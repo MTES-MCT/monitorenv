@@ -48,6 +48,7 @@ export function TableReportingsFiltersWithRef(
     startedBefore,
     statusFilter = [],
     subThemesFilter = [],
+    targetTypeFilter = [],
     themeFilter = [],
     typeFilter = []
   } = useAppSelector(state => state.reportingFilters)
@@ -58,6 +59,7 @@ export function TableReportingsFiltersWithRef(
     sourceTypeOptions,
     statusOptions,
     subThemesOptions,
+    targetTypeOtions,
     themesOptions,
     typeOptions
   } = optionsList
@@ -163,6 +165,20 @@ export function TableReportingsFiltersWithRef(
             placeholder="Type de signalement"
             style={tagPickerStyle}
             value={typeFilter}
+          />
+          <CheckPicker
+            isLabelHidden
+            label="Type de cible"
+            menuStyle={{ maxWidth: '200%' }}
+            name="targetType"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}
+            options={targetTypeOtions}
+            placeholder="Type de cible"
+            renderValue={() =>
+              targetTypeFilter && <OptionValue>{`Type de cible (${targetTypeFilter.length})`}</OptionValue>
+            }
+            style={tagPickerStyle}
+            value={targetTypeFilter}
           />
           <CheckPicker
             key={themesOptions.length}

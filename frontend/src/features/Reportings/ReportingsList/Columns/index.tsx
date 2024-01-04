@@ -86,7 +86,13 @@ export const Columns = [
   },
   {
     accessorFn: row => row.targetDetails,
-    cell: ({ row }) => <CellTarget targetDetails={row.original.targetDetails} targetType={row.original.targetType} />,
+    cell: ({ row }) => (
+      <CellTarget
+        targetDetails={row.original.targetDetails}
+        targetType={row.original.targetType}
+        vehicleType={row.original.vehicleType}
+      />
+    ),
     header: () => 'Cible',
     id: 'targetDetails',
     maxSize: 190,
@@ -95,11 +101,14 @@ export const Columns = [
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
       const targetDetailsAsTextA = getTargetDetailsAsText({
         targetDetails: rowA.original.targetDetails,
-        targetType: rowA.original.targetType
+        targetType: rowA.original.targetType,
+        vehicleType: rowA.original.vehicleType
       })
+
       const targetDetailsAsTextB = getTargetDetailsAsText({
         targetDetails: rowB.original.targetDetails,
-        targetType: rowB.original.targetType
+        targetType: rowB.original.targetType,
+        vehicleType: rowB.original.vehicleType
       })
 
       return targetDetailsAsTextA.localeCompare(targetDetailsAsTextB)

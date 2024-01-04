@@ -120,6 +120,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
                 )
             )
         )
+        AND ((:targetTypes) = '{}' OR CAST(target_type AS text) = ANY(CAST(:targetTypes as text[])))
         ORDER BY reporting_id DESC
     """,
         nativeQuery = true,
@@ -132,6 +133,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         startedAfter: Instant,
         startedBefore: Instant?,
         status: String?,
+        targetTypes: String?,
     ): List<ReportingModel>
 
     @Query(

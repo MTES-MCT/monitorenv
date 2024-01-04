@@ -33,6 +33,7 @@ interface IReportingRepository {
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
+        targetTypes: List<String>?,
     ): List<ReportingDTO>
 
     fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity>

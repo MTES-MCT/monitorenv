@@ -12,6 +12,7 @@ type ReportingsFilter = {
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
   status?: string[]
+  targetTypes?: string[]
 }
 
 const ReportingAdapter = createEntityAdapter<ReportingDetailed>()

@@ -64,6 +64,7 @@ class JpaReportingRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
+        targetTypes: List<String>?,
     ): List<ReportingDTO> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
@@ -75,6 +76,7 @@ class JpaReportingRepository(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
             status = convertToString(status),
+            targetTypes = convertToString(targetTypes),
         )
             .map { it.toReportingDTO(mapper) }
     }

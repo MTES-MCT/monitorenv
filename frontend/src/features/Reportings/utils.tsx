@@ -11,6 +11,7 @@ import {
   type TargetDetails
 } from '../../domain/entities/reporting'
 import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../domain/entities/targetType'
+import { vehicleTypeLabels, type VehicleTypeEnum } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
 
@@ -85,20 +86,22 @@ export const getFormattedReportingId = (reportingId: number | undefined) => {
 
 export const getTargetDetailsAsText = ({
   targetDetails,
-  targetType
+  targetType,
+  vehicleType
 }: {
   targetDetails: TargetDetails[] | undefined
-  targetType: ReportingTargetTypeEnum
+  targetType: ReportingTargetTypeEnum | undefined
+  vehicleType: VehicleTypeEnum | undefined
 }) => {
   let targetDetailsAsText = ''
 
-  if (!targetDetails) {
+  if (!targetDetails || !targetType) {
     return targetDetailsAsText
   }
 
   if (targetDetails.length === 1) {
     if (targetType !== ReportingTargetTypeEnum.VEHICLE) {
-      targetDetailsAsText = targetDetails[0]?.operatorName || ''
+      targetDetailsAsText = targetDetails[0]?.operatorName || targetDetails[0]?.vesselName || ''
     } else {
       targetDetailsAsText =
         targetDetails[0]?.vesselName ||
@@ -109,6 +112,14 @@ export const getTargetDetailsAsText = ({
     }
   } else if (targetDetails.length > 1) {
     targetDetailsAsText = `${targetDetails.length} ${ReportingTargetTypeLabels[targetType]}s`
+  }
+
+  if (targetDetailsAsText === '') {
+    if (targetType === ReportingTargetTypeEnum.VEHICLE && vehicleType) {
+      return vehicleTypeLabels[vehicleType].label
+    }
+
+    return ReportingTargetTypeLabels[targetType]
   }
 
   return targetDetailsAsText

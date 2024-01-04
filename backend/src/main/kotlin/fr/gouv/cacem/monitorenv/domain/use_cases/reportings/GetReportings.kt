@@ -25,6 +25,7 @@ class GetReportings(
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
         status: List<String>?,
+        targetTypes: List<String>? = null,
     ): List<ReportingDTO> {
         val reports =
             reportingRepository.findAll(
@@ -35,6 +36,7 @@ class GetReportings(
                     ?: ZonedDateTime.now().minusDays(30).toInstant(),
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 status = status,
+                targetTypes = targetTypes,
                 pageable =
                 if (pageNumber != null && pageSize != null) {
                     PageRequest.of(pageNumber, pageSize)

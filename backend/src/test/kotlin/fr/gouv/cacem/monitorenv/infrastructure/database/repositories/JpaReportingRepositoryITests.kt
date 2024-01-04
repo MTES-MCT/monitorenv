@@ -211,6 +211,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 sourcesType = null,
                 status = null,
+                targetTypes = null,
             )
         assertThat(reportings.size).isEqualTo(11)
     }
@@ -224,16 +225,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
     @Test
     fun `findById should return specified reporting`() {
-        val reportingDTO = jpaReportingRepository.findById(1)
-        assertThat(reportingDTO.reporting.id).isEqualTo(1)
-        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300001)
+        val reportingDTO = jpaReportingRepository.findById(2)
+        assertThat(reportingDTO.reporting.id).isEqualTo(2)
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300002)
         assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
+        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(23)
         assertThat(reportingDTO.reporting.controlUnitId).isNull()
         assertThat(reportingDTO.reporting.sourceName).isNull()
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
         assertThat(reportingDTO.reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
-        assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
+        assertThat(reportingDTO.reporting.validityTime).isEqualTo(2)
     }
 
     @Test

@@ -41,23 +41,17 @@ import java.time.ZonedDateTime
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(Reportings::class)])
 class ReportingsITests {
-    @Autowired
-    private lateinit var mockedApi: MockMvc
+    @Autowired private lateinit var mockedApi: MockMvc
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
-    @MockBean
-    private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
+    @MockBean private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
 
-    @MockBean
-    private lateinit var getReportings: GetReportings
+    @MockBean private lateinit var getReportings: GetReportings
 
-    @MockBean
-    private lateinit var getReportingById: GetReportingById
+    @MockBean private lateinit var getReportingById: GetReportingById
 
-    @MockBean
-    private lateinit var deleteReporting: DeleteReporting
+    @MockBean private lateinit var deleteReporting: DeleteReporting
 
     @MockBean private lateinit var deleteReportings: DeleteReportings
 
@@ -73,7 +67,8 @@ class ReportingsITests {
                 )
         val reporting =
             ReportingDTO(
-                reporting = ReportingEntity(
+                reporting =
+                ReportingEntity(
                     id = 1,
                     sourceType = SourceTypeEnum.SEMAPHORE,
                     semaphoreId = 1,
@@ -97,7 +92,8 @@ class ReportingsITests {
                     isDeleted = false,
                     openBy = "CDA",
                 ),
-                semaphore = SemaphoreEntity(
+                semaphore =
+                SemaphoreEntity(
                     id = 1,
                     name = "name",
                     geom =
@@ -179,7 +175,8 @@ class ReportingsITests {
                 )
         val reporting =
             ReportingDTO(
-                reporting = ReportingEntity(
+                reporting =
+                ReportingEntity(
                     id = 1,
                     sourceType = SourceTypeEnum.SEMAPHORE,
                     semaphoreId = 1,
@@ -203,7 +200,8 @@ class ReportingsITests {
                     isDeleted = false,
                     openBy = "CDA",
                 ),
-                semaphore = SemaphoreEntity(
+                semaphore =
+                SemaphoreEntity(
                     id = 1,
                     name = "name",
                     geom =
@@ -258,7 +256,8 @@ class ReportingsITests {
                 )
         val reporting =
             ReportingDTO(
-                reporting = ReportingEntity(
+                reporting =
+                ReportingEntity(
                     id = 1,
                     sourceType = SourceTypeEnum.SEMAPHORE,
                     targetType = TargetTypeEnum.VEHICLE,
@@ -293,6 +292,7 @@ class ReportingsITests {
                 seaFronts = any(),
                 sourcesType = any(),
                 status = any(),
+                targetTypes = any(),
             ),
         )
             .willReturn(listOf(reporting))
@@ -314,11 +314,11 @@ class ReportingsITests {
                 )
         val updatedReporting =
             ReportingDTO(
-                reporting = ReportingEntity(
+                reporting =
+                ReportingEntity(
                     id = 1,
                     sourceType = SourceTypeEnum.SEMAPHORE,
                     semaphoreId = 1,
-
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -339,7 +339,8 @@ class ReportingsITests {
                     isDeleted = false,
                     openBy = "CDA",
                 ),
-                semaphore = SemaphoreEntity(
+                semaphore =
+                SemaphoreEntity(
                     id = 1,
                     name = "name",
                     geom =
@@ -375,8 +376,7 @@ class ReportingsITests {
                 ),
             )
 
-        given(createOrUpdateReporting.execute(any()))
-            .willReturn(updatedReporting)
+        given(createOrUpdateReporting.execute(any())).willReturn(updatedReporting)
 
         // When
         mockedApi

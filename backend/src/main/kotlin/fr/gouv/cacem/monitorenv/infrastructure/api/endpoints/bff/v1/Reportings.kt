@@ -115,6 +115,9 @@ class Reportings(
         @Parameter(description = "Reporting status")
         @RequestParam(name = "status", required = false)
         status: List<String>?,
+        @Parameter(description = "Target type")
+        @RequestParam(name = "targetTypes", required = false)
+        targetTypes: List<String>?,
     ): List<ReportingsDataOutput> {
         return getReportings.execute(
             pageNumber = pageNumber,
@@ -125,6 +128,7 @@ class Reportings(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
             status = status,
+            targetTypes = targetTypes,
         )
             .map { ReportingsDataOutput.fromReportingDTO(it) }
     }

@@ -23,6 +23,7 @@ export enum ReportingsFiltersEnum {
   STARTED_BEFORE_FILTER = 'startedBefore',
   STATUS_FILTER = 'statusFilter',
   SUB_THEMES_FILTER = 'subThemesFilter',
+  TARGET_TYPE_FILTER = 'targetTypeFilter',
   THEME_FILTER = 'themeFilter',
   TYPE_FILTER = 'typeFilter'
 }
@@ -38,6 +39,7 @@ type ReportingsFiltersSliceType = {
   startedBefore?: string
   statusFilter: string[]
   subThemesFilter: number[] | undefined
+  targetTypeFilter?: string[] | undefined
   themeFilter: number[] | undefined
   typeFilter?: string | undefined
 }
@@ -53,6 +55,7 @@ const initialState: ReportingsFiltersSliceType = {
   startedBefore: undefined,
   statusFilter: [StatusFilterEnum.IN_PROGRESS],
   subThemesFilter: undefined,
+  targetTypeFilter: undefined,
   themeFilter: undefined,
   typeFilter: undefined
 }

@@ -18,6 +18,7 @@ export const useGetFilteredReportingsQuery = () => {
     startedBefore,
     statusFilter,
     subThemesFilter,
+    targetTypeFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
@@ -29,7 +30,8 @@ export const useGetFilteredReportingsQuery = () => {
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: startedAfter || undefined,
       startedBeforeDateTime: startedBefore || undefined,
-      status: statusFilter
+      status: statusFilter,
+      targetTypes: targetTypeFilter
     },
     { pollingInterval: TWO_MINUTES }
   )
