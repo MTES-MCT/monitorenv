@@ -1,5 +1,4 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { truncate } from 'lodash/fp'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
@@ -32,8 +31,7 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
             <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={handleEdit} title="Éditer ce moyen" />
           </div>
         </InfoBoxHeader>
-        {/* 120 chars ~= 3 lines */}
-        {controlUnitResource.note && <p>{truncate({ length: 120 }, controlUnitResource.note)}</p>}
+        {controlUnitResource.note && <Note>{controlUnitResource.note}</Note>}
       </InfoBox>
     </Wrapper>
   )
@@ -53,14 +51,21 @@ const InfoBox = styled.div`
 
 const InfoBoxHeader = styled.div`
   display: flex;
+
   margin-bottom: 8px;
   color: ${p => p.theme.color.gunMetal};
-
   > div:first-child {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
   }
+`
+
+const Note = styled.div`
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  overflow: hidden;
 `
 
 const Name = styled.p`
