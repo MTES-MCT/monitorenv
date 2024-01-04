@@ -8,6 +8,7 @@ import { CellActionThemes } from '../Cells/CellActionThemes'
 import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
 import { CellLocalizeReporting } from '../Cells/CellLocalizeReporting'
 import { CellStatus } from '../Cells/CellStatus'
+import { CellTarget } from '../Cells/CellTarget'
 import { CellValidityTime } from '../Cells/CellValidityTime'
 import { getDateCell } from '../Cells/getDateCell'
 import { getReportType } from '../Cells/getReportType'
@@ -64,12 +65,16 @@ export const Columns = [
   },
   {
     accessorFn: row => row.displayedSource,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
+    cell: info => (
+      <Cell id={info.getValue()} title={info.getValue()}>
+        {info.getValue()}
+      </Cell>
+    ),
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    maxSize: 260,
-    minSize: 210
+    maxSize: 210,
+    minSize: 190
   },
   {
     accessorFn: row => row.reportType,
@@ -80,13 +85,21 @@ export const Columns = [
     size: 170
   },
   {
+    accessorFn: row => row.targetDetails,
+    cell: ({ row }) => <CellTarget targetDetails={row.original.targetDetails} targetType={row.original.targetType} />,
+    header: () => 'Cible',
+    id: 'targetDetails',
+    maxSize: 190,
+    minSize: 100
+  },
+  {
     accessorFn: row => row.theme,
     cell: ({ row }) => <CellActionThemes subThemeIds={row.original.subThemeIds} themeId={row.original.themeId} />,
     enableSorting: true,
     header: () => 'Thématique',
     id: 'theme',
-    maxSize: 280,
-    minSize: 230
+    maxSize: 260,
+    minSize: 210
   },
   {
     accessorFn: row => row.seaFront,
@@ -162,4 +175,4 @@ export const Columns = [
   }
 ]
 
-const Cell = styled.div``
+const Cell = styled.span``

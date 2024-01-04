@@ -57,7 +57,7 @@ export enum ControlStatusLabels {
   SURVEILLANCE_DONE = 'Surveillance faite'
 }
 
-type TargetDetails = {
+export type TargetDetails = {
   externalReferenceNumber?: string
   imo?: string
   mmsi?: string
