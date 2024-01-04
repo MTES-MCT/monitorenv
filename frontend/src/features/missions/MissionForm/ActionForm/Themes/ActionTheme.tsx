@@ -1,5 +1,4 @@
 import { useField } from 'formik'
-import { sortBy } from 'lodash/fp'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -8,6 +7,7 @@ import { ThemeSelector } from './ThemeSelector'
 import { SubThemesSelector } from './ThemeSelector/SubThemesSelector'
 import { ActionTypeEnum } from '../../../../../domain/entities/missions'
 import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlansByYear'
+import { sortControlPlans } from '../../../../../utils/sortControlPlans'
 
 import type { ControlPlansData } from '../../../../../domain/entities/controlPlan'
 
@@ -40,20 +40,16 @@ export function ActionTheme({
 
   const formattedThemesAsOptions = useMemo(() => {
     if (actionType === ActionTypeEnum.CONTROL) {
-      return sortBy(
-        'label',
-        themesByYearAsOptions?.filter(theme => theme.label !== GENERAL_SURVEILLANCE)
-      )
+      return themesByYearAsOptions?.filter(theme => theme.label !== GENERAL_SURVEILLANCE).sort(sortControlPlans)
     }
 
-    return sortBy(
-      'label',
-      themesByYearAsOptions?.map(themeAsOption => ({
+    return themesByYearAsOptions
+      ?.map(themeAsOption => ({
         isDisabled: actionControlPlansField.value.some(controlPlan => controlPlan.themeId === themeAsOption.value),
         label: themeAsOption.label,
         value: themeAsOption.value
       }))
-    )
+      .sort(sortControlPlans)
   }, [actionType, themesByYearAsOptions, actionControlPlansField.value])
 
   return (

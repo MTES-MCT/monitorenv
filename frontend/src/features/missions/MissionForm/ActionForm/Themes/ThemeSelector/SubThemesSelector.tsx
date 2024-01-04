@@ -1,5 +1,6 @@
 import { MultiSelect, useNewWindow, type Option } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { updateSubThemes } from '../../../formikUseCases/updateActionThemes'
@@ -33,6 +34,13 @@ export function SubThemesSelector({
   const handleUpdateSubTheme = subTheme => {
     updateSubThemes(setFieldValue)(subTheme, actionIndex, themeIndex)
   }
+
+  useEffect(() => {
+    if (subThemes.length === 1) {
+      setFieldValue(`envActions[${actionIndex}].controlPlans[${themeIndex}].subThemeIds`, [subThemes[0]?.value])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subThemes, actionIndex, themeIndex])
 
   return (
     <>

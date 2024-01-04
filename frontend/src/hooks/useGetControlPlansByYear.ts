@@ -2,26 +2,9 @@ import { sortBy } from 'lodash/fp'
 import { useMemo } from 'react'
 
 import { useGetControlPlansByYearQuery } from '../api/controlPlans'
+import { sortControlPlans } from '../utils/sortControlPlans'
 
 import type { Option } from '@mtes-mct/monitor-ui'
-
-const sortFunction = (a: Option<number>, b: Option<number>) => {
-  if (a.label.includes('Autre')) {
-    return 1
-  }
-  if (b.label.includes('Autre')) {
-    return -1
-  }
-
-  if (a?.label < b?.label) {
-    return -1
-  }
-  if (a?.label > b?.label) {
-    return 1
-  }
-
-  return 0
-}
 
 export function useGetControlPlansByYear({
   selectedTheme = undefined,
@@ -39,7 +22,7 @@ export function useGetControlPlansByYear({
           label: theme,
           value: id
         }))
-        .sort(sortFunction) || [],
+        .sort(sortControlPlans) || [],
     [data?.themes]
   )
 
@@ -48,7 +31,7 @@ export function useGetControlPlansByYear({
       Object.values(data?.subThemes || {})
         ?.filter(({ themeId }) => themeId === selectedTheme)
         .map(({ id, subTheme }) => ({ label: subTheme, value: id }))
-        .sort(sortFunction) || [],
+        .sort(sortControlPlans) || [],
     [data?.subThemes, selectedTheme]
   )
 
