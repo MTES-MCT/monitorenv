@@ -14,6 +14,15 @@ export function TextareaForm({ controlUnit, isLabelHidden, label, name, onSubmit
   const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState<string | undefined>(controlUnit[name])
 
+  const cancel = () => {
+    setIsEditing(false)
+    setValue(controlUnit[name])
+  }
+
+  const edit = () => {
+    setIsEditing(true)
+  }
+
   const moveCursorToEnd = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
     event.target.setSelectionRange(event.target.value.length, event.target.value.length)
   }, [])
@@ -31,10 +40,6 @@ export function TextareaForm({ controlUnit, isLabelHidden, label, name, onSubmit
     setIsEditing(false)
   }
 
-  const toggleIsEditing = useCallback(() => {
-    setIsEditing(!isEditing)
-  }, [isEditing])
-
   if (isEditing) {
     return (
       <Form onSubmit={updateControlUnit}>
@@ -51,7 +56,7 @@ export function TextareaForm({ controlUnit, isLabelHidden, label, name, onSubmit
           value={value}
         />
         <div>
-          <Button accent={Accent.SECONDARY} onClick={toggleIsEditing}>
+          <Button accent={Accent.SECONDARY} onClick={cancel}>
             Annuler
           </Button>
           <Button type="submit">Valider</Button>
@@ -64,7 +69,7 @@ export function TextareaForm({ controlUnit, isLabelHidden, label, name, onSubmit
     <>
       {!isLabelHidden && <Label>{label}</Label>}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
-      <TextBox data-cy={`ControlUnitDialog-${name}`} onClick={toggleIsEditing}>
+      <TextBox data-cy={`ControlUnitDialog-${name}`} onClick={edit}>
         {controlUnit[name]}
       </TextBox>
     </>
