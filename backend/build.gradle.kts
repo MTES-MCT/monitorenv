@@ -69,7 +69,7 @@ dependencies {
     api("org.testcontainers:postgresql:1.19.2")
     api("org.springframework.boot:spring-boot-starter-log4j2:3.1.4")
     api("io.sentry:sentry:6.31.0")
-    api("io.sentry:sentry-log4j2:6.31.0")
+    api("io.sentry:sentry-log4j2:7.1.0")
     api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     runtimeOnly("org.springframework.boot:spring-boot-devtools:3.1.4")
     runtimeOnly("org.postgresql:postgresql:42.6.0")
