@@ -4,13 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
@@ -248,13 +245,7 @@ class ApiMissionsITests {
                 isUnderJdp = true,
                 isGeometryComputedFromControls = false,
             )
-        val envAction =
-            EnvActionControlEntity(
-                id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
-                actionTargetType = ActionTargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                actionNumberOfControls = 4,
-            )
+
         val requestBody =
             CreateOrUpdateMissionDataInput(
                 id = 14,
@@ -263,7 +254,6 @@ class ApiMissionsITests {
                 observationsCnsp = "updated observations",
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 missionSource = MissionSourceEnum.MONITORFISH,
-                envActions = listOf(envAction),
                 isClosed = false,
                 hasMissionOrder = true,
                 isUnderJdp = true,

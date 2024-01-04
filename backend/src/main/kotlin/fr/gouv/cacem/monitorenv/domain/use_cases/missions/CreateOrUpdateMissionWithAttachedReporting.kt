@@ -15,6 +15,7 @@ import java.util.UUID
 @UseCase
 class CreateOrUpdateMissionWithAttachedReporting(
     private val createOrUpdateMission: CreateOrUpdateMission,
+    private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 ) {
@@ -39,6 +40,11 @@ class CreateOrUpdateMissionWithAttachedReporting(
 
         val savedMission = createOrUpdateMission.execute(mission)
         require(savedMission.id != null) { "The mission id is null" }
+
+        createOrUpdateEnvActions.execute(
+            savedMission,
+            mission.envActions,
+        )
 
         attachedReportingIds.forEach {
             val reporting = reportingRepository.findById(it)

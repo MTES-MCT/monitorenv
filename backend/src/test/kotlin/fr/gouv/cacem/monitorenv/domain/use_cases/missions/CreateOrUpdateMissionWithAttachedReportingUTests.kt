@@ -1,6 +1,6 @@
 @file:Suppress("ktlint:standard:package-name")
 
-package fr.gouv.cacem.monitorenv.domain.use_cases
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.given
@@ -10,8 +10,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithAttachedReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTOWithAttachedMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
@@ -31,6 +29,8 @@ import java.util.*
 class CreateOrUpdateMissionWithAttachedReportingUTests {
 
     @MockBean private lateinit var createOrUpdateMission: CreateOrUpdateMission
+
+    @MockBean private lateinit var createOrUpdateEnvActions: CreateOrUpdateEnvActions
 
     @MockBean private lateinit var missionRepository: IMissionRepository
 
@@ -93,6 +93,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
         val createdMissionDTO =
             CreateOrUpdateMissionWithAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
+                createOrUpdateEnvActions = createOrUpdateEnvActions,
                 missionRepository = missionRepository,
                 reportingRepository = reportingRepository,
             )
@@ -138,6 +139,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
         assertThatThrownBy {
             CreateOrUpdateMissionWithAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
+                createOrUpdateEnvActions = createOrUpdateEnvActions,
                 missionRepository = missionRepository,
                 reportingRepository = reportingRepository,
             )
@@ -216,6 +218,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
         val createdMissionDTO =
             CreateOrUpdateMissionWithAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
+                createOrUpdateEnvActions = createOrUpdateEnvActions,
                 missionRepository = missionRepository,
                 reportingRepository = reportingRepository,
             )
