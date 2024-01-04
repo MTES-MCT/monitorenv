@@ -17,8 +17,7 @@ context('Reporting', () => {
     cy.wait(1000)
 
     // When
-    cy.getDataCy('add-semaphore-source').click({ force: true })
-    cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
+    cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
 
     cy.getDataCy('reporting-target-type').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
@@ -73,8 +72,7 @@ context('Reporting', () => {
     cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
 
     // When
-    cy.get('*[data-cy="add-semaphore-source"]').click({ force: true })
-    cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
+    cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
 
     cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
@@ -111,6 +109,7 @@ context('Reporting', () => {
       })
     })
   })
+
   it('A mission can be detached from a reporting', () => {
     // Given
     cy.intercept('PUT', '/bff/v1/reportings/*').as('updateReporting')
@@ -141,6 +140,45 @@ context('Reporting', () => {
         targetType: 'COMPANY',
         validityTime: 24
       })
+    })
+  })
+
+  it('An attached mission can be reinitialze during reporting creation', () => {
+    // Given
+    cy.clickButton('Chercher des signalements')
+    cy.clickButton('Ajouter un signalement')
+    cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
+    cy.wait(1000)
+
+    // When
+    cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
+
+    cy.getDataCy('reporting-target-type').click({ force: true })
+    cy.get('div[role="option"]').contains('Personne morale').click()
+
+    cy.clickButton('Ajouter un point')
+    cy.get('#root').click(350, 690, { timeout: 10000 })
+    cy.clickButton('Valider le point')
+
+    cy.get('.rs-radio').find('label').contains('Infraction').click()
+
+    cy.fill('Saisi par', 'XYZ')
+    cy.fill('Date et heure (UTC)', [2024, 5, 26, 23, 35])
+
+    cy.clickButton('Lier à une mission existante')
+    cy.get('#root').click(582, 546)
+    cy.wait(1000)
+    cy.clickButton('Réinitialiser')
+    cy.wait(1000)
+
+    cy.clickButton('Valider le signalement')
+
+    // Then
+    cy.wait('@createReporting').then(({ response }) => {
+      expect(response && response.statusCode).equal(201)
+      const responseBody = response && response.body
+      expect(responseBody.missionId).equal(null)
+      expect(responseBody.attachedMission).equal(null)
     })
   })
 })

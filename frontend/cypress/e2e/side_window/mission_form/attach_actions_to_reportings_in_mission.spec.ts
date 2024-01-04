@@ -1,4 +1,4 @@
-context('Mission', () => {
+context('Side Window > Mission Form > Attach action to reporting', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)

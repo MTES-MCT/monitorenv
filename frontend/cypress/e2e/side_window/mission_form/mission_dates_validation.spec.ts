@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-context('Mission dates', () => {
+context('Side Window > Mission Form > Mission dates', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
 
