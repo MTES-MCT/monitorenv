@@ -2,7 +2,6 @@ import { MISSION_FORM_AUTO_UPDATE } from '../../../env'
 import { ReconnectingEventSource } from '../../../libs/ReconnectingEventSource'
 
 import type { Mission } from '../../../domain/entities/missions'
-import type { PatchCollection, Recipe } from '@reduxjs/toolkit/dist/query/core/buildThunks'
 
 const MISSION_UPDATES_URL = `/api/v1/missions/sse`
 export const MISSION_UPDATE_EVENT = `MISSION_UPDATE`
@@ -56,35 +55,27 @@ export function disableMissionListener(missionId: number) {
   console.log(`SSE: disabled listener of mission id ${missionId}.`)
 }
 
-export const missionEventListener =
-  (id: number, updateCachedData: (updateRecipe: Recipe<any>) => PatchCollection) => (event: MessageEvent) => {
-    const mission = JSON.parse(event.data) as Mission
-    if (mission.id !== id) {
-      // eslint-disable-next-line no-console
-      console.log(`SSE: filtered an update for mission id ${id} (received mission id ${mission.id}).`)
-
-      return
-    }
-
+export const missionEventListener = (id: number, callback: (mission: Mission) => void) => (event: MessageEvent) => {
+  const mission = JSON.parse(event.data) as Mission
+  if (mission.id !== id) {
     // eslint-disable-next-line no-console
-    console.log(`SSE: received an update for mission id ${id}.`)
+    console.log(`SSE: filtered an update for mission id ${id} (received mission id ${mission.id}).`)
 
-    if (!MISSION_FORM_AUTO_UPDATE) {
-      // eslint-disable-next-line no-console
-      console.log(
-        'Skipping automatic update of mission form. ' +
-          "Set 'REACT_APP_MISSION_FORM_AUTO_UPDATE=true' feature flag to activate this feature."
-      )
-
-      return
-    }
-
-    updateCachedData(draft => {
-      const { envActions } = draft
-
-      return {
-        ...mission,
-        envActions
-      }
-    })
+    return
   }
+
+  // eslint-disable-next-line no-console
+  console.log(`SSE: received an update for mission id ${id}.`)
+
+  if (!MISSION_FORM_AUTO_UPDATE) {
+    // eslint-disable-next-line no-console
+    console.log(
+      'Skipping automatic update of mission form. ' +
+        "Set 'REACT_APP_MISSION_FORM_AUTO_UPDATE=true' feature flag to activate this feature."
+    )
+
+    return
+  }
+
+  callback(mission)
+}

@@ -1,54 +1,57 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { Formik, Form } from 'formik'
+import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+import { useUpdateFreezedFormValues } from './hooks/useUpdateFreezedFormValues'
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
-import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isNewMission } from '../../../utils/isNewMission'
 import { missionFactory } from '../Missions.helpers'
 
 import type { Mission as MissionType, NewMission } from '../../../domain/entities/missions'
 
-export function Mission() {
+export function MissionFormWrapper() {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
   )
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
+  const [formKey, setFormKey] = useState(0)
 
   const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
 
-  const { data: missionToEdit, isLoading } = useGetMissionQuery(
-    !missionIsNewMission && activeMissionId ? Number(activeMissionId) : skipToken
-  )
-
-  const missionFormikValues: Partial<MissionType> = useMemo(() => {
+  const missionValues: Partial<MissionType> = useMemo(() => {
     if (missionIsNewMission && activeMissionId) {
       return missionFactory({ id: activeMissionId } as Partial<NewMission>, true)
     }
 
-    if (missionToEdit) {
-      return missionFactory(missionToEdit, false)
+    if (selectedMission?.missionForm) {
+      return missionFactory(selectedMission.missionForm, false)
     }
 
     return {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [missionToEdit, activeMissionId])
+  }, [selectedMission?.missionForm, activeMissionId])
 
-  if (isLoading || missionFormikValues?.id !== activeMissionId || !activeMissionId) {
+  // `formikFormValuesRef` is freezed as Formik manage his state internally
+  const formikFormValuesRef = useRef<Partial<MissionType> | undefined>(undefined)
+  useUpdateFreezedFormValues(formikFormValuesRef.current, missionValues, nextFormValues => {
+    formikFormValuesRef.current = nextFormValues
+    setFormKey(key => key + 1)
+  })
+
+  if (!formikFormValuesRef.current || missionValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>
   }
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        key={activeMissionId}
+        key={formKey}
         enableReinitialize
-        initialValues={missionFormikValues}
+        initialValues={formikFormValuesRef.current}
         onSubmit={noop}
         validateOnBlur={false}
         validateOnChange={shouldValidateOnChange}
