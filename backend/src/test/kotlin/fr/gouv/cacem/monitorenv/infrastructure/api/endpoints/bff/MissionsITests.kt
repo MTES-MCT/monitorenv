@@ -55,8 +55,8 @@ class MissionsITests {
     @Autowired private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var createOrUpdateMissionWithAttachedReporting:
-        CreateOrUpdateMissionWithAttachedReporting
+    private lateinit var createOrUpdateMissionWithActionsAndAttachedReporting:
+        CreateOrUpdateMissionWithActionsAndAttachedReporting
 
     @MockBean private lateinit var getFullMissions: GetFullMissions
 
@@ -118,7 +118,7 @@ class MissionsITests {
             )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
         given(
-            createOrUpdateMissionWithAttachedReporting.execute(
+            createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = newMissionRequest.toMissionEntity(),
                 attachedReportingIds = listOf(),
                 envActionsAttachedToReportingIds = listOf(),
@@ -833,7 +833,7 @@ class MissionsITests {
             ) as
                 List<EnvActionAttachedToReportingIds>
         given(
-            createOrUpdateMissionWithAttachedReporting.execute(
+            createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = requestBody.toMissionEntity(),
                 attachedReportingIds = listOf(1),
                 envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,

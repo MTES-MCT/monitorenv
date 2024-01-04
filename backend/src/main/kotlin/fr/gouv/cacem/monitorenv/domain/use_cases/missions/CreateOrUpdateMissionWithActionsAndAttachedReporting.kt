@@ -13,13 +13,14 @@ import org.slf4j.LoggerFactory
 import java.util.UUID
 
 @UseCase
-class CreateOrUpdateMissionWithAttachedReporting(
+class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val createOrUpdateMission: CreateOrUpdateMission,
+    private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 ) {
     private val logger =
-        LoggerFactory.getLogger(CreateOrUpdateMissionWithAttachedReporting::class.java)
+        LoggerFactory.getLogger(CreateOrUpdateMissionWithActionsAndAttachedReporting::class.java)
 
     @Throws(IllegalArgumentException::class)
     fun execute(
@@ -39,6 +40,11 @@ class CreateOrUpdateMissionWithAttachedReporting(
 
         val savedMission = createOrUpdateMission.execute(mission)
         require(savedMission.id != null) { "The mission id is null" }
+
+        createOrUpdateEnvActions.execute(
+            savedMission,
+            mission.envActions,
+        )
 
         attachedReportingIds.forEach {
             val reporting = reportingRepository.findById(it)
