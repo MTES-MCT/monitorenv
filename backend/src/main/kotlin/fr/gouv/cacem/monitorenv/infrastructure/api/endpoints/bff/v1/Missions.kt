@@ -18,8 +18,8 @@ import java.time.ZonedDateTime
 @RequestMapping("/bff/v1/missions")
 @Tag(description = "API Missions", name = "BFF.Missions")
 class Missions(
-    private val createOrUpdateMissionWithAttachedReporting:
-        CreateOrUpdateMissionWithAttachedReporting,
+    private val createOrUpdateMissionWithActionsAndAttachedReporting:
+        CreateOrUpdateMissionWithActionsAndAttachedReporting,
     private val getFullMissions: GetFullMissions,
     private val getFullMissionById: GetFullMissionById,
     private val deleteMission: DeleteMission,
@@ -32,7 +32,7 @@ class Missions(
         createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val createdMission =
-            createOrUpdateMissionWithAttachedReporting.execute(
+            createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = createMissionDataInput.toMissionEntity(),
                 attachedReportingIds = createMissionDataInput.attachedReportingIds,
                 envActionsAttachedToReportingIds =
@@ -128,7 +128,7 @@ class Missions(
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
-        return createOrUpdateMissionWithAttachedReporting.execute(
+        return createOrUpdateMissionWithActionsAndAttachedReporting.execute(
             mission = updateMissionDataInput.toMissionEntity(),
             attachedReportingIds = updateMissionDataInput.attachedReportingIds,
             envActionsAttachedToReportingIds =

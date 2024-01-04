@@ -26,7 +26,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
-class CreateOrUpdateMissionWithAttachedReportingUTests {
+class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
     @MockBean private lateinit var createOrUpdateMission: CreateOrUpdateMission
 
@@ -91,7 +91,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
         // When
         val createdMissionDTO =
-            CreateOrUpdateMissionWithAttachedReporting(
+            CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 missionRepository = missionRepository,
@@ -137,7 +137,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
 
         // Then
         assertThatThrownBy {
-            CreateOrUpdateMissionWithAttachedReporting(
+            CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 missionRepository = missionRepository,
@@ -216,7 +216,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
 
         // When
         val createdMissionDTO =
-            CreateOrUpdateMissionWithAttachedReporting(
+            CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 missionRepository = missionRepository,
