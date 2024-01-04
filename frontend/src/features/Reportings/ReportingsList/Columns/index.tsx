@@ -1,7 +1,7 @@
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { getFormattedReportingId } from '../../utils'
+import { getFormattedReportingId, getTargetDetailsAsText } from '../../utils'
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
 import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionThemes } from '../Cells/CellActionThemes'
@@ -82,7 +82,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Type',
     id: 'reportType',
-    size: 170
+    size: 140
   },
   {
     accessorFn: row => row.targetDetails,
@@ -90,7 +90,20 @@ export const Columns = [
     header: () => 'Cible',
     id: 'targetDetails',
     maxSize: 190,
-    minSize: 100
+    minSize: 160,
+    size: 160,
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
+      const targetDetailsAsTextA = getTargetDetailsAsText({
+        targetDetails: rowA.original.targetDetails,
+        targetType: rowA.original.targetType
+      })
+      const targetDetailsAsTextB = getTargetDetailsAsText({
+        targetDetails: rowB.original.targetDetails,
+        targetType: rowB.original.targetType
+      })
+
+      return targetDetailsAsTextA.localeCompare(targetDetailsAsTextB)
+    }
   },
   {
     accessorFn: row => row.theme,
@@ -99,7 +112,8 @@ export const Columns = [
     header: () => 'Thématique',
     id: 'theme',
     maxSize: 260,
-    minSize: 210
+    minSize: 210,
+    size: 210
   },
   {
     accessorFn: row => row.seaFront,
@@ -138,7 +152,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 155
+    size: 110
   },
   {
     accessorFn: row => row.geom,
@@ -153,7 +167,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 140
+    size: 110
   },
   {
     accessorFn: row => row.geom,

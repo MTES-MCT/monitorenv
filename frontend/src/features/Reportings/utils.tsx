@@ -7,8 +7,10 @@ import {
   ReportingSourceEnum,
   type Reporting,
   ReportingStatusEnum,
-  getReportingStatus
+  getReportingStatus,
+  type TargetDetails
 } from '../../domain/entities/reporting'
+import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../domain/entities/targetType'
 
 import type { AtLeast } from '../../types'
 
@@ -79,4 +81,35 @@ export const getFormattedReportingId = (reportingId: number | undefined) => {
   }
 
   return `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
+}
+
+export const getTargetDetailsAsText = ({
+  targetDetails,
+  targetType
+}: {
+  targetDetails: TargetDetails[] | undefined
+  targetType: ReportingTargetTypeEnum
+}) => {
+  let targetDetailsAsText = ''
+
+  if (!targetDetails) {
+    return targetDetailsAsText
+  }
+
+  if (targetDetails.length === 1) {
+    if (targetType !== ReportingTargetTypeEnum.VEHICLE) {
+      targetDetailsAsText = targetDetails[0]?.operatorName || ''
+    } else {
+      targetDetailsAsText =
+        targetDetails[0]?.vesselName ||
+        targetDetails[0]?.mmsi ||
+        targetDetails[0]?.operatorName ||
+        targetDetails[0]?.externalReferenceNumber ||
+        ''
+    }
+  } else if (targetDetails.length > 1) {
+    targetDetailsAsText = `${targetDetails.length} ${ReportingTargetTypeLabels[targetType]}s`
+  }
+
+  return targetDetailsAsText
 }

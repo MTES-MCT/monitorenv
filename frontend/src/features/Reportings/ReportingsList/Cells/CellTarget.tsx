@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 import { ReportingTargetTypeEnum, ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
+import { getTargetDetailsAsText } from '../../utils'
 
 import type { TargetDetails } from '../../../../domain/entities/reporting'
 
@@ -11,17 +12,13 @@ export function CellTarget({
   targetDetails: TargetDetails[]
   targetType: ReportingTargetTypeEnum
 }) {
-  let targetDetailsAsText = ''
-  if (targetType !== ReportingTargetTypeEnum.VEHICLE) {
-    targetDetailsAsText = targetDetails[0]?.operatorName || ''
-  } else {
-    targetDetailsAsText = targetDetails[0]?.vesselName || targetDetails[0]?.mmsi || targetDetails[0]?.operatorName || ''
+  if (targetDetails.length === 0 && targetType !== ReportingTargetTypeEnum.OTHER) {
+    return <span>-</span>
   }
+  const targetDetailsAsText = getTargetDetailsAsText({ targetDetails, targetType })
 
-  if (targetDetailsAsText === '') {
-    return (
-      <ItalicTarget title={ReportingTargetTypeLabels[targetType]}>{ReportingTargetTypeLabels[targetType]}</ItalicTarget>
-    )
+  if (targetDetailsAsText === '' || targetType === ReportingTargetTypeEnum.OTHER) {
+    return <ItalicTarget>{ReportingTargetTypeLabels[targetType]}</ItalicTarget>
   }
 
   return <span title={targetDetailsAsText}>{targetDetailsAsText}</span>
