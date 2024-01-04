@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
+import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
@@ -24,21 +25,13 @@ import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
-import { missionFactory } from '../Missions.helpers'
 
 export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useAppDispatch()
   const sideWindow = useAppSelector(state => state.sideWindow)
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
-  const { dirty, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
-
-  useEffect(() => {
-    if (selectedMission) {
-      setValues(missionFactory(selectedMission, false))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { dirty, setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   useSyncFormValuesWithRedux()
   useUpdateSurveillance()
@@ -149,6 +142,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
 
   return (
     <StyledFormContainer>
+      <FormikSyncMissionFields missionId={id} />
       <CancelEditModal
         onCancel={returnToEdition}
         onConfirm={cancelForm}

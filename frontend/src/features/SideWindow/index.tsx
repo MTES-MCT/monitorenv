@@ -14,7 +14,7 @@ import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
-import { Mission } from '../missions/MissionForm'
+import { MissionFormWrapper } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
@@ -83,7 +83,7 @@ export function SideWindow() {
                   <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
                   <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-                  <Route element={<Mission />} path={sideWindowPaths.MISSION} />
+                  <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
                 </StyledRouteContainer>
                 {isReportingsButtonIsActive && (
                   <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />

@@ -55,7 +55,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       keepUnusedDataFor: 10,
       async onQueryStarted(id, { updateCachedData }) {
         try {
-          const listener = missionEventListener(id, updateCachedData)
+          const listener = missionEventListener(id, mission => updateCachedData(() => mission))
           addNewMissionListener(id, listener)
         } catch (e) {
           logSoftError({
