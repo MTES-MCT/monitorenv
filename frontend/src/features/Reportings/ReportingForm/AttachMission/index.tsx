@@ -56,7 +56,7 @@ export function AttachMission({ onAttachMission }) {
   // the form listens to the redux store to update the attached mission
   // because of the map interaction to attach mission
   useEffect(() => {
-    if (missionId && missionId !== values.missionId) {
+    if ((missionId && missionId !== values.missionId) || (!missionId && values.missionId)) {
       setFieldValue('missionId', missionId)
       setFieldValue('attachedMission', attachedMission)
       setFieldValue('attachedToMissionAtUtc', new Date().toISOString())

@@ -2,6 +2,7 @@ import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
+import { isNewReporting } from '../../../features/Reportings/utils'
 import { setToast, ReportingContext } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
@@ -9,9 +10,20 @@ import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../ma
 import type { Reporting } from '../../entities/reporting'
 
 export const unattachMissionFromReporting =
-  (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext) => async dispatch => {
+  (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext) => async (dispatch, getState) => {
     const newOrNextReportingData = omit(values, ['attachedMission'])
     const endpoint = reportingsAPI.endpoints.updateReporting
+
+    const { initialAttachedMission } = getState().attachMissionToReporting
+
+    const reportingIsNew = isNewReporting(values.id)
+
+    if (reportingIsNew) {
+      await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+      await dispatch(attachMissionToReportingSliceActions.setAttachedMission(initialAttachedMission))
+
+      return
+    }
 
     try {
       const response = await dispatch(endpoint.initiate(newOrNextReportingData))
