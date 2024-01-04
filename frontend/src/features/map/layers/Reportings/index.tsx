@@ -107,7 +107,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const isLayerVisible = useMemo(
     () =>
       (displayReportingsLayer && !hasMapListener) ||
-      !!(attachedReportingsToActiveMission && attachedReportingsToActiveMission?.length > 0),
+      !!(attachedReportingsToActiveMission && attachedReportingsToActiveMission?.length > 0 && !hasMapListener),
     [displayReportingsLayer, hasMapListener, attachedReportingsToActiveMission]
   )
 

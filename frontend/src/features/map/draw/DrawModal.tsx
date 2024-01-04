@@ -157,6 +157,9 @@ export function DrawModal() {
     },
     [dispatch]
   )
+  if (!listener) {
+    return null
+  }
 
   return (
     <MapInteraction

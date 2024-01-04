@@ -1,4 +1,4 @@
-context('Mission', () => {
+context('Side Window > Mission Form > Validation on close', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
