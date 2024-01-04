@@ -34,6 +34,7 @@ interface IReportingRepository {
         startedBefore: Instant?,
         status: List<String>?,
         targetTypes: List<String>?,
+        attachToMission: List<String>?,
     ): List<ReportingDTO>
 
     fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity>

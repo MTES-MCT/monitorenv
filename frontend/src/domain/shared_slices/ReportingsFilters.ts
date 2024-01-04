@@ -15,6 +15,7 @@ export type SourceFilterProps = {
 }
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
+  ATTACH_TO_MISSION_FILTER = 'attachToMissionFilter',
   PERIOD_FILTER = 'periodFilter',
   SEA_FRONT_FILTER = 'seaFrontFilter',
   SOURCE_FILTER = 'sourceFilter',
@@ -30,6 +31,7 @@ export enum ReportingsFiltersEnum {
 
 type ReportingsFiltersSliceType = {
   actionsFilter?: string[]
+  attachToMissionFilter?: string[]
   hasFilters: boolean
   periodFilter: string
   seaFrontFilter: string[] | undefined
@@ -46,6 +48,7 @@ type ReportingsFiltersSliceType = {
 
 const initialState: ReportingsFiltersSliceType = {
   actionsFilter: [],
+  attachToMissionFilter: [],
   hasFilters: false,
   periodFilter: ReportingDateRangeEnum.DAY,
   seaFrontFilter: undefined,

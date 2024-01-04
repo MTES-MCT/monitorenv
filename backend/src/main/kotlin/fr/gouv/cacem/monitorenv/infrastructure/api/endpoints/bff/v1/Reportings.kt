@@ -118,6 +118,9 @@ class Reportings(
         @Parameter(description = "Target type")
         @RequestParam(name = "targetTypes", required = false)
         targetTypes: List<String>?,
+        @Parameter(description = "Attach to mission")
+        @RequestParam(name = "attachToMission", required = false)
+        attachToMission: List<String>?,
     ): List<ReportingsDataOutput> {
         return getReportings.execute(
             pageNumber = pageNumber,
@@ -129,6 +132,7 @@ class Reportings(
             startedBeforeDateTime = startedBeforeDateTime,
             status = status,
             targetTypes = targetTypes,
+            attachToMission = attachToMission,
         )
             .map { ReportingsDataOutput.fromReportingDTO(it) }
     }

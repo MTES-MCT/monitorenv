@@ -8,7 +8,11 @@ export const StyledStatusFilter = styled.div`
   gap: 16px;
   margin-bottom: 8px;
 `
-
+export const Separator = styled.div`
+  width: 2px;
+  height: 100%;
+  border-right: ${p => `1px solid ${p.theme.color.slateGray}`};
+`
 export const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,
   .rs-picker-toggle-clean {

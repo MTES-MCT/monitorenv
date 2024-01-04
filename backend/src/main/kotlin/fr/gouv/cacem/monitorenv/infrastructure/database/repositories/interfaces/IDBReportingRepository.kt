@@ -121,6 +121,18 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             )
         )
         AND ((:targetTypes) = '{}' OR CAST(target_type AS text) = ANY(CAST(:targetTypes as text[])))
+        AND ((:attachToMission) = '{}'
+            OR (
+                'ATTACHED' = ANY(CAST(:attachToMission as text[])) AND (
+                    mission_id IS NOT NULL
+                    AND detached_from_mission_at_utc IS NULL
+                )
+            )
+                
+            OR 'UNATTACHED' = ANY(CAST(:attachToMission as text[])) AND (
+                mission_id IS NULL
+            )
+        )
         ORDER BY reporting_id DESC
     """,
         nativeQuery = true,
@@ -134,6 +146,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         startedBefore: Instant?,
         status: String?,
         targetTypes: String?,
+        attachToMission: String?,
     ): List<ReportingModel>
 
     @Query(

@@ -15,6 +15,7 @@ import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/Reportin
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import {
   OptionValue,
+  Separator,
   StyledCustomPeriodContainer,
   StyledCutomPeriodLabel,
   StyledSelect,
@@ -39,6 +40,7 @@ export function TableReportingsFiltersWithRef(
   const { newWindowContainerRef } = useNewWindow()
 
   const {
+    attachToMissionFilter = [],
     hasFilters,
     periodFilter,
     seaFrontFilter = [],
@@ -53,6 +55,7 @@ export function TableReportingsFiltersWithRef(
     typeFilter = []
   } = useAppSelector(state => state.reportingFilters)
   const {
+    attachToMissionOptions,
     dateRangeOptions,
     seaFrontsOptions,
     sourceOptions,
@@ -104,6 +107,24 @@ export function TableReportingsFiltersWithRef(
                 name={status.label}
                 onChange={isChecked =>
                   updateCheckboxFilter(isChecked, status.value, ReportingsFiltersEnum.STATUS_FILTER, statusFilter)
+                }
+              />
+            ))}
+            <Separator />
+            {attachToMissionOptions.map(attachToMission => (
+              <Checkbox
+                key={attachToMission.label}
+                checked={attachToMissionFilter?.includes(String(attachToMission.value))}
+                data-cy={`attach-to-mission-filter-${attachToMission.label}`}
+                label={attachToMission.label}
+                name={attachToMission.label}
+                onChange={isChecked =>
+                  updateCheckboxFilter(
+                    isChecked,
+                    attachToMission.value,
+                    ReportingsFiltersEnum.ATTACH_TO_MISSION_FILTER,
+                    attachToMissionFilter
+                  )
                 }
               />
             ))}

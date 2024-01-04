@@ -118,6 +118,16 @@ export enum StatusFilterLabels {
   ARCHIVED = 'Archivés'
 }
 
+export enum AttachToMissionFilterEnum {
+  ATTACHED = 'ATTACHED',
+  UNATTACHED = 'UNATTACHED'
+}
+
+export enum AttachToMissionFilterLabels {
+  ATTACHED = 'Lié à une mission',
+  UNATTACHED = 'Non lié à une mission'
+}
+
 export const getReportingStatus = ({
   createdAt,
   isArchived,

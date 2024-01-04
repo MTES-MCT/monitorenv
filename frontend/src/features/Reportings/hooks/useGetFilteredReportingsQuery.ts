@@ -11,6 +11,7 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredReportingsQuery = () => {
   const {
+    attachToMissionFilter,
     seaFrontFilter,
     sourceFilter,
     sourceTypeFilter,
@@ -25,6 +26,7 @@ export const useGetFilteredReportingsQuery = () => {
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
+      attachToMission: attachToMissionFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
       sourcesType: sourceTypeFilter,

@@ -2,6 +2,7 @@ import _ from 'lodash'
 import * as Yup from 'yup'
 
 import { ReportingSourceEnum, type Reporting } from '../../../../domain/entities/reporting'
+import { ReportingTargetTypeEnum } from '../../../../domain/entities/targetType'
 
 const ReportingZoneSchema = Yup.object().test({
   message: 'Veuillez définir la localisation du signalement',
@@ -18,6 +19,13 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
       return schema.nullable()
     }),
     createdAt: Yup.date().nullable().required('Veuillez définir la date de signalement'),
+    description: Yup.string().when('targetType', (targetType, schema) => {
+      if (targetType === ReportingTargetTypeEnum.OTHER) {
+        return schema.nullable().required('Veuillez renseigner des informations sur la cible')
+      }
+
+      return schema.nullable()
+    }),
     geom: ReportingZoneSchema,
     openBy: Yup.string().nullable().required('Requis'),
     reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),
