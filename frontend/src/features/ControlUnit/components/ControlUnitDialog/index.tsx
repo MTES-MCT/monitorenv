@@ -1,4 +1,4 @@
-import { Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
 import { noop } from 'lodash/fp'
 import { useCallback } from 'react'
@@ -10,6 +10,7 @@ import { ControlUnitResourceList } from './ControlUnitResourceList'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitQuery, useUpdateControlUnitMutation } from '../../../../api/controlUnitsAPI'
 import { globalActions } from '../../../../domain/shared_slices/Global'
+import { addMission } from '../../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
@@ -24,6 +25,10 @@ export function ControlUnitDialog() {
   const { data: controlUnit } = useGetControlUnitQuery(mapControlUnitDialog.controlUnitId, RTK_DEFAULT_QUERY_OPTIONS)
   const [updateControlUnit] = useUpdateControlUnitMutation()
 
+  const openNewMission = useCallback(() => {
+    dispatch(addMission({ initialControlUnit: controlUnit }))
+  }, [controlUnit, dispatch])
+
   const close = useCallback(() => {
     dispatch(
       globalActions.setDisplayedItems({
@@ -31,17 +36,6 @@ export function ControlUnitDialog() {
       })
     )
   }, [dispatch])
-
-  if (!controlUnit) {
-    return (
-      <MapMenuDialog.Container>
-        <MapMenuDialog.Header>
-          <MapMenuDialog.Title>Chargement en cours...</MapMenuDialog.Title>
-          <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
-        </MapMenuDialog.Header>
-      </MapMenuDialog.Container>
-    )
-  }
 
   if (!controlUnit) {
     return (
@@ -64,6 +58,9 @@ export function ControlUnitDialog() {
       </MapMenuDialog.Header>
       <Formik initialValues={controlUnit} onSubmit={noop}>
         <StyledMapMenuDialogBody>
+          <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={openNewMission}>
+            Créer une mission avec cette unité
+          </Button>
           <ControlUnitContactList controlUnit={controlUnit} onSubmit={updateControlUnit} />
           <ControlUnitResourceList controlUnit={controlUnit} />
           <AreaNote controlUnit={controlUnit} onSubmit={updateControlUnit} />

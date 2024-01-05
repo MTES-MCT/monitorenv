@@ -30,7 +30,7 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
       )
       await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
       await dispatch(reportingActions.deleteSelectedReporting(values.id))
-      await dispatch(addMission(response.data))
+      await dispatch(addMission({ attachedReporting: response.data }))
     } else {
       throw Error('Erreur à la création ou à la modification du signalement')
     }
