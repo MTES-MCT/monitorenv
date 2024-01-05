@@ -14,6 +14,7 @@ import { FilterTags } from './FilterTags'
 import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { ReportingSearch } from '../ReportingSearch'
 import {
   OptionValue,
   Separator,
@@ -98,6 +99,8 @@ export function TableReportingsFiltersWithRef(
     <>
       <FilterWrapper ref={ref}>
         <StyledFiltersFirstLine>
+          <ReportingSearch />
+
           <StyledStatusFilter>
             {statusOptions.map(status => (
               <Checkbox
@@ -286,11 +289,12 @@ export const TableReportingsFilters = forwardRef(TableReportingsFiltersWithRef)
 
 const FilterWrapper = styled.div`
   display: flex;
-  gap: 16px;
   flex-direction: column;
+  gap: 16px;
 `
 const StyledFiltersFirstLine = styled.div`
   display: flex;
+  justify-content: space-between;
 `
 
 const StyledFiltersSecondLine = styled.div`
@@ -298,12 +302,12 @@ const StyledFiltersSecondLine = styled.div`
   gap: 10px;
 `
 const ResetFiltersButton = styled.div`
-  text-decoration: underline;
+  align-items: end;
   cursor: pointer;
   display: flex;
-  align-items: end;
   gap: 4px;
   margin-bottom: 8px;
+  text-decoration: underline;
   > span {
     font-size: 13px;
   }

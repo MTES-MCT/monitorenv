@@ -99,8 +99,19 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
+
+        WITH formatted_target_details AS (
+            SELECT
+                *,
+                jsonb_array_elements(target_details) -> 'operatorName' as operator_name,
+                jsonb_array_elements(target_details) -> 'vesselName' as vessel_name,
+                jsonb_array_elements(target_details) -> 'mmsi' as mmsi,
+                jsonb_array_elements(target_details) -> 'imo' as imo
+            FROM reportings
+        )
+
         SELECT *
-        FROM reportings
+        FROM formatted_target_details
         WHERE is_deleted IS FALSE
         AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
         AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
@@ -112,7 +123,8 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
                 'ARCHIVED' = ANY(CAST(:status as text[])) AND (
                     is_archived = true
                     OR (created_at + make_interval(hours => validity_time)) < NOW()
-                ))
+                )
+            )
             OR (
                 'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
                     is_archived = false
@@ -127,10 +139,34 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
                     mission_id IS NOT NULL
                     AND detached_from_mission_at_utc IS NULL
                 )
+            ) 
+            OR (
+                'UNATTACHED' = ANY(CAST(:attachToMission as text[])) AND (
+                    mission_id IS NULL
+                )
             )
                 
             OR (
                 (:isAttachedToMission) = false AND mission_id IS NULL
+            )
+        )
+        AND ((:search) IS NULL
+            OR (
+                unaccent(CAST(formatted_target_details.operator_name as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+            )
+            OR (
+                unaccent(CAST(formatted_target_details.vessel_name as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+            )
+            OR (
+                unaccent(CAST(formatted_target_details.mmsi as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+            )
+            OR (
+                unaccent(CAST(formatted_target_details.imo as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+
             )
         )
         ORDER BY reporting_id DESC
@@ -147,6 +183,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         status: String?,
         targetTypes: String?,
         isAttachedToMission: Boolean?,
+        search: String?,
     ): List<ReportingModel>
 
     @Query(

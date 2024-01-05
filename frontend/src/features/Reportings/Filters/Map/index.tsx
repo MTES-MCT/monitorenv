@@ -61,7 +61,7 @@ export function MapReportingsFiltersWithRef(
   return (
     <FilterWrapper ref={ref}>
       <StyledBloc>
-        <StyledStatusFilter>
+        <StyledStatusFilter $withMargin>
           {statusOptions.map(status => (
             <Checkbox
               key={status.label}
