@@ -21,7 +21,7 @@ export const StyledForm = styled.div<{ $totalReducedReportings: number }>`
   overflow-y: auto;
 `
 
-export const StyledHeader = styled.div`
+export const ReportingHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -30,13 +30,37 @@ export const StyledHeader = styled.div`
   color: ${p => p.theme.color.white};
   font-size: 16px;
   font-weight: 500;
-  padding: 10px 24px;
+  padding: 10px 16px;
   gap: 8px;
   flex: 1;
 `
-export const StyledTitle = styled.div`
+export const ReportingTitle = styled.div`
+  align-items: center;
   display: flex;
+  flex: 1;
   gap: 8px;
+  justify-content: space-between;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+export const ReportingInfosContainer = styled.div`
+  display: flex;
+  gap: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+export const ReportingInfos = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `
 export const StyledArchivedTag = styled(Tag)`
   margin-left: 16px;
@@ -44,12 +68,12 @@ export const StyledArchivedTag = styled(Tag)`
 export const StyledIconButton = styled(IconButton)`
   color: ${p => p.theme.color.white};
 `
-export const StyledChevronIcon = styled(IconButton)<{ $isOpen: boolean }>`
+export const ReportingChevronIcon = styled(IconButton)<{ $isOpen: boolean }>`
   transform: ${props => (!props.$isOpen ? 'rotate(0deg)' : 'rotate(-180deg)')};
   transition: all 0.5s;
 `
 
-export const StyledHeaderButtons = styled.div`
+export const ReportingHeaderButtons = styled.div`
   display: flex;
   flex-direction: row;
   > button {

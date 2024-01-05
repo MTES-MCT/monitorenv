@@ -1,4 +1,4 @@
-import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikTextarea, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
@@ -13,6 +13,7 @@ import { Target } from './FormComponents/Target'
 import { ThemeSelector } from './FormComponents/ThemeSelector'
 import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelector'
 import { Validity } from './FormComponents/Validity'
+import { Header } from './Header'
 import {
   type Reporting,
   ReportingTypeEnum,
@@ -20,13 +21,12 @@ import {
   type ReportingDetailed
 } from '../../../domain/entities/reporting'
 import {
-  hideSideButtons,
   setReportingFormVisibility,
   ReportingContext,
-  VisibilityState
+  VisibilityState,
+  hideSideButtons
 } from '../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../domain/shared_slices/reporting'
-import { closeReporting } from '../../../domain/use_cases/reporting/closeReporting'
 import { deleteReporting } from '../../../domain/use_cases/reporting/deleteReporting'
 import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reporting/reduceOrExpandReportingForm'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
@@ -38,16 +38,11 @@ import {
   Separator,
   StyledForm,
   StyledFormContainer,
-  StyledHeader,
   StyledThemeContainer,
   StyledToggle,
-  StyledHeaderButtons,
-  StyledTitle,
-  StyledChevronIcon,
   StyledFormikTextInput,
   ReportTypeMultiRadio
 } from '../style'
-import { getReportingTitle } from '../utils'
 
 import type { AtLeast } from '../../../types'
 
@@ -67,7 +62,6 @@ export function FormContent({
   const dispatch = useAppDispatch()
 
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
-
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext =
@@ -105,13 +99,6 @@ export function FormContent({
       setFieldValue('hasNoUnitAvailable', false)
       await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     }
-  }
-
-  const reduceOrExpandReporting = () => {
-    if (isMapContext) {
-      dispatch(hideSideButtons())
-    }
-    dispatch(reduceOrExpandReportingForm(reportingContext))
   }
 
   const returnToEdition = () => {
@@ -156,6 +143,13 @@ export function FormContent({
     dispatch(deleteReporting(values.id))
   }
 
+  const reduceOrExpandReporting = () => {
+    if (isMapContext) {
+      dispatch(hideSideButtons())
+    }
+    dispatch(reduceOrExpandReportingForm(reportingContext))
+  }
+
   if (!selectedReporting || isEmpty(values)) {
     return null
   }
@@ -178,30 +172,14 @@ export function FormContent({
         subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
         title="Supprimer le signalement&nbsp;?"
       />
-      <StyledHeader>
-        <StyledTitle data-cy="reporting-title">
-          <Icon.Report />
-          {getReportingTitle(values)}
-        </StyledTitle>
-
-        <StyledHeaderButtons>
-          <StyledChevronIcon
-            $isOpen={
-              reportingFormVisibility.context === reportingContext &&
-              reportingFormVisibility.visibility === VisibilityState.REDUCED
-            }
-            accent={Accent.TERTIARY}
-            data-cy="reporting-reduce-or-expand-button"
-            Icon={Icon.Chevron}
-            onClick={reduceOrExpandReporting}
-          />
-          <IconButton
-            accent={Accent.TERTIARY}
-            Icon={Icon.Close}
-            onClick={() => dispatch(closeReporting(selectedReporting.id, reportingContext))}
-          />
-        </StyledHeaderButtons>
-      </StyledHeader>
+      <Header
+        isOpen={
+          reportingFormVisibility.context === reportingContext &&
+          reportingFormVisibility.visibility === VisibilityState.REDUCED
+        }
+        reduceOrExpandReporting={reduceOrExpandReporting}
+        reporting={selectedReporting}
+      />
       <StyledForm $totalReducedReportings={reducedReportingsOnContext}>
         <Source />
         <Target />

@@ -41,6 +41,7 @@ export function Validity({
         <FormikDatePicker
           baseContainer={reportingContext === ReportingContext.MAP ? ref.current : newWindowContainerRef.current}
           isCompact
+          isHistorical
           isStringDate
           label="Date et heure (UTC)"
           name="createdAt"

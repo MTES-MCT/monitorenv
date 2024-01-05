@@ -1,21 +1,15 @@
 import styled from 'styled-components'
 
-import { ReportingTargetTypeEnum, ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
-import { vehicleTypeLabels, type VehicleTypeEnum } from '../../../../domain/entities/vehicleType'
+import {
+  GENERIC_TARGET_TYPE,
+  ReportingTargetTypeEnum,
+  ReportingTargetTypeLabels
+} from '../../../../domain/entities/targetType'
+import { type VehicleTypeEnum } from '../../../../domain/entities/vehicleType'
 import { getTargetDetailsAsText } from '../../utils'
 
 import type { TargetDetails } from '../../../../domain/entities/reporting'
 
-const ITALIC_WORDS = [
-  ReportingTargetTypeLabels.COMPANY,
-  ReportingTargetTypeLabels.OTHER,
-  ReportingTargetTypeLabels.VEHICLE,
-  ReportingTargetTypeLabels.INDIVIDUAL,
-  vehicleTypeLabels.OTHER_SEA.label,
-  vehicleTypeLabels.VEHICLE_AIR.label,
-  vehicleTypeLabels.VEHICLE_LAND.label,
-  vehicleTypeLabels.VESSEL.label
-]
 export function CellTarget({
   targetDetails,
   targetType,
@@ -34,7 +28,7 @@ export function CellTarget({
   }
   const targetDetailsAsText = getTargetDetailsAsText({ targetDetails, targetType, vehicleType })
 
-  if (ITALIC_WORDS.includes(targetDetailsAsText)) {
+  if (GENERIC_TARGET_TYPE.includes(targetDetailsAsText)) {
     return <ItalicTarget title={targetDetailsAsText}>{targetDetailsAsText}</ItalicTarget>
   }
 

@@ -1,5 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 
+import { vehicleTypeLabels } from './vehicleType'
+
 // Mission
 export enum TargetTypeEnum {
   COMPANY = 'COMPANY',
@@ -26,3 +28,14 @@ export enum ReportingTargetTypeLabels {
   INDIVIDUAL = 'Personne physique',
   OTHER = 'Autre'
 }
+
+export const GENERIC_TARGET_TYPE = [
+  ReportingTargetTypeLabels.COMPANY,
+  ReportingTargetTypeLabels.OTHER,
+  ReportingTargetTypeLabels.VEHICLE,
+  ReportingTargetTypeLabels.INDIVIDUAL,
+  vehicleTypeLabels.OTHER_SEA.label,
+  vehicleTypeLabels.VEHICLE_AIR.label,
+  vehicleTypeLabels.VEHICLE_LAND.label,
+  vehicleTypeLabels.VESSEL.label
+]

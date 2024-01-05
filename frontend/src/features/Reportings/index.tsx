@@ -1,13 +1,10 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ReportingFormWithContext } from './ReportingForm'
-import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from './style'
-import { getReportingTitle } from './utils'
+import { Header } from './ReportingForm/Header'
 import { hideSideButtons, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
-import { closeReporting } from '../../domain/use_cases/reporting/closeReporting'
 import { reduceOrExpandReportingForm } from '../../domain/use_cases/reporting/reduceOrExpandReportingForm'
 import { switchReporting } from '../../domain/use_cases/reporting/switchReporting'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
@@ -32,7 +29,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
   )
 
   const reduceOrExpandReporting = async reporting => {
-    const { id } = reporting.reporting
+    const { id } = reporting
 
     if (activeReportingId === id && reportingFormVisibility.context === context) {
       return dispatch(reduceOrExpandReportingForm(context))
@@ -70,27 +67,11 @@ export function Reportings({ context }: { context: ReportingContext }) {
             $reportingFormVisibility={reportingFormVisibility.visibility}
           >
             <Separator $visible={isSeparatorVisible} />
-            <StyledHeader>
-              <StyledTitle>
-                <Icon.Report />
-                {getReportingTitle(reducedReporting)}
-              </StyledTitle>
-
-              <StyledHeaderButtons>
-                <StyledChevronIcon
-                  $isOpen
-                  accent={Accent.TERTIARY}
-                  data-cy={`reporting-reduce-or-expand-button-${reducedReporting?.id}`}
-                  Icon={Icon.Chevron}
-                  onClick={() => reduceOrExpandReporting(reporting)}
-                />
-                <IconButton
-                  accent={Accent.TERTIARY}
-                  Icon={Icon.Close}
-                  onClick={() => dispatch(closeReporting(reducedReporting?.id, reporting.context))}
-                />
-              </StyledHeaderButtons>
-            </StyledHeader>
+            <Header
+              isOpen
+              reduceOrExpandReporting={() => reduceOrExpandReporting(reducedReporting)}
+              reporting={reducedReporting}
+            />
           </StyledContainer>
         )
       })}

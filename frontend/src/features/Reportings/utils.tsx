@@ -1,16 +1,13 @@
-import { Accent } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
+import styled from 'styled-components'
 
-import { LinkToMissionTag } from './components/LinkToMissionTag'
-import { StyledArchivedTag } from './style'
+import { ReportingInfos } from './style'
+import { ReportingSourceEnum, type Reporting, type TargetDetails } from '../../domain/entities/reporting'
 import {
-  ReportingSourceEnum,
-  type Reporting,
-  ReportingStatusEnum,
-  getReportingStatus,
-  type TargetDetails
-} from '../../domain/entities/reporting'
-import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../domain/entities/targetType'
+  ReportingTargetTypeLabels,
+  ReportingTargetTypeEnum,
+  GENERIC_TARGET_TYPE
+} from '../../domain/entities/targetType'
 import { vehicleTypeLabels, type VehicleTypeEnum } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
@@ -37,28 +34,26 @@ export const getReportingTitle = reporting => {
     return undefined
   }
   const { id, reportingId } = reporting || {}
-  const reportingStatus = getReportingStatus(reporting)
+
   if (isNewReporting(id)) {
     return `NOUVEAU SIGNALEMENT (${String(id).slice(4)})`
   }
 
-  const statusTag = () => {
-    if (reportingStatus === ReportingStatusEnum.ARCHIVED) {
-      return <StyledArchivedTag accent={Accent.PRIMARY}>Archivé</StyledArchivedTag>
-    }
-
-    if (reporting.missionId && !reporting.detachedFromMissionAtUtc) {
-      return <LinkToMissionTag />
-    }
-
-    return null
-  }
+  const targetAsText = getTargetDetailsAsText({
+    targetDetails: reporting.targetDetails,
+    targetType: reporting.targetType,
+    vehicleType: reporting.vehicleType
+  })
 
   return (
-    <>
-      {`SIGNALEMENT ${getFormattedReportingId(reportingId)}`}
-      {statusTag()}
-    </>
+    <ReportingInfos>
+      <span>{`${getFormattedReportingId(reportingId)} - `}</span>
+      {GENERIC_TARGET_TYPE.includes(targetAsText) ? (
+        <ItalicTarget>{targetAsText}</ItalicTarget>
+      ) : (
+        <span>{targetAsText}</span>
+      )}
+    </ReportingInfos>
   )
 }
 
@@ -146,3 +141,7 @@ export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetails
 
   return targetDetailsAsTextA.localeCompare(targetDetailsAsTextB)
 }
+
+const ItalicTarget = styled.span`
+  font-style: italic;
+`
