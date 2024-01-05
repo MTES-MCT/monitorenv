@@ -10,6 +10,9 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
+
 const OVERLAY_HEIGHT = 174
 
 const INITIAL_OFFSET_VALUE = [-90, 10]
@@ -22,6 +25,23 @@ const defaultMargins = {
   yTop: -180
 }
 
+type OverlayPositionOnCentroidProps = {
+  appClassName: string
+  children: React.ReactNode
+  feature: Feature<Geometry> | null | undefined
+  featureIsShowed?: boolean
+  map: any
+  options?: {
+    margins?: {
+      xLeft: number
+      xMiddle: number
+      xRight: number
+      yBottom: number
+      yMiddle: number
+      yTop: number
+    }
+  }
+}
 export function OverlayPositionOnCentroid({
   appClassName,
   children,
@@ -29,10 +49,10 @@ export function OverlayPositionOnCentroid({
   featureIsShowed = false,
   map,
   options: { margins = defaultMargins } = {}
-}) {
+}: OverlayPositionOnCentroidProps) {
   const dispatch = useAppDispatch()
-  const overlayRef = useRef(null)
-  const olOverlayObjectRef = useRef(null)
+  const overlayRef = useRef<HTMLDivElement | null>(null)
+  const olOverlayObjectRef = useRef<Overlay | null>(null)
   const isThrottled = useRef(false)
   const [showed, setShowed] = useState(false)
   const currentCoordinates = useRef([])
@@ -42,7 +62,7 @@ export function OverlayPositionOnCentroid({
   const currentOffset = useRef(INITIAL_OFFSET_VALUE)
 
   const overlayCallback = useCallback(
-    ref => {
+    (ref: HTMLDivElement) => {
       overlayRef.current = ref
       if (ref) {
         olOverlayObjectRef.current = new Overlay({
@@ -146,18 +166,20 @@ export function OverlayPositionOnCentroid({
   useMoveOverlayWhenDragging(olOverlayObjectRef.current, map, currentOffset, moveCardWithThrottle, showed)
 
   return (
-    <OverlayComponent ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
+    <OverlayComponent ref={overlayCallback} $overlayTopLeftMargin={overlayTopLeftMargin}>
       {feature && children}
     </OverlayComponent>
   )
 }
 
-const OverlayComponent = styled.div`
-  position: absolute;
-  top: ${props => props.overlayTopLeftMargin[0]}px;
-  left: ${props => props.overlayTopLeftMargin[1]}px;
-  text-align: left;
+const OverlayComponent = styled.div<{
+  $overlayTopLeftMargin: number[]
+}>`
   background-color: ${p => p.theme.color.white};
   border-radius: 2px;
   cursor: grabbing;
+  left: ${p => p.$overlayTopLeftMargin[1]}px;
+  position: absolute;
+  text-align: left;
+  top: ${p => p.$overlayTopLeftMargin[0]}px;
 `

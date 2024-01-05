@@ -20,7 +20,7 @@ export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps)
   return (
     <OverlayPositionOnCentroid
       appClassName="overlay-action-hover"
-      feature={displayHoveredFeature && currentFeatureOver}
+      feature={displayHoveredFeature ? currentFeatureOver : undefined}
       map={map}
     >
       {displayControlCard && <ControlCard feature={currentFeatureOver} />}

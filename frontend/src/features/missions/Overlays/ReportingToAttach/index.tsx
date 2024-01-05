@@ -34,7 +34,7 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapCh
   return (
     <OverlayPositionOnCentroid
       appClassName="overlay-reporting-to-attach-hover"
-      feature={displayReportingToAttachLayer && displayHoveredFeature && currentFeatureOver}
+      feature={displayReportingToAttachLayer && displayHoveredFeature ? currentFeatureOver : undefined}
       map={map}
       options={{ margins: hoveredMargins }}
     >

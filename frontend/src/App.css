@@ -1,6 +1,6 @@
 /*
- *    class selectors 
- * classnames used in app scope 
+ *    class selectors
+ * classnames used in app scope
  *
  */
 
@@ -28,6 +28,8 @@
 }
 
 /* classNames added via ol component */
+/* TODO Why repeat width, height 0 everywhere? Could be done in OL default class. */
+/* TODO Maybe rather use a common "-hover" class with a high z-index to always show hovered overlays above everything else? */
 
 .overlay-mission-hover .overlay-mission-to-attach-hover {
   z-index: 5000;
@@ -68,4 +70,9 @@
   z-index: 4000;
   width: 0;
   height: 0;
+}
+
+.overlay-station-hover,
+.overlay-station-selected {
+  z-index: 7000;
 }

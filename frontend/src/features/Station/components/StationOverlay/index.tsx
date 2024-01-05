@@ -28,7 +28,7 @@ export function StationOverlay({ currentFeatureOver: hoveredFeature, map }: Base
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-station-hover"
-        feature={canDisplayHoveredFeature && hoveredFeature}
+        feature={canDisplayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         options={{ margins: OVERLAY_MARGINS }}
       >
