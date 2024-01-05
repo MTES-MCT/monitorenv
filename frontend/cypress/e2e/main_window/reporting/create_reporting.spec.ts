@@ -81,7 +81,7 @@ context('Reporting', () => {
     cy.get('#root').click(350, 690, { timeout: 10000 })
     cy.clickButton('Valider le point')
 
-    cy.get('.rs-radio').find('label').contains('Infraction (suspicion)').click()
+    cy.get('.rs-radio').find('label').contains('Infraction (susp.)').click()
 
     cy.fill('Saisi par', 'XYZ')
 
