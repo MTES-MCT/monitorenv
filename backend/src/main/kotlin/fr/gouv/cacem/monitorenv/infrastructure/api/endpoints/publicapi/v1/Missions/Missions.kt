@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
