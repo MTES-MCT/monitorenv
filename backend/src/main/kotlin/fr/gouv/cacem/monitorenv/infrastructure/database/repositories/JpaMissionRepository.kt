@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
@@ -37,15 +38,17 @@ class JpaMissionRepository(
     }
 
     override fun findAllFullMissions(
-        startedAfter: Instant,
-        startedBefore: Instant?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
+        pageNumber: Int?,
+        pageSize: Int?,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
     ): List<MissionDTO> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
+        val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
         return dbMissionRepository.findAll(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
@@ -75,15 +78,17 @@ class JpaMissionRepository(
     }
 
     override fun findAll(
-        startedAfter: Instant,
-        startedBefore: Instant?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
+        pageNumber: Int?,
+        pageSize: Int?,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
+        val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
         return dbMissionRepository.findAll(
             startedAfter = startedAfter,
             startedBefore = startedBefore,

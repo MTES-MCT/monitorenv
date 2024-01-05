@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import org.springframework.data.domain.Pageable
 import java.time.Instant
 
 interface IMissionRepository {
@@ -16,23 +15,25 @@ interface IMissionRepository {
     fun findById(missionId: Int): MissionEntity
 
     fun findAllFullMissions(
-        startedAfter: Instant,
-        startedBefore: Instant?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>? = null,
+        pageNumber: Int?,
+        pageSize: Int?,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
     ): List<MissionDTO>
 
     fun findAll(
-        startedAfter: Instant,
-        startedBefore: Instant?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>? = null,
+        pageNumber: Int?,
+        pageSize: Int?,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
     ): List<MissionEntity>
 
     fun findByIds(ids: List<Int>): List<MissionEntity>

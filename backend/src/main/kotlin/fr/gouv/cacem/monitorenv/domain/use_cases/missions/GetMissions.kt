@@ -7,8 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import java.time.ZonedDateTime
 
 @UseCase
@@ -16,15 +14,15 @@ class GetMissions(private val missionRepository: IMissionRepository) {
     private val logger = LoggerFactory.getLogger(GetMissions::class.java)
 
     fun execute(
-        startedAfterDateTime: ZonedDateTime? = null,
-        startedBeforeDateTime: ZonedDateTime? = null,
+        controlUnits: List<Int>? = null,
+        missionStatuses: List<String>? = null,
         missionSources: List<MissionSourceEnum>? = null,
         missionTypes: List<String>? = null,
-        missionStatuses: List<String>? = null,
         pageNumber: Int? = null,
         pageSize: Int? = null,
         seaFronts: List<String>? = null,
-        controlUnits: List<Int>? = null,
+        startedAfterDateTime: ZonedDateTime? = null,
+        startedBeforeDateTime: ZonedDateTime? = null,
     ): List<MissionEntity> {
         var missions: List<MissionEntity> =
             missionRepository.findAll(
@@ -39,15 +37,8 @@ class GetMissions(private val missionRepository: IMissionRepository) {
                 missionTypes = missionTypes,
                 missionStatuses = missionStatuses,
                 seaFronts = seaFronts,
-                pageable =
-                if (pageNumber != null && pageSize != null) {
-                    PageRequest.of(
-                        pageNumber,
-                        pageSize,
-                    )
-                } else {
-                    Pageable.unpaged()
-                },
+                pageNumber = pageNumber,
+                pageSize = pageSize,
             )
 
         if (!controlUnits.isNullOrEmpty()) {
