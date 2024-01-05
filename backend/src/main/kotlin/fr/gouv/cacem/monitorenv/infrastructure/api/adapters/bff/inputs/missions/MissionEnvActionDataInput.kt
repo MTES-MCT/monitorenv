@@ -5,7 +5,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import org.locationtech.jts.geom.Geometry
@@ -24,7 +23,6 @@ data class MissionEnvActionDataInput(
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataInput>? = null,
-    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = null,
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
@@ -86,7 +84,6 @@ data class MissionEnvActionDataInput(
                     this.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = this.isSeafarersControl,
                     observations = this.observations,
-                    themes = this.themes,
                     vehicleType = this.vehicleType,
                 )
             ActionTypeEnum.SURVEILLANCE ->
@@ -99,7 +96,6 @@ data class MissionEnvActionDataInput(
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
-                    themes = this.themes,
                     coverMissionZone = this.coverMissionZone,
                     observations = this.observations,
                 )
@@ -113,5 +109,3 @@ data class MissionEnvActionDataInput(
         }
     }
 }
-
-typealias ControlPlanSubThemeDataInput = Pair<Int, List<String>>
