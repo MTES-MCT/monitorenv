@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.slf4j.LoggerFactory
@@ -25,7 +26,7 @@ class GetReportings(
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
         status: List<String>?,
-        targetTypes: List<String>?,
+        targetTypes: List<TargetTypeEnum>?,
         attachToMission: List<String>?,
     ): List<ReportingDTO> {
         val reports =

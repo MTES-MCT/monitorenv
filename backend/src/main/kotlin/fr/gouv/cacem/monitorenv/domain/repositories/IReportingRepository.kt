@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.springframework.data.domain.Pageable
 import java.time.Instant
@@ -33,7 +34,7 @@ interface IReportingRepository {
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
-        targetTypes: List<String>?,
+        targetTypes: List<TargetTypeEnum>?,
         attachToMission: List<String>?,
     ): List<ReportingDTO>
 

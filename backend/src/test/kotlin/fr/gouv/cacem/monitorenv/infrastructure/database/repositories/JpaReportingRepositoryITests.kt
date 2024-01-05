@@ -220,6 +220,40 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    fun `findAll should return all reporting when targetType filter is set to VEHICLE`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = listOf(TargetTypeEnum.VEHICLE),
+                attachToMission = null,
+            )
+        assertThat(reportings.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `findAll should return all reporting when attachToMission filter is set to ATTACHED`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = null,
+                attachToMission = listOf("ATTACHED"),
+            )
+        assertThat(reportings.size).isEqualTo(6)
+    }
+
+    @Test
     fun `findByControlUnitId() should find the matching reportings`() {
         val foundReportings = jpaReportingRepository.findByControlUnitId(10000)
 

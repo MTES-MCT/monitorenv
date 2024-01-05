@@ -115,7 +115,7 @@ export function TableReportingsFiltersWithRef(
               <Checkbox
                 key={attachToMission.label}
                 checked={attachToMissionFilter?.includes(String(attachToMission.value))}
-                data-cy={`attach-to-mission-filter-${attachToMission.label}`}
+                data-cy={`attach-to-mission-filter-${attachToMission.value}`}
                 label={attachToMission.label}
                 name={attachToMission.label}
                 onChange={isChecked =>

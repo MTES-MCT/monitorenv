@@ -74,6 +74,27 @@ context('Reportings', () => {
     })
   })
 
+  it('Should filter reportings by target type', () => {
+    cy.fill('Type de cible', ['Autre'])
+    cy.wait(500)
+    cy.wait('@getReportings')
+
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Autre')
+
+    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+
+    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
+      if (index === 0 || index === list.length - 1) {
+        return
+      }
+
+      cy.wrap(row).should('contain', 'Autre')
+    })
+
+    // here we test if the clear button worked correctly
+    cy.fill('Type de cible', undefined)
+  })
+
   it('Should filter reportings by themes', () => {
     cy.fill('Thématiques', ['Police des mouillages'])
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Police des mouillages')
@@ -139,7 +160,37 @@ context('Reportings', () => {
 
       cy.wrap(row).should('contain', 'Archivé')
     })
+  })
 
-    cy.fill('Facade', undefined)
+  it('Should filter reportings attached to a mission', () => {
+    // filter only attached reportings
+    cy.getDataCy('attach-to-mission-filter-ATTACHED').click()
+    cy.wait(500)
+    cy.wait('@getReportings')
+    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
+      if (index === 0 || index === list.length - 1) {
+        return
+      }
+
+      cy.wrap(row).should('contain', 'Mission')
+    })
+
+    // filter only unattached reportings
+    cy.getDataCy('attach-to-mission-filter-ATTACHED').click()
+    cy.getDataCy('attach-to-mission-filter-UNATTACHED').click()
+    cy.wait(500)
+    cy.wait('@getReportings')
+    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
+      if (index === 0 || index === list.length - 1) {
+        return
+      }
+
+      cy.wrap(row).should('not.contain', 'Mission')
+    })
+
+    // clean filter
+    cy.getDataCy('attach-to-mission-filter-UNATTACHED').click()
   })
 })

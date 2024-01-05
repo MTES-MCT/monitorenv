@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.ArchiveReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
@@ -117,7 +118,7 @@ class Reportings(
         status: List<String>?,
         @Parameter(description = "Target type")
         @RequestParam(name = "targetTypes", required = false)
-        targetTypes: List<String>?,
+        targetTypes: List<TargetTypeEnum>?,
         @Parameter(description = "Attach to mission")
         @RequestParam(name = "attachToMission", required = false)
         attachToMission: List<String>?,
