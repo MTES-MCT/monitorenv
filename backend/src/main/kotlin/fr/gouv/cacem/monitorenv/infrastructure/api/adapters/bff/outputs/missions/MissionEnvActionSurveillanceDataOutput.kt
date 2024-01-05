@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -19,8 +18,6 @@ data class MissionEnvActionSurveillanceDataOutput(
     val geom: Geometry? = null,
     val observations: String? = null,
     val reportingIds: List<Int>,
-    @Deprecated("Use controlPlans instead")
-    val themes: List<ThemeEntity>? = listOf(),
 ) :
     MissionEnvActionDataOutput(
         id = id,
@@ -45,7 +42,6 @@ data class MissionEnvActionSurveillanceDataOutput(
                 coverMissionZone = envActionSurveillanceEntity.coverMissionZone,
                 observations = envActionSurveillanceEntity.observations,
                 reportingIds = reportingIds,
-                themes = envActionSurveillanceEntity.themes,
             )
     }
 }

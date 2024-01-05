@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
@@ -28,7 +27,6 @@ data class MissionEnvActionControlDataOutput(
     val isSeafarersControl: Boolean? = null,
     val observations: String? = null,
     val reportingIds: List<Int>,
-    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     MissionEnvActionDataOutput(
@@ -64,7 +62,6 @@ data class MissionEnvActionControlDataOutput(
                     .isSafetyEquipmentAndStandardsComplianceControl,
                 isSeafarersControl = envActionControlEntity.isSeafarersControl,
                 observations = envActionControlEntity.observations,
-                themes = envActionControlEntity.themes,
                 vehicleType = envActionControlEntity.vehicleType,
                 reportingIds = reportingIds,
             )
