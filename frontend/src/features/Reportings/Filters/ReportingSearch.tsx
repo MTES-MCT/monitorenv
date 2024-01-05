@@ -18,10 +18,10 @@ export function ReportingSearch() {
       Icon={Icon.Search}
       isLabelHidden
       isLight
-      label="Rechercher dans les signalements"
+      label="Rechercher une cible"
       name="reporting-search"
       onChange={onQuery}
-      placeholder="Rechercher dans les signalements"
+      placeholder="Rechercher une cible"
       size={Size.LARGE}
       value={searchFilter}
     />

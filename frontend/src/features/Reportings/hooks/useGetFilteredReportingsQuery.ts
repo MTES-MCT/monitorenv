@@ -50,7 +50,7 @@ export const useGetFilteredReportingsQuery = () => {
       status: statusFilter,
       targetTypes: targetTypeFilter
     },
-    { pollingInterval: TWO_MINUTES, skip: !!(searchFilter && searchFilter.length < 3) }
+    { pollingInterval: TWO_MINUTES, skip: !!(!!searchFilter && searchFilter.length % 2 !== 0) }
   )
 
   const reportings = useMemo(() => {
