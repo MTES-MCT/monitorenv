@@ -3,6 +3,7 @@ import { forwardRef, useRef } from 'react'
 import styled from 'styled-components'
 
 import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
+import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -23,18 +24,28 @@ export function MapReportingsFiltersWithRef(
 ) {
   const dispatch = useAppDispatch()
   const {
+    attachToMissionFilter,
     periodFilter,
     sourceTypeFilter,
     startedAfter,
     startedBefore,
     statusFilter,
     subThemesFilter,
+    targetTypeFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
   const { subThemes, themes } = useGetControlPlans()
-  const { dateRangeOptions, sourceTypeOptions, statusOptions, subThemesOptions, themesOptions, typeOptions } =
-    optionsList
+  const {
+    attachToMissionOptions,
+    dateRangeOptions,
+    sourceTypeOptions,
+    statusOptions,
+    subThemesOptions,
+    targetTypeOtions,
+    themesOptions,
+    typeOptions
+  } = optionsList
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -56,6 +67,25 @@ export function MapReportingsFiltersWithRef(
               name={status.label}
               onChange={isChecked =>
                 updateCheckboxFilter(isChecked, status.value, ReportingsFiltersEnum.STATUS_FILTER, statusFilter)
+              }
+            />
+          ))}
+        </StyledStatusFilter>
+        <StyledStatusFilter>
+          {attachToMissionOptions.map(attachToMission => (
+            <Checkbox
+              key={attachToMission.label}
+              checked={attachToMissionFilter?.includes(String(attachToMission.value))}
+              data-cy={`attach-to-mission-filter-${attachToMission.value}`}
+              label={attachToMission.label}
+              name={attachToMission.label}
+              onChange={isChecked =>
+                updateCheckboxFilter(
+                  isChecked,
+                  attachToMission.value,
+                  ReportingsFiltersEnum.ATTACH_TO_MISSION_FILTER,
+                  attachToMissionFilter
+                )
               }
             />
           ))}
@@ -131,6 +161,30 @@ export function MapReportingsFiltersWithRef(
           placeholder="Type de signalement"
           value={typeFilter}
         />
+        <CheckPicker
+          isLabelHidden
+          label="Type de cible"
+          name="targetType"
+          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}
+          options={targetTypeOtions}
+          placeholder="Cible"
+          renderValue={() => targetTypeFilter && <OptionValue>{`Cible (${targetTypeFilter.length})`}</OptionValue>}
+          value={targetTypeFilter}
+        />
+        {targetTypeFilter && targetTypeFilter.length > 0 && (
+          <StyledTagsContainer>
+            {targetTypeFilter.map(targetType => (
+              <SingleTag
+                key={targetType}
+                accent={Accent.SECONDARY}
+                onDelete={() => onDeleteTag(targetType, ReportingsFiltersEnum.TARGET_TYPE_FILTER, targetTypeFilter)}
+                title={String(ReportingTargetTypeLabels[targetType])}
+              >
+                {String(ReportingTargetTypeLabels[targetType])}
+              </SingleTag>
+            ))}
+          </StyledTagsContainer>
+        )}
       </StyledBloc>
       <StyledBloc>
         <CheckPicker

@@ -124,8 +124,8 @@ export enum AttachToMissionFilterEnum {
 }
 
 export enum AttachToMissionFilterLabels {
-  ATTACHED = 'Lié à une mission',
-  UNATTACHED = 'Non lié à une mission'
+  ATTACHED = 'Liés à une mission',
+  UNATTACHED = 'Non liés'
 }
 
 export const getReportingStatus = ({
