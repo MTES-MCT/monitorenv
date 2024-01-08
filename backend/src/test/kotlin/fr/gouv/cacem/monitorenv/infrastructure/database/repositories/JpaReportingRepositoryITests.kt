@@ -121,8 +121,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             jpaReportingRepository.save(
                 existingReportingDTO.reporting.copy(
                     missionId = 38,
-                    attachedToMissionAtUtc =
-                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                    attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 ),
             )
         assertThat(reportingWithMissionDTO.reporting.attachedEnvActionId).isNull()
@@ -131,8 +130,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         jpaReportingRepository.save(
             reportingWithMissionDTO.reporting.copy(
-                attachedEnvActionId =
-                    UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
             ),
         )
 
@@ -345,8 +343,9 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             assertThrows<NotFoundException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
-                        attachedEnvActionId =
-                            UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                        attachedEnvActionId = UUID.fromString(
+                            "e2257638-ddef-4611-960c-7675a3254c38",
+                        ),
                     ),
                 )
             }
@@ -372,8 +371,9 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         missionId = 42,
-                        attachedEnvActionId =
-                            UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                        attachedEnvActionId = UUID.fromString(
+                            "e2257638-ddef-4611-960c-7675a3254c38",
+                        ),
                     ),
                 )
             }
@@ -397,8 +397,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         missionId = 100,
-                        attachedToMissionAtUtc =
-                            ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                        attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                     ),
                 )
             }
@@ -420,8 +419,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             assertThrows<NotFoundException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
-                        detachedFromMissionAtUtc =
-                            ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                        detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                     ),
                 )
             }

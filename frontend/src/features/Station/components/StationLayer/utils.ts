@@ -29,7 +29,7 @@ export const getFeatureStyle = ((feature: Feature) => {
       fill: new Fill({
         color: THEME.color.charcoal
       }),
-      radius: 9
+      radius: 10
     })
   })
 
@@ -41,7 +41,8 @@ export const getFeatureStyle = ((feature: Feature) => {
       font: '12px Marianne',
       offsetX: featureProps.controlUnitsCount === 1 ? 16.5 : 16,
       offsetY: -35,
-      text: featureProps.controlUnitsCount.toString()
+      text: featureProps.controlUnitsCount.toString(),
+      textAlign: 'center'
     })
   })
 

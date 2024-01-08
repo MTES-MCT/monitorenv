@@ -40,6 +40,7 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.cultured};
   display: flex;
+  min-height: 96px;
 `
 
 const InfoBox = styled.div`
@@ -66,6 +67,7 @@ const Note = styled.div`
   -webkit-line-clamp: 3;
   display: -webkit-box;
   overflow: hidden;
+  margin-bottom: 4px;
 `
 
 const Name = styled.p`
