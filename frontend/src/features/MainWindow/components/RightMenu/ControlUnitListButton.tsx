@@ -10,7 +10,7 @@ import { ControlUnitListDialog } from '../../../ControlUnit/components/ControlUn
 
 export function ControlUnitListButton() {
   const dispatch = useAppDispatch()
-  const { isControlUnitListDialogVisible } = useAppSelector(state => state.global)
+  const isControlUnitListDialogVisible = useAppSelector(state => state.global.isControlUnitListDialogVisible)
 
   const toggleDialog = useCallback(() => {
     dispatch(globalActions.hideSideButtons())

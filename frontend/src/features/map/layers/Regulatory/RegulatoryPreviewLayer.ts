@@ -21,8 +21,8 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const { isRegulatorySearchResultsVisible, regulatoryLayersSearchResult, searchExtent } = useAppSelector(
     state => state.layerSearch
   )
-  const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
-  const { isLayersSidebarVisible } = useAppSelector(state => state.global)
+  const regulatoryLayersById = useAppSelector(state => state.regulatory.regulatoryLayersById)
+  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>

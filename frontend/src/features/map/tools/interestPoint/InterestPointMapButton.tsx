@@ -18,7 +18,10 @@ import { MapToolButton } from '../MapToolButton'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
-  const { displayInterestPoint, healthcheckTextWarning, isMapToolVisible } = useAppSelector(state => state.global)
+  const displayInterestPoint = useAppSelector(state => state.global.displayInterestPoint)
+  const healthcheckTextWarning = useAppSelector(state => state.global.healthcheckTextWarning)
+  const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
+
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
   const wrapperRef = useRef(null)
 

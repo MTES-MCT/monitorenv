@@ -15,8 +15,9 @@ import type { Feature } from 'ol'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
-  const { regulatoryLayers, showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
-  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
+  const regulatoryLayers = useAppSelector(state => state.regulatory.regulatoryLayers)
+  const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
 
   const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
   function getVectorSource() {

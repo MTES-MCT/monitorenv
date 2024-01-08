@@ -24,7 +24,7 @@ export function ResultList({ searchedText }) {
     regulatoryLayersSearchResult
   } = useAppSelector(state => state.layerSearch)
   const dispatch = useAppDispatch()
-  const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
+  const regulatoryLayersById = useAppSelector(state => state.regulatory.regulatoryLayersById)
   const { data: amps } = useGetAMPsQuery()
 
   const ampsByAMPName = _.groupBy(amps?.entities, a => a?.name)

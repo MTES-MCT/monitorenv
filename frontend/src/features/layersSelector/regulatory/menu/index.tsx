@@ -8,8 +8,9 @@ import { LayerSelectorMenu } from '../../utils/LayerSelectorMenu.style'
 export function RegulatoryLayers() {
   const dispatch = useAppDispatch()
 
-  const { regulatoryLayers, selectedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
-  const { myRegulatoryZonesIsOpen } = useAppSelector(state => state.layerSidebar)
+  const regulatoryLayers = useAppSelector(state => state.regulatory.regulatoryLayers)
+  const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const myRegulatoryZonesIsOpen = useAppSelector(state => state.layerSidebar.myRegulatoryZonesIsOpen)
 
   const selectedRegulatoryLayers = regulatoryLayers?.filter(layer => selectedRegulatoryLayerIds.includes(layer.id))
 

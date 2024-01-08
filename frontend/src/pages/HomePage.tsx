@@ -25,17 +25,18 @@ import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
-  const {
-    displayDrawModal,
-    displayInterestPoint,
-    displayLocateOnMap,
-    displayMeasurement,
-    displayMissionMenuButton,
-    displayReportingsButton,
-    displayRightMenuControlUnitListButton: isRightMenuControlUnitListButtonVisible,
-    displaySearchSemaphoreButton,
-    isControlUnitDialogVisible
-  } = useAppSelector(state => state.global)
+  const displayDrawModal = useAppSelector(state => state.global.displayDrawModal)
+  const displayInterestPoint = useAppSelector(state => state.global.displayInterestPoint)
+  const displayLocateOnMap = useAppSelector(state => state.global.displayLocateOnMap)
+  const displayMeasurement = useAppSelector(state => state.global.displayMeasurement)
+  const displayMissionMenuButton = useAppSelector(state => state.global.displayMissionMenuButton)
+  const displayReportingsButton = useAppSelector(state => state.global.displayReportingsButton)
+  const isRightMenuControlUnitListButtonVisible = useAppSelector(
+    state => state.global.displayRightMenuControlUnitListButton
+  )
+  const displaySearchSemaphoreButton = useAppSelector(state => state.global.displaySearchSemaphoreButton)
+  const isControlUnitDialogVisible = useAppSelector(state => state.global.isControlUnitDialogVisible)
+
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
 
   const hasAtLeastOneMissionFormDirty = useMemo(

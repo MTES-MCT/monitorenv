@@ -8,9 +8,8 @@ import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpe
 
 export function RightMenuOnHoverArea() {
   const dispatch = useAppDispatch()
-  const {
-    reportingFormVisibility: { context, visibility }
-  } = useAppSelector(state => state.global)
+  const context = useAppSelector(state => state.global.reportingFormVisibility.context)
+  const visibility = useAppSelector(state => state.global.reportingFormVisibility.visibility)
 
   const isReportingFormVisible = visibility === VisibilityState.VISIBLE || visibility === VisibilityState.VISIBLE_LEFT
 

@@ -11,6 +11,7 @@ import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapp
 export function SearchSemaphoreButton() {
   const dispatch = useAppDispatch()
   const isSearchSemaphoreVisible = useAppSelector(state => state.global.isSearchSemaphoreVisible)
+
   const openOrCloseSearchSemaphore = () => {
     dispatch(globalActions.hideSideButtons())
     dispatch(reduceReportingFormOnMap())
