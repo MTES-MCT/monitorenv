@@ -215,6 +215,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = null,
                 isAttachedToMission = null,
+                search = null,
             )
         assertThat(reportings.size).isEqualTo(11)
     }
@@ -233,6 +234,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = listOf(TargetTypeEnum.VEHICLE),
                 isAttachedToMission = null,
+                search = null,
             )
         assertThat(reportings.size).isEqualTo(4)
     }
@@ -251,8 +253,27 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = null,
                 isAttachedToMission = true,
+                search = null,
             )
         assertThat(reportings.size).isEqualTo(6)
+    }
+
+    @Test
+    fun `findAll should return all reportings when search filter is set to gerant`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = null,
+                attachToMission = null,
+                search = "gerant",
+            )
+        assertThat(reportings.size).isEqualTo(2)
     }
 
     @Test
