@@ -101,14 +101,6 @@ export const Columns = [
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortTargetDetails(rowA.original, rowB.original)
   },
   {
-    accessorFn: row => row.targetDetails,
-    cell: ({ row }) => <CellTarget targetDetails={row.original.targetDetails} targetType={row.original.targetType} />,
-    header: () => 'Cible',
-    id: 'targetDetails',
-    maxSize: 190,
-    minSize: 100
-  },
-  {
     accessorFn: row => row.theme,
     cell: ({ row }) => <CellActionThemes subThemeIds={row.original.subThemeIds} themeId={row.original.themeId} />,
     enableSorting: true,

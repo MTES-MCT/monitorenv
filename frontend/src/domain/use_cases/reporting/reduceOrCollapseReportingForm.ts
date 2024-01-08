@@ -1,6 +1,6 @@
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 
-export const reduceOrExpandReportingForm = (reportingContext: ReportingContext) => (dispatch, getState) => {
+export const reduceOrCollapseReportingForm = (reportingContext: ReportingContext) => (dispatch, getState) => {
   const { reportingFormVisibility } = getState().global
   if (reportingFormVisibility.visibility === VisibilityState.VISIBLE) {
     dispatch(

@@ -68,8 +68,8 @@ export const StyledArchivedTag = styled(Tag)`
 export const StyledIconButton = styled(IconButton)`
   color: ${p => p.theme.color.white};
 `
-export const ReportingChevronIcon = styled(IconButton)<{ $isOpen: boolean }>`
-  transform: ${props => (!props.$isOpen ? 'rotate(0deg)' : 'rotate(-180deg)')};
+export const ReportingChevronIcon = styled(IconButton)<{ $isExpanded: boolean }>`
+  transform: ${p => (!p.$isExpanded ? 'rotate(0deg)' : 'rotate(-180deg)')};
   transition: all 0.5s;
 `
 

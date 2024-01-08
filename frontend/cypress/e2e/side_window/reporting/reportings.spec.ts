@@ -55,7 +55,7 @@ context('Reportings', () => {
     cy.get('*[data-cy="status-filter-Archivés"]').click()
 
     cy.get('*[data-cy="edit-reporting-5"]').click({ force: true })
-    cy.get('*[data-cy="reporting-reduce-or-expand-button-5"]').click()
+    cy.get('*[data-id="reporting-collapse-or-expand-button-5"]').click()
 
     // create new reporting
     cy.clickButton('Ajouter un nouveau signalement')
@@ -66,12 +66,12 @@ context('Reportings', () => {
     cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
 
-    cy.get('*[data-cy="reporting-reduce-or-expand-button-new-1"]').click()
+    cy.get('*[data-id="reporting-collapse-or-expand-button-new-1"]').click()
 
     // create another new reporting
     cy.clickButton('Ajouter un nouveau signalement')
     cy.get('*[data-cy="reporting-title"]').contains('NOUVEAU SIGNALEMENT (2)')
-    cy.get('*[data-cy="reporting-reduce-or-expand-button-new-1"]').click()
+    cy.get('*[data-id="reporting-collapse-or-expand-button-new-1"]').click()
 
     cy.get('*[data-cy="reporting-title"]').contains('NOUVEAU SIGNALEMENT (1)')
     cy.get('*[data-cy="add-semaphore-source"]').contains('Sémaphore de Dieppe')

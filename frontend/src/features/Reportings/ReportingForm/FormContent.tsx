@@ -28,7 +28,7 @@ import {
 } from '../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../domain/shared_slices/reporting'
 import { deleteReporting } from '../../../domain/use_cases/reporting/deleteReporting'
-import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reporting/reduceOrExpandReportingForm'
+import { reduceOrCollapseReportingForm } from '../../../domain/use_cases/reporting/reduceOrCollapseReportingForm'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
@@ -143,11 +143,11 @@ export function FormContent({
     dispatch(deleteReporting(values.id))
   }
 
-  const reduceOrExpandReporting = () => {
+  const reduceOrCollapseReporting = () => {
     if (isMapContext) {
       dispatch(hideSideButtons())
     }
-    dispatch(reduceOrExpandReportingForm(reportingContext))
+    dispatch(reduceOrCollapseReportingForm(reportingContext))
   }
 
   if (!selectedReporting || isEmpty(values)) {
@@ -173,11 +173,11 @@ export function FormContent({
         title="Supprimer le signalement&nbsp;?"
       />
       <Header
-        isOpen={
+        isExpanded={
           reportingFormVisibility.context === reportingContext &&
           reportingFormVisibility.visibility === VisibilityState.REDUCED
         }
-        reduceOrExpandReporting={reduceOrExpandReporting}
+        reduceOrCollapseReporting={reduceOrCollapseReporting}
         reporting={selectedReporting}
       />
       <StyledForm $totalReducedReportings={reducedReportingsOnContext}>

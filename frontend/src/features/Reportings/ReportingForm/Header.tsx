@@ -19,12 +19,12 @@ import { getReportingTitle } from '../utils'
 import type { AtLeast } from '../../../types'
 
 export function Header({
-  isOpen,
-  reduceOrExpandReporting,
+  isExpanded,
+  reduceOrCollapseReporting,
   reporting
 }: {
-  isOpen: boolean
-  reduceOrExpandReporting: () => void
+  isExpanded: boolean
+  reduceOrCollapseReporting: () => void
   reporting: AtLeast<ReportingDetailed, 'id'>
 }) {
   const dispatch = useAppDispatch()
@@ -64,11 +64,11 @@ export function Header({
 
       <ReportingHeaderButtons>
         <ReportingChevronIcon
-          $isOpen={isOpen}
+          $isExpanded={isExpanded}
           accent={Accent.TERTIARY}
-          data-cy={`reporting-reduce-or-expand-button-${reporting?.id}`}
+          data-id={`reporting-collapse-or-expand-button-${reporting?.id}`}
           Icon={Icon.Chevron}
-          onClick={reduceOrExpandReporting}
+          onClick={reduceOrCollapseReporting}
         />
         <IconButton
           accent={Accent.TERTIARY}
