@@ -8,28 +8,54 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { sideWindowPaths } from '../../entities/sideWindow'
 
+import type { HomeAppThunk } from '../../../store'
 import type { ReportingDetailed } from '../../entities/reporting'
+import type { ControlUnit } from '@mtes-mct/monitor-ui'
 
-export const addMission = (attachedReporting?: ReportingDetailed) => async (dispatch, getState) => {
-  const { missions = {} } = getState().missionForms
+export const addMission =
+  ({
+    attachedReporting,
+    initialControlUnit
+  }: Partial<{
+    attachedReporting: ReportingDetailed
+    initialControlUnit: ControlUnit.ControlUnit
+  }> = {}): HomeAppThunk =>
+  async (dispatch, getState) => {
+    const { missions = {} } = getState().missionForms
 
-  const maxNewMissionId = _.chain(missions)
-    .filter(newMission => isNewMission(newMission?.missionForm?.id))
-    .maxBy(filteredNewMission => Number(filteredNewMission?.missionForm?.id?.split('new-')[1]))
-    .value()
+    const maxNewMissionId = _.chain(missions)
+      .filter(newMission => isNewMission(newMission.missionForm.id))
+      .maxBy(filteredNewMission => Number(String(filteredNewMission.missionForm.id).split('new-')[1]))
+      .value()
 
-  const id: string =
-    maxNewMissionId && maxNewMissionId.missionForm.id
-      ? `new-${Number(maxNewMissionId?.missionForm?.id?.split('new-')[1]) + 1}`
-      : 'new-1'
+    const id: string =
+      maxNewMissionId && maxNewMissionId.missionForm.id
+        ? `new-${Number(String(maxNewMissionId.missionForm.id).split('new-')[1]) + 1}`
+        : 'new-1'
 
-  const newMission = { isFormDirty: false, missionForm: missionFactory({ id }, true, attachedReporting) }
+    const initialMission: any = { id }
+    if (initialControlUnit) {
+      initialMission.controlUnits = [
+        {
+          administration: initialControlUnit.administration.name,
+          id: initialControlUnit.id,
+          isArchived: false,
+          name: initialControlUnit.name,
+          resources: []
+        }
+      ]
+    }
 
-  await dispatch(missionFormsActions.setMission(newMission))
+    const newMission = {
+      isFormDirty: false,
+      missionForm: missionFactory(initialMission, true, attachedReporting)
+    }
 
-  await dispatch(
-    attachReportingToMissionSliceActions.setAttachedReportings(attachedReporting ? [attachedReporting] : [])
-  )
+    await dispatch(missionFormsActions.setMission(newMission))
 
-  await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id })))
-}
+    await dispatch(
+      attachReportingToMissionSliceActions.setAttachedReportings(attachedReporting ? [attachedReporting] : [])
+    )
+
+    await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id })))
+  }
