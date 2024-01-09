@@ -24,7 +24,7 @@ export function MeasurementOverlay({
   measurement,
   type
 }: MeasurementOverlayProps) {
-  const { distanceUnit } = useAppSelector(state => state.map)
+  const distanceUnit = useAppSelector(state => state.map.distanceUnit)
 
   const overlayRef = useRef()
   const olOverlayObjectRef = useRef() as MutableRefObject<Overlay>

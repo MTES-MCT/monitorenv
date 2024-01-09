@@ -6,7 +6,7 @@ import { OverlayPositionOnExtent } from '../../../map/overlays/OverlayPositionOn
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const { displayMissionToAttachLayer } = useAppSelector(state => state.global)
+  const displayMissionToAttachLayer = useAppSelector(state => state.global.displayMissionToAttachLayer)
 
   const currentfeatureId = currentFeatureOver?.getId()
   const displayHoveredFeature =

@@ -70,7 +70,7 @@ function getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit) {
 export function MeasurementLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
 
-  const { distanceUnit } = useAppSelector(state => state.map)
+  const distanceUnit = useAppSelector(state => state.map.distanceUnit)
 
   const { circleMeasurementToAdd, measurementsDrawed, measurementTypeToAdd } = useAppSelector(
     state => state.measurement

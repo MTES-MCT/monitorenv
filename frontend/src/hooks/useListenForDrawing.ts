@@ -11,7 +11,9 @@ type GeometryAndInteractionType = {
 }
 
 export function useListenForDrawedGeometry(componentListener: InteractionListener) {
-  const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
+  const geometry = useAppSelector(state => state.draw.geometry)
+  const interactionType = useAppSelector(state => state.draw.interactionType)
+  const listener = useAppSelector(state => state.draw.listener)
 
   const [drawForListener, setDrawForListener] = useState<GeometryAndInteractionType>({
     geometry: undefined,

@@ -23,8 +23,8 @@ export function RegulatoryLayerGroup({
 }) {
   const dispatch = useAppDispatch()
 
-  const { selectedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
-  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
+  const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
   const totalNumberOfZones = useAppSelector(state => state.regulatory?.regulatoryLayersIdsByName[groupName]?.length)
 
   const [zonesAreOpen, setZonesAreOpen] = useState(false)

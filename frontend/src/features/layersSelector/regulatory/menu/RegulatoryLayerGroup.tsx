@@ -14,8 +14,8 @@ import { LayerSelector } from '../../utils/LayerSelector.style'
 
 export function RegulatoryLayerGroup({ groupName, layers }) {
   const dispatch = useAppDispatch()
-  const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
-  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
+  const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const regulatoryZonesAreShowed = _.intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0

@@ -43,7 +43,7 @@ export function MultiZonePicker({
   const [, , coverMissionZoneHelpers] = useField(`envActions[${envActionIndex}].coverMissionZone`)
   const { value } = field
 
-  const { listener } = useAppSelector(state => state.draw)
+  const listener = useAppSelector(state => state.draw.listener)
   const isEditingZone = useMemo(
     () => listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.SURVEILLANCE_ZONE,
     [listener]

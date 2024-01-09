@@ -114,7 +114,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     })
   }
 
-  const { listener } = useAppSelector(state => state.draw)
+  const listener = useAppSelector(state => state.draw.listener)
   const isEditingZone = useMemo(() => listener === InteractionListener.SURVEILLANCE_ZONE, [listener])
 
   const duration = dateDifferenceInHours(

@@ -19,7 +19,7 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function AMPLayers({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const { showedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
+  const showedAmpLayerIds = useAppSelector(state => state.selectedAmp.showedAmpLayerIds)
 
   const { data: ampLayers } = useGetAMPsQuery()
 

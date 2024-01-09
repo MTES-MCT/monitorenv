@@ -8,7 +8,8 @@ const DEFAULT_MAP_ANIMATION_DURATION = 1000
 const MAX_ZOOM_LEVEL = 14
 
 export function MapExtentController({ map }: BaseMapChildrenProps) {
-  const { fitToExtent, zoomToCenter } = useAppSelector(state => state.map)
+  const fitToExtent = useAppSelector(state => state.map.fitToExtent)
+  const zoomToCenter = useAppSelector(state => state.map.zoomToCenter)
 
   useEffect(() => {
     if (fitToExtent && fitToExtent[0] !== Infinity) {

@@ -10,7 +10,7 @@ import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 
 export function AdministrativeLayers() {
   const dispatch = useAppDispatch()
-  const { administrativeZonesIsOpen } = useAppSelector(state => state.layerSidebar)
+  const administrativeZonesIsOpen = useAppSelector(state => state.layerSidebar.administrativeZonesIsOpen)
 
   const onSectionTitleClicked = () => {
     dispatch(toggleAdministrativeZones())

@@ -17,7 +17,9 @@ const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 export function RegulatoryLayerZoneMetadata() {
   const dispatch = useAppDispatch()
-  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
+
   const { currentData } = useGetRegulatoryLayerQuery({ id: regulatoryMetadataLayerId }, { pollingInterval: FOUR_HOURS })
   const regulatoryMetadata = currentData?.properties
 

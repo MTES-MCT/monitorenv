@@ -19,11 +19,12 @@ import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useAppDispatch()
-  const {
-    regulatoryLayersById: { [layerId]: layer },
-    selectedRegulatoryLayerIds
-  } = useAppSelector(state => state.regulatory)
-  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
+
+  const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const layer = useAppSelector(state => state.regulatory.regulatoryLayersById[layerId])
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
+
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
   const metadataIsShown = regulatoryMetadataPanelIsOpen && layerId === regulatoryMetadataLayerId
 

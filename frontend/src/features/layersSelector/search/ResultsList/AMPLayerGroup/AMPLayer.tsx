@@ -26,7 +26,9 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
       layer: data?.entities[layerId]
     })
   })
-  const { selectedAmpLayerId, selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
+  const selectedAmpLayerId = useAppSelector(state => state.selectedAmp.selectedAmpLayerId)
+  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
+
   const isZoneSelected = selectedAmpLayerIds.includes(layerId)
 
   const handleSelectRegulatoryZone = e => {

@@ -24,7 +24,7 @@ export function ZonePicker() {
   const [field, , helpers] = useField('geom')
   const { value } = field
 
-  const { listener } = useAppSelector(state => state.draw)
+  const listener = useAppSelector(state => state.draw.listener)
   const isEditingZone = useMemo(() => listener === InteractionListener.REPORTING_ZONE, [listener])
 
   useEffect(() => {

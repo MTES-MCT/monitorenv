@@ -7,7 +7,9 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function AMPLayersList() {
-  const { selectedAmpLayerIds, showedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
+  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
+  const showedAmpLayerIds = useAppSelector(state => state.selectedAmp.showedAmpLayerIds)
+
   const { currentData: amps, isLoading } = useGetAMPsQuery()
   const selectedAmps = useMemo(
     () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter(l => l),

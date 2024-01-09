@@ -15,8 +15,8 @@ const MARGINS = {
   yTop: -170
 }
 export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
-  const { displaySemaphoreOverlay } = useAppSelector(state => state.global)
+  const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
+  const displaySemaphoreOverlay = useAppSelector(state => state.global.displaySemaphoreOverlay)
 
   const feature = map
     ?.getLayers()
