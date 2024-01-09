@@ -1,7 +1,7 @@
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { getFormattedReportingId, getTargetDetailsAsText } from '../../utils'
+import { getFormattedReportingId, sortTargetDetails } from '../../utils'
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
 import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionThemes } from '../Cells/CellActionThemes'
@@ -98,21 +98,7 @@ export const Columns = [
     maxSize: 190,
     minSize: 160,
     size: 160,
-    sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
-      const targetDetailsAsTextA = getTargetDetailsAsText({
-        targetDetails: rowA.original.targetDetails,
-        targetType: rowA.original.targetType,
-        vehicleType: rowA.original.vehicleType
-      })
-
-      const targetDetailsAsTextB = getTargetDetailsAsText({
-        targetDetails: rowB.original.targetDetails,
-        targetType: rowB.original.targetType,
-        vehicleType: rowB.original.vehicleType
-      })
-
-      return targetDetailsAsTextA.localeCompare(targetDetailsAsTextB)
-    }
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortTargetDetails(rowA.original, rowB.original)
   },
   {
     accessorFn: row => row.theme,

@@ -11,7 +11,8 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredReportingsQuery = () => {
   const {
-    attachToMissionFilter,
+    isAttachedToMissionFilter,
+    isUnattachedToMissionFilter,
     seaFrontFilter,
     sourceFilter,
     sourceTypeFilter,
@@ -23,10 +24,22 @@ export const useGetFilteredReportingsQuery = () => {
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
+
+  const isAttachedOrNotToMissionFilter = useMemo(() => {
+    if (isAttachedToMissionFilter && !isUnattachedToMissionFilter) {
+      return Boolean(true)
+    }
+
+    if (!isAttachedToMissionFilter && isUnattachedToMissionFilter) {
+      return Boolean(false)
+    }
+
+    return undefined
+  }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
-      attachToMission: attachToMissionFilter,
+      isAttachedToMission: isAttachedOrNotToMissionFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
       sourcesType: sourceTypeFilter,

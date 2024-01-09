@@ -124,3 +124,25 @@ export const getTargetDetailsAsText = ({
 
   return targetDetailsAsText
 }
+
+type TargetDataProps = {
+  targetDetails: TargetDetails[] | undefined
+  targetType: ReportingTargetTypeEnum | undefined
+  vehicleType: VehicleTypeEnum | undefined
+}
+
+export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetailsB: TargetDataProps) {
+  const targetDetailsAsTextA = getTargetDetailsAsText({
+    targetDetails: targetDetailsA.targetDetails,
+    targetType: targetDetailsA.targetType,
+    vehicleType: targetDetailsA.vehicleType
+  })
+
+  const targetDetailsAsTextB = getTargetDetailsAsText({
+    targetDetails: targetDetailsB.targetDetails,
+    targetType: targetDetailsB.targetType,
+    vehicleType: targetDetailsB.vehicleType
+  })
+
+  return targetDetailsAsTextA.localeCompare(targetDetailsAsTextB)
+}

@@ -293,7 +293,7 @@ class ReportingsITests {
                 sourcesType = any(),
                 status = any(),
                 targetTypes = any(),
-                attachToMission = any(),
+                isAttachedToMission = any(),
             ),
         )
             .willReturn(listOf(reporting))

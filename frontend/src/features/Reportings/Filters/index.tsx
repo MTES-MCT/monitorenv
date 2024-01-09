@@ -9,7 +9,6 @@ import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
-  AttachToMissionFilterLabels,
   ReportingSourceEnum,
   ReportingSourceLabels,
   ReportingTypeLabels,
@@ -96,10 +95,8 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const seaFrontsOptions = Object.values(seaFrontLabels)
   const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
   const targetTypeOtions = getOptionsFromLabelledEnum(ReportingTargetTypeLabels)
-  const attachToMissionOptions = getOptionsFromLabelledEnum(AttachToMissionFilterLabels)
 
   const optionsList = {
-    attachToMissionOptions,
     dateRangeOptions,
     seaFrontsOptions,
     sourceOptions,

@@ -2,7 +2,11 @@ import { CheckPicker, DateRangePicker, Checkbox, SingleTag, Accent } from '@mtes
 import { forwardRef, useRef } from 'react'
 import styled from 'styled-components'
 
-import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
+import {
+  AttachToMissionFilterEnum,
+  AttachToMissionFilterLabels,
+  ReportingSourceLabels
+} from '../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -24,7 +28,8 @@ export function MapReportingsFiltersWithRef(
 ) {
   const dispatch = useAppDispatch()
   const {
-    attachToMissionFilter,
+    isAttachedToMissionFilter,
+    isUnattachedToMissionFilter,
     periodFilter,
     sourceTypeFilter,
     startedAfter,
@@ -37,7 +42,6 @@ export function MapReportingsFiltersWithRef(
   } = useAppSelector(state => state.reportingFilters)
   const { subThemes, themes } = useGetControlPlans()
   const {
-    attachToMissionOptions,
     dateRangeOptions,
     sourceTypeOptions,
     statusOptions,
@@ -72,23 +76,26 @@ export function MapReportingsFiltersWithRef(
           ))}
         </StyledStatusFilter>
         <StyledStatusFilter>
-          {attachToMissionOptions.map(attachToMission => (
+          <>
             <Checkbox
-              key={attachToMission.label}
-              checked={attachToMissionFilter?.includes(String(attachToMission.value))}
-              data-cy={`attach-to-mission-filter-${attachToMission.value}`}
-              label={attachToMission.label}
-              name={attachToMission.label}
+              key={AttachToMissionFilterLabels.ATTACHED}
+              checked={!!isAttachedToMissionFilter}
+              data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.ATTACHED}`}
+              label={AttachToMissionFilterLabels.ATTACHED}
+              name={AttachToMissionFilterLabels.ATTACHED}
+              onChange={isChecked => updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)}
+            />
+            <Checkbox
+              key={AttachToMissionFilterLabels.UNATTACHED}
+              checked={!!isUnattachedToMissionFilter}
+              data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.UNATTACHED}`}
+              label={AttachToMissionFilterLabels.UNATTACHED}
+              name={AttachToMissionFilterLabels.UNATTACHED}
               onChange={isChecked =>
-                updateCheckboxFilter(
-                  isChecked,
-                  attachToMission.value,
-                  ReportingsFiltersEnum.ATTACH_TO_MISSION_FILTER,
-                  attachToMissionFilter
-                )
+                updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_UNATTACHED_TO_MISSION_FILTER)
               }
             />
-          ))}
+          </>
         </StyledStatusFilter>
 
         <StyledSelect

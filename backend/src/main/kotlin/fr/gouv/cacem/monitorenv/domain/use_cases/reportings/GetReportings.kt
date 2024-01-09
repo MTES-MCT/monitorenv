@@ -27,7 +27,7 @@ class GetReportings(
         startedBeforeDateTime: ZonedDateTime?,
         status: List<String>?,
         targetTypes: List<TargetTypeEnum>?,
-        attachToMission: List<String>?,
+        isAttachedToMission: Boolean?,
     ): List<ReportingDTO> {
         val reports =
             reportingRepository.findAll(
@@ -39,7 +39,7 @@ class GetReportings(
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 status = status,
                 targetTypes = targetTypes,
-                attachToMission = attachToMission,
+                isAttachedToMission = isAttachedToMission,
                 pageable =
                 if (pageNumber != null && pageSize != null) {
                     PageRequest.of(pageNumber, pageSize)

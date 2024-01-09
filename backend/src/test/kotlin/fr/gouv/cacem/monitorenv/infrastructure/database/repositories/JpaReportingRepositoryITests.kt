@@ -214,7 +214,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 sourcesType = null,
                 status = null,
                 targetTypes = null,
-                attachToMission = null,
+                isAttachedToMission = null,
             )
         assertThat(reportings.size).isEqualTo(11)
     }
@@ -231,13 +231,13 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 sourcesType = null,
                 status = null,
                 targetTypes = listOf(TargetTypeEnum.VEHICLE),
-                attachToMission = null,
+                isAttachedToMission = null,
             )
         assertThat(reportings.size).isEqualTo(4)
     }
 
     @Test
-    fun `findAll should return all reporting when attachToMission filter is set to ATTACHED`() {
+    fun `findAll should return all reporting when atisAttachedToMissiontachToMission filter is set to TRUE`() {
         val reportings =
             jpaReportingRepository.findAll(
                 Pageable.unpaged(),
@@ -248,7 +248,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 sourcesType = null,
                 status = null,
                 targetTypes = null,
-                attachToMission = listOf("ATTACHED"),
+                isAttachedToMission = true,
             )
         assertThat(reportings.size).isEqualTo(6)
     }

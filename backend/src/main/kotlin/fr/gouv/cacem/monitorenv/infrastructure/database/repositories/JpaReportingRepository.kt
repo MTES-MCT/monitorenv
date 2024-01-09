@@ -66,7 +66,7 @@ class JpaReportingRepository(
         startedBefore: Instant?,
         status: List<String>?,
         targetTypes: List<TargetTypeEnum>?,
-        attachToMission: List<String>?,
+        isAttachedToMission: Boolean?,
     ): List<ReportingDTO> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
@@ -80,7 +80,7 @@ class JpaReportingRepository(
             startedBefore = startedBefore,
             status = convertToString(status),
             targetTypes = convertToString(targetTypesAsStringArray),
-            attachToMission = convertToString(attachToMission),
+            isAttachedToMission = isAttachedToMission,
         )
             .map { it.toReportingDTO(mapper) }
     }
