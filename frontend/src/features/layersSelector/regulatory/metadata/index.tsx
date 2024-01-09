@@ -7,7 +7,7 @@ import { Identification } from './Identification'
 import { MetadataRegulatoryReferences } from './MetadataRegulatoryReferences'
 import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { getTitle } from '../../../../domain/entities/regulatory'
-import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { closeRegulatoryMetadataPanel } from '../../../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
@@ -24,7 +24,7 @@ export function RegulatoryLayerZoneMetadata() {
   const regulatoryMetadata = currentData?.properties
 
   const onCloseIconClicked = useCallback(() => {
-    dispatch(closeRegulatoryZoneMetadata())
+    dispatch(closeRegulatoryMetadataPanel())
   }, [dispatch])
 
   return (

@@ -2,7 +2,9 @@ import { getAllRegulatoryLayersFromAPI } from '../../../api/regulatoryLayersAPI'
 import { setToast } from '../../shared_slices/Global'
 import { setRegulatoryLayers } from '../../shared_slices/Regulatory'
 
-export const loadRegulatoryData = () => async dispatch =>
+import type { HomeAppThunk } from '../../../store'
+
+export const loadRegulatoryData = (): HomeAppThunk => dispatch =>
   getAllRegulatoryLayersFromAPI()
     .then(features => dispatch(setRegulatoryLayers(features)))
     .catch(error => {

@@ -10,7 +10,7 @@ import { RegulatoryLayerZoneMetadata } from './regulatory/metadata'
 import { LayerSearch } from './search'
 import { useGetAMPsQuery } from '../../api/ampsAPI'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
-import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { closeRegulatoryMetadataPanel } from '../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
@@ -26,7 +26,7 @@ export function LayersSidebar() {
 
   const toggleLayerSidebar = () => {
     if (isLayersSidebarVisible) {
-      dispatch(closeRegulatoryZoneMetadata())
+      dispatch(closeRegulatoryMetadataPanel())
     }
     dispatch(setDisplayedItems({ isLayersSidebarVisible: !isLayersSidebarVisible }))
   }
