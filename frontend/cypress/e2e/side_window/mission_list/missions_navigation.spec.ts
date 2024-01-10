@@ -6,10 +6,16 @@ context('Mission', () => {
   it('Missions should be created and saved in store When auto-save is not enabled', () => {
     cy.visit(`/side_window`, {
       onBeforeLoad(window) {
-        Object.defineProperty(window, 'env', { value: {
-            REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: false
-          }
-        })
+        if (!window.env) {
+          Object.defineProperty(window, 'env', { value: {
+              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: false
+            }
+          })
+
+          return
+        }
+
+        window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = false
       }
     })
 
