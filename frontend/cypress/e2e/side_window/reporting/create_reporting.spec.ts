@@ -22,7 +22,8 @@ context('Reportings', () => {
 
     // When
     cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
-    cy.fill('Type de cible', 'Personne morale')
+    cy.getDataCy('reporting-target-type').click({ force: true })
+    cy.get('div[role="option"]').contains('Personne morale').click()
 
     cy.clickButton('Ajouter un point')
 
@@ -73,7 +74,8 @@ context('Reportings', () => {
 
     // When
     cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
-    cy.fill('Type de cible', 'Personne morale')
+    cy.getDataCy('reporting-target-type').click({ force: true })
+    cy.get('div[role="option"]').contains('Personne morale').click()
 
     cy.clickButton('Ajouter un point')
 

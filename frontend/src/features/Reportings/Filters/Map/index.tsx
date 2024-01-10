@@ -2,7 +2,12 @@ import { CheckPicker, DateRangePicker, Checkbox, SingleTag, Accent } from '@mtes
 import { forwardRef, useRef } from 'react'
 import styled from 'styled-components'
 
-import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
+import {
+  AttachToMissionFilterEnum,
+  AttachToMissionFilterLabels,
+  ReportingSourceLabels
+} from '../../../../domain/entities/reporting'
+import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -23,18 +28,28 @@ export function MapReportingsFiltersWithRef(
 ) {
   const dispatch = useAppDispatch()
   const {
+    isAttachedToMissionFilter,
+    isUnattachedToMissionFilter,
     periodFilter,
     sourceTypeFilter,
     startedAfter,
     startedBefore,
     statusFilter,
     subThemesFilter,
+    targetTypeFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
   const { subThemes, themes } = useGetControlPlans()
-  const { dateRangeOptions, sourceTypeOptions, statusOptions, subThemesOptions, themesOptions, typeOptions } =
-    optionsList
+  const {
+    dateRangeOptions,
+    sourceTypeOptions,
+    statusOptions,
+    subThemesOptions,
+    targetTypeOtions,
+    themesOptions,
+    typeOptions
+  } = optionsList
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -59,6 +74,28 @@ export function MapReportingsFiltersWithRef(
               }
             />
           ))}
+        </StyledStatusFilter>
+        <StyledStatusFilter>
+          <>
+            <Checkbox
+              key={AttachToMissionFilterLabels.ATTACHED}
+              checked={!!isAttachedToMissionFilter}
+              data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.ATTACHED}`}
+              label={AttachToMissionFilterLabels.ATTACHED}
+              name={AttachToMissionFilterLabels.ATTACHED}
+              onChange={isChecked => updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)}
+            />
+            <Checkbox
+              key={AttachToMissionFilterLabels.UNATTACHED}
+              checked={!!isUnattachedToMissionFilter}
+              data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.UNATTACHED}`}
+              label={AttachToMissionFilterLabels.UNATTACHED}
+              name={AttachToMissionFilterLabels.UNATTACHED}
+              onChange={isChecked =>
+                updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_UNATTACHED_TO_MISSION_FILTER)
+              }
+            />
+          </>
         </StyledStatusFilter>
 
         <StyledSelect
@@ -131,6 +168,30 @@ export function MapReportingsFiltersWithRef(
           placeholder="Type de signalement"
           value={typeFilter}
         />
+        <CheckPicker
+          isLabelHidden
+          label="Type de cible"
+          name="targetType"
+          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}
+          options={targetTypeOtions}
+          placeholder="Cible"
+          renderValue={() => targetTypeFilter && <OptionValue>{`Cible (${targetTypeFilter.length})`}</OptionValue>}
+          value={targetTypeFilter}
+        />
+        {targetTypeFilter && targetTypeFilter.length > 0 && (
+          <StyledTagsContainer>
+            {targetTypeFilter.map(targetType => (
+              <SingleTag
+                key={targetType}
+                accent={Accent.SECONDARY}
+                onDelete={() => onDeleteTag(targetType, ReportingsFiltersEnum.TARGET_TYPE_FILTER, targetTypeFilter)}
+                title={String(ReportingTargetTypeLabels[targetType])}
+              >
+                {String(ReportingTargetTypeLabels[targetType])}
+              </SingleTag>
+            ))}
+          </StyledTagsContainer>
+        )}
       </StyledBloc>
       <StyledBloc>
         <CheckPicker

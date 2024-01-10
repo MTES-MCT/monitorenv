@@ -11,10 +11,12 @@ import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
+import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import {
   OptionValue,
+  Separator,
   StyledCustomPeriodContainer,
   StyledCutomPeriodLabel,
   StyledSelect,
@@ -40,6 +42,8 @@ export function TableReportingsFiltersWithRef(
 
   const {
     hasFilters,
+    isAttachedToMissionFilter,
+    isUnattachedToMissionFilter,
     periodFilter,
     seaFrontFilter = [],
     sourceFilter = [],
@@ -48,6 +52,7 @@ export function TableReportingsFiltersWithRef(
     startedBefore,
     statusFilter = [],
     subThemesFilter = [],
+    targetTypeFilter = [],
     themeFilter = [],
     typeFilter = []
   } = useAppSelector(state => state.reportingFilters)
@@ -58,6 +63,7 @@ export function TableReportingsFiltersWithRef(
     sourceTypeOptions,
     statusOptions,
     subThemesOptions,
+    targetTypeOtions,
     themesOptions,
     typeOptions
   } = optionsList
@@ -105,6 +111,29 @@ export function TableReportingsFiltersWithRef(
                 }
               />
             ))}
+            <Separator />
+            <>
+              <Checkbox
+                key={AttachToMissionFilterLabels.ATTACHED}
+                checked={!!isAttachedToMissionFilter}
+                data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.ATTACHED}`}
+                label={AttachToMissionFilterLabels.ATTACHED}
+                name={AttachToMissionFilterLabels.ATTACHED}
+                onChange={isChecked =>
+                  updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)
+                }
+              />
+              <Checkbox
+                key={AttachToMissionFilterLabels.UNATTACHED}
+                checked={!!isUnattachedToMissionFilter}
+                data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.UNATTACHED}`}
+                label={AttachToMissionFilterLabels.UNATTACHED}
+                name={AttachToMissionFilterLabels.UNATTACHED}
+                onChange={isChecked =>
+                  updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_UNATTACHED_TO_MISSION_FILTER)
+                }
+              />
+            </>
           </StyledStatusFilter>
         </StyledFiltersFirstLine>
         <StyledFiltersSecondLine>
@@ -163,6 +192,20 @@ export function TableReportingsFiltersWithRef(
             placeholder="Type de signalement"
             style={tagPickerStyle}
             value={typeFilter}
+          />
+          <CheckPicker
+            isLabelHidden
+            label="Type de cible"
+            menuStyle={{ maxWidth: '200%' }}
+            name="targetType"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}
+            options={targetTypeOtions}
+            placeholder="Type de cible"
+            renderValue={() =>
+              targetTypeFilter && <OptionValue>{`Type de cible (${targetTypeFilter.length})`}</OptionValue>
+            }
+            style={tagPickerStyle}
+            value={targetTypeFilter}
           />
           <CheckPicker
             key={themesOptions.length}

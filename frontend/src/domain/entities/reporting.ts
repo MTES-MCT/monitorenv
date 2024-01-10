@@ -52,12 +52,12 @@ export enum ControlStatusEnum {
 }
 
 export enum ControlStatusLabels {
-  CONTROL_TO_BE_DONE = 'Contrôle à faire',
-  CONTROL_DONE = 'Contrôle fait',
-  SURVEILLANCE_DONE = 'Surveillance faite'
+  CONTROL_TO_BE_DONE = 'Ctl à faire',
+  CONTROL_DONE = 'Ctl fait',
+  SURVEILLANCE_DONE = 'Srv faite'
 }
 
-type TargetDetails = {
+export type TargetDetails = {
   externalReferenceNumber?: string
   imo?: string
   mmsi?: string
@@ -94,7 +94,7 @@ export enum ReportingTypeEnum {
 }
 
 export enum ReportingTypeLabels {
-  INFRACTION_SUSPICION = 'Infraction (suspicion)',
+  INFRACTION_SUSPICION = 'Infraction (susp.)',
   OBSERVATION = 'Observation'
 }
 
@@ -116,6 +116,16 @@ export enum StatusFilterEnum {
 export enum StatusFilterLabels {
   IN_PROGRESS = 'En cours',
   ARCHIVED = 'Archivés'
+}
+
+export enum AttachToMissionFilterEnum {
+  ATTACHED = 'ATTACHED',
+  UNATTACHED = 'UNATTACHED'
+}
+
+export enum AttachToMissionFilterLabels {
+  ATTACHED = 'Liés à une mission',
+  UNATTACHED = 'Non liés'
 }
 
 export const getReportingStatus = ({

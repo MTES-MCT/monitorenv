@@ -11,6 +11,8 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredReportingsQuery = () => {
   const {
+    isAttachedToMissionFilter,
+    isUnattachedToMissionFilter,
     seaFrontFilter,
     sourceFilter,
     sourceTypeFilter,
@@ -18,18 +20,33 @@ export const useGetFilteredReportingsQuery = () => {
     startedBefore,
     statusFilter,
     subThemesFilter,
+    targetTypeFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
+
+  const isAttachedOrNotToMissionFilter = useMemo(() => {
+    if (isAttachedToMissionFilter && !isUnattachedToMissionFilter) {
+      return Boolean(true)
+    }
+
+    if (!isAttachedToMissionFilter && isUnattachedToMissionFilter) {
+      return Boolean(false)
+    }
+
+    return undefined
+  }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
+      isAttachedToMission: isAttachedOrNotToMissionFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: startedAfter || undefined,
       startedBeforeDateTime: startedBefore || undefined,
-      status: statusFilter
+      status: statusFilter,
+      targetTypes: targetTypeFilter
     },
     { pollingInterval: TWO_MINUTES }
   )

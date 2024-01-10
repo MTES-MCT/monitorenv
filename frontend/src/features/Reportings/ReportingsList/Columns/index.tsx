@@ -1,13 +1,14 @@
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { getFormattedReportingId } from '../../utils'
+import { getFormattedReportingId, sortTargetDetails } from '../../utils'
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
 import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionThemes } from '../Cells/CellActionThemes'
 import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
 import { CellLocalizeReporting } from '../Cells/CellLocalizeReporting'
 import { CellStatus } from '../Cells/CellStatus'
+import { CellTarget } from '../Cells/CellTarget'
 import { CellValidityTime } from '../Cells/CellValidityTime'
 import { getDateCell } from '../Cells/getDateCell'
 import { getReportType } from '../Cells/getReportType'
@@ -64,12 +65,16 @@ export const Columns = [
   },
   {
     accessorFn: row => row.displayedSource,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
+    cell: info => (
+      <Cell id={info.getValue()} title={info.getValue()}>
+        {info.getValue()}
+      </Cell>
+    ),
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    maxSize: 260,
-    minSize: 210
+    maxSize: 210,
+    minSize: 190
   },
   {
     accessorFn: row => row.reportType,
@@ -77,7 +82,23 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Type',
     id: 'reportType',
-    size: 170
+    size: 140
+  },
+  {
+    accessorFn: row => row.targetDetails,
+    cell: ({ row }) => (
+      <CellTarget
+        targetDetails={row.original.targetDetails}
+        targetType={row.original.targetType}
+        vehicleType={row.original.vehicleType}
+      />
+    ),
+    header: () => 'Cible',
+    id: 'targetDetails',
+    maxSize: 190,
+    minSize: 160,
+    size: 160,
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortTargetDetails(rowA.original, rowB.original)
   },
   {
     accessorFn: row => row.theme,
@@ -85,8 +106,9 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Thématique',
     id: 'theme',
-    maxSize: 280,
-    minSize: 230
+    maxSize: 260,
+    minSize: 210,
+    size: 210
   },
   {
     accessorFn: row => row.seaFront,
@@ -125,7 +147,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 155
+    size: 110
   },
   {
     accessorFn: row => row.geom,
@@ -140,7 +162,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 140
+    size: 110
   },
   {
     accessorFn: row => row.geom,
@@ -162,4 +184,4 @@ export const Columns = [
   }
 ]
 
-const Cell = styled.div``
+const Cell = styled.span``

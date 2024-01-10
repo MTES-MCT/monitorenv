@@ -121,7 +121,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             jpaReportingRepository.save(
                 existingReportingDTO.reporting.copy(
                     missionId = 38,
-                    attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                    attachedToMissionAtUtc =
+                    ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 ),
             )
         assertThat(reportingWithMissionDTO.reporting.attachedEnvActionId).isNull()
@@ -130,7 +131,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         jpaReportingRepository.save(
             reportingWithMissionDTO.reporting.copy(
-                attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                attachedEnvActionId =
+                UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
             ),
         )
 
@@ -211,8 +213,44 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 sourcesType = null,
                 status = null,
+                targetTypes = null,
+                isAttachedToMission = null,
             )
         assertThat(reportings.size).isEqualTo(11)
+    }
+
+    @Test
+    fun `findAll should return all reporting when targetType filter is set to VEHICLE`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = listOf(TargetTypeEnum.VEHICLE),
+                isAttachedToMission = null,
+            )
+        assertThat(reportings.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `findAll should return all reporting when atisAttachedToMissiontachToMission filter is set to TRUE`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = null,
+                isAttachedToMission = true,
+            )
+        assertThat(reportings.size).isEqualTo(6)
     }
 
     @Test
@@ -224,16 +262,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
     @Test
     fun `findById should return specified reporting`() {
-        val reportingDTO = jpaReportingRepository.findById(1)
-        assertThat(reportingDTO.reporting.id).isEqualTo(1)
-        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300001)
+        val reportingDTO = jpaReportingRepository.findById(2)
+        assertThat(reportingDTO.reporting.id).isEqualTo(2)
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300002)
         assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
+        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(23)
         assertThat(reportingDTO.reporting.controlUnitId).isNull()
         assertThat(reportingDTO.reporting.sourceName).isNull()
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
         assertThat(reportingDTO.reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
-        assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
+        assertThat(reportingDTO.reporting.validityTime).isEqualTo(2)
     }
 
     @Test
@@ -343,7 +381,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             assertThrows<NotFoundException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
-                        attachedEnvActionId = UUID.fromString(
+                        attachedEnvActionId =
+                        UUID.fromString(
                             "e2257638-ddef-4611-960c-7675a3254c38",
                         ),
                     ),
@@ -371,7 +410,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         missionId = 42,
-                        attachedEnvActionId = UUID.fromString(
+                        attachedEnvActionId =
+                        UUID.fromString(
                             "e2257638-ddef-4611-960c-7675a3254c38",
                         ),
                     ),
@@ -397,7 +437,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         missionId = 100,
-                        attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                        attachedToMissionAtUtc =
+                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                     ),
                 )
             }
@@ -419,7 +460,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             assertThrows<NotFoundException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
-                        detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                        detachedFromMissionAtUtc =
+                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                     ),
                 )
             }

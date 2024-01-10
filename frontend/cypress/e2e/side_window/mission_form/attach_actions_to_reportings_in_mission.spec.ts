@@ -15,7 +15,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
 
     cy.getDataCy('control-attached-reporting-tag').should('be.visible')
     cy.getDataCy('reporting-status-action-tag').should('have.length', 1)
-    cy.getDataCy('reporting-status-action-tag').contains('Contrôle fait')
+    cy.getDataCy('reporting-status-action-tag').contains('Ctl fait')
 
     cy.intercept('PUT', `/bff/v1/missions/38`).as('updateMission')
     cy.clickButton('Enregistrer et quitter')
@@ -101,7 +101,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
 
     cy.getDataCy('surveillance-attached-reportings-tags').should('exist')
     cy.getDataCy('reporting-status-action-tag').should('have.length', 2)
-    cy.getDataCy('reporting-status-action-tag').contains('Surveillance faite')
+    cy.getDataCy('reporting-status-action-tag').contains('Srv faite')
 
     cy.fill('Signalements', ['9', '11'])
     cy.getDataCy('reporting-status-action-tag').should('have.length', 3)

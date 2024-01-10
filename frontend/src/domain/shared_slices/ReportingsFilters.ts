@@ -15,6 +15,8 @@ export type SourceFilterProps = {
 }
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
+  IS_ATTACHED_TO_MISSION_FILTER = 'isAttachedToMissionFilter',
+  IS_UNATTACHED_TO_MISSION_FILTER = 'isUnattachedToMissionFilter',
   PERIOD_FILTER = 'periodFilter',
   SEA_FRONT_FILTER = 'seaFrontFilter',
   SOURCE_FILTER = 'sourceFilter',
@@ -23,6 +25,7 @@ export enum ReportingsFiltersEnum {
   STARTED_BEFORE_FILTER = 'startedBefore',
   STATUS_FILTER = 'statusFilter',
   SUB_THEMES_FILTER = 'subThemesFilter',
+  TARGET_TYPE_FILTER = 'targetTypeFilter',
   THEME_FILTER = 'themeFilter',
   TYPE_FILTER = 'typeFilter'
 }
@@ -30,6 +33,8 @@ export enum ReportingsFiltersEnum {
 type ReportingsFiltersSliceType = {
   actionsFilter?: string[]
   hasFilters: boolean
+  isAttachedToMissionFilter?: boolean
+  isUnattachedToMissionFilter?: boolean
   periodFilter: string
   seaFrontFilter: string[] | undefined
   sourceFilter: SourceFilterProps[] | undefined
@@ -38,6 +43,7 @@ type ReportingsFiltersSliceType = {
   startedBefore?: string
   statusFilter: string[]
   subThemesFilter: number[] | undefined
+  targetTypeFilter?: string[] | undefined
   themeFilter: number[] | undefined
   typeFilter?: string | undefined
 }
@@ -45,6 +51,8 @@ type ReportingsFiltersSliceType = {
 const initialState: ReportingsFiltersSliceType = {
   actionsFilter: [],
   hasFilters: false,
+  isAttachedToMissionFilter: false,
+  isUnattachedToMissionFilter: false,
   periodFilter: ReportingDateRangeEnum.DAY,
   seaFrontFilter: undefined,
   sourceFilter: undefined,
@@ -53,6 +61,7 @@ const initialState: ReportingsFiltersSliceType = {
   startedBefore: undefined,
   statusFilter: [StatusFilterEnum.IN_PROGRESS],
   subThemesFilter: undefined,
+  targetTypeFilter: undefined,
   themeFilter: undefined,
   typeFilter: undefined
 }

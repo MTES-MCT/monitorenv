@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
@@ -64,9 +65,12 @@ class JpaReportingRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
+        targetTypes: List<TargetTypeEnum>?,
+        isAttachedToMission: Boolean?,
     ): List<ReportingDTO> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
+        val targetTypesAsStringArray = targetTypes?.map { it.name }
         return dbReportingRepository.findAll(
             pageable,
             reportingType = convertToString(reportingTypeAsStringArray),
@@ -75,6 +79,8 @@ class JpaReportingRepository(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
             status = convertToString(status),
+            targetTypes = convertToString(targetTypesAsStringArray),
+            isAttachedToMission = isAttachedToMission,
         )
             .map { it.toReportingDTO(mapper) }
     }

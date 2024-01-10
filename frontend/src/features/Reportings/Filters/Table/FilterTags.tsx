@@ -2,6 +2,7 @@ import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
+import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -10,9 +11,8 @@ import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 export function FilterTags() {
   const { subThemes, themes } = useGetControlPlans()
   const dispatch = useAppDispatch()
-  const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
-    state => state.reportingFilters
-  )
+  const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, targetTypeFilter, themeFilter } =
+    useAppSelector(state => state.reportingFilters)
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -50,6 +50,17 @@ export function FilterTags() {
             onDelete={() => onDeleteTag(source, ReportingsFiltersEnum.SOURCE_FILTER, sourceFilter)}
           >
             {String(`Source ${source.label}`)}
+          </SingleTag>
+        ))}
+      {targetTypeFilter &&
+        targetTypeFilter.length > 0 &&
+        targetTypeFilter.map(targetType => (
+          <SingleTag
+            key={targetType}
+            accent={Accent.SECONDARY}
+            onDelete={() => onDeleteTag(targetType, ReportingsFiltersEnum.TARGET_TYPE_FILTER, targetTypeFilter)}
+          >
+            {String(`Cible ${ReportingTargetTypeLabels[targetType]}`)}
           </SingleTag>
         ))}
       {themeFilter &&
