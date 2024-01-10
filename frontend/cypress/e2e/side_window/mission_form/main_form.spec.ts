@@ -12,7 +12,8 @@ context('Side Window > Mission Form > Main Form', () => {
 
         if (!window.env) {
           Object.defineProperty(window, 'env', { value: {
-              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled
+              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled,
+              REACT_APP_CYPRESS_TEST: true
             }
           })
 
