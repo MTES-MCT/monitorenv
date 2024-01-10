@@ -35,6 +35,7 @@ services:
       - REACT_APP_GEOSERVER_NAMESPACE=monitorenv
       - REACT_APP_CYPRESS_TEST=true
       - REACT_APP_MISSION_FORM_AUTO_UPDATE=true
+      - REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED=true
     ports:
       - 8880:8880
       - 8000:8000
