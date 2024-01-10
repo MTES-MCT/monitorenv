@@ -151,24 +151,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             )
         )
         AND ((:searchQuery) IS NULL
-            OR (
-                
-                unaccent(CAST(formatted_target_details.operator_name as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
-            )
-            OR (
-                unaccent(CAST(formatted_target_details.vessel_name as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
-            )
-            OR (
-                unaccent(CAST(formatted_target_details.mmsi as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
-            )
-            OR (
-                unaccent(CAST(formatted_target_details.imo as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
-
-            )
+            OR CAST(to_tsvector('mydict', target_details) as text) @@ CAST((:searchQuery) as text)
         )
         ORDER BY reporting_id DESC
     """,

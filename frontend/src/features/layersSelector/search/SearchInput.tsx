@@ -1,9 +1,5 @@
-import { Accent, IconButton, Icon, Size } from '@mtes-mct/monitor-ui'
-import { Input, InputGroup } from 'rsuite'
+import { Accent, IconButton, Icon, Size, TextInput } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
-
-import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 
 export function SearchInput({
   displayRegFilters,
@@ -14,34 +10,22 @@ export function SearchInput({
   setGlobalSearchText,
   toggleRegFilters
 }) {
-  const handleResetSearch = () => {
-    setGlobalSearchText('')
-  }
   const numberOfFilters = (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0)
 
   return (
     <SearchHeader>
-      <SearchInputGroup>
-        <SearchBoxInput
-          classPrefix="input ghost"
-          data-cy="regulatory-search-input"
-          onChange={setGlobalSearchText}
-          placeholder={placeholder}
-          type="text"
-          value={globalSearchText}
-        />
-
-        {globalSearchText === '' ? (
-          <InputGroup.Addon>
-            <SearchIcon className="rs-icon" />
-          </InputGroup.Addon>
-        ) : (
-          <InputGroup.Button appearance="ghost" onClick={handleResetSearch}>
-            <CloseIcon className="rs-icon" />
-          </InputGroup.Button>
-        )}
-      </SearchInputGroup>
-      <FilterIcon>
+      <StyledTextInput
+        isLabelHidden
+        isLight
+        isSearchInput
+        label={placeholder}
+        name={placeholder}
+        onChange={setGlobalSearchText}
+        placeholder={placeholder}
+        size={Size.LARGE}
+        value={globalSearchText}
+      />
+      <div>
         {!displayRegFilters && numberOfFilters > 0 && <NumberOfFilteredReg>{numberOfFilters}</NumberOfFilteredReg>}
         <IconButton
           accent={Accent.PRIMARY}
@@ -51,7 +35,7 @@ export function SearchInput({
           size={Size.LARGE}
           title="Filtrer par type de zones"
         />
-      </FilterIcon>
+      </div>
     </SearchHeader>
   )
 }
@@ -60,24 +44,12 @@ const SearchHeader = styled.div`
   display: flex;
   width: 400px;
 `
-const SearchInputGroup = styled(InputGroup)`
+const StyledTextInput = styled(TextInput)`
   width: 310px;
-  background: ${p => p.theme.color.white};
+  > div > input {
+    height: 42px;
+  }
 `
-const SearchBoxInput = styled(Input)`
-  padding-left: 12px;
-  height: 40px;
-`
-const SearchIcon = styled(SearchIconSVG)`
-  width: 16px;
-  height: 16px;
-`
-
-const CloseIcon = styled(CloseIconSVG)`
-  width: 16px;
-  height: 16px;
-`
-const FilterIcon = styled.div``
 
 const NumberOfFilteredReg = styled.span`
   background: ${p => p.theme.color.maximumRed};

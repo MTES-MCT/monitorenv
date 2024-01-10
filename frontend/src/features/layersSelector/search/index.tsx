@@ -87,12 +87,12 @@ export function LayerSearch({ isVisible }) {
       window.setTimeout(() => {
         isSearchThrottled.current = false
 
-        if (searchedText.length > 2 || ampTypes?.length > 0 || geofilter) {
+        if (searchedText?.length > 2 || ampTypes?.length > 0 || geofilter) {
           let searchedAMPS
           let itemSchema
-          if (searchedText.length > 2 || ampTypes?.length > 0) {
+          if (searchedText?.length > 2 || ampTypes?.length > 0) {
             const filterWithTextExpression =
-              searchedText.length > 0 ? { $path: ['name'], $val: searchedText } : undefined
+              searchedText?.length > 0 ? { $path: ['name'], $val: searchedText } : undefined
             const filterWithType =
               ampTypes?.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) } : undefined
 
@@ -112,12 +112,12 @@ export function LayerSearch({ isVisible }) {
           dispatch(setAMPsSearchResult([]))
         }
 
-        if (searchedText.length > 2 || regulatoryThemes?.length > 0 || geofilter) {
+        if (searchedText?.length > 2 || regulatoryThemes?.length > 0 || geofilter) {
           let searchedRegulatory
           let itemSchema
-          if (searchedText.length > 2 || regulatoryThemes?.length > 0) {
+          if (searchedText?.length > 2 || regulatoryThemes?.length > 0) {
             const filterWithTextExpression =
-              searchedText.length > 0
+              searchedText?.length > 0
                 ? {
                     $or: [
                       { $path: ['properties', 'layer_name'], $val: searchedText },

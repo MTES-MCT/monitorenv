@@ -1,4 +1,6 @@
-import { Icon, Size, TextInput } from '@mtes-mct/monitor-ui'
+import { Size, TextInput } from '@mtes-mct/monitor-ui'
+import { debounce } from 'lodash'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
@@ -9,21 +11,38 @@ export function ReportingSearch() {
   const dispatch = useAppDispatch()
   const searchFilter = useAppSelector(state => state.reportingFilters.searchQueryFilter)
 
-  const onQuery = value => {
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value }))
-  }
+  const [searchText, setSearchText] = useState(searchFilter)
+
+  const onQuery = useCallback(
+    value => {
+      if (value && value.length > 2) {
+        dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value }))
+      } else {
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value: undefined })
+        )
+      }
+    },
+    [dispatch]
+  )
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedHandleChange = useCallback(debounce(onQuery, 500), [])
 
   return (
     <StyledSearch
-      Icon={Icon.Search}
       isLabelHidden
       isLight
+      isSearchInput
       label="Rechercher une cible"
       name="reporting-search"
-      onChange={onQuery}
+      onChange={value => {
+        setSearchText(value)
+        debouncedHandleChange(value)
+      }}
       placeholder="Rechercher une cible"
       size={Size.LARGE}
-      value={searchFilter}
+      value={searchText}
     />
   )
 }

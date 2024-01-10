@@ -37,6 +37,7 @@ export const useGetFilteredReportingsQuery = () => {
 
     return undefined
   }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
+
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
@@ -50,7 +51,7 @@ export const useGetFilteredReportingsQuery = () => {
       status: statusFilter,
       targetTypes: targetTypeFilter
     },
-    { pollingInterval: TWO_MINUTES, skip: !!(!!searchQueryFilter && searchQueryFilter.length % 2 !== 0) }
+    { pollingInterval: TWO_MINUTES }
   )
 
   const reportings = useMemo(() => {
