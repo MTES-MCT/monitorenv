@@ -1,14 +1,11 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ReportingFormWithContext } from './ReportingForm'
-import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from './style'
-import { getReportingTitle } from './utils'
+import { Header } from './ReportingForm/Header'
 import { hideSideButtons, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
-import { closeReporting } from '../../domain/use_cases/reporting/closeReporting'
-import { reduceOrExpandReportingForm } from '../../domain/use_cases/reporting/reduceOrExpandReportingForm'
+import { reduceOrCollapseReportingForm } from '../../domain/use_cases/reporting/reduceOrCollapseReportingForm'
 import { switchReporting } from '../../domain/use_cases/reporting/switchReporting'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
@@ -31,11 +28,11 @@ export function Reportings({ context }: { context: ReportingContext }) {
     [reportings, activeReportingId, context]
   )
 
-  const reduceOrExpandReporting = async reporting => {
-    const { id } = reporting.reporting
+  const reduceOrCollapseReporting = async reporting => {
+    const { id } = reporting
 
     if (activeReportingId === id && reportingFormVisibility.context === context) {
-      return dispatch(reduceOrExpandReportingForm(context))
+      return dispatch(reduceOrCollapseReportingForm(context))
     }
 
     if (reporting.context === ReportingContext.MAP) {
@@ -70,27 +67,11 @@ export function Reportings({ context }: { context: ReportingContext }) {
             $reportingFormVisibility={reportingFormVisibility.visibility}
           >
             <Separator $visible={isSeparatorVisible} />
-            <StyledHeader>
-              <StyledTitle>
-                <Icon.Report />
-                {getReportingTitle(reducedReporting)}
-              </StyledTitle>
-
-              <StyledHeaderButtons>
-                <StyledChevronIcon
-                  $isOpen
-                  accent={Accent.TERTIARY}
-                  data-cy={`reporting-reduce-or-expand-button-${reducedReporting?.id}`}
-                  Icon={Icon.Chevron}
-                  onClick={() => reduceOrExpandReporting(reporting)}
-                />
-                <IconButton
-                  accent={Accent.TERTIARY}
-                  Icon={Icon.Close}
-                  onClick={() => dispatch(closeReporting(reducedReporting?.id, reporting.context))}
-                />
-              </StyledHeaderButtons>
-            </StyledHeader>
+            <Header
+              isExpanded
+              reduceOrCollapseReporting={() => reduceOrCollapseReporting(reducedReporting)}
+              reporting={reducedReporting}
+            />
           </StyledContainer>
         )
       })}
