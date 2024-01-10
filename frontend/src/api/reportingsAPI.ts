@@ -9,7 +9,7 @@ type ReportingsFilter = {
   isAttachedToMission?: boolean | undefined
   reportingType?: string | undefined
   seaFronts?: string[]
-  search?: string
+  searchQuery?: string
   sourcesType?: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string

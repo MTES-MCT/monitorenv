@@ -1,12 +1,12 @@
 import { Select } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-export const StyledStatusFilter = styled.div<{ $withMargin?: boolean }>`
+export const StyledStatusFilter = styled.div<{ $withBottomMargin?: boolean }>`
   display: flex;
   flex-wrap: wrap;
   align-items: end;
   gap: 16px;
-  margin-bottom: ${p => (p.$withMargin ? '8px' : '0px')};
+  margin-bottom: ${p => (p.$withBottomMargin ? '8px' : '0px')};
 `
 export const Separator = styled.div`
   width: 2px;
@@ -20,8 +20,8 @@ export const StyledSelect = styled(Select)`
   }
 `
 
-export const StyledTagsContainer = styled.div<{ $withMargin: boolean }>`
-  margin-top: ${p => (p.$withMargin ? '16px' : '0px')};
+export const StyledTagsContainer = styled.div<{ $withTopMargin: boolean }>`
+  margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
   display: flex;
   flex-direction: row;
   max-width: 100%;

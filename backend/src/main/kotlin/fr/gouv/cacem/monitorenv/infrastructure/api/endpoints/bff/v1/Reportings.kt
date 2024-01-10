@@ -122,9 +122,9 @@ class Reportings(
         @Parameter(description = "Is Attached to mission")
         @RequestParam(name = "isAttachedToMission", required = false)
         isAttachedToMission: Boolean?,
-        @Parameter(description = "search")
-        @RequestParam(name = "search", required = false)
-        search: String?,
+        @Parameter(description = "Search query")
+        @RequestParam(name = "searchQuery", required = false)
+        searchQuery: String?,
     ): List<ReportingsDataOutput> {
         return getReportings.execute(
             pageNumber = pageNumber,
@@ -137,7 +137,7 @@ class Reportings(
             status = status,
             targetTypes = targetTypes,
             isAttachedToMission = isAttachedToMission,
-            search = search,
+            searchQuery = searchQuery,
         )
             .map { ReportingsDataOutput.fromReportingDTO(it) }
     }

@@ -14,7 +14,7 @@ export const useGetFilteredReportingsQuery = () => {
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,
     seaFrontFilter,
-    searchFilter,
+    searchQueryFilter,
     sourceFilter,
     sourceTypeFilter,
     startedAfter,
@@ -43,14 +43,14 @@ export const useGetFilteredReportingsQuery = () => {
       isAttachedToMission: isAttachedOrNotToMissionFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
-      search: searchFilter,
+      searchQuery: searchQueryFilter,
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: startedAfter || undefined,
       startedBeforeDateTime: startedBefore || undefined,
       status: statusFilter,
       targetTypes: targetTypeFilter
     },
-    { pollingInterval: TWO_MINUTES, skip: !!(!!searchFilter && searchFilter.length % 2 !== 0) }
+    { pollingInterval: TWO_MINUTES, skip: !!(!!searchQueryFilter && searchQueryFilter.length % 2 !== 0) }
   )
 
   const reportings = useMemo(() => {

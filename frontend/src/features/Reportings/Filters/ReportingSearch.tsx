@@ -7,10 +7,10 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 
 export function ReportingSearch() {
   const dispatch = useAppDispatch()
-  const searchFilter = useAppSelector(state => state.reportingFilters.searchFilter)
+  const searchFilter = useAppSelector(state => state.reportingFilters.searchQueryFilter)
 
   const onQuery = value => {
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_FILTER, value }))
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value }))
   }
 
   return (

@@ -253,7 +253,7 @@ export function TableReportingsFiltersWithRef(
           />
         </StyledFiltersSecondLine>
       </FilterWrapper>
-      <StyledTagsContainer $withMargin={isCustomPeriodVisible || hasFilters}>
+      <StyledTagsContainer $withTopMargin={isCustomPeriodVisible || hasFilters}>
         {isCustomPeriodVisible && (
           <StyledCustomPeriodContainer>
             <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>

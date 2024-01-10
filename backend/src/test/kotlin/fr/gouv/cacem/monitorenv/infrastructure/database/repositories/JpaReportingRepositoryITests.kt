@@ -215,7 +215,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = null,
                 isAttachedToMission = null,
-                search = null,
+                searchQuery = null,
             )
         assertThat(reportings.size).isEqualTo(11)
     }
@@ -234,13 +234,13 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = listOf(TargetTypeEnum.VEHICLE),
                 isAttachedToMission = null,
-                search = null,
+                searchQuery = null,
             )
         assertThat(reportings.size).isEqualTo(4)
     }
 
     @Test
-    fun `findAll should return all reporting when atisAttachedToMissiontachToMission filter is set to TRUE`() {
+    fun `findAll should return all reporting when isAttachedToMission filter is set to TRUE`() {
         val reportings =
             jpaReportingRepository.findAll(
                 pageNumber = null,
@@ -253,13 +253,13 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = null,
                 isAttachedToMission = true,
-                search = null,
+                searchQuery = null,
             )
         assertThat(reportings.size).isEqualTo(6)
     }
 
     @Test
-    fun `findAll should return all reportings when search filter is set to gerant`() {
+    fun `findAll should return all reportings when searchQuery filter is set to GERANT (vesselName in targetDetails)`() {
         val reportings =
             jpaReportingRepository.findAll(
                 Pageable.unpaged(),
@@ -270,10 +270,64 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 sourcesType = null,
                 status = null,
                 targetTypes = null,
-                attachToMission = null,
-                search = "gerant",
+                isAttachedToMission = null,
+                searchQuery = "gerant",
             )
         assertThat(reportings.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `findAll should return all reportings when searchQuery filter is set to 9876543210(imo in targetDetails)`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = null,
+                isAttachedToMission = null,
+                searchQuery = "9876543210",
+            )
+        assertThat(reportings.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `findAll should return all reportings when searchQuery filter is set to COMPANY(operatorName in targetDetails)`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = null,
+                isAttachedToMission = null,
+                searchQuery = "company",
+            )
+        assertThat(reportings.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `findAll should return all reportings when searchQuery filter is set to 012314231345(mmsi in targetDetails)`() {
+        val reportings =
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+                targetTypes = null,
+                isAttachedToMission = null,
+                searchQuery = "012314231345",
+            )
+        assertThat(reportings.size).isEqualTo(1)
     }
 
     @Test

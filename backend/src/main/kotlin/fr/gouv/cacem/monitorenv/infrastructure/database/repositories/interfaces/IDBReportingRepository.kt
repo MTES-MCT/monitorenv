@@ -141,31 +141,32 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
                 )
             ) 
             OR (
-                'UNATTACHED' = ANY(CAST(:attachToMission as text[])) AND (
+                (:isAttachedToMission) = false AND (
                     mission_id IS NULL
+                    OR (
+                        mission_id IS NOT NULL AND 
+                        detached_from_mission_at_utc IS NOT NULL
+                    )
                 )
             )
-                
-            OR (
-                (:isAttachedToMission) = false AND mission_id IS NULL
-            )
         )
-        AND ((:search) IS NULL
+        AND ((:searchQuery) IS NULL
             OR (
+                
                 unaccent(CAST(formatted_target_details.operator_name as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
             )
             OR (
                 unaccent(CAST(formatted_target_details.vessel_name as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
             )
             OR (
                 unaccent(CAST(formatted_target_details.mmsi as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
             )
             OR (
                 unaccent(CAST(formatted_target_details.imo as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:search) as text) || '%' as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
 
             )
         )
@@ -183,7 +184,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         status: String?,
         targetTypes: String?,
         isAttachedToMission: Boolean?,
-        search: String?,
+        searchQuery: String?,
     ): List<ReportingModel>
 
     @Query(

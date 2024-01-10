@@ -294,7 +294,7 @@ class ReportingsITests {
                 status = any(),
                 targetTypes = any(),
                 isAttachedToMission = any(),
-                search = any(),
+                searchQuery = any(),
             ),
         )
             .willReturn(listOf(reporting))

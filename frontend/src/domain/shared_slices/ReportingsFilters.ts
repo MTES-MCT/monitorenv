@@ -18,7 +18,7 @@ export enum ReportingsFiltersEnum {
   IS_ATTACHED_TO_MISSION_FILTER = 'isAttachedToMissionFilter',
   IS_UNATTACHED_TO_MISSION_FILTER = 'isUnattachedToMissionFilter',
   PERIOD_FILTER = 'periodFilter',
-  SEARCH_FILTER = 'searchFilter',
+  SEARCH_QUERY_FILTER = 'searchQueryFilter',
   SEA_FRONT_FILTER = 'seaFrontFilter',
   SOURCE_FILTER = 'sourceFilter',
   SOURCE_TYPE_FILTER = 'sourceTypeFilter',
@@ -38,7 +38,7 @@ type ReportingsFiltersSliceType = {
   isUnattachedToMissionFilter?: boolean
   periodFilter: string
   seaFrontFilter: string[] | undefined
-  searchFilter: string | undefined
+  searchQueryFilter: string | undefined
   sourceFilter: SourceFilterProps[] | undefined
   sourceTypeFilter: string[] | undefined
   startedAfter: string
@@ -57,7 +57,7 @@ const initialState: ReportingsFiltersSliceType = {
   isUnattachedToMissionFilter: false,
   periodFilter: ReportingDateRangeEnum.DAY,
   seaFrontFilter: undefined,
-  searchFilter: '',
+  searchQueryFilter: '',
   sourceFilter: undefined,
   sourceTypeFilter: undefined,
   startedAfter: LAST_24_HOURS,
