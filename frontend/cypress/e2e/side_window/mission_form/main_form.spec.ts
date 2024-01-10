@@ -388,7 +388,7 @@ context('Side Window > Mission Form > Main Form', () => {
     })
   })
 
-  it.only('Should keep the existing archived resources when appending new resources', () => {
+  it('Should keep the existing archived resources when appending new resources', () => {
     visitSideWindow()
 
     // -------------------------------------------------------------------------
