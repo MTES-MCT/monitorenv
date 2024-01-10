@@ -1,4 +1,5 @@
 import omit from 'lodash/omit'
+import { generatePath } from 'react-router'
 
 import { missionsAPI } from '../../../api/missionsAPI'
 import { ApiErrorCode } from '../../../api/types'
@@ -8,6 +9,7 @@ import {
   enableMissionListener,
   removeMissionListener
 } from '../../../features/missions/MissionForm/sse'
+import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -17,7 +19,7 @@ import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const saveMission =
-  (values, reopen = false) =>
+  (values, reopen = false, quitAfterSave = false) =>
   async (dispatch, getState) => {
     const {
       reporting: { reportings },
@@ -35,18 +37,28 @@ export const saveMission =
       disableMissionListener(values.id)
       const response = await dispatch(upsertMission.initiate(newOrNextMissionData))
       if ('data' in response) {
-        if (reopen) {
+        const missionUpdated = response.data
+
+        // We save the new properties : `id`, `createdAt`, `updatedAt` after a mission creation/update
+        if (missionIsNewMission) {
+          const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionUpdated.id })
+          await dispatch(missionFormsActions.deleteSelectedMission(values.id))
+          dispatch(missionFormsActions.setMission({ isFormDirty: false, missionForm: response.data }))
+          await dispatch(missionActions.setSelectedMissionIdOnMap(missionUpdated.id))
+          dispatch(sideWindowActions.setCurrentPath(nextPath))
+        }
+
+        if (reopen || !quitAfterSave) {
           enableMissionListener(values.id)
 
           return
         }
+
         await dispatch(missionFormsActions.deleteSelectedMission(values.id))
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
-
         removeMissionListener(values.id)
 
-        const missionUpdated = response.data
         // we want to update openings reportings with new attached or detached mission
         await updateReportingsWithAttachedMission({
           dispatch,

@@ -68,6 +68,7 @@
     "rsuite": "5.44.0",
     "styled-components": "5.3.11",
     "timeago.js": "4.0.2",
+    "use-debounce": "10.0.0",
     "uuid": "9.0.0",
     "worker-loader": "3.0.8",
     "yup": "^0.32.11"
