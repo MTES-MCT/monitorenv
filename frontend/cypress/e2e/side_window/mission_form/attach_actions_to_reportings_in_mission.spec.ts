@@ -11,14 +11,12 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.getDataCy('edit-mission-38').click({ force: true })
     cy.getDataCy('action-card').eq(1).click()
     cy.getDataCy('control-form-toggle-reporting').click({ force: true })
+    cy.intercept('PUT', `/bff/v1/missions/38`).as('updateMission')
     cy.fill('Signalements', '8')
 
     cy.getDataCy('control-attached-reporting-tag').should('be.visible')
     cy.getDataCy('reporting-status-action-tag').should('have.length', 1)
     cy.getDataCy('reporting-status-action-tag').contains('Ctl fait')
-
-    cy.intercept('PUT', `/bff/v1/missions/38`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
@@ -40,13 +38,11 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.wait(400)
     cy.getDataCy('edit-mission-38').click({ force: true })
     cy.getDataCy('action-card').eq(1).click()
+    cy.intercept('PUT', `/bff/v1/missions/38`).as('updateMission')
     cy.getDataCy('control-form-toggle-reporting').click({ force: true })
 
     cy.getDataCy('control-attached-reporting-tag').should('not.exist')
     cy.getDataCy('reporting-control-done').should('not.exist')
-
-    cy.intercept('PUT', `/bff/v1/missions/38`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
@@ -67,13 +63,11 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.getDataCy('edit-mission-53').click({ force: true })
     cy.getDataCy('action-card').eq(1).click()
 
+    cy.intercept('PUT', `/bff/v1/missions/53`).as('updateMission')
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
 
     cy.getDataCy('surveillance-attached-reportings-tags').should('not.exist')
     cy.getDataCy('reporting-status-action-tag').should('have.length', 1)
-
-    cy.intercept('PUT', `/bff/v1/missions/53`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
@@ -96,6 +90,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.getDataCy('edit-mission-53').click({ force: true })
     cy.getDataCy('action-card').eq(1).click()
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
+    cy.wait(250)
 
     cy.fill('Signalements', ['9'])
 
@@ -103,10 +98,10 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.getDataCy('reporting-status-action-tag').should('have.length', 2)
     cy.getDataCy('reporting-status-action-tag').contains('Srv faite')
 
+    cy.wait(250)
     cy.fill('Signalements', ['9', '11'])
-    cy.getDataCy('reporting-status-action-tag').should('have.length', 3)
     cy.intercept('PUT', `/bff/v1/missions/53`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
+    cy.getDataCy('reporting-status-action-tag').should('have.length', 3)
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {

@@ -7,7 +7,7 @@ context('Side Window > Mission Form > Validation on close', () => {
   it('A new mission with control and surveillance can be closed with all required values', () => {
     // Given
     cy.get('*[data-cy="add-mission"]').click()
-    cy.clickButton('Enregistrer et clôturer')
+    cy.clickButton('Clôturer')
     cy.wait(100)
 
     cy.get('*[data-cy="mission-errors"]').should('exist')
@@ -33,7 +33,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     // we add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
-    cy.clickButton('Enregistrer et clôturer')
+    cy.clickButton('Clôturer')
     cy.wait(100)
 
     cy.get('*[data-cy="mission-errors"]').should('exist')
@@ -65,7 +65,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     // we add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
-    cy.clickButton(' Enregistrer et clôturer')
+    cy.clickButton(' Clôturer')
     cy.wait(100)
 
     cy.get('*[data-cy="mission-errors"]').should('exist')
@@ -81,7 +81,7 @@ context('Side Window > Mission Form > Validation on close', () => {
 
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
-    cy.clickButton('Enregistrer et clôturer')
+    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('*[data-cy="mission-errors"]').should('exist')
 
@@ -93,7 +93,7 @@ context('Side Window > Mission Form > Validation on close', () => {
 
     // Then
     cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
-    cy.clickButton('Enregistrer et clôturer')
+    cy.clickButton('Clôturer')
     cy.wait(100)
 
     cy.wait('@createAndCloseMission').then(({ response }) => {

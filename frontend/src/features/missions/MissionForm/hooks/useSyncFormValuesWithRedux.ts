@@ -1,6 +1,7 @@
-import { useFormikContext } from 'formik'
-import _ from 'lodash'
-import { useEffect, useMemo } from 'react'
+import { type FormikErrors, useFormikContext } from 'formik'
+import { isEmpty } from 'lodash'
+import { useEffect } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -8,29 +9,46 @@ import { missionFormsActions } from '../slice'
 
 import type { Mission } from '../../../../domain/entities/missions'
 
-export const useSyncFormValuesWithRedux = () => {
-  const { dirty, values } = useFormikContext<Mission>()
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-
+export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const dispatch = useAppDispatch()
-  const dispatchFormUpdate = useMemo(() => {
-    const throttled = newValues => {
-      if (!newValues || newValues.id !== activeMissionId) {
-        return
-      }
-      dispatch(missionFormsActions.setMission({ isFormDirty: newValues ? dirty : false, missionForm: newValues }))
+  const { dirty, validateForm, values } = useFormikContext<Mission>()
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const selectedMissions = useAppSelector(state => state.missionForms.missions)
+
+  const dispatchFormUpdate = useDebouncedCallback(async (newValues: Mission) => {
+    if (!newValues || newValues.id !== activeMissionId) {
+      return
     }
 
-    return _.throttle(throttled, 500)
-  }, [activeMissionId, dispatch, dirty])
+    const errors = await validateForm()
+    const isFormDirty = isMissionFormDirty(errors)
+
+    dispatch(missionFormsActions.setMission({ isFormDirty, missionForm: newValues }))
+  }, 500)
+
+  /**
+   * The form is dirty if:
+   * - In auto-save mode, an error is found (hence the form is not saved)
+   * - In manual save mode, values have been modified (using the `dirty` props of Formik)
+   */
+  function isMissionFormDirty(errors: FormikErrors<Mission>) {
+    if (!isAutoSaveEnabled) {
+      return !isEmpty(errors)
+    }
+
+    if (dirty) {
+      return dirty
+    }
+
+    /**
+     * If the form was already dirty and still open, the new `dirty` property is not valid anymore as Formik
+     * has been re-instantiated with the saved values.
+     * We use the last `isFormDirty` value instead of `dirty`.
+     */
+    return (activeMissionId && selectedMissions[activeMissionId]?.isFormDirty) || false
+  }
 
   useEffect(() => {
     dispatchFormUpdate(values)
   }, [values, dispatchFormUpdate])
-
-  useEffect(
-    () => () => dispatchFormUpdate(undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
 }

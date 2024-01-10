@@ -23,12 +23,12 @@ export function MissionFormWrapper() {
   const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
 
   const missionValues: Partial<MissionType> = useMemo(() => {
-    if (missionIsNewMission && activeMissionId) {
-      return missionFactory({ id: activeMissionId } as Partial<NewMission>, true)
-    }
-
     if (selectedMission?.missionForm) {
       return missionFactory(selectedMission.missionForm, false)
+    }
+
+    if (missionIsNewMission && activeMissionId) {
+      return missionFactory({ id: activeMissionId } as Partial<NewMission>, true)
     }
 
     return {}
