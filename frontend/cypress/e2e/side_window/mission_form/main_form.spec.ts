@@ -26,6 +26,7 @@ context('Side Window > Mission Form > Main Form', () => {
         }
 
         window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = isAutoSaveEnabled
+        cy.log(window.env)
       }
     })
   }
