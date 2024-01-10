@@ -9,10 +9,17 @@ context('Side Window > Mission Form > Main Form', () => {
       onBeforeLoad(window) {
         Object.defineProperty(window, 'EventSource', { value: EventSource })
         Object.defineProperty(window, 'mockEventSources', { value: sources })
-        Object.defineProperty(window, 'env', { value: {
-            REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled
-          }
-        })
+
+        if (!window.env) {
+          Object.defineProperty(window, 'env', { value: {
+              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled
+            }
+          })
+
+          return
+        }
+
+        window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = isAutoSaveEnabled
       }
     })
   }
@@ -190,10 +197,9 @@ context('Side Window > Mission Form > Main Form', () => {
     visitSideWindow()
     cy.wait(200)
     cy.get('*[data-cy="edit-mission-25"]').click({ force: true })
-    cy.intercept('PUT', `/bff/v1/missions/25`).as('updateMission')
 
+    cy.intercept('PUT', `/bff/v1/missions/25`).as('updateMission')
     cy.get('*[data-cy="reopen-mission"]').click()
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
@@ -353,18 +359,21 @@ context('Side Window > Mission Form > Main Form', () => {
       })
 
     cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
+    cy.get('[name="missionTypes1"]').click({ force: true })
+    cy.wait(250)
 
-    // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      if (!response) {
-        return
-      }
-
-      expect(response.body.openBy).equal('LTH')
-      expect(response.body.closedBy).equal('LTH')
-      expect(response.body.observationsCnsp).equal('Encore une observation')
-    })
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {
+          openBy: 'LTH',
+          closedBy: 'LTH',
+          observationsCnsp: 'Encore une observation'
+        }
+      },
+      5)
+      .its('response.statusCode')
+      .should('eq', 200)
   })
 
   it('Should keep the existing archived resources when appending new resources', () => {
