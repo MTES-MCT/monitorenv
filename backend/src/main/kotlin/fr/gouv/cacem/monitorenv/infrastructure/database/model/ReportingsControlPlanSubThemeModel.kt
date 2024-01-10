@@ -23,7 +23,7 @@ class ReportingsControlPlanSubThemeModel(
     @JoinColumn(name = "reporting_id")
     val reporting: ReportingModel? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("subthemeId")
     @JoinColumn(name = "subtheme_id")
     val controlPlanSubTheme: ControlPlanSubThemeModel? = null,

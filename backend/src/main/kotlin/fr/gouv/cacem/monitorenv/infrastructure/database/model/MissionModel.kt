@@ -40,7 +40,7 @@ class MissionModel(
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
 
-    @OneToMany(mappedBy = "mission")
+    @OneToMany(mappedBy = "mission", fetch = FetchType.EAGER)
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val attachedReportings: List<ReportingModel>? = listOf(),

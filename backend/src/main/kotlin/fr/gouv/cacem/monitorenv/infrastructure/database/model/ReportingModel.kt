@@ -103,7 +103,7 @@ class ReportingModel(
     @Type(PostgreSQLEnumType::class)
     val reportType: ReportingTypeEnum? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     val controlPlanTheme: ControlPlanThemeModel? = null,
 

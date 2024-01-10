@@ -15,7 +15,7 @@ data class MissionControlResourceModel(
     @JoinColumn(name = "mission_id")
     val mission: MissionModel,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "control_resource_id")
     var resource: ControlUnitResourceModel,
 ) {
