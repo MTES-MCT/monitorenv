@@ -81,7 +81,8 @@ class GetMissionsUTests {
                 missionTypes = anyOrNull(),
                 missionStatuses = anyOrNull(),
                 seaFronts = anyOrNull(),
-                pageable = anyOrNull(),
+                pageNumber = anyOrNull(),
+                pageSize = anyOrNull(),
             ),
         ).willReturn(listOf(mission1, mission2))
 
@@ -102,7 +103,8 @@ class GetMissionsUTests {
                 missionTypes = anyOrNull(),
                 missionStatuses = anyOrNull(),
                 seaFronts = anyOrNull(),
-                pageable = anyOrNull(),
+                pageNumber = anyOrNull(),
+                pageSize = anyOrNull(),
             ),
         ).willReturn(listOf(mission1, mission2))
 
@@ -123,7 +125,8 @@ class GetMissionsUTests {
                 missionTypes = anyOrNull(),
                 missionStatuses = anyOrNull(),
                 seaFronts = anyOrNull(),
-                pageable = anyOrNull(),
+                pageNumber = anyOrNull(),
+                pageSize = anyOrNull(),
             ),
         ).willReturn(listOf(mission1, mission2))
 
@@ -145,7 +148,8 @@ class GetMissionsUTests {
                 missionTypes = anyOrNull(),
                 missionStatuses = anyOrNull(),
                 seaFronts = anyOrNull(),
-                pageable = anyOrNull(),
+                pageNumber = anyOrNull(),
+                pageSize = anyOrNull(),
             ),
         ).willReturn(listOf(mission1, mission2))
 
@@ -166,7 +170,8 @@ class GetMissionsUTests {
                 missionTypes = anyOrNull(),
                 missionStatuses = anyOrNull(),
                 seaFronts = anyOrNull(),
-                pageable = anyOrNull(),
+                pageNumber = anyOrNull(),
+                pageSize = anyOrNull(),
             ),
         ).willReturn(listOf(mission1, mission2))
 

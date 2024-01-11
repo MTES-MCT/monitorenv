@@ -22,8 +22,6 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
@@ -52,7 +50,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missionsList).hasSize(21)
 
@@ -67,7 +66,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(nextMissionList).hasSize(20)
     }
@@ -83,7 +83,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(54)
     }
@@ -99,7 +100,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(21)
     }
@@ -115,7 +117,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = listOf("SEA"),
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(22)
     }
@@ -131,7 +134,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = listOf("SEA", "LAND"),
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(45)
     }
@@ -147,7 +151,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = listOf("MEMN"),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(9)
     }
@@ -163,7 +168,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = listOf("MEMN", "NAMO"),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(27)
     }
@@ -179,7 +185,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("UPCOMING"),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(7)
     }
@@ -195,7 +202,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("PENDING"),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(14)
     }
@@ -211,7 +219,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("ENDED"),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(15)
     }
@@ -227,7 +236,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("CLOSED"),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(18)
     }
@@ -243,7 +253,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("CLOSED", "UPCOMING"),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(25)
     }
@@ -259,7 +270,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = PageRequest.of(1, 10),
+                pageNumber = 1,
+                pageSize = 10,
             )
         assertThat(missions).hasSize(10)
     }
@@ -281,7 +293,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     MissionSourceEnum.POSEIDON_CACEM,
                     MissionSourceEnum.POSEIDON_CNSP,
                 ),
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
         assertThat(missions).hasSize(3)
     }
@@ -408,7 +421,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
 
         assertThat(existingMissions).hasSize(21)
@@ -525,7 +539,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
             )
 
         assertThat(missions).hasSize(22)

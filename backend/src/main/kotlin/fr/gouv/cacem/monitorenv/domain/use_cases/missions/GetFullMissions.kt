@@ -7,8 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import java.time.ZonedDateTime
 
 @UseCase
@@ -37,15 +35,8 @@ class GetFullMissions(private val missionRepository: IMissionRepository) {
                         MissionSourceEnum.MONITORFISH,
                     ),
                 seaFronts = seaFronts,
-                pageable =
-                if (pageNumber != null && pageSize != null) {
-                    PageRequest.of(
-                        pageNumber,
-                        pageSize,
-                    )
-                } else {
-                    Pageable.unpaged()
-                },
+                pageSize = pageSize,
+                pageNumber = pageNumber,
             )
 
         logger.info("Found ${missions.size} mission(s)")

@@ -13,7 +13,6 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
@@ -206,7 +205,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `findAll should return all reportings`() {
         val reportings =
             jpaReportingRepository.findAll(
-                Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
                 startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 reportingType = null,
@@ -223,7 +223,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `findAll should return all reporting when targetType filter is set to VEHICLE`() {
         val reportings =
             jpaReportingRepository.findAll(
-                Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
                 startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 reportingType = null,
@@ -240,7 +241,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `findAll should return all reporting when atisAttachedToMissiontachToMission filter is set to TRUE`() {
         val reportings =
             jpaReportingRepository.findAll(
-                Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
                 startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 reportingType = null,
