@@ -23,7 +23,7 @@ dev-run-front:
 dev-lint-frontend:
 	cd frontend && npm run test:lint:partial
 
-test-back:
+test-back: check-clean-archi
 	cd backend && ./gradlew clean test
 
 test-front:
@@ -69,7 +69,10 @@ dev-erase-db:
 dev-clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
-.PHONY: clean lint-back test
+.PHONY: clean lint-back test check-clean-archi
+check-clean-archi:
+	cd backend/tools && ./check-clean-architecture.sh
+
 lint-back:
 	cd ./backend && ./gradlew ktlintFormat | grep -v \
 		-e "Exceeded max line length" \

@@ -18,6 +18,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
@@ -58,7 +59,8 @@ class JpaReportingRepository(
     }
 
     override fun findAll(
-        pageable: Pageable,
+        pageNumber: Int?,
+        pageSize: Int?,
         reportingType: List<ReportingTypeEnum>?,
         seaFronts: List<String>?,
         sourcesType: List<SourceTypeEnum>?,
@@ -71,6 +73,9 @@ class JpaReportingRepository(
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
         val targetTypesAsStringArray = targetTypes?.map { it.name }
+        val pageable = if (pageNumber != null && pageSize != null) {
+            PageRequest.of(pageNumber, pageSize)
+        } else { Pageable.unpaged() }
         return dbReportingRepository.findAll(
             pageable,
             reportingType = convertToString(reportingTypeAsStringArray),

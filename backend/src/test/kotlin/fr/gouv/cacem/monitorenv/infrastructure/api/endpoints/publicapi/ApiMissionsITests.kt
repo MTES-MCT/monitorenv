@@ -11,8 +11,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions.Missions
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions.SSEMission
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.Missions
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.SSEMission
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
@@ -33,7 +33,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.ZonedDateTime
-import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [Missions::class, SSEMission::class])

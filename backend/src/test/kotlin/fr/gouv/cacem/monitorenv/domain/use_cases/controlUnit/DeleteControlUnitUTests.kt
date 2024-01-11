@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -30,7 +30,7 @@ class DeleteControlUnitUTests {
     }
 
     @Test
-    fun `execute should throw ForeignKeyConstraintException when canDeleteControlUnit returns false`() {
+    fun `execute should throw CouldNotDeleteException when canDeleteControlUnit returns false`() {
         val controlUnitId = 1
 
         given(canDeleteControlUnit.execute(controlUnitId)).willReturn(false)
@@ -38,6 +38,6 @@ class DeleteControlUnitUTests {
         assertThatThrownBy {
             DeleteControlUnit(controlUnitRepository, canDeleteControlUnit).execute(controlUnitId)
         }
-            .isInstanceOf(ForeignKeyConstraintException::class.java)
+            .isInstanceOf(CouldNotDeleteException::class.java)
     }
 }

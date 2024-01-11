@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.administration
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -30,7 +30,7 @@ class DeleteAdministrationUTests {
     }
 
     @Test
-    fun `execute should throw ForeignKeyConstraintException when canDeleteAdministration returns false`() {
+    fun `execute should throw CouldNotDeleteException when canDeleteAdministration returns false`() {
         val administrationId = 1
 
         given(canDeleteAdministration.execute(administrationId)).willReturn(false)
@@ -38,6 +38,6 @@ class DeleteAdministrationUTests {
         assertThatThrownBy {
             DeleteAdministration(administrationRepository, canDeleteAdministration).execute(administrationId)
         }
-            .isInstanceOf(ForeignKeyConstraintException::class.java)
+            .isInstanceOf(CouldNotDeleteException::class.java)
     }
 }

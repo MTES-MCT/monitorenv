@@ -3,8 +3,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.administration
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotArchiveException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,7 +31,7 @@ class ArchiveAdministrationUTests {
     }
 
     @Test
-    fun `execute should throw UnarchivedChildException when canArchive() returns false`() {
+    fun `execute should throw CouldNotArchiveException when canArchive() returns false`() {
         val administrationId = 1
 
         given(canArchiveAdministration.execute(administrationId)).willReturn(false)
@@ -39,7 +39,7 @@ class ArchiveAdministrationUTests {
         assertThatThrownBy {
             ArchiveAdministration(administrationRepository, canArchiveAdministration).execute(administrationId)
         }
-            .isInstanceOf(UnarchivedChildException::class.java)
+            .isInstanceOf(CouldNotArchiveException::class.java)
 
         verifyNoMoreInteractions(administrationRepository)
     }

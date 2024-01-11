@@ -7,8 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import java.time.ZonedDateTime
 
 @UseCase
@@ -40,12 +38,8 @@ class GetReportings(
                 status = status,
                 targetTypes = targetTypes,
                 isAttachedToMission = isAttachedToMission,
-                pageable =
-                if (pageNumber != null && pageSize != null) {
-                    PageRequest.of(pageNumber, pageSize)
-                } else {
-                    Pageable.unpaged()
-                },
+                pageNumber = pageNumber,
+                pageSize = pageSize,
             )
 
         logger.info(
