@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionCont
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -13,7 +12,6 @@ data class EnvActionControlProperties(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
     val observations: String? = null,
-    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) {
     fun toEnvActionControlEntity(
@@ -47,7 +45,6 @@ data class EnvActionControlProperties(
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
             observations = observations,
-            themes = themes,
             vehicleType = vehicleType,
         )
 
@@ -58,7 +55,6 @@ data class EnvActionControlProperties(
                 actionTargetType = envAction.actionTargetType,
                 infractions = envAction.infractions,
                 observations = envAction.observations,
-                themes = envAction.themes,
                 vehicleType = envAction.vehicleType,
             )
     }

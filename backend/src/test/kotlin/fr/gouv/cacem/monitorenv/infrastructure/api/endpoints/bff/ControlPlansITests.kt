@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanTagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanThemeEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlans
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlansByYear
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.ControlPlansController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.ControlPlans
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class)
-@WebMvcTest(value = [(ControlPlansController::class)])
+@WebMvcTest(value = [(ControlPlans::class)])
 class ControlPlansITests {
     @Autowired private lateinit var mockMvc: MockMvc
 

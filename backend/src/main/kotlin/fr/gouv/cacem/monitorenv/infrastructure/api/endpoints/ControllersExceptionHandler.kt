@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,13 +19,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
 class ControllersExceptionHandler() {
     private val logger: Logger = LoggerFactory.getLogger(ControllersExceptionHandler::class.java)
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ForeignKeyConstraintException::class)
-    fun handleForeignKeyConstraintException(e: ForeignKeyConstraintException): ApiError {
-        logger.error(e.message, e)
-        return ApiError(ErrorCode.FOREIGN_KEY_CONSTRAINT.name)
-    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException::class)

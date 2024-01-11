@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
@@ -26,7 +26,6 @@ data class MissionEnvActionControlDataOutput(
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     val isSeafarersControl: Boolean? = null,
     val observations: String? = null,
-    val reportingIds: List<Int>,
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     MissionEnvActionDataOutput(
@@ -37,7 +36,6 @@ data class MissionEnvActionControlDataOutput(
     companion object {
         fun fromEnvActionControlEntity(
             envActionControlEntity: EnvActionControlEntity,
-            reportingIds: List<Int>,
         ) =
             MissionEnvActionControlDataOutput(
                 id = envActionControlEntity.id,
@@ -63,7 +61,6 @@ data class MissionEnvActionControlDataOutput(
                 isSeafarersControl = envActionControlEntity.isSeafarersControl,
                 observations = envActionControlEntity.observations,
                 vehicleType = envActionControlEntity.vehicleType,
-                reportingIds = reportingIds,
             )
     }
 }

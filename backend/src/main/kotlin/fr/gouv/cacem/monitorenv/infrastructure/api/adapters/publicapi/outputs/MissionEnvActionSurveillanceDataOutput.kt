@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
@@ -17,7 +17,6 @@ data class MissionEnvActionSurveillanceDataOutput(
     val facade: String? = null,
     val geom: Geometry? = null,
     val observations: String? = null,
-    val reportingIds: List<Int>,
 ) :
     MissionEnvActionDataOutput(
         id = id,
@@ -27,7 +26,6 @@ data class MissionEnvActionSurveillanceDataOutput(
     companion object {
         fun fromEnvActionSurveillanceEntity(
             envActionSurveillanceEntity: EnvActionSurveillanceEntity,
-            reportingIds: List<Int>,
         ) =
             MissionEnvActionSurveillanceDataOutput(
                 id = envActionSurveillanceEntity.id,
@@ -41,7 +39,6 @@ data class MissionEnvActionSurveillanceDataOutput(
                 geom = envActionSurveillanceEntity.geom,
                 coverMissionZone = envActionSurveillanceEntity.coverMissionZone,
                 observations = envActionSurveillanceEntity.observations,
-                reportingIds = reportingIds,
             )
     }
 }

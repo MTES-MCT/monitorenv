@@ -11,7 +11,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
@@ -162,13 +161,6 @@ class MissionsITests {
                 isComplianceWithWaterRegulationsControl = false,
                 isSafetyEquipmentAndStandardsComplianceControl = false,
                 isSeafarersControl = false,
-                themes =
-                listOf(
-                    ThemeEntity(
-                        theme = "Theme 1",
-                        subThemes = listOf("sous theme 1", "sous theme 2"),
-                    ),
-                ),
                 observations = "Observations de l'action de contrôle",
                 actionNumberOfControls = 2,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
@@ -373,19 +365,6 @@ class MissionsITests {
                 ),
             )
             .andExpect(jsonPath("$[0].envActions[0].isSeafarersControl", equalTo(false)))
-            .andExpect(jsonPath("$[0].envActions[0].themes[0].theme", equalTo("Theme 1")))
-            .andExpect(
-                jsonPath(
-                    "$[0].envActions[0].themes[0].subThemes[0]",
-                    equalTo("sous theme 1"),
-                ),
-            )
-            .andExpect(
-                jsonPath(
-                    "$[0].envActions[0].themes[0].subThemes[1]",
-                    equalTo("sous theme 2"),
-                ),
-            )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].observations",
@@ -496,13 +475,6 @@ class MissionsITests {
                 isComplianceWithWaterRegulationsControl = false,
                 isSafetyEquipmentAndStandardsComplianceControl = false,
                 isSeafarersControl = false,
-                themes =
-                listOf(
-                    ThemeEntity(
-                        theme = "Theme 1",
-                        subThemes = listOf("sous theme 1", "sous theme 2"),
-                    ),
-                ),
                 observations = "Observations de l'action de contrôle",
                 actionNumberOfControls = 2,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
@@ -692,13 +664,6 @@ class MissionsITests {
                 ),
             )
             .andExpect(jsonPath("$.envActions[0].isSeafarersControl", equalTo(false)))
-            .andExpect(jsonPath("$.envActions[0].themes[0].theme", equalTo("Theme 1")))
-            .andExpect(
-                jsonPath("$.envActions[0].themes[0].subThemes[0]", equalTo("sous theme 1")),
-            )
-            .andExpect(
-                jsonPath("$.envActions[0].themes[0].subThemes[1]", equalTo("sous theme 2")),
-            )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].observations",

@@ -7,7 +7,6 @@ import java.util.UUID
 data class EnvActionSurveillanceProperties(
     val coverMissionZone: Boolean? = null,
     val observations: String? = null,
-    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = listOf(),
 ) {
     fun toEnvActionSurveillanceEntity(
         id: UUID,
@@ -28,14 +27,12 @@ data class EnvActionSurveillanceProperties(
             facade = facade,
             geom = geom,
             observations = observations,
-            themes = themes,
         )
     companion object {
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) =
             EnvActionSurveillanceProperties(
                 coverMissionZone = envAction.coverMissionZone,
                 observations = envAction.observations,
-                themes = envAction.themes,
             )
     }
 }
