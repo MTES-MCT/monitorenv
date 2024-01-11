@@ -57,7 +57,7 @@ const initialState: ReportingsFiltersSliceType = {
   isUnattachedToMissionFilter: false,
   periodFilter: ReportingDateRangeEnum.DAY,
   seaFrontFilter: undefined,
-  searchQueryFilter: '',
+  searchQueryFilter: undefined,
   sourceFilter: undefined,
   sourceTypeFilter: undefined,
   startedAfter: LAST_24_HOURS,

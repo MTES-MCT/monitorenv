@@ -99,61 +99,50 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-
-        WITH formatted_target_details AS (
-            SELECT
-                *,
-                jsonb_array_elements(target_details) -> 'operatorName' as operator_name,
-                jsonb_array_elements(target_details) -> 'vesselName' as vessel_name,
-                jsonb_array_elements(target_details) -> 'mmsi' as mmsi,
-                jsonb_array_elements(target_details) -> 'imo' as imo
-            FROM reportings
-        )
-
         SELECT *
-        FROM formatted_target_details
+        FROM reportings
         WHERE is_deleted IS FALSE
-        AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
-        AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
-        AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
-        AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
-        AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
-        AND ((:status) = '{}'
-            OR (
-                'ARCHIVED' = ANY(CAST(:status as text[])) AND (
-                    is_archived = true
-                    OR (created_at + make_interval(hours => validity_time)) < NOW()
+            AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
+            AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
+            AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
+            AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
+            AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
+            AND ((:status) = '{}'
+                OR (
+                    'ARCHIVED' = ANY(CAST(:status as text[])) AND (
+                        is_archived = true
+                        OR (created_at + make_interval(hours => validity_time)) < NOW()
+                    )
                 )
-            )
-            OR (
-                'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
-                    is_archived = false
-                    AND (created_at + make_interval(hours => validity_time)) >= NOW()
-                )
-            )
-        )
-        AND ((:targetTypes) = '{}' OR CAST(target_type AS text) = ANY(CAST(:targetTypes as text[])))
-        AND ((:isAttachedToMission) IS NULL
-            OR (
-                (:isAttachedToMission) = true AND (
-                    mission_id IS NOT NULL
-                    AND detached_from_mission_at_utc IS NULL
-                )
-            ) 
-            OR (
-                (:isAttachedToMission) = false AND (
-                    mission_id IS NULL
-                    OR (
-                        mission_id IS NOT NULL AND 
-                        detached_from_mission_at_utc IS NOT NULL
+                OR (
+                    'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
+                        is_archived = false
+                        AND (created_at + make_interval(hours => validity_time)) >= NOW()
                     )
                 )
             )
-        )
-        AND ((:searchQuery) IS NULL
-            OR CAST(to_tsvector('mydict', target_details) as text) @@ CAST((:searchQuery) as text)
-        )
-        ORDER BY reporting_id DESC
+            AND ((:targetTypes) = '{}' OR CAST(target_type AS text) = ANY(CAST(:targetTypes as text[])))
+            AND ((:isAttachedToMission) IS NULL
+                OR (
+                    (:isAttachedToMission) = true AND (
+                        mission_id IS NOT NULL
+                        AND detached_from_mission_at_utc IS NULL
+                    )
+                ) 
+                OR (
+                    (:isAttachedToMission) = false AND (
+                        mission_id IS NULL
+                        OR (
+                            mission_id IS NOT NULL AND 
+                            detached_from_mission_at_utc IS NOT NULL
+                        )
+                    )
+                )
+            )
+            AND ((:searchQuery) = ''
+                OR CAST(to_tsvector('mydict', target_details) as text) @@ CAST((:searchQuery) as text)
+            )
+            ORDER BY reporting_id DESC
     """,
         nativeQuery = true,
     )
@@ -167,7 +156,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         status: String?,
         targetTypes: String?,
         isAttachedToMission: Boolean?,
-        searchQuery: String?,
+        searchQuery: String,
     ): List<ReportingModel>
 
     @Query(

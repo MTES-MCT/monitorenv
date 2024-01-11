@@ -1,6 +1,6 @@
-import { Size, TextInput } from '@mtes-mct/monitor-ui'
+import { Size, TextInput, usePrevious } from '@mtes-mct/monitor-ui'
 import { debounce } from 'lodash'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
@@ -9,9 +9,9 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 
 export function ReportingSearch() {
   const dispatch = useAppDispatch()
-  const searchFilter = useAppSelector(state => state.reportingFilters.searchQueryFilter)
-
-  const [searchText, setSearchText] = useState(searchFilter)
+  const searchQueryFilter = useAppSelector(state => state.reportingFilters.searchQueryFilter)
+  const previousSearchQueryFilter = usePrevious(searchQueryFilter)
+  const [searchText, setSearchText] = useState(searchQueryFilter)
 
   const onQuery = useCallback(
     value => {
@@ -25,6 +25,13 @@ export function ReportingSearch() {
     },
     [dispatch]
   )
+
+  // when filters are reinitialzed, reset search text
+  useEffect(() => {
+    if (previousSearchQueryFilter && !searchQueryFilter) {
+      setSearchText(undefined)
+    }
+  }, [searchQueryFilter, previousSearchQueryFilter])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedHandleChange = useCallback(debounce(onQuery, 500), [])

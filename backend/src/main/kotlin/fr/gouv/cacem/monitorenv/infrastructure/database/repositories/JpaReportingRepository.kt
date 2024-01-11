@@ -87,7 +87,7 @@ class JpaReportingRepository(
             status = convertToString(status),
             targetTypes = convertToString(targetTypesAsStringArray),
             isAttachedToMission = isAttachedToMission,
-            searchQuery = searchQuery,
+            searchQuery = searchQuery ?: "",
         )
             .map { it.toReportingDTO(mapper) }
     }
