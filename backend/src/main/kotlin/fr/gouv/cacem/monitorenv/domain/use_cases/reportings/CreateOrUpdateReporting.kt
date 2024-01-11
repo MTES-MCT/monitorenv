@@ -2,9 +2,9 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -21,11 +21,6 @@ class CreateOrUpdateReporting(
         logger.info("Create or update reporting: $reporting.id")
         reporting.validate()
 
-        var seaFront: String? = null
-        if (reporting.geom != null) {
-            seaFront = facadeRepository.findFacadeFromGeometry(reporting.geom)
-        }
-
         if (reporting.id != null &&
             reporting.attachedToMissionAtUtc != null &&
             reporting.missionId != null &&
@@ -40,6 +35,12 @@ class CreateOrUpdateReporting(
                     "Reporting ${reporting.id} is already attached to a mission",
                 )
             }
+        }
+
+        val seaFront = if (reporting.geom != null) {
+            facadeRepository.findFacadeFromGeometry(reporting.geom)
+        } else {
+            null
         }
 
         return reportingRepository.save(
