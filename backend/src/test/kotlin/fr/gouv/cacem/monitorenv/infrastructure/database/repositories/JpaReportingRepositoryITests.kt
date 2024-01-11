@@ -384,9 +384,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         attachedEnvActionId =
-                        UUID.fromString(
-                            "e2257638-ddef-4611-960c-7675a3254c38",
-                        ),
+                        UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
                     ),
                 )
             }
@@ -413,9 +411,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                     existingReportingDTO.reporting.copy(
                         missionId = 42,
                         attachedEnvActionId =
-                        UUID.fromString(
-                            "e2257638-ddef-4611-960c-7675a3254c38",
-                        ),
+                        UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
                     ),
                 )
             }
