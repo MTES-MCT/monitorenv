@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.station
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
 import fr.gouv.cacem.monitorenv.domain.repositories.IStationRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -30,7 +30,7 @@ class DeleteStationUTests {
     }
 
     @Test
-    fun `execute should throw ForeignKeyConstraintException when canDeleteBase returns false`() {
+    fun `execute should throw CouldNotDeleteException when canDeleteBase returns false`() {
         val stationId = 1
 
         given(canDeleteStation.execute(stationId)).willReturn(false)
@@ -38,6 +38,6 @@ class DeleteStationUTests {
         assertThatThrownBy {
             DeleteStation(stationRepository, canDeleteStation).execute(stationId)
         }
-            .isInstanceOf(ForeignKeyConstraintException::class.java)
+            .isInstanceOf(CouldNotDeleteException::class.java)
     }
 }

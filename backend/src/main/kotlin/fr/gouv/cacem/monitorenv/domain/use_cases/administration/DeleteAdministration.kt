@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.administration
 
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 
 @UseCase
 class DeleteAdministration(
@@ -11,7 +11,7 @@ class DeleteAdministration(
 ) {
     fun execute(administrationId: Int) {
         if (!canDeleteAdministration.execute(administrationId)) {
-            throw ForeignKeyConstraintException(
+            throw CouldNotDeleteException(
                 "Cannot delete administration (ID=$administrationId) due to existing relationships.",
             )
         }

@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
 
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class EnvActionSurveillanceProperties(
     val coverMissionZone: Boolean? = null,
