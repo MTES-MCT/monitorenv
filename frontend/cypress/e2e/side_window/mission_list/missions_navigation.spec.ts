@@ -42,6 +42,7 @@ context('Mission', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}').wait(500)
+    cy.clickOutside()
     cy.wait(500)
 
     // we close the first mission and display the confirm cancel modal
@@ -83,6 +84,7 @@ context('Mission', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}').wait(500)
+    cy.clickOutside()
     cy.wait(500)
 
     // we close the first mission and display the confirm cancel modal
