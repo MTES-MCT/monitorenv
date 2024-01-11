@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
     name = "Control Plan Themes, SubThemes and tags",
     description = "API des sous thématiques des plan de contrôle",
 )
-class ControlPlansController(
+class ControlPlans(
     private val getControlPlans: GetControlPlans,
     private val getControlPlansByYear: GetControlPlansByYear,
 ) {

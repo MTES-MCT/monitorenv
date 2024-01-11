@@ -4,7 +4,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -22,7 +21,7 @@ data class MissionDataOutput(
     val endDateTimeUtc: ZonedDateTime? = null,
     val createdAtUtc: ZonedDateTime? = null,
     val updatedAtUtc: ZonedDateTime? = null,
-    val envActions: List<EnvActionEntity>? = null,
+    val envActions: List<MissionEnvActionDataOutput>? = null,
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
@@ -47,7 +46,11 @@ data class MissionDataOutput(
                 endDateTimeUtc = mission.endDateTimeUtc,
                 createdAtUtc = mission.createdAtUtc,
                 updatedAtUtc = mission.updatedAtUtc,
-                envActions = mission.envActions,
+                envActions = mission.envActions?.map {
+                    MissionEnvActionDataOutput.fromEnvActionEntity(
+                        envActionEntity = it,
+                    )
+                },
                 missionSource = mission.missionSource,
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,

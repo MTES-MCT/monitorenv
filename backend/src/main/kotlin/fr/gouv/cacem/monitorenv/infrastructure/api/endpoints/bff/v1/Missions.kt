@@ -14,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
 import java.time.ZonedDateTime
 
-@RestController
+@RestController("MissionsV1")
 @RequestMapping("/bff/v1/missions")
 @Tag(description = "API Missions", name = "BFF.Missions")
 class Missions(
