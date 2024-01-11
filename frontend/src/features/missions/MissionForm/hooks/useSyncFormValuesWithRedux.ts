@@ -33,19 +33,19 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
    */
   function isMissionFormDirty(errors: FormikErrors<Mission>) {
     if (!isAutoSaveEnabled) {
-      return !isEmpty(errors)
+      if (dirty) {
+        return dirty
+      }
+
+      /**
+       * If the form was already dirty and still open, the new `dirty` property is not valid anymore as Formik
+       * has been re-instantiated with the saved values.
+       * We use the last `isFormDirty` value instead of `dirty`.
+       */
+      return (activeMissionId && selectedMissions[activeMissionId]?.isFormDirty) || false
     }
 
-    if (dirty) {
-      return dirty
-    }
-
-    /**
-     * If the form was already dirty and still open, the new `dirty` property is not valid anymore as Formik
-     * has been re-instantiated with the saved values.
-     * We use the last `isFormDirty` value instead of `dirty`.
-     */
-    return (activeMissionId && selectedMissions[activeMissionId]?.isFormDirty) || false
+    return !isEmpty(errors)
   }
 
   useEffect(() => {

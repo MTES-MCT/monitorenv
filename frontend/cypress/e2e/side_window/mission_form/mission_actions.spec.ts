@@ -162,8 +162,10 @@ context('Side Window > Mission Form > Mission actions', () => {
   it(`Should be able to delete action with linked reporting`, () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
+    cy.wait(500)
     cy.get('*[data-cy="action-card"]').eq(0).click()
-    // TODO
+
+    cy.wait(500)
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('*[data-cy="actioncard-delete-button-b8007c8a-5135-4bc3-816f-c69c7b75d807"]').click()
 
@@ -197,7 +199,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Add a note
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une note libre')
-    cy.wait(250)
+    cy.wait(500)
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.get('[id="envActions[0].observations"]').type('Obs.', {
       force: true
@@ -238,7 +240,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
-    cy.wait(250)
+    cy.wait(500)
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.get('[id="envActions[0].observations"]').type('Obs.', {
       force: true

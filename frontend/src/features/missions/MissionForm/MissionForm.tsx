@@ -1,6 +1,6 @@
 import { customDayjs, FormikEffect } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import _, { isEmpty, isEqual, omit } from 'lodash'
+import { isEmpty, isEqual, omit } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
@@ -113,7 +113,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     setShouldValidateOnChange(false)
 
     validateForm().then(errors => {
-      if (_.isEmpty(errors)) {
+      if (isEmpty(errors)) {
         dispatch(saveMission(values, false, true))
 
         return
@@ -124,19 +124,23 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
 
   const closeMission = () => {
     validateForm({ ...values, isClosed: true }).then(errors => {
-      if (_.isEmpty(errors)) {
+      setFieldValue('isClosed', true)
+
+      if (isEmpty(errors)) {
         dispatch(saveMission({ ...values, isClosed: true }, false, true))
 
         return
       }
+
       setShouldValidateOnChange(true)
     })
   }
 
   const reopenMission = () => {
     validateForm({ ...values, isClosed: false }).then(errors => {
-      if (_.isEmpty(errors)) {
-        setFieldValue('isClosed', false)
+      setFieldValue('isClosed', false)
+
+      if (isEmpty(errors)) {
         if (isFormDirty) {
           return setIsReopenModalOpen(true)
         }
