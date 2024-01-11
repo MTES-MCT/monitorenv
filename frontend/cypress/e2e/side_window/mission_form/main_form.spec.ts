@@ -21,7 +21,6 @@ context('Side Window > Mission Form > Main Form', () => {
         }
 
         window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = isAutoSaveEnabled
-        cy.log(window.env)
       }
     })
   }
@@ -360,6 +359,7 @@ context('Side Window > Mission Form > Main Form', () => {
         )
       })
 
+    cy.wait(500)
     cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
     cy.get('[name="missionTypes1"]').click({ force: true })
     cy.wait(250)
@@ -446,6 +446,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // -------------------------------------------------------------------------
     // Reset
 
+    cy.wait(250)
     cy.clickButton('Quitter')
     cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
 
