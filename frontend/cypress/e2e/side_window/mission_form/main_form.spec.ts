@@ -18,6 +18,7 @@ context('Side Window > Mission Form > Main Form', () => {
         if (!window.env) {
           Object.defineProperty(window, 'env', { value: {
               REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled,
+              REACT_APP_MISSION_FORM_AUTO_UPDATE: true,
               REACT_APP_CYPRESS_TEST: true
             }
           })
@@ -26,6 +27,7 @@ context('Side Window > Mission Form > Main Form', () => {
         }
 
         window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = isAutoSaveEnabled
+        window.env.REACT_APP_MISSION_FORM_AUTO_UPDATE = true
       }
     })
   }
@@ -466,7 +468,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // -------------------------------------------------------------------------
     // Reset
 
-    cy.wait(250)
+    cy.wait(500)
     cy.clickButton('Quitter')
     cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
 
