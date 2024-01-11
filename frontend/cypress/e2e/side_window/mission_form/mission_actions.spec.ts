@@ -191,6 +191,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.getDataCy('add-control-unit').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.getDataCy('control-unit-contact').type('Contact 012345')
     cy.wait(250)
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
@@ -232,6 +233,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(250)
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
@@ -274,6 +276,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(250)
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')

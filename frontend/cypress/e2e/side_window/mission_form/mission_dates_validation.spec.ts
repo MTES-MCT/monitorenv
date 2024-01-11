@@ -24,13 +24,16 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
-    cy.wait(200)
+    cy.wait(250)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.wait(500)
     cy.get('[name="closedBy"]').scrollIntoView().type('PCF')
+    cy.wait(250)
 
     // Add a surveillance
     cy.clickButton('Ajouter')
@@ -110,7 +113,6 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // Start date of surveillance is after end date of mission
     cy.fill('Date et heure de début de surveillance (UTC)', [2024, 5, 28, 15, 35])
-    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être antérieure à celle de fin de mission')
 
@@ -119,24 +121,19 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // End date of surveillance is before start date of mission
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 25, 23, 35])
-    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à celle de début de mission')
 
     // End date of surveillance is after end date of mission
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 28, 15, 35])
-    cy.clickButton('Clôturer')
-    cy.wait(100)
+    cy.wait(250)
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
 
     // Valid end date of surveillance
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 28, 13, 35])
 
     // Then
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
-    cy.clickButton('Clôturer')
-    cy.wait(100)
-
     cy.wait('@updateAndCloseMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
@@ -156,6 +153,7 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
@@ -214,6 +212,7 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
@@ -246,18 +245,14 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // Date is after end date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 14, 16])
-    cy.clickButton('Clôturer')
-    cy.wait(100)
+    cy.wait(250)
     cy.get('.Element-FieldError').contains('La date doit être antérieure à celle de fin de mission')
 
     // Valid date
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 13, 16])
 
     // Then
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
-    cy.clickButton('Clôturer')
-    cy.wait(100)
-
     cy.wait('@updateAndCloseMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
