@@ -7,8 +7,9 @@ context('Side Window > Mission Form > Validation on close', () => {
   it('A new mission with control and surveillance can be closed with all required values', () => {
     // Given
     cy.get('*[data-cy="add-mission"]').click()
+    cy.wait(250)
     cy.clickButton('Clôturer')
-    cy.wait(100)
+    cy.wait(250)
 
     cy.get('*[data-cy="mission-errors"]').should('exist')
     cy.contains('Date de fin requise').should('exist')

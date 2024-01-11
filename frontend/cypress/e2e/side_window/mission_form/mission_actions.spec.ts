@@ -209,6 +209,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       const id = response && response.body.id
 
       // clean
+      cy.wait(250)
       cy.clickButton('Quitter')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
@@ -250,6 +251,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       const id = response && response.body.id
 
       // clean
+      cy.wait(250)
       cy.clickButton('Quitter')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
@@ -257,7 +259,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('Sould create control and surveillance actions with valids themes and subthemes depending on mission year', () => {
+  it('Sould create surveillance and control actions with valid themes and subthemes depending on mission year', () => {
     // Given
     cy.wait(400)
 
@@ -303,20 +305,20 @@ context('Side Window > Mission Form > Mission actions', () => {
       const { envActions } = response && response.body
       expect(envActions.length).equal(2)
 
-      // control
-      const control = envActions[0]
-      const controlPlans = control.controlPlans[0]
-      expect(controlPlans.themeId).equal(112)
-      expect(controlPlans.subThemeIds.length).equal(1)
-      expect(controlPlans.subThemeIds[0]).equal(173)
-
       // surveillance
-      const surveillance = envActions[1]
+      const surveillance = envActions[0]
       const surveillanceControlPlans = surveillance.controlPlans[0]
       expect(surveillanceControlPlans.themeId).equal(105)
       expect(surveillanceControlPlans.subThemeIds.length).equal(2)
       expect(surveillanceControlPlans.subThemeIds[0]).equal(128)
       expect(surveillanceControlPlans.subThemeIds[1]).equal(131)
+
+      // control
+      const control = envActions[1]
+      const controlPlans = control.controlPlans[0]
+      expect(controlPlans.themeId).equal(112)
+      expect(controlPlans.subThemeIds.length).equal(1)
+      expect(controlPlans.subThemeIds[0]).equal(173)
 
       const id = response && response.body.id
       // update mission date to 2023
