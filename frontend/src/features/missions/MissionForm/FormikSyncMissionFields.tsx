@@ -18,6 +18,10 @@ const UNSYNCHRONIZED_PROPERTIES = [
   'detachedReportingIds',
   'detachedReportings',
   'isGeometryComputedFromControls',
+  // We do not update this field as it is not used by the form
+  'updatedAtUtc',
+  // We do not update this field as it is not used by the form
+  'createdAtUtc',
   // TODO add the update of the env actions
   'envActions'
 ]
