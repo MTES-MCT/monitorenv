@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
 import { useGetControlPlansQuery } from '../api/controlPlans'
+import { sortControlPlans } from '../utils/sortControlPlans'
 
 import type { Option } from '@mtes-mct/monitor-ui'
 
@@ -11,10 +12,12 @@ export function useGetControlPlans() {
 
   const themesAsOptions: Array<Option<number>> = useMemo(
     () =>
-      Object.values(data?.themes || {}).map(({ id, theme }) => ({
-        label: theme,
-        value: id
-      })) || [],
+      Object.values(data?.themes || {})
+        .map(({ id, theme }) => ({
+          label: theme,
+          value: id
+        }))
+        .sort(sortControlPlans) || [],
     [data?.themes]
   )
 
@@ -22,7 +25,8 @@ export function useGetControlPlans() {
     () =>
       Object.values(data?.subThemes || {})
         .filter(subTheme => (themeFilter ? themeFilter.includes(subTheme.themeId) : true))
-        .map(({ id, subTheme }) => ({ label: subTheme, value: id })) || [],
+        .map(({ id, subTheme }) => ({ label: subTheme, value: id }))
+        .sort(sortControlPlans) || [],
     [data?.subThemes, themeFilter]
   )
 

@@ -1,6 +1,8 @@
+import { sortBy } from 'lodash/fp'
 import { useMemo } from 'react'
 
 import { useGetControlPlansByYearQuery } from '../api/controlPlans'
+import { sortControlPlans } from '../utils/sortControlPlans'
 
 import type { Option } from '@mtes-mct/monitor-ui'
 
@@ -15,10 +17,12 @@ export function useGetControlPlansByYear({
 
   const themesByYearAsOptions: Array<Option<number>> = useMemo(
     () =>
-      Object.values(data?.themes || {}).map(({ id, theme }) => ({
-        label: theme,
-        value: id
-      })) || [],
+      Object.values(data?.themes || {})
+        .map(({ id, theme }) => ({
+          label: theme,
+          value: id
+        }))
+        .sort(sortControlPlans) || [],
     [data?.themes]
   )
 
@@ -26,15 +30,19 @@ export function useGetControlPlansByYear({
     () =>
       Object.values(data?.subThemes || {})
         ?.filter(({ themeId }) => themeId === selectedTheme)
-        .map(({ id, subTheme }) => ({ label: subTheme, value: id })) || [],
+        .map(({ id, subTheme }) => ({ label: subTheme, value: id }))
+        .sort(sortControlPlans) || [],
     [data?.subThemes, selectedTheme]
   )
 
   const tagsByYearAsOptions: Array<Option<number>> = useMemo(
     () =>
-      Object.values(data?.tags || {})
-        ?.filter(({ themeId }) => themeId === selectedTheme)
-        .map(({ id, tag }) => ({ label: tag, value: id })) || [],
+      sortBy(
+        'label',
+        Object.values(data?.tags || {})
+          ?.filter(({ themeId }) => themeId === selectedTheme)
+          .map(({ id, tag }) => ({ label: tag, value: id }))
+      ) || [],
     [data?.tags, selectedTheme]
   )
 

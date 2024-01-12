@@ -84,8 +84,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       expect(controlPlans[0].subThemeIds[0]).equal(117)
       expect(controlPlans[0].subThemeIds[1]).equal(120)
       expect(controlPlans[0].tagIds.length).equal(2)
-      expect(controlPlans[0].tagIds[0]).equal(11)
-      expect(controlPlans[0].tagIds[1]).equal(15)
+      expect(controlPlans[0].tagIds[0]).equal(15)
+      expect(controlPlans[0].tagIds[1]).equal(11)
     })
   })
 
@@ -132,7 +132,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.get('*[data-cy="envaction-add-theme"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-selector"]').eq(2).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click() // id 102
+    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click({ force: true }) // id 102
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains("Rejet d'hydrocarbure").click({ force: true }) // id 74

@@ -3,6 +3,7 @@ import { isEmpty, compact } from 'lodash'
 import styled from 'styled-components'
 
 import { ActionTheme } from './ActionTheme'
+import { ActionTypeEnum } from '../../../../../domain/entities/missions'
 
 export function MultipleThemeElement({ envActionIndex, form, push, remove, themesYear }) {
   const handleRemoveTheme = (index: number) => {
@@ -24,6 +25,7 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove, theme
         <ThemeBloc key={0}>
           <ActionTheme
             actionIndex={envActionIndex}
+            actionType={ActionTypeEnum.SURVEILLANCE}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
             themeIndex={0}
@@ -36,6 +38,7 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove, theme
         <ThemeBloc key={index}>
           <ActionTheme
             actionIndex={envActionIndex}
+            actionType={ActionTypeEnum.SURVEILLANCE}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
             themeIndex={index}
