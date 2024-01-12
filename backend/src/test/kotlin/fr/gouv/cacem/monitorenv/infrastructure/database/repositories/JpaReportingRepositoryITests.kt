@@ -262,7 +262,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `findAll should return all reportings when searchQuery filter is set to GERANT (vesselName in targetDetails)`() {
         val reportings =
             jpaReportingRepository.findAll(
-                Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
                 startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 reportingType = null,
@@ -280,7 +281,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `findAll should return all reportings when searchQuery filter is set to 9876543210(imo in targetDetails)`() {
         val reportings =
             jpaReportingRepository.findAll(
-                Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
                 startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 reportingType = null,
@@ -298,7 +300,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `findAll should return all reportings when searchQuery filter is set to COMPANY(operatorName in targetDetails)`() {
         val reportings =
             jpaReportingRepository.findAll(
-                Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
                 startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 reportingType = null,
@@ -316,7 +319,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `findAll should return all reportings when searchQuery filter is set to 012314231345(mmsi in targetDetails)`() {
         val reportings =
             jpaReportingRepository.findAll(
-                Pageable.unpaged(),
+                pageNumber = null,
+                pageSize = null,
                 startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 reportingType = null,
