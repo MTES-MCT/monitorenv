@@ -37,14 +37,21 @@ export function HomePage() {
     isControlUnitDialogVisible
   } = useAppSelector(state => state.global)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
+  const reportings = useAppSelector(state => state.reporting.reportings)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => !!Object.values(selectedMissions).find(mission => mission.isFormDirty),
     [selectedMissions]
   )
+
+  const hasAtLeastOneReportingFormDirty = useMemo(
+    () => !!Object.values(reportings).find(reporting => reporting.isFormDirty),
+    [reportings]
+  )
+
   const beforeUnload = useCallback(
     event => {
-      if (hasAtLeastOneMissionFormDirty) {
+      if (hasAtLeastOneMissionFormDirty || hasAtLeastOneReportingFormDirty) {
         event.preventDefault()
 
         // eslint-disable-next-line no-return-assign, no-param-reassign
@@ -53,7 +60,7 @@ export function HomePage() {
 
       return undefined
     },
-    [hasAtLeastOneMissionFormDirty]
+    [hasAtLeastOneMissionFormDirty, hasAtLeastOneReportingFormDirty]
   )
 
   useBeforeUnload(beforeUnload)

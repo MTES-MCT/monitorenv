@@ -20,14 +20,14 @@ type ReportingState = {
   selectedReportingIdOnMap: number | string | undefined
 }
 
-const initialState: ReportingState = {
+const INITIAL_STATE: ReportingState = {
   activeReportingId: undefined,
   isConfirmCancelDialogVisible: false,
   reportings: {},
   selectedReportingIdOnMap: undefined
 }
 const reportingSlice = createSlice({
-  initialState,
+  initialState: INITIAL_STATE,
   name: 'reporting',
   reducers: {
     deleteSelectedReporting(state, action) {
@@ -40,6 +40,9 @@ const reportingSlice = createSlice({
       if (reportingIdToDelete === state.selectedReportingIdOnMap) {
         state.selectedReportingIdOnMap = undefined
       }
+    },
+    resetReportings() {
+      return INITIAL_STATE
     },
     setActiveReportingId(state, action: PayloadAction<number | string | undefined>) {
       state.activeReportingId = action.payload
