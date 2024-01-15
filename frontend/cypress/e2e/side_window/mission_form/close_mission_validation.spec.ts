@@ -39,6 +39,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill('Ouvert par', 'PCF').scrollIntoView()
     cy.wait(500)
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
+    cy.wait(500)
 
     cy.get('*[data-cy="mission-errors"]').should('not.exist')
 
@@ -112,9 +113,9 @@ context('Side Window > Mission Form > Validation on close', () => {
     // TODO understand why `cy.fill` doesn't work here
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.wait(250)
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Jet de déchet').click({ force: true })
     cy.wait(250)
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
 
