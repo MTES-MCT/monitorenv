@@ -52,6 +52,7 @@ const ZonesNumber = styled.span`
 
 const GroupWrapper = styled.li<{ $isPadded?: boolean }>`
   display: flex;
+  align-items: center;
   user-select: none;
   text-overflow: ellipsis;
   white-space: nowrap;

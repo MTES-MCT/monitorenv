@@ -1,6 +1,11 @@
 import EventSource, { sources } from 'eventsourcemock'
 
+import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+
+import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
+
+const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 context('Side Window > Mission Form > Main Form', () => {
   beforeEach(() => {
@@ -50,6 +55,22 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+
+    const geometry: GeoJSON.Geometry = {
+      coordinates: [
+        [
+          [
+            [-3.9617884109581034, 47.721266748801554],
+            [-3.950968256158881, 47.72820847289114],
+            [-3.9463533907207182, 47.718950664687924],
+            [-3.9617884109581034, 47.721266748801554]
+          ]
+        ]
+      ],
+      type: 'MultiPolygon'
+    }
+    cy.clickButton('Ajouter une zone de mission').wait(1000)
+    dispatch(setGeometry(geometry))
 
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
     cy.clickButton('Enregistrer et quitter')
@@ -293,7 +314,6 @@ context('Side Window > Mission Form > Main Form', () => {
     // Open
 
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
-
     cy.fill('Période', 'Période spécifique')
     const startDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(6, 'month').toISOString()
     const endDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(3, 'month').toISOString()
