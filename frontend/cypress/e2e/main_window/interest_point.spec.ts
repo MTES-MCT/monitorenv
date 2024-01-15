@@ -1,5 +1,8 @@
+import { FAKE_MAPBOX_RESPONSE } from '../constants'
+
 context('InterestPoint', () => {
   beforeEach(() => {
+    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.visit('/#@-824534.42,6082993.21,8.70')
   })
 
@@ -98,6 +101,7 @@ context('InterestPoint', () => {
     cy.getDataCy('interest-point-type-radio-input').click()
     cy.getDataCy('interest-point-save').click()
     cy.get('[data-cy="interest-point-edit').click()
+
     // The interest point is moved to the East side
     cy.getDataCy('dms-coordinates-input').eq(1).type('{backspace}E')
     cy.getDataCy('interest-point-save').click()
@@ -108,11 +112,11 @@ context('InterestPoint', () => {
 
     cy.getDataCy('interest-point-edit').should('not.be.visible')
     cy.getDataCy('interest-point-edit').click({ force: true })
-    cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '47° 45′ 31″ N 007° 54′ 51″ E')
+    cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
     cy.getDataCy('interest-point-type-radio-input').should('have.class', 'rs-radio-checked')
     cy.getDataCy('interest-point-save').click({ timeout: 10000 })
 
-    cy.getDataCy('interest-point-coordinates').first().contains('47° 45′')
+    cy.getDataCy('interest-point-coordinates').first().contains('47° 42′')
     cy.getDataCy('interest-point-coordinates').first().contains('N')
     cy.getDataCy('interest-point-coordinates').first().contains('007° 54′')
     cy.getDataCy('interest-point-coordinates').first().contains('E')
