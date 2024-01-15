@@ -136,8 +136,8 @@ const regulatorySlice = createSlice({
      *  }
      * }
      */
-    setRegulatoryLayers(state, { payload: { features } }: { payload: { features: RegulatoryLayerType[] } }) {
-      const newState = features.reduce(
+    setRegulatoryLayers(state, { payload }: { payload: RegulatoryLayerType[] }) {
+      const newState = payload.reduce(
         (a, f) => ({
           regulatoryLayersById: { ...a.regulatoryLayersById, [f.id]: f },
           regulatoryLayersIdsByName: {
@@ -152,7 +152,7 @@ const regulatorySlice = createSlice({
           regulatoryLayersIdsByName: {} as RegulatorySliceState['regulatoryLayersIdsByName']
         }
       )
-      state.regulatoryLayers = features
+      state.regulatoryLayers = payload
       state.regulatoryLayersById = newState.regulatoryLayersById
       state.regulatoryLayersIdsByName = newState.regulatoryLayersIdsByName
     },
