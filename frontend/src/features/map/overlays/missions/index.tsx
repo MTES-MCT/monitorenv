@@ -8,7 +8,7 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const selectedMissionId = useAppSelector(state => state.mission.selectedMissionIdOnMap)
-  const { displayMissionsOverlay } = useAppSelector(state => state.global)
+  const displayMissionsOverlay = useAppSelector(state => state.global.displayMissionsOverlay)
   const feature = map
     ?.getLayers()
     ?.getArray()

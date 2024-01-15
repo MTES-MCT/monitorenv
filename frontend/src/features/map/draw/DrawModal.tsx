@@ -54,7 +54,12 @@ const validateButtonPlaceholder = {
 export function DrawModal() {
   const dispatch = useAppDispatch()
 
-  const { geometry, initialGeometry, interactionType, isGeometryValid, listener } = useAppSelector(state => state.draw)
+  const geometry = useAppSelector(state => state.draw.geometry)
+  const initialGeometry = useAppSelector(state => state.draw.initialGeometry)
+  const interactionType = useAppSelector(state => state.draw.interactionType)
+  const isGeometryValid = useAppSelector(state => state.draw.isGeometryValid)
+  const listener = useAppSelector(state => state.draw.listener)
+
   const global = useAppSelector(state => state.global)
   const coordinatesFormat = useAppSelector(state => state.map?.coordinatesFormat)
   const sideWindow = useAppSelector(state => state.sideWindow)

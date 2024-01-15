@@ -24,7 +24,7 @@ import type { Coordinate } from 'ol/coordinate'
 export function PointPicker() {
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
-  const { coordinatesFormat } = useAppSelector(state => state.map)
+  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
   const { geometry } = useListenForDrawedGeometry(InteractionListener.REPORTING_POINT)
 
   const [field, , helpers] = useField('geom')

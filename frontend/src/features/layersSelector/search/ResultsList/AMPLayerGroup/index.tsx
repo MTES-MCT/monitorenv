@@ -28,7 +28,9 @@ export function AMPLayerGroup({
 }) {
   const dispatch = useAppDispatch()
 
-  const { selectedAmpLayerId, selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
+  const selectedAmpLayerId = useAppSelector(state => state.selectedAmp.selectedAmpLayerId)
+  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
+
   const totalNumberOfZones = groups[groupName]?.length
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const zonesSelected = _.intersection(selectedAmpLayerIds, layerIds)

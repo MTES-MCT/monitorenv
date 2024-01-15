@@ -20,9 +20,10 @@ import type { RegulatoryLayerType } from '../../../types'
 export function LayerSearch({ isVisible }) {
   const dispatch = useAppDispatch()
   const { data: amps } = useGetAMPsQuery()
-  const { regulatoryLayers } = useAppSelector(state => state.regulatory)
-  const { ampsSearchResult, regulatoryLayersSearchResult } = useAppSelector(state => state.layerSearch)
-  const { currentMapExtentTracker } = useAppSelector(state => state.map)
+  const regulatoryLayers = useAppSelector(state => state.regulatory.regulatoryLayers)
+  const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
+  const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
+  const currentMapExtentTracker = useAppSelector(state => state.map.currentMapExtentTracker)
 
   const [shouldReloadSearchOnExtent, setShouldReloadSearchOnExtent] = useState<boolean>(false)
   const [displayRegFilters, setDisplayRegFilters] = useState<boolean>(false)

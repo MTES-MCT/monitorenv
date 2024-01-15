@@ -52,7 +52,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   const mapElement = useRef() as MutableRefObject<HTMLDivElement>
 
   const wrapperRef = useRef(null)
-  const { distanceUnit } = useAppSelector(state => state.map)
+  const distanceUnit = useAppSelector(state => state.map.distanceUnit)
   const [unitsSelectionIsOpen, setUnitsSelectionIsOpen] = useState(false)
   const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, unitsSelectionIsOpen)
 

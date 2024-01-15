@@ -12,8 +12,9 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
-  const { activeReportingId, selectedReportingIdOnMap } = useAppSelector(state => state.reporting)
-  const { displayReportingSelectedLayer } = useAppSelector(state => state.global)
+  const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const displayReportingSelectedLayer = useAppSelector(state => state.global.displayReportingSelectedLayer)
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({

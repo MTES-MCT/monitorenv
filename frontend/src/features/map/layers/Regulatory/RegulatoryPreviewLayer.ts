@@ -17,12 +17,12 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
-  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
-  const { isRegulatorySearchResultsVisible, regulatoryLayersSearchResult, searchExtent } = useAppSelector(
-    state => state.layerSearch
-  )
-  const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
-  const { isLayersSidebarVisible } = useAppSelector(state => state.global)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
+  const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const regulatoryLayersById = useAppSelector(state => state.regulatory.regulatoryLayersById)
+  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>

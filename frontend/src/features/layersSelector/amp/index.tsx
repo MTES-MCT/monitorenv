@@ -8,8 +8,9 @@ import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 export function AmpLayers() {
   const dispatch = useAppDispatch()
 
-  const { selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
-  const { myAmpsIsOpen } = useAppSelector(state => state.layerSidebar)
+  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
+  const myAmpsIsOpen = useAppSelector(state => state.layerSidebar.myAmpsIsOpen)
+
   const onTitleClicked = () => {
     dispatch(toggleMyAmps())
   }

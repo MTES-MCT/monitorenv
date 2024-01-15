@@ -7,7 +7,7 @@ import { Identification } from './Identification'
 import { MetadataRegulatoryReferences } from './MetadataRegulatoryReferences'
 import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { getTitle } from '../../../../domain/entities/regulatory'
-import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { closeRegulatoryMetadataPanel } from '../../../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
@@ -17,12 +17,14 @@ const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 export function RegulatoryLayerZoneMetadata() {
   const dispatch = useAppDispatch()
-  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
+
   const { currentData } = useGetRegulatoryLayerQuery({ id: regulatoryMetadataLayerId }, { pollingInterval: FOUR_HOURS })
   const regulatoryMetadata = currentData?.properties
 
   const onCloseIconClicked = useCallback(() => {
-    dispatch(closeRegulatoryZoneMetadata())
+    dispatch(closeRegulatoryMetadataPanel())
   }, [dispatch])
 
   return (

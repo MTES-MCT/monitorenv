@@ -30,7 +30,7 @@ export type MultiPointPickerProps = {
 export function MultiPointPicker({ addButtonLabel, label = undefined, name }: MultiPointPickerProps) {
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
-  const { coordinatesFormat } = useAppSelector(state => state.map)
+  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
   const { geometry } = useListenForDrawedGeometry(InteractionListener.CONTROL_POINT)
 
   const [field, meta, helpers] = useField(name)

@@ -14,8 +14,8 @@ const baseLayersKeys = Object.keys(BaseLayers).filter(key => key !== BaseLayers.
 
 export function BaseLayerList() {
   const dispatch = useAppDispatch()
-  const { baselayerIsOpen } = useAppSelector(state => state.layerSidebar)
-  const { selectedBaseLayer } = useAppSelector(state => state.map)
+  const baselayerIsOpen = useAppSelector(state => state.layerSidebar.baselayerIsOpen)
+  const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
   const onSectionTitleClicked = () => {
     dispatch(toggleBaseLayer())
   }

@@ -9,8 +9,10 @@ import {
   removeRegulatoryZonesFromMyLayers,
   showRegulatoryLayer
 } from '../../../../domain/shared_slices/Regulatory'
-import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
+import {
+  closeRegulatoryMetadataPanel,
+  openRegulatoryMetadataPanel
+} from '../../../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../utils/LayerLegend.style'
@@ -18,8 +20,10 @@ import { LayerSelector } from '../../utils/LayerSelector.style'
 
 export function RegulatoryLayerZone({ regulatoryZone }) {
   const dispatch = useAppDispatch()
-  const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
-  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
+  const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
+
   const regulatoryZoneIsShowed = showedRegulatoryLayerIds.includes(regulatoryZone.id)
   const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
 
@@ -49,9 +53,9 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
 
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {
-      dispatch(closeRegulatoryZoneMetadata())
+      dispatch(closeRegulatoryMetadataPanel())
     } else {
-      dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+      dispatch(openRegulatoryMetadataPanel(regulatoryZone.id))
     }
   }
 

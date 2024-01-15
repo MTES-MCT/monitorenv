@@ -10,21 +10,23 @@ import { RegulatoryLayerZoneMetadata } from './regulatory/metadata'
 import { LayerSearch } from './search'
 import { useGetAMPsQuery } from '../../api/ampsAPI'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
-import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { closeRegulatoryMetadataPanel } from '../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar() {
-  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
-  const { displayLayersSidebar, isLayersSidebarVisible } = useAppSelector(state => state.global)
-  const { regulatoryLayers } = useAppSelector(state => state.regulatory)
+  const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
+  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
+  const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
+  const regulatoryLayers = useAppSelector(state => state.regulatory.regulatoryLayers)
   const amps = useGetAMPsQuery()
 
   const dispatch = useAppDispatch()
 
   const toggleLayerSidebar = () => {
     if (isLayersSidebarVisible) {
-      dispatch(closeRegulatoryZoneMetadata())
+      dispatch(closeRegulatoryMetadataPanel())
     }
     dispatch(setDisplayedItems({ isLayersSidebarVisible: !isLayersSidebarVisible }))
   }

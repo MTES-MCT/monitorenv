@@ -50,7 +50,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
   const wrapperRef = useRef(null)
 
   const dispatch = useAppDispatch()
-  const { coordinatesFormat } = useAppSelector(state => state.map)
+  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
   const [coordinatesSelectionIsOpen, setCoordinatesSelectionIsOpen] = useState(false)
   const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, coordinatesSelectionIsOpen)
 

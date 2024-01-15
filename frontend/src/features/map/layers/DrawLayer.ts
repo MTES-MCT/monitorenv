@@ -26,7 +26,9 @@ import type Geometry from 'ol/geom/Geometry'
 
 function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
+  const geometry = useAppSelector(state => state.draw.geometry)
+  const interactionType = useAppSelector(state => state.draw.interactionType)
+  const listener = useAppSelector(state => state.draw.listener)
 
   const feature = useMemo(() => {
     if (!geometry) {

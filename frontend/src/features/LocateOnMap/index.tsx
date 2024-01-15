@@ -12,7 +12,7 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {
   const dispatch = useAppDispatch()
-  const { reportingFormVisibility } = useAppSelector(state => state.global)
+  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
 

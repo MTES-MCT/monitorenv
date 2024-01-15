@@ -15,7 +15,8 @@ import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useAppDispatch()
-  const { displayMissionsLayer, isSearchMissionsVisible } = useAppSelector(state => state.global)
+  const isSearchMissionsVisible = useAppSelector(state => state.global.isSearchMissionsVisible)
+  const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
   const sideWindow = useAppSelector(state => state.sideWindow)
 
   const isMissionButtonIsActive = useMemo(

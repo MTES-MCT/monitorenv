@@ -10,7 +10,7 @@ export type RouteProps = {
   path: string | string[]
 }
 export function Route({ element, path }: RouteProps) {
-  const { currentPath } = useAppSelector(state => state.sideWindow)
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
   if (typeof path === 'string') {
     const routeParams = matchPath<'id', string>(
       {

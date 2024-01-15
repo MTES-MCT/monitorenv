@@ -8,7 +8,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import type { BaseMapChildrenProps } from '../BaseMap'
 
 export function AdministrativeLayers({ map }: BaseMapChildrenProps) {
-  const { showedAdministrativeLayerIds } = useAppSelector(state => state.administrative)
+  const showedAdministrativeLayerIds = useAppSelector(state => state.administrative.showedAdministrativeLayerIds)
 
   useEffect(() => {
     if (map && showedAdministrativeLayerIds) {

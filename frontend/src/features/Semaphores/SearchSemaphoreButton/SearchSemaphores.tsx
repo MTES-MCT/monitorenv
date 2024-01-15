@@ -18,8 +18,8 @@ import type { Semaphore } from '../../../domain/entities/semaphore'
 export function SearchSemaphores() {
   const dispatch = useAppDispatch()
 
-  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { semaphoresResearchHistory } = useAppSelector(state => state.semaphoresSlice)
+  const displaySemaphoresLayer = useAppSelector(state => state.global.displaySemaphoresLayer)
+  const semaphoresResearchHistory = useAppSelector(state => state.semaphoresSlice.semaphoresResearchHistory)
   const { data } = useGetSemaphoresQuery()
 
   const [isSemaphoresHistoryVisible, setIsSemaphoresHistoryVisible] = useState(semaphoresResearchHistory.length > 0)

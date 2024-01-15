@@ -18,7 +18,10 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
-  const { ampsSearchResult, isAmpSearchResultsVisible, searchExtent } = useAppSelector(state => state.layerSearch)
+  const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
+  const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)
 

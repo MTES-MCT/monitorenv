@@ -15,16 +15,16 @@ import {
 } from '../slice'
 
 export function ResultList({ searchedText }) {
-  const {
-    ampsSearchResult,
-    isAmpSearchResultsExpanded,
-    isAmpSearchResultsVisible,
-    isRegulatorySearchResultsExpanded,
-    isRegulatorySearchResultsVisible,
-    regulatoryLayersSearchResult
-  } = useAppSelector(state => state.layerSearch)
   const dispatch = useAppDispatch()
-  const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
+
+  const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
+  const isAmpSearchResultsExpanded = useAppSelector(state => state.layerSearch.isAmpSearchResultsExpanded)
+  const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
+  const isRegulatorySearchResultsExpanded = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsExpanded)
+  const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
+  const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
+
+  const regulatoryLayersById = useAppSelector(state => state.regulatory.regulatoryLayersById)
   const { data: amps } = useGetAMPsQuery()
 
   const ampsByAMPName = _.groupBy(amps?.entities, a => a?.name)

@@ -16,7 +16,7 @@ const DEFAULT_TOAST_OPTIONS: ToastOptions = {
 
 // todo use monitor-ui component
 export function ToastNotification() {
-  const { toast } = useAppSelector(state => state.global)
+  const toast = useAppSelector(state => state.global.toast)
 
   useEffect(() => {
     if (toast) {
