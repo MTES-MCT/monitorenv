@@ -6,9 +6,12 @@ import styled from 'styled-components'
 
 import { Columns } from './Columns'
 import { GroupActions } from './GroupActions'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 
 import type { ReportingDetailed } from '../../../domain/entities/reporting'
+
+const TABLE_WIDTH = 1776 // (1920 (CACEM screen size) - 64 (left menu) - 40 (padding left) - 40 (padding right))
 
 export function ReportingsTable({
   isLoading,
@@ -17,6 +20,7 @@ export function ReportingsTable({
   isLoading: boolean
   reportings: (ReportingDetailed | undefined)[]
 }) {
+  const openReportings = useAppSelector(state => state.reporting.reportings)
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
@@ -80,14 +84,7 @@ export function ReportingsTable({
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <TableWithSelectableRows.Th
-                    key={header.id}
-                    style={{
-                      maxWidth: header.column.getSize(),
-                      minWidth: header.column.getSize(),
-                      width: header.column.getSize()
-                    }}
-                  >
+                  <TableWithSelectableRows.Th key={header.id} $width={header.column.getSize()}>
                     {header.isPlaceholder ? undefined : (
                       <TableWithSelectableRows.SortContainer
                         className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
@@ -119,17 +116,19 @@ export function ReportingsTable({
               const row = rows[virtualRow.index]
 
               return (
-                <TableWithSelectableRows.BodyTr key={virtualRow.key}>
+                <TableWithSelectableRows.BodyTr
+                  key={virtualRow.key}
+                  $isHighlighted={!!Object.keys(openReportings).find(key => Number(key) === Number(row?.original.id))}
+                >
                   {row?.getVisibleCells().map(cell => (
                     <TableWithSelectableRows.Td
                       key={cell.id}
                       $hasRightBorder={!!(cell.column.id === 'geom')}
                       $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
-                      style={{
-                        maxWidth: cell.column.getSize(),
-                        minWidth: cell.column.getSize(),
-                        width: cell.column.getSize()
-                      }}
+                      $isHighlighted={
+                        !!Object.keys(openReportings).find(key => Number(key) === Number(row?.original.id))
+                      }
+                      $width={cell.column.getSize()}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableWithSelectableRows.Td>
@@ -150,4 +149,5 @@ export function ReportingsTable({
 
 const StyledReportingsContainer = styled.div`
   overflow: auto;
+  width: ${TABLE_WIDTH}px;
 `

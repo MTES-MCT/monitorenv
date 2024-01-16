@@ -32,3 +32,16 @@ export function getDateAsLocalizedStringCompact(date: string | undefined | null)
     </>
   )
 }
+
+export function getDateAsLocalizedStringVeryCompact(date: string | undefined | null) {
+  if (!date || date.trim() === '') {
+    return undefined
+  }
+  const dayJsDate = getLocalizedDayjs(date)
+
+  return (
+    <>
+      {formatDateLabel(dayJsDate.format('DD/MM/YY'))} à {dayJsDate.format('HH')}h{dayJsDate.format('mm')}
+    </>
+  )
+}
