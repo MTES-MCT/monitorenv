@@ -19,7 +19,7 @@ export const Columns = [
   {
     accessorFn: row => row.reportingId,
     cell: ({ row }) => (
-      <div className="px-1">
+      <div>
         <TableWithSelectableRows.RowCheckbox
           disabled={!row.getCanSelect()}
           isChecked={row.getIsSelected()}
@@ -37,7 +37,7 @@ export const Columns = [
     ),
 
     id: 'select',
-    size: 50
+    size: 55
   },
   {
     accessorFn: row => row.reportingId,
@@ -45,15 +45,15 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'reportingId',
-    size: 90
+    size: 82
   },
   {
     accessorFn: row => row.createdAt,
     cell: info => getDateCell(info.getValue()),
     enableSorting: true,
-    header: () => 'Ouverture',
+    header: () => 'Date (UTC)',
     id: 'createdAt',
-    size: 160
+    size: 118
   },
   {
     accessorFn: row => row.validityTime,
@@ -61,7 +61,7 @@ export const Columns = [
     enableSorting: false, // TODO see how we can sort on timeLeft and not validityTime
     header: () => 'Fin dans',
     id: 'validityTime',
-    size: 70
+    size: 75
   },
   {
     accessorFn: row => row.displayedSource,
@@ -73,8 +73,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    maxSize: 210,
-    minSize: 190
+    size: 180
   },
   {
     accessorFn: row => row.reportType,
@@ -82,7 +81,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Type',
     id: 'reportType',
-    size: 140
+    size: 130
   },
   {
     accessorFn: row => row.targetDetails,
@@ -95,9 +94,7 @@ export const Columns = [
     ),
     header: () => 'Cible',
     id: 'targetDetails',
-    maxSize: 190,
-    minSize: 160,
-    size: 160,
+    size: 165,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortTargetDetails(rowA.original, rowB.original)
   },
   {
@@ -106,9 +103,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Thématique',
     id: 'theme',
-    maxSize: 260,
-    minSize: 210,
-    size: 210
+    size: 230
   },
   {
     accessorFn: row => row.seaFront,
@@ -116,7 +111,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 100
+    size: 90
   },
   {
     accessorFn: row => row.status,
@@ -147,7 +142,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 110
+    size: 102
   },
   {
     accessorFn: row => row.geom,
@@ -162,7 +157,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 110
+    size: 107
   },
   {
     accessorFn: row => row.geom,
@@ -170,7 +165,8 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 55
+
+    size: 58
   },
   {
     accessorFn: row => row.id,
@@ -178,9 +174,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'id',
-    maxSize: 100,
-    minSize: 100,
-    size: 100
+    size: 95
   }
 ]
 
