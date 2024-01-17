@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { GEOSERVER_REMOTE_URL, MONITORFISH_PUBLIC_URL } from '../env'
+import { GEOSERVER_REMOTE_URL, MONITORFISH_PUBLIC_URL, MONITORFISH_PROTECTED_API_KEY } from '../env'
 import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
 
 import type { BackendApiErrorResponse } from './types'
@@ -70,7 +70,7 @@ export const monitorenvPublicApi = createApi({
 // MonitorFish Public API
 
 const setAuthorizationHeader = headers => {
-  headers.set('X-API-KEY', 'test')
+  headers.set('x-api-key', MONITORFISH_PROTECTED_API_KEY)
 
   return headers
 }

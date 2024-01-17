@@ -13,6 +13,7 @@ sed -i 's#__REACT_APP_CYPRESS_TEST__#'"$REACT_APP_CYPRESS_TEST"'#g' /home/monito
 sed -i 's#__REACT_APP_MISSION_FORM_AUTO_UPDATE__#'"$REACT_APP_MISSION_FORM_AUTO_UPDATE"'#g' /home/monitorenv/public/env.js
 sed -i 's#__REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED__#'"$REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED"'#g' /home/monitorenv/public/env.js
 sed -i 's#__REACT_APP_MONITORFISH_PUBLIC_URL__#'"$REACT_APP_MONITORFISH_PUBLIC_URL"'#g' /home/monitorenv/public/env.js
+sed -i 's#__REACT_APP_MONITORFISH_PROTECTED_API_KEY__#'"$REACT_APP_MONITORFISH_PROTECTED_API_KEY"'#g' /home/monitorenv/public/env.js
 
 exec "$@"
 
