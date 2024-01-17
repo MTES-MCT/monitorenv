@@ -9,17 +9,24 @@ export const MISSION_UPDATE_EVENT = `MISSION_UPDATE`
 let EVENT_SOURCE: EventSource = new EventSource(MISSION_UPDATES_URL)
 
 // Handle reconnection when the backend send a message
-EVENT_SOURCE.onerror = () => {
-  EVENT_SOURCE.close()
-
-  EVENT_SOURCE = new EventSource(MISSION_UPDATES_URL)
-
-  // eslint-disable-next-line no-console
-  console.log(`SSE: Reconnected to missions endpoint.`)
-}
+reconnectOnError(EVENT_SOURCE)
 
 export function getMissionUpdatesEventSource(): EventSource {
   return EVENT_SOURCE
+}
+
+function reconnectOnError(eventSource: EventSource) {
+  // We need to re-attach the `onerror` listener
+  // eslint-disable-next-line no-param-reassign
+  eventSource.onerror = () => {
+    EVENT_SOURCE.close()
+
+    EVENT_SOURCE = new EventSource(MISSION_UPDATES_URL)
+    reconnectOnError(EVENT_SOURCE)
+
+    // eslint-disable-next-line no-console
+    console.log(`SSE: Reconnected to missions endpoint.`)
+  }
 }
 
 // eslint-disable-next-line no-console

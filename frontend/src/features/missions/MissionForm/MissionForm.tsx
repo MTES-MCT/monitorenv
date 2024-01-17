@@ -211,12 +211,14 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
       'detachedReportings',
       'detachedReportingIds',
       'createdAtUtc',
-      'updatedAtUtc'
+      'updatedAtUtc',
+      'envActions'
     ])
     const filteredReceivedMission = omit(receivedMission, [
       'isGeometryComputedFromControls',
       'createdAtUtc',
-      'updatedAtUtc'
+      'updatedAtUtc',
+      'envActions'
     ])
     if (isEqual(filteredReceivedMission, filteredNextValues)) {
       return
