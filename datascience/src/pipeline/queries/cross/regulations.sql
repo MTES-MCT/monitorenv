@@ -21,6 +21,7 @@ SELECT
   date_fin,
   "Edition" as edition,
   md5(
+        COALESCE(geom::text, '') ||
         COALESCE(entity_name::text, '') ||
         COALESCE(url::text, '') ||
         COALESCE(layer_name::text, '') ||
