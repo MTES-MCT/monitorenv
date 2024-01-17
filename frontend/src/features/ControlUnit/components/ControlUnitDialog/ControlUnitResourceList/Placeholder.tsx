@@ -13,13 +13,12 @@ export function Placeholder({ type }: PlaceholderProps) {
 }
 
 const Wrapper = styled.div`
-  align-items: flex-start;
+  align-items: center;
   background-color: ${p => p.theme.color.lightGray};
   display: flex;
   flex-grow: 1;
   justify-content: center;
   max-width: 116px;
   min-width: 116px;
-  padding-top: 32px;
   width: 116px;
 `
