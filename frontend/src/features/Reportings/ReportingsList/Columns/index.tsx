@@ -87,6 +87,7 @@ export const Columns = [
     accessorFn: row => row.targetDetails,
     cell: ({ row }) => (
       <CellTarget
+        description={row.original.description}
         targetDetails={row.original.targetDetails}
         targetType={row.original.targetType}
         vehicleType={row.original.vehicleType}

@@ -1,20 +1,18 @@
 import styled from 'styled-components'
 
-import {
-  GENERIC_TARGET_TYPE,
-  ReportingTargetTypeEnum,
-  ReportingTargetTypeLabels
-} from '../../../../domain/entities/targetType'
+import { GENERIC_TARGET_TYPE, ReportingTargetTypeEnum } from '../../../../domain/entities/targetType'
 import { type VehicleTypeEnum } from '../../../../domain/entities/vehicleType'
 import { getTargetDetailsAsText } from '../../utils'
 
 import type { TargetDetails } from '../../../../domain/entities/reporting'
 
 export function CellTarget({
+  description,
   targetDetails,
   targetType,
   vehicleType
 }: {
+  description: string
   targetDetails: TargetDetails[]
   targetType: ReportingTargetTypeEnum | undefined
   vehicleType: VehicleTypeEnum | undefined
@@ -23,10 +21,7 @@ export function CellTarget({
     return <span>-</span>
   }
 
-  if (targetType === ReportingTargetTypeEnum.OTHER) {
-    return <ItalicTarget>{ReportingTargetTypeLabels[targetType]}</ItalicTarget>
-  }
-  const targetDetailsAsText = getTargetDetailsAsText({ targetDetails, targetType, vehicleType })
+  const targetDetailsAsText = getTargetDetailsAsText({ description, targetDetails, targetType, vehicleType })
 
   if (GENERIC_TARGET_TYPE.includes(targetDetailsAsText)) {
     return <ItalicTarget title={targetDetailsAsText}>{targetDetailsAsText}</ItalicTarget>

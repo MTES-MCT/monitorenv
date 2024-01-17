@@ -40,6 +40,7 @@ export const getReportingTitle = reporting => {
   }
 
   const targetAsText = getTargetDetailsAsText({
+    description: reporting.description,
     targetDetails: reporting.targetDetails,
     targetType: reporting.targetType,
     vehicleType: reporting.vehicleType
@@ -80,15 +81,21 @@ export const getFormattedReportingId = (reportingId: number | undefined) => {
 }
 
 export const getTargetDetailsAsText = ({
+  description,
   targetDetails,
   targetType,
   vehicleType
 }: {
+  description: string | undefined
   targetDetails: TargetDetails[] | undefined
   targetType: ReportingTargetTypeEnum | undefined
   vehicleType: VehicleTypeEnum | undefined
 }) => {
   let targetDetailsAsText = ''
+
+  if (targetType === ReportingTargetTypeEnum.OTHER && description) {
+    return description
+  }
 
   if (!targetDetails || !targetType) {
     return targetDetailsAsText
@@ -121,6 +128,7 @@ export const getTargetDetailsAsText = ({
 }
 
 type TargetDataProps = {
+  description: string | undefined
   targetDetails: TargetDetails[] | undefined
   targetType: ReportingTargetTypeEnum | undefined
   vehicleType: VehicleTypeEnum | undefined
@@ -128,12 +136,14 @@ type TargetDataProps = {
 
 export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetailsB: TargetDataProps) {
   const targetDetailsAsTextA = getTargetDetailsAsText({
+    description: targetDetailsA.description,
     targetDetails: targetDetailsA.targetDetails,
     targetType: targetDetailsA.targetType,
     vehicleType: targetDetailsA.vehicleType
   })
 
   const targetDetailsAsTextB = getTargetDetailsAsText({
+    description: targetDetailsB.description,
     targetDetails: targetDetailsB.targetDetails,
     targetType: targetDetailsB.targetType,
     vehicleType: targetDetailsB.vehicleType
