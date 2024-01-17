@@ -1,59 +1,29 @@
 import { MISSION_FORM_AUTO_UPDATE_ENABLED } from '../../../env'
-import { ReconnectingEventSource } from '../../../libs/ReconnectingEventSource'
 
 import type { Mission } from '../../../domain/entities/missions'
 
 const MISSION_UPDATES_URL = `/api/v1/missions/sse`
 export const MISSION_UPDATE_EVENT = `MISSION_UPDATE`
 
-export const EVENT_SOURCE = new ReconnectingEventSource(MISSION_UPDATES_URL, { max_retry_time: 10000 })
+// We need to share this instance to the whole app
+let EVENT_SOURCE: EventSource = new EventSource(MISSION_UPDATES_URL)
+
+// Handle reconnection when the backend send a message
+EVENT_SOURCE.onerror = () => {
+  EVENT_SOURCE.close()
+
+  EVENT_SOURCE = new EventSource(MISSION_UPDATES_URL)
+
+  // eslint-disable-next-line no-console
+  console.log(`SSE: Reconnected to missions endpoint.`)
+}
+
+export function getMissionUpdatesEventSource(): EventSource {
+  return EVENT_SOURCE
+}
+
 // eslint-disable-next-line no-console
 console.log(`SSE: connected to missions endpoint.`)
-
-const missionIdToListenerMap = new Map<number, (event: MessageEvent) => void>()
-
-export function addNewMissionListener(missionId: number, listener: (event: MessageEvent) => void) {
-  // eslint-disable-next-line no-console
-  console.log(`SSE: listening for updates of mission id ${missionId}...`)
-
-  missionIdToListenerMap.set(missionId, listener)
-
-  EVENT_SOURCE.addEventListener(MISSION_UPDATE_EVENT, listener)
-}
-
-export function enableMissionListener(missionId: number) {
-  const listener = missionIdToListenerMap.get(missionId)
-  if (!listener) {
-    return
-  }
-
-  EVENT_SOURCE.addEventListener(MISSION_UPDATE_EVENT, listener)
-  // eslint-disable-next-line no-console
-  console.log(`SSE: enabled listener of mission id ${missionId}.`)
-}
-
-export function removeMissionListener(missionId: number) {
-  const listener = missionIdToListenerMap.get(missionId)
-  if (!listener) {
-    return
-  }
-
-  EVENT_SOURCE.removeEventListener(MISSION_UPDATE_EVENT, listener)
-  missionIdToListenerMap.delete(missionId)
-  // eslint-disable-next-line no-console
-  console.log(`SSE: removed listener of mission id ${missionId}.`)
-}
-
-export function disableMissionListener(missionId: number) {
-  const listener = missionIdToListenerMap.get(missionId)
-  if (!listener) {
-    return
-  }
-
-  EVENT_SOURCE.removeEventListener(MISSION_UPDATE_EVENT, listener)
-  // eslint-disable-next-line no-console
-  console.log(`SSE: disabled listener of mission id ${missionId}.`)
-}
 
 export const missionEventListener = (id: number, callback: (mission: Mission) => void) => (event: MessageEvent) => {
   const mission = JSON.parse(event.data) as Mission

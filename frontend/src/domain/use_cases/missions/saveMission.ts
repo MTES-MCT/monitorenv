@@ -4,11 +4,6 @@ import { generatePath } from 'react-router'
 import { missionsAPI } from '../../../api/missionsAPI'
 import { ApiErrorCode } from '../../../api/types'
 import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
-import {
-  disableMissionListener,
-  enableMissionListener,
-  removeMissionListener
-} from '../../../features/missions/MissionForm/sse'
 import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
@@ -34,7 +29,6 @@ export const saveMission =
       ? missionsAPI.endpoints.createMission
       : missionsAPI.endpoints.updateMission
     try {
-      disableMissionListener(values.id)
       const response = await dispatch(upsertMission.initiate(newOrNextMissionData))
       if ('data' in response) {
         const missionUpdated = response.data
@@ -49,15 +43,12 @@ export const saveMission =
         }
 
         if (reopen || !quitAfterSave) {
-          enableMissionListener(values.id)
-
           return
         }
 
         await dispatch(missionFormsActions.deleteSelectedMission(values.id))
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
-        removeMissionListener(values.id)
 
         // we want to update openings reportings with new attached or detached mission
         await updateReportingsWithAttachedMission({

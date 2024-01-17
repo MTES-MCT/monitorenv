@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik'
 import { omit } from 'lodash'
 import { useEffect, useState } from 'react'
 
-import { EVENT_SOURCE, MISSION_UPDATE_EVENT, missionEventListener } from './sse'
+import { getMissionUpdatesEventSource, MISSION_UPDATE_EVENT, missionEventListener } from './sse'
 
 import type { Mission } from '../../../domain/entities/missions'
 
@@ -43,12 +43,12 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
 
     const listener = missionEventListener(missionId, mission => setReceivedMission(mission))
 
-    EVENT_SOURCE.addEventListener(MISSION_UPDATE_EVENT, listener)
+    getMissionUpdatesEventSource().addEventListener(MISSION_UPDATE_EVENT, listener)
 
     return () => {
-      EVENT_SOURCE.removeEventListener(MISSION_UPDATE_EVENT, listener)
+      getMissionUpdatesEventSource().removeEventListener(MISSION_UPDATE_EVENT, listener)
     }
-  }, [missionId])
+  }, [missionId, receivedMission])
 
   useDeepCompareEffect(
     () => {

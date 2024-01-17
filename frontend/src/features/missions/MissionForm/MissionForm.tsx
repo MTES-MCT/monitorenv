@@ -1,7 +1,7 @@
 import { customDayjs, FormikEffect } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty, isEqual, omit } from 'lodash'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'
@@ -18,7 +18,7 @@ import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
 import { missionFormsActions } from './slice'
-import { EVENT_SOURCE, MISSION_UPDATE_EVENT, missionEventListener, removeMissionListener } from './sse'
+import { getMissionUpdatesEventSource, MISSION_UPDATE_EVENT, missionEventListener } from './sse'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
@@ -67,7 +67,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
-  const receivedMission = useRef<Mission | undefined>()
+  const [receivedMission, setReceivedMission] = useState<Mission | undefined>(undefined)
 
   const allowEditMission =
     selectedMission?.missionSource === undefined ||
@@ -106,7 +106,6 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     await dispatch(sideWindowActions.setShowConfirmCancelModal(false))
     await dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
     await dispatch(missionFormsActions.deleteSelectedMission(id))
-    removeMissionListener(id)
   }
 
   const submitMission = () => {
@@ -178,15 +177,15 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     }
 
     const listener = missionEventListener(id as number, mission => {
-      receivedMission.current = mission
+      setReceivedMission(mission)
     })
 
-    EVENT_SOURCE.addEventListener(MISSION_UPDATE_EVENT, listener)
+    getMissionUpdatesEventSource().addEventListener(MISSION_UPDATE_EVENT, listener)
 
     return () => {
-      EVENT_SOURCE.removeEventListener(MISSION_UPDATE_EVENT, listener)
+      getMissionUpdatesEventSource().removeEventListener(MISSION_UPDATE_EVENT, listener)
     }
-  }, [id])
+  }, [id, receivedMission])
 
   const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
     const errors = await validateForm()
@@ -206,8 +205,20 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     }
 
     // Prevent re-sending the form when receiving an update
-    const nextValuesWithoutIsValid = omit(nextValues, ['isValid'])
-    if (isEqual(receivedMission.current, nextValuesWithoutIsValid)) {
+    const filteredNextValues = omit(nextValues, [
+      'attachedReportingIds',
+      'attachedReportings',
+      'detachedReportings',
+      'detachedReportingIds',
+      'createdAtUtc',
+      'updatedAtUtc'
+    ])
+    const filteredReceivedMission = omit(receivedMission, [
+      'isGeometryComputedFromControls',
+      'createdAtUtc',
+      'updatedAtUtc'
+    ])
+    if (isEqual(filteredReceivedMission, filteredNextValues)) {
       return
     }
 

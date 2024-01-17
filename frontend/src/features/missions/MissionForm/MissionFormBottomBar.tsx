@@ -78,7 +78,13 @@ export function MissionFormBottomBar({
         )}
 
         {allowClose && allowEdit && (
-          <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={onCloseMission} type="button">
+          <Button
+            accent={Accent.SECONDARY}
+            data-cy="close-mission"
+            Icon={Icon.Save}
+            onClick={onCloseMission}
+            type="button"
+          >
             Clôturer
           </Button>
         )}

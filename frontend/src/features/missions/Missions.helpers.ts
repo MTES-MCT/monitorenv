@@ -216,7 +216,7 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
   }, {} as EnvActionForTimeline)
 
 const formattedReportingsForTimeline = attachedReportings =>
-  attachedReportings.reduce(
+  attachedReportings?.reduce(
     (newReportingsCollection, reporting) => ({
       ...newReportingsCollection,
       [reporting.id]: {
