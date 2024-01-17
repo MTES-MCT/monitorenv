@@ -1,5 +1,5 @@
-import { platform } from 'os'
 import { expect, it } from '@jest/globals'
+import { platform } from 'os'
 
 import { assertContains, getFirstTab, getInputContent, listenToConsole, wait } from './utils'
 
