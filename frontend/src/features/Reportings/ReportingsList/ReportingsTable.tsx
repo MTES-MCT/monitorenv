@@ -82,6 +82,7 @@ export function ReportingsTable({
                 {headerGroup.headers.map(header => (
                   <TableWithSelectableRows.Th
                     key={header.id}
+                    $width={header.column.getSize()}
                     style={{
                       maxWidth: header.column.getSize(),
                       minWidth: header.column.getSize(),
@@ -125,6 +126,7 @@ export function ReportingsTable({
                       key={cell.id}
                       $hasRightBorder={!!(cell.column.id === 'geom')}
                       $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
+                      $width={cell.column.getSize()}
                       style={{
                         maxWidth: cell.column.getSize(),
                         minWidth: cell.column.getSize(),

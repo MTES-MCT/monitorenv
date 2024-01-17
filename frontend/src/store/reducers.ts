@@ -1,4 +1,4 @@
-import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
+import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi, monitorFishPublicApi } from '../api/api'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
 import { drawReducer } from '../domain/shared_slices/Draw'
 import { globalReducer } from '../domain/shared_slices/Global'
@@ -33,6 +33,7 @@ export const homeReducers = {
   [geoserverApi.reducerPath]: geoserverApi.reducer,
   [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
+  [monitorFishPublicApi.reducerPath]: monitorFishPublicApi.reducer,
   administrationTable: administrationTablePersistedReducer,
   administrative: administrativeSlicePersistedReducer,
   attachMissionToReporting: attachMissionToReportingSliceReducer,

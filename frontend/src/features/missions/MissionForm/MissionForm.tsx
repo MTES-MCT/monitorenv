@@ -14,6 +14,7 @@ import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
+import { ActionsModal } from './modals/ActionsModal'
 import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
@@ -23,6 +24,7 @@ import { type Mission, MissionSourceEnum, type NewMission } from '../../../domai
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
+import { getMissionActionsFromFish } from '../../../domain/use_cases/missions/getFishMissionActions'
 import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { MISSION_FORM_AUTO_SAVE_ENABLED } from '../../../env'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
@@ -30,6 +32,14 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 
 import type { AtLeast } from '../../../types'
+
+enum ModalTypes {
+  ACTIONS = 'ACTIONS',
+  DELETE = 'DELETE',
+  REOPEN = 'REOPEN'
+}
+
+type ModalProps = ModalTypes.ACTIONS | ModalTypes.REOPEN | ModalTypes.DELETE
 
 type MissionFormProps = {
   id
@@ -65,8 +75,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   useUpdateOtherControlTypes()
 
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
-  const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
+  const [openModal, setOpenModal] = useState<ModalProps | undefined>(undefined)
   const receivedMission = useRef<Mission | undefined>()
 
   const allowEditMission =
@@ -91,15 +100,21 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
 
   const returnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
-    setDeleteModalIsOpen(false)
-    setIsReopenModalOpen(false)
+    setOpenModal(undefined)
   }
   const validateDeleteMission = () => {
     dispatch(deleteMissionAndGoToMissionsList(id))
   }
 
-  const deleteMission = () => {
-    setDeleteModalIsOpen(true)
+  const deleteMission = async () => {
+    const fishMissionActions = await dispatch(getMissionActionsFromFish(id))
+
+    if (fishMissionActions && fishMissionActions.length > 0) {
+      setOpenModal(ModalTypes.ACTIONS)
+
+      return
+    }
+    setOpenModal(ModalTypes.DELETE)
   }
 
   const cancelForm = async () => {
@@ -142,7 +157,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
 
       if (isEmpty(errors)) {
         if (isFormDirty) {
-          return setIsReopenModalOpen(true)
+          return setOpenModal(ModalTypes.REOPEN)
         }
 
         return validateReopenMission()
@@ -161,7 +176,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
         type: 'success'
       })
     )
-    setIsReopenModalOpen(false)
+    setOpenModal(undefined)
   }
 
   const confirmFormCancelation = () => {
@@ -224,8 +239,21 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
         onConfirm={cancelForm}
         open={sideWindow.showConfirmCancelModal && isFormDirty}
       />
-      <DeleteModal onCancel={returnToEdition} onConfirm={validateDeleteMission} open={deleteModalIsOpen} />
-      <ReopenModal onCancel={returnToEdition} onConfirm={validateReopenMission} open={isReopenModalOpen} />
+      <DeleteModal
+        onCancel={returnToEdition}
+        onConfirm={validateDeleteMission}
+        open={openModal === ModalTypes.DELETE}
+      />
+      <ReopenModal
+        onCancel={returnToEdition}
+        onConfirm={validateReopenMission}
+        open={openModal === ModalTypes.REOPEN}
+      />
+      <ActionsModal
+        onCancel={returnToEdition}
+        onConfirm={validateDeleteMission}
+        open={openModal === ModalTypes.ACTIONS}
+      />
       <Wrapper>
         <FirstColumn>
           <GeneralInformationsForm />
