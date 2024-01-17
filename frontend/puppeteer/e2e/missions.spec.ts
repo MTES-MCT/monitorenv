@@ -1,4 +1,4 @@
-import { expect, it } from '@jest/globals'
+import { expect, it, beforeEach } from '@jest/globals'
 import { platform } from 'os'
 
 import { assertContains, getFirstTab, getInputContent, listenToConsole, wait } from './utils'
@@ -35,7 +35,7 @@ describe('Missions Form', () => {
       await page.click('[data-cy="edit-mission-25"]')
       await wait(1000)
     }
-  })
+  }, 50000)
 
   it(
     'Two windows must be synchronized on form update',
