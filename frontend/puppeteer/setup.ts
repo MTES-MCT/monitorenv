@@ -33,14 +33,16 @@ export default async () => {
     const version = await browser.version()
     console.log('\nBrowser version: ', version)
 
+    // @ts-ignore
     browsers.push(browser)
   }
 
   // use the file system to expose the browsers wsEndpoint for TestEnvironments
-  await fs.mkdir(TEMP_DIRECTORY, { recursive: true }, () => {})
+  await fs.mkdir(TEMP_DIRECTORY, { recursive: true })
 
   await fs.writeFile(
     path.join(TEMP_DIRECTORY, 'wsEndpoints'),
+    // @ts-ignore
     browsers.map(browser => browser.wsEndpoint()).join('\\n')
   )
 

@@ -1,4 +1,5 @@
 import { platform } from 'os'
+import { expect, it } from '@jest/globals'
 
 import { assertContains, getFirstTab, getInputContent, listenToConsole, wait } from './utils'
 
@@ -18,9 +19,11 @@ jest.retryTimes(1)
 
 describe('Missions Form', () => {
   beforeEach(async () => {
+    // @ts-ignore
     pageA = await getFirstTab(browsers[0])
     listenToConsole(pageA, 1)
 
+    // @ts-ignore
     pageB = await getFirstTab(browsers[1])
     listenToConsole(pageB, 2)
 
@@ -32,7 +35,7 @@ describe('Missions Form', () => {
       await page.click('[data-cy="edit-mission-25"]')
       await wait(1000)
     }
-  }, 50000)
+  })
 
   it(
     'Two windows must be synchronized on form update',
