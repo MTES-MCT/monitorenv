@@ -51,7 +51,7 @@ export function ControlUnitDialog() {
   return (
     <Wrapper>
       <MapMenuDialog.Header>
-        <MapMenuDialog.Title>
+        <MapMenuDialog.Title title={`${controlUnit.name} (${controlUnit.administration.name})`}>
           <b>{controlUnit.name}</b> ({controlUnit.administration.name})
         </MapMenuDialog.Title>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
