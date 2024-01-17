@@ -1,0 +1,60 @@
+import { Size, TextInput, usePrevious } from '@mtes-mct/monitor-ui'
+import { debounce } from 'lodash'
+import { useCallback, useEffect, useState } from 'react'
+import styled from 'styled-components'
+
+import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+
+export function ReportingSearch() {
+  const dispatch = useAppDispatch()
+  const searchQueryFilter = useAppSelector(state => state.reportingFilters.searchQueryFilter)
+  const previousSearchQueryFilter = usePrevious(searchQueryFilter)
+  const [searchText, setSearchText] = useState(searchQueryFilter)
+
+  const onQuery = useCallback(
+    value => {
+      if (value && value.length > 2) {
+        dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value }))
+      } else {
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value: undefined })
+        )
+      }
+    },
+    [dispatch]
+  )
+
+  // when filters are reinitialzed, reset search text
+  useEffect(() => {
+    if (previousSearchQueryFilter && !searchQueryFilter) {
+      setSearchText(undefined)
+    }
+  }, [searchQueryFilter, previousSearchQueryFilter])
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedHandleChange = useCallback(debounce(onQuery, 500), [])
+
+  return (
+    <StyledSearch
+      isLabelHidden
+      isLight
+      isSearchInput
+      label="Rechercher une cible"
+      name="reporting-search"
+      onChange={value => {
+        setSearchText(value)
+        debouncedHandleChange(value)
+      }}
+      placeholder="Rechercher une cible"
+      size={Size.LARGE}
+      value={searchText}
+    />
+  )
+}
+
+const StyledSearch = styled(TextInput)`
+  border: 1px solid ${p => p.theme.color.lightGray};
+  width: 280px;
+`

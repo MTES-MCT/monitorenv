@@ -36,6 +36,7 @@ interface IReportingRepository {
         status: List<String>?,
         targetTypes: List<TargetTypeEnum>?,
         isAttachedToMission: Boolean?,
+        searchQuery: String?,
     ): List<ReportingDTO>
 
     fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity>

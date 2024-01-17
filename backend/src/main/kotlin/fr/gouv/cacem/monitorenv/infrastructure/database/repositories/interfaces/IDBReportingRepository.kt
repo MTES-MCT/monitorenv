@@ -102,38 +102,47 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         SELECT *
         FROM reportings
         WHERE is_deleted IS FALSE
-        AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
-        AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
-        AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
-        AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
-        AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
-        AND ((:status) = '{}'
-            OR (
-                'ARCHIVED' = ANY(CAST(:status as text[])) AND (
-                    is_archived = true
-                    OR (created_at + make_interval(hours => validity_time)) < NOW()
-                ))
-            OR (
-                'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
-                    is_archived = false
-                    AND (created_at + make_interval(hours => validity_time)) >= NOW()
+            AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
+            AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
+            AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
+            AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
+            AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
+            AND ((:status) = '{}'
+                OR (
+                    'ARCHIVED' = ANY(CAST(:status as text[])) AND (
+                        is_archived = true
+                        OR (created_at + make_interval(hours => validity_time)) < NOW()
+                    )
+                )
+                OR (
+                    'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
+                        is_archived = false
+                        AND (created_at + make_interval(hours => validity_time)) >= NOW()
+                    )
                 )
             )
-        )
-        AND ((:targetTypes) = '{}' OR CAST(target_type AS text) = ANY(CAST(:targetTypes as text[])))
-        AND ((:isAttachedToMission) IS NULL
-            OR (
-                (:isAttachedToMission) = true AND (
-                    mission_id IS NOT NULL
-                    AND detached_from_mission_at_utc IS NULL
+            AND ((:targetTypes) = '{}' OR CAST(target_type AS text) = ANY(CAST(:targetTypes as text[])))
+            AND ((:isAttachedToMission) IS NULL
+                OR (
+                    (:isAttachedToMission) = true AND (
+                        mission_id IS NOT NULL
+                        AND detached_from_mission_at_utc IS NULL
+                    )
+                ) 
+                OR (
+                    (:isAttachedToMission) = false AND (
+                        mission_id IS NULL
+                        OR (
+                            mission_id IS NOT NULL AND 
+                            detached_from_mission_at_utc IS NOT NULL
+                        )
+                    )
                 )
             )
-                
-            OR (
-                (:isAttachedToMission) = false AND mission_id IS NULL
+            AND ((:searchQuery) = ''
+                OR to_tsvector('mydict', target_details) @@ to_tsquery('mydict', (:searchQuery || ':*'))
             )
-        )
-        ORDER BY reporting_id DESC
+            ORDER BY reporting_id DESC
     """,
         nativeQuery = true,
     )
@@ -147,6 +156,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         status: String?,
         targetTypes: String?,
         isAttachedToMission: Boolean?,
+        searchQuery: String,
     ): List<ReportingModel>
 
     @Query(

@@ -26,6 +26,7 @@ class GetReportings(
         status: List<String>?,
         targetTypes: List<TargetTypeEnum>?,
         isAttachedToMission: Boolean?,
+        searchQuery: String?,
     ): List<ReportingDTO> {
         val reports =
             reportingRepository.findAll(
@@ -40,6 +41,7 @@ class GetReportings(
                 isAttachedToMission = isAttachedToMission,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
+                searchQuery = searchQuery,
             )
 
         logger.info(

@@ -14,6 +14,7 @@ export const useGetFilteredReportingsQuery = () => {
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,
     seaFrontFilter,
+    searchQueryFilter,
     sourceFilter,
     sourceTypeFilter,
     startedAfter,
@@ -36,12 +37,14 @@ export const useGetFilteredReportingsQuery = () => {
 
     return undefined
   }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
+
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
       isAttachedToMission: isAttachedOrNotToMissionFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
+      searchQuery: searchQueryFilter,
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: startedAfter || undefined,
       startedBeforeDateTime: startedBefore || undefined,
