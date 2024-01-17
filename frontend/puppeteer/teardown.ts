@@ -11,5 +11,7 @@ export default async () => {
   }
 
   // clean-up the temporary file used to write the browsers wsEndpoints
-  rimraf.sync(DIR)
+  if (!process.env.CI) {
+    rimraf.sync(DIR)
+  }
 }
