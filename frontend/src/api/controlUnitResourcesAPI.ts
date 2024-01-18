@@ -31,6 +31,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
     }),
 
     canDeleteControlUnitResource: builder.query<boolean, number>({
+      forceRefetch: () => true,
       query: controlUnitResourceId => `/v1/control_unit_resources/${controlUnitResourceId}/can_delete`,
       transformErrorResponse: response =>
         new FrontendApiError(CAN_DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response),
