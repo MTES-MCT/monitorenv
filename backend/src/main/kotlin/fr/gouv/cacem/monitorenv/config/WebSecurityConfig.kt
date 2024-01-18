@@ -15,21 +15,21 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class WebSecurityConfig {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
-            .cors().and()
-            .csrf().disable()
-            .authorizeHttpRequests { authorize -> authorize.requestMatchers(AntPathRequestMatcher("/**")).permitAll() }
+        http.cors().and().csrf().disable().authorizeHttpRequests { authorize ->
+            authorize.requestMatchers(AntPathRequestMatcher("/**")).permitAll()
+        }
 
         return http.build()
     }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration().apply {
-            allowedOrigins = listOf("*")
-            allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE")
-            allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
-        }
+        val configuration =
+            CorsConfiguration().apply {
+                allowedOrigins = listOf("*")
+                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
+                allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
+            }
 
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
