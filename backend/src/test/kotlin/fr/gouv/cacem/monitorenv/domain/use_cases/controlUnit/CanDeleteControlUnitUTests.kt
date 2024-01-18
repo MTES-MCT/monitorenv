@@ -13,6 +13,59 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
+val FAKE_MISSION =
+    MissionEntity(
+        id = 1,
+        missionTypes = listOf(),
+        controlUnits = listOf(),
+        openBy = null,
+        closedBy = null,
+        observationsCacem = null,
+        observationsCnsp = null,
+        facade = null,
+        geom = null,
+        startDateTimeUtc = ZonedDateTime.now(),
+        endDateTimeUtc = null,
+        envActions = listOf(),
+        isClosed = false,
+        isDeleted = false,
+        isGeometryComputedFromControls = false,
+        missionSource = MissionSourceEnum.MONITORENV,
+        hasMissionOrder = false,
+        isUnderJdp = false,
+    )
+
+val FAKE_REPORTING =
+    ReportingEntity(
+        id = 1,
+        reportingId = null,
+        sourceType = null,
+        semaphoreId = null,
+        controlUnitId = null,
+        sourceName = null,
+        targetType = null,
+        vehicleType = null,
+        targetDetails = null,
+        geom = null,
+        seaFront = null,
+        description = null,
+        reportType = null,
+        themeId = null,
+        subThemeIds = null,
+        actionTaken = null,
+        isControlRequired = null,
+        hasNoUnitAvailable = null,
+        createdAt = ZonedDateTime.now(),
+        validityTime = null,
+        isArchived = false,
+        isDeleted = false,
+        openBy = null,
+        missionId = null,
+        attachedToMissionAtUtc = null,
+        detachedFromMissionAtUtc = null,
+        attachedEnvActionId = null,
+    )
+
 @ExtendWith(SpringExtension::class)
 class CanDeleteControlUnitUTests {
     @MockBean
@@ -22,7 +75,7 @@ class CanDeleteControlUnitUTests {
     private lateinit var reportingRepository: IReportingRepository
 
     @Test
-    fun `execute should return true when both missions and reportings are empty`() {
+    fun `execute should return TRUE there are neither missions nor reportings attached to this control unit`() {
         val controlUnitId = 1
 
         given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
@@ -30,87 +83,62 @@ class CanDeleteControlUnitUTests {
 
         val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
-        assertThat(result).isTrue
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `execute should return false when missions are not empty`() {
+    fun `execute should return FALSE when there are non-deleted missions attached to this control unit`() {
         val controlUnitId = 1
 
         given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(
-            listOf(
-                MissionEntity(
-                    id = 1,
-                    missionTypes = listOf(),
-                    controlUnits = listOf(),
-                    openBy = null,
-                    closedBy = null,
-                    observationsCacem = null,
-                    observationsCnsp = null,
-                    facade = null,
-                    geom = null,
-                    startDateTimeUtc = ZonedDateTime.now(),
-                    endDateTimeUtc = null,
-                    envActions = listOf(),
-                    isClosed = false,
-                    isDeleted = false,
-                    isGeometryComputedFromControls = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-
-                ),
-            ),
+            listOf(FAKE_MISSION),
         )
         given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
 
         val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
-        assertThat(result).isFalse
+        assertThat(result).isFalse()
     }
 
     @Test
-    fun `execute should return false when reportings are not empty`() {
+    fun `execute should return TRUE when there are only deleted missions attached to this control unit`() {
+        val controlUnitId = 1
+
+        given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(
+            listOf(FAKE_MISSION.copy(isDeleted = true)),
+        )
+        given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
+
+        val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `execute should return FALSE when there are non-deleted reportings attached to this control unit`() {
         val controlUnitId = 1
 
         given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
         given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(
-            listOf(
-                ReportingEntity(
-                    id = 1,
-                    reportingId = null,
-                    sourceType = null,
-                    semaphoreId = null,
-                    controlUnitId = null,
-                    sourceName = null,
-                    targetType = null,
-                    vehicleType = null,
-                    targetDetails = null,
-                    geom = null,
-                    seaFront = null,
-                    description = null,
-                    reportType = null,
-                    themeId = null,
-                    subThemeIds = null,
-                    actionTaken = null,
-                    isControlRequired = null,
-                    hasNoUnitAvailable = null,
-                    createdAt = ZonedDateTime.now(),
-                    validityTime = null,
-                    isArchived = false,
-                    isDeleted = false,
-                    openBy = null,
-                    missionId = null,
-                    attachedToMissionAtUtc = null,
-                    detachedFromMissionAtUtc = null,
-                    attachedEnvActionId = null,
-
-                ),
-            ),
+            listOf(FAKE_REPORTING),
         )
 
         val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
-        assertThat(result).isFalse
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `execute should return TRUE when there are only deleted reportings attached to this control unit`() {
+        val controlUnitId = 1
+
+        given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
+        given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(
+            listOf(FAKE_REPORTING.copy(isDeleted = true)),
+        )
+
+        val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
+
+        assertThat(result).isTrue()
     }
 }

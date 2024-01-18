@@ -10,9 +10,9 @@ class CanDeleteControlUnit(
     private val reportingRepository: IReportingRepository,
 ) {
     fun execute(controlUnitId: Int): Boolean {
-        val missions = missionRepository.findByControlUnitId(controlUnitId)
-        val reportings = reportingRepository.findByControlUnitId(controlUnitId)
+        val nonDeletedMissions = missionRepository.findByControlUnitId(controlUnitId).filter { !it.isDeleted }
+        val nonDeletedReportings = reportingRepository.findByControlUnitId(controlUnitId).filter { !it.isDeleted }
 
-        return missions.isEmpty() && reportings.isEmpty()
+        return nonDeletedMissions.isEmpty() && nonDeletedReportings.isEmpty()
     }
 }
