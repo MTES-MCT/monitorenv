@@ -106,14 +106,19 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   // ---------------------------------------------------------------------------
   // Layer Attachment
 
-  useEffect(() => {
-    map.getLayers().push(vectorLayerRef.current)
+  useEffect(
+    () => {
+      map.getLayers().push(vectorLayerRef.current)
 
-    return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(vectorLayerRef.current)
-    }
-  }, [map])
+      return () => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(vectorLayerRef.current)
+      }
+    },
+
+    // We include `stations` to update the layers when their control unit resources change
+    [map, stations]
+  )
 
   return null
 }
