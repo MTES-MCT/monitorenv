@@ -1,7 +1,9 @@
+import Highlighter from 'react-highlight-words'
 import styled from 'styled-components'
 
 import { GENERIC_TARGET_TYPE, ReportingTargetTypeEnum } from '../../../../domain/entities/targetType'
 import { type VehicleTypeEnum } from '../../../../domain/entities/vehicleType'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getTargetDetailsAsText } from '../../utils'
 
 import type { TargetDetails } from '../../../../domain/entities/reporting'
@@ -17,6 +19,7 @@ export function CellTarget({
   targetType: ReportingTargetTypeEnum | undefined
   vehicleType: VehicleTypeEnum | undefined
 }) {
+  const searchQueryFilter = useAppSelector(state => state.reportingFilters.searchQueryFilter)
   if (!targetType) {
     return <span>-</span>
   }
@@ -24,12 +27,28 @@ export function CellTarget({
   const targetDetailsAsText = getTargetDetailsAsText({ description, targetDetails, targetType, vehicleType })
 
   if (GENERIC_TARGET_TYPE.includes(targetDetailsAsText)) {
-    return <ItalicTarget title={targetDetailsAsText}>{targetDetailsAsText}</ItalicTarget>
+    return (
+      <StyledHighlighter
+        autoEscape
+        highlightClassName="highlight"
+        searchWords={searchQueryFilter ? [searchQueryFilter.toLowerCase()] : []}
+        textToHighlight={targetDetailsAsText ?? ''}
+        title={targetDetailsAsText}
+      />
+    )
   }
 
-  return <span title={targetDetailsAsText}>{targetDetailsAsText}</span>
+  return (
+    <Highlighter
+      autoEscape
+      highlightClassName="highlight"
+      searchWords={searchQueryFilter ? [searchQueryFilter] : []}
+      textToHighlight={targetDetailsAsText ?? ''}
+      title={targetDetailsAsText}
+    />
+  )
 }
 
-const ItalicTarget = styled.span`
+const StyledHighlighter = styled(Highlighter)`
   font-style: italic;
 `

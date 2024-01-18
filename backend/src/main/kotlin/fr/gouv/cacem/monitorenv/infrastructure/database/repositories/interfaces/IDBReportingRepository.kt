@@ -140,7 +140,13 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
                 )
             )
             AND ((:searchQuery) = ''
-                OR to_tsvector('mydict', target_details) @@ to_tsquery('mydict', (:searchQuery || ':*'))
+                OR (
+                    to_tsvector('mydict', target_details) @@ to_tsquery('mydict', (:searchQuery || ':*'))
+                    )
+                OR (
+                    unaccent(CAST(description as text))
+                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
+                )
             )
             ORDER BY reporting_id DESC
     """,

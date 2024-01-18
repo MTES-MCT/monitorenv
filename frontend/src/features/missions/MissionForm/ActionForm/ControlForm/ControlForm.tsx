@@ -226,14 +226,16 @@ export function ControlForm({
             />
           )}
         </ReportingsContainer>
-        <ActionTheme
-          actionIndex={envActionIndex}
-          actionType={ActionTypeEnum.CONTROL}
-          labelSubTheme="Sous-thématiques de contrôle"
-          labelTheme="Thématique de contrôle"
-          themeIndex={0}
-          themesYear={actualYearForThemes}
-        />
+        <Form.Group>
+          <ActionTheme
+            actionIndex={envActionIndex}
+            actionType={ActionTypeEnum.CONTROL}
+            labelSubTheme="Sous-thématiques de contrôle"
+            labelTheme="Thématique de contrôle"
+            themeIndex={0}
+            themesYear={actualYearForThemes}
+          />
+        </Form.Group>
         <Form.Group>
           <DatePicker
             baseContainer={newWindowContainerRef.current}

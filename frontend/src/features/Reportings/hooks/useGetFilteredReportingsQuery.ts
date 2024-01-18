@@ -38,13 +38,22 @@ export const useGetFilteredReportingsQuery = () => {
     return undefined
   }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
 
+  // to search differents words the back needs "&" between words
+  const formattedQuerySearch = useMemo(() => {
+    if (searchQueryFilter) {
+      return searchQueryFilter.trim().replace(' ', '&')
+    }
+
+    return undefined
+  }, [searchQueryFilter])
+
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
       isAttachedToMission: isAttachedOrNotToMissionFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
-      searchQuery: searchQueryFilter,
+      searchQuery: formattedQuerySearch,
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: startedAfter || undefined,
       startedBeforeDateTime: startedBefore || undefined,

@@ -5,7 +5,7 @@ import { ReportingTargetTypeEnum } from '../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../domain/entities/vehicleType'
 
 const reporting1 = {
-  description: "une super description un peu longue mais qui vaut le coup d'oeil",
+  description: "Avec super description un peu longue mais qui vaut le coup d'oeil",
   targetDetails: [{}],
   targetType: ReportingTargetTypeEnum.OTHER,
   vehicleType: undefined
@@ -59,7 +59,7 @@ describe('reporting', () => {
     const targetAsTextReporting4 = getTargetDetailsAsText(reporting4)
 
     // Then
-    expect(targetAsTextReporting1).toEqual("une super description un peu longue mais qui vaut le coup d'oeil")
+    expect(targetAsTextReporting1).toEqual("Avec super description un peu longue mais qui vaut le coup d'oeil")
     expect(targetAsTextReporting2).toEqual('Nom du véhicule')
     expect(targetAsTextReporting3).toEqual('Nom de la société')
     expect(targetAsTextReporting4).toEqual('2 Véhicules')
