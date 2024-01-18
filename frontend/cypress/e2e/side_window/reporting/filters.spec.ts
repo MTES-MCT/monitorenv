@@ -201,7 +201,7 @@ context('Reportings', () => {
 
     // because we have two enpty tr at the beginning and at the end of the table
     // we add 2 to the length
-    cy.get('.Table-SimpleTable tr').should('have.length', 4)
+    cy.get('.Table-SimpleTable tr').should('have.length', 5)
     cy.fill('Rechercher une cible', undefined)
   })
 })
