@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
 import java.time.ZonedDateTime
-import java.util.*
 
 @Component
 class SSEMission {
@@ -64,9 +63,9 @@ class SSEMission {
             try {
                 val data = MissionDataOutput.fromMissionEntity(event.mission)
                 val sseEvent = event()
-                    .id(UUID.randomUUID().toString())
                     .name(MISSION_UPDATE_EVENT_NAME)
                     .data(data)
+                    .reconnectTime(0)
                     .build()
 
                 sseEmitter.send(sseEvent)

@@ -23,6 +23,7 @@ export const saveMission =
     const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings'])
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
+    await dispatch(missionFormsActions.setIsListeningToEvents(false))
 
     const newOrNextMissionData = missionIsNewMission ? { ...valuesToSave, id: undefined } : valuesToSave
     const upsertMission = missionIsNewMission
@@ -32,6 +33,8 @@ export const saveMission =
       const response = await dispatch(upsertMission.initiate(newOrNextMissionData))
       if ('data' in response) {
         const missionUpdated = response.data
+
+        await dispatch(missionFormsActions.setIsListeningToEvents(true))
 
         // We save the new properties : `id`, `createdAt`, `updatedAt` after a mission creation/update
         if (missionIsNewMission) {

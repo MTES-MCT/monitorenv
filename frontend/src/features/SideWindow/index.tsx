@@ -8,6 +8,7 @@ import { Route } from './Route'
 import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
+import { MissionEventContext } from '../../context/MissionEventContext'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext } from '../../domain/shared_slices/Global'
 import { switchTab } from '../../domain/use_cases/missions/switchTab'
@@ -15,6 +16,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
 import { MissionFormWrapper } from '../missions/MissionForm'
+import { useListenMissionEventUpdates } from '../missions/MissionForm/hooks/useListenMissionEventUpdates'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
@@ -23,6 +25,17 @@ import { ReportingsList } from '../Reportings/ReportingsList'
 export function SideWindow() {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const selectedMissions = useAppSelector(state => state.missionForms.missions)
+  const missionEvent = useListenMissionEventUpdates()
+
+  // TODO Update all missions in redux state when receiving an event
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('selectedMissions', selectedMissions)
+    // eslint-disable-next-line no-console
+    console.log('activeMissionId', activeMissionId)
+  }, [activeMissionId, selectedMissions])
 
   const [isFirstRender, setIsFirstRender] = useState(true)
 
@@ -83,7 +96,9 @@ export function SideWindow() {
                   <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
                   <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-                  <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
+                  <MissionEventContext.Provider value={missionEvent}>
+                    <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
+                  </MissionEventContext.Provider>
                 </StyledRouteContainer>
                 {isReportingsButtonIsActive && (
                   <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />

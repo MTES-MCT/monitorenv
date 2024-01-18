@@ -14,11 +14,13 @@ type SelectedMissionType = {
 
 type MissionFormsState = {
   activeMissionId: number | string | undefined
+  isListeningToEvents: boolean
   missions: SelectedMissionType
 }
 
 const INITIAL_STATE: MissionFormsState = {
   activeMissionId: undefined,
+  isListeningToEvents: true,
   missions: {}
 }
 
@@ -40,6 +42,9 @@ const missionFormsSlice = createSlice({
     },
     resetMissions() {
       return INITIAL_STATE
+    },
+    setIsListeningToEvents(state, action: PayloadAction<boolean>) {
+      state.isListeningToEvents = action.payload
     },
     setMission(state, action: PayloadAction<MissionInStateType>) {
       const { id } = action.payload.missionForm

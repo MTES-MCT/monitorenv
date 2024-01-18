@@ -1,6 +1,6 @@
-import { customDayjs, FormikEffect } from '@mtes-mct/monitor-ui'
+import { customDayjs, FormikEffect, usePrevious } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { isEmpty, isEqual, omit } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
@@ -10,6 +10,7 @@ import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
+import { useFilterMissionEventUpdatesById } from './hooks/useFilterMissionEventUpdatesById'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
@@ -18,7 +19,7 @@ import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
 import { missionFormsActions } from './slice'
-import { getMissionUpdatesEventSource, MISSION_UPDATE_EVENT, missionEventListener } from './sse'
+import { shouldSaveMission } from './utils'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
@@ -44,6 +45,8 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
+  const previousValues = usePrevious(values)
+  const missionEvent = useFilterMissionEventUpdatesById(id)
 
   const isAutoSaveEnabled = useMemo(() => {
     if (!MISSION_FORM_AUTO_SAVE_ENABLED) {
@@ -67,7 +70,6 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
-  const [receivedMission, setReceivedMission] = useState<Mission | undefined>(undefined)
 
   const allowEditMission =
     selectedMission?.missionSource === undefined ||
@@ -171,56 +173,15 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     }
   }
 
-  useEffect(() => {
-    if (!id || !Number.isInteger(id)) {
-      return undefined
-    }
-
-    const listener = missionEventListener(id as number, mission => {
-      setReceivedMission(mission)
-    })
-
-    getMissionUpdatesEventSource().addEventListener(MISSION_UPDATE_EVENT, listener)
-
-    return () => {
-      getMissionUpdatesEventSource().removeEventListener(MISSION_UPDATE_EVENT, listener)
-    }
-  }, [id, receivedMission])
-
   const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
     const errors = await validateForm()
     const isValid = isEmpty(errors)
 
-    if (!isAutoSaveEnabled) {
+    if (!isAutoSaveEnabled || !isValid) {
       return
     }
 
-    if (!isValid) {
-      return
-    }
-
-    // Prevent triggering `onChange` when opening the form
-    if (isEqual(selectedMission, nextValues)) {
-      return
-    }
-
-    // Prevent re-sending the form when receiving an update
-    const filteredNextValues = omit(nextValues, [
-      'attachedReportingIds',
-      'attachedReportings',
-      'detachedReportings',
-      'detachedReportingIds',
-      'createdAtUtc',
-      'updatedAtUtc',
-      'envActions'
-    ])
-    const filteredReceivedMission = omit(receivedMission, [
-      'isGeometryComputedFromControls',
-      'createdAtUtc',
-      'updatedAtUtc',
-      'envActions'
-    ])
-    if (isEqual(filteredReceivedMission, filteredNextValues)) {
+    if (!shouldSaveMission(previousValues, nextValues, missionEvent)) {
       return
     }
 

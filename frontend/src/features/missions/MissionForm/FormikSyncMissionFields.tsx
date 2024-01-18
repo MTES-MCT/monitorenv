@@ -1,10 +1,9 @@
-import { useDeepCompareEffect } from '@mtes-mct/monitor-ui'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
 import { omit } from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import { getMissionUpdatesEventSource, MISSION_UPDATE_EVENT, missionEventListener } from './sse'
+import { useFilterMissionEventUpdatesById } from './hooks/useFilterMissionEventUpdatesById'
 
 import type { Mission } from '../../../domain/entities/missions'
 
@@ -34,48 +33,29 @@ type FormikSyncMissionFormProps = {
  */
 export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProps) {
   const { setFieldValue, values } = useFormikContext<Mission>()
-  const [receivedMission, setReceivedMission] = useState<Mission | undefined>()
+  const missionEvent = useFilterMissionEventUpdatesById(missionId)
 
-  useEffect(() => {
-    if (!missionId) {
-      return undefined
-    }
-
-    const listener = missionEventListener(missionId, mission => setReceivedMission(mission))
-
-    getMissionUpdatesEventSource().addEventListener(MISSION_UPDATE_EVENT, listener)
-
-    return () => {
-      getMissionUpdatesEventSource().removeEventListener(MISSION_UPDATE_EVENT, listener)
-    }
-  }, [missionId, receivedMission])
-
-  useDeepCompareEffect(
+  useEffect(
     () => {
-      if (!receivedMission) {
+      if (!missionEvent) {
         return
       }
 
-      ;(async () => {
-        const receivedDiff = diff(
-          omit(values, UNSYNCHRONIZED_PROPERTIES),
-          omit(receivedMission, UNSYNCHRONIZED_PROPERTIES)
-        )
+      const receivedDiff = diff(omit(values, UNSYNCHRONIZED_PROPERTIES), omit(missionEvent, UNSYNCHRONIZED_PROPERTIES))
 
-        /**
-         * We iterate and use `setFieldValue` on each diff key to avoid a global re-render of the <MissionForm/> component
-         */
-        Object.keys(receivedDiff).forEach(key => {
-          // eslint-disable-next-line no-console
-          console.log(`SSE: setting form key "${key}" to "${JSON.stringify(receivedMission[key])}"`)
-          setFieldValue(key, receivedMission[key])
-        })
-      })()
+      /**
+       * We iterate and use `setFieldValue` on each diff key to avoid a global re-render of the <MissionForm/> component
+       */
+      Object.keys(receivedDiff).forEach(key => {
+        // eslint-disable-next-line no-console
+        console.log(`SSE: setting form key "${key}" to "${JSON.stringify(missionEvent[key])}"`)
+        setFieldValue(key, missionEvent[key])
+      })
     },
 
     // We don't want to trigger infinite re-renders since `setFieldValue` changes after each rendering
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [receivedMission]
+    [missionEvent]
   )
 
   return <></>
