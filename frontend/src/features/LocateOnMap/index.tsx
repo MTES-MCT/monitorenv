@@ -5,14 +5,14 @@ import styled from 'styled-components'
 
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
-import { ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {
   const dispatch = useAppDispatch()
-  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+  const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
+  const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
 
@@ -27,13 +27,7 @@ export function LocateOnMap() {
   }
 
   return (
-    <Wrapper
-      $reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
-      }
-    >
+    <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
       <StyledSearch
         data-cy="location-search-input"
         isLabelHidden
@@ -51,22 +45,18 @@ export function LocateOnMap() {
   )
 }
 
-const Wrapper = styled.div<{ $reportingFormVisibility: VisibilityState }>`
-  position: absolute;
-  top: 10px;
-  right: ${p => {
-    switch (p.$reportingFormVisibility) {
-      case VisibilityState.VISIBLE:
-        return '512'
-      case VisibilityState.VISIBLE_LEFT:
-        return '560'
-      default:
-        return '10'
-    }
-  }}px;
-  width: 365px;
+const Wrapper = styled.div<{
+  $hasFullHeightRightDialogOpen: boolean
+  $isRightMenuOpened: boolean
+}>`
   display: flex;
+  position: absolute;
+  right: ${p =>
+    // eslint-disable-next-line no-nested-ternary
+    p.$hasFullHeightRightDialogOpen ? (p.$isRightMenuOpened ? 560 : 512) : 10}px;
+  top: 10px;
   transition: right 0.5s ease-out;
+  width: 365px;
 
   > div {
     flex-grow: 1;

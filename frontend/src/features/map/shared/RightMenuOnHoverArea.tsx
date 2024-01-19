@@ -1,54 +1,47 @@
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
-import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
+import { mainWindowActions } from '../../MainWindow/slice'
 
 export function RightMenuOnHoverArea() {
-  const dispatch = useAppDispatch()
-  const context = useAppSelector(state => state.global.reportingFormVisibility.context)
-  const visibility = useAppSelector(state => state.global.reportingFormVisibility.visibility)
-
-  const isReportingFormVisible = visibility === VisibilityState.VISIBLE || visibility === VisibilityState.VISIBLE_LEFT
-
   const areaRef = useRef(null)
 
-  const clickedOutsideComponent = useClickOutsideWhenOpened(areaRef, isReportingFormVisible)
+  const dispatch = useAppDispatch()
+  const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
+  const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
+
+  const onMouseEnter = () => {
+    dispatch(mainWindowActions.setIsRightMenuOpened(true))
+  }
+
+  const clickedOutsideComponent = useClickOutsideWhenOpened(areaRef, hasFullHeightRightDialogOpen)
   useEffect(() => {
-    if (clickedOutsideComponent && context === ReportingContext.MAP && visibility === VisibilityState.VISIBLE_LEFT) {
-      dispatch(
-        setReportingFormVisibility({
-          context: ReportingContext.MAP,
-          visibility: VisibilityState.VISIBLE
-        })
-      )
+    if (clickedOutsideComponent) {
+      dispatch(mainWindowActions.setIsRightMenuOpened(false))
     }
 
     // to prevent re-render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clickedOutsideComponent])
 
-  const onMouseEnter = () => {
-    if (context === ReportingContext.MAP && visibility === VisibilityState.VISIBLE) {
-      dispatch(
-        setReportingFormVisibility({
-          context: ReportingContext.MAP,
-          visibility: VisibilityState.VISIBLE_LEFT
-        })
-      )
-    }
-  }
-
-  return isReportingFormVisible ? <Area ref={areaRef} onMouseEnter={onMouseEnter} /> : null
+  return hasFullHeightRightDialogOpen ? (
+    <Area ref={areaRef} $isRightMenuOpened={isRightMenuOpened} onMouseEnter={onMouseEnter} />
+  ) : (
+    <></>
+  )
 }
 
-const Area = styled.div`
+const Area = styled.div<{
+  $isRightMenuOpened: boolean
+}>`
   height: 500px;
-  right: 0;
-  width: 60px;
   opacity: 0;
   position: absolute;
+  right: 0;
   top: 56px;
+  width: 60px;
+  z-index: ${p => (!p.$isRightMenuOpened ? 1000 : 0)};
 `

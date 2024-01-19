@@ -11,6 +11,7 @@ import { mapActions } from '../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
+import { mainWindowActions } from '../../../MainWindow/slice'
 import { stationActions } from '../../../Station/slice'
 import { controlUnitDialogActions } from '../ControlUnitDialog/slice'
 
@@ -70,6 +71,7 @@ export function Item({ controlUnit }: ItemProps) {
         isControlUnitListDialogVisible: false
       })
     )
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
   }
 
   return (

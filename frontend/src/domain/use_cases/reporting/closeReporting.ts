@@ -1,3 +1,4 @@
+import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
@@ -23,8 +24,11 @@ export const closeReporting =
         )
       )
 
-      await dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
-      await dispatch(
+      dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
+      if (reportingContextToClose === ReportingContext.MAP) {
+        dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
+      }
+      dispatch(
         setReportingFormVisibility({
           context: reportingContextToClose,
           visibility: VisibilityState.VISIBLE
@@ -39,7 +43,10 @@ export const closeReporting =
     }
     await dispatch(reportingActions.deleteSelectedReporting(reportingIdToClose))
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-    await dispatch(
+    if (reportingContextToClose === ReportingContext.MAP) {
+      dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+    }
+    dispatch(
       setReportingFormVisibility({
         context: reportingContextToClose,
         visibility: VisibilityState.NONE

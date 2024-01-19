@@ -34,7 +34,7 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
       )
     )
 
-    await dispatch(
+    dispatch(
       setReportingFormVisibility({
         context: ReportingContext.SIDE_WINDOW,
         visibility: VisibilityState.VISIBLE

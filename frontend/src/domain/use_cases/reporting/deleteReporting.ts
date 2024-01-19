@@ -1,5 +1,6 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
+import { mainWindowActions } from '../../../features/MainWindow/slice'
+import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
@@ -19,6 +20,9 @@ export const deleteReporting = (id: number | string | undefined) => async (dispa
 
       await dispatch(reportingActions.deleteSelectedReporting(id))
       dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+      if (reportings[id].context === ReportingContext.MAP) {
+        dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+      }
       dispatch(
         setReportingFormVisibility({
           context: reportings[id].context,

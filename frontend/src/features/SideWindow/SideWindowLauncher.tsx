@@ -7,6 +7,7 @@ import { ReportingContext, VisibilityState, setReportingFormVisibility } from '.
 import { reportingActions } from '../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
+import { mainWindowActions } from '../MainWindow/slice'
 import { missionFormsActions } from '../missions/MissionForm/slice'
 
 export function SideWindowLauncher() {
@@ -42,7 +43,9 @@ export function SideWindowLauncher() {
   const onUnload = async () => {
     dispatch(sideWindowActions.close())
     dispatch(reportingActions.resetReportings())
+    // TODO Why?
     dispatch(setReportingFormVisibility({ context: ReportingContext.MAP, visibility: VisibilityState.NONE }))
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
     dispatch(missionFormsActions.resetMissions())
   }
 

@@ -14,9 +14,11 @@ import { addMission } from '../../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
+import { mainWindowActions } from '../../../MainWindow/slice'
 
 export function ControlUnitDialog() {
   const dispatch = useAppDispatch()
+  const isRightMenuOpened = useAppSelector(store => store.mainWindow.isRightMenuOpened)
   const mapControlUnitDialog = useAppSelector(store => store.mapControlUnitDialog)
   if (!mapControlUnitDialog.controlUnitId) {
     throw new FrontendError('`mapControlUnitDialog.controlUnitId` is undefined.')
@@ -35,6 +37,7 @@ export function ControlUnitDialog() {
         isControlUnitDialogVisible: false
       })
     )
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
   }, [dispatch])
 
   if (!controlUnit) {
@@ -49,7 +52,7 @@ export function ControlUnitDialog() {
   }
 
   return (
-    <Wrapper>
+    <Wrapper $isRightMenuOpened={isRightMenuOpened}>
       <MapMenuDialog.Header>
         <MapMenuDialog.Title title={`${controlUnit.name} (${controlUnit.administration.name})`}>
           <b>{controlUnit.name}</b> ({controlUnit.administration.name})
@@ -70,14 +73,20 @@ export function ControlUnitDialog() {
   )
 }
 
-const Wrapper = styled(MapMenuDialog.Container)`
-  bottom: 10px;
+// TODO This wrapper should be a shared Env `<FullHeightMapRightDialog />` component to avoid logical + styling repetition.
+const Wrapper = styled(MapMenuDialog.Container)<{
+  $isRightMenuOpened: boolean
+}>`
+  bottom: 0;
+  /* TODO Remove margin in monitor-ui. */
+  margin: 0;
   max-height: none;
   position: absolute;
-  right: 50px;
-  top: 10px;
-  z-index: 2;
+  right: ${p => (p.$isRightMenuOpened ? 56 : 8)}px;
+  top: 0;
+  transition: right 0.5s ease-out, top 0.5s ease-out;
   width: 500px;
+  z-index: 2;
 `
 
 const StyledMapMenuDialogBody = styled(MapMenuDialog.Body)`

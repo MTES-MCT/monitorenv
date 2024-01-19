@@ -1,3 +1,4 @@
+import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
@@ -18,7 +19,10 @@ export const addReporting =
       reporting: getReportingInitialValues({ createdAt: new Date().toISOString(), id, ...partialReporting })
     }
 
-    await dispatch(
+    if (reportingContext === ReportingContext.MAP) {
+      dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
+    }
+    dispatch(
       setReportingFormVisibility({
         context: reportingContext,
         visibility: VisibilityState.VISIBLE

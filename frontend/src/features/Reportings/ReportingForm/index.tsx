@@ -21,6 +21,7 @@ type ReportingFormProps = {
 export function ReportingFormWithContext({ context, totalReportings }: ReportingFormProps) {
   const dispatch = useAppDispatch()
 
+  const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext = useAppSelector(state =>
@@ -70,6 +71,7 @@ export function ReportingFormWithContext({ context, totalReportings }: Reporting
     <>
       <FormContainer
         $context={reportingContext || ReportingContext.MAP}
+        $isRightMenuOpened={isRightMenuOpened}
         $position={totalReportings + 1}
         $reportingFormVisibility={reportingFormVisibility.visibility}
       >

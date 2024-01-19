@@ -199,6 +199,7 @@ export const StyledDeleteButton = styled(IconButton)`
 
 export const FormContainer = styled.div<{
   $context: ReportingContext
+  $isRightMenuOpened: boolean
   $position: number
   $reportingFormVisibility?: VisibilityState
 }>`
@@ -216,9 +217,7 @@ export const FormContainer = styled.div<{
     if (p.$context === ReportingContext.MAP) {
       switch (p.$reportingFormVisibility) {
         case VisibilityState.VISIBLE:
-          return 'right: 8px;'
-        case VisibilityState.VISIBLE_LEFT:
-          return 'right: 56px;'
+          return p.$isRightMenuOpened ? 'right: 56px;' : 'right: 8px;'
         case VisibilityState.REDUCED:
           return `right: 12px; top: calc(100vh - ${p.$position * 52}px);`
         case VisibilityState.NONE:

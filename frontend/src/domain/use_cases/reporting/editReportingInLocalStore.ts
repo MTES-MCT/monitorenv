@@ -1,4 +1,5 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
@@ -52,6 +53,9 @@ async function setReporting(dispatch, reportingId, reportingContext, newReportin
     )
   )
 
+  if (reportingContext === ReportingContext.MAP) {
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
+  }
   await dispatch(
     setReportingFormVisibility({
       context: reportingContext,
