@@ -74,7 +74,7 @@ describe('Missions Form', () => {
       // Erase the value
       await observationsCnsp.click({ clickCount: 3 })
       await observationsCnsp.type('Aucune', { delay: 50 })
-      await wait(5000)
+      await wait(2000)
 
       /**
        * User A modify "Observations CACEM"
@@ -92,7 +92,7 @@ describe('Missions Form', () => {
       // Erase the value
       await observationsCacem.click({ clickCount: 3 })
       await observationsCacem.type('Aucune', { delay: 50 })
-      await wait(5000)
+      await wait(2000)
 
       /**
        * User B modify "Open By"
@@ -104,13 +104,13 @@ describe('Missions Form', () => {
       await openBy.click({ clickCount: 3 })
       await openBy.type('LTH', { delay: 50 })
       // Wait for the update to be sent
-      await wait(3000)
+      await wait(2000)
       // Should send the update to the second page
       expect(await getInputContent(pageA, '[name="openBy"]')).toBe('LTH')
       // Erase the value
       await openBy.click({ clickCount: 3 })
       await openBy.type('FDJ', { delay: 50 })
-      await wait(5000)
+      await wait(2000)
 
       /**
        * User B reopen mission
@@ -133,7 +133,7 @@ describe('Missions Form', () => {
       await wait(2000)
       await pageB.waitForSelector('.Element-Tag')
       await assertContains(pageB, '.Element-Tag', 'Cloturée')
-      await wait(5000)
+      await wait(2000)
 
       /**
        * User B re-open mission
@@ -143,7 +143,7 @@ describe('Missions Form', () => {
       await wait(2000)
       await pageB.waitForSelector('.Element-Tag')
       await assertContains(pageB, '.Element-Tag', 'À venir')
-      await wait(5000)
+      await wait(2000)
 
       /**
        * User A re-edit mission in form
@@ -156,7 +156,43 @@ describe('Missions Form', () => {
 
       const finalClose = await pageA.waitForSelector('[data-cy="close-mission"]')
       await finalClose.click()
-      await wait(5000)
+      await wait(3000)
+    },
+    TIMEOUT
+  )
+
+  it(
+    'An unactive mission tab opened must be synchronized',
+    async () => {
+      /**
+       * User A open another mission
+       */
+      await pageA.waitForSelector('[data-cy="mission-0"]')
+      await pageA.click('[data-cy="mission-0"]')
+      // Edit another mission
+      await pageA.waitForSelector('[data-cy="edit-mission-49"]')
+      await pageA.click('[data-cy="edit-mission-49"]')
+
+      /**
+       * User B modify "Control unit contact"
+       */
+      const controlUnitContact = await pageB.waitForSelector('[name="controlUnits.0.contact"]')
+      // Modify contact on first page
+      await controlUnitContact.click({ clickCount: 3 })
+      await controlUnitContact.type('A new tel. number', { delay: 50 })
+      // Wait for the update to be sent
+      await wait(2000)
+
+      /**
+       * User A goes back to modified mission
+       */
+      await pageA.waitForSelector('[data-cy="mission-1"]')
+      await pageA.click('[data-cy="mission-1"]')
+      expect(await getInputContent(pageA, '[name="controlUnits.0.contact"]')).toBe('A new tel. number')
+      // Erase the value
+      await controlUnitContact.click({ clickCount: 3 })
+      await controlUnitContact.type('contact', { delay: 50 })
+      await wait(2000)
     },
     TIMEOUT
   )

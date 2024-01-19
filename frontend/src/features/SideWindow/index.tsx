@@ -1,4 +1,5 @@
 import { Icon, SideMenu, type NewWindowContextValue, NewWindowContext } from '@mtes-mct/monitor-ui'
+import { omit } from 'lodash'
 import { useEffect, useMemo, useState, useRef, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
@@ -17,32 +18,33 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
 import { MissionFormWrapper } from '../missions/MissionForm'
 import { useListenMissionEventUpdates } from '../missions/MissionForm/hooks/useListenMissionEventUpdates'
+import { missionFormsActions } from '../missions/MissionForm/slice'
+import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../missions/MissionForm/sse'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
 import { ReportingsList } from '../Reportings/ReportingsList'
 
 export function SideWindow() {
+  const dispatch = useAppDispatch()
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const selectedMissions = useAppSelector(state => state.missionForms.missions)
-  const missionEvent = useListenMissionEventUpdates()
-
-  // TODO Update all missions in redux state when receiving an event
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('selectedMissions', selectedMissions)
-    // eslint-disable-next-line no-console
-    console.log('activeMissionId', activeMissionId)
-  }, [activeMissionId, selectedMissions])
-
   const [isFirstRender, setIsFirstRender] = useState(true)
-
-  const dispatch = useAppDispatch()
+  const missionEvent = useListenMissionEventUpdates()
 
   const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
+
+  /**
+   * Use to update mission opened in the side window but not actives
+   */
+  useEffect(() => {
+    if (!missionEvent) {
+      return
+    }
+
+    dispatch(missionFormsActions.updateUnactiveMission(omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES)))
+  }, [dispatch, missionEvent])
 
   const navigate = nextPath => {
     if (!nextPath) {

@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer'
 
 const TEMP_DIRECTORY = path.join(os.tmpdir(), 'jest_puppeteer_global_setup')
 const NUMBER_OF_BROWSERS = 2
-const WIDTH = 1040
+const WIDTH = 1050
 const HEIGHT = 880
 
 console.log(`Running in ${process.env.CI ? 'headless' : 'browser'} mode.`)

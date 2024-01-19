@@ -13,10 +13,18 @@ export function shouldSaveMission(
     return false
   }
 
+  const filteredPreviousValues = {
+    ...previousValues,
+    envActions: filterActionsFormInternalProperties(previousValues)
+  }
   const filteredNextValues = {
     ...nextValues,
-    envActions: nextValues.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) || []
+    envActions: filterActionsFormInternalProperties(nextValues)
   }
 
-  return !isEqual(previousValues, filteredNextValues)
+  return !isEqual(filteredPreviousValues, filteredNextValues)
+}
+
+function filterActionsFormInternalProperties(values: Partial<Mission | NewMission>) {
+  return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) || []
 }

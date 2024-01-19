@@ -58,6 +58,26 @@ const missionFormsSlice = createSlice({
         state.missions = { ...state.missions, [id]: action.payload }
       }
       state.activeMissionId = id
+    },
+    updateUnactiveMission(state, action: PayloadAction<AtLeast<Partial<Mission>, 'id'>>) {
+      const { id } = action.payload
+
+      // If the mission is active, hence the form is open, the form will be updated from Formik (see FormikSyncMissionFields.ts)
+      if (!id || id === state.activeMissionId) {
+        return
+      }
+
+      const mission = state.missions[id]
+      if (mission) {
+        state.missions[id] = {
+          ...mission,
+          missionForm: {
+            // We keep all data not received from the Mission event (see MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES)
+            ...mission.missionForm,
+            ...action.payload
+          } as Mission
+        }
+      }
     }
   }
 })
