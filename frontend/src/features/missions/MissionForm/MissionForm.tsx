@@ -1,4 +1,4 @@
-import { customDayjs, FormikEffect, usePrevious } from '@mtes-mct/monitor-ui'
+import { customDayjs, FormikEffect } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
@@ -10,7 +10,6 @@ import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
-import { useFilterMissionEventUpdatesById } from './hooks/useFilterMissionEventUpdatesById'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
@@ -45,8 +44,6 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
-  const previousValues = usePrevious(values)
-  const missionEvent = useFilterMissionEventUpdatesById(id)
 
   const isAutoSaveEnabled = useMemo(() => {
     if (!MISSION_FORM_AUTO_SAVE_ENABLED) {
@@ -181,7 +178,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
       return
     }
 
-    if (!shouldSaveMission(previousValues, nextValues, missionEvent)) {
+    if (!shouldSaveMission(selectedMission, nextValues)) {
       return
     }
 
