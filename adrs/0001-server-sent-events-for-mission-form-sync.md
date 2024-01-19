@@ -28,19 +28,13 @@ Il est possible d'utiliser :
 
 **Limitations** :
 Lors de l'envoi d'un message, il faut fermer la connexion HTTP ouverte (voir `sseEmitter.complete()`), sinon le message n'est pas envoyé avec la configuration `Spring Boot` actuelle.  
-La conséquence est que côté frontend, à chaque évenement reçu, un message de type `error` (qui déclenche `onerror`) est également reçu.
-Cet évenement nous oblige à re-créer une nouvelle connexion `EventSource`.
+La conséquence est que côté frontend, à chaque évenement reçu, la connexion SSE `EventSource` est automatiquement re-créé par le navigateur.
 
 ## Décision
 
-`SSE` parait plus approprié à notre utilisation, par contre la re-créatino d'une connexio HTTP à chaque message reçu est une limitation majeure. 
+`SSE` parait plus approprié à notre utilisation.
 
 ## Conséquences
 
-Etant donné que l'instance `EventSource` est utilisé à plusieurs endroits dans le code,
-il faut re-créer des `EventListener` dans les composants qui écoutent les events à chaque message reçu.   
-Cela peut entrainer des phénomênes de **race condition**.
+Voir si la re-création de connexion `EventSource` fonctionne bien sur des sessions utilisateurs longues.
 
-Pour éviter cela, il faudra à l'avenir :
-- Eviter cette fermeture de connexion par le backend
-- Passer à `Websocket`
