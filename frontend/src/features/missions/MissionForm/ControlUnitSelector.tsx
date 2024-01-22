@@ -34,7 +34,9 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     `controlUnits.${controlUnitIndex}.administration`
   )
   const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
-  const [, unitNameMeta, unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
+  const [unitNameField, unitNameMeta, unitNameHelpers] = useField<string | undefined>(
+    `controlUnits.${controlUnitIndex}.name`
+  )
   const [resourcesField, , resourcesHelpers] = useField<ControlUnit.ControlUnitResource[]>(
     `controlUnits.${controlUnitIndex}.resources`
   )
@@ -49,7 +51,12 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     isLoading
   } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const filteredControlUnits = useMemo(() => controlUnitsData?.filter(isNotArchived) || [], [controlUnitsData])
+  const filteredControlUnits = useMemo(
+    () =>
+      controlUnitsData?.filter(controlUnit => isNotArchived(controlUnit) || unitNameField.value === controlUnit.name) ||
+      [],
+    [controlUnitsData, unitNameField.value]
+  )
 
   const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -124,6 +131,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
       unitHelpers.setValue(value)
       resourcesHelpers.setValue([])
       const foundUnit = unitList.find(unit => unit.id === value)
+
       if (!foundUnit) {
         return
       }

@@ -11,15 +11,15 @@ context('Back Office > Administration Table > Filters', () => {
     cy.get('tbody > tr').should('have.length', 33)
     cy.getTableRowByText('-').should('be.visible')
     cy.getTableRowByText('Sécurité Civile').should('exist')
-    cy.getTableRowByText('Administion Archivée 1').should('not.exist')
+    cy.getTableRowByText('Administration Archivée 1').should('not.exist')
   })
 
   it('Should show all archived administrations when clicking on "Administrations archivées" tab', () => {
     cy.clickButton('Administrations archivées')
 
     cy.get('tbody > tr').should('have.length', 2)
-    cy.getTableRowByText('Administion Archivée 1').should('be.visible')
-    cy.getTableRowByText('Administion Archivée 2').should('be.visible')
+    cy.getTableRowByText('Administration Archivée 1').should('be.visible')
+    cy.getTableRowByText('Administration Archivée 2').should('be.visible')
     cy.getTableRowByText('-').should('not.exist')
   })
 
