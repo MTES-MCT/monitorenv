@@ -52,7 +52,7 @@ RUN npm run build
 ######################
 # Upload sourcemaps  #
 ######################
-FROM getsentry/sentry-cli:latest as buildSourcemaps
+FROM getsentry/sentry-cli:2 as buildSourcemaps
 
 ARG VERSION
 ARG SENTRY_URL
