@@ -1,8 +1,8 @@
-import { CustomSearch, type Filter, isDefined, pluralize } from '@mtes-mct/monitor-ui'
+import { ControlUnit, CustomSearch, type Filter, isDefined, pluralize } from '@mtes-mct/monitor-ui'
 import { isEmpty, uniq } from 'lodash/fp'
 
-import { ControlUnit } from '../../../../domain/entities/controlUnit'
 import { isNotArchived } from '../../../../utils/isNotArchived'
+import { getControlUnitResourceCategoryFromControlUnitResourceType } from '../../utils'
 
 import type { FiltersState } from './types'
 import type { Extent } from 'ol/extent'
@@ -94,7 +94,25 @@ export function getFilters(
   if (filtersState.stationId) {
     const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
       controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-        const matches = controlUnit.controlUnitResources.filter(({ stationId }) => stationId === filtersState.stationId)
+        const matches = controlUnit.controlUnitResources.filter(
+          ({ isArchived, stationId }) => !isArchived && stationId === filtersState.stationId
+        )
+
+        return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
+      }, [])
+
+    filters.push(filter)
+  }
+
+  // Control Unit Resource Category
+  if (filtersState.categories) {
+    const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
+      controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
+        const matches = controlUnit.controlUnitResources.filter(({ isArchived, type }) => {
+          const category = getControlUnitResourceCategoryFromControlUnitResourceType(type)
+
+          return !isArchived && !!category && filtersState.categories?.includes(category)
+        })
 
         return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
       }, [])
@@ -106,7 +124,9 @@ export function getFilters(
   if (filtersState.type) {
     const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
       controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-        const matches = controlUnit.controlUnitResources.filter(({ type }) => type === filtersState.type)
+        const matches = controlUnit.controlUnitResources.filter(
+          ({ isArchived, type }) => !isArchived && type === filtersState.type
+        )
 
         return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
       }, [])
