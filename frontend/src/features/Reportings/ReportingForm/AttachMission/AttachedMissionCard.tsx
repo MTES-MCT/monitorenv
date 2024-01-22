@@ -41,7 +41,10 @@ export function AttachedMissionCard({
         <Title>
           {controlUnits && controlUnits?.length === 1 && (
             <>
-              <div>{firstControlUnit?.name.toUpperCase()}</div>
+              <TitleWithActionTag>
+                <ControlUnitTitle>{firstControlUnit?.name.toUpperCase()}</ControlUnitTitle>
+                <StatusActionTag controlStatus={controlStatus} />
+              </TitleWithActionTag>
               {firstControlUnit?.contact ? (
                 <div>{firstControlUnit?.contact}</div>
               ) : (
@@ -51,7 +54,10 @@ export function AttachedMissionCard({
           )}
           {controlUnits?.length > 1 && firstControlUnit && (
             <>
-              <div>{firstControlUnit?.name.toUpperCase()}</div>
+              <TitleWithActionTag>
+                <ControlUnitTitle>{firstControlUnit?.name.toUpperCase()}</ControlUnitTitle>
+                <StatusActionTag controlStatus={controlStatus} />
+              </TitleWithActionTag>
               <MultipleControlUnits>
                 et {controlUnits.length - 1} {pluralize('autre', controlUnits.length - 1)}{' '}
                 {pluralize('unité', controlUnits.length - 1)}
@@ -62,15 +68,10 @@ export function AttachedMissionCard({
       </Header>
 
       <Body>
-        <Details>
-          <div>
-            Mission {humanizeMissionTypes(missionTypes)} – {missionDurationText}
-          </div>
-          <MissionStatusLabel missionStatus={missionStatus} />
-        </Details>
         <div>
-          <StatusActionTag controlStatus={controlStatus} />
+          Mission {humanizeMissionTypes(missionTypes)} – {missionDurationText}
         </div>
+        <MissionStatusLabel missionStatus={missionStatus} />
       </Body>
     </Wrapper>
   )
@@ -99,22 +100,28 @@ const NoContact = styled.div`
   font-weight: 400;
   font-style: italic;
 `
-const Details = styled.div`
-  color: ${p => p.theme.color.slateGray};
-  display: flex;
-  flex: 2;
-  flex-direction: column;
-`
-
 const Title = styled.div`
-  white-space: nowrap;
-  font: normal normal bold 13px/18px Marianne;
   color: ${p => p.theme.color.gunMetal};
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  font: normal normal bold 13px/18px Marianne;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `
-
-const Body = styled.div`
+const TitleWithActionTag = styled.div`
   display: flex;
   justify-content: space-between;
-  flex-direction: row;
-  align-items: center;
+  gap: 16px;
+`
+
+const ControlUnitTitle = styled.span`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+const Body = styled.div`
+  display: flex;
+  flex-direction: column;
 `
