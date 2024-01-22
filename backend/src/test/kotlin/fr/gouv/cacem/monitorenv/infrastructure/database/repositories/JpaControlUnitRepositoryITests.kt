@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaControlUnitRepositoryITests : AbstractDBTests() {
-    @Autowired
-    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
     @Test
     @Transactional
@@ -34,202 +33,245 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all control units`() {
-        val foundFullControlUnits = jpaControlUnitRepository.findAll().sortedBy { requireNotNull(it.controlUnit.id) }
+        val foundFullControlUnits =
+            jpaControlUnitRepository.findAll().sortedBy { requireNotNull(it.controlUnit.id) }
 
-        assertThat(foundFullControlUnits).hasSize(33)
+        assertThat(foundFullControlUnits).hasSize(34)
 
-        assertThat(foundFullControlUnits[0]).isEqualTo(
-            FullControlUnitDTO(
-                administration = AdministrationEntity(
-                    id = 1005,
-                    isArchived = false,
-                    name = "DDTM",
-                ),
-                controlUnit = ControlUnitEntity(
-                    id = 10000,
-                    administrationId = 1005,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Cultures marines – DDTM 40",
-                    termsNote = null,
-                ),
-                controlUnitContacts = listOf(
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 10000,
-                        email = null,
-                        name = "Contact 1",
-                        phone = null,
+        assertThat(foundFullControlUnits[0])
+            .isEqualTo(
+                FullControlUnitDTO(
+                    administration =
+                    AdministrationEntity(
+                        id = 1005,
+                        isArchived = false,
+                        name = "DDTM",
                     ),
-                    ControlUnitContactEntity(
-                        id = 2,
-                        controlUnitId = 10000,
-                        email = null,
-                        name = "Contact 2",
-                        phone = null,
+                    controlUnit =
+                    ControlUnitEntity(
+                        id = 10000,
+                        administrationId = 1005,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Cultures marines – DDTM 40",
+                        termsNote = null,
                     ),
-                ),
-                controlUnitResources = listOf(
-                    FullControlUnitResourceDTO(
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
-                        ),
-                        controlUnitResource = ControlUnitResourceEntity(
+                    controlUnitContacts =
+                    listOf(
+                        ControlUnitContactEntity(
                             id = 1,
-                            stationId = 1,
                             controlUnitId = 10000,
-                            isArchived = false,
-                            name = "Semi-rigide 1",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.BARGE,
+                            email = null,
+                            name = "Contact 1",
+                            phone = null,
                         ),
-                        station = StationEntity(
-                            id = 1,
-                            latitude = 43.295765,
-                            longitude = 5.375486,
-                            name = "Marseille",
-                        ),
-                    ),
-                    FullControlUnitResourceDTO(
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
-                        ),
-                        controlUnitResource = ControlUnitResourceEntity(
+                        ControlUnitContactEntity(
                             id = 2,
-                            stationId = 1,
                             controlUnitId = 10000,
-                            isArchived = false,
-                            name = "Semi-rigide 2",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.BARGE,
-                        ),
-                        station = StationEntity(
-                            id = 1,
-                            latitude = 43.295765,
-                            longitude = 5.375486,
-                            name = "Marseille",
+                            email = null,
+                            name = "Contact 2",
+                            phone = null,
                         ),
                     ),
-                    FullControlUnitResourceDTO(
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
+                    controlUnitResources =
+                    listOf(
+                        FullControlUnitResourceDTO(
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 1,
+                                stationId = 1,
+                                controlUnitId = 10000,
+                                isArchived = false,
+                                name = "Semi-rigide 1",
+                                note = null,
+                                photo = null,
+                                type =
+                                ControlUnitResourceType
+                                    .BARGE,
+                            ),
+                            station =
+                            StationEntity(
+                                id = 1,
+                                latitude = 43.295765,
+                                longitude = 5.375486,
+                                name = "Marseille",
+                            ),
                         ),
-                        controlUnitResource = ControlUnitResourceEntity(
-                            id = 13,
-                            controlUnitId = 10000,
-                            isArchived = true,
-                            name = "Voiture",
-                            note = null,
-                            photo = null,
-                            stationId = 1,
-                            type = ControlUnitResourceType.CAR,
+                        FullControlUnitResourceDTO(
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 2,
+                                stationId = 1,
+                                controlUnitId = 10000,
+                                isArchived = false,
+                                name = "Semi-rigide 2",
+                                note = null,
+                                photo = null,
+                                type =
+                                ControlUnitResourceType
+                                    .BARGE,
+                            ),
+                            station =
+                            StationEntity(
+                                id = 1,
+                                latitude = 43.295765,
+                                longitude = 5.375486,
+                                name = "Marseille",
+                            ),
                         ),
-                        station = StationEntity(
-                            id = 1,
-                            latitude = 43.295765,
-                            longitude = 5.375486,
-                            name = "Marseille",
+                        FullControlUnitResourceDTO(
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 13,
+                                controlUnitId = 10000,
+                                isArchived = true,
+                                name = "Voiture",
+                                note = null,
+                                photo = null,
+                                stationId = 1,
+                                type =
+                                ControlUnitResourceType
+                                    .CAR,
+                            ),
+                            station =
+                            StationEntity(
+                                id = 1,
+                                latitude = 43.295765,
+                                longitude = 5.375486,
+                                name = "Marseille",
+                            ),
                         ),
-                    ),
-                    FullControlUnitResourceDTO(
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
-                        ),
-                        controlUnitResource = ControlUnitResourceEntity(
-                            id = 14,
-                            controlUnitId = 10000,
-                            isArchived = false,
-                            name = "Drône",
-                            note = null,
-                            photo = null,
-                            stationId = 2,
-                            type = ControlUnitResourceType.DRONE,
-                        ),
-                        station = StationEntity(
-                            id = 2,
-                            latitude = 48.648105,
-                            longitude = -2.013144,
-                            name = "Saint-Malo",
+                        FullControlUnitResourceDTO(
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 14,
+                                controlUnitId = 10000,
+                                isArchived = false,
+                                name = "Drône",
+                                note = null,
+                                photo = null,
+                                stationId = 2,
+                                type =
+                                ControlUnitResourceType
+                                    .DRONE,
+                            ),
+                            station =
+                            StationEntity(
+                                id = 2,
+                                latitude = 48.648105,
+                                longitude = -2.013144,
+                                name = "Saint-Malo",
+                            ),
                         ),
                     ),
                 ),
-            ),
-        )
+            )
 
-        assertThat(foundFullControlUnits[32]).isEqualTo(
-            FullControlUnitDTO(
-                administration = AdministrationEntity(
-                    id = 1009,
-                    isArchived = false,
-                    name = "DIRM / DM",
-                ),
-                controlUnit = ControlUnitEntity(
-                    id = 10121,
-                    administrationId = 1009,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "PAM Jeanne Barret",
-                    termsNote = null,
-                ),
-                controlUnitContacts = listOf(),
-                controlUnitResources = listOf(
-                    FullControlUnitResourceDTO(
-                        station = StationEntity(
-                            id = 3,
-                            name = "Dunkerque",
-                            latitude = 51.035534,
-                            longitude = 2.372845,
-                        ),
-                        controlUnit = ControlUnitEntity(
-                            id = 10121,
-                            administrationId = 1009,
-                            areaNote = null,
-                            isArchived = false,
-                            name = "PAM Jeanne Barret",
-                            termsNote = null,
-                        ),
-                        controlUnitResource = ControlUnitResourceEntity(
-                            id = 8,
-                            stationId = 3,
-                            controlUnitId = 10121,
-                            isArchived = false,
-                            name = "PAM Jeanne Barret",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.FRIGATE,
+        assertThat(foundFullControlUnits[33])
+            .isEqualTo(
+                FullControlUnitDTO(
+                    administration =
+                    AdministrationEntity(
+                        id = 1009,
+                        isArchived = false,
+                        name = "DIRM / DM",
+                    ),
+                    controlUnit =
+                    ControlUnitEntity(
+                        id = 10121,
+                        administrationId = 1009,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "PAM Jeanne Barret",
+                        termsNote = null,
+                    ),
+                    controlUnitContacts = listOf(),
+                    controlUnitResources =
+                    listOf(
+                        FullControlUnitResourceDTO(
+                            station =
+                            StationEntity(
+                                id = 3,
+                                name = "Dunkerque",
+                                latitude = 51.035534,
+                                longitude = 2.372845,
+                            ),
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10121,
+                                administrationId = 1009,
+                                areaNote = null,
+                                isArchived = false,
+                                name = "PAM Jeanne Barret",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 8,
+                                stationId = 3,
+                                controlUnitId = 10121,
+                                isArchived = false,
+                                name = "PAM Jeanne Barret",
+                                note = null,
+                                photo = null,
+                                type =
+                                ControlUnitResourceType
+                                    .FRIGATE,
+                            ),
                         ),
                     ),
                 ),
-            ),
-        )
+            )
     }
 
     @Test
@@ -237,145 +279,183 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     fun `findById() should find a control unit by its ID`() {
         val foundFullControlUnit = jpaControlUnitRepository.findById(10000)
 
-        assertThat(foundFullControlUnit).isEqualTo(
-            FullControlUnitDTO(
-                administration = AdministrationEntity(
-                    id = 1005,
-                    isArchived = false,
-                    name = "DDTM",
-                ),
-                controlUnit = ControlUnitEntity(
-                    id = 10000,
-                    administrationId = 1005,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Cultures marines – DDTM 40",
-                    termsNote = null,
-                ),
-                controlUnitContacts = listOf(
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 10000,
-                        email = null,
-                        name = "Contact 1",
-                        phone = null,
+        assertThat(foundFullControlUnit)
+            .isEqualTo(
+                FullControlUnitDTO(
+                    administration =
+                    AdministrationEntity(
+                        id = 1005,
+                        isArchived = false,
+                        name = "DDTM",
                     ),
-                    ControlUnitContactEntity(
-                        id = 2,
-                        controlUnitId = 10000,
-                        email = null,
-                        name = "Contact 2",
-                        phone = null,
+                    controlUnit =
+                    ControlUnitEntity(
+                        id = 10000,
+                        administrationId = 1005,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Cultures marines – DDTM 40",
+                        termsNote = null,
                     ),
-                ),
-                controlUnitResources = listOf(
-                    FullControlUnitResourceDTO(
-                        station = StationEntity(
+                    controlUnitContacts =
+                    listOf(
+                        ControlUnitContactEntity(
                             id = 1,
-                            latitude = 43.295765,
-                            longitude = 5.375486,
-                            name = "Marseille",
-                        ),
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
-                        ),
-                        controlUnitResource = ControlUnitResourceEntity(
-                            id = 1,
-                            stationId = 1,
                             controlUnitId = 10000,
-                            isArchived = false,
-                            name = "Semi-rigide 1",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.BARGE,
+                            email = null,
+                            name = "Contact 1",
+                            phone = null,
                         ),
-                    ),
-                    FullControlUnitResourceDTO(
-                        station = StationEntity(
-                            id = 1,
-                            latitude = 43.295765,
-                            longitude = 5.375486,
-                            name = "Marseille",
-                        ),
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
-                        ),
-                        controlUnitResource = ControlUnitResourceEntity(
+                        ControlUnitContactEntity(
                             id = 2,
-                            stationId = 1,
                             controlUnitId = 10000,
-                            isArchived = false,
-                            name = "Semi-rigide 2",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.BARGE,
+                            email = null,
+                            name = "Contact 2",
+                            phone = null,
                         ),
                     ),
-                    FullControlUnitResourceDTO(
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
+                    controlUnitResources =
+                    listOf(
+                        FullControlUnitResourceDTO(
+                            station =
+                            StationEntity(
+                                id = 1,
+                                latitude = 43.295765,
+                                longitude = 5.375486,
+                                name = "Marseille",
+                            ),
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 1,
+                                stationId = 1,
+                                controlUnitId = 10000,
+                                isArchived = false,
+                                name = "Semi-rigide 1",
+                                note = null,
+                                photo = null,
+                                type =
+                                ControlUnitResourceType
+                                    .BARGE,
+                            ),
                         ),
-                        controlUnitResource = ControlUnitResourceEntity(
-                            id = 13,
-                            controlUnitId = 10000,
-                            isArchived = true,
-                            name = "Voiture",
-                            note = null,
-                            photo = null,
-                            stationId = 1,
-                            type = ControlUnitResourceType.CAR,
+                        FullControlUnitResourceDTO(
+                            station =
+                            StationEntity(
+                                id = 1,
+                                latitude = 43.295765,
+                                longitude = 5.375486,
+                                name = "Marseille",
+                            ),
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 2,
+                                stationId = 1,
+                                controlUnitId = 10000,
+                                isArchived = false,
+                                name = "Semi-rigide 2",
+                                note = null,
+                                photo = null,
+                                type =
+                                ControlUnitResourceType
+                                    .BARGE,
+                            ),
                         ),
-                        station = StationEntity(id = 1, latitude = 43.295765, longitude = 5.375486, name = "Marseille"),
-                    ),
-                    FullControlUnitResourceDTO(
-                        controlUnit = ControlUnitEntity(
-                            id = 10000,
-                            administrationId = 1005,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Cultures marines – DDTM 40",
-                            termsNote = null,
+                        FullControlUnitResourceDTO(
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 13,
+                                controlUnitId = 10000,
+                                isArchived = true,
+                                name = "Voiture",
+                                note = null,
+                                photo = null,
+                                stationId = 1,
+                                type =
+                                ControlUnitResourceType
+                                    .CAR,
+                            ),
+                            station =
+                            StationEntity(
+                                id = 1,
+                                latitude = 43.295765,
+                                longitude = 5.375486,
+                                name = "Marseille",
+                            ),
                         ),
-                        controlUnitResource = ControlUnitResourceEntity(
-                            id = 14,
-                            controlUnitId = 10000,
-                            isArchived = false,
-                            name = "Drône",
-                            note = null,
-                            photo = null,
-                            stationId = 2,
-                            type = ControlUnitResourceType.DRONE,
-                        ),
-                        station = StationEntity(
-                            id = 2,
-                            latitude = 48.648105,
-                            longitude = -2.013144,
-                            name = "Saint-Malo",
+                        FullControlUnitResourceDTO(
+                            controlUnit =
+                            ControlUnitEntity(
+                                id = 10000,
+                                administrationId = 1005,
+                                areaNote = null,
+                                departmentAreaInseeCode =
+                                null,
+                                isArchived = false,
+                                name =
+                                "Cultures marines – DDTM 40",
+                                termsNote = null,
+                            ),
+                            controlUnitResource =
+                            ControlUnitResourceEntity(
+                                id = 14,
+                                controlUnitId = 10000,
+                                isArchived = false,
+                                name = "Drône",
+                                note = null,
+                                photo = null,
+                                stationId = 2,
+                                type =
+                                ControlUnitResourceType
+                                    .DRONE,
+                            ),
+                            station =
+                            StationEntity(
+                                id = 2,
+                                latitude = 48.648105,
+                                longitude = -2.013144,
+                                name = "Saint-Malo",
+                            ),
                         ),
                     ),
                 ),
-            ),
-        )
+            )
     }
 
     @Test
@@ -384,14 +464,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Create
 
-        val newControlUnit = ControlUnitEntity(
-            administrationId = 1,
-            areaNote = "Area Note",
-            departmentAreaInseeCode = "50",
-            isArchived = false,
-            name = "Control Unit Name",
-            termsNote = "Terms Note",
-        )
+        val newControlUnit =
+            ControlUnitEntity(
+                administrationId = 1,
+                areaNote = "Area Note",
+                departmentAreaInseeCode = "50",
+                isArchived = false,
+                name = "Control Unit Name",
+                termsNote = "Terms Note",
+            )
 
         val createdControlUnit = jpaControlUnitRepository.save(newControlUnit)
 
@@ -400,15 +481,16 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Update
 
-        val nextControlUnit = ControlUnitEntity(
-            id = 10122,
-            administrationId = 1,
-            areaNote = "Updated Area Note",
-            departmentAreaInseeCode = "85",
-            isArchived = false,
-            name = "Updated Control Unit Name",
-            termsNote = "Updated Terms Note",
-        )
+        val nextControlUnit =
+            ControlUnitEntity(
+                id = 10122,
+                administrationId = 1,
+                areaNote = "Updated Area Note",
+                departmentAreaInseeCode = "85",
+                isArchived = false,
+                name = "Updated Control Unit Name",
+                termsNote = "Updated Terms Note",
+            )
 
         val updatedControlUnit = jpaControlUnitRepository.save(nextControlUnit)
 
@@ -419,7 +501,11 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         jpaControlUnitRepository.deleteById(10122)
 
-        val controlUnitIds = jpaControlUnitRepository.findAll().map { requireNotNull(it.controlUnit.id) }.sorted()
+        val controlUnitIds =
+            jpaControlUnitRepository
+                .findAll()
+                .map { requireNotNull(it.controlUnit.id) }
+                .sorted()
 
         assertThat(controlUnitIds).doesNotContain(10122)
     }
