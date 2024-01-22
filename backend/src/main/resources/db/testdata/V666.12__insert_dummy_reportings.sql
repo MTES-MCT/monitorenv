@@ -17,7 +17,7 @@ INSERT INTO reportings (id, reporting_id, source_type, semaphore_id, control_uni
  /* reporting linked to a control */
 (10, 2300010, 'OTHER', null, null, 'Vigipol', 'INDIVIDUAL', NULL, '[{"operatorName": ""}]', ST_GeomFromText('MULTIPOINT((-3.91241571 48.67428686))', 4326), 'NAMO', 'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.', 'INFRACTION_SUSPICION', NULL, NULL, NULL, true, true, now() - INTERVAL '90 minutes', 6, false, 53, now() - INTERVAL '25 minutes', NULL, '3480657f-7845-4eb4-aa06-07b174b1da45', 'GHI'),
 /* reporting linked to a surveillance */
-(11, 2300011, 'SEMAPHORE', 36, NULL, NULL, 'OTHER', NULL, '[{"operatorName": ""}]', ST_GeomFromText('MULTIPOINT((-4.76689484 48.52102012))', 4326), 'NAMO', 'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.', 'OBSERVATION', NULL, NULL, NULL, true, true, now() - INTERVAL '90 minutes', 6, false, 53, now() - INTERVAL '25 minutes', NULL, '9969413b-b394-4db4-985f-b00743ffb833', 'GHI')
+(11, 2300011, 'SEMAPHORE', 36, NULL, NULL, 'OTHER', NULL, '[{"operatorName": ""}]', ST_GeomFromText('MULTIPOINT((-4.76689484 48.52102012))', 4326), 'NAMO', 'La description du signalement', 'OBSERVATION', NULL, NULL, NULL, true, true, now() - INTERVAL '90 minutes', 6, false, 53, now() - INTERVAL '25 minutes', NULL, '9969413b-b394-4db4-985f-b00743ffb833', 'GHI')
 ;
 
 SELECT setval('reportings_id_seq', (SELECT max(id) FROM reportings), true);

@@ -1,4 +1,5 @@
 import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
@@ -24,7 +25,23 @@ export function FilterTags() {
     )
   }
 
-  if (!hasFilters) {
+  const hasTagFilters = useMemo(() => {
+    if (
+      hasFilters &&
+      ((seaFrontFilter && seaFrontFilter?.length > 0) ||
+        (sourceFilter && sourceFilter?.length > 0) ||
+        (sourceTypeFilter && sourceTypeFilter?.length > 0) ||
+        (subThemesFilter && subThemesFilter?.length > 0) ||
+        (targetTypeFilter && targetTypeFilter?.length > 0) ||
+        (themeFilter && themeFilter?.length > 0))
+    ) {
+      return true
+    }
+
+    return false
+  }, [hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, targetTypeFilter, themeFilter])
+
+  if (!hasTagFilters) {
     return null
   }
 

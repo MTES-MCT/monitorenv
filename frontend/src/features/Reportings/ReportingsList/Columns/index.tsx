@@ -37,7 +37,7 @@ export const Columns = [
     ),
 
     id: 'select',
-    size: 55
+    size: 45
   },
   {
     accessorFn: row => row.reportingId,
@@ -87,6 +87,7 @@ export const Columns = [
     accessorFn: row => row.targetDetails,
     cell: ({ row }) => (
       <CellTarget
+        description={row.original.description}
         targetDetails={row.original.targetDetails}
         targetType={row.original.targetType}
         vehicleType={row.original.vehicleType}
@@ -142,7 +143,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 102
+    size: 90
   },
   {
     accessorFn: row => row.geom,
@@ -157,7 +158,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 107
+    size: 85
   },
   {
     accessorFn: row => row.geom,
@@ -166,7 +167,7 @@ export const Columns = [
     header: () => '',
     id: 'geom',
 
-    size: 58
+    size: 50
   },
   {
     accessorFn: row => row.id,

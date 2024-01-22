@@ -88,7 +88,7 @@ context('Reportings', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'Autre')
+      cy.wrap(row).should('contain', 'La description du signalement')
     })
 
     // here we test if the clear button worked correctly
@@ -192,5 +192,16 @@ context('Reportings', () => {
 
     // clean filter
     cy.getDataCy('attach-to-mission-filter-UNATTACHED').click()
+  })
+
+  it('Should filter reportings by search query', () => {
+    cy.fill('Rechercher une cible', 'mr le')
+    cy.wait(500)
+    cy.wait('@getReportings')
+
+    // because we have two enpty tr at the beginning and at the end of the table
+    // we add 2 to the length
+    cy.get('.Table-SimpleTable tr').should('have.length', 5)
+    cy.fill('Rechercher une cible', undefined)
   })
 })

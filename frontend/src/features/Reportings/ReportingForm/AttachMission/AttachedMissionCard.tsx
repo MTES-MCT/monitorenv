@@ -29,8 +29,8 @@ export function AttachedMissionCard({
 
   const isMissionDuringOneDay = !endDateTimeUtc || (endDateTimeUtc && endDate.diff(startDate, 'day') === 0)
 
-  const formattedStartDate = startDate.isValid() && startDate.format('D MMM YYYY')
-  const formattedEndDate = endDateTimeUtc && endDate.isValid() && endDate.format('D MMM YYYY')
+  const formattedStartDate = startDate.isValid() && startDate.format('DD/MM/YYYY')
+  const formattedEndDate = endDateTimeUtc && endDate.isValid() && endDate.format('DD/MM/YYYY')
   const missionDurationText = isMissionDuringOneDay
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
