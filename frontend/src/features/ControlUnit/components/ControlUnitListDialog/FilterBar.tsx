@@ -1,5 +1,8 @@
 import {
+  ControlUnit,
+  Field,
   Icon,
+  MultiCheckbox,
   Select,
   Size,
   TextInput,
@@ -13,7 +16,6 @@ import { controlUnitListDialogActions } from './slice'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetStationsQuery } from '../../../../api/stationsAPI'
-import { ControlUnit } from '../../../../domain/entities/controlUnit'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { isNotArchived } from '../../../../utils/isNotArchived'
@@ -29,6 +31,10 @@ export function FilterBar() {
     [administrations]
   )
   const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])
+  const categoriesAsOptions = useMemo(
+    () => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceCategoryLabel),
+    []
+  )
   const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceTypeLabel), [])
 
   const updateAdministrationId = useCallback(
@@ -41,6 +47,13 @@ export function FilterBar() {
   const updateBaseId = useCallback(
     (nextValue: number | undefined) => {
       dispatch(controlUnitListDialogActions.setFilter({ key: 'stationId', value: nextValue }))
+    },
+    [dispatch]
+  )
+
+  const updateCategory = useCallback(
+    (nextValue: ControlUnit.ControlUnitResourceCategory[] | undefined) => {
+      dispatch(controlUnitListDialogActions.setFilter({ key: 'categories', value: nextValue }))
     },
     [dispatch]
   )
@@ -109,6 +122,17 @@ export function FilterBar() {
         searchable
         value={mapControlUnitListDialog.filtersState.stationId}
       />
+      <Field>
+        <MultiCheckbox
+          isInline
+          isLabelHidden
+          label="Catégorie de moyen"
+          name="category"
+          onChange={updateCategory}
+          options={categoriesAsOptions}
+          value={mapControlUnitListDialog.filtersState.categories}
+        />
+      </Field>
     </Wrapper>
   )
 }
