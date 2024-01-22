@@ -43,6 +43,15 @@ context('Main Window > Control Unit List Dialog > Filters', () => {
     cy.contains('DPM – DDTM 14').should('exist')
   })
 
+  it('Should find control units matching the selected resource category', () => {
+    cy.fill('Catégorie de moyen', ['Aérien', 'Terrestre'])
+
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 2)
+
+    cy.contains('Cultures marines – DDTM 40').should('exist')
+    cy.contains('DML 2A').should('exist')
+  })
+
   it('Should find control units matching the selected base', () => {
     cy.fill('Base du moyen', 'Marseille')
 
