@@ -54,9 +54,10 @@ INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_date
 INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, deleted, observations_cnsp, mission_source, closed, mission_order, mission_types) VALUES (39, 'KEI', 'Without black box common. More reduce many trial.', 'MED', '2022-03-02 05:42:47.588693', '2022-05-03 09:16:22.588693', NULL, 'ELI', false, NULL, 'MONITORENV', true, NULL, '{LAND}');
 INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, deleted, observations_cnsp, mission_source, closed, mission_order, mission_types) VALUES (40, 'TAM', 'Idea tonight interesting value.', 'NAMO', '2022-03-17 13:29:55.588693', '2022-05-27 02:14:48.588693', NULL, 'RAN', false, NULL, 'MONITORENV', true, NULL, '{LAND}');
 INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, deleted, observations_cnsp, mission_source, closed, mission_order, mission_types) VALUES (53, 'CDA', 'Idea tonight interesting value.', 'NAMO', '2022-11-21 13:29:55.588693', '2022-11-23 02:14:48.588693', NULL, 'CDA', false, NULL, 'MONITORENV', false, NULL, '{LAND, SEA}');
+INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, deleted, observations_cnsp, mission_source, closed, mission_order, mission_types) VALUES (54, 'CDA', 'A deleted mission with a control unit.', 'NAMO', '2020-01-01 00:00:00.000000', '2020-01-01 01:00:00.000000', NULL, 'ABC', true, NULL, 'MONITORENV', false, NULL, '{LAND}');
 
 
-SELECT pg_catalog.setval('public.missions_id_seq', 53, true);
+SELECT pg_catalog.setval('public.missions_id_seq', 54, true);
 
 INSERT INTO missions_control_units
     (mission_id, control_unit_id)
@@ -121,7 +122,8 @@ VALUES
     (        47,           10002,  'A Team - Gimme your number'),
     (        25,           10002,                'Full contact'),
     (        43,           10018,                'Full contact'),
-    (        53,           10018,                'Full contact');
+    (        53,           10018,                'Full contact'),
+    (        54,           10029,                'Full contact');
 
 INSERT INTO missions_control_resources
     (mission_id, control_resource_id)
