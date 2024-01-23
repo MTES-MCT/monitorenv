@@ -1,4 +1,4 @@
-import { expect, it, beforeEach } from '@jest/globals'
+import { beforeEach, expect, it } from '@jest/globals'
 import { platform } from 'os'
 
 import { assertContains, getFirstTab, getInputContent, listenToConsole, wait } from './utils'

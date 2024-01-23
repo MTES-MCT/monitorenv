@@ -8,7 +8,7 @@ export function listenToConsole(page, index) {
 
       if (messageType === 'ERR') {
         console.log(message.args(), message.stackTrace())
-        // throw new Error(message.text())
+        throw new Error(message.text())
       }
     })
     .on('response', response => {

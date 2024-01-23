@@ -10,6 +10,7 @@ import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
+import { useListenMissionEventUpdatesById } from './hooks/useListenMissionEventUpdatesById'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
@@ -43,6 +44,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
+  const missionEvent = useListenMissionEventUpdatesById(id)
   const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const isAutoSaveEnabled = useMemo(() => {
@@ -178,7 +180,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
       return
     }
 
-    if (!shouldSaveMission(selectedMission, nextValues)) {
+    if (!shouldSaveMission(selectedMission, missionEvent, nextValues)) {
       return
     }
 
