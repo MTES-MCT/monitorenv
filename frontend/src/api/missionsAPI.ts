@@ -103,6 +103,4 @@ export const {
   useUpdateMissionMutation
 } = missionsAPI
 
-export const useGetMissionState = missionsAPI.endpoints.getMission.useQueryState
-
 export const { useGetEngagedControlUnitsQuery } = publicMissionsAPI
