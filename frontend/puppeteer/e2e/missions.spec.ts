@@ -27,6 +27,7 @@ describe('Missions Form', () => {
     pageB = await getFirstTab(browsers[1])
     listenToConsole(pageB, 2)
 
+    await wait(1000)
     /* eslint-disable no-restricted-syntax */
     for (const page of [pageA, pageB]) {
       await page.goto(URL)
@@ -188,8 +189,15 @@ describe('Missions Form', () => {
        * User A goes back to modified mission
        */
       await pageA.waitForSelector('[data-cy="mission-1"]')
-      await pageA.click('[data-cy="mission-1"]')
-      await assertContains(pageA, '[data-cy="editMissionWrapper"]', 'Mission Terre – DML 2A')
+      try {
+        await assertContains(pageA, '[data-cy="editMissionWrapper"]', 'Mission Terre – DML 2A')
+      } catch (e) {
+        // Sometimes a Dropdown is shown, we need to resize the window
+        pageA.setViewport({ height: 880, width: 1030 })
+        await pageA.click('[data-cy="mission-1"]')
+
+        await assertContains(pageA, '[data-cy="editMissionWrapper"]', 'Mission Terre – DML 2A')
+      }
       expect(await getInputContent(pageA, '[name="controlUnits.0.contact"]')).toBe('A new tel. number')
       // Erase the value
       await controlUnitContact.click({ clickCount: 3 })
