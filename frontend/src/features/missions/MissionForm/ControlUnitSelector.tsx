@@ -34,7 +34,9 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     `controlUnits.${controlUnitIndex}.administration`
   )
   const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
-  const [, unitNameMeta, unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
+  const [unitNameField, unitNameMeta, unitNameHelpers] = useField<string | undefined>(
+    `controlUnits.${controlUnitIndex}.name`
+  )
   const [resourcesField, , resourcesHelpers] = useField<ControlUnit.ControlUnitResource[]>(
     `controlUnits.${controlUnitIndex}.resources`
   )
@@ -49,7 +51,13 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     isLoading
   } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const filteredControlUnits = useMemo(() => controlUnitsData?.filter(isNotArchived) || [], [controlUnitsData])
+  // Include archived control units (and administrations) if they're already selected
+  const activeWithSelectedControlUnits = useMemo(
+    () =>
+      controlUnitsData?.filter(controlUnit => isNotArchived(controlUnit) || unitNameField.value === controlUnit.name) ||
+      [],
+    [controlUnitsData, unitNameField.value]
+  )
 
   const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -62,15 +70,17 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   }, [engagedControlUnitsData])
 
   const administrationsAsOption = useMemo(() => {
-    const formattedAdministrations = uniq(filteredControlUnits.map(({ administration }) => administration)).sort()
+    const formattedAdministrations = uniq(
+      activeWithSelectedControlUnits.map(({ administration }) => administration)
+    ).sort()
 
     return formattedAdministrations.map(administration => ({
       label: administration,
       value: administration
     }))
-  }, [filteredControlUnits])
+  }, [activeWithSelectedControlUnits])
 
-  const unitList = filteredControlUnits
+  const unitList = activeWithSelectedControlUnits
     .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
     .sort()
 
@@ -84,29 +94,29 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     [unitListAsOption]
   )
 
-  const activeControlUnitResources = (
-    filteredControlUnits?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
-      ?.resources || []
-  ).filter(isNotArchived)
+  // Include archived resources if they're already selected
+  const activeWithSelectedControlUnitResources = useMemo(() => {
+    const activeControlUnitResources = (
+      activeWithSelectedControlUnits?.find(
+        unit => unit.administration === administrationField.value && unit.id === unitField.value
+      )?.resources || []
+    ).filter(isNotArchived)
 
-  // Add any resource from Mission not present in list from API (as the resource might be historized)
-  // See: https://github.com/MTES-MCT/monitorenv/issues/103
-  // eslint-disable-next-line no-unsafe-optional-chaining
-  const activeAndSelectedControlUnitResources = useMemo(() => {
     const resources = [...activeControlUnitResources, ...resourcesField.value]
 
-    return uniqBy(resources, 'id').sort()
-  }, [activeControlUnitResources, resourcesField.value])
+    return uniqBy(resources, 'id')
+  }, [activeWithSelectedControlUnits, administrationField.value, resourcesField.value, unitField.value])
+
   const resourcesAsOption = useMemo(
-    () => getOptionsFromIdAndName(activeAndSelectedControlUnitResources),
-    [activeAndSelectedControlUnitResources]
+    () => getOptionsFromIdAndName(activeWithSelectedControlUnitResources),
+    [activeWithSelectedControlUnitResources]
   )
 
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
       administrationHelpers.setValue(value)
       const newUnitList = uniqBy(
-        filteredControlUnits.filter(controlUnit => controlUnit.administration === value),
+        activeWithSelectedControlUnits.filter(controlUnit => controlUnit.administration === value),
         'name'
       )
       if (newUnitList.length === 1 && newUnitList[0]?.id) {
@@ -124,6 +134,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
       unitHelpers.setValue(value)
       resourcesHelpers.setValue([])
       const foundUnit = unitList.find(unit => unit.id === value)
+
       if (!foundUnit) {
         return
       }
@@ -139,7 +150,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
       return
     }
 
-    const nextControlUnitResources = activeAndSelectedControlUnitResources.filter(controlUnitResource =>
+    const nextControlUnitResources = activeWithSelectedControlUnitResources.filter(controlUnitResource =>
       nextControlUnitResourceIds.includes(controlUnitResource.id)
     )
 

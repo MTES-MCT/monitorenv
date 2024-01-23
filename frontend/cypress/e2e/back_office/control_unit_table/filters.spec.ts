@@ -17,9 +17,10 @@ context('Back Office > Control Unit Table > Filters', () => {
   it('Should show all archived control units when clicking on "Unités archivées" tab', () => {
     cy.clickButton('Unités archivées')
 
-    cy.get('tbody > tr').should('have.length', 2)
+    cy.get('tbody > tr').should('have.length', 3)
     cy.getTableRowByText('BGC Ajaccio').should('be.visible')
     cy.getTableRowByText('BGC Bastia').should('be.visible')
+    cy.getTableRowByText('Unité archivée').should('be.visible')
     cy.getTableRowByText('A636 Maïto').should('not.exist')
   })
 

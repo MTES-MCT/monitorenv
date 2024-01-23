@@ -150,22 +150,22 @@ const StyledReportingsContainer = styled.div`
   width: ${TABLE_WIDTH}px;
 `
 const StyledTh = styled(TableWithSelectableRows.Th)`
-  :first-child {
+  &:first-child {
     padding: 4px 16px 4px 4px;
   }
 `
 
 const StyledTd = styled(TableWithSelectableRows.Td)`
-  :first-child {
+  &:first-child {
     padding: 4px 16px 4px 4px;
   }
-  :nth-child(11) {
+  &:nth-child(11) {
     padding: 4px 4px 4px 16px;
   }
-  :nth-child(12) {
+  &:nth-child(12) {
     padding: 4px;
   }
-  :nth-child(13) {
+  &:nth-child(13) {
     padding: 4px 16px 4px 12px;
   }
 `

@@ -389,4 +389,25 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait('@updateMission')
   })
+
+  it('Should display the archived control unit and administration when edit mission', () => {
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
+    cy.fill('Période', 'Période spécifique')
+    const startDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(6, 'month').toISOString()
+    const endDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.toISOString()
+    const startDate = getUtcDateInMultipleFormats(startDateInString).utcDateTuple
+    const endDate = getUtcDateInMultipleFormats(endDateInString).utcDateTuple
+    cy.fill('Période spécifique', [startDate, endDate])
+
+    cy.wait('@getMissions')
+
+    cy.intercept('GET', '/bff/v1/missions/40').as('getMission')
+
+    cy.get('*[data-cy="edit-mission-40"]').click({ force: true }).wait(500)
+
+    cy.wait('@getMission')
+
+    cy.getDataCy('add-control-unit').find('.rs-picker-toggle-value').contains('Unité archivée')
+    cy.getDataCy('add-control-administration').find('.rs-picker-toggle-value').contains('Administration Archivée 2')
+  })
 })

@@ -50,9 +50,9 @@ export const getReportingTitle = reporting => {
     <ReportingInfos>
       <span>{`${getFormattedReportingId(reportingId)} - `}</span>
       {GENERIC_TARGET_TYPE.includes(targetAsText) ? (
-        <ItalicTarget>{targetAsText}</ItalicTarget>
+        <ItalicTarget title={targetAsText}>{targetAsText}</ItalicTarget>
       ) : (
-        <span>{targetAsText}</span>
+        <span title={targetAsText}>{targetAsText}</span>
       )}
     </ReportingInfos>
   )

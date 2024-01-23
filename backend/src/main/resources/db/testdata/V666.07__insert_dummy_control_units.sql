@@ -33,7 +33,8 @@ VALUES
     (10029,              1015,       false,         'Police Municipale Le Marin 972'),
     (10030,              1004,       false, 'Réserve Naturelle  de L''Ilot M''Bouzi'),
     (10031,              1004,       false,               'Réserve Naturelle 7 Iles'),
-    (10032,              1005,       false,             'Cultures marines – DDTM 30');
+    (10032,              1005,       false,             'Cultures marines – DDTM 30'),
+    (10033,                22,       true,                          'Unité archivée');
 
 INSERT INTO public.control_units(
     id, administration_id,                    name) VALUES
