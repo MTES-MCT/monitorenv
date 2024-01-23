@@ -13,14 +13,14 @@ export function listenToConsole(page, index) {
     })
     .on('response', response => {
       if (response.url().includes('/bff/') || response.url().includes('/api/')) {
-        console.log(`[Page ${index}] HTTP ${response.status()}: ${response.url()}`)
+        console.log(`[Page ${index}] HTTP ${response.request().method()} ${response.status()}: ${response.url()}`)
       }
     })
 }
 
 export async function assertContains(page, selector, text) {
   const nodes = await page.$$eval(selector, elements => elements.map(element => element.textContent))
-  const node = nodes.find(content => content === text)
+  const node = nodes.find(content => content.includes(text))
 
   assert.ok(node, `${selector} of value ${text} not found in array ${nodes}.`)
 }

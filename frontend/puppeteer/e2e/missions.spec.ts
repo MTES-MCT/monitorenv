@@ -189,6 +189,7 @@ describe('Missions Form', () => {
        */
       await pageA.waitForSelector('[data-cy="mission-1"]')
       await pageA.click('[data-cy="mission-1"]')
+      await assertContains(pageA, '[data-cy="editMissionWrapper"]', 'Mission Terre – DML 2A')
       expect(await getInputContent(pageA, '[name="controlUnits.0.contact"]')).toBe('A new tel. number')
       // Erase the value
       await controlUnitContact.click({ clickCount: 3 })

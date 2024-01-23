@@ -184,6 +184,29 @@ context('Side Window > Mission Form > Main Form', () => {
     })
   })
 
+  it('A mission tab should be closed', () => {
+    // Given
+    visitSideWindow()
+    cy.get('[data-cy="edit-mission-25"]').click({ force: true })
+    cy.wait(500)
+
+    // Back to missions list
+    cy.get('[data-cy="mission-0"]').click({ multiple: true, force: true })
+    cy.wait(500)
+
+    cy.get('[data-cy="edit-mission-38"]').click({ force: true })
+    cy.wait(500)
+
+    cy.get('[data-cy="mission-1"]').click({ multiple: true, force: true })
+    cy.wait(500)
+    cy.get('[data-cy="mission-2"]').click({ multiple: true, force: true })
+
+    cy.wait(500)
+
+    cy.get('[data-cy="mission-2"] > [aria-label="close"]').eq(0).click({ force: true })
+    cy.wait(500)
+  })
+
   it('A mission should be deleted', () => {
     // Given
     visitSideWindow()
