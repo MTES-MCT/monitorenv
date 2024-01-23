@@ -15,6 +15,6 @@ export const reduceReportingFormOnMap = (): HomeAppThunk => (dispatch, getState)
         visibility: VisibilityState.REDUCED
       })
     )
-    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
   }
 }
