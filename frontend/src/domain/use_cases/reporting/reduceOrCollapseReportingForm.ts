@@ -3,10 +3,10 @@ import { setReportingFormVisibility, ReportingContext, VisibilityState } from '.
 
 export const reduceOrCollapseReportingForm = (reportingContext: ReportingContext) => (dispatch, getState) => {
   const { reportingFormVisibility } = getState().global
-  if (reportingContext === ReportingContext.MAP) {
-    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
-  }
   if (reportingFormVisibility.visibility === VisibilityState.VISIBLE) {
+    if (reportingContext === ReportingContext.MAP) {
+      dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+    }
     dispatch(
       setReportingFormVisibility({
         context: reportingContext,
@@ -14,6 +14,9 @@ export const reduceOrCollapseReportingForm = (reportingContext: ReportingContext
       })
     )
   } else {
+    if (reportingContext === ReportingContext.MAP) {
+      dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
+    }
     dispatch(
       setReportingFormVisibility({
         context: reportingContext,
