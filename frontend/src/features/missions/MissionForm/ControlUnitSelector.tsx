@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import {
   Accent,
   CustomSearch,
@@ -6,8 +5,6 @@ import {
   getOptionsFromIdAndName,
   Icon,
   IconButton,
-  Level,
-  Message,
   MultiSelect,
   Select,
   useNewWindow
@@ -17,10 +14,10 @@ import { uniq, uniqBy } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { ControlUnitWarningMessage } from './ControlUnitWarningMessage'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
 import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
-import { missionSourceEnum } from '../../../domain/entities/missions'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isNewMission } from '../../../utils/isNewMission'
 import { isNotArchived } from '../../../utils/isNotArchived'
@@ -160,29 +157,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
   const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
-  const controlUnitWarningMessage = useMemo(() => {
-    if (!engagedControlUnit) {
-      return ''
-    }
-
-    if (engagedControlUnit.missionSources.length === 1) {
-      const source = engagedControlUnit.missionSources[0]
-      if (!source) {
-        return ''
-      }
-
-      return `Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le ${missionSourceEnum[source].label}.`
-    }
-
-    if (engagedControlUnit.missionSources.length > 1) {
-      return `Cette unité est actuellement sélectionnée dans plusieurs autres missions en cours, ouvertes par le ${engagedControlUnit.missionSources
-        .map(source => missionSourceEnum[source].label)
-        .join(' et le ')}.`
-    }
-
-    return ''
-  }, [engagedControlUnit])
-
   if (isError) {
     return <div>Erreur</div>
   }
@@ -225,7 +199,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
           value={unitField.value}
         />
         {missionIsNewMission && !!engagedControlUnit && (
-          <StyledMessage level={Level.WARNING}>{controlUnitWarningMessage}</StyledMessage>
+          <ControlUnitWarningMessage engagedControlUnit={engagedControlUnit} />
         )}
       </div>
 
@@ -249,10 +223,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     </RessourceUnitWrapper>
   )
 }
-
-const StyledMessage = styled(Message)`
-  margin-top: 8px;
-`
 
 const RessourceUnitWrapper = styled.div`
   margin-bottom: 14px;
