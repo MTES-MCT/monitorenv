@@ -34,11 +34,18 @@ import type { AtLeast } from '../../../types'
 
 type MissionFormProps = {
   id: number | string
+  isControlUnitAlreadyEngaged: boolean
   isNewMission: boolean
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
   setShouldValidateOnChange: (boolean) => void
 }
-export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }: MissionFormProps) {
+export function MissionForm({
+  id,
+  isControlUnitAlreadyEngaged,
+  isNewMission,
+  selectedMission,
+  setShouldValidateOnChange
+}: MissionFormProps) {
   const dispatch = useAppDispatch()
   const sideWindow = useAppSelector(state => state.sideWindow)
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
@@ -181,6 +188,10 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     }
 
     if (!shouldSaveMission(selectedMission, missionEvent, nextValues)) {
+      return
+    }
+
+    if (isControlUnitAlreadyEngaged) {
       return
     }
 

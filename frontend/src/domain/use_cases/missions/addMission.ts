@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { chain } from 'lodash'
 import { generatePath } from 'react-router'
 
 import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
@@ -23,7 +23,7 @@ export const addMission =
   async (dispatch, getState) => {
     const { missions = {} } = getState().missionForms
 
-    const maxNewMissionId = _.chain(missions)
+    const maxNewMissionId = chain(missions)
       .filter(newMission => isNewMission(newMission.missionForm.id))
       .maxBy(filteredNewMission => Number(String(filteredNewMission.missionForm.id).split('new-')[1]))
       .value()
@@ -47,6 +47,7 @@ export const addMission =
     }
 
     const newMission = {
+      isControlUnitAlreadyEngaged: false,
       isFormDirty: false,
       missionForm: missionFactory(initialMission, true, attachedReporting)
     }

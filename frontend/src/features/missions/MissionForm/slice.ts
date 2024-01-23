@@ -4,6 +4,7 @@ import type { Mission, NewMission } from '../../../domain/entities/missions'
 import type { AtLeast } from '../../../types'
 
 export type MissionInStateType = {
+  isControlUnitAlreadyEngaged: boolean
   isFormDirty: boolean
   missionForm: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>
 }
@@ -45,6 +46,17 @@ const missionFormsSlice = createSlice({
     },
     setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload
+    },
+    setIsControlUnitAlreadyEngaged(state, action: PayloadAction<boolean>) {
+      const { activeMissionId } = state
+
+      if (!activeMissionId) {
+        return
+      }
+      const mission = state.missions[activeMissionId]
+      if (mission) {
+        mission.isControlUnitAlreadyEngaged = action.payload
+      }
     },
     setIsListeningToEvents(state, action: PayloadAction<boolean>) {
       state.isListeningToEvents = action.payload

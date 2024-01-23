@@ -11,13 +11,15 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { uniq, uniqBy } from 'lodash'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ControlUnitWarningMessage } from './ControlUnitWarningMessage'
+import { missionFormsActions } from './slice'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
 import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isNewMission } from '../../../utils/isNewMission'
 import { isNotArchived } from '../../../utils/isNotArchived'
@@ -26,6 +28,7 @@ import { getMissionPageRoute } from '../../../utils/routes'
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
 export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
+  const dispatch = useAppDispatch()
   const { newWindowContainerRef } = useNewWindow()
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
@@ -157,6 +160,12 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
   const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
+  useEffect(() => {
+    if (!!engagedControlUnit && missionIsNewMission) {
+      dispatch(missionFormsActions.setIsControlUnitAlreadyEngaged(true))
+    }
+  }, [engagedControlUnit, missionIsNewMission, dispatch])
+
   if (isError) {
     return <div>Erreur</div>
   }
@@ -198,9 +207,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
           searchable={unitList.length > 10}
           value={unitField.value}
         />
-        {missionIsNewMission && !!engagedControlUnit && (
-          <ControlUnitWarningMessage engagedControlUnit={engagedControlUnit} />
-        )}
+        <ControlUnitWarningMessage engagedControlUnit={engagedControlUnit} />
       </div>
 
       <MultiSelect

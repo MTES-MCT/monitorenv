@@ -52,6 +52,7 @@ export function MissionFormWrapper() {
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm
             id={activeMissionId}
+            isControlUnitAlreadyEngaged={selectedMission?.isControlUnitAlreadyEngaged ?? false}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.missionForm}
             setShouldValidateOnChange={setShouldValidateOnChange}
