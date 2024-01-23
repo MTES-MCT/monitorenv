@@ -165,13 +165,14 @@ describe('Missions Form', () => {
     'An unactive mission tab opened must be synchronized',
     async () => {
       /**
-       * User A open another mission
+       * User A open a mission
        */
       await pageA.waitForSelector('[data-cy="mission-0"]')
       await pageA.click('[data-cy="mission-0"]')
       // Edit another mission
       await pageA.waitForSelector('[data-cy="edit-mission-49"]')
       await pageA.click('[data-cy="edit-mission-49"]')
+      await wait(1000)
 
       /**
        * User B modify "Control unit contact"
