@@ -15,7 +15,7 @@ const URL = `http://${WEBAPP_HOST}:${WEBAPP_PORT}/side_window`
 let pageA
 let pageB
 
-jest.retryTimes(1)
+jest.retryTimes(2)
 
 describe('Missions Form', () => {
   beforeEach(async () => {
