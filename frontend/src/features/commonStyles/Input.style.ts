@@ -1,7 +1,9 @@
 import { Input } from 'rsuite'
 import styled from 'styled-components'
 
-export const Label = styled.span`
+export const Label = styled.span<{
+  isLast: boolean
+}>`
   text-align: left;
   color: ${p => p.theme.color.slateGray};
   min-width: 154px;

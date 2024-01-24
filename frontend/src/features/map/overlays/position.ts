@@ -1,5 +1,15 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
-import { containsXY } from 'ol/extent'
+import { containsXY, type Extent } from 'ol/extent'
+
+type Margins = {
+  xLeft: number
+  xMiddle: number
+  xRight: number
+  yBottom: number
+  yMiddle: number
+  yTop: number
+}
+
 /**
  *
  * @param {*} boxSize taille de la boite
@@ -43,18 +53,15 @@ function getOuterExtentPositionForCentroid(boxSize, x, y) {
   }
 }
 
-/**
- *
- * @param {number[]} featureExtent extent of feature
- * @param {*} margins default margins
- * @param {*} boxSize size of the overlay
- * @param {*} boxSize.height height of the overlay
- * @param {*} boxSize.width width of the overlay
- * @returns
- */
-
-function getOuterExtentPositionForExtent(featureExtent, margins, boxSize) {
-  const [xTop, yTop, xBottom, yBottom] = featureExtent
+function getOuterExtentPositionForExtent(
+  featureExtent: Extent,
+  boxSize: {
+    height: number
+    resolution: number
+    width: number
+  }
+) {
+  const [xTop, yTop, xBottom, yBottom] = featureExtent as [number, number, number, number]
 
   return {
     BOTTOM_LEFT: {
@@ -76,16 +83,16 @@ function getOuterExtentPositionForExtent(featureExtent, margins, boxSize) {
   }
 }
 
-export const OverlayPosition = {
-  BOTTOM: 'BOTTOM',
-  BOTTOM_LEFT: 'BOTTOM_LEFT',
-  BOTTOM_RIGHT: 'BOTTOM_RIGHT',
-  CENTER: 'CENTER',
-  LEFT: 'LEFT',
-  RIGHT: 'RIGHT',
-  TOP: 'TOP',
-  TOP_LEFT: 'TOP_LEFT',
-  TOP_RIGHT: 'TOP_RIGHT'
+export enum OverlayPosition {
+  BOTTOM = 'BOTTOM',
+  BOTTOM_LEFT = 'BOTTOM_LEFT',
+  BOTTOM_RIGHT = 'BOTTOM_RIGHT',
+  CENTER = 'CENTER',
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT',
+  TOP = 'TOP',
+  TOP_LEFT = 'TOP_LEFT',
+  TOP_RIGHT = 'TOP_RIGHT'
 }
 
 /**
@@ -101,7 +108,7 @@ export const OverlayPosition = {
   }} margins
  * @returns {number[]} margins - The [top, left] overlay margins (and not the x, y margins)
  */
-export function getTopLeftMargin(nextOverlayPosition, margins) {
+export function getTopLeftMargin(nextOverlayPosition: OverlayPosition, margins: Margins) {
   const { xLeft, xMiddle, xRight, yBottom, yMiddle, yTop } = margins
 
   switch (nextOverlayPosition) {
@@ -162,16 +169,17 @@ export function getOverlayPositionForCentroid(boxSize, x, y, extent) {
   return OverlayPosition.TOP
 }
 
-/**
- *
- * @param {*} boxSize
- * @param {*} featureExtent
- * @param {*} extent
- * @returns
- */
-export function getOverlayPositionForExtent(featureExtent, extent, margins, boxSize) {
-  const position = getOuterExtentPositionForExtent(featureExtent, margins, boxSize)
-  const [xTop, yTop, xBottom, yBottom] = featureExtent
+export function getOverlayPositionForExtent(
+  featureExtent: Extent,
+  extent: Extent,
+  boxSize: {
+    height: number
+    resolution: number
+    width: number
+  }
+) {
+  const position = getOuterExtentPositionForExtent(featureExtent, boxSize)
+  const [xTop, yTop, xBottom, yBottom] = featureExtent as [number, number, number, number]
   if (containsXY(extent, position.TOP_LEFT.x, position.TOP_LEFT.y) && containsXY(extent, xTop, yTop)) {
     return OverlayPosition.TOP_LEFT
   }

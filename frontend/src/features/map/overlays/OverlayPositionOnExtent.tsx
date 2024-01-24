@@ -66,7 +66,7 @@ export function OverlayPositionOnExtent({
         const resolution = map.getView().getResolution()
         const extent = map.getView().calculateExtent()
 
-        const nextOverlayPosition = getOverlayPositionForExtent(featureExtent, extent, margins, {
+        const nextOverlayPosition = getOverlayPositionForExtent(featureExtent, extent, {
           height: OVERLAY_HEIGHT,
           resolution,
           width: OVERLAY_WIDTH

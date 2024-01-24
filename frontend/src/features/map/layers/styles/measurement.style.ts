@@ -8,7 +8,11 @@ import Style from 'ol/style/Style'
 
 export const measurementStyleWithCenter = new Style({
   geometry: feature => {
-    const extent = feature.getGeometry().getExtent()
+    const extent = feature.getGeometry()?.getExtent()
+    if (!extent) {
+      throw new Error('`extent` is undefined.')
+    }
+
     const center = getCenter(extent)
 
     return new Point(center)
