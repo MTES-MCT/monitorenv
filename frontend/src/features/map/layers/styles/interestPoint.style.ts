@@ -5,7 +5,7 @@ import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
 import { InterestPointLine } from '../../../../domain/entities/interestPointLine'
-import { INTEREST_POINT_STYLE, interestPointType } from '../../../../domain/entities/interestPoints'
+import { INTEREST_POINT_STYLE, interestPointType } from '../../../../domain/entities/interestPoints.js'
 
 const interestPointStylesCache = new Map()
 
