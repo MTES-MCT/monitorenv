@@ -1,10 +1,9 @@
-import { ControlUnit, Icon } from '@mtes-mct/monitor-ui'
+import { ControlUnit, Icon, getControlUnitResourceCategoryFromType } from '@mtes-mct/monitor-ui'
 
 import { ControlUnit as LocalControlUnit } from '../../../../../domain/entities/controlUnit'
-import { getControlUnitResourceCategoryFromControlUnitResourceType } from '../../../utils'
 
 export function getIconFromControlUnitResourceType(type: LocalControlUnit.ControlUnitResourceType) {
-  const category = getControlUnitResourceCategoryFromControlUnitResourceType(type)
+  const category = getControlUnitResourceCategoryFromType(type)
 
   switch (category) {
     case ControlUnit.ControlUnitResourceCategory.LAND:
