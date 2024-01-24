@@ -1,4 +1,4 @@
-import {customDayjs} from "@mtes-mct/monitor-ui";
+import { customDayjs } from '@mtes-mct/monitor-ui'
 
 context('Side Window > Mission Form > Validation on close', () => {
   beforeEach(() => {

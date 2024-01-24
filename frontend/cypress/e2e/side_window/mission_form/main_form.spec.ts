@@ -1,4 +1,4 @@
-import EventSource, {sources} from 'eventsourcemock'
+import EventSource, { sources } from 'eventsourcemock'
 
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
@@ -8,7 +8,6 @@ import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 context('Side Window > Mission Form > Main Form', () => {
-
   function visitSideWindow(isAutoSaveEnabled = true) {
     cy.visit(`/side_window`, {
       onBeforeLoad(window) {
@@ -16,17 +15,20 @@ context('Side Window > Mission Form > Main Form', () => {
         Object.defineProperty(window, 'mockEventSources', { value: sources })
 
         if (!window.env) {
-          Object.defineProperty(window, 'env', { value: {
+          Object.defineProperty(window, 'env', {
+            value: {
+              REACT_APP_CYPRESS_TEST: true,
               REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled,
-              REACT_APP_MISSION_FORM_AUTO_UPDATE: true,
-              REACT_APP_CYPRESS_TEST: true
+              REACT_APP_MISSION_FORM_AUTO_UPDATE: true
             }
           })
 
           return
         }
 
+        // eslint-disable-next-line no-param-reassign
         window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = isAutoSaveEnabled
+        // eslint-disable-next-line no-param-reassign
         window.env.REACT_APP_MISSION_FORM_AUTO_UPDATE = true
       }
     })
@@ -79,18 +81,21 @@ context('Side Window > Mission Form > Main Form', () => {
       '@createMission',
       {
         body: {
+          controlUnits: [
+            {
+              administration: 'DIRM / DM',
+              contact: 'Contact 012345',
+              id: 10011,
+              name: 'Cross Etel'
+            }
+          ],
+          isClosed: false,
           missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF',
-          controlUnits: [{
-            administration: 'DIRM / DM',
-            id: 10011,
-            name: 'Cross Etel',
-            contact: 'Contact 012345'
-          }],
-          isClosed: false
+          openBy: 'PCF'
         }
       },
-      5)
+      5
+    )
       .its('response.statusCode')
       .should('eq', 200)
   })
@@ -160,17 +165,20 @@ context('Side Window > Mission Form > Main Form', () => {
       '@createMission',
       {
         body: {
+          controlUnits: [
+            {
+              administration: 'DIRM / DM',
+              id: 10011,
+              name: 'Cross Etel'
+            }
+          ],
+          isClosed: false,
           missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF',
-          controlUnits: [{
-            administration: 'DIRM / DM',
-            id: 10011,
-            name: 'Cross Etel',
-          }],
-          isClosed: false
+          openBy: 'PCF'
         }
       },
-      5)
+      5
+    )
       .its('response.statusCode')
       .should('eq', 200)
 
@@ -191,15 +199,15 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.wait(500)
 
     // Back to missions list
-    cy.get('[data-cy="mission-0"]').click({ multiple: true, force: true })
+    cy.get('[data-cy="mission-0"]').click({ force: true, multiple: true })
     cy.wait(500)
 
     cy.get('[data-cy="edit-mission-38"]').click({ force: true })
     cy.wait(500)
 
-    cy.get('[data-cy="mission-1"]').click({ multiple: true, force: true })
+    cy.get('[data-cy="mission-1"]').click({ force: true, multiple: true })
     cy.wait(500)
-    cy.get('[data-cy="mission-2"]').click({ multiple: true, force: true })
+    cy.get('[data-cy="mission-2"]').click({ force: true, multiple: true })
 
     cy.wait(500)
 
@@ -305,7 +313,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('*[data-cy="delete-mission"]').should('be.disabled')
   })
 
-  it('A warning should be displayed When a control unit is already engaged in a mission', () => {
+  it('A user can delete mission if control unit already engaged and be redirected to filtered mission list', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
@@ -314,13 +322,65 @@ context('Side Window > Mission Form > Main Form', () => {
     // When
     cy.get('*[data-cy="add-mission"]').click()
     cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('DREAL{enter}')
+    cy.get('.rs-picker-search-bar-input').type('Jeanne{enter}')
     cy.wait('@getEngagedControlUnits')
 
     // Then
-    cy.get('body').contains(
-      'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.'
+    cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
+    cy.clickButton("Non, l'abandonner")
+
+    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+
+    // table have two rows for one résult because of the header
+    cy.get('.Table-SimpleTable tr').should('have.length', 2)
+  })
+
+  it('A user can create mission even if control unit already engaged', () => {
+    visitSideWindow()
+    cy.wait(200)
+    cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
+
+    cy.get('*[data-cy="add-mission"]').click()
+
+    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+
+    cy.get('[name="missionTypes0"]').click({ force: true })
+    cy.get('[name="missionTypes1"]').click({ force: true })
+
+    cy.get('*[data-cy="add-control-unit"]').click()
+    cy.get('.rs-picker-search-bar-input').type('Jeanne{enter}')
+    cy.wait('@getEngagedControlUnits')
+    cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
+    cy.clickButton('Oui, la conserver')
+    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+
+    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+
+    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
+
+    // Then
+    cy.waitForLastRequest(
+      '@createMission',
+      {
+        body: {
+          controlUnits: [
+            {
+              administration: 'DIRM / DM',
+              contact: 'Contact 012345',
+              id: 10121,
+              name: 'PAM Jeanne Barret'
+            }
+          ],
+          isClosed: false,
+          missionTypes: ['SEA', 'LAND'],
+          openBy: 'PCF'
+        }
+      },
+      5
     )
+      .its('response.statusCode')
+      .should('eq', 200)
   })
 
   it('A warning should not be displayed When it is an edited mission', () => {
@@ -334,10 +394,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.wait('@getEngagedControlUnits')
 
     // Then
-    cy.get('body').should(
-      'not.contain',
-      'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.'
-    )
+    cy.get('body').should('not.contain', 'Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
   })
 
   it('The mission form Should be updated When a mission update event is received', () => {
@@ -416,12 +473,13 @@ context('Side Window > Mission Form > Main Form', () => {
       '@updateMission',
       {
         body: {
-          openBy: 'LTH',
           closedBy: 'LTH',
-          observationsCnsp: 'Encore une observation'
+          observationsCnsp: 'Encore une observation',
+          openBy: 'LTH'
         }
       },
-      5)
+      5
+    )
       .its('response.statusCode')
       .should('eq', 200)
   })
@@ -465,17 +523,18 @@ context('Side Window > Mission Form > Main Form', () => {
       '@updateMission',
       {
         body: {
-          controlUnits: [{
-            administration: 'DDTM',
-            contact: 'Un contact',
-            id: 10000,
-            isArchived: false,
-            name: 'Cultures marines – DDTM 40',
-            resources: [
-              { id: 1, name: 'Semi-rigide 1' },
-              { controlUnitId: 10000, id: 13, name: 'Voiture' }
-            ]
-          },
+          controlUnits: [
+            {
+              administration: 'DDTM',
+              contact: 'Un contact',
+              id: 10000,
+              isArchived: false,
+              name: 'Cultures marines – DDTM 40',
+              resources: [
+                { id: 1, name: 'Semi-rigide 1' },
+                { controlUnitId: 10000, id: 13, name: 'Voiture' }
+              ]
+            },
             {
               administration: 'DDTM',
               contact: 'Un autre contact',
@@ -483,10 +542,12 @@ context('Side Window > Mission Form > Main Form', () => {
               isArchived: false,
               name: 'DML 2A',
               resources: []
-            }],
+            }
+          ]
         }
       },
-      5)
+      5
+    )
       .its('response.statusCode')
       .should('eq', 200)
 

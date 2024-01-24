@@ -177,13 +177,16 @@ context('Side Window > Mission Form > Mission dates', () => {
       '@updateMission',
       {
         body: {
-          envActions: [{
-            actionStartDateTimeUtc: '2024-05-26T12:00:00Z',
-            actionEndDateTimeUtc: '2024-05-28T14:15:00Z'
-          }],
+          envActions: [
+            {
+              actionEndDateTimeUtc: '2024-05-28T14:15:00Z',
+              actionStartDateTimeUtc: '2024-05-26T12:00:00Z'
+            }
+          ]
         }
       },
-      5, response => {
+      5,
+      response => {
         // Then
         const id = response.body.id
 
@@ -193,7 +196,8 @@ context('Side Window > Mission Form > Mission dates', () => {
         cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
         cy.clickButton('Supprimer la mission')
         cy.clickButton('Confirmer la suppression')
-      })
+      }
+    )
       .its('response.statusCode')
       .should('eq', 200)
   })
@@ -281,15 +285,18 @@ context('Side Window > Mission Form > Mission dates', () => {
       '@updateMission',
       {
         body: {
-          envActions: [{
-            isAdministrativeControl: false,
-            isComplianceWithWaterRegulationsControl: false,
-            isSeafarersControl: false,
-            isSafetyEquipmentAndStandardsComplianceControl: false,
-          }],
+          envActions: [
+            {
+              isAdministrativeControl: false,
+              isComplianceWithWaterRegulationsControl: false,
+              isSafetyEquipmentAndStandardsComplianceControl: false,
+              isSeafarersControl: false
+            }
+          ]
         }
       },
-      5, response => {
+      5,
+      response => {
         const controlActionResponse = response?.body.envActions[0]
         expect(controlActionResponse.isAdministrativeControl).equal(false)
         expect(controlActionResponse.isComplianceWithWaterRegulationsControl).equal(false)
@@ -303,7 +310,8 @@ context('Side Window > Mission Form > Mission dates', () => {
         cy.fill('Gens de mer', true)
         cy.fill('Equipement de sécurité et respect des normes', true)
         cy.clickButton('Enregistrer et quitter')
-      })
+      }
+    )
       .its('response.statusCode')
       .should('eq', 200)
   })

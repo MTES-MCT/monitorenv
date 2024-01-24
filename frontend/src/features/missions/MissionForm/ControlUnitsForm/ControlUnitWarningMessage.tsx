@@ -1,21 +1,30 @@
 import { Accent, Button, Level, Message } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
+import { isEmpty } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { missionFormsActions } from './slice'
-import { missionSourceEnum, type Mission } from '../../../domain/entities/missions'
-import { cancelCreateAndRedirectToFilteredList } from '../../../domain/use_cases/missions/cancelCreateAndRedirectToFilteredList'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { missionSourceEnum, type NewMission } from '../../../../domain/entities/missions'
+import { cancelCreateAndRedirectToFilteredList } from '../../../../domain/use_cases/missions/cancelCreateAndRedirectToFilteredList'
+import { saveMission } from '../../../../domain/use_cases/missions/saveMission'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { missionFormsActions } from '../slice'
 
-export function ControlUnitWarningMessage({ engagedControlUnit }) {
+import type { ControlUnit } from '../../../../domain/entities/controlUnit'
+
+export function ControlUnitWarningMessage({
+  engagedControlUnit
+}: {
+  engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
+}) {
+  const { validateForm, values } = useFormikContext<Partial<NewMission>>()
+
   const dispatch = useAppDispatch()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const isControlUnitAlreadyEngaged = !!useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.isControlUnitAlreadyEngaged : false
   )
-  const { values } = useFormikContext<Mission | Partial<Mission>>()
 
   const message = useMemo(() => {
     if (!engagedControlUnit) {
@@ -40,13 +49,20 @@ export function ControlUnitWarningMessage({ engagedControlUnit }) {
     return ''
   }, [engagedControlUnit])
 
-  // TO DO force field update to call `validateBeforeOnChange`
   const validate = async () => {
     dispatch(missionFormsActions.setIsControlUnitAlreadyEngaged(false))
+
+    const errors = await validateForm()
+    const isValid = isEmpty(errors)
+    if (!isValid) {
+      return
+    }
+
+    dispatch(saveMission(values, false, false))
   }
 
   const cancel = async () => {
-    const controlUnitId = engagedControlUnit.controlUnit?.id
+    const controlUnitId = engagedControlUnit?.controlUnit?.id
     if (!controlUnitId) {
       return
     }

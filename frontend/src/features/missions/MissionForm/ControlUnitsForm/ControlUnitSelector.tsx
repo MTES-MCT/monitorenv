@@ -15,19 +15,25 @@ import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ControlUnitWarningMessage } from './ControlUnitWarningMessage'
-import { missionFormsActions } from './slice'
-import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
-import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
-import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { isNewMission } from '../../../utils/isNewMission'
-import { isNotArchived } from '../../../utils/isNotArchived'
-import { getMissionPageRoute } from '../../../utils/routes'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
+import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
+import { useGetEngagedControlUnitsQuery } from '../../../../api/missionsAPI'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { isNewMission } from '../../../../utils/isNewMission'
+import { isNotArchived } from '../../../../utils/isNotArchived'
+import { getMissionPageRoute } from '../../../../utils/routes'
+import { missionFormsActions } from '../slice'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit'
+import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
-export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
+export function ControlUnitSelector({
+  controlUnitIndex,
+  removeControlUnit
+}: {
+  controlUnitIndex: number
+  removeControlUnit: () => void
+}) {
   const dispatch = useAppDispatch()
   const { newWindowContainerRef } = useNewWindow()
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(

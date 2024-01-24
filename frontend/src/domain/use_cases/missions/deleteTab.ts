@@ -8,47 +8,49 @@ import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 
-export const deleteTab = (path: string) => async (dispatch, getState) => {
-  const { missions } = getState().missionForms
-  const { activeMissionId } = getState().missionForms
-  const { selectedMissionIdOnMap } = getState().mission
+export const deleteTab =
+  (path: string, withConfirmation = true) =>
+  async (dispatch, getState) => {
+    const { missions } = getState().missionForms
+    const { activeMissionId } = getState().missionForms
+    const { selectedMissionIdOnMap } = getState().mission
 
-  const routeParams = getMissionPageRoute(path)
-  const idToDelete = getIdTyped(routeParams?.params.id)
+    const routeParams = getMissionPageRoute(path)
+    const idToDelete = getIdTyped(routeParams?.params.id)
 
-  if (idToDelete && missions[idToDelete]?.isFormDirty) {
-    if (activeMissionId === idToDelete) {
-      await dispatch(sideWindowActions.setShowConfirmCancelModal(true))
+    if (idToDelete && missions[idToDelete]?.isFormDirty) {
+      if (activeMissionId === idToDelete) {
+        await dispatch(sideWindowActions.setShowConfirmCancelModal(withConfirmation))
+
+        return
+      }
+      const missionToClose = missions[idToDelete]
+      await setMission(dispatch, missionToClose)
+      await dispatch(sideWindowActions.setShowConfirmCancelModal(withConfirmation))
 
       return
     }
-    const missionToClose = missions[idToDelete]
-    await setMission(dispatch, missionToClose)
-    await dispatch(sideWindowActions.setShowConfirmCancelModal(true))
 
-    return
+    if (idToDelete === selectedMissionIdOnMap) {
+      await dispatch(missionActions.resetSelectedMissionIdOnMap())
+    }
+
+    if (idToDelete === activeMissionId) {
+      await dispatch(attachReportingToMissionSliceActions.resetAttachReportingState())
+    }
+
+    await dispatch(missionFormsActions.deleteSelectedMission(idToDelete))
+
+    const arrayOfMissions: MissionInStateType[] = Object.values(missions)
+    const missionToDeleteIndex = arrayOfMissions.findIndex(mission => mission?.missionForm?.id === idToDelete)
+
+    if (missionToDeleteIndex === 0) {
+      dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
+    } else {
+      const previousMission = arrayOfMissions[missionToDeleteIndex - 1]
+      await setMission(dispatch, previousMission)
+    }
   }
-
-  if (idToDelete === selectedMissionIdOnMap) {
-    await dispatch(missionActions.resetSelectedMissionIdOnMap())
-  }
-
-  if (idToDelete === activeMissionId) {
-    await dispatch(attachReportingToMissionSliceActions.resetAttachReportingState())
-  }
-
-  await dispatch(missionFormsActions.deleteSelectedMission(idToDelete))
-
-  const arrayOfMissions: MissionInStateType[] = Object.values(missions)
-  const missionToDeleteIndex = arrayOfMissions.findIndex(mission => mission?.missionForm?.id === idToDelete)
-
-  if (missionToDeleteIndex === 0) {
-    dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
-  } else {
-    const previousMission = arrayOfMissions[missionToDeleteIndex - 1]
-    await setMission(dispatch, previousMission)
-  }
-}
 
 async function setMission(dispatch, mission) {
   await dispatch(missionFormsActions.setMission(mission))
