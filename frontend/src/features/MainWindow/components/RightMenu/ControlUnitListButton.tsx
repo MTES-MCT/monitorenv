@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 
 import { ButtonWrapper } from './ButtonWrapper'
 import { globalActions } from '../../../../domain/shared_slices/Global'
+import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../../commonStyles/map/MenuWithCloseButton'
@@ -14,6 +15,7 @@ export function ControlUnitListButton() {
 
   const toggleDialog = useCallback(() => {
     dispatch(globalActions.hideSideButtons())
+    dispatch(reduceReportingFormOnMap())
     dispatch(globalActions.setDisplayedItems({ isControlUnitListDialogVisible: !isControlUnitListDialogVisible }))
   }, [dispatch, isControlUnitListDialogVisible])
 
