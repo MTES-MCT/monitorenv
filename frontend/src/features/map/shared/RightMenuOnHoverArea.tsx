@@ -38,10 +38,9 @@ const Area = styled.div<{
   $isRightMenuOpened: boolean
 }>`
   height: 500px;
-  opacity: 0;
   position: absolute;
   right: 0;
   top: 56px;
-  width: 60px;
+  width: ${p => (!p.$isRightMenuOpened ? 10 : 60)}px;
   z-index: ${p => (!p.$isRightMenuOpened ? 1000 : 0)};
 `
