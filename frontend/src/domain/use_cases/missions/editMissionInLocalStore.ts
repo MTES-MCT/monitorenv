@@ -3,7 +3,6 @@ import { generatePath } from 'react-router'
 import { missionsAPI } from '../../../api/missionsAPI'
 import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
-import { removeMissionListener } from '../../../features/missions/MissionForm/sse'
 import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
@@ -37,7 +36,6 @@ export const editMissionInLocalStore = (missionId: number) => async (dispatch, g
 
     await missionRequest.unsubscribe()
   } catch (error) {
-    removeMissionListener(missionId)
     dispatch(
       setToast({ containerId: 'sideWindow', message: 'Erreur à la création ou à la modification de la mission' })
     )

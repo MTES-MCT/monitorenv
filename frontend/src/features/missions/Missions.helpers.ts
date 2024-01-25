@@ -216,7 +216,7 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
   }, {} as EnvActionForTimeline)
 
 const formattedReportingsForTimeline = attachedReportings =>
-  attachedReportings.reduce(
+  attachedReportings?.reduce(
     (newReportingsCollection, reporting) => ({
       ...newReportingsCollection,
       [reporting.id]: {
@@ -226,30 +226,32 @@ const formattedReportingsForTimeline = attachedReportings =>
       }
     }),
     {} as ReportingForTimeline
-  )
+  ) || []
 
 const formattedDetachedReportingsForTimeline = (detachedReportings, attachedReportingIds) => {
   const filteredDetachedReportings = detachedReportings?.filter(
     detachedreporting => !attachedReportingIds?.includes(detachedreporting.id)
   )
 
-  return filteredDetachedReportings?.reduce(
-    (newDetachedReportingsCollection, detachedReporting) => ({
-      ...newDetachedReportingsCollection,
-      [`attach-${detachedReporting.reportingId}`]: {
-        ...detachedReporting,
-        action: 'attach',
-        actionType: ActionTypeEnum.DETACHED_REPORTING,
-        timelineDate: detachedReporting?.attachedToMissionAtUtc
-      },
-      [`detach-${detachedReporting.reportingId}`]: {
-        ...detachedReporting,
-        action: 'detach',
-        actionType: ActionTypeEnum.DETACHED_REPORTING,
-        timelineDate: detachedReporting?.detachedFromMissionAtUtc
-      }
-    }),
-    {} as DetachedReportingForTimeline
+  return (
+    filteredDetachedReportings?.reduce(
+      (newDetachedReportingsCollection, detachedReporting) => ({
+        ...newDetachedReportingsCollection,
+        [`attach-${detachedReporting.reportingId}`]: {
+          ...detachedReporting,
+          action: 'attach',
+          actionType: ActionTypeEnum.DETACHED_REPORTING,
+          timelineDate: detachedReporting?.attachedToMissionAtUtc
+        },
+        [`detach-${detachedReporting.reportingId}`]: {
+          ...detachedReporting,
+          action: 'detach',
+          actionType: ActionTypeEnum.DETACHED_REPORTING,
+          timelineDate: detachedReporting?.detachedFromMissionAtUtc
+        }
+      }),
+      {} as DetachedReportingForTimeline
+    ) || []
   )
 }
 

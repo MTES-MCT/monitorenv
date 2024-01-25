@@ -14,13 +14,11 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="infraction-form"]').should('not.exist')
 
     // When
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('*[data-cy="duplicate-infraction"]').click({ force: true })
     cy.get('*[data-cy="infraction-form-registrationNumber"]').should('have.value', 'BALTIK')
     cy.get('*[data-cy="infraction-form-validate"]').click({ force: true })
     cy.get('*[data-cy="duplicate-infraction"]').eq(1).should('be.disabled')
-
-    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
@@ -64,12 +62,10 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true }) // id 15
     cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true }) // id 11
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
 
     cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
-
-    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
@@ -96,22 +92,20 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('[id="envActions[1].observations"]').contains('RAS')
 
     // When
-    cy.get('[id="envActions[1].observations"]').type('{backspace}{backspace}Une observation importante', {
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
+    cy.get('[id="envActions[1].observations"]').type('{backspace}{backspace}Obs.', {
       force: true
     })
-
-    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
       const { observations } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
-      expect(observations).equal('RUne observation importante')
+      expect(observations).equal('RObs.')
 
       expect(response && response.statusCode).equal(200)
       expect(
         response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')?.observations
-      ).equal('RUne observation importante')
+      ).equal('RObs.')
     })
   })
 
@@ -135,12 +129,10 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click({ force: true }) // id 102
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains("Rejet d'hydrocarbure").click({ force: true }) // id 74
 
     cy.get('*[data-cy="envaction-tags-selector"]').should('have.length', 0)
-
-    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
@@ -170,12 +162,13 @@ context('Side Window > Mission Form > Mission actions', () => {
   it(`Should be able to delete action with linked reporting`, () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
+    cy.wait(500)
     cy.get('*[data-cy="action-card"]').eq(0).click()
-    // TODO
+
+    cy.wait(500)
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('*[data-cy="actioncard-delete-button-b8007c8a-5135-4bc3-816f-c69c7b75d807"]').click()
 
-    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
     // Then
     cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
@@ -198,24 +191,29 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.getDataCy('add-control-unit').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.getDataCy('control-unit-contact').type('Contact 012345')
+    cy.wait(250)
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.wait(250)
 
     // Add a note
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une note libre')
-    cy.get('[id="envActions[0].observations"]').type('Une observation importante', {
+    cy.wait(500)
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
+    cy.get('[id="envActions[0].observations"]').type('Obs.', {
       force: true
     })
 
-    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
-    cy.clickButton('Enregistrer et quitter')
-    cy.wait('@createMission').then(({ response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
-      expect(response && response.body.envActions[0].observations).equal('Une observation importante')
+      expect(response && response.body.envActions[0].observations).equal('Obs.')
       const id = response && response.body.id
 
       // clean
+      cy.wait(250)
+      cy.clickButton('Quitter')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
@@ -235,35 +233,39 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+    cy.wait(250)
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.wait(250)
 
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
-    cy.get('[id="envActions[0].observations"]').type('Une observation importante', {
+    cy.wait(500)
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
+    cy.get('[id="envActions[0].observations"]').type('Obs.', {
       force: true
     })
 
-    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
-    cy.clickButton('Enregistrer et quitter')
-    cy.wait('@createMission').then(({ response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
-      expect(response && response.body.envActions[0].observations).equal('Une observation importante')
+      expect(response && response.body.envActions[0].observations).equal('Obs.')
 
       const id = response && response.body.id
 
       // clean
+      cy.wait(250)
+      cy.clickButton('Quitter')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
     })
   })
 
-  it('Sould create control and surveillance actions with valids themes and subthemes depending on mission year', () => {
+  it('Sould create surveillance and control actions with valid themes and subthemes depending on mission year', () => {
     // Given
     cy.wait(400)
-    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
     cy.clickButton('Ajouter une nouvelle mission')
 
@@ -274,8 +276,11 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+    cy.wait(250)
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.wait(250)
 
     // Add a surveillance
     cy.clickButton('Ajouter')
@@ -295,39 +300,38 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.wait(250)
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
 
     // Then
-    cy.clickButton('Enregistrer et quitter')
-    cy.wait('@createMission').then(({ response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
       const { envActions } = response && response.body
       expect(envActions.length).equal(2)
 
-      // control
-      const control = envActions[0]
-      const controlPlans = control.controlPlans[0]
-      expect(controlPlans.themeId).equal(112)
-      expect(controlPlans.subThemeIds.length).equal(1)
-      expect(controlPlans.subThemeIds[0]).equal(173)
-
       // surveillance
-      const surveillance = envActions[1]
+      const surveillance = envActions[0]
       const surveillanceControlPlans = surveillance.controlPlans[0]
       expect(surveillanceControlPlans.themeId).equal(105)
       expect(surveillanceControlPlans.subThemeIds.length).equal(2)
       expect(surveillanceControlPlans.subThemeIds[0]).equal(128)
       expect(surveillanceControlPlans.subThemeIds[1]).equal(131)
 
-      const id = response && response.body.id
-      cy.intercept('PUT', `/bff/v1/missions/${id}`).as('updateMission')
-      cy.getDataCy(`edit-mission-${id}`).click({ force: true })
+      // control
+      const control = envActions[1]
+      const controlPlans = control.controlPlans[0]
+      expect(controlPlans.themeId).equal(112)
+      expect(controlPlans.subThemeIds.length).equal(1)
+      expect(controlPlans.subThemeIds[0]).equal(173)
 
+      const id = response && response.body.id
       // update mission date to 2023
       cy.fill('Début de mission (UTC)', [2023, 5, 26, 12, 0])
+      cy.intercept('PUT', `/bff/v1/missions/${id}`).as('updateMissionTwo')
       cy.fill('Fin de mission (UTC)', [2023, 5, 28, 14, 15])
-      cy.clickButton('Enregistrer et quitter')
-      cy.wait('@updateMission').then(({ response: newResponse }) => {
+
+      cy.wait('@updateMissionTwo').then(({ response: newResponse }) => {
         const { envActions: updatedEnvActions } = newResponse && newResponse.body
         expect(updatedEnvActions.length).equal(2)
 

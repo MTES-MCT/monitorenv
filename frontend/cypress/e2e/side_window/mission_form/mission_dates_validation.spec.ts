@@ -24,13 +24,16 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
-    cy.wait(200)
+    cy.wait(250)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.wait(500)
     cy.get('[name="closedBy"]').scrollIntoView().type('PCF')
+    cy.wait(250)
 
     // Add a surveillance
     cy.clickButton('Ajouter')
@@ -104,13 +107,12 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // Start date of surveillance is before start date of mission
     cy.fill('Date et heure de début de surveillance (UTC)', [2024, 5, 25, 23, 35])
-    cy.clickButton('Enregistrer et clôturer')
+    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être postérieure à celle de début de mission')
 
     // Start date of surveillance is after end date of mission
     cy.fill('Date et heure de début de surveillance (UTC)', [2024, 5, 28, 15, 35])
-    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être antérieure à celle de fin de mission')
 
@@ -119,25 +121,20 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // End date of surveillance is before start date of mission
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 25, 23, 35])
-    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à celle de début de mission')
 
     // End date of surveillance is after end date of mission
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 28, 15, 35])
-    cy.clickButton('Enregistrer et clôturer')
-    cy.wait(100)
+    cy.wait(250)
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
 
     // Valid end date of surveillance
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 28, 13, 35])
 
     // Then
-    cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
-    cy.clickButton('Enregistrer et clôturer')
-    cy.wait(100)
-
-    cy.wait('@createAndCloseMission').then(({ response }) => {
+    cy.wait('@updateAndCloseMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
   })
@@ -156,12 +153,19 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.wait(200)
+    cy.wait(200)
 
+    cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.wait('@createMission')
+
+    cy.intercept('PUT', `/bff/v1/missions/*`).as('updateMission')
 
     // Add a second surveillance
     cy.clickButton('Ajouter')
@@ -169,26 +173,29 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
 
-    cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
-    cy.clickButton('Enregistrer et quitter')
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {
+          envActions: [{
+            actionStartDateTimeUtc: '2024-05-26T12:00:00Z',
+            actionEndDateTimeUtc: '2024-05-28T14:15:00Z'
+          }],
+        }
+      },
+      5, response => {
+        // Then
+        const id = response.body.id
 
-    // Then
-    cy.wait('@createMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-
-      const surveillance = response?.body.envActions[0]
-      expect(surveillance.actionStartDateTimeUtc).equal(response?.body.startDateTimeUtc)
-      expect(surveillance.actionEndDateTimeUtc).equal(response?.body.endDateTimeUtc)
-
-      const id = response?.body.id
-
-      // clean
-      cy.getDataCy(`edit-mission-${id}`).click({ force: true })
-      cy.getDataCy('action-card').eq(0).click()
-      cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
-      cy.clickButton('Supprimer la mission')
-      cy.clickButton('Confirmer la suppression')
-    })
+        // clean
+        cy.getDataCy(`edit-mission-${id}`).click({ force: true })
+        cy.getDataCy('action-card').eq(0).click()
+        cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
+        cy.clickButton('Supprimer la mission')
+        cy.clickButton('Confirmer la suppression')
+      })
+      .its('response.statusCode')
+      .should('eq', 200)
   })
 
   it('A mission should be created with valid dates for control action', () => {
@@ -205,12 +212,14 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.wait(500)
     cy.get('[name="closedBy"]').scrollIntoView().type('PCF')
 
     // Add a control
@@ -230,25 +239,21 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Date is before start date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 25, 23, 35])
 
-    cy.clickButton('Enregistrer et clôturer')
+    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date doit être postérieure à celle de début de mission')
 
     // Date is after end date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 14, 16])
-    cy.clickButton('Enregistrer et clôturer')
-    cy.wait(100)
+    cy.wait(250)
     cy.get('.Element-FieldError').contains('La date doit être antérieure à celle de fin de mission')
 
     // Valid date
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 13, 16])
 
     // Then
-    cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
-    cy.clickButton('Enregistrer et clôturer')
-    cy.wait(100)
-
-    cy.wait('@createAndCloseMission').then(({ response }) => {
+    cy.wait('@updateAndCloseMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
   })
@@ -266,38 +271,40 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
 
     // When
+    cy.intercept('PUT', `/bff/v1/missions/41`).as('updateMission')
     cy.fill('Contrôle administratif', false)
     cy.fill('Respect du code de la navigation sur le plan d’eau', false)
     cy.fill('Gens de mer', false)
     cy.fill('Equipement de sécurité et respect des normes', false)
 
-    cy.intercept('PUT', `/bff/v1/missions/41`).as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {
+          envActions: [{
+            isAdministrativeControl: false,
+            isComplianceWithWaterRegulationsControl: false,
+            isSeafarersControl: false,
+            isSafetyEquipmentAndStandardsComplianceControl: false,
+          }],
+        }
+      },
+      5, response => {
+        const controlActionResponse = response?.body.envActions[0]
+        expect(controlActionResponse.isAdministrativeControl).equal(false)
+        expect(controlActionResponse.isComplianceWithWaterRegulationsControl).equal(false)
+        expect(controlActionResponse.isSeafarersControl).equal(false)
+        expect(controlActionResponse.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
 
-    // Then
-    cy.wait('@updateMission').then(({ request, response }) => {
-      expect(response && response.statusCode).equal(200)
-
-      const controlActionRequest = request.body.envActions[0]
-      expect(controlActionRequest.isAdministrativeControl).equal(false)
-      expect(controlActionRequest.isComplianceWithWaterRegulationsControl).equal(false)
-      expect(controlActionRequest.isSeafarersControl).equal(false)
-      expect(controlActionRequest.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
-
-      const controlActionResponse = response?.body.envActions[0]
-      expect(controlActionResponse.isAdministrativeControl).equal(false)
-      expect(controlActionResponse.isComplianceWithWaterRegulationsControl).equal(false)
-      expect(controlActionResponse.isSeafarersControl).equal(false)
-      expect(controlActionResponse.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
-    })
-
-    // Revert
-    cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(0).click()
-    cy.fill('Contrôle administratif', true)
-    cy.fill('Respect du code de la navigation sur le plan d’eau', true)
-    cy.fill('Gens de mer', true)
-    cy.fill('Equipement de sécurité et respect des normes', true)
-    cy.clickButton('Enregistrer et quitter')
+        cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
+        cy.get('*[data-cy="action-card"]').eq(0).click()
+        cy.fill('Contrôle administratif', true)
+        cy.fill('Respect du code de la navigation sur le plan d’eau', true)
+        cy.fill('Gens de mer', true)
+        cy.fill('Equipement de sécurité et respect des normes', true)
+        cy.clickButton('Enregistrer et quitter')
+      })
+      .its('response.statusCode')
+      .should('eq', 200)
   })
 })

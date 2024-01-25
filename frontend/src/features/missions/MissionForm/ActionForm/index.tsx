@@ -16,13 +16,13 @@ type ActionFormProps = {
 }
 export function ActionForm({ currentActionIndex, setCurrentActionIndex }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
-  const reportingActionIndex = attachedReportingsField.value.findIndex(
+  const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
     reporting => String(reporting.id) === currentActionIndex
   )
   const [reportingField] = useField<Reporting>(`attachedReportings.${reportingActionIndex}`)
 
   const [envActionsField, , envActionsHelper] = useField<EnvAction[]>('envActions')
-  const envActionIndex = envActionsField.value.findIndex(envAction => envAction.id === currentActionIndex)
+  const envActionIndex = (envActionsField.value ?? []).findIndex(envAction => envAction.id === currentActionIndex)
   const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${envActionIndex}.actionType`)
   const [actionIdField] = useField<EnvAction['id']>(`envActions.${envActionIndex}.id`)
 

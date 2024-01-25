@@ -10,6 +10,7 @@ type MissionFormBottomBarProps = {
   allowClose: boolean
   allowDelete: boolean
   allowEdit: boolean
+  isAutoSaveEnabled: boolean
   isFromMonitorFish: boolean
   onCloseMission: MouseEventHandler<HTMLButtonElement>
   onDeleteMission: MouseEventHandler<HTMLButtonElement>
@@ -21,6 +22,7 @@ export function MissionFormBottomBar({
   allowClose,
   allowDelete,
   allowEdit,
+  isAutoSaveEnabled,
   isFromMonitorFish,
   onCloseMission,
   onDeleteMission,
@@ -69,15 +71,21 @@ export function MissionFormBottomBar({
       </Button>
 
       <StyledButtonsContainer>
-        {allowEdit && (
+        {!isAutoSaveEnabled && allowEdit && (
           <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} onClick={onSaveMission} type="button">
             Enregistrer et quitter
           </Button>
         )}
 
         {allowClose && allowEdit && (
-          <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={onCloseMission} type="button">
-            Enregistrer et clôturer
+          <Button
+            accent={Accent.SECONDARY}
+            data-cy="close-mission"
+            Icon={Icon.Save}
+            onClick={onCloseMission}
+            type="button"
+          >
+            Clôturer
           </Button>
         )}
       </StyledButtonsContainer>

@@ -1,4 +1,5 @@
 import { Icon, SideMenu, type NewWindowContextValue, NewWindowContext } from '@mtes-mct/monitor-ui'
+import { omit } from 'lodash'
 import { useEffect, useMemo, useState, useRef, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
@@ -8,28 +9,42 @@ import { Route } from './Route'
 import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
+import { MissionEventContext } from '../../context/MissionEventContext'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext } from '../../domain/shared_slices/Global'
 import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
-import { Mission } from '../missions/MissionForm'
+import { MissionFormWrapper } from '../missions/MissionForm'
+import { useListenMissionEventUpdates } from '../missions/MissionForm/hooks/useListenMissionEventUpdates'
+import { missionFormsActions } from '../missions/MissionForm/slice'
+import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../missions/MissionForm/sse'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
 import { ReportingsList } from '../Reportings/ReportingsList'
 
 export function SideWindow() {
+  const dispatch = useAppDispatch()
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
-
   const [isFirstRender, setIsFirstRender] = useState(true)
-
-  const dispatch = useAppDispatch()
+  const missionEvent = useListenMissionEventUpdates()
 
   const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
+
+  /**
+   * Use to update mission opened in the side window but not actives
+   */
+  useEffect(() => {
+    if (!missionEvent) {
+      return
+    }
+
+    dispatch(missionFormsActions.updateUnactiveMission(omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES)))
+  }, [dispatch, missionEvent])
 
   const navigate = nextPath => {
     if (!nextPath) {
@@ -83,7 +98,9 @@ export function SideWindow() {
                   <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
                   <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-                  <Route element={<Mission />} path={sideWindowPaths.MISSION} />
+                  <MissionEventContext.Provider value={missionEvent}>
+                    <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
+                  </MissionEventContext.Provider>
                 </StyledRouteContainer>
                 {isReportingsButtonIsActive && (
                   <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />

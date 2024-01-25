@@ -7,7 +7,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
-import java.util.*
+import java.time.ZonedDateTime
 
 @Component
 class SSEMission {
@@ -29,7 +29,7 @@ class SSEMission {
      * This method register a listener for a given mission id
      */
     fun registerListener(): SseEmitter {
-        logger.info("Adding new SSE listener of mission updates.")
+        logger.info("Adding new SSE listener of mission updates at ${ZonedDateTime.now()}.")
         val sseEmitter = SseEmitter(TWENTY_FOUR_HOURS)
 
         synchronized(mutexLock) {
@@ -55,30 +55,29 @@ class SSEMission {
      */
     @EventListener(UpdateMissionEvent::class)
     fun handleUpdateMissionEvent(event: UpdateMissionEvent) {
-        logger.info("Received mission event for mission ${event.mission.id}.")
+        logger.info("SSE: Received mission event for mission ${event.mission.id}.")
         val missionId = event.mission.id
 
-        logger.info("Sending update of mission $missionId to ${sseStore.size} listener(s).")
+        logger.info("SSE: Sending update of mission $missionId to ${sseStore.size} listener(s).")
         val sseEmittersToRemove = sseStore.map { sseEmitter ->
             try {
                 val data = MissionDataOutput.fromMissionEntity(event.mission)
                 val sseEvent = event()
-                    .id(UUID.randomUUID().toString())
                     .name(MISSION_UPDATE_EVENT_NAME)
                     .data(data)
+                    .reconnectTime(0)
                     .build()
 
                 sseEmitter.send(sseEvent)
-
                 sseEmitter.complete()
 
-                return@map null
+                return@map sseEmitter
             } catch (e: Exception) {
                 sseEmitter.completeWithError(e)
 
                 return@map sseEmitter
             }
-        }.filterNotNull()
+        }
 
         synchronized(mutexLock) {
             sseStore.removeAll(sseEmittersToRemove)

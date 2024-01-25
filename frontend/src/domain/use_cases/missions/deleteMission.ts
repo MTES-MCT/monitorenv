@@ -1,6 +1,5 @@
 import { missionsAPI } from '../../../api/missionsAPI'
 import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
-import { removeMissionListener } from '../../../features/missions/MissionForm/sse'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
@@ -13,7 +12,6 @@ export const deleteMissionAndGoToMissionsList = id => async dispatch => {
       throw Error('Erreur à la suppression de la mission')
     }
 
-    removeMissionListener(id)
     await dispatch(missionFormsActions.deleteSelectedMission(id))
     await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     await dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))

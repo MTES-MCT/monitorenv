@@ -18,6 +18,9 @@ export function isBrowserSupported(): boolean {
     case 'Chrome':
       return browserVersionAsNumber >= 69
 
+    case 'Chromium':
+      return browserVersionAsNumber >= 69
+
     case 'Firefox':
       return browserVersionAsNumber >= 62
 
@@ -33,6 +36,6 @@ export function isBrowserSupported(): boolean {
     default:
       toast.error(`Navigateur inconnu: "${browserName} v${browserVersion}"`)
 
-      return false
+      return true
   }
 }

@@ -1,12 +1,16 @@
+import { customDayjs, FormikEffect } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import _ from 'lodash'
-import { useEffect, useState } from 'react'
+import { isEmpty } from 'lodash'
+import { useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
+import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
+import { useListenMissionEventUpdatesById } from './hooks/useListenMissionEventUpdatesById'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
@@ -15,32 +19,50 @@ import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
 import { missionFormsActions } from './slice'
-import { removeMissionListener } from './sse'
+import { shouldSaveMission } from './utils'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { saveMission } from '../../../domain/use_cases/missions/saveMission'
+import { MISSION_FORM_AUTO_SAVE_ENABLED } from '../../../env'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
-import { missionFactory } from '../Missions.helpers'
 
-export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
+import type { AtLeast } from '../../../types'
+
+type MissionFormProps = {
+  id: number | string
+  isNewMission: boolean
+  selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
+  setShouldValidateOnChange: (boolean) => void
+}
+export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }: MissionFormProps) {
   const dispatch = useAppDispatch()
   const sideWindow = useAppSelector(state => state.sideWindow)
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
-  const { dirty, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
+  const selectedMissions = useAppSelector(state => state.missionForms.missions)
+  const missionEvent = useListenMissionEventUpdatesById(id)
+  const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
-  useEffect(() => {
-    if (selectedMission) {
-      setValues(missionFactory(selectedMission, false))
+  const isAutoSaveEnabled = useMemo(() => {
+    if (!MISSION_FORM_AUTO_SAVE_ENABLED) {
+      return false
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  useSyncFormValuesWithRedux()
+    const now = customDayjs()
+    if (selectedMission?.endDateTimeUtc && now.isAfter(selectedMission?.endDateTimeUtc) && selectedMission?.isClosed) {
+      return false
+    }
+
+    return true
+  }, [selectedMission])
+
+  const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty || false, [id, selectedMissions])
+
+  useSyncFormValuesWithRedux(isAutoSaveEnabled)
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
 
@@ -85,15 +107,14 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     await dispatch(sideWindowActions.setShowConfirmCancelModal(false))
     await dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
     await dispatch(missionFormsActions.deleteSelectedMission(id))
-    removeMissionListener(id)
   }
 
   const submitMission = () => {
     setShouldValidateOnChange(false)
 
     validateForm().then(errors => {
-      if (_.isEmpty(errors)) {
-        dispatch(saveMission(values))
+      if (isEmpty(errors)) {
+        dispatch(saveMission(values, false, true))
 
         return
       }
@@ -103,20 +124,24 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
 
   const closeMission = () => {
     validateForm({ ...values, isClosed: true }).then(errors => {
-      if (_.isEmpty(errors)) {
-        dispatch(saveMission({ ...values, isClosed: true }))
+      setFieldValue('isClosed', true)
+
+      if (isEmpty(errors)) {
+        dispatch(saveMission({ ...values, isClosed: true }, false, true))
 
         return
       }
+
       setShouldValidateOnChange(true)
     })
   }
 
   const reopenMission = () => {
     validateForm({ ...values, isClosed: false }).then(errors => {
-      if (_.isEmpty(errors)) {
-        setFieldValue('isClosed', false)
-        if (dirty) {
+      setFieldValue('isClosed', false)
+
+      if (isEmpty(errors)) {
+        if (isFormDirty) {
           return setIsReopenModalOpen(true)
         }
 
@@ -128,7 +153,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   }
 
   const validateReopenMission = async () => {
-    await dispatch(saveMission({ ...values, isClosed: false }, true))
+    await dispatch(saveMission({ ...values, isClosed: false }, true, false))
     dispatch(
       setToast({
         containerId: 'sideWindow',
@@ -140,19 +165,37 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   }
 
   const confirmFormCancelation = () => {
-    if (dirty) {
+    if (isFormDirty) {
       dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     } else {
       cancelForm()
     }
   }
 
+  const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
+    const errors = await validateForm()
+    const isValid = isEmpty(errors)
+
+    if (!isAutoSaveEnabled || !isValid) {
+      return
+    }
+
+    if (!shouldSaveMission(selectedMission, missionEvent, nextValues)) {
+      return
+    }
+
+    dispatch(saveMission(nextValues, false, false))
+  }, 250)
+
   return (
     <StyledFormContainer>
+      <FormikEffect onChange={validateBeforeOnChange} />
+      <FormikSyncMissionFields missionId={id} />
       <CancelEditModal
+        isAutoSaveEnabled={isAutoSaveEnabled}
         onCancel={returnToEdition}
         onConfirm={cancelForm}
-        open={sideWindow.showConfirmCancelModal && dirty}
+        open={sideWindow.showConfirmCancelModal && isFormDirty}
       />
       <DeleteModal onCancel={returnToEdition} onConfirm={validateDeleteMission} open={deleteModalIsOpen} />
       <ReopenModal onCancel={returnToEdition} onConfirm={validateReopenMission} open={isReopenModalOpen} />
@@ -172,6 +215,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
         allowClose={allowCloseMission}
         allowDelete={allowDeleteMission}
         allowEdit={allowEditMission}
+        isAutoSaveEnabled={isAutoSaveEnabled}
         isFromMonitorFish={selectedMission?.missionSource === MissionSourceEnum.MONITORFISH}
         onCloseMission={closeMission}
         onDeleteMission={deleteMission}
