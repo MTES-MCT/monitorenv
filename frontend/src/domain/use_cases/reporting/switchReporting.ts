@@ -18,9 +18,7 @@ export const switchReporting =
       )
     )
 
-    if (reportingContext === ReportingContext.MAP) {
-      dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
-    }
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(reportingContext === ReportingContext.MAP))
     dispatch(
       setReportingFormVisibility({
         context: reportingContext,

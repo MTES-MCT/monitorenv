@@ -66,7 +66,7 @@ export function FormContent({
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext =
-    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ||
+    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
   const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
@@ -226,7 +226,7 @@ export function FormContent({
 
         <StyledToggle>
           <Toggle
-            checked={values.isControlRequired || false}
+            checked={!!values.isControlRequired || false}
             data-cy="reporting-is-control-required"
             disabled={values.isArchived}
             onChange={changeNeedControlValue}

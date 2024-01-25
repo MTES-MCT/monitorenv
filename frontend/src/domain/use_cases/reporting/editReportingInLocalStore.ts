@@ -53,10 +53,8 @@ async function setReporting(dispatch, reportingId, reportingContext, newReportin
     )
   )
 
-  if (reportingContext === ReportingContext.MAP) {
-    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
-  }
-  await dispatch(
+  dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(reportingContext === ReportingContext.MAP))
+  dispatch(
     setReportingFormVisibility({
       context: reportingContext,
       visibility: VisibilityState.VISIBLE
