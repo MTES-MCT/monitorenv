@@ -29,5 +29,5 @@
     "verbatimModuleSyntax": true
   },
   "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules/*", "./config/cypress.config.ts"]
+  "exclude": ["node_modules/*"]
 }

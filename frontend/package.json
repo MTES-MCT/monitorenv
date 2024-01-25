@@ -21,7 +21,7 @@
     "test:e2e": "npm run cypress:run --browser firefox --config-file ./cypress.config.ts --e2e",
     "test:multi-windows:open": "jest --config=./config/multi-windows/jest.config.js --detectOpenHandles",
     "test:multi-windows:run": "CI=true jest --config=./config/multi-windows/jest.config.js --detectOpenHandles",
-    "test:lint": "eslint ./src",
+    "test:lint": "eslint  .",
     "test:lint:fix": "npm run test:lint -- --fix",
     "test:type": "tsc",
     "test:unit": "jest --config=./config/jest.config.js --detectOpenHandles",
