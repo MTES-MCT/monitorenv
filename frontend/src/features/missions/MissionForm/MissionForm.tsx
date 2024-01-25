@@ -33,10 +33,10 @@ import { sideWindowActions } from '../../SideWindow/slice'
 import type { AtLeast } from '../../../types'
 
 type MissionFormProps = {
-  id
+  id: number | string | undefined
   isNewMission: boolean
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
-  setShouldValidateOnChange
+  setShouldValidateOnChange: (boolean) => void
 }
 export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }: MissionFormProps) {
   const dispatch = useAppDispatch()

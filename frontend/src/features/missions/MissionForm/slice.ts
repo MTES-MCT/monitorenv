@@ -43,7 +43,7 @@ const missionFormsSlice = createSlice({
     resetMissions() {
       return INITIAL_STATE
     },
-    setActiveMission(state, action: PayloadAction<number | string>) {
+    setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload
     },
     setIsListeningToEvents(state, action: PayloadAction<boolean>) {

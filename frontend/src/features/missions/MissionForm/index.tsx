@@ -1,9 +1,8 @@
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { useUpdateFreezedFormValues } from './hooks/useUpdateFreezedFormValues'
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -18,7 +17,6 @@ export function MissionFormWrapper() {
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
   )
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
-  const [formKey, setFormKey] = useState(0)
 
   const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
 
@@ -35,23 +33,16 @@ export function MissionFormWrapper() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMission?.missionForm, activeMissionId])
 
-  // `formikFormValuesRef` is freezed as Formik manage his state internally
-  const formikFormValuesRef = useRef<Partial<MissionType> | undefined>(undefined)
-  useUpdateFreezedFormValues(formikFormValuesRef.current, missionValues, nextFormValues => {
-    formikFormValuesRef.current = nextFormValues
-    setFormKey(key => key + 1)
-  })
-
-  if (!formikFormValuesRef.current || missionValues?.id !== activeMissionId || !activeMissionId) {
+  if (!missionValues || missionValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>
   }
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        key={formKey}
+        key={missionValues?.id}
         enableReinitialize
-        initialValues={formikFormValuesRef.current}
+        initialValues={missionValues}
         onSubmit={noop}
         validateOnBlur={false}
         validateOnChange={shouldValidateOnChange}

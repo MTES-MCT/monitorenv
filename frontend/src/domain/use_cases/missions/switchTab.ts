@@ -20,7 +20,7 @@ export const switchTab = path => async (dispatch, getState) => {
     return
   }
 
-  await dispatch(missionFormsActions.setActiveMission(id))
+  await dispatch(missionFormsActions.setActiveMissionId(id))
   await dispatch(missionActions.setSelectedMissionIdOnMap(id))
 
   // since we are switching to another mission, we need to update the attached reportings store
