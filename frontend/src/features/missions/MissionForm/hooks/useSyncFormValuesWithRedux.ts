@@ -14,8 +14,8 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const { dirty, validateForm, values } = useFormikContext<Mission>()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
-  const isControlUnitAlreadyEngaged = !!useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.isControlUnitAlreadyEngaged : false
+  const engagedControlUnit = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
 
   const dispatchFormUpdate = useDebouncedCallback(async (newValues: Mission) => {
@@ -26,7 +26,7 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
     const errors = await validateForm()
     const isFormDirty = isMissionFormDirty(errors)
 
-    dispatch(missionFormsActions.setMission({ isControlUnitAlreadyEngaged, isFormDirty, missionForm: newValues }))
+    dispatch(missionFormsActions.setMission({ engagedControlUnit, isFormDirty, missionForm: newValues }))
   }, 500)
 
   /**

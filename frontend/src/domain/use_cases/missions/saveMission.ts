@@ -42,7 +42,7 @@ export const saveMission =
           await dispatch(missionFormsActions.deleteSelectedMission(values.id))
           dispatch(
             missionFormsActions.setMission({
-              isControlUnitAlreadyEngaged: false,
+              engagedControlUnit: undefined,
               isFormDirty: false,
               missionForm: response.data
             })

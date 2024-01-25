@@ -567,6 +567,7 @@ context('Side Window > Mission Form > Main Form', () => {
   })
 
   it('Should display the archived control unit and administration when edit mission', () => {
+    visitSideWindow()
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
     cy.fill('Période', 'Période spécifique')
     const startDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(6, 'month').toISOString()

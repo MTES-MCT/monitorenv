@@ -11,7 +11,7 @@ import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../sh
 export const cancelCreateAndRedirectToFilteredList =
   ({ controlUnitId, missionId }) =>
   async dispatch => {
-    dispatch(missionFormsActions.setIsControlUnitAlreadyEngaged(false))
+    dispatch(missionFormsActions.setEngagedControlUnit(undefined))
 
     // update filters to redirect to list with only pending mission with the control unit selected
     await dispatch(resetMissionFilters())

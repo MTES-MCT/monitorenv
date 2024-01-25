@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
@@ -31,7 +31,10 @@ export function MissionFormWrapper() {
 
     return {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMission?.missionForm, activeMissionId])
+  }, [activeMissionId])
+
+  const formikFormValuesRef = useRef<Partial<MissionType> | undefined>(undefined)
+  formikFormValuesRef.current = missionValues
 
   if (!missionValues || missionValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>
@@ -40,7 +43,7 @@ export function MissionFormWrapper() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        key={missionValues?.id}
+        key={missionValues.id}
         enableReinitialize
         initialValues={missionValues}
         onSubmit={noop}
@@ -51,8 +54,8 @@ export function MissionFormWrapper() {
       >
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm
+            engagedControlUnit={selectedMission?.engagedControlUnit ?? undefined}
             id={activeMissionId}
-            isControlUnitAlreadyEngaged={selectedMission?.isControlUnitAlreadyEngaged ?? false}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.missionForm}
             setShouldValidateOnChange={setShouldValidateOnChange}

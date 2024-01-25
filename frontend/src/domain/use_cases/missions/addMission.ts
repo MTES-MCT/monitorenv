@@ -47,7 +47,7 @@ export const addMission =
     }
 
     const newMission = {
-      isControlUnitAlreadyEngaged: false,
+      engagedControlUnit: undefined,
       isFormDirty: false,
       missionForm: missionFactory(initialMission, true, attachedReporting)
     }

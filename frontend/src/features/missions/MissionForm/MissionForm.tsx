@@ -30,18 +30,19 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 
+import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AtLeast } from '../../../types'
 
 type MissionFormProps = {
+  engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   id: number | string
-  isControlUnitAlreadyEngaged: boolean
   isNewMission: boolean
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
   setShouldValidateOnChange: (boolean) => void
 }
 export function MissionForm({
+  engagedControlUnit,
   id,
-  isControlUnitAlreadyEngaged,
   isNewMission,
   selectedMission,
   setShouldValidateOnChange
@@ -55,7 +56,7 @@ export function MissionForm({
   const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const isAutoSaveEnabled = useMemo(() => {
-    if (!MISSION_FORM_AUTO_SAVE_ENABLED) {
+    if (MISSION_FORM_AUTO_SAVE_ENABLED === 'false') {
       return false
     }
 
@@ -67,7 +68,7 @@ export function MissionForm({
     return true
   }, [selectedMission])
 
-  const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty || false, [id, selectedMissions])
+  const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty ?? false, [id, selectedMissions])
 
   useSyncFormValuesWithRedux(isAutoSaveEnabled)
   useUpdateSurveillance()
@@ -179,7 +180,7 @@ export function MissionForm({
     }
   }
 
-  const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
+  const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave = false) => {
     const errors = await validateForm()
     const isValid = isEmpty(errors)
 
@@ -187,16 +188,25 @@ export function MissionForm({
       return
     }
 
-    if (!shouldSaveMission(selectedMission, missionEvent, nextValues)) {
+    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
       return
     }
 
-    if (isControlUnitAlreadyEngaged) {
+    if (engagedControlUnit) {
       return
     }
 
     dispatch(saveMission(nextValues, false, false))
   }, 250)
+
+  useEffect(() => {
+    if (!engagedControlUnit) {
+      validateBeforeOnChange(values, true)
+    }
+    // we want to trigger the `validateBeforeOnChange` when engagedControlUnit change
+    // so when user confirm mission creation even if the control unit is engaged
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [engagedControlUnit])
 
   return (
     <StyledFormContainer>

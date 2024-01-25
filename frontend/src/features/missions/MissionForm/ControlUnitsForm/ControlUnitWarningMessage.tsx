@@ -1,29 +1,21 @@
 import { Accent, Button, Level, Message } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { missionSourceEnum, type NewMission } from '../../../../domain/entities/missions'
 import { cancelCreateAndRedirectToFilteredList } from '../../../../domain/use_cases/missions/cancelCreateAndRedirectToFilteredList'
-import { saveMission } from '../../../../domain/use_cases/missions/saveMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { missionFormsActions } from '../slice'
 
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
-
-export function ControlUnitWarningMessage({
-  engagedControlUnit
-}: {
-  engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
-}) {
-  const { validateForm, values } = useFormikContext<Partial<NewMission>>()
+export function ControlUnitWarningMessage() {
+  const { values } = useFormikContext<Partial<NewMission>>()
 
   const dispatch = useAppDispatch()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const isControlUnitAlreadyEngaged = !!useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.isControlUnitAlreadyEngaged : false
+  const engagedControlUnit = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
 
   const message = useMemo(() => {
@@ -50,15 +42,7 @@ export function ControlUnitWarningMessage({
   }, [engagedControlUnit])
 
   const validate = async () => {
-    dispatch(missionFormsActions.setIsControlUnitAlreadyEngaged(false))
-
-    const errors = await validateForm()
-    const isValid = isEmpty(errors)
-    if (!isValid) {
-      return
-    }
-
-    dispatch(saveMission(values, false, false))
+    dispatch(missionFormsActions.setEngagedControlUnit(undefined))
   }
 
   const cancel = async () => {
@@ -70,7 +54,7 @@ export function ControlUnitWarningMessage({
     dispatch(cancelCreateAndRedirectToFilteredList({ controlUnitId, missionId: values.id }))
   }
 
-  if (!isControlUnitAlreadyEngaged) {
+  if (!engagedControlUnit) {
     return null
   }
 

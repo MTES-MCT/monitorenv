@@ -34,7 +34,7 @@ export const missionEventListener = (callback: (mission: Mission) => void) => (e
   // eslint-disable-next-line no-console
   console.log(`SSE: received a mission update.`)
 
-  if (!MISSION_FORM_AUTO_UPDATE_ENABLED) {
+  if (MISSION_FORM_AUTO_UPDATE_ENABLED === 'false') {
     // eslint-disable-next-line no-console
     console.log(
       'Skipping automatic update of mission form. ' +

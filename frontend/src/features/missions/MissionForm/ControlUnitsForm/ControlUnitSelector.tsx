@@ -27,13 +27,12 @@ import { missionFormsActions } from '../slice'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
-export function ControlUnitSelector({
-  controlUnitIndex,
-  removeControlUnit
-}: {
+type ControlUnitSelectorProps = {
   controlUnitIndex: number
   removeControlUnit: () => void
-}) {
+}
+
+export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: ControlUnitSelectorProps) {
   const dispatch = useAppDispatch()
   const { newWindowContainerRef } = useNewWindow()
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
@@ -168,7 +167,7 @@ export function ControlUnitSelector({
 
   useEffect(() => {
     if (!!engagedControlUnit && missionIsNewMission) {
-      dispatch(missionFormsActions.setIsControlUnitAlreadyEngaged(true))
+      dispatch(missionFormsActions.setEngagedControlUnit(engagedControlUnit))
     }
   }, [engagedControlUnit, missionIsNewMission, dispatch])
 
@@ -213,7 +212,7 @@ export function ControlUnitSelector({
           searchable={unitList.length > 10}
           value={unitField.value}
         />
-        <ControlUnitWarningMessage engagedControlUnit={engagedControlUnit} />
+        <ControlUnitWarningMessage />
       </div>
 
       <MultiSelect
