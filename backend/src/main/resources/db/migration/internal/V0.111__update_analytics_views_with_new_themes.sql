@@ -66,9 +66,9 @@ ORDER BY action_start_datetime_utc DESC;
 
 
 /* Update analytics_controls_locations views */
-DROP MATERIALIZED VIEW analytics_controls_locations;
+DROP VIEW analytics_controls_locations;
 
-CREATE MATERIALIZED VIEW public.analytics_controls_locations AS
+CREATE VIEW public.analytics_controls_locations AS
 
 SELECT
         a.id as action_id,
