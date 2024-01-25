@@ -1,8 +1,9 @@
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { isNewReporting } from '../../../features/Reportings/utils'
-import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
+import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 import { addMission } from '../missions/addMission'
@@ -22,7 +23,10 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
     const response = await dispatch(endpoint.initiate(newOrNextReportingData))
 
     if ('data' in response) {
-      await dispatch(
+      if (reportingContext === ReportingContext.MAP) {
+        dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+      }
+      dispatch(
         setReportingFormVisibility({
           context: reportingContext,
           visibility: VisibilityState.NONE

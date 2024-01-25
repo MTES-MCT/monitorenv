@@ -2,6 +2,7 @@ import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { ApiErrorCode } from '../../../api/types'
+import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
@@ -20,6 +21,9 @@ export const saveReporting =
     try {
       const response = await dispatch(endpoint.initiate(newOrNextReportingData))
       if ('data' in response) {
+        if (reportingContext === ReportingContext.MAP) {
+          dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+        }
         dispatch(
           setReportingFormVisibility({
             context: reportingContext,

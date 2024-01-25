@@ -32,6 +32,7 @@ import { reduceOrCollapseReportingForm } from '../../../domain/use_cases/reporti
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
+import { mainWindowActions } from '../../MainWindow/slice'
 import { useSyncFormValuesWithRedux } from '../hooks/useSyncFormValuesWithRedux'
 import { attachMissionToReportingSliceActions } from '../slice'
 import {
@@ -65,7 +66,7 @@ export function FormContent({
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext =
-    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ||
+    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
   const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
@@ -115,6 +116,9 @@ export function FormContent({
         visibility: VisibilityState.NONE
       })
     )
+    if (reportingContext === ReportingContext.MAP) {
+      dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+    }
   }
 
   const deleteCurrentReporting = () => {
@@ -132,6 +136,9 @@ export function FormContent({
           visibility: VisibilityState.NONE
         })
       )
+      if (reportingContext === ReportingContext.MAP) {
+        dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+      }
     }
   }
 
@@ -219,7 +226,7 @@ export function FormContent({
 
         <StyledToggle>
           <Toggle
-            checked={values.isControlRequired || false}
+            checked={!!values.isControlRequired || false}
             data-cy="reporting-is-control-required"
             disabled={values.isArchived}
             onChange={changeNeedControlValue}

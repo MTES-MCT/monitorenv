@@ -1,7 +1,6 @@
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
-import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 type ButtonWrapperProps = {
@@ -9,16 +8,14 @@ type ButtonWrapperProps = {
   topPosition: number
 }
 export function ButtonWrapperWithRef({ children, topPosition }: ButtonWrapperProps, ref: React.Ref<HTMLDivElement>) {
-  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+  const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
+  const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
 
   return (
     <Wrapper
       ref={ref}
-      $reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
-      }
+      $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen}
+      $isRightMenuOpened={isRightMenuOpened}
       $topPosition={topPosition}
     >
       {children}
@@ -26,12 +23,16 @@ export function ButtonWrapperWithRef({ children, topPosition }: ButtonWrapperPro
   )
 }
 
-const Wrapper = styled.div<{ $reportingFormVisibility: VisibilityState; $topPosition: number }>`
-  position: absolute;
-  top: ${p => p.$topPosition}px;
-  right: ${p => (p.$reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
+const Wrapper = styled.div<{
+  $hasFullHeightRightDialogOpen: boolean
+  $isRightMenuOpened: boolean
+  $topPosition: number
+}>`
   display: flex;
   justify-content: flex-end;
+  position: absolute;
+  right: ${p => (!p.$hasFullHeightRightDialogOpen || p.$isRightMenuOpened ? 10 : 0)}px;
+  top: ${p => p.$topPosition}px;
   transition: right 0.3s ease-out;
 `
 

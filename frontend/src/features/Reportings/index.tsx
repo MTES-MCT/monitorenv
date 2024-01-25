@@ -11,6 +11,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function Reportings({ context }: { context: ReportingContext }) {
+  const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportings = useAppSelector(state => state.reporting.reportings)
@@ -62,6 +63,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
         return (
           <StyledContainer
             key={`${reducedReporting?.id}-${context}`}
+            $isRightMenuOpened={isRightMenuOpened}
             $position={index}
             $reportingContext={reporting.context}
             $reportingFormVisibility={reportingFormVisibility.visibility}
@@ -88,6 +90,7 @@ const Separator = styled.div<{ $visible: boolean }>`
 `
 
 const StyledContainer = styled.div<{
+  $isRightMenuOpened: boolean
   $position: number
   $reportingContext: ReportingContext
   $reportingFormVisibility: VisibilityState
@@ -107,9 +110,7 @@ const StyledContainer = styled.div<{
     if (p.$reportingContext === ReportingContext.MAP) {
       switch (p.$reportingFormVisibility) {
         case VisibilityState.VISIBLE:
-          return 'right: 8px;'
-        case VisibilityState.VISIBLE_LEFT:
-          return 'right: 56px;'
+          return p.$isRightMenuOpened ? 'right: 56px;' : 'right: 8px;'
         case VisibilityState.REDUCED:
           return `right: 12px;`
         case VisibilityState.NONE:

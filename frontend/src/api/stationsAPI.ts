@@ -15,6 +15,7 @@ const GET_STATIONS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des
 export const stationsAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     canDeleteStation: builder.query<boolean, number>({
+      forceRefetch: () => true,
       query: stationId => `/v1/stations/${stationId}/can_delete`,
       transformErrorResponse: response => new FrontendApiError(CAN_DELETE_STATION_ERROR_MESSAGE, response),
       transformResponse: (response: BackendApiBooleanResponse) => response.value

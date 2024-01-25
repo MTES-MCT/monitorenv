@@ -1,6 +1,7 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
-import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
+import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
 export const deleteReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
@@ -19,6 +20,9 @@ export const deleteReportings = (ids: number[], resetSelectionFn: () => void) =>
         await dispatch(reportingActions.setActiveReportingId(undefined))
 
         await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
+        if (context === ReportingContext.MAP) {
+          dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+        }
         dispatch(
           setReportingFormVisibility({
             context,

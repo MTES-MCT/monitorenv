@@ -37,6 +37,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
     }),
 
     canArchiveAdministration: builder.query<boolean, number>({
+      forceRefetch: () => true,
       query: administrationId => `/v1/administrations/${administrationId}/can_archive`,
       transformErrorResponse: response => new FrontendApiError(CAN_ARCHIVE_ADMINISTRATION_ERROR_MESSAGE, response),
       transformResponse: (response: BackendApiBooleanResponse) => response.value

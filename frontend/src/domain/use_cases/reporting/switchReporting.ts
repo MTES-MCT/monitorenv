@@ -1,3 +1,4 @@
+import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
@@ -17,7 +18,8 @@ export const switchReporting =
       )
     )
 
-    await dispatch(
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(reportingContext === ReportingContext.MAP))
+    dispatch(
       setReportingFormVisibility({
         context: reportingContext,
         visibility: VisibilityState.VISIBLE

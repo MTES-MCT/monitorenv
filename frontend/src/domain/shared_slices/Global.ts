@@ -13,8 +13,7 @@ export enum ReportingContext {
 export enum VisibilityState {
   NONE = 'none',
   REDUCED = 'reduced',
-  VISIBLE = 'visible',
-  VISIBLE_LEFT = 'visible_left'
+  VISIBLE = 'visible'
 }
 
 export type ReportingFormVisibilityProps = {
