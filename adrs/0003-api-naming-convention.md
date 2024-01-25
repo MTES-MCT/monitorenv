@@ -12,13 +12,13 @@ Convention de nommage des routes pour une API RESTful
 5 endpoints pour une ressource
 Donc 5 définitions de méthode par fichier de ressource au maximum
 
-Verbe HTTP| Request Path       | Controller Name   | Usage
-
-GET       | /missions/:id      | get               | display a specific mission
-GET       | /missions          | getAll            | list all missions
-POST      | /missions          | create            | create a new mission
-PATCH/PUT | /missions/:id      | update            | update a specific mission
-DELETE    | /missions/:id      | delete            | delete a specific mission
+| Verbe HTTP| Request Path       | Controller Name   | Usage                     |
+|-----------|--------------------|-------------------|---------------------------|
+| GET       | /missions/:id      | get               | display a specific mission|
+| GET       | /missions          | getAll            | list all missions         |
+| POST      | /missions          | create            | create a new mission      |
+| PATCH/PUT | /missions/:id      | update            | update a specific mission |
+| DELETE    | /missions/:id      | delete            | delete a specific mission |
 
 ## Définition du scope des ressources
 
