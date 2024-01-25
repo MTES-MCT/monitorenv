@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
@@ -32,9 +32,6 @@ export function MissionFormWrapper() {
     return {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeMissionId])
-
-  const formikFormValuesRef = useRef<Partial<MissionType> | undefined>(undefined)
-  formikFormValuesRef.current = missionValues
 
   if (!missionValues || missionValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>
