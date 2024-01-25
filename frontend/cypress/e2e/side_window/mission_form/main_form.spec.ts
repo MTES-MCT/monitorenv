@@ -8,7 +8,7 @@ import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 context('Side Window > Mission Form > Main Form', () => {
-  function visitSideWindow(isAutoSaveEnabled = true) {
+  function visitSideWindow(isAutoSaveEnabled = 'true') {
     cy.visit(`/side_window`, {
       onBeforeLoad(window) {
         Object.defineProperty(window, 'EventSource', { value: EventSource })
@@ -17,9 +17,9 @@ context('Side Window > Mission Form > Main Form', () => {
         if (!window.env) {
           Object.defineProperty(window, 'env', {
             value: {
-              REACT_APP_CYPRESS_TEST: true,
+              REACT_APP_CYPRESS_TEST: 'true',
               REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled,
-              REACT_APP_MISSION_FORM_AUTO_UPDATE: true
+              REACT_APP_MISSION_FORM_AUTO_UPDATE: 'true'
             }
           })
 
@@ -29,7 +29,7 @@ context('Side Window > Mission Form > Main Form', () => {
         // eslint-disable-next-line no-param-reassign
         window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = isAutoSaveEnabled
         // eslint-disable-next-line no-param-reassign
-        window.env.REACT_APP_MISSION_FORM_AUTO_UPDATE = true
+        window.env.REACT_APP_MISSION_FORM_AUTO_UPDATE = 'true'
       }
     })
   }
@@ -102,7 +102,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
   it('A mission should be created When auto-save is not enabled', () => {
     // Given
-    visitSideWindow(false)
+    visitSideWindow('false')
 
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.wait(400)

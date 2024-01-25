@@ -10,7 +10,7 @@ context('Mission', () => {
           Object.defineProperty(window, 'env', {
             value: {
               REACT_APP_CYPRESS_TEST: true,
-              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: false
+              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: 'false'
             }
           })
 
@@ -18,7 +18,7 @@ context('Mission', () => {
         }
 
         // eslint-disable-next-line no-param-reassign
-        window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = false
+        window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = 'false'
       }
     })
 
