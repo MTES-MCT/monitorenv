@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { GEOSERVER_REMOTE_URL } from '../env'
 import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
 
 import type { BackendApiErrorResponse } from './types'
@@ -9,7 +8,7 @@ import type { BackendApiErrorResponse } from './types'
 // GeoServer API
 
 export const geoserverApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: `${GEOSERVER_REMOTE_URL}/geoserver` }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.FRONTEND_GEOSERVER_REMOTE_URL}/geoserver` }),
   endpoints: () => ({}),
   reducerPath: 'geoserverApi'
 })

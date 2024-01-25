@@ -2,11 +2,12 @@ import _ from 'lodash'
 import { useEffect, useState, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { loadGoogleMapScript } from './utils'
-import { GOOGLEMAPS_API_KEY } from '../../env'
 
 const GOOGLEMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
 const GOOGLEMAPS_SCRIPT_BASEURL = `https://maps.googleapis.com/maps/api/js`
-const GOOGLEMAPS_SCRIPT_URL = `${GOOGLEMAPS_SCRIPT_BASEURL}?key=${GOOGLEMAPS_API_KEY}&libraries=places`
+const GOOGLEMAPS_SCRIPT_URL = `${GOOGLEMAPS_SCRIPT_BASEURL}?key=${
+  import.meta.env.FRONTEND_GOOGLEMAPS_API_KEY
+}&libraries=places`
 
 export const getPlaceCoordinates = placeId => {
   // @ts-ignore

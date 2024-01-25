@@ -3,9 +3,9 @@ import * as Yup from 'yup'
 
 import { ControlPlansSchema } from './ControlPlans'
 import { ActionTypeEnum, type EnvActionSurveillance } from '../../../../domain/entities/missions'
-import { REACT_APP_CYPRESS_TEST } from '../../../../env'
+import { isCypress } from '../../../../utils/isCypress'
 
-const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
+const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
 const SurveillanceZoneSchema = Yup.object().test({
   message: 'Veuillez définir une zone de surveillance',

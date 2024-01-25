@@ -37,17 +37,21 @@ ENV DISABLE_ESLINT_PLUGIN=true
 
 ARG VERSION
 ARG ENV_PROFILE
-ENV REACT_APP_ENV=$ENV_PROFILE
-RUN echo ${REACT_APP_ENV}
+ENV FRONTEND_ENV=$ENV_PROFILE
+RUN echo ${FRONTEND_ENV}
 
 COPY frontend/ /tmp/frontend/
 COPY infra/ /tmp/infra/
 WORKDIR /tmp/frontend
 
-# Files are expected to be in /tmp/frontend/dist/monitorenv-frontend
-# TODO Remove `--legacy-peer-deps` option as soon as CRA is migrate to Vite.
-RUN npm ci --legacy-peer-deps
+# Files are expected to be in /tmp/frontend/build
+RUN npm ci
 RUN npm run build
+
+# Create an `import-meta-env` Alpine executable without node, to be copied to the final image
+RUN npx pkg ./node_modules/@import-meta-env/cli/bin/import-meta-env.js \
+  --target node16-alpine-x64 \
+  --output import-meta-env
 
 ######################
 # Upload sourcemaps  #
@@ -109,10 +113,16 @@ COPY --from=buildBack /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
 COPY infra/configurations/backend /home/monitorenv/configurations/
 
 USER monitorenv
+
 # Copy files for the front
 RUN mkdir /home/monitorenv/public
 COPY --from=buildSourcemaps /tmp/frontend/build /home/monitorenv/public/
+
+# Copy import-meta-env
+COPY --from=buildFront /tmp/frontend/import-meta-env /home/monitorenv/
 COPY --from=buildFront /tmp/infra/docker/app/env.sh /home/monitorenv/
+COPY --from=buildFront /tmp/frontend/.env.example /home/monitorenv/
+RUN cp /home/monitorenv/.env.example /home/monitorenv/.env
 
 # Add logs folder to be mounted as volume
 RUN mkdir /home/monitorenv/logs
@@ -127,9 +137,19 @@ ENV SPRING_PROFILES_ACTIVE=${ENV_PROFILE}
 RUN echo ${ENV_PROFILE}
 
 USER root
+
+RUN chown monitorenv /home/monitorenv/import-meta-env
+RUN chmod +x /home/monitorenv/import-meta-env
 RUN chown monitorenv /home/monitorenv/env.sh
 RUN chmod +x /home/monitorenv/env.sh
+RUN chown monitorenv /home/monitorenv/import-meta-env
+RUN chmod +x /home/monitorenv/import-meta-env
+RUN chown monitorenv /home/monitorenv/public/index.html
+RUN chmod +rwx /home/monitorenv/public/index.html
+
 USER monitorenv
+
+RUN ./import-meta-env -x .env.example -p public/index.html
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 

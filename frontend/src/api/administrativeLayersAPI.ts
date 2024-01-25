@@ -1,5 +1,4 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map/constants'
-import { GEOSERVER_REMOTE_URL, GEOSERVER_NAMESPACE } from '../env'
 
 const OK = 200
 
@@ -24,7 +23,7 @@ function getAdministrativeZoneURL(type, extent, subZone, geoserverURL) {
 
     return (
       `${geoserverURL}/geoserver/wfs?service=WFS&` +
-      `version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${type}&` +
+      `version=1.1.0&request=GetFeature&typename=${import.meta.env.FRONTEND_GEOSERVER_NAMESPACE}:${type}&` +
       `outputFormat=application/json&srsname=${WSG84_PROJECTION}${subZoneFilter}`
     )
   }
@@ -34,14 +33,14 @@ function getAdministrativeZoneURL(type, extent, subZone, geoserverURL) {
 
     return (
       `${geoserverURL}/geoserver/wfs?service=WFS&` +
-      `version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${type}&` +
+      `version=1.1.0&request=GetFeature&typename=${import.meta.env.FRONTEND_GEOSERVER_NAMESPACE}:${type}&` +
       `outputFormat=application/json&srsname=${WSG84_PROJECTION}${extentFilter}`
     )
   }
 
   return (
     `${geoserverURL}/geoserver/wfs?service=WFS&` +
-    `version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${type}&` +
+    `version=1.1.0&request=GetFeature&typename=${import.meta.env.FRONTEND_GEOSERVER_NAMESPACE}:${type}&` +
     `outputFormat=application/json&srsname=${WSG84_PROJECTION}`
   )
 }
@@ -55,7 +54,7 @@ function getAdministrativeZoneURL(type, extent, subZone, geoserverURL) {
  * @throws {Error}
  */
 export function getAdministrativeZoneFromAPI(administrativeZone, extent, subZone) {
-  const geoserverURL = GEOSERVER_REMOTE_URL
+  const geoserverURL = import.meta.env.FRONTEND_GEOSERVER_REMOTE_URL
 
   return fetch(getAdministrativeZoneURL(administrativeZone, extent, subZone, geoserverURL))
     .then(response => {

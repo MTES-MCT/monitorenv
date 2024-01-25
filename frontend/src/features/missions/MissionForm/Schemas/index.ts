@@ -9,12 +9,12 @@ import {
   MissionTypeEnum,
   type NewMission
 } from '../../../../domain/entities/missions'
-import { REACT_APP_CYPRESS_TEST } from '../../../../env'
+import { isCypress } from '../../../../utils/isCypress'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { LegacyControlUnit } from '../../../../domain/entities/legacyControlUnit'
 
-const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
+const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
 const MissionTypesSchema = Yup.array()
   .of(Yup.mixed<MissionTypeEnum>().oneOf(Object.values(MissionTypeEnum)).required())

@@ -3,8 +3,12 @@
 context('Side Window > Mission Form > Mission dates', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-
-    cy.visit(`/side_window`).wait(1000)
+    cy.visit(`/side_window`, {
+      onBeforeLoad: () => {
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
+      }
+    })
   })
 
   it('A mission should be created and closed with surveillances and valid dates', () => {

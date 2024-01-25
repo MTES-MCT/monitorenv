@@ -5,9 +5,9 @@ import { ControlPlansSchema } from './ControlPlans'
 import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
-import { REACT_APP_CYPRESS_TEST } from '../../../../env'
+import { isCypress } from '../../../../utils/isCypress'
 
-const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
+const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
 const ControlPointSchema = Yup.object().test({
   message: 'Point de contrôle requis',

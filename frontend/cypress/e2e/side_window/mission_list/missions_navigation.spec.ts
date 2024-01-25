@@ -5,20 +5,8 @@ context('Mission', () => {
 
   it('Missions should be created and saved in store When auto-save is not enabled', () => {
     cy.visit(`/side_window`, {
-      onBeforeLoad(window: Cypress.AUTWindow & { env: { [key: string]: string } }) {
-        if (!window.env) {
-          Object.defineProperty(window, 'env', {
-            value: {
-              REACT_APP_CYPRESS_TEST: true,
-              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: 'false'
-            }
-          })
-
-          return
-        }
-
-        // eslint-disable-next-line no-param-reassign
-        window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = 'false'
+      onBeforeLoad: () => {
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'false')
       }
     })
 

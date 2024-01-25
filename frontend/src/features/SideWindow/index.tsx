@@ -17,9 +17,9 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
 import { MissionFormWrapper } from '../missions/MissionForm'
+import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../missions/MissionForm/constants'
 import { useListenMissionEventUpdates } from '../missions/MissionForm/hooks/useListenMissionEventUpdates'
 import { missionFormsActions } from '../missions/MissionForm/slice'
-import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../missions/MissionForm/sse'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
@@ -73,7 +73,7 @@ export function SideWindow() {
   }, [])
 
   return (
-    <StyleSheetManager target={wrapperRef.current || undefined}>
+    <StyleSheetManager target={wrapperRef.current ?? undefined}>
       <ErrorBoundary>
         <Wrapper ref={wrapperRef}>
           {wrapperRef.current && (
