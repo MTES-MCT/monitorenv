@@ -9,7 +9,7 @@ import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './sse'
 import type { Mission } from '../../../domain/entities/missions'
 
 type FormikSyncMissionFormProps = {
-  missionId: number | undefined
+  missionId: string | number | undefined
 }
 /**
  * Sync
