@@ -23,10 +23,6 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     )
     fun delete(id: Int)
 
-    // see https://github.com/spring-projects/spring-data-jpa/issues/2491
-    // and https://stackoverflow.com/questions/55169797/pass-liststring-into-postgres-function-as-parameter
-    // for ugly casting of passed parameters
-
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         """

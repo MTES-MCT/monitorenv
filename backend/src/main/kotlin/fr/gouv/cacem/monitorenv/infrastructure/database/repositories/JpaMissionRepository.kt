@@ -177,8 +177,4 @@ class JpaMissionRepository(
             )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
     }
-
-    private fun convertToPGArray(array: List<String>?): String {
-        return array?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: "{}"
-    }
 }
