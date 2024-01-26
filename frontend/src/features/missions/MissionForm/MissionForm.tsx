@@ -1,4 +1,4 @@
-import { customDayjs, FormikEffect } from '@mtes-mct/monitor-ui'
+import { customDayjs, FormikEffect, usePrevious } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
@@ -54,6 +54,8 @@ export function MissionForm({
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const missionEvent = useListenMissionEventUpdatesById(id)
   const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
+
+  const previousEngagedControlUnit = usePrevious(engagedControlUnit)
 
   const isAutoSaveEnabled = useMemo(() => {
     if (MISSION_FORM_AUTO_SAVE_ENABLED === 'false') {
@@ -200,13 +202,13 @@ export function MissionForm({
   }, 250)
 
   useEffect(() => {
-    if (!engagedControlUnit) {
+    if (isNewMission && !engagedControlUnit && previousEngagedControlUnit !== engagedControlUnit) {
       validateBeforeOnChange(values, true)
     }
     // we want to trigger the `validateBeforeOnChange` when engagedControlUnit change
     // so when user confirm mission creation even if the control unit is engaged
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engagedControlUnit])
+  }, [isNewMission, engagedControlUnit])
 
   return (
     <StyledFormContainer>

@@ -10,20 +10,20 @@ import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../sh
 
 export const cancelCreateAndRedirectToFilteredList =
   ({ controlUnitId, missionId }) =>
-  async dispatch => {
+  dispatch => {
     dispatch(missionFormsActions.setEngagedControlUnit(undefined))
 
     // update filters to redirect to list with only pending mission with the control unit selected
-    await dispatch(resetMissionFilters())
+    dispatch(resetMissionFilters())
 
     const twoMonthsAgo = customDayjs().subtract(2, 'month').toISOString()
-    await dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: DateRangeEnum.CUSTOM }))
-    await dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: twoMonthsAgo }))
-    await dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: customDayjs().toISOString() }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: DateRangeEnum.CUSTOM }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: twoMonthsAgo }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: customDayjs().toISOString() }))
 
-    await dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: [controlUnitId] }))
-    await dispatch(updateFilters({ key: MissionFiltersEnum.STATUS_FILTER, value: [MissionStatusEnum.PENDING] }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: [controlUnitId] }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.STATUS_FILTER, value: [MissionStatusEnum.PENDING] }))
 
     const missionPathToClose = generatePath(sideWindowPaths.MISSION, { id: missionId })
-    await dispatch(deleteTab(missionPathToClose, false))
+    dispatch(deleteTab(missionPathToClose, false))
   }

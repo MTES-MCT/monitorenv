@@ -18,15 +18,15 @@ export const deleteTab =
     const routeParams = getMissionPageRoute(path)
     const idToDelete = getIdTyped(routeParams?.params.id)
 
-    if (idToDelete && missions[idToDelete]?.isFormDirty) {
+    if (idToDelete && missions[idToDelete]?.isFormDirty && withConfirmation) {
       if (activeMissionId === idToDelete) {
-        await dispatch(sideWindowActions.setShowConfirmCancelModal(withConfirmation))
+        await dispatch(sideWindowActions.setShowConfirmCancelModal(true))
 
         return
       }
       const missionToClose = missions[idToDelete]
       await setMission(dispatch, missionToClose)
-      await dispatch(sideWindowActions.setShowConfirmCancelModal(withConfirmation))
+      await dispatch(sideWindowActions.setShowConfirmCancelModal(true))
 
       return
     }

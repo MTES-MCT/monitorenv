@@ -44,5 +44,5 @@ export function shouldSaveMission(
 }
 
 function filterActionsFormInternalProperties(values: Partial<Mission | NewMission>) {
-  return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) || []
+  return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) ?? []
 }
