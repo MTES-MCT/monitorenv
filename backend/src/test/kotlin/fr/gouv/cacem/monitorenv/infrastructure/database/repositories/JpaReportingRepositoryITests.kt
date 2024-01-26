@@ -202,6 +202,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll should return all reportings`() {
         val reportings =
             jpaReportingRepository.findAll(
@@ -221,6 +222,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll should return all reporting when targetType filter is set to VEHICLE`() {
         val reportings =
             jpaReportingRepository.findAll(
@@ -342,6 +344,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findById should return specified reporting`() {
         val reportingDTO = jpaReportingRepository.findById(2)
         assertThat(reportingDTO.reporting.id).isEqualTo(2)

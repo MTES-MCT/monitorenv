@@ -5,11 +5,16 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 import jakarta.persistence.*
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
 @Entity
+@Cache(
+    usage = CacheConcurrencyStrategy.READ_WRITE,
+)
 @Table(name = "administrations")
 data class AdministrationModel(
     @Id

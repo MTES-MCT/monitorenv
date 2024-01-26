@@ -53,10 +53,12 @@ class JpaMissionRepository(
         return dbMissionRepository.findAll(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = (missionTypes),
+            missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
+            missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
+            missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
             missionStatuses = (missionStatuses),
-            missionSources = (missionSourcesAsStringArray),
-            seaFronts = (seaFronts),
+            missionSources = missionSources,
+            seaFronts = seaFronts,
             pageable = pageable,
         )
             .map { it.toMissionDTO(mapper) }
@@ -88,18 +90,21 @@ class JpaMissionRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionEntity> {
-        val missionSourcesAsStringArray = missionSources?.map { it.name }
         val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
-        return dbMissionRepository.findAll(
+
+        val missions = dbMissionRepository.findAll(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = missionTypes,
-            missionStatuses = (missionStatuses),
-            missionSources = (missionSourcesAsStringArray),
+            missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
+            missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
+            missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
+            missionStatuses = missionStatuses,
+            missionSources = (missionSources),
             seaFronts = (seaFronts),
             pageable = pageable,
         )
-            .map { it.toMissionEntity(mapper) }
+
+        return missions.map { it.toMissionEntity(mapper) }
     }
 
     override fun findFullMissionById(missionId: Int): MissionDTO {

@@ -112,6 +112,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when startedAfter & startedBefore are set`() {
         // When
         val missions =
@@ -128,6 +129,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when missionTypes is set`() {
         // When
         val missions =
@@ -140,12 +142,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
+        println(missions)
         assertThat(missions).hasSize(22)
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when multiple missionTypes are set`() {
         // When
+
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
@@ -156,10 +161,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
+        // Then
+        // MissionTypes are hardcoded in query. If you add a new mission type, you need to update the query
+        assertThat(MissionTypeEnum.values().size).isEqualTo(3)
+        assertThat(MissionTypeEnum.SEA.name).isEqualTo("SEA")
+        assertThat(MissionTypeEnum.LAND.name).isEqualTo("LAND")
+        assertThat(MissionTypeEnum.AIR.name).isEqualTo("AIR")
         assertThat(missions).hasSize(45)
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN`() {
         // When
         val missions =
@@ -172,10 +184,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
+        // Then
         assertThat(missions).hasSize(9)
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN and NAMO`() {
         // When
         val missions =
@@ -192,6 +206,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when status is set to UPCOMING`() {
         // When
         val missions =
@@ -208,6 +223,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when status is set to PENDING`() {
         // When
         val missions =
@@ -224,6 +240,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when status is set to ENDED`() {
         // When
         val missions =
@@ -240,6 +257,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when status is set to CLOSED`() {
         // When
         val missions =
@@ -256,6 +274,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll Should return filtered missions when status is set to CLOSED or UPCOMING`() {
         // When
         val missions =
@@ -272,6 +291,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll with pagenumber and pagesize Should return subset of missions`() {
         // When
         val missions =
@@ -288,6 +308,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findAll should filter missions based on MissionSources`() {
         // When
         val missions =
@@ -310,6 +331,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findByControlUnitId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
@@ -317,6 +339,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findByControlUnitResourceId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitResourceId(8)
 
@@ -324,6 +347,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findById Should return specified mission`() {
         // When
         val firstMission =
@@ -396,6 +420,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findById Should return specified mission and associated env actions and associated envActionReportingIds`() {
         // When
         val missionDTO = jpaMissionRepository.findFullMissionById(34)
@@ -409,6 +434,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `findByIds() should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByIds(listOf(50, 51, 52))
 

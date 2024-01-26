@@ -6,11 +6,16 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import jakarta.persistence.*
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
 @Entity
+@Cache(
+    usage = CacheConcurrencyStrategy.READ_WRITE,
+)
 @Table(name = "control_units")
 data class ControlUnitModel(
     @Id
@@ -18,7 +23,7 @@ data class ControlUnitModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id", nullable = false)
     @JsonBackReference
     val administration: AdministrationModel,

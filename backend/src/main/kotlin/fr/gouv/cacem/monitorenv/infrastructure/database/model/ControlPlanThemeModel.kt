@@ -6,8 +6,13 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
+@Cache(
+    usage = CacheConcurrencyStrategy.READ_WRITE,
+)
 @Table(name = "control_plan_themes")
 data class ControlPlanThemeModel(
     @Id

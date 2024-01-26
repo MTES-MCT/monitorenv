@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.domain.Pageable
@@ -27,12 +27,20 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     // and https://stackoverflow.com/questions/55169797/pass-liststring-into-postgres-function-as-parameter
     // for ugly casting of passed parameters
 
-    @EntityGraph(attributePaths = [ "envActions"])
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         """
         SELECT mission
         FROM MissionModel mission
         WHERE
+            ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE) OR (
+                (:missionTypeAIR = TRUE AND (  CAST(mission.missionTypes as String) like '%AIR%'))
+                OR
+                (:missionTypeLAND = TRUE AND (  CAST(mission.missionTypes as String) like '%LAND%'))
+                OR
+                (:missionTypeSEA = TRUE AND (  CAST(mission.missionTypes as String) like '%SEA%'))
+            ))
+            AND
             mission.isDeleted = false
             AND (
                 mission.startDateTimeUtc >= :startedAfter
@@ -42,7 +50,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                     AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.endDateTimeUtc <= CAST(:startedBefore AS timestamp))
                 )
             )
-            AND (TRUE OR :missionTypes IS NULL)
+
 
             AND (:seaFronts IS NULL OR mission.facade IN :seaFronts)
             AND (
@@ -82,12 +90,15 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,
-        missionTypes: List<MissionTypeEnum>? = emptyList<MissionTypeEnum>(),
+        missionTypeAIR: Boolean,
+        missionTypeLAND: Boolean,
+        missionTypeSEA: Boolean,
         missionStatuses: List<String>? = emptyList<String>(),
-        missionSources: List<String>? = emptyList<String>(),
+        missionSources: List<MissionSourceEnum>? = emptyList<MissionSourceEnum>(),
         seaFronts: List<String>? = emptyList<String>(),
         pageable: Pageable,
     ): List<MissionModel>
+    // missionTypes: List<String>? = emptyList<String>(),
 
     @Query(
         value = """
