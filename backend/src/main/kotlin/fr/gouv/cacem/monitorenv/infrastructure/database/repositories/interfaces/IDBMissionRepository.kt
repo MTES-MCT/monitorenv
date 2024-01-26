@@ -12,7 +12,7 @@ import java.time.Instant
 
 @DynamicUpdate
 interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value = """
         UPDATE missions
