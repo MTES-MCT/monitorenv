@@ -52,7 +52,7 @@ class MissionModel(
     @OneToMany(mappedBy = "mission", fetch = FetchType.EAGER)
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    @OrderBy("id")
+    @OrderBy("control_unit_id")
     val attachedReportings: MutableSet<ReportingModel>? = LinkedHashSet(),
 
     @OneToMany(
@@ -63,6 +63,7 @@ class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
+    @OrderBy("control_resource_id")
     val controlResources: MutableSet<MissionControlResourceModel>? = LinkedHashSet(),
 
     @OneToMany(
@@ -73,6 +74,7 @@ class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
+    @OrderBy("control_unit_id")
     val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
 
     @Column(name = "closed_by")
@@ -90,6 +92,7 @@ class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
+    @OrderBy("id")
     val envActions: MutableSet<EnvActionModel>? = LinkedHashSet(),
 
     @Column(name = "end_datetime_utc")
