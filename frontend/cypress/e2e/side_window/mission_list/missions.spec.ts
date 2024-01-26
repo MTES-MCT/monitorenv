@@ -57,7 +57,7 @@ context('Missions', () => {
     cy.get('*[data-cy="cell-envActions-themes"]')
       .eq(0)
       .contains(
-        'Police des activités de cultures marines : Contrôle du schéma des structures ; Police des épaves : Contrôle administratif / Épave/navire abandonné'
+        'Police des activités de cultures marines : Contrôle du schéma des structures ; Police des épaves : Épave/navire abandonné / Contrôle administratif'
       )
   })
 })
