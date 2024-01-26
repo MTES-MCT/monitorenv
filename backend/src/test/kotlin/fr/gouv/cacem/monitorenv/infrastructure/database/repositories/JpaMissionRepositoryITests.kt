@@ -80,6 +80,26 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `findAll Should return missions when filered by controlUnit`() {
+        // When
+        val missions =
+            jpaMissionRepository.findAllFullMissions(
+                controlUnitIds = listOf(10002, 10018),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                missionTypes = null,
+                missionStatuses = null,
+                seaFronts = null,
+                pageNumber = null,
+                pageSize = null,
+            )
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+        assertThat(missions).hasSize(27)
+    }
+
+    @Test
+    @Transactional
     fun `delete Should set the deleted flag as true`() {
         // Given
         val missionsList =

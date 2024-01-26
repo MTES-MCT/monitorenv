@@ -16,6 +16,7 @@ interface IMissionRepository {
     fun findById(missionId: Int): MissionEntity
 
     fun findAllFullMissions(
+        controlUnitIds: List<Int>? = null,
         missionSources: List<MissionSourceEnum>? = null,
         missionStatuses: List<String>?,
         missionTypes: List<MissionTypeEnum>?,
@@ -27,6 +28,7 @@ interface IMissionRepository {
     ): List<MissionDTO>
 
     fun findAll(
+        controlUnitIds: List<Int>? = null,
         missionSources: List<MissionSourceEnum>? = null,
         missionStatuses: List<String>?,
         missionTypes: List<MissionTypeEnum>?,

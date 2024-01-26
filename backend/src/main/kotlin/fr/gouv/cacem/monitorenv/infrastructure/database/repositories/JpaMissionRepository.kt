@@ -39,6 +39,7 @@ class JpaMissionRepository(
     }
 
     override fun findAllFullMissions(
+        controlUnitIds: List<Int>?,
         missionSources: List<MissionSourceEnum>?,
         missionStatuses: List<String>?,
         missionTypes: List<MissionTypeEnum>?,
@@ -48,18 +49,18 @@ class JpaMissionRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionDTO> {
-        val missionSourcesAsStringArray = missionSources?.map { it.name }
         val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
         return dbMissionRepository.findAll(
-            startedAfter = startedAfter,
-            startedBefore = startedBefore,
+            controlUnitIds = controlUnitIds,
+            missionSources = missionSources,
+            missionStatuses = (missionStatuses),
             missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
             missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
             missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
-            missionStatuses = (missionStatuses),
-            missionSources = missionSources,
-            seaFronts = seaFronts,
             pageable = pageable,
+            seaFronts = seaFronts,
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
         )
             .map { it.toMissionDTO(mapper) }
     }
@@ -81,6 +82,7 @@ class JpaMissionRepository(
     }
 
     override fun findAll(
+        controlUnitIds: List<Int>?,
         missionSources: List<MissionSourceEnum>?,
         missionStatuses: List<String>?,
         missionTypes: List<MissionTypeEnum>?,
@@ -93,15 +95,16 @@ class JpaMissionRepository(
         val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
 
         val missions = dbMissionRepository.findAll(
-            startedAfter = startedAfter,
-            startedBefore = startedBefore,
+            controlUnitIds = controlUnitIds,
+            missionSources = missionSources,
+            missionStatuses = (missionStatuses),
             missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
             missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
             missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
-            missionStatuses = missionStatuses,
-            missionSources = (missionSources),
-            seaFronts = (seaFronts),
             pageable = pageable,
+            seaFronts = seaFronts,
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
         )
 
         return missions.map { it.toMissionEntity(mapper) }

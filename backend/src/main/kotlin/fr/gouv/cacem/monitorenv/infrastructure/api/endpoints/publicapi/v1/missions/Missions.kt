@@ -62,7 +62,7 @@ class Missions(
         seaFronts: List<String>?,
         @Parameter(description = "Unités de contrôle")
         @RequestParam(name = "controlUnits", required = false)
-        controlUnits: List<Int>? = null,
+        controlUnitIds: List<Int>? = null,
     ): List<MissionDataOutput> {
         val missions =
             getMissions.execute(
@@ -72,7 +72,7 @@ class Missions(
                 missionStatuses = missionStatuses,
                 missionTypes = missionTypes,
                 seaFronts = seaFronts,
-                controlUnits = controlUnits,
+                controlUnitIds = controlUnitIds,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
             )

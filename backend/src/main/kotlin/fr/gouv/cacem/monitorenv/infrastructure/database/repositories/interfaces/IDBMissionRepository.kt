@@ -33,6 +33,8 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         SELECT mission
         FROM MissionModel mission
         WHERE
+            (:controlUnitIds IS NULL OR EXISTS (SELECT c FROM mission.controlUnits c WHERE c.unit.id IN :controlUnitIds))
+            AND
             ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE) OR (
                 (:missionTypeAIR = TRUE AND (  CAST(mission.missionTypes as String) like '%AIR%'))
                 OR
@@ -50,8 +52,6 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                     AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.endDateTimeUtc <= CAST(:startedBefore AS timestamp))
                 )
             )
-
-
             AND (:seaFronts IS NULL OR mission.facade IN :seaFronts)
             AND (
                 :missionStatuses IS NULL
@@ -88,15 +88,16 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         """,
     )
     fun findAll(
-        startedAfter: Instant,
-        startedBefore: Instant?,
+        controlUnitIds: List<Int>? = emptyList<Int>(),
+        missionStatuses: List<String>? = emptyList<String>(),
+        missionSources: List<MissionSourceEnum>? = emptyList<MissionSourceEnum>(),
         missionTypeAIR: Boolean,
         missionTypeLAND: Boolean,
         missionTypeSEA: Boolean,
-        missionStatuses: List<String>? = emptyList<String>(),
-        missionSources: List<MissionSourceEnum>? = emptyList<MissionSourceEnum>(),
-        seaFronts: List<String>? = emptyList<String>(),
         pageable: Pageable,
+        seaFronts: List<String>? = emptyList<String>(),
+        startedAfter: Instant,
+        startedBefore: Instant?,
     ): List<MissionModel>
     // missionTypes: List<String>? = emptyList<String>(),
 
