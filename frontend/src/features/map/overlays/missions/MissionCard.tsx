@@ -74,7 +74,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
           )}
           {controlUnits?.length > 1 && controlUnits[0] && (
             <>
-              <div>{controlUnits[0].name.toUpperCase()}</div>
+              <div>{controlUnits[0].name?.toUpperCase()}</div>
               <MultipleControlUnits>
                 et {controlUnits.length - 1} {pluralize('autre', controlUnits.length - 1)}{' '}
                 {pluralize('unité', controlUnits.length - 1)}

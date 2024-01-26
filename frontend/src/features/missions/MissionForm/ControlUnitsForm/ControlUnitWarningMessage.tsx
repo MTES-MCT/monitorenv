@@ -1,22 +1,44 @@
 import { Accent, Button, Level, Message } from '@mtes-mct/monitor-ui'
-import { useFormikContext } from 'formik'
-import { useMemo } from 'react'
+import { useField, useFormikContext } from 'formik'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
+import { useGetEngagedControlUnitsQuery } from '../../../../api/missionsAPI'
 import { missionSourceEnum, type NewMission } from '../../../../domain/entities/missions'
 import { cancelCreateAndRedirectToFilteredList } from '../../../../domain/use_cases/missions/cancelCreateAndRedirectToFilteredList'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { missionFormsActions } from '../slice'
 
-export function ControlUnitWarningMessage() {
-  const { values } = useFormikContext<Partial<NewMission>>()
-
+export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitIndex: number }) {
   const dispatch = useAppDispatch()
+
+  const { values } = useFormikContext<Partial<NewMission>>()
+  const [unitField] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
+
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
+
+  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+
+  const engagedControlUnits = useMemo(() => {
+    if (!engagedControlUnitsData) {
+      return []
+    }
+
+    return engagedControlUnitsData
+  }, [engagedControlUnitsData])
+
+  const controlUnitAlreadyEngaged = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
+
+  useEffect(() => {
+    if (controlUnitAlreadyEngaged) {
+      dispatch(missionFormsActions.setEngagedControlUnit(controlUnitAlreadyEngaged))
+    }
+  }, [controlUnitAlreadyEngaged, dispatch])
 
   const message = useMemo(() => {
     if (!engagedControlUnit) {
@@ -54,7 +76,7 @@ export function ControlUnitWarningMessage() {
     dispatch(cancelCreateAndRedirectToFilteredList({ controlUnitId, missionId: values.id }))
   }
 
-  if (!engagedControlUnit) {
+  if (!engagedControlUnit || engagedControlUnit?.controlUnit.id !== unitField.value) {
     return null
   }
 

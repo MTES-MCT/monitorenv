@@ -11,19 +11,16 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { uniq, uniqBy } from 'lodash'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ControlUnitWarningMessage } from './ControlUnitWarningMessage'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
-import { useGetEngagedControlUnitsQuery } from '../../../../api/missionsAPI'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { isNewMission } from '../../../../utils/isNewMission'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 import { getMissionPageRoute } from '../../../../utils/routes'
-import { missionFormsActions } from '../slice'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
@@ -33,8 +30,8 @@ type ControlUnitSelectorProps = {
 }
 
 export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: ControlUnitSelectorProps) {
-  const dispatch = useAppDispatch()
   const { newWindowContainerRef } = useNewWindow()
+
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
   )
@@ -59,20 +56,10 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
   // Include archived control units (and administrations) if they're already selected
   const activeWithSelectedControlUnits = useMemo(
     () =>
-      controlUnitsData?.filter(controlUnit => isNotArchived(controlUnit) || unitNameField.value === controlUnit.name) ||
+      controlUnitsData?.filter(controlUnit => isNotArchived(controlUnit) || unitNameField.value === controlUnit.name) ??
       [],
     [controlUnitsData, unitNameField.value]
   )
-
-  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-
-  const engagedControlUnits = useMemo(() => {
-    if (!engagedControlUnitsData) {
-      return []
-    }
-
-    return engagedControlUnitsData
-  }, [engagedControlUnitsData])
 
   const administrationsAsOption = useMemo(() => {
     const formattedAdministrations = uniq(
@@ -92,7 +79,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
   const unitListAsOption = useMemo(() => getOptionsFromIdAndName(unitList), [unitList])
   const controlUnitCustomSearch = useMemo(
     () =>
-      new CustomSearch(unitListAsOption || [], ['label'], {
+      new CustomSearch(unitListAsOption ?? [], ['label'], {
         isStrict: true,
         threshold: 0.2
       }),
@@ -104,7 +91,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
     const activeControlUnitResources = (
       activeWithSelectedControlUnits?.find(
         unit => unit.administration === administrationField.value && unit.id === unitField.value
-      )?.resources || []
+      )?.resources ?? []
     ).filter(isNotArchived)
 
     const resources = [...activeControlUnitResources, ...resourcesField.value]
@@ -162,14 +149,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
     resourcesHelpers.setValue(nextControlUnitResources)
   }
 
-  const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
   const resourceUnitIndexDisplayed = controlUnitIndex + 1
-
-  useEffect(() => {
-    if (!!engagedControlUnit && missionIsNewMission) {
-      dispatch(missionFormsActions.setEngagedControlUnit(engagedControlUnit))
-    }
-  }, [engagedControlUnit, missionIsNewMission, dispatch])
 
   if (isError) {
     return <div>Erreur</div>
@@ -208,11 +188,11 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
           label={`Unité ${resourceUnitIndexDisplayed}`}
           name={unitField.name}
           onChange={handleUnitChange}
-          options={unitListAsOption || []}
+          options={unitListAsOption ?? []}
           searchable={unitList.length > 10}
           value={unitField.value}
         />
-        <ControlUnitWarningMessage />
+        {missionIsNewMission && <ControlUnitWarningMessage controlUnitIndex={controlUnitIndex} />}
       </div>
 
       <MultiSelect
@@ -222,7 +202,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
         label={`Moyen(s) ${resourceUnitIndexDisplayed}`}
         name={resourcesField.name}
         onChange={handleResourceChange}
-        options={resourcesAsOption || []}
+        options={resourcesAsOption ?? []}
         value={resourcesField.value.map(resource => resource.id)}
       />
 

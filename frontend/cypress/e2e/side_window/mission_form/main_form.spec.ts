@@ -352,8 +352,19 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('.rs-picker-search-bar-input').type('Jeanne{enter}')
     cy.wait('@getEngagedControlUnits')
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
+
+    cy.getDataCy('add-other-control-unit').should('be.disabled')
     cy.clickButton('Oui, la conserver')
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+
+    // we want to test with a second engaged control unit
+    cy.getDataCy('add-other-control-unit').should('not.be.disabled')
+    cy.clickButton('Ajouter une autre unité')
+    cy.get('*[data-cy="add-control-unit"]').last().click()
+    cy.get('.rs-picker-search-bar-input').last().type('DML 2A{enter}')
+    cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
+    cy.clickButton('Oui, la conserver')
+
+    cy.get('*[data-cy="control-unit-contact"]').first().type('Contact 012345')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
 
