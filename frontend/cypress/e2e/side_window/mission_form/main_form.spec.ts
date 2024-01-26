@@ -402,7 +402,6 @@ context('Side Window > Mission Form > Main Form', () => {
 
     // When
     cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
-    cy.wait('@getEngagedControlUnits')
 
     // Then
     cy.get('body').should('not.contain', 'Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
