@@ -89,11 +89,12 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
-    cy.get('[id="envActions[0].observations"]').contains('RAS')
+
+    cy.getDataCy('control-form-observations').contains('RAS')
 
     // When
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('[id="envActions[0].observations"]').type('{backspace}{backspace}Une observation importante.', {
+    cy.getDataCy('control-form-observations').type('{backspace}{backspace}Une observation importante.', {
       force: true
     })
 
