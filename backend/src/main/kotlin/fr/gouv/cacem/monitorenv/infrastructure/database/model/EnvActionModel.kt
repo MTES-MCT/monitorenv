@@ -97,7 +97,8 @@ class EnvActionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @JsonManagedReference
-    val attachedReporting: List<ReportingModel>? = listOf(),
+    @OrderBy("id")
+    val attachedReporting: MutableSet<ReportingModel>? = LinkedHashSet(),
 
     @OneToMany(
         fetch = FetchType.EAGER,
@@ -110,7 +111,7 @@ class EnvActionModel(
     val controlPlanThemes: MutableSet<EnvActionsControlPlanThemeModel>? = LinkedHashSet(),
 
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "envAction",

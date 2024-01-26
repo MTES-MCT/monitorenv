@@ -87,14 +87,14 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         """,
     )
     fun findAll(
-        controlUnitIds: List<Int>? = emptyList<Int>(),
-        missionStatuses: List<String>? = emptyList<String>(),
-        missionSources: List<MissionSourceEnum>? = emptyList<MissionSourceEnum>(),
+        controlUnitIds: List<Int>? = emptyList(),
+        missionStatuses: List<String>? = emptyList(),
+        missionSources: List<MissionSourceEnum>? = emptyList(),
         missionTypeAIR: Boolean,
         missionTypeLAND: Boolean,
         missionTypeSEA: Boolean,
         pageable: Pageable,
-        seaFronts: List<String>? = emptyList<String>(),
+        seaFronts: List<String>? = emptyList(),
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionModel>
@@ -112,9 +112,11 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     )
     fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT mm FROM MissionModel mm JOIN mm.controlUnits mmcu WHERE mmcu.unit.id = :controlUnitId")
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         "SELECT mm FROM MissionModel mm JOIN mm.controlResources mmcr WHERE mmcr.resource.id = :controlUnitResourceId",
     )

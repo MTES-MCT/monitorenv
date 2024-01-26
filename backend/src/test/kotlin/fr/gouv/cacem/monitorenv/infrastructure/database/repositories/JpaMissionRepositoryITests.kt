@@ -115,9 +115,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(missionsList).hasSize(21)
 
         // When
+        customQueryCountListener!!.resetQueryCount()
         jpaMissionRepository.delete(3)
 
         // Then
+        customQueryCountListener!!.resetQueryCount()
         val nextMissionList =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
@@ -146,6 +148,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(21)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -164,6 +169,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         println(missions)
         assertThat(missions).hasSize(22)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -188,6 +196,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(MissionTypeEnum.LAND.name).isEqualTo("LAND")
         assertThat(MissionTypeEnum.AIR.name).isEqualTo("AIR")
         assertThat(missions).hasSize(45)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -274,6 +285,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(15)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -291,6 +305,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(18)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -308,6 +325,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(25)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -325,6 +345,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = 10,
             )
         assertThat(missions).hasSize(10)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -348,6 +371,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 startedBefore = null,
             )
         assertThat(missions).hasSize(3)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -356,6 +382,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
         assertThat(foundMissions).hasSize(17)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -364,6 +393,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val foundMissions = jpaMissionRepository.findByControlUnitResourceId(8)
 
         assertThat(foundMissions).hasSize(4)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -437,6 +469,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 ),
             ),
         ).isEqualTo(firstMission)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -451,6 +486,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
             .isEqualTo(UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807"))
         assertThat(missionDTO.envActionsAttachedToReportingIds?.get(0)?.second).isEqualTo(listOf(6))
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -459,6 +497,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val foundMissions = jpaMissionRepository.findByIds(listOf(50, 51, 52))
 
         assertThat(foundMissions).hasSize(3)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -803,6 +844,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `save Should update mission`() {
         // Given
         val infraction =

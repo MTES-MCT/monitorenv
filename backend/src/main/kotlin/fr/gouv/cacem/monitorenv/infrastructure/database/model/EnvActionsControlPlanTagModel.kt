@@ -43,8 +43,8 @@ class EnvActionsControlPlanTagModel(
             EnvActionsControlPlanTagModel(
                 id =
                 EnvActionsTagPk(
-                    envActionId = envAction.id!!,
-                    tagId = controlPlanTag.id!!,
+                    envActionId = envAction.id,
+                    tagId = controlPlanTag.id,
                 ),
                 envAction = envAction,
                 controlPlanTag = controlPlanTag,

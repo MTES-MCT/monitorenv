@@ -9,6 +9,8 @@ import jakarta.persistence.*
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
@@ -33,10 +35,12 @@ data class ControlUnitModel(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)

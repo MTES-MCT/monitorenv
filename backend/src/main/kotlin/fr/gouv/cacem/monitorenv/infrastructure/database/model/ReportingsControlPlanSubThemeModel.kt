@@ -27,6 +27,9 @@ class ReportingsControlPlanSubThemeModel(
     @MapsId("subthemeId")
     @JoinColumn(name = "subtheme_id")
     val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
+
+    @Column(name = "order_index", updatable = false, insertable = false)
+    val orderIndex: Int? = null,
 ) {
     companion object {
         fun fromModels(

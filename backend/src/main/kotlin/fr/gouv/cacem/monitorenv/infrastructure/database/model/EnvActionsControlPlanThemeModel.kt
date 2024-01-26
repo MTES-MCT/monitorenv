@@ -39,8 +39,8 @@ class EnvActionsControlPlanThemeModel(
             controlPlanTheme: ControlPlanThemeModel,
         ) = EnvActionsControlPlanThemeModel(
             id = EnvActionsThemePk(
-                envActionId = envAction.id!!,
-                themeId = controlPlanTheme.id!!,
+                envActionId = envAction.id,
+                themeId = controlPlanTheme.id,
             ),
             envAction = envAction,
             controlPlanTheme = controlPlanTheme,

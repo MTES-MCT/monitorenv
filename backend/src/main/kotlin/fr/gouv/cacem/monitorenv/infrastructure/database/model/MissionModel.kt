@@ -36,7 +36,7 @@ import java.time.ZoneOffset.UTC
     name = "MissionModel.fullLoad",
     attributeNodes = [
         NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
-        NamedAttributeNode("attachedReportings"),
+        NamedAttributeNode("attachedReportings", subgraph = "subgraph.attachedReportings"),
         NamedAttributeNode("controlResources", subgraph = "subgraph.missionControlResources"),
         NamedAttributeNode("controlUnits", subgraph = "subgraph.missionControlUnits"),
     ],
@@ -45,19 +45,63 @@ import java.time.ZoneOffset.UTC
             name = "subgraph.envActions",
             attributeNodes = [
                 NamedAttributeNode("controlPlanThemes"),
+                NamedAttributeNode("controlPlanSubThemes", subgraph = "subgraph.linkedControlPlanSubThemes"),
+                NamedAttributeNode("controlPlanTags", subgraph = "subgraph.linkedControlPlanTags"),
                 NamedAttributeNode("attachedReporting"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.attachedReportings",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanSubThemes", subgraph = "subgraph.linkedControlPlanSubThemes"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanSubThemes",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanSubTheme", subgraph = "subgraph.controlPlanSubThemes"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanSubThemes",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanTheme"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanTags",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanTag", subgraph = "subgraph.controlPlanTags"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanTags",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanTheme"),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.missionControlResources",
             attributeNodes = [
-                NamedAttributeNode("resource"),
+                NamedAttributeNode("resource", subgraph = "subgraph.controlResource"),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.missionControlUnits",
             attributeNodes = [
-                NamedAttributeNode("unit"),
+                NamedAttributeNode("unit", subgraph = "subgraph.controlUnit"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlUnit",
+            attributeNodes = [
+                NamedAttributeNode("administration"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlResource",
+            attributeNodes = [
+                NamedAttributeNode("station"),
             ],
         ),
     ],

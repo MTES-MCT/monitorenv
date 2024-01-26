@@ -25,6 +25,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
@@ -116,7 +117,8 @@ class ReportingModel(
         mappedBy = "reporting",
     )
     @Fetch(value = FetchMode.SUBSELECT)
-    val controlPlanSubThemes: MutableList<ReportingsControlPlanSubThemeModel>? = ArrayList(),
+    @OrderBy("orderIndex")
+    val controlPlanSubThemes: MutableSet<ReportingsControlPlanSubThemeModel>? = LinkedHashSet(),
 
     @Column(name = "action_taken")
     val actionTaken: String? = null,
