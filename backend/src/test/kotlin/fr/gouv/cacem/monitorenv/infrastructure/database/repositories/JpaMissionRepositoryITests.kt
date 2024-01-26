@@ -1,5 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
+import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
@@ -11,22 +13,35 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselSizeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
+@ExtendWith(SpringExtension::class)
+@Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
+    @Autowired
+    private val customQueryCountListener: CustomQueryCountListener? = null
+
     @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
 
     @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
@@ -34,10 +49,34 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
 
+    @BeforeEach
+    fun setUp() {
+        customQueryCountListener!!.resetQueryCount() // Reset the count before each test
+    }
+
     private val polygon = WKTReader().read(
         "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
     ) as MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
+
+    @Test
+    @Transactional
+    fun `findAll Should return all missions when only required startedAfter is set to a very old date`() {
+        // When
+        val missions =
+            jpaMissionRepository.findAllFullMissions(
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                missionTypes = null,
+                missionStatuses = null,
+                seaFronts = null,
+                pageNumber = null,
+                pageSize = null,
+            )
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+        assertThat(missions).hasSize(54)
+    }
 
     @Test
     @Transactional
@@ -73,24 +112,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
-    fun `findAll Should return all missions when only required startedAfter is set to a very old date`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                missionStatuses = null,
-                seaFronts = null,
-                pageNumber = null,
-                pageSize = null,
-            )
-        assertThat(missions).hasSize(54)
-    }
-
-    @Test
-    @Transactional
     fun `findAll Should return filtered missions when startedAfter & startedBefore are set`() {
         // When
         val missions =
@@ -107,14 +128,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when missionTypes is set`() {
         // When
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
-                missionTypes = listOf("SEA"),
+                missionTypes = listOf(MissionTypeEnum.SEA),
                 missionStatuses = null,
                 seaFronts = null,
                 pageNumber = null,
@@ -124,14 +144,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when multiple missionTypes are set`() {
         // When
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
-                missionTypes = listOf("SEA", "LAND"),
+                missionTypes = listOf(MissionTypeEnum.SEA, MissionTypeEnum.LAND),
                 missionStatuses = null,
                 seaFronts = null,
                 pageNumber = null,
@@ -141,7 +160,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN`() {
         // When
         val missions =
@@ -158,7 +176,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN and NAMO`() {
         // When
         val missions =
@@ -175,7 +192,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when status is set to UPCOMING`() {
         // When
         val missions =
@@ -192,7 +208,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when status is set to PENDING`() {
         // When
         val missions =
@@ -209,7 +224,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when status is set to ENDED`() {
         // When
         val missions =
@@ -226,7 +240,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when status is set to CLOSED`() {
         // When
         val missions =
@@ -243,7 +256,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll Should return filtered missions when status is set to CLOSED or UPCOMING`() {
         // When
         val missions =
@@ -260,7 +272,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll with pagenumber and pagesize Should return subset of missions`() {
         // When
         val missions =
@@ -277,30 +288,28 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findAll should filter missions based on MissionSources`() {
         // When
         val missions =
             jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                missionStatuses = null,
-                seaFronts = null,
                 missionSources =
                 listOf(
                     MissionSourceEnum.MONITORFISH,
                     MissionSourceEnum.POSEIDON_CACEM,
                     MissionSourceEnum.POSEIDON_CNSP,
                 ),
+                missionStatuses = null,
+                missionTypes = null,
                 pageNumber = null,
                 pageSize = null,
+                seaFronts = null,
+                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
             )
         assertThat(missions).hasSize(3)
     }
 
     @Test
-    @Transactional
     fun `findByControlUnitId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
@@ -308,7 +317,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findByControlUnitResourceId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitResourceId(8)
 
@@ -316,7 +324,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findById Should return specified mission`() {
         // When
         val firstMission =
@@ -389,7 +396,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findById Should return specified mission and associated env actions and associated envActionReportingIds`() {
         // When
         val missionDTO = jpaMissionRepository.findFullMissionById(34)
@@ -403,7 +409,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `findByIds() should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByIds(listOf(50, 51, 52))
 
