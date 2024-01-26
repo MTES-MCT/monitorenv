@@ -28,10 +28,12 @@ class JpaControlUnitRepository(
         dbControlUnitRepository.deleteById(controlUnitId)
     }
 
+    @Transactional
     override fun findAll(): List<FullControlUnitDTO> {
         return dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
     }
 
+    @Transactional
     override fun findById(controlUnitId: Int): FullControlUnitDTO {
         return dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
     }

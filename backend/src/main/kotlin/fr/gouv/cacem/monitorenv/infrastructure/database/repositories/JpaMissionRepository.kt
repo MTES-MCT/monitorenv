@@ -31,11 +31,11 @@ class JpaMissionRepository(
         return dbMissionRepository.count()
     }
 
-    @Transactional
     override fun delete(missionId: Int) {
         dbMissionRepository.delete(missionId)
     }
 
+    @Transactional
     override fun findAllFullMissions(
         controlUnitIds: List<Int>?,
         missionSources: List<MissionSourceEnum>?,
@@ -63,22 +63,26 @@ class JpaMissionRepository(
             .map { it.toMissionDTO(mapper) }
     }
 
+    @Transactional
     override fun findByIds(ids: List<Int>): List<MissionEntity> {
         return dbMissionRepository.findNotDeletedByIds(ids).map { it.toMissionEntity(mapper) }
     }
 
+    @Transactional
     override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
         return dbMissionRepository.findByControlUnitId(controlUnitId).map {
             it.toMissionEntity(mapper)
         }
     }
 
+    @Transactional
     override fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity> {
         return dbMissionRepository.findByControlUnitResourceId(controlUnitResourceId).map {
             it.toMissionEntity(mapper)
         }
     }
 
+    @Transactional
     override fun findAll(
         controlUnitIds: List<Int>?,
         missionSources: List<MissionSourceEnum>?,
@@ -108,10 +112,12 @@ class JpaMissionRepository(
         return missions.map { it.toMissionEntity(mapper) }
     }
 
+    @Transactional
     override fun findFullMissionById(missionId: Int): MissionDTO {
         return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
     }
 
+    @Transactional
     override fun findById(missionId: Int): MissionEntity {
         return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
     }
