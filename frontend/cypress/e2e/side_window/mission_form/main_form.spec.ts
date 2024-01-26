@@ -105,7 +105,8 @@ context('Side Window > Mission Form > Main Form', () => {
     visitSideWindow('false')
 
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
-    cy.wait(400)
+    cy.wait('@getMissions')
+    cy.wait(400) // a first render with 0 missions is likely to happen
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
@@ -219,7 +220,8 @@ context('Side Window > Mission Form > Main Form', () => {
     // Given
     visitSideWindow()
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
-    cy.wait(400)
+    cy.wait('@getMissions')
+    cy.wait(400) // a first render with 0 missions is likely to happen
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')

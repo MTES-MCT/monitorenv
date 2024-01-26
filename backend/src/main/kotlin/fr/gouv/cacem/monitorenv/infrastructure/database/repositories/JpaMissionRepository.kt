@@ -31,6 +31,7 @@ class JpaMissionRepository(
         return dbMissionRepository.count()
     }
 
+    @Transactional
     override fun delete(missionId: Int) {
         dbMissionRepository.delete(missionId)
     }
