@@ -22,6 +22,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
@@ -105,7 +106,8 @@ class EnvActionModel(
         mappedBy = "envAction",
     )
     @Fetch(FetchMode.SUBSELECT)
-    val controlPlanThemes: MutableList<EnvActionsControlPlanThemeModel>? = ArrayList(),
+    @OrderBy("orderIndex")
+    val controlPlanThemes: MutableSet<EnvActionsControlPlanThemeModel>? = LinkedHashSet(),
 
     @OneToMany(
         fetch = FetchType.EAGER,
@@ -114,7 +116,8 @@ class EnvActionModel(
         mappedBy = "envAction",
     )
     @Fetch(FetchMode.SUBSELECT)
-    val controlPlanSubThemes: MutableList<EnvActionsControlPlanSubThemeModel>? = ArrayList(),
+    @OrderBy("orderIndex")
+    val controlPlanSubThemes: MutableSet<EnvActionsControlPlanSubThemeModel>? = LinkedHashSet(),
 
     @OneToMany(
         fetch = FetchType.EAGER,
@@ -123,7 +126,8 @@ class EnvActionModel(
         mappedBy = "envAction",
     )
     @Fetch(FetchMode.SUBSELECT)
-    val controlPlanTags: MutableList<EnvActionsControlPlanTagModel>? = ArrayList(),
+    @OrderBy("orderIndex")
+    val controlPlanTags: MutableSet<EnvActionsControlPlanTagModel>? = LinkedHashSet(),
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {

@@ -803,12 +803,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `save Should update mission`() {
         // Given
         val infraction =
             InfractionEntity(
-                id = UUID.randomUUID().toString(),
+                id = "a4d8cd64-ee6e-4dba-ae5d-f6a41395b52a",
                 natinf = listOf("53432"),
                 observations = "This is an infraction",
                 registrationNumber = "REGISTRATION NUM",
@@ -823,7 +822,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val controlAction =
             EnvActionControlEntity(
-                id = UUID.randomUUID(),
+                id = UUID.fromString("867af85e-d88d-42cc-ba50-28f302611a81"),
                 observations = "RAS",
                 actionNumberOfControls = 12,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
@@ -832,14 +831,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val surveillanceAction =
             EnvActionSurveillanceEntity(
-                id = UUID.randomUUID(),
+                id = UUID.fromString("325a8c12-7c13-465d-9b42-6aee473d8d3b"),
                 observations = "This is a surveillance action",
             )
         val noteAction =
             EnvActionNoteEntity(
-                id = UUID.randomUUID(),
+                id = UUID.fromString("10cca413-f7e2-4a68-9c14-eea08bde0c29"),
                 observations = "This is a note",
             )
+
+        // list is sorted by id
+        val envActions = listOf(noteAction, surveillanceAction, controlAction)
 
         val missionToUpdate =
             MissionEntity(
@@ -855,7 +857,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isClosed = false,
                 isDeleted = false,
-                envActions = listOf(controlAction, surveillanceAction, noteAction),
+                envActions = envActions,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = false,
@@ -879,12 +881,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     isClosed = false,
                     isDeleted = false,
-                    envActions =
-                    listOf(
-                        controlAction,
-                        surveillanceAction,
-                        noteAction,
-                    ),
+                    envActions = envActions,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,

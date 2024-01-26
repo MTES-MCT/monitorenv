@@ -18,16 +18,22 @@ import java.util.UUID
 @Entity
 @Table(name = "env_actions_control_plan_tags")
 class EnvActionsControlPlanTagModel(
-    @EmbeddedId val id: EnvActionsTagPk,
+    @EmbeddedId
+    val id: EnvActionsTagPk,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("envActionId")
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @MapsId("tagId")
     @JoinColumn(name = "tag_id")
     val controlPlanTag: ControlPlanTagModel? = null,
+
+    @Column(name = "order_index", updatable = false, insertable = false)
+    val orderIndex: Int? = null,
 ) {
     companion object {
         fun fromEnvActionControlPlanTagEntity(

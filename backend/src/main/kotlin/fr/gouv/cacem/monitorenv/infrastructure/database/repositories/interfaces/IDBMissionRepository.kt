@@ -29,9 +29,12 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         SELECT mission
         FROM MissionModel mission
         WHERE
+            mission.isDeleted = false
+            AND
             (:controlUnitIds IS NULL OR EXISTS (SELECT c FROM mission.controlUnits c WHERE c.unit.id IN :controlUnitIds))
             AND
-            ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE) OR (
+            ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE)
+                OR (
                 (:missionTypeAIR = TRUE AND (  CAST(mission.missionTypes as String) like '%AIR%'))
                 OR
                 (:missionTypeLAND = TRUE AND (  CAST(mission.missionTypes as String) like '%LAND%'))
@@ -39,10 +42,10 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                 (:missionTypeSEA = TRUE AND (  CAST(mission.missionTypes as String) like '%SEA%'))
             ))
             AND
-            mission.isDeleted = false
-            AND (
-                mission.startDateTimeUtc >= :startedAfter
-                AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.startDateTimeUtc <= CAST(:startedBefore AS timestamp))
+             (
+                (mission.startDateTimeUtc >= :startedAfter
+                    AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.startDateTimeUtc <= CAST(:startedBefore AS timestamp))
+                )
                 OR (
                     mission.endDateTimeUtc >= :startedAfter
                     AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.endDateTimeUtc <= CAST(:startedBefore AS timestamp))
@@ -95,7 +98,6 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionModel>
-    // missionTypes: List<String>? = emptyList<String>(),
 
     @Query(
         value = """

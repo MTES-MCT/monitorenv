@@ -29,6 +29,9 @@ class EnvActionsControlPlanThemeModel(
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel? = null,
 
+    @Column(name = "order_index", updatable = false, insertable = false)
+    val orderIndex: Int? = null,
+
 ) {
     companion object {
         fun fromEnvActionControlPlanThemeEntity(
