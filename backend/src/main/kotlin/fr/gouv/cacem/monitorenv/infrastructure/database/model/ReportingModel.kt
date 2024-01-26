@@ -27,6 +27,8 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
@@ -113,6 +115,7 @@ class ReportingModel(
         orphanRemoval = true,
         mappedBy = "reporting",
     )
+    @Fetch(value = FetchMode.SUBSELECT)
     val controlPlanSubThemes: MutableList<ReportingsControlPlanSubThemeModel>? = ArrayList(),
 
     @Column(name = "action_taken")

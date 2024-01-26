@@ -35,10 +35,31 @@ import java.time.ZoneOffset.UTC
 @NamedEntityGraph(
     name = "MissionModel.fullLoad",
     attributeNodes = [
-        NamedAttributeNode("envActions"),
+        NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
         NamedAttributeNode("attachedReportings"),
-        NamedAttributeNode("controlResources"),
-        NamedAttributeNode("controlUnits"),
+        NamedAttributeNode("controlResources", subgraph = "subgraph.missionControlResources"),
+        NamedAttributeNode("controlUnits", subgraph = "subgraph.missionControlUnits"),
+    ],
+    subgraphs = [
+        NamedSubgraph(
+            name = "subgraph.envActions",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanThemes"),
+                NamedAttributeNode("attachedReporting"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.missionControlResources",
+            attributeNodes = [
+                NamedAttributeNode("resource"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.missionControlUnits",
+            attributeNodes = [
+                NamedAttributeNode("unit"),
+            ],
+        ),
     ],
 )
 @Table(name = "missions")
