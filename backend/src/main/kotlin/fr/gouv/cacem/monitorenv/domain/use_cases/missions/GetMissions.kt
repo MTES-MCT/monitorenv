@@ -5,6 +5,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
@@ -17,7 +18,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         controlUnits: List<Int>? = null,
         missionStatuses: List<String>? = null,
         missionSources: List<MissionSourceEnum>? = null,
-        missionTypes: List<String>? = null,
+        missionTypes: List<MissionTypeEnum>? = null,
         pageNumber: Int? = null,
         pageSize: Int? = null,
         seaFronts: List<String>? = null,

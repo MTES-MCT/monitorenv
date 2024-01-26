@@ -10,6 +10,8 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.io.Serializable
 import java.util.UUID
 
@@ -21,7 +23,8 @@ class EnvActionsControlPlanTagModel(
     @MapsId("envActionId")
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     @MapsId("tagId")
     @JoinColumn(name = "tag_id")
     val controlPlanTag: ControlPlanTagModel? = null,

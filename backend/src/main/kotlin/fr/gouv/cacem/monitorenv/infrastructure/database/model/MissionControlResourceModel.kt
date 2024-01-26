@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import jakarta.persistence.*
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 
 @Entity
 @Table(name = "missions_control_resources")
@@ -16,6 +18,7 @@ data class MissionControlResourceModel(
     val mission: MissionModel,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "control_resource_id")
     var resource: ControlUnitResourceModel,
 ) {

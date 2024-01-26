@@ -8,6 +8,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
@@ -20,7 +22,8 @@ data class ControlUnitResourceModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
     val controlUnit: ControlUnitModel,
@@ -37,7 +40,7 @@ data class ControlUnitResourceModel(
     @Column(name = "photo")
     val photo: ByteArray? = byteArrayOf(),
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
     @JsonBackReference
     val station: StationModel,

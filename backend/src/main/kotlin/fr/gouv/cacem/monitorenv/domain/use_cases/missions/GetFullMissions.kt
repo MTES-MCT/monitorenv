@@ -4,6 +4,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.slf4j.LoggerFactory
@@ -16,7 +17,7 @@ class GetFullMissions(private val missionRepository: IMissionRepository) {
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
         missionSources: List<MissionSourceEnum>?,
-        missionTypes: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         missionStatuses: List<String>?,
         pageNumber: Int?,
         pageSize: Int?,

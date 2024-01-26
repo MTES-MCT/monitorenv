@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
@@ -38,9 +39,9 @@ class JpaMissionRepository(
     }
 
     override fun findAllFullMissions(
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
+        missionStatuses: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,
@@ -52,10 +53,10 @@ class JpaMissionRepository(
         return dbMissionRepository.findAll(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = convertToPGArray(missionTypes),
-            missionStatuses = convertToPGArray(missionStatuses),
-            missionSources = convertToPGArray(missionSourcesAsStringArray),
-            seaFronts = convertToPGArray(seaFronts),
+            missionTypes = (missionTypes),
+            missionStatuses = (missionStatuses),
+            missionSources = (missionSourcesAsStringArray),
+            seaFronts = (seaFronts),
             pageable = pageable,
         )
             .map { it.toMissionDTO(mapper) }
@@ -78,9 +79,9 @@ class JpaMissionRepository(
     }
 
     override fun findAll(
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
+        missionStatuses: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,
@@ -92,10 +93,10 @@ class JpaMissionRepository(
         return dbMissionRepository.findAll(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = convertToPGArray(missionTypes),
-            missionStatuses = convertToPGArray(missionStatuses),
-            missionSources = convertToPGArray(missionSourcesAsStringArray),
-            seaFronts = convertToPGArray(seaFronts),
+            missionTypes = missionTypes,
+            missionStatuses = (missionStatuses),
+            missionSources = (missionSourcesAsStringArray),
+            seaFronts = (seaFronts),
             pageable = pageable,
         )
             .map { it.toMissionEntity(mapper) }

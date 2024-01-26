@@ -60,12 +60,12 @@ class ReportingModel(
     @Type(PostgreSQLEnumType::class)
     val sourceType: SourceTypeEnum? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semaphore_id", nullable = true)
     @JsonBackReference
     val semaphore: SemaphoreModel? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = true)
     @JsonBackReference
     val controlUnit: ControlUnitModel? = null,
@@ -108,7 +108,7 @@ class ReportingModel(
     val controlPlanTheme: ControlPlanThemeModel? = null,
 
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "reporting",
@@ -139,7 +139,7 @@ class ReportingModel(
     @Column(name = "open_by")
     val openBy: String? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     val mission: MissionModel? = null,

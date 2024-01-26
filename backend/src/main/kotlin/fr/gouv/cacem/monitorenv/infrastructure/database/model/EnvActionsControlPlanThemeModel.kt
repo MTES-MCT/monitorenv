@@ -24,7 +24,7 @@ class EnvActionsControlPlanThemeModel(
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("themeId")
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel? = null,
