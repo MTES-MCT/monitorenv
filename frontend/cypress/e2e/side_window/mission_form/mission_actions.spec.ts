@@ -89,23 +89,25 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
-    cy.get('[id="envActions[1].observations"]').contains('RAS')
+
+    cy.getDataCy('control-form-observations').contains('RAS')
 
     // When
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('[id="envActions[1].observations"]').type('{backspace}{backspace}Obs.', {
+    cy.getDataCy('control-form-observations').type('{backspace}{backspace}Une observation importante.', {
       force: true
     })
 
+    cy.wait(500)
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
       const { observations } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
-      expect(observations).equal('RObs.')
+      expect(observations).equal('RUne observation importante.')
 
       expect(response && response.statusCode).equal(200)
       expect(
         response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')?.observations
-      ).equal('RObs.')
+      ).equal('RUne observation importante.')
     })
   })
 

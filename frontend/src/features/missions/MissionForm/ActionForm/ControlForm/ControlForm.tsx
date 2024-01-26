@@ -303,6 +303,7 @@ export function ControlForm({
           validateOnChange={false}
         />
         <StyledFormikTextareaWithMargin
+          data-cy="control-form-observations"
           isLight
           label="Observations"
           name={`envActions[${envActionIndex}].observations`}

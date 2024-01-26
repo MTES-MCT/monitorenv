@@ -23,7 +23,7 @@
     "test:multi-windows:run": "CI=true jest --config=./config/multi-windows/jest.config.js --detectOpenHandles",
     "test:lint": "eslint ./src",
     "test:lint:fix": "npm run test:lint -- --fix",
-    "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src ./puppeteer",
+    "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src ./puppeteer ./cypress",
     "test:lint:partial:fix": "npm run test:lint:partial -- --fix",
     "test:type": "tsc",
     "test:type:partial": "tsc --project ./tsconfig.partial.json",

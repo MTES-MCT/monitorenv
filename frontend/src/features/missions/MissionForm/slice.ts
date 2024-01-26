@@ -1,9 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
+import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { Mission, NewMission } from '../../../domain/entities/missions'
 import type { AtLeast } from '../../../types'
 
 export type MissionInStateType = {
+  engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   isFormDirty: boolean
   missionForm: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>
 }
@@ -45,6 +47,17 @@ const missionFormsSlice = createSlice({
     },
     setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload
+    },
+    setEngagedControlUnit(state, action: PayloadAction<ControlUnit.EngagedControlUnit | undefined>) {
+      const { activeMissionId } = state
+
+      if (!activeMissionId) {
+        return
+      }
+      const mission = state.missions[activeMissionId]
+      if (mission) {
+        mission.engagedControlUnit = action.payload
+      }
     },
     setIsListeningToEvents(state, action: PayloadAction<boolean>) {
       state.isListeningToEvents = action.payload

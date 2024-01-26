@@ -1,4 +1,4 @@
-import { customDayjs, FormikEffect } from '@mtes-mct/monitor-ui'
+import { customDayjs, FormikEffect, usePrevious } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
@@ -30,15 +30,23 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 
+import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AtLeast } from '../../../types'
 
 type MissionFormProps = {
+  engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   id: number | string
   isNewMission: boolean
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
   setShouldValidateOnChange: (boolean) => void
 }
-export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }: MissionFormProps) {
+export function MissionForm({
+  engagedControlUnit,
+  id,
+  isNewMission,
+  selectedMission,
+  setShouldValidateOnChange
+}: MissionFormProps) {
   const dispatch = useAppDispatch()
   const sideWindow = useAppSelector(state => state.sideWindow)
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
@@ -47,8 +55,10 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const missionEvent = useListenMissionEventUpdatesById(id)
   const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
+  const previousEngagedControlUnit = usePrevious(engagedControlUnit)
+
   const isAutoSaveEnabled = useMemo(() => {
-    if (!MISSION_FORM_AUTO_SAVE_ENABLED) {
+    if (MISSION_FORM_AUTO_SAVE_ENABLED === 'false') {
       return false
     }
 
@@ -60,7 +70,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     return true
   }, [selectedMission])
 
-  const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty || false, [id, selectedMissions])
+  const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty ?? false, [id, selectedMissions])
 
   useSyncFormValuesWithRedux(isAutoSaveEnabled)
   useUpdateSurveillance()
@@ -172,7 +182,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     }
   }
 
-  const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
+  const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave = false) => {
     const errors = await validateForm()
     const isValid = isEmpty(errors)
 
@@ -180,12 +190,25 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
       return
     }
 
-    if (!shouldSaveMission(selectedMission, missionEvent, nextValues)) {
+    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
+      return
+    }
+
+    if (engagedControlUnit) {
       return
     }
 
     dispatch(saveMission(nextValues, false, false))
   }, 250)
+
+  useEffect(() => {
+    if (isNewMission && !engagedControlUnit && previousEngagedControlUnit !== engagedControlUnit) {
+      validateBeforeOnChange(values, true)
+    }
+    // we want to trigger the `validateBeforeOnChange` when engagedControlUnit change
+    // so when user confirm mission creation even if the control unit is engaged
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNewMission, engagedControlUnit])
 
   return (
     <StyledFormContainer>

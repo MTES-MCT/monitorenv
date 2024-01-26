@@ -40,7 +40,13 @@ export const saveMission =
         if (missionIsNewMission) {
           const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionUpdated.id })
           await dispatch(missionFormsActions.deleteSelectedMission(values.id))
-          dispatch(missionFormsActions.setMission({ isFormDirty: false, missionForm: response.data }))
+          dispatch(
+            missionFormsActions.setMission({
+              engagedControlUnit: undefined,
+              isFormDirty: false,
+              missionForm: response.data
+            })
+          )
           await dispatch(missionActions.setSelectedMissionIdOnMap(missionUpdated.id))
           dispatch(sideWindowActions.setCurrentPath(nextPath))
         }

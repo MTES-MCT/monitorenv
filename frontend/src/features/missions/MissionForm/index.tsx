@@ -31,7 +31,7 @@ export function MissionFormWrapper() {
 
     return {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMission?.missionForm, activeMissionId])
+  }, [activeMissionId])
 
   if (!missionValues || missionValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>
@@ -40,7 +40,7 @@ export function MissionFormWrapper() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        key={missionValues?.id}
+        key={missionValues.id}
         enableReinitialize
         initialValues={missionValues}
         onSubmit={noop}
@@ -51,6 +51,7 @@ export function MissionFormWrapper() {
       >
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm
+            engagedControlUnit={selectedMission?.engagedControlUnit ?? undefined}
             id={activeMissionId}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.missionForm}

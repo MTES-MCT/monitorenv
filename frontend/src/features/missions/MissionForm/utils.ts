@@ -5,7 +5,7 @@ import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './sse'
 import type { Mission, NewMission } from '../../../domain/entities/missions'
 
 /**
- * should a Formik `onChange` event trigger trigger `saveMission`.
+ * should a Formik `onChange` event trigger `saveMission`.
  */
 export function shouldSaveMission(
   previousValues: Partial<Mission | NewMission> | undefined,
@@ -44,5 +44,5 @@ export function shouldSaveMission(
 }
 
 function filterActionsFormInternalProperties(values: Partial<Mission | NewMission>) {
-  return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) || []
+  return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) ?? []
 }

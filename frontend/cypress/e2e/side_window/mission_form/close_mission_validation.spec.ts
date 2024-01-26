@@ -1,4 +1,4 @@
-import {customDayjs} from "@mtes-mct/monitor-ui";
+import { customDayjs } from '@mtes-mct/monitor-ui'
 
 context('Side Window > Mission Form > Validation on close', () => {
   beforeEach(() => {
@@ -31,7 +31,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.wait(250)
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.get('.rs-picker-search-bar-input').type('Cross Gris{enter}')
     cy.clickOutside()
     cy.wait(250)
     cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()

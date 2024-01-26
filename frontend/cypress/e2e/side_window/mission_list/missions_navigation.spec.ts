@@ -7,16 +7,18 @@ context('Mission', () => {
     cy.visit(`/side_window`, {
       onBeforeLoad(window) {
         if (!window.env) {
-          Object.defineProperty(window, 'env', { value: {
-              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: false,
-              REACT_APP_CYPRESS_TEST: true
+          Object.defineProperty(window, 'env', {
+            value: {
+              REACT_APP_CYPRESS_TEST: true,
+              REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: 'false'
             }
           })
 
           return
         }
 
-        window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = false
+        // eslint-disable-next-line no-param-reassign
+        window.env.REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED = 'false'
       }
     })
 
