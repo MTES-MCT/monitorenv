@@ -17,7 +17,7 @@ export function useGetControlPlansByYear({
 
   const themesByYearAsOptions: Array<Option<number>> = useMemo(
     () =>
-      Object.values(data?.themes || {})
+      Object.values(data?.themes ?? {})
         .map(({ id, theme }) => ({
           label: theme,
           value: id
@@ -28,7 +28,7 @@ export function useGetControlPlansByYear({
 
   const subThemesByYearAsOptions: Array<Option<number>> = useMemo(
     () =>
-      Object.values(data?.subThemes || {})
+      Object.values(data?.subThemes ?? {})
         ?.filter(({ themeId }) => themeId === selectedTheme)
         .map(({ id, subTheme }) => ({ label: subTheme, value: id }))
         .sort(sortControlPlans) || [],
@@ -39,14 +39,14 @@ export function useGetControlPlansByYear({
     () =>
       sortBy(
         'label',
-        Object.values(data?.tags || {})
+        Object.values(data?.tags ?? {})
           ?.filter(({ themeId }) => themeId === selectedTheme)
           .map(({ id, tag }) => ({ label: tag, value: id }))
       ) || [],
     [data?.tags, selectedTheme]
   )
 
-  const themesByYear = useMemo(() => data?.themes || {}, [data?.themes])
+  const themesByYear = useMemo(() => data?.themes ?? {}, [data?.themes])
 
   return {
     isError,

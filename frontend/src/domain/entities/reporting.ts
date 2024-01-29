@@ -32,6 +32,7 @@ export type Reporting = {
   themeId?: number
   validityTime?: number
   vehicleType?: string
+  withVHFAnswer?: boolean | undefined
 }
 
 export type ReportingDetailed = Reporting & {
@@ -128,6 +129,8 @@ export enum AttachToMissionFilterLabels {
   UNATTACHED = 'Non liés'
 }
 
+export const INDIVIDUAL_ANCHORING_THEME_ID = 100 // for 2024
+
 export const getReportingStatus = ({
   createdAt,
   isArchived,
@@ -152,7 +155,6 @@ export const getReportingStatus = ({
     return ReportingStatusEnum.OBSERVATION
   }
   if (reportType === ReportingTypeEnum.INFRACTION_SUSPICION) {
-    // TODO handle attached to mission
     return ReportingStatusEnum.INFRACTION_SUSPICION
   }
 

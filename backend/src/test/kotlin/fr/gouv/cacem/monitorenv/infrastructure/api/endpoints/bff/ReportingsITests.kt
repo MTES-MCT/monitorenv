@@ -91,6 +91,7 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
+                    withVHFAnswer = null,
                 ),
                 semaphore =
                 SemaphoreEntity(

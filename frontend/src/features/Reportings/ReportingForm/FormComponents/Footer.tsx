@@ -22,8 +22,8 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
   const reportingStatus = getReportingStatus(values)
 
   const handleReopen = () => {
-    const endOfValidity = getLocalizedDayjs(values?.createdAt || customDayjs().toISOString()).add(
-      values?.validityTime || 0,
+    const endOfValidity = getLocalizedDayjs(values?.createdAt ?? customDayjs().toISOString()).add(
+      values?.validityTime ?? 0,
       'hour'
     )
     const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
@@ -39,7 +39,7 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
         if (!activeReportingId || !reportings || !reportings[activeReportingId]) {
           return
         }
-        dispatch(reopenReporting({ ...values, isArchived: false }, reportingContext || ReportingContext.MAP))
+        dispatch(reopenReporting({ ...values, isArchived: false }, reportingContext ?? ReportingContext.MAP))
 
         return
       }
@@ -78,6 +78,7 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
         color={THEME.color.maximumRed}
         Icon={Icon.Delete}
         onClick={onDelete}
+        title="Supprimer le signalement"
       />
 
       <div>
