@@ -17,14 +17,18 @@ class JpaControlUnitContactRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
 ) : IControlUnitContactRepository {
+
+    @Transactional
     override fun deleteById(controlUnitContactId: Int) {
         dbControlUnitContactRepository.deleteById(controlUnitContactId)
     }
 
+    @Transactional
     override fun findAll(): List<FullControlUnitContactDTO> {
         return dbControlUnitContactRepository.findAll().map { it.toFullControlUnitContact() }
     }
 
+    @Transactional
     override fun findById(controlUnitContactId: Int): FullControlUnitContactDTO {
         return dbControlUnitContactRepository.findById(controlUnitContactId).get().toFullControlUnitContact()
     }

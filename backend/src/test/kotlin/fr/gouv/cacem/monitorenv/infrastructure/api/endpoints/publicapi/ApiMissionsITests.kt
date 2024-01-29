@@ -149,7 +149,7 @@ class ApiMissionsITests {
                 missionTypes = any(),
                 missionStatuses = any(),
                 seaFronts = any(),
-                controlUnits = any(),
+                controlUnitIds = any(),
                 pageNumber = any(),
                 pageSize = any(),
             ),

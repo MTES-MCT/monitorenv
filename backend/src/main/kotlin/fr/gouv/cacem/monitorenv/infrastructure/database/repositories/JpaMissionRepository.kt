@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
@@ -13,7 +14,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -32,85 +32,98 @@ class JpaMissionRepository(
     }
 
     @Transactional
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun delete(missionId: Int) {
         dbMissionRepository.delete(missionId)
     }
 
+    @Transactional
     override fun findAllFullMissions(
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
+        controlUnitIds: List<Int>?,
         missionSources: List<MissionSourceEnum>?,
+        missionStatuses: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionDTO> {
-        val missionSourcesAsStringArray = missionSources?.map { it.name }
         val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
         return dbMissionRepository.findAll(
+            controlUnitIds = controlUnitIds,
+            missionSources = missionSources,
+            missionStatuses = (missionStatuses),
+            missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
+            missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
+            missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
+            pageable = pageable,
+            seaFronts = seaFronts,
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = convertToPGArray(missionTypes),
-            missionStatuses = convertToPGArray(missionStatuses),
-            missionSources = convertToPGArray(missionSourcesAsStringArray),
-            seaFronts = convertToPGArray(seaFronts),
-            pageable = pageable,
         )
             .map { it.toMissionDTO(mapper) }
     }
 
+    @Transactional
     override fun findByIds(ids: List<Int>): List<MissionEntity> {
         return dbMissionRepository.findNotDeletedByIds(ids).map { it.toMissionEntity(mapper) }
     }
 
+    @Transactional
     override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
         return dbMissionRepository.findByControlUnitId(controlUnitId).map {
             it.toMissionEntity(mapper)
         }
     }
 
+    @Transactional
     override fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity> {
         return dbMissionRepository.findByControlUnitResourceId(controlUnitResourceId).map {
             it.toMissionEntity(mapper)
         }
     }
 
+    @Transactional
     override fun findAll(
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
+        controlUnitIds: List<Int>?,
         missionSources: List<MissionSourceEnum>?,
+        missionStatuses: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionEntity> {
-        val missionSourcesAsStringArray = missionSources?.map { it.name }
         val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
-        return dbMissionRepository.findAll(
+
+        val missions = dbMissionRepository.findAll(
+            controlUnitIds = controlUnitIds,
+            missionSources = missionSources,
+            missionStatuses = (missionStatuses),
+            missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
+            missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
+            missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
+            pageable = pageable,
+            seaFronts = seaFronts,
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = convertToPGArray(missionTypes),
-            missionStatuses = convertToPGArray(missionStatuses),
-            missionSources = convertToPGArray(missionSourcesAsStringArray),
-            seaFronts = convertToPGArray(seaFronts),
-            pageable = pageable,
         )
-            .map { it.toMissionEntity(mapper) }
+
+        return missions.map { it.toMissionEntity(mapper) }
     }
 
+    @Transactional
     override fun findFullMissionById(missionId: Int): MissionDTO {
         return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
     }
 
+    @Transactional
     override fun findById(missionId: Int): MissionEntity {
         return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
     }
 
     @Transactional
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(mission: MissionEntity): MissionDTO {
         // Extract all control units resources unique control unit resource IDs
         val uniqueControlUnitResourceIds =
@@ -167,9 +180,5 @@ class JpaMissionRepository(
                 mapper = mapper,
             )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
-    }
-
-    private fun convertToPGArray(array: List<String>?): String {
-        return array?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: "{}"
     }
 }

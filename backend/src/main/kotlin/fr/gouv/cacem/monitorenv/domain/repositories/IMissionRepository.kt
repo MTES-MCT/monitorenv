@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import java.time.Instant
 
@@ -15,9 +16,10 @@ interface IMissionRepository {
     fun findById(missionId: Int): MissionEntity
 
     fun findAllFullMissions(
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
+        controlUnitIds: List<Int>? = null,
         missionSources: List<MissionSourceEnum>? = null,
+        missionStatuses: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,
@@ -26,9 +28,10 @@ interface IMissionRepository {
     ): List<MissionDTO>
 
     fun findAll(
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
+        controlUnitIds: List<Int>? = null,
         missionSources: List<MissionSourceEnum>? = null,
+        missionStatuses: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,

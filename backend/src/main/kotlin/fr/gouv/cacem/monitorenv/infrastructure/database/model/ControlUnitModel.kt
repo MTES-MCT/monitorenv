@@ -6,11 +6,18 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import jakarta.persistence.*
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
 @Entity
+@Cache(
+    usage = CacheConcurrencyStrategy.READ_WRITE,
+)
 @Table(name = "control_units")
 data class ControlUnitModel(
     @Id
@@ -26,12 +33,14 @@ data class ControlUnitModel(
     @Column(name = "area_note")
     val areaNote: String? = null,
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "controlUnit")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "controlUnit")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)

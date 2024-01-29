@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository
 
 @DynamicUpdate
 interface IDBAdministrationRepository : CrudRepository<AdministrationModel, Int> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value = """
         UPDATE administrations

@@ -1,5 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
+import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
@@ -11,22 +13,35 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselSizeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
+@ExtendWith(SpringExtension::class)
+@Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
+    @Autowired
+    private val customQueryCountListener: CustomQueryCountListener? = null
+
     @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
 
     @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
@@ -34,10 +49,54 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
 
+    @BeforeEach
+    fun setUp() {
+        customQueryCountListener!!.resetQueryCount() // Reset the count before each test
+    }
+
     private val polygon = WKTReader().read(
         "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
     ) as MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
+
+    @Test
+    @Transactional
+    fun `findAll Should return all missions when only required startedAfter is set to a very old date`() {
+        // When
+        val missions =
+            jpaMissionRepository.findAllFullMissions(
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                missionTypes = null,
+                missionStatuses = null,
+                seaFronts = null,
+                pageNumber = null,
+                pageSize = null,
+            )
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+        assertThat(missions).hasSize(54)
+    }
+
+    @Test
+    @Transactional
+    fun `findAll Should return missions when filered by controlUnit`() {
+        // When
+        val missions =
+            jpaMissionRepository.findAllFullMissions(
+                controlUnitIds = listOf(10002, 10018),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                missionTypes = null,
+                missionStatuses = null,
+                seaFronts = null,
+                pageNumber = null,
+                pageSize = null,
+            )
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+        assertThat(missions).hasSize(27)
+    }
 
     @Test
     @Transactional
@@ -56,9 +115,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(missionsList).hasSize(21)
 
         // When
+        customQueryCountListener!!.resetQueryCount()
         jpaMissionRepository.delete(3)
 
         // Then
+        customQueryCountListener!!.resetQueryCount()
         val nextMissionList =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
@@ -70,23 +131,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(nextMissionList).hasSize(20)
-    }
-
-    @Test
-    @Transactional
-    fun `findAll Should return all missions when only required startedAfter is set to a very old date`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                missionStatuses = null,
-                seaFronts = null,
-                pageNumber = null,
-                pageSize = null,
-            )
-        assertThat(missions).hasSize(54)
     }
 
     @Test
@@ -104,6 +148,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(21)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -114,30 +161,44 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
-                missionTypes = listOf("SEA"),
+                missionTypes = listOf(MissionTypeEnum.SEA),
                 missionStatuses = null,
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
             )
+        println(missions)
         assertThat(missions).hasSize(22)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
     @Transactional
     fun `findAll Should return filtered missions when multiple missionTypes are set`() {
         // When
+
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
-                missionTypes = listOf("SEA", "LAND"),
+                missionTypes = listOf(MissionTypeEnum.SEA, MissionTypeEnum.LAND),
                 missionStatuses = null,
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
             )
+        // Then
+        // MissionTypes are hardcoded in query. If you add a new mission type, you need to update the query
+        assertThat(MissionTypeEnum.values().size).isEqualTo(3)
+        assertThat(MissionTypeEnum.SEA.name).isEqualTo("SEA")
+        assertThat(MissionTypeEnum.LAND.name).isEqualTo("LAND")
+        assertThat(MissionTypeEnum.AIR.name).isEqualTo("AIR")
         assertThat(missions).hasSize(45)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -154,6 +215,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
+        // Then
         assertThat(missions).hasSize(9)
     }
 
@@ -223,6 +285,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(15)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -240,6 +305,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(18)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -257,6 +325,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         assertThat(missions).hasSize(25)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -274,6 +345,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = 10,
             )
         assertThat(missions).hasSize(10)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -282,21 +356,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // When
         val missions =
             jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                missionStatuses = null,
-                seaFronts = null,
                 missionSources =
                 listOf(
                     MissionSourceEnum.MONITORFISH,
                     MissionSourceEnum.POSEIDON_CACEM,
                     MissionSourceEnum.POSEIDON_CNSP,
                 ),
+                missionStatuses = null,
+                missionTypes = null,
                 pageNumber = null,
                 pageSize = null,
+                seaFronts = null,
+                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
             )
         assertThat(missions).hasSize(3)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -305,6 +382,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
         assertThat(foundMissions).hasSize(17)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -313,6 +393,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val foundMissions = jpaMissionRepository.findByControlUnitResourceId(8)
 
         assertThat(foundMissions).hasSize(4)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -386,6 +469,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 ),
             ),
         ).isEqualTo(firstMission)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -400,6 +486,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
             .isEqualTo(UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807"))
         assertThat(missionDTO.envActionsAttachedToReportingIds?.get(0)?.second).isEqualTo(listOf(6))
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -408,6 +497,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val foundMissions = jpaMissionRepository.findByIds(listOf(50, 51, 52))
 
         assertThat(foundMissions).hasSize(3)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -757,7 +849,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Given
         val infraction =
             InfractionEntity(
-                id = UUID.randomUUID().toString(),
+                id = "a4d8cd64-ee6e-4dba-ae5d-f6a41395b52a",
                 natinf = listOf("53432"),
                 observations = "This is an infraction",
                 registrationNumber = "REGISTRATION NUM",
@@ -772,7 +864,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val controlAction =
             EnvActionControlEntity(
-                id = UUID.randomUUID(),
+                id = UUID.fromString("867af85e-d88d-42cc-ba50-28f302611a81"),
                 observations = "RAS",
                 actionNumberOfControls = 12,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
@@ -781,14 +873,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val surveillanceAction =
             EnvActionSurveillanceEntity(
-                id = UUID.randomUUID(),
+                id = UUID.fromString("325a8c12-7c13-465d-9b42-6aee473d8d3b"),
                 observations = "This is a surveillance action",
             )
         val noteAction =
             EnvActionNoteEntity(
-                id = UUID.randomUUID(),
+                id = UUID.fromString("10cca413-f7e2-4a68-9c14-eea08bde0c29"),
                 observations = "This is a note",
             )
+
+        // list is sorted by id
+        val envActions = listOf(noteAction, surveillanceAction, controlAction)
 
         val missionToUpdate =
             MissionEntity(
@@ -804,7 +899,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isClosed = false,
                 isDeleted = false,
-                envActions = listOf(controlAction, surveillanceAction, noteAction),
+                envActions = envActions,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = false,
@@ -828,12 +923,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     isClosed = false,
                     isDeleted = false,
-                    envActions =
-                    listOf(
-                        controlAction,
-                        surveillanceAction,
-                        noteAction,
-                    ),
+                    envActions = envActions,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,

@@ -13,6 +13,8 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 
 @Entity
 @Table(name = "control_plan_tags")
@@ -24,10 +26,14 @@ class ControlPlanTagModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     val id: Int,
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel,
-    @Column(name = "tag") val tag: String,
+
+    @Column(name = "tag")
+    val tag: String,
 ) {
     fun toControlPlanTagEntity() =
         ControlPlanTagEntity(

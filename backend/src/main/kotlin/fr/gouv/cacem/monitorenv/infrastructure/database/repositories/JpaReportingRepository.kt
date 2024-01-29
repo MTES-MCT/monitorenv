@@ -58,6 +58,7 @@ class JpaReportingRepository(
         return dbReportingRepository.findById(reportingId).get().toReportingDTO(mapper)
     }
 
+    @Transactional
     override fun findAll(
         pageNumber: Int?,
         pageSize: Int?,
@@ -92,6 +93,7 @@ class JpaReportingRepository(
             .map { it.toReportingDTO(mapper) }
     }
 
+    @Transactional
     override fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity> {
         return dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting() }
     }

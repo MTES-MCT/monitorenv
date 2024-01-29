@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository
 
 @DynamicUpdate
 interface IDBControlUnitResourceRepository : CrudRepository<ControlUnitResourceModel, Int> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value = """
         UPDATE control_unit_resources

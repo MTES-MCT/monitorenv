@@ -25,8 +25,11 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
@@ -60,12 +63,12 @@ class ReportingModel(
     @Type(PostgreSQLEnumType::class)
     val sourceType: SourceTypeEnum? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semaphore_id", nullable = true)
     @JsonBackReference
     val semaphore: SemaphoreModel? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = true)
     @JsonBackReference
     val controlUnit: ControlUnitModel? = null,
@@ -108,12 +111,14 @@ class ReportingModel(
     val controlPlanTheme: ControlPlanThemeModel? = null,
 
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "reporting",
     )
-    val controlPlanSubThemes: MutableList<ReportingsControlPlanSubThemeModel>? = ArrayList(),
+    @Fetch(value = FetchMode.SUBSELECT)
+    @OrderBy("orderIndex")
+    val controlPlanSubThemes: MutableSet<ReportingsControlPlanSubThemeModel>? = LinkedHashSet(),
 
     @Column(name = "action_taken")
     val actionTaken: String? = null,
@@ -139,7 +144,7 @@ class ReportingModel(
     @Column(name = "open_by")
     val openBy: String? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     val mission: MissionModel? = null,

@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitAndMissionSourcesDataOutput
@@ -85,7 +86,7 @@ class Missions(
         missionSources: List<MissionSourceEnum>?,
         @Parameter(description = "Types de mission")
         @RequestParam(name = "missionTypes", required = false)
-        missionTypes: List<String>?,
+        missionTypes: List<MissionTypeEnum>?,
         @Parameter(description = "Statuts de mission")
         @RequestParam(name = "missionStatus", required = false)
         missionStatuses: List<String>?,

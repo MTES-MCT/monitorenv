@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query
 
 @DynamicUpdate
 interface IDBControlUnitRepository : JpaRepository<ControlUnitModel, Int> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value = """
         UPDATE control_units

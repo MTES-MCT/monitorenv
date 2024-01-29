@@ -24,10 +24,13 @@ class EnvActionsControlPlanThemeModel(
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("themeId")
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel? = null,
+
+    @Column(name = "order_index", updatable = false, insertable = false)
+    val orderIndex: Int? = null,
 
 ) {
     companion object {
@@ -36,8 +39,8 @@ class EnvActionsControlPlanThemeModel(
             controlPlanTheme: ControlPlanThemeModel,
         ) = EnvActionsControlPlanThemeModel(
             id = EnvActionsThemePk(
-                envActionId = envAction.id!!,
-                themeId = controlPlanTheme.id!!,
+                envActionId = envAction.id,
+                themeId = controlPlanTheme.id,
             ),
             envAction = envAction,
             controlPlanTheme = controlPlanTheme,

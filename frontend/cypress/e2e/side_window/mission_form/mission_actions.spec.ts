@@ -312,20 +312,20 @@ context('Side Window > Mission Form > Mission actions', () => {
       const { envActions } = response && response.body
       expect(envActions.length).equal(2)
 
+      // control
+      const control = envActions.find(a => a.actionType === 'CONTROL')
+      const controlPlans = control.controlPlans[0]
+      expect(controlPlans.themeId).equal(112)
+      expect(controlPlans.subThemeIds.length).equal(1)
+      expect(controlPlans.subThemeIds[0]).equal(173)
+
       // surveillance
-      const surveillance = envActions[0]
+      const surveillance = envActions.find(a => a.actionType === 'SURVEILLANCE')
       const surveillanceControlPlans = surveillance.controlPlans[0]
       expect(surveillanceControlPlans.themeId).equal(105)
       expect(surveillanceControlPlans.subThemeIds.length).equal(2)
       expect(surveillanceControlPlans.subThemeIds[0]).equal(128)
       expect(surveillanceControlPlans.subThemeIds[1]).equal(131)
-
-      // control
-      const control = envActions[1]
-      const controlPlans = control.controlPlans[0]
-      expect(controlPlans.themeId).equal(112)
-      expect(controlPlans.subThemeIds.length).equal(1)
-      expect(controlPlans.subThemeIds[0]).equal(173)
 
       const id = response && response.body.id
       // update mission date to 2023

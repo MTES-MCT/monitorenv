@@ -11,12 +11,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType
+import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.*
@@ -32,6 +32,80 @@ import java.time.ZoneOffset.UTC
     property = "id",
 )
 @Entity
+@NamedEntityGraph(
+    name = "MissionModel.fullLoad",
+    attributeNodes = [
+        NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
+        NamedAttributeNode("attachedReportings", subgraph = "subgraph.attachedReportings"),
+        NamedAttributeNode("controlResources", subgraph = "subgraph.missionControlResources"),
+        NamedAttributeNode("controlUnits", subgraph = "subgraph.missionControlUnits"),
+    ],
+    subgraphs = [
+        NamedSubgraph(
+            name = "subgraph.envActions",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanThemes"),
+                NamedAttributeNode("controlPlanSubThemes", subgraph = "subgraph.linkedControlPlanSubThemes"),
+                NamedAttributeNode("controlPlanTags", subgraph = "subgraph.linkedControlPlanTags"),
+                NamedAttributeNode("attachedReporting"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.attachedReportings",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanSubThemes", subgraph = "subgraph.linkedControlPlanSubThemes"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanSubThemes",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanSubTheme", subgraph = "subgraph.controlPlanSubThemes"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanSubThemes",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanTheme"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanTags",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanTag", subgraph = "subgraph.controlPlanTags"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanTags",
+            attributeNodes = [
+                NamedAttributeNode("controlPlanTheme"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.missionControlResources",
+            attributeNodes = [
+                NamedAttributeNode("resource", subgraph = "subgraph.controlResource"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.missionControlUnits",
+            attributeNodes = [
+                NamedAttributeNode("unit", subgraph = "subgraph.controlUnit"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlUnit",
+            attributeNodes = [
+                NamedAttributeNode("administration"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlResource",
+            attributeNodes = [
+                NamedAttributeNode("station"),
+            ],
+        ),
+    ],
+)
 @Table(name = "missions")
 class MissionModel(
     @Id
@@ -40,10 +114,11 @@ class MissionModel(
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
 
-    @OneToMany(mappedBy = "mission")
+    @OneToMany(mappedBy = "mission", fetch = FetchType.EAGER)
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val attachedReportings: List<ReportingModel>? = listOf(),
+    @OrderBy("id")
+    val attachedReportings: MutableSet<ReportingModel>? = LinkedHashSet(),
 
     @OneToMany(
         mappedBy = "mission",
@@ -53,7 +128,8 @@ class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
+    @OrderBy("id")
+    val controlResources: MutableSet<MissionControlResourceModel>? = LinkedHashSet(),
 
     @OneToMany(
         mappedBy = "mission",
@@ -63,7 +139,8 @@ class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
+    @OrderBy("id")
+    val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
 
     @Column(name = "closed_by")
     val closedBy: String? = null,
@@ -76,11 +153,12 @@ class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val envActions: MutableList<EnvActionModel>? = ArrayList(),
+    @OrderBy("id")
+    val envActions: MutableSet<EnvActionModel>? = LinkedHashSet(),
 
     @Column(name = "end_datetime_utc")
     val endDateTimeUtc: Instant? = null,
@@ -138,26 +216,26 @@ class MissionModel(
 
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
-        val controlUnits =
-            controlUnits.mapOrElseEmpty { missionControlUnitModel ->
-                val controlUnitResources =
+        val mappedControlUnits =
+            controlUnits?.map { missionControlUnitModel ->
+                val mappedControlUnitResources =
                     controlResources
-                        .mapOrElseEmpty { it.toLegacyControlUnitResource() }
-                        .filter { it.controlUnitId == missionControlUnitModel.unit.id }
+                        ?.map { it.toLegacyControlUnitResource() }
+                        ?.filter { it.controlUnitId == missionControlUnitModel.unit.id }
 
                 missionControlUnitModel
                     .unit
                     .toLegacyControlUnit()
                     .copy(
                         contact = missionControlUnitModel.contact,
-                        resources = controlUnitResources,
+                        resources = mappedControlUnitResources?.toList() ?: emptyList(),
                     )
             }
 
         return MissionEntity(
             id = id,
             closedBy = closedBy,
-            controlUnits = controlUnits,
+            controlUnits = mappedControlUnits ?: emptyList(),
             endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             createdAtUtc = createdAtUtc?.atZone(UTC),
             updatedAtUtc = updatedAtUtc?.atZone(UTC),

@@ -1,8 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -10,7 +12,7 @@ import java.time.Instant
 
 @DynamicUpdate
 interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value = """
         UPDATE missions
@@ -21,63 +23,80 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     )
     fun delete(id: Int)
 
-    // see https://github.com/spring-projects/spring-data-jpa/issues/2491
-    // and https://stackoverflow.com/questions/55169797/pass-liststring-into-postgres-function-as-parameter
-    // for ugly casting of passed parameters
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
-        value = """
-        SELECT *
-        FROM missions
+        """
+        SELECT mission
+        FROM MissionModel mission
         WHERE
-            deleted IS FALSE
-            AND (
-                start_datetime_utc >= CAST(CAST(:startedAfter AS text) AS timestamp)
-                AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR start_datetime_utc <= CAST(CAST(:startedBefore AS text) AS timestamp))
+            mission.isDeleted = false
+            AND
+            (:controlUnitIds IS NULL OR EXISTS (SELECT c FROM mission.controlUnits c WHERE c.unit.id IN :controlUnitIds))
+            AND
+            ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE)
                 OR (
-                    end_datetime_utc >= CAST(CAST(:startedAfter AS text) AS timestamp)
-                    AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR end_datetime_utc <= CAST(CAST(:startedBefore AS text) AS timestamp))
-                    )
+                (:missionTypeAIR = TRUE AND (  CAST(mission.missionTypes as String) like '%AIR%'))
+                OR
+                (:missionTypeLAND = TRUE AND (  CAST(mission.missionTypes as String) like '%LAND%'))
+                OR
+                (:missionTypeSEA = TRUE AND (  CAST(mission.missionTypes as String) like '%SEA%'))
+            ))
+            AND
+             (
+                (mission.startDateTimeUtc >= :startedAfter
+                    AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.startDateTimeUtc <= CAST(:startedBefore AS timestamp))
+                )
+                OR (
+                    mission.endDateTimeUtc >= :startedAfter
+                    AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.endDateTimeUtc <= CAST(:startedBefore AS timestamp))
+                )
             )
-            AND ((:missionTypes) = '{}' OR mission_types && CAST(:missionTypes as text[]))
-            AND ((:seaFronts) = '{}' OR CAST(facade AS text) = ANY(CAST(:seaFronts as text[])))
-            AND ((:missionStatuses) = '{}'
+            AND (:seaFronts IS NULL OR mission.facade IN :seaFronts)
+            AND (
+                :missionStatuses IS NULL
                 OR (
-                    'UPCOMING' = ANY(CAST(:missionStatuses as text[])) AND (
-                    start_datetime_utc >= now()
-                    AND closed = FALSE
+                    'UPCOMING' IN :missionStatuses AND (
+                    mission.startDateTimeUtc >= now()
+                    AND mission.isClosed = FALSE
                     ))
                 OR (
-                    'PENDING' = ANY(CAST(:missionStatuses as text[])) AND (
-                    (end_datetime_utc IS NULL OR end_datetime_utc >= now())
-                    AND (start_datetime_utc <= now())
-                    AND closed = FALSE
+                    'PENDING' IN :missionStatuses AND (
+                    (mission.endDateTimeUtc IS NULL OR mission.endDateTimeUtc >= now())
+                    AND (mission.startDateTimeUtc <= now())
+                    AND mission.isClosed = FALSE
                     )
                 )
                 OR (
-                    'ENDED' = ANY(CAST(:missionStatuses as text[])) AND (
-                    end_datetime_utc < now()
-                    AND closed = FALSE
+                    'ENDED' IN :missionStatuses AND (
+                    mission.endDateTimeUtc < now()
+                    AND mission.isClosed = FALSE
                     )
                 )
                 OR (
-                    'CLOSED' = ANY(CAST(:missionStatuses as text[])) AND (
-                    closed = TRUE
+                    'CLOSED' IN :missionStatuses AND (
+                    mission.isClosed = TRUE
                     )
                 )
             )
-            AND ((:missionSources) = '{}' OR CAST(mission_source AS text) = ANY(CAST(:missionSources as text[])))
-        ORDER BY start_datetime_utc DESC
+            AND (:missionSources IS NULL
+                OR mission.missionSource IN (:missionSources)
+            )
+
+        ORDER BY mission.startDateTimeUtc DESC
+
         """,
-        nativeQuery = true,
     )
     fun findAll(
+        controlUnitIds: List<Int>? = emptyList(),
+        missionStatuses: List<String>? = emptyList(),
+        missionSources: List<MissionSourceEnum>? = emptyList(),
+        missionTypeAIR: Boolean,
+        missionTypeLAND: Boolean,
+        missionTypeSEA: Boolean,
+        pageable: Pageable,
+        seaFronts: List<String>? = emptyList(),
         startedAfter: Instant,
         startedBefore: Instant?,
-        missionTypes: String,
-        missionStatuses: String,
-        missionSources: String,
-        seaFronts: String,
-        pageable: Pageable,
     ): List<MissionModel>
 
     @Query(
@@ -93,9 +112,11 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     )
     fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT mm FROM MissionModel mm JOIN mm.controlUnits mmcu WHERE mmcu.unit.id = :controlUnitId")
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         "SELECT mm FROM MissionModel mm JOIN mm.controlResources mmcr WHERE mmcr.resource.id = :controlUnitResourceId",
     )
