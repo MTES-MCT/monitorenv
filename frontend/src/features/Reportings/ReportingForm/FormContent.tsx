@@ -219,13 +219,7 @@ export function FormContent({
             theme={themeField?.value}
           />
           {values.themeId === INDIVIDUAL_ANCHORING_THEME_ID && (
-            <FormikMultiRadio
-              data-cy="withVHFAnswer-radio"
-              isInline
-              label="Réponse à la VHF"
-              name="withVHFAnswer"
-              options={withVHFAnswerOptions}
-            />
+            <FormikMultiRadio isInline label="Réponse à la VHF" name="withVHFAnswer" options={withVHFAnswerOptions} />
           )}
         </StyledThemeContainer>
 

@@ -143,7 +143,7 @@ export const getReportingStatus = ({
   validityTime?: number | undefined
 }) => {
   const endOfValidity = dayjs(createdAt)
-    .add(validityTime || 0, 'hour')
+    .add(validityTime ?? 0, 'hour')
     .toISOString()
   const timeLeft = dayjs(endOfValidity).diff(dayjs(), 'hour', true)
 

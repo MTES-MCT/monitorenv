@@ -40,7 +40,6 @@ const reportingSlice = createSlice({
       state.activeReportingId = undefined
       if (reportingIdToDelete === state.selectedReportingIdOnMap) {
         state.selectedReportingIdOnMap = undefined
-        state.selectedReportingIdOnMap = undefined
       }
     },
     resetReportingsOnSideWindow(state, action: PayloadAction<Array<ReportingType>>) {
