@@ -17,10 +17,13 @@ import styled from 'styled-components'
 import { ControlUnitWarningMessage } from './ControlUnitWarningMessage'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
+import { useGetEngagedControlUnitsQuery } from '../../../../api/missionsAPI'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { isNewMission } from '../../../../utils/isNewMission'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 import { getMissionPageRoute } from '../../../../utils/routes'
+import { missionFormsActions } from '../slice'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
@@ -31,6 +34,7 @@ type ControlUnitSelectorProps = {
 
 export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: ControlUnitSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
+  const dispatch = useAppDispatch()
 
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
@@ -121,6 +125,12 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
       resourcesHelpers.setValue([])
     }
   }
+
+  const { data: engagedControlUnits = [] } = useGetEngagedControlUnitsQuery(undefined, {
+    ...RTK_DEFAULT_QUERY_OPTIONS,
+    skip: !missionIsNewMission
+  })
+
   const handleUnitChange = value => {
     if (value !== unitField.value) {
       unitHelpers.setValue(value)
@@ -133,6 +143,16 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
 
       unitNameHelpers.setValue(foundUnit.name)
       administrationHelpers.setValue(foundUnit.administration)
+
+      if (missionIsNewMission) {
+        const controlUnitAlreadyEngaged = engagedControlUnits.find(engaged => engaged.controlUnit.id === value)
+        if (controlUnitAlreadyEngaged) {
+          dispatch(missionFormsActions.setEngagedControlUnit(controlUnitAlreadyEngaged))
+
+          return
+        }
+        dispatch(missionFormsActions.setEngagedControlUnit(controlUnitAlreadyEngaged))
+      }
     }
   }
   const handleResourceChange = (nextControlUnitResourceIds: number[] | undefined) => {

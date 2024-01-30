@@ -1,10 +1,8 @@
 import { Accent, Button, Level, Message } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
-import { useGetEngagedControlUnitsQuery } from '../../../../api/missionsAPI'
 import { missionSourceEnum, type NewMission } from '../../../../domain/entities/missions'
 import { cancelCreateAndRedirectToFilteredList } from '../../../../domain/use_cases/missions/cancelCreateAndRedirectToFilteredList'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -21,24 +19,6 @@ export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitInd
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
-
-  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-
-  const engagedControlUnits = useMemo(() => {
-    if (!engagedControlUnitsData) {
-      return []
-    }
-
-    return engagedControlUnitsData
-  }, [engagedControlUnitsData])
-
-  const controlUnitAlreadyEngaged = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
-
-  useEffect(() => {
-    if (controlUnitAlreadyEngaged) {
-      dispatch(missionFormsActions.setEngagedControlUnit(controlUnitAlreadyEngaged))
-    }
-  }, [controlUnitAlreadyEngaged, dispatch])
 
   const message = useMemo(() => {
     if (!engagedControlUnit) {
