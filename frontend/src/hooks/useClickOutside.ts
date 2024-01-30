@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 export const useClickOutsideComponent = ref => {
-  const [clicked, setClicked] = useState(null)
+  const [clicked, setClicked] = useState<{} | null>(null)
 
   useEffect(() => {
     function handleClickOutside(event) {

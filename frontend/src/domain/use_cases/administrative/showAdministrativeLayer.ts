@@ -18,7 +18,8 @@ const setIrretrievableFeaturesEvent = error => ({
 })
 
 export const getAdministrativeVectorLayer = layerId => {
-  const layerDefinition = _.find(_.flatten(administrativeLayers), l => l.code === layerId)
+  // TODO Type these `any`.
+  const layerDefinition: any = _.find(_.flatten(administrativeLayers as any), (l: any) => l.code === layerId)
   const code = layerDefinition?.groupCode || layerDefinition?.code
   const zone = layerDefinition?.groupCode ? layerDefinition?.code : undefined
   const layer = new VectorImageLayer({
@@ -30,6 +31,10 @@ export const getAdministrativeVectorLayer = layerId => {
     },
     source: getAdministrativeVectorSourceBBOXStrategy(code, zone),
     style: getAdministrativeLayersStyle(code),
+    // TODO TS tells this prop doesn't exist, does it?
+    // `updateWhileAnimating` & `updateWhileInteracting` don't exist
+    // => https://github.com/openlayers/openlayers/issues/11250#issuecomment-654150900 (interesting thread by the way)
+    // @ts-ignore
     updateWhileAnimating: true,
     updateWhileInteracting: true
   })
@@ -53,17 +58,21 @@ function getAdministrativeVectorSourceBBOXStrategy(code, subZone) {
       getAdministrativeZoneFromAPI(code, extent, subZone)
         .then(administrativeZone => {
           vectorSource.clear(true)
-          vectorSource.addFeatures(vectorSource.getFormat().readFeatures(administrativeZone))
+          // TODO Type this `any`.
+          vectorSource.addFeatures(vectorSource.getFormat()?.readFeatures(administrativeZone) as any)
         })
         .catch(e => {
-          vectorSource.dispatchEvent(setIrretrievableFeaturesEvent(e))
+          // TODO Type this `any`.
+          vectorSource.dispatchEvent(setIrretrievableFeaturesEvent(e) as any)
           vectorSource.removeLoadedExtent(extent)
         })
     },
     strategy: bboxStrategy
   })
 
-  vectorSource.once(IRRETRIEVABLE_FEATURES_EVENT, event => {
+  // TODO Type these `any` (if possible).
+  vectorSource.once(IRRETRIEVABLE_FEATURES_EVENT as any, (event: any) => {
+    // eslint-disable-next-line no-console
     console.warn(event.error)
   })
 

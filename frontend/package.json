@@ -21,12 +21,9 @@
     "test:e2e": "npm run cypress:run --browser firefox --config-file ./cypress.config.ts --e2e",
     "test:multi-windows:open": "jest --config=./config/multi-windows/jest.config.js --detectOpenHandles",
     "test:multi-windows:run": "CI=true jest --config=./config/multi-windows/jest.config.js --detectOpenHandles",
-    "test:lint": "eslint ./src",
+    "test:lint": "eslint  .",
     "test:lint:fix": "npm run test:lint -- --fix",
-    "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src ./puppeteer ./cypress",
-    "test:lint:partial:fix": "npm run test:lint:partial -- --fix",
     "test:type": "tsc",
-    "test:type:partial": "tsc --project ./tsconfig.partial.json",
     "test:unit": "jest --config=./config/jest.config.js --detectOpenHandles",
     "test:unit:watch": "npm run test:unit -- --watch"
   },
@@ -149,7 +146,7 @@
     "*.{json,md,yaml,yml}": "prettier --write",
     "*.{ts,tsx}": [
       "eslint --fix",
-      "bash -c 'npm run test:type:partial'"
+      "bash -c 'npm run test:type'"
     ]
   },
   "proxy": "http://localhost:8880",

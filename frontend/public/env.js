@@ -1,4 +1,7 @@
+// @ts-ignore
+// eslint-disable-next-line no-restricted-globals
 self.env = {
+  // @ts-ignore
   REACT_APP_CYPRESS_TEST: '__REACT_APP_CYPRESS_TEST__',
   REACT_APP_GEOSERVER_NAMESPACE: '__REACT_APP_GEOSERVER_NAMESPACE__',
   REACT_APP_GEOSERVER_REMOTE_URL: '__REACT_APP_GEOSERVER_REMOTE_URL__',

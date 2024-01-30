@@ -60,7 +60,7 @@ Le navigateur s'ouvre par défaut sur l'url <http://localhost:3000>
 
 ### Linting
 
-Avant de pousser un commit, vérifier le linting avec `npm run test:lint:partial`
+Avant de pousser un commit, vérifier le linting avec `npm run test:lint`
 
 ### Variables d'environnement
 

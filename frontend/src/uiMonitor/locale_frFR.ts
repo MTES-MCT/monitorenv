@@ -20,6 +20,7 @@ export const Calendar = {
   dateLocale: fr_FR.Calendar.dateLocale
 }
 
+// eslint-disable-next-line import/no-default-export
 export default {
   Breadcrumb: {
     expandText: 'Montrer le chemin'

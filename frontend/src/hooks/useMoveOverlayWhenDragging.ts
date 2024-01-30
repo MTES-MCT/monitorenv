@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 const X = 0
 const Y = 1
 
+// TODO Type these parameters.
 export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLineWithThrottle, showed) => {
   useEffect(() => {
     let eventKey
@@ -31,6 +32,8 @@ export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLine
       })
 
       hammer.on('panend', ({ deltaX, deltaY }) => {
+        // TODO Remove this re-assigment.
+        // eslint-disable-next-line no-param-reassign
         currentOffset.current = [currentOffset.current[X] + deltaX, currentOffset.current[Y] + deltaY]
       })
     }

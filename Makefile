@@ -21,7 +21,7 @@ dev-run-front:
 .PHONY: test-front dev-lint-frontend test-back
 
 dev-lint-frontend:
-	cd frontend && npm run test:lint:partial
+	cd frontend && npm run test:lint
 
 test-back: check-clean-archi
 	cd backend && ./gradlew clean test
