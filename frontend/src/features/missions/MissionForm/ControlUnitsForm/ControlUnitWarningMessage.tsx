@@ -1,5 +1,5 @@
 import { Accent, Button, Level, Message } from '@mtes-mct/monitor-ui'
-import { useFormikContext } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -9,10 +9,12 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { missionFormsActions } from '../slice'
 
-export function ControlUnitWarningMessage() {
-  const { values } = useFormikContext<Partial<NewMission>>()
-
+export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitIndex: number }) {
   const dispatch = useAppDispatch()
+
+  const { values } = useFormikContext<Partial<NewMission>>()
+  const [unitField] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
+
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
@@ -54,7 +56,7 @@ export function ControlUnitWarningMessage() {
     dispatch(cancelCreateAndRedirectToFilteredList({ controlUnitId, missionId: values.id }))
   }
 
-  if (!engagedControlUnit) {
+  if (!engagedControlUnit || engagedControlUnit?.controlUnit.id !== unitField.value) {
     return null
   }
 

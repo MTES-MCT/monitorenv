@@ -1,9 +1,14 @@
 import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 
 import { ControlUnitSelector } from './ControlUnitSelector'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { controlUnitFactory } from '../../Missions.helpers'
 
 export function ControlUnitsForm({ form, push, remove }) {
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const engagedControlUnit = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
+  )
   const handleAddControlUnit = () => {
     push(controlUnitFactory())
   }
@@ -27,7 +32,14 @@ export function ControlUnitsForm({ form, push, remove }) {
         </>
       )}
 
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddControlUnit} size={Size.SMALL}>
+      <Button
+        accent={Accent.SECONDARY}
+        data-cy="add-other-control-unit"
+        disabled={!!engagedControlUnit}
+        Icon={Icon.Plus}
+        onClick={handleAddControlUnit}
+        size={Size.SMALL}
+      >
         Ajouter une autre unité
       </Button>
     </div>
