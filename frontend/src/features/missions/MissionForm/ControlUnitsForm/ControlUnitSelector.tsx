@@ -151,7 +151,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
 
           return
         }
-        dispatch(missionFormsActions.setEngagedControlUnit(controlUnitAlreadyEngaged))
+        dispatch(missionFormsActions.setEngagedControlUnit(undefined))
       }
     }
   }
