@@ -17,7 +17,7 @@ def extract_facade_areas() -> pd.DataFrame:
     """
 
     return extract(
-        db_name="monitorfish_local", query_filepath="cross/facade_areas.sql"
+        db_name="monitorfish_local", query_filepath="cross/cnsp/facade_areas.sql"
     )
 
 

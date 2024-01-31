@@ -9,7 +9,7 @@ from src.pipeline.generic_tasks import extract, load
 
 @task(checkpoint=False)
 def extract_3_miles_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/3_miles_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/3_miles_areas.sql")
 
 
 @task(checkpoint=False)
@@ -28,7 +28,7 @@ def load_3_miles_areas(
 
 @task(checkpoint=False)
 def extract_6_miles_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/6_miles_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/6_miles_areas.sql")
 
 
 @task(checkpoint=False)
@@ -47,7 +47,7 @@ def load_6_miles_areas(
 
 @task(checkpoint=False)
 def extract_12_miles_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/12_miles_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/12_miles_areas.sql")
 
 
 @task(checkpoint=False)
@@ -66,7 +66,7 @@ def load_12_miles_areas(
 
 @task(checkpoint=False)
 def extract_eez_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/eez_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/eez_areas.sql")
 
 
 @task(checkpoint=False)
@@ -85,7 +85,7 @@ def load_eez_areas(
 
 @task(checkpoint=False)
 def extract_aem_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/aem_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/aem_areas.sql")
 
 
 @task(checkpoint=False)
@@ -102,7 +102,7 @@ def load_aem_areas(aem_areas: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_departments_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/departments_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/departments_areas.sql")
 
 
 @task(checkpoint=False)
@@ -119,7 +119,7 @@ def load_departments_areas(departments_areas: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_saltwater_limit_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/saltwater_limit_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/saltwater_limit_areas.sql")
 
 
 @task(checkpoint=False)
@@ -136,7 +136,7 @@ def load_saltwater_limit_areas(saltwater_limit_areas: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_transversal_sea_limit_areas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/transversal_sea_limit_areas.sql")
+    return extract("monitorfish_local", "cross/cnsp/transversal_sea_limit_areas.sql")
 
 
 @task(checkpoint=False)
@@ -152,7 +152,7 @@ def load_transversal_sea_limit_areas(transversal_sea_limit_areas: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_territorial_seas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/territorial_seas.sql")
+    return extract("monitorfish_local", "cross/cacem/territorial_seas.sql")
 
 
 @task(checkpoint=False)
@@ -169,7 +169,7 @@ def load_territorial_seas(territorial_seas: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_straight_baseline() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/straight_baseline.sql")
+    return extract("monitorfish_local", "cross/cacem/straight_baseline.sql")
 
 
 @task(checkpoint=False)
