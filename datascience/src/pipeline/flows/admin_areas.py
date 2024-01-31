@@ -117,6 +117,73 @@ def load_departments_areas(departments_areas: pd.DataFrame):
     )
 
 
+@task(checkpoint=False)
+def extract_saltwater_limit_areas() -> pd.DataFrame:
+    return extract("monitorfish_local", "cross/saltwater_limit_areas.sql")
+
+
+@task(checkpoint=False)
+def load_saltwater_limit_areas(saltwater_limit_areas: pd.DataFrame):
+    load(
+        saltwater_limit_areas,
+        table_name="saltwater_limit_areas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+
+@task(checkpoint=False)
+def extract_transversal_sea_limit_areas() -> pd.DataFrame:
+    return extract("monitorfish_local", "cross/transversal_sea_limit_areas.sql")
+
+
+@task(checkpoint=False)
+def load_transversal_sea_limit_areas(transversal_sea_limit_areas: pd.DataFrame):
+    load(
+        transversal_sea_limit_areas,
+        table_name="transversal_sea_limit_areas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+@task(checkpoint=False)
+def extract_territorial_seas() -> pd.DataFrame:
+    return extract("monitorfish_local", "cross/territorial_seas.sql")
+
+
+@task(checkpoint=False)
+def load_territorial_seas(territorial_seas: pd.DataFrame):
+    load(
+        territorial_seas,
+        table_name="territorial_seas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+
+@task(checkpoint=False)
+def extract_straight_baseline() -> pd.DataFrame:
+    return extract("monitorfish_local", "cross/straight_baseline.sql")
+
+
+@task(checkpoint=False)
+def load_straight_baseline(straight_baseline: pd.DataFrame):
+    load(
+        straight_baseline,
+        table_name="straight_baseline",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+
 with Flow("Administrative areas") as flow:
 
     three_miles_areas = extract_3_miles_areas()
@@ -136,5 +203,18 @@ with Flow("Administrative areas") as flow:
 
     departments_areas = extract_departments_areas()
     load_departments_areas(departments_areas)
+
+    saltwater_limit_areas = extract_saltwater_limit_areas()
+    load_saltwater_limit_areas(saltwater_limit_areas)
+
+    transversal_sea_limit_areas = extract_transversal_sea_limit_areas()
+    load_transversal_sea_limit_areas(transversal_sea_limit_areas)
+
+    territorial_seas = extract_territorial_seas()
+    load_territorial_seas(territorial_seas)
+
+    straight_baseline = extract_straight_baseline()
+    load_straight_baseline(straight_baseline)
+
 
 flow.file_name = Path(__file__).name
