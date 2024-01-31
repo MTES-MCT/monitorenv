@@ -1,4 +1,6 @@
 
+DELETE FROM env_actions_control_plan_sub_themes;
+DELETE FROM env_actions_control_plan_themes;
 DELETE FROM env_actions;
 DELETE FROM missions;
 
