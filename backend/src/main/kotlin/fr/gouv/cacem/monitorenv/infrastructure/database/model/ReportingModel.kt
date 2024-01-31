@@ -48,6 +48,7 @@ class ReportingModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
+
     @Generated(event = [EventType.INSERT])
     @Column(
         name = "reporting_id",
@@ -57,43 +58,59 @@ class ReportingModel(
         insertable = false,
     )
     val reportingId: Long? = null,
+
     @Column(name = "source_type", columnDefinition = "reportings_source_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val sourceType: SourceTypeEnum? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semaphore_id", nullable = true)
     @JsonBackReference
     val semaphore: SemaphoreModel? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = true)
     @JsonBackReference
     val controlUnit: ControlUnitModel? = null,
-    @Column(name = "source_name") val sourceName: String? = null,
+
+    @Column(name = "source_name")
+    val sourceName: String? = null,
+
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val targetType: TargetTypeEnum? = null,
+
     @Column(name = "vehicle_type", columnDefinition = "reportings_vehicle_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val vehicleType: VehicleTypeEnum? = null,
+
     @Column(name = "target_details", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
+
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: Geometry? = null,
-    @Column(name = "sea_front") val seaFront: String? = null,
-    @Column(name = "description") val description: String? = null,
+
+    @Column(name = "sea_front")
+    val seaFront: String? = null,
+
+    @Column(name = "description")
+    val description: String? = null,
+
     @Column(name = "report_type", columnDefinition = "reportings_report_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val reportType: ReportingTypeEnum? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     val controlPlanTheme: ControlPlanThemeModel? = null,
+
     @OneToMany(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
@@ -103,21 +120,42 @@ class ReportingModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("orderIndex")
     val controlPlanSubThemes: MutableSet<ReportingsControlPlanSubThemeModel>? = LinkedHashSet(),
-    @Column(name = "action_taken") val actionTaken: String? = null,
-    @Column(name = "is_control_required") val isControlRequired: Boolean? = null,
-    @Column(name = "has_no_unit_available") val hasNoUnitAvailable: Boolean? = null,
-    @Column(name = "created_at") val createdAt: Instant,
-    @Column(name = "validity_time") val validityTime: Int? = null,
-    @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
-    @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
-    @Column(name = "open_by") val openBy: String? = null,
+
+    @Column(name = "action_taken")
+    val actionTaken: String? = null,
+
+    @Column(name = "is_control_required")
+    val isControlRequired: Boolean? = null,
+
+    @Column(name = "has_no_unit_available")
+    val hasNoUnitAvailable: Boolean? = null,
+
+    @Column(name = "created_at")
+    val createdAt: Instant,
+
+    @Column(name = "validity_time")
+    val validityTime: Int? = null,
+
+    @Column(name = "is_archived", nullable = false)
+    val isArchived: Boolean,
+
+    @Column(name = "is_deleted", nullable = false)
+    val isDeleted: Boolean,
+
+    @Column(name = "open_by")
+    val openBy: String? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     val mission: MissionModel? = null,
-    @Column(name = "attached_to_mission_at_utc") val attachedToMissionAtUtc: Instant? = null,
+
+    @Column(name = "attached_to_mission_at_utc")
+    val attachedToMissionAtUtc: Instant? = null,
+
     @Column(name = "detached_from_mission_at_utc")
     val detachedFromMissionAtUtc: Instant? = null,
+
     @JdbcType(UUIDJdbcType::class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -126,7 +164,9 @@ class ReportingModel(
         referencedColumnName = "id",
     )
     val attachedEnvAction: EnvActionModel? = null,
-    @Column(name = "with_vhf_answer") val withVHFAnswer: Boolean? = null,
+
+    @Column(name = "with_vhf_answer")
+    val withVHFAnswer: Boolean? = null,
 ) {
 
     fun toReporting() =
@@ -160,6 +200,7 @@ class ReportingModel(
             attachedEnvActionId = attachedEnvAction?.id,
             withVHFAnswer = withVHFAnswer,
         )
+
     fun toReportingDTO(objectMapper: ObjectMapper) =
         ReportingDTO(
             reporting = this.toReporting(),
