@@ -152,7 +152,7 @@ def load_transversal_sea_limit_areas(transversal_sea_limit_areas: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_territorial_seas() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/cacem/territorial_seas.sql")
+    return extract("cacem_local", "cross/cacem/territorial_seas.sql")
 
 
 @task(checkpoint=False)
@@ -169,7 +169,7 @@ def load_territorial_seas(territorial_seas: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_straight_baseline() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/cacem/straight_baseline.sql")
+    return extract("cacem_local", "cross/cacem/straight_baseline.sql")
 
 
 @task(checkpoint=False)
@@ -185,7 +185,7 @@ def load_straight_baseline(straight_baseline: pd.DataFrame):
 
 @task(checkpoint=False)
 def extract_low_water_line() -> pd.DataFrame:
-    return extract("monitorfish_local", "cross/cacem/low_water_line.sql")
+    return extract("cacem_local", "cross/cacem/low_water_line.sql")
 
 
 @task(checkpoint=False)
