@@ -26,7 +26,26 @@ def test_refresh_analytics_actions(reset_test_data):
 
     with e.begin() as connection:
         connection.execute(
-            text("DELETE FROM env_actions WHERE mission_id = 12")
+            text(
+                (
+                    "WITH env_actions_to_delete AS ("
+                    "   SELECT DISTINCT id "
+                    "FROM env_actions "
+                    "WHERE mission_id = 12"
+                    "), "
+                    "deleted_action_themes AS ("
+                    "   DELETE FROM env_actions_control_plan_themes "
+                    "   WHERE env_action_id IN (SELECT id FROM env_actions_to_delete)"
+                    "), "
+                    "deleted_action_sub_themes AS ("
+                    "   DELETE FROM env_actions_control_plan_sub_themes "
+                    "   WHERE env_action_id IN (SELECT id FROM env_actions_to_delete)"
+                    ") "
+                    "DELETE FROM env_actions WHERE id IN ("
+                    "   SELECT id FROM env_actions_to_delete"
+                    ")"
+                )
+            )
         )
 
     actions_before_refresh = read_query("monitorenv_remote", query)
@@ -65,7 +84,26 @@ def test_refresh_analytics_surveillance_density_map(reset_test_data):
 
     with e.begin() as connection:
         connection.execute(
-            text("DELETE FROM env_actions WHERE mission_id = 12")
+            text(
+                (
+                    "WITH env_actions_to_delete AS ("
+                    "   SELECT DISTINCT id "
+                    "FROM env_actions "
+                    "WHERE mission_id = 12"
+                    "), "
+                    "deleted_action_themes AS ("
+                    "   DELETE FROM env_actions_control_plan_themes "
+                    "   WHERE env_action_id IN (SELECT id FROM env_actions_to_delete)"
+                    "), "
+                    "deleted_action_sub_themes AS ("
+                    "   DELETE FROM env_actions_control_plan_sub_themes "
+                    "   WHERE env_action_id IN (SELECT id FROM env_actions_to_delete)"
+                    ") "
+                    "DELETE FROM env_actions WHERE id IN ("
+                    "   SELECT id FROM env_actions_to_delete"
+                    ")"
+                )
+            )
         )
 
     surveillance_density_map_before_refresh = read_query(

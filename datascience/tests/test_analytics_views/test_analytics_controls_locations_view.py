@@ -22,14 +22,18 @@ def analytics_controls_locations() -> pd.DataFrame:
                 datetime(2022, 11, 17, 13, 59, 51, 108000),
             ],
             "theme": [
-                "",
-                "",
+                "Aucun thème",
+                "Aucun thème",
                 (
                     "Activités et manifestations soumises "
                     "à évaluation d’incidence Natura 2000"
                 ),
             ],
-            "subtheme": ["", "", "Contrôle administratif"],
+            "subtheme": [
+                "Aucun sous-thème",
+                "Aucun sous-thème",
+                "Contrôle administratif",
+            ],
             "facade": ["NAMO", "NAMO", "MED"],
             "lon": [-3.0564, -2.9822, -2.52],
             "lat": [48.1177, 48.1236, 47.16],
