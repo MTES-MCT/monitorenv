@@ -1,4 +1,5 @@
 SELECT 
+  ogc_fid,
   inspireid,
   type,
   descriptio,
