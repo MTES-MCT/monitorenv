@@ -1,7 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendUsageError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.slf4j.Logger
@@ -59,5 +61,11 @@ class ControllersExceptionHandler() {
     @ExceptionHandler(ReportingAlreadyAttachedException::class)
     fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
         return ApiError(ErrorCode.CHILD_ALREADY_ATTACHED.name)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BackendUsageException::class)
+    fun handleBackendUsageError(e: BackendUsageException): BackendUsageError {
+        return BackendUsageError(code = e.code, data = e.data)
     }
 }

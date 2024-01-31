@@ -25,6 +25,7 @@ class Missions(
     private val getFullMissionById: GetFullMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
+
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
@@ -49,7 +50,7 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
     ) {
-        deleteMission.execute(missionId = missionId)
+        deleteMission.execute(missionId = missionId, MissionSourceEnum.MONITORENV)
     }
 
     @GetMapping("/{missionId}")

@@ -11,4 +11,7 @@ enum class ErrorCode {
 
     /** Thrown when attempting to archive an entity linked to non-archived child(ren). */
     UNARCHIVED_CHILD,
+
+    /** Thrown when attempting to delete a mission which have actions created by other applications. */
+    EXISTING_MISSION_ACTION,
 }
