@@ -183,6 +183,22 @@ def load_straight_baseline(straight_baseline: pd.DataFrame):
         how="replace",
     )
 
+@task(checkpoint=False)
+def extract_low_water_line() -> pd.DataFrame:
+    return extract("monitorfish_local", "cross/cacem/low_water_line.sql")
+
+
+@task(checkpoint=False)
+def load_low_water_line(low_water_line: pd.DataFrame):
+    load(
+        low_water_line,
+        table_name="low_water_line",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
 
 with Flow("Administrative areas") as flow:
 
@@ -215,6 +231,9 @@ with Flow("Administrative areas") as flow:
 
     straight_baseline = extract_straight_baseline()
     load_straight_baseline(straight_baseline)
+
+    low_water_line = extract_low_water_line()
+    load_low_water_line(low_water_line)
 
 
 flow.file_name = Path(__file__).name
