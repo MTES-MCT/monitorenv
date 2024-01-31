@@ -47,6 +47,8 @@ class ApiMissionsITests {
 
     @MockBean private lateinit var deleteMission: DeleteMission
 
+    @MockBean private lateinit var canDeleteMission: CanDeleteMission
+
     @MockBean private lateinit var getMissionsByIds: GetMissionsByIds
 
     @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
@@ -288,6 +290,20 @@ class ApiMissionsITests {
             // Then
             .andExpect(status().isOk)
         Mockito.verify(deleteMission).execute(20)
+    }
+
+    @Test
+    fun `canDelete() should check if a mission can be deleted`() {
+        val missionId = 42
+        val source = MissionSourceEnum.MONITORFISH
+        val canDelete = true
+
+        given(canDeleteMission.execute(missionId = missionId, source = source))
+            .willReturn(canDelete)
+
+        mockMvc.perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.value").value(true))
     }
 
     @Test

@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BooleanDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -28,6 +29,7 @@ class Missions(
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
     private val sseMission: SSEMission,
+    private val canDeleteMission: CanDeleteMission,
 ) {
     private val logger = LoggerFactory.getLogger(Missions::class.java)
 
@@ -138,6 +140,19 @@ class Missions(
         missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
+    }
+
+    @GetMapping("/{missionId}/can_delete")
+    @Operation(summary = "Can this mission be deleted?")
+    fun canDelete(
+        @PathParam("Mission ID")
+        @PathVariable(name = "missionId")
+        missionId: Int,
+        @Parameter(description = "Request source")
+        @RequestParam(name = "source")
+        source: MissionSourceEnum,
+    ): BooleanDataOutput {
+        return canDeleteMission.execute(missionId = missionId, source = source).let { BooleanDataOutput.get(it) }
     }
 
     // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity

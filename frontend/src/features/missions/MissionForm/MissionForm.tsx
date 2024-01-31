@@ -10,6 +10,7 @@ import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { CancelEditModal } from './CancelEditModal'
 import { DeleteModal } from './DeleteModal'
+import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useListenMissionEventUpdatesById } from './hooks/useListenMissionEventUpdatesById'
@@ -20,6 +21,7 @@ import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { ReopenModal } from './ReopenModal'
 import { missionFormsActions } from './slice'
 import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
+import { missionsAPI } from '../../../api/missionsAPI'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
@@ -31,6 +33,14 @@ import { sideWindowActions } from '../../SideWindow/slice'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AtLeast } from '../../../types'
+
+enum ModalTypes {
+  ACTIONS = 'ACTIONS',
+  DELETE = 'DELETE',
+  REOPEN = 'REOPEN'
+}
+
+type ModalProps = ModalTypes.ACTIONS | ModalTypes.REOPEN | ModalTypes.DELETE
 
 type MissionFormProps = {
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
@@ -76,8 +86,7 @@ export function MissionForm({
   useUpdateOtherControlTypes()
 
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
-  const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
+  const [openModal, setOpenModal] = useState<ModalProps | undefined>(undefined)
 
   const allowEditMission =
     selectedMission?.missionSource === undefined ||
@@ -101,15 +110,22 @@ export function MissionForm({
 
   const returnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
-    setDeleteModalIsOpen(false)
-    setIsReopenModalOpen(false)
+    setOpenModal(undefined)
   }
   const validateDeleteMission = () => {
     dispatch(deleteMissionAndGoToMissionsList(id))
   }
 
-  const deleteMission = () => {
-    setDeleteModalIsOpen(true)
+  const deleteMission = async () => {
+    const response = dispatch(missionsAPI.endpoints.canDeleteMission.initiate(Number(id)))
+    const canDeleteMission = await response.unwrap()
+
+    if (!canDeleteMission) {
+      setOpenModal(ModalTypes.ACTIONS)
+
+      return
+    }
+    setOpenModal(ModalTypes.DELETE)
   }
 
   const cancelForm = async () => {
@@ -151,7 +167,7 @@ export function MissionForm({
 
       if (isEmpty(errors)) {
         if (isFormDirty) {
-          return setIsReopenModalOpen(true)
+          return setOpenModal(ModalTypes.REOPEN)
         }
 
         return validateReopenMission()
@@ -170,7 +186,7 @@ export function MissionForm({
         type: 'success'
       })
     )
-    setIsReopenModalOpen(false)
+    setOpenModal(undefined)
   }
 
   const confirmFormCancelation = () => {
@@ -219,8 +235,21 @@ export function MissionForm({
         onConfirm={cancelForm}
         open={sideWindow.showConfirmCancelModal && isFormDirty}
       />
-      <DeleteModal onCancel={returnToEdition} onConfirm={validateDeleteMission} open={deleteModalIsOpen} />
-      <ReopenModal onCancel={returnToEdition} onConfirm={validateReopenMission} open={isReopenModalOpen} />
+      <DeleteModal
+        onCancel={returnToEdition}
+        onConfirm={validateDeleteMission}
+        open={openModal === ModalTypes.DELETE}
+      />
+      <ReopenModal
+        onCancel={returnToEdition}
+        onConfirm={validateReopenMission}
+        open={openModal === ModalTypes.REOPEN}
+      />
+      <ExternalActionsModal
+        onCancel={returnToEdition}
+        onConfirm={validateDeleteMission}
+        open={openModal === ModalTypes.ACTIONS}
+      />
       <Wrapper>
         <FirstColumn>
           <GeneralInformationsForm />

@@ -1,12 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.monitorfish.GetFishMissionActionsById
 import org.assertj.core.api.Assertions
@@ -20,7 +18,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
-class DeleteMissionUTests {
+class CanDeleteMissionUTests {
     @MockBean
     private lateinit var missionRepository: IMissionRepository
 
@@ -28,19 +26,7 @@ class DeleteMissionUTests {
     private lateinit var getFishMissionActionsById: GetFishMissionActionsById
 
     @Test
-    fun `execute Should delete mission`() {
-        val missionId = 19
-
-        DeleteMission(
-            missionRepository = missionRepository,
-            getFishMissionActionsById = getFishMissionActionsById,
-        ).execute(missionId)
-
-        verify(missionRepository).delete(missionId)
-    }
-
-    @Test
-    fun `execute Should delete mission when mission haven't Env Actions and request come from Fish`() {
+    fun `execute Should return true when haven't Env Actions and request come from Fish`() {
         val missionId = 57
 
         given(missionRepository.findById(missionId)).willReturn(
@@ -61,16 +47,16 @@ class DeleteMissionUTests {
             ),
         )
 
-        DeleteMission(
+        val result = CanDeleteMission(
             missionRepository = missionRepository,
             getFishMissionActionsById = getFishMissionActionsById,
-        ).execute(missionId)
+        ).execute(missionId, MissionSourceEnum.MONITORFISH)
 
-        verify(missionRepository).delete(missionId)
+        Assertions.assertThat(result).isEqualTo(true)
     }
 
     @Test
-    fun `execute Should throw an exception when mission have Env Actions and request come from Fish`() {
+    fun `execute Should return false when have Env Actions and request come from Fish`() {
         val missionId = 34
 
         val wktReader = WKTReader()
@@ -101,12 +87,11 @@ class DeleteMissionUTests {
             ),
         )
 
-        Assertions.assertThatThrownBy {
-            DeleteMission(
-                missionRepository = missionRepository,
-                getFishMissionActionsById = getFishMissionActionsById,
-            )
-                .execute(missionId, MissionSourceEnum.MONITORFISH)
-        }.isInstanceOf(BackendUsageException::class.java)
+        val result = CanDeleteMission(
+            missionRepository = missionRepository,
+            getFishMissionActionsById = getFishMissionActionsById,
+        ).execute(missionId, MissionSourceEnum.MONITORFISH)
+
+        Assertions.assertThat(result).isEqualTo(false)
     }
 }

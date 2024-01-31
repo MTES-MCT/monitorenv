@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionsDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BooleanDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -25,6 +26,7 @@ class Missions(
     private val getFullMissionById: GetFullMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
+    private val canDeleteMission: CanDeleteMission,
 
 ) {
     @PutMapping("", consumes = ["application/json"])
@@ -51,6 +53,19 @@ class Missions(
         missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId, MissionSourceEnum.MONITORENV)
+    }
+
+    @GetMapping("/{missionId}/can_delete")
+    @Operation(summary = "Can this mission be deleted?")
+    fun canDelete(
+        @PathParam("Mission ID")
+        @PathVariable(name = "missionId")
+        missionId: Int,
+        @Parameter(description = "Request source")
+        @RequestParam(name = "source")
+        source: MissionSourceEnum,
+    ): BooleanDataOutput {
+        return canDeleteMission.execute(missionId = missionId, source = source).let { BooleanDataOutput.get(it) }
     }
 
     @GetMapping("/{missionId}")

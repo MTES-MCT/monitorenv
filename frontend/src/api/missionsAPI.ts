@@ -1,7 +1,8 @@
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
+import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
 
-import type { Mission, MissionData } from '../domain/entities/missions'
+import type { BackendApiBooleanResponse } from './types'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -27,6 +28,13 @@ const getSeaFrontsFilter = seaFronts =>
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
+    canDeleteMission: builder.query<boolean, number>({
+      query: id => ({
+        method: 'GET',
+        url: `/v1/missions/${id}/can_delete?source=${MissionSourceEnum.MONITORENV}`
+      }),
+      transformResponse: (response: BackendApiBooleanResponse) => response.value
+    }),
     createMission: builder.mutation<Mission, MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
         { id: 'LIST', type: 'Missions' },
