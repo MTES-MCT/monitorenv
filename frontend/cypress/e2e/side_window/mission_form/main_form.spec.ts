@@ -10,14 +10,14 @@ const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 context('Side Window > Mission Form > Main Form', () => {
   function visitSideWindow(isAutoSaveEnabled = 'true') {
     cy.visit(`/side_window`, {
-      onBeforeLoad(window) {
+      onBeforeLoad(window: Cypress.AUTWindow & { env: { [key: string]: string } }) {
         Object.defineProperty(window, 'EventSource', { value: EventSource })
         Object.defineProperty(window, 'mockEventSources', { value: sources })
 
         if (!window.env) {
           Object.defineProperty(window, 'env', {
             value: {
-              REACT_APP_CYPRESS_TEST: 'true',
+              REACT_APP_CYPRESS_TEST: true,
               REACT_APP_MISSION_FORM_AUTO_SAVE_ENABLED: isAutoSaveEnabled,
               REACT_APP_MISSION_FORM_AUTO_UPDATE: 'true'
             }
