@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
+import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError

@@ -1,7 +1,9 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.monitorfish.GetFishMissionActionsById
 import org.slf4j.LoggerFactory
@@ -22,10 +24,31 @@ class CanDeleteMission(
         if (source === MissionSourceEnum.MONITORFISH) {
             val envActions = missionRepository.findById(missionId).envActions
 
-            return envActions !== null && envActions.isEmpty()
+            if (envActions !== null && envActions.isEmpty()) {
+                return true
+            }
+
+            val errorSources = object {
+                var sources = listOf(MissionSourceEnum.MONITORENV)
+            }
+
+            throw BackendUsageException(
+                ErrorCode.EXISTING_MISSION_ACTION,
+                errorSources,
+            )
         }
 
         val fishActions = getFishMissionActionsById.execute(missionId)
-        return fishActions.isEmpty()
+        if (fishActions.isEmpty()) {
+            return true
+        }
+
+        val errorSources = object {
+            var sources = listOf(MissionSourceEnum.MONITORFISH)
+        }
+        throw BackendUsageException(
+            ErrorCode.EXISTING_MISSION_ACTION,
+            errorSources,
+        )
     }
 }

@@ -22,6 +22,7 @@ import { ReopenModal } from './ReopenModal'
 import { missionFormsActions } from './slice'
 import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
+import { ApiErrorCode } from '../../../api/types'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
@@ -87,6 +88,7 @@ export function MissionForm({
 
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [openModal, setOpenModal] = useState<ModalProps | undefined>(undefined)
+  const [actionsSources, setActionsSources] = useState<MissionSourceEnum[]>([])
 
   const allowEditMission =
     selectedMission?.missionSource === undefined ||
@@ -117,15 +119,22 @@ export function MissionForm({
   }
 
   const deleteMission = async () => {
-    const response = dispatch(missionsAPI.endpoints.canDeleteMission.initiate(Number(id)))
-    const canDeleteMission = await response.unwrap()
+    try {
+      const response = dispatch(missionsAPI.endpoints.canDeleteMission.initiate(Number(id)))
+      const canDeleteMission = await response.unwrap()
+      if (!canDeleteMission) {
+        setOpenModal(ModalTypes.ACTIONS)
 
-    if (!canDeleteMission) {
-      setOpenModal(ModalTypes.ACTIONS)
+        return
+      }
 
-      return
+      setOpenModal(ModalTypes.DELETE)
+    } catch (error: any) {
+      if (error.code === ApiErrorCode.EXISTING_MISSION_ACTION) {
+        setActionsSources(error.data.sources)
+        setOpenModal(ModalTypes.ACTIONS)
+      }
     }
-    setOpenModal(ModalTypes.DELETE)
   }
 
   const cancelForm = async () => {
@@ -249,6 +258,7 @@ export function MissionForm({
         onCancel={returnToEdition}
         onConfirm={validateDeleteMission}
         open={openModal === ModalTypes.ACTIONS}
+        sources={actionsSources}
       />
       <Wrapper>
         <FirstColumn>

@@ -1,7 +1,18 @@
 import { Accent, Button, Dialog, Icon, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-export function ExternalActionsModal({ onCancel, onConfirm, open }) {
+import { MissionSourceEnum } from '../../../../domain/entities/missions'
+
+type ExternalActionsModalProps = {
+  onCancel: () => void
+  onConfirm: () => void
+  open: boolean
+  sources: MissionSourceEnum[]
+}
+
+export function ExternalActionsModal({ onCancel, onConfirm, open, sources }: ExternalActionsModalProps) {
+  const isCNSP = sources.includes(MissionSourceEnum.MONITORFISH)
+
   return (
     open && (
       <Dialog isAbsolute>
@@ -10,7 +21,7 @@ export function ExternalActionsModal({ onCancel, onConfirm, open }) {
           <Alert>
             <Icon.Attention color={THEME.color.maximumRed} size={30} />
           </Alert>
-          <Text>La mission comporte des évènements ajoutés par le CNSP.</Text>
+          <Text>{`La mission comporte des évènements ajoutés par ${isCNSP ? 'le CNSP' : ''}.`}</Text>
           <Bold>Avez-vous vérifié auprès du centre que la mission pouvait tout de même être supprimée ?</Bold>
         </Dialog.Body>
 

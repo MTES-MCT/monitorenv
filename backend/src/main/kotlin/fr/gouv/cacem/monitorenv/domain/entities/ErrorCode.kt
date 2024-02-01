@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
+package fr.gouv.cacem.monitorenv.domain.entities
 
 // Don't forget to mirror any update here in the frontend enum.
 enum class ErrorCode {
@@ -7,11 +7,10 @@ enum class ErrorCode {
      * attached.
      */
     CHILD_ALREADY_ATTACHED,
-    FOREIGN_KEY_CONSTRAINT,
 
     /** Thrown when attempting to archive an entity linked to non-archived child(ren). */
     UNARCHIVED_CHILD,
 
-    /** Thrown when attempting to delete a mission which have actions created by other applications. */
+    /** Thrown when attempting to delete a mission that has actions created by other applications. */
     EXISTING_MISSION_ACTION,
 }
