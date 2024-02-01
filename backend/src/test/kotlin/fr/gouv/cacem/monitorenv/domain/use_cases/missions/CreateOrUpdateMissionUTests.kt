@@ -112,6 +112,8 @@ class CreateOrUpdateMissionUTests {
             MissionEntity(
                 id = 100,
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                updatedAtUtc = ZonedDateTime.now(),
                 facade = "La Face Ade",
                 hasMissionOrder = false,
                 isClosed = false,
@@ -153,5 +155,62 @@ class CreateOrUpdateMissionUTests {
                 },
             )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
+    }
+
+    @Test
+    fun `should return the stored createAtUtc field When an update returned null createAtUtc`() {
+        // Given
+        val missionToUpdate =
+            MissionEntity(
+                id = 100,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                facade = "Outre-Mer",
+                geom = null,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isClosed = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isDeleted = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+            )
+
+        val returnedSavedMission =
+            MissionEntity(
+                id = 100,
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                createdAtUtc = null,
+                updatedAtUtc = ZonedDateTime.now(),
+                facade = "La Face Ade",
+                hasMissionOrder = false,
+                isClosed = false,
+                isDeleted = false,
+                isGeometryComputedFromControls = false,
+                isUnderJdp = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            )
+
+        given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
+        given(missionRepository.findById(100))
+            .willReturn(missionToUpdate.copy(createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")))
+        given(missionRepository.save(anyOrNull()))
+            .willReturn(MissionDTO(mission = returnedSavedMission))
+
+        // When
+        val createdMission =
+            CreateOrUpdateMission(
+                missionRepository = missionRepository,
+                facadeRepository = facadeAreasRepository,
+                eventPublisher = applicationEventPublisher,
+            )
+                .execute(
+                    missionToUpdate,
+                )
+
+        // Then
+        assertThat(createdMission.createdAtUtc).isEqualTo(ZonedDateTime.parse("2022-01-23T20:29:03Z"))
     }
 }
