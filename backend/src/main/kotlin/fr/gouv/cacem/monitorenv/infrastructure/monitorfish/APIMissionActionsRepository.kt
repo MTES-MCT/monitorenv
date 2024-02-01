@@ -28,8 +28,8 @@ class APIMissionActionsRepository(
 
                 return@runBlocking missionActions
             } catch (e: Exception) {
-                // logger.error("Could not fetch mission actions at $missionActionsUrl", e)
-                logger.error("ERROR:", e)
+                logger.error("Could not fetch mission actions at $missionActionsUrl", e)
+
                 return@runBlocking listOf()
             }
         }
