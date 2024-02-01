@@ -48,7 +48,7 @@ class CreateOrUpdateMission(
          * To fix this, we return the stored `createdAtUtc`
          */
         return savedMission.mission.copy(
-            createdAtUtc = savedMission.mission.createdAtUtc ?: storedMission?.createdAtUtc
+            createdAtUtc = savedMission.mission.createdAtUtc ?: storedMission?.createdAtUtc,
         )
     }
 }
