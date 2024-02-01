@@ -17,7 +17,7 @@ def extract_semaphores() -> pd.DataFrame:
         pd.DataFrame: GeoDataFrame of Semaphores
     """
 
-    return extract(db_name="cacem_local", query_filepath="cross/semaphore.sql")
+    return extract(db_name="cacem_local", query_filepath="cross/cacem/semaphore.sql")
 
 
 @task(checkpoint=False)

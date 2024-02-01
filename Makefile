@@ -149,8 +149,7 @@ init-geoserver:
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME}
-	./infra/init/v0.01_geoserver_init_layers.sh
-	./infra/init/v0.02_geoserver_remove_unused_layers.sh
+	./infra/init/geoserver_init_layers.sh
 
 .PHONY: register-pipeline-flows
 register-pipeline-flows:

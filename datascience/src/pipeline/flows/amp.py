@@ -16,7 +16,7 @@ def extract_local_hashes() -> pd.DataFrame:
         pd.DataFrame: GeoDataFrame of amp ids + row_hash
     """
     return extract(
-        db_name="cacem_local", query_filepath="cross/amp_hashes.sql"
+        db_name="cacem_local", query_filepath="cross/cacem/amp_hashes.sql"
     )
 
 
@@ -102,7 +102,7 @@ def delete(ids_to_delete: set):
 def extract_new_amp(ids_to_upsert: set) -> pd.DataFrame:
     return extract(
         "cacem_local",
-        "cross/amp.sql",
+        "cross/cacem/amp.sql",
         params={"ids": tuple(ids_to_upsert)},
     )
 

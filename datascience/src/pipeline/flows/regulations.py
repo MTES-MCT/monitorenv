@@ -16,7 +16,7 @@ def extract_local_hashes() -> pd.DataFrame:
         pd.DataFrame: GeoDataFrame of regulation ids + row_hash
     """
     return extract(
-        db_name="cacem_local", query_filepath="cross/regulations_hashes.sql"
+        db_name="cacem_local", query_filepath="cross/cacem/regulations_hashes.sql"
     )
 
 
@@ -102,7 +102,7 @@ def delete(ids_to_delete: set):
 def extract_new_regulations(ids_to_update: set) -> pd.DataFrame:
     return extract(
         "cacem_local",
-        "cross/regulations.sql",
+        "cross/cacem/regulations.sql",
         params={"ids": tuple(ids_to_update)},
     )
 

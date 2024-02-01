@@ -39,7 +39,7 @@ export const getAdministrativeLayersStyle = code => {
             font: '12px Marianne',
             overflow: true,
             stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: Layers.FAO.getZoneName(feature)
+            text: Layers.FAO.getZoneName && Layers.FAO.getZoneName(feature)
           })
         })
     case Layers.AEM.code:
