@@ -348,6 +348,8 @@ class MissionModel(
                     observationsCnsp = mission.observationsCnsp,
                     openBy = mission.openBy,
                     startDateTimeUtc = mission.startDateTimeUtc.toInstant(),
+                    createdAtUtc = mission.createdAtUtc?.toInstant(),
+                    updatedAtUtc = mission.updatedAtUtc?.toInstant(),
                 )
 
             mission.envActions?.map {
