@@ -8,10 +8,9 @@ export const administrativeLayers = [
   [Layers.FAO],
   [Layers.AEM],
   [Layers.DEPARTMENTS],
-  [Layers.FACADES],
   [Layers.LOW_WATER_LINE],
+  [Layers.TRANSVERSAL_SEA_LIMIT_AREAS],
   [Layers.SALTWATER_LIMIT_AREAS],
   [Layers.STRAIGHT_BASELINE],
-  [Layers.TERRITORIAL_SEAS],
-  [Layers.TRANSVERSAL_SEA_LIMIT_AREAS]
+  [Layers.TERRITORIAL_SEAS]
 ]

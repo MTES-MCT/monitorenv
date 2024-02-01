@@ -25,7 +25,6 @@ enum MonitorEnvLayers {
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
   EEZ = 'EEZ',
-  FACADES = 'FACADES',
   FAO = 'FAO',
   INTEREST_POINT = 'INTEREST_POINT',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
@@ -133,11 +132,6 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.LOW_WATER_LINE]: {
     code: 'low_water_line',
     name: 'Laisses des basses eaux',
-    type: LayerType.ADMINISTRATIVE
-  },
-  [MonitorEnvLayers.FACADES]: {
-    code: 'facade_areas_subdivided',
-    name: 'Facades',
     type: LayerType.ADMINISTRATIVE
   },
   [MonitorEnvLayers.DEPARTMENTS]: {
