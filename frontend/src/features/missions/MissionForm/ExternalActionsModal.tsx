@@ -15,7 +15,7 @@ export function ExternalActionsModal({ onCancel, onConfirm, open, sources }: Ext
 
   return (
     open && (
-      <Dialog isAbsolute>
+      <Dialog data-cy="external-actions-modal" isAbsolute>
         <Dialog.Title>Demande de suppression de mission</Dialog.Title>
         <Dialog.Body>
           <Alert>
@@ -26,10 +26,10 @@ export function ExternalActionsModal({ onCancel, onConfirm, open, sources }: Ext
         </Dialog.Body>
 
         <Dialog.Action>
-          <Button accent={Accent.PRIMARY} name="delete-mission-modal-cancel" onClick={onConfirm}>
+          <Button accent={Accent.PRIMARY} name="external-actions-modal-cancel" onClick={onConfirm}>
             Oui, supprimer
           </Button>
-          <Button accent={Accent.SECONDARY} name="delete-mission-modal-confirm" onClick={onCancel}>
+          <Button accent={Accent.SECONDARY} name="external-actions-modal-confirm" onClick={onCancel}>
             Non, annuler
           </Button>
         </Dialog.Action>

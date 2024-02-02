@@ -1,3 +1,5 @@
+import { ApiErrorCode } from '../../src/api/types'
+
 export const FAKE_API_POST_RESPONSE = {
   body: {},
   statusCode: 201
@@ -32,4 +34,9 @@ export const FAKE_MAPBOX_RESPONSE = {
     zoom: 8.876283025155784
   },
   statusCode: 200
+}
+
+export const FAKE_FISH_MISSION_ACTIONS = {
+  body: { code: ApiErrorCode.EXISTING_MISSION_ACTION, data: { sources: ['MONITORFISH'] } },
+  statusCode: 400
 }
