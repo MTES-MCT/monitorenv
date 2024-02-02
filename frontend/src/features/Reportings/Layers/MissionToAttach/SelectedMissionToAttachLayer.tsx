@@ -24,7 +24,8 @@ export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
   const { selectedMission: attachedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedMission: data?.find(mission => mission.id === missionId && !editedReporting?.detachedFromMissionAtUtc)
-    })
+    }),
+    skip: !missionId
   })
   const selectedAttachedMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
 

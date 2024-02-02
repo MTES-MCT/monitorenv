@@ -24,9 +24,12 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
   )
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
 
-  const { data: reportings } = useGetReportingsQuery({
-    status: [StatusFilterEnum.IN_PROGRESS]
-  })
+  const { data: reportings } = useGetReportingsQuery(
+    {
+      status: [StatusFilterEnum.IN_PROGRESS]
+    },
+    { skip: !isReportingAttachmentInProgress }
+  )
 
   const attachedReportingsFeatures = useMemo(
     () =>

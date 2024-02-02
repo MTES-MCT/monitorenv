@@ -17,7 +17,8 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedMission: data?.find(op => op.id === selectedMissionIdOnMap)
-    })
+    }),
+    skip: !selectedMissionIdOnMap
   })
 
   const hasNoMissionDuplication = useMemo(() => {
