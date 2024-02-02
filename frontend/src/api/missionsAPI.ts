@@ -90,6 +90,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
 export const publicMissionsAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     getEngagedControlUnits: builder.query<Array<ControlUnit.EngagedControlUnit>, void>({
+      keepUnusedDataFor: 1,
       query: () => `/v1/missions/engaged_control_units`
     })
   })
