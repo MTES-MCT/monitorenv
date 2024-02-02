@@ -1,7 +1,7 @@
 import { Accent, Button, Dialog, Icon, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { MissionSourceEnum } from '../../../../domain/entities/missions'
+import { MissionSourceEnum } from '../../../domain/entities/missions'
 
 type ExternalActionsModalProps = {
   onCancel: () => void

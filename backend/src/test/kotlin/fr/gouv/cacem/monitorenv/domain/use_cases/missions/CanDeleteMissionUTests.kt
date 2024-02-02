@@ -1,12 +1,14 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.monitorfish.GetFishMissionActionsById
+import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,7 +25,7 @@ class CanDeleteMissionUTests {
     private lateinit var missionRepository: IMissionRepository
 
     @MockBean
-    private lateinit var getFishMissionActionsById: GetFishMissionActionsById
+    private lateinit var monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository
 
     @Test
     fun `execute Should return true when haven't Env Actions and request come from Fish`() {
@@ -49,14 +51,14 @@ class CanDeleteMissionUTests {
 
         val result = CanDeleteMission(
             missionRepository = missionRepository,
-            getFishMissionActionsById = getFishMissionActionsById,
+            monitorFishMissionActionsRepository = monitorFishMissionActionsRepository,
         ).execute(missionId, MissionSourceEnum.MONITORFISH)
 
         Assertions.assertThat(result).isEqualTo(true)
     }
 
     @Test
-    fun `execute Should return false when have Env Actions and request come from Fish`() {
+    fun `execute Should throw an exception when have Env Actions and request come from Fish`() {
         val missionId = 34
 
         val wktReader = WKTReader()
@@ -87,11 +89,21 @@ class CanDeleteMissionUTests {
             ),
         )
 
-        val result = CanDeleteMission(
-            missionRepository = missionRepository,
-            getFishMissionActionsById = getFishMissionActionsById,
-        ).execute(missionId, MissionSourceEnum.MONITORFISH)
+        val throwable = Assertions.catchThrowable {
+            CanDeleteMission(
+                missionRepository = missionRepository,
+                monitorFishMissionActionsRepository = monitorFishMissionActionsRepository,
+            ).execute(missionId, MissionSourceEnum.MONITORFISH)
+        }
 
-        Assertions.assertThat(result).isEqualTo(false)
+        val errorSources = object {
+            var sources = listOf(MissionSourceEnum.MONITORENV)
+        }
+        Assertions.assertThat(throwable).isInstanceOf(
+            BackendUsageException(
+                ErrorCode.EXISTING_MISSION_ACTION,
+                errorSources,
+            )::class.java,
+        )
     }
 }

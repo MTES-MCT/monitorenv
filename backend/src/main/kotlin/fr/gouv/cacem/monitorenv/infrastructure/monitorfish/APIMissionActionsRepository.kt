@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.monitorfish
 
 import fr.gouv.cacem.monitorenv.config.ApiClient
 import fr.gouv.cacem.monitorenv.config.MonitorfishProperties
-import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.FishAction
-import fr.gouv.cacem.monitorenv.domain.repositories.IFishMissionActionsRepository
+import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
+import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
@@ -15,16 +15,20 @@ import org.springframework.stereotype.Repository
 class APIMissionActionsRepository(
     val apiClient: ApiClient,
     val monitorfishProperties: MonitorfishProperties,
-) : IFishMissionActionsRepository {
+) : IMonitorFishMissionActionsRepository {
     private val logger: Logger = LoggerFactory.getLogger(APIMissionActionsRepository::class.java)
 
-    override fun findFishMissionActionsById(missionId: Int): List<FishAction> {
+    override fun findFishMissionActionsById(missionId: Int): List<MonitorFishMissionActionEntity> {
         val missionActionsUrl = "${monitorfishProperties.url}/api/v1/mission_actions?missionId=$missionId"
 
         return runBlocking {
             try {
-                val missionActions = apiClient.httpClient.get(missionActionsUrl).body<List<FishAction>>()
-                logger.info("Fetched ${missionActions.size}.")
+                val missionActions = apiClient.httpClient.get(missionActionsUrl) {
+                    headers {
+                        append("x-api-key", monitorfishProperties.xApiKey)
+                    }
+                }.body<List<MonitorFishMissionActionEntity>>()
+                logger.info("Fetched ${missionActions.size} mission actions.")
 
                 return@runBlocking missionActions
             } catch (e: Exception) {

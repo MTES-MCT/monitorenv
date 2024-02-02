@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "monitorfish")
 class MonitorfishProperties {
-    var url: String? = null
-    var xApiKey: String? = null
+    var url: String = ""
+    var xApiKey: String = ""
 }

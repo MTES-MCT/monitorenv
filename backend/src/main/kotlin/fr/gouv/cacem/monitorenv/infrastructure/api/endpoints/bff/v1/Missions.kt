@@ -52,7 +52,7 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
     ) {
-        deleteMission.execute(missionId = missionId, MissionSourceEnum.MONITORENV)
+        deleteMission.execute(missionId = missionId)
     }
 
     @GetMapping("/{missionId}/can_delete")

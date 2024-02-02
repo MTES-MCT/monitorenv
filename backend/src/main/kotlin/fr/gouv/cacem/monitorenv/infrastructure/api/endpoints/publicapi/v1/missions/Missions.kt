@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
-import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
@@ -31,7 +30,6 @@ class Missions(
     private val sseMission: SSEMission,
     private val canDeleteMission: CanDeleteMission,
 ) {
-    private val logger = LoggerFactory.getLogger(Missions::class.java)
 
     @GetMapping("")
     @Operation(summary = "Get missions")

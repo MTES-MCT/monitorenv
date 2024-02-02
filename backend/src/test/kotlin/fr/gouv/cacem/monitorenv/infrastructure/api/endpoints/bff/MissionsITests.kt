@@ -63,6 +63,8 @@ class MissionsITests {
 
     @MockBean private lateinit var deleteMission: DeleteMission
 
+    @MockBean private lateinit var canDeleteMission: CanDeleteMission
+
     @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
     @Autowired private lateinit var objectMapper: ObjectMapper
