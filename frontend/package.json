@@ -47,7 +47,7 @@
     "lodash": "4.17.21",
     "ol": "6.15.1",
     "ol-mapbox-style": "6.9.0",
-    "ramda": "0.29.0",
+    "ramda": "0.29.1",
     "react": "18.2.0",
     "react-coordinate-input": "^1.0.0-rc.2",
     "react-device-detect": "2.2.3",
@@ -124,7 +124,7 @@
     "lint-staged": "13.0.3",
     "prettier": "2.7.1",
     "puppeteer": "21.7.0",
-    "ramda": "0.29.0",
+    "ramda": "0.29.1",
     "type-fest": "4.4.0",
     "typescript": "5.2.2",
     "webpack": "5.88.2"
