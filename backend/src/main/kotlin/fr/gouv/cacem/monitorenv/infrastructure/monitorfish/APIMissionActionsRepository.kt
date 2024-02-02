@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.ApiClient
 import fr.gouv.cacem.monitorenv.config.MonitorfishProperties
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
+import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataInput
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
@@ -27,10 +28,12 @@ class APIMissionActionsRepository(
                     headers {
                         append("x-api-key", monitorfishProperties.xApiKey)
                     }
-                }.body<List<MonitorFishMissionActionEntity>>()
+                }.body<List<MonitorFishMissionActionDataInput>>()
                 logger.info("Fetched ${missionActions.size} mission actions.")
 
-                return@runBlocking missionActions
+                return@runBlocking missionActions.map {
+                    it.toMonitorFishMissionActionEntity()
+                }
             } catch (e: Exception) {
                 logger.error("Could not fetch mission actions at $missionActionsUrl", e)
 
