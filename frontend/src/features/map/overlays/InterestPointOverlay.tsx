@@ -1,3 +1,4 @@
+import { Accent, Icon, IconButton, Size, type Coordinates } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
@@ -9,11 +10,7 @@ import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { usePrevious } from '../../../hooks/usePrevious'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
-import { ReactComponent as EditSVG } from '../../../uiMonitor/icons/Edit.svg'
 import { getCoordinates } from '../../../utils/coordinates'
-
-import type { Coordinates } from '@mtes-mct/monitor-ui'
 
 const X = 0
 const Y = 1
@@ -154,8 +151,20 @@ export function InterestPointOverlay({
               <Name data-cy="interest-point-name" title={name ?? 'Aucun Libellé'}>
                 {name ?? 'Aucun Libellé'}
               </Name>
-              <Edit data-cy="interest-point-edit" onClick={() => modifyInterestPoint(uuid)} />
-              <Delete data-cy="interest-point-delete" onClick={() => deleteInterestPoint(uuid)} />
+              <IconButton
+                accent={Accent.TERTIARY}
+                data-cy="interest-point-edit"
+                Icon={Icon.Edit}
+                onClick={() => modifyInterestPoint(uuid)}
+                size={Size.SMALL}
+              />
+              <IconButton
+                accent={Accent.TERTIARY}
+                data-cy="interest-point-delete"
+                Icon={Icon.Delete}
+                onClick={() => deleteInterestPoint(uuid)}
+                size={Size.SMALL}
+              />
             </Header>
             <Body data-cy="interest-point-observations">{observations ?? 'Aucune observation'}</Body>
             <Footer data-cy="interest-point-coordinates">
@@ -193,26 +202,6 @@ const Header = styled.div`
   border: none;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-`
-
-const Delete = styled(DeleteSVG)`
-  height: 30px;
-  width: 22px;
-  border-left: 1px solid ${p => p.theme.color.lightGray};
-  padding-left: 6px;
-  margin-left: auto;
-  margin-right: 8px;
-  cursor: pointer;
-`
-
-const Edit = styled(EditSVG)`
-  height: 30px;
-  width: 22px;
-  border-left: 1px solid ${p => p.theme.color.lightGray};
-  padding-left: 6px;
-  margin-left: auto;
-  margin-right: 6px;
-  cursor: pointer;
 `
 
 const WrapperToBeKeptForDOMManagement = styled.div`

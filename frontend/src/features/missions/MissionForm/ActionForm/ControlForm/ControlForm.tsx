@@ -7,12 +7,16 @@ import {
   useNewWindow,
   type OptionValueType,
   DatePicker,
-  FieldError
+  FieldError,
+  Accent,
+  Icon,
+  Size,
+  THEME
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import { Form, IconButton, Toggle } from 'rsuite'
+import { Form, Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
@@ -21,13 +25,12 @@ import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domai
 import { type Mission, type EnvActionControl, ActionTypeEnum } from '../../../../../domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
-import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
-import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
 import { MultiPointPicker } from '../../../MultiPointPicker'
+import { Header, StyledDeleteButton, Title, TitleWithIcon } from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
 export function ControlForm({
@@ -187,22 +190,26 @@ export function ControlForm({
   return (
     <>
       <Header>
-        <ControlIcon />
-        <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
-        <SubTitle>
-          &nbsp;(
-          {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc)})
-        </SubTitle>
+        <TitleWithIcon>
+          <Icon.ControlUnit color={THEME.color.gunMetal} />
+          <div>
+            <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
+            <SubTitle>
+              &nbsp;(
+              {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc)})
+            </SubTitle>
+          </div>
+        </TitleWithIcon>
 
-        <IconButtonRight
-          appearance="ghost"
-          icon={<DeleteIcon className="rs-icon" />}
+        <StyledDeleteButton
+          accent={Accent.SECONDARY}
+          Icon={Icon.Delete}
           onClick={handleRemoveAction}
-          size="sm"
+          size={Size.SMALL}
           title="supprimer"
         >
           Supprimer
-        </IconButtonRight>
+        </StyledDeleteButton>
       </Header>
       <FormBody>
         <ReportingsContainer>
@@ -314,21 +321,12 @@ export function ControlForm({
   )
 }
 
-const Header = styled.div`
-  margin-bottom: 24px;
-  display: flex;
-`
 const FormBody = styled.div`
   display: flex;
   flex-direction: column;
   padding-bottom: 48px;
 `
-const Title = styled.h2`
-  font-size: 16px;
-  line-height: 22px;
-  display: inline-block;
-  color: ${p => p.theme.color.charcoal};
-`
+
 const ReportingsContainer = styled.div`
   padding-bottom: 32px;
   gap: 16px;
@@ -367,23 +365,9 @@ const ActionFieldWrapper = styled.div`
   }
 `
 
-const ControlIcon = styled(ControlIconSVG)`
-  color: ${p => p.theme.color.gunMetal};
-  margin-right: 8px;
-  margin-top: 2px;
-  width: 24px;
-`
-
 const SubTitle = styled.div`
   font-size: 16px;
   display: inline-block;
-`
-const DeleteIcon = styled(DeleteSVG)`
-  color: ${p => p.theme.color.maximumRed};
-`
-
-const IconButtonRight = styled(IconButton)`
-  margin-left: auto;
 `
 
 const StyledFormikTextareaWithMargin = styled(FormikTextarea)`

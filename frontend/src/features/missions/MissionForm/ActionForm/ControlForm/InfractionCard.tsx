@@ -1,6 +1,5 @@
-import { Accent, Tag } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Tag } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { IconButton } from 'rsuite'
 import styled, { css } from 'styled-components'
 
 import {
@@ -14,9 +13,7 @@ import {
 } from '../../../../../domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels, VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
-import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
-import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
-import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Edit.svg'
+import { StyledDeleteIconButton } from '../style'
 
 export function InfractionCard({
   canAddInfraction,
@@ -86,20 +83,20 @@ export function InfractionCard({
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
-        <IconButton appearance="ghost" icon={<EditIcon className="rs-icon" />} onClick={setCurrentInfractionIndex}>
+        <Button accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={setCurrentInfractionIndex}>
           Editer
-        </IconButton>
+        </Button>
 
         <>
           <IconButton
-            appearance="ghost"
+            accent={Accent.SECONDARY}
             data-cy="duplicate-infraction"
             disabled={!canAddInfraction}
-            icon={<DuplicateSVG className="rs-icon" />}
+            Icon={Icon.Duplicate}
             onClick={duplicateInfraction}
             title="dupliquer"
           />
-          <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
+          <StyledDeleteIconButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeInfraction} />
         </>
       </ButtonsWrapper>
     </Wrapper>
@@ -126,7 +123,7 @@ const Summary = styled.div`
 
 const ButtonsWrapper = styled.div`
   display: flex;
-  flex: 0 0 162px;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
 `
@@ -147,10 +144,4 @@ const SummaryDetails = styled.div`
 
 const Info = styled(Tag)`
   margin-right: 8px;
-`
-
-const EditIcon = styled(EditIconSVG)``
-
-const DeleteIcon = styled(DeleteSVG)`
-  color: ${p => p.theme.color.maximumRed};
 `
