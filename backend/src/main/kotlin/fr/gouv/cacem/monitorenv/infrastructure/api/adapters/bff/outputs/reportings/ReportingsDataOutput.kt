@@ -40,6 +40,7 @@ data class ReportingsDataOutput(
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
     val controlStatus: ControlStatusEnum? = null,
+    val withVHFAnswer: Boolean? = null,
 ) {
     companion object {
         fun fromReportingDTO(
@@ -55,8 +56,11 @@ data class ReportingsDataOutput(
                 sourceName = dto.reporting.sourceName,
                 displayedSource =
                 when (dto.reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
-                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
+                    SourceTypeEnum.SEMAPHORE ->
+                        dto?.semaphore?.unit
+                            ?: dto?.semaphore?.name
+                    // TODO This is really strange : `fullControlUnit?.controlUnit`
+                    // can't be null and I have to add another `?`...
                     SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
@@ -82,6 +86,7 @@ data class ReportingsDataOutput(
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
                 controlStatus = dto.controlStatus,
+                withVHFAnswer = dto.reporting.withVHFAnswer,
             )
         }
     }

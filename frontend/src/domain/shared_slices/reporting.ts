@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { ReportingContext } from './Global'
+import { ReportingContext } from './Global'
+
 import type { AtLeast } from '../../types'
 import type { Reporting, ReportingDetailed } from '../entities/reporting'
 
@@ -41,8 +42,14 @@ const reportingSlice = createSlice({
         state.selectedReportingIdOnMap = undefined
       }
     },
-    resetReportings() {
-      return INITIAL_STATE
+    resetReportingsOnSideWindow(state, action: PayloadAction<Array<ReportingType>>) {
+      const reportingsToDelete = action.payload
+      reportingsToDelete.forEach(reporting => {
+        if (state.activeReportingId === reporting.reporting.id) {
+          state.activeReportingId = undefined
+        }
+        delete state.reportings[reporting.reporting.id]
+      })
     },
     setActiveReportingId(state, action: PayloadAction<number | string | undefined>) {
       state.activeReportingId = action.payload

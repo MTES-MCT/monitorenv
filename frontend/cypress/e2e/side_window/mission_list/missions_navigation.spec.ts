@@ -5,7 +5,7 @@ context('Mission', () => {
 
   it('Missions should be created and saved in store When auto-save is not enabled', () => {
     cy.visit(`/side_window`, {
-      onBeforeLoad(window) {
+      onBeforeLoad(window: Cypress.AUTWindow & { env: { [key: string]: string } }) {
         if (!window.env) {
           Object.defineProperty(window, 'env', {
             value: {

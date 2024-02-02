@@ -3,22 +3,25 @@ import { useField, useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
+import { INDIVIDUAL_ANCHORING_THEME_ID, type Reporting } from '../../../../../domain/entities/reporting'
 import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlansByYear'
 import { updateTheme } from '../../formikUseCases/updateReportingThemes'
 
-import type { Reporting } from '../../../../../domain/entities/reporting'
-
 export function ThemeSelector({ isInNewWindow = false, isLight = true, label, name }) {
   const { newWindowContainerRef } = useNewWindow()
-  const [currentThemeField] = useField<string>(name)
+  const [currentThemeField] = useField<number | undefined>(name)
   const { setFieldValue, values } = useFormikContext<Reporting>()
 
-  const year = customDayjs(values.createdAt || new Date().toISOString()).year()
+  const year = customDayjs(values.createdAt ?? new Date().toISOString()).year()
   const { isError, isLoading, themesByYearAsOptions } = useGetControlPlansByYear({
     year
   })
-  const handleUpdateTheme = theme => {
+  const handleUpdateTheme = (theme: number | undefined) => {
     updateTheme(setFieldValue)(theme)
+
+    if (theme !== INDIVIDUAL_ANCHORING_THEME_ID) {
+      setFieldValue('withVHFAnswer', undefined)
+    }
   }
 
   useEffect(() => {

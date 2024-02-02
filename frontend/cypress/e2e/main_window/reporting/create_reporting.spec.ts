@@ -143,7 +143,7 @@ context('Reporting', () => {
     })
   })
 
-  it('An attached mission can be reinitialze during reporting creation', () => {
+  it('An attached mission can be reinitialize during reporting creation', () => {
     // Given
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
@@ -180,5 +180,65 @@ context('Reporting', () => {
       expect(responseBody.missionId).equal(null)
       expect(responseBody.attachedMission).equal(null)
     })
+  })
+
+  it('A reporting can be created with withVHFAnswer only for `mouillage individuel` theme', () => {
+    cy.clickButton('Chercher des signalements')
+    cy.clickButton('Ajouter un signalement')
+
+    cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
+
+    cy.get('.Element-Legend').contains('Réponse à la VHF').should('not.exist')
+
+    cy.fill('Source', 'Autre')
+    cy.fill('Nom, société ...', 'Nom de ma société')
+
+    cy.clickButton('Ajouter un point')
+    cy.get('#root').click(450, 690, { timeout: 10000 })
+    cy.clickButton('Valider le point')
+    cy.fill('Type de signalement', 'Observation')
+    cy.fill('Thématique du signalement', 'Mouillage individuel')
+
+    cy.get('.Element-Legend').contains('Réponse à la VHF').should('be.visible')
+    cy.fill('Réponse à la VHF', 'Oui')
+
+    cy.fill('Saisi par', 'XYZ')
+
+    cy.clickButton('Valider le signalement')
+
+    cy.wait('@createReporting').then(({ request, response }) => {
+      expect(request.body.themeId).equal(100)
+      expect(request.body.withVHFAnswer).equal(true)
+
+      expect(response && response.statusCode).equal(201)
+      expect(response?.body.themeId).equal(100)
+      expect(response?.body.withVHFAnswer).equal(true)
+    })
+
+    // we update reporting theme and clean `withVHFAnswer` field
+    cy.intercept('PUT', '/bff/v1/reportings/*').as('updateReporting')
+    cy.get('#root').click(450, 690, { timeout: 10000 })
+
+    cy.clickButton('Editer le signalement')
+    cy.fill('Thématique du signalement', 'Bien culturel maritime')
+
+    cy.clickButton('Enregistrer et quitter')
+
+    cy.wait('@updateReporting').then(({ request, response }) => {
+      expect(request.body.themeId).equal(104)
+      expect(request.body.withVHFAnswer).equal(undefined)
+
+      expect(response && response.statusCode).equal(200)
+      expect(response?.body.themeId).equal(104)
+      expect(response?.body.withVHFAnswer).equal(null)
+    })
+
+    // delete reporting
+    cy.intercept('PUT', '/bff/v1/reportings/*').as('updateReporting')
+    cy.get('#root').click(450, 690, { timeout: 10000 })
+
+    cy.clickButton('Editer le signalement')
+    cy.clickButton('Supprimer le signalement')
+    cy.clickButton('Confirmer la suppression')
   })
 })

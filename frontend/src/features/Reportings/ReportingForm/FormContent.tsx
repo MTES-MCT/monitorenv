@@ -1,4 +1,4 @@
-import { FieldError, FormikTextarea, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikMultiRadio, FormikTextarea, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
@@ -18,7 +18,8 @@ import {
   type Reporting,
   ReportingTypeEnum,
   ReportingTypeLabels,
-  type ReportingDetailed
+  type ReportingDetailed,
+  INDIVIDUAL_ANCHORING_THEME_ID
 } from '../../../domain/entities/reporting'
 import {
   setReportingFormVisibility,
@@ -88,7 +89,10 @@ export function FormContent({
   useSyncFormValuesWithRedux()
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
-
+  const withVHFAnswerOptions = [
+    { label: 'Oui', value: true },
+    { label: 'Non', value: false }
+  ]
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
     setFieldValue('isControlRequired', reportType === ReportingTypeEnum.INFRACTION_SUSPICION)
@@ -196,7 +200,6 @@ export function FormContent({
 
         <div>
           <ReportTypeMultiRadio
-            data-cy="reporting-type"
             isInline
             label="Type de signalement"
             name="reportType"
@@ -215,6 +218,9 @@ export function FormContent({
             name="subThemeIds"
             theme={themeField?.value}
           />
+          {values.themeId === INDIVIDUAL_ANCHORING_THEME_ID && (
+            <FormikMultiRadio isInline label="Réponse à la VHF" name="withVHFAnswer" options={withVHFAnswerOptions} />
+          )}
         </StyledThemeContainer>
 
         <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />

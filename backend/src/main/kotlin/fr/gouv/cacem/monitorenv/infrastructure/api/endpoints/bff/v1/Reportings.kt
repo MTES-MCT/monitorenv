@@ -90,6 +90,9 @@ class Reportings(
     @GetMapping("")
     @Operation(summary = "Get reportings")
     fun getAll(
+        @Parameter(description = "Is Attached to mission")
+        @RequestParam(name = "isAttachedToMission", required = false)
+        isAttachedToMission: Boolean?,
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
@@ -119,9 +122,6 @@ class Reportings(
         @Parameter(description = "Target type")
         @RequestParam(name = "targetTypes", required = false)
         targetTypes: List<TargetTypeEnum>?,
-        @Parameter(description = "Is Attached to mission")
-        @RequestParam(name = "isAttachedToMission", required = false)
-        isAttachedToMission: Boolean?,
         @Parameter(description = "Search query")
         @RequestParam(name = "searchQuery", required = false)
         searchQuery: String?,

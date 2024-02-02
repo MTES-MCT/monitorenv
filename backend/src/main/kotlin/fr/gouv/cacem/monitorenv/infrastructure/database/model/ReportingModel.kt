@@ -58,6 +58,7 @@ class ReportingModel(
         insertable = false,
     )
     val reportingId: Long? = null,
+
     @Column(name = "source_type", columnDefinition = "reportings_source_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
@@ -163,6 +164,9 @@ class ReportingModel(
         referencedColumnName = "id",
     )
     val attachedEnvAction: EnvActionModel? = null,
+
+    @Column(name = "with_vhf_answer")
+    val withVHFAnswer: Boolean? = null,
 ) {
 
     fun toReporting() =
@@ -194,7 +198,9 @@ class ReportingModel(
             attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
             detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
             attachedEnvActionId = attachedEnvAction?.id,
+            withVHFAnswer = withVHFAnswer,
         )
+
     fun toReportingDTO(objectMapper: ObjectMapper) =
         ReportingDTO(
             reporting = this.toReporting(),
@@ -237,33 +243,35 @@ class ReportingModel(
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
             controlPlanThemeReference: ControlPlanThemeModel?,
-        ) = ReportingModel(
-            id = reporting.id,
-            reportingId = reporting.reportingId,
-            sourceType = reporting.sourceType,
-            semaphore = semaphoreReference,
-            controlUnit = controlUnitReference,
-            sourceName = reporting.sourceName,
-            targetType = reporting.targetType,
-            vehicleType = reporting.vehicleType,
-            targetDetails = reporting.targetDetails,
-            geom = reporting.geom,
-            seaFront = reporting.seaFront,
-            description = reporting.description,
-            reportType = reporting.reportType,
-            controlPlanTheme = controlPlanThemeReference,
-            actionTaken = reporting.actionTaken,
-            isControlRequired = reporting.isControlRequired,
-            hasNoUnitAvailable = reporting.hasNoUnitAvailable,
-            createdAt = reporting.createdAt.toInstant(),
-            validityTime = reporting.validityTime,
-            isArchived = reporting.isArchived,
-            isDeleted = reporting.isDeleted,
-            openBy = reporting.openBy,
-            mission = missionReference,
-            attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
-            detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
-            attachedEnvAction = envActionReference,
-        )
+        ) =
+            ReportingModel(
+                id = reporting.id,
+                reportingId = reporting.reportingId,
+                sourceType = reporting.sourceType,
+                semaphore = semaphoreReference,
+                controlUnit = controlUnitReference,
+                sourceName = reporting.sourceName,
+                targetType = reporting.targetType,
+                vehicleType = reporting.vehicleType,
+                targetDetails = reporting.targetDetails,
+                geom = reporting.geom,
+                seaFront = reporting.seaFront,
+                description = reporting.description,
+                reportType = reporting.reportType,
+                controlPlanTheme = controlPlanThemeReference,
+                actionTaken = reporting.actionTaken,
+                isControlRequired = reporting.isControlRequired,
+                hasNoUnitAvailable = reporting.hasNoUnitAvailable,
+                createdAt = reporting.createdAt.toInstant(),
+                validityTime = reporting.validityTime,
+                isArchived = reporting.isArchived,
+                isDeleted = reporting.isDeleted,
+                openBy = reporting.openBy,
+                mission = missionReference,
+                attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
+                detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
+                attachedEnvAction = envActionReference,
+                withVHFAnswer = reporting.withVHFAnswer,
+            )
     }
 }

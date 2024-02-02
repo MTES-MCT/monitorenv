@@ -17,7 +17,12 @@ export function SideWindowLauncher() {
   const missions = useAppSelector(state => state.missionForms.missions)
   const reportings = useAppSelector(state => state.reporting.reportings)
   const sideWindow = useAppSelector(state => state.sideWindow)
+  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
+  const reportingsOpenOnSideWindow = useMemo(
+    () => Object.values(reportings).filter(reporting => reporting.context === ReportingContext.SIDE_WINDOW),
+    [reportings]
+  )
   useEffect(() => {
     forceUpdate()
   }, [forceUpdate])
@@ -36,17 +41,19 @@ export function SideWindowLauncher() {
   )
 
   const hasAtLeastOneReportingFormDirty = useMemo(
-    () => !!Object.values(reportings).find(reporting => reporting.isFormDirty),
-    [reportings]
+    () => !!reportingsOpenOnSideWindow.find(reporting => reporting.isFormDirty),
+    [reportingsOpenOnSideWindow]
   )
 
-  const onUnload = async () => {
+  const onUnload = () => {
     dispatch(sideWindowActions.close())
-    dispatch(reportingActions.resetReportings())
-    // TODO Why?
-    dispatch(setReportingFormVisibility({ context: ReportingContext.MAP, visibility: VisibilityState.NONE }))
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+    dispatch(reportingActions.resetReportingsOnSideWindow(reportingsOpenOnSideWindow))
     dispatch(missionFormsActions.resetMissions())
+
+    if (reportingFormVisibility.context === ReportingContext.SIDE_WINDOW) {
+      dispatch(setReportingFormVisibility({ context: ReportingContext.MAP, visibility: VisibilityState.NONE }))
+    }
   }
 
   if (sideWindow.status === SideWindowStatus.CLOSED) {
