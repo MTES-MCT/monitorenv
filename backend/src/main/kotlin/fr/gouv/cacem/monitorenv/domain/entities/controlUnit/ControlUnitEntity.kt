@@ -1,8 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class ControlUnitEntity(
     val id: Int? = null,
     val administrationId: Int,
