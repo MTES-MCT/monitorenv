@@ -35,15 +35,6 @@
     "useUnknownInCatchVariables": true,
     "verbatimModuleSyntax": true
   },
-  "include": [
-    "**/*.js",
-    "**/*.jsx",
-    "**/*.mjs",
-    "**/*.mts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/styled-components.d.ts",
-    "vite.config.mts"
-  ],
+  "include": ["**/*.js", "**/*.jsx", "**/*.mjs", "**/*.mts", "**/*.ts", "**/*.tsx", "vite.config.mts"],
   "exclude": ["node_modules/*"]
 }
