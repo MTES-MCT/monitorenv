@@ -48,6 +48,7 @@ context('InterestPoint', () => {
 
     cy.getDataCy('interest-point').click()
     cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '__° __′ __″ _ ___° __′ __″ _')
+    cy.wait(400)
     cy.get('#root').click(650, 690)
     cy.getDataCy('interest-point-name-input').type('Phénomène 3')
     cy.getDataCy('interest-point-observations-input').type('Est encore encore dans la bergerie')

@@ -25,7 +25,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
   const { data: missions } = useGetMissionsQuery(
     {
       missionStatus: [MissionStatusEnum.PENDING],
-      startedAfterDateTime: customDayjs.utc().startOf('day').utc().subtract(90, 'day').toISOString()
+      startedAfterDateTime: customDayjs.utc().startOf('day').subtract(90, 'day').toISOString()
     },
     { skip: !isMissionAttachmentInProgress }
   )
