@@ -37,8 +37,6 @@ ENV DISABLE_ESLINT_PLUGIN=true
 
 ARG VERSION
 ARG ENV_PROFILE
-ENV FRONTEND_ENV=$ENV_PROFILE
-RUN echo ${FRONTEND_ENV}
 
 COPY frontend/ /tmp/frontend/
 COPY infra/ /tmp/infra/
