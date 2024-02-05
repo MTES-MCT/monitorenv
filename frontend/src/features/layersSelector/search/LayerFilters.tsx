@@ -1,5 +1,4 @@
 import { Accent, CheckPicker, SingleTag } from '@mtes-mct/monitor-ui'
-import { Button } from 'rsuite'
 import styled from 'styled-components'
 
 export function LayerFilters({
@@ -80,9 +79,7 @@ export function LayerFilters({
       </TagWrapper>
 
       {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0) && (
-        <ResetFilters appearance="link" onClick={handleResetFilters}>
-          Réinitialiser les filtres
-        </ResetFilters>
+        <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
       )}
     </FiltersWrapper>
   )
@@ -101,8 +98,12 @@ const TagWrapper = styled.div`
   flex-wrap: wrap;
   gap: 4px;
 `
-const ResetFilters = styled(Button)`
+const ResetFilters = styled.div`
+  color: ${p => p.theme.color.slateGray};
+  cursor: pointer;
+  display: flex;
   padding: 0px;
+  text-decoration: underline;
 `
 
 const OptionValue = styled.span`

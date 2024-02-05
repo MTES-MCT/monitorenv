@@ -228,7 +228,6 @@ export function MissionsTableFilters() {
           renderValue={() =>
             selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
           }
-          size="sm"
           style={tagPickerStyle}
           value={selectedControlUnitIds}
         />
@@ -243,7 +242,6 @@ export function MissionsTableFilters() {
           renderValue={() =>
             selectedMissionTypes && <OptionValue>{`Type (${selectedMissionTypes.length})`}</OptionValue>
           }
-          size="sm"
           style={tagPickerStyle}
           value={selectedMissionTypes}
         />
@@ -257,7 +255,6 @@ export function MissionsTableFilters() {
           options={seaFrontsAsOptions}
           placeholder="Facade"
           renderValue={() => selectedSeaFronts && <OptionValue>{`Facade (${selectedSeaFronts.length})`}</OptionValue>}
-          size="sm"
           style={tagPickerStyle}
           value={selectedSeaFronts}
         />
@@ -270,7 +267,6 @@ export function MissionsTableFilters() {
           options={missionStatusesAsOptions}
           placeholder="Statut"
           renderValue={() => selectedStatuses && <OptionValue>{`Statut (${selectedStatuses.length})`}</OptionValue>}
-          size="sm"
           style={tagPickerStyle}
           value={selectedStatuses}
         />
@@ -285,7 +281,6 @@ export function MissionsTableFilters() {
           options={themesAsOptions}
           placeholder="Thématique"
           renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
-          size="sm"
           style={tagPickerStyle}
           value={selectedThemes}
         />

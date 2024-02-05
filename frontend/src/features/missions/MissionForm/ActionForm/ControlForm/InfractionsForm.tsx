@@ -1,5 +1,5 @@
+import { Accent, Button } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
-import { Button } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionCard } from './InfractionCard'
@@ -42,7 +42,7 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
     <>
       <Header>
         <Title>Détails de la cible en infraction</Title>
-        <Button appearance="ghost" disabled={!canAddInfraction} onClick={handleAddInfraction} size="sm">
+        <Button accent={Accent.SECONDARY} disabled={!canAddInfraction} onClick={handleAddInfraction}>
           + Ajouter un contrôle avec infraction
         </Button>
       </Header>
@@ -81,12 +81,12 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
 }
 
 const Header = styled.div`
+  align-items: end;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 8px;
+  justify-content: space-between;
 `
-const Title = styled.h3`
+const Title = styled.span`
   font-size: 13px;
   line-height: 22px;
   display: inline-block;

@@ -1,38 +1,22 @@
-/* eslint-disable react/jsx-props-no-spreading */
+import { FormikSelect, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useRef } from 'react'
-import { Form, SelectPicker } from 'rsuite'
-import styled from 'styled-components'
 
 import { vesselTypeLabels } from '../../../../../../domain/entities/missions'
 
-export function VesselTypeSelector({ onChange, value, ...props }) {
+export function VesselTypeSelector({ infractionPath }) {
   const vesselTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
-  const vesselTypeFieldList = Object.values(vesselTypeLabels)
+  const vesselTypeFieldList = getOptionsFromLabelledEnum(vesselTypeLabels)
 
   return (
-    <SelectorWrapper ref={vesselTypeSelectorRef}>
-      <Form.ControlLabel htmlFor="vesselTypeField">Type de navire</Form.ControlLabel>
-      <SelectPicker
-        block
-        cleanable={false}
-        container={() => vesselTypeSelectorRef.current}
-        data={vesselTypeFieldList}
-        labelKey="libelle"
-        onChange={onChange}
-        searchable={false}
-        size="sm"
-        value={value}
-        valueKey="code"
-        {...props}
-      />
-    </SelectorWrapper>
+    <FormikSelect
+      baseContainer={vesselTypeSelectorRef.current}
+      block
+      cleanable={false}
+      label="Type de navire"
+      name={`${infractionPath}.vesselType`}
+      options={vesselTypeFieldList}
+      searchable={false}
+      style={{ width: '170px' }}
+    />
   )
 }
-
-const SelectorWrapper = styled.div`
-  width: 150px;
-  .rs-picker-menu {
-    position: relative;
-    margin-top: -50px;
-  }
-`

@@ -221,6 +221,13 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   }
 }
 
+export const BaseLayersLabel = {
+  LIGHT: 'Fond de carte clair',
+  OSM: 'Open Street Map',
+  SATELLITE: 'Satellite',
+  SHOM: 'Carte marine (SHOM)'
+}
+
 export const BaseLayers = {
   DARK: {
     code: 'DARK',

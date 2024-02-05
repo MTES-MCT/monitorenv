@@ -116,22 +116,10 @@ export enum VesselTypeEnum {
   SAILING = 'SAILING'
 }
 export const vesselTypeLabels = {
-  COMMERCIAL: {
-    code: 'COMMERCIAL',
-    libelle: 'Commerce'
-  },
-  FISHING: {
-    code: 'FISHING',
-    libelle: 'Pêche'
-  },
-  MOTOR: {
-    code: 'MOTOR',
-    libelle: 'Moteur'
-  },
-  SAILING: {
-    code: 'SAILING',
-    libelle: 'Voilier'
-  }
+  COMMERCIAL: 'Commerce',
+  FISHING: 'Pêche',
+  MOTOR: 'Moteur',
+  SAILING: 'Voilier'
 }
 
 export enum VesselSizeEnum {
@@ -140,23 +128,11 @@ export enum VesselSizeEnum {
   LESS_THAN_12m = 'LESS_THAN_12m',
   MORE_THAN_46m = 'MORE_THAN_46m'
 }
-export const vesselSizeEnum = {
-  FROM_12_TO_24m: {
-    code: 'FROM_12_TO_24m',
-    libelle: '12 à 24 m'
-  },
-  FROM_24_TO_46m: {
-    code: 'FROM_24_TO_46m',
-    libelle: 'plus de 24 m'
-  },
-  LESS_THAN_12m: {
-    code: 'LESS_THAN_12m',
-    libelle: 'moins de 12 m'
-  },
-  MORE_THAN_46m: {
-    code: 'MORE_THAN_46m',
-    libelle: 'plus de 46 m'
-  }
+export const vesselSizeLabel = {
+  FROM_12_TO_24m: '12 à 24 m',
+  FROM_24_TO_46m: 'plus de 24 m',
+  LESS_THAN_12m: 'moins de 12 m',
+  MORE_THAN_46m: 'plus de 46 m'
 }
 
 export enum MissionStatusEnum {
