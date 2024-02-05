@@ -22,10 +22,13 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
 
-  const { data: missions } = useGetMissionsQuery({
-    missionStatus: [MissionStatusEnum.PENDING],
-    startedAfterDateTime: customDayjs.utc().startOf('day').utc().subtract(90, 'day').toISOString()
-  })
+  const { data: missions } = useGetMissionsQuery(
+    {
+      missionStatus: [MissionStatusEnum.PENDING],
+      startedAfterDateTime: customDayjs.utc().startOf('day').subtract(90, 'day').toISOString()
+    },
+    { skip: !isMissionAttachmentInProgress }
+  )
 
   const missionsMultiPolygons = useMemo(
     () =>

@@ -127,7 +127,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
   }
 
   const { data: engagedControlUnits = [] } = useGetEngagedControlUnitsQuery(undefined, {
-    ...RTK_DEFAULT_QUERY_OPTIONS,
     skip: !missionIsNewMission
   })
 
