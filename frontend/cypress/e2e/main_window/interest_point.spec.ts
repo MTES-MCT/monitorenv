@@ -25,9 +25,7 @@ context('InterestPoint', () => {
     cy.getDataCy('interest-point-save').click()
   })
 
-  // TODO Restore this test once the Interest Points have been redesigned (or removed).
-  // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('Multiple interest points Should be created When clicking on the map', () => {
+  it('Multiple interest points Should be created When clicking on the map', () => {
     // When
     cy.getDataCy('interest-point').click()
     cy.get('#root').click(490, 580)
