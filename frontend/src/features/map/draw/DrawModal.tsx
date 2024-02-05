@@ -1,10 +1,9 @@
-import { type Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
+import { type Coordinates, CoordinatesInput, IconButton, Icon } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
 import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import {
@@ -26,10 +25,6 @@ import {
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
-import { ReactComponent as CircleSVG } from '../../../uiMonitor/icons/Info.svg'
-import { ReactComponent as PolygonSVG } from '../../../uiMonitor/icons/Polygone.svg'
-import { ReactComponent as RectangleSVG } from '../../../uiMonitor/icons/Rectangle.svg'
-import { ReactComponent as SelectorSVG } from '../../../uiMonitor/icons/Selector.svg'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 import { SideWindowStatus } from '../../SideWindow/slice'
@@ -172,31 +167,19 @@ export function DrawModal() {
         (listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE) && (
           <IconGroup>
             <IconButton
-              active={interactionType === InteractionType.POLYGON}
-              appearance="primary"
-              icon={<PolygonIcon className="rs-icon" />}
+              className={interactionType === InteractionType.POLYGON ? '_active' : undefined}
+              Icon={Icon.SelectPolygon}
               onClick={handleSelectInteraction(InteractionType.POLYGON)}
-              size="md"
             />
             <IconButton
-              active={interactionType === InteractionType.SQUARE}
-              appearance="primary"
-              icon={<RectangleIcon className="rs-icon" />}
+              className={interactionType === InteractionType.SQUARE ? '_active' : undefined}
+              Icon={Icon.SelectRectangle}
               onClick={handleSelectInteraction(InteractionType.SQUARE)}
-              size="md"
             />
             <IconButton
-              active={interactionType === InteractionType.CIRCLE}
-              appearance="primary"
-              icon={<CircleIcon className="rs-icon" />}
+              className={interactionType === InteractionType.CIRCLE ? '_active' : undefined}
+              Icon={Icon.SelectCircle}
               onClick={handleSelectInteraction(InteractionType.CIRCLE)}
-              size="md"
-            />
-            <IconButton
-              active={interactionType === InteractionType.SELECTION}
-              appearance="primary"
-              icon={<SelectorIcon className="rs-icon" />}
-              size="md"
             />
           </IconGroup>
         )
@@ -224,32 +207,14 @@ export function DrawModal() {
 }
 
 const CoordinatesInputWrapper = styled.div`
-  width: 280px;
-  margin-right: auto !important;
-  margin-left: auto;
   margin-bottom: 8px;
+  margin-left: auto;
+  margin-right: auto !important;
+  width: 280px;
 `
 
 const IconGroup = styled.div`
-  display: inline-block;
-  & > :not(:last-child) {
-    margin-right: 16px;
-  }
-`
-
-const PolygonIcon = styled(PolygonSVG)`
-  width: 16px;
-  height: 16px;
-`
-const CircleIcon = styled(CircleSVG)`
-  width: 16px;
-  height: 16px;
-`
-const RectangleIcon = styled(RectangleSVG)`
-  width: 16px;
-  height: 16px;
-`
-const SelectorIcon = styled(SelectorSVG)`
-  width: 16px;
-  height: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
 `

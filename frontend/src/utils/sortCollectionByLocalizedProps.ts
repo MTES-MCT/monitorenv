@@ -1,6 +1,6 @@
 import { property } from 'lodash/fp'
 
-import type { AnyObject } from '@mtes-mct/monitor-ui/types'
+import type { AnyObject } from '@mtes-mct/monitor-ui'
 
 export function sortCollectionByLocalizedProps<T = AnyObject>(propPaths: string[], collection: T[]): T[] {
   return collection.sort((a, b) => {

@@ -3,7 +3,7 @@ import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo, useState } from 'react'
 import { Radio, RadioGroup } from 'rsuite'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { interestPointType } from '../../../../domain/entities/interestPoints'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
@@ -12,7 +12,6 @@ import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { saveInterestPointFeature } from '../../../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { ReactComponent as VesselSVG } from '../../../../uiMonitor/icons/Label_segment_de_flotte.svg'
 import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordinates'
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
@@ -152,7 +151,7 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
               Moyen de contrôle
             </Radio>
             <Radio value={interestPointType.FISHING_VESSEL}>
-              <Vessel />
+              <Icon.FleetSegment size={14} />
               Navire de pêche
             </Radio>
             <Radio data-cy="interest-point-type-radio-input" value={interestPointType.OTHER}>
@@ -288,13 +287,4 @@ const Wrapper = styled(MapToolBox)`
     align-items: center;
     margin-left: 4px;
   }
-`
-
-const iconStyle = css`
-  margin-left: 0px 1px;
-  vertical-align: sub;
-  width: 14px;
-`
-const Vessel = styled(VesselSVG)`
-  ${iconStyle}
 `
