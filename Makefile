@@ -15,7 +15,7 @@ dev-install:
 	cd frontend && npm install
 
 dev-run-front:
-	cd frontend && npm start
+	cd frontend && npm run dev
 
 .PHONY: test-front dev-lint-frontend test-back
 
