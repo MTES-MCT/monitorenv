@@ -160,3 +160,8 @@ UPDATE public.missions SET
   start_datetime_utc = start_datetime_utc + (now() - '2022-06-01 23:00:00'),
   end_datetime_utc = end_datetime_utc + (now() - '2022-06-01 23:00:00')
 WHERE id > 20;
+
+
+
+UPDATE missions set created_at_utc = least(now()- interval '10 minutes', start_datetime_utc) where created_at_utc is null;
+UPDATE missions set updated_at_utc = least(now()- interval '10 minutes', start_datetime_utc) where updated_at_utc is null;

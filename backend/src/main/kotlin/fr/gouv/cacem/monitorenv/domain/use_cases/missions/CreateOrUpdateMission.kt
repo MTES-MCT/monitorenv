@@ -43,12 +43,6 @@ class CreateOrUpdateMission(
             UpdateMissionEvent(savedMission.mission),
         )
 
-        /**
-         * TODO When doing an update, the `createdAtUtc` field is returned as null.
-         * To fix this, we return the stored `createdAtUtc`
-         */
-        return savedMission.mission.copy(
-            createdAtUtc = savedMission.mission.createdAtUtc ?: storedMission?.createdAtUtc,
-        )
+        return savedMission.mission
     }
 }

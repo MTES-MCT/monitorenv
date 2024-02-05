@@ -755,7 +755,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         val updatedMission = jpaMissionRepository.save(nextMission)
 
-        assertThat(updatedMission.mission.createdAtUtc).isNull()
+        assertThat(updatedMission.mission.createdAtUtc).isNotNull()
         assertThat(updatedMission.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(updatedMission.mission.controlUnits).hasSize(2)
         assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)
