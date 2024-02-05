@@ -1,11 +1,9 @@
-import { Accent, FormikTextarea, Icon, Size } from '@mtes-mct/monitor-ui'
+import { Accent, FormikTextarea, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { Form } from 'rsuite'
-import styled from 'styled-components'
 
-import { Header, StyledDeleteButton, Title } from './style'
+import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
 import { type EnvAction } from '../../../../domain/entities/missions'
-import { ReactComponent as NoteSVG } from '../../../../uiMonitor/icons/Note_libre.svg'
 
 export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const [actionsFields] = useField<EnvAction[]>('envActions')
@@ -19,10 +17,10 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
   return (
     <>
       <Header>
-        <div>
-          <NoteIcon />
+        <TitleWithIcon>
+          <Icon.Note color={THEME.color.gunMetal} />
           <Title>Note</Title>
-        </div>
+        </TitleWithIcon>
 
         <StyledDeleteButton
           accent={Accent.SECONDARY}
@@ -41,29 +39,3 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
     </>
   )
 }
-
-/* const Header = styled.div`
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-`
-
-const Title = styled.h2`
-  font-size: 16px;
-  line-height: 22px;
-  display: inline-block;
-  color: ${p => p.theme.color.charcoal};
-`
- */
-const NoteIcon = styled(NoteSVG)`
-  color: ${p => p.theme.color.gunMetal};
-  margin-right: 8px;
-  margin-top: 2px;
-  width: 18px;
-`
-
-/* const StyledButton = styled(Button)`
-  > div > svg {
-    color: ${p => p.theme.color.maximumRed};
-  }
-` */

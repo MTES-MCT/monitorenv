@@ -7,7 +7,8 @@ import {
   getOptionsFromIdAndName,
   CheckPicker,
   getOptionsFromLabelledEnum,
-  CustomSearch
+  CustomSearch,
+  Icon
 } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -23,7 +24,6 @@ import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../..
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
-import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 
 export function MissionsTableFilters() {
@@ -310,7 +310,7 @@ export function MissionsTableFilters() {
 
         {hasFilters && (
           <ResetFiltersButton data-cy="reinitialize-filters" onClick={onResetFilters}>
-            <ReloadSVG />
+            <Icon.Reset size={14} />
             Réinitialiser les filtres
           </ResetFiltersButton>
         )}
