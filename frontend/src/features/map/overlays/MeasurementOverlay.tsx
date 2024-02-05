@@ -1,11 +1,10 @@
-import { pluralize } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, THEME, pluralize } from '@mtes-mct/monitor-ui'
 import Overlay from 'ol/Overlay'
 import { type MutableRefObject, useEffect, useCallback, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { DistanceUnit, OLGeometryType } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
 
 type MeasurementOverlayProps = {
   coordinates: any[]
@@ -77,7 +76,14 @@ export function MeasurementOverlay({
       <MeasurementOverlayElement ref={overlayCallback}>
         <ZoneSelected>
           <ZoneText data-cy="measurement-value">{measurementWithUnitDistance}</ZoneText>
-          <CloseIcon data-cy="close-measurement" onClick={() => deleteFeature && deleteFeature(id)} />
+          <StyledIconButton
+            accent={Accent.TERTIARY}
+            color={THEME.color.slateGray}
+            data-cy="close-measurement"
+            Icon={Icon.Close}
+            onClick={() => deleteFeature && deleteFeature(id)}
+            size={Size.SMALL}
+          />
         </ZoneSelected>
         <TrianglePointer>
           <TriangleShadow />
@@ -107,33 +113,23 @@ const TriangleShadow = styled.div`
 
 const MeasurementOverlayElement = styled.div``
 
-const ZoneText = styled.span`
-  margin-bottom: 5px;
-  vertical-align: middle;
-  height: 30px;
-  display: inline-block;
-  user-select: none;
+const ZoneText = styled.div`
+  margin: 0px 8px;
+  color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
 `
 
 const ZoneSelected = styled.div`
   background: ${p => p.theme.color.gainsboro};
   border-radius: 2px;
-  color: ${p => p.theme.color.slateGray};
-  margin-left: 0;
-  font-size: 13px;
-  padding: 0px 3px 0px 7px;
-  vertical-align: top;
-  height: 30px;
-  display: inline-block;
+  display: flex;
   user-select: none;
 `
 
-const CloseIcon = styled(CloseIconSVG)`
-  width: 13px;
-  vertical-align: text-bottom;
-  cursor: pointer;
-  border-left: 1px solid white;
-  height: 30px;
-  margin: 0 6px 0 7px;
-  padding-left: 7px;
+const StyledIconButton = styled(IconButton)`
+  border-left: 1px solid ${p => p.theme.color.white};
+  > div > svg {
+    height: 13px;
+    width: 13px;
+  }
 `

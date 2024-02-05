@@ -1,7 +1,7 @@
+import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { ReactComponent as WarningSVG } from '../../uiMonitor/icons/Alert.svg'
 
 export function Healthcheck() {
   const { healthcheckTextWarning } = useAppSelector(state => state.global)
@@ -10,32 +10,21 @@ export function Healthcheck() {
     <>
       {healthcheckTextWarning ? (
         <HealthcheckWarnings>
-          <Warning>
-            <WarningIcon />
-            {healthcheckTextWarning}
-          </Warning>
+          <Icon.Alert />
+          {healthcheckTextWarning}
         </HealthcheckWarnings>
       ) : null}
     </>
   )
 }
 
-const WarningIcon = styled(WarningSVG)`
-  width: 20px;
-  vertical-align: sub;
-  margin-right: 8px;
-  height: 18px;
-`
-
-const Warning = styled.div`
-  font: normal normal bold 16px/22px Marianne;
-`
-
 const HealthcheckWarnings = styled.div`
-  background: #f6d012 0% 0% no-repeat padding-box;
-  width: 100%;
-  height: 22px;
-  text-align: center;
-  padding: 13px;
+  align-items: center;
+  background-color: ${p => p.theme.color.goldenPoppy};
   border-bottom: 2px solid #e3be05;
+  display: flex;
+  font: normal normal bold 16px/22px Marianne;
+  gap: 8px;
+  justify-content: center;
+  padding: 13px;
 `

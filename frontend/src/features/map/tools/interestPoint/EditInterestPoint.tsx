@@ -1,8 +1,9 @@
+import { Icon } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo, useState } from 'react'
 import { Radio, RadioGroup } from 'rsuite'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { interestPointType } from '../../../../domain/entities/interestPoints'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
@@ -11,9 +12,6 @@ import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { saveInterestPointFeature } from '../../../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { ReactComponent as ControlSVG } from '../../../../uiMonitor/icons/Control.svg'
-import { ReactComponent as VesselSVG } from '../../../../uiMonitor/icons/Label_segment_de_flotte.svg'
-import { ReactComponent as OtherSVG } from '../../../../uiMonitor/icons/Point_interet_autre.svg'
 import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordinates'
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
@@ -149,15 +147,15 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
             onChange={updateType}
           >
             <Radio value={interestPointType.CONTROL_ENTITY}>
-              <Control />
+              <Icon.ControlUnit size={14} />
               Moyen de contrôle
             </Radio>
             <Radio value={interestPointType.FISHING_VESSEL}>
-              <Vessel />
+              <Icon.FleetSegment size={14} />
               Navire de pêche
             </Radio>
             <Radio data-cy="interest-point-type-radio-input" value={interestPointType.OTHER}>
-              <Other />
+              <Icon.Info size={15} />
               Autre point
             </Radio>
           </RadioGroup>
@@ -283,23 +281,10 @@ const Header = styled.div`
 const Wrapper = styled(MapToolBox)`
   top: 0px;
   width: 306px;
-`
-
-const iconStyle = css`
-  margin-left: 3px;
-  margin-right: 7px;
-  vertical-align: sub;
-  width: 14px;
-`
-
-const Control = styled(ControlSVG)`
-  ${iconStyle}
-`
-
-const Vessel = styled(VesselSVG)`
-  ${iconStyle}
-`
-
-const Other = styled(OtherSVG)`
-  ${iconStyle}
+  .rs-radio-checker > label {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-left: 4px;
+  }
 `

@@ -1,9 +1,9 @@
+import { Icon, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ReactComponent as DisplaySVG } from '../../../uiMonitor/icons/Display.svg'
 
 export function AdministrativeLayer({ isGrouped, layer }) {
   const dispatch = useAppDispatch()
@@ -22,7 +22,7 @@ export function AdministrativeLayer({ isGrouped, layer }) {
   return (
     <Row $isGrouped={isGrouped} data-cy="administrative-layer-toggle" onClick={toggleLayer}>
       <LayerName title={layer.name}>{layer.name}</LayerName>
-      {isLayerVisible ? <DisplaySVG /> : <HideIcon />}
+      <Icon.Display color={isLayerVisible ? THEME.color.charcoal : THEME.color.lightGray} />
     </Row>
   )
 }
@@ -56,8 +56,4 @@ const Row = styled.span<{ $isGrouped: boolean }>`
     margin-left: auto;
     margin-top: 4px;
   }
-`
-
-const HideIcon = styled(DisplaySVG)`
-  color: ${p => p.theme.color.lightGray};
 `

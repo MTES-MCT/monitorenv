@@ -10,7 +10,6 @@ import { getTitle } from '../../../../domain/entities/regulatory'
 import { closeRegulatoryMetadataPanel } from '../../../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
 import { RegulatoryLayerLegend } from '../../utils/LayerLegend.style'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
@@ -47,7 +46,7 @@ export function RegulatoryLayerZoneMetadata() {
             />
           </Header>
           <Warning>
-            <WarningIcon />
+            <Icon.Warning size={30} />
             Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
           </Warning>
           <Content>
@@ -113,21 +112,16 @@ const Content = styled.div`
 `
 
 const Warning = styled.div`
-  font-size: 13px;
-  color: ${p => p.theme.color.gunMetal};
+  align-items: center;
   background: ${p => p.theme.color.goldenPoppy};
+  color: ${p => p.theme.color.gunMetal};
   display: flex;
-  text-align: left;
   font: normal normal bold 13px/18px Marianne;
+  gap: 16px;
   padding: 10px;
+  text-align: left;
 `
 
-const WarningIcon = styled(AlertSVG)`
-  width: 30px;
-  flex: 57px;
-  height: 30px;
-  margin: 4px 10px 0px 0;
-`
 const CenteredFingerprintSpinner = styled(FingerprintSpinner)`
   position: initial !important;
   display: block;

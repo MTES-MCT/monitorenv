@@ -1,12 +1,11 @@
+import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
-
-import { ReactComponent as AlertSVG } from '../uiMonitor/icons/Alert.svg'
 
 export function AlertUnsupportedBrowser() {
   return (
     <Wrapper>
       <Alert>
-        <AlertSVG />
+        <Icon.Alert />
         <br />
         <Text>
           <Title>

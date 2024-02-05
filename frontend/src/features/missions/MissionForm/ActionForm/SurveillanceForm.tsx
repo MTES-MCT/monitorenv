@@ -7,13 +7,18 @@ import {
   pluralize,
   useNewWindow,
   type OptionValueType,
-  DatePicker
+  DatePicker,
+  Accent,
+  Icon,
+  Size,
+  THEME
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
-import { Form, IconButton, Toggle } from 'rsuite'
+import { Form, Toggle } from 'rsuite'
 import styled from 'styled-components'
 
+import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 import { CONTROL_PLAN_INIT } from '../../../../domain/entities/controlPlan'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
@@ -24,8 +29,6 @@ import {
   type Mission
 } from '../../../../domain/entities/missions'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
-import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { getFormattedReportingId } from '../../../Reportings/utils'
 import { MultiZonePicker } from '../../MultiZonePicker'
@@ -144,17 +147,19 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   return (
     <>
       <Header>
-        <SurveillanceIcon />
-        <Title>Surveillance</Title>
-        <IconButtonRight
-          appearance="ghost"
-          icon={<DeleteIcon className="rs-icon" />}
+        <TitleWithIcon>
+          <Icon.Observation color={THEME.color.gunMetal} />
+          <Title>Surveillance</Title>
+        </TitleWithIcon>
+        <StyledDeleteButton
+          accent={Accent.SECONDARY}
+          Icon={Icon.Delete}
           onClick={handleRemoveAction}
-          size="sm"
+          size={Size.SMALL}
           title="supprimer"
         >
           Supprimer
-        </IconButtonRight>
+        </StyledDeleteButton>
       </Header>
       <ReportingsContainer>
         <StyledToggle>
@@ -164,7 +169,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             onChange={updateIsSurveillanceAttachedToReporting}
             readOnly={areAllReportingsAttachedToAnAction && currentAction?.reportingIds?.length === 0}
           />
-          <span>Le contrôle est rattaché à un signalement</span>
+          <span>La surveillance est rattachée à un signalement</span>
         </StyledToggle>
         {isReportingListVisible && (
           <StyledMultiCheckbox
@@ -256,17 +261,6 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   )
 }
 
-const Header = styled.div`
-  margin-bottom: 24px;
-  display: flex;
-`
-
-const Title = styled.h2`
-  font-size: 16px;
-  line-height: 22px;
-  display: inline-block;
-  color: ${p => p.theme.color.charcoal};
-`
 const ReportingsContainer = styled.div`
   padding-bottom: 32px;
   gap: 16px;
@@ -311,19 +305,6 @@ const StyledDuration = styled.div`
   font-size: 13px;
   color: ${p => p.theme.color.slateGray};
   margin-left: 8px;
-`
-
-const SurveillanceIcon = styled(SurveillanceIconSVG)`
-  margin-right: 8px;
-  height: 24px;
-  color: ${p => p.theme.color.gunMetal};
-`
-const DeleteIcon = styled(DeleteSVG)`
-  color: ${p => p.theme.color.maximumRed};
-`
-
-const IconButtonRight = styled(IconButton)`
-  margin-left: auto;
 `
 
 const StyledFormikCheckbox = styled(FormikCheckbox)`
