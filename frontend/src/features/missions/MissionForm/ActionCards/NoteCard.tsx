@@ -6,7 +6,7 @@ export function NoteCard({ action }) {
   return (
     <>
       <Icon.Note color={THEME.color.charcoal} size={20} />
-      <NoteContent>{action.observations || 'Observation à renseigner'}</NoteContent>
+      <NoteContent title={action.observations ?? ''}>{action.observations ?? 'Observation à renseigner'}</NoteContent>
     </>
   )
 }
