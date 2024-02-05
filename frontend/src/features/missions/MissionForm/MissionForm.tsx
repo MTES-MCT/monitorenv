@@ -19,7 +19,7 @@ import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { ReopenModal } from './ReopenModal'
 import { missionFormsActions } from './slice'
-import { isEnvAutoSaveEnabled, shouldSaveMission } from './utils'
+import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
@@ -57,7 +57,7 @@ export function MissionForm({
   const previousEngagedControlUnit = usePrevious(engagedControlUnit)
 
   const isAutoSaveEnabled = useMemo(() => {
-    if (!isEnvAutoSaveEnabled()) {
+    if (!isMissionAutoSaveEnabled()) {
       return false
     }
 

@@ -1,4 +1,4 @@
-import { isEnvAutoUpdateEnabled } from './utils'
+import { isMissionAutoUpdateEnabled } from './utils'
 
 import type { Mission } from '../../../domain/entities/missions'
 
@@ -8,7 +8,7 @@ export const missionEventListener = (callback: (mission: Mission) => void) => (e
   // eslint-disable-next-line no-console
   console.log(`SSE: received a mission update.`)
 
-  if (!isEnvAutoUpdateEnabled()) {
+  if (!isMissionAutoUpdateEnabled()) {
     // eslint-disable-next-line no-console
     console.log(
       'Skipping automatic update of mission form. ' +

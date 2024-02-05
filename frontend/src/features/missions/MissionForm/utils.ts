@@ -11,11 +11,11 @@ import type { Mission, NewMission } from '../../../domain/entities/missions'
  * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
  * instead of `import.meta.env`.
  */
-export const isEnvAutoSaveEnabled = () =>
+export const isMissionAutoSaveEnabled = () =>
   isCypress()
     ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED') === 'true'
     : import.meta.env.FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED === 'true'
-export const isEnvAutoUpdateEnabled = () =>
+export const isMissionAutoUpdateEnabled = () =>
   isCypress()
     ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE') === 'true'
     : import.meta.env.FRONTEND_MISSION_FORM_AUTO_UPDATE === 'true'
