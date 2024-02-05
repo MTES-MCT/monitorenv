@@ -10,11 +10,12 @@ import {
   type NewMission
 } from '../../../../domain/entities/missions'
 import { isCypress } from '../../../../utils/isCypress'
+import { isPuppeteer } from '../../../../utils/isPuppeteer'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { LegacyControlUnit } from '../../../../domain/entities/legacyControlUnit'
 
-const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
+const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress() || isPuppeteer()
 
 const MissionTypesSchema = Yup.array()
   .of(Yup.mixed<MissionTypeEnum>().oneOf(Object.values(MissionTypeEnum)).required())

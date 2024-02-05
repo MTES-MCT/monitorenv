@@ -6,8 +6,9 @@ import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { isCypress } from '../../../../utils/isCypress'
+import { isPuppeteer } from '../../../../utils/isPuppeteer'
 
-const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
+const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress() || isPuppeteer()
 
 const ControlPointSchema = Yup.object().test({
   message: 'Point de contrôle requis',

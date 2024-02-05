@@ -1,7 +1,9 @@
 import { beforeEach, expect, it, jest } from '@jest/globals'
 import { platform } from 'os'
 
-import { assertContains, getFirstTab, getInputContent, listenToConsole, wait } from './utils'
+import { assertContains, getFirstTab, getInputContent, listenToConsole, setPuppeteerEnvironment, wait } from './utils'
+
+import type { Page } from 'puppeteer'
 
 const TIMEOUT = 120 * 1000
 
@@ -12,8 +14,8 @@ const WEBAPP_HOST = IS_DARWIN ? '0.0.0.0' : 'localhost'
 
 const URL = `http://${WEBAPP_HOST}:${WEBAPP_PORT}/side_window`
 
-let pageA
-let pageB
+let pageA: Page
+let pageB: Page
 
 jest.retryTimes(2)
 
@@ -32,6 +34,8 @@ describe('Missions Form', () => {
     for (const page of [pageA, pageB]) {
       await page.goto(URL)
       await wait(1000)
+
+      setPuppeteerEnvironment(page)
 
       await page.click('[data-cy="edit-mission-25"]')
       await wait(1000)

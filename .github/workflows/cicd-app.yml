@@ -146,8 +146,6 @@ jobs:
   e2e_test:
     name: Run E2E tests
     needs: [version, build]
-    # TODO !!! Remove that once the PR is ready !!!
-    # needs: [version]
     runs-on: ubuntu-22.04
     strategy:
       # when one test fails, DO NOT cancel the other

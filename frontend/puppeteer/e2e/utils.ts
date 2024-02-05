@@ -1,5 +1,7 @@
 import assert from 'assert'
 
+import type { Browser, Page } from 'puppeteer'
+
 export function listenToConsole(page, index) {
   page
     .on('console', message => {
@@ -25,22 +27,34 @@ export async function assertContains(page, selector, text) {
   assert.ok(node, `${selector} of value ${text} not found in array ${nodes}.`)
 }
 
-export async function getTextContent(page, selector) {
+export async function getTextContent(page: Page, selector: string) {
   const element = await page.waitForSelector(selector)
+  if (!element) {
+    throw new Error('`element` is undefined.')
+  }
 
   return element.evaluate(el => el.textContent)
 }
 
-export async function getInputContent(page, selector) {
+export async function getInputContent(page: Page, selector: string) {
   const element = await page.waitForSelector(selector)
+  if (!element) {
+    throw new Error('`element` is undefined.')
+  }
 
-  return element.evaluate(el => el.value)
+  return element.evaluate(el => (el as HTMLInputElement).value)
 }
 
-export async function getFirstTab(browser) {
+export async function getFirstTab(browser: Browser) {
   const [firstTab] = await browser.pages()
 
   return firstTab
+}
+
+export function setPuppeteerEnvironment(page: Page) {
+  page.evaluate(() => {
+    localStorage.setItem('IS_PUPPETEER', 'true')
+  })
 }
 
 export function wait(ms) {
