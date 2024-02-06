@@ -1,11 +1,10 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+// import { Icon, MultiRadio } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo, useState } from 'react'
-import { Radio, RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { interestPointType } from '../../../../domain/entities/interestPoints'
+// import { interestPointType } from '../../../../domain/entities/interestPoints'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import { addInterestPoint, updateInterestPointKeyBeingDrawed } from '../../../../domain/shared_slices/InterestPoint'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
@@ -17,6 +16,36 @@ import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
 
 import type { Coordinate } from 'ol/coordinate'
+
+/* const INTEREST_POINT_OPTIONS = [
+  {
+    label: (
+      <>
+        <Icon.ControlUnit size={14} />
+        Moyen de contrôle
+      </>
+    ),
+    value: interestPointType.CONTROL_ENTITY
+  },
+  {
+    label: (
+      <>
+        <Icon.FleetSegment size={14} />
+        Navire de pêche
+      </>
+    ),
+    value: interestPointType.FISHING_VESSEL
+  },
+  {
+    label: (
+      <>
+        <Icon.Info size={15} />
+        Autre point
+      </>
+    ),
+    value: interestPointType.OTHER
+  }
+] */
 
 // TODO Refactor this component
 // - Move the state logic to the reducer
@@ -78,7 +107,7 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
     [dispatch, interestPointBeingDrawed?.observations]
   )
 
-  const updateType = useCallback(
+  /*   const updateType = useCallback(
     type => {
       if (type && interestPointBeingDrawed?.type !== type) {
         dispatch(
@@ -90,7 +119,7 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
       }
     },
     [dispatch, interestPointBeingDrawed?.type]
-  )
+  ) */
 
   /**
    * Compare with previous coordinates and update interest point coordinates
@@ -139,27 +168,13 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
       <Body>
         <p>Coordonnées</p>
         {isOpen && <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />}
-        <p>Type de point</p>
-        <RadioWrapper>
-          <RadioGroup
-            defaultValue={interestPointBeingDrawed?.type ?? interestPointType.OTHER}
-            name="interestTypeRadio"
-            onChange={updateType}
-          >
-            <Radio value={interestPointType.CONTROL_ENTITY}>
-              <Icon.ControlUnit size={14} />
-              Moyen de contrôle
-            </Radio>
-            <Radio value={interestPointType.FISHING_VESSEL}>
-              <Icon.FleetSegment size={14} />
-              Navire de pêche
-            </Radio>
-            <Radio data-cy="interest-point-type-radio-input" value={interestPointType.OTHER}>
-              <Icon.Info size={15} />
-              Autre point
-            </Radio>
-          </RadioGroup>
-        </RadioWrapper>
+        {/*  <MultiRadio
+          label="Type de point"
+          name="interestTypeRadio"
+          onChange={updateType}
+          options={INTEREST_POINT_OPTIONS}
+          value={interestPointBeingDrawed?.type ?? interestPointType.OTHER}
+        /> */}
         <p>Libellé du point</p>
         <Name
           data-cy="interest-point-name-input"
@@ -186,10 +201,6 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
 
 const Name = styled.input`
   width: 100%;
-`
-
-const RadioWrapper = styled.div`
-  margin-top: 10px;
 `
 
 const CancelButton = styled.button`
