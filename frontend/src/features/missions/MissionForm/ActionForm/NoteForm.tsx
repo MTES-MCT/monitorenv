@@ -1,6 +1,5 @@
 import { Accent, FormikTextarea, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { Form } from 'rsuite'
 
 import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
 import { type EnvAction } from '../../../../domain/entities/missions'
@@ -33,9 +32,7 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
         </StyledDeleteButton>
       </Header>
 
-      <Form.Group>
-        <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
-      </Form.Group>
+      <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
     </>
   )
 }

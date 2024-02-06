@@ -39,7 +39,7 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
   }
 
   return (
-    <>
+    <div>
       <Header>
         <Title>Détails de la cible en infraction</Title>
         <Button accent={Accent.SECONDARY} disabled={!canAddInfraction} onClick={handleAddInfraction}>
@@ -76,7 +76,7 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
           <NoAction>aucun contrôle avec infraction enregistré pour le moment</NoAction>
         </NoActionWrapper>
       )}
-    </>
+    </div>
   )
 }
 

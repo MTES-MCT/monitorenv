@@ -16,7 +16,7 @@ import {
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import { Form, Toggle } from 'rsuite'
+import { Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
@@ -213,7 +213,7 @@ export function ControlForm({
         </StyledDeleteButton>
       </Header>
       <FormBody>
-        <ReportingsContainer>
+        <div>
           <StyledToggle>
             <Toggle
               checked={isReportingListVisible}
@@ -233,29 +233,27 @@ export function ControlForm({
               value={currentAction?.reportingIds[0]}
             />
           )}
-        </ReportingsContainer>
-        <Form.Group>
-          <ActionTheme
-            actionIndex={envActionIndex}
-            actionType={ActionTypeEnum.CONTROL}
-            labelSubTheme="Sous-thématiques de contrôle"
-            labelTheme="Thématique de contrôle"
-            themeIndex={0}
-            themesYear={actualYearForThemes}
-          />
-        </Form.Group>
-        <Form.Group>
-          <DatePicker
-            baseContainer={newWindowContainerRef.current}
-            defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
-            isLight
-            isStringDate
-            label="Date et heure du contrôle (UTC)"
-            onChange={updateControlDate}
-            withTime
-          />
-          {actionStartDateTimeUtcErrorMessage && <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>}
-        </Form.Group>
+        </div>
+
+        <ActionTheme
+          actionIndex={envActionIndex}
+          actionType={ActionTypeEnum.CONTROL}
+          labelSubTheme="Sous-thématiques de contrôle"
+          labelTheme="Thématique de contrôle"
+          themeIndex={0}
+          themesYear={actualYearForThemes}
+        />
+
+        <DatePicker
+          baseContainer={newWindowContainerRef.current}
+          defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
+          isLight
+          isStringDate
+          label="Date et heure du contrôle (UTC)"
+          onChange={updateControlDate}
+          withTime
+        />
+        {actionStartDateTimeUtcErrorMessage && <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>}
 
         <MultiPointPicker
           addButtonLabel="Ajouter un point de contrôle"
@@ -266,35 +264,30 @@ export function ControlForm({
         <Separator />
 
         <ActionSummary>
-          <ActionFieldWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${envActionIndex}.actionNumberOfControls`} />
-            <FormikNumberInput
-              data-cy="control-form-number-controls"
-              isErrorMessageHidden
-              isLight
-              label="Nombre total de contrôles"
-              min={1}
-              name={`envActions.${envActionIndex}.actionNumberOfControls`}
-            />
-          </ActionFieldWrapper>
-          <ActionFieldWrapper>
-            <TargetSelector
-              error={actionTargetTypeErrorMessage}
-              name={`envActions.${envActionIndex}.actionTargetType`}
-              onChange={onTargetTypeChange}
-              options={targetTypeOptions}
-              value={actionTargetType}
-            />
-          </ActionFieldWrapper>
-          <ActionFieldWrapper>
-            <VehicleTypeSelector
-              disabled={actionTargetType !== TargetTypeEnum.VEHICLE}
-              error={actionVehicleTypeErrorMessage}
-              name={`envActions.${envActionIndex}.vehicleType`}
-              onChange={onVehicleTypeChange}
-              value={vehicleType}
-            />
-          </ActionFieldWrapper>
+          <FormikNumberInput
+            data-cy="control-form-number-controls"
+            isErrorMessageHidden
+            isLight
+            label="Nombre total de contrôles"
+            min={1}
+            name={`envActions.${envActionIndex}.actionNumberOfControls`}
+          />
+
+          <TargetSelector
+            error={actionTargetTypeErrorMessage}
+            name={`envActions.${envActionIndex}.actionTargetType`}
+            onChange={onTargetTypeChange}
+            options={targetTypeOptions}
+            value={actionTargetType}
+          />
+
+          <VehicleTypeSelector
+            disabled={actionTargetType !== TargetTypeEnum.VEHICLE}
+            error={actionVehicleTypeErrorMessage}
+            name={`envActions.${envActionIndex}.vehicleType`}
+            onChange={onVehicleTypeChange}
+            value={vehicleType}
+          />
         </ActionSummary>
 
         <FieldArray
@@ -310,7 +303,7 @@ export function ControlForm({
           )}
           validateOnChange={false}
         />
-        <StyledFormikTextareaWithMargin
+        <FormikTextarea
           data-cy="control-form-observations"
           isLight
           label="Observations"
@@ -325,13 +318,10 @@ export function ControlForm({
 const FormBody = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 24px;
   padding-bottom: 48px;
 `
 
-const ReportingsContainer = styled.div`
-  padding-bottom: 32px;
-  gap: 16px;
-`
 const StyledToggle = styled.div`
   display: flex;
   flex-direction: row;
@@ -350,27 +340,18 @@ const StyledMultiRadio = styled(MultiRadio)`
   margin-left: 48px;
 `
 
-const Separator = styled.hr`
-  border-color: ${p => p.theme.color.slateGray};
+const Separator = styled.div`
+  height: 1px;
+  border-top: 1px solid ${p => p.theme.color.slateGray};
 `
 
-const ActionSummary = styled(Form.Group)`
-  height: 58px;
-  flex-shrink: 0;
+const ActionSummary = styled.div`
   display: flex;
-`
-
-const ActionFieldWrapper = styled.div`
-  :not(:first-child) {
-    margin-left: 8px;
-  }
+  flex-direction: row;
+  gap: 8px;
 `
 
 const SubTitle = styled.div`
   font-size: 16px;
   display: inline-block;
-`
-
-const StyledFormikTextareaWithMargin = styled(FormikTextarea)`
-  margin-top: 24px;
 `

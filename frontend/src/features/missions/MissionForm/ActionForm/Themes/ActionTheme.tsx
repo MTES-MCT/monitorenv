@@ -79,5 +79,8 @@ export function ActionTheme({
 }
 
 const ActionThemeWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
+  gap: 24px;
 `

@@ -11,11 +11,12 @@ import {
   Accent,
   Icon,
   Size,
-  THEME
+  THEME,
+  Label
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
-import { Form, Toggle } from 'rsuite'
+import { Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
@@ -161,31 +162,31 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           Supprimer
         </StyledDeleteButton>
       </Header>
-      <ReportingsContainer>
-        <StyledToggle>
-          <Toggle
-            checked={isReportingListVisible}
-            data-cy="surveillance-form-toggle-reporting"
-            onChange={updateIsSurveillanceAttachedToReporting}
-            readOnly={areAllReportingsAttachedToAnAction && currentAction?.reportingIds?.length === 0}
-          />
-          <span>La surveillance est rattachée à un signalement</span>
-        </StyledToggle>
-        {isReportingListVisible && (
-          <StyledMultiCheckbox
-            isLabelHidden
-            label="Signalements"
-            name={`envActions[${envActionIndex}].reportingIds`}
-            onChange={selectReportings}
-            options={reportingAsOptions}
-            value={currentAction?.reportingIds}
-          />
-        )}
-      </ReportingsContainer>
-      <SurveillanceThemes envActionIndex={envActionIndex} themesYear={actualYearForThemes} />
-      <FlexSelectorWrapper>
-        <Form.Group>
-          <Form.ControlLabel>Début et fin de surveillance (UTC)</Form.ControlLabel>
+      <FormBody>
+        <div>
+          <StyledToggle>
+            <Toggle
+              checked={isReportingListVisible}
+              data-cy="surveillance-form-toggle-reporting"
+              onChange={updateIsSurveillanceAttachedToReporting}
+              readOnly={areAllReportingsAttachedToAnAction && currentAction?.reportingIds?.length === 0}
+            />
+            <span>La surveillance est rattachée à un signalement</span>
+          </StyledToggle>
+          {isReportingListVisible && (
+            <StyledMultiCheckbox
+              isLabelHidden
+              label="Signalements"
+              name={`envActions[${envActionIndex}].reportingIds`}
+              onChange={selectReportings}
+              options={reportingAsOptions}
+              value={currentAction?.reportingIds}
+            />
+          )}
+        </div>
+        <SurveillanceThemes envActionIndex={envActionIndex} themesYear={actualYearForThemes} />
+        <FlexSelectorWrapper>
+          <Label>Début et fin de surveillance (UTC)</Label>
           <StyledDatePickerContainer>
             <StyledDatePicker
               key={`start-date-${durationMatchMissionField.value}`}
@@ -234,36 +235,36 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             label="Dates et heures de surveillance équivalentes à celles de la mission"
             name={`envActions[${envActionIndex}].durationMatchesMission`}
           />
-        </Form.Group>
-      </FlexSelectorWrapper>
-      <FlexSelectorWrapper>
-        <MultiZonePicker
-          addButtonLabel="Ajouter une zone de surveillance"
-          envActionIndex={envActionIndex}
-          interactionListener={InteractionListener.SURVEILLANCE_ZONE}
-          isLight
-          label="Zone de surveillance"
-          name={`envActions[${envActionIndex}].geom`}
-        />
-        <StyledFormikCheckbox
-          data-cy="surveillance-zone-matches-mission"
-          disabled={hasCustomZone || isEditingZone}
-          inline
-          label="Zone de surveillance équivalente à la zone de mission"
-          name={`envActions[${envActionIndex}].coverMissionZone`}
-        />
-      </FlexSelectorWrapper>
-      <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions[${envActionIndex}].observations`}> </Form.ControlLabel>
+        </FlexSelectorWrapper>
+        <FlexSelectorWrapper>
+          <MultiZonePicker
+            addButtonLabel="Ajouter une zone de surveillance"
+            envActionIndex={envActionIndex}
+            interactionListener={InteractionListener.SURVEILLANCE_ZONE}
+            isLight
+            label="Zone de surveillance"
+            name={`envActions[${envActionIndex}].geom`}
+          />
+          <StyledFormikCheckbox
+            data-cy="surveillance-zone-matches-mission"
+            disabled={hasCustomZone || isEditingZone}
+            inline
+            label="Zone de surveillance équivalente à la zone de mission"
+            name={`envActions[${envActionIndex}].coverMissionZone`}
+          />
+        </FlexSelectorWrapper>
+
         <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
-      </Form.Group>
+      </FormBody>
     </>
   )
 }
 
-const ReportingsContainer = styled.div`
-  padding-bottom: 32px;
-  gap: 16px;
+const FormBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 48px;
 `
 const StyledToggle = styled.div`
   display: flex;
@@ -286,15 +287,12 @@ const FlexSelectorWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: baseline;
-  gap: 8px;
-  margin-bottom: 24px;
 `
 const StyledDatePickerContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
   align-items: baseline;
-  margin-bottom: 8px;
 `
 const StyledDatePicker = styled(DatePicker)`
   p {

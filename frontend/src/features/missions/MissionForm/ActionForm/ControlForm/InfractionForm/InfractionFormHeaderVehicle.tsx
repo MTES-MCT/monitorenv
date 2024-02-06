@@ -13,36 +13,25 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
 
   return (
     <FormGroup>
-      <FormColumn>
-        <FormikTextInput
-          data-cy="infraction-form-registrationNumber"
-          label="Immatriculation"
-          name={`${infractionPath}.registrationNumber`}
-        />
-      </FormColumn>
+      <FormikTextInput
+        data-cy="infraction-form-registrationNumber"
+        label="Immatriculation"
+        name={`${infractionPath}.registrationNumber`}
+      />
+
       {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
         <>
-          <FormColumn>
-            <VesselTypeSelector infractionPath={infractionPath} />
-          </FormColumn>
+          <VesselTypeSelector infractionPath={infractionPath} />
 
-          <FormColumn>
-            <VesselSizeSelector infractionPath={infractionPath} />
-          </FormColumn>
+          <VesselSizeSelector infractionPath={infractionPath} />
         </>
       )}
     </FormGroup>
   )
 }
 
-const FormColumn = styled.div`
-  display: inline-block;
-  :not(:last-child) {
-    margin-right: 6px;
-  }
-`
 const FormGroup = styled.div`
-  margin-bottom: 16px;
-  height: 58px;
   display: flex;
+  flex: 1;
+  gap: 8px;
 `
