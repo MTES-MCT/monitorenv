@@ -11,7 +11,7 @@ interface ImportMetaEnv {
   readonly FRONTEND_MONITORENV_VERSION?: string
   readonly FRONTEND_SENTRY_DSN?: string
   readonly FRONTEND_SENTRY_ENV?: string
-  readonly FRONTEND_SENTRY_TRACING_ORIGINS: string
+  readonly FRONTEND_SENTRY_TRACING_ORIGIN?: string
   readonly FRONTEND_SHOM_KEY: string
 }
 

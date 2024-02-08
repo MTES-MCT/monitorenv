@@ -19,7 +19,9 @@ if (import.meta.env.PROD) {
     environment: import.meta.env.FRONTEND_SENTRY_ENV ?? '',
     integrations: [
       new BrowserTracing({
-        tracingOrigins: [import.meta.env.FRONTEND_SENTRY_TRACING_ORIGINS]
+        tracingOrigins: import.meta.env.FRONTEND_SENTRY_TRACING_ORIGIN
+          ? [import.meta.env.FRONTEND_SENTRY_TRACING_ORIGIN]
+          : undefined
       })
     ],
     release: import.meta.env.FRONTEND_MONITORENV_VERSION ?? '0.0.0',
