@@ -1,10 +1,10 @@
-// import { Icon, MultiRadio } from '@mtes-mct/monitor-ui'
+import { Icon, MultiRadio, type Option } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-// import { interestPointType } from '../../../../domain/entities/interestPoints'
+import { interestPointType } from '../../../../domain/entities/interestPoints'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import { addInterestPoint, updateInterestPointKeyBeingDrawed } from '../../../../domain/shared_slices/InterestPoint'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
@@ -15,37 +15,32 @@ import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordi
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
 
+import type { InterestPointOptionValueType } from '../../../InterestPoint/types'
 import type { Coordinate } from 'ol/coordinate'
 
-/* const INTEREST_POINT_OPTIONS = [
+const INTEREST_POINT_OPTIONS: Array<Option<InterestPointOptionValueType>> = [
   {
-    label: (
-      <>
-        <Icon.ControlUnit size={14} />
-        Moyen de contrôle
-      </>
-    ),
-    value: interestPointType.CONTROL_ENTITY
+    label: 'Moyen de contrôle',
+    value: {
+      icon: Icon.ControlUnit,
+      value: interestPointType.CONTROL_ENTITY
+    }
   },
   {
-    label: (
-      <>
-        <Icon.FleetSegment size={14} />
-        Navire de pêche
-      </>
-    ),
-    value: interestPointType.FISHING_VESSEL
+    label: 'Navire de pêche',
+    value: {
+      icon: Icon.FleetSegment,
+      value: interestPointType.FISHING_VESSEL
+    }
   },
   {
-    label: (
-      <>
-        <Icon.Info size={15} />
-        Autre point
-      </>
-    ),
-    value: interestPointType.OTHER
+    label: 'Autre point',
+    value: {
+      icon: Icon.Info,
+      value: interestPointType.OTHER
+    }
   }
-] */
+]
 
 // TODO Refactor this component
 // - Move the state logic to the reducer
@@ -57,9 +52,19 @@ type EditInterestPointProps = {
 }
 export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
-  const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
 
   const { interestPointBeingDrawed, isEditing } = useAppSelector(state => state.interestPoint)
+
+  const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
+
+  const defaultType = interestPointBeingDrawed?.type
+    ? INTEREST_POINT_OPTIONS.find(
+        interestPointOption => interestPointOption.value.value === interestPointBeingDrawed.type
+      )?.value
+    : INTEREST_POINT_OPTIONS[2]?.value
+
+  const [selectedOption, setSelectedOption] = useState()
+
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
     if (!interestPointBeingDrawed?.coordinates?.length) {
@@ -107,19 +112,21 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
     [dispatch, interestPointBeingDrawed?.observations]
   )
 
-  /*   const updateType = useCallback(
-    type => {
-      if (type && interestPointBeingDrawed?.type !== type) {
+  const updateType = useCallback(
+    option => {
+      setSelectedOption(option)
+      const type = option.value
+      if (option.value && interestPointBeingDrawed?.type !== type) {
         dispatch(
           updateInterestPointKeyBeingDrawed({
             key: 'type',
-            value: type
+            value: option.value
           })
         )
       }
     },
     [dispatch, interestPointBeingDrawed?.type]
-  ) */
+  )
 
   /**
    * Compare with previous coordinates and update interest point coordinates
@@ -156,45 +163,68 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
       dispatch(addInterestPoint())
       close()
 
-      const formattedCoordinates = [localCoordinates[1], localCoordinates[0]] as Coordinate
-      const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-      dispatch(setFitToExtent(extent))
+      if (!isEditing) {
+        const formattedCoordinates = [localCoordinates[1], localCoordinates[0]] as Coordinate
+        const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+        dispatch(setFitToExtent(extent))
+      }
+
+      // reset state
+      setSelectedOption(undefined)
     }
+  }
+
+  const cancel = () => {
+    close()
+    // reset state
+    setSelectedOption(undefined)
   }
 
   return (
     <Wrapper data-cy="save-interest-point" healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
-      <Header>Créer un point d&apos;intérêt</Header>
-      <Body>
-        <p>Coordonnées</p>
-        {isOpen && <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />}
-        {/*  <MultiRadio
-          label="Type de point"
-          name="interestTypeRadio"
-          onChange={updateType}
-          options={INTEREST_POINT_OPTIONS}
-          value={interestPointBeingDrawed?.type ?? interestPointType.OTHER}
-        /> */}
-        <p>Libellé du point</p>
-        <Name
-          data-cy="interest-point-name-input"
-          onChange={e => updateName(e.target.value)}
-          type="text"
-          value={interestPointBeingDrawed?.name ?? ''}
-        />
-        <p>Observations</p>
-        <textarea
-          data-cy="interest-point-observations-input"
-          onChange={e => updateObservations(e.target.value)}
-          value={interestPointBeingDrawed?.observations ?? ''}
-        />
-        <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
-          OK
-        </OkButton>
-        <CancelButton disabled={isEditing} onClick={close}>
-          Annuler
-        </CancelButton>
-      </Body>
+      {isOpen && (
+        <>
+          <Header>Créer un point d&apos;intérêt</Header>
+          <Body>
+            <p>Coordonnées</p>
+            <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
+            <MultiRadio
+              key={interestPointBeingDrawed?.uuid}
+              label="Type de point"
+              name="interestTypeRadio"
+              onChange={updateType}
+              options={INTEREST_POINT_OPTIONS}
+              optionValueKey="value"
+              renderMenuItem={(label, value) => (
+                <MultiRadioLabel>
+                  <value.icon size={14} />
+                  <span>{label}</span>
+                </MultiRadioLabel>
+              )}
+              value={selectedOption ?? defaultType}
+            />
+            <p>Libellé du point</p>
+            <Name
+              data-cy="interest-point-name-input"
+              onChange={e => updateName(e.target.value)}
+              type="text"
+              value={interestPointBeingDrawed?.name ?? ''}
+            />
+            <p>Observations</p>
+            <textarea
+              data-cy="interest-point-observations-input"
+              onChange={e => updateObservations(e.target.value)}
+              value={interestPointBeingDrawed?.observations ?? ''}
+            />
+            <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
+              OK
+            </OkButton>
+            <CancelButton disabled={isEditing} onClick={cancel}>
+              Annuler
+            </CancelButton>
+          </Body>
+        </>
+      )}
     </Wrapper>
   )
 }
@@ -298,4 +328,9 @@ const Wrapper = styled(MapToolBox)`
     align-items: center;
     margin-left: 4px;
   }
+`
+const MultiRadioLabel = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `
