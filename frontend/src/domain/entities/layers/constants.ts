@@ -26,6 +26,7 @@ enum MonitorEnvLayers {
   DRAW = 'DRAW',
   EEZ = 'EEZ',
   FAO = 'FAO',
+  HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
   MEASUREMENT = 'MEASUREMENT',
@@ -158,39 +159,43 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING]: {
     code: MonitorEnvLayers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING,
-    zIndex: 1000
+    zIndex: 2000
   },
   [MonitorEnvLayers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION]: {
     code: MonitorEnvLayers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION,
-    zIndex: 1000
+    zIndex: 1700
   },
   [MonitorEnvLayers.REPORTING_SELECTED]: {
     code: MonitorEnvLayers.REPORTING_SELECTED,
-    zIndex: 1025
+    zIndex: 1700
   },
   [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION]: {
     code: MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION,
-    zIndex: 1025
+    zIndex: 1700
   },
   [MonitorEnvLayers.MISSION_SELECTED]: {
     code: MonitorEnvLayers.MISSION_SELECTED,
-    zIndex: 1050
+    zIndex: 2000
   },
   [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING]: {
     code: MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING,
-    zIndex: 1050
+    zIndex: 2000
   },
   [MonitorEnvLayers.MISSIONS]: {
     code: MonitorEnvLayers.MISSIONS,
-    zIndex: 1050
+    zIndex: 2000
+  },
+  [MonitorEnvLayers.HOVERED_MISSION]: {
+    code: MonitorEnvLayers.MISSIONS,
+    zIndex: 1800
   },
   [MonitorEnvLayers.REPORTINGS]: {
     code: MonitorEnvLayers.REPORTINGS,
-    zIndex: 1050
+    zIndex: 1700
   },
   [MonitorEnvLayers.ACTIONS]: {
     code: MonitorEnvLayers.ACTIONS,
-    zIndex: 1110
+    zIndex: 1800
   },
   [MonitorEnvLayers.MEASUREMENT]: {
     code: MonitorEnvLayers.MEASUREMENT,
@@ -204,7 +209,7 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.SEMAPHORES]: {
     code: MonitorEnvLayers.SEMAPHORES,
-    zIndex: 1300
+    zIndex: 1500
   },
   [MonitorEnvLayers.DRAW]: {
     code: 'draw_layer',
@@ -212,8 +217,7 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.STATIONS]: {
     code: MonitorEnvLayers.STATIONS,
-    // Station layer should always appear above all other layers
-    zIndex: 2000
+    zIndex: 1600
   }
 }
 

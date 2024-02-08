@@ -7,7 +7,7 @@ import { Circle, Icon, Style } from 'ol/style'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { ActionTypeEnum, MissionStatusEnum } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, MissionStatusEnum, MissionTypeEnum } from '../../../../domain/entities/missions'
 
 export const missionZoneStyle = new Style({
   fill: new Fill({
@@ -21,7 +21,7 @@ export const missionZoneStyle = new Style({
   })
 })
 
-const missionWithCentroidStyleFactory = color =>
+const missionWithCentroidStyleFactory = (status, type) =>
   new Style({
     geometry: feature => {
       const extent = feature?.getGeometry()?.getExtent()
@@ -30,24 +30,29 @@ const missionWithCentroidStyleFactory = color =>
       return center && new Point(center)
     },
     image: new Icon({
-      color,
-      src: 'marker-flag.svg'
+      displacement: [0, 24],
+      scale: 0.5,
+      src: `mission/${status}_${type}.png`
     })
   })
 
 export const missionWithCentroidStyleFn = feature => {
-  const missionStatus = feature.get('missionStatus')
+  const missionStatus = feature.get('missionStatus') as MissionStatusEnum
+  const missionTypes = feature.get('missionTypes') as MissionTypeEnum[]
+
+  const missionTypeLabel = missionTypes?.length > 1 ? 'MULTI' : missionTypes[0]
+
   switch (missionStatus) {
     case MissionStatusEnum.UPCOMING:
-      return missionWithCentroidStyleFactory(THEME.color.yellowGreen)
+      return missionWithCentroidStyleFactory(MissionStatusEnum.UPCOMING, missionTypeLabel)
     case MissionStatusEnum.PENDING:
-      return missionWithCentroidStyleFactory(THEME.color.mediumSeaGreen)
+      return missionWithCentroidStyleFactory(MissionStatusEnum.PENDING, missionTypeLabel)
     case MissionStatusEnum.ENDED:
-      return missionWithCentroidStyleFactory(THEME.color.charcoal)
+      return missionWithCentroidStyleFactory(MissionStatusEnum.ENDED, missionTypeLabel)
     case MissionStatusEnum.CLOSED:
-      return missionWithCentroidStyleFactory(THEME.color.opal)
+      return missionWithCentroidStyleFactory(MissionStatusEnum.CLOSED, missionTypeLabel)
     default:
-      return missionWithCentroidStyleFactory(THEME.color.opal)
+      return missionWithCentroidStyleFactory(MissionStatusEnum.CLOSED, missionTypeLabel)
   }
 }
 

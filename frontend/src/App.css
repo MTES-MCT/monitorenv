@@ -31,30 +31,19 @@
 /* TODO Why repeat width, height 0 everywhere? Could be done in OL default class. */
 /* TODO Maybe rather use a common "-hover" class with a high z-index to always show hovered overlays above everything else? */
 
-.overlay-mission-hover .overlay-mission-to-attach-hover {
-  z-index: 5000;
-  width: 0;
-  height: 0;
-}
-
 .overlay-mission-selected .overlay-mission-to-attach-selected {
-  z-index: 4000;
+  z-index: 6500;
   width: 0;
   height: 0;
 }
 
-.overlay-action-hover {
-  z-index: 5500;
-  width: 0;
-  height: 0;
-}
-.overlay-semaphore-hover {
+.overlay-mission-hover .overlay-mission-to-attach-hover {
   z-index: 6000;
   width: 0;
   height: 0;
 }
 
-.overlay-semaphore-selected {
+.overlay-action-hover {
   z-index: 5500;
   width: 0;
   height: 0;
@@ -67,12 +56,24 @@
 }
 
 .overlay-reporting-selected {
-  z-index: 4000;
+  z-index: 5000;
   width: 0;
   height: 0;
 }
 
 .overlay-station-hover,
 .overlay-station-selected {
-  z-index: 7000;
+  z-index: 4000;
+}
+
+.overlay-semaphore-hover {
+  z-index: 3000;
+  width: 0;
+  height: 0;
+}
+
+.overlay-semaphore-selected {
+  z-index: 3000;
+  width: 0;
+  height: 0;
 }

@@ -29,9 +29,9 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
           style: missionZoneStyle,
           updateWhileAnimating: true,
           updateWhileInteracting: true,
-          zIndex: Layers.MISSIONS.zIndex
+          zIndex: Layers.HOVERED_MISSION.zIndex
         }) as VectorLayerWithName
-        vectorLayerRef.current.name = Layers.MISSION_SELECTED.code
+        vectorLayerRef.current.name = Layers.HOVERED_MISSION.code
       }
 
       return vectorLayerRef.current
