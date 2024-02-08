@@ -86,7 +86,7 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       feature.setProperties({
         isHighlighted: highlightedFeatureIds.includes(featureId),
         isSelected: featureId === selectedFeatureId,
-        overlayCoordinates: featureId === selectedFeatureId ? overlayCoordinates.stations : undefined
+        overlayCoordinates: featureId === selectedFeatureId ? overlayCoordinates[Layers.STATIONS.code] : undefined
       })
     })
   }, [highlightedFeatureIds, overlayCoordinates, selectedFeatureId])
