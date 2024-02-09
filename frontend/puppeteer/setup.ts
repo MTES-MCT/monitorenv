@@ -27,7 +27,7 @@ export default async () => {
 
       defaultViewport: null,
 
-      headless: process.env.CI ? 'new' : false
+      headless: process.env.IS_HEADLESS === 'true' ? 'new' : false
     })
 
     const version = await browser.version()

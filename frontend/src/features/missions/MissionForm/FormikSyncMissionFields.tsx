@@ -3,8 +3,8 @@ import { useFormikContext } from 'formik'
 import { omit } from 'lodash'
 import { useEffect } from 'react'
 
+import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 import { useListenMissionEventUpdatesById } from './hooks/useListenMissionEventUpdatesById'
-import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './sse'
 
 import type { Mission } from '../../../domain/entities/missions'
 

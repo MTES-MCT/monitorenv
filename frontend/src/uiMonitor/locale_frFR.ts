@@ -1,7 +1,10 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
+
 import fr_FR from 'rsuite/locales/fr_FR'
 
-export const Calendar = {
+import type { Locale } from 'rsuite'
+
+const Calendar = {
   sunday: 'Dim',
   monday: 'Lundi',
   tuesday: 'Mardi',
@@ -20,8 +23,7 @@ export const Calendar = {
   dateLocale: fr_FR.Calendar.dateLocale
 }
 
-// eslint-disable-next-line import/no-default-export
-export default {
+export const FR_FR_LOCALE: Locale = {
   Breadcrumb: {
     expandText: 'Montrer le chemin'
   },
@@ -30,8 +32,10 @@ export default {
     closeLabel: 'Fermer'
   },
   common: {
+    // clear: 'Effacer',
     emptyMessage: 'Aucune donnée',
     loading: 'Chargement...'
+    // remove: 'Supprimer'
   },
   DatePicker: {
     ...Calendar
@@ -75,6 +79,7 @@ export default {
     error: 'Erreur',
     inited: 'Initial',
     progress: 'En cours',
+    // removeFile: 'Supprimer',
     upload: 'Charger'
   }
 }

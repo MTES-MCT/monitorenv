@@ -1,9 +1,9 @@
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
-import { Provider } from 'react-redux'
+import { Provider as ReduxProvider } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
-import { CustomProvider } from 'rsuite'
+import { CustomProvider as RsuiteCustomProvider } from 'rsuite'
 
 import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { ToastNotification } from './components/ToastNotification'
@@ -11,31 +11,27 @@ import { SideWindow } from './features/SideWindow'
 import { BackOfficePage } from './pages/BackOfficePage'
 import { HomePage } from './pages/HomePage'
 import { homeStore } from './store'
-import frFR from './uiMonitor/locale_frFR'
+import { FR_FR_LOCALE } from './uiMonitor/locale_frFR'
 import { isBrowserSupported } from './utils/isBrowserSupported'
+import { isCypress } from './utils/isCypress'
 
 export function App() {
   if (!isBrowserSupported()) {
     return <AlertUnsupportedBrowser />
   }
 
-  // expose store when run in Cypress
-  if (window.Cypress) {
+  // Expose store when run in Cypress
+  if (isCypress()) {
     window.store = homeStore
   }
 
   const persistor = persistStore(homeStore)
 
-  // expose store when run in Cypress
-  if (window.Cypress) {
-    window.store = homeStore
-  }
-
   return (
     <ThemeProvider theme={THEME}>
       <OnlyFontGlobalStyle />
-      <CustomProvider disableRipple locale={frFR}>
-        <Provider store={homeStore}>
+      <RsuiteCustomProvider disableRipple locale={FR_FR_LOCALE}>
+        <ReduxProvider store={homeStore}>
           <PersistGate loading={undefined} persistor={persistor}>
             <Router>
               <Routes>
@@ -47,8 +43,8 @@ export function App() {
 
             <ToastNotification />
           </PersistGate>
-        </Provider>
-      </CustomProvider>
+        </ReduxProvider>
+      </RsuiteCustomProvider>
     </ThemeProvider>
   )
 }

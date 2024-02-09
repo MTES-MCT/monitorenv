@@ -1,8 +1,24 @@
 import { isEqual, omit } from 'lodash'
 
-import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './sse'
+import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
+import { isCypress } from '../../../utils/isCypress'
 
 import type { Mission, NewMission } from '../../../domain/entities/missions'
+
+/**
+ * Is auto-save enabled.
+ *
+ * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
+ * instead of `import.meta.env`.
+ */
+export const isMissionAutoSaveEnabled = () =>
+  isCypress()
+    ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED') === 'true'
+    : import.meta.env.FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED === 'true'
+export const isMissionAutoUpdateEnabled = () =>
+  isCypress()
+    ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE') === 'true'
+    : import.meta.env.FRONTEND_MISSION_FORM_AUTO_UPDATE === 'true'
 
 /**
  * should a Formik `onChange` event trigger `saveMission`.

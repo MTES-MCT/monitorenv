@@ -3,7 +3,12 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 context('Side Window > Mission Form > Validation on close', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
+    cy.visit(`/side_window`, {
+      onBeforeLoad: () => {
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
+      }
+    })
   })
 
   it('A new mission with control and surveillance can be closed with all required values When auto-save is enabled', () => {

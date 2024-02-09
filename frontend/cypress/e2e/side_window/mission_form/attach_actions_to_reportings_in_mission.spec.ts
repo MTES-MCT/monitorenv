@@ -1,7 +1,12 @@
 context('Side Window > Mission Form > Attach action to reporting', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
+    cy.visit(`/side_window`, {
+      onBeforeLoad: () => {
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
+      }
+    })
   })
 
   it('A control can be attached to a reporting', () => {

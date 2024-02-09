@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon-32.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Monitor Env" />
+    <title>MonitorEnv</title>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!-- This script will be used by the `import-meta-env` library to inject -->
+    <!-- runtime environment variables when running in production -->
+    <!-- see: https://import-meta-env.org/guide/getting-started/introduction.html -->
+    <script>
+      globalThis.import_meta_env = JSON.parse('"import_meta_env_placeholder"')
+    </script>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
