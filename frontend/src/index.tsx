@@ -1,5 +1,6 @@
 import { BrowserTracing } from '@sentry/browser'
 import { init } from '@sentry/react'
+import { isEmpty } from 'lodash'
 import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
@@ -13,18 +14,16 @@ import './App.css'
 import './uiMonitor/ol-override.css'
 import './uiMonitor/rsuite-override.css'
 
-if (import.meta.env.PROD) {
+if (import.meta.env.PROD && isEmpty(import.meta.env.FRONTEND_SENTRY_DSN)) {
   init({
-    dsn: import.meta.env.FRONTEND_SENTRY_DSN ?? '',
-    environment: import.meta.env.FRONTEND_SENTRY_ENV ?? '',
+    dsn: import.meta.env.FRONTEND_SENTRY_DSN,
+    environment: import.meta.env.FRONTEND_SENTRY_ENV,
     integrations: [
       new BrowserTracing({
-        tracingOrigins: import.meta.env.FRONTEND_SENTRY_TRACING_ORIGIN
-          ? [import.meta.env.FRONTEND_SENTRY_TRACING_ORIGIN]
-          : undefined
+        tracingOrigins: [import.meta.env.FRONTEND_SENTRY_TRACING_ORIGIN]
       })
     ],
-    release: import.meta.env.FRONTEND_MONITORENV_VERSION ?? '0.0.0',
+    release: import.meta.env.FRONTEND_MONITORENV_VERSION,
 
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.

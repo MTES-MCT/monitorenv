@@ -120,7 +120,6 @@ COPY --from=buildSourcemaps /tmp/frontend/build /home/monitorenv/public/
 COPY --from=buildFront /tmp/frontend/import-meta-env /home/monitorenv/
 COPY --from=buildFront /tmp/infra/docker/app/env.sh /home/monitorenv/
 COPY --from=buildFront /tmp/frontend/.env.example /home/monitorenv/
-RUN cp /home/monitorenv/.env.example /home/monitorenv/.env
 
 # Add logs folder to be mounted as volume
 RUN mkdir /home/monitorenv/logs
@@ -146,8 +145,6 @@ RUN chown monitorenv /home/monitorenv/public/index.html
 RUN chmod +rwx /home/monitorenv/public/index.html
 
 USER monitorenv
-
-RUN ./import-meta-env -x .env.example -p public/index.html
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
