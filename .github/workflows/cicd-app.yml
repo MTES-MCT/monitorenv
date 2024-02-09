@@ -159,9 +159,9 @@ jobs:
       CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
-      FRONTEND_GOOGLEMAPS_API_KEY: ${{ secrets.REACT_APP_GOOGLEMAPS_API_KEY }}
+      FRONTEND_GOOGLEMAPS_API_KEY: ${{ secrets.FRONTEND_GOOGLEMAPS_API_KEY }}
       FRONTEND_SHOM_KEY: ${{ secrets.FRONTEND_SHOM_KEY }}
-      FRONTEND_MAPBOX_KEY: ${{ secrets.MAPBOX_KEY }}
+      FRONTEND_MAPBOX_KEY: ${{ secrets.FRONTEND_MAPBOX_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MONITORENV_VERSION: ${{ needs.version.outputs.VERSION }}
       VERSION: ${{needs.version.outputs.VERSION}}
