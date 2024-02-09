@@ -17,6 +17,9 @@ jobs:
   build:
     name: Build & test docker image
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
