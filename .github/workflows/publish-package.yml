@@ -23,7 +23,7 @@ jobs:
       - name: Replace the version number
         run: sed -i -e "s/VERSION_TO_CHANGE/${{ github.event.inputs.version }}/g" backend/build.gradle.kts 
       - name: Publish package
-        uses: gradle/gradle-build-action@982da8e78c05368c70dac0351bb82647a9e9a5d2
+        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87
         with:
           arguments: publish
           build-root-directory: backend
