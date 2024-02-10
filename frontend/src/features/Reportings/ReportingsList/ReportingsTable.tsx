@@ -59,7 +59,7 @@ export function ReportingsTable({
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
-  const paddingTop = virtualRows.length > 0 ? Math.max(0, virtualRows[0]?.start || 0) : 0
+  const paddingTop = virtualRows.length > 0 ? Math.max(0, virtualRows[0]?.start ?? 0) : 0
 
   const selectedIds = useMemo(
     () => table.getSelectedRowModel().rows.map(({ original }) => Number(original.id)),

@@ -103,13 +103,13 @@ export const getTargetDetailsAsText = ({
 
   if (targetDetails.length === 1) {
     if (targetType !== ReportingTargetTypeEnum.VEHICLE) {
-      targetDetailsAsText = targetDetails[0]?.operatorName || targetDetails[0]?.vesselName || ''
+      targetDetailsAsText = targetDetails[0]?.operatorName ?? targetDetails[0]?.vesselName ?? ''
     } else {
       targetDetailsAsText =
-        targetDetails[0]?.vesselName ||
-        targetDetails[0]?.mmsi ||
-        targetDetails[0]?.operatorName ||
-        targetDetails[0]?.externalReferenceNumber ||
+        targetDetails[0]?.vesselName ??
+        targetDetails[0]?.mmsi ??
+        targetDetails[0]?.operatorName ??
+        targetDetails[0]?.externalReferenceNumber ??
         ''
     }
   } else if (targetDetails.length > 1) {

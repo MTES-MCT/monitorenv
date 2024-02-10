@@ -53,24 +53,25 @@ export function ControlForm({
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
   const currentAction = envActions[envActionIndex]
-  const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc || startDateTimeUtc || new Date().toISOString()
+  const actionDate =
+    envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
   const actualYearForThemes = customDayjs(actionDate).year()
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
-  const { actionNumberOfControls, actionTargetType, reportingIds, vehicleType } = currentAction || {}
+  const { actionNumberOfControls, actionTargetType, reportingIds, vehicleType } = currentAction ?? {}
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length === 1)
 
   const actionTargetTypeErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${envActionIndex}].actionTargetType`) || '',
+    () => getIn(errors, `envActions[${envActionIndex}].actionTargetType`) ?? '',
     [errors, envActionIndex]
   )
   const actionVehicleTypeErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${envActionIndex}].vehicleType`) || '',
+    () => getIn(errors, `envActions[${envActionIndex}].vehicleType`) ?? '',
     [errors, envActionIndex]
   )
   const actionStartDateTimeUtcErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${envActionIndex}].actionStartDateTimeUtc`) || '',
+    () => getIn(errors, `envActions[${envActionIndex}].actionStartDateTimeUtc`) ?? '',
     [errors, envActionIndex]
   )
   const canAddInfraction =
@@ -78,7 +79,7 @@ export function ControlForm({
     actionNumberOfControls > 0 &&
     ((actionTargetType === TargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
       (actionTargetType !== undefined && actionTargetType !== TargetTypeEnum.VEHICLE)) &&
-    actionNumberOfControls > (envActions[envActionIndex]?.infractions?.length || 0)
+    actionNumberOfControls > (envActions[envActionIndex]?.infractions?.length ?? 0)
 
   const reportingAsOptions = useMemo(
     () =>
@@ -246,7 +247,7 @@ export function ControlForm({
         <Form.Group>
           <DatePicker
             baseContainer={newWindowContainerRef.current}
-            defaultValue={currentAction?.actionStartDateTimeUtc || undefined}
+            defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
             isLight
             isStringDate
             label="Date et heure du contrôle (UTC)"

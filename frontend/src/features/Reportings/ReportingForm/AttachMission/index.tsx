@@ -45,7 +45,7 @@ export function AttachMission({ onAttachMission }) {
       hasNoUnitAvailable: false
     }
 
-    dispatch(unattachMissionFromReporting(valuesUpdated, reportingContext || ReportingContext.MAP))
+    dispatch(unattachMissionFromReporting(valuesUpdated, reportingContext ?? ReportingContext.MAP))
   }
 
   const createMission = async () => {

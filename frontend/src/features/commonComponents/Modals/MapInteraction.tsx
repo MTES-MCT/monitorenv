@@ -34,7 +34,7 @@ export function MapInteraction({
             {customTools}
             <ButtonGroup>
               <Button accent={Accent.SECONDARY} onClick={onReset}>
-                {resetButtonText || 'Réinitialiser'}
+                {resetButtonText ?? 'Réinitialiser'}
               </Button>
               <ValidateButton disabled={isValidatedButtonDisabled} onClick={onValidate}>
                 {validateButtonText}

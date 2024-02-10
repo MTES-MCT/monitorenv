@@ -31,7 +31,7 @@ export function Header({
 
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext =
-    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ||
+    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
   const statusTag = () => {

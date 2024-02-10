@@ -52,7 +52,7 @@ export function ControlUnitForm() {
 
   const initialValues: ControlUnitFormValues | undefined = isNew
     ? INITIAL_CONTROL_UNIT_FORM_VALUES
-    : controlUnit || undefined
+    : controlUnit ?? undefined
 
   const administrationsAsOptions = useMemo(
     () => getOptionsFromIdAndName(administrations?.filter(isNotArchived)),

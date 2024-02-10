@@ -54,10 +54,10 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
         (labels, semaphore) => {
           if (semaphore) {
             labels.push({
-              label: semaphore.unit || semaphore.name,
+              label: semaphore.unit ?? semaphore.name,
               value: {
                 id: semaphore.id,
-                label: semaphore.unit || semaphore.name
+                label: semaphore.unit ?? semaphore.name
               }
             })
           }

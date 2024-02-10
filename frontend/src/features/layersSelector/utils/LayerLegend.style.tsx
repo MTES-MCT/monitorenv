@@ -17,7 +17,7 @@ export function AMPLayerLegend({ name, type }) {
 const Rectangle = styled.div<{ $vectorLayerColor?: string }>`
   width: 14px;
   height: 14px;
-  background: ${p => p.$vectorLayerColor || p.theme.color.gainsboro};
+  background: ${p => p.$vectorLayerColor ?? p.theme.color.gainsboro};
   border: 1px solid ${p => p.theme.color.slateGray};
   display: inline-block;
   margin-right: 10px;

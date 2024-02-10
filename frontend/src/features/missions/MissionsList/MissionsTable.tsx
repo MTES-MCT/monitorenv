@@ -47,8 +47,8 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
   const [paddingTop, paddingBottom] =
     virtualRows.length > 0
       ? [
-          Math.max(0, virtualRows[0]?.start || 0),
-          Math.max(0, rowVirtualizer.getTotalSize() - (virtualRows[virtualRows.length - 1]?.end || 0))
+          Math.max(0, virtualRows[0]?.start ?? 0),
+          Math.max(0, rowVirtualizer.getTotalSize() - (virtualRows[virtualRows.length - 1]?.end ?? 0))
         ]
       : [0, 0]
 

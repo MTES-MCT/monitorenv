@@ -51,7 +51,7 @@ export function MissionsTableFilters() {
 
   const activeAdministrations = useMemo(
     () =>
-      (administrations || []).filter(isNotArchived).map(admin => ({
+      (administrations ?? []).filter(isNotArchived).map(admin => ({
         label: admin.name,
         value: admin.name
       })),
@@ -61,14 +61,14 @@ export function MissionsTableFilters() {
   const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions, ['label']), [themesAsOptions])
 
   const controlUnitsAsOptions = useMemo(() => {
-    const activeControlUnits = (legacyControlUnits || []).filter(isNotArchived)
+    const activeControlUnits = (legacyControlUnits ?? []).filter(isNotArchived)
     const selectableControlUnits = activeControlUnits?.filter(activeControlUnit =>
       selectedAdministrationNames?.length
         ? selectedAdministrationNames.includes(activeControlUnit.administration)
         : true
     )
 
-    return getOptionsFromIdAndName(selectableControlUnits) || []
+    return getOptionsFromIdAndName(selectableControlUnits) ?? []
   }, [legacyControlUnits, selectedAdministrationNames])
 
   const controlUnitCustomSearch = useMemo(

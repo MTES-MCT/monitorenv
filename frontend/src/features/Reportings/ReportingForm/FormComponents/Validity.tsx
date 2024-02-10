@@ -18,9 +18,9 @@ export function Validity({
   const { values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
-  const createdAt = values.createdAt || customDayjs().toISOString()
+  const createdAt = values.createdAt ?? customDayjs().toISOString()
 
-  const endOfValidity = getLocalizedDayjs(createdAt).add(values?.validityTime || 0, 'hour')
+  const endOfValidity = getLocalizedDayjs(createdAt).add(values?.validityTime ?? 0, 'hour')
   const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
   const timeLeft = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)

@@ -28,7 +28,7 @@ export function SearchSemaphores() {
       data?.entities,
       (options, semaphore) => {
         if (semaphore) {
-          options.push({ label: semaphore.unit || semaphore.name, value: semaphore })
+          options.push({ label: semaphore.unit ?? semaphore.name, value: semaphore })
         }
 
         return options
@@ -111,7 +111,7 @@ export function SearchSemaphores() {
           <StyledHistoricTitle>Historique de recherche</StyledHistoricTitle>
           {semaphoresResearchHistory.map(semaphore => (
             <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegiteredSemaphore(semaphore)}>
-              {semaphore.unit || semaphore.name}
+              {semaphore.unit ?? semaphore.name}
             </StyledRegisteredSemaphore>
           ))}
         </StyledRegisteredSemaphoreList>

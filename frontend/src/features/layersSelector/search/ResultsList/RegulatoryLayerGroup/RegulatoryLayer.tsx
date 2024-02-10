@@ -75,7 +75,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
           autoEscape
           highlightClassName="highlight"
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={layer?.properties?.entity_name || ''}
+          textToHighlight={layer?.properties?.entity_name ?? ''}
         />
         {!layer?.properties?.entity_name && 'AUCUN NOM'}
       </LayerSelector.Name>

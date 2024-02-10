@@ -27,7 +27,7 @@ export function FilterBar() {
   const { data: bases } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const administrationsAsOptions = useMemo(
-    () => getOptionsFromIdAndName((administrations || []).filter(isNotArchived)),
+    () => getOptionsFromIdAndName((administrations ?? []).filter(isNotArchived)),
     [administrations]
   )
   const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])

@@ -19,7 +19,7 @@ export class FrontendError extends Error {
     console.groupEnd()
 
     const controlledScope =
-      scope ||
+      scope ??
       (() => {
         const newScope = new Scope()
         newScope.setTags({

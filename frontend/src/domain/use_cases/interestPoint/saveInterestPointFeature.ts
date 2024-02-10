@@ -13,7 +13,7 @@ export const saveInterestPointFeature = (feature?: Feature | undefined) => (disp
   }
 
   const featureToSave =
-    feature ||
+    feature ??
     new Feature({
       geometry: new Point(interestPointBeingDrawed.coordinates),
       properties: interestPointBeingDrawed

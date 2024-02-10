@@ -67,7 +67,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
             layerFilter: layer => {
               const typedLayer = layer as VectorLayerWithName
 
-              const layerName = typedLayer.name || typedLayer.get('name')
+              const layerName = typedLayer.name ?? typedLayer.get('name')
 
               return !!layerName && SelectableLayers.includes(layerName)
             }
@@ -107,7 +107,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   const updateScaleControl = useCallback(() => {
     control.current = new ScaleLine({
       className: 'ol-scale-line',
-      target: document.getElementById('scale-line') || undefined,
+      target: document.getElementById('scale-line') ?? undefined,
       units: distanceUnit
     })
 

@@ -43,7 +43,7 @@ export function Source() {
         semaphores?.entities,
         (labels, semaphore) => {
           if (semaphore) {
-            labels.push({ label: semaphore.unit || semaphore.name, value: semaphore.id })
+            labels.push({ label: semaphore.unit ?? semaphore.name, value: semaphore.id })
           }
 
           return labels
@@ -55,7 +55,7 @@ export function Source() {
 
   const customSearchSemaphore = useMemo(
     () =>
-      new CustomSearch(semaphoresOptions || [], ['label'], {
+      new CustomSearch(semaphoresOptions, ['label'], {
         isStrict: true
       }),
     [semaphoresOptions]
@@ -67,7 +67,7 @@ export function Source() {
       units
         ?.filter(unit => !unit.isArchived)
         .sort((a, b) => a?.name?.localeCompare(b?.name))
-        .map(unit => ({ label: unit.name, value: unit.id })) || [],
+        .map(unit => ({ label: unit.name, value: unit.id })) ?? [],
     [units]
   )
 
