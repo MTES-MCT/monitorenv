@@ -5,6 +5,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "alwaysStrict": true,
+    "baseUrl": "./src",
     "checkJs": false,
     // Override inherited value for CommonJS > ESM compatibility purpose
     "esModuleInterop": true,
@@ -15,6 +16,16 @@
     // https://github.com/cypress-io/cypress/issues/26308#issuecomment-1666236726
     "module": "ESNext",
     "moduleResolution": "Node",
+    "paths": {
+      "@api/*": ["api/*"],
+      "@components/*": ["components/*"],
+      "@features/*": ["features/*"],
+      "@hooks/*": ["hooks/*"],
+      "@libs/*": ["libs/*"],
+      "@pages/*": ["pages/*"],
+      "@store/*": ["store/*"],
+      "@utils/*": ["utils/*"]
+    },
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,

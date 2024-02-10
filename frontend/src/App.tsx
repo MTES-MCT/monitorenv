@@ -1,19 +1,19 @@
+import { AlertUnsupportedBrowser } from '@components/AlertUnsupportedBrowser'
+import { ToastNotification } from '@components/ToastNotification'
+import { SideWindow } from '@features/SideWindow'
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
+import { BackOfficePage } from '@pages/BackOfficePage'
+import { HomePage } from '@pages/HomePage'
+import { homeStore } from '@store/index'
+import { isBrowserSupported } from '@utils/isBrowserSupported'
+import { isCypress } from '@utils/isCypress'
 import { Provider as ReduxProvider } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider as RsuiteCustomProvider } from 'rsuite'
 
-import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
-import { ToastNotification } from './components/ToastNotification'
-import { SideWindow } from './features/SideWindow'
-import { BackOfficePage } from './pages/BackOfficePage'
-import { HomePage } from './pages/HomePage'
-import { homeStore } from './store'
 import { FR_FR_LOCALE } from './uiMonitor/locale_frFR'
-import { isBrowserSupported } from './utils/isBrowserSupported'
-import { isCypress } from './utils/isCypress'
 
 export function App() {
   if (!isBrowserSupported()) {

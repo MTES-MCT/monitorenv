@@ -1,10 +1,10 @@
 import { BrowserTracing } from '@sentry/browser'
 import { init } from '@sentry/react'
+import { measureScrollbarWidth } from '@utils/styleHelpers'
 import { isEmpty } from 'lodash'
 import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
-import { measureScrollbarWidth } from './utils/styleHelpers'
 
 import 'rsuite/dist/rsuite.min.css'
 import 'ol/ol.css'
