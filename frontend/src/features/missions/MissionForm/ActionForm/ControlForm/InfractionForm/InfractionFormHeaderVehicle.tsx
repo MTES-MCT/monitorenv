@@ -47,7 +47,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
 
 const FormColumn = styled.div`
   display: inline-block;
-  :not(:last-child) {
+  &:not(:last-child) {
     margin-right: 6px;
   }
 `

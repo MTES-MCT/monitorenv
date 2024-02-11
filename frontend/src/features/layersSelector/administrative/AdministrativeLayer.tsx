@@ -49,7 +49,7 @@ const Row = styled.span<{ $isGrouped: boolean }>`
   width: stretch;
   min-height: 36px;
 
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
   & > :last-child {

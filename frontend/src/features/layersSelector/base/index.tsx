@@ -89,7 +89,7 @@ const ListItem = styled.li`
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
   line-height: 1.9em;
 
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
 `

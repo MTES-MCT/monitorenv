@@ -135,7 +135,7 @@ const TargetWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  :not(:last-child) {
+  &:not(:last-child) {
     margin-bottom: 8px;
   }
 `

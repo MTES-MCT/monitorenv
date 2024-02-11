@@ -360,7 +360,7 @@ const ActionSummary = styled(Form.Group)`
 `
 
 const ActionFieldWrapper = styled.div`
-  :not(:first-child) {
+  &:not(:first-child) {
     margin-left: 8px;
   }
 `
