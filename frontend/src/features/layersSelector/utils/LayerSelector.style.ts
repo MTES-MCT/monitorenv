@@ -20,7 +20,7 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $selected?: boolean }>`
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   align-items: center;
 
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
 `
@@ -65,7 +65,7 @@ const GroupWrapper = styled.li<{ $isPadded?: boolean }>`
   color: ${p => p.theme.color.gunMetal};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
 
