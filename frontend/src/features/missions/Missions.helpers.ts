@@ -10,7 +10,9 @@ import {
   InfractionTypeEnum,
   type EnvAction,
   type EnvActionSurveillance,
-  type EnvActionForTimeline
+  type EnvActionForTimeline,
+  type NewInfraction,
+  type Infraction
 } from '../../domain/entities/missions'
 import {
   type DetachedReporting,
@@ -24,7 +26,7 @@ import { getFormattedReportingId } from '../Reportings/utils'
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 import type { AtLeast } from '../../types'
 
-export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
+export const infractionFactory = (infraction?: Partial<Infraction>): NewInfraction => ({
   id: uuidv4(),
   natinf: [],
   observations: '',

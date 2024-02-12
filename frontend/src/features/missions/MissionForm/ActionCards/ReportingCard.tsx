@@ -1,17 +1,36 @@
 import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
+import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Accented, ReportingDate, SummaryContent } from './style'
-import { ActionTypeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, VesselSizeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
 import { ControlStatusEnum, type ReportingForTimeline } from '../../../../domain/entities/reporting'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 import { getFormattedReportingId } from '../../../Reportings/utils'
-import { actionFactory } from '../../Missions.helpers'
+import { actionFactory, infractionFactory } from '../../Missions.helpers'
 
+const getVesselSize = size => {
+  if (!size) {
+    return undefined
+  }
+
+  if (size < 12) {
+    return VesselSizeEnum.LESS_THAN_12m
+  }
+  if (size >= 12 && size < 24) {
+    return VesselSizeEnum.FROM_12_TO_24m
+  }
+  if (size >= 24 && size < 46) {
+    return VesselSizeEnum.FROM_24_TO_46m
+  }
+
+  return VesselSizeEnum.MORE_THAN_46m
+}
 export function ReportingCard({
   action,
   setCurrentActionIndex
@@ -24,7 +43,43 @@ export function ReportingCard({
 
   const addAttachedControl = e => {
     e.stopPropagation()
+    let newInfraction
+
+    if (action.targetDetails && action.targetDetails.length > 0) {
+      switch (action.targetType) {
+        case ReportingTargetTypeEnum.VEHICLE:
+          newInfraction = infractionFactory({
+            controlledPersonIdentity: action.targetDetails[0]?.operatorName,
+            registrationNumber: action.targetDetails[0]?.externalReferenceNumber,
+            ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
+              vesselSize: getVesselSize(action.targetDetails[0]?.size)
+            })
+          })
+
+          break
+        case ReportingTargetTypeEnum.COMPANY:
+          newInfraction = infractionFactory({
+            companyName: action.targetDetails[0]?.operatorName,
+            controlledPersonIdentity: action.targetDetails[0]?.vesselName
+          })
+
+          break
+
+        case ReportingTargetTypeEnum.INDIVIDUAL:
+          newInfraction = infractionFactory({
+            controlledPersonIdentity: action.targetDetails[0]?.operatorName
+          })
+
+          break
+
+        case ReportingTargetTypeEnum.OTHER:
+        default:
+          break
+      }
+    }
+
     const newControl = actionFactory({
+      actionNumberOfControls: 1,
       actionTargetType: action.targetType,
       actionType: ActionTypeEnum.CONTROL,
       reportingIds: [Number(action.id)],
@@ -37,6 +92,9 @@ export function ReportingCard({
             themeId: action.themeId
           }
         ]
+      }),
+      ...(newInfraction && {
+        infractions: [newInfraction]
       })
     })
 

@@ -9,10 +9,11 @@ import { infractionFactory } from '../../../Missions.helpers'
 import type { Infraction } from '../../../../../domain/entities/missions'
 
 export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, remove }) {
+  const infractions = form?.values.envActions[envActionIndex]?.infractions
   const [currentInfractionIndex, setCurrentInfractionIndex] = useState<number | undefined>(undefined)
 
   const handleAddInfraction = () => {
-    const numberOfInfractions = form?.values.envActions[envActionIndex]?.infractions?.length || 0
+    const numberOfInfractions = infractions?.length || 0
     push(infractionFactory())
     setCurrentInfractionIndex(numberOfInfractions)
   }
@@ -31,8 +32,8 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
   }
 
   const handleDuplicateInfraction = index => () => {
-    const numberOfInfractions = form?.values.envActions[envActionIndex]?.infractions.length || 0
-    const selectedInfraction = form?.values.envActions[envActionIndex]?.infractions[index] as Infraction
+    const numberOfInfractions = infractions.length || 0
+    const selectedInfraction = infractions[index] as Infraction
 
     push(infractionFactory(selectedInfraction))
     setCurrentInfractionIndex(numberOfInfractions)
