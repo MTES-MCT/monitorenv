@@ -1,8 +1,7 @@
-import { FieldError, FormikMultiRadio, FormikTextarea, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikMultiRadio, FormikTextarea, getOptionsFromLabelledEnum, Toggle } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
-import { Toggle } from 'rsuite'
 
 import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
@@ -232,9 +231,12 @@ export function FormContent({
 
         <StyledToggle>
           <Toggle
-            checked={!!values.isControlRequired || false}
-            data-cy="reporting-is-control-required"
+            dataCy="reporting-is-control-required"
             disabled={values.isArchived}
+            isChecked={!!values.isControlRequired || false}
+            isLabelHidden
+            label="Le signalement nécessite un contrôle"
+            name="isControlRequired"
             onChange={changeNeedControlValue}
           />
           <span>Le signalement nécessite un contrôle</span>

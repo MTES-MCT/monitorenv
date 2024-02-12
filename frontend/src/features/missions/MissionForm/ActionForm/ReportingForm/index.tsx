@@ -1,6 +1,5 @@
-import { Accent, Button, Icon, MultiRadio, TextInput, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, MultiRadio, TextInput, getOptionsFromLabelledEnum, Toggle } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { Location } from './Location'
@@ -159,7 +158,14 @@ export function ReportingForm({
             value={reporting.actionTaken ?? 'Aucune description'}
           />
           <StyledToggle>
-            <Toggle checked={reporting.isControlRequired} readOnly />
+            <Toggle
+              isChecked={reporting.isControlRequired ?? false}
+              isLabelHidden
+              label="Le signalement nécessite un contrôle"
+              name="isControlRequired"
+              onChange={() => {}}
+              readOnly
+            />
             <span>Le signalement nécessite un contrôle</span>
           </StyledToggle>
           <TextInput label="Saisi par" name="openBy" plaintext value={reporting.openBy || EMPTY_VALUE} />

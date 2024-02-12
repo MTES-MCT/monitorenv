@@ -11,12 +11,12 @@ import {
   Accent,
   Icon,
   Size,
-  THEME
+  THEME,
+  Toggle
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import { Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
@@ -216,8 +216,11 @@ export function ControlForm({
         <div>
           <StyledToggle>
             <Toggle
-              checked={isReportingListVisible}
-              data-cy="control-form-toggle-reporting"
+              dataCy="control-form-toggle-reporting"
+              isChecked={isReportingListVisible}
+              isLabelHidden
+              label="Le contrôle est rattaché à un signalement"
+              name="isControlAttachedToReporting"
               onChange={updateIsControlAttachedToReporting}
               readOnly={areAllReportingsAttachedToAnAction && currentAction?.reportingIds?.length === 0}
             />

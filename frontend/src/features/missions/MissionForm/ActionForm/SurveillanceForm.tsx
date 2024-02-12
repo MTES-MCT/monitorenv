@@ -12,11 +12,11 @@ import {
   Icon,
   Size,
   THEME,
-  Label
+  Label,
+  Toggle
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
-import { Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
@@ -166,8 +166,11 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         <div>
           <StyledToggle>
             <Toggle
-              checked={isReportingListVisible}
-              data-cy="surveillance-form-toggle-reporting"
+              dataCy="surveillance-form-toggle-reporting"
+              isChecked={isReportingListVisible}
+              isLabelHidden
+              label="La surveillance est rattachée à un signalement"
+              name="isSurveillanceAttachedToReporting"
               onChange={updateIsSurveillanceAttachedToReporting}
               readOnly={areAllReportingsAttachedToAnAction && currentAction?.reportingIds?.length === 0}
             />

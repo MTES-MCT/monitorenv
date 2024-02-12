@@ -32,7 +32,6 @@ context('InterestPoint', () => {
     cy.getDataCy('interest-point-name-input').type('Phénomène')
     cy.getDataCy('interest-point-observations-input').type('Est dans la bergerie')
     cy.getDataCy('interest-point-save').click()
-    cy.getDataCy('save-interest-point').should('be.visible')
     cy.getDataCy('interest-point-observations').eq(0).contains('Est dans la bergerie')
     cy.getDataCy('interest-point-observations').should('have.length', 1)
 
@@ -42,7 +41,6 @@ context('InterestPoint', () => {
     cy.getDataCy('interest-point-name-input').type('Phénomène 2')
     cy.getDataCy('interest-point-observations-input').type('Est encore dans la bergerie')
     cy.getDataCy('interest-point-save').click()
-    cy.getDataCy('save-interest-point').should('be.visible')
     cy.getDataCy('interest-point-observations').should('have.length', 2)
     cy.getDataCy('interest-point-observations').eq(0).contains('Est encore dans la bergerie')
 
@@ -53,7 +51,6 @@ context('InterestPoint', () => {
     cy.getDataCy('interest-point-name-input').type('Phénomène 3')
     cy.getDataCy('interest-point-observations-input').type('Est encore encore dans la bergerie')
     cy.getDataCy('interest-point-save').click()
-    cy.getDataCy('save-interest-point').should('be.visible')
     cy.getDataCy('interest-point-observations').should('have.length', 3)
     cy.getDataCy('interest-point-observations').eq(0).contains('Est encore encore dans la bergerie')
   })
@@ -62,7 +59,7 @@ context('InterestPoint', () => {
     // When
     cy.getDataCy('coordinates-selection').click({ force: true })
     cy.get('#root').click(159, 1000)
-    cy.getDataCy('coordinates-selection-dd').click()
+    cy.fill('Unités des coordonnées', 'DD')
     cy.getDataCy('interest-point').click()
 
     // Then
@@ -82,15 +79,17 @@ context('InterestPoint', () => {
     // When
     cy.getDataCy('coordinates-selection').click({ force: true })
     cy.get('#root').click(159, 1000)
-    cy.getDataCy('coordinates-selection-dmd').find('input').click({ force: true })
+    cy.fill('Unités des coordonnées', 'DMD')
     cy.getDataCy('interest-point').click()
-    cy.get('#root').click(490, 580)
+    cy.get('#root').click(590, 580)
+    cy.getDataCy('interest-point-name-input').type('Phénomène')
+
     cy.getDataCy('interest-point-save').click()
-    cy.getDataCy('interest-point-edit').click()
+    cy.getDataCy('interest-point-edit').click({ force: true })
     cy.getDataCy('dmd-coordinates-input').eq(1).type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
 
     // Then
-    cy.getDataCy('interest-point-coordinates').contains('47° 42.111′ N 007° 54.500′ W')
+    cy.getDataCy('interest-point-coordinates').contains('47° 42.043′ N 007° 34.500′ W')
   })
 
   it('An interest Should be edited with East value When DMS coordinates are selected', () => {
@@ -99,7 +98,6 @@ context('InterestPoint', () => {
     cy.get('#root').click(159, 1000)
     cy.getDataCy('interest-point').click()
     cy.get('#root').click(490, 580)
-    cy.getDataCy('interest-point-type-radio-input').click()
     cy.getDataCy('interest-point-save').click()
     cy.get('[data-cy="interest-point-edit').click()
 
@@ -114,7 +112,7 @@ context('InterestPoint', () => {
     cy.getDataCy('interest-point-edit').should('not.be.visible')
     cy.getDataCy('interest-point-edit').click({ force: true })
     cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
-    cy.getDataCy('interest-point-type-radio-input').should('have.class', 'rs-radio-checked')
+    cy.get('.rs-radio').first().should('have.class', 'rs-radio-checked')
     cy.getDataCy('interest-point-save').click({ timeout: 10000 })
 
     cy.getDataCy('interest-point-coordinates').first().contains('47° 42′')
@@ -143,7 +141,7 @@ context('InterestPoint', () => {
     cy.get('body').type('{esc}')
     cy.wait(200)
     cy.get('#root').click(490, 580)
-    cy.getDataCy('interest-point-save').should('not.be.visible')
+    cy.getDataCy('interest-point-save').should('not.exist')
     cy.getDataCy('interest-point-edit').should('not.exist')
   })
 })

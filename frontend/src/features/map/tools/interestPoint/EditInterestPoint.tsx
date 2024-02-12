@@ -1,4 +1,4 @@
-import { Icon, MultiRadio, type Option } from '@mtes-mct/monitor-ui'
+import { Icon, Label, MultiRadio, type Option } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo, useState } from 'react'
@@ -186,12 +186,16 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
         <>
           <Header>Créer un point d&apos;intérêt</Header>
           <Body>
-            <p>Coordonnées</p>
-            <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
+            <div>
+              <Label>Coordonnées</Label>
+              <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
+            </div>
+
             <MultiRadio
               key={interestPointBeingDrawed?.uuid}
+              data-cy="interest-point-type-radio"
               label="Type de point"
-              name="interestTypeRadio"
+              name="interestPointTypeRadio"
               onChange={updateType}
               options={INTEREST_POINT_OPTIONS}
               optionValueKey="value"
@@ -203,25 +207,33 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
               )}
               value={selectedOption ?? defaultType}
             />
-            <p>Libellé du point</p>
-            <Name
-              data-cy="interest-point-name-input"
-              onChange={e => updateName(e.target.value)}
-              type="text"
-              value={interestPointBeingDrawed?.name ?? ''}
-            />
-            <p>Observations</p>
-            <textarea
-              data-cy="interest-point-observations-input"
-              onChange={e => updateObservations(e.target.value)}
-              value={interestPointBeingDrawed?.observations ?? ''}
-            />
-            <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
-              OK
-            </OkButton>
-            <CancelButton disabled={isEditing} onClick={cancel}>
-              Annuler
-            </CancelButton>
+            <div>
+              <Label>Libellé du point</Label>
+              <Name
+                data-cy="interest-point-name-input"
+                onChange={e => updateName(e.target.value)}
+                type="text"
+                value={interestPointBeingDrawed?.name ?? ''}
+              />
+            </div>
+
+            <div>
+              <Label>Observations</Label>
+              <textarea
+                data-cy="interest-point-observations-input"
+                onChange={e => updateObservations(e.target.value)}
+                value={interestPointBeingDrawed?.observations ?? ''}
+              />
+            </div>
+
+            <ButtonContainer>
+              <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
+                OK
+              </OkButton>
+              <CancelButton disabled={isEditing} onClick={cancel}>
+                Annuler
+              </CancelButton>
+            </ButtonContainer>
           </Body>
         </>
       )}
@@ -266,33 +278,15 @@ const Body = styled.div`
   font-size: 13px;
   margin: 10px 15px;
   text-align: left;
-
-  p {
-    font-size: 13px;
-    margin: 0;
-  }
-
-  p:nth-of-type(2) {
-    font-size: 13px;
-    margin-top: 15px;
-  }
-
-  p:nth-of-type(3) {
-    font-size: 13px;
-    margin-top: 15px;
-  }
-
-  p:nth-of-type(4) {
-    font-size: 13px;
-    margin-top: 15px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   input {
     background: ${p => p.theme.color.gainsboro};
     border: none;
     color: ${p => p.theme.color.gunMetal};
     height: 27px;
-    margin-top: 7px;
     padding-left: 8px;
   }
 
@@ -300,13 +294,16 @@ const Body = styled.div`
     background: ${p => p.theme.color.gainsboro};
     border: none;
     color: ${p => p.theme.color.gunMetal};
-    margin-top: 7px;
     min-height: 50px;
     padding-left: 8px;
     padding-top: 3px;
     resize: vertical;
     width: 100% !important;
   }
+`
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
 `
 
 const Header = styled.div`
@@ -322,12 +319,6 @@ const Header = styled.div`
 const Wrapper = styled(MapToolBox)`
   top: 0px;
   width: 306px;
-  .rs-radio-checker > label {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    margin-left: 4px;
-  }
 `
 const MultiRadioLabel = styled.div`
   display: flex;

@@ -81,6 +81,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
         </Header>
         <RadioContainer>
           <MultiRadio
+            data-cy="coordinates-radio"
             isInline
             isLabelHidden
             label="Unités des coordonnées"
