@@ -58,6 +58,7 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         featureIsShowed
         map={map}
         options={{ margins: selectedMargins }}
+        zIndex={5000}
       >
         <ReportingCard feature={feature} selected updateMargins={updateSelectedMargins} />
       </OverlayPositionOnCentroid>
@@ -66,6 +67,7 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         feature={displayReportingsOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
         options={{ margins: hoveredMargins }}
+        zIndex={5000}
       >
         <ReportingCard feature={currentFeatureOver} updateMargins={updateHoveredMargins} />
       </OverlayPositionOnCentroid>

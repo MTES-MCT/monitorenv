@@ -41,6 +41,7 @@ type OverlayPositionOnCentroidProps = {
       yTop: number
     }
   }
+  zIndex: number
 }
 export function OverlayPositionOnCentroid({
   appClassName,
@@ -48,7 +49,8 @@ export function OverlayPositionOnCentroid({
   feature,
   featureIsShowed = false,
   map,
-  options: { margins = defaultMargins } = {}
+  options: { margins = defaultMargins } = {},
+  zIndex
 }: OverlayPositionOnCentroidProps) {
   const dispatch = useAppDispatch()
   const overlayRef = useRef<HTMLDivElement | null>(null)
@@ -166,7 +168,7 @@ export function OverlayPositionOnCentroid({
   useMoveOverlayWhenDragging(olOverlayObjectRef.current, map, currentOffset, moveCardWithThrottle, showed)
 
   return (
-    <OverlayComponent ref={overlayCallback} $overlayTopLeftMargin={overlayTopLeftMargin}>
+    <OverlayComponent ref={overlayCallback} $overlayTopLeftMargin={overlayTopLeftMargin} $zIndex={zIndex}>
       {feature && children}
     </OverlayComponent>
   )
@@ -174,6 +176,7 @@ export function OverlayPositionOnCentroid({
 
 const OverlayComponent = styled.div<{
   $overlayTopLeftMargin: number[]
+  $zIndex: number
 }>`
   background-color: ${p => p.theme.color.white};
   border-radius: 2px;
@@ -182,4 +185,5 @@ const OverlayComponent = styled.div<{
   position: absolute;
   text-align: left;
   top: ${p => p.$overlayTopLeftMargin[0]}px;
+  z-index: ${p => p.$zIndex};
 `

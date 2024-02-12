@@ -31,6 +31,7 @@ export function StationOverlay({ currentFeatureOver: hoveredFeature, map }: Base
         feature={canDisplayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         options={{ margins: OVERLAY_MARGINS }}
+        zIndex={4000}
       >
         {canDisplayHoveredFeature && hoveredFeature && <StationCard feature={hoveredFeature} />}
       </OverlayPositionOnCentroid>
@@ -41,6 +42,7 @@ export function StationOverlay({ currentFeatureOver: hoveredFeature, map }: Base
         featureIsShowed
         map={map}
         options={{ margins: OVERLAY_MARGINS }}
+        zIndex={4000}
       >
         {selectedFeature && <StationCard feature={selectedFeature} selected />}
       </OverlayPositionOnCentroid>

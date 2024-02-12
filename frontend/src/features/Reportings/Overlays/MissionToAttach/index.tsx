@@ -17,6 +17,7 @@ export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChil
       appClassName="overlay-mission-to-attach-hover"
       feature={displayMissionToAttachLayer && displayHoveredFeature && currentFeatureOver}
       map={map}
+      zIndex={6000}
     >
       <MissionCard feature={currentFeatureOver} isOnlyHoverable />
     </OverlayPositionOnExtent>

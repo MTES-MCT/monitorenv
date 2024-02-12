@@ -22,13 +22,36 @@ const defaultMargins = {
   }
 }
 
+type OverlayPositionOnExtentProps = {
+  appClassName: string
+  children: React.ReactNode
+  feature: Feature<Geometry> | null | undefined
+  map: any
+  options?: {
+    margins?: {
+      left: {
+        center: number
+        left: number
+        right: number
+      }
+      top: {
+        bottom: number
+        middle: number
+        top: number
+      }
+    }
+  }
+  zIndex: number
+}
+
 export function OverlayPositionOnExtent({
   appClassName,
   children,
   feature,
   map,
-  options: { margins = defaultMargins } = {}
-}) {
+  options: { margins = defaultMargins } = {},
+  zIndex
+}: OverlayPositionOnExtentProps) {
   const overlayRef = useRef(null)
   const olOverlayObjectRef = useRef(null)
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
@@ -90,17 +113,18 @@ export function OverlayPositionOnExtent({
   }, [feature, overlayRef, olOverlayObjectRef, map, margins])
 
   return (
-    <OverlayComponent ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
+    <OverlayComponent ref={overlayCallback} $overlayTopLeftMargin={overlayTopLeftMargin} $zIndex={zIndex}>
       {feature && children}
     </OverlayComponent>
   )
 }
 
-const OverlayComponent = styled.div`
-  position: relative;
-  top: ${props => props.overlayTopLeftMargin[0]}px;
-  left: ${props => props.overlayTopLeftMargin[1]}px;
-  text-align: left;
+const OverlayComponent = styled.div<{ $overlayTopLeftMargin: number[]; $zIndex: number }>`
   background-color: ${p => p.theme.color.white};
   border-radius: 2px;
+  left: ${p => p.$overlayTopLeftMargin[1]}px;
+  position: relative;
+  text-align: left;
+  top: ${p => p.$overlayTopLeftMargin[0]}px;
+  z-index: ${p => p.$zIndex};
 `
