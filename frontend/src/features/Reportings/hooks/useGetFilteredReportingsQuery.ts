@@ -55,8 +55,8 @@ export const useGetFilteredReportingsQuery = () => {
       seaFronts: seaFrontFilter,
       searchQuery: formattedQuerySearch,
       sourcesType: sourceTypeFilter,
-      startedAfterDateTime: startedAfter || undefined,
-      startedBeforeDateTime: startedBefore || undefined,
+      startedAfterDateTime: startedAfter ?? undefined,
+      startedBeforeDateTime: startedBefore ?? undefined,
       status: statusFilter,
       targetTypes: targetTypeFilter
     },

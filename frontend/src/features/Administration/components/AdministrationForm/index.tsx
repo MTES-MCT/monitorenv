@@ -31,7 +31,7 @@ export function AdministrationForm() {
 
   const initialValues: AdministrationFormValues | undefined = isNew
     ? INITIAL_ADMINISTRATION_FORM_VALUES
-    : administration || undefined
+    : administration ?? undefined
 
   const goBackToList = useCallback(() => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`)

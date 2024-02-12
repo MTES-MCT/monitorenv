@@ -20,7 +20,7 @@ const reportingStyleFactory = (color, src?: string | undefined) =>
     image: new Icon({
       color,
       displacement: [5, 18],
-      src: src || 'report.svg'
+      src: src ?? 'report.svg'
     })
   })
 

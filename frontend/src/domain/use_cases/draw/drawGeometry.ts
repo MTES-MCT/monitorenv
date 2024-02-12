@@ -30,7 +30,7 @@ export const drawPoint =
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.DRAW_ZONE_OR_POINT))
     dispatch(
       setInteractionTypeAndListener({
-        listener: listener || InteractionListener.CONTROL_POINT,
+        listener: listener ?? InteractionListener.CONTROL_POINT,
         type: InteractionType.POINT
       })
     )

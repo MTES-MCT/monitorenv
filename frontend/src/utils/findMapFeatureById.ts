@@ -22,5 +22,5 @@ export function findMapFeatureById(
     return undefined
   }
 
-  return foundVectorLayerWithName.getSource()?.getFeatureById(featureId) || undefined
+  return foundVectorLayerWithName.getSource()?.getFeatureById(featureId) ?? undefined
 }

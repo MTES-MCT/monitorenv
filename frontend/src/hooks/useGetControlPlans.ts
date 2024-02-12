@@ -12,26 +12,26 @@ export function useGetControlPlans() {
 
   const themesAsOptions: Array<Option<number>> = useMemo(
     () =>
-      Object.values(data?.themes || {})
+      Object.values(data?.themes ?? {})
         .map(({ id, theme }) => ({
           label: theme,
           value: id
         }))
-        .sort(sortControlPlans) || [],
+        .sort(sortControlPlans) ?? [],
     [data?.themes]
   )
 
   const subThemesAsOptions: Array<Option<number>> = useMemo(
     () =>
-      Object.values(data?.subThemes || {})
+      Object.values(data?.subThemes ?? {})
         .filter(subTheme => (themeFilter ? themeFilter.includes(subTheme.themeId) : true))
         .map(({ id, subTheme }) => ({ label: subTheme, value: id }))
-        .sort(sortControlPlans) || [],
+        .sort(sortControlPlans),
     [data?.subThemes, themeFilter]
   )
 
-  const themes = useMemo(() => data?.themes || {}, [data?.themes])
-  const subThemes = useMemo(() => data?.subThemes || {}, [data?.subThemes])
+  const themes = useMemo(() => data?.themes ?? {}, [data?.themes])
+  const subThemes = useMemo(() => data?.subThemes ?? {}, [data?.subThemes])
 
   return {
     isError,

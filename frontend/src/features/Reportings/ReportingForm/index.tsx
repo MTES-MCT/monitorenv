@@ -70,7 +70,7 @@ export function ReportingFormWithContext({ context, totalReportings }: Reporting
   return (
     <>
       <FormContainer
-        $context={reportingContext || ReportingContext.MAP}
+        $context={reportingContext ?? ReportingContext.MAP}
         $isRightMenuOpened={isRightMenuOpened}
         $position={totalReportings + 1}
         $reportingFormVisibility={reportingFormVisibility.visibility}

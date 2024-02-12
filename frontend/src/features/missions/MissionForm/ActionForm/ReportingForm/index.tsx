@@ -46,7 +46,7 @@ export function ReportingForm({
   }
 
   const subThemesAsString =
-    reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') || EMPTY_VALUE
+    reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') ?? EMPTY_VALUE
 
   const sourceTypeText = (() => {
     if (reporting.sourceType === ReportingSourceEnum.SEMAPHORE) {
@@ -76,7 +76,7 @@ export function ReportingForm({
       return action
     })
     setFieldValue('envActions', envActionsToUpdate)
-    setFieldValue('detachedReportingIds', [...(values.detachedReportingIds || []), reporting.id])
+    setFieldValue('detachedReportingIds', [...(values.detachedReportingIds ?? []), reporting.id])
 
     setCurrentActionIndex(undefined)
   }
@@ -129,7 +129,7 @@ export function ReportingForm({
           label="Description du signalement"
           name="description"
           plaintext
-          value={reporting.description || 'Aucune description'}
+          value={reporting.description ?? 'Aucune description'}
         />
       </FirstPartContainer>
       <div>
@@ -156,7 +156,7 @@ export function ReportingForm({
             label="Actions effectuées"
             name="actionTaken"
             plaintext
-            value={reporting.actionTaken || 'Aucune description'}
+            value={reporting.actionTaken ?? 'Aucune description'}
           />
           <StyledToggle>
             <Toggle checked={reporting.isControlRequired} readOnly />

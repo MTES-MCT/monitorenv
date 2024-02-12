@@ -19,7 +19,7 @@ export function SubThemesSelector({ context, isLight = false, label, name, theme
   const { newWindowContainerRef } = useNewWindow()
   const ref = useRef<HTMLDivElement>(null)
   const { values } = useFormikContext<Reporting>()
-  const year = customDayjs(values.createdAt || new Date().toISOString()).year()
+  const year = customDayjs(values.createdAt ?? new Date().toISOString()).year()
   const { isError, isLoading, subThemesByYearAsOptions } = useGetControlPlansByYear({
     selectedTheme: theme,
     year

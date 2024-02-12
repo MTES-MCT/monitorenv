@@ -62,7 +62,7 @@ export function FilterTags() {
             key={unit}
             onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
           >
-            {String(`Unité ${controlUnits.currentData?.find(controlUnit => controlUnit.id === unit)?.name || unit}`)}
+            {String(`Unité ${controlUnits.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`)}
           </SingleTag>
         ))}
       {selectedMissionTypes &&
@@ -99,7 +99,7 @@ export function FilterTags() {
         selectedThemes?.length > 0 &&
         selectedThemes.map(theme => (
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
-            {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label || theme}`)}
+            {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`)}
           </SingleTag>
         ))}
     </StyledContainer>

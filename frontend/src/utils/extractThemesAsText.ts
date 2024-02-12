@@ -10,7 +10,7 @@ export function extractThemesAsText(controlPlans: ControlPlansData[], themes: Co
       if (currentControlPlan?.themeId) {
         const themeLabel = currentControlPlan.themeId ? themes[currentControlPlan.themeId]?.theme : undefined
 
-        controlPlansCollection.push(themeLabel || '')
+        controlPlansCollection.push(themeLabel ?? '')
       }
 
       return controlPlansCollection

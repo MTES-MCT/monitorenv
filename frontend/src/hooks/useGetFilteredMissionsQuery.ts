@@ -31,8 +31,8 @@ export const useGetFilteredMissionsQuery = () => {
       missionStatus: selectedStatuses,
       missionTypes: selectedMissionTypes,
       seaFronts: selectedSeaFronts,
-      startedAfterDateTime: startedAfter || undefined,
-      startedBeforeDateTime: startedBefore || undefined
+      startedAfterDateTime: startedAfter ?? undefined,
+      startedBeforeDateTime: startedBefore ?? undefined
     },
     { pollingInterval: TWO_MINUTES }
   )

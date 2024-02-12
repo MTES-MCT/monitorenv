@@ -46,7 +46,7 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const { data: stations } = useGetStationsQuery()
 
   const stationsAsFeatures = useMemo(
-    () => (stations || []).filter(station => station.controlUnitResourceIds.length > 0).map(getStationPointFeature),
+    () => (stations ?? []).filter(station => station.controlUnitResourceIds.length > 0).map(getStationPointFeature),
     [stations]
   )
 

@@ -142,7 +142,7 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
         <p>Type de point</p>
         <RadioWrapper>
           <RadioGroup
-            defaultValue={interestPointBeingDrawed?.type || interestPointType.OTHER}
+            defaultValue={interestPointBeingDrawed?.type ?? interestPointType.OTHER}
             name="interestTypeRadio"
             onChange={updateType}
           >
@@ -165,13 +165,13 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
           data-cy="interest-point-name-input"
           onChange={e => updateName(e.target.value)}
           type="text"
-          value={interestPointBeingDrawed?.name || ''}
+          value={interestPointBeingDrawed?.name ?? ''}
         />
         <p>Observations</p>
         <textarea
           data-cy="interest-point-observations-input"
           onChange={e => updateObservations(e.target.value)}
-          value={interestPointBeingDrawed?.observations || ''}
+          value={interestPointBeingDrawed?.observations ?? ''}
         />
         <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
           OK

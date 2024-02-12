@@ -45,10 +45,10 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
   const currentAction = envActions[envActionIndex]
 
-  const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc || startDateTimeUtc || new Date().toISOString()
+  const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
   const actualYearForThemes = customDayjs(actionDate).year()
 
-  const { reportingIds = [] } = currentAction || {}
+  const { reportingIds = [] } = currentAction ?? {}
   const [, actionStartDateMeta] = useField(`envActions[${envActionIndex}].actionStartDateTimeUtc`)
   const [, actionEndDateMeta] = useField(`envActions[${envActionIndex}].actionEndDateTimeUtc`)
 
@@ -98,7 +98,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   }
 
   const selectReportings = (nextReportingIds: OptionValueType[] | undefined) => {
-    setFieldValue(`envActions[${envActionIndex}].reportingIds`, nextReportingIds || [])
+    setFieldValue(`envActions[${envActionIndex}].reportingIds`, nextReportingIds ?? [])
 
     attachedReportings.map((reporting, index) => {
       if (nextReportingIds && nextReportingIds.includes(reporting.id)) {
@@ -191,7 +191,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               key={`start-date-${durationMatchMissionField.value}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-start-date-time"
-              defaultValue={currentAction?.actionStartDateTimeUtc || undefined}
+              defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
               isCompact
               isErrorMessageHidden
@@ -207,7 +207,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               key={`end-date-${durationMatchMissionField.value}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-end-date-time"
-              defaultValue={currentAction?.actionEndDateTimeUtc || undefined}
+              defaultValue={currentAction?.actionEndDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
               isCompact
               isErrorMessageHidden

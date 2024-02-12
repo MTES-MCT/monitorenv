@@ -60,25 +60,27 @@ export function InfractionCard({
       <Summary>
         {targetTypeField.value === TargetTypeEnum.VEHICLE && (
           <VehicleType>
-            {vehicleTypeLabels[vehicleTypeField?.value]?.label || 'Non Renseigné'}
+            {/* TODO Fix the type here: `label` is a `string` but can be undefined? */}
+            {vehicleTypeLabels[vehicleTypeField?.value]?.label ?? 'Non Renseigné'}
             {vehicleTypeField?.value === VehicleTypeEnum.VESSEL
-              ? ` – ${vesselTypeLabels[vesselType?.value]?.libelle || 'Type non défini'}`
+              ? // TODO Fix the type here: `libelle` is a `string` but can be undefined?
+                ` – ${vesselTypeLabels[vesselType?.value]?.libelle ?? 'Type non défini'}`
               : ''}
             &nbsp;&ndash;&nbsp;
           </VehicleType>
         )}
         {targetTypeField.value === TargetTypeEnum.VEHICLE ? (
-          <Identification>{registrationNumber?.value || ' sans immatriculation'}</Identification>
+          <Identification>{registrationNumber?.value ?? ' sans immatriculation'}</Identification>
         ) : (
           <Identification>
-            {companyName?.value || controlledPersonIdentity?.value || TargetTypeLabels[targetTypeField.value]}
+            {companyName?.value ?? controlledPersonIdentity?.value ?? TargetTypeLabels[targetTypeField.value]}
           </Identification>
         )}
         <SummaryDetails>
           <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
           {formalNotice?.value === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
           <Info accent={Accent.PRIMARY}>
-            {natinf.value?.length || '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}
+            {natinf.value?.length ?? '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}
           </Info>
         </SummaryDetails>
       </Summary>

@@ -11,5 +11,5 @@ export function useHasMapInteraction() {
     state => state.attachReportingToMission.isReportingAttachmentInProgress
   )
 
-  return listener || isMissionAttachmentInProgress || isReportingAttachmentInProgress
+  return listener ?? (isMissionAttachmentInProgress || isReportingAttachmentInProgress)
 }

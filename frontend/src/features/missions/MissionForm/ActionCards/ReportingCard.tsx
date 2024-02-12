@@ -32,7 +32,7 @@ export function ReportingCard({
       ...(action.themeId && {
         controlPlans: [
           {
-            subThemeIds: action.subThemeIds || [],
+            subThemeIds: action.subThemeIds ?? [],
             tagIds: [],
             themeId: action.themeId
           }
@@ -40,7 +40,7 @@ export function ReportingCard({
       })
     })
 
-    setFieldValue('envActions', [newControl, ...(values?.envActions || [])])
+    setFieldValue('envActions', [newControl, ...(values?.envActions ?? [])])
     setCurrentActionIndex(newControl.id)
     const reportingToUpdateIndex = values?.attachedReportings
       ? values?.attachedReportings?.findIndex(reporting => Number(reporting.id) === Number(action.id))
@@ -76,7 +76,7 @@ export function ReportingCard({
             {action.themeId && ' -'}{' '}
           </>
         )}
-        {action.description || 'Aucune description'}
+        {action.description ?? 'Aucune description'}
         <ControlContainer $isEndAlign={!action.attachedEnvActionId}>
           {action.attachedEnvActionId && controlStatus !== ControlStatusEnum.CONTROL_TO_BE_DONE && (
             <StatusActionTag backgroundColor={THEME.color.white} controlStatus={controlStatus} />

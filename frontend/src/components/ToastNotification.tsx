@@ -35,7 +35,7 @@ export function ToastNotification() {
         return
       }
 
-      const type = toast.type || DEFAULT_TOAST_TYPE
+      const type = toast.type ?? DEFAULT_TOAST_TYPE
 
       switch (type) {
         case ErrorType.INFO:
