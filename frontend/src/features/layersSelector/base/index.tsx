@@ -81,7 +81,7 @@ const StyledMultiRadio = styled(MultiRadio)`
     :hover {
       background-color: ${p => p.theme.color.blueYonder25};
     }
-    > div > label {
+    > .rs-radio-checker > label {
       line-height: 22px;
     }
   }
