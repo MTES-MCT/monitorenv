@@ -22,6 +22,7 @@ export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps)
       appClassName="overlay-action-hover"
       feature={displayHoveredFeature ? currentFeatureOver : undefined}
       map={map}
+      zIndex={5500}
     >
       {displayControlCard && <ControlCard feature={currentFeatureOver} />}
       {displaySurveillanceCard && <SurveillanceCard feature={currentFeatureOver} />}

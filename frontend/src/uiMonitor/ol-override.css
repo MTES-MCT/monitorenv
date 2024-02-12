@@ -60,3 +60,8 @@
   width: 25px;
   height: 25px;
 }
+
+.ol-overlay-container {
+  height: 0;
+  width: 0;
+}

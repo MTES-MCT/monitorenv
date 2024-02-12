@@ -110,7 +110,8 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       feature.setProperties({
         isHighlighted: feature.getId() === selectedSemaphore && isSemaphoreHighlighted,
         isSelected: feature.getId() === selectedSemaphore,
-        overlayCoordinates: feature.getId() === selectedSemaphore ? overlayCoordinates.semaphores : undefined
+        overlayCoordinates:
+          feature.getId() === selectedSemaphore ? overlayCoordinates[Layers.SEMAPHORES.code] : undefined
       })
     })
   }, [overlayCoordinates, selectedSemaphoreId, isSemaphoreHighlighted])

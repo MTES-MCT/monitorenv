@@ -76,7 +76,7 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
     )
 
     feature?.setProperties({
-      overlayCoordinates: overlayCoordinates.reportings
+      overlayCoordinates: overlayCoordinates[Layers.REPORTINGS.code]
     })
   }, [overlayCoordinates, activeReportingId])
 

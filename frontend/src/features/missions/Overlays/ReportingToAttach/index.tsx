@@ -37,6 +37,7 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapCh
       feature={displayReportingToAttachLayer && displayHoveredFeature ? currentFeatureOver : undefined}
       map={map}
       options={{ margins: hoveredMargins }}
+      zIndex={5000}
     >
       <ReportingCard feature={currentFeatureOver} isOnlyHoverable updateMargins={updateHoveredMargins} />
     </OverlayPositionOnCentroid>

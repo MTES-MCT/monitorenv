@@ -41,6 +41,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         featureIsShowed
         map={map}
         options={{ margins: MARGINS }}
+        zIndex={3000}
       >
         <SemaphoreCard feature={feature} selected />
       </OverlayPositionOnCentroid>
@@ -49,6 +50,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         feature={displaySemaphoreOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
         options={{ margins: MARGINS }}
+        zIndex={3000}
       >
         <SemaphoreCard feature={currentFeatureOver} />
       </OverlayPositionOnCentroid>

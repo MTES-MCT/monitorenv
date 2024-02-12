@@ -30,6 +30,7 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
         appClassName="overlay-mission-selected"
         feature={displayMissionsOverlay && feature}
         map={map}
+        zIndex={6500}
       >
         <MissionCard feature={feature} selected />
       </OverlayPositionOnExtent>
@@ -37,6 +38,7 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
         appClassName="overlay-mission-hover"
         feature={displayMissionsOverlay && displayHoveredFeature && currentFeatureOver}
         map={map}
+        zIndex={6000}
       >
         <MissionCard feature={currentFeatureOver} />
       </OverlayPositionOnExtent>
