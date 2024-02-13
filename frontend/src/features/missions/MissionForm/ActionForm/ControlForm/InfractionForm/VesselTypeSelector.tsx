@@ -12,6 +12,7 @@ export function VesselTypeSelector({ infractionPath }) {
       baseContainer={vesselTypeSelectorRef.current}
       block
       cleanable={false}
+      data-cy="vessel-type-selector"
       label="Type de navire"
       name={`${infractionPath}.vesselType`}
       options={vesselTypeFieldList}

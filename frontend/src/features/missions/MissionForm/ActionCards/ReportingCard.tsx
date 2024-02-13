@@ -6,7 +6,13 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Accented, ReportingDate, SummaryContent } from './style'
-import { ActionTypeEnum, VesselSizeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
+import {
+  ActionTypeEnum,
+  VesselSizeEnum,
+  type Mission,
+  type NewMission,
+  type NewInfraction
+} from '../../../../domain/entities/missions'
 import { ControlStatusEnum, type ReportingForTimeline } from '../../../../domain/entities/reporting'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
@@ -43,39 +49,36 @@ export function ReportingCard({
 
   const addAttachedControl = e => {
     e.stopPropagation()
-    let newInfraction
+    let newInfractions: Array<NewInfraction> = []
 
-    if (action.targetDetails && action.targetDetails.length > 0) {
-      switch (action.targetType) {
-        case ReportingTargetTypeEnum.VEHICLE:
-          newInfraction = infractionFactory({
-            controlledPersonIdentity: action.targetDetails[0]?.operatorName,
-            registrationNumber: action.targetDetails[0]?.externalReferenceNumber,
-            ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
-              vesselSize: getVesselSize(action.targetDetails[0]?.size)
+    if (
+      action.targetType !== ReportingTargetTypeEnum.OTHER &&
+      action.targetDetails &&
+      action.targetDetails.length > 0
+    ) {
+      newInfractions = action.targetDetails.map(target => {
+        switch (action.targetType) {
+          case ReportingTargetTypeEnum.VEHICLE:
+            return infractionFactory({
+              controlledPersonIdentity: target?.vesselName ?? target?.operatorName,
+              registrationNumber: target?.externalReferenceNumber,
+              ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
+                vesselSize: getVesselSize(target?.size)
+              })
             })
-          })
 
-          break
-        case ReportingTargetTypeEnum.COMPANY:
-          newInfraction = infractionFactory({
-            companyName: action.targetDetails[0]?.operatorName,
-            controlledPersonIdentity: action.targetDetails[0]?.vesselName
-          })
+          case ReportingTargetTypeEnum.COMPANY:
+            return infractionFactory({
+              companyName: target?.operatorName,
+              controlledPersonIdentity: target?.vesselName
+            })
 
-          break
-
-        case ReportingTargetTypeEnum.INDIVIDUAL:
-          newInfraction = infractionFactory({
-            controlledPersonIdentity: action.targetDetails[0]?.operatorName
-          })
-
-          break
-
-        case ReportingTargetTypeEnum.OTHER:
-        default:
-          break
-      }
+          default:
+            return infractionFactory({
+              controlledPersonIdentity: target?.operatorName
+            })
+        }
+      })
     }
 
     const newControl = actionFactory({
@@ -93,8 +96,8 @@ export function ReportingCard({
           }
         ]
       }),
-      ...(newInfraction && {
-        infractions: [newInfraction]
+      ...(newInfractions.length > 0 && {
+        infractions: [...newInfractions]
       })
     })
 

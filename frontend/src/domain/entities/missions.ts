@@ -268,7 +268,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.CONTROL
   controlPlans: ControlPlansData[]
   geom?: Record<string, any>[]
-  infractions: Infraction[]
+  infractions: Infraction[] | NewInfraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
