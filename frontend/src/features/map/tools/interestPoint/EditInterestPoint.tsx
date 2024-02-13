@@ -116,11 +116,11 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
     option => {
       setSelectedOption(option)
       const type = option.value
-      if (option.value && interestPointBeingDrawed?.type !== type) {
+      if (type && interestPointBeingDrawed?.type !== type) {
         dispatch(
           updateInterestPointKeyBeingDrawed({
             key: 'type',
-            value: option.value
+            value: type
           })
         )
       }

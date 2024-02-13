@@ -32,7 +32,7 @@ export function BaseLayerList() {
         <StyledMultiRadio
           isLabelHidden
           label="Fonds de carte"
-          name="v"
+          name="baseLayer"
           onChange={handleSelectBaseLayer}
           options={baseLayersKeys}
           value={selectedBaseLayer}
