@@ -81,7 +81,7 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock-jvm:2.3.7")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:3.1.5")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.2.2")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.0")
     testImplementation("org.testcontainers:junit-jupiter:1.19.2")
     testImplementation("net.java.dev.jna:jna:5.13.0")
