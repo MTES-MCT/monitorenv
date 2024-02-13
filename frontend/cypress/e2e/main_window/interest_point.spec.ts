@@ -81,10 +81,12 @@ context('InterestPoint', () => {
     cy.get('#root').click(159, 1000)
     cy.fill('Unités des coordonnées', 'DMD')
     cy.getDataCy('interest-point').click()
+    cy.wait(500)
     cy.get('#root').click(590, 580)
     cy.getDataCy('interest-point-name-input').type('Phénomène')
-
     cy.getDataCy('interest-point-save').click()
+
+    cy.wait(500)
     cy.getDataCy('interest-point-edit').click({ force: true })
     cy.getDataCy('dmd-coordinates-input').eq(1).type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
 
