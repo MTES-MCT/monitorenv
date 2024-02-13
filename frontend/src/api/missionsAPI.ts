@@ -1,7 +1,10 @@
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
+import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { ControlUnit } from '../domain/entities/controlUnit'
+import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
+import { FrontendApiError } from '../libs/FrontendApiError'
 
-import type { Mission, MissionData } from '../domain/entities/missions'
+const CAN_DELETE_MISSION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette mission est supprimable."
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -27,6 +30,20 @@ const getSeaFrontsFilter = seaFronts =>
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
+    canDeleteMission: builder.query<boolean | Array<MissionSourceEnum>, number>({
+      query: id => ({
+        method: 'GET',
+        url: `/v1/missions/${id}/can_delete?source=${MissionSourceEnum.MONITORENV}`
+      }),
+      transformErrorResponse: error => {
+        if (error.data.code === ApiErrorCode.EXISTING_MISSION_ACTION) {
+          return error.data
+        }
+
+        return new FrontendApiError(CAN_DELETE_MISSION_ERROR_MESSAGE, error)
+      },
+      transformResponse: (response: BackendApiBooleanResponse) => response.value
+    }),
     createMission: builder.mutation<Mission, MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
         { id: 'LIST', type: 'Missions' },

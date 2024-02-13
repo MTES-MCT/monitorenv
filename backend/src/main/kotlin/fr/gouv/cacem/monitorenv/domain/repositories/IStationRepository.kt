@@ -12,5 +12,5 @@ interface IStationRepository {
 
     fun findById(stationId: Int): FullStationDTO
 
-    fun save(base: StationEntity): StationEntity
+    fun save(station: StationEntity): StationEntity
 }

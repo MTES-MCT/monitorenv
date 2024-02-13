@@ -1,6 +1,5 @@
-import EventSource, { sources } from 'eventsourcemock'
-
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
+import { visitSideWindow } from '../../utils'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
 import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
@@ -8,18 +7,6 @@ import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 context('Side Window > Mission Form > Main Form', () => {
-  function visitSideWindow(isAutoSaveEnabled = 'true') {
-    cy.visit(`/side_window`, {
-      onBeforeLoad(window: Cypress.AUTWindow & { env: { [key: string]: string } }) {
-        Object.defineProperty(window, 'EventSource', { value: EventSource })
-        Object.defineProperty(window, 'mockEventSources', { value: sources })
-
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', isAutoSaveEnabled)
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
-      }
-    })
-  }
-
   beforeEach(() => {
     cy.viewport(1280, 1024)
   })
@@ -200,41 +187,6 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('[data-cy="mission-2"] > [aria-label="close"]').eq(0).click({ force: true })
     cy.wait(500)
-  })
-
-  it('A mission should be deleted', () => {
-    // Given
-    visitSideWindow()
-    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
-    cy.wait('@getMissions')
-    cy.wait(400) // a first render with 0 missions is likely to happen
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 10)
-      cy.wrap(numberOfMissions).as('numberOfMissions')
-    })
-
-    cy.get('*[data-cy="edit-mission-49"]').click({ force: true })
-
-    cy.intercept({
-      url: `/bff/v1/missions*`
-    }).as('deleteMission')
-    cy.get('*[data-cy="delete-mission"]').click()
-    cy.get('*[name="delete-mission-modal-cancel"]').click()
-    cy.get('*[data-cy="delete-mission"]').click()
-    cy.get('*[name="delete-mission-modal-confirm"]').click()
-
-    // Then
-    cy.wait('@deleteMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-    })
-    cy.wait('@getMissions')
-    cy.wait(500)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 10)
-      cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
-        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) - 1)
-      })
-    })
   })
 
   it('A closed mission should be reopenable, editable and saved again', () => {
