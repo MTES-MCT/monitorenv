@@ -144,6 +144,9 @@ RUN chmod +x /home/monitorenv/import-meta-env
 RUN chown monitorenv /home/monitorenv/public/index.html
 RUN chmod +rwx /home/monitorenv/public/index.html
 
+# Test
+RUN ./import-meta-env -e .env.example -x .env.example -p public/index.html
+
 USER monitorenv
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
