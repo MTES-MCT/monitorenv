@@ -95,7 +95,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
           cy.wait('@getReportings')
 
           cy.getDataCy(`edit-reporting-${attachedReportingId}`).click({ force: true })
-          cy.getDataCy('attach-mission-button').should('be.visible')
+          cy.getDataCy('attach-mission-button').scrollIntoView().should('be.visible')
         })
       })
     })
