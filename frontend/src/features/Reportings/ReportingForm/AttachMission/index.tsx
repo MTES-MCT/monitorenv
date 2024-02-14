@@ -71,6 +71,7 @@ export function AttachMission({ onAttachMission }) {
     <ButtonsContainer>
       <Button
         accent={Accent.SECONDARY}
+        data-cy="attach-mission-button"
         disabled={isButtonDisabled}
         Icon={Icon.Link}
         isFullWidth

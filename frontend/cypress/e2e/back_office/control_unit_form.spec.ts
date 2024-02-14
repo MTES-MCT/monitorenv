@@ -1,4 +1,4 @@
-import { expectPathToBe } from '../utils'
+import { expectPathToBe } from '../utils/expectPathToBe'
 
 context('Back Office > Control Unit Form', () => {
   beforeEach(() => {

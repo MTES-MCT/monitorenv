@@ -160,6 +160,7 @@ const missionCircleStyle = feature => {
       return center && new Point(center)
     },
     image: new Circle({
+      displacement: [0, 14],
       radius: 20,
       stroke: new Stroke({
         color: THEME.color.charcoal,
