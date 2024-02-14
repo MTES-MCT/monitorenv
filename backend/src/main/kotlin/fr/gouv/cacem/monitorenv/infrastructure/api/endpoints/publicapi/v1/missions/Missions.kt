@@ -24,7 +24,7 @@ class Missions(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val getMissions: GetMissions,
     private val getMissionById: GetMissionById,
-    private val deleteMission: DeleteMission,
+    private val deleteMissionWithoutActionsCheck: DeleteMissionWithoutActionsCheck,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
     private val sseMission: SSEMission,
@@ -137,7 +137,7 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
     ) {
-        deleteMission.execute(missionId = missionId)
+        deleteMissionWithoutActionsCheck.execute(missionId = missionId)
     }
 
     @GetMapping("/{missionId}/can_delete")

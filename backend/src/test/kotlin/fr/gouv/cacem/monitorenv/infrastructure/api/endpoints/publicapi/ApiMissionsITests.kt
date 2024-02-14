@@ -48,6 +48,8 @@ class ApiMissionsITests {
 
     @MockBean private lateinit var deleteMission: DeleteMission
 
+    @MockBean private lateinit var deleteMissionWithoutActionsCheck: DeleteMissionWithoutActionsCheck
+
     @MockBean private lateinit var canDeleteMission: CanDeleteMission
 
     @MockBean private lateinit var getMissionsByIds: GetMissionsByIds
@@ -287,7 +289,14 @@ class ApiMissionsITests {
     fun `Should delete mission`() {
         mockMvc.perform(delete("/api/v1/missions/20"))
             .andExpect(status().isOk)
-        Mockito.verify(deleteMission).execute(20)
+        Mockito.verify(deleteMissionWithoutActionsCheck).execute(20)
+    }
+
+    @Test
+    fun `Should delete mission with api v2`() {
+        mockMvc.perform(delete("/api/v2/missions/20?source=MONITORFISH"))
+            .andExpect(status().isOk)
+        Mockito.verify(deleteMission).execute(20, MissionSourceEnum.MONITORFISH)
     }
 
     @Test

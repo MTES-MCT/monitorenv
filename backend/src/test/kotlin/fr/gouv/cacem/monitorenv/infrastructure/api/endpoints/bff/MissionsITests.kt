@@ -61,7 +61,7 @@ class MissionsITests {
 
     @MockBean private lateinit var getFullMissionById: GetFullMissionById
 
-    @MockBean private lateinit var deleteMission: DeleteMission
+    @MockBean private lateinit var deleteMissionWithoutActionsCheck: DeleteMissionWithoutActionsCheck
 
     @MockBean private lateinit var canDeleteMission: CanDeleteMission
 
@@ -830,7 +830,7 @@ class MissionsITests {
         mockMvc.perform(delete("/bff/v1/missions/20"))
             // Then
             .andExpect(status().isOk)
-        Mockito.verify(deleteMission).execute(20)
+        Mockito.verify(deleteMissionWithoutActionsCheck).execute(20)
     }
 
     @Test
