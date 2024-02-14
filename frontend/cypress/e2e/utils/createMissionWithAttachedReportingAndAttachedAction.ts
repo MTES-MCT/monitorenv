@@ -10,10 +10,12 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
 
   cy.clickButton('signalements')
   cy.wait('@getReportings')
+  cy.wait(1000)
 
   cy.clickButton('Ajouter un nouveau signalement')
   cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
 
+  cy.wait(1000)
   cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
 
   // because of the filter in reporting table with the same name
