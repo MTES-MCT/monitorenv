@@ -248,8 +248,7 @@ export function MissionForm({
         open={openModal === ModalTypes.REOPEN}
       />
       <ExternalActionsModal
-        onCancel={returnToEdition}
-        onConfirm={validateDeleteMission}
+        onClose={returnToEdition}
         open={openModal === ModalTypes.ACTIONS}
         sources={actionsSources}
       />

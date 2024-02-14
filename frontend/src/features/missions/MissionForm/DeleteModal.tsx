@@ -4,7 +4,7 @@ export function DeleteModal({ onCancel, onConfirm, open }) {
   return (
     open && (
       <Dialog isAbsolute>
-        <Dialog.Title>Enregistrer les modifications ?</Dialog.Title>
+        <Dialog.Title>Supprimer la mission</Dialog.Title>
         <Dialog.Body>
           <p>Êtes-vous sûr de vouloir supprimer la mission ?</p>
         </Dialog.Body>

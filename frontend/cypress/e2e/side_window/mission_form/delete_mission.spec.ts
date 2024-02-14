@@ -68,7 +68,9 @@ context('Side Window > Mission Form > Delete Mission', () => {
       expect(response && response.body.sources[0]).equal('MONITORFISH')
     })
 
-    cy.get('*[data-cy="external-actions-modal"]').should('be.visible')
+    cy.getDataCy('external-actions-modal').should('be.visible')
+    cy.clickButton('Fermer')
+    cy.getDataCy('external-actions-modal').should('not.be.exist')
   })
 
   it('A mission should be deleted and attached reportings should be detached', () => {
