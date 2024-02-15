@@ -33,7 +33,6 @@ import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verify
-import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -49,7 +48,7 @@ import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(Missions::class)])
-class MissionsITests {
+class LegacyMissionsITests {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
@@ -93,10 +92,8 @@ class MissionsITests {
                     ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                     endDateTimeUtc =
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    createdAtUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    updatedAtUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     isDeleted = false,
                     isClosed = false,
                     missionSource = MissionSourceEnum.MONITORENV,
@@ -825,12 +822,12 @@ class MissionsITests {
 
     @Test
     fun `Should delete mission`() {
-        // Given
-        // When
-        mockMvc.perform(delete("/bff/v1/missions/20"))
+        val source = MissionSourceEnum.MONITORENV
+        val missionId = 20
+        mockMvc.perform(delete("/bff/v1/missions/$missionId"))
             // Then
             .andExpect(status().isOk)
-        Mockito.verify(deleteMission).execute(20)
+        verify(deleteMission).execute(missionId, source)
     }
 
     @Test

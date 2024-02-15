@@ -20,11 +20,11 @@ import java.time.ZonedDateTime
 @RestController("PublicApiV1Missions")
 @RequestMapping("/api/v1/missions")
 @Tag(description = "API Missions", name = "Public.Missions")
-class Missions(
+class LegacyMissions(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val getMissions: GetMissions,
     private val getMissionById: GetMissionById,
-    private val deleteMission: DeleteMission,
+    private val bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
     private val sseMission: SSEMission,
@@ -137,7 +137,7 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
     ) {
-        deleteMission.execute(missionId = missionId)
+        bypassActionCheckAndDeleteMission.execute(missionId = missionId)
     }
 
     @GetMapping("/{missionId}/can_delete")
