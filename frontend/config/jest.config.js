@@ -12,6 +12,17 @@ module.exports = {
       '@swc/jest',
       {
         jsc: {
+          baseUrl: './src',
+          paths: {
+            '@api/*': ['api/*'],
+            '@components/*': ['components/*'],
+            '@features/*': ['features/*'],
+            '@hooks/*': ['hooks/*'],
+            '@libs/*': ['libs/*'],
+            '@pages/*': ['pages/*'],
+            '@store/*': ['store/*'],
+            '@utils/*': ['utils/*']
+          },
           transform: {
             optimizer: {
               globals: {
