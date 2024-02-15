@@ -22,7 +22,6 @@ import { ReopenModal } from './ReopenModal'
 import { missionFormsActions } from './slice'
 import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
-import { ApiErrorCode } from '../../../api/types'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
@@ -119,22 +118,16 @@ export function MissionForm({
   }
 
   const deleteMission = async () => {
-    try {
-      const response = dispatch(missionsAPI.endpoints.canDeleteMission.initiate(Number(id)))
-      const canDeleteMission = await response.unwrap()
-      if (!canDeleteMission) {
-        setOpenModal(ModalTypes.ACTIONS)
-
-        return
-      }
-
+    const response = dispatch(missionsAPI.endpoints.canDeleteMission.initiate(Number(id)))
+    const canDeleteMissionResponse = await response.unwrap()
+    if (canDeleteMissionResponse.canDelete) {
       setOpenModal(ModalTypes.DELETE)
-    } catch (error: any) {
-      if (error.code === ApiErrorCode.EXISTING_MISSION_ACTION) {
-        setActionsSources(error.data.sources)
-        setOpenModal(ModalTypes.ACTIONS)
-      }
+
+      return
     }
+
+    setActionsSources(canDeleteMissionResponse.sources)
+    setOpenModal(ModalTypes.ACTIONS)
   }
 
   const cancelForm = async () => {

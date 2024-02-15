@@ -1,6 +1,6 @@
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
-import { visitSideWindow } from '../../utils'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 
