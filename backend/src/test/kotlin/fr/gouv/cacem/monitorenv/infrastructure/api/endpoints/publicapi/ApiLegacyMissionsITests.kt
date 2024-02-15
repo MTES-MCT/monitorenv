@@ -12,7 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.Missions
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.LegacyMissions
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.SSEMission
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2.NewMissions
 import org.assertj.core.api.Assertions.assertThat
@@ -37,8 +37,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.ZonedDateTime
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [Missions::class, SSEMission::class, NewMissions::class])
-class ApiMissionsITests {
+@WebMvcTest(value = [LegacyMissions::class, SSEMission::class, NewMissions::class])
+class ApiLegacyMissionsITests {
     @Autowired private lateinit var mockMvc: MockMvc
 
     @MockBean private lateinit var createOrUpdateMission: CreateOrUpdateMission
@@ -49,7 +49,7 @@ class ApiMissionsITests {
 
     @MockBean private lateinit var deleteMission: DeleteMission
 
-    @MockBean private lateinit var deleteMissionWithoutActionsCheck: DeleteMissionWithoutActionsCheck
+    @MockBean private lateinit var bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission
 
     @MockBean private lateinit var canDeleteMission: CanDeleteMission
 
@@ -290,7 +290,7 @@ class ApiMissionsITests {
     fun `Should delete mission`() {
         mockMvc.perform(delete("/api/v1/missions/20"))
             .andExpect(status().isOk)
-        Mockito.verify(deleteMissionWithoutActionsCheck).execute(20)
+        Mockito.verify(bypassActionCheckAndDeleteMission).execute(20)
     }
 
     @Test

@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
+import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -77,7 +78,8 @@ class DeleteMissionUTests {
             isArchived = false,
             isDeleted = false,
         )
-        given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH)).willReturn(true)
+        given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH))
+            .willReturn(CanDeleteMissionResponse(true, listOf()))
         given(missionRepository.findFullMissionById(missionId)).willReturn(
             MissionDTO(
                 mission = missionToDelete,
@@ -136,7 +138,8 @@ class DeleteMissionUTests {
             isGeometryComputedFromControls = false,
             envActions = listOf(envActionControl),
         )
-        given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH)).willReturn(false)
+        given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH))
+            .willReturn(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV)))
         given(missionRepository.findFullMissionById(missionId)).willReturn(
             MissionDTO(
                 mission = missionToDelete,
@@ -184,7 +187,8 @@ class DeleteMissionUTests {
             envActions = listOf(),
         )
 
-        given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH)).willReturn(true)
+        given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH))
+            .willReturn(CanDeleteMissionResponse(true, listOf()))
         given(missionRepository.findFullMissionById(missionId)).willReturn(
             MissionDTO(
                 mission = missionToDelete,

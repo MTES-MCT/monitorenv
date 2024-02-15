@@ -48,7 +48,7 @@ import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(Missions::class)])
-class MissionsITests {
+class LegacyMissionsITests {
 
     @Autowired private lateinit var mockMvc: MockMvc
 

@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import java.time.ZonedDateTime
 
 @UseCase
-class DeleteMissionWithoutActionsCheck(
+class BypassActionCheckAndDeleteMission(
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 ) {

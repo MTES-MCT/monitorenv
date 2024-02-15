@@ -21,7 +21,7 @@ class DeleteMission(
     fun execute(missionId: Int?, source: MissionSourceEnum) {
         require(missionId != null) { "No mission to delete" }
 
-        if (!canDeleteMission.execute(missionId, source)) {
+        if (!canDeleteMission.execute(missionId, source).canDelete) {
             val actionSources = if (source == MissionSourceEnum.MONITORFISH) {
                 MissionSourceEnum.MONITORENV
             } else {
