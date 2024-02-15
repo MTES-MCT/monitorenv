@@ -28,7 +28,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
 
     cy.wait('@canDeleteMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
-      expect(response && response.body.value).equal(true)
+      expect(response && response.body.canDelete).equal(true)
     })
     cy.get('*[name="delete-mission-modal-cancel"]').click()
     cy.clickButton('Supprimer la mission')
