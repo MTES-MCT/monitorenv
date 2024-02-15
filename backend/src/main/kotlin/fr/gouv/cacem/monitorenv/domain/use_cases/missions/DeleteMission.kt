@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import java.time.ZonedDateTime
+import java.util.UUID
 
 @UseCase
 class DeleteMission(
@@ -19,15 +20,13 @@ class DeleteMission(
         val missionToDelete = missionRepository.findFullMissionById(missionId)
 
         if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
+            val envActionIdsToDetach = mutableListOf<UUID>()
             missionToDelete.attachedReportingIds.forEach {
                 val reporting = reportingRepository.findById(it)
 
                 // detach action attached to reporting
                 if (reporting.reporting.attachedEnvActionId != null) {
-                    reportingRepository.detachDanglingEnvActions(
-                        missionId,
-                        listOf(reporting.reporting.attachedEnvActionId),
-                    )
+                    envActionIdsToDetach.add(reporting.reporting.attachedEnvActionId)
                 }
 
                 // detach mission to reporting
@@ -37,6 +36,10 @@ class DeleteMission(
                 )
                 reportingRepository.save(detachedReporting)
             }
+            reportingRepository.detachDanglingEnvActions(
+                missionId,
+                envActionIdsToDetach,
+            )
         }
 
         return missionRepository.delete(missionId)

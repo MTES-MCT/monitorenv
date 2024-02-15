@@ -1,5 +1,4 @@
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
-import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { ControlUnit } from '../domain/entities/controlUnit'
 import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
 import { FrontendApiError } from '../libs/FrontendApiError'
@@ -16,6 +15,11 @@ type MissionsFilter = {
   startedBeforeDateTime?: string
 }
 
+type CanDeleteMissionResponseType = {
+  canDelete: boolean
+  sources: MissionSourceEnum[]
+}
+
 const getStartDateFilter = startedAfterDateTime =>
   startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
 const getEndDateFilter = startedBeforeDateTime =>
@@ -30,19 +34,12 @@ const getSeaFrontsFilter = seaFronts =>
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
-    canDeleteMission: builder.query<boolean | Array<MissionSourceEnum>, number>({
+    canDeleteMission: builder.query<CanDeleteMissionResponseType, number>({
       query: id => ({
         method: 'GET',
         url: `/v1/missions/${id}/can_delete?source=${MissionSourceEnum.MONITORENV}`
       }),
-      transformErrorResponse: error => {
-        if (error.data.code === ApiErrorCode.EXISTING_MISSION_ACTION) {
-          return error.data
-        }
-
-        return new FrontendApiError(CAN_DELETE_MISSION_ERROR_MESSAGE, error)
-      },
-      transformResponse: (response: BackendApiBooleanResponse) => response.value
+      transformErrorResponse: error => new FrontendApiError(CAN_DELETE_MISSION_ERROR_MESSAGE, error)
     }),
     createMission: builder.mutation<Mission, MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [

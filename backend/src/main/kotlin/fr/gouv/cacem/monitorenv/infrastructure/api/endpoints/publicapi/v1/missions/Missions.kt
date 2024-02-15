@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BooleanDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -149,8 +149,8 @@ class Missions(
         @Parameter(description = "Request source")
         @RequestParam(name = "source")
         source: MissionSourceEnum,
-    ): BooleanDataOutput {
-        return canDeleteMission.execute(missionId = missionId, source = source).let { BooleanDataOutput.get(it) }
+    ): CanDeleteMissionResponse {
+        return canDeleteMission.execute(missionId = missionId, source = source)
     }
 
     // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity

@@ -4,12 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
@@ -295,34 +294,26 @@ class ApiMissionsITests {
     fun `canDelete() should check if a mission can be deleted`() {
         val missionId = 42
         val source = MissionSourceEnum.MONITORFISH
-        val canDelete = true
 
         given(canDeleteMission.execute(missionId = missionId, source = source))
-            .willReturn(canDelete)
+            .willReturn(CanDeleteMissionResponse(true, listOf()))
 
         mockMvc.perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.value").value(true))
+            .andExpect(jsonPath("$.canDelete").value(true))
     }
 
     @Test
-    fun `canDelete() should throw an exception if a mission can't be deleted`() {
+    fun `canDelete() should return list of sources if a mission can't be deleted`() {
         val missionId = 34
         val source = MissionSourceEnum.MONITORFISH
-        val errorSources = object {
-            var sources = listOf(MissionSourceEnum.MONITORENV)
-        }
 
         given(canDeleteMission.execute(missionId = missionId, source = source))
-            .willAnswer {
-                throw BackendUsageException(
-                    ErrorCode.EXISTING_MISSION_ACTION,
-                    errorSources,
-                )
-            }
+            .willReturn(CanDeleteMissionResponse(canDelete = false, sources = listOf(MissionSourceEnum.MONITORENV)))
 
         mockMvc.perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
-            .andExpect(status().`is`(400))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.canDelete").value(false))
     }
 
     @Test

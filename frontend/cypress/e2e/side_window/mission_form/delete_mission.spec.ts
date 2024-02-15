@@ -63,8 +63,9 @@ context('Side Window > Mission Form > Delete Mission', () => {
     cy.clickButton('Supprimer la mission')
 
     cy.wait('@canDeleteMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(400)
-      expect(response && response.body.data.sources[0]).equal('MONITORFISH')
+      expect(response && response.statusCode).equal(200)
+      expect(response && response.body.canDelete).equal(false)
+      expect(response && response.body.sources[0]).equal('MONITORFISH')
     })
 
     cy.get('*[data-cy="external-actions-modal"]').should('be.visible')
@@ -73,8 +74,9 @@ context('Side Window > Mission Form > Delete Mission', () => {
   it('A mission should be deleted and attached reportings should be detached', () => {
     visitSideWindow()
 
-    createMissionWithAttachedReportingAndAttachedAction().then(repsonse => {
-      cy.intercept('PUT', `/bff/v1/missions/${repsonse.body.id}`).as('updateMission')
+    createMissionWithAttachedReportingAndAttachedAction().then(response => {
+      const misisonId = response.body.id
+      cy.intercept('PUT', `/bff/v1/missions/${misisonId}`).as('updateMission')
       cy.wait(500)
       cy.waitForLastRequest('@updateMission', {}, 5, undefined, missionResponse => {
         const attachedReportingId = missionResponse.body.attachedReportingIds[0]
@@ -86,8 +88,11 @@ context('Side Window > Mission Form > Delete Mission', () => {
         cy.wait(400)
         cy.get('*[name="delete-mission-modal-confirm"]').click()
         cy.wait(400)
-        cy.wait('@deleteMission').then(({ response }) => {
-          expect(response && response.statusCode).equal(200)
+        cy.wait('@deleteMission').then(({ response: deleteResponse }) => {
+          expect(deleteResponse && deleteResponse.statusCode).equal(200)
+
+          cy.intercept('GET', '/bff/v1/missions').as('getMissions')
+          cy.get(`*[data-cy="edit-mission-${misisonId}"]`).should('not.exist')
 
           cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
 
