@@ -77,8 +77,15 @@ context('Side Window > Mission Form > Delete Mission', () => {
     visitSideWindow()
 
     createMissionWithAttachedReportingAndAttachedAction().then(response => {
-      const misisonId = response.body.id
-      cy.intercept('PUT', `/bff/v1/missions/${misisonId}`).as('updateMission')
+      const missionId = response.body.id
+      cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')
+
+      cy.clickButton('Editer')
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Mise en demeure', 'Oui')
+      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('Clôturé par', 'PCF')
+
       cy.wait(500)
       cy.waitForLastRequest('@updateMission', {}, 5, undefined, missionResponse => {
         const attachedReportingId = missionResponse.body.attachedReportingIds[0]
@@ -94,7 +101,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
           expect(deleteResponse && deleteResponse.statusCode).equal(200)
 
           cy.intercept('GET', '/bff/v1/missions').as('getMissions')
-          cy.get(`*[data-cy="edit-mission-${misisonId}"]`).should('not.exist')
+          cy.get(`*[data-cy="edit-mission-${missionId}"]`).should('not.exist')
 
           cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
 
