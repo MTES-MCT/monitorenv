@@ -18,7 +18,6 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('form').submit()
     cy.wait(100)
-    cy.get('*[data-cy="mission-errors"]').should('exist')
 
     // When
     cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])

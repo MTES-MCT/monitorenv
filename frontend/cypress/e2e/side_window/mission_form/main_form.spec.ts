@@ -23,6 +23,8 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('*[data-cy="add-mission"]').click()
 
+    cy.get('div').contains('Mission non enregistrée.')
+    cy.get('.Element-Tag').contains('Enregistrement auto. actif')
     // When
     cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
 
@@ -71,6 +73,8 @@ context('Side Window > Mission Form > Main Form', () => {
     )
       .its('response.statusCode')
       .should('eq', 200)
+    cy.get('div').contains('Mission créée par le')
+    cy.get('div').contains('Dernière modification enregistrée')
   })
 
   it('A mission should be created When auto-save is not enabled', () => {
@@ -89,8 +93,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('form').submit()
     cy.wait(100)
-    cy.get('*[data-cy="mission-errors"]').should('exist')
-
+    cy.get('.Element-Tag').contains('Enregistrement auto. inactif')
     // When
     cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
 

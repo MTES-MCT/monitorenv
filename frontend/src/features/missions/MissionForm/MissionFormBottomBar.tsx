@@ -1,10 +1,15 @@
-import { Icon, Button, Accent } from '@mtes-mct/monitor-ui'
+import { Icon, Button, Accent, customDayjs } from '@mtes-mct/monitor-ui'
+import { timeagoFrenchLocale } from '@utils/timeagoFrenchLocale'
 import { useFormikContext } from 'formik'
-import _ from 'lodash'
 import styled from 'styled-components'
+import { format, register } from 'timeago.js'
 
-import type { Mission } from '../../../domain/entities/missions'
+import { AutoSaveTag } from './AutoSaveTag'
+import { missionSourceEnum, type Mission } from '../../../domain/entities/missions'
+
 import type { MouseEventHandler } from 'react'
+// @ts-ignore
+register('fr', timeagoFrenchLocale)
 
 type MissionFormBottomBarProps = {
   allowClose: boolean
@@ -30,21 +35,7 @@ export function MissionFormBottomBar({
   onReopenMission,
   onSaveMission
 }: MissionFormBottomBarProps) {
-  const { errors } = useFormikContext<Mission>()
-
-  const { envActions, ...errorsWithoutEnvActions } = errors
-
-  const updatedEnvActionsErrors = Array.isArray(envActions)
-    ? (envActions as Array<Record<string, any>>).filter(error => error !== null)
-    : null
-
-  const cleanedErrors = {
-    ...errorsWithoutEnvActions,
-    ...(updatedEnvActionsErrors &&
-      updatedEnvActionsErrors.length > 0 && {
-        envActions: updatedEnvActionsErrors
-      })
-  }
+  const { values } = useFormikContext<Mission>()
 
   return (
     <Footer>
@@ -61,9 +52,18 @@ export function MissionFormBottomBar({
         </StyledButton>
       )}
       <Separator />
-      {!_.isEmpty(cleanedErrors) && (
-        <MessageRed data-cy="mission-errors">Veuillez corriger les éléments en rouge</MessageRed>
-      )}
+      <MissionInfos>
+        {!values?.createdAtUtc && <>Mission non enregistrée.</>}
+        {values?.createdAtUtc && (
+          <>
+            Mission créée par le {missionSourceEnum[values?.missionSource]?.label} le{' '}
+            {customDayjs(values.createdAtUtc).utc().format('DD/MM/YYYY à HH:mm')} (UTC).
+          </>
+        )}
+
+        {values?.updatedAtUtc && <> Dernière modification enregistrée {format(values.updatedAtUtc, 'fr')}.</>}
+      </MissionInfos>
+      <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
       <Separator />
 
       <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={onQuitFormEditing} type="button">
@@ -108,17 +108,18 @@ export function MissionFormBottomBar({
 const Separator = styled.div`
   flex: 1;
 `
-const MessageRed = styled.div`
-  color: ${p => p.theme.color.maximumRed};
-  padding-top: 6px;
+
+const MissionInfos = styled.div`
+  color: ${p => p.theme.color.slateGray};
   font-style: italic;
 `
 
 const Footer = styled.div`
+  align-items: center;
   border-top: 1px solid ${p => p.theme.color.lightGray};
-  padding: 16px;
-  gap: 16px;
   display: flex;
+  gap: 16px;
+  padding: 16px;
 `
 const StyledButtonsContainer = styled.div`
   display: flex;
