@@ -1,5 +1,4 @@
 import { beforeEach, expect, it, jest } from '@jest/globals'
-import { platform } from 'os'
 
 import { assertContains, getFirstTab, getInputContent, listenToConsole, setPuppeteerEnvironment, wait } from './utils'
 
@@ -8,9 +7,8 @@ import type { Page } from 'puppeteer'
 const TIMEOUT = 120 * 1000
 
 const IS_CI = Boolean(process.env.CI)
-const IS_DARWIN = platform() === 'darwin'
 const WEBAPP_PORT = IS_CI ? 8880 : 3000
-const WEBAPP_HOST = IS_DARWIN ? '0.0.0.0' : 'localhost'
+const WEBAPP_HOST = 'localhost'
 
 const URL = `http://${WEBAPP_HOST}:${WEBAPP_PORT}/side_window`
 
