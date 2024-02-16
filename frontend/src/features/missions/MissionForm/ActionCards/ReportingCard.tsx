@@ -6,13 +6,7 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Accented, ReportingDate, SummaryContent } from './style'
-import {
-  ActionTypeEnum,
-  VesselSizeEnum,
-  type Mission,
-  type NewMission,
-  type NewInfraction
-} from '../../../../domain/entities/missions'
+import { ActionTypeEnum, type Mission, type NewMission, type NewInfraction } from '../../../../domain/entities/missions'
 import { ControlStatusEnum, type ReportingForTimeline } from '../../../../domain/entities/reporting'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
@@ -20,23 +14,6 @@ import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 import { getFormattedReportingId } from '../../../Reportings/utils'
 import { actionFactory, infractionFactory } from '../../Missions.helpers'
 
-const getVesselSize = size => {
-  if (!size) {
-    return undefined
-  }
-
-  if (size < 12) {
-    return VesselSizeEnum.LESS_THAN_12m
-  }
-  if (size >= 12 && size < 24) {
-    return VesselSizeEnum.FROM_12_TO_24m
-  }
-  if (size >= 24 && size < 46) {
-    return VesselSizeEnum.FROM_24_TO_46m
-  }
-
-  return VesselSizeEnum.MORE_THAN_46m
-}
 export function ReportingCard({
   action,
   setCurrentActionIndex
@@ -63,7 +40,7 @@ export function ReportingCard({
               controlledPersonIdentity: target?.vesselName ?? target?.operatorName,
               registrationNumber: target?.externalReferenceNumber,
               ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
-                vesselSize: getVesselSize(target?.size)
+                vesselSize: target?.size
               })
             })
 

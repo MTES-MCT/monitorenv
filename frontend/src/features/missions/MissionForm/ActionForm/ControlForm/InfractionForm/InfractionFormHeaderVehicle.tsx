@@ -1,8 +1,7 @@
-import { FormikTextInput } from '@mtes-mct/monitor-ui'
+import { FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import styled from 'styled-components'
 
-import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
 import { VehicleTypeEnum } from '../../../../../../domain/entities/vehicleType'
 
@@ -10,6 +9,11 @@ import type { EnvActionControl } from '../../../../../../domain/entities/mission
 
 export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) {
   const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${envActionIndex}.vehicleType`)
+  const [vesselTypeField, , vesselTypeHelpers] = useField<Infraction['vesselType']>(`${infractionPath}.vesselType`)
+
+  const handleChangeVesselType = v => {
+    vesselTypeHelpers.setValue(v)
+  }
 
   return (
     <FormGroup>
@@ -23,7 +27,13 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
         <>
           <VesselTypeSelector infractionPath={infractionPath} />
 
-          <VesselSizeSelector infractionPath={infractionPath} />
+          <FormColumn>
+            <FormikNumberInput
+              data-cy="infraction-form-vessel-size"
+              label="Taille du navire"
+              name={`${infractionPath}.vesselSize`}
+            />
+          </FormColumn>
         </>
       )}
     </FormGroup>

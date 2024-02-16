@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselSizeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 
 data class MissionEnvActionControlInfractionDataInput(
@@ -18,7 +17,7 @@ data class MissionEnvActionControlInfractionDataInput(
     val toProcess: Boolean,
     val controlledPersonIdentity: String? = null,
     val vesselType: VesselTypeEnum? = null,
-    val vesselSize: VesselSizeEnum? = null,
+    val vesselSize: Number? = null,
 ) {
     fun toInfractionEntity() =
         InfractionEntity(

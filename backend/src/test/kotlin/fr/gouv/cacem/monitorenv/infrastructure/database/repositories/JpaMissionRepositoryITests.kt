@@ -16,7 +16,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselSizeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
@@ -860,7 +859,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 toProcess = false,
                 controlledPersonIdentity = "Dick Hoover",
                 vesselType = VesselTypeEnum.FISHING,
-                vesselSize = VesselSizeEnum.FROM_12_TO_24m,
+                vesselSize = 23,
             )
         val controlAction =
             EnvActionControlEntity(

@@ -123,19 +123,6 @@ export const vesselTypeLabel: Record<VesselTypeEnum, string> = {
   SAILING: 'Voilier'
 }
 
-export enum VesselSizeEnum {
-  FROM_12_TO_24m = 'FROM_12_TO_24m',
-  FROM_24_TO_46m = 'FROM_24_TO_46m',
-  LESS_THAN_12m = 'LESS_THAN_12m',
-  MORE_THAN_46m = 'MORE_THAN_46m'
-}
-export const vesselSizeLabel = {
-  FROM_12_TO_24m: '12 à 24 m',
-  FROM_24_TO_46m: 'plus de 24 m',
-  LESS_THAN_12m: 'moins de 12 m',
-  MORE_THAN_46m: 'plus de 46 m'
-}
-
 export enum MissionStatusEnum {
   CLOSED = 'CLOSED',
   ENDED = 'ENDED',
@@ -308,7 +295,7 @@ export type NewInfraction = {
   registrationNumber?: string | null
   relevantCourt?: string | null
   toProcess: boolean
-  vesselSize?: VesselSizeEnum | null
+  vesselSize?: Number | null
   vesselType?: VesselTypeEnum | null
 }
 export type Infraction = NewInfraction & {

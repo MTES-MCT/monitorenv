@@ -4,7 +4,6 @@ import {
   FormalNoticeEnum,
   InfractionTypeEnum,
   type Infraction,
-  VesselSizeEnum,
   VesselTypeEnum
 } from '../../../../domain/entities/missions'
 
@@ -38,9 +37,7 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
   registrationNumber: Yup.string().nullable(),
   relevantCourt: Yup.string().nullable(),
   toProcess: Yup.boolean().required('Requis'),
-  // @ts-ignore
-  // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'
-  vesselSize: Yup.mixed().oneOfOptional(Object.values(VesselSizeEnum)),
+  vesselSize: Yup.number().nullable(),
   // @ts-ignore
   // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'
   vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
