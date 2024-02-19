@@ -1,12 +1,10 @@
 import { defineConfig } from 'cypress'
 import initCypressMousePositionPlugin from 'cypress-mouse-position/plugin'
 import { initPlugin } from 'cypress-plugin-snapshots/plugin'
-import { platform } from 'os'
 
 const IS_CI = Boolean(process.env.CI)
-const IS_DARWIN = platform() === 'darwin'
 const WEBAPP_PORT = IS_CI ? 8880 : 3000
-const WEBAPP_HOST = IS_DARWIN ? '0.0.0.0' : 'localhost'
+const WEBAPP_HOST = 'localhost'
 
 export default defineConfig({
   e2e: {
