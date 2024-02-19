@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { BaseLayers } from '../entities/layers/constants'
+import { BaseLayer } from '../entities/layers/constants'
 import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
@@ -19,7 +19,7 @@ const initialState: MapSliceStateType = {
   currentMapExtentTracker: undefined,
   distanceUnit: DistanceUnit.NAUTICAL,
   fitToExtent: undefined,
-  selectedBaseLayer: BaseLayers.LIGHT.code,
+  selectedBaseLayer: BaseLayer.LIGHT,
   zoomToCenter: undefined
 }
 

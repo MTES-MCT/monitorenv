@@ -115,12 +115,11 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
   const updateType = useCallback(
     option => {
       setSelectedOption(option)
-      const type = option.value
-      if (type && interestPointBeingDrawed?.type !== type) {
+      if (option.value && interestPointBeingDrawed?.type !== option.value) {
         dispatch(
           updateInterestPointKeyBeingDrawed({
             key: 'type',
-            value: type
+            value: option.value
           })
         )
       }

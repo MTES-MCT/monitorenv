@@ -330,9 +330,6 @@ const StyledToggle = styled.div`
   flex-direction: row;
   flex: 1;
   gap: 8px;
-  > .rs-toggle-checked .rs-toggle-presentation {
-    background-color: ${p => p.theme.color.gunMetal};
-  }
   > span {
     color: ${p => p.theme.color.gunMetal};
     font-weight: bold;

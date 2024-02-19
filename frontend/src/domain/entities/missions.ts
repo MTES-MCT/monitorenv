@@ -115,7 +115,8 @@ export enum VesselTypeEnum {
   MOTOR = 'MOTOR',
   SAILING = 'SAILING'
 }
-export const vesselTypeLabels = {
+
+export const vesselTypeLabel: Record<VesselTypeEnum, string> = {
   COMMERCIAL: 'Commerce',
   FISHING: 'Pêche',
   MOTOR: 'Moteur',

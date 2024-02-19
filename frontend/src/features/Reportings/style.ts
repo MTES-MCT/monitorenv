@@ -166,9 +166,6 @@ export const StyledToggle = styled.div`
   flex-direction: row;
   flex: 1;
   gap: 8px;
-  > .rs-toggle-checked .rs-toggle-presentation {
-    background-color: ${p => p.theme.color.gunMetal};
-  }
 `
 export const StyledFormikTextInput = styled(FormikTextInput)`
   width: 90px;

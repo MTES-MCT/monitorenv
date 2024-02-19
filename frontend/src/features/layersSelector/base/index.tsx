@@ -1,7 +1,7 @@
 import { MultiRadio, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { BaseLayersLabel } from '../../../domain/entities/layers/constants'
+import { BaseLayerLabel } from '../../../domain/entities/layers/constants'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
@@ -9,7 +9,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 
-const baseLayersKeys = getOptionsFromLabelledEnum(BaseLayersLabel)
+const baseLayersKeys = getOptionsFromLabelledEnum(BaseLayerLabel)
 
 export function BaseLayerList() {
   const dispatch = useAppDispatch()
