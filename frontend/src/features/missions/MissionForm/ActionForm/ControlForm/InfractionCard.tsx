@@ -7,7 +7,7 @@ import {
   InfractionTypeEnum,
   infractionTypeLabels,
   VesselTypeEnum,
-  vesselTypeLabels,
+  vesselTypeLabel,
   type EnvActionControl,
   type Infraction
 } from '../../../../../domain/entities/missions'
@@ -63,8 +63,7 @@ export function InfractionCard({
             {/* TODO Fix the type here: `label` is a `string` but can be undefined? */}
             {vehicleTypeLabels[vehicleTypeField?.value]?.label ?? 'Non Renseigné'}
             {vehicleTypeField?.value === VehicleTypeEnum.VESSEL
-              ? // TODO Fix the type here: `libelle` is a `string` but can be undefined?
-                ` – ${vesselTypeLabels[vesselType?.value]?.libelle ?? 'Type non défini'}`
+              ? ` – ${vesselTypeLabel[vesselType?.value] ?? 'Type non défini'}`
               : ''}
             &nbsp;&ndash;&nbsp;
           </VehicleType>

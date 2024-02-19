@@ -30,6 +30,14 @@ export enum CoordinatesFormat {
   DEGREES_MINUTES_SECONDS = 'DMS'
 }
 
+export enum CoordinatesFormatLabel {
+  DMS = 'DMS',
+  // eslint-disable-next-line typescript-sort-keys/string-enum
+  DMD = 'DMD',
+  // eslint-disable-next-line typescript-sort-keys/string-enum
+  DD = 'DD'
+}
+
 export enum DistanceUnit {
   METRIC = 'metric',
   NAUTICAL = 'nautical'

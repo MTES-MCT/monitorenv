@@ -20,7 +20,7 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove, theme
     []
 
   return (
-    <ThemesWrapper>
+    <div>
       {isEmpty(compact(currentThemes)) && (
         <ThemeBloc key={0}>
           <ActionTheme
@@ -63,13 +63,9 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove, theme
           Ajouter une autre thématique
         </Button>
       </ButtonWrapper>
-    </ThemesWrapper>
+    </div>
   )
 }
-
-const ThemesWrapper = styled.div`
-  margin-bottom: 24px;
-`
 
 const ThemeBloc = styled.div`
   display: flex;

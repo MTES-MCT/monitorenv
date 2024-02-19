@@ -1,6 +1,13 @@
-import { FieldError, FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  FieldError,
+  FormikCheckbox,
+  FormikMultiRadio,
+  FormikTextarea,
+  FormikTextInput
+} from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { Form, Button, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
@@ -42,57 +49,41 @@ export function InfractionForm({
         <InfractionFormHeaderCompany infractionPath={infractionPath} />
       )}
 
-      <Form.Group>
-        <FormikTextInput
-          label="Identité de la personne contrôlée"
-          name={`${infractionPath}.controlledPersonIdentity`}
-        />
-      </Form.Group>
+      <FormikTextInput label="Identité de la personne contrôlée" name={`${infractionPath}.controlledPersonIdentity`} />
 
-      <SubGroup>
-        <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`} />
-        <FormikMultiRadio
-          isErrorMessageHidden
-          isInline
-          label="Type d'infraction"
-          name={`${infractionPath}.infractionType`}
-          options={infractionTypeOptions}
-        />
-      </SubGroup>
+      <FormikMultiRadio
+        isErrorMessageHidden
+        isInline
+        label="Type d'infraction"
+        name={`${infractionPath}.infractionType`}
+        options={infractionTypeOptions}
+      />
 
-      <SubGroup>
-        <FormikMultiRadio
-          isErrorMessageHidden
-          isInline
-          label="Mise en demeure"
-          name={`${infractionPath}.formalNotice`}
-          options={formalNoticeOPtions}
-        />
-      </SubGroup>
+      <FormikMultiRadio
+        isErrorMessageHidden
+        isInline
+        label="Mise en demeure"
+        name={`${infractionPath}.formalNotice`}
+        options={formalNoticeOPtions}
+      />
 
-      <FormGroupFixedHeight>
-        <NatinfSelector infractionPath={infractionPath} />
-      </FormGroupFixedHeight>
+      <NatinfSelector infractionPath={infractionPath} />
 
-      <Form.Group>
-        <FormColumn>
-          <RelevantCourtSelector infractionPath={infractionPath} />
-        </FormColumn>
+      <FormColumnWithCheckbox>
+        <RelevantCourtSelector infractionPath={infractionPath} />
+        <FormikCheckbox inline label="A traiter" name={`${infractionPath}.toProcess`} />
+      </FormColumnWithCheckbox>
 
-        <FormColumnWithCheckbox>
-          <FormikCheckbox inline label="A traiter" name={`${infractionPath}.toProcess`} />
-        </FormColumnWithCheckbox>
-      </Form.Group>
+      <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
 
-      <Form.Group>
-        <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
-      </Form.Group>
-      <ButtonToolbarRight>
-        <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
-        <Button appearance="primary" data-cy="infraction-form-validate" onClick={validateInfraction}>
+      <ButtonContainer>
+        <Button accent={Accent.TERTIARY} onClick={removeInfraction}>
+          Supprimer l&apos;infraction
+        </Button>
+        <Button data-cy="infraction-form-validate" onClick={validateInfraction}>
           Valider l&apos;infraction
         </Button>
-      </ButtonToolbarRight>
+      </ButtonContainer>
       {!!meta.error && <FieldError>Veuillez compléter les champs en rouge pour valider l&apos;infraction</FieldError>}
     </FormWrapper>
   )
@@ -100,24 +91,22 @@ export function InfractionForm({
 
 const FormWrapper = styled.div`
   background: ${p => p.theme.color.white};
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   padding: 32px;
 `
-const FormGroupFixedHeight = styled(Form.Group)`
-  haight: 58px;
-`
 
-const FormColumn = styled.div`
-  display: inline-block;
-`
 const FormColumnWithCheckbox = styled.div`
-  display: inline-block;
-  vertical-align: top;
-  padding-top: 16px;
-`
-const ButtonToolbarRight = styled(ButtonToolbar)`
+  align-items: end;
   display: flex;
-  justify-content: flex-end;
+  gap: 16px;
+  > .Field-Checkbox {
+    padding-bottom: 8px;
+  }
 `
-const SubGroup = styled.div`
-  margin-bottom: 16px;
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
 `

@@ -221,27 +221,18 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   }
 }
 
-export const BaseLayers = {
-  DARK: {
-    code: 'DARK',
-    text: 'Fond de carte sombre'
-  },
-  LIGHT: {
-    code: 'LIGHT',
-    text: 'Fond de carte clair'
-  },
-  OSM: {
-    code: 'OSM',
-    text: 'Open Street Map'
-  },
-  SATELLITE: {
-    code: 'SATELLITE',
-    text: 'Satellite'
-  },
-  SHOM: {
-    code: 'SHOM',
-    text: 'Carte marine (SHOM)'
-  }
+export enum BaseLayer {
+  LIGHT = 'LIGHT',
+  OSM = 'OSM',
+  SATELLITE = 'SATELLITE',
+  SHOM = 'SHOM'
+}
+
+export const BaseLayerLabel: Record<BaseLayer, string> = {
+  [BaseLayer.LIGHT]: 'Fond de carte clair',
+  [BaseLayer.OSM]: 'Open Street Map',
+  [BaseLayer.SATELLITE]: 'Satellite',
+  [BaseLayer.SHOM]: 'Carte marine (SHOM)'
 }
 
 export const SelectableLayers = [

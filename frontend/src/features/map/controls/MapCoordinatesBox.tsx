@@ -1,8 +1,12 @@
+import { MultiRadio, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useEffect, useRef, useState } from 'react'
-import { Radio, RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { CoordinatesFormat, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
+import {
+  CoordinatesFormat,
+  CoordinatesFormatLabel,
+  OPENLAYERS_PROJECTION
+} from '../../../domain/entities/map/constants'
 import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -14,6 +18,8 @@ import type { Coordinate } from 'ol/coordinate'
 
 let lastEventForPointerMove
 let timeoutForPointerMove
+
+const COORDINATES_OPTIONS = getOptionsFromLabelledEnum(CoordinatesFormatLabel)
 
 export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
   const [coordinates, setCursorCoordinates] = useState<Coordinate>()
@@ -50,9 +56,16 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
   const wrapperRef = useRef(null)
 
   const dispatch = useAppDispatch()
-  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
+  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat) as CoordinatesFormat
   const [coordinatesSelectionIsOpen, setCoordinatesSelectionIsOpen] = useState(false)
   const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, coordinatesSelectionIsOpen)
+
+  const selectCordinatesFormat = value => {
+    if (!value) {
+      return
+    }
+    dispatch(setCoordinatesFormat(value))
+  }
 
   useEffect(() => {
     if (clickedOutsideComponent) {
@@ -66,32 +79,18 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
         <Header data-cy="coordinates-selection" onClick={() => setCoordinatesSelectionIsOpen(false)}>
           Unités des coordonnées
         </Header>
-        <RadioWrapper
-          inline
-          name="coordinatesRadio"
-          onChange={value => dispatch(setCoordinatesFormat(value))}
-          value={coordinatesFormat}
-        >
-          <Radio inline title="Degrés Minutes Secondes" value={CoordinatesFormat.DEGREES_MINUTES_SECONDS}>
-            DMS
-          </Radio>
-          <Radio
-            data-cy="coordinates-selection-dmd"
-            inline
-            title="Degrés Minutes Décimales"
-            value={CoordinatesFormat.DEGREES_MINUTES_DECIMALS}
-          >
-            DMD
-          </Radio>
-          <Radio
-            data-cy="coordinates-selection-dd"
-            inline
-            title="Degrés Décimales"
-            value={CoordinatesFormat.DECIMAL_DEGREES}
-          >
-            DD
-          </Radio>
-        </RadioWrapper>
+        <RadioContainer>
+          <MultiRadio
+            data-cy="coordinates-radio"
+            isInline
+            isLabelHidden
+            label="Unités des coordonnées"
+            name="coordinatesRadio"
+            onChange={selectCordinatesFormat}
+            options={COORDINATES_OPTIONS}
+            value={coordinatesFormat}
+          />
+        </RadioContainer>
       </CoordinatesTypeSelection>
       <Coordinates onClick={() => setCoordinatesSelectionIsOpen(!coordinatesSelectionIsOpen)}>
         {getShowedCoordinates(coordinates, coordinatesFormat)} ({coordinatesFormat})
@@ -113,7 +112,7 @@ const getShowedCoordinates = (coordinates, coordinatesFormat) => {
 const StyledCoordinatesContainer = styled.div`
   z-index: 2;
 `
-const RadioWrapper = styled(RadioGroup)`
+const RadioContainer = styled.div`
   padding: 6px 12px 12px 12px !important;
 `
 

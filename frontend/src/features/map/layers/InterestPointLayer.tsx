@@ -218,7 +218,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
             )
           }
 
-          startDrawing(event, interestPointBeingDrawed?.type ?? interestPointType.FISHING_VESSEL)
+          startDrawing(event, interestPointBeingDrawed?.type ?? interestPointType.OTHER)
         })
 
         drawObject.once(DRAW_ABORT_EVENT, () => {

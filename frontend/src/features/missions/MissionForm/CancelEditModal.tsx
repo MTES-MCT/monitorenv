@@ -1,5 +1,4 @@
-import { Dialog } from '@mtes-mct/monitor-ui'
-import { Button } from 'rsuite'
+import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 
 type CancelEditModalProps = {
   isAutoSaveEnabled: boolean
@@ -22,12 +21,10 @@ export function CancelEditModal({ isAutoSaveEnabled, onCancel, onConfirm, open }
         </Dialog.Body>
 
         <Dialog.Action>
-          <Button appearance="ghost" onClick={onCancel}>
+          <Button accent={Accent.SECONDARY} onClick={onCancel}>
             Retourner à l&apos;édition
           </Button>
-          <Button appearance="primary" onClick={onConfirm}>
-            Quitter sans enregistrer
-          </Button>
+          <Button onClick={onConfirm}>Quitter sans enregistrer</Button>
         </Dialog.Action>
       </Dialog>
     )

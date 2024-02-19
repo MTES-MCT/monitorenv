@@ -1,8 +1,7 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+import { Icon, Label, MultiRadio, type Option } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo, useState } from 'react'
-import { Radio, RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
 import { interestPointType } from '../../../../domain/entities/interestPoints'
@@ -16,7 +15,32 @@ import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordi
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
 
+import type { InterestPointOptionValueType } from '../../../InterestPoint/types'
 import type { Coordinate } from 'ol/coordinate'
+
+const INTEREST_POINT_OPTIONS: Array<Option<InterestPointOptionValueType>> = [
+  {
+    label: 'Moyen de contrôle',
+    value: {
+      icon: Icon.ControlUnit,
+      value: interestPointType.CONTROL_ENTITY
+    }
+  },
+  {
+    label: 'Navire de pêche',
+    value: {
+      icon: Icon.FleetSegment,
+      value: interestPointType.FISHING_VESSEL
+    }
+  },
+  {
+    label: 'Autre point',
+    value: {
+      icon: Icon.Info,
+      value: interestPointType.OTHER
+    }
+  }
+]
 
 // TODO Refactor this component
 // - Move the state logic to the reducer
@@ -28,9 +52,19 @@ type EditInterestPointProps = {
 }
 export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
-  const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
 
   const { interestPointBeingDrawed, isEditing } = useAppSelector(state => state.interestPoint)
+
+  const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
+
+  const defaultType = interestPointBeingDrawed?.type
+    ? INTEREST_POINT_OPTIONS.find(
+        interestPointOption => interestPointOption.value.value === interestPointBeingDrawed.type
+      )?.value
+    : INTEREST_POINT_OPTIONS[2]?.value
+
+  const [selectedOption, setSelectedOption] = useState()
+
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
     if (!interestPointBeingDrawed?.coordinates?.length) {
@@ -79,12 +113,13 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
   )
 
   const updateType = useCallback(
-    type => {
-      if (type && interestPointBeingDrawed?.type !== type) {
+    option => {
+      setSelectedOption(option)
+      if (option.value && interestPointBeingDrawed?.type !== option.value) {
         dispatch(
           updateInterestPointKeyBeingDrawed({
             key: 'type',
-            value: type
+            value: option.value
           })
         )
       }
@@ -127,69 +162,86 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
       dispatch(addInterestPoint())
       close()
 
-      const formattedCoordinates = [localCoordinates[1], localCoordinates[0]] as Coordinate
-      const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-      dispatch(setFitToExtent(extent))
+      if (!isEditing) {
+        const formattedCoordinates = [localCoordinates[1], localCoordinates[0]] as Coordinate
+        const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+        dispatch(setFitToExtent(extent))
+      }
+
+      // reset state
+      setSelectedOption(undefined)
     }
+  }
+
+  const cancel = () => {
+    close()
+    // reset state
+    setSelectedOption(undefined)
   }
 
   return (
     <Wrapper data-cy="save-interest-point" healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
-      <Header>Créer un point d&apos;intérêt</Header>
-      <Body>
-        <p>Coordonnées</p>
-        {isOpen && <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />}
-        <p>Type de point</p>
-        <RadioWrapper>
-          <RadioGroup
-            defaultValue={interestPointBeingDrawed?.type ?? interestPointType.OTHER}
-            name="interestTypeRadio"
-            onChange={updateType}
-          >
-            <Radio value={interestPointType.CONTROL_ENTITY}>
-              <Icon.ControlUnit size={14} />
-              Moyen de contrôle
-            </Radio>
-            <Radio value={interestPointType.FISHING_VESSEL}>
-              <Icon.FleetSegment size={14} />
-              Navire de pêche
-            </Radio>
-            <Radio data-cy="interest-point-type-radio-input" value={interestPointType.OTHER}>
-              <Icon.Info size={15} />
-              Autre point
-            </Radio>
-          </RadioGroup>
-        </RadioWrapper>
-        <p>Libellé du point</p>
-        <Name
-          data-cy="interest-point-name-input"
-          onChange={e => updateName(e.target.value)}
-          type="text"
-          value={interestPointBeingDrawed?.name ?? ''}
-        />
-        <p>Observations</p>
-        <textarea
-          data-cy="interest-point-observations-input"
-          onChange={e => updateObservations(e.target.value)}
-          value={interestPointBeingDrawed?.observations ?? ''}
-        />
-        <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
-          OK
-        </OkButton>
-        <CancelButton disabled={isEditing} onClick={close}>
-          Annuler
-        </CancelButton>
-      </Body>
+      {isOpen && (
+        <>
+          <Header>Créer un point d&apos;intérêt</Header>
+          <Body>
+            <div>
+              <Label>Coordonnées</Label>
+              <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
+            </div>
+
+            <MultiRadio
+              key={interestPointBeingDrawed?.uuid}
+              data-cy="interest-point-type-radio"
+              label="Type de point"
+              name="interestPointTypeRadio"
+              onChange={updateType}
+              options={INTEREST_POINT_OPTIONS}
+              optionValueKey="value"
+              renderMenuItem={(label, value) => (
+                <MultiRadioLabel>
+                  <value.icon size={14} />
+                  <span>{label}</span>
+                </MultiRadioLabel>
+              )}
+              value={selectedOption ?? defaultType}
+            />
+            <div>
+              <Label>Libellé du point</Label>
+              <Name
+                data-cy="interest-point-name-input"
+                onChange={e => updateName(e.target.value)}
+                type="text"
+                value={interestPointBeingDrawed?.name ?? ''}
+              />
+            </div>
+
+            <div>
+              <Label>Observations</Label>
+              <textarea
+                data-cy="interest-point-observations-input"
+                onChange={e => updateObservations(e.target.value)}
+                value={interestPointBeingDrawed?.observations ?? ''}
+              />
+            </div>
+
+            <ButtonContainer>
+              <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
+                OK
+              </OkButton>
+              <CancelButton disabled={isEditing} onClick={cancel}>
+                Annuler
+              </CancelButton>
+            </ButtonContainer>
+          </Body>
+        </>
+      )}
     </Wrapper>
   )
 }
 
 const Name = styled.input`
   width: 100%;
-`
-
-const RadioWrapper = styled.div`
-  margin-top: 10px;
 `
 
 const CancelButton = styled.button`
@@ -225,33 +277,15 @@ const Body = styled.div`
   font-size: 13px;
   margin: 10px 15px;
   text-align: left;
-
-  p {
-    font-size: 13px;
-    margin: 0;
-  }
-
-  p:nth-of-type(2) {
-    font-size: 13px;
-    margin-top: 15px;
-  }
-
-  p:nth-of-type(3) {
-    font-size: 13px;
-    margin-top: 15px;
-  }
-
-  p:nth-of-type(4) {
-    font-size: 13px;
-    margin-top: 15px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   input {
     background: ${p => p.theme.color.gainsboro};
     border: none;
     color: ${p => p.theme.color.gunMetal};
     height: 27px;
-    margin-top: 7px;
     padding-left: 8px;
   }
 
@@ -259,13 +293,16 @@ const Body = styled.div`
     background: ${p => p.theme.color.gainsboro};
     border: none;
     color: ${p => p.theme.color.gunMetal};
-    margin-top: 7px;
     min-height: 50px;
     padding-left: 8px;
     padding-top: 3px;
     resize: vertical;
     width: 100% !important;
   }
+`
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
 `
 
 const Header = styled.div`
@@ -281,10 +318,9 @@ const Header = styled.div`
 const Wrapper = styled(MapToolBox)`
   top: 0px;
   width: 306px;
-  .rs-radio-checker > label {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    margin-left: 4px;
-  }
+`
+const MultiRadioLabel = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `

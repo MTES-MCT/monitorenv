@@ -1,5 +1,4 @@
-import { Dialog } from '@mtes-mct/monitor-ui'
-import { Button } from 'rsuite'
+import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 
 export function ReopenModal({ onCancel, onConfirm, open }) {
   return (
@@ -14,12 +13,10 @@ export function ReopenModal({ onCancel, onConfirm, open }) {
         </Dialog.Body>
 
         <Dialog.Action>
-          <Button appearance="ghost" onClick={onCancel}>
+          <Button accent={Accent.SECONDARY} onClick={onCancel}>
             Annuler
           </Button>
-          <Button appearance="primary" onClick={onConfirm}>
-            Enregistrer et rouvrir
-          </Button>
+          <Button onClick={onConfirm}>Enregistrer et rouvrir</Button>
         </Dialog.Action>
       </Dialog>
     )
