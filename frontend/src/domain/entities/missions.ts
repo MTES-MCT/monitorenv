@@ -226,6 +226,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   attachedReportings: ReportingDetailed[]
   closedBy: string
   controlUnits: LegacyControlUnit[]
+  createdAtUtc?: string | undefined
   detachedReportingIds: number[]
   detachedReportings?: []
   endDateTimeUtc?: string
@@ -242,6 +243,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   observationsCnsp?: string
   openBy: string
   startDateTimeUtc: string
+  updatedAtUtc?: string | undefined
 }
 
 export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' | 'id'> & {

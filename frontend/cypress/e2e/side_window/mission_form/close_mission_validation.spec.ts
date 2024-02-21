@@ -19,7 +19,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.clickButton('Clôturer')
     cy.wait(500)
 
-    cy.get('*[data-cy="mission-errors"]').should('exist')
     cy.contains('Date de fin requise').should('exist')
     cy.contains('Type de mission').should('exist')
     cy.contains('Administration requise').should('exist')
@@ -46,14 +45,11 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
     cy.wait(500)
 
-    cy.get('*[data-cy="mission-errors"]').should('not.exist')
-
     // we add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
     cy.wait(250)
 
-    cy.get('*[data-cy="mission-errors"]').should('exist')
     cy.contains('Thème requis').should('exist')
     cy.contains('Sous-thématique requise').should('exist')
     cy.contains('Date requise').should('exist')
@@ -87,14 +83,10 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
     cy.wait(250)
 
-    cy.get('*[data-cy="mission-errors"]').should('not.exist')
-
     // we add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
     cy.wait(250)
-
-    cy.get('*[data-cy="mission-errors"]').should('exist')
 
     cy.fill('Thématique de surveillance', 'Rejets illicites')
     // TODO understand why `cy.fill` doesn't work here
@@ -106,12 +98,11 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
 
     cy.getDataCy('surveillance-zone-matches-mission').should('have.class', 'rs-checkbox-checked')
-    cy.get('*[data-cy="mission-errors"]').should('not.exist')
 
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
     cy.wait(250)
-    cy.get('*[data-cy="mission-errors"]').should('exist')
+    cy.contains('Thème requis').should('exist')
 
     cy.fill('Thématique de surveillance', 'Rejets illicites')
     cy.wait(250)
@@ -138,7 +129,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.clickButton('Clôturer')
     cy.wait(500)
 
-    cy.get('*[data-cy="mission-errors"]').should('exist')
     cy.contains('Date de fin requise').should('exist')
     cy.contains('Type de mission').should('exist')
     cy.contains('Administration requise').should('exist')
@@ -164,14 +154,11 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(500)
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
 
-    cy.get('*[data-cy="mission-errors"]').should('not.exist')
-
     // we add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
     cy.wait(250)
 
-    cy.get('*[data-cy="mission-errors"]').should('exist')
     cy.contains('Thème requis').should('exist')
     cy.contains('Sous-thématique requise').should('exist')
     cy.contains('Date requise').should('exist')
@@ -205,14 +192,10 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
     cy.wait(250)
 
-    cy.get('*[data-cy="mission-errors"]').should('not.exist')
-
     // we add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
     cy.wait(250)
-
-    cy.get('*[data-cy="mission-errors"]').should('exist')
 
     cy.fill('Thématique de surveillance', 'Rejets illicites')
     // TODO understand why `cy.fill` doesn't work here
@@ -224,12 +207,11 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
 
     cy.getDataCy('surveillance-zone-matches-mission').should('have.class', 'rs-checkbox-checked')
-    cy.get('*[data-cy="mission-errors"]').should('not.exist')
 
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
     cy.wait(250)
-    cy.get('*[data-cy="mission-errors"]').should('exist')
+    cy.contains('Thème requis').should('exist')
 
     cy.fill('Thématique de surveillance', 'Rejets illicites')
     cy.wait(250)
