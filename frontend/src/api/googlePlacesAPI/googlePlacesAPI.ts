@@ -13,7 +13,7 @@ export const getPlaceCoordinates = placeId => {
   // @ts-ignore
   // see https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
   // URLSearchParams() constructor accepts "a record of string keys and string values."
-  const queryparams = new URLSearchParams({ key: GOOGLEMAPS_API_KEY, place_id: placeId })
+  const queryparams = new URLSearchParams({ key: import.meta.env.FRONTEND_GOOGLEMAPS_API_KEY, place_id: placeId })
   const queryURL = `${GOOGLEMAPS_GEOCODE_URL}?${queryparams.toString()}`
 
   return fetch(queryURL)
