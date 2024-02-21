@@ -9,11 +9,6 @@ import type { EnvActionControl } from '../../../../../../domain/entities/mission
 
 export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) {
   const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${envActionIndex}.vehicleType`)
-  const [vesselTypeField, , vesselTypeHelpers] = useField<Infraction['vesselType']>(`${infractionPath}.vesselType`)
-
-  const handleChangeVesselType = v => {
-    vesselTypeHelpers.setValue(v)
-  }
 
   return (
     <FormGroup>
@@ -27,13 +22,11 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
         <>
           <VesselTypeSelector infractionPath={infractionPath} />
 
-          <FormColumn>
-            <FormikNumberInput
-              data-cy="infraction-form-vessel-size"
-              label="Taille du navire"
-              name={`${infractionPath}.vesselSize`}
-            />
-          </FormColumn>
+          <FormikNumberInput
+            data-cy="infraction-form-vessel-size"
+            label="Taille du navire"
+            name={`${infractionPath}.vesselSize`}
+          />
         </>
       )}
     </FormGroup>
