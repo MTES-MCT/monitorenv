@@ -15,16 +15,12 @@ context('Side Window > Mission Form > Validation on close', () => {
     // Given
     cy.get('*[data-cy="add-mission"]').click()
     cy.wait(500)
-    cy.wait(500)
-    cy.clickButton('Clôturer')
-    cy.wait(500)
 
     cy.contains('Date de fin requise').should('exist')
     cy.contains('Type de mission').should('exist')
     cy.contains('Administration requise').should('exist')
     cy.contains('Unité requise').should('exist')
     cy.contains("Trigramme d'ouverture requis").should('exist')
-    cy.contains('Trigramme de clôture requis').should('exist')
 
     // we fill all the required inputs
     cy.fill('Début de mission (UTC)', [2023, 10, 11, 7, 35])
@@ -41,7 +37,12 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()
     cy.wait(250)
     cy.fill('Ouvert par', 'PCF').scrollIntoView()
+    cy.wait(1000)
+
+    cy.clickButton('Clôturer')
     cy.wait(500)
+
+    cy.contains('Trigramme de clôture requis').should('exist')
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
     cy.wait(500)
 
@@ -75,7 +76,7 @@ context('Side Window > Mission Form > Validation on close', () => {
 
     // we add an infraction
     cy.clickButton('+ Ajouter un contrôle avec infraction')
-    cy.wait(250)
+    cy.wait(1000)
     cy.fill("Type d'infraction", 'Avec PV')
     cy.wait(250)
     cy.fill('Mise en demeure', 'Oui')
@@ -125,16 +126,12 @@ context('Side Window > Mission Form > Validation on close', () => {
     // Given
     cy.get('*[data-cy="add-mission"]').click()
     cy.wait(500)
-    cy.wait(500)
-    cy.clickButton('Clôturer')
-    cy.wait(500)
 
     cy.contains('Date de fin requise').should('exist')
     cy.contains('Type de mission').should('exist')
     cy.contains('Administration requise').should('exist')
     cy.contains('Unité requise').should('exist')
     cy.contains("Trigramme d'ouverture requis").should('exist')
-    cy.contains('Trigramme de clôture requis').should('exist')
 
     // we fill all the required inputs
     cy.fill('Début de mission (UTC)', [2023, 10, 11, 7, 35])
@@ -151,6 +148,11 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()
     cy.wait(250)
     cy.fill('Ouvert par', 'PCF').scrollIntoView()
+
+    cy.wait(1000)
+    cy.clickButton('Clôturer')
+    cy.wait(500)
+    cy.contains('Trigramme de clôture requis').should('exist')
     cy.wait(500)
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
 
@@ -224,8 +226,8 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
 
     // Then
-    cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
-    cy.clickButton('Enregistrer et quitter')
+    cy.intercept('PUT', '/bff/v1/missions/*').as('createAndCloseMission')
+    cy.clickButton('Enregistrer')
 
     cy.wait('@createAndCloseMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)

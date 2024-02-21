@@ -135,7 +135,7 @@ context('Side Window > Mission Form > Main Form', () => {
     dispatch(setGeometry(geometry))
 
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
-    cy.clickButton('Enregistrer et quitter')
+    cy.clickButton('Enregistrer')
 
     // Then
     cy.waitForLastRequest(
@@ -508,7 +508,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // Reset
 
     cy.wait(500)
-    cy.clickButton('Quitter')
+    cy.clickButton('Fermer')
     cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
 
     cy.wait('@getMission')

@@ -220,7 +220,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       // clean
       cy.wait(250)
-      cy.clickButton('Quitter')
+      cy.clickButton('Fermer')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
@@ -263,7 +263,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       // clean
       cy.wait(250)
-      cy.clickButton('Quitter')
+      cy.clickButton('Fermer')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')

@@ -312,7 +312,7 @@ context('Side Window > Mission Form > Mission dates', () => {
         cy.fill('Respect du code de la navigation sur le plan d’eau', true)
         cy.fill('Gens de mer', true)
         cy.fill('Equipement de sécurité et respect des normes', true)
-        cy.clickButton('Enregistrer et quitter')
+        cy.clickButton('Enregistrer')
       }
     )
       .its('response.statusCode')
