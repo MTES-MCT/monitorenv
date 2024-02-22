@@ -64,7 +64,6 @@
     "rimraf": "5.0.5",
     "rsuite": "5.45.0",
     "styled-components": "5.3.11",
-    "timeago.js": "4.0.2",
     "ts-jest": "^29.1.1",
     "use-debounce": "10.0.0",
     "uuid": "9.0.0",

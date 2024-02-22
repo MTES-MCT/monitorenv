@@ -20,6 +20,7 @@ export const saveMission =
       reporting: { reportings },
       sideWindow: { currentPath }
     } = getState()
+    const selectedMissions = getState().missionForms.missions
     const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings'])
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
@@ -49,6 +50,15 @@ export const saveMission =
           )
           await dispatch(missionActions.setSelectedMissionIdOnMap(missionUpdated.id))
           dispatch(sideWindowActions.setCurrentPath(nextPath))
+        } else {
+          // for a mission already created we want to update the `updatedAt` value with the new one
+          const mission = selectedMissions[values.id]
+          dispatch(
+            missionFormsActions.setMission({
+              ...mission,
+              missionForm: response.data
+            })
+          )
         }
 
         if (reopen || !quitAfterSave) {

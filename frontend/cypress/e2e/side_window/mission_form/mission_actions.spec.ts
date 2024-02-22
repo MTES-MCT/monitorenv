@@ -220,7 +220,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       // clean
       cy.wait(250)
-      cy.clickButton('Quitter')
+      cy.clickButton('Fermer')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
@@ -263,7 +263,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       // clean
       cy.wait(250)
-      cy.clickButton('Quitter')
+      cy.clickButton('Fermer')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
@@ -292,31 +292,43 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
+    cy.wait(1000)
+
     cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
+    cy.wait(250)
     cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click({ force: true }) // id 105
+    cy.wait(250)
+
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(0).click({ force: true })
+    cy.wait(250)
     cy.get('*[data-cy="envaction-theme-element"]')
       .eq(0)
       .contains("Découverte d'une épave maritime")
       .click({ force: true }) // id 128
+    cy.wait(250)
     cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
-
+    cy.wait(250)
     // Add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
-    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.wait(250)
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
 
+    cy.wait(500)
+    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
+    cy.wait(250)
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
+    cy.wait(250)
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.wait(500)
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
+    cy.wait(250)
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
+    cy.wait(250)
     // Then
-    cy.wait('@updateMission').then(({ response }) => {
+    cy.waitForLastRequest('@updateMission', {}, 5, response => {
       expect(response && response.statusCode).equal(200)
       const { envActions } = response && response.body
       expect(envActions.length).equal(2)
-
       // control
       const control = envActions.find(a => a.actionType === 'CONTROL')
       const controlPlans = control.controlPlans[0]

@@ -1,15 +1,11 @@
 import { Icon, Button, Accent, customDayjs } from '@mtes-mct/monitor-ui'
-import { timeagoFrenchLocale } from '@utils/timeagoFrenchLocale'
+import { isNewMission } from '@utils/isNewMission'
 import { useFormikContext } from 'formik'
+import { useMemo, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
-import { format, register } from 'timeago.js'
 
 import { AutoSaveTag } from './AutoSaveTag'
 import { missionSourceEnum, type Mission } from '../../../domain/entities/missions'
-
-import type { MouseEventHandler } from 'react'
-// @ts-ignore
-register('fr', timeagoFrenchLocale)
 
 type MissionFormBottomBarProps = {
   allowClose: boolean
@@ -36,6 +32,25 @@ export function MissionFormBottomBar({
   onSaveMission
 }: MissionFormBottomBarProps) {
   const { values } = useFormikContext<Mission>()
+  const missionIsNewMission = isNewMission(values?.id)
+
+  const formattedUpdatedDate = useMemo(() => {
+    const updatedDate = customDayjs(values.updatedAtUtc)
+    const updatedHour = customDayjs(updatedDate).utc().format('HH')
+    const updatedMinutes = customDayjs(updatedDate).utc().format('mm')
+    const updatedTime = `${updatedHour}h${updatedMinutes}`
+
+    if (customDayjs(updatedDate).isSame(customDayjs(), 'day')) {
+      return `aujourdhui à ${updatedTime} (UTC)`
+    }
+
+    const yesterday = customDayjs().subtract(1, 'day')
+    if (customDayjs(updatedDate).isSame(yesterday, 'day')) {
+      return `hier à ${updatedTime} (UTC)`
+    }
+
+    return `le ${customDayjs(updatedDate).utc().format('DD/MM/YYYY ')} à ${updatedTime} (UTC)`
+  }, [values.updatedAtUtc])
 
   return (
     <Footer>
@@ -61,46 +76,50 @@ export function MissionFormBottomBar({
           </>
         )}
 
-        {values?.updatedAtUtc && <> Dernière modification enregistrée {format(values.updatedAtUtc, 'fr')}.</>}
+        {values?.updatedAtUtc && <> Dernière modification enregistrée {formattedUpdatedDate}.</>}
       </MissionInfos>
-      <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
+
       <Separator />
 
-      <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={onQuitFormEditing} type="button">
-        Quitter
-      </Button>
+      <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
+      {allowClose && allowEdit && (
+        <Button
+          accent={Accent.SECONDARY}
+          data-cy="close-mission"
+          disabled={missionIsNewMission}
+          onClick={onCloseMission}
+          type="button"
+        >
+          Clôturer
+        </Button>
+      )}
 
       <StyledButtonsContainer>
-        {!isAutoSaveEnabled && allowEdit && (
-          <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} onClick={onSaveMission} type="button">
-            Enregistrer et quitter
-          </Button>
-        )}
-
-        {allowClose && allowEdit && (
+        {!allowClose && allowEdit && (
           <Button
             accent={Accent.SECONDARY}
-            data-cy="close-mission"
-            Icon={Icon.Save}
-            onClick={onCloseMission}
+            data-cy="reopen-mission"
+            Icon={Icon.Unlock}
+            onClick={onReopenMission}
             type="button"
           >
-            Clôturer
+            Rouvrir la mission
+          </Button>
+        )}
+        <Button
+          accent={isAutoSaveEnabled ? Accent.PRIMARY : Accent.SECONDARY}
+          data-cy="quit-edit-mission"
+          onClick={onQuitFormEditing}
+          type="button"
+        >
+          Fermer
+        </Button>
+        {!isAutoSaveEnabled && allowEdit && (
+          <Button data-cy="save-mission" onClick={onSaveMission} type="button">
+            Enregistrer
           </Button>
         )}
       </StyledButtonsContainer>
-
-      {!allowClose && allowEdit && (
-        <Button
-          accent={Accent.SECONDARY}
-          data-cy="reopen-mission"
-          Icon={Icon.Unlock}
-          onClick={onReopenMission}
-          type="button"
-        >
-          Rouvrir la mission
-        </Button>
-      )}
     </Footer>
   )
 }

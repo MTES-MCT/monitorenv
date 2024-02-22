@@ -16,6 +16,7 @@ export function MissionFormWrapper() {
   const selectedMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
   )
+
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
@@ -30,8 +31,10 @@ export function MissionFormWrapper() {
     }
 
     return {}
+
+    // we want to have the `updatedAtUtc` in the dependency array to update the `formattedUpdatedDate` in `MissionFormBottomBar.tsx`
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeMissionId])
+  }, [activeMissionId, selectedMission?.missionForm.updatedAtUtc])
 
   if (!missionValues || missionValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>
