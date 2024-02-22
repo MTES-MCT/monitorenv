@@ -24,10 +24,9 @@ export default async () => {
         `--window-position=${WIDTH * i},0`,
         '--enable-features=ExperimentalJavaScript'
       ],
-
       defaultViewport: null,
-
-      headless: process.env.IS_HEADLESS === 'true' ? 'new' : false
+      headless: process.env.IS_HEADLESS === 'true' ? 'new' : false,
+      product: 'firefox'
     })
 
     const version = await browser.version()
