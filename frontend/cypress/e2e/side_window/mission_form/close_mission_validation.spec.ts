@@ -40,7 +40,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(1000)
 
     cy.clickButton('Clôturer')
-    cy.wait(500)
+    cy.wait(1000)
 
     cy.contains('Trigramme de clôture requis').should('exist')
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
@@ -70,9 +70,9 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
 
     cy.fill('Nombre total de contrôles', '2')
-    cy.wait(250)
+    cy.wait(500)
     cy.fill('Type de cible', 'Personne morale')
-    cy.wait(250)
+    cy.wait(1000)
 
     // we add an infraction
     cy.clickButton('+ Ajouter un contrôle avec infraction')
