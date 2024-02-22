@@ -1,0 +1,27 @@
+language: "fr"
+early_access: true
+chat:
+  auto_reply: true
+
+reviews:
+  collapse_walkthrough: false
+  high_level_summary: true
+  poem: false
+  request_changes_workflow: false
+  review_status: false
+  auto_review:
+    enabled: true
+    drafts: true
+    base_branches:
+      - "main"
+    labels:
+      - coderabbit
+  path_instructions:
+    - path: "src/**/*.[jt]sx?"
+      instructions: |
+        - Keep your comments short.
+        - Check for typos and bad English naming.
+        - Avoid general concepts and focus on the current code.
+        - Suggest code changes with concrete code rather than explanations.
+  path_filters:
+    - "!datascience/**"
