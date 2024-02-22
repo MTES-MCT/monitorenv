@@ -1,11 +1,11 @@
-import { Icon, Button, Accent, customDayjs } from '@mtes-mct/monitor-ui'
+import { Icon, Button, Accent } from '@mtes-mct/monitor-ui'
 import { isNewMission } from '@utils/isNewMission'
 import { useFormikContext } from 'formik'
-import { useMemo, type MouseEventHandler } from 'react'
+import { type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 import { AutoSaveTag } from './AutoSaveTag'
-import { missionSourceEnum, type Mission } from '../../../domain/entities/missions'
+import { type Mission } from '../../../domain/entities/missions'
 
 type MissionFormBottomBarProps = {
   allowClose: boolean
@@ -34,24 +34,6 @@ export function MissionFormBottomBar({
   const { values } = useFormikContext<Mission>()
   const missionIsNewMission = isNewMission(values?.id)
 
-  const formattedUpdatedDate = useMemo(() => {
-    const updatedDate = customDayjs(values.updatedAtUtc)
-    const updatedHour = customDayjs(updatedDate).utc().format('HH')
-    const updatedMinutes = customDayjs(updatedDate).utc().format('mm')
-    const updatedTime = `${updatedHour}h${updatedMinutes}`
-
-    if (customDayjs(updatedDate).isSame(customDayjs(), 'day')) {
-      return `aujourdhui à ${updatedTime} (UTC)`
-    }
-
-    const yesterday = customDayjs().subtract(1, 'day')
-    if (customDayjs(updatedDate).isSame(yesterday, 'day')) {
-      return `hier à ${updatedTime} (UTC)`
-    }
-
-    return `le ${customDayjs(updatedDate).utc().format('DD/MM/YYYY ')} à ${updatedTime} (UTC)`
-  }, [values.updatedAtUtc])
-
   return (
     <Footer>
       {allowDelete && (
@@ -67,17 +49,6 @@ export function MissionFormBottomBar({
         </StyledButton>
       )}
       <Separator />
-      <MissionInfos>
-        {!values?.createdAtUtc && <>Mission non enregistrée.</>}
-        {values?.createdAtUtc && (
-          <>
-            Mission créée par le {missionSourceEnum[values?.missionSource]?.label} le{' '}
-            {customDayjs(values.createdAtUtc).utc().format('DD/MM/YYYY à HH:mm')} (UTC).
-          </>
-        )}
-
-        {values?.updatedAtUtc && <> Dernière modification enregistrée {formattedUpdatedDate}.</>}
-      </MissionInfos>
 
       <Separator />
 
@@ -126,11 +97,6 @@ export function MissionFormBottomBar({
 
 const Separator = styled.div`
   flex: 1;
-`
-
-const MissionInfos = styled.div`
-  color: ${p => p.theme.color.slateGray};
-  font-style: italic;
 `
 
 const Footer = styled.div`
