@@ -1,4 +1,4 @@
-import { Icon, Button, Accent, customDayjs } from '@mtes-mct/monitor-ui'
+import { Icon, Button, Accent, customDayjs, humanizePastDate } from '@mtes-mct/monitor-ui'
 import { isNewMission } from '@utils/isNewMission'
 import { useFormikContext } from 'formik'
 import { useMemo, type MouseEventHandler } from 'react'
@@ -32,25 +32,12 @@ export function MissionFormBottomBar({
   onSaveMission
 }: MissionFormBottomBarProps) {
   const { values } = useFormikContext<Mission>()
-  const missionIsNewMission = isNewMission(values?.id)
+  const missionIsNewMission = useMemo(() => isNewMission(values?.id), [values?.id])
 
-  const formattedUpdatedDate = useMemo(() => {
-    const updatedDate = customDayjs(values.updatedAtUtc).utc()
-    const updatedHour = updatedDate.format('HH')
-    const updatedMinutes = updatedDate.format('mm')
-    const updatedTime = `${updatedHour}h${updatedMinutes}`
-
-    if (updatedDate.isSame(customDayjs(), 'day')) {
-      return `aujourdhui à ${updatedTime} (UTC)`
-    }
-
-    const yesterday = customDayjs().subtract(1, 'day')
-    if (updatedDate.isSame(yesterday, 'day')) {
-      return `hier à ${updatedTime} (UTC)`
-    }
-
-    return `le ${updatedDate.format('DD/MM/YYYY ')} à ${updatedTime} (UTC)`
-  }, [values.updatedAtUtc])
+  const formattedUpdatedDate = useMemo(
+    () => values.updatedAtUtc && humanizePastDate(values.updatedAtUtc),
+    [values.updatedAtUtc]
+  )
 
   return (
     <Footer>
