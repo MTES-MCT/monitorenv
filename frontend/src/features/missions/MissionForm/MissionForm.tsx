@@ -227,6 +227,27 @@ export function MissionForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNewMission, engagedControlUnit])
 
+  useEffect(() => {
+    if (!isAutoSaveEnabled) {
+      return
+    }
+    if (
+      values?.updatedAtUtc &&
+      !customDayjs(selectedMission?.updatedAtUtc).isSame(customDayjs(values?.updatedAtUtc), 'minutes')
+    ) {
+      setFieldValue('updatedAtUtc', selectedMission?.updatedAtUtc)
+
+      return
+    }
+
+    if (missionEvent && !customDayjs(missionEvent.updatedAtUtc).isSame(customDayjs(values?.updatedAtUtc), 'minutes')) {
+      setFieldValue('updatedAtUtc', missionEvent?.updatedAtUtc)
+    }
+    // we want to listen to `updatedAtUtc` after `saveMission` or when a mission event is received
+    // there's no need to listen for changes in `values`, since `updatedAtUtc` is read-only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [missionEvent, selectedMission?.updatedAtUtc, isAutoSaveEnabled])
+
   return (
     <StyledFormContainer>
       <FormikEffect onChange={validateBeforeOnChange} />
