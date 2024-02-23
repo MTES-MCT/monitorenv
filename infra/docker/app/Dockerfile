@@ -34,7 +34,6 @@ FROM node:20-alpine as buildFront
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISABLE_ESLINT_PLUGIN=true
-ENV PUPPETEER_DOWNLOAD_BASE_URL=https://storage.googleapis.com/chrome-for-testing-public
 
 ARG VERSION
 ARG ENV_PROFILE
