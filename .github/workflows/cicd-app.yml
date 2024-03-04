@@ -62,6 +62,7 @@ jobs:
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
       - name: Show version
         run: echo "VERSION:${{ env.VERSION }} ENV_PROFILE:${{ env.ENV_PROFILE }}"
@@ -165,6 +166,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MONITORENV_VERSION: ${{ needs.version.outputs.VERSION }}
       VERSION: ${{needs.version.outputs.VERSION}}
+      PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -216,6 +218,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MONITORENV_VERSION: ${{ needs.version.outputs.VERSION }}
       VERSION: ${{needs.version.outputs.VERSION}}
+      PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -239,6 +242,9 @@ jobs:
       - name: Install Node.js dependencies
         run: npm ci
         working-directory: ./frontend
+
+      - name: Install Firefox
+        run: npx puppeteer browsers install firefox
 
       - name: Run docker images
         run: |
