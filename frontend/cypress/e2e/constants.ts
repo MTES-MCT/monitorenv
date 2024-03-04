@@ -34,7 +34,7 @@ export const FAKE_MAPBOX_RESPONSE = {
   statusCode: 200
 }
 
-export const FAKE_FISH_MISSION_ACTIONS = {
+export const FAKE_MISSION_WITH_EXTERNAL_ACTIONS = {
   body: { canDelete: false, sources: ['MONITORFISH'] },
   statusCode: 200
 }

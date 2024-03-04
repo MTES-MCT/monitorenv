@@ -4,7 +4,7 @@ import { ControlUnit } from '../domain/entities/controlUnit'
 import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
 import { FrontendApiError } from '../libs/FrontendApiError'
 
-export const CAN_DELETE_MISSION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette mission est supprimable."
+const CAN_DELETE_MISSION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette mission est supprimable."
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
