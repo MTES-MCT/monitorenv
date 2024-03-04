@@ -22,11 +22,11 @@ export default async () => {
       args: [
         `--window-size=${WIDTH},${HEIGHT}`,
         `--window-position=${WIDTH * i},0`,
-        '--enable-features=ExperimentalJavaScript'
+        '--enable-features=ExperimentalJavaScript',
+        '--enable-gpu'
       ],
       defaultViewport: null,
-      headless: process.env.IS_HEADLESS === 'true',
-      product: 'firefox'
+      headless: process.env.IS_HEADLESS === 'true'
     })
 
     const version = await browser.version()
