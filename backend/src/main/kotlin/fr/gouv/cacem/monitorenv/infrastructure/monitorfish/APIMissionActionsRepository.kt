@@ -20,24 +20,25 @@ class APIMissionActionsRepository(
     private val logger: Logger = LoggerFactory.getLogger(APIMissionActionsRepository::class.java)
 
     override fun findFishMissionActionsById(missionId: Int): List<MonitorFishMissionActionEntity> {
-        val missionActionsUrl = "${monitorfishProperties.url}/api/v1/mission_actions?missionId=$missionId"
+        val missionActionsUrl =
+            "${monitorfishProperties.url}/api/v1/mission_actions?missionId=$missionId"
 
         return runBlocking {
             try {
-                val missionActions = apiClient.httpClient.get(missionActionsUrl) {
-                    headers {
-                        append("x-api-key", monitorfishProperties.xApiKey)
-                    }
-                }.body<List<MonitorFishMissionActionDataInput>>()
+                val missionActions =
+                    apiClient
+                        .httpClient
+                        .get(missionActionsUrl) {
+                            headers { append("x-api-key", monitorfishProperties.xApiKey) }
+                        }
+                        .body<List<MonitorFishMissionActionDataInput>>()
                 logger.info("Fetched ${missionActions.size} mission actions.")
 
-                return@runBlocking missionActions.map {
-                    it.toMonitorFishMissionActionEntity()
-                }
+                return@runBlocking missionActions.map { it.toMonitorFishMissionActionEntity() }
             } catch (e: Exception) {
                 logger.error("Could not fetch mission actions at $missionActionsUrl", e)
 
-                return@runBlocking listOf()
+                throw NoSuchElementException()
             }
         }
     }

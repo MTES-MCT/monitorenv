@@ -16,17 +16,28 @@ class CanDeleteMission(
         if (source == MissionSourceEnum.MONITORFISH) {
             val envActions = missionRepository.findById(missionId).envActions
             if (!envActions.isNullOrEmpty()) {
-                return CanDeleteMissionResponse(canDelete = false, sources = listOf(MissionSourceEnum.MONITORENV))
+                return CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.MONITORENV),
+                )
             }
 
             return CanDeleteMissionResponse(canDelete = true, sources = listOf())
         }
 
-        val fishActions = monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
-        if (fishActions.isNotEmpty()) {
-            return CanDeleteMissionResponse(canDelete = false, sources = listOf(MissionSourceEnum.MONITORFISH))
-        }
+        try {
+            val fishActions =
+                monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
+            if (fishActions.isNotEmpty()) {
+                return CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.MONITORFISH),
+                )
+            }
 
-        return CanDeleteMissionResponse(canDelete = true, sources = listOf())
+            return CanDeleteMissionResponse(canDelete = true, sources = listOf())
+        } catch (e: NoSuchElementException) {
+            return CanDeleteMissionResponse(canDelete = false, sources = listOf())
+        }
     }
 }
