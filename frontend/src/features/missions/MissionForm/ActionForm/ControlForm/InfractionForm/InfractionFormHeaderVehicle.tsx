@@ -25,6 +25,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
           <FormikNumberInput
             data-cy="infraction-form-vessel-size"
             label="Taille du navire"
+            min={0}
             name={`${infractionPath}.vesselSize`}
           />
         </>
