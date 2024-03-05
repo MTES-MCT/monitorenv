@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurve
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
@@ -31,6 +32,8 @@ class CreateOrUpdateMissionUTests {
 
     @MockBean private lateinit var facadeAreasRepository: IFacadeAreasRepository
 
+    @MockBean private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
+
     @MockBean private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @Test
@@ -42,6 +45,7 @@ class CreateOrUpdateMissionUTests {
                     missionRepository = missionRepository,
                     facadeRepository = facadeAreasRepository,
                     eventPublisher = applicationEventPublisher,
+                    postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(null)
             }
@@ -125,6 +129,7 @@ class CreateOrUpdateMissionUTests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             )
 
+        given(postgisFunctionRepository.normalizeMultipolygon(polygon)).willReturn(polygon)
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(missionRepository.findById(100)).willReturn(missionToUpdate.copy(envActions = existingEnvActions))
         given(missionRepository.save(anyOrNull()))
@@ -136,6 +141,7 @@ class CreateOrUpdateMissionUTests {
                 missionRepository = missionRepository,
                 facadeRepository = facadeAreasRepository,
                 eventPublisher = applicationEventPublisher,
+                postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(
                     missionToUpdate,
@@ -143,6 +149,7 @@ class CreateOrUpdateMissionUTests {
 
         // Then
         verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == polygon })
+        verify(postgisFunctionRepository, times(1)).normalizeMultipolygon(argThat { this == polygon })
 
         verify(missionRepository, times(1))
             .save(
@@ -205,6 +212,7 @@ class CreateOrUpdateMissionUTests {
                 missionRepository = missionRepository,
                 facadeRepository = facadeAreasRepository,
                 eventPublisher = applicationEventPublisher,
+                postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(
                     missionToUpdate,

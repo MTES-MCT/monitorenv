@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 class CreateOrUpdateReporting(
     private val reportingRepository: IReportingRepository,
     private val facadeRepository: IFacadeAreasRepository,
+    private val postgisFunctionRepository: IPostgisFunctionRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
@@ -36,15 +37,23 @@ class CreateOrUpdateReporting(
                 )
             }
         }
+        val normalizedGeometry = if (reporting.geom != null) {
+            postgisFunctionRepository.normalizeGeometry(
+                reporting.geom,
+            )
+        } else {
+            null
+        }
 
-        val seaFront = if (reporting.geom != null) {
-            facadeRepository.findFacadeFromGeometry(reporting.geom)
+        val seaFront = if (normalizedGeometry != null) {
+            facadeRepository.findFacadeFromGeometry(normalizedGeometry)
         } else {
             null
         }
 
         return reportingRepository.save(
             reporting.copy(
+                geom = normalizedGeometry,
                 seaFront = seaFront,
             ),
         )
