@@ -2,9 +2,3 @@ services:
   db:
     volumes:
       - "../../.backups/:/opt/monitorenv_backups"
-  geoserver:
-    restart: unless-stopped
-    links:
-      - "db:db"
-    depends_on:
-      - db

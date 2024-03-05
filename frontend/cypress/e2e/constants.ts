@@ -38,3 +38,8 @@ export const FAKE_MISSION_WITH_EXTERNAL_ACTIONS = {
   body: { canDelete: false, sources: ['MONITORFISH'] },
   statusCode: 200
 }
+
+export const FAKE_MISSION_WITHOUT_EXTERNAL_ACTIONS = {
+  body: { canDelete: true, sources: [] },
+  statusCode: 200
+}
