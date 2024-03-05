@@ -1,11 +1,11 @@
-import { Icon, Button, Accent } from '@mtes-mct/monitor-ui'
+import { Icon, Button, Accent, customDayjs, humanizePastDate } from '@mtes-mct/monitor-ui'
 import { isNewMission } from '@utils/isNewMission'
 import { useFormikContext } from 'formik'
-import { type MouseEventHandler } from 'react'
+import { useMemo, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 import { AutoSaveTag } from './AutoSaveTag'
-import { type Mission } from '../../../domain/entities/missions'
+import { missionSourceEnum, type Mission } from '../../../domain/entities/missions'
 
 type MissionFormBottomBarProps = {
   allowClose: boolean
@@ -32,7 +32,12 @@ export function MissionFormBottomBar({
   onSaveMission
 }: MissionFormBottomBarProps) {
   const { values } = useFormikContext<Mission>()
-  const missionIsNewMission = isNewMission(values?.id)
+  const missionIsNewMission = useMemo(() => isNewMission(values?.id), [values?.id])
+
+  const formattedUpdatedDate = useMemo(
+    () => values.updatedAtUtc && humanizePastDate(values.updatedAtUtc),
+    [values.updatedAtUtc]
+  )
 
   return (
     <Footer>
@@ -49,23 +54,31 @@ export function MissionFormBottomBar({
         </StyledButton>
       )}
       <Separator />
-
+      <MissionInfos>
+        {!values?.createdAtUtc && <>Mission non enregistrée.</>}
+        {values?.createdAtUtc && (
+          <>
+            Mission créée par le {missionSourceEnum[values?.missionSource]?.label} le{' '}
+            {customDayjs(values.createdAtUtc).utc().format('DD/MM/YYYY à HH:mm')} (UTC).
+          </>
+        )}
+        {values?.updatedAtUtc && <> Dernière modification enregistrée {formattedUpdatedDate}.</>}
+      </MissionInfos>
       <Separator />
-
-      <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
-      {allowClose && allowEdit && (
-        <Button
-          accent={Accent.SECONDARY}
-          data-cy="close-mission"
-          disabled={missionIsNewMission}
-          onClick={onCloseMission}
-          type="button"
-        >
-          Clôturer
-        </Button>
-      )}
-
       <StyledButtonsContainer>
+        <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
+        {allowClose && allowEdit && (
+          <Button
+            accent={Accent.SECONDARY}
+            data-cy="close-mission"
+            disabled={missionIsNewMission}
+            onClick={onCloseMission}
+            type="button"
+          >
+            Clôturer
+          </Button>
+        )}
+
         {!allowClose && allowEdit && (
           <Button
             accent={Accent.SECONDARY}
@@ -95,6 +108,11 @@ export function MissionFormBottomBar({
   )
 }
 
+const MissionInfos = styled.div`
+  color: ${p => p.theme.color.slateGray};
+  font-style: italic;
+`
+
 const Separator = styled.div`
   flex: 1;
 `
@@ -104,6 +122,7 @@ const Footer = styled.div`
   border-top: 1px solid ${p => p.theme.color.lightGray};
   display: flex;
   gap: 16px;
+  justify-content: space-between;
   padding: 16px;
 `
 const StyledButtonsContainer = styled.div`

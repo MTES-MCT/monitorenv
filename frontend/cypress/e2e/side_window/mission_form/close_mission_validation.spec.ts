@@ -40,7 +40,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(1000)
 
     cy.clickButton('Clôturer')
-    cy.wait(1000)
+    cy.wait(500)
 
     cy.contains('Trigramme de clôture requis').should('exist')
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
@@ -70,13 +70,13 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
 
     cy.fill('Nombre total de contrôles', '2')
-    cy.wait(500)
+    cy.wait(250)
     cy.fill('Type de cible', 'Personne morale')
-    cy.wait(1000)
+    cy.wait(250)
 
     // we add an infraction
     cy.clickButton('+ Ajouter un contrôle avec infraction')
-    cy.wait(1000)
+    cy.wait(250)
     cy.fill("Type d'infraction", 'Avec PV')
     cy.wait(250)
     cy.fill('Mise en demeure', 'Oui')
@@ -149,11 +149,11 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
     cy.fill('Ouvert par', 'PCF').scrollIntoView()
 
-    cy.wait(1000)
+    cy.wait(500)
     cy.clickButton('Clôturer')
-    cy.wait(500)
+    cy.wait(250)
     cy.contains('Trigramme de clôture requis').should('exist')
-    cy.wait(500)
+    cy.wait(250)
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
 
     // we add a control

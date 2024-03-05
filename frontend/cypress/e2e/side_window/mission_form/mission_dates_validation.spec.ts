@@ -41,14 +41,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
-    cy.wait(250)
     cy.get('*[data-cy="envaction-theme-selector"]').click()
     cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
-    cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.wait(250)
     cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction').click({ force: true })
-    cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
@@ -229,24 +225,18 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-    cy.wait(500)
     cy.get('[name="closedBy"]').scrollIntoView().type('PCF')
-    cy.wait(500)
+    cy.wait(250)
 
     // Add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
-    cy.wait(500)
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
-    cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.wait(250)
     cy.get('*[data-cy="envaction-theme-element"]').contains('Détention').click({ force: true })
-    cy.wait(250)
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
-    cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
