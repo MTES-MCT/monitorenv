@@ -31,7 +31,7 @@ describe('Missions Form', () => {
     /* eslint-disable no-restricted-syntax */
     for (const page of [pageA, pageB]) {
       await page.goto(URL)
-      await wait(1000)
+      await wait(2000)
 
       setPuppeteerEnvironment(page)
 
