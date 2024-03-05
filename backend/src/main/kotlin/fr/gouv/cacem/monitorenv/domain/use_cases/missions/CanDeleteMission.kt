@@ -5,14 +5,19 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
+import org.slf4j.LoggerFactory
 
 @UseCase
 class CanDeleteMission(
     private val missionRepository: IMissionRepository,
     private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(CanDeleteMission::class.java)
+
     @Throws(IllegalArgumentException::class)
     fun execute(missionId: Int, source: MissionSourceEnum): CanDeleteMissionResponse {
+        logger.info("Check if mission $missionId can be deleted")
+
         if (source == MissionSourceEnum.MONITORFISH) {
             val envActions = missionRepository.findById(missionId).envActions
             if (!envActions.isNullOrEmpty()) {

@@ -61,7 +61,7 @@ services:
     ports:
       - 8081:8080
     volumes:
-      - ../../frontend/cypress/mappings:/home/wiremock/mappings
+      - ../../frontend/cypress/mappings/geoserver:/home/wiremock/mappings
     healthcheck:
       test:
         [
@@ -72,6 +72,17 @@ services:
       timeout: 1s
       retries: 30
 
+  monitorfish:
+    image: rodolpheche/wiremock
+    ports:
+      - 8082:8080
+    volumes:
+      - ../../frontend/cypress/mappings/monitorfish:/home/wiremock/mappings
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/api/v1/mission_actions?missionId=34 || exit 1 "]
+      interval: 1s
+      timeout: 1s
+      retries: 30
 volumes:
   db-data:
     driver: local
