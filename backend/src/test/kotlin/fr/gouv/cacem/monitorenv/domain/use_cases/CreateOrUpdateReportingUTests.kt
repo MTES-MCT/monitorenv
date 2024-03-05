@@ -15,6 +15,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedExcept
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
@@ -44,6 +45,8 @@ class CreateOrUpdateReportingUTests {
 
     @MockBean private lateinit var missionRepository: IMissionRepository
 
+    @MockBean private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
+
     @Test
     fun `Should throw an exception when input is null`() {
         // When
@@ -52,6 +55,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
+                    postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(null)
             }
@@ -197,16 +201,19 @@ class CreateOrUpdateReportingUTests {
         given(facadeRepository.findFacadeFromGeometry(polygon)).willReturn("Facade 1")
         given(semaphoreRepository.findById(1)).willReturn(semaphore)
         given(controlUnitRepository.findById(1)).willReturn(fullControlUnit)
+        given(postgisFunctionRepository.normalizeGeometry(polygon)).willReturn(polygon)
 
         // When
         val createdReportingWithSemaphore =
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
+                postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(reportingWithSemaphore)
 
         // Then
+        verify(postgisFunctionRepository, times(1)).normalizeGeometry(polygon)
         verify(reportingRepository, times(1)).save(reportingWithSemaphore)
         assertThat(createdReportingWithSemaphore).isEqualTo(reportingWithSemaphoreDTO)
 
@@ -215,6 +222,7 @@ class CreateOrUpdateReportingUTests {
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
+                postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(reportingWithControlUnit)
 
@@ -259,6 +267,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
+                    postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(reporting)
             }
@@ -305,6 +314,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
+                    postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(reporting)
             }
@@ -391,6 +401,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
+                    postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(reportingWithControlUnitId)
             }
@@ -406,6 +417,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
+                    postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(reportingWithSemaphoreId)
             }
@@ -421,6 +433,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
+                    postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(reportingWithoutSourceName)
             }
@@ -502,6 +515,7 @@ class CreateOrUpdateReportingUTests {
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
+                postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(reportingWithNewAttachedMission)
         }
