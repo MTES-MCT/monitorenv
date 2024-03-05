@@ -1,4 +1,4 @@
-import { FAKE_MISSION_WITHOUT_EXTERNAL_ACTIONS, FAKE_MISSION_WITH_EXTERNAL_ACTIONS } from '../../constants'
+import { FAKE_MISSION_WITH_EXTERNAL_ACTIONS } from '../../constants'
 import { createMissionWithAttachedReportingAndAttachedAction } from '../../utils/createMissionWithAttachedReportingAndAttachedAction'
 import { visitSideWindow } from '../../utils/visitSideWindow'
 
@@ -21,10 +21,9 @@ context('Side Window > Mission Form > Delete Mission', () => {
     const missionId = 49
     cy.get('*[data-cy="edit-mission-49"]').click({ force: true })
 
-    cy.intercept(
-      { method: 'GET', url: `/bff/v1/missions/${missionId}/can_delete?source=MONITORENV` },
-      FAKE_MISSION_WITHOUT_EXTERNAL_ACTIONS
-    ).as('canDeleteMission')
+    cy.intercept({ method: 'GET', url: `/bff/v1/missions/${missionId}/can_delete?source=MONITORENV` }).as(
+      'canDeleteMission'
+    )
     cy.intercept({
       method: 'DELETE',
       url: `/bff/v1/missions/${missionId}`
