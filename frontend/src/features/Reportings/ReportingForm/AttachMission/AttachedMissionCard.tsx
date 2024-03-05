@@ -1,4 +1,6 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
+import { editMissionInLocalStore } from 'domain/use_cases/missions/editMissionInLocalStore'
 import styled from 'styled-components'
 
 import { getMissionStatus, type Mission } from '../../../../domain/entities/missions'
@@ -15,6 +17,7 @@ export function AttachedMissionCard({
   attachedMission: Mission | undefined
   controlStatus: ControlStatusEnum
 }) {
+  const dispatch = useAppDispatch()
   if (!attachedMission) {
     return null
   }
@@ -35,8 +38,13 @@ export function AttachedMissionCard({
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
+  const goToMission = e => {
+    e.preventDefault()
+    dispatch(editMissionInLocalStore(attachedMission?.id))
+  }
+
   return (
-    <Wrapper data-cy="attach-mission-to-reporting-overlay">
+    <Wrapper data-cy="attach-mission-to-reporting-overlay" onClick={goToMission}>
       <Header>
         <Title>
           {controlUnits && controlUnits?.length === 1 && (
@@ -84,6 +92,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  cursor: pointer;
 `
 
 const Header = styled.div`
