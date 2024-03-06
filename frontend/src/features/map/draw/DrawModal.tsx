@@ -125,6 +125,12 @@ export function DrawModal() {
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
   }
+  const handleCancel = () => {
+    handleReset()
+
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+  }
+
   const handleReset = () => {
     if (!initialGeometry) {
       return dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
@@ -185,6 +191,7 @@ export function DrawModal() {
         )
       }
       isValidatedButtonDisabled={!isGeometryValid}
+      onCancel={handleCancel}
       onReset={handleReset}
       onValidate={handleValidate}
       title={`Vous êtes en train d'ajouter ${listener && titlePlaceholder[listener]}`}

@@ -28,7 +28,7 @@ export function Position() {
       <StyledPositionContainer>
         <Button
           accent={Accent.SECONDARY}
-          disabled={field.value?.coordinates}
+          disabled={field.value?.coordinates.length > 0}
           Icon={Icon.Plus}
           isFullWidth
           onClick={handleAddZone}
@@ -37,7 +37,7 @@ export function Position() {
         </Button>
         <Button
           accent={Accent.SECONDARY}
-          disabled={field.value?.coordinates}
+          disabled={field.value?.coordinates.length > 0}
           Icon={Icon.Plus}
           isFullWidth
           onClick={handleAddPoint}
