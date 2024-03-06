@@ -32,6 +32,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
     cy.get('*[data-cy="delete-mission"]').click()
 
     cy.wait('@canDeleteMission').then(({ response }) => {
+      cy.log('response', JSON.stringify(response))
       expect(response && response.statusCode).equal(200)
       expect(response && response.body.canDelete).equal(true)
     })
@@ -71,6 +72,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
     cy.clickButton('Supprimer la mission')
 
     cy.wait('@canDeleteMission').then(({ response }) => {
+      cy.log('response', JSON.stringify(response))
       expect(response && response.statusCode).equal(200)
       expect(response && response.body.canDelete).equal(false)
       expect(response && response.body.sources[0]).equal('MONITORFISH')
