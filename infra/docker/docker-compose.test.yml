@@ -43,7 +43,7 @@ services:
       - FRONTEND_SHOM_KEY=${FRONTEND_SHOM_KEY}
       - FRONTEND_SENTRY_TRACING_ORIGIN=
       - MONITORFISH_API_KEY=${MONITORFISH_API_KEY}
-      - MONITORFISH_URL=http://monitorfish:8082
+      - MONITORFISH_URL=http://localhost:8082
     ports:
       - 8880:8880
       - 8000:8000
