@@ -118,16 +118,27 @@ export function MissionForm({
   }
 
   const deleteMission = async () => {
-    const response = dispatch(missionsAPI.endpoints.canDeleteMission.initiate(Number(id)))
-    const canDeleteMissionResponse = await response.unwrap()
-    if (canDeleteMissionResponse.canDelete) {
-      setOpenModal(ModalTypes.DELETE)
+    try {
+      const response = dispatch(missionsAPI.endpoints.canDeleteMission.initiate(Number(id)))
+      const canDeleteMissionResponse = await response.unwrap()
 
-      return
+      if (canDeleteMissionResponse.canDelete) {
+        setOpenModal(ModalTypes.DELETE)
+
+        return
+      }
+
+      setActionsSources(canDeleteMissionResponse.sources)
+      setOpenModal(ModalTypes.ACTIONS)
+    } catch (error: any) {
+      dispatch(
+        setToast({
+          containerId: 'sideWindow',
+          message: error.message,
+          type: 'error'
+        })
+      )
     }
-
-    setActionsSources(canDeleteMissionResponse.sources)
-    setOpenModal(ModalTypes.ACTIONS)
   }
 
   const cancelForm = async () => {

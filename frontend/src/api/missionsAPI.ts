@@ -1,4 +1,5 @@
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
+import { ApiErrorCode } from './types'
 import { ControlUnit } from '../domain/entities/controlUnit'
 import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
 import { FrontendApiError } from '../libs/FrontendApiError'
@@ -35,11 +36,27 @@ const getSeaFrontsFilter = seaFronts =>
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     canDeleteMission: builder.query<CanDeleteMissionResponseType, number>({
+      forceRefetch: () => true,
       query: id => ({
         method: 'GET',
         url: `/v1/missions/${id}/can_delete?source=${MissionSourceEnum.MONITORENV}`
       }),
-      transformErrorResponse: error => new FrontendApiError(CAN_DELETE_MISSION_ERROR_MESSAGE, error)
+      transformErrorResponse: error => new FrontendApiError(CAN_DELETE_MISSION_ERROR_MESSAGE, error),
+      transformResponse: (response: CanDeleteMissionResponseType) => {
+        // this means that the api to get fish actions is not responding correctly.
+        if (!response.canDelete && response.sources.length === 0) {
+          throw new FrontendApiError(CAN_DELETE_MISSION_ERROR_MESSAGE, {
+            data: {
+              code: ApiErrorCode.EXISTING_MISSION_ACTION,
+              data: response,
+              type: ApiErrorCode.EXISTING_MISSION_ACTION
+            },
+            status: 'FETCH_ERROR'
+          })
+        }
+
+        return response
+      }
     }),
     createMission: builder.mutation<Mission, MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
