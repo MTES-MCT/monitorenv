@@ -174,7 +174,7 @@ docker-tag-app:
 docker-push-app:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 run-infra-for-frontend-tests:
-	export MONITORENV_VERSION=$(VERSION) && docker compose -f ./infra/docker/docker-compose.test.yml up -d
+	export MONITORENV_VERSION=$(VERSION) && docker compose -f ./infra/docker/docker-compose.test.yml up -d db geoserver monitorfish
 
 # CI commands - pipeline
 .PHONY: docker-build-pipeline docker-test-pipeline docker-tag-pipeline docker-push-pipeline
