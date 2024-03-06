@@ -1,5 +1,5 @@
 import { Accent, Icon, IconButton, Button, Size } from '@mtes-mct/monitor-ui'
-import Fuse from 'fuse.js'
+import Fuse, { type Expression } from 'fuse.js'
 import _ from 'lodash'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
@@ -96,7 +96,7 @@ export function LayerSearch({ isVisible }) {
             const filterWithType =
               ampTypes?.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) } : undefined
 
-            const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Fuse.Expression[]
+            const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Expression[]
 
             searchedAMPS = fuseAMPs?.search<AMP>({
               $and: filterExpression
@@ -133,7 +133,7 @@ export function LayerSearch({ isVisible }) {
                 ? { $or: regulatoryThemes.map(theme => ({ $path: ['properties', 'thematique'], $val: theme })) }
                 : undefined
 
-            const filterExpression = [filterWithTextExpression, filterWithTheme].filter(f => !!f) as Fuse.Expression[]
+            const filterExpression = [filterWithTextExpression, filterWithTheme].filter(f => !!f) as Expression[]
             searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>({
               $and: filterExpression
             })
