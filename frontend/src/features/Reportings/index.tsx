@@ -10,6 +10,8 @@ import { switchReporting } from '../../domain/use_cases/reporting/switchReportin
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
+import type { ReportingType } from 'domain/shared_slices/reporting'
+
 export function Reportings({ context }: { context: ReportingContext }) {
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
@@ -23,7 +25,10 @@ export function Reportings({ context }: { context: ReportingContext }) {
   const reportingsTabs = useMemo(
     () =>
       _.chain(Object.entries(reportings))
-        .filter(([key, reporting]) => reporting.context === context && String(activeReportingId) !== key)
+        .filter(
+          ([key, reporting]: [string, ReportingType]) =>
+            reporting.context === context && String(activeReportingId) !== key
+        )
         .map(filteredReportings => filteredReportings[1])
         .value(),
     [reportings, activeReportingId, context]

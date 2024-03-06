@@ -25,5 +25,5 @@ export const cancelCreateAndRedirectToFilteredList =
     dispatch(updateFilters({ key: MissionFiltersEnum.STATUS_FILTER, value: [MissionStatusEnum.PENDING] }))
 
     const missionPathToClose = generatePath(sideWindowPaths.MISSION, { id: missionId })
-    dispatch(deleteTab(missionPathToClose, false))
+    dispatch(deleteTab(missionPathToClose, true))
   }

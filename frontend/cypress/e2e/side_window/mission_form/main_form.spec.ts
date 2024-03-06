@@ -304,6 +304,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.clickButton('Ajouter une autre unité')
     cy.get('*[data-cy="add-control-unit"]').last().click()
     cy.get('.rs-picker-search-bar-input').last().type('DML 2A{enter}')
+    cy.wait(200)
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
     cy.clickButton('Oui, la conserver')
 
@@ -471,6 +472,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.fill("Contact de l'unité 1", 'Un contact')
     cy.fill("Contact de l'unité 2", 'Un autre contact')
+    cy.wait(250)
 
     cy.waitForLastRequest(
       '@updateMission',

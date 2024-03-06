@@ -16,6 +16,9 @@ export function MissionFormWrapper() {
   const selectedMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
   )
+  const engagedControlUnit = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
+  )
 
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
@@ -61,6 +64,7 @@ export function MissionFormWrapper() {
           />
         </Form>
       </Formik>
+      {engagedControlUnit && <DisabledMissionBackground />}
     </EditMissionWrapper>
   )
 }
@@ -69,4 +73,12 @@ const EditMissionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+`
+const DisabledMissionBackground = styled.div`
+  position: absolute;
+  background-color: ${p => p.theme.color.white};
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
 `

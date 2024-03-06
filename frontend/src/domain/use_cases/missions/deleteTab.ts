@@ -9,7 +9,7 @@ import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 
 export const deleteTab =
-  (path: string, withConfirmation = true) =>
+  (path: string, forceQuitAndRedirectToList = false) =>
   async (dispatch, getState) => {
     const { missions } = getState().missionForms
     const { activeMissionId } = getState().missionForms
@@ -18,7 +18,7 @@ export const deleteTab =
     const routeParams = getMissionPageRoute(path)
     const idToDelete = getIdTyped(routeParams?.params.id)
 
-    if (idToDelete && missions[idToDelete]?.isFormDirty && withConfirmation) {
+    if (idToDelete && missions[idToDelete]?.isFormDirty && !forceQuitAndRedirectToList) {
       if (activeMissionId === idToDelete) {
         await dispatch(sideWindowActions.setShowConfirmCancelModal(true))
 
@@ -44,7 +44,7 @@ export const deleteTab =
     const arrayOfMissions: MissionInStateType[] = Object.values(missions)
     const missionToDeleteIndex = arrayOfMissions.findIndex(mission => mission?.missionForm?.id === idToDelete)
 
-    if (missionToDeleteIndex === 0) {
+    if (missionToDeleteIndex === 0 || forceQuitAndRedirectToList) {
       dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
     } else {
       const previousMission = arrayOfMissions[missionToDeleteIndex - 1]
