@@ -1,8 +1,7 @@
-import { FormikTextInput } from '@mtes-mct/monitor-ui'
+import { FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import styled from 'styled-components'
 
-import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
 import { VehicleTypeEnum } from '../../../../../../domain/entities/vehicleType'
 
@@ -23,7 +22,12 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
         <>
           <VesselTypeSelector infractionPath={infractionPath} />
 
-          <VesselSizeSelector infractionPath={infractionPath} />
+          <FormikNumberInput
+            data-cy="infraction-form-vessel-size"
+            label="Taille du navire"
+            min={0}
+            name={`${infractionPath}.vesselSize`}
+          />
         </>
       )}
     </FormGroup>

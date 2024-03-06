@@ -178,7 +178,7 @@ class LegacyMissionsITests {
                         toProcess = false,
                         controlledPersonIdentity = "Captain Flame",
                         vesselType = VesselTypeEnum.COMMERCIAL,
-                        vesselSize = VesselSizeEnum.FROM_12_TO_24m,
+                        vesselSize = 23,
                     ),
                 ),
             )
@@ -444,7 +444,7 @@ class LegacyMissionsITests {
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].vesselSize",
-                    equalTo(VesselSizeEnum.FROM_12_TO_24m.toString()),
+                    equalTo(23),
                 ),
             )
     }
@@ -492,7 +492,7 @@ class LegacyMissionsITests {
                         toProcess = false,
                         controlledPersonIdentity = "Captain Flame",
                         vesselType = VesselTypeEnum.COMMERCIAL,
-                        vesselSize = VesselSizeEnum.FROM_12_TO_24m,
+                        vesselSize = 23,
                     ),
                 ),
             )
@@ -742,7 +742,7 @@ class LegacyMissionsITests {
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].vesselSize",
-                    equalTo(VesselSizeEnum.FROM_12_TO_24m.toString()),
+                    equalTo(23),
                 ),
             )
 

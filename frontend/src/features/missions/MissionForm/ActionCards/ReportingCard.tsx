@@ -1,16 +1,18 @@
 import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
+import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Accented, ReportingDate, SummaryContent } from './style'
-import { ActionTypeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, type Mission, type NewMission, type NewInfraction } from '../../../../domain/entities/missions'
 import { ControlStatusEnum, type ReportingForTimeline } from '../../../../domain/entities/reporting'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 import { getFormattedReportingId } from '../../../Reportings/utils'
-import { actionFactory } from '../../Missions.helpers'
+import { actionFactory, infractionFactory } from '../../Missions.helpers'
 
 export function ReportingCard({
   action,
@@ -24,7 +26,40 @@ export function ReportingCard({
 
   const addAttachedControl = e => {
     e.stopPropagation()
+    let newInfractions: Array<NewInfraction> = []
+
+    if (
+      action.targetType !== ReportingTargetTypeEnum.OTHER &&
+      action.targetDetails &&
+      action.targetDetails.length > 0
+    ) {
+      newInfractions = action.targetDetails.map(target => {
+        switch (action.targetType) {
+          case ReportingTargetTypeEnum.VEHICLE:
+            return infractionFactory({
+              controlledPersonIdentity: target?.vesselName ?? target?.operatorName,
+              registrationNumber: target?.externalReferenceNumber,
+              ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
+                vesselSize: target?.size
+              })
+            })
+
+          case ReportingTargetTypeEnum.COMPANY:
+            return infractionFactory({
+              companyName: target?.operatorName,
+              controlledPersonIdentity: target?.vesselName
+            })
+
+          default:
+            return infractionFactory({
+              controlledPersonIdentity: target?.operatorName
+            })
+        }
+      })
+    }
+
     const newControl = actionFactory({
+      actionNumberOfControls: 1,
       actionTargetType: action.targetType,
       actionType: ActionTypeEnum.CONTROL,
       reportingIds: [Number(action.id)],
@@ -37,6 +72,9 @@ export function ReportingCard({
             themeId: action.themeId
           }
         ]
+      }),
+      ...(newInfractions.length > 0 && {
+        infractions: [...newInfractions]
       })
     })
 

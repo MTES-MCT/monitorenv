@@ -1,3 +1,5 @@
+import { createMissionWithAttachedReportingAndAttachedAction } from '../../utils/createMissionWithAttachedReportingAndAttachedAction'
+
 context('Side Window > Mission Form > Attach action to reporting', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -120,6 +122,17 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
       expect(surveillanceWithAttachedReportings.reportingIds.length).equal(2)
       expect(firstAttachedReporting.attachedEnvActionId).equal('9969413b-b394-4db4-985f-b00743ffb833')
       expect(secondAttachedReporting.attachedEnvActionId).equal('9969413b-b394-4db4-985f-b00743ffb833')
+    })
+  })
+
+  it('A control with infraction can be created from a reporting', () => {
+    createMissionWithAttachedReportingAndAttachedAction().then(() => {
+      cy.clickButton('Editer')
+      cy.getDataCy('infraction-form').should('be.visible')
+
+      cy.getDataCy('infraction-form-registrationNumber').should('have.value', '123456789')
+      cy.getDataCy('infraction-form-controlledPersonIdentity').should('have.value', 'Le Bateau 2000')
+      cy.getDataCy('infraction-form-vessel-size').should('have.value', 13)
     })
   })
 })

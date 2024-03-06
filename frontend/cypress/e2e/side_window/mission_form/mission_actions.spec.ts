@@ -40,7 +40,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       expect(duplicatedInfraction.registrationNumber).equal('BALTIK')
       expect(duplicatedInfraction.relevantCourt).equal('LOCAL_COURT')
       expect(duplicatedInfraction.toProcess).equal(false)
-      expect(duplicatedInfraction.vesselSize).equal('FROM_24_TO_46m')
+      expect(duplicatedInfraction.vesselSize).equal(45)
       expect(duplicatedInfraction.vesselType).equal('COMMERCIAL')
       expect(duplicatedInfraction.id).not.equal('b8007c8a-5135-4bc3-816f-c69c7b75d807')
     })
