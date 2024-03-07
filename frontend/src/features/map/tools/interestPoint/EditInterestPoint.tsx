@@ -1,4 +1,4 @@
-import { Icon, Label, MultiRadio, type Option } from '@mtes-mct/monitor-ui'
+import { Label, MultiRadio, type Option } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo, useState } from 'react'
@@ -15,30 +15,20 @@ import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordi
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
 
-import type { InterestPointOptionValueType } from '../../../InterestPoint/types'
 import type { Coordinate } from 'ol/coordinate'
 
-const INTEREST_POINT_OPTIONS: Array<Option<InterestPointOptionValueType>> = [
+const INTEREST_POINT_OPTIONS: Array<Option> = [
   {
     label: 'Moyen de contrôle',
-    value: {
-      icon: Icon.ControlUnit,
-      value: interestPointType.CONTROL_ENTITY
-    }
+    value: interestPointType.CONTROL_ENTITY
   },
   {
     label: 'Navire de pêche',
-    value: {
-      icon: Icon.FleetSegment,
-      value: interestPointType.FISHING_VESSEL
-    }
+    value: interestPointType.FISHING_VESSEL
   },
   {
     label: 'Autre point',
-    value: {
-      icon: Icon.Info,
-      value: interestPointType.OTHER
-    }
+    value: interestPointType.OTHER
   }
 ]
 
@@ -58,9 +48,8 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
   const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
 
   const defaultType = interestPointBeingDrawed?.type
-    ? INTEREST_POINT_OPTIONS.find(
-        interestPointOption => interestPointOption.value.value === interestPointBeingDrawed.type
-      )?.value
+    ? INTEREST_POINT_OPTIONS.find(interestPointOption => interestPointOption.value === interestPointBeingDrawed.type)
+        ?.value
     : INTEREST_POINT_OPTIONS[2]?.value
 
   const [selectedOption, setSelectedOption] = useState()
@@ -115,11 +104,11 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
   const updateType = useCallback(
     option => {
       setSelectedOption(option)
-      if (option.value && interestPointBeingDrawed?.type !== option.value) {
+      if (option && interestPointBeingDrawed?.type !== option) {
         dispatch(
           updateInterestPointKeyBeingDrawed({
             key: 'type',
-            value: option.value
+            value: option
           })
         )
       }
@@ -197,13 +186,6 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
               name="interestPointTypeRadio"
               onChange={updateType}
               options={INTEREST_POINT_OPTIONS}
-              optionValueKey="value"
-              renderMenuItem={(label, value) => (
-                <MultiRadioLabel>
-                  <value.icon size={14} />
-                  <span>{label}</span>
-                </MultiRadioLabel>
-              )}
               value={selectedOption ?? defaultType}
             />
             <div>
@@ -318,9 +300,4 @@ const Header = styled.div`
 const Wrapper = styled(MapToolBox)`
   top: 0px;
   width: 306px;
-`
-const MultiRadioLabel = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
 `

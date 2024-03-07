@@ -32,11 +32,12 @@ export const FR_FR_LOCALE: Locale = {
     closeLabel: 'Fermer'
   },
   common: {
-    // clear: 'Effacer',
+    clear: 'Effacer',
     emptyMessage: 'Aucune donnée',
-    loading: 'Chargement...'
-    // remove: 'Supprimer'
+    loading: 'Chargement...',
+    remove: 'Supprimer'
   },
+
   DatePicker: {
     ...Calendar
   },
@@ -79,7 +80,7 @@ export const FR_FR_LOCALE: Locale = {
     error: 'Erreur',
     inited: 'Initial',
     progress: 'En cours',
-    // removeFile: 'Supprimer',
+    removeFile: 'Supprimer',
     upload: 'Charger'
   }
 }

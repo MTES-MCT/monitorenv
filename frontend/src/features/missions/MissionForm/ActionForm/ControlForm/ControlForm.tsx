@@ -4,7 +4,6 @@ import {
   FormikTextarea,
   MultiRadio,
   getOptionsFromLabelledEnum,
-  useNewWindow,
   type OptionValueType,
   DatePicker,
   FieldError,
@@ -42,8 +41,6 @@ export function ControlForm({
   removeControlAction: () => void
   setCurrentActionIndex: (string) => void
 }) {
-  const { newWindowContainerRef } = useNewWindow()
-
   const {
     errors,
     setFieldValue,
@@ -155,8 +152,8 @@ export function ControlForm({
     setCurrentActionIndex(undefined)
     removeControlAction()
   }
-  const updateIsControlAttachedToReporting = (checked: boolean) => {
-    setIsReportingListVisible(checked)
+  const updateIsControlAttachedToReporting = (checked: boolean | undefined) => {
+    setIsReportingListVisible(checked ?? false)
     if (!checked) {
       const reportingToDetachIndex = attachedReportings?.findIndex(
         reporting => reporting.attachedEnvActionId === currentAction?.id
@@ -216,8 +213,8 @@ export function ControlForm({
         <div>
           <StyledToggle>
             <Toggle
+              checked={isReportingListVisible}
               dataCy="control-form-toggle-reporting"
-              isChecked={isReportingListVisible}
               isLabelHidden
               label="Le contrôle est rattaché à un signalement"
               name="isControlAttachedToReporting"
@@ -248,11 +245,11 @@ export function ControlForm({
         />
 
         <DatePicker
-          baseContainer={newWindowContainerRef.current}
           defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
           isLight
           isStringDate
           label="Date et heure du contrôle (UTC)"
+          name="actionStartDateTimeUtc"
           onChange={updateControlDate}
           withTime
         />

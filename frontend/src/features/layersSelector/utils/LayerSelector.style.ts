@@ -123,9 +123,7 @@ const LayerList = styled.ul`
 
 const NoLayerSelected = styled.div`
   color: ${p => p.theme.color.slateGray};
-  padding: 6px;
-  font-size: 13px;
-  height: 36px;
+  padding: 8px;
   text-align: center;
 `
 

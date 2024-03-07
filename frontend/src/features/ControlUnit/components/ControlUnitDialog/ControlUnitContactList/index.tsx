@@ -1,4 +1,4 @@
-import { Accent, Button } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -126,7 +126,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           />
         ) : (
           <div>
-            <Button accent={Accent.SECONDARY} onClick={openCreationForm}>
+            <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={openCreationForm}>
               Ajouter un contact
             </Button>
           </div>

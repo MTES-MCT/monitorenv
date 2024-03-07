@@ -5,7 +5,6 @@ import {
   FormikTextarea,
   MultiCheckbox,
   pluralize,
-  useNewWindow,
   type OptionValueType,
   DatePicker,
   Accent,
@@ -35,8 +34,6 @@ import { getFormattedReportingId } from '../../../Reportings/utils'
 import { MultiZonePicker } from '../../MultiZonePicker'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
-  const { newWindowContainerRef } = useNewWindow()
-
   const {
     setFieldValue,
     values: { attachedReportings, envActions, startDateTimeUtc }
@@ -84,8 +81,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     [attachedReportings]
   )
 
-  const updateIsSurveillanceAttachedToReporting = (checked: boolean) => {
-    setIsReportingListVisible(checked)
+  const updateIsSurveillanceAttachedToReporting = (checked: boolean | undefined) => {
+    setIsReportingListVisible(checked ?? false)
     if (!checked) {
       attachedReportings.map((reporting, index) => {
         if (reporting.attachedEnvActionId === currentAction?.id) {
@@ -166,8 +163,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         <div>
           <StyledToggle>
             <Toggle
+              checked={isReportingListVisible}
               dataCy="surveillance-form-toggle-reporting"
-              isChecked={isReportingListVisible}
               isLabelHidden
               label="La surveillance est rattachée à un signalement"
               name="isSurveillanceAttachedToReporting"
@@ -193,7 +190,6 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           <StyledDatePickerContainer>
             <StyledDatePicker
               key={`start-date-${durationMatchMissionField.value}`}
-              baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-start-date-time"
               defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
@@ -204,12 +200,12 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               isStringDate
               isUndefinedWhenDisabled={false}
               label="Date et heure de début de surveillance (UTC)"
+              name="startDateTimeUtc"
               onChange={updateStartDateTime}
               withTime
             />
             <StyledDatePicker
               key={`end-date-${durationMatchMissionField.value}`}
-              baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-end-date-time"
               defaultValue={currentAction?.actionEndDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
@@ -220,6 +216,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               isStringDate
               isUndefinedWhenDisabled={false}
               label="Date et heure de fin de surveillance (UTC)"
+              name="endDateTimeUtc"
               onChange={updateEndDateTime}
               withTime
             />

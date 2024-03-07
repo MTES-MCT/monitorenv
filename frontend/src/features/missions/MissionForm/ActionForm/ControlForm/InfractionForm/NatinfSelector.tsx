@@ -1,4 +1,4 @@
-import { CustomSearch, MultiSelect, useNewWindow } from '@mtes-mct/monitor-ui'
+import { CustomSearch, MultiSelect } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
 
@@ -18,7 +18,6 @@ const sortNatinf = (a, b) => {
 }
 
 export function NatinfSelector({ infractionPath }) {
-  const { newWindowContainerRef } = useNewWindow()
   const [natinfField, meta, natinfHelpers] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
   const { data, isError, isLoading } = useGetInfractionsQuery()
 
@@ -46,7 +45,6 @@ export function NatinfSelector({ infractionPath }) {
 
   return (
     <MultiSelect
-      baseContainer={newWindowContainerRef.current}
       block
       customSearch={customSearch}
       error={meta.error}
@@ -54,9 +52,9 @@ export function NatinfSelector({ infractionPath }) {
       name="infraction-natinf"
       onChange={setValue}
       options={sortedNatinfs}
+      optionValueKey={'value' as any}
       searchable
       value={natinfField.value}
-      valueKey="value"
     />
   )
 }

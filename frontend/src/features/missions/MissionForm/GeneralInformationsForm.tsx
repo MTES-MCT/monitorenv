@@ -83,13 +83,13 @@ export function GeneralInformationsForm() {
         <div>
           <StyledDatePickerContainer>
             <DatePicker
-              baseContainer={newWindowContainerRef.current}
               data-cy="mission-start-date-time"
               defaultValue={values?.startDateTimeUtc || undefined}
               isCompact
               isErrorMessageHidden
               isStringDate
               label="Début de mission (UTC)"
+              name="startDateTimeUtc"
               onChange={updateMissionDateTime}
               withTime
             />

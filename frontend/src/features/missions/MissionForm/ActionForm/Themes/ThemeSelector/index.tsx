@@ -1,4 +1,4 @@
-import { Select, useNewWindow, type Option } from '@mtes-mct/monitor-ui'
+import { Select, type Option } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
@@ -15,7 +15,6 @@ type ActionThemeProps = {
   themes: Array<Option<number>>
 }
 export function ThemeSelector({ actionIndex, isError, isLoading, label, themeIndex, themes }: ActionThemeProps) {
-  const { newWindowContainerRef } = useNewWindow()
   const [currentThemeField, currentThemeProps] = useField<string>(
     `envActions[${actionIndex}].controlPlans[${themeIndex}].themeId`
   )
@@ -32,7 +31,6 @@ export function ThemeSelector({ actionIndex, isError, isLoading, label, themeInd
       {!isError && !isLoading && (
         <Select
           key={`${actionIndex}-${themes.length}`}
-          baseContainer={newWindowContainerRef.current}
           data-cy="envaction-theme-selector"
           error={currentThemeProps.error}
           isLight

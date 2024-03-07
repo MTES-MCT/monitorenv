@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Select, useNewWindow } from '@mtes-mct/monitor-ui'
+import { Select } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -16,19 +16,16 @@ type VehicleTypeSelectorProps = {
   value?: string
 }
 export function VehicleTypeSelector({ dataCy, disabled, error, name, onChange, value }: VehicleTypeSelectorProps) {
-  const { newWindowContainerRef } = useNewWindow()
   const vehicleTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const vehicleTypeFieldList = Object.values(vehicleTypeLabels)
 
   return (
     <SelectorWrapper ref={vehicleTypeSelectorRef}>
       <Select
-        baseContainer={newWindowContainerRef.current}
         data-cy={dataCy}
         disabled={disabled}
         error={error}
         isErrorMessageHidden
-        isLight
         label="Type de véhicule"
         name={name}
         onChange={onChange}

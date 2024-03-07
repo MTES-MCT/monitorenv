@@ -1,5 +1,5 @@
 import { CheckPicker, DateRangePicker, Checkbox, SingleTag, Accent } from '@mtes-mct/monitor-ui'
-import { forwardRef, useRef } from 'react'
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -56,8 +56,6 @@ export function MapReportingsFiltersWithRef(
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
 
-  const filtersRef = useRef()
-
   return (
     <FilterWrapper ref={ref}>
       <StyledBloc>
@@ -113,7 +111,6 @@ export function MapReportingsFiltersWithRef(
           <StyledCustomPeriodContainer>
             <DateRangePicker
               key="dateRange"
-              baseContainer={filtersRef.current}
               data-cy="datepicker-missionStartedAfter"
               defaultValue={
                 startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
@@ -123,6 +120,7 @@ export function MapReportingsFiltersWithRef(
               isLabelHidden
               isStringDate
               label="Date de début entre le et le"
+              name="reportingDateRange"
               onChange={updateDateRangeFilter}
             />
           </StyledCustomPeriodContainer>

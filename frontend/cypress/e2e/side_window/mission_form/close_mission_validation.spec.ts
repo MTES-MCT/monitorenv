@@ -34,16 +34,16 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.get('.rs-picker-search-bar-input').type('Cross Gris{enter}')
     cy.clickOutside()
     cy.wait(250)
-    cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()
+    cy.fill("Contact de l'unité 1", 'contact')
     cy.wait(250)
-    cy.fill('Ouvert par', 'PCF').scrollIntoView()
+    cy.fill('Ouvert par', 'PCF')
     cy.wait(1000)
 
     cy.clickButton('Clôturer')
     cy.wait(500)
 
     cy.contains('Trigramme de clôture requis').should('exist')
-    cy.fill('Clôturé par', 'PCF').scrollIntoView()
+    cy.fill('Clôturé par', 'PCF')
     cy.wait(500)
 
     // we add a control
@@ -145,16 +145,16 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
     cy.clickOutside()
     cy.wait(250)
-    cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()
+    cy.fill("Contact de l'unité 1", 'contact')
     cy.wait(250)
-    cy.fill('Ouvert par', 'PCF').scrollIntoView()
+    cy.fill('Ouvert par', 'PCF')
 
     cy.wait(500)
     cy.clickButton('Clôturer')
     cy.wait(250)
     cy.contains('Trigramme de clôture requis').should('exist')
     cy.wait(250)
-    cy.fill('Clôturé par', 'PCF').scrollIntoView()
+    cy.fill('Clôturé par', 'PCF')
 
     // we add a control
     cy.clickButton('Ajouter')

@@ -211,7 +211,6 @@ export function FormContent({
         <StyledThemeContainer>
           <ThemeSelector isLight={false} label="Thématique du signalement" name="themeId" />
           <SubThemesSelector
-            context={reportingContext}
             isLight={false}
             label="Sous-thématique du signalement"
             name="subThemeIds"
@@ -231,9 +230,9 @@ export function FormContent({
 
         <StyledToggle>
           <Toggle
+            checked={!!values.isControlRequired || false}
             dataCy="reporting-is-control-required"
             disabled={values.isArchived}
-            isChecked={!!values.isControlRequired || false}
             isLabelHidden
             label="Le signalement nécessite un contrôle"
             name="isControlRequired"

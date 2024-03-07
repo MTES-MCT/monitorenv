@@ -58,8 +58,6 @@ const ZonesList = styled.ul<{ showZones: boolean; zonesLength: number }>`
 `
 
 const ListItem = styled.li`
-  min-height: 36px;
-  line-height: 18px;
   text-align: left;
   list-style-type: none;
   white-space: nowrap;

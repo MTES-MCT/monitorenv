@@ -6,8 +6,7 @@ import {
   Icon,
   IconButton,
   MultiSelect,
-  Select,
-  useNewWindow
+  Select
 } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { uniq, uniqBy } from 'lodash'
@@ -33,7 +32,6 @@ type ControlUnitSelectorProps = {
 }
 
 export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: ControlUnitSelectorProps) {
-  const { newWindowContainerRef } = useNewWindow()
   const dispatch = useAppDispatch()
 
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
@@ -182,7 +180,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
     <RessourceUnitWrapper>
       <AdministrationContainer>
         <Select
-          baseContainer={newWindowContainerRef.current}
           data-cy="add-control-administration"
           error={administrationMeta.error}
           label={`Administration ${resourceUnitIndexDisplayed}`}
@@ -200,7 +197,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
       <div>
         <Select
           key={unitList.length}
-          baseContainer={newWindowContainerRef.current}
           customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
           data-cy="add-control-unit"
           error={unitNameMeta.error}
@@ -215,7 +211,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
       </div>
 
       <MultiSelect
-        baseContainer={newWindowContainerRef.current}
         cleanable={false}
         disabled={!unitField.value}
         label={`Moyen(s) ${resourceUnitIndexDisplayed}`}

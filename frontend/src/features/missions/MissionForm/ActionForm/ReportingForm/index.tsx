@@ -97,10 +97,10 @@ export function ReportingForm({
         <SourceContainer>
           <MultiRadio
             isInline
-            isReadOnly
             label="Source"
             name="sourceType"
             options={sourceOptions}
+            readOnly
             value={reporting.sourceType}
           />
           <TextInput label={sourceTypeText} name="source" plaintext value={reporting.displayedSource} />
@@ -137,10 +137,10 @@ export function ReportingForm({
         <AdditionnalInformationsContainer>
           <ReportTypeMultiRadio
             isInline
-            isReadOnly
             label="Type de signalement"
             name="reportType"
             options={reportTypeOptions}
+            readOnly
             value={reporting.reportType}
           />
           <TextInput
@@ -159,7 +159,7 @@ export function ReportingForm({
           />
           <StyledToggle>
             <Toggle
-              isChecked={reporting.isControlRequired ?? false}
+              checked={reporting.isControlRequired ?? false}
               isLabelHidden
               label="Le signalement nécessite un contrôle"
               name="isControlRequired"

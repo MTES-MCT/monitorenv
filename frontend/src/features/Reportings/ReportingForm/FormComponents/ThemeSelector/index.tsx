@@ -1,4 +1,4 @@
-import { customDayjs, Select, useNewWindow } from '@mtes-mct/monitor-ui'
+import { customDayjs, Select } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
@@ -7,8 +7,7 @@ import { INDIVIDUAL_ANCHORING_THEME_ID, type Reporting } from '../../../../../do
 import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlansByYear'
 import { updateTheme } from '../../formikUseCases/updateReportingThemes'
 
-export function ThemeSelector({ isInNewWindow = false, isLight = true, label, name }) {
-  const { newWindowContainerRef } = useNewWindow()
+export function ThemeSelector({ isLight = true, label, name }) {
   const [currentThemeField] = useField<number | undefined>(name)
   const { setFieldValue, values } = useFormikContext<Reporting>()
 
@@ -37,7 +36,6 @@ export function ThemeSelector({ isInNewWindow = false, isLight = true, label, na
       {!isError && !isLoading && (
         <Select
           key={name}
-          baseContainer={isInNewWindow ? newWindowContainerRef.current : null}
           data-cy="reporting-theme-selector"
           isErrorMessageHidden
           isLight={isLight}
