@@ -54,6 +54,7 @@ export function NatinfSelector({ infractionPath }) {
       name="infraction-natinf"
       onChange={setValue}
       options={sortedNatinfs}
+      optionValueKey={'value' as any}
       searchable
       value={natinfField.value}
     />
