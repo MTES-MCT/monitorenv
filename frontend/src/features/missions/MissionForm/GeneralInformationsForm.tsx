@@ -87,8 +87,9 @@ export function GeneralInformationsForm() {
               defaultValue={values?.startDateTimeUtc || undefined}
               isCompact
               isErrorMessageHidden
+              isRequired
               isStringDate
-              label="Début de mission (UTC)"
+              label="Début de mission"
               name="startDateTimeUtc"
               onChange={updateMissionDateTime}
               withTime
@@ -100,14 +101,20 @@ export function GeneralInformationsForm() {
               isCompact
               isEndDate
               isErrorMessageHidden
+              isRequired
               isStringDate
-              label="Fin de mission (UTC)"
+              label="Fin de mission"
               name="endDateTimeUtc"
               withTime
             />
           </StyledDatePickerContainer>
-          {errors.startDateTimeUtc && <FieldError>{errors.startDateTimeUtc}</FieldError>}
-          {errors.endDateTimeUtc && <FieldError>{errors.endDateTimeUtc}</FieldError>}
+          {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
+          {errors.startDateTimeUtc && errors.startDateTimeUtc?.length > 1 && (
+            <FieldError>{errors.startDateTimeUtc}</FieldError>
+          )}
+          {errors.endDateTimeUtc && errors.endDateTimeUtc.length > 1 && (
+            <FieldError>{errors.endDateTimeUtc}</FieldError>
+          )}
         </div>
 
         <div>
@@ -116,6 +123,7 @@ export function GeneralInformationsForm() {
               data-cy="mission-types"
               isErrorMessageHidden
               isInline
+              isRequired
               label="Type de mission"
               name="missionTypes"
               options={missionTypeOptions}
@@ -126,7 +134,6 @@ export function GeneralInformationsForm() {
               <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
             )}
           </StyledMissionType>
-          {errors.missionTypes && <FieldError>{errors.missionTypes}</FieldError>}
         </div>
         {(missionSourceField.value === MissionSourceEnum.MONITORFISH ||
           missionSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
@@ -163,8 +170,9 @@ export function GeneralInformationsForm() {
             <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
             <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
           </StyledAuthorContainer>
-          {errors.openBy && <FieldError>{errors.openBy}</FieldError>}
-          {errors.closedBy && <FieldError>{errors.closedBy}</FieldError>}
+          {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
+          {errors.openBy && errors.openBy.length > 1 && <FieldError>{errors.openBy}</FieldError>}
+          {errors.closedBy && errors.closedBy.length > 1 && <FieldError>{errors.closedBy}</FieldError>}
         </StyledObservationsContainer>
       </StyledFormWrapper>
     </StyledContainer>

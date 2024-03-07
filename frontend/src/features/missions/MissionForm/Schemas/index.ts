@@ -105,7 +105,7 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
       .nullable()
       .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début')
       // TODO [Missions] Delete when deploying the auto-save feature
-      .required('Date de fin requise'),
+      .required('_'),
     // cast as any to avoid type error
     // FIXME : see issue https://github.com/jquense/yup/issues/1190
     // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
@@ -122,8 +122,8 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
       .max(3, 'le Trigramme doit comporter 3 lettres')
       .nullable()
       // TODO [Missions] Delete when deploying the auto-save feature
-      .required("Trigramme d'ouverture requis"),
-    startDateTimeUtc: Yup.date().required('Date de début requise')
+      .required('_'),
+    startDateTimeUtc: Yup.date().required('_')
   })
   .required()
 
@@ -132,7 +132,7 @@ const ClosedMissionSchema = NewMissionSchema.shape({
     .min(3, 'Minimum 3 lettres pour le Trigramme')
     .max(3, 'Maximum 3 lettres pour le Trigramme')
     .nullable()
-    .required('Trigramme de clôture requis'),
+    .required('_'),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
   envActions: Yup.array()
     .of(ClosedEnvActionSchema as any)

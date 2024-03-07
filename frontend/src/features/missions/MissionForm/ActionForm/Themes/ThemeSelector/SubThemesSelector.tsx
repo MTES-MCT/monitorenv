@@ -52,6 +52,7 @@ export function SubThemesSelector({
           data-cy="envaction-subtheme-selector"
           disabled={!themeId}
           error={currentSubThemesProps.error}
+          isErrorMessageHidden
           isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}

@@ -196,7 +196,6 @@ export function MissionsTableFilters() {
           data-cy="select-administration-filter"
           isLabelHidden
           label="Administration"
-          menuStyle={{ maxWidth: '200%' }}
           name="administration"
           onChange={onUpdateAdministrationFilter as any}
           options={activeAdministrations || []}
@@ -217,7 +216,6 @@ export function MissionsTableFilters() {
           data-cy="select-units-filter"
           isLabelHidden
           label="Unité"
-          menuStyle={{ maxWidth: '200%' }}
           name="controlUnit"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
           options={controlUnitsAsOptions as any}
@@ -247,7 +245,6 @@ export function MissionsTableFilters() {
           data-cy="select-seaFronts-filter"
           isLabelHidden
           label="Facade"
-          menuStyle={{ maxWidth: '150%' }}
           name="seaFront"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
           options={seaFrontsAsOptions}
@@ -273,7 +270,6 @@ export function MissionsTableFilters() {
           data-cy="select-theme-filter"
           isLabelHidden
           label="Thématique"
-          menuStyle={{ maxWidth: '200%' }}
           name="theme"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
           options={themesAsOptions}
@@ -331,7 +327,7 @@ const ResetFiltersButton = styled.div`
   }
 `
 
-const tagPickerStyle = { width: 160 }
+const tagPickerStyle = { width: 165 }
 
 const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,

@@ -11,11 +11,20 @@ type VehicleTypeSelectorProps = {
   dataCy?: string
   disabled: boolean
   error?: string
+  isLight?: boolean
   name: string
   onChange: (nextValue: string | undefined) => Promisable<void>
   value?: string
 }
-export function VehicleTypeSelector({ dataCy, disabled, error, name, onChange, value }: VehicleTypeSelectorProps) {
+export function VehicleTypeSelector({
+  dataCy,
+  disabled,
+  error,
+  isLight = true,
+  name,
+  onChange,
+  value
+}: VehicleTypeSelectorProps) {
   const vehicleTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const vehicleTypeFieldList = Object.values(vehicleTypeLabels)
 
@@ -26,6 +35,7 @@ export function VehicleTypeSelector({ dataCy, disabled, error, name, onChange, v
         disabled={disabled}
         error={error}
         isErrorMessageHidden
+        isLight={isLight}
         label="Type de véhicule"
         name={name}
         onChange={onChange}

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as Yup from 'yup'
 
-import { ControlPlansSchema } from './ControlPlans'
+import { ClosedControlPlansSchema } from './ControlPlans'
 import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
@@ -47,7 +47,7 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
       actionNumberOfControls: Yup.number().required('Requis'),
       actionStartDateTimeUtc: Yup.string()
         .nullable()
-        .required('Date requise')
+        .required('_')
         .test({
           message: 'La date doit être postérieure à celle de début de mission',
           test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
@@ -64,7 +64,7 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
         }),
       actionTargetType: Yup.string().nullable().required('Requis'),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
-      controlPlans: Yup.array().of(ControlPlansSchema).ensure().required().min(1),
+      controlPlans: Yup.array().of(ClosedControlPlansSchema).ensure().required().min(1),
       geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
         : Yup.array().of(ControlPointSchema).ensure().min(1, 'Point de contrôle requis'),

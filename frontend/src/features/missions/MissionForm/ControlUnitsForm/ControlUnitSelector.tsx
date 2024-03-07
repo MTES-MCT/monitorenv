@@ -182,6 +182,8 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
         <Select
           data-cy="add-control-administration"
           error={administrationMeta.error}
+          isErrorMessageHidden
+          isRequired
           label={`Administration ${resourceUnitIndexDisplayed}`}
           name={administrationField.name}
           onChange={handleAdministrationChange}
@@ -200,6 +202,8 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
           customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
           data-cy="add-control-unit"
           error={unitNameMeta.error}
+          isErrorMessageHidden
+          isRequired
           label={`Unité ${resourceUnitIndexDisplayed}`}
           name={unitField.name}
           onChange={handleUnitChange}

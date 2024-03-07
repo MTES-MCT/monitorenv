@@ -186,20 +186,21 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </div>
         <SurveillanceThemes envActionIndex={envActionIndex} themesYear={actualYearForThemes} />
         <FlexSelectorWrapper>
-          <Label>Début et fin de surveillance (UTC)</Label>
+          <Label>Début et fin de surveillance</Label>
           <StyledDatePickerContainer>
             <StyledDatePicker
               key={`start-date-${durationMatchMissionField.value}`}
               data-cy="surveillance-start-date-time"
               defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
+              error={actionStartDateMeta.error}
               isCompact
               isErrorMessageHidden
               isLabelHidden
               isLight
               isStringDate
               isUndefinedWhenDisabled={false}
-              label="Date et heure de début de surveillance (UTC)"
+              label="Date et heure de début de surveillance"
               name="startDateTimeUtc"
               onChange={updateStartDateTime}
               withTime
@@ -209,13 +210,14 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               data-cy="surveillance-end-date-time"
               defaultValue={currentAction?.actionEndDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
+              error={actionEndDateMeta.error}
               isCompact
               isErrorMessageHidden
               isLabelHidden
               isLight
               isStringDate
               isUndefinedWhenDisabled={false}
-              label="Date et heure de fin de surveillance (UTC)"
+              label="Date et heure de fin de surveillance"
               name="endDateTimeUtc"
               onChange={updateEndDateTime}
               withTime
@@ -226,8 +228,13 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               </StyledDuration>
             )}
           </StyledDatePickerContainer>
-          {actionStartDateMeta.error && <FieldError>{actionStartDateMeta.error}</FieldError>}
-          {actionEndDateMeta.error && <FieldError>{actionEndDateMeta.error}</FieldError>}
+          {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
+          {actionStartDateMeta.error && actionStartDateMeta.error.length > 1 && (
+            <FieldError>{actionStartDateMeta.error}</FieldError>
+          )}
+          {actionEndDateMeta.error && actionEndDateMeta.error.length > 1 && (
+            <FieldError>{actionEndDateMeta.error}</FieldError>
+          )}
           <StyledFormikCheckbox
             data-cy="surveillance-duration-matches-mission"
             disabled={surveillances.length > 1}

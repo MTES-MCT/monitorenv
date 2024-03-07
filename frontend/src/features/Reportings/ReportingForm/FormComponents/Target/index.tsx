@@ -29,6 +29,7 @@ export function Target() {
       <StyledInlineContainer>
         <TargetSelector
           dataCy="reporting-target-type"
+          isLight={false}
           name="targetType"
           onChange={onTargetTypeChange}
           options={targetTypeOptions}
@@ -37,6 +38,7 @@ export function Target() {
         <VehicleTypeSelector
           dataCy="reporting-vehicle-type"
           disabled={values.targetType !== ReportingTargetTypeEnum.VEHICLE}
+          isLight={false}
           name="vehicleType"
           onChange={onVehicleTypeChange}
           value={values.vehicleType}

@@ -23,9 +23,9 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.contains("Trigramme d'ouverture requis").should('exist')
 
     // we fill all the required inputs
-    cy.fill('Début de mission (UTC)', [2023, 10, 11, 7, 35])
+    cy.fill('Début de mission', [2023, 10, 11, 7, 35])
     cy.wait(250)
-    cy.fill('Fin de mission (UTC)', [customDayjs().year() + 1, 10, 12, 7, 35])
+    cy.fill('Fin de mission', [customDayjs().year() + 1, 10, 12, 7, 35])
     cy.wait(250)
     cy.fill('Type de mission', ['Air'])
     cy.wait(250)
@@ -66,7 +66,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
-    cy.fill('Date et heure du contrôle (UTC)', [2023, 10, 11, 12, 12])
+    cy.fill('Date et heure du contrôle', [2023, 10, 11, 12, 12])
     cy.wait(250)
 
     cy.fill('Nombre total de contrôles', '2')
@@ -134,9 +134,9 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.contains("Trigramme d'ouverture requis").should('exist')
 
     // we fill all the required inputs
-    cy.fill('Début de mission (UTC)', [2023, 10, 11, 7, 35])
+    cy.fill('Début de mission', [2023, 10, 11, 7, 35])
     cy.wait(250)
-    cy.fill('Fin de mission (UTC)', [2023, 10, 12, 7, 35])
+    cy.fill('Fin de mission', [2023, 10, 12, 7, 35])
     cy.wait(250)
     cy.fill('Type de mission', ['Air'])
     cy.wait(250)
@@ -176,7 +176,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
-    cy.fill('Date et heure du contrôle (UTC)', [2023, 10, 11, 12, 12])
+    cy.fill('Date et heure du contrôle', [2023, 10, 11, 12, 12])
     cy.wait(250)
 
     cy.fill('Nombre total de contrôles', '2')

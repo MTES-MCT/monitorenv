@@ -1,4 +1,4 @@
-import { Accent, Button, FieldError, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -79,10 +79,10 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
 
   return (
     <Field>
-      {label && <Label hasError={!!meta.error}>{label}</Label>}
+      {label && <Label>{label}</Label>}
 
       <Button
-        accent={Accent.SECONDARY}
+        accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
         disabled={points.length > 0}
         Icon={Icon.Plus}
         isFullWidth
@@ -90,7 +90,6 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
       >
         {addButtonLabel}
       </Button>
-      {!!meta.error && <FieldError>{meta.error}</FieldError>}
 
       <>
         {points.map((coordinates, index) => (

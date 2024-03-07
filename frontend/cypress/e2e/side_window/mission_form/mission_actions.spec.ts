@@ -192,8 +192,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter une nouvelle mission')
 
     // When
-    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
 
     cy.getDataCy('add-control-unit').click()
@@ -234,8 +234,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter une nouvelle mission')
 
     // When
-    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
 
     cy.get('*[data-cy="add-control-unit"]').click()
@@ -277,8 +277,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter une nouvelle mission')
 
     // When
-    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
 
     cy.get('*[data-cy="add-control-unit"]').click()
@@ -334,9 +334,9 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       const id = response && response.body.id
       // update mission date to 2023
-      cy.fill('Début de mission (UTC)', [2023, 5, 26, 12, 0])
+      cy.fill('Début de mission', [2023, 5, 26, 12, 0])
       cy.intercept('PUT', `/bff/v1/missions/${id}`).as('updateMissionTwo')
-      cy.fill('Fin de mission (UTC)', [2023, 5, 28, 14, 15])
+      cy.fill('Fin de mission', [2023, 5, 28, 14, 15])
 
       cy.wait('@updateMissionTwo').then(({ response: newResponse }) => {
         const { envActions: updatedEnvActions } = newResponse && newResponse.body

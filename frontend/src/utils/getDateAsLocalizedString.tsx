@@ -15,7 +15,7 @@ export function getDateAsLocalizedStringExpanded(date: string | undefined | null
 
   return (
     <>
-      <b>{formatDateLabel(dayJsDate.format('DD MMM'))}</b> à {dayJsDate.format('HH:mm')} (UTC)
+      <b>{formatDateLabel(dayJsDate.format('DD MMM'))}</b> à {dayJsDate.format('HH:mm')}
     </>
   )
 }

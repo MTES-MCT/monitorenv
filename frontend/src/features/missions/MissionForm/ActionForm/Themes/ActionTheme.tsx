@@ -45,7 +45,7 @@ export function ActionTheme({
 
     return themesByYearAsOptions
       ?.map(themeAsOption => ({
-        isDisabled: actionControlPlansField.value.some(controlPlan => controlPlan.themeId === themeAsOption.value),
+        isDisabled: actionControlPlansField.value?.some(controlPlan => controlPlan.themeId === themeAsOption.value),
         label: themeAsOption.label,
         value: themeAsOption.value
       }))
@@ -82,5 +82,5 @@ const ActionThemeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 24px;
+  gap: 8px;
 `

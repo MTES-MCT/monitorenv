@@ -244,17 +244,22 @@ export function ControlForm({
           themesYear={actualYearForThemes}
         />
 
-        <DatePicker
-          defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
-          isLight
-          isStringDate
-          label="Date et heure du contrôle (UTC)"
-          name="actionStartDateTimeUtc"
-          onChange={updateControlDate}
-          withTime
-        />
-        {actionStartDateTimeUtcErrorMessage && <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>}
-
+        <div>
+          <DatePicker
+            defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
+            error={actionStartDateTimeUtcErrorMessage}
+            isErrorMessageHidden
+            isLight
+            isStringDate
+            label="Date et heure du contrôle"
+            name="actionStartDateTimeUtc"
+            onChange={updateControlDate}
+            withTime
+          />
+          {actionStartDateTimeUtcErrorMessage && actionStartDateTimeUtcErrorMessage.length > 1 && (
+            <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>
+          )}
+        </div>
         <MultiPointPicker
           addButtonLabel="Ajouter un point de contrôle"
           label="Lieu du contrôle"

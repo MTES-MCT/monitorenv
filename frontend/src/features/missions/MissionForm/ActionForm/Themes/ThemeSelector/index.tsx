@@ -33,6 +33,7 @@ export function ThemeSelector({ actionIndex, isError, isLoading, label, themeInd
           key={`${actionIndex}-${themes.length}`}
           data-cy="envaction-theme-selector"
           error={currentThemeProps.error}
+          isErrorMessageHidden
           isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}
