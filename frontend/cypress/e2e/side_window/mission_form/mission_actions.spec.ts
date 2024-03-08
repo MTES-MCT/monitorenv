@@ -307,7 +307,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     // Then
-    cy.waitForLastRequest('@updateMission', {}, 5, response => {
+    cy.waitForLastRequest('@updateMission', {}, 5, 0, response => {
       expect(response && response.statusCode).equal(200)
       const { envActions } = response && response.body
       expect(envActions.length).equal(2)
@@ -345,5 +345,68 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(updatedSurveillance.controlPlans.length).equal(0)
       })
     })
+  })
+
+  it('save other control actions', () => {
+    cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+
+    cy.intercept('PUT', '/bff/v1/missions/41').as('updateMission')
+
+    // verify if fields are checked
+    cy.get('*[name="envActions[0].isAdministrativeControl"]').should('be.checked')
+    cy.get('*[name="envActions[0].isComplianceWithWaterRegulationsControl"]').should('be.checked')
+    cy.get('*[name="envActions[0].isSafetyEquipmentAndStandardsComplianceControl"]').should('be.checked')
+    cy.get('*[name="envActions[0].isSeafarersControl"]').should('be.checked')
+
+    // uncheck all fields
+    cy.fill('Contrôle administratif', false)
+    cy.wait(200)
+    cy.fill('Respect du code de la navigation sur le plan d’eau', false)
+    cy.wait(200)
+    cy.fill('Gens de mer', false)
+    cy.wait(200)
+    cy.fill('Equipement de sécurité et respect des normes', false)
+    cy.wait(250)
+
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {
+          envActions: [
+            {
+              isAdministrativeControl: false,
+              isComplianceWithWaterRegulationsControl: false,
+              isSafetyEquipmentAndStandardsComplianceControl: false,
+              isSeafarersControl: false
+            }
+          ]
+        }
+      },
+      5,
+      0,
+      response => {
+        expect(response && response.statusCode).equal(200)
+
+        const controlActionResponse = response?.body.envActions[0]
+        expect(controlActionResponse.isAdministrativeControl).equal(false)
+        expect(controlActionResponse.isComplianceWithWaterRegulationsControl).equal(false)
+        expect(controlActionResponse.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
+        expect(controlActionResponse.isSeafarersControl).equal(false)
+        cy.log('controlActionResponse', controlActionResponse)
+
+        cy.clickButton('Fermer')
+        cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
+        cy.get('*[data-cy="action-card"]').eq(0).click()
+        cy.fill('Contrôle administratif', true)
+        cy.wait(200)
+        cy.fill('Respect du code de la navigation sur le plan d’eau', true)
+        cy.wait(200)
+        cy.fill('Gens de mer', true)
+        cy.wait(200)
+        cy.fill('Equipement de sécurité et respect des normes', true)
+      }
+    )
   })
 })

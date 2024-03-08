@@ -15,6 +15,11 @@ export const useUpdateOtherControlTypes = () => {
   )
   const previousControlUnitIsPAM = usePrevious(currentControlUnitIsPAM)
 
+  // if control unit is not changed, do nothing
+  if (previousControlUnitIsPAM === undefined) {
+    return
+  }
+
   if (previousControlUnitIsPAM && !currentControlUnitIsPAM) {
     envActions.forEach((action, index) => {
       if (action.actionType === ActionTypeEnum.CONTROL) {

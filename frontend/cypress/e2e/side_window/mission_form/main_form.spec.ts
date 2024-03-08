@@ -297,7 +297,6 @@ context('Side Window > Mission Form > Main Form', () => {
     // we want to test with a second engaged control unit
     cy.getDataCy('add-other-control-unit').should('not.be.disabled')
     cy.clickButton('Ajouter une autre unité')
-    cy.get('*[data-cy="add-control-unit"]').last().click()
     cy.fill('Unité 2', 'DML 2A')
     cy.wait(200)
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
@@ -460,7 +459,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     // We do that manually to keep the existing "Voiture" resource which is an archived one.
     cy.intercept('PUT', '/bff/v1/missions/30').as('updateMission')
-    cy.contains('Moyen(s) 1').parent().find('.rs-picker-toggle-caret').forceClick().wait(250)
+    cy.contains('Moyen(s) 1').parent().find('.rs-picker-caret-icon').forceClick().wait(250)
     cy.get('span[title="Semi-rigide 1"]').forceClick().wait(250)
     cy.clickOutside()
     cy.wait(250)
@@ -510,7 +509,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait('@getMission')
 
-    cy.contains('Moyen(s) 1').parent().find('.rs-picker-toggle-caret').forceClick().wait(250)
+    cy.contains('Moyen(s) 1').parent().find('.rs-picker-caret-icon').forceClick().wait(250)
     cy.get('span[title="Semi-rigide 1"]').forceClick().wait(250) // Uncheck this resource
     cy.clickOutside()
     cy.wait(250)

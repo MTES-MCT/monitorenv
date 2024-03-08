@@ -20,7 +20,7 @@ export function OtherControlTypesForm({ currentActionIndex }: { currentActionInd
   }
 
   return (
-    <>
+    <div>
       <Label>Autre(s) contrôle(s) effectué(s) par l’unité sur le navire</Label>
       <StyledFormikCheckbox
         label="Contrôle administratif"
@@ -35,12 +35,11 @@ export function OtherControlTypesForm({ currentActionIndex }: { currentActionInd
         label="Equipement de sécurité et respect des normes"
         name={`envActions[${currentActionIndex}].isSafetyEquipmentAndStandardsComplianceControl`}
       />
-    </>
+    </div>
   )
 }
 
 const Label = styled.span`
-  margin-top: 24px;
   font-size: 13px;
   line-height: 22px;
   display: inline-block;

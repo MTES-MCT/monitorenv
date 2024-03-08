@@ -187,9 +187,11 @@ context('Side Window > Mission Form > Mission dates', () => {
         }
       },
       5,
+      0,
       response => {
-        // Then
+        expect(response.statusCode).equal(200)
         const id = response.body.id
+        cy.clickButton('Fermer')
 
         // clean
         cy.getDataCy(`edit-mission-${id}`).click({ force: true })
@@ -199,8 +201,6 @@ context('Side Window > Mission Form > Mission dates', () => {
         cy.clickButton('Confirmer la suppression')
       }
     )
-      .its('response.statusCode')
-      .should('eq', 200)
   })
 
   it('A mission should be created with valid dates for control action', () => {
@@ -259,56 +259,5 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.wait('@updateAndCloseMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
-  })
-
-  it('save other control actions', () => {
-    // Given
-    cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(0).click()
-
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('*[data-key="10080"]').click()
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
-
-    // When
-    cy.intercept('PUT', `/bff/v1/missions/41`).as('updateMission')
-    cy.fill('Contrôle administratif', false)
-    cy.fill('Respect du code de la navigation sur le plan d’eau', false)
-    cy.fill('Gens de mer', false)
-    cy.fill('Equipement de sécurité et respect des normes', false)
-
-    cy.waitForLastRequest(
-      '@updateMission',
-      {
-        body: {
-          envActions: [
-            {
-              isAdministrativeControl: false,
-              isComplianceWithWaterRegulationsControl: false,
-              isSafetyEquipmentAndStandardsComplianceControl: false,
-              isSeafarersControl: false
-            }
-          ]
-        }
-      },
-      5,
-      response => {
-        const controlActionResponse = response?.body.envActions[0]
-        expect(controlActionResponse.isAdministrativeControl).equal(false)
-        expect(controlActionResponse.isComplianceWithWaterRegulationsControl).equal(false)
-        expect(controlActionResponse.isSeafarersControl).equal(false)
-        expect(controlActionResponse.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
-
-        cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
-        cy.get('*[data-cy="action-card"]').eq(0).click()
-        cy.fill('Contrôle administratif', true)
-        cy.fill('Respect du code de la navigation sur le plan d’eau', true)
-        cy.fill('Gens de mer', true)
-        cy.fill('Equipement de sécurité et respect des normes', true)
-        cy.clickButton('Enregistrer')
-      }
-    )
-      .its('response.statusCode')
-      .should('eq', 200)
   })
 })
