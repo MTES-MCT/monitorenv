@@ -19,10 +19,10 @@
     "test:e2e:open": "cypress open --browser firefox --config-file ./config/cypress.config.ts --e2e",
     "test:lint": "eslint ./src",
     "test:lint:fix": "npm run test:lint -- --fix",
-    "test:multi-windows:open": "IS_HEADLESS=false jest --config=./config/multi-windows/jest.config.js --detectOpenHandles",
-    "test:multi-windows:run": "IS_HEADLESS=true jest --config=./config/multi-windows/jest.config.js --detectOpenHandles",
+    "test:multi-windows:open": "IS_HEADLESS=false jest --config=./config/multi-windows/jest.config.js",
+    "test:multi-windows:run": "IS_HEADLESS=true jest --config=./config/multi-windows/jest.config.js",
     "test:type": "tsc",
-    "test:unit": "jest --config=./config/jest.config.js --detectOpenHandles",
+    "test:unit": "jest --config=./config/jest.config.js",
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
