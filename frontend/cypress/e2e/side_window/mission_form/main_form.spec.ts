@@ -39,8 +39,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.fill('Unité 1', 'Cross Etel')
     cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
@@ -108,9 +107,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
-    cy.clickOutside()
+    cy.fill('Unité 1', 'Cross Etel')
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
@@ -264,8 +261,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     // When
     cy.get('*[data-cy="add-mission"]').click()
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Jeanne{enter}')
+    cy.fill('Unité 1', 'PAM Jeanne Barret')
     cy.wait('@getEngagedControlUnits')
 
     // Then
@@ -291,8 +287,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Jeanne{enter}')
+    cy.fill('Unité 1', 'PAM Jeanne Barret')
     cy.wait('@getEngagedControlUnits')
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
 
@@ -303,7 +298,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.getDataCy('add-other-control-unit').should('not.be.disabled')
     cy.clickButton('Ajouter une autre unité')
     cy.get('*[data-cy="add-control-unit"]').last().click()
-    cy.get('.rs-picker-search-bar-input').last().type('DML 2A{enter}')
+    cy.fill('Unité 2', 'DML 2A')
     cy.wait(200)
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
     cy.clickButton('Oui, la conserver')

@@ -25,9 +25,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
-    cy.clickOutside()
+    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(250)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
@@ -103,6 +101,8 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Autre').click({ force: true })
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Drone').click({ force: true })
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.getDataCy('action-card').eq(0).click()
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
@@ -153,14 +153,12 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
     cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
-    cy.wait(200)
     cy.wait(200)
 
     cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
@@ -170,6 +168,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.intercept('PUT', `/bff/v1/missions/*`).as('updateMission')
 
     // Add a second surveillance
+    cy.wait(200)
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
@@ -216,9 +215,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
-    cy.clickOutside()
+    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
@@ -268,9 +265,6 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Given
     cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
-
-    cy.get('*[data-cy="add-control-administration"]').click()
-    cy.get('.rs-picker-search-bar-input').type('DIRM{enter}')
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('*[data-key="10080"]').click()

@@ -30,9 +30,7 @@ context('Mission', () => {
     // so we have double the number of real tabs open
     cy.get('*[data-cy="missions-nav"] > a').should('have.length', 6)
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}').wait(500)
-    cy.clickOutside()
+    cy.fill('Unité 1', 'Cross Etel')
     cy.wait(500)
 
     // we close the first mission and display the confirm cancel modal
@@ -72,9 +70,7 @@ context('Mission', () => {
     // so we have double the number of real tabs open
     cy.get('*[data-cy="missions-nav"] > a').should('have.length', 6)
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}').wait(500)
-    cy.clickOutside()
+    cy.fill('Unité 1', 'Cross Etel')
     cy.wait(500)
 
     // we close the first mission and display the confirm cancel modal
