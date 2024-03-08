@@ -38,8 +38,7 @@ export function AttachedMissionCard({
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
-  const goToMission = e => {
-    e.preventDefault()
+  const goToMission = () => {
     dispatch(editMissionInLocalStore(attachedMission?.id))
   }
 

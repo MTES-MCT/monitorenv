@@ -1,4 +1,3 @@
-/* eslint-disable typescript-sort-keys/string-enum */
 import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
 
 import type { ControlPlansData } from './controlPlan'
@@ -132,10 +131,12 @@ export enum MissionStatusEnum {
 }
 
 export enum MissionStatusLabel {
+  /* eslint-disable typescript-sort-keys/string-enum */
   UPCOMING = 'À venir',
   PENDING = 'En cours',
   ENDED = 'Terminée',
   CLOSED = 'Cloturée'
+  /* eslint-disable typescript-sort-keys/string-enum */
 }
 
 export const missionStatusLabels = {
