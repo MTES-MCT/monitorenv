@@ -71,7 +71,10 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     deleteMission: builder.mutation({
-      invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
+      invalidatesTags: [
+        { id: 'LIST', type: 'Missions' },
+        { id: 'LIST', type: 'Reportings' }
+      ],
       query: ({ id }) => ({
         method: 'DELETE',
         url: `/v1/missions/${id}`

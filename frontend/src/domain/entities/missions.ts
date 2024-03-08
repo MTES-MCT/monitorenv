@@ -131,10 +131,12 @@ export enum MissionStatusEnum {
 }
 
 export enum MissionStatusLabel {
-  CLOSED = 'Cloturée',
-  ENDED = 'Terminée',
+  /* eslint-disable typescript-sort-keys/string-enum */
+  UPCOMING = 'À venir',
   PENDING = 'En cours',
-  UPCOMING = 'À venir'
+  ENDED = 'Terminée',
+  CLOSED = 'Cloturée'
+  /* eslint-disable typescript-sort-keys/string-enum */
 }
 
 export const missionStatusLabels = {
