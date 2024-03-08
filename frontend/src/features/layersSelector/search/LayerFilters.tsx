@@ -43,7 +43,6 @@ export function LayerFilters({
         name="regulatoryThemes"
         onChange={handleSetFilteredRegulatoryThemes}
         options={regulatoryThemes || []}
-        optionValueKey="value"
         placeholder="Thématique réglementaire"
         renderValue={() =>
           filteredRegulatoryThemes && (
@@ -72,7 +71,6 @@ export function LayerFilters({
         name="ampTypes"
         onChange={handleSetFilteredAmpTypes}
         options={ampTypes}
-        optionValueKey="value"
         placeholder="Type d'AMP"
         renderValue={() => filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>}
         value={filteredAmpTypes}
