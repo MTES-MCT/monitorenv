@@ -23,7 +23,6 @@ import type { Coordinate } from 'ol/coordinate'
 
 export type MultiZonePickerProps = {
   addButtonLabel: string
-  envActionIndex?: number
   interactionListener: InteractionListener
   isLight?: boolean
   label?: string | undefined
@@ -31,7 +30,6 @@ export type MultiZonePickerProps = {
 }
 export function MultiZonePicker({
   addButtonLabel,
-  envActionIndex,
   interactionListener,
   isLight,
   label = undefined,
@@ -40,7 +38,6 @@ export function MultiZonePicker({
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(interactionListener)
   const [field, meta, helpers] = useField(name)
-  const [, , coverMissionZoneHelpers] = useField(`envActions[${envActionIndex}].coverMissionZone`)
   const { value } = field
 
   const listener = useAppSelector(state => state.draw.listener)
@@ -75,8 +72,7 @@ export function MultiZonePicker({
 
   const handleAddZone = useCallback(() => {
     dispatch(drawPolygon(value, interactionListener))
-    coverMissionZoneHelpers.setValue(false)
-  }, [coverMissionZoneHelpers, dispatch, value, interactionListener])
+  }, [dispatch, value, interactionListener])
 
   const deleteZone = useCallback(
     (index: number) => {

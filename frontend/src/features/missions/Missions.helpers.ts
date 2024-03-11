@@ -79,7 +79,6 @@ export const actionFactory = ({
           }
         ],
 
-        coverMissionZone: true,
         durationMatchesMission: true,
         id: uuidv4(),
         observations: '',

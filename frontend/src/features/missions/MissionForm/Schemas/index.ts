@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import * as Yup from 'yup'
 
 import { getClosedEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
@@ -9,13 +8,9 @@ import {
   MissionTypeEnum,
   type NewMission
 } from '../../../../domain/entities/missions'
-import { isCypress } from '../../../../utils/isCypress'
-import { isPuppeteer } from '../../../../utils/isPuppeteer'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { LegacyControlUnit } from '../../../../domain/entities/legacyControlUnit'
-
-const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress() || isPuppeteer()
 
 const MissionTypesSchema = Yup.array()
   .of(Yup.mixed<MissionTypeEnum>().oneOf(Object.values(MissionTypeEnum)).required())
@@ -79,12 +74,6 @@ const ClosedEnvActionSchema = Yup.lazy((value, context) => {
   return Yup.object().required()
 })
 
-const MissionZoneSchema = Yup.object().test({
-  message: 'Veuillez définir une zone de mission',
-  name: 'has-geom',
-  test: val => val && !_.isEmpty(val?.coordinates)
-})
-
 const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
     closedBy: Yup.string().nullable(),
@@ -100,9 +89,7 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     envActions: Yup.array()
       .of(NewEnvActionSchema as any)
       .nullable(),
-    geom: shouldUseAlternateValidationInTestEnvironment
-      ? Yup.object().nullable()
-      : Yup.array().of(MissionZoneSchema).ensure().min(1, 'Veuillez définir une zone de mission'),
+    geom: Yup.object().nullable(),
     isClosed: Yup.boolean().oneOf([false]).required(),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()

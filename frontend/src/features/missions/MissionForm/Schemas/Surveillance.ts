@@ -51,6 +51,9 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
+      geom: /* shouldUseAlternateValidationInTestEnvironment
+        ? Yup.object().nullable()
+        :  */ Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
       id: Yup.string().required()
     })
     .required()
@@ -95,15 +98,9 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
       controlPlans: Yup.array().ensure().of(ClosedControlPlansSchema).ensure().required().min(1),
-      geom: Yup.object().when('coverMissionZone', {
-        is: true,
-        otherwise: () =>
-          shouldUseAlternateValidationInTestEnvironment
-            ? Yup.object().nullable()
-            : Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
-
-        then: () => Yup.object().nullable()
-      }),
+      geom: shouldUseAlternateValidationInTestEnvironment
+        ? Yup.object().nullable()
+        : Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
       id: Yup.string().required()
     })
     .required()

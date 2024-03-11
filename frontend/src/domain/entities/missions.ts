@@ -274,7 +274,6 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
   controlPlans: ControlPlansData[]
-  coverMissionZone?: boolean
   durationMatchesMission?: boolean
   geom?: Record<string, any>[]
   observations: string | null
