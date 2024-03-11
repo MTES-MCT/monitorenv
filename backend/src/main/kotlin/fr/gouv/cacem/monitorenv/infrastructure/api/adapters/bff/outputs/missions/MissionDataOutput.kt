@@ -34,6 +34,7 @@ data class MissionDataOutput(
     val attachedReportings: List<MissionAttachedReportingDataOutput>? = listOf(),
     val detachedReportingIds: List<Int>? = listOf(),
     val detachedReportings: List<MissionDetachedReportingDataOutput>? = listOf(),
+    val isGeometryComputedFromControls: Boolean,
 ) {
 
     companion object {
@@ -107,6 +108,7 @@ data class MissionDataOutput(
                 dto.detachedReportings?.map {
                     MissionDetachedReportingDataOutput.fromReporting(it.reporting)
                 },
+                isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
             )
         }
     }

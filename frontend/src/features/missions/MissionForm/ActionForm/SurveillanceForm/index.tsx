@@ -18,19 +18,19 @@ import { useField, useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
-import { SurveillanceThemes } from './Themes/SurveillanceThemes'
-import { CONTROL_PLAN_INIT } from '../../../../domain/entities/controlPlan'
-import { InteractionListener } from '../../../../domain/entities/map/constants'
+import { SurveillanceZonePicker } from './SurveillanceZonePicker'
+import { CONTROL_PLAN_INIT } from '../../../../../domain/entities/controlPlan'
+import { InteractionListener } from '../../../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
   type EnvAction,
   type EnvActionSurveillance,
   type Mission
-} from '../../../../domain/entities/missions'
-import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
-import { getFormattedReportingId } from '../../../Reportings/utils'
-import { MultiZonePicker } from '../../MultiZonePicker'
+} from '../../../../../domain/entities/missions'
+import { dateDifferenceInHours } from '../../../../../utils/dateDifferenceInHours'
+import { getFormattedReportingId } from '../../../../Reportings/utils'
+import { Header, StyledDeleteButton, Title, TitleWithIcon } from '../style'
+import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const {
@@ -237,7 +237,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           />
         </FlexSelectorWrapper>
         <FlexSelectorWrapper>
-          <MultiZonePicker
+          <SurveillanceZonePicker
             addButtonLabel="Ajouter une zone de surveillance"
             interactionListener={InteractionListener.SURVEILLANCE_ZONE}
             isLight

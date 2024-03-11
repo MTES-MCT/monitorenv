@@ -56,7 +56,28 @@ export const missionWithCentroidStyleFn = feature => {
   }
 }
 
-export const selectedMissionActionsStyle = [
+export const selectedMissionControlWithCircleStyle = feature => [
+  new Style({
+    geometry: () => {
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+
+    image: new Icon({
+      displacement: [0, 14],
+      scale: 1.1,
+      src: 'Control.svg'
+    })
+  })
+]
+
+export const selectedMissionActionsStyle = feature => [
   new Style({
     fill: new Fill({
       color: 'rgba(86, 151, 210, .35)' // Blue Gray
@@ -66,18 +87,37 @@ export const selectedMissionActionsStyle = [
       scale: 1.1,
       src: 'Control.svg'
     }),
-    stroke: new Stroke({
-      color: THEME.color.charcoal,
-      width: 2
-    })
+    stroke:
+      feature.get('actionType') === ActionTypeEnum.CONTROL && feature.get('isGeometryComputedFromControls')
+        ? new Stroke({
+            color: THEME.color.charcoal,
+            lineCap: 'square',
+            lineDash: [2, 8],
+            width: 4
+          })
+        : new Stroke({
+            color: THEME.color.charcoal,
+            width: 2
+          })
   }),
   new Style({
-    geometry: feature => {
-      if (feature.get('actionType') === ActionTypeEnum.CONTROL) {
+    geometry: () => {
+      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
+        return undefined
+      }
+
+      if (!feature.get('isGeometryComputedFromControls')) {
         return feature.getGeometry()
       }
 
-      return undefined
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
     },
     image: new Icon({
       color: THEME.color.charcoal,
@@ -86,7 +126,7 @@ export const selectedMissionActionsStyle = [
     })
   }),
   new Style({
-    geometry: feature => {
+    geometry: () => {
       if (feature.get('actionType') === ActionTypeEnum.SURVEILLANCE) {
         const geom = feature?.getGeometry() as MultiPolygon
         const polygons = geom?.getPolygons()
@@ -100,6 +140,30 @@ export const selectedMissionActionsStyle = [
     image: new Icon({
       scale: 1.1,
       src: 'Observation.svg'
+    })
+  }),
+  new Style({
+    geometry: () => {
+      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
+        return undefined
+      }
+
+      if (feature.get('actionType') === ActionTypeEnum.CONTROL && !feature.get('isGeometryComputedFromControls')) {
+        return undefined
+      }
+
+      return undefined
+    },
+    image: new Icon({
+      displacement: [0, 14],
+      scale: 1.1,
+      src: 'Control.svg'
+    }),
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      lineCap: 'square',
+      lineDash: [2, 8],
+      width: 4
     })
   })
 ]

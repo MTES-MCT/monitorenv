@@ -1,5 +1,5 @@
 import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
@@ -20,6 +20,7 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
 import { formatCoordinates } from '../../utils/coordinates'
 
+import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
 
 export type MultiPointPickerProps = {
@@ -28,6 +29,7 @@ export type MultiPointPickerProps = {
   name: string
 }
 export function MultiPointPicker({ addButtonLabel, label = undefined, name }: MultiPointPickerProps) {
+  const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
@@ -50,8 +52,12 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
   useEffect(() => {
     if (geometry?.type === OLGeometryType.MULTIPOINT && !_.isEqual(geometry, value)) {
       setValue(geometry)
+      if ((!values.geom || values.geom?.coordinates.length === 0) && values.envActions.length === 1) {
+        setFieldValue('geom', geometry)
+        setFieldValue('isGeometryComputedFromControls', true)
+      }
     }
-  }, [geometry, setValue, value])
+  }, [geometry, setValue, value, values.envActions.length, values.geom, setFieldValue])
 
   const handleCenterOnMap = coordinates => {
     if (!coordinates) {

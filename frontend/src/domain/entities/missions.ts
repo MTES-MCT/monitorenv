@@ -4,6 +4,7 @@ import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
 import type { ReportingDetailed } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export enum ActionTypeEnum {
   CONTROL = 'CONTROL',
@@ -221,10 +222,11 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   endDateTimeUtc?: string
   envActions: EnvAction[]
   facade: SeaFrontEnum
-  geom?: Record<string, any>[]
+  geom?: GeoJSON.MultiPolygon
   hasMissionOrder?: boolean
   id: number
   isClosed: boolean
+  isGeometryComputedFromControls: boolean
   isUnderJdp?: boolean
   missionSource: MissionSourceEnum
   missionTypes: MissionTypeEnum[]
@@ -256,7 +258,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
   controlPlans: ControlPlansData[]
-  geom?: Record<string, any>[]
+  geom?: GeoJSON.MultiPolygon | GeoJSON.MultiPoint
   infractions: Infraction[] | NewInfraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
@@ -275,7 +277,7 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
   controlPlans: ControlPlansData[]
   durationMatchesMission?: boolean
-  geom?: Record<string, any>[]
+  geom?: GeoJSON.MultiPolygon
   observations: string | null
   reportingIds: number[]
 }

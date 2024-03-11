@@ -1,5 +1,5 @@
 import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
@@ -19,7 +19,10 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
 
+import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
+
+const MISSION_GEOM_NAME = 'geom'
 
 export type MultiZonePickerProps = {
   addButtonLabel: string
@@ -35,11 +38,15 @@ export function MultiZonePicker({
   label = undefined,
   name
 }: MultiZonePickerProps) {
+  const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(interactionListener)
   const [field, meta, helpers] = useField(name)
   const { value } = field
 
+  // TODO: Clean this component beacause it's only for mission zone
+  const isDrawingPolygonVisible =
+    (name === MISSION_GEOM_NAME && !values.isGeometryComputedFromControls) || name !== MISSION_GEOM_NAME
   const listener = useAppSelector(state => state.draw.listener)
   const isEditingZone = useMemo(
     () => listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.SURVEILLANCE_ZONE,
@@ -71,19 +78,31 @@ export function MultiZonePicker({
   }
 
   const handleAddZone = useCallback(() => {
+    if (values.isGeometryComputedFromControls) {
+      helpers.setValue(undefined)
+      dispatch(drawPolygon(undefined, interactionListener))
+      setFieldValue('isGeometryComputedFromControls', false)
+
+      return
+    }
+
     dispatch(drawPolygon(value, interactionListener))
-  }, [dispatch, value, interactionListener])
+  }, [dispatch, helpers, value, interactionListener, setFieldValue, values.isGeometryComputedFromControls])
 
   const deleteZone = useCallback(
-    (index: number) => {
+    async (index: number) => {
       if (!value) {
         return
       }
 
       const nextCoordinates = remove(index, 1, value.coordinates)
       helpers.setValue({ ...value, coordinates: nextCoordinates })
+
+      if (!nextCoordinates.length) {
+        setFieldValue('isGeometryComputedFromControls', true)
+      }
     },
-    [value, helpers]
+    [value, helpers, setFieldValue]
   )
 
   return (
@@ -100,33 +119,39 @@ export function MultiZonePicker({
       </Button>
 
       <>
-        {polygons.map((polygonCoordinates, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <Row key={`zone-${index}`}>
-            <ZoneWrapper isLight={isLight}>
-              Polygone dessiné {index + 1}
-              {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
-              {/* eslint-disable jsx-a11y/anchor-is-valid */}
-              {/* eslint-disable jsx-a11y/click-events-have-key-events */}
-              {/* eslint-disable jsx-a11y/no-static-element-interactions */}
-              <Center onClick={() => handleCenterOnMap(polygonCoordinates as Coordinate[][])}>
-                <Icon.SelectRectangle />
-                Centrer sur la carte
-              </Center>
-            </ZoneWrapper>
+        {isDrawingPolygonVisible &&
+          polygons.map((polygonCoordinates, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <Row key={`zone-${index}`}>
+              <ZoneWrapper isLight={isLight}>
+                Polygone dessiné {index + 1}
+                {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
+                {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                {/* eslint-disable jsx-a11y/click-events-have-key-events */}
+                {/* eslint-disable jsx-a11y/no-static-element-interactions */}
+                <Center onClick={() => handleCenterOnMap(polygonCoordinates as Coordinate[][])}>
+                  <Icon.SelectRectangle />
+                  Centrer sur la carte
+                </Center>
+              </ZoneWrapper>
 
-            <>
-              <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
-              <IconButton
-                accent={Accent.SECONDARY}
-                aria-label="Supprimer cette zone"
-                disabled={isEditingZone}
-                Icon={Icon.Delete}
-                onClick={() => deleteZone(index)}
-              />
-            </>
-          </Row>
-        ))}
+              <>
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  disabled={isEditingZone}
+                  Icon={Icon.Edit}
+                  onClick={handleAddZone}
+                />
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  aria-label="Supprimer cette zone"
+                  disabled={isEditingZone}
+                  Icon={Icon.Delete}
+                  onClick={() => deleteZone(index)}
+                />
+              </>
+            </Row>
+          ))}
       </>
     </Field>
   )

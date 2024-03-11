@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { ActionCards } from './ActionCards'
 import { AttachReporting } from './AttachReporting'
+import { useUpdateMissionZone } from './hooks/useUpdateMissionZone'
 import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '../../../domain/entities/missions'
 import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../Missions.helpers'
 
@@ -40,6 +41,8 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
       }),
     [actions]
   )
+
+  useUpdateMissionZone(sortedActions)
 
   const handleAddSurveillanceAction = useCallback(() => {
     const newSurveillance = actionFactory({

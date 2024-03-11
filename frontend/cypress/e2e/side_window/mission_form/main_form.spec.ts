@@ -124,7 +124,7 @@ context('Side Window > Mission Form > Main Form', () => {
       ],
       type: 'MultiPolygon'
     }
-    cy.clickButton('Ajouter une zone de mission').wait(1000)
+    cy.clickButton('Ajouter une zone de mission manuelle').wait(1000)
     dispatch(setGeometry(geometry))
 
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')

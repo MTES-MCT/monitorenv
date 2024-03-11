@@ -12,7 +12,9 @@ import {
   type EnvActionSurveillance,
   type EnvActionForTimeline,
   type NewInfraction,
-  type Infraction
+  type Infraction,
+  type NewEnvActionControl,
+  type EnvActionNote
 } from '../../domain/entities/missions'
 import {
   type DetachedReporting,
@@ -58,7 +60,7 @@ export const actionFactory = ({
         observations: '',
         reportingIds: [],
         ...action
-      }
+      } as NewEnvActionControl
     case ActionTypeEnum.NOTE:
       return {
         actionStartDateTimeUtc: new Date().toISOString(),
@@ -66,7 +68,7 @@ export const actionFactory = ({
         id: uuidv4(),
         observations: '',
         ...action
-      }
+      } as EnvActionNote
     case ActionTypeEnum.SURVEILLANCE:
     default:
       return {
@@ -84,7 +86,7 @@ export const actionFactory = ({
         observations: '',
         reportingIds: [],
         ...action
-      }
+      } as EnvActionSurveillance
   }
 }
 
@@ -105,6 +107,7 @@ export const missionFactory = (
     endDateTimeUtc: '',
     envActions: [],
     isClosed: false,
+    isGeometryComputedFromControls: false,
     isUnderJdp: false,
     missionSource: MissionSourceEnum.MONITORENV,
     missionTypes: [],

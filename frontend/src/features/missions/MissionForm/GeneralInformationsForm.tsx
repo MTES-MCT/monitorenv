@@ -8,7 +8,8 @@ import {
   FormikTextInput,
   FormikTextarea,
   MultiRadio,
-  useNewWindow
+  useNewWindow,
+  THEME
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
@@ -156,12 +157,20 @@ export function GeneralInformationsForm() {
           />
         </StyledUnitsContainer>
 
-        <MultiZonePicker
-          addButtonLabel="Ajouter une zone de mission"
-          interactionListener={InteractionListener.MISSION_ZONE}
-          label="Localisations :"
-          name="geom"
-        />
+        <div>
+          <MultiZonePicker
+            addButtonLabel="Ajouter une zone de mission manuelle"
+            interactionListener={InteractionListener.MISSION_ZONE}
+            label="Localisations :"
+            name="geom"
+          />
+          {values.isGeometryComputedFromControls && (
+            <ZoneComputedFromActions>
+              Actuellement, la zone de mission est <b>automatiquement calculée</b> selon le point ou la zone de la
+              dernière action rapportée par l’unité.
+            </ZoneComputedFromActions>
+          )}
+        </div>
 
         <StyledObservationsContainer>
           <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
@@ -232,6 +241,13 @@ const StyledMissionType = styled.div`
 const StyledUnitsContainer = styled.div`
   display: flex;
   flex-direction: column;
+`
+
+const ZoneComputedFromActions = styled.div`
+  margin-top: 8px;
+  color: ${THEME.color.blueYonder};
+  background: ${THEME.color.blueYonder25};
+  padding: 16px;
 `
 
 const StyledObservationsContainer = styled.div`
