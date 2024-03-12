@@ -46,6 +46,7 @@
     "ol": "6.15.1",
     "ol-mapbox-style": "6.9.0",
     "ramda": "0.29.1",
+    "re-reselect": "5.1.0",
     "react": "18.2.0",
     "react-coordinate-input": "^1.0.0-rc.2",
     "react-device-detect": "2.2.3",
