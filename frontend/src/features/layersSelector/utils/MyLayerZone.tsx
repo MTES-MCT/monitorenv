@@ -53,6 +53,12 @@ export function MyLayerZone({
     dispatch(setFitToExtent(extent))
   }
 
+  const handleClickOnLayerName = () => {
+    if (layerZoneIsShowed) {
+      zoomToLayerExtent()
+    }
+  }
+
   const toggleLayerDisplay = () => {
     if (layerZoneIsShowed) {
       hideLayer()
@@ -65,7 +71,9 @@ export function MyLayerZone({
   return (
     <LayerSelector.Layer $selected={metadataIsShown}>
       <LayerLegend layerType={layerType} name={name} type={type} />
-      <LayerSelector.Name title={displayedName}>{displayedName}</LayerSelector.Name>
+      <LayerSelector.Name onClick={handleClickOnLayerName} title={displayedName}>
+        {displayedName}
+      </LayerSelector.Name>
       <LayerSelector.IconGroup>
         {hasMetadata && (
           <IconButton

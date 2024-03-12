@@ -27,6 +27,22 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
   const metadataIsShowed = _.includes(groupLayerIds, regulatoryMetadataLayerId)
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
 
+  const fitToGroupExtent = () => {
+    const extent = getExtentOfLayersGroup(layers)
+    dispatch(setFitToExtent(extent))
+  }
+
+  const handleClickOnGroupName = () => {
+    if (!zonesAreOpen && regulatoryZonesAreShowed) {
+      fitToGroupExtent()
+    }
+  }
+
+  const handleRemoveZone = e => {
+    e.stopPropagation()
+    dispatch(removeRegulatoryZonesFromMyLayers(groupLayerIds))
+  }
+
   const toggleLayerDisplay = e => {
     e.stopPropagation()
     if (regulatoryZonesAreShowed) {
@@ -38,11 +54,6 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
     }
   }
 
-  const handleRemoveZone = e => {
-    e.stopPropagation()
-    dispatch(removeRegulatoryZonesFromMyLayers(groupLayerIds))
-  }
-
   const toggleZonesAreOpen = () => {
     if (!metadataIsShowed) {
       setZonesAreOpen(!zonesAreOpen)
@@ -52,7 +63,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
-        <LayerSelector.GroupName data-cy="my-regulatory-group" title={groupName}>
+        <LayerSelector.GroupName data-cy="my-regulatory-group" onClick={handleClickOnGroupName} title={groupName}>
           {groupName}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>

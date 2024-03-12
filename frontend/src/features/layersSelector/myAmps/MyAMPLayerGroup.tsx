@@ -13,8 +13,6 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 
-const makeSelector = () => getNumberOfAMPByGroupName
-
 export function MyAMPLayerGroup({
   groupName,
   layers,
@@ -25,26 +23,36 @@ export function MyAMPLayerGroup({
   showedAmpLayerIds: number[]
 }) {
   const dispatch = useAppDispatch()
-  const totalNumberOfZones = useAppSelector(state => makeSelector()(state, groupName))
+  const totalNumberOfZones = useAppSelector(state => getNumberOfAMPByGroupName(state, groupName))
 
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const ampZonesAreShowed = _.intersection(groupLayerIds, showedAmpLayerIds).length > 0
 
-  const toggleLayerDisplay = e => {
-    e.stopPropagation()
-    if (ampZonesAreShowed) {
-      dispatch(hideAmpLayers(groupLayerIds))
-    } else {
-      const extent = getExtentOfLayersGroup(layers)
-      dispatch(setFitToExtent(extent))
-      dispatch(showAmpLayer(groupLayerIds))
+  const fitToGroupExtent = () => {
+    const extent = getExtentOfLayersGroup(layers)
+    dispatch(setFitToExtent(extent))
+  }
+
+  const handleClickOnGroupName = () => {
+    if (zonesAreOpen) {
+      fitToGroupExtent()
     }
   }
 
   const handleRemoveZone = e => {
     e.stopPropagation()
     dispatch(removeAmpZonesFromMyLayers(groupLayerIds))
+  }
+
+  const toggleLayerDisplay = e => {
+    e.stopPropagation()
+    if (ampZonesAreShowed) {
+      dispatch(hideAmpLayers(groupLayerIds))
+    } else {
+      fitToGroupExtent()
+      dispatch(showAmpLayer(groupLayerIds))
+    }
   }
 
   const toggleZonesAreOpen = () => {
@@ -54,7 +62,7 @@ export function MyAMPLayerGroup({
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
-        <LayerSelector.GroupName data-cy="amp-layer-topic" title={groupName}>
+        <LayerSelector.GroupName data-cy="amp-layer-topic" onClick={handleClickOnGroupName} title={groupName}>
           {groupName}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>

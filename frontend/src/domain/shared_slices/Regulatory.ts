@@ -1,4 +1,4 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -12,16 +12,10 @@ const persistConfig = {
 }
 
 type RegulatorySliceState = {
-  loadingRegulatoryZoneMetadata: boolean
-  regulationSearchedZoneExtent: []
-  regulatoryZoneMetadata: any
   selectedRegulatoryLayerIds: number[]
   showedRegulatoryLayerIds: number[]
 }
 const initialState: RegulatorySliceState = {
-  loadingRegulatoryZoneMetadata: false,
-  regulationSearchedZoneExtent: [],
-  regulatoryZoneMetadata: null,
   selectedRegulatoryLayerIds: [],
   showedRegulatoryLayerIds: []
 }
@@ -34,9 +28,9 @@ const regulatorySlice = createSlice({
      * Add regulatory zones to "My Zones" regulatory selection
      * @memberOf RegulatoryReducer
      * @param {Object} state
-     * @param {layerId[]} action.payload - The regulatory zones
+     * @param {layerId[]} action.payload - The regulatory zone ids
      */
-    addRegulatoryZonesToMyLayers(state, action) {
+    addRegulatoryZonesToMyLayers(state, action: PayloadAction<number[]>) {
       return {
         ...state,
         selectedRegulatoryLayerIds: _.union(state.selectedRegulatoryLayerIds, action.payload),
@@ -50,10 +44,10 @@ const regulatorySlice = createSlice({
      * @param {Object} state
      * @param {number} action.payload - The regulatory zone id
      */
-    hideRegulatoryLayer(state, action) {
+    hideRegulatoryLayer(state, action: PayloadAction<number>) {
       state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, action.payload)
     },
-    hideRegulatoryLayers(state, action) {
+    hideRegulatoryLayers(state, action: PayloadAction<number[]>) {
       state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, ...action.payload)
     },
 
@@ -64,7 +58,7 @@ const regulatorySlice = createSlice({
      * @param {Object} state
      * @param {layerId[]} action - The regulatory zones to remove
      */
-    removeRegulatoryZonesFromMyLayers(state, action) {
+    removeRegulatoryZonesFromMyLayers(state, action: PayloadAction<number[]>) {
       return {
         ...state,
         selectedRegulatoryLayerIds: _.difference(state.selectedRegulatoryLayerIds, action.payload),
@@ -72,23 +66,7 @@ const regulatorySlice = createSlice({
       }
     },
 
-    /**
-     * Set the regulation searched zone extent - used to fit the extent into the OpenLayers view
-     * @function setRegulationSearchedZoneExtent
-     * @memberOf RegulatoryReducer
-     * @param {Object} state
-     * @param {{payload: number[]}} action - the extent
-     */
-    setRegulationSearchedZoneExtent(state, action) {
-      state.regulationSearchedZoneExtent = action.payload
-    },
-    /**
-     * show RegulatoryLayer
-     * @memberOf RegulatoryReducer
-     * @param {Object} state
-     * @param {RegulatoryZone[]} action.payload - The regulatory zone
-     */
-    showRegulatoryLayer(state, action) {
+    showRegulatoryLayer(state, action: PayloadAction<number | number[]>) {
       state.showedRegulatoryLayerIds = _.uniq(_.concat(state.showedRegulatoryLayerIds, action.payload))
     }
   }
@@ -99,7 +77,6 @@ export const {
   hideRegulatoryLayer,
   hideRegulatoryLayers,
   removeRegulatoryZonesFromMyLayers,
-  setRegulationSearchedZoneExtent,
   showRegulatoryLayer
 } = regulatorySlice.actions
 
