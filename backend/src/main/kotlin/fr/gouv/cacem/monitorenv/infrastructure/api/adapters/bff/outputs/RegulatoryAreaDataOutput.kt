@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import org.locationtech.jts.geom.MultiPolygon
 
-data class RegulatoryAreasDataOutput(
+data class RegulatoryAreaDataOutput(
     val id: Int,
     val entity_name: String? = null,
     val geom: MultiPolygon? = null,
@@ -13,7 +13,7 @@ data class RegulatoryAreasDataOutput(
     val type: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreasDataOutput(
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreaDataOutput(
             id = regulatoryArea.id,
             entity_name = regulatoryArea.entity_name,
             geom = regulatoryArea.geom,

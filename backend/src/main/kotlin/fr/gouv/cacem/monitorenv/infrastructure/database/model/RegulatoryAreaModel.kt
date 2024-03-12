@@ -17,96 +17,116 @@ data class RegulatoryAreaModel(
     @Id
     @Column(name = "id")
     val id: Int,
+
+    @Column(name = "action")
+    val action: String?,
+
+    @Column(name = "date")
+    val date: String?,
+
+    @Column(name = "date_fin")
+    val date_fin: String?,
+
+    @Column(name = "duree_validite")
+    val duree_validite: String?,
+
+    @Column(name = "echelle")
+    val echelle: String?,
+
+    @Column(name = "editeur")
+    val editeur: String?,
+
+    @Column(name = "edition")
+    val edition: String?,
+
+    @Column(name = "entity_name")
+    val entity_name: String?,
+
+    @Column(name = "facade")
+    val facade: String?,
+
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon?,
-    @Column(name = "entity_name")
-    val entity_name: String?,
-    @Column(name = "url")
-    val url: String?,
+
     @Column(name = "layer_name")
     val layer_name: String?,
-    @Column(name = "facade")
-    val facade: String?,
-    @Column(name = "ref_reg")
-    val ref_reg: String?,
-    @Column(name = "edition")
-    val edition: String?,
-    @Column(name = "editeur")
-    val editeur: String?,
-    @Column(name = "source")
-    val source: String?,
-    @Column(name = "observation")
-    val observation: String?,
-    @Column(name = "thematique")
-    val thematique: String?,
-    @Column(name = "echelle")
-    val echelle: String?,
-    @Column(name = "date")
-    val date: String?,
-    @Column(name = "duree_validite")
-    val duree_validite: String?,
-    @Column(name = "date_fin")
-    val date_fin: String?,
-    @Column(name = "temporalite")
-    val temporalite: String?,
-    @Column(name = "action")
-    val action: String?,
+
     @Column(name = "objet")
     val objet: String?,
-    @Column(name = "type")
-    val type: String?,
+
+    @Column(name = "observation")
+    val observation: String?,
+
+    @Column(name = "ref_reg")
+    val ref_reg: String?,
+
     @Column(name = "signataire")
     val signataire: String?,
+
+    @Column(name = "source")
+    val source: String?,
+
+    @Column(name = "temporalite")
+    val temporalite: String?,
+
+    @Column(name = "thematique")
+    val thematique: String?,
+
+    @Column(name = "type")
+    val type: String?,
+
+    @Column(name = "url")
+    val url: String?,
 ) {
     fun toRegulatoryArea() = RegulatoryAreaEntity(
         id = id,
-        geom = geom,
-        entity_name = entity_name,
-        url = url,
-        layer_name = layer_name,
-        facade = facade,
-        ref_reg = ref_reg,
-        edition = edition,
-        editeur = editeur,
-        source = source,
-        observation = observation,
-        thematique = thematique,
-        echelle = echelle,
-        date = date,
-        duree_validite = duree_validite,
-        date_fin = date_fin,
-        temporalite = temporalite,
         action = action,
+        date = date,
+        date_fin = date_fin,
+        duree_validite = duree_validite,
+        echelle = echelle,
+        editeur = editeur,
+        edition = edition,
+        entity_name = entity_name,
+        facade = facade,
+        geom = geom,
+        layer_name = layer_name,
         objet = objet,
-        type = type,
+        observation = observation,
+        ref_reg = ref_reg,
         signataire = signataire,
+        source = source,
+        temporalite = temporalite,
+        thematique = thematique,
+        type = type,
+        url = url,
     )
 
     companion object {
         fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreaModel(
             id = regulatoryArea.id,
-            geom = regulatoryArea.geom,
-            entity_name = regulatoryArea.entity_name,
-            url = regulatoryArea.url,
-            layer_name = regulatoryArea.layer_name,
-            facade = regulatoryArea.facade,
-            ref_reg = regulatoryArea.ref_reg,
-            edition = regulatoryArea.edition,
-            editeur = regulatoryArea.editeur,
-            source = regulatoryArea.source,
-            observation = regulatoryArea.observation,
-            thematique = regulatoryArea.thematique,
-            echelle = regulatoryArea.echelle,
-            date = regulatoryArea.date,
-            duree_validite = regulatoryArea.duree_validite,
-            date_fin = regulatoryArea.date_fin,
-            temporalite = regulatoryArea.temporalite,
             action = regulatoryArea.action,
+            date = regulatoryArea.date,
+            date_fin = regulatoryArea.date_fin,
+            duree_validite = regulatoryArea.duree_validite,
+            echelle = regulatoryArea.echelle,
+            editeur = regulatoryArea.editeur,
+            edition = regulatoryArea.edition,
+            entity_name = regulatoryArea.entity_name,
+            facade = regulatoryArea.facade,
+            geom = regulatoryArea.geom,
+            layer_name = regulatoryArea.layer_name,
             objet = regulatoryArea.objet,
-            type = regulatoryArea.type,
+            observation = regulatoryArea.observation,
+            ref_reg = regulatoryArea.ref_reg,
             signataire = regulatoryArea.signataire,
+            source = regulatoryArea.source,
+            temporalite = regulatoryArea.temporalite,
+            thematique = regulatoryArea.thematique,
+            type = regulatoryArea.type,
+            url = regulatoryArea.url,
         )
     }
 }
