@@ -22,7 +22,7 @@ export const getPlaceCoordinates = placeId => {
       if (d.status === 'OK') {
         const bbox = d.results[0].geometry.viewport
 
-        return [bbox.southwest.lng, bbox.northeast.lat, bbox.northeast.lng, bbox.southwest.lat]
+        return [bbox.southwest.lng, bbox.southwest.lat, bbox.northeast.lng, bbox.northeast.lat]
       }
 
       return undefined
