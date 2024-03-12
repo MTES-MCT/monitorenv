@@ -6,13 +6,15 @@ import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
+import type { AMP } from '../../../domain/entities/AMPs'
+
 export function AMPLayersList() {
   const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
   const showedAmpLayerIds = useAppSelector(state => state.selectedAmp.showedAmpLayerIds)
 
   const { currentData: amps, isLoading } = useGetAMPsQuery()
   const selectedAmps = useMemo(
-    () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter(l => l),
+    () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((l): l is AMP => !!l),
     [amps, selectedAmpLayerIds]
   )
   const layersByLayersName = useMemo(() => _.groupBy(selectedAmps, r => r?.name), [selectedAmps])
@@ -36,9 +38,17 @@ export function AMPLayersList() {
   return (
     <LayerSelector.LayerList data-cy="amp-my-zones-list">
       {layersByLayersName &&
-        Object.entries(layersByLayersName).map(([layerName, layers]) => (
-          <AMPLayerGroup key={layerName} groupName={layerName} layers={layers} showedAmpLayerIds={showedAmpLayerIds} />
-        ))}
+        Object.entries(layersByLayersName).map(
+          ([layerName, layers]) =>
+            layers!! && (
+              <AMPLayerGroup
+                key={layerName}
+                groupName={layerName}
+                layers={layers}
+                showedAmpLayerIds={showedAmpLayerIds}
+              />
+            )
+        )}
     </LayerSelector.LayerList>
   )
 }

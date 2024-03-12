@@ -1,8 +1,20 @@
-import { Tag, IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
+import {
+  Tag,
+  IconButton,
+  Accent,
+  Icon,
+  Size,
+  THEME,
+  WSG84_PROJECTION,
+  OPENLAYERS_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
+import { createEmpty, extend } from 'ol/extent'
+import { Projection, transformExtent } from 'ol/proj'
 import { useState } from 'react'
 
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import {
   hideRegulatoryLayers,
   removeRegulatoryZonesFromMyLayers,
@@ -12,7 +24,9 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { LayerSelector } from '../../utils/LayerSelector.style'
 
-export function RegulatoryLayerGroup({ groupName, layers }) {
+import type { RegulatoryLayerType } from '../../../../types'
+
+export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string; layers: RegulatoryLayerType[] }) {
   const dispatch = useAppDispatch()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
@@ -26,6 +40,20 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
     if (regulatoryZonesAreShowed) {
       dispatch(hideRegulatoryLayers(groupLayerIds))
     } else {
+      const extentOfGroupLayers = layers.reduce((accumulatedExtent, currentLayer) => {
+        const extendedExtent = [...accumulatedExtent]
+        extend(extendedExtent, currentLayer.bbox)
+
+        return extendedExtent
+      }, createEmpty())
+      const extent =
+        extentOfGroupLayers &&
+        transformExtent(
+          extentOfGroupLayers,
+          new Projection({ code: WSG84_PROJECTION }),
+          new Projection({ code: OPENLAYERS_PROJECTION })
+        )
+      dispatch(setFitToExtent(extent))
       dispatch(showRegulatoryLayer(groupLayerIds))
     }
   }

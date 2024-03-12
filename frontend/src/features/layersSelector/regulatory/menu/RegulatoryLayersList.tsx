@@ -3,7 +3,9 @@ import _ from 'lodash'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 import { LayerSelector } from '../../utils/LayerSelector.style'
 
-export function RegulatoryLayersList({ results }) {
+import type { RegulatoryLayerType } from '../../../../types'
+
+export function RegulatoryLayersList({ results }: { results: RegulatoryLayerType[] }) {
   if (_.isEmpty(results)) {
     return (
       <LayerSelector.LayerList>

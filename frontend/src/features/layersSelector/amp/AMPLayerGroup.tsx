@@ -1,13 +1,35 @@
-import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Icon,
+  IconButton,
+  OPENLAYERS_PROJECTION,
+  Size,
+  Tag,
+  THEME,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
+import { createEmpty, extend } from 'ol/extent'
+import { Projection, transformExtent } from 'ol/proj'
 import { useState } from 'react'
 
 import { AMPLayerZone } from './AMPLayerZone'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { hideAmpLayers, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
-export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
+import type { AMP } from '../../../domain/entities/AMPs'
+
+export function AMPLayerGroup({
+  groupName,
+  layers,
+  showedAmpLayerIds
+}: {
+  groupName: string
+  layers: AMP[]
+  showedAmpLayerIds: number[]
+}) {
   const dispatch = useAppDispatch()
 
   const groupLayerIds = layers.map(l => l.id)
@@ -19,6 +41,20 @@ export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
     if (ampZonesAreShowed) {
       dispatch(hideAmpLayers(groupLayerIds))
     } else {
+      const extentOfGroupLayers = layers.reduce((accumulatedExtent, currentLayer) => {
+        const extendedExtent = [...accumulatedExtent]
+        extend(extendedExtent, currentLayer.bbox)
+
+        return extendedExtent
+      }, createEmpty())
+      const extent =
+        extentOfGroupLayers &&
+        transformExtent(
+          extentOfGroupLayers,
+          new Projection({ code: WSG84_PROJECTION }),
+          new Projection({ code: OPENLAYERS_PROJECTION })
+        )
+      dispatch(setFitToExtent(extent))
       dispatch(showAmpLayer(groupLayerIds))
     }
   }
