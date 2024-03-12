@@ -8,12 +8,12 @@ context('Main Window > AMP Layers', () => {
     cy.clickButton('Arbre des couches').wait(1000)
     cy.clickButton('Filtrer par type de zones').wait(1000)
     cy.fill("Type d'AMP", ['Natura 2000'])
-    cy.getDataCy('amp-results-list-button').click({ force: true })
-    cy.getDataCy('amp-result-list').find('li').first().click({ force: true })
-    cy.getDataCy('amp-layer-topic-pin-button').first().click({ force: true })
+    cy.getDataCy('amp-results-list-button').click()
+    cy.getDataCy('amp-result-list').find('li').first().click()
+    cy.clickButton('Sélectionner la/les zone(s)')
 
-    cy.getDataCy('amp-layers-my-zones').click({ force: true })
-    cy.getDataCy('amp-my-zones-list').should('have.length', 1)
+    cy.getDataCy('my-amp-layers-zones').click({ force: true })
+    cy.getDataCy('my-amp-zones-list').should('have.length', 1)
 
     cy.getDataCy('amp-layer-type').first().click({ force: true }).wait(2000)
 

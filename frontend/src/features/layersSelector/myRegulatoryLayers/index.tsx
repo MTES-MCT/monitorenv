@@ -22,7 +22,7 @@ export function RegulatoryLayers() {
       <LayerSelector.Wrapper
         $hasPinnedLayers={selectedRegulatoryLayers?.length > 0}
         $isExpanded={myRegulatoryZonesIsOpen}
-        data-cy="regulatory-layers-my-zones"
+        data-cy="my-regulatory-layers"
         onClick={onTitleClicked}
       >
         <LayerSelector.Pin />

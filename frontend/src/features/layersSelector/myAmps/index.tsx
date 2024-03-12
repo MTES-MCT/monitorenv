@@ -20,7 +20,7 @@ export function AmpLayers() {
       <LayerSelector.Wrapper
         $hasPinnedLayers={selectedAmpLayerIds?.length > 0}
         $isExpanded={myAmpsIsOpen}
-        data-cy="amp-layers-my-zones"
+        data-cy="my-amp-layers-zones"
         onClick={onTitleClicked}
       >
         <LayerSelector.Pin />

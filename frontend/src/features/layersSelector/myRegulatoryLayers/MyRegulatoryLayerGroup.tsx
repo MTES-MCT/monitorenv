@@ -16,9 +16,9 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
-import type { RegulatoryLayers } from '../../../domain/entities/regulatory'
+import type { RegulatoryLayerCompact } from '../../../domain/entities/regulatory'
 
-export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string; layers: RegulatoryLayers[] }) {
+export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string; layers: RegulatoryLayerCompact[] }) {
   const dispatch = useAppDispatch()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
@@ -65,15 +65,15 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
   return (
     <>
       <LayerSelector.GroupWrapper $isPadded onClick={toggleZonesAreOpen}>
-        <LayerSelector.GroupName data-cy="regulatory-layer-topic" title={groupName}>
+        <LayerSelector.GroupName data-cy="my-regulatory-group" title={groupName}>
           {groupName}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.NumberOfZones>{`${layers?.length} / ${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
           <IconButton
             accent={Accent.TERTIARY}
+            aria-label={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
             color={regulatoryZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
-            data-cy={regulatoryZonesAreShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
             Icon={Icon.Display}
             onClick={toggleLayerDisplay}
             title={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
@@ -82,7 +82,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
           <IconButton
             accent={Accent.TERTIARY}
             color={THEME.color.lightGray}
-            data-cy="regulatory-my-zones-zone-delete"
+            data-cy="my-regulatory-group-delete"
             Icon={Icon.Close}
             onClick={handleRemoveZone}
             size={Size.SMALL}

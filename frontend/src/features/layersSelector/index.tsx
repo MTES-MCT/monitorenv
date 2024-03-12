@@ -38,6 +38,7 @@ export function LayersSidebar() {
         $isActive={isLayersSidebarVisible}
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
+        aria-label="Arbre des couches"
         data-cy="layers-sidebar"
         Icon={Icon.MapLayers}
         onClick={toggleLayerSidebar}

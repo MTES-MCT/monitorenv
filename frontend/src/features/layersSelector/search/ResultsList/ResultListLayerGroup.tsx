@@ -57,7 +57,7 @@ export function ResultListLayerGroup({
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen} onClick={clickOnGroupZones}>
-        <LayerSelector.GroupName data-cy="regulatory-layer-topic" title={groupName}>
+        <LayerSelector.GroupName data-cy="result-group" title={groupName}>
           <Highlighter
             autoEscape
             highlightClassName="highlight"
@@ -73,6 +73,7 @@ export function ResultListLayerGroup({
             color={allTopicZonesAreChecked ? THEME.color.blueGray : THEME.color.gunMetal}
             Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
             onClick={handleCheckAllZones}
+            title="Sélectionner la/les zone(s)"
           />
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>

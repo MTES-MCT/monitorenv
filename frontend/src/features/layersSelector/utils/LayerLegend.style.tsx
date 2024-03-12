@@ -11,7 +11,7 @@ export function LayerLegend({ layerType, name, type }: { layerType: LayerTypeEnu
     case MonitorEnvLayers.AMP:
       return <Rectangle $vectorLayerColor={getAMPColorWithAlpha(type, name)} />
     case MonitorEnvLayers.REGULATORY_ENV:
-      return <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(name, type)} />
+      return <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, name)} />
     default:
       return <Rectangle />
   }

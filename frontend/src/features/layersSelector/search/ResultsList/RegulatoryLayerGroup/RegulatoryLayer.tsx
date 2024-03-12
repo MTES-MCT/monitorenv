@@ -74,7 +74,12 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
   }, [layerId, regulatoryMetadataLayerId, ref])
 
   return (
-    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} onClick={toggleRegulatoryZoneMetadata}>
+    <LayerSelector.Layer
+      ref={ref}
+      $metadataIsShown={metadataIsShown}
+      data-cy="regulatory-result-zone"
+      onClick={toggleRegulatoryZoneMetadata}
+    >
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
         name={layer?.entity_name ?? 'aucun'}

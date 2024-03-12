@@ -34,7 +34,7 @@ export function RegulatoryLayerZoneMetadata() {
     <Wrapper $regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
       {regulatoryMetadata ? (
         <>
-          <Header>
+          <Header data-cy="regulatory-metadata-header">
             <LayerLegend
               layerType={MonitorEnvLayers.REGULATORY_ENV}
               name={regulatoryMetadata?.entity_name}

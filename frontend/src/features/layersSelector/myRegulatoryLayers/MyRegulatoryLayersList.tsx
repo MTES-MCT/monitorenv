@@ -10,7 +10,7 @@ export function RegulatoryLayersList() {
 
   if (_.isEmpty(selectedRegulatoryLayers)) {
     return (
-      <LayerSelector.LayerList>
+      <LayerSelector.LayerList data-cy="my-regulatory-layers-list">
         <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
       </LayerSelector.LayerList>
     )
@@ -19,7 +19,7 @@ export function RegulatoryLayersList() {
   const layersByLayersName = _.groupBy(selectedRegulatoryLayers, r => r?.layer_name)
 
   return (
-    <LayerSelector.LayerList>
+    <LayerSelector.LayerList data-cy="my-regulatory-layers-list">
       {layersByLayersName &&
         Object.entries(layersByLayersName).map(
           ([layerName, layers]) =>

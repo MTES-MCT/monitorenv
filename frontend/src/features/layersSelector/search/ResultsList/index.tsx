@@ -15,7 +15,11 @@ import {
   setIsRegulatorySearchResultsVisible
 } from '../slice'
 
-export function ResultList({ searchedText }) {
+type ResultListProps = {
+  searchedText: string
+}
+
+export function ResultList({ searchedText }: ResultListProps) {
   const dispatch = useAppDispatch()
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
@@ -69,7 +73,7 @@ export function ResultList({ searchedText }) {
               name="isRegulatorySearchResultsVisible"
               onChange={toggleRegulatoryVisibility}
             />
-            <Title onClick={toggleRegulatory}>
+            <Title data-cy="regulatory-layers-result-title" onClick={toggleRegulatory}>
               ZONES RÉGLEMENTAIRES &nbsp;
               <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
             </Title>

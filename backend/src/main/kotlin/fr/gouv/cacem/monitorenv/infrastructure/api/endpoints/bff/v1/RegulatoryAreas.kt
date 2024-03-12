@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaWithMetadataDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreasDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -26,8 +26,8 @@ class RegulatoryAreas(
         @PathParam("regulatoryArea id")
         @PathVariable(name = "regulatoryAreaId")
         regulatoryAreaId: Int,
-    ): RegulatoryAreaDataOutput {
-        return RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
+    ): RegulatoryAreaWithMetadataDataOutput {
+        return RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(
             getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId),
         )
     }

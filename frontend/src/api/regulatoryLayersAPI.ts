@@ -6,24 +6,24 @@ import { setToast } from '../domain/shared_slices/Global'
 import { getSelectedRegulatoryLayerIds } from '../domain/shared_slices/Regulatory'
 
 import type {
-  RegulatoryLayer,
-  RegulatoryLayerFromAPI,
-  RegulatoryLayers,
-  RegulatoryLayersFromAPI
+  RegulatoryLayerWithMetadata,
+  RegulatoryLayerWithMetadataFromAPI,
+  RegulatoryLayerCompact,
+  RegulatoryLayerCompactFromAPI
 } from '../domain/entities/regulatory'
 import type { Coordinate } from 'ol/coordinate'
 
 export const REGULATORY_ZONES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les zones réglementaires"
 
-const RegulatoryLayersAdapter = createEntityAdapter<RegulatoryLayers>()
+const RegulatoryLayersAdapter = createEntityAdapter<RegulatoryLayerCompact>()
 
 const regulatoryLayersInitialState = RegulatoryLayersAdapter.getInitialState()
 
 export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
-    getRegulatoryLayerById: builder.query<RegulatoryLayer, number>({
+    getRegulatoryLayerById: builder.query<RegulatoryLayerWithMetadata, number>({
       query: id => `/v1/regulatory/${id}`,
-      transformResponse: (response: RegulatoryLayerFromAPI) => {
+      transformResponse: (response: RegulatoryLayerWithMetadataFromAPI) => {
         const bbox = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
 
         return {
@@ -32,9 +32,9 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getRegulatoryLayers: builder.query<EntityState<RegulatoryLayers>, void>({
+    getRegulatoryLayers: builder.query<EntityState<RegulatoryLayerCompact>, void>({
       query: () => `/v1/regulatory`,
-      transformResponse: (response: RegulatoryLayersFromAPI[]) =>
+      transformResponse: (response: RegulatoryLayerCompactFromAPI[]) =>
         RegulatoryLayersAdapter.setAll(
           regulatoryLayersInitialState,
           response.map(regulatoryLayer => {
@@ -72,7 +72,7 @@ export const getSelectedRegulatoryLayers = createSelector(
     return (
       selectedRegulatoryLayerIds
         .map(id => regulatoryLayers?.data?.entities[id])
-        .filter((l): l is RegulatoryLayers => !!l) ?? emptyArray
+        .filter((l): l is RegulatoryLayerCompact => !!l) ?? emptyArray
     )
   }
 )

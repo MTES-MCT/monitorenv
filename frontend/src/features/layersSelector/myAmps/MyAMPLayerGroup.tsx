@@ -73,7 +73,7 @@ export function MyAMPLayerGroup({
           <IconButton
             accent={Accent.TERTIARY}
             color={ampZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
-            data-cy={ampZonesAreShowed ? 'amp-my-zones-zone-hide' : 'amp-my-zones-zone-show'}
+            data-cy={ampZonesAreShowed ? 'my-amp-zones-zone-hide' : 'my-amp-zones-zone-show'}
             Icon={Icon.Display}
             onClick={toggleLayerDisplay}
             title={ampZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
@@ -82,7 +82,7 @@ export function MyAMPLayerGroup({
           <IconButton
             accent={Accent.TERTIARY}
             color={THEME.color.lightGray}
-            data-cy="amp-layers-my-zones-zone-delete"
+            data-cy="my-amp-layers-zones-zone-delete"
             Icon={Icon.Close}
             onClick={handleRemoveZone}
             size={Size.SMALL}
