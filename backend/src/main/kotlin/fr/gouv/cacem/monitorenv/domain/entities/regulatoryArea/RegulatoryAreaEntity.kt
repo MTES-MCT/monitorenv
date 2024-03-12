@@ -20,6 +20,8 @@ data class RegulatoryAreaEntity(
     val duree_validite: String? = null,
     val date_fin: String? = null,
     val temporalite: String? = null,
+    val action: String? = null,
     val objet: String? = null,
+    val type: String? = null,
     val signataire: String? = null,
 )

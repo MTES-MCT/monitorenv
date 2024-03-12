@@ -51,8 +51,12 @@ data class RegulatoryAreaModel(
     val date_fin: String?,
     @Column(name = "temporalite")
     val temporalite: String?,
+    @Column(name = "action")
+    val action: String?,
     @Column(name = "objet")
     val objet: String?,
+    @Column(name = "type")
+    val type: String?,
     @Column(name = "signataire")
     val signataire: String?,
 ) {
@@ -74,7 +78,9 @@ data class RegulatoryAreaModel(
         duree_validite = duree_validite,
         date_fin = date_fin,
         temporalite = temporalite,
+        action = action,
         objet = objet,
+        type = type,
         signataire = signataire,
     )
 
@@ -97,7 +103,9 @@ data class RegulatoryAreaModel(
             duree_validite = regulatoryArea.duree_validite,
             date_fin = regulatoryArea.date_fin,
             temporalite = regulatoryArea.temporalite,
+            action = regulatoryArea.action,
             objet = regulatoryArea.objet,
+            type = regulatoryArea.type,
             signataire = regulatoryArea.signataire,
         )
     }
