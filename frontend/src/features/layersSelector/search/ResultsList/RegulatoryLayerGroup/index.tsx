@@ -1,4 +1,7 @@
-import { getNumberOfRegulatoryLayerZonesByGroupName } from '../../../../../api/regulatoryLayersAPI'
+import {
+  getExtentOfRegulatoryLayersGroupByGroupName,
+  getNumberOfRegulatoryLayerZonesByGroupName
+} from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import {
   addRegulatoryZonesToMyLayers,
@@ -22,6 +25,7 @@ export function RegulatoryLayerGroup({
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+  const groupExtent = useAppSelector(state => getExtentOfRegulatoryLayersGroupByGroupName(state, groupName))
 
   const handleAddLayers = ids => dispatch(addRegulatoryZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeRegulatoryZonesFromMyLayers(ids))
@@ -29,6 +33,7 @@ export function RegulatoryLayerGroup({
   return (
     <ResultListLayerGroup
       addLayers={handleAddLayers}
+      groupExtent={groupExtent}
       groupName={groupName}
       layerIds={layerIds}
       layerIdToDisplay={regulatoryMetadataLayerId}

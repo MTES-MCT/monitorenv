@@ -13,6 +13,8 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 
+const makeSelector = () => getNumberOfAMPByGroupName
+
 export function MyAMPLayerGroup({
   groupName,
   layers,
@@ -23,7 +25,7 @@ export function MyAMPLayerGroup({
   showedAmpLayerIds: number[]
 }) {
   const dispatch = useAppDispatch()
-  const totalNumberOfZones = useAppSelector(state => getNumberOfAMPByGroupName(state, groupName))
+  const totalNumberOfZones = useAppSelector(state => makeSelector()(state, groupName))
 
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
@@ -51,7 +53,7 @@ export function MyAMPLayerGroup({
 
   return (
     <>
-      <LayerSelector.GroupWrapper $isPadded onClick={toggleZonesAreOpen}>
+      <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
         <LayerSelector.GroupName data-cy="amp-layer-topic" title={groupName}>
           {groupName}
         </LayerSelector.GroupName>

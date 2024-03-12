@@ -1,6 +1,8 @@
+import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createEntityAdapter, createSelector, type EntityId, type EntityState } from '@reduxjs/toolkit'
-import { boundingExtent } from 'ol/extent'
+import { boundingExtent, createEmpty } from 'ol/extent'
+import { createCachedSelector } from 're-reselect'
 
 import { monitorenvPrivateApi } from './api'
 import { getSelectedRegulatoryLayerIds } from '../domain/shared_slices/Regulatory'
@@ -68,7 +70,7 @@ export const getSelectedRegulatoryLayers = createSelector(
   }
 )
 
-export const getRegulatoryLayerZonesByName = createSelector(
+export const getRegulatoryLayersIdsGroupedByName = createSelector(
   [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select()],
   regulatoryLayers => {
     const regulatoryLayersIdsByName = {}
@@ -88,7 +90,27 @@ export const getRegulatoryLayerZonesByName = createSelector(
     return regulatoryLayersIdsByName
   }
 )
-export const getNumberOfRegulatoryLayerZonesByGroupName = createSelector(
-  [getRegulatoryLayerZonesByName, (_, name: string) => name],
+
+export const getRegulatoryLayersIdsByGroupName = createCachedSelector(
+  [getRegulatoryLayersIdsGroupedByName, (_, groupName: string) => groupName],
+  (regulatoryLayersIdsByName, groupName) => regulatoryLayersIdsByName && regulatoryLayersIdsByName[groupName]
+)((_, groupName: string) => groupName)
+
+export const getNumberOfRegulatoryLayerZonesByGroupName = createCachedSelector(
+  [getRegulatoryLayersIdsGroupedByName, (_, name: string) => name],
   (regulatoryLayerZonesByName, name): number => regulatoryLayerZonesByName[name]?.length ?? 0
-)
+)((_, name) => name)
+
+export const getExtentOfRegulatoryLayersGroupByGroupName = createCachedSelector(
+  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(), getRegulatoryLayersIdsByGroupName],
+  (regulatoryLayersQuery, regulatoryLayerIdsByName) => {
+    const amps = regulatoryLayerIdsByName
+      ?.map(id => regulatoryLayersQuery.data?.entities[id])
+      .filter((amp): amp is RegulatoryLayerCompact => !!amp)
+    if (amps) {
+      return getExtentOfLayersGroup(amps)
+    }
+
+    return createEmpty()
+  }
+)((_, groupName: string) => groupName)

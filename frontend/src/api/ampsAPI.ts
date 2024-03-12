@@ -1,6 +1,8 @@
+import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { type EntityState, createEntityAdapter, createSelector, type EntityId } from '@reduxjs/toolkit'
-import { boundingExtent } from 'ol/extent'
+import { boundingExtent, createEmpty } from 'ol/extent'
+import { createCachedSelector } from 're-reselect'
 
 import { monitorenvPrivateApi } from './api'
 
@@ -49,7 +51,24 @@ export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs
   return ampIdsByName
 })
 
-export const getNumberOfAMPByGroupName = createSelector(
+export const getAMPsIdsByGroupName = createCachedSelector(
+  [getAMPsIdsGroupedByName, (_, groupName: string) => groupName],
+  (ampIdsByName, groupName) => ampIdsByName && ampIdsByName[groupName]
+)((_, groupName: string) => groupName)
+
+export const getNumberOfAMPByGroupName = createCachedSelector(
   [getAMPsIdsGroupedByName, (_, groupName: string) => groupName],
   (ampIdsByName, groupName) => (ampIdsByName && ampIdsByName[groupName]?.length) ?? 0
-)
+)((_, groupName: string) => groupName)
+
+export const getExtentOfAMPLayersGroupByGroupName = createCachedSelector(
+  [ampsAPI.endpoints.getAMPs.select(), getAMPsIdsByGroupName],
+  (ampsQuery, ampIdsByName) => {
+    const amps = ampIdsByName?.map(id => ampsQuery.data?.entities[id]).filter((amp): amp is AMP => !!amp)
+    if (amps) {
+      return getExtentOfLayersGroup(amps)
+    }
+
+    return createEmpty()
+  }
+)((_, groupName: string) => groupName)

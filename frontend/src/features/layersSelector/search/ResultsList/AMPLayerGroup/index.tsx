@@ -1,4 +1,4 @@
-import { getNumberOfAMPByGroupName } from '../../../../../api/ampsAPI'
+import { getExtentOfAMPLayersGroupByGroupName, getNumberOfAMPByGroupName } from '../../../../../api/ampsAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import {
   addAmpZonesToMyLayers,
@@ -19,10 +19,10 @@ export function AMPLayerGroup({
   searchedText: string
 }) {
   const dispatch = useAppDispatch()
-
   const selectedAmpLayerId = useAppSelector(state => state.selectedAmp.selectedAmpLayerId)
   const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
   const totalNumberOfZones = useAppSelector(state => getNumberOfAMPByGroupName(state, groupName))
+  const groupExtent = useAppSelector(state => getExtentOfAMPLayersGroupByGroupName(state, groupName))
 
   const handleAddLayers = ids => dispatch(addAmpZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeAmpZonesFromMyLayers(ids))
@@ -35,6 +35,7 @@ export function AMPLayerGroup({
     <ResultListLayerGroup
       addLayers={handleAddLayers}
       clearSelectedLayer={handleClearSelectedLayer}
+      groupExtent={groupExtent}
       groupName={groupName}
       layerIds={layerIds}
       layerIdToDisplay={selectedAmpLayerId}

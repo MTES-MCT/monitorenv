@@ -1,4 +1,6 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { setFitToExtent } from 'domain/shared_slices/Map'
 import _ from 'lodash'
 import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
@@ -11,6 +13,7 @@ import { LayerSelector } from '../../utils/LayerSelector.style'
 type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
   clearSelectedLayer?: () => void
+  groupExtent: number[]
   groupName: string
   layerIdToDisplay: number | undefined
   layerIds: number[]
@@ -23,6 +26,7 @@ type ResultListLayerGroupProps = {
 export function ResultListLayerGroup({
   addLayers,
   clearSelectedLayer,
+  groupExtent,
   groupName,
   layerIds,
   layerIdToDisplay,
@@ -32,6 +36,7 @@ export function ResultListLayerGroup({
   selectedLayerIds,
   totalNumberOfZones
 }: ResultListLayerGroupProps) {
+  const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
   const zonesSelected = _.intersection(selectedLayerIds, layerIds)
@@ -49,6 +54,10 @@ export function ResultListLayerGroup({
 
   const clickOnGroupZones = () => {
     setZonesAreOpen(!zonesAreOpen)
+
+    if (!zonesAreOpen) {
+      dispatch(setFitToExtent(groupExtent))
+    }
     if (clearSelectedLayer) {
       clearSelectedLayer()
     }

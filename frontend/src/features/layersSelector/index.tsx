@@ -49,7 +49,7 @@ export function LayersSidebar() {
         isLayersSidebarVisible={isLayersSidebarVisible}
         isVisible={displayLayersSidebar && (isLayersSidebarVisible || regulatoryMetadataPanelIsOpen)}
       >
-        <LayerSearch isVisible={displayLayersSidebar && isLayersSidebarVisible} />
+        <LayerSearch />
         <Layers>
           <RegulatoryLayers />
           <AmpLayers />

@@ -51,7 +51,7 @@ const ZonesNumber = styled.span`
   max-width: 50px;
 `
 
-const GroupWrapper = styled.li<{ $isOpen?: boolean; $isPadded?: boolean }>`
+const GroupWrapper = styled.li<{ $isOpen: boolean; $isPadded?: boolean }>`
   display: flex;
   align-items: center;
   user-select: none;
