@@ -111,7 +111,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     [displayReportingsLayer, hasMapListener, attachedReportingsToActiveMission]
   )
 
-  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Geometry>>
+  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
   const vectorLayerRef = useRef(
     new VectorLayer({

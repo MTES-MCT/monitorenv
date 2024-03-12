@@ -29,8 +29,8 @@ export const getInterestPointStyle = (feature, resolution) => {
 
     const style = new Style({
       image: new Icon({
-        imgSize: [30, 79],
         offset: [0, 0],
+        size: [30, 79],
         src: filename
       }),
       zIndex: INTEREST_POINT_STYLE

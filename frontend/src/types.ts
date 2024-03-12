@@ -14,7 +14,7 @@ export type MonitorEnvBaseLayer = BaseLayer & {
   type?: string
 }
 
-interface VectorSourceType extends VectorSource<Geometry> {}
+interface VectorSourceType extends VectorSource<Feature<Geometry>> {}
 
 export type MonitorEnvVectorImageLayer = VectorImageLayer<VectorSourceType> & {
   layerId: number

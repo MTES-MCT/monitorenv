@@ -65,7 +65,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
     [filteredReportings, attachedReportingsFeatures]
   )
 
-  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Geometry>>
+  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
   const vectorLayerRef = useRef(
     new VectorLayer({

@@ -22,6 +22,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../BaseMap'
+import type Feature from 'ol/Feature'
 import type Geometry from 'ol/geom/Geometry'
 
 function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
@@ -40,8 +41,8 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
     }).readFeature(geometry)
   }, [geometry])
 
-  const vectorSourceRef = useRef() as MutableRefObject<VectorSource<Geometry>>
-  const getVectorSource = useCallback(() => {
+  const vectorSourceRef = useRef() as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const getVectorSource = useCallback((): VectorSource<Feature<Geometry>> => {
     if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource({
         format: new GeoJSON({
@@ -54,9 +55,9 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
     return vectorSourceRef.current
   }, [])
 
-  const drawVectorSourceRef = useRef() as MutableRefObject<VectorSource<Geometry>>
+  const drawVectorSourceRef = useRef() as MutableRefObject<VectorSource<Feature<Geometry>>>
 
-  const getDrawVectorSource = useCallback(() => {
+  const getDrawVectorSource = useCallback((): VectorSource<Feature<Geometry>> => {
     if (drawVectorSourceRef.current === undefined) {
       drawVectorSourceRef.current = new VectorSource()
     }

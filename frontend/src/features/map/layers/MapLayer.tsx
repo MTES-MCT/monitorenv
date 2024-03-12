@@ -1,8 +1,8 @@
-import { MapboxVector } from 'ol/layer'
 import TileLayer from 'ol/layer/Tile'
 import { OSM } from 'ol/source'
 import TileWMS from 'ol/source/TileWMS'
 import XYZ from 'ol/source/XYZ'
+import { MapboxVectorLayer } from 'ol-mapbox-style'
 import React, { useEffect, useState } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -16,7 +16,7 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
 
   const [baseLayersObjects] = useState({
     LIGHT: () =>
-      new MapboxVector({
+      new MapboxVectorLayer({
         accessToken: import.meta.env.FRONTEND_MAPBOX_KEY,
         className: Layers.BASE_LAYER.code,
         styleUrl: 'mapbox://styles/monitorfish/ckrbusml50wgv17nrzy3q374b',
