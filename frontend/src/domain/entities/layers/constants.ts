@@ -17,7 +17,7 @@ type Layer = {
   zoneFieldKey?: string
 }
 
-enum MonitorEnvLayers {
+export enum MonitorEnvLayers {
   ACTIONS = 'ACTIONS',
   AEM = 'AEM',
   AMP = 'AMP',

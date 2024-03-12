@@ -7,7 +7,7 @@ import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
+import { LayerSelector } from '../utils/LayerSelector.style'
 
 const baseLayersKeys = getOptionsFromLabelledEnum(BaseLayerLabel)
 
@@ -24,10 +24,10 @@ export function BaseLayerList() {
 
   return (
     <>
-      <LayerSelectorMenu.Wrapper $isExpanded={baselayerIsOpen} onClick={onSectionTitleClicked}>
-        <LayerSelectorMenu.Title>Fonds de carte</LayerSelectorMenu.Title>
+      <LayerSelector.Wrapper $isExpanded={baselayerIsOpen} onClick={onSectionTitleClicked}>
+        <LayerSelector.Title>Fonds de carte</LayerSelector.Title>
         <ChevronIcon $isOpen={baselayerIsOpen} $right />
-      </LayerSelectorMenu.Wrapper>
+      </LayerSelector.Wrapper>
       <BaseLayersContainer $baseLayersLength={baseLayersKeys.length} $showBaseLayers={baselayerIsOpen}>
         <StyledMultiRadio
           isLabelHidden

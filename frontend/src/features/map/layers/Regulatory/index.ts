@@ -4,6 +4,7 @@ import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
+import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -15,7 +16,7 @@ import type { Feature } from 'ol'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
-  const regulatoryLayers = useAppSelector(state => state.regulatory.regulatoryLayers)
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
 
@@ -63,16 +64,18 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     if (map) {
       getVectorSource().clear()
-      if (regulatoryLayers.length > 0) {
-        const features = regulatoryLayers.reduce((feats: Feature[], regulatorylayer) => {
-          if (showedRegulatoryLayerIds.includes(regulatorylayer.id) && regulatorylayer?.geometry) {
+      if (regulatoryLayers?.entities) {
+        const features = showedRegulatoryLayerIds.reduce((feats: Feature[], regulatorylayerId) => {
+          const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
+          if (regulatorylayer) {
+            const { geom, ...regulatoryLayerProperties } = regulatorylayer
             const feature = new GeoJSON({
               featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(regulatorylayer.geometry)
+            }).readFeature(geom)
             feature.setId(`${Layers.REGULATORY_ENV.code}:${regulatorylayer.id}`)
             const geometry = feature.getGeometry()
             const area = geometry && getArea(geometry)
-            feature.setProperties({ area, layerId: regulatorylayer.id, ...regulatorylayer.properties })
+            feature.setProperties({ area, ...regulatoryLayerProperties })
 
             feats.push(feature)
           }

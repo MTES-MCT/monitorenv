@@ -6,6 +6,7 @@ import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
+import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -21,7 +22,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
-  const regulatoryLayersById = useAppSelector(state => state.regulatory.regulatoryLayersById)
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
@@ -64,12 +65,12 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       getRegulatoryVectorSource().clear()
       if (regulatoryLayersSearchResult) {
         const features = regulatoryLayersSearchResult.reduce((regulatorylayers, id) => {
-          const layer = regulatoryLayersById[id]
+          const layer = regulatoryLayers?.entities[id]
 
-          if (layer && layer.geometry) {
+          if (layer && layer.geom) {
             const feature = new GeoJSON({
               featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(layer.geometry)
+            }).readFeature(layer.geom)
             const geometry = feature.getGeometry()
             const area = geometry && getArea(geometry)
             feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${layer.id}`)
@@ -77,7 +78,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
             feature.setProperties({
               area,
               layerId: layer.id,
-              ...layer.properties
+              ...layer
             })
 
             regulatorylayers.push(feature)
@@ -101,7 +102,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
         refreshPreviewLayer()
       }, 300)
     }
-  }, [map, regulatoryLayersSearchResult, regulatoryLayersById])
+  }, [map, regulatoryLayersSearchResult, regulatoryLayers])
 
   useEffect(() => {
     function getLayer() {

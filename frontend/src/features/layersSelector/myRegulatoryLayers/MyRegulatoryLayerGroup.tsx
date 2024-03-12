@@ -1,32 +1,24 @@
-import {
-  Tag,
-  IconButton,
-  Accent,
-  Icon,
-  Size,
-  THEME,
-  WSG84_PROJECTION,
-  OPENLAYERS_PROJECTION
-} from '@mtes-mct/monitor-ui'
+import { IconButton, Accent, Icon, Size, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { createEmpty, extend } from 'ol/extent'
 import { Projection, transformExtent } from 'ol/proj'
 import { useState } from 'react'
 
-import { RegulatoryLayerZone } from './RegulatoryLayerZone'
-import { setFitToExtent } from '../../../../domain/shared_slices/Map'
+import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
+import { getNumberOfRegulatoryLayerZonesByGroupName } from '../../../api/regulatoryLayersAPI'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import {
   hideRegulatoryLayers,
   removeRegulatoryZonesFromMyLayers,
   showRegulatoryLayer
-} from '../../../../domain/shared_slices/Regulatory'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { LayerSelector } from '../../utils/LayerSelector.style'
+} from '../../../domain/shared_slices/Regulatory'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { LayerSelector } from '../utils/LayerSelector.style'
 
-import type { RegulatoryLayerType } from '../../../../types'
+import type { RegulatoryLayers } from '../../../domain/entities/regulatory'
 
-export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string; layers: RegulatoryLayerType[] }) {
+export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string; layers: RegulatoryLayers[] }) {
   const dispatch = useAppDispatch()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
@@ -34,6 +26,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const regulatoryZonesAreShowed = _.intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
   const metadataIsShowed = _.includes(groupLayerIds, regulatoryMetadataLayerId)
+  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
 
   const toggleLayerDisplay = e => {
     e.stopPropagation()
@@ -76,20 +69,19 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
           {groupName}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
-          <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
+          <LayerSelector.NumberOfZones>{`${layers?.length} / ${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
           <IconButton
             accent={Accent.TERTIARY}
-            color={regulatoryZonesAreShowed ? THEME.color.blueGray : THEME.color.slateGray}
+            color={regulatoryZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
             data-cy={regulatoryZonesAreShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
             Icon={Icon.Display}
-            iconSize={20}
             onClick={toggleLayerDisplay}
-            size={Size.SMALL}
             title={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
           />
 
           <IconButton
             accent={Accent.TERTIARY}
+            color={THEME.color.lightGray}
             data-cy="regulatory-my-zones-zone-delete"
             Icon={Icon.Close}
             onClick={handleRemoveZone}

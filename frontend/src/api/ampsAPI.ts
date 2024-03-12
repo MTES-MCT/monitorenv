@@ -1,4 +1,4 @@
-import { type EntityState, createEntityAdapter, type Middleware } from '@reduxjs/toolkit'
+import { type EntityState, createEntityAdapter, type Middleware, createSelector } from '@reduxjs/toolkit'
 import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
@@ -41,3 +41,21 @@ export const ampsErrorLoggerMiddleware: Middleware = store => next => action => 
 }
 
 export const { useGetAMPsQuery } = ampsAPI
+
+export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs.select()], ampsQuery => {
+  const ampIdsByName = ampsQuery.data?.ids.reduce((acc, id) => {
+    const amp = ampsQuery.data?.entities[id]
+    if (amp) {
+      acc[amp.name] = [...(acc[amp.name] ?? []), id]
+    }
+
+    return acc
+  }, {})
+
+  return ampIdsByName
+})
+
+export const getNumberOfAMPByGroupName = createSelector(
+  [getAMPsIdsGroupedByName, (_, groupName: string) => groupName],
+  (ampIdsByName, groupName) => (ampIdsByName && ampIdsByName[groupName].length) ?? 0
+)

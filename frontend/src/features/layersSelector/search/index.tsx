@@ -9,18 +9,19 @@ import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
 import { resetSearchExtent, setAMPsSearchResult, setRegulatoryLayersSearchResult, setSearchExtent } from './slice'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
+import { useGetRegulatoryLayersQuery } from '../../../api/regulatoryLayersAPI'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getIntersectingLayerIds } from '../utils/getIntersectingLayerIds'
 
 import type { AMP } from '../../../domain/entities/AMPs'
-import type { RegulatoryLayerType } from '../../../types'
+import type { RegulatoryLayers } from '../../../domain/entities/regulatory'
 
 export function LayerSearch({ isVisible }) {
   const dispatch = useAppDispatch()
   const { data: amps } = useGetAMPsQuery()
-  const regulatoryLayers = useAppSelector(state => state.regulatory.regulatoryLayers)
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const currentMapExtentTracker = useAppSelector(state => state.map.currentMapExtentTracker)
@@ -45,16 +46,10 @@ export function LayerSearch({ isVisible }) {
   }, [filterSearchOnMapExtent, currentMapExtentTracker])
 
   const searchLayers = useMemo(() => {
-    const fuseRegulatory = new Fuse(regulatoryLayers, {
+    const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
       ignoreLocation: true,
       includeScore: false,
-      keys: [
-        'properties.layer_name',
-        'properties.entity_name',
-        'properties.ref_reg',
-        'properties.type',
-        'properties.thematique'
-      ],
+      keys: ['layer_name', 'entity_name', 'ref_reg', 'type', 'thematique'],
       minMatchCharLength: 2,
       threshold: 0.2
     })
@@ -106,7 +101,7 @@ export function LayerSearch({ isVisible }) {
             searchedAMPS = amps?.entities && Object.values(amps?.entities)
             itemSchema = { bboxPath: 'bbox', idPath: 'id' }
           }
-          const searchedAMPsInExtent = getIntersectingLayerIds(geofilter, searchedAMPS, extent, itemSchema)
+          const searchedAMPsInExtent = getIntersectingLayerIds<AMP>(geofilter, searchedAMPS, extent, itemSchema)
           dispatch(setAMPsSearchResult(searchedAMPsInExtent))
         } else {
           dispatch(setAMPsSearchResult([]))
@@ -120,31 +115,36 @@ export function LayerSearch({ isVisible }) {
               searchedText?.length > 0
                 ? {
                     $or: [
-                      { $path: ['properties', 'layer_name'], $val: searchedText },
-                      { $path: ['properties', 'entity_name'], $val: searchedText },
-                      { $path: ['properties', 'ref_reg'], $val: searchedText },
-                      { $path: ['properties', 'type'], $val: searchedText }
+                      { $path: ['layer_name'], $val: searchedText },
+                      { $path: ['entity_name'], $val: searchedText },
+                      { $path: ['ref_reg'], $val: searchedText },
+                      { $path: ['type'], $val: searchedText }
                     ]
                   }
                 : undefined
 
             const filterWithTheme =
               regulatoryThemes?.length > 0
-                ? { $or: regulatoryThemes.map(theme => ({ $path: ['properties', 'thematique'], $val: theme })) }
+                ? { $or: regulatoryThemes.map(theme => ({ $path: ['thematique'], $val: theme })) }
                 : undefined
 
             const filterExpression = [filterWithTextExpression, filterWithTheme].filter(f => !!f) as Expression[]
-            searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>({
+            searchedRegulatory = fuseRegulatory.search<RegulatoryLayers>({
               $and: filterExpression
             })
 
             itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
           } else {
-            searchedRegulatory = regulatoryLayers
+            searchedRegulatory = regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)
             itemSchema = { bboxPath: 'bbox', idPath: 'id' }
           }
 
-          const searchedRegulatoryInExtent = getIntersectingLayerIds(geofilter, searchedRegulatory, extent, itemSchema)
+          const searchedRegulatoryInExtent = getIntersectingLayerIds<RegulatoryLayers>(
+            geofilter,
+            searchedRegulatory,
+            extent,
+            itemSchema
+          )
           dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
         } else {
           dispatch(setRegulatoryLayersSearchResult([]))
@@ -256,9 +256,9 @@ export function LayerSearch({ isVisible }) {
   )
   const regulatoryThemes = useMemo(
     () =>
-      _.chain(regulatoryLayers)
-        .filter(l => !!l.properties.thematique)
-        .map(l => l.properties.thematique.split(','))
+      _.chain(regulatoryLayers?.entities)
+        .filter(l => !!l?.thematique)
+        .map(l => l?.thematique.split(','))
         .flatMap()
         .map(l => l.trim())
         .uniq()

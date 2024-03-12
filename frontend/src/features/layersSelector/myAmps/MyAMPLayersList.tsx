@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useMemo } from 'react'
 
-import { AMPLayerGroup } from './AMPLayerGroup'
+import { MyAMPLayerGroup } from './MyAMPLayerGroup'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { LayerSelector } from '../utils/LayerSelector.style'
@@ -41,7 +41,7 @@ export function AMPLayersList() {
         Object.entries(layersByLayersName).map(
           ([layerName, layers]) =>
             layers!! && (
-              <AMPLayerGroup
+              <MyAMPLayerGroup
                 key={layerName}
                 groupName={layerName}
                 layers={layers}

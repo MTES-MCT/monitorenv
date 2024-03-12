@@ -1,3 +1,4 @@
+import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const LAYER_SELECTOR_ROW_HEIGHT = 36
@@ -50,7 +51,7 @@ const ZonesNumber = styled.span`
   max-width: 50px;
 `
 
-const GroupWrapper = styled.li<{ $isPadded?: boolean }>`
+const GroupWrapper = styled.li<{ $isOpen?: boolean; $isPadded?: boolean }>`
   display: flex;
   align-items: center;
   user-select: none;
@@ -60,10 +61,10 @@ const GroupWrapper = styled.li<{ $isPadded?: boolean }>`
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   font-size: 13px;
   padding-left: 18px;
-  padding-right: ${p => (p.$isPadded ? '11px' : '0')};
+  padding-right: ${p => (p.$isPadded ? '8px' : '0')};
   font-weight: 700;
   color: ${p => p.theme.color.gunMetal};
-  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  border-bottom: ${p => (p.$isOpen ? 0 : 1)}px solid ${p => p.theme.color.lightGray};
 
   :hover {
     background: ${p => p.theme.color.blueYonder25};
@@ -128,6 +129,41 @@ const NoLayerSelected = styled.div`
   text-align: center;
 `
 
+const NumberOfZones = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-weight: 400;
+`
+
+const Wrapper = styled.div<{ $hasPinnedLayers?: boolean; $isExpanded: boolean }>`
+  height: 38px;
+  font-size: 16px;
+  line-height: 22px;
+  padding-top: 6px;
+  padding-left: 16px;
+  padding-right: 4px;
+  color: ${p => p.theme.color.gainsboro};
+  display: flex;
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: ${props => (props.$isExpanded ? '0' : '2px')};
+  border-bottom-right-radius: ${props => (props.$isExpanded ? '0' : '2px')};
+  background: ${p => p.theme.color.charcoal};
+
+  ${props => props.$hasPinnedLayers && `.Element-IconBox:first-of-type svg { color: ${props.theme.color.blueGray}; }`}
+`
+const Title = styled.span`
+  flex: 1;
+`
+
+const Pin = styled(Icon.Pin)`
+  margin-right: 8px;
+  margin-top: 2px;
+`
+
 export const LayerSelector = {
   GroupList,
   GroupName,
@@ -137,6 +173,10 @@ export const LayerSelector = {
   LayerList,
   Name,
   NoLayerSelected,
+  NumberOfZones,
+  Pin,
   SubGroup,
+  Title,
+  Wrapper,
   ZonesNumber
 }

@@ -1,9 +1,11 @@
-import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 
+import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
+import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import {
@@ -16,14 +18,18 @@ import {
 } from '../../../../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { RegulatoryLayerLegend } from '../../../utils/LayerLegend.style'
+import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useAppDispatch()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
-  const layer = useAppSelector(state => state.regulatory.regulatoryLayersById[layerId])
+  const { layer } = useGetRegulatoryLayersQuery(undefined, {
+    selectFromResult: result => ({
+      layer: result?.currentData?.entities[layerId]
+    })
+  })
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
   const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
 
@@ -32,7 +38,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
 
   const ref = createRef<HTMLSpanElement>()
 
-  const handleSelectRegulatoryZone = e => {
+  const handleSelectZone = e => {
     e.stopPropagation()
     if (isZoneSelected) {
       dispatch(removeRegulatoryZonesFromMyLayers([layerId]))
@@ -69,23 +75,28 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
 
   return (
     <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} onClick={toggleRegulatoryZoneMetadata}>
-      <RegulatoryLayerLegend entity_name={layer?.properties?.entity_name} thematique={layer?.properties?.thematique} />
-      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.properties?.entity_name}>
+      <LayerLegend
+        layerType={MonitorEnvLayers.REGULATORY_ENV}
+        name={layer?.entity_name ?? 'aucun'}
+        type={layer?.thematique ?? 'aucun'}
+      />
+      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entity_name}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={layer?.properties?.entity_name ?? ''}
+          textToHighlight={layer?.entity_name ?? ''}
         />
-        {!layer?.properties?.entity_name && 'AUCUN NOM'}
+        {!layer?.entity_name && 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}
+          aria-label="Sélectionner la zone"
+          color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
           data-cy="regulatory-zone-check"
           Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
-          onClick={handleSelectRegulatoryZone}
-          size={Size.NORMAL}
+          onClick={handleSelectZone}
         />
       </LayerSelector.IconGroup>
     </LayerSelector.Layer>

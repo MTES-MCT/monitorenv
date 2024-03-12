@@ -6,7 +6,7 @@ import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSi
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
+import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function AdministrativeLayers() {
   const dispatch = useAppDispatch()
@@ -18,14 +18,14 @@ export function AdministrativeLayers() {
 
   return (
     <>
-      <LayerSelectorMenu.Wrapper
+      <LayerSelector.Wrapper
         $isExpanded={administrativeZonesIsOpen}
         data-cy="administrative-zones-open"
         onClick={onSectionTitleClicked}
       >
-        <LayerSelectorMenu.Title>Zones administratives</LayerSelectorMenu.Title>
+        <LayerSelector.Title>Zones administratives</LayerSelector.Title>
         <ChevronIcon $isOpen={administrativeZonesIsOpen} $right />
-      </LayerSelectorMenu.Wrapper>
+      </LayerSelector.Wrapper>
       {administrativeLayers && administrativeLayers.length ? (
         <ZonesList showZones={administrativeZonesIsOpen} zonesLength={administrativeLayers.length}>
           {administrativeLayers.map(layers => {
