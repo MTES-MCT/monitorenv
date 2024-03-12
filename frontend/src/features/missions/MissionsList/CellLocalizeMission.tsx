@@ -18,7 +18,9 @@ export function CellLocalizeMission({ geom }: { geom: any }) {
     }).readFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
-    dispatch(setFitToExtent(extent))
+    if (extent) {
+      dispatch(setFitToExtent(extent))
+    }
   }
 
   return <StyledIconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToMission} />

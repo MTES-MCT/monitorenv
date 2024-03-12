@@ -1,7 +1,5 @@
-import { IconButton, Accent, Icon, Size, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
-import { createEmpty, extend } from 'ol/extent'
-import { Projection, transformExtent } from 'ol/proj'
 import { useState } from 'react'
 
 import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
@@ -14,6 +12,7 @@ import {
 } from '../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getExtentOfLayersGroup } from '../utils/getExtentOfLayersGroup'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { RegulatoryLayerCompact } from '../../../domain/entities/regulatory'
@@ -33,19 +32,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
     if (regulatoryZonesAreShowed) {
       dispatch(hideRegulatoryLayers(groupLayerIds))
     } else {
-      const extentOfGroupLayers = layers.reduce((accumulatedExtent, currentLayer) => {
-        const extendedExtent = [...accumulatedExtent]
-        extend(extendedExtent, currentLayer.bbox)
-
-        return extendedExtent
-      }, createEmpty())
-      const extent =
-        extentOfGroupLayers &&
-        transformExtent(
-          extentOfGroupLayers,
-          new Projection({ code: WSG84_PROJECTION }),
-          new Projection({ code: OPENLAYERS_PROJECTION })
-        )
+      const extent = getExtentOfLayersGroup(layers)
       dispatch(setFitToExtent(extent))
       dispatch(showRegulatoryLayer(groupLayerIds))
     }

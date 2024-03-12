@@ -14,7 +14,7 @@ export function AMPLayersList() {
 
   const { currentData: amps, isLoading } = useGetAMPsQuery()
   const selectedAmps = useMemo(
-    () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((l): l is AMP => !!l),
+    () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((layer): layer is AMP => !!layer),
     [amps, selectedAmpLayerIds]
   )
   const layersByLayersName = useMemo(() => _.groupBy(selectedAmps, r => r?.name), [selectedAmps])

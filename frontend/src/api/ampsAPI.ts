@@ -1,8 +1,8 @@
-import { type EntityState, createEntityAdapter, type Middleware, createSelector } from '@reduxjs/toolkit'
+import { FrontendApiError } from '@libs/FrontendApiError'
+import { type EntityState, createEntityAdapter, createSelector, type EntityId } from '@reduxjs/toolkit'
 import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
-import { setToast } from '../domain/shared_slices/Global'
 
 import type { AMP, AMPFromAPI } from '../domain/entities/AMPs'
 import type { Coordinate } from 'ol/coordinate'
@@ -11,10 +11,13 @@ const AMPAdapter = createEntityAdapter<AMP>()
 
 const initialState = AMPAdapter.getInitialState()
 
+const GET_AMP_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les Zones AMP"
+
 export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getAMPs: builder.query<EntityState<AMP>, void>({
       query: () => `/v1/amps`,
+      transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
       transformResponse: (response: AMPFromAPI[]) =>
         AMPAdapter.setAll(
           initialState,
@@ -31,15 +34,6 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-// TODO Migrate this middleware.
-export const ampsErrorLoggerMiddleware: Middleware = store => next => action => {
-  if (ampsAPI.endpoints.getAMPs.matchRejected(action)) {
-    store.dispatch(setToast({ message: "Nous n'avons pas pu récupérer les Zones AMP" }))
-  }
-
-  return next(action)
-}
-
 export const { useGetAMPsQuery } = ampsAPI
 
 export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs.select()], ampsQuery => {
@@ -50,12 +44,12 @@ export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs
     }
 
     return acc
-  }, {})
+  }, {} as Record<string, EntityId[]>)
 
   return ampIdsByName
 })
 
 export const getNumberOfAMPByGroupName = createSelector(
   [getAMPsIdsGroupedByName, (_, groupName: string) => groupName],
-  (ampIdsByName, groupName) => (ampIdsByName && ampIdsByName[groupName].length) ?? 0
+  (ampIdsByName, groupName) => (ampIdsByName && ampIdsByName[groupName]?.length) ?? 0
 )

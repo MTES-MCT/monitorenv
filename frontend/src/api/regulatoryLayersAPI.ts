@@ -1,8 +1,8 @@
-import { createEntityAdapter, createSelector, type EntityId, type EntityState, type Middleware } from '@reduxjs/toolkit'
+import { FrontendApiError } from '@libs/FrontendApiError'
+import { createEntityAdapter, createSelector, type EntityId, type EntityState } from '@reduxjs/toolkit'
 import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
-import { setToast } from '../domain/shared_slices/Global'
 import { getSelectedRegulatoryLayerIds } from '../domain/shared_slices/Regulatory'
 
 import type {
@@ -13,7 +13,8 @@ import type {
 } from '../domain/entities/regulatory'
 import type { Coordinate } from 'ol/coordinate'
 
-export const REGULATORY_ZONES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les zones réglementaires"
+const GET_REGULATORY_LAYER_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
+const GET_REGULATORY_LAYERS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
 
 const RegulatoryLayersAdapter = createEntityAdapter<RegulatoryLayerCompact>()
 
@@ -23,6 +24,7 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getRegulatoryLayerById: builder.query<RegulatoryLayerWithMetadata, number>({
       query: id => `/v1/regulatory/${id}`,
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_LAYER_ERROR_MESSAGE, response),
       transformResponse: (response: RegulatoryLayerWithMetadataFromAPI) => {
         const bbox = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
 
@@ -34,6 +36,7 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
     }),
     getRegulatoryLayers: builder.query<EntityState<RegulatoryLayerCompact>, void>({
       query: () => `/v1/regulatory`,
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_LAYERS_ERROR_MESSAGE, response),
       transformResponse: (response: RegulatoryLayerCompactFromAPI[]) =>
         RegulatoryLayersAdapter.setAll(
           regulatoryLayersInitialState,
@@ -49,18 +52,6 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
     })
   })
 })
-
-// TODO Migrate this middleware.
-export const regulatoryLayersErrorLoggerMiddleware: Middleware = store => next => action => {
-  if (regulatoryLayersAPI.endpoints.getRegulatoryLayers.matchRejected(action)) {
-    store.dispatch(setToast({ message: "Nous n'avons pas pu récupérer les Zones Réglementaires" }))
-  }
-  if (regulatoryLayersAPI.endpoints.getRegulatoryLayerById.matchRejected(action)) {
-    store.dispatch(setToast({ message: "Nous n'avons pas pu récupérer la zone réglementaire" }))
-  }
-
-  return next(action)
-}
 
 export const { useGetRegulatoryLayerByIdQuery, useGetRegulatoryLayersQuery } = regulatoryLayersAPI
 

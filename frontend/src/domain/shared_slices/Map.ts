@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import { BaseLayer } from '../entities/layers/constants'
 import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
@@ -66,7 +66,7 @@ const mapSlice = createSlice({
      * @param {*} state
      * @param {object} action.payload.extent
      */
-    setFitToExtent(state, action) {
+    setFitToExtent(state, action: PayloadAction<Extent>) {
       state.fitToExtent = action.payload
     },
 

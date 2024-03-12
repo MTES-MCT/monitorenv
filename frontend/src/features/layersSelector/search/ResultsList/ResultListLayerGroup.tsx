@@ -49,7 +49,7 @@ export function ResultListLayerGroup({
 
   const clickOnGroupZones = () => {
     setZonesAreOpen(!zonesAreOpen)
-    if (typeof clearSelectedLayer === 'function') {
+    if (clearSelectedLayer) {
       clearSelectedLayer()
     }
   }

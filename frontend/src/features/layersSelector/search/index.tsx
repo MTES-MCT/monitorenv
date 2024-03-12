@@ -35,8 +35,6 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
 
   const [filterSearchOnMapExtent, setFilterSearchOnMapExtent] = useState<boolean>(false)
 
-  // const isSearchThrottled = useRef(false)
-
   useEffect(() => {
     if (filterSearchOnMapExtent) {
       setShouldReloadSearchOnExtent(true)
@@ -64,24 +62,28 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
     const searchFunction = async ({
       ampTypes,
       extent,
-      geofilter,
       regulatoryThemes,
-      searchedText
+      searchedText,
+      shouldSearchByExtent
     }: {
       ampTypes: string[]
       extent: number[] | undefined
-      geofilter: boolean
       regulatoryThemes: string[]
       searchedText: string
+      shouldSearchByExtent: boolean
     }) => {
-      if (searchedText?.length > 2 || ampTypes?.length > 0 || geofilter) {
+      const shouldSearchByText = searchedText?.length > 2
+      const shouldSeachTroughAMPTypes = ampTypes?.length > 0
+      const shouldSearchThroughRegulatoryThemes = regulatoryThemes?.length > 0
+
+      if (shouldSearchByText || shouldSeachTroughAMPTypes || shouldSearchByExtent) {
         let searchedAMPS
         let itemSchema
-        if (searchedText?.length > 2 || ampTypes?.length > 0) {
-          const filterWithTextExpression =
-            searchedText?.length > 0 ? { $path: ['name'], $val: searchedText } : undefined
-          const filterWithType =
-            ampTypes?.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) } : undefined
+        if (shouldSearchByText || shouldSeachTroughAMPTypes) {
+          const filterWithTextExpression = shouldSearchByText ? { $path: ['name'], $val: searchedText } : undefined
+          const filterWithType = shouldSeachTroughAMPTypes
+            ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) }
+            : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Fuse.Expression[]
 
@@ -93,32 +95,35 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
           searchedAMPS = amps?.entities && Object.values(amps?.entities)
           itemSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
-        const searchedAMPsInExtent = getIntersectingLayerIds<AMP>(geofilter, searchedAMPS, extent, itemSchema)
+        const searchedAMPsInExtent = getIntersectingLayerIds<AMP>(
+          shouldSearchByExtent,
+          searchedAMPS,
+          extent,
+          itemSchema
+        )
         dispatch(setAMPsSearchResult(searchedAMPsInExtent))
       } else {
         dispatch(setAMPsSearchResult([]))
       }
 
-      if (searchedText?.length > 2 || regulatoryThemes?.length > 0 || geofilter) {
+      if (shouldSearchByText || shouldSearchThroughRegulatoryThemes || shouldSearchByExtent) {
         let searchedRegulatory
         let itemSchema
-        if (searchedText?.length > 2 || regulatoryThemes?.length > 0) {
-          const filterWithTextExpression =
-            searchedText?.length > 0
-              ? {
-                  $or: [
-                    { $path: ['layer_name'], $val: searchedText },
-                    { $path: ['entity_name'], $val: searchedText },
-                    { $path: ['ref_reg'], $val: searchedText },
-                    { $path: ['type'], $val: searchedText }
-                  ]
-                }
-              : undefined
+        if (shouldSearchByText || shouldSearchThroughRegulatoryThemes) {
+          const filterWithTextExpression = shouldSearchByText
+            ? {
+                $or: [
+                  { $path: ['layer_name'], $val: searchedText },
+                  { $path: ['entity_name'], $val: searchedText },
+                  { $path: ['ref_reg'], $val: searchedText },
+                  { $path: ['type'], $val: searchedText }
+                ]
+              }
+            : undefined
 
-          const filterWithTheme =
-            regulatoryThemes?.length > 0
-              ? { $or: regulatoryThemes.map(theme => ({ $path: ['thematique'], $val: theme })) }
-              : undefined
+          const filterWithTheme = shouldSearchThroughRegulatoryThemes
+            ? { $or: regulatoryThemes.map(theme => ({ $path: ['thematique'], $val: theme })) }
+            : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithTheme].filter(f => !!f) as Expression[]
           searchedRegulatory = fuseRegulatory.search<RegulatoryLayerCompact>({
@@ -132,7 +137,7 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
         }
 
         const searchedRegulatoryInExtent = getIntersectingLayerIds<RegulatoryLayerCompact>(
-          geofilter,
+          shouldSearchByExtent,
           searchedRegulatory,
           extent,
           itemSchema
@@ -146,19 +151,19 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
     return _.debounce(searchFunction, 300, { trailing: true })
   }, [dispatch, regulatoryLayers, amps])
 
-  // const debouncedSearchLayers = useCallback(_.debounce(memoizedSearchFunction, 1300, { trailing: true }), [])
-
   const handleReloadSearch = () => {
     setShouldReloadSearchOnExtent(false)
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: currentMapExtentTracker,
-      geofilter: filterSearchOnMapExtent,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText
-    })
-    dispatch(setSearchExtent(currentMapExtentTracker))
-    dispatch(setFitToExtent(currentMapExtentTracker))
+    if (currentMapExtentTracker) {
+      debouncedSearchLayers({
+        ampTypes: filteredAmpTypes,
+        extent: currentMapExtentTracker,
+        regulatoryThemes: filteredRegulatoryThemes,
+        searchedText: globalSearchText,
+        shouldSearchByExtent: filterSearchOnMapExtent
+      })
+      dispatch(setSearchExtent(currentMapExtentTracker))
+      dispatch(setFitToExtent(currentMapExtentTracker))
+    }
   }
 
   const handleResetSearch = () => {
@@ -176,9 +181,9 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,
-      geofilter: filterSearchOnMapExtent,
       regulatoryThemes: filteredRegulatoryThemes,
-      searchedText
+      searchedText,
+      shouldSearchByExtent: filterSearchOnMapExtent
     })
   }
 
@@ -187,9 +192,9 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
     debouncedSearchLayers({
       ampTypes: filteredTypes,
       extent: currentMapExtentTracker,
-      geofilter: filterSearchOnMapExtent,
       regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText
+      searchedText: globalSearchText,
+      shouldSearchByExtent: filterSearchOnMapExtent
     })
   }
 
@@ -198,9 +203,9 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,
-      geofilter: filterSearchOnMapExtent,
       regulatoryThemes: filteredThemes,
-      searchedText: globalSearchText
+      searchedText: globalSearchText,
+      shouldSearchByExtent: filterSearchOnMapExtent
     })
   }
 
@@ -210,9 +215,9 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
     debouncedSearchLayers({
       ampTypes: [],
       extent: currentMapExtentTracker,
-      geofilter: filterSearchOnMapExtent,
       regulatoryThemes: [],
-      searchedText: globalSearchText
+      searchedText: globalSearchText,
+      shouldSearchByExtent: filterSearchOnMapExtent
     })
   }
 
@@ -221,7 +226,7 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
       setShouldReloadSearchOnExtent(false)
       dispatch(resetSearchExtent())
       setFilterSearchOnMapExtent(false)
-    } else {
+    } else if (currentMapExtentTracker) {
       setFilterSearchOnMapExtent(true)
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
@@ -229,9 +234,9 @@ export function LayerSearch({ isVisible }: { isVisible: boolean }) {
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,
-      geofilter: !filterSearchOnMapExtent,
       regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText
+      searchedText: globalSearchText,
+      shouldSearchByExtent: !filterSearchOnMapExtent
     })
   }
 

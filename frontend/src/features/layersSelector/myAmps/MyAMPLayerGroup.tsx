@@ -1,7 +1,5 @@
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Size, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
-import { createEmpty, extend } from 'ol/extent'
-import { Projection, transformExtent } from 'ol/proj'
 import { useState } from 'react'
 
 import { MyAMPLayerZone } from './MyAMPLayerZone'
@@ -10,6 +8,7 @@ import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { hideAmpLayers, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getExtentOfLayersGroup } from '../utils/getExtentOfLayersGroup'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { AMP } from '../../../domain/entities/AMPs'
@@ -35,19 +34,7 @@ export function MyAMPLayerGroup({
     if (ampZonesAreShowed) {
       dispatch(hideAmpLayers(groupLayerIds))
     } else {
-      const extentOfGroupLayers = layers.reduce((accumulatedExtent, currentLayer) => {
-        const extendedExtent = [...accumulatedExtent]
-        extend(extendedExtent, currentLayer.bbox)
-
-        return extendedExtent
-      }, createEmpty())
-      const extent =
-        extentOfGroupLayers &&
-        transformExtent(
-          extentOfGroupLayers,
-          new Projection({ code: WSG84_PROJECTION }),
-          new Projection({ code: OPENLAYERS_PROJECTION })
-        )
+      const extent = getExtentOfLayersGroup(layers)
       dispatch(setFitToExtent(extent))
       dispatch(showAmpLayer(groupLayerIds))
     }
@@ -73,7 +60,7 @@ export function MyAMPLayerGroup({
           <IconButton
             accent={Accent.TERTIARY}
             color={ampZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
-            data-cy={ampZonesAreShowed ? 'my-amp-zones-zone-hide' : 'my-amp-zones-zone-show'}
+            data-cy={ampZonesAreShowed ? 'my-amp-zone-hide' : 'my-amp-zone-show'}
             Icon={Icon.Display}
             onClick={toggleLayerDisplay}
             title={ampZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
@@ -82,7 +69,7 @@ export function MyAMPLayerGroup({
           <IconButton
             accent={Accent.TERTIARY}
             color={THEME.color.lightGray}
-            data-cy="my-amp-layers-zones-zone-delete"
+            data-cy="my-amp-zone-delete"
             Icon={Icon.Close}
             onClick={handleRemoveZone}
             size={Size.SMALL}
