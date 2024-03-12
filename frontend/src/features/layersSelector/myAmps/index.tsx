@@ -1,9 +1,9 @@
-import { AMPLayersList } from './AMPLayersList'
+import { AMPLayersList } from './MyAMPLayersList'
 import { toggleMyAmps } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
+import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function AmpLayers() {
   const dispatch = useAppDispatch()
@@ -17,16 +17,16 @@ export function AmpLayers() {
 
   return (
     <>
-      <LayerSelectorMenu.Wrapper
+      <LayerSelector.Wrapper
         $hasPinnedLayers={selectedAmpLayerIds?.length > 0}
         $isExpanded={myAmpsIsOpen}
-        data-cy="amp-layers-my-zones"
+        data-cy="my-amp-layers-zones"
         onClick={onTitleClicked}
       >
-        <LayerSelectorMenu.Pin />
-        <LayerSelectorMenu.Title>Mes AMP</LayerSelectorMenu.Title>
+        <LayerSelector.Pin />
+        <LayerSelector.Title>Mes AMP</LayerSelector.Title>
         <ChevronIcon $isOpen={myAmpsIsOpen} $right />
-      </LayerSelectorMenu.Wrapper>
+      </LayerSelector.Wrapper>
       {myAmpsIsOpen && <AMPLayersList />}
     </>
   )

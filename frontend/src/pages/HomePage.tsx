@@ -3,7 +3,6 @@ import { useBeforeUnload } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
-import { APIWorker } from '../api/APIWorker'
 import { ReportingContext } from '../domain/shared_slices/Global'
 import { ControlUnitDialog } from '../features/ControlUnit/components/ControlUnitDialog'
 import { Healthcheck } from '../features/healthcheck/Healthcheck'
@@ -70,7 +69,6 @@ export function HomePage() {
     <>
       <Healthcheck />
       <Wrapper>
-        <APIWorker />
         <Map />
         <LayersSidebar />
         <RightMenuOnHoverArea />

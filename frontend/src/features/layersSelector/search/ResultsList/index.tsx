@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
+import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import {
@@ -14,7 +15,11 @@ import {
   setIsRegulatorySearchResultsVisible
 } from '../slice'
 
-export function ResultList({ searchedText }) {
+type ResultListProps = {
+  searchedText: string
+}
+
+export function ResultList({ searchedText }: ResultListProps) {
   const dispatch = useAppDispatch()
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
@@ -24,15 +29,14 @@ export function ResultList({ searchedText }) {
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
 
-  const regulatoryLayersById = useAppSelector(state => state.regulatory.regulatoryLayersById)
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: amps } = useGetAMPsQuery()
 
-  const ampsByAMPName = _.groupBy(amps?.entities, a => a?.name)
   const ampResulstsByAMPName = _.groupBy(ampsSearchResult, a => amps?.entities[a]?.name)
 
   const regulatoryLayersByLayerName = _.groupBy(
     regulatoryLayersSearchResult,
-    r => regulatoryLayersById[r]?.properties.layer_name
+    r => regulatoryLayers?.entities[r]?.layer_name
   )
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
@@ -69,7 +73,7 @@ export function ResultList({ searchedText }) {
               name="isRegulatorySearchResultsVisible"
               onChange={toggleRegulatoryVisibility}
             />
-            <Title onClick={toggleRegulatory}>
+            <Title data-cy="regulatory-layers-result-title" onClick={toggleRegulatory}>
               ZONES RÉGLEMENTAIRES &nbsp;
               <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
             </Title>
@@ -101,13 +105,7 @@ export function ResultList({ searchedText }) {
           </HeaderAMP>
           <SubListAMP $isExpanded={isAmpSearchResultsExpanded} data-cy="amp-result-list">
             {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
-              <AMPLayerGroup
-                key={ampName}
-                groupName={ampName}
-                groups={ampsByAMPName}
-                layerIds={ampIdsInGroup}
-                searchedText={searchedText}
-              />
+              <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
             ))}
           </SubListAMP>
         </>

@@ -1,16 +1,18 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { skipToken } from '@reduxjs/toolkit/query'
 import { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import { Identification } from './Identification'
 import { MetadataRegulatoryReferences } from './MetadataRegulatoryReferences'
-import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
-import { getTitle } from '../../../../domain/entities/regulatory'
-import { closeRegulatoryMetadataPanel } from '../../../../domain/shared_slices/RegulatoryMetadata'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { RegulatoryLayerLegend } from '../../utils/LayerLegend.style'
+import { useGetRegulatoryLayerByIdQuery } from '../../../api/regulatoryLayersAPI'
+import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
+import { getTitle } from '../../../domain/entities/regulatory'
+import { closeRegulatoryMetadataPanel } from '../../../domain/shared_slices/RegulatoryMetadata'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { LayerLegend } from '../utils/LayerLegend.style'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
@@ -19,8 +21,10 @@ export function RegulatoryLayerZoneMetadata() {
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
   const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
 
-  const { currentData } = useGetRegulatoryLayerQuery({ id: regulatoryMetadataLayerId }, { pollingInterval: FOUR_HOURS })
-  const regulatoryMetadata = currentData?.properties
+  const { currentData } = useGetRegulatoryLayerByIdQuery(regulatoryMetadataLayerId ?? skipToken, {
+    pollingInterval: FOUR_HOURS
+  })
+  const regulatoryMetadata = currentData
 
   const onCloseIconClicked = useCallback(() => {
     dispatch(closeRegulatoryMetadataPanel())
@@ -30,10 +34,11 @@ export function RegulatoryLayerZoneMetadata() {
     <Wrapper $regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
       {regulatoryMetadata ? (
         <>
-          <Header>
-            <RegulatoryLayerLegend
-              entity_name={regulatoryMetadata?.entity_name}
-              thematique={regulatoryMetadata?.thematique}
+          <Header data-cy="regulatory-metadata-header">
+            <LayerLegend
+              layerType={MonitorEnvLayers.REGULATORY_ENV}
+              name={regulatoryMetadata?.entity_name}
+              type={regulatoryMetadata?.thematique}
             />
             <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
               {getTitle(regulatoryMetadata?.layer_name)}

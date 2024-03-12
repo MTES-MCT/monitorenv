@@ -1,10 +1,11 @@
-import { Accent, Icon, Size, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 
 import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
+import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import {
@@ -14,7 +15,7 @@ import {
 } from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { AMPLayerLegend } from '../../../utils/LayerLegend.style'
+import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
@@ -31,7 +32,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
 
   const isZoneSelected = selectedAmpLayerIds.includes(layerId)
 
-  const handleSelectRegulatoryZone = e => {
+  const handleSelectZone = e => {
     e.stopPropagation()
     if (isZoneSelected) {
       dispatch(removeAmpZonesFromMyLayers([layerId]))
@@ -61,7 +62,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
 
   return (
     <LayerSelector.Layer ref={ref} $selected={selectedAmpLayerId === layerId}>
-      <AMPLayerLegend name={layer?.name} type={layer?.type} />
+      <LayerLegend layerType={MonitorEnvLayers.AMP} name={layer?.name ?? 'aucun'} type={layer?.type ?? 'aucun'} />
       <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type}>
         <Highlighter
           autoEscape
@@ -76,10 +77,9 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
           accent={Accent.TERTIARY}
           aria-label="Sélectionner la zone"
           color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
+          data-cy="amp-zone-check"
           Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
-          iconSize={20}
-          onClick={handleSelectRegulatoryZone}
-          size={Size.SMALL}
+          onClick={handleSelectZone}
         />
       </LayerSelector.IconGroup>
     </LayerSelector.Layer>

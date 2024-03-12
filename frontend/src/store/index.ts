@@ -4,18 +4,14 @@ import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist
 
 import { homeReducers } from './reducers'
 import { monitorenvPrivateApi, monitorenvPublicApi, geoserverApi } from '../api/api'
-import { regulatoryActionSanitizer } from '../domain/shared_slices/Regulatory'
 
 const homeStore = configureStore({
-  devTools: {
-    actionSanitizer: regulatoryActionSanitizer
-  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       // https://redux-toolkit.js.org/api/serializabilityMiddleware
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, 'regulatory/setRegulatoryLayers'],
-        ignoredPaths: ['regulatory', 'layerSearch'],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredPaths: ['layerSearch'],
         // TODO Replace all Redux state Dates by strings & Error by a strict-typed POJO.
         isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error
       }

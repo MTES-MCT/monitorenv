@@ -71,13 +71,14 @@ export function AMPLayers({ map, mapClickEvent }: BaseMapChildrenProps) {
         const features = showedAmpLayerIds.reduce((feats: Feature[], layerId) => {
           const ampLayer = ampLayers.entities[layerId]
           if (ampLayer) {
+            const { geom, ...ampLayerProperties } = ampLayer
             const feature = new GeoJSON({
               featureProjection: OPENLAYERS_PROJECTION
             }).readFeature(ampLayer.geom)
             feature.setId(`${Layers.AMP.code}:${ampLayer.id}`)
             const geometry = feature.getGeometry()
             const area = geometry && getArea(geometry)
-            feature.setProperties({ area, ...ampLayer })
+            feature.setProperties({ area, ...ampLayerProperties })
 
             feats.push(feature)
           }

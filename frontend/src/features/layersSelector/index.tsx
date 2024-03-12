@@ -3,12 +3,13 @@ import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import { AdministrativeLayers } from './administrative'
-import { AmpLayers } from './amp'
 import { BaseLayerList } from './base'
-import { RegulatoryLayers } from './regulatory/menu'
-import { RegulatoryLayerZoneMetadata } from './regulatory/metadata'
+import { AmpLayers } from './myAmps'
+import { RegulatoryLayers } from './myRegulatoryLayers'
+import { RegulatoryLayerZoneMetadata } from './regulatoryMetadata'
 import { LayerSearch } from './search'
 import { useGetAMPsQuery } from '../../api/ampsAPI'
+import { useGetRegulatoryLayersQuery } from '../../api/regulatoryLayersAPI'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { closeRegulatoryMetadataPanel } from '../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
@@ -19,7 +20,7 @@ export function LayersSidebar() {
   const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
-  const regulatoryLayers = useAppSelector(state => state.regulatory.regulatoryLayers)
+  const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
 
   const dispatch = useAppDispatch()
@@ -37,6 +38,7 @@ export function LayersSidebar() {
         $isActive={isLayersSidebarVisible}
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
+        aria-label="Arbre des couches"
         data-cy="layers-sidebar"
         Icon={Icon.MapLayers}
         onClick={toggleLayerSidebar}
@@ -47,7 +49,7 @@ export function LayersSidebar() {
         isLayersSidebarVisible={isLayersSidebarVisible}
         isVisible={displayLayersSidebar && (isLayersSidebarVisible || regulatoryMetadataPanelIsOpen)}
       >
-        <LayerSearch isVisible={displayLayersSidebar && isLayersSidebarVisible} />
+        <LayerSearch />
         <Layers>
           <RegulatoryLayers />
           <AmpLayers />
@@ -61,12 +63,12 @@ export function LayersSidebar() {
           {regulatoryMetadataLayerId && <RegulatoryLayerZoneMetadata />}
         </RegulatoryZoneMetadataShifter>
       </Sidebar>
-      {(regulatoryLayers.length === 0 || amps.isLoading) && (
+      {(regulatoryAreas.isLoading || amps.isLoading) && (
         <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
           <FulfillingBouncingCircleSpinner color={THEME.color.gunMetal} size={30} />
           <Message>
-            Chargement des zones cartographiques ({regulatoryLayers.length === 0 && 'Zones réglementaires'}
-            {regulatoryLayers.length === 0 && amps.isLoading ? ' et ' : ''}
+            Chargement des zones cartographiques ({regulatoryAreas.isLoading && 'Zones réglementaires'}
+            {regulatoryAreas.isLoading && amps.isLoading ? ' et ' : ''}
             {amps.isLoading && 'Aires Marines Protégées'})
           </Message>
         </SpinnerWrapper>

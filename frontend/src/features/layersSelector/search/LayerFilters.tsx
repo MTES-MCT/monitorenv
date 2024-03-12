@@ -1,5 +1,15 @@
-import { Accent, CheckPicker, SingleTag } from '@mtes-mct/monitor-ui'
+import { type Option, Accent, CheckPicker, SingleTag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
+
+type LayerFiltersProps = {
+  ampTypes: Option<string>[]
+  filteredAmpTypes: string[]
+  filteredRegulatoryThemes: string[]
+  handleResetFilters: () => void
+  regulatoryThemes: Option<string>[]
+  setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
+  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
+}
 
 export function LayerFilters({
   ampTypes,
@@ -9,7 +19,7 @@ export function LayerFilters({
   regulatoryThemes,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes
-}) {
+}: LayerFiltersProps) {
   const handleSetFilteredAmpTypes = filteredAmps => {
     setFilteredAmpTypes(filteredAmps)
   }

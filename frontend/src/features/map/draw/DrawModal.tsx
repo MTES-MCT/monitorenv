@@ -153,7 +153,10 @@ export function DrawModal() {
       })
 
       dispatch(addFeatureToDrawedFeature(nextFeature))
-      dispatch(setFitToExtent(nextFeature.getGeometry()?.getExtent()))
+      const extent = nextFeature.getGeometry()?.getExtent()
+      if (extent) {
+        dispatch(setFitToExtent(extent))
+      }
     },
     [dispatch]
   )

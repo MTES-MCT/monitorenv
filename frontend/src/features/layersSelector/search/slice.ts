@@ -2,21 +2,29 @@ import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
+  filteredAmpTypes: string[]
+  filteredRegulatoryThemes: string[]
+  globalSearchText: string
   isAmpSearchResultsExpanded: boolean
   isAmpSearchResultsVisible: boolean
   isRegulatorySearchResultsExpanded: boolean
   isRegulatorySearchResultsVisible: boolean
   regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
+  shouldFilterSearchOnMapExtent: boolean
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
+  filteredAmpTypes: [],
+  filteredRegulatoryThemes: [],
+  globalSearchText: '',
   isAmpSearchResultsExpanded: false,
   isAmpSearchResultsVisible: true,
   isRegulatorySearchResultsExpanded: false,
   isRegulatorySearchResultsVisible: true,
   regulatoryLayersSearchResult: undefined,
-  searchExtent: undefined
+  searchExtent: undefined,
+  shouldFilterSearchOnMapExtent: false
 }
 
 const layerSearchSlice = createSlice({
@@ -35,6 +43,17 @@ const layerSearchSlice = createSlice({
       state.ampsSearchResult = action.payload
     },
 
+    setFilteredAmpTypes(state, action: PayloadAction<string[]>) {
+      state.filteredAmpTypes = action.payload
+    },
+
+    setFilteredRegulatoryThemes(state, action: PayloadAction<string[]>) {
+      state.filteredRegulatoryThemes = action.payload
+    },
+    setGlobalSearchText(state, action: PayloadAction<string>) {
+      state.globalSearchText = action.payload
+    },
+
     setIsAmpSearchResultsExpanded(state, action: PayloadAction<boolean>) {
       state.isAmpSearchResultsExpanded = action.payload
     },
@@ -42,37 +61,21 @@ const layerSearchSlice = createSlice({
     setIsAmpSearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isAmpSearchResultsVisible = action.payload
     },
+
     setIsRegulatorySearchResultsExpanded(state, action: PayloadAction<boolean>) {
       state.isRegulatorySearchResultsExpanded = action.payload
     },
-
     setIsRegulatorySearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isRegulatorySearchResultsVisible = action.payload
     },
-    /**
-     * Set regulatory layers search result structured as
-     * LawType: {
-     *   Topic: Zone[]
-     * }
-     * @param {Object} state
-     * @param {RegulatoryLawTypes | null} action - The regulatory search result
-     */
     setRegulatoryLayersSearchResult(state, action) {
       state.regulatoryLayersSearchResult = action.payload
     },
-
-    /**
-     * Set the selected zone to filter regulations
-     * @param {Object} state
-     * @param {{
-     * payload: {
-     *  name: string,
-     *  code: string,
-     *  feature: GeoJSON
-     * }}} action - The zone
-     */
     setSearchExtent(state, action) {
       state.searchExtent = action.payload
+    },
+    setShouldFilterSearchOnMapExtent(state, action: PayloadAction<boolean>) {
+      state.shouldFilterSearchOnMapExtent = action.payload
     }
   }
 })
@@ -80,12 +83,16 @@ const layerSearchSlice = createSlice({
 export const {
   resetSearchExtent,
   setAMPsSearchResult,
+  setFilteredAmpTypes,
+  setFilteredRegulatoryThemes,
+  setGlobalSearchText,
   setIsAmpSearchResultsExpanded,
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsExpanded,
   setIsRegulatorySearchResultsVisible,
   setRegulatoryLayersSearchResult,
-  setSearchExtent
+  setSearchExtent,
+  setShouldFilterSearchOnMapExtent
 } = layerSearchSlice.actions
 
 export const layerSearchSliceReducer = layerSearchSlice.reducer

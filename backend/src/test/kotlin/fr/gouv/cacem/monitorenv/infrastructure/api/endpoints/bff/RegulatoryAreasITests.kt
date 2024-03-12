@@ -75,12 +75,10 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$[0].id", equalTo(regulatoryArea.id)))
             .andExpect(jsonPath("$[0].entity_name", equalTo(regulatoryArea.entity_name)))
             .andExpect(jsonPath("$[0].layer_name", equalTo(regulatoryArea.layer_name)))
-            .andExpect(jsonPath("$[0].facade", equalTo(regulatoryArea.facade)))
             .andExpect(jsonPath("$[0].ref_reg", equalTo(regulatoryArea.ref_reg)))
             .andExpect(jsonPath("$[0].thematique", equalTo(regulatoryArea.thematique)))
-            .andExpect(jsonPath("$[0].echelle", equalTo(regulatoryArea.echelle)))
-            .andExpect(jsonPath("$[0].date", equalTo(regulatoryArea.date)))
-            .andExpect(jsonPath("$[0].duree_validite", equalTo(regulatoryArea.duree_validite)))
+            .andExpect(jsonPath("$[0].type", equalTo(regulatoryArea.type)))
+            .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
     }
 
     @Test
@@ -120,12 +118,12 @@ class RegulatoryAreasITests {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(regulatoryArea.id)))
             .andExpect(jsonPath("$.entity_name", equalTo(regulatoryArea.entity_name)))
-            .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))
             .andExpect(jsonPath("$.facade", equalTo(regulatoryArea.facade)))
-            .andExpect(jsonPath("$.thematique", equalTo(regulatoryArea.thematique)))
+            .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$.layer_name", equalTo(regulatoryArea.layer_name)))
             .andExpect(jsonPath("$.ref_reg", equalTo(regulatoryArea.ref_reg)))
-            .andExpect(jsonPath("$.date", equalTo(regulatoryArea.date)))
-            .andExpect(jsonPath("$.temporalite", equalTo(regulatoryArea.temporalite)))
+            .andExpect(jsonPath("$.thematique", equalTo(regulatoryArea.thematique)))
+            .andExpect(jsonPath("$.type", equalTo(regulatoryArea.type)))
+            .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))
     }
 }

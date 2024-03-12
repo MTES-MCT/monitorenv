@@ -76,7 +76,9 @@ export function SearchSemaphores() {
     }).readFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
-    dispatch(setFitToExtent(extent))
+    if (extent) {
+      dispatch(setFitToExtent(extent))
+    }
   }
 
   return (
