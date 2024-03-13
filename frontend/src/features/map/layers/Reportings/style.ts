@@ -264,6 +264,7 @@ const attachedMissionCircleStyle = feature =>
       return missionCenter && new Point(missionCenter)
     },
     image: new Circle({
+      displacement: [0, 23],
       radius: 20,
       stroke: new Stroke({
         color: THEME.color.charcoal,

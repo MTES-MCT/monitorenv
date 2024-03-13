@@ -17,6 +17,7 @@ export const selectedMissionToAttachStyle = new Style({
     return new Point(center)
   },
   image: new Circle({
+    displacement: [0, 23],
     radius: 20,
     stroke: new Stroke({
       color: THEME.color.charcoal,

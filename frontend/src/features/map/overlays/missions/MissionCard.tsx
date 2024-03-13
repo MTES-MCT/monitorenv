@@ -1,5 +1,7 @@
 import { Accent, Button, Icon, IconButton, Size, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
-import { useCallback } from 'react'
+import { Layers } from 'domain/entities/layers/constants'
+import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
@@ -14,8 +16,9 @@ type MissionCardProps = {
   feature: any
   isOnlyHoverable?: boolean
   selected?: boolean
+  updateMargins?: (margin: number) => void
 }
-export function MissionCard({ feature, isOnlyHoverable = false, selected = false }: MissionCardProps) {
+export function MissionCard({ feature, isOnlyHoverable = false, selected = false, updateMargins }: MissionCardProps) {
   const dispatch = useAppDispatch()
   const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
   const listener = useAppSelector(state => state.draw.listener)
@@ -35,6 +38,8 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
     startDateTimeUtc
   } = feature.getProperties()
 
+  const ref = useRef<HTMLDivElement>(null)
+
   const startDate = dayjs(startDateTimeUtc)
   const endDate = dayjs(endDateTimeUtc)
 
@@ -52,14 +57,22 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
 
   const handleCloseOverlay = useCallback(() => {
     dispatch(missionActions.resetSelectedMissionIdOnMap())
+    dispatch(removeOverlayCoordinatesByName(Layers.MISSIONS.code))
   }, [dispatch])
+
+  useEffect(() => {
+    if (feature && ref.current && updateMargins) {
+      const cardHeight = ref.current.offsetHeight
+      updateMargins(cardHeight === 0 ? 200 : cardHeight)
+    }
+  }, [feature, updateMargins])
 
   if (!displayMissionsLayer || listener || isReportingAttachmentInProgress) {
     return null
   }
 
   return (
-    <Wrapper data-cy="mission-overlay">
+    <Wrapper ref={ref} data-cy="mission-overlay">
       <Header>
         <Title>
           {controlUnits?.length === 1 && (

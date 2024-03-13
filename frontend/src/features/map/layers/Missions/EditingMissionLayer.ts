@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useCallback, useEffect, useRef, useMemo } from 'react'
+import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './missions.style'
@@ -13,6 +13,7 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const editingMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
   )
@@ -36,85 +37,72 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
     [displayMissionEditingLayer, isMissionAttachmentInProgress, hasNoMissionDuplication]
   )
 
-  const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetEditingMissionVectorSource = () => {
-    if (editingMissionVectorSourceRef.current === undefined) {
-      editingMissionVectorSourceRef.current = new VectorSource()
-    }
+  const editingMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
+  const editingMissionVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: editingMissionVectorSourceRef.current,
+      style: selectedMissionStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.MISSION_SELECTED.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(editingMissionVectorLayerRef.current as VectorLayerWithName).name = Layers.MISSION_SELECTED.code
 
-    return editingMissionVectorSourceRef.current
-  }
+  const editingMissionActionsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
+  const editingMissionActionsVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: editingMissionActionsVectorSourceRef.current,
+      style: selectedMissionActionsStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.ACTIONS.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(editingMissionActionsVectorLayerRef.current as VectorLayerWithName).name = Layers.ACTIONS.code
 
-  const editingMissionActionsVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetEditingMissionActionsVectorSource = () => {
-    if (editingMissionActionsVectorSourceRef.current === undefined) {
-      editingMissionActionsVectorSourceRef.current = new VectorSource()
-    }
+  useEffect(() => {
+    const feature = editingMissionVectorSourceRef.current.getFeatureById(
+      `${Layers.MISSION_SELECTED.code}:${selectedMissionIdOnMap}`
+    )
 
-    return editingMissionActionsVectorSourceRef.current
-  }
-
-  const editingMissionVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
-  const editingMissionActionsVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
-
-  const GetSelectedMissionVectorLayer = useCallback(() => {
-    if (editingMissionVectorLayerRef.current === undefined) {
-      editingMissionVectorLayerRef.current = new VectorLayer({
-        renderBuffer: 7,
-        source: GetEditingMissionVectorSource(),
-        style: selectedMissionStyle,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Layers.MISSION_SELECTED.zIndex
-      })
-      editingMissionVectorLayerRef.current.name = Layers.MISSION_SELECTED.code
-    }
-
-    return editingMissionVectorLayerRef.current
-  }, [])
-
-  const GetSelectedMissionActionsVectorLayer = useCallback(() => {
-    if (editingMissionActionsVectorLayerRef.current === undefined) {
-      editingMissionActionsVectorLayerRef.current = new VectorLayer({
-        renderBuffer: 7,
-        source: GetEditingMissionActionsVectorSource(),
-        style: selectedMissionActionsStyle,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Layers.ACTIONS.zIndex
-      })
-      editingMissionActionsVectorLayerRef.current.name = Layers.ACTIONS.code
-    }
-
-    return editingMissionActionsVectorLayerRef.current
-  }, [])
+    feature?.setProperties({
+      overlayCoordinates: overlayCoordinates[Layers.MISSIONS.code]
+    })
+  }, [overlayCoordinates, selectedMissionIdOnMap])
 
   useEffect(() => {
     if (map) {
       const layersCollection = map.getLayers()
-      layersCollection.push(GetSelectedMissionVectorLayer())
-      layersCollection.push(GetSelectedMissionActionsVectorLayer())
+      layersCollection.push(editingMissionVectorLayerRef.current)
+      layersCollection.push(editingMissionActionsVectorLayerRef.current)
     }
 
     return () => {
       if (map) {
-        map.removeLayer(GetSelectedMissionVectorLayer())
-        map.removeLayer(GetSelectedMissionActionsVectorLayer())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(editingMissionVectorLayerRef.current)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(editingMissionActionsVectorLayerRef.current)
       }
     }
-  }, [map, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
+  }, [map])
 
   useEffect(() => {
-    GetSelectedMissionVectorLayer()?.setVisible(isLayerVisible)
-    GetSelectedMissionActionsVectorLayer()?.setVisible(isLayerVisible)
-  }, [isLayerVisible, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
+    editingMissionVectorLayerRef.current?.setVisible(isLayerVisible)
+    editingMissionActionsVectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
   useEffect(() => {
-    GetEditingMissionVectorSource()?.clear(true)
-    GetEditingMissionActionsVectorSource()?.clear(true)
+    editingMissionVectorSourceRef.current?.clear(true)
+    editingMissionActionsVectorSourceRef.current?.clear(true)
     if (editingMission) {
-      GetEditingMissionVectorSource()?.addFeature(getMissionZoneFeature(editingMission, Layers.MISSION_SELECTED.code))
-      GetEditingMissionActionsVectorSource()?.addFeatures(getActionsFeatures(editingMission))
+      editingMissionVectorSourceRef.current?.addFeature(
+        getMissionZoneFeature(editingMission, Layers.MISSION_SELECTED.code)
+      )
+      editingMissionActionsVectorSourceRef.current?.addFeatures(getActionsFeatures(editingMission))
     }
   }, [editingMission])
 

@@ -113,7 +113,7 @@ const StyledCoordinatesContainer = styled.div`
   z-index: 2;
 `
 const RadioContainer = styled.div`
-  padding: 6px 12px 12px 12px !important;
+  padding: 12px;
 `
 
 const Header = styled.span`

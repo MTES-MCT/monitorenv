@@ -1,4 +1,5 @@
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
 import { LineString, MultiPoint, MultiPolygon } from 'ol/geom'
@@ -21,7 +22,7 @@ export const missionZoneStyle = new Style({
   })
 })
 
-const missionWithCentroidStyleFactory = (status, type) =>
+const missionWithCentroidStyleFactory = (status, type) => [
   new Style({
     geometry: feature => {
       const extent = feature?.getGeometry()?.getExtent()
@@ -30,11 +31,33 @@ const missionWithCentroidStyleFactory = (status, type) =>
       return center && new Point(center)
     },
     image: new Icon({
-      displacement: [0, 24],
+      displacement: [0, 44],
       scale: 0.5,
       src: `mission/${status}_${type}.png`
     })
+  }),
+  new Style({
+    geometry: feature => {
+      const overlayPostion = feature.get('overlayCoordinates')
+      if (isEmpty(overlayPostion)) {
+        return undefined
+      }
+
+      const extent = feature?.getGeometry()?.getExtent()
+      const center = extent && getCenter(extent)
+      if (!center) {
+        return undefined
+      }
+
+      return new LineString([overlayPostion.coordinates, center])
+    },
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
+    })
   })
+]
 
 export const missionWithCentroidStyleFn = feature => {
   const missionStatus = feature.get('missionStatus') as MissionStatusEnum
@@ -79,28 +102,6 @@ export const selectedMissionControlWithCircleStyle = feature => [
 
 export const selectedMissionActionsStyle = feature => [
   new Style({
-    fill: new Fill({
-      color: 'rgba(86, 151, 210, .35)' // Blue Gray
-    }),
-    image: new Icon({
-      displacement: [0, 14],
-      scale: 1.1,
-      src: 'Control.svg'
-    }),
-    stroke:
-      feature.get('actionType') === ActionTypeEnum.CONTROL && feature.get('isGeometryComputedFromControls')
-        ? new Stroke({
-            color: THEME.color.charcoal,
-            lineCap: 'square',
-            lineDash: [2, 8],
-            width: 4
-          })
-        : new Stroke({
-            color: THEME.color.charcoal,
-            width: 2
-          })
-  }),
-  new Style({
     geometry: () => {
       if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
         return undefined
@@ -143,28 +144,26 @@ export const selectedMissionActionsStyle = feature => [
     })
   }),
   new Style({
-    geometry: () => {
-      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
-        return undefined
-      }
-
-      if (feature.get('actionType') === ActionTypeEnum.CONTROL && !feature.get('isGeometryComputedFromControls')) {
-        return undefined
-      }
-
-      return undefined
-    },
+    fill: new Fill({
+      color: 'rgba(86, 151, 210, .35)' // Blue Gray
+    }),
     image: new Icon({
-      displacement: [0, 14],
+      displacement: [0, 16],
       scale: 1.1,
       src: 'Control.svg'
     }),
-    stroke: new Stroke({
-      color: THEME.color.charcoal,
-      lineCap: 'square',
-      lineDash: [2, 8],
-      width: 4
-    })
+    stroke:
+      feature.get('actionType') === ActionTypeEnum.CONTROL && feature.get('isGeometryComputedFromControls')
+        ? new Stroke({
+            color: THEME.color.charcoal,
+            lineCap: 'square',
+            lineDash: [2, 8],
+            width: 4
+          })
+        : new Stroke({
+            color: THEME.color.charcoal,
+            width: 2
+          })
   })
 ]
 
@@ -224,7 +223,7 @@ const missionCircleStyle = feature => {
       return center && new Point(center)
     },
     image: new Circle({
-      displacement: [0, 14],
+      displacement: [0, 23],
       radius: 20,
       stroke: new Stroke({
         color: THEME.color.charcoal,
@@ -236,7 +235,7 @@ const missionCircleStyle = feature => {
 
 export const selectedMissionStyle = feature => [
   selectedMissionZoneStyle,
-  missionWithCentroidStyleFn(feature),
+  ...missionWithCentroidStyleFn(feature),
   ...missionToReportingsLinkStyle(feature),
   missionCircleStyle(feature)
 ]

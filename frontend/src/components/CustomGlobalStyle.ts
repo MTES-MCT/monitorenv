@@ -67,4 +67,8 @@ html {
     }
   }
   
+
+  .rs-radio-checker {
+    line-height: normal !important;
+  }
 `
