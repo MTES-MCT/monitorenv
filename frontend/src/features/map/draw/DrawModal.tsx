@@ -201,6 +201,7 @@ export function DrawModal() {
             isLabelHidden
             isLight
             label="Coordonées"
+            name="coordinates"
             onChange={handleSelectCoordinates}
           />
         </CoordinatesInputWrapper>

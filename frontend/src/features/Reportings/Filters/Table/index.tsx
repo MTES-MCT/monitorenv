@@ -1,12 +1,4 @@
-import {
-  CheckPicker,
-  DateRangePicker,
-  useNewWindow,
-  Checkbox,
-  Icon,
-  CustomSearch,
-  type Option
-} from '@mtes-mct/monitor-ui'
+import { CheckPicker, DateRangePicker, Checkbox, Icon, CustomSearch, type Option } from '@mtes-mct/monitor-ui'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -39,8 +31,6 @@ export function TableReportingsFiltersWithRef(
   },
   ref
 ) {
-  const { newWindowContainerRef } = useNewWindow()
-
   const {
     hasFilters,
     isAttachedToMissionFilter,
@@ -55,7 +45,7 @@ export function TableReportingsFiltersWithRef(
     subThemesFilter = [],
     targetTypeFilter = [],
     themeFilter = [],
-    typeFilter = []
+    typeFilter = undefined
   } = useAppSelector(state => state.reportingFilters)
   const {
     dateRangeOptions,
@@ -141,7 +131,6 @@ export function TableReportingsFiltersWithRef(
         </StyledFiltersFirstLine>
         <StyledFiltersSecondLine>
           <StyledSelect
-            baseContainer={newWindowContainerRef.current}
             cleanable={false}
             data-cy="select-period-filter"
             isLabelHidden
@@ -179,17 +168,17 @@ export function TableReportingsFiltersWithRef(
             options={sourceOptions}
             optionValueKey={'label' as any}
             placeholder="Source"
+            popupWidth={300}
             renderValue={() => sourceFilter && <OptionValue>{`Source (${sourceFilter.length})`}</OptionValue>}
             style={tagPickerStyle}
             value={sourceFilter as any}
           />
 
           <StyledSelect
-            baseContainer={newWindowContainerRef.current}
             data-cy="select-type-filter"
             isLabelHidden
             label="Type de signalement"
-            name="type"
+            name="Type"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TYPE_FILTER)}
             options={typeOptions}
             placeholder="Type de signalement"
@@ -220,8 +209,9 @@ export function TableReportingsFiltersWithRef(
             onChange={value => updateThemeFilter(value)}
             options={themesOptions}
             placeholder="Thématiques"
+            popupWidth={286}
             renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
-            style={{ width: 311 }}
+            style={{ width: 310 }}
             value={themeFilter}
           />
           <CheckPicker
@@ -234,9 +224,10 @@ export function TableReportingsFiltersWithRef(
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
             options={subThemesOptions}
             placeholder="Sous-thématiques"
+            popupWidth={286}
             renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
             searchable
-            style={{ width: 311 }}
+            style={{ width: 310 }}
             value={subThemesFilter}
           />
           <CheckPicker
@@ -259,7 +250,6 @@ export function TableReportingsFiltersWithRef(
             <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
             <DateRangePicker
               key="dateRange"
-              baseContainer={newWindowContainerRef.current}
               data-cy="datepicker-missionStartedAfter"
               defaultValue={
                 startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
@@ -267,6 +257,7 @@ export function TableReportingsFiltersWithRef(
               isLabelHidden
               isStringDate
               label="Date de début entre le et le"
+              name="dateRange"
               onChange={updateDateRangeFilter}
             />
           </StyledCustomPeriodContainer>

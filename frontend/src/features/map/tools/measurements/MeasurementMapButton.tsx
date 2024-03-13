@@ -1,4 +1,4 @@
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -83,35 +83,31 @@ export function MeasurementMapButton() {
 
       <MeasurementOptions healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
         <MeasurementItem
+          className="_active"
           data-cy="measurement-multiline"
+          Icon={() => Icon.MeasureBrokenLine({ size: 28 })}
           onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
           title={"Mesure d'une distance avec lignes brisées"}
-        >
-          <Icon.MeasureBrokenLine color={THEME.color.gainsboro} size={25} />
-        </MeasurementItem>
+        />
         <MeasurementItem
+          className="_active"
           data-cy="measurement-circle-range"
+          Icon={() => Icon.MeasureCircle({ size: 28 })}
           onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
           title={"Rayon d'action"}
-        >
-          <Icon.MeasureCircle color={THEME.color.gainsboro} size={25} />
-        </MeasurementItem>
+        />
       </MeasurementOptions>
       <CustomCircleRange />
     </ButtonWrapper>
   )
 }
 
-const MeasurementItem = styled.div`
+const MeasurementItem = styled(IconButton)`
   background: ${p => p.theme.color.blueGray};
-  border-radius: 2px;
   cursor: pointer;
   float: right;
-  height: 40px;
   margin-left: 5px;
   position: relative;
-  width: 40px;
-  padding: 8px;
 `
 
 const MeasurementOptions = styled(MapComponentStyle)<{

@@ -1,4 +1,4 @@
-import { Accent, FieldError, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 
 import { ControlCard } from './ControlCard'
 import { NoteCard } from './NoteCard'
@@ -99,8 +99,6 @@ export function ActionCards({
               </TagsContainer>
             )}
           </ActionSummaryWrapper>
-
-          {hasError && <FieldError>Veuillez compléter les champs manquants dans cette action</FieldError>}
         </Card>
       )}
     </Action>

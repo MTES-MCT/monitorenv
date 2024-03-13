@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as Yup from 'yup'
 
-import { ControlPlansSchema } from './ControlPlans'
+import { ClosedControlPlansSchema } from './ControlPlans'
 import { ActionTypeEnum, type EnvActionSurveillance } from '../../../../domain/entities/missions'
 import { isCypress } from '../../../../utils/isCypress'
 
@@ -35,7 +35,7 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
         .min(Yup.ref('actionStartDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
       actionStartDateTimeUtc: Yup.date()
         .nullable()
-        .required('Date de début requise')
+        .required('_')
         .test({
           message: 'La date de début doit être postérieure à celle de début de mission',
           test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
@@ -60,7 +60,7 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
     .shape({
       actionEndDateTimeUtc: Yup.date()
         .nullable()
-        .required('Date de fin requise')
+        .required('_')
         .test({
           message: 'La date de fin doit être postérieure à celle de début de mission',
           test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
@@ -78,7 +78,7 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
         .min(Yup.ref('actionStartDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
       actionStartDateTimeUtc: Yup.date()
         .nullable()
-        .required('Date de début requise')
+        .required('_')
         .test({
           message: 'La date de début doit être postérieure à celle de début de mission',
           test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
@@ -94,7 +94,7 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
-      controlPlans: Yup.array().of(ControlPlansSchema).ensure().required(),
+      controlPlans: Yup.array().ensure().of(ClosedControlPlansSchema).ensure().required().min(1),
       geom: Yup.object().when('coverMissionZone', {
         is: true,
         otherwise: () =>

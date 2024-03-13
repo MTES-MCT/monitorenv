@@ -81,7 +81,7 @@ export function FilterBar() {
       <TextInput
         Icon={Icon.Search}
         isLabelHidden
-        isLight
+        isTransparent
         label="Rechercher une unité"
         name="query"
         onChange={updateQuery}
@@ -91,7 +91,7 @@ export function FilterBar() {
       />
       <Select
         isLabelHidden
-        isLight
+        isTransparent
         label="Administration"
         name="administrationId"
         onChange={updateAdministrationId}
@@ -102,7 +102,7 @@ export function FilterBar() {
       />
       <Select
         isLabelHidden
-        isLight
+        isTransparent
         label="Type de moyen"
         name="type"
         onChange={updateType}
@@ -113,7 +113,7 @@ export function FilterBar() {
       />
       <Select
         isLabelHidden
-        isLight
+        isTransparent
         label="Base du moyen"
         name="stationId"
         onChange={updateBaseId}

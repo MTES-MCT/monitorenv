@@ -22,7 +22,7 @@ export function Validity({ reporting }: { reporting: Reporting }) {
   return (
     <StyledValidityContainer>
       <div>
-        <TextInput label="Date et heure (UTC)" name="createdAt" plaintext value={formattedCreatedAt} />
+        <TextInput label="Date et heure" name="createdAt" plaintext value={formattedCreatedAt} />
         <TextInput
           label="Validité&nbsp;(h)"
           name="validityTime"
@@ -35,13 +35,11 @@ export function Validity({ reporting }: { reporting: Reporting }) {
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft > 0 && timeLeft < 1) ||
         (timeLeft > 0 && timeLeft < 1)) && (
-        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (UTC) (dans ${remainingMinutes}min)`}</GrayText>
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (dans ${remainingMinutes}min)`}</GrayText>
       )}
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft >= 1) || timeLeft >= 1) && (
-        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (UTC) (dans ${Math.round(
-          timeLeft
-        )}h)`}</GrayText>
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity}(dans ${Math.round(timeLeft)}h)`}</GrayText>
       )}
     </StyledValidityContainer>
   )

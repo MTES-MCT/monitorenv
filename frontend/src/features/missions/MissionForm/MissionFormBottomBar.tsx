@@ -55,14 +55,17 @@ export function MissionFormBottomBar({
       )}
       <Separator />
       <MissionInfos>
-        {!values?.createdAtUtc && <>Mission non enregistrée.</>}
-        {values?.createdAtUtc && (
-          <>
-            Mission créée par le {missionSourceEnum[values?.missionSource]?.label} le{' '}
-            {customDayjs(values.createdAtUtc).utc().format('DD/MM/YYYY à HH:mm')} (UTC).
-          </>
-        )}
-        {values?.updatedAtUtc && <> Dernière modification enregistrée {formattedUpdatedDate}.</>}
+        <span>
+          {!values?.createdAtUtc && <>Mission non enregistrée.</>}
+          {values?.createdAtUtc && (
+            <>
+              Mission créée par le {missionSourceEnum[values?.missionSource]?.label} le{' '}
+              {customDayjs(values.createdAtUtc).utc().format('DD/MM/YYYY à HH[h]mm')}.
+            </>
+          )}
+          {values?.updatedAtUtc && <> Dernière modification enregistrée {formattedUpdatedDate}.</>}
+        </span>
+        <span> Toutes les dates et heures sont en UTC</span>
       </MissionInfos>
       <Separator />
       <StyledButtonsContainer>
@@ -111,6 +114,9 @@ export function MissionFormBottomBar({
 const MissionInfos = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-style: italic;
+  > span:first-child {
+    font-weight: bold;
+  }
 `
 
 const Separator = styled.div`

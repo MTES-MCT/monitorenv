@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -52,17 +52,17 @@ export function MissionsMenu() {
   return (
     <ButtonWrapper topPosition={82}>
       {isSearchMissionsVisible && (
-        <MenuWithCloseButton.Container>
-          <MenuWithCloseButton.Header>
-            <MenuWithCloseButton.CloseButton Icon={Icon.Close} onClick={toggleMissionsMenu} />
-            <MenuWithCloseButton.Title>Missions et contrôles</MenuWithCloseButton.Title>
-            <MenuWithCloseButton.VisibilityButton
+        <MapMenuDialog.Container>
+          <MapMenuDialog.Header>
+            <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={toggleMissionsMenu} />
+            <MapMenuDialog.Title>Missions et contrôles</MapMenuDialog.Title>
+            <MapMenuDialog.VisibilityButton
               accent={Accent.SECONDARY}
               Icon={displayMissionsLayer ? Icon.Display : Icon.Hide}
               onClick={toggleMissionsLayer}
             />
-          </MenuWithCloseButton.Header>
-          <MenuWithCloseButton.Footer>
+          </MapMenuDialog.Header>
+          <MapMenuDialog.Footer>
             <StyledButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
               Ajouter une nouvelle mission
             </StyledButton>
@@ -70,8 +70,8 @@ export function MissionsMenu() {
             <StyledButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
               Voir la vue détaillée des missions
             </StyledButton>
-          </MenuWithCloseButton.Footer>
-        </MenuWithCloseButton.Container>
+          </MapMenuDialog.Footer>
+        </MapMenuDialog.Container>
       )}
       <MenuWithCloseButton.ButtonOnMap
         className={isMissionButtonIsActive ? '_active' : undefined}

@@ -55,12 +55,12 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
     cy.clickButton('missions')
     cy.clickButton('Ajouter une nouvelle mission')
 
-    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
 
     cy.get('[name="missionTypes0"]').click({ force: true })
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('BN Toulon{enter}')
+    cy.fill('Unité 1', 'BN Toulon')
+
     cy.get('*[data-cy="control-unit-contact"]').first().type('Contact 012345')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')

@@ -16,34 +16,25 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.get('*[data-cy="add-mission"]').click()
     cy.wait(500)
 
-    cy.contains('Date de fin requise').should('exist')
-    cy.contains('Type de mission').should('exist')
-    cy.contains('Administration requise').should('exist')
-    cy.contains('Unité requise').should('exist')
-    cy.contains("Trigramme d'ouverture requis").should('exist')
-
     // we fill all the required inputs
-    cy.fill('Début de mission (UTC)', [2023, 10, 11, 7, 35])
+    cy.fill('Début de mission', [2023, 10, 11, 7, 35])
     cy.wait(250)
-    cy.fill('Fin de mission (UTC)', [customDayjs().year() + 1, 10, 12, 7, 35])
+    cy.fill('Fin de mission', [customDayjs().year() + 1, 10, 12, 7, 35])
     cy.wait(250)
     cy.fill('Type de mission', ['Air'])
     cy.wait(250)
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.wait(250)
-    cy.get('.rs-picker-search-bar-input').type('Cross Gris{enter}')
+    cy.fill('Unité 1', 'Cross Gris Nez')
     cy.clickOutside()
     cy.wait(250)
-    cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()
+    cy.fill("Contact de l'unité 1", 'contact')
     cy.wait(250)
-    cy.fill('Ouvert par', 'PCF').scrollIntoView()
+    cy.fill('Ouvert par', 'PCF')
     cy.wait(1000)
 
     cy.clickButton('Clôturer')
     cy.wait(500)
 
-    cy.contains('Trigramme de clôture requis').should('exist')
-    cy.fill('Clôturé par', 'PCF').scrollIntoView()
+    cy.fill('Clôturé par', 'PCF')
     cy.wait(500)
 
     // we add a control
@@ -51,9 +42,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.clickButton('Ajouter des contrôles')
     cy.wait(250)
 
-    cy.contains('Thème requis').should('exist')
-    cy.contains('Sous-thématique requise').should('exist')
-    cy.contains('Date requise').should('exist')
     // can't test this one because there is map interaction
     // cy.contains('Point de contrôle requis').should('exist')
 
@@ -66,10 +54,10 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
-    cy.fill('Date et heure du contrôle (UTC)', [2023, 10, 11, 12, 12])
+    cy.fill('Date et heure du contrôle', [2023, 10, 11, 12, 12])
     cy.wait(250)
 
-    cy.fill('Nombre total de contrôles', '2')
+    cy.fill('Nombre total de contrôles', 2)
     cy.wait(250)
     cy.fill('Type de cible', 'Personne morale')
     cy.wait(250)
@@ -103,7 +91,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
     cy.wait(250)
-    cy.contains('Thème requis').should('exist')
 
     cy.fill('Thématique de surveillance', 'Rejets illicites')
     cy.wait(250)
@@ -127,43 +114,30 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.get('*[data-cy="add-mission"]').click()
     cy.wait(500)
 
-    cy.contains('Date de fin requise').should('exist')
-    cy.contains('Type de mission').should('exist')
-    cy.contains('Administration requise').should('exist')
-    cy.contains('Unité requise').should('exist')
-    cy.contains("Trigramme d'ouverture requis").should('exist')
-
     // we fill all the required inputs
-    cy.fill('Début de mission (UTC)', [2023, 10, 11, 7, 35])
+    cy.fill('Début de mission', [2023, 10, 11, 7, 35])
     cy.wait(250)
-    cy.fill('Fin de mission (UTC)', [2023, 10, 12, 7, 35])
+    cy.fill('Fin de mission', [2023, 10, 12, 7, 35])
     cy.wait(250)
     cy.fill('Type de mission', ['Air'])
     cy.wait(250)
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.wait(250)
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.fill('Unité 1', 'Cross Etel')
     cy.clickOutside()
     cy.wait(250)
-    cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()
+    cy.fill("Contact de l'unité 1", 'contact')
     cy.wait(250)
-    cy.fill('Ouvert par', 'PCF').scrollIntoView()
+    cy.fill('Ouvert par', 'PCF')
 
     cy.wait(500)
     cy.clickButton('Clôturer')
     cy.wait(250)
-    cy.contains('Trigramme de clôture requis').should('exist')
-    cy.wait(250)
-    cy.fill('Clôturé par', 'PCF').scrollIntoView()
+    cy.fill('Clôturé par', 'PCF')
 
     // we add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
     cy.wait(250)
 
-    cy.contains('Thème requis').should('exist')
-    cy.contains('Sous-thématique requise').should('exist')
-    cy.contains('Date requise').should('exist')
     // can't test this one because there is map interaction
     // cy.contains('Point de contrôle requis').should('exist')
 
@@ -176,10 +150,10 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
-    cy.fill('Date et heure du contrôle (UTC)', [2023, 10, 11, 12, 12])
+    cy.fill('Date et heure du contrôle', [2023, 10, 11, 12, 12])
     cy.wait(250)
 
-    cy.fill('Nombre total de contrôles', '2')
+    cy.fill('Nombre total de contrôles', 2)
     cy.wait(250)
     cy.fill('Type de cible', 'Personne morale')
     cy.wait(250)
@@ -213,7 +187,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
     cy.wait(250)
-    cy.contains('Thème requis').should('exist')
 
     cy.fill('Thématique de surveillance', 'Rejets illicites')
     cy.wait(250)

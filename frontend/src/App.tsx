@@ -1,4 +1,5 @@
 import { AlertUnsupportedBrowser } from '@components/AlertUnsupportedBrowser'
+import { CustomGlobalStyle } from '@components/CustomGlobalStyle'
 import { ToastNotification } from '@components/ToastNotification'
 import { SideWindow } from '@features/SideWindow'
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
@@ -30,6 +31,8 @@ export function App() {
   return (
     <ThemeProvider theme={THEME}>
       <OnlyFontGlobalStyle />
+      <CustomGlobalStyle />
+
       <RsuiteCustomProvider disableRipple locale={FR_FR_LOCALE}>
         <ReduxProvider store={homeStore}>
           <PersistGate loading={undefined} persistor={persistor}>

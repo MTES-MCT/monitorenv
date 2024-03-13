@@ -18,31 +18,28 @@
 .ol-control button:hover,
 .ol-control button:focus {
   background-color: #3b4559;
-  border-radius: 2px;
+  border-radius: 0px;
   font-size: 15px;
   padding-bottom: 5px;
 }
 
 .ol-scale-line {
-  box-sizing: content-box;
+  border-radius: 0px;
   position: absolute;
   bottom: 10px;
   left: 282px;
   display: inline-block;
   margin: 1px;
-  padding: 2px 0 5px 2px;
+  padding: 1px 0px 1px 2px;
   color: white;
   font-size: 0.9em;
   text-decoration: none;
   text-align: center;
-  height: 18px;
   background-color: #3b4559;
-  border: none;
-  border-radius: 2px;
 }
 
 .ol-scale-line-inner {
-  margin: 3px 4px 4px 2px;
+  margin: 3px 3px 3px 2px;
   line-height: 11px;
   padding-bottom: 4px;
 }

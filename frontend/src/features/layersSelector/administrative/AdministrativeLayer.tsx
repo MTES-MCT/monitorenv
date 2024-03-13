@@ -35,19 +35,15 @@ const LayerName = styled.span`
 `
 
 const Row = styled.span<{ $isGrouped: boolean }>`
-  margin-top: 0px;
-  padding: ${props => (props.$isGrouped ? '4px 16px 3px 20px' : '4px 16px 4px 20px')};
+  padding: ${props => (props.$isGrouped ? '5px 16px 6px 20px' : '6px 16px 6px 20px')};
   padding-left: ${props => (props.$isGrouped ? '38px' : '20px')};
-  line-height: 18px;
   display: flex;
   user-select: none;
-  font-size: 13px;
   font-weight: 500;
   width: 100%;
   width: -moz-available;
   width: -webkit-fill-available;
   width: stretch;
-  min-height: 36px;
 
   :hover {
     background: ${p => p.theme.color.blueYonder25};

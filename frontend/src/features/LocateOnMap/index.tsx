@@ -32,13 +32,14 @@ export function LocateOnMap() {
         data-cy="location-search-input"
         isLabelHidden
         isLight
-        isSearchIconVisible={false}
+        isSearchIconHidden
         label="Rechercher un lieu"
         name="search-place"
         onChange={handleSelectLocation}
         onQuery={setSearchedLocation}
         options={results}
         placeholder="rechercher un lieu (port, lieu-dit, baie...)"
+        size={Size.LARGE}
       />
       <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} />
     </Wrapper>

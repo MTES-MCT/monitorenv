@@ -79,7 +79,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findAll Should return missions when filered by controlUnit`() {
+    fun `findAll Should return missions when filtered by controlUnit`() {
         // When
         val missions =
             jpaMissionRepository.findAllFullMissions(
@@ -94,7 +94,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
-        assertThat(missions).hasSize(27)
+        assertThat(missions).hasSize(26)
     }
 
     @Test
@@ -380,7 +380,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findByControlUnitId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
-        assertThat(foundMissions).hasSize(17)
+        assertThat(foundMissions).hasSize(16)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")

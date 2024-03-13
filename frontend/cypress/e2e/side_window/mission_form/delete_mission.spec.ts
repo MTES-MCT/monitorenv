@@ -97,7 +97,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
       cy.fill('Clôturé par', 'PCF')
 
       cy.wait(500)
-      cy.waitForLastRequest('@updateMission', {}, 5, undefined, missionResponse => {
+      cy.waitForLastRequest('@updateMission', {}, 5, 0, missionResponse => {
         const attachedReportingId = missionResponse.body.attachedReportingIds[0]
 
         cy.intercept({ method: 'GET', url: '/bff/v1/missions/34/can_delete?source=MONITORENV' }).as('canDeleteMission')

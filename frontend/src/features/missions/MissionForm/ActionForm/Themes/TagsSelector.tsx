@@ -1,4 +1,4 @@
-import { MultiSelect, useNewWindow, type Option } from '@mtes-mct/monitor-ui'
+import { MultiSelect, type Option } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 
 import { type Mission } from '../../../../../domain/entities/missions'
@@ -11,7 +11,6 @@ type TagsSelectorProps = {
 }
 export function TagsSelector({ actionIndex, tags, themeIndex }: TagsSelectorProps) {
   const [currentTagsField] = useField<number[]>(`envActions[${actionIndex}].controlPlans[${themeIndex}].tagIds`)
-  const { newWindowContainerRef } = useNewWindow()
   const { setFieldValue } = useFormikContext<Mission>()
 
   const handleUpdateTags = nextTags => {
@@ -21,7 +20,6 @@ export function TagsSelector({ actionIndex, tags, themeIndex }: TagsSelectorProp
   return (
     <MultiSelect
       key={`${actionIndex}-${themeIndex}`}
-      baseContainer={newWindowContainerRef.current}
       data-cy="envaction-tags-selector"
       isLight
       label="Précisions sur la thématique"

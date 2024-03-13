@@ -26,21 +26,20 @@ context('Side Window > Mission Form > Main Form', () => {
     //  cy.get('div').contains('Mission non enregistrée.')
     cy.get('.Element-Tag').contains('Enregistrement auto. actif')
     // When
-    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
+    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
 
     // with wrong end date of mission
-    cy.fill('Fin de mission (UTC)', [2024, 5, 25, 14, 15])
+    cy.fill('Fin de mission', [2024, 5, 25, 14, 15])
     cy.get('form').submit()
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à la date de début')
 
     // with good date
-    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.fill('Unité 1', 'Cross Etel')
     cy.clickOutside()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
@@ -95,22 +94,20 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.wait(100)
     cy.get('.Element-Tag').contains('Enregistrement auto. inactif')
     // When
-    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
+    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
 
     // with wrong end date of mission
-    cy.fill('Fin de mission (UTC)', [2024, 5, 25, 14, 15])
+    cy.fill('Fin de mission', [2024, 5, 25, 14, 15])
     cy.get('form').submit()
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à la date de début')
 
     // with good date
-    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
-    cy.clickOutside()
+    cy.fill('Unité 1', 'Cross Etel')
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
@@ -264,8 +261,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     // When
     cy.get('*[data-cy="add-mission"]').click()
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Jeanne{enter}')
+    cy.fill('Unité 1', 'PAM Jeanne Barret')
     cy.wait('@getEngagedControlUnits')
 
     // Then
@@ -285,14 +281,13 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('*[data-cy="add-mission"]').click()
 
-    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
 
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type('Jeanne{enter}')
+    cy.fill('Unité 1', 'PAM Jeanne Barret')
     cy.wait('@getEngagedControlUnits')
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
 
@@ -302,8 +297,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // we want to test with a second engaged control unit
     cy.getDataCy('add-other-control-unit').should('not.be.disabled')
     cy.clickButton('Ajouter une autre unité')
-    cy.get('*[data-cy="add-control-unit"]').last().click()
-    cy.get('.rs-picker-search-bar-input').last().type('DML 2A{enter}')
+    cy.fill('Unité 2', 'DML 2A')
     cy.wait(200)
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
     cy.clickButton('Oui, la conserver')
@@ -465,7 +459,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     // We do that manually to keep the existing "Voiture" resource which is an archived one.
     cy.intercept('PUT', '/bff/v1/missions/30').as('updateMission')
-    cy.contains('Moyen(s) 1').parent().find('.rs-picker-toggle-caret').forceClick().wait(250)
+    cy.contains('Moyen(s) 1').parent().find('.rs-picker-caret-icon').forceClick().wait(250)
     cy.get('span[title="Semi-rigide 1"]').forceClick().wait(250)
     cy.clickOutside()
     cy.wait(250)
@@ -515,7 +509,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait('@getMission')
 
-    cy.contains('Moyen(s) 1').parent().find('.rs-picker-toggle-caret').forceClick().wait(250)
+    cy.contains('Moyen(s) 1').parent().find('.rs-picker-caret-icon').forceClick().wait(250)
     cy.get('span[title="Semi-rigide 1"]').forceClick().wait(250) // Uncheck this resource
     cy.clickOutside()
     cy.wait(250)

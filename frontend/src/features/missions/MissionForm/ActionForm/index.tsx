@@ -2,7 +2,7 @@ import { useField } from 'formik'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import { ControlForm } from './ControlForm/ControlForm'
+import { ControlForm } from './ControlForm'
 import { NoteForm } from './NoteForm'
 import { ReportingForm } from './ReportingForm'
 import { SurveillanceForm } from './SurveillanceForm'

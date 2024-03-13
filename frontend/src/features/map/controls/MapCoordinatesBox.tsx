@@ -137,7 +137,7 @@ const CoordinatesTypeSelection = styled.span<{ isOpen: boolean }>`
   color: ${p => p.theme.color.slateGray};
   text-align: center;
   background-color: ${p => p.theme.color.white};
-  width: 237px;
+  width: 234px;
   opacity: ${props => (props.isOpen ? 1 : 0)};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
   height: ${props => (props.isOpen ? 69 : 0)}px;
@@ -146,15 +146,13 @@ const CoordinatesTypeSelection = styled.span<{ isOpen: boolean }>`
 `
 
 const Coordinates = styled.span`
-  box-sizing: content-box;
   position: absolute;
   bottom: 11px;
   left: 40px;
   display: inline-block;
-  padding: 2px 0 6px 2px;
+  padding: 3px 0px 3px 2px;
   color: ${p => p.theme.color.gainsboro};
   text-align: center;
-  height: 17px;
   background-color: ${p => p.theme.color.charcoal};
   width: 235px;
   cursor: pointer;

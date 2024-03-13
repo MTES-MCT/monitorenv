@@ -1,4 +1,4 @@
-import { Accent, CustomSearch, Icon, Search } from '@mtes-mct/monitor-ui'
+import { Accent, CustomSearch, Icon, MapMenuDialog, Search, Size } from '@mtes-mct/monitor-ui'
 import { reduce } from 'lodash'
 import { GeoJSON } from 'ol/format'
 import { useRef, useState } from 'react'
@@ -11,7 +11,6 @@ import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
 import type { Semaphore } from '../../../domain/entities/semaphore'
 
@@ -82,17 +81,17 @@ export function SearchSemaphores() {
   }
 
   return (
-    <MenuWithCloseButton.Container>
-      <MenuWithCloseButton.Header>
-        <MenuWithCloseButton.CloseButton Icon={Icon.Close} onClick={closeSearchSemaphore} />
-        <MenuWithCloseButton.Title>Sémaphores</MenuWithCloseButton.Title>
+    <MapMenuDialog.Container>
+      <MapMenuDialog.Header>
+        <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeSearchSemaphore} />
+        <MapMenuDialog.Title>Sémaphores</MapMenuDialog.Title>
 
-        <MenuWithCloseButton.VisibilityButton
+        <MapMenuDialog.VisibilityButton
           accent={Accent.SECONDARY}
           Icon={displaySemaphoresLayer ? Icon.Display : Icon.Hide}
           onClick={setSemaphoreVisibilityOnMap}
         />
-      </MenuWithCloseButton.Header>
+      </MapMenuDialog.Header>
 
       <StyledSearch
         customSearch={customSearchRef.current}
@@ -106,6 +105,7 @@ export function SearchSemaphores() {
         options={optionsRef.current}
         optionValueKey={'name' as any}
         placeholder="Rechercher un sémaphore"
+        size={Size.LARGE}
       />
 
       {isSemaphoresHistoryVisible && (
@@ -118,7 +118,7 @@ export function SearchSemaphores() {
           ))}
         </StyledRegisteredSemaphoreList>
       )}
-    </MenuWithCloseButton.Container>
+    </MapMenuDialog.Container>
   )
 }
 

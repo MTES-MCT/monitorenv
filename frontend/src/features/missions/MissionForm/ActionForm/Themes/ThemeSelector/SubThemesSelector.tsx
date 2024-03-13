@@ -1,4 +1,4 @@
-import { MultiSelect, useNewWindow, type Option } from '@mtes-mct/monitor-ui'
+import { MultiSelect, type Option } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
@@ -25,7 +25,6 @@ export function SubThemesSelector({
   themeId,
   themeIndex
 }: SubThemesSelectorProps) {
-  const { newWindowContainerRef } = useNewWindow()
   const { setFieldValue } = useFormikContext<Mission>()
   const [currentSubThemesField, currentSubThemesProps] = useField<number[]>(
     `envActions[${actionIndex}].controlPlans[${themeIndex}].subThemeIds`
@@ -50,10 +49,10 @@ export function SubThemesSelector({
         <MultiSelect
           // force update when name or theme changes
           key={`${actionIndex}-${themeId}-${subThemes.length}`}
-          baseContainer={newWindowContainerRef.current}
           data-cy="envaction-subtheme-selector"
           disabled={!themeId}
           error={currentSubThemesProps.error}
+          isErrorMessageHidden
           isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}

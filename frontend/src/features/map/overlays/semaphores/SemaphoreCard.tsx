@@ -12,7 +12,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
-import type { OverlayTriggerType } from 'rsuite/esm/Overlay/OverlayTrigger'
+import type { OverlayTriggerType } from 'rsuite/esm/internals/Overlay/OverlayTrigger'
 
 const PHONE_TOOLTIP_STATE = {
   click: {

@@ -92,13 +92,16 @@ export function MultiZonePicker({
 
   return (
     <Field>
-      {label && <Label hasError={!!meta.error}>{label}</Label>}
+      {label && <Label>{label}</Label>}
 
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
+      <Button
+        accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
+        Icon={Icon.Plus}
+        isFullWidth
+        onClick={handleAddZone}
+      >
         {addButtonLabel}
       </Button>
-
-      {!!meta.error && <ErrorMessage>{meta.error}</ErrorMessage>}
 
       <>
         {polygons.map((polygonCoordinates, index) => (
@@ -170,9 +173,4 @@ const ZoneWrapper = styled.div<{
   font-size: 13px;
   justify-content: space-between;
   padding: 4px 8px 4px;
-`
-
-const ErrorMessage = styled.div`
-  color: ${p => p.theme.color.maximumRed};
-  font: italic normal normal 13px/18px Marianne;
 `

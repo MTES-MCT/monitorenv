@@ -3,7 +3,6 @@ import {
   customDayjs,
   DateRangePicker,
   type DateAsStringRange,
-  useNewWindow,
   getOptionsFromIdAndName,
   CheckPicker,
   getOptionsFromLabelledEnum,
@@ -28,7 +27,6 @@ import { isNotArchived } from '../../../../utils/isNotArchived'
 
 export function MissionsTableFilters() {
   const dispatch = useAppDispatch()
-  const { newWindowContainerRef } = useNewWindow()
   const {
     hasFilters,
     selectedAdministrationNames,
@@ -171,7 +169,6 @@ export function MissionsTableFilters() {
     <>
       <FilterWrapper ref={unitPickerRef}>
         <StyledSelect
-          baseContainer={newWindowContainerRef.current}
           cleanable={false}
           data-cy="select-period-filter"
           isLabelHidden
@@ -185,7 +182,6 @@ export function MissionsTableFilters() {
         />
 
         <StyledSelect
-          baseContainer={newWindowContainerRef.current}
           data-cy="select-origin-filter"
           isLabelHidden
           label="Origine"
@@ -200,11 +196,11 @@ export function MissionsTableFilters() {
           data-cy="select-administration-filter"
           isLabelHidden
           label="Administration"
-          menuStyle={{ maxWidth: '200%' }}
           name="administration"
           onChange={onUpdateAdministrationFilter as any}
           options={activeAdministrations || []}
           placeholder="Administration"
+          popupWidth={300}
           renderValue={() =>
             selectedAdministrationNames && (
               <OptionValue>{`Administration (${selectedAdministrationNames.length})`}</OptionValue>
@@ -220,11 +216,11 @@ export function MissionsTableFilters() {
           data-cy="select-units-filter"
           isLabelHidden
           label="Unité"
-          menuStyle={{ maxWidth: '200%' }}
           name="controlUnit"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
           options={controlUnitsAsOptions as any}
           placeholder="Unité"
+          popupWidth={300}
           renderValue={() =>
             selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
           }
@@ -249,7 +245,6 @@ export function MissionsTableFilters() {
           data-cy="select-seaFronts-filter"
           isLabelHidden
           label="Facade"
-          menuStyle={{ maxWidth: '150%' }}
           name="seaFront"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
           options={seaFrontsAsOptions}
@@ -275,11 +270,11 @@ export function MissionsTableFilters() {
           data-cy="select-theme-filter"
           isLabelHidden
           label="Thématique"
-          menuStyle={{ maxWidth: '200%' }}
           name="theme"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
           options={themesAsOptions}
           placeholder="Thématique"
+          popupWidth={300}
           renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
           style={tagPickerStyle}
           value={selectedThemes}
@@ -290,13 +285,13 @@ export function MissionsTableFilters() {
           <StyledCustomPeriodContainer>
             <DateRangePicker
               key="dateRange"
-              baseContainer={newWindowContainerRef.current}
               data-cy="datepicker-missionStartedAfter"
               defaultValue={
                 startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
               }
               isStringDate
               label="Période spécifique"
+              name="missionDateRange"
               onChange={onUpdateDateRangeFilter}
             />
           </StyledCustomPeriodContainer>
@@ -332,7 +327,7 @@ const ResetFiltersButton = styled.div`
   }
 `
 
-const tagPickerStyle = { width: 160 }
+const tagPickerStyle = { width: 165 }
 
 const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,

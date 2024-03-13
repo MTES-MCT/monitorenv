@@ -49,9 +49,7 @@ export function LayerFilters({
             <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
           )
         }
-        size="sm"
         value={filteredRegulatoryThemes}
-        valueKey="value"
       />
       <TagWrapper>
         {filteredRegulatoryThemes?.length > 0 &&
@@ -75,9 +73,7 @@ export function LayerFilters({
         options={ampTypes}
         placeholder="Type d'AMP"
         renderValue={() => filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>}
-        size="sm"
         value={filteredAmpTypes}
-        valueKey="value"
       />
       <TagWrapper>
         {filteredAmpTypes?.length > 0 &&

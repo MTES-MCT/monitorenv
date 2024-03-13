@@ -7,8 +7,7 @@ context('Search Places', () => {
   })
 
   it('A user can search a place and zoom on it when it is selected', () => {
-    cy.fill('Rechercher un lieu', 'Nantes')
-    cy.get('.rs-auto-complete-item').first().click()
+    cy.fill('Rechercher un lieu', 'Nantes', { delay: 200 })
     cy.url().should('include', '/#@-173695.64,5981051.92,12.96')
   })
 })
