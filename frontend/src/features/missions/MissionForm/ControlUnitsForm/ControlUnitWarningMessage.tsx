@@ -31,13 +31,13 @@ export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitInd
         return ''
       }
 
-      return `Une autre mission, ouverte par le ${missionSourceEnum[source].label}, est en cours avec cette unité.`
+      return `Une autre mission, ouverte par le ${missionSourceEnum[source].label}, est en cours avec cette unité. `
     }
 
     if (engagedControlUnit.missionSources.length > 1) {
       return `D'autres missions en cours, ouvertes par le ${engagedControlUnit.missionSources
         .map(source => missionSourceEnum[source].label)
-        .join(' et le ')}, sont en cours avec cette unité.`
+        .join(' et le ')}, sont en cours avec cette unité. `
     }
 
     return ''
@@ -65,15 +65,14 @@ export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitInd
       <Warning>Attention</Warning>
       <div>
         <span>{message}</span>
-        <br />
         <span>Voulez-vous quand même conserver cette mission ?</span>
       </div>
 
       <ButtonsContainer>
-        <Button accent={Accent.WARNING} onClick={validate}>
+        <Button accent={Accent.WARNING} isFullWidth onClick={validate}>
           Oui, la conserver
         </Button>
-        <Button accent={Accent.WARNING} onClick={cancel}>
+        <Button accent={Accent.WARNING} isFullWidth onClick={cancel}>
           Non, l&apos;abandonner
         </Button>
       </ButtonsContainer>
@@ -94,4 +93,5 @@ const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 16px;
+  gap: 8px;
 `
