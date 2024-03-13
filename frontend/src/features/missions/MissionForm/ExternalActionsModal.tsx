@@ -15,7 +15,7 @@ export function ExternalActionsModal({ onClose, open, sources }: ExternalActions
   return (
     open && (
       <Dialog data-cy="external-actions-modal" isAbsolute>
-        <Dialog.Title>Supprimer la mission</Dialog.Title>
+        <Dialog.Title>Suppression impossible</Dialog.Title>
         <Dialog.Body>
           <Alert>
             <Icon.Attention color={THEME.color.maximumRed} size={30} />
@@ -48,10 +48,8 @@ const Alert = styled.div`
 `
 const Text = styled.p`
   color: ${props => props.theme.color.maximumRed} !important;
-  padding: 2px 40px;
+  padding: 0px 40px;
 `
-const Bold = styled.p`
-  color: ${props => props.theme.color.maximumRed} !important;
+const Bold = styled(Text)`
   font-weight: bold;
-  padding: 2px 40px;
 `
