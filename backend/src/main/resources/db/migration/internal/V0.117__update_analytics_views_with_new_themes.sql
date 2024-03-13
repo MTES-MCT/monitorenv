@@ -14,6 +14,7 @@ SELECT
     mission_type,
     action_type,
     COALESCE(m.facade, 'Hors façade') AS mission_facade,
+    cu.id AS control_unit_id,
     cu.name AS control_unit,
     adm.name AS administration,
     cu.name ILIKE 'ulam%' OR (
