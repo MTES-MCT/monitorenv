@@ -186,7 +186,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </div>
         <SurveillanceThemes envActionIndex={envActionIndex} themesYear={actualYearForThemes} />
         <FlexSelectorWrapper>
-          <Label>Début et fin de surveillance</Label>
+          <Label $isRequired>Début et fin de surveillance (UTC)</Label>
           <StyledDatePickerContainer>
             <StyledDatePicker
               key={`start-date-${durationMatchMissionField.value}`}
@@ -274,9 +274,9 @@ const FormBody = styled.div`
   padding-bottom: 48px;
 `
 const StyledToggle = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: row;
-  flex: 1;
   gap: 8px;
   > span {
     color: ${p => p.theme.color.gunMetal};
@@ -284,6 +284,7 @@ const StyledToggle = styled.div`
   }
 `
 const StyledMultiCheckbox = styled(MultiCheckbox)`
+  margin-top: 16px;
   margin-left: 48px;
 `
 
@@ -295,7 +296,7 @@ const FlexSelectorWrapper = styled.div`
 const StyledDatePickerContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 16px;
   align-items: baseline;
 `
 const StyledDatePicker = styled(DatePicker)`

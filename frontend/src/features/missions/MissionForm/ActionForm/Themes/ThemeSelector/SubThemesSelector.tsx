@@ -54,6 +54,7 @@ export function SubThemesSelector({
           error={currentSubThemesProps.error}
           isErrorMessageHidden
           isLight
+          isRequired
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateSubTheme}

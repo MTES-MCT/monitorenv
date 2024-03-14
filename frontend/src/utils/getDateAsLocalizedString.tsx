@@ -20,7 +20,7 @@ export function getDateAsLocalizedStringExpanded(date: string | undefined | null
   )
 }
 
-export function getDateAsLocalizedStringCompact(date: string | undefined | null) {
+export function getDateAsLocalizedStringCompact(date: string | undefined | null, withUtc = false) {
   if (!date || date.trim() === '') {
     return undefined
   }
@@ -28,7 +28,8 @@ export function getDateAsLocalizedStringCompact(date: string | undefined | null)
 
   return (
     <>
-      {formatDateLabel(dayJsDate.format('DD MMM YY'))}, {dayJsDate.format('HH')}h{dayJsDate.format('mm')} (UTC)
+      {formatDateLabel(dayJsDate.format('DD MMM YY'))}, {dayJsDate.format('HH')}h{dayJsDate.format('mm')}{' '}
+      {withUtc && '(UTC)'}
     </>
   )
 }

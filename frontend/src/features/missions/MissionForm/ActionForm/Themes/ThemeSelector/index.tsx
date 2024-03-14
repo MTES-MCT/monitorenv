@@ -35,6 +35,7 @@ export function ThemeSelector({ actionIndex, isError, isLoading, label, themeInd
           error={currentThemeProps.error}
           isErrorMessageHidden
           isLight
+          isRequired
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateTheme}

@@ -194,7 +194,7 @@ export function ControlForm({
             <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
             <SubTitle>
               &nbsp;(
-              {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc)})
+              {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc, false)})
             </SubTitle>
           </div>
         </TitleWithIcon>
@@ -250,8 +250,9 @@ export function ControlForm({
             error={actionStartDateTimeUtcErrorMessage}
             isErrorMessageHidden
             isLight
+            isRequired
             isStringDate
-            label="Date et heure du contrôle"
+            label="Date et heure du contrôle (UTC)"
             name="actionStartDateTimeUtc"
             onChange={updateControlDate}
             withTime
@@ -273,6 +274,7 @@ export function ControlForm({
             data-cy="control-form-number-controls"
             isErrorMessageHidden
             isLight
+            isRequired
             label="Nombre total de contrôles"
             min={1}
             name={`envActions.${envActionIndex}.actionNumberOfControls`}
@@ -280,6 +282,7 @@ export function ControlForm({
 
           <TargetSelector
             error={actionTargetTypeErrorMessage}
+            isRequired
             name={`envActions.${envActionIndex}.actionTargetType`}
             onChange={onTargetTypeChange}
             options={targetTypeOptions}
@@ -289,6 +292,7 @@ export function ControlForm({
           <VehicleTypeSelector
             disabled={actionTargetType !== TargetTypeEnum.VEHICLE}
             error={actionVehicleTypeErrorMessage}
+            isRequired
             name={`envActions.${envActionIndex}.vehicleType`}
             onChange={onVehicleTypeChange}
             value={vehicleType}
@@ -328,9 +332,9 @@ const FormBody = styled.div`
 `
 
 const StyledToggle = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: row;
-  flex: 1;
   gap: 8px;
   > span {
     color: ${p => p.theme.color.gunMetal};
@@ -339,6 +343,7 @@ const StyledToggle = styled.div`
 `
 
 const StyledMultiRadio = styled(MultiRadio)`
+  margin-top: 16px;
   margin-left: 48px;
 `
 
@@ -350,7 +355,7 @@ const Separator = styled.div`
 const ActionSummary = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 16px;
 `
 
 const SubTitle = styled.div`

@@ -48,6 +48,8 @@ export function NatinfSelector({ infractionPath }) {
       block
       customSearch={customSearch}
       error={meta.error}
+      isErrorMessageHidden
+      isRequired
       label="NATINF"
       name="infraction-natinf"
       onChange={setValue}

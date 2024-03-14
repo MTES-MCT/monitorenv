@@ -65,7 +65,6 @@ export function MissionFormBottomBar({
           )}
           {values?.updatedAtUtc && <> Dernière modification enregistrée {formattedUpdatedDate}.</>}
         </span>
-        <span> Toutes les dates et heures sont en UTC</span>
       </MissionInfos>
       <Separator />
       <StyledButtonsContainer>
@@ -114,8 +113,8 @@ export function MissionFormBottomBar({
 const MissionInfos = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-style: italic;
-  > span:first-child {
-    font-weight: bold;
+  > span {
+    font-weight: 500;
   }
 `
 
@@ -129,7 +128,7 @@ const Footer = styled.div`
   display: flex;
   gap: 16px;
   justify-content: space-between;
-  padding: 16px;
+  padding: 16px 24px;
 `
 const StyledButtonsContainer = styled.div`
   display: flex;

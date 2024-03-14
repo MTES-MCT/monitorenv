@@ -22,21 +22,21 @@ Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
 export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   companyName: Yup.string().optional().nullable(),
   controlledPersonIdentity: Yup.string().nullable(),
-  formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required('Requis'),
+  formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required(),
   id: Yup.string().required(),
-  infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required('Requis'),
+  infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required(),
   natinf: Yup.array()
     .of(Yup.string().ensure())
     .when('infractionType', {
       is: InfractionTypeEnum.WAITING,
-      otherwise: schema => schema.compact().min(1, 'Sélectionnez au moins une infraction'),
+      otherwise: schema => schema.compact().min(1),
       then: schema => schema.compact().min(0)
     })
     .ensure(),
   observations: Yup.string().nullable(),
   registrationNumber: Yup.string().nullable(),
   relevantCourt: Yup.string().nullable(),
-  toProcess: Yup.boolean().required('Requis'),
+  toProcess: Yup.boolean().required(),
   vesselSize: Yup.number().nullable(),
   // @ts-ignore
   // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'
@@ -44,8 +44,6 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
 })
 
 export const ClosedInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
-  formalNotice: Yup.mixed().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required('Requis'),
-  infractionType: Yup.mixed()
-    .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
-    .required('Requis')
+  formalNotice: Yup.mixed().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
+  infractionType: Yup.mixed().oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT]).required()
 })

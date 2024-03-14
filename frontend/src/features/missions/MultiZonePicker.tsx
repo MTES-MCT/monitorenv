@@ -92,7 +92,7 @@ export function MultiZonePicker({
 
   return (
     <Field>
-      {label && <Label>{label}</Label>}
+      {label && <Label $isRequired>{label}</Label>}
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}

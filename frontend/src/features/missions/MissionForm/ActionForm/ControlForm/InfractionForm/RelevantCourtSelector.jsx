@@ -12,6 +12,7 @@ export function RelevantCourtSelector({ infractionPath }) {
       label="Tribunal compétent "
       name={`${infractionPath}.relevantCourt`}
       options={relevantCourtFieldList}
+      style={{ width: '200px' }}
     />
   )
 }
