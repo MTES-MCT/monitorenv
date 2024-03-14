@@ -10,7 +10,7 @@ from src.pipeline.generic_tasks import extract, load
 @task(checkpoint=False)
 def extract_facade_areas() -> pd.DataFrame:
     """
-    Extract facade areas from the monitorfish_local database as a DataFrame.
+    Extract facade areas from the monitorfish_local (cross) database as a DataFrame.
 
     Returns:
         pd.DataFrame: GeoDataFrame of facade areas
