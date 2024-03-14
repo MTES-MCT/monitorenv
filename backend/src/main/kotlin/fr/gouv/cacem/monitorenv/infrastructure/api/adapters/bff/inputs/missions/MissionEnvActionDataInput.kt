@@ -37,9 +37,6 @@ data class MissionEnvActionDataInput(
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     val isSeafarersControl: Boolean? = null,
 
-    // EnvActionSurveillance Properties
-    val coverMissionZone: Boolean? = null,
-
     // complementary properties
     val reportingIds: Optional<List<Int>>,
 ) {
@@ -96,7 +93,6 @@ data class MissionEnvActionDataInput(
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
-                    coverMissionZone = this.coverMissionZone,
                     observations = this.observations,
                 )
             ActionTypeEnum.NOTE ->

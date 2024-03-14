@@ -12,7 +12,6 @@ data class EnvActionSurveillanceEntity(
     override val geom: Geometry? = null,
     override val facade: String? = null,
     override val department: String? = null,
-    val coverMissionZone: Boolean? = null,
     val observations: String? = null,
 ) :
     EnvActionEntity(

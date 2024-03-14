@@ -12,7 +12,6 @@ data class MissionEnvActionSurveillanceDataOutput(
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.SURVEILLANCE,
     val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = null,
-    val coverMissionZone: Boolean? = null,
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
@@ -31,13 +30,14 @@ data class MissionEnvActionSurveillanceDataOutput(
                 id = envActionSurveillanceEntity.id,
                 actionEndDateTimeUtc = envActionSurveillanceEntity.actionEndDateTimeUtc,
                 actionStartDateTimeUtc = envActionSurveillanceEntity.actionStartDateTimeUtc,
-                controlPlans = envActionSurveillanceEntity.controlPlans?.map {
-                    MissionEnvActionControlPlanDataOutput.fromEnvActionControlPlanEntity(it)
+                controlPlans =
+                envActionSurveillanceEntity.controlPlans?.map {
+                    MissionEnvActionControlPlanDataOutput
+                        .fromEnvActionControlPlanEntity(it)
                 },
                 department = envActionSurveillanceEntity.department,
                 facade = envActionSurveillanceEntity.facade,
                 geom = envActionSurveillanceEntity.geom,
-                coverMissionZone = envActionSurveillanceEntity.coverMissionZone,
                 observations = envActionSurveillanceEntity.observations,
             )
     }

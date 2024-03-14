@@ -53,7 +53,6 @@ class MissionEnvActionDataInputUTests {
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
                 department = "TestDepartment",
                 facade = "TestFacade",
-                coverMissionZone = true,
                 observations = "Observations",
                 reportingIds = Optional.of(listOf()),
             )
@@ -105,7 +104,6 @@ class MissionEnvActionDataInputUTests {
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
                 department = "TestDepartment",
                 facade = "TestFacade",
-                coverMissionZone = true,
                 observations = "Observations",
                 reportingIds = Optional.empty(),
             )
