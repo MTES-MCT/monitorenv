@@ -23,7 +23,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
             fill: new Fill({ color: THEME.color.gunMetal }),
             font: '12px Marianne',
             overflow: true,
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
             text: Layers.FAO.getZoneName && Layers.FAO.getZoneName(feature)
           })
         })
@@ -37,7 +37,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
           text: new Text({
             fill: new Fill({ color: THEME.color.gunMetal }),
             font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
             text: `${feature.get(Layers.AEM.subZoneFieldKey) ? feature.get(Layers.AEM.subZoneFieldKey) : ''}`
           })
         })
@@ -51,7 +51,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
           text: new Text({
             fill: new Fill({ color: THEME.color.gunMetal }),
             font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
             text: `${feature.get(Layers.EEZ.subZoneFieldKey) ? feature.get(Layers.EEZ.subZoneFieldKey) : ''}`
           })
         })
@@ -61,7 +61,6 @@ export const getAdministrativeLayersStyle = (code: String) => {
       return () =>
         new Style({
           stroke: new Stroke({
-            // color: 'rgba(5, 5, 94, 0.5)',
             color: darkPeriwinkle,
             width: 2
           })
@@ -76,7 +75,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
           text: new Text({
             fill: new Fill({ color: THEME.color.gunMetal }),
             font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
             text: `${feature.get(Layers.FACADES.zoneFieldKey) ? feature.get(Layers.FACADES.zoneFieldKey) : ''}`
           })
         })
@@ -91,7 +90,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
             fill: new Fill({ color: THEME.color.gunMetal }),
             font: '16px Marianne',
             overflow: true,
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
             text: `${feature.get(Layers.DEPARTMENTS.zoneFieldKey) ? feature.get(Layers.DEPARTMENTS.zoneFieldKey) : ''}`
           })
         })
