@@ -35,27 +35,6 @@ const missionWithCentroidStyleFactory = (status, type) => [
       scale: 0.5,
       src: `mission/${status}_${type}.png`
     })
-  }),
-  new Style({
-    geometry: feature => {
-      const overlayPostion = feature.get('overlayCoordinates')
-      if (isEmpty(overlayPostion)) {
-        return undefined
-      }
-
-      const extent = feature?.getGeometry()?.getExtent()
-      const center = extent && getCenter(extent)
-      if (!center) {
-        return undefined
-      }
-
-      return new LineString([overlayPostion.coordinates, center])
-    },
-    stroke: new Stroke({
-      color: THEME.color.slateGray,
-      lineDash: [4, 4],
-      width: 2
-    })
   })
 ]
 
@@ -167,17 +146,40 @@ export const selectedMissionActionsStyle = feature => [
   })
 ]
 
-export const selectedMissionZoneStyle = new Style({
-  fill: new Fill({
-    color: 'rgba(86, 151, 210, .25)' // Blue Gray
+export const selectedMissionZoneStyle = [
+  new Style({
+    fill: new Fill({
+      color: 'rgba(86, 151, 210, .25)' // Blue Gray
+    }),
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      lineCap: 'square',
+      lineDash: [2, 8],
+      width: 5
+    })
   }),
-  stroke: new Stroke({
-    color: THEME.color.charcoal,
-    lineCap: 'square',
-    lineDash: [2, 8],
-    width: 5
+  new Style({
+    geometry: feature => {
+      const overlayPostion = feature.get('overlayCoordinates')
+      if (isEmpty(overlayPostion)) {
+        return undefined
+      }
+
+      const extent = feature?.getGeometry()?.getExtent()
+      const center = extent && getCenter(extent)
+      if (!center) {
+        return undefined
+      }
+
+      return new LineString([overlayPostion.coordinates, center])
+    },
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
+    })
   })
-})
+]
 
 const missionToReportingsLinkStyle = feature => {
   if (!feature.get('attachedReportings') || feature.get('attachedReportings').length === 0) {
@@ -234,7 +236,7 @@ const missionCircleStyle = feature => {
 }
 
 export const selectedMissionStyle = feature => [
-  selectedMissionZoneStyle,
+  ...selectedMissionZoneStyle,
   ...missionWithCentroidStyleFn(feature),
   ...missionToReportingsLinkStyle(feature),
   missionCircleStyle(feature)

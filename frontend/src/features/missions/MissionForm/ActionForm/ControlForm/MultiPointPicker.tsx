@@ -1,6 +1,6 @@
 import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
-import _ from 'lodash'
+import { isEqual } from 'lodash'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 import { remove } from 'ramda'
@@ -12,34 +12,35 @@ import {
   OLGeometryType,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
-} from '../../domain/entities/map/constants'
-import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { drawPoint } from '../../domain/use_cases/draw/drawGeometry'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
-import { formatCoordinates } from '../../utils/coordinates'
+} from '../../../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
+import { drawPoint } from '../../../../../domain/use_cases/draw/drawGeometry'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { useListenForDrawedGeometry } from '../../../../../hooks/useListenForDrawing'
+import { formatCoordinates } from '../../../../../utils/coordinates'
 
 import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
 
+const CONTROL_INTERACTION_LISTENER = InteractionListener.CONTROL_POINT
+
 export type MultiPointPickerProps = {
-  addButtonLabel: string
-  label?: string
-  name: string
+  actionIndex: number
 }
-export function MultiPointPicker({ addButtonLabel, label = undefined, name }: MultiPointPickerProps) {
+
+export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
   const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
-  const { geometry } = useListenForDrawedGeometry(InteractionListener.CONTROL_POINT)
+  const { geometry } = useListenForDrawedGeometry(CONTROL_INTERACTION_LISTENER)
 
-  const [field, meta, helpers] = useField(name)
+  const [field, meta, helpers] = useField(`envActions[${actionIndex}].geom`)
   const { value } = field
   const { setValue } = helpers
 
-  const isAddingAControl = useMemo(() => listener === InteractionListener.CONTROL_POINT, [listener])
+  const isAddingAControl = useMemo(() => listener === CONTROL_INTERACTION_LISTENER, [listener])
 
   const points = useMemo(() => {
     if (!value) {
@@ -50,7 +51,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
   }, [value])
 
   useEffect(() => {
-    if (geometry?.type === OLGeometryType.MULTIPOINT && !_.isEqual(geometry, value)) {
+    if (geometry?.type === OLGeometryType.MULTIPOINT && !isEqual(geometry, value)) {
       setValue(geometry)
       if ((!values.geom || values.geom?.coordinates.length === 0) && values.envActions.length === 1) {
         setFieldValue('geom', geometry)
@@ -85,7 +86,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
 
   return (
     <Field>
-      {label && <Label $isRequired>{label}</Label>}
+      <Label $isRequired>Lieu du contrôle</Label>
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
@@ -94,7 +95,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
         isFullWidth
         onClick={handleAddPoint}
       >
-        {addButtonLabel}
+        Ajouter un point de contrôle
       </Button>
 
       <>

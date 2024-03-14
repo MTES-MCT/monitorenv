@@ -16,7 +16,6 @@ import styled from 'styled-components'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../domain/entities/controlPlan'
-import { InteractionListener } from '../../../domain/entities/map/constants'
 import {
   type Mission,
   MissionSourceEnum,
@@ -31,7 +30,7 @@ import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { getMissionTitle } from '../../../utils/getMissionTitle'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
-import { MultiZonePicker } from '../MultiZonePicker'
+import { MissionZonePicker } from '../MissionZonePicker'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
@@ -158,12 +157,7 @@ export function GeneralInformationsForm() {
         </StyledUnitsContainer>
 
         <div>
-          <MultiZonePicker
-            addButtonLabel="Ajouter une zone de mission manuelle"
-            interactionListener={InteractionListener.MISSION_ZONE}
-            label="Localisations :"
-            name="geom"
-          />
+          <MissionZonePicker />
           {values.isGeometryComputedFromControls && (
             <ZoneComputedFromActions>
               Actuellement, la zone de mission est <b>automatiquement calculée</b> selon le point ou la zone de la

@@ -20,7 +20,6 @@ import styled from 'styled-components'
 
 import { SurveillanceZonePicker } from './SurveillanceZonePicker'
 import { CONTROL_PLAN_INIT } from '../../../../../domain/entities/controlPlan'
-import { InteractionListener } from '../../../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
   type EnvAction,
@@ -237,13 +236,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           />
         </FlexSelectorWrapper>
         <FlexSelectorWrapper>
-          <SurveillanceZonePicker
-            addButtonLabel="Ajouter une zone de surveillance"
-            interactionListener={InteractionListener.SURVEILLANCE_ZONE}
-            isLight
-            label="Zone de surveillance"
-            name={`envActions[${envActionIndex}].geom`}
-          />
+          <SurveillanceZonePicker actionIndex={envActionIndex} />
         </FlexSelectorWrapper>
 
         <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />

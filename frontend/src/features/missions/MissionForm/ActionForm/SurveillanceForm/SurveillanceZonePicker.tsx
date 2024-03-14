@@ -16,28 +16,21 @@ import styled from 'styled-components'
 import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
 
+const SURVEILLANCE_INTERACTION_LISTENER = InteractionListener.SURVEILLANCE_ZONE
+
 export type SurveillanceZonePickerProps = {
-  addButtonLabel: string
-  interactionListener: InteractionListener
-  isLight?: boolean
-  label?: string | undefined
-  name: string
+  actionIndex: number
 }
-export function SurveillanceZonePicker({
-  addButtonLabel,
-  interactionListener,
-  isLight,
-  label = undefined,
-  name
-}: SurveillanceZonePickerProps) {
+
+export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerProps) {
   const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
-  const { geometry } = useListenForDrawedGeometry(interactionListener)
-  const [field, meta, helpers] = useField(name)
+  const { geometry } = useListenForDrawedGeometry(SURVEILLANCE_INTERACTION_LISTENER)
+  const [field, meta, helpers] = useField(`envActions[${actionIndex}].geom`)
   const { value } = field
 
   const listener = useAppSelector(state => state.draw.listener)
-  const isEditingZone = useMemo(() => listener === InteractionListener.SURVEILLANCE_ZONE, [listener])
+  const isEditingZone = useMemo(() => listener === SURVEILLANCE_INTERACTION_LISTENER, [listener])
 
   const polygons = useMemo(() => {
     if (!value) {
@@ -68,8 +61,8 @@ export function SurveillanceZonePicker({
   }
 
   const handleAddZone = useCallback(() => {
-    dispatch(drawPolygon(value, interactionListener))
-  }, [dispatch, value, interactionListener])
+    dispatch(drawPolygon(value, SURVEILLANCE_INTERACTION_LISTENER))
+  }, [dispatch, value])
 
   const deleteZone = useCallback(
     (index: number) => {
@@ -89,7 +82,7 @@ export function SurveillanceZonePicker({
 
   return (
     <Field>
-      {label && <Label>{label}</Label>}
+      <Label>Zone de surveillance</Label>
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
@@ -97,14 +90,14 @@ export function SurveillanceZonePicker({
         isFullWidth
         onClick={handleAddZone}
       >
-        {addButtonLabel}
+        Ajouter une zone de surveillance
       </Button>
 
       <>
         {polygons.map((polygonCoordinates, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <Row key={`zone-${index}`}>
-            <ZoneWrapper isLight={isLight}>
+            <ZoneWrapper isLight>
               Polygone dessiné {index + 1}
               {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
               {/* eslint-disable jsx-a11y/anchor-is-valid */}

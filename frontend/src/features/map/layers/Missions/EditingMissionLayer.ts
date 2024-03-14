@@ -65,13 +65,13 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     const feature = editingMissionVectorSourceRef.current.getFeatureById(
-      `${Layers.MISSION_SELECTED.code}:${selectedMissionIdOnMap}`
+      `${Layers.MISSION_SELECTED.code}:${activeMissionId}`
     )
 
     feature?.setProperties({
       overlayCoordinates: overlayCoordinates[Layers.MISSIONS.code]
     })
-  }, [overlayCoordinates, selectedMissionIdOnMap])
+  }, [overlayCoordinates, activeMissionId])
 
   useEffect(() => {
     if (map) {

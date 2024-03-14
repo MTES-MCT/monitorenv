@@ -19,6 +19,7 @@ import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
+import { MultiPointPicker } from './MultiPointPicker'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domain/entities/controlPlan'
 import { type Mission, type EnvActionControl, ActionTypeEnum } from '../../../../../domain/entities/missions'
@@ -28,7 +29,6 @@ import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsL
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
-import { MultiPointPicker } from '../../../MultiPointPicker'
 import { Header, StyledDeleteButton, Title, TitleWithIcon } from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
@@ -261,11 +261,7 @@ export function ControlForm({
             <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>
           )}
         </div>
-        <MultiPointPicker
-          addButtonLabel="Ajouter un point de contrôle"
-          label="Lieu du contrôle"
-          name={`envActions[${envActionIndex}].geom`}
-        />
+        <MultiPointPicker actionIndex={envActionIndex} />
 
         <Separator />
 

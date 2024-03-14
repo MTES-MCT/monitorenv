@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Label, THEME } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -22,36 +22,17 @@ import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
 import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
 
-const MISSION_GEOM_NAME = 'geom'
+const MISSION_INTERACTION_LISTENER = InteractionListener.MISSION_ZONE
 
-export type MultiZonePickerProps = {
-  addButtonLabel: string
-  interactionListener: InteractionListener
-  isLight?: boolean
-  label?: string | undefined
-  name: string
-}
-export function MultiZonePicker({
-  addButtonLabel,
-  interactionListener,
-  isLight,
-  label = undefined,
-  name
-}: MultiZonePickerProps) {
+export function MissionZonePicker() {
   const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
-  const { geometry } = useListenForDrawedGeometry(interactionListener)
-  const [field, meta, helpers] = useField(name)
+  const { geometry } = useListenForDrawedGeometry(MISSION_INTERACTION_LISTENER)
+  const [field, meta, helpers] = useField('geom')
   const { value } = field
 
-  // TODO: Clean this component beacause it's only for mission zone
-  const isDrawingPolygonVisible =
-    (name === MISSION_GEOM_NAME && !values.isGeometryComputedFromControls) || name !== MISSION_GEOM_NAME
   const listener = useAppSelector(state => state.draw.listener)
-  const isEditingZone = useMemo(
-    () => listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.SURVEILLANCE_ZONE,
-    [listener]
-  )
+  const isEditingZone = useMemo(() => listener === MISSION_INTERACTION_LISTENER, [listener])
 
   const polygons = useMemo(() => {
     if (!value) {
@@ -80,14 +61,14 @@ export function MultiZonePicker({
   const handleAddZone = useCallback(() => {
     if (values.isGeometryComputedFromControls) {
       helpers.setValue(undefined)
-      dispatch(drawPolygon(undefined, interactionListener))
+      dispatch(drawPolygon(undefined, MISSION_INTERACTION_LISTENER))
       setFieldValue('isGeometryComputedFromControls', false)
 
       return
     }
 
-    dispatch(drawPolygon(value, interactionListener))
-  }, [dispatch, helpers, value, interactionListener, setFieldValue, values.isGeometryComputedFromControls])
+    dispatch(drawPolygon(value, MISSION_INTERACTION_LISTENER))
+  }, [dispatch, helpers, value, setFieldValue, values.isGeometryComputedFromControls])
 
   const deleteZone = useCallback(
     async (index: number) => {
@@ -107,7 +88,7 @@ export function MultiZonePicker({
 
   return (
     <Field>
-      {label && <Label $isRequired>{label}</Label>}
+      <Label $isRequired>Localisations :</Label>
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
@@ -115,15 +96,15 @@ export function MultiZonePicker({
         isFullWidth
         onClick={handleAddZone}
       >
-        {addButtonLabel}
+        Ajouter une zone de mission manuelle
       </Button>
 
       <>
-        {isDrawingPolygonVisible &&
+        {!values.isGeometryComputedFromControls &&
           polygons.map((polygonCoordinates, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <Row key={`zone-${index}`}>
-              <ZoneWrapper isLight={isLight}>
+              <ZoneWrapper>
                 Polygone dessiné {index + 1}
                 {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
@@ -185,10 +166,8 @@ const Row = styled.div`
   }
 `
 
-const ZoneWrapper = styled.div<{
-  isLight: boolean | undefined
-}>`
-  background-color: ${p => (p.isLight ? p.theme.color.white : p.theme.color.gainsboro)};
+const ZoneWrapper = styled.div`
+  background-color: ${THEME.color.white};
   display: flex;
   flex-grow: 1;
   font-size: 13px;

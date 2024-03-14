@@ -85,7 +85,7 @@ export function OverlayPositionOnCentroid({
       olOverlayObjectRef.current.setOffset(INITIAL_OFFSET_VALUE)
     }
     if (feature) {
-      currentCoordinates.current = feature.getGeometry().getExtent()
+      currentCoordinates.current = feature.getGeometry()?.getExtent()
     } else {
       currentCoordinates.current = undefined
     }
@@ -153,7 +153,7 @@ export function OverlayPositionOnCentroid({
     }
 
     if (overlayRef.current && olOverlayObjectRef.current) {
-      if (feature) {
+      if (feature && feature.getGeometry()) {
         const featureCenter = getCenter(feature.getGeometry().getExtent())
         olOverlayObjectRef.current.setPosition(featureCenter)
         const nextOverlayPosition = getNextOverlayPosition(featureCenter)

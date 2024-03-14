@@ -1,3 +1,4 @@
+import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -141,6 +142,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
         const { missionId } = feature.getProperties()
         dispatch(missionActions.setSelectedMissionIdOnMap(missionId))
+        dispatch(removeOverlayCoordinatesByName(Layers.MISSIONS.code))
       }
     }
   }, [dispatch, mapClickEvent])
