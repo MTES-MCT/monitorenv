@@ -12,6 +12,7 @@ import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 import { missionActions } from '../../../missions/slice'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
@@ -87,7 +88,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     [displayMissionsLayer, hasMapInteraction, missionAttachedToReporting]
   )
 
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
+  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource()

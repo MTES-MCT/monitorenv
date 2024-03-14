@@ -78,7 +78,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       ),
     [semaphores, reportingsBySemaphoreId]
   )
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
+  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource()

@@ -14,6 +14,7 @@ import { missionWithCentroidStyleFn } from '../../../map/layers/Missions/mission
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
+import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
@@ -36,7 +37,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
     [missions]
   )
 
-  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Geometry>>
+  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
   const vectorLayerRef = useRef(
     new VectorLayer({

@@ -49,7 +49,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     useAppSelector(state => state.interestPoint)
 
   const [drawObject, setDrawObject] = useState<Draw>()
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<LineString>>
+  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Feature<LineString>>>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource({ wrapX: false })

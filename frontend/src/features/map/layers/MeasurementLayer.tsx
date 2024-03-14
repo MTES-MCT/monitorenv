@@ -80,7 +80,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
     measurementInProgressRef.current = value
   }
   const currentInteraction = useRef<Draw>()
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
+  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource({ wrapX: false })
