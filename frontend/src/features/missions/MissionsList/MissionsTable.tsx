@@ -94,7 +94,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         <tbody>
           {paddingTop > 0 && (
             <tr>
-              <td style={{ height: `${paddingTop}px` }} />
+              <td aria-label="empty-line-for-scroll" style={{ height: `${paddingTop}px` }} />
             </tr>
           )}
           {virtualRows.map(virtualRow => {
@@ -122,7 +122,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
           })}
           {paddingBottom > 0 && (
             <tr>
-              <td style={{ height: `${paddingBottom}px` }} />
+              <td aria-label="empty-line-for-scroll" style={{ height: `${paddingBottom}px` }} />
             </tr>
           )}
         </tbody>
