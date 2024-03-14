@@ -9,6 +9,8 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
@@ -50,7 +52,9 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   ) as MutableRefObject<VectorLayerWithName>
   ;(editingMissionVectorLayerRef.current as VectorLayerWithName).name = Layers.MISSION_SELECTED.code
 
-  const editingMissionActionsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
+  const editingMissionActionsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
+    VectorSource<Feature<Geometry>>
+  >
   const editingMissionActionsVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,

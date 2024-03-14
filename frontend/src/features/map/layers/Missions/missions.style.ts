@@ -31,7 +31,7 @@ const missionWithCentroidStyleFactory = (status, type) => [
       return center && new Point(center)
     },
     image: new Icon({
-      displacement: [0, 44],
+      displacement: [0, 24],
       scale: 0.5,
       src: `mission/${status}_${type}.png`
     })

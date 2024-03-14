@@ -7,10 +7,11 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const hoveredMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Geometry>>
+  const hoveredMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const hoveredMissionVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,

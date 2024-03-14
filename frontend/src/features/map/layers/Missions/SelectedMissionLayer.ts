@@ -10,6 +10,8 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
@@ -33,7 +35,7 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
 
   const displaySelectedMission = displayMissionSelectedLayer && hasNoMissionDuplication
 
-  const selectedMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
+  const selectedMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const selectedMissionVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
@@ -46,7 +48,9 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
   ) as MutableRefObject<VectorLayerWithName>
   ;(selectedMissionVectorLayerRef.current as VectorLayerWithName).name = Layers.MISSION_SELECTED.code
 
-  const selectedMissionActionsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
+  const selectedMissionActionsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
+    VectorSource<Feature<Geometry>>
+  >
   const selectedMissionActionsVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
