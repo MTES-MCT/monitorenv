@@ -203,7 +203,7 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.ACTIONS]: {
     code: MonitorEnvLayers.ACTIONS,
-    zIndex: 2200
+    zIndex: 1800
   },
   [MonitorEnvLayers.MEASUREMENT]: {
     code: MonitorEnvLayers.MEASUREMENT,

@@ -7,51 +7,39 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { Geometry } from 'ol/geom'
 
 export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetVectorSource = () => {
-    if (vectorSourceRef.current === undefined) {
-      vectorSourceRef.current = new VectorSource()
-    }
-
-    return vectorSourceRef.current
-  }
-
-  const vectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+  const hoveredMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Geometry>>
+  const hoveredMissionVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: hoveredMissionVectorSourceRef.current,
+      style: missionZoneStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.HOVERED_MISSION.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(hoveredMissionVectorLayerRef.current as VectorLayerWithName).name = Layers.HOVERED_MISSION.code
 
   useEffect(() => {
-    const GetVectorLayer = () => {
-      if (vectorLayerRef.current === undefined) {
-        vectorLayerRef.current = new VectorLayer({
-          renderBuffer: 7,
-          source: GetVectorSource(),
-          style: missionZoneStyle,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true,
-          zIndex: Layers.HOVERED_MISSION.zIndex
-        }) as VectorLayerWithName
-        vectorLayerRef.current.name = Layers.HOVERED_MISSION.code
-      }
-
-      return vectorLayerRef.current
-    }
-
     if (map) {
-      map.getLayers().push(GetVectorLayer())
+      map.getLayers().push(hoveredMissionVectorLayerRef.current)
     }
 
     return () => {
       if (map) {
-        map.removeLayer(GetVectorLayer())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(hoveredMissionVectorLayerRef.current)
       }
     }
   }, [map])
 
   useEffect(() => {
-    GetVectorSource()?.clear(true)
+    hoveredMissionVectorSourceRef.current?.clear(true)
     if (currentFeatureOver && currentFeatureOver.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
-      GetVectorSource()?.addFeature(currentFeatureOver)
+      hoveredMissionVectorSourceRef.current?.addFeature(currentFeatureOver)
     }
   }, [currentFeatureOver])
 

@@ -1,7 +1,7 @@
 import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './missions.style'
@@ -13,6 +13,7 @@ import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 import { missionActions } from '../../../missions/slice'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
@@ -89,52 +90,40 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     [displayMissionsLayer, hasMapInteraction, missionAttachedToReporting]
   )
 
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Feature<Geometry>>>
-  const GetVectorSource = () => {
-    if (vectorSourceRef.current === undefined) {
-      vectorSourceRef.current = new VectorSource()
-    }
-
-    return vectorSourceRef.current
-  }
-
-  const vectorLayerRef = useRef() as React.MutableRefObject<VectorLayer<VectorSource> & { name?: string }>
-  const GetVectorLayer = useCallback(() => {
-    if (vectorLayerRef.current === undefined) {
-      vectorLayerRef.current = new VectorLayer({
-        renderBuffer: 7,
-        source: GetVectorSource(),
-        style: missionWithCentroidStyleFn,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Layers.MISSIONS.zIndex
-      })
-      vectorLayerRef.current.name = Layers.MISSIONS.code
-    }
-
-    return vectorLayerRef.current
-  }, [])
+  const missionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const missionVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: missionVectorSourceRef.current,
+      style: missionWithCentroidStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.MISSIONS.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(missionVectorLayerRef.current as VectorLayerWithName).name = Layers.MISSIONS.code
 
   useEffect(() => {
     if (map) {
-      map.getLayers().push(GetVectorLayer())
+      map.getLayers().push(missionVectorLayerRef.current)
 
-      return () => map.removeLayer(GetVectorLayer())
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      return () => map.removeLayer(missionVectorLayerRef.current)
     }
 
     return () => {}
-  }, [map, GetVectorLayer])
+  }, [map])
 
   useEffect(() => {
-    GetVectorSource()?.clear(true)
+    missionVectorSourceRef.current?.clear(true)
     if (missionsMultiPolygons) {
-      GetVectorSource()?.addFeatures(missionsMultiPolygons)
+      missionVectorSourceRef.current?.addFeatures(missionsMultiPolygons)
     }
   }, [missionsMultiPolygons])
 
   useEffect(() => {
-    GetVectorLayer()?.setVisible(isLayerVisible)
-  }, [GetVectorLayer, isLayerVisible])
+    missionVectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {

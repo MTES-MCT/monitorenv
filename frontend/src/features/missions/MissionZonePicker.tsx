@@ -1,4 +1,5 @@
 import { Accent, Button, Icon, IconButton, Label, THEME } from '@mtes-mct/monitor-ui'
+import { setInitialGeometry } from 'domain/shared_slices/Draw'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -60,6 +61,9 @@ export function MissionZonePicker() {
 
   const handleAddZone = useCallback(() => {
     if (values.isGeometryComputedFromControls) {
+      if (values.geom) {
+        dispatch(setInitialGeometry(values.geom))
+      }
       helpers.setValue(undefined)
       dispatch(drawPolygon(undefined, MISSION_INTERACTION_LISTENER))
       setFieldValue('isGeometryComputedFromControls', false)
@@ -68,7 +72,7 @@ export function MissionZonePicker() {
     }
 
     dispatch(drawPolygon(value, MISSION_INTERACTION_LISTENER))
-  }, [dispatch, helpers, value, setFieldValue, values.isGeometryComputedFromControls])
+  }, [dispatch, helpers, value, setFieldValue, values.isGeometryComputedFromControls, values.geom])
 
   const deleteZone = useCallback(
     async (index: number) => {
