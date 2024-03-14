@@ -25,6 +25,7 @@ export enum MonitorEnvLayers {
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
   EEZ = 'EEZ',
+  FACADES = 'FACADES',
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
@@ -138,7 +139,14 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.DEPARTMENTS]: {
     code: 'departments_areas',
     name: 'Départements',
-    type: LayerType.ADMINISTRATIVE
+    type: LayerType.ADMINISTRATIVE,
+    zoneFieldKey: 'name'
+  },
+  [MonitorEnvLayers.FACADES]: {
+    code: 'facade_areas_unextended',
+    name: 'Facades',
+    type: LayerType.ADMINISTRATIVE,
+    zoneFieldKey: 'facade'
   },
   [MonitorEnvLayers.REGULATORY_ENV]: {
     code: MonitorEnvLayers.REGULATORY_ENV,

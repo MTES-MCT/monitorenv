@@ -6,18 +6,46 @@ import Text from 'ol/style/Text'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
-/**
- *
- * @param {string} code
- * @returns
- */
-export const getAdministrativeLayersStyle = code => {
+
+const blueMarine = '#7B9FCC'
+const darkPeriwinkle = '#767AB2'
+
+export const getAdministrativeLayersStyle = (code: String) => {
   switch (code) {
+    case Layers.FAO.code:
+      return feature =>
+        new Style({
+          stroke: new Stroke({
+            color: darkPeriwinkle,
+            width: 1
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '12px Marianne',
+            overflow: true,
+            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            text: Layers.FAO.getZoneName && Layers.FAO.getZoneName(feature)
+          })
+        })
+    case Layers.AEM.code:
+      return feature =>
+        new Style({
+          stroke: new Stroke({
+            color: darkPeriwinkle,
+            width: 1
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '12px Marianne',
+            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            text: `${feature.get(Layers.AEM.subZoneFieldKey) ? feature.get(Layers.AEM.subZoneFieldKey) : ''}`
+          })
+        })
     case Layers.EEZ.code:
       return feature =>
         new Style({
           stroke: new Stroke({
-            color: '#767AB2',
+            color: darkPeriwinkle,
             width: 1
           }),
           text: new Text({
@@ -27,56 +55,63 @@ export const getAdministrativeLayersStyle = code => {
             text: `${feature.get(Layers.EEZ.subZoneFieldKey) ? feature.get(Layers.EEZ.subZoneFieldKey) : ''}`
           })
         })
-    case Layers.FAO.code:
-      return feature =>
-        new Style({
-          stroke: new Stroke({
-            color: '#767AB2',
-            width: 1
-          }),
-          text: new Text({
-            fill: new Fill({ color: THEME.color.gunMetal }),
-            font: '12px Marianne',
-            overflow: true,
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: Layers.FAO.getZoneName && Layers.FAO.getZoneName(feature)
-          })
-        })
-    case Layers.AEM.code:
-      return feature =>
-        new Style({
-          stroke: new Stroke({
-            color: '#767AB2',
-            width: 1
-          }),
-          text: new Text({
-            fill: new Fill({ color: THEME.color.gunMetal }),
-            font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: `${feature.get(Layers.AEM.subZoneFieldKey) ? feature.get(Layers.AEM.subZoneFieldKey) : ''}`
-          })
-        })
     case Layers.THREE_MILES.code:
-      return () =>
-        new Style({
-          stroke: new Stroke({
-            color: 'rgba(5, 5, 94, 0.5)',
-            width: 2
-          })
-        })
     case Layers.SIX_MILES.code:
-      return () =>
-        new Style({
-          stroke: new Stroke({
-            color: 'rgba(5, 5, 94, 0.5)',
-            width: 2
-          })
-        })
     case Layers.TWELVE_MILES.code:
       return () =>
         new Style({
           stroke: new Stroke({
-            color: 'rgba(5, 5, 94, 0.5)',
+            // color: 'rgba(5, 5, 94, 0.5)',
+            color: darkPeriwinkle,
+            width: 2
+          })
+        })
+    case Layers.FACADES.code:
+      return feature =>
+        new Style({
+          stroke: new Stroke({
+            color: darkPeriwinkle,
+            width: 2
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '12px Marianne',
+            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            text: `${feature.get(Layers.FACADES.zoneFieldKey) ? feature.get(Layers.FACADES.zoneFieldKey) : ''}`
+          })
+        })
+    case Layers.DEPARTMENTS.code:
+      return feature =>
+        new Style({
+          stroke: new Stroke({
+            color: darkPeriwinkle,
+            width: 2
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '16px Marianne',
+            overflow: true,
+            stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
+            text: `${feature.get(Layers.DEPARTMENTS.zoneFieldKey) ? feature.get(Layers.DEPARTMENTS.zoneFieldKey) : ''}`
+          })
+        })
+    case Layers.SALTWATER_LIMIT_AREAS.code:
+    case Layers.TRANSVERSAL_SEA_LIMIT_AREAS.code:
+      return () =>
+        new Style({
+          stroke: new Stroke({
+            color: getColorWithAlpha(THEME.color.maximumRed, 0.6),
+            width: 4
+          })
+        })
+    case Layers.TERRITORIAL_SEAS.code:
+      return () =>
+        new Style({
+          fill: new Fill({
+            color: getColorWithAlpha(darkPeriwinkle, 0.25)
+          }),
+          stroke: new Stroke({
+            color: darkPeriwinkle,
             width: 2
           })
         })
@@ -84,10 +119,10 @@ export const getAdministrativeLayersStyle = code => {
       return () =>
         new Style({
           fill: new Fill({
-            color: getColorWithAlpha('#7B9FCC', 0.2)
+            color: getColorWithAlpha(blueMarine, 0.2)
           }),
           stroke: new Stroke({
-            color: getColorWithAlpha('#7B9FCC', 0.6),
+            color: getColorWithAlpha(blueMarine, 0.6),
             width: 2
           })
         })
