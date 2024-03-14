@@ -107,7 +107,7 @@ export function ReportingsTable({
           <tbody>
             {paddingTop > 0 && (
               <tr>
-                <td style={{ height: `${paddingTop}px` }} />
+                <td aria-label="empty-line-for-scroll" style={{ height: `${paddingTop}px` }} />
               </tr>
             )}
             {virtualRows.map(virtualRow => {
@@ -136,7 +136,7 @@ export function ReportingsTable({
             })}
 
             <tr>
-              <td style={{ height: '50px' }} />
+              <td aria-label="empty-line-for-scroll" style={{ height: '50px' }} />
             </tr>
           </tbody>
         </TableWithSelectableRows.Table>
