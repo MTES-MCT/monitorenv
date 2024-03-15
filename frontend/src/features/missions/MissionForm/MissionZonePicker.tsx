@@ -163,7 +163,7 @@ const Row = styled.div`
 `
 
 const ZoneWrapper = styled.div`
-  background-color: ${THEME.color.white};
+  background-color: ${THEME.color.gainsboro};
   display: flex;
   flex-grow: 1;
   font-size: 13px;
