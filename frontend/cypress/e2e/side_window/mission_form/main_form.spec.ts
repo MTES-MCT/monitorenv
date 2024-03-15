@@ -26,16 +26,16 @@ context('Side Window > Mission Form > Main Form', () => {
     //  cy.get('div').contains('Mission non enregistrée.')
     cy.get('.Element-Tag').contains('Enregistrement auto. actif')
     // When
-    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
+    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
 
     // with wrong end date of mission
-    cy.fill('Fin de mission', [2024, 5, 25, 14, 15])
+    cy.fill('Date de fin (UTC)', [2024, 5, 25, 14, 15])
     cy.get('form').submit()
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à la date de début')
 
     // with good date
-    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
+    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
@@ -94,16 +94,16 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.wait(100)
     cy.get('.Element-Tag').contains('Enregistrement auto. inactif')
     // When
-    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
+    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
 
     // with wrong end date of mission
-    cy.fill('Fin de mission', [2024, 5, 25, 14, 15])
+    cy.fill('Date de fin (UTC)', [2024, 5, 25, 14, 15])
     cy.get('form').submit()
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à la date de début')
 
     // with good date
-    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
+    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
@@ -281,8 +281,8 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('*[data-cy="add-mission"]').click()
 
-    cy.fill('Début de mission', [2024, 5, 26, 12, 0])
-    cy.fill('Fin de mission', [2024, 5, 28, 14, 15])
+    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
+    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
 
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })

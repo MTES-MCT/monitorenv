@@ -79,7 +79,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
 
   return (
     <Field>
-      {label && <Label>{label}</Label>}
+      {label && <Label $isRequired>{label}</Label>}
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}

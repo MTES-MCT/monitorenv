@@ -89,7 +89,7 @@ export function GeneralInformationsForm() {
               isErrorMessageHidden
               isRequired
               isStringDate
-              label="Début de mission"
+              label="Date de début (UTC)"
               name="startDateTimeUtc"
               onChange={updateMissionDateTime}
               withTime
@@ -103,7 +103,7 @@ export function GeneralInformationsForm() {
               isErrorMessageHidden
               isRequired
               isStringDate
-              label="Fin de mission"
+              label="Date de fin (UTC)"
               name="endDateTimeUtc"
               withTime
             />
@@ -167,8 +167,8 @@ export function GeneralInformationsForm() {
           <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
           <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
           <StyledAuthorContainer>
-            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
-            <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
+            <FormikTextInput isErrorMessageHidden isRequired label="Ouvert par" name="openBy" />
+            <FormikTextInput isErrorMessageHidden isRequired label="Clôturé par" name="closedBy" />
           </StyledAuthorContainer>
           {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
           {errors.openBy && errors.openBy.length > 1 && <FieldError>{errors.openBy}</FieldError>}
@@ -214,7 +214,7 @@ const StyledTagsContainer = styled.div`
 `
 const StyledDatePickerContainer = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 16px;
 `
 const StyledFormikDatePicker = styled(FormikDatePicker)`
   p {
@@ -241,7 +241,7 @@ const StyledObservationsContainer = styled.div`
 `
 const StyledAuthorContainer = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 16px;
   .Field-TextInput {
     width: 120px;
   }

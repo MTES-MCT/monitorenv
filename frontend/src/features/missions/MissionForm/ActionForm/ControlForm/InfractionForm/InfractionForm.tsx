@@ -1,12 +1,4 @@
-import {
-  Accent,
-  Button,
-  FieldError,
-  FormikCheckbox,
-  FormikMultiRadio,
-  FormikTextarea,
-  FormikTextInput
-} from '@mtes-mct/monitor-ui'
+import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import styled from 'styled-components'
 
@@ -37,7 +29,6 @@ export function InfractionForm({
   const infractionPath = `envActions[${envActionIndex}].infractions[${currentInfractionIndex}]`
 
   const [actionTargetField] = useField<string>(`envActions.${envActionIndex}.actionTargetType`)
-  const [, meta] = useField(infractionPath)
 
   return (
     <FormWrapper data-cy="infraction-form">
@@ -58,6 +49,7 @@ export function InfractionForm({
       <FormikMultiRadio
         isErrorMessageHidden
         isInline
+        isRequired
         label="Type d'infraction"
         name={`${infractionPath}.infractionType`}
         options={infractionTypeOptions}
@@ -66,6 +58,7 @@ export function InfractionForm({
       <FormikMultiRadio
         isErrorMessageHidden
         isInline
+        isRequired
         label="Mise en demeure"
         name={`${infractionPath}.formalNotice`}
         options={formalNoticeOPtions}
@@ -88,7 +81,6 @@ export function InfractionForm({
           Valider l&apos;infraction
         </Button>
       </ButtonContainer>
-      {!!meta.error && <FieldError>Veuillez compléter les champs en rouge pour valider l&apos;infraction</FieldError>}
     </FormWrapper>
   )
 }
@@ -106,7 +98,7 @@ const FormColumnWithCheckbox = styled.div`
   display: flex;
   gap: 16px;
   > .Field-Checkbox {
-    padding-bottom: 8px;
+    padding-bottom: 12px;
   }
 `
 const ButtonContainer = styled.div`

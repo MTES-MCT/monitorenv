@@ -12,6 +12,7 @@ type VehicleTypeSelectorProps = {
   disabled: boolean
   error?: string
   isLight?: boolean
+  isRequired?: boolean
   name: string
   onChange: (nextValue: string | undefined) => Promisable<void>
   value?: string
@@ -21,6 +22,7 @@ export function VehicleTypeSelector({
   disabled,
   error,
   isLight = true,
+  isRequired = false,
   name,
   onChange,
   value
@@ -36,6 +38,7 @@ export function VehicleTypeSelector({
         error={error}
         isErrorMessageHidden
         isLight={isLight}
+        isRequired={isRequired}
         label="Type de véhicule"
         name={name}
         onChange={onChange}
@@ -48,5 +51,5 @@ export function VehicleTypeSelector({
 }
 
 const SelectorWrapper = styled.div`
-  width: 150px;
+  width: 176px;
 `
