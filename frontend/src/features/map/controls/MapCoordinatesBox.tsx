@@ -147,7 +147,7 @@ const CoordinatesTypeSelection = styled.span<{ isOpen: boolean }>`
 
 const Coordinates = styled.span`
   position: absolute;
-  bottom: 11px;
+  bottom: 9px;
   left: 40px;
   display: inline-block;
   padding: 3px 0px 3px 2px;
