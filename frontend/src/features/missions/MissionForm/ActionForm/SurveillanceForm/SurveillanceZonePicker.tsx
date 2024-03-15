@@ -82,7 +82,7 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
 
   return (
     <Field>
-      <Label>Zone de surveillance</Label>
+      <Label $isRequired>Zone de surveillance</Label>
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}

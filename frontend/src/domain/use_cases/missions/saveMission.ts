@@ -57,6 +57,7 @@ export const saveMission =
           dispatch(
             missionFormsActions.setMission({
               ...mission,
+              isFormDirty: false, // since misison has just been saved, it's not dirty anymore
               missionForm: response.data
             })
           )

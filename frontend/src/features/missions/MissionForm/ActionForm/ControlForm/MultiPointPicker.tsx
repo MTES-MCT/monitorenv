@@ -1,7 +1,11 @@
-import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Label, type Coordinates } from '@mtes-mct/monitor-ui'
+import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { useField, useFormikContext } from 'formik'
 import { isEqual } from 'lodash'
+import { Feature } from 'ol'
 import { boundingExtent } from 'ol/extent'
+import { MultiPolygon } from 'ol/geom'
+import Polygon, { circular } from 'ol/geom/Polygon'
 import { transformExtent } from 'ol/proj'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -54,7 +58,13 @@ export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
     if (geometry?.type === OLGeometryType.MULTIPOINT && !isEqual(geometry, value)) {
       setValue(geometry)
       if ((!values.geom || values.geom?.coordinates.length === 0) && values.envActions.length === 1) {
-        setFieldValue('geom', geometry)
+        const circleGeometry = new Feature({
+          geometry: circular(geometry.coordinates[0] as Coordinates, 4000, 64).transform(
+            WSG84_PROJECTION,
+            OPENLAYERS_PROJECTION
+          )
+        }).getGeometry()
+        setFieldValue('geom', convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon])))
         setFieldValue('isGeometryComputedFromControls', true)
       }
     }
@@ -80,8 +90,12 @@ export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
       }
       const nextCoordinates = remove(index, 1, value.coordinates)
       setValue({ ...value, coordinates: nextCoordinates })
+      if (values.isGeometryComputedFromControls && values.envActions.length === 1) {
+        setFieldValue('geom', undefined)
+        setFieldValue('isGeometryComputedFromControls', false)
+      }
     },
-    [value, setValue]
+    [value, setValue, values.isGeometryComputedFromControls, values.envActions.length, setFieldValue]
   )
 
   return (

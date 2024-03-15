@@ -1,5 +1,4 @@
 import { Accent, Button, Icon, IconButton, Label, THEME } from '@mtes-mct/monitor-ui'
-import { setInitialGeometry } from 'domain/shared_slices/Draw'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -13,12 +12,12 @@ import {
   OLGeometryType,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
-} from '../../domain/entities/map/constants'
-import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { drawPolygon } from '../../domain/use_cases/draw/drawGeometry'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
+} from '../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { drawPolygon } from '../../../domain/use_cases/draw/drawGeometry'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useListenForDrawedGeometry } from '../../../hooks/useListenForDrawing'
 
 import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
@@ -61,18 +60,15 @@ export function MissionZonePicker() {
 
   const handleAddZone = useCallback(() => {
     if (values.isGeometryComputedFromControls) {
-      if (values.geom) {
-        dispatch(setInitialGeometry(values.geom))
-      }
+      setFieldValue('isGeometryComputedFromControls', false)
       helpers.setValue(undefined)
       dispatch(drawPolygon(undefined, MISSION_INTERACTION_LISTENER))
-      setFieldValue('isGeometryComputedFromControls', false)
 
       return
     }
 
     dispatch(drawPolygon(value, MISSION_INTERACTION_LISTENER))
-  }, [dispatch, helpers, value, setFieldValue, values.isGeometryComputedFromControls, values.geom])
+  }, [dispatch, helpers, value, setFieldValue, values.isGeometryComputedFromControls])
 
   const deleteZone = useCallback(
     async (index: number) => {
@@ -82,17 +78,13 @@ export function MissionZonePicker() {
 
       const nextCoordinates = remove(index, 1, value.coordinates)
       helpers.setValue({ ...value, coordinates: nextCoordinates })
-
-      if (!nextCoordinates.length) {
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
     },
-    [value, helpers, setFieldValue]
+    [value, helpers]
   )
 
   return (
     <Field>
-      <Label $isRequired>Localisations :</Label>
+      <Label>Localisations</Label>
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
@@ -129,7 +121,7 @@ export function MissionZonePicker() {
                 />
                 <IconButton
                   accent={Accent.SECONDARY}
-                  aria-label="Supprimer cette zone"
+                  aria-label="Supprimer cette zone de mission"
                   disabled={isEditingZone}
                   Icon={Icon.Delete}
                   onClick={() => deleteZone(index)}
