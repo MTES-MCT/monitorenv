@@ -58,13 +58,13 @@ const BaseLayersContainer = styled.div<{ $baseLayersLength: number | undefined; 
       height: 0;
     }
     100% {
-      height: ${p => (p.$baseLayersLength ? `${38 * p.$baseLayersLength}px` : '175px')};
+      height: ${p => (p.$baseLayersLength ? `${39 * p.$baseLayersLength}px` : '175px')};
     }
   }
 
   @keyframes zones-closing {
     0% {
-      height: ${p => (p.$baseLayersLength ? `${38 * p.$baseLayersLength}px` : '175px')};
+      height: ${p => (p.$baseLayersLength ? `${39 * p.$baseLayersLength}px` : '175px')};
     }
     100% {
       height: 0;
@@ -73,7 +73,7 @@ const BaseLayersContainer = styled.div<{ $baseLayersLength: number | undefined; 
 `
 
 const StyledMultiRadio = styled(MultiRadio)`
-  > div > div > .rs-radio {
+  > div > div > div > .rs-radio {
     border-bottom: 1px solid ${p => p.theme.color.lightGray};
     margin-top: 0px !important;
     padding: 10px 16px;

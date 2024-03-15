@@ -50,5 +50,17 @@ html {
   .collapsed {
     display: none;
   }
+
+  .rs-radio-checker {
+    line-height: normal;
+  }
+
+  .Element-Fieldset__InnerBox {
+    > .Field-DateRangePicker__RangeCalendarPicker {
+      > div > .rs-picker-daterange-panel {
+        min-width: 481px !important;
+      }
+    }
+  }
   
 `
