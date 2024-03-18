@@ -1,8 +1,8 @@
+import { selectedMissionStyle } from '@features/map/layers/Missions/missions.style'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
-import { attachedMissionStyle } from './style'
 import { useGetMissionsQuery } from '../../../../api/missionsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -33,7 +33,7 @@ export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: selectedAttachedMissionVectorSourceRef.current,
-      style: attachedMissionStyle,
+      style: selectedMissionStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.zIndex
