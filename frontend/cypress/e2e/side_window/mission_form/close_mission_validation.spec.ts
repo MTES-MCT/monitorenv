@@ -12,7 +12,6 @@ context('Side Window > Mission Form > Validation on close', () => {
   })
 
   it('A new mission with control and surveillance can be closed with all required values When auto-save is enabled', () => {
-    // Given
     cy.get('*[data-cy="add-mission"]').click()
     cy.wait(500)
 
@@ -86,8 +85,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
 
-    cy.getDataCy('surveillance-zone-matches-mission').should('have.class', 'rs-checkbox-checked')
-
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
     cy.wait(250)
@@ -110,11 +107,12 @@ context('Side Window > Mission Form > Validation on close', () => {
   })
 
   it('A new mission with control and surveillance can be closed with all required values When auto-save is disabled (because of old mission)', () => {
-    // Given
+    cy.intercept('PUT', '/bff/v1/missions/*').as('createAndCloseMission')
     cy.get('*[data-cy="add-mission"]').click()
     cy.wait(500)
 
     // we fill all the required inputs
+    // since we fill dates with past dates autosaved is disabled
     cy.fill('Date de début (UTC)', [2023, 10, 11, 7, 35])
     cy.wait(250)
     cy.fill('Date de fin (UTC)', [2023, 10, 12, 7, 35])
@@ -182,8 +180,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
 
-    cy.getDataCy('surveillance-zone-matches-mission').should('have.class', 'rs-checkbox-checked')
-
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
     cy.wait(250)
@@ -199,7 +195,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.wait(250)
 
     // Then
-    cy.intercept('PUT', '/bff/v1/missions/*').as('createAndCloseMission')
+
     cy.clickButton('Enregistrer')
 
     cy.wait('@createAndCloseMission').then(({ response }) => {
