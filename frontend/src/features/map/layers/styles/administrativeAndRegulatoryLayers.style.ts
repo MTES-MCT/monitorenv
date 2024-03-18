@@ -55,6 +55,8 @@ export const getAdministrativeLayersStyle = (code: String) => {
             text: `${feature.get(Layers.EEZ.subZoneFieldKey) ? feature.get(Layers.EEZ.subZoneFieldKey) : ''}`
           })
         })
+    case Layers.LOW_WATER_LINE.code:
+    case Layers.STRAIGHT_BASELINE.code:
     case Layers.THREE_MILES.code:
     case Layers.SIX_MILES.code:
     case Layers.TWELVE_MILES.code:
@@ -87,7 +89,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
             width: 2
           }),
           text: new Text({
-            fill: new Fill({ color: THEME.color.gunMetal }),
+            fill: new Fill({ color: darkPeriwinkle }),
             font: '16px Marianne',
             overflow: true,
             stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
