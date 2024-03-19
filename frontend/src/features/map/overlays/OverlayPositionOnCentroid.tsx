@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { debounce } from 'lodash'
 import { getCenter } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -91,14 +92,23 @@ export function OverlayPositionOnCentroid({
     }
   }, [feature])
 
-  useEffect(() => {
-    const view = map.getView()
-    view.on('change:resolution', () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedHandleChangeResolution = useCallback(
+    debounce(() => {
       if (overlayCoordinates) {
         dispatch(removeAllOverlayCoordinates())
       }
+    }, 500),
+    [overlayCoordinates, dispatch]
+  )
+
+  useEffect(() => {
+    const view = map.getView()
+
+    view.on('change:resolution', () => {
+      debouncedHandleChangeResolution()
     })
-  }, [dispatch, map, overlayCoordinates])
+  }, [dispatch, map, overlayCoordinates, debouncedHandleChangeResolution])
 
   useEffect(() => {
     if (map) {

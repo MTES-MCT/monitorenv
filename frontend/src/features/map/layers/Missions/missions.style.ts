@@ -59,17 +59,7 @@ export const missionWithCentroidStyleFn = feature => {
 }
 
 export const selectedMissionActionsStyle = [
-  // Global actions style
-  new Style({
-    fill: new Fill({
-      color: 'rgba(86, 151, 210, .35)' // Blue Gray
-    }),
-    stroke: new Stroke({
-      color: THEME.color.charcoal,
-      width: 2
-    })
-  }),
-  // Surveillance
+  // Surveillance icon
   new Style({
     geometry: feature => {
       if (feature.get('actionType') !== ActionTypeEnum.SURVEILLANCE) {
@@ -88,7 +78,20 @@ export const selectedMissionActionsStyle = [
     image: new Icon({
       scale: 1.1,
       src: 'Observation.svg'
+    })
+  }),
+  // Surveillance zone
+  new Style({
+    fill: new Fill({
+      color: 'rgba(86, 151, 210, .35)' // Blue Gray
     }),
+    geometry: feature => {
+      if (feature.get('actionType') !== ActionTypeEnum.SURVEILLANCE) {
+        return undefined
+      }
+
+      return feature.getGeometry()
+    },
     stroke: new Stroke({
       color: THEME.color.charcoal,
       width: 2
