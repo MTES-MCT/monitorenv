@@ -1,3 +1,4 @@
+import mimetypes
 import smtplib
 from email.message import EmailMessage
 from mimetypes import guess_type
@@ -96,11 +97,17 @@ def create_html_email(
             )
 
     if attachments:
-        for filename, filebytes in attachments.items():
+        for filename, content in attachments.items():
+            ctype, encoding = mimetypes.guess_type(filename)
+            if ctype is None or encoding is not None:
+                # No guess could be made, or the file is encoded (compressed), so
+                # use a generic bag-of-bits type.
+                ctype = "application/octet-stream"
+            maintype, subtype = ctype.split("/", 1)
             msg.add_attachment(
-                filebytes,
-                maintype="application",
-                subtype="octet-stream",
+                content,
+                maintype=maintype,
+                subtype=subtype,
                 filename=filename,
             )
 

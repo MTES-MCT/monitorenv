@@ -20,6 +20,11 @@ HOST_MIGRATIONS_FOLDER = os.getenv(
     "HOST_MIGRATIONS_FOLDER", LOCAL_MIGRATIONS_FOLDER
 )
 
+EMAIL_TEMPLATES_LOCATION = LIBRARY_LOCATION / Path("pipeline/emails/templates")
+EMAIL_STYLESHEETS_LOCATION = LIBRARY_LOCATION / Path(
+    "pipeline/emails/stylesheets"
+)
+
 # Must be set to true when running tests locally
 TEST_LOCAL = os.getenv("TEST_LOCAL", "False").lower() in (
     "true",
