@@ -31,7 +31,7 @@ jobs:
           repository: mtes-mct/monitorenv
 
       - name: Set ENV_PROFILE as PROD when it is a release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v1') || startsWith(github.ref, 'refs/heads/v1') || startsWith(github.ref, 'refs/tags/v2') || startsWith(github.ref, 'refs/heads/v2')
         run: echo "ENV_PROFILE=prod" >> $GITHUB_ENV
 
       - name: Set VERSION
