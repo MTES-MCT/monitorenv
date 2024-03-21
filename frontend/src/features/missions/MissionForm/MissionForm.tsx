@@ -9,6 +9,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { CancelEditModal } from './CancelEditModal'
+import { CloseEditModal } from './CloseEditModal'
 import { DeleteModal } from './DeleteModal'
 import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
@@ -36,11 +37,12 @@ import type { AtLeast } from '../../../types'
 
 enum ModalTypes {
   ACTIONS = 'ACTIONS',
+  CLOSE = 'CLOSE',
   DELETE = 'DELETE',
   REOPEN = 'REOPEN'
 }
 
-type ModalProps = ModalTypes.ACTIONS | ModalTypes.REOPEN | ModalTypes.DELETE
+type ModalProps = ModalTypes.ACTIONS | ModalTypes.REOPEN | ModalTypes.DELETE | ModalTypes.CLOSE
 
 type MissionFormProps = {
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
@@ -62,7 +64,13 @@ export function MissionForm({
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const missionEvent = useListenMissionEventUpdatesById(id)
-  const { setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
+  const {
+    dirty,
+    errors: formErrors,
+    setFieldValue,
+    validateForm,
+    values
+  } = useFormikContext<Partial<Mission | NewMission>>()
 
   const previousEngagedControlUnit = usePrevious(engagedControlUnit)
 
@@ -88,13 +96,6 @@ export function MissionForm({
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [openModal, setOpenModal] = useState<ModalProps | undefined>(undefined)
   const [actionsSources, setActionsSources] = useState<MissionSourceEnum[]>([])
-
-  const allowEditMission =
-    selectedMission?.missionSource === undefined ||
-    selectedMission?.missionSource === MissionSourceEnum.MONITORENV ||
-    selectedMission?.missionSource === MissionSourceEnum.MONITORFISH
-  const allowDeleteMission = !isNewMission && allowEditMission
-  const allowCloseMission = !selectedMission?.isClosed || !values?.isClosed
 
   // the form listens to the redux store to update the attached reportings
   // because of the map interaction to attach reportings
@@ -156,6 +157,7 @@ export function MissionForm({
 
         return
       }
+      dispatch(sideWindowActions.setShowConfirmCancelModal(true))
       setShouldValidateOnChange(true)
     })
   }
@@ -203,6 +205,12 @@ export function MissionForm({
   }
 
   const confirmFormCancelation = () => {
+    // when auto save is disabled, and form has changes we want to display specific modal
+    if (!isAutoSaveEnabled && dirty && isEmpty(formErrors)) {
+      setOpenModal(ModalTypes.CLOSE)
+
+      return
+    }
     if (isFormDirty) {
       dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     } else {
@@ -263,12 +271,8 @@ export function MissionForm({
     <StyledFormContainer>
       <FormikEffect onChange={validateBeforeOnChange} />
       <FormikSyncMissionFields missionId={id} />
-      <CancelEditModal
-        isAutoSaveEnabled={isAutoSaveEnabled}
-        onCancel={returnToEdition}
-        onConfirm={cancelForm}
-        open={sideWindow.showConfirmCancelModal && isFormDirty}
-      />
+      <CancelEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={sideWindow.showConfirmCancelModal} />
+      <CloseEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={openModal === ModalTypes.CLOSE} />
       <DeleteModal
         onCancel={returnToEdition}
         onConfirm={validateDeleteMission}
@@ -297,11 +301,7 @@ export function MissionForm({
       </Wrapper>
 
       <MissionFormBottomBar
-        allowClose={allowCloseMission}
-        allowDelete={allowDeleteMission}
-        allowEdit={allowEditMission}
         isAutoSaveEnabled={isAutoSaveEnabled}
-        isFromMonitorFish={selectedMission?.missionSource === MissionSourceEnum.MONITORFISH}
         onCloseMission={closeMission}
         onDeleteMission={deleteMission}
         onQuitFormEditing={confirmFormCancelation}

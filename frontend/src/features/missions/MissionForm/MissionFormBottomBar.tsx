@@ -5,14 +5,10 @@ import { useMemo, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 import { AutoSaveTag } from './AutoSaveTag'
-import { missionSourceEnum, type Mission } from '../../../domain/entities/missions'
+import { MissionSourceEnum, missionSourceEnum, type Mission } from '../../../domain/entities/missions'
 
 type MissionFormBottomBarProps = {
-  allowClose: boolean
-  allowDelete: boolean
-  allowEdit: boolean
   isAutoSaveEnabled: boolean
-  isFromMonitorFish: boolean
   onCloseMission: MouseEventHandler<HTMLButtonElement>
   onDeleteMission: MouseEventHandler<HTMLButtonElement>
   onQuitFormEditing: MouseEventHandler<HTMLButtonElement>
@@ -20,11 +16,7 @@ type MissionFormBottomBarProps = {
   onSaveMission: MouseEventHandler<HTMLButtonElement>
 }
 export function MissionFormBottomBar({
-  allowClose,
-  allowDelete,
-  allowEdit,
   isAutoSaveEnabled,
-  isFromMonitorFish,
   onCloseMission,
   onDeleteMission,
   onQuitFormEditing,
@@ -33,7 +25,21 @@ export function MissionFormBottomBar({
 }: MissionFormBottomBarProps) {
   const { values } = useFormikContext<Mission>()
   const missionIsNewMission = useMemo(() => isNewMission(values?.id), [values?.id])
+  const allowEditMission = useMemo(
+    () =>
+      values?.missionSource === undefined ||
+      values?.missionSource === MissionSourceEnum.MONITORENV ||
+      values?.missionSource === MissionSourceEnum.MONITORFISH,
+    [values?.missionSource]
+  )
 
+  const allowDeleteMission = !missionIsNewMission && allowEditMission
+  const allowCloseMission = useMemo(() => !values?.isClosed, [values?.isClosed])
+
+  const isFromMonitorFish = useMemo(
+    () => values.missionSource === MissionSourceEnum.MONITORFISH,
+    [values.missionSource]
+  )
   const formattedUpdatedDate = useMemo(
     () => values.updatedAtUtc && humanizePastDate(values.updatedAtUtc),
     [values.updatedAtUtc]
@@ -41,7 +47,7 @@ export function MissionFormBottomBar({
 
   return (
     <Footer>
-      {allowDelete && (
+      {allowDeleteMission && (
         <StyledButton
           accent={Accent.SECONDARY}
           data-cy="delete-mission"
@@ -69,7 +75,7 @@ export function MissionFormBottomBar({
       <Separator />
       <StyledButtonsContainer>
         <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
-        {allowClose && allowEdit && (
+        {allowCloseMission && allowEditMission && (
           <Button
             accent={Accent.SECONDARY}
             data-cy="close-mission"
@@ -81,7 +87,7 @@ export function MissionFormBottomBar({
           </Button>
         )}
 
-        {!allowClose && allowEdit && (
+        {!allowCloseMission && allowEditMission && (
           <Button
             accent={Accent.SECONDARY}
             data-cy="reopen-mission"
@@ -100,7 +106,7 @@ export function MissionFormBottomBar({
         >
           Fermer
         </Button>
-        {!isAutoSaveEnabled && allowEdit && (
+        {!isAutoSaveEnabled && allowEditMission && (
           <Button data-cy="save-mission" onClick={onSaveMission} type="button">
             Enregistrer
           </Button>
