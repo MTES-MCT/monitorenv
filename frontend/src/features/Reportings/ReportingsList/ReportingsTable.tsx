@@ -1,3 +1,4 @@
+import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Icon, THEME, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -21,14 +22,15 @@ export function ReportingsTable({
   reportings: (ReportingDetailed | undefined)[]
 }) {
   const openReportings = useAppSelector(state => state.reporting.reportings)
+  const { themes } = useGetControlPlans()
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
 
   const columns = useMemo(
-    () => (isLoading ? Columns.map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns),
-    [isLoading]
+    () => (isLoading ? Columns(themes).map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns(themes)),
+    [isLoading, themes]
   )
 
   const table = useReactTable({
