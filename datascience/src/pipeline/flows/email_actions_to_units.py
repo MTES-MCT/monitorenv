@@ -328,16 +328,14 @@ def load_emails_sent_to_control_units(
     )
 
 
-with Flow("Email actions data", executor=LocalDaskExecutor()) as flow:
+with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
     flow_not_running = check_flow_not_running()
     with case(flow_not_running, True):
         test_mode = Parameter("test_mode")
         is_integration = Parameter("is_integration")
         start_days_ago = Parameter("start_days_ago")
         end_days_ago = Parameter("end_days_ago")
-        contact_names = Parameter(
-            "contact_names", ["OFFICE", "UNIT_CHIEF", "COMMANDER"]
-        )
+        contact_names = Parameter("contact_names")
 
         template = get_template()
         utcnow = get_utcnow()
@@ -363,8 +361,6 @@ with Flow("Email actions data", executor=LocalDaskExecutor()) as flow:
             test_mode=unmapped(test_mode),
         )
         message = filter_results(message)
-
-        # messages_to_send = flatten(email)
 
         sent_messages = send_env_actions_email.map(
             message,
