@@ -45,6 +45,24 @@ RUN_LOCAL = os.getenv("RUN_LOCAL", "False").lower() in (
 if RUN_LOCAL:
     load_dotenv(ROOT_DIRECTORY / ".env")
 
+# Must be set to true to avoid external side effects (emails, data.gouv uploads...) in
+# integration
+IS_INTEGRATION = os.getenv("IS_INTEGRATION", "False").lower() in (
+    "true",
+    "t",
+    "yes",
+    "y",
+)
+
+# Must be set to true to send controls data to the CACEM_EMAIL_ADDRESS, and
+# not to real email addressees (control units)
+TEST_MODE = os.getenv("TEST_MODE", "False").lower() in (
+    "true",
+    "t",
+    "yes",
+    "y",
+)
+
 # Flow execution configuration
 DOCKER_IMAGE = "ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline"
 MONITORENV_VERSION = os.getenv("MONITORENV_VERSION")
