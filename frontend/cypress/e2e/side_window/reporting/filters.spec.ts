@@ -96,8 +96,8 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by themes', () => {
-    cy.fill('Thématiques', ['Police des mouillages'])
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Police des mouillages')
+    cy.fill('Thématiques', ['Arrêté à visa environnemental'])
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Arrêté à visa environnemental')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index, list) => {
@@ -105,7 +105,7 @@ context('Reportings', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'Police des mouillages')
+      cy.wrap(row).should('contain', 'Arrêté à visa environnemental')
     })
 
     cy.fill('Thématiques', undefined)
@@ -113,8 +113,10 @@ context('Reportings', () => {
 
   it('Should filter reportings by sub-themes', () => {
     cy.log('Sub-themes should be filtered')
-    cy.fill('Sous-thématiques', ['ZMEL'])
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Sous-thème ZMEL')
+    cy.fill('Sous-thématiques', ['Surveillance générale'])
+    cy.getDataCy('reportings-filter-tags')
+      .find('.Component-SingleTag > span')
+      .contains('Sous-thème Surveillance générale')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index, list) => {
@@ -122,7 +124,7 @@ context('Reportings', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'ZMEL')
+      cy.wrap(row).should('contain', 'Surveillance générale')
     })
 
     cy.fill('Sous-thématiques', undefined)

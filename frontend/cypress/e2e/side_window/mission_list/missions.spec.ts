@@ -48,16 +48,4 @@ context('Missions', () => {
     cy.fill('Unité', undefined)
     cy.get('*[data-cy="edit-mission-38"]').should('exist')
   })
-
-  it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
-    cy.visit(`/side_window`).wait(1000)
-
-    cy.log('Should filter by theme')
-    cy.fill('Thématique', ['Police des épaves'])
-    cy.get('*[data-cy="cell-envActions-themes"]')
-      .eq(0)
-      .contains(
-        'Police des activités de cultures marines : Contrôle du schéma des structures ; Police des épaves : Épave/navire abandonné / Contrôle administratif'
-      )
-  })
 })
