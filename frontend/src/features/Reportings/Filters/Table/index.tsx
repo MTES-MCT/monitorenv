@@ -202,6 +202,7 @@ export function TableReportingsFiltersWithRef(
           <CheckPicker
             key={themesOptions.length}
             customSearch={themeCustomSearch}
+            data-cy="reporting-theme-filter"
             isLabelHidden
             label="Thématiques"
             menuStyle={{ maxWidth: '200%' }}
@@ -217,6 +218,7 @@ export function TableReportingsFiltersWithRef(
           <CheckPicker
             key={subThemesOptions.length}
             customSearch={subThemeCustomSearch}
+            data-cy="reporting-sub-theme-filter"
             isLabelHidden
             label="Sous-thématiques"
             menuStyle={{ maxWidth: '200%' }}
@@ -256,7 +258,7 @@ export function TableReportingsFiltersWithRef(
               }
               isLabelHidden
               isStringDate
-              label="Date de début entre le et le"
+              label="Période spécifique"
               name="dateRange"
               onChange={updateDateRangeFilter}
             />

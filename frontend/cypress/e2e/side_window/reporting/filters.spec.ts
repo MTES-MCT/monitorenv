@@ -204,4 +204,38 @@ context('Reportings', () => {
     cy.get('.Table-SimpleTable tr').should('have.length', 5)
     cy.fill('Rechercher une cible', undefined)
   })
+
+  it('Should themes and subThemes filters depends on date filter', () => {
+    cy.fill('Période', 'Période spécifique')
+
+    // for year 2024
+    cy.fill('Période spécifique', [
+      [2024, 1, 1],
+      [2024, 3, 3]
+    ])
+    cy.wait(500)
+    cy.wait('@getReportings')
+
+    cy.get('*[data-cy="reporting-theme-filter"]').click()
+    cy.get('#themes-listbox > div').should('have.length', 18)
+
+    cy.get('*[data-cy="reporting-sub-theme-filter"]').click()
+    cy.get('#subThemes-listbox > div').should('have.length', 78)
+
+    cy.wait(200)
+
+    // on two years
+    cy.fill('Période spécifique', [
+      [2023, 1, 1],
+      [2024, 3, 3]
+    ])
+    cy.wait(500)
+    cy.wait('@getReportings')
+
+    cy.get('*[data-cy="reporting-theme-filter"]').click()
+    cy.get('#themes-listbox > div').should('have.length', 34)
+
+    cy.get('*[data-cy="reporting-sub-theme-filter"]').click()
+    cy.get('#subThemes-listbox > div').should('have.length', 161)
+  })
 })

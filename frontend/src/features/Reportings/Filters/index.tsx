@@ -1,3 +1,4 @@
+import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
@@ -27,12 +28,36 @@ export enum ReportingFilterContext {
 }
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
-  const { periodFilter, sourceTypeFilter, subThemesFilter } = useAppSelector(state => state.reportingFilters)
+  const { periodFilter, sourceTypeFilter, startedAfter, startedBefore, subThemesFilter } = useAppSelector(
+    state => state.reportingFilters
+  )
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+
+  const startedAfterYear = useMemo(() => customDayjs(startedAfter).get('year'), [startedAfter])
+  const startedBeforeYear = useMemo(() => customDayjs(startedBefore).get('year'), [startedBefore])
   const { subThemes, subThemesAsOptions, themesAsOptions } = useGetControlPlans()
+  const { subThemesByYearAsOptions, themesByYearAsOptions } = useGetControlPlansByYear({ year: startedAfterYear })
+  const themesAsOptionsPerPeriod = useMemo(() => {
+    if (startedAfterYear === startedBeforeYear) {
+      return themesByYearAsOptions
+    }
+
+    // TODO deal with 2-year periods
+    return themesAsOptions
+  }, [startedAfterYear, startedBeforeYear, themesAsOptions, themesByYearAsOptions])
+
+  const subThemesAsOptionsPerPeriod = useMemo(() => {
+    if (startedAfterYear === startedBeforeYear) {
+      return subThemesByYearAsOptions
+    }
+
+    // TODO deal with 2-year periods
+    return subThemesAsOptions
+  }, [startedAfterYear, startedBeforeYear, subThemesAsOptions, subThemesByYearAsOptions])
+
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
 
@@ -102,9 +127,9 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
-    subThemesOptions: subThemesAsOptions,
+    subThemesOptions: subThemesAsOptionsPerPeriod,
     targetTypeOtions,
-    themesOptions: themesAsOptions,
+    themesOptions: themesAsOptionsPerPeriod,
     typeOptions
   }
 
