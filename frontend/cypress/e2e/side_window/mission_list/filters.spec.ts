@@ -1,17 +1,13 @@
-import { customDayjs } from '../../utils/customDayjs'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
 context('Side Window > Mission List > Filter Bar', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-
+    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.visit(`/side_window`).wait(1000)
   })
 
   it('Should filter missions for the current day', () => {
-    const currentDay = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
-    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentDay}*`).as('getMissions')
-
     cy.fill('Période', 'Aujourd’hui')
     cy.wait('@getMissions')
 
@@ -19,9 +15,6 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions for the current month', () => {
-    const currentDay = encodeURIComponent(customDayjs().utc().startOf('day').utc().subtract(30, 'day').toISOString())
-    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentDay}*`).as('getMissions')
-
     cy.fill('Période', 'Un mois')
     cy.wait('@getMissions')
 
@@ -31,10 +24,6 @@ context('Side Window > Mission List > Filter Bar', () => {
   it('Should filter missions for the custom date range', () => {
     const expectedStartDate = getUtcDateInMultipleFormats('2023-05-01T00:00:00.000Z')
     const expectedEndDate = getUtcDateInMultipleFormats('2023-05-31T23:59:59.000Z')
-    cy.intercept(
-      'GET',
-      `/bff/v1/missions?&startedAfterDateTime=${expectedStartDate.utcDateAsEncodedString}&startedBeforeDateTime=${expectedEndDate.utcDateAsEncodedString}*`
-    ).as('getMissions')
 
     cy.fill('Période', 'Période spécifique')
     cy.fill('Période spécifique', [expectedStartDate.utcDateTuple, expectedEndDate.utcDateTuple])
@@ -42,7 +31,6 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by source', () => {
-    cy.intercept('GET', `*missionSource=MONITORENV*`).as('getMissions')
     cy.fill('Origine', 'CACEM')
     cy.wait('@getMissions')
 
@@ -184,7 +172,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by themes', () => {
-    cy.fill('Thématique', ['Police des activités de cultures marines'])
+    cy.fill('Thématique', ['Mouillage individuel'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -192,9 +180,36 @@ context('Side Window > Mission List > Filter Bar', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'Police des activités de cultures marines')
+      cy.wrap(row).should('contain', 'Mouillage individuel')
     })
 
     cy.fill('Thématique', undefined)
+  })
+  it('Should themes filter depends on date filter', () => {
+    cy.fill('Période', 'Période spécifique')
+
+    // for year 2024
+    cy.fill('Période spécifique', [
+      [2024, 1, 1],
+      [2024, 3, 3]
+    ])
+    cy.wait(500)
+    cy.wait('@getMissions')
+
+    cy.get('*[data-cy="mission-theme-filter"]').click()
+    cy.get('#theme-listbox > div').should('have.length', 18)
+
+    cy.wait(200)
+
+    // on two years
+    cy.fill('Période spécifique', [
+      [2023, 1, 1],
+      [2024, 3, 3]
+    ])
+    cy.wait(500)
+    cy.wait('@getMissions')
+
+    cy.get('*[data-cy="mission-theme-filter"]').click()
+    cy.get('#theme-listbox > div').should('have.length', 34)
   })
 })

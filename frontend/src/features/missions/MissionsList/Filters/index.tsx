@@ -1,3 +1,4 @@
+import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
   Select,
   customDayjs,
@@ -45,7 +46,21 @@ export function MissionsTableFilters() {
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+
+  const startedAfterYear = customDayjs(startedAfter).get('year')
   const { themesAsOptions } = useGetControlPlans()
+  const { themesByYearAsOptions } = useGetControlPlansByYear({ year: startedAfterYear })
+
+  const themesAsOptionsPerPeriod = useMemo(() => {
+    const startedBeforeYear = customDayjs(startedBefore).get('year')
+
+    if (startedAfterYear === startedBeforeYear) {
+      return themesByYearAsOptions
+    }
+
+    // TODO deal with 2-year periods
+    return themesAsOptions
+  }, [startedAfterYear, startedBefore, themesAsOptions, themesByYearAsOptions])
 
   const activeAdministrations = useMemo(
     () =>
@@ -56,7 +71,10 @@ export function MissionsTableFilters() {
     [administrations]
   )
 
-  const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions, ['label']), [themesAsOptions])
+  const themeCustomSearch = useMemo(
+    () => new CustomSearch(themesAsOptionsPerPeriod, ['label']),
+    [themesAsOptionsPerPeriod]
+  )
 
   const controlUnitsAsOptions = useMemo(() => {
     const activeControlUnits = (legacyControlUnits ?? []).filter(isNotArchived)
@@ -266,13 +284,14 @@ export function MissionsTableFilters() {
           value={selectedStatuses}
         />
         <CheckPicker
+          key={themesAsOptionsPerPeriod.length}
           customSearch={themeCustomSearch}
-          data-cy="select-theme-filter"
+          data-cy="mission-theme-filter"
           isLabelHidden
           label="Thématique"
           name="theme"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
-          options={themesAsOptions}
+          options={themesAsOptionsPerPeriod}
           placeholder="Thématique"
           popupWidth={300}
           renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}

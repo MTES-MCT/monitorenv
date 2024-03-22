@@ -29,7 +29,7 @@ export function useGetControlPlansByYear({
   const subThemesByYearAsOptions: Array<Option<number>> = useMemo(
     () =>
       Object.values(data?.subThemes ?? {})
-        ?.filter(({ themeId }) => themeId === selectedTheme)
+        ?.filter(({ themeId }) => (selectedTheme ? themeId === selectedTheme : true))
         .map(({ id, subTheme }) => ({ label: subTheme, value: id }))
         .sort(sortControlPlans) || [],
     [data?.subThemes, selectedTheme]

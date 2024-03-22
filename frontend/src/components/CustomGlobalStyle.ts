@@ -55,6 +55,10 @@ html {
     line-height: normal;
   }
 
+  .rs-checkbox-checker > label {
+    line-height: normal !important;
+  }
+
   .Element-Fieldset__InnerBox {
     > .Field-DateRangePicker__RangeCalendarPicker {
       > div > .rs-picker-daterange-panel {

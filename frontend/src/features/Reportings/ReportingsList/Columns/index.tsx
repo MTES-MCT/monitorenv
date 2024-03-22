@@ -15,7 +15,7 @@ import { getReportType } from '../Cells/getReportType'
 
 import type { Row } from '@tanstack/react-table'
 
-export const Columns = [
+export const Columns = themes => [
   {
     accessorFn: row => row.reportingId,
     cell: ({ row }) => (
@@ -103,8 +103,14 @@ export const Columns = [
     cell: ({ row }) => <CellActionThemes subThemeIds={row.original.subThemeIds} themeId={row.original.themeId} />,
     enableSorting: true,
     header: () => 'Thématique',
-    id: 'theme',
-    size: 230
+    id: 'themeId',
+    size: 230,
+    sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
+      const themeA = themes[rowA.original[columnId]]?.theme
+      const themeB = themes[rowB.original[columnId]]?.theme
+
+      return themeA?.localeCompare(themeB)
+    }
   },
   {
     accessorFn: row => row.seaFront,
