@@ -6,13 +6,15 @@ import { MissionCard } from '../../../map/overlays/missions/MissionCard'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
-const MARGINS = {
-  xLeft: 20,
-  xMiddle: 120,
-  xRight: 20,
-  yBottom: 20,
-  yMiddle: 20,
-  yTop: 20
+const OPTIONS = {
+  margins: {
+    xLeft: 20,
+    xMiddle: 120,
+    xRight: 20,
+    yBottom: 20,
+    yMiddle: 20,
+    yTop: 20
+  }
 }
 
 export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
@@ -27,7 +29,7 @@ export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChil
       appClassName="overlay-mission-to-attach-hover"
       feature={displayMissionToAttachLayer && displayHoveredFeature ? currentFeatureOver : undefined}
       map={map}
-      options={{ margins: MARGINS }}
+      options={OPTIONS}
       zIndex={6000}
     >
       <MissionCard feature={currentFeatureOver} isOnlyHoverable />

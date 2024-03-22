@@ -47,13 +47,11 @@ export function GeneralInformationsForm() {
 
   const title = useMemo(() => getMissionTitle(missionIsNewMission, values), [missionIsNewMission, values])
 
-  const missionIsFromMonitorFish = useMemo(
-    () =>
-      values.missionSource === MissionSourceEnum.MONITORFISH ||
-      values.missionSource === MissionSourceEnum.POSEIDON_CNSP,
-    [values.missionSource]
-  )
-  const actualYearForThemes = customDayjs(values?.startDateTimeUtc).year()
+  const missionIsFromMonitorFish =
+    values.missionSource === MissionSourceEnum.MONITORFISH || values.missionSource === MissionSourceEnum.POSEIDON_CNSP
+
+  const actualYearForThemes = useMemo(() => customDayjs(values?.startDateTimeUtc).year(), [values?.startDateTimeUtc])
+
   const updateMissionDateTime = (date: string | undefined) => {
     if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
       values?.envActions?.forEach((action, actionIndex) => {
