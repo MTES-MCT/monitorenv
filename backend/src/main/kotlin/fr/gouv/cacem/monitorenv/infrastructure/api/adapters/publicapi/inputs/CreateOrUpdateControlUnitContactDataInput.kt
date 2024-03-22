@@ -8,6 +8,8 @@ data class CreateOrUpdateControlUnitContactDataInput(
     val email: String? = null,
     val name: String,
     val phone: String? = null,
+    val isEmailDistributionContact: Boolean? = false,
+    val isSmsDistributionContact: Boolean? = false,
 ) {
     fun toControlUnitContact(): ControlUnitContactEntity {
         return ControlUnitContactEntity(
@@ -16,6 +18,7 @@ data class CreateOrUpdateControlUnitContactDataInput(
             email = this.email,
             name = this.name,
             phone = this.phone,
-        )
+            isEmailDistributionContact = this.isEmailDistributionContact,
+            isSmsDistributionContact = this.isSmsDistributionContact)
     }
 }

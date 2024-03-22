@@ -37,7 +37,14 @@ data class ControlUnitContactModel(
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,
-) {
+
+    @Column(name = "is_email_distribution_contact", nullable = false)
+    val isEmailDistributionContact: Boolean? = false,
+
+    @Column(name = "is_sms_distribution_contact", nullable = false)
+    val isSmsDistributionContact: Boolean? = false,
+
+    ) {
     companion object {
         fun fromControlUnitContact(
             controlUnitContact: ControlUnitContactEntity,
@@ -49,6 +56,8 @@ data class ControlUnitContactModel(
                 email = controlUnitContact.email,
                 name = controlUnitContact.name,
                 phone = controlUnitContact.phone,
+                isEmailDistributionContact = controlUnitContact.isEmailDistributionContact,
+                isSmsDistributionContact = controlUnitContact.isSmsDistributionContact,
             )
         }
     }
@@ -60,6 +69,8 @@ data class ControlUnitContactModel(
             email,
             name,
             phone,
+            isEmailDistributionContact,
+            isSmsDistributionContact,
         )
     }
 
@@ -72,6 +83,6 @@ data class ControlUnitContactModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone)"
+        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone, isEmailDistributionContact = $isEmailDistributionContact, isSmsDistributionContact = $isSmsDistributionContact)"
     }
 }
