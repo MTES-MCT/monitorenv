@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Bilan hebdomadaire contrôle de l'environnement marin</title>
+        <meta charset="UTF-8">
+        <style>
+            {% include "splendid.css" %}
+        </style>
+    </head>
+    <body>
+        <header>
+            <h3>Bilan hebdomadaire contrôle de l'environnement marin</h3>
+        </header>
+        <hr>
+        <main>
+            <section>
+                <p>Bonjour,</p>
+                <p>Vous trouverez ci-joint les données des <strong>contrôles</strong> et des <strong>surveillances de l'environnement marin</strong> auquels 
+                votre unité <strong>({{ control_unit_name }})</strong> a participé <strong>entre le {{ from_date }} et le {{ to_date }}</strong> qui ont été prises en compte 
+                par le Centre d'Appui au Contrôle de l'Environnement Marin (CACEM).</p>
+                <p>Seuls les contrôles et surveillances des missions clôturées sont transmis dans ce bilan hebdomadaire. Si votre unité est engagée
+                dans une mission qui court sur plusieurs jours et qui n'était pas clôturée au {{ to_date }}, il est normal que les données 
+                correspondantes n'y figurent pas.</p>
+                <p>Si des données sont manquantes, incorrectes ou incomplètes, n'hésitez pas à <strong>contacter le CACEM</strong>.</p>
+            </section>
+        </main>
+        <footer class="no-vertical-margin">
+            <hr/>
+            <p>Centre d'Appui au Contrôle de l'Environnement Marin - Tél : +33 2 90 74 32 55</p>
+        </footer>
+    </body>
+</html>
