@@ -18,6 +18,7 @@ import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../../hooks/useGetControlPlans'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
 import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
+import { FormTitle } from '../../style'
 
 const EMPTY_VALUE = '--'
 
@@ -83,7 +84,7 @@ export function ReportingForm({
   return (
     <>
       <Header>
-        <Title>{`Signalement ${getFormattedReportingId(reporting.reportingId)}`}</Title>
+        <FormTitle>{`Signalement ${getFormattedReportingId(reporting.reportingId)}`}</FormTitle>
         <Button
           accent={Accent.SECONDARY}
           disabled={reporting.isArchived}
@@ -176,17 +177,11 @@ export function ReportingForm({
 }
 
 const Header = styled.div`
-  padding-bottom: 40px;
+  padding-bottom: 32px;
   display: flex;
   justify-content: space-between;
 `
 
-const Title = styled.h2`
-  font-size: 16px;
-  line-height: 22px;
-  display: inline-block;
-  color: ${p => p.theme.color.charcoal};
-`
 const FirstPartContainer = styled.div`
   display: flex;
   flex-direction: column;

@@ -1,7 +1,7 @@
 import { Icon, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import type { DetachedReportingForTimeline } from '../../../../domain/entities/reporting'
+import type { DetachedReportingForTimeline } from '../../../../../../domain/entities/reporting'
 
 export function ReportingHistory({ action }: { action: DetachedReportingForTimeline }) {
   if (action.action === 'attach') {

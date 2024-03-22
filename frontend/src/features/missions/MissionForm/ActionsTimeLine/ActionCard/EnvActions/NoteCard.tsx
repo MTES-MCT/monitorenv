@@ -1,6 +1,6 @@
 import { Icon, THEME } from '@mtes-mct/monitor-ui'
 
-import { NoteContent } from './style'
+import { NoteContent } from '../style'
 
 export function NoteCard({ action }) {
   return (

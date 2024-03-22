@@ -3,18 +3,21 @@ import { useFormikContext } from 'formik'
 import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { ActionCards } from './ActionCards'
-import { AttachReporting } from './AttachReporting'
-import { useUpdateMissionZone } from './hooks/useUpdateMissionZone'
-import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '../../../domain/entities/missions'
-import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../Missions.helpers'
+import { ActionCard } from './ActionCard'
+import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '../../../../domain/entities/missions'
+import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../../Missions.helpers'
+import { AttachReporting } from '../AttachReporting'
+import { useUpdateMissionZone } from '../hooks/useUpdateMissionZone'
+import { FormTitle } from '../style'
 
-import type { DetachedReporting, Reporting } from '../../../domain/entities/reporting'
+import type { DetachedReporting, Reporting } from '../../../../domain/entities/reporting'
+import type { FishMissionAction } from '../../fishActions.types'
 
-export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
+export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
   const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const envActions = values?.envActions as EnvAction[]
+  const fishActions = values?.fishActions as FishMissionAction.MissionAction[]
   const attachedReportings = values?.attachedReportings as Reporting[]
   const attachedReportingIds = values?.attachedReportingIds as number[]
   const detachedReportings = values?.detachedReportings as DetachedReporting[]
@@ -22,8 +25,14 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
 
   const actions = useMemo(
     () =>
-      getEnvActionsAndReportingsForTimeline(envActions, attachedReportings, detachedReportings, attachedReportingIds),
-    [envActions, attachedReportings, detachedReportings, attachedReportingIds]
+      getEnvActionsAndReportingsForTimeline(
+        envActions,
+        attachedReportings,
+        detachedReportings,
+        attachedReportingIds,
+        fishActions
+      ),
+    [envActions, attachedReportings, detachedReportings, attachedReportingIds, fishActions]
   )
 
   const sortedActions = useMemo(
@@ -117,22 +126,23 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
   return (
     <FormWrapper>
       <TitleWrapper>
-        <div>
-          <Title>Actions réalisées en mission</Title>
-          <Dropdown Icon={Icon.Plus} noCaret title="Ajouter">
-            <Dropdown.Item Icon={Icon.ControlUnit} onClick={handleAddControlAction}>
-              Ajouter des contrôles
-            </Dropdown.Item>
-            <Dropdown.Item Icon={Icon.Observation} onClick={handleAddSurveillanceAction}>
-              Ajouter une surveillance
-            </Dropdown.Item>
-            <Dropdown.Item Icon={Icon.Note} onClick={handleAddNoteAction}>
-              Ajouter une note libre
-            </Dropdown.Item>
-          </Dropdown>
-        </div>
+        <FormTitle>Actions réalisées en mission</FormTitle>
+        <Dropdown Icon={Icon.Plus} noCaret title="Ajouter">
+          <Dropdown.Item Icon={Icon.ControlUnit} onClick={handleAddControlAction}>
+            Ajouter des contrôles
+          </Dropdown.Item>
+          <Dropdown.Item Icon={Icon.Observation} onClick={handleAddSurveillanceAction}>
+            Ajouter une surveillance
+          </Dropdown.Item>
+          <Dropdown.Item Icon={Icon.Note} onClick={handleAddNoteAction}>
+            Ajouter une note libre
+          </Dropdown.Item>
+        </Dropdown>
+
         <AttachReporting />
       </TitleWrapper>
+      {/* TODO : Add separator when no more source Tag */}
+      {/* <Separator /> */}
       <ActionsTimeline>
         {sortedActions ? (
           sortedActions.map((action, index) => {
@@ -144,7 +154,7 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
               errors?.envActions[envActionsIndex]
 
             return (
-              <ActionCards
+              <ActionCard
                 // eslint-disable-next-line react/no-array-index-key
                 key={index}
                 action={action}
@@ -168,25 +178,16 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
 }
 
 const FormWrapper = styled.div`
-  height: calc(100% - 64px);
   display: flex;
   flex-direction: column;
-  padding-left: 32px;
-  padding-top: 32px;
-  padding-right: 48px;
+  padding: 32px 48px 32px 32px;
   color: ${p => p.theme.color.slateGray};
 `
 const TitleWrapper = styled.div`
-  margin-bottom: 30px;
+  align-items: baseline;
   display: flex;
   justify-content: space-between;
-`
-const Title = styled.h2`
-  font-size: 16px;
-  line-height: 22px;
-  color: ${p => p.theme.color.charcoal};
-  display: inline-block;
-  margin-right: 16px;
+  padding-bottom: 32px;
 `
 
 const ActionsTimeline = styled.div`

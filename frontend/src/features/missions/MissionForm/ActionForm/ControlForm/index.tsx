@@ -29,7 +29,8 @@ import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsL
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
-import { Header, StyledDeleteButton, Title, TitleWithIcon } from '../style'
+import { FormTitle, Separator } from '../../style'
+import { FormBody, Header, StyledDeleteButton, TitleWithIcon } from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
 export function ControlForm({
@@ -190,14 +191,14 @@ export function ControlForm({
       <Header>
         <TitleWithIcon>
           <Icon.ControlUnit color={THEME.color.gunMetal} />
-          <div>
-            <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
-            <SubTitle>
-              &nbsp;(
-              {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc, false)})
-            </SubTitle>
-          </div>
+
+          <FormTitle>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</FormTitle>
+          <SubTitle>
+            &nbsp;(
+            {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc, false)})
+          </SubTitle>
         </TitleWithIcon>
+        <Separator />
 
         <StyledDeleteButton
           accent={Accent.SECONDARY}
@@ -320,13 +321,6 @@ export function ControlForm({
   )
 }
 
-const FormBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding-bottom: 48px;
-`
-
 const StyledToggle = styled.div`
   align-items: center;
   display: flex;
@@ -341,11 +335,6 @@ const StyledToggle = styled.div`
 const StyledMultiRadio = styled(MultiRadio)`
   margin-top: 16px;
   margin-left: 48px;
-`
-
-const Separator = styled.div`
-  height: 1px;
-  border-top: 1px solid ${p => p.theme.color.slateGray};
 `
 
 const ActionSummary = styled.div`

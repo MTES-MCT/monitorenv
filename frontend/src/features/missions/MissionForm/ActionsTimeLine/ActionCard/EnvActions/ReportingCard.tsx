@@ -5,14 +5,19 @@ import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { Accented, ReportingDate, SummaryContent } from './style'
-import { ActionTypeEnum, type Mission, type NewMission, type NewInfraction } from '../../../../domain/entities/missions'
-import { ControlStatusEnum, type ReportingForTimeline } from '../../../../domain/entities/reporting'
-import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
-import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
-import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
-import { getFormattedReportingId } from '../../../Reportings/utils'
-import { actionFactory, infractionFactory } from '../../Missions.helpers'
+import {
+  ActionTypeEnum,
+  type Mission,
+  type NewMission,
+  type NewInfraction
+} from '../../../../../../domain/entities/missions'
+import { ControlStatusEnum, type ReportingForTimeline } from '../../../../../../domain/entities/reporting'
+import { useGetControlPlans } from '../../../../../../hooks/useGetControlPlans'
+import { getDateAsLocalizedStringCompact } from '../../../../../../utils/getDateAsLocalizedString'
+import { StatusActionTag } from '../../../../../Reportings/components/StatusActionTag'
+import { getFormattedReportingId } from '../../../../../Reportings/utils'
+import { actionFactory, infractionFactory } from '../../../../Missions.helpers'
+import { Accented, ReportingDate, SummaryContent } from '../style'
 
 export function ReportingCard({
   action,

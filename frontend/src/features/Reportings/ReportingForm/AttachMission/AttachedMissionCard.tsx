@@ -39,7 +39,7 @@ export function AttachedMissionCard({
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
   const goToMission = () => {
-    dispatch(editMissionInLocalStore(attachedMission?.id))
+    dispatch(editMissionInLocalStore(attachedMission?.id, 'sideWindow'))
   }
 
   return (

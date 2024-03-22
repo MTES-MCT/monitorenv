@@ -14,7 +14,8 @@ import {
   type NewInfraction,
   type Infraction,
   type NewEnvActionControl,
-  type EnvActionNote
+  type EnvActionNote,
+  ActionSource
 } from '../../domain/entities/missions'
 import {
   type DetachedReporting,
@@ -25,6 +26,7 @@ import {
 } from '../../domain/entities/reporting'
 import { getFormattedReportingId } from '../Reportings/utils'
 
+import type { FishMissionAction } from './fishActions.types'
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 import type { AtLeast } from '../../types'
 
@@ -185,6 +187,7 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
         ...newEnvActionsCollection,
         [action.id]: {
           ...action,
+          actionSource: ActionSource.MONITORENV,
           formattedReportingId: getFormattedReportingId(attachedReporting?.reportingId),
           timelineDate: action?.actionStartDateTimeUtc
         }
@@ -204,6 +207,7 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
         ...newEnvActionsCollection,
         [action.id]: {
           ...action,
+          actionSource: ActionSource.MONITORENV,
           formattedReportingIds,
           timelineDate: action?.actionStartDateTimeUtc
         }
@@ -214,6 +218,7 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
       ...newEnvActionsCollection,
       [action.id]: {
         ...action,
+        actionSource: ActionSource.MONITORENV,
         timelineDate: action?.actionStartDateTimeUtc
       }
     }
@@ -225,6 +230,7 @@ const formattedReportingsForTimeline = attachedReportings =>
       ...newReportingsCollection,
       [reporting.id]: {
         ...reporting,
+        actionSource: ActionSource.MONITORENV,
         actionType: ActionTypeEnum.REPORTING,
         timelineDate: reporting?.attachedToMissionAtUtc
       }
@@ -244,12 +250,14 @@ const formattedDetachedReportingsForTimeline = (detachedReportings, attachedRepo
         [`attach-${detachedReporting.reportingId}`]: {
           ...detachedReporting,
           action: 'attach',
+          actionSource: ActionSource.MONITORENV,
           actionType: ActionTypeEnum.DETACHED_REPORTING,
           timelineDate: detachedReporting?.attachedToMissionAtUtc
         },
         [`detach-${detachedReporting.reportingId}`]: {
           ...detachedReporting,
           action: 'detach',
+          actionSource: ActionSource.MONITORENV,
           actionType: ActionTypeEnum.DETACHED_REPORTING,
           timelineDate: detachedReporting?.detachedFromMissionAtUtc
         }
@@ -258,16 +266,31 @@ const formattedDetachedReportingsForTimeline = (detachedReportings, attachedRepo
     ) || []
   )
 }
+const formattedFishActionsForTimeline = fishActions =>
+  fishActions?.reduce(
+    (newFishActionsCollection, fishAction) => ({
+      ...newFishActionsCollection,
+      [fishAction.id]: {
+        ...fishAction,
+        actionSource: ActionSource.MONITORFISH,
+        actionType: fishAction.actionType,
+        timelineDate: fishAction?.actionDatetimeUtc
+      }
+    }),
+    {} as FishMissionAction.FishActionForTimeline
+  ) || []
 
 export const getEnvActionsAndReportingsForTimeline = (
   envActions: EnvAction[] | undefined,
   attachedReportings: Reporting[] | undefined,
   detachedReportings: DetachedReporting[] | undefined,
-  attachedReportingIds: number[] | undefined
+  attachedReportingIds: number[] | undefined,
+  fishActions: FishMissionAction.MissionAction[] | undefined
 ): ActionsForTimeLine => {
   const formattedEnvActions = formattedEnvActionsForTimeline(envActions, attachedReportings)
   const formattedReportings = formattedReportingsForTimeline(attachedReportings)
   const formattedDetachedReportings = formattedDetachedReportingsForTimeline(detachedReportings, attachedReportingIds)
+  const formattedFishActions = formattedFishActionsForTimeline(fishActions)
 
-  return { ...formattedEnvActions, ...formattedReportings, ...formattedDetachedReportings }
+  return { ...formattedEnvActions, ...formattedReportings, ...formattedDetachedReportings, ...formattedFishActions }
 }

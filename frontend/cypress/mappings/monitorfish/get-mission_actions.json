@@ -1,7 +1,19 @@
 {
   "request": {
     "method": "GET",
-    "urlPattern": "/api/v1/mission_actions.*"
+    "urlPath": "/api/v1/mission_actions",
+    "queryParameters": {
+      "missionId": {
+        "and": [
+          {
+            "matches": "[0-9]+"
+          },
+          {
+            "doesNotMatch": "53"
+          }
+        ]
+      }
+    }
   },
   "response": {
     "status": 200,

@@ -68,12 +68,14 @@ export type TargetDetails = {
 }
 
 export type ReportingForTimeline = Partial<ReportingDetailed> & {
+  actionSource: string
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string
 }
 
 export type DetachedReportingForTimeline = DetachedReporting & {
   action: string
+  actionSource: string
   actionType: ActionTypeEnum.DETACHED_REPORTING
   timelineDate: string
 }

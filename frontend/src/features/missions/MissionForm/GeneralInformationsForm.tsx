@@ -17,6 +17,7 @@ import styled from 'styled-components'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
 import { MissionZonePicker } from './MissionZonePicker'
+import { FormTitle } from './style'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../domain/entities/controlPlan'
 import {
   type Mission,
@@ -73,8 +74,8 @@ export function GeneralInformationsForm() {
 
   return (
     <StyledContainer>
-      <StyledHeader>
-        <Title>{title}</Title>
+      <StyledHeader $withPadding={missionIsNewMission}>
+        <FormTitle>{title}</FormTitle>
         {!missionIsNewMission && (
           <StyledTagsContainer>
             <MissionSourceTag source={values.missionSource} />
@@ -82,6 +83,9 @@ export function GeneralInformationsForm() {
           </StyledTagsContainer>
         )}
       </StyledHeader>
+      {/* TODO : Add separator when no more source Tag */}
+      {/* <Separator /> */}
+
       <StyledFormWrapper>
         <div>
           <StyledDatePickerContainer>
@@ -193,27 +197,20 @@ const StyledFormWrapper = styled.div`
   gap: 24px;
 `
 
-const StyledHeader = styled.div`
+const StyledHeader = styled.div<{ $withPadding: boolean }>`
   display: flex;
   flex-direction: row;
+  gap: 16px;
   justify-content: space-between;
-`
-
-const Title = styled.h2`
-  font-size: 16px;
-  line-height: 22px;
-  padding-bottom: 8px;
-  color: ${p => p.theme.color.charcoal};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 60%;
+  padding-bottom: ${p => (p.$withPadding ? '32px' : '0px')};
 `
 const StyledTagsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   gap: 8px;
 `
+
 const StyledDatePickerContainer = styled.div`
   display: flex;
   gap: 16px;

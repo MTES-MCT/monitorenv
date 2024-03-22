@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -26,6 +27,7 @@ data class MissionDataOutput(
     val createdAtUtc: ZonedDateTime? = null,
     val updatedAtUtc: ZonedDateTime? = null,
     val envActions: List<MissionEnvActionDataOutput>? = null,
+    val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
@@ -94,6 +96,11 @@ data class MissionDataOutput(
                         }
                     }
                     ),
+                fishActions =
+                dto.fishActions?.map {
+                    MonitorFishMissionActionDataOutput
+                        .fromMonitorFishMissionActionEntity(it)
+                },
                 missionSource = dto.mission.missionSource,
                 isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,

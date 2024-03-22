@@ -1,8 +1,9 @@
 import { Accent, FormikTextarea, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 
-import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
+import { Header, StyledDeleteButton, TitleWithIcon } from './style'
 import { type EnvAction } from '../../../../domain/entities/missions'
+import { FormTitle } from '../style'
 
 export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const [actionsFields] = useField<EnvAction[]>('envActions')
@@ -18,7 +19,7 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
       <Header>
         <TitleWithIcon>
           <Icon.Note color={THEME.color.gunMetal} />
-          <Title>Note</Title>
+          <FormTitle>Note</FormTitle>
         </TitleWithIcon>
 
         <StyledDeleteButton
