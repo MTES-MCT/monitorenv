@@ -35,7 +35,10 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 1,
                     controlUnitId = 10000,
                     name = "Contact 1",
-                    phone = null,
+                    phone = "06 01 xx xx xx",
+                    email = "email_1",
+                    isEmailDistributionContact = true,
+                    isSmsDistributionContact = false,
                 ),
             ),
         )
@@ -56,6 +59,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     controlUnitId = 10003,
                     name = "Contact 3",
                     phone = null,
+                    email = "email_3",
+                    isEmailDistributionContact = false,
+                    isSmsDistributionContact = true,
                 ),
             ),
         )
@@ -81,7 +87,10 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 1,
                     controlUnitId = 10000,
                     name = "Contact 1",
-                    phone = null,
+                    email = "email_1",
+                    phone = "06 01 xx xx xx",
+                    isEmailDistributionContact = true,
+                    isSmsDistributionContact = false,
                 ),
             ),
         )
@@ -97,6 +106,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
             controlUnitId = 10000,
             name = "Contact Name",
             phone = "0123456789",
+            email = "Adresse email",
+            isEmailDistributionContact = false,
+            isSmsDistributionContact = true,
         )
 
         val createdControlUnitContact = jpaControlUnitContactRepository.save(newControlUnitContact)
@@ -111,6 +123,8 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
             controlUnitId = 10001,
             name = "Updated Contact Name",
             phone = "9876543210",
+            isEmailDistributionContact = true,
+            isSmsDistributionContact = true,
         )
 
         val updatedControlUnitContact = jpaControlUnitContactRepository.save(nextControlUnitContact)
