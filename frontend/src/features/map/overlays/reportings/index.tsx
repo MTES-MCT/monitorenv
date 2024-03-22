@@ -8,20 +8,22 @@ import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
-const MARGINS = {
-  xLeft: 50,
-  xMiddle: 30,
-  xRight: -55,
-  yBottom: 50,
-  yMiddle: 50,
-  yTop: -55
+const OPTIONS = {
+  margins: {
+    xLeft: 50,
+    xMiddle: 30,
+    xRight: -55,
+    yBottom: 50,
+    yMiddle: 50,
+    yTop: -55
+  }
 }
 export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
   const displayReportingsOverlay = useAppSelector(state => state.global.displayReportingsOverlay)
-  const [hoveredMargins, setHoveredMargins] = useState(MARGINS)
-  const [selectedMargins, setSelectedMargins] = useState(MARGINS)
+  const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
+  const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
 
   const feature = map
     ?.getLayers()
@@ -39,14 +41,14 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     currentfeatureId !== `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`
 
   const updateHoveredMargins = (cardHeight: number) => {
-    if (MARGINS.yTop - cardHeight !== hoveredMargins.yTop) {
-      setHoveredMargins({ ...hoveredMargins, yTop: MARGINS.yTop - cardHeight })
+    if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
+      setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
     }
   }
 
   const updateSelectedMargins = (cardHeight: number) => {
-    if (MARGINS.yTop - cardHeight !== selectedMargins.yTop) {
-      setSelectedMargins({ ...selectedMargins, yTop: MARGINS.yTop - cardHeight })
+    if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
+      setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
     }
   }
 
@@ -57,7 +59,7 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         feature={displayReportingsOverlay ? feature : undefined}
         featureIsShowed
         map={map}
-        options={{ margins: selectedMargins }}
+        options={selectedOptions}
         zIndex={5000}
       >
         <ReportingCard feature={feature} selected updateMargins={updateSelectedMargins} />
@@ -66,7 +68,7 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         appClassName="overlay-reporting-hover"
         feature={displayReportingsOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
-        options={{ margins: hoveredMargins }}
+        options={hoveredOptions}
         zIndex={5000}
       >
         <ReportingCard feature={currentFeatureOver} updateMargins={updateHoveredMargins} />
