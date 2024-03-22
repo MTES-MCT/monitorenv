@@ -86,15 +86,12 @@ def get_control_unit_ids(env_action: pd.DataFrame) -> List[int]:
 
 
 @task(checkpoint=False)
-def extract_control_units(
-    control_unit_ids: List[str], contact_names: List[str]
-) -> pd.DataFrame:
+def extract_control_units(control_unit_ids: List[str]) -> pd.DataFrame:
     return extract(
         "monitorenv_remote",
         "monitorenv/control_units.sql",
         params={
             "control_unit_ids": tuple(control_unit_ids),
-            "contact_names": tuple(contact_names),
         },
     )
 
@@ -335,7 +332,6 @@ with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
         is_integration = Parameter("is_integration")
         start_days_ago = Parameter("start_days_ago")
         end_days_ago = Parameter("end_days_ago")
-        contact_names = Parameter("contact_names")
 
         template = get_template()
         utcnow = get_utcnow()
@@ -347,7 +343,7 @@ with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
         )
         env_actions = extract_env_actions(period=period)
         control_unit_ids = get_control_unit_ids(env_actions)
-        control_units = extract_control_units(control_unit_ids, contact_names)
+        control_units = extract_control_units(control_unit_ids)
 
         control_unit_actions = to_control_unit_actions(
             env_actions, period, control_units
