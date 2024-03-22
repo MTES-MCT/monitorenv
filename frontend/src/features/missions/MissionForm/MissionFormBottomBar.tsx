@@ -25,21 +25,16 @@ export function MissionFormBottomBar({
 }: MissionFormBottomBarProps) {
   const { values } = useFormikContext<Mission>()
   const missionIsNewMission = useMemo(() => isNewMission(values?.id), [values?.id])
-  const allowEditMission = useMemo(
-    () =>
-      values?.missionSource === undefined ||
-      values?.missionSource === MissionSourceEnum.MONITORENV ||
-      values?.missionSource === MissionSourceEnum.MONITORFISH,
-    [values?.missionSource]
-  )
+  const allowEditMission =
+    values?.missionSource === undefined ||
+    values?.missionSource === MissionSourceEnum.MONITORENV ||
+    values?.missionSource === MissionSourceEnum.MONITORFISH
 
   const allowDeleteMission = !missionIsNewMission && allowEditMission
-  const allowCloseMission = useMemo(() => !values?.isClosed, [values?.isClosed])
+  const allowCloseMission = !values?.isClosed
 
-  const isFromMonitorFish = useMemo(
-    () => values.missionSource === MissionSourceEnum.MONITORFISH,
-    [values.missionSource]
-  )
+  const isFromMonitorFish = values.missionSource === MissionSourceEnum.MONITORFISH
+
   const formattedUpdatedDate = useMemo(
     () => values.updatedAtUtc && humanizePastDate(values.updatedAtUtc),
     [values.updatedAtUtc]
