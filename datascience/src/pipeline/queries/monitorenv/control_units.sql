@@ -7,7 +7,7 @@ JOIN control_unit_contacts cuc
 ON cu.id = cuc.control_unit_id
 WHERE
     cu.id IN :control_unit_ids
-    AND cuc.name IN :contact_names
     AND email IS NOT NULL
+    AND is_email_distribution_contact
 GROUP BY 1, 2
 ORDER BY 1, 2

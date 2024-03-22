@@ -409,7 +409,7 @@ def test_extract_control_units(
     reset_test_data, expected_control_unit_ids, expected_control_units
 ):
     units = extract_control_units.run(
-        control_unit_ids=expected_control_unit_ids, contact_names=["DIFFUSION"]
+        control_unit_ids=expected_control_unit_ids
     )
     units["email_addresses"] = units.email_addresses.map(sorted)
     pd.testing.assert_frame_equal(units, expected_control_units)
@@ -660,7 +660,6 @@ def test_flow_run_blabla(reset_test_data):
         is_integration=True,
         start_days_ago=start_days_ago,
         end_days_ago=end_days_ago,
-        contact_names=["DIFFUSION"],
     )
     assert state.is_successful()
 

@@ -40,7 +40,6 @@ email_actions_to_units.flow.schedule = Schedule(
             parameter_defaults={
                 "start_days_ago": 7,
                 "end_days_ago": 1,
-                "contact_names": ["UNIT_CHIEF", "COMMANDER"],
                 "test_mode": TEST_MODE,
                 "is_integration": IS_INTEGRATION,
             },
