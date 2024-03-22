@@ -40,8 +40,6 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('[name="missionTypes1"]').click({ force: true })
 
     cy.fill('Unité 1', 'Cross Etel')
-    cy.clickOutside()
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
@@ -58,7 +56,6 @@ context('Side Window > Mission Form > Main Form', () => {
           controlUnits: [
             {
               administration: 'DIRM / DM',
-              contact: 'Contact 012345',
               id: 10011,
               name: 'Cross Etel'
             }
@@ -108,7 +105,6 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('[name="missionTypes1"]').click({ force: true })
 
     cy.fill('Unité 1', 'Cross Etel')
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
@@ -205,31 +201,12 @@ context('Side Window > Mission Form > Main Form', () => {
     })
   })
 
-  it('A mission can be closed without contact', () => {
-    // Given
-    visitSideWindow()
-    cy.wait(200)
-    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
-    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
-
-    cy.fill("Contact de l'unité 1", '')
-    cy.wait(300)
-    cy.clickButton('Clôturer')
-
-    // Then
-    cy.wait('@updateMission').then(({ request, response }) => {
-      expect(response && response.statusCode).equal(200)
-      expect(request.body.controlUnits[0].contact).equal(undefined)
-      expect(request.body.isClosed).to.be.true
-    })
-  })
-
   it('A closed mission can be saved and stay closed', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
-    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
-    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
+    cy.get('*[data-cy="edit-mission-38"]').click({ force: true })
+    cy.intercept('PUT', '/bff/v1/missions/38').as('updateMission')
     cy.fill("Contact de l'unité 1", 'Test')
 
     // Then
@@ -302,8 +279,6 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
     cy.clickButton('Oui, la conserver')
 
-    cy.get('*[data-cy="control-unit-contact"]').first().type('Contact 012345')
-
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
 
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
@@ -316,7 +291,6 @@ context('Side Window > Mission Form > Main Form', () => {
           controlUnits: [
             {
               administration: 'DIRM / DM',
-              contact: 'Contact 012345',
               id: 10121,
               name: 'PAM Jeanne Barret'
             }
