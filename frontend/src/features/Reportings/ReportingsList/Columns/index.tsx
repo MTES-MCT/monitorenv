@@ -108,14 +108,8 @@ export const Columns = themes => [
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       const themeA = themes[rowA.original[columnId]]?.theme
       const themeB = themes[rowB.original[columnId]]?.theme
-      if (themeA > themeB) {
-        return -1
-      }
-      if (themeB > themeA) {
-        return 1
-      }
 
-      return 1
+      return themeA?.localeCompare(themeB)
     }
   },
   {
