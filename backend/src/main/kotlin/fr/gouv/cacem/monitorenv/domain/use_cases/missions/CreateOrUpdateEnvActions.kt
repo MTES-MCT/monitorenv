@@ -10,12 +10,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 
 @UseCase
 class CreateOrUpdateEnvActions(
     private val departmentRepository: IDepartmentAreaRepository,
     private val facadeRepository: IFacadeAreasRepository,
     private val missionRepository: IMissionRepository,
+    private val postgisFunctionRepository: IPostgisFunctionRepository,
 ) {
     @Throws(IllegalArgumentException::class)
     fun execute(
@@ -26,21 +28,27 @@ class CreateOrUpdateEnvActions(
             envActions?.map {
                 when (it.actionType) {
                     ActionTypeEnum.CONTROL -> {
-                        (it as EnvActionControlEntity).copy(
+                        val control = it as EnvActionControlEntity
+                        val normalizedControlPoint = control.geom?.let { nonNullGeom ->
+                            postgisFunctionRepository.normalizeGeometry(nonNullGeom)
+                        }
+                        control.copy(
+                            geom = normalizedControlPoint,
                             facade =
-                            (it.geom ?: mission.geom)?.let { geom ->
-                                facadeRepository.findFacadeFromGeometry(geom)
+                            (normalizedControlPoint ?: mission.geom)?.let { nonNullGeom ->
+                                facadeRepository.findFacadeFromGeometry(nonNullGeom)
                             },
                             department =
-                            (it.geom ?: mission.geom)?.let { geom ->
-                                departmentRepository.findDepartmentFromGeometry(
-                                    geom,
-                                )
+                            (normalizedControlPoint ?: mission.geom)?.let { nonNullGeom ->
+                                departmentRepository.findDepartmentFromGeometry(nonNullGeom)
                             },
                         )
                     }
                     ActionTypeEnum.SURVEILLANCE -> {
                         val surveillance = it as EnvActionSurveillanceEntity
+                        val normalizedGeometry = surveillance.geom?.let { nonNullGeom ->
+                            postgisFunctionRepository.normalizeGeometry(nonNullGeom)
+                        }
                         /*
                         When coverMissionZone is true, use mission geometry in priority, fall back to action geometry.
                         When coverMissionZone is not true, prioritize the other way around.
@@ -50,9 +58,9 @@ class CreateOrUpdateEnvActions(
                          */
                         val geometry =
                             if (surveillance.coverMissionZone == true) {
-                                (mission.geom ?: surveillance.geom)
+                                (mission.geom ?: normalizedGeometry)
                             } else {
-                                (surveillance.geom ?: mission.geom)
+                                (normalizedGeometry ?: mission.geom)
                             }
                         surveillance.copy(
                             facade =

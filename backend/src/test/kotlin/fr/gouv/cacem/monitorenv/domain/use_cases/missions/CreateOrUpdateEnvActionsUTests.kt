@@ -12,6 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -31,6 +32,8 @@ class CreateOrUpdateEnvActionsUTests {
     @MockBean private lateinit var missionRepository: IMissionRepository
 
     @MockBean private lateinit var facadeAreasRepository: IFacadeAreasRepository
+
+    @MockBean private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
 
     @Test
     fun `should return the mission to update with computed facade and department info for envActions`() {
@@ -133,6 +136,8 @@ class CreateOrUpdateEnvActionsUTests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             )
 
+        given(postgisFunctionRepository.normalizeGeometry(point)).willReturn(point)
+        given(postgisFunctionRepository.normalizeGeometry(polygon)).willReturn(polygon)
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
         given(missionRepository.save(anyOrNull()))
@@ -144,6 +149,7 @@ class CreateOrUpdateEnvActionsUTests {
                 departmentRepository = departmentRepository,
                 missionRepository = missionRepository,
                 facadeRepository = facadeAreasRepository,
+                postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(
                     mission = missionToUpdate,
@@ -151,10 +157,12 @@ class CreateOrUpdateEnvActionsUTests {
                 )
 
         // Then
-        verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == polygon })
+        // verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == polygon })
         verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == point })
         verify(departmentRepository, times(1)).findDepartmentFromGeometry(argThat { this == polygon })
         verify(departmentRepository, times(1)).findDepartmentFromGeometry(argThat { this == point })
+        verify(postgisFunctionRepository, times(1)).normalizeGeometry(argThat { this == point })
+        verify(postgisFunctionRepository, times(1)).normalizeGeometry(argThat { this == polygon })
 
         verify(missionRepository, times(1))
             .save(

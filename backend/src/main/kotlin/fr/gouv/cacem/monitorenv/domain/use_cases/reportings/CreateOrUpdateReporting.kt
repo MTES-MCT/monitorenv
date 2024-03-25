@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 class CreateOrUpdateReporting(
     private val reportingRepository: IReportingRepository,
     private val facadeRepository: IFacadeAreasRepository,
+    private val postgisFunctionRepository: IPostgisFunctionRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
@@ -21,30 +22,32 @@ class CreateOrUpdateReporting(
         logger.info("Create or update reporting: $reporting.id")
         reporting.validate()
 
-        if (reporting.id != null &&
-            reporting.attachedToMissionAtUtc != null &&
+        val reportingToSaveIsAttachedToMission = reporting.attachedToMissionAtUtc != null &&
             reporting.missionId != null &&
             reporting.detachedFromMissionAtUtc == null
-        ) {
+
+        if (reporting.id != null && reportingToSaveIsAttachedToMission) {
             val existingReporting = reportingRepository.findById(reporting.id)
-            if (existingReporting.reporting.missionId != null &&
+            val existingReportingIsAttachedToAnotherMission = existingReporting.reporting.missionId != null &&
                 existingReporting.reporting.detachedFromMissionAtUtc == null &&
                 existingReporting.reporting.missionId != reporting.missionId
-            ) {
+            if (existingReportingIsAttachedToAnotherMission) {
                 throw ReportingAlreadyAttachedException(
                     "Reporting ${reporting.id} is already attached to a mission",
                 )
             }
         }
+        val normalizedGeometry = reporting.geom?.let { nonNullGeometry ->
+            postgisFunctionRepository.normalizeGeometry(nonNullGeometry)
+        }
 
-        val seaFront = if (reporting.geom != null) {
-            facadeRepository.findFacadeFromGeometry(reporting.geom)
-        } else {
-            null
+        val seaFront = normalizedGeometry?.let { nonNullGeometry ->
+            facadeRepository.findFacadeFromGeometry(nonNullGeometry)
         }
 
         return reportingRepository.save(
             reporting.copy(
+                geom = normalizedGeometry,
                 seaFront = seaFront,
             ),
         )
