@@ -9,7 +9,8 @@ export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
   'detachedReportings',
   // TODO add the update of the env actions
   // `envActions` is included but `reportingIds` is missing
-  'envActions'
+  'envActions',
+  'fishActions'
 ]
 
 export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [

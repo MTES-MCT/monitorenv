@@ -58,7 +58,102 @@ export const missionWithCentroidStyleFn = feature => {
   }
 }
 
-export const selectedMissionActionsStyle = [
+export const selectedMissionControlStyle = [
+  // Close icon for controls
+  new Style({
+    geometry: feature => {
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+    image: new Icon({
+      color: THEME.color.charcoal,
+      scale: 0.6,
+      src: 'Close.svg'
+    })
+  }),
+  // Control icon with infraction
+  new Style({
+    geometry: feature => {
+      const controlHasInfraction = feature.get('infractions').length > 0
+      if (!controlHasInfraction) {
+        return undefined
+      }
+
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+    image: new Icon({
+      color: THEME.color.charcoal,
+      displacement: [0, 18],
+      scale: 1.1,
+      src: 'Control_filled.svg'
+    })
+  }),
+  // Control icon without infraction
+  new Style({
+    geometry: feature => {
+      const controlHasInfraction = feature.get('infractions') && feature.get('infractions').length > 0
+      if (controlHasInfraction) {
+        return undefined
+      }
+
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+    image: new Icon({
+      displacement: [0, 16],
+      scale: 1.1,
+      src: 'Control.svg'
+    })
+  }),
+  // Control zone or point
+  new Style({
+    fill: new Fill({
+      color: 'rgba(86, 151, 210, .35)' // Blue Gray
+    }),
+    geometry: feature => {
+      // if mission zone is computed we want to display a "control zone"
+      if (feature.get('isGeometryComputedFromControls')) {
+        return feature.getGeometry()
+      }
+
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      lineCap: 'square',
+      lineDash: [2, 8],
+      width: 4
+    })
+  })
+]
+
+export const selectedMissionSurveillanceStyle = [
   // Surveillance icon
   new Style({
     geometry: feature => {
@@ -126,7 +221,7 @@ export const selectedMissionActionsStyle = [
         return undefined
       }
       const controlHasInfraction = feature.get('infractions').length > 0
-      if (!controlHasInfraction || feature.get('isGeometryComputedFromControls')) {
+      if (!controlHasInfraction) {
         return undefined
       }
 
@@ -153,7 +248,7 @@ export const selectedMissionActionsStyle = [
         return undefined
       }
       const controlHasInfraction = feature.get('infractions') && feature.get('infractions').length > 0
-      if (controlHasInfraction || feature.get('isGeometryComputedFromControls')) {
+      if (controlHasInfraction) {
         return undefined
       }
 
@@ -174,6 +269,9 @@ export const selectedMissionActionsStyle = [
   }),
   // Control zone or point
   new Style({
+    fill: new Fill({
+      color: 'rgba(86, 151, 210, .35)' // Blue Gray
+    }),
     geometry: feature => {
       if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
         return undefined
@@ -201,7 +299,6 @@ export const selectedMissionActionsStyle = [
     })
   })
 ]
-
 export const selectedMissionZoneStyle = [
   new Style({
     fill: new Fill({

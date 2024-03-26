@@ -3,6 +3,8 @@ export namespace FishMissionAction {
     actionDatetimeUtc: string
     actionType: MissionActionType
     id: number
+    latitude: number
+    longitude: number
     numberOfVesselsFlownOver: number
     vesselName: string
   }

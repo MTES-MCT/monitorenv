@@ -2,7 +2,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION, usePrevious } from '@mtes-mct/monitor-ui'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { InteractionListener } from 'domain/entities/map/constants'
-import { ActionTypeEnum, type Mission } from 'domain/entities/missions'
+import { ActionSource, ActionTypeEnum, type Mission } from 'domain/entities/missions'
 import { useFormikContext } from 'formik'
 import { isEqual } from 'lodash'
 import { Feature } from 'ol'
@@ -36,12 +36,34 @@ export const useUpdateMissionZone = sortedActions => {
       return
     }
 
+    if (firstAction.actionSource === ActionSource.MONITORFISH && firstAction.latitude && firstAction.longitude) {
+      if (
+        isEqual(previousFirstAction, firstAction) &&
+        isEqual(previousActionCoordinates, firstActionCoordinates) &&
+        values.geom &&
+        values.geom.coordinates?.length > 0
+      ) {
+        return
+      }
+      const circleGeometry = new Feature({
+        geometry: circular([firstAction.longitude, firstAction.latitude], 4000, 64).transform(
+          WSG84_PROJECTION,
+          OPENLAYERS_PROJECTION
+        )
+      }).getGeometry()
+
+      setFieldValue('geom', convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon])))
+      if (!values.isGeometryComputedFromControls) {
+        setFieldValue('isGeometryComputedFromControls', true)
+      }
+    }
+
     if (firstAction?.actionType === ActionTypeEnum.CONTROL && firstAction?.geom) {
       if (
         isEqual(previousFirstAction, firstAction) &&
         isEqual(previousActionCoordinates, firstActionCoordinates) &&
         values.geom &&
-        values.geom.coordinates.length > 0
+        values.geom.coordinates?.length > 0
       ) {
         return
       }

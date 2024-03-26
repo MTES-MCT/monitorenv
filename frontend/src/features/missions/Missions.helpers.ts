@@ -108,6 +108,7 @@ export const missionFactory = (
     detachedReportingIds: [],
     endDateTimeUtc: '',
     envActions: [],
+    fishActions: [],
     isClosed: false,
     isGeometryComputedFromControls: false,
     isUnderJdp: false,
