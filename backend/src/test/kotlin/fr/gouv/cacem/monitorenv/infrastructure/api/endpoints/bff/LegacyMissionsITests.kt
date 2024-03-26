@@ -113,6 +113,7 @@ class LegacyMissionsITests {
                 isClosed = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(),
+                isGeometryComputedFromControls = false,
             )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
         given(
@@ -790,6 +791,7 @@ class LegacyMissionsITests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 isClosed = false,
                 attachedReportingIds = listOf(1),
+                isGeometryComputedFromControls = false,
             )
         val envActionsAttachedToReportingIds =
             listOf(

@@ -41,19 +41,8 @@ class CreateOrUpdateEnvActions(
                     }
                     ActionTypeEnum.SURVEILLANCE -> {
                         val surveillance = it as EnvActionSurveillanceEntity
-                        /*
-                        When coverMissionZone is true, use mission geometry in priority, fall back to action geometry.
-                        When coverMissionZone is not true, prioritize the other way around.
-                        Ideally the fallbacks should not be needed, but if coverMissionZone is true and the mission geom
-                        is null, or if coverMissionZone is false and the action geom is null, then rather that nothing,
-                        better use the geometry that is available, if any.
-                         */
-                        val geometry =
-                            if (surveillance.coverMissionZone == true) {
-                                (mission.geom ?: surveillance.geom)
-                            } else {
-                                (surveillance.geom ?: mission.geom)
-                            }
+                        val geometry = surveillance.geom ?: mission.geom
+
                         surveillance.copy(
                             facade =
                             geometry?.let { geom ->

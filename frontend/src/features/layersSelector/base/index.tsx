@@ -74,7 +74,6 @@ const BaseLayersContainer = styled.div<{ $baseLayersLength: number | undefined; 
 
 const StyledMultiRadio = styled(MultiRadio)`
   > div > div > div > .rs-radio {
-    border-bottom: 1px solid ${p => p.theme.color.lightGray};
     margin-top: 0px !important;
     padding: 10px 16px;
     width: 100%;
@@ -82,6 +81,9 @@ const StyledMultiRadio = styled(MultiRadio)`
     :hover {
       background-color: ${p => p.theme.color.blueYonder25};
     }
+  }
+  > div > div > .Element-Field:not(:last-child) {
+    border-bottom: 1px solid ${p => p.theme.color.lightGray};
   }
   > div > div > .Element-Field:not(:first-child) {
     margin: 0px;

@@ -1,14 +1,30 @@
+import { useState } from 'react'
+
 import { MissionCard } from './MissionCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { OverlayPositionOnExtent } from '../OverlayPositionOnExtent'
+import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
+const OPTIONS = {
+  margins: {
+    xLeft: 50,
+    xMiddle: 30,
+    xRight: -55,
+    yBottom: 50,
+    yMiddle: 50,
+    yTop: -55
+  }
+}
+
 export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const selectedMissionId = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const displayMissionsOverlay = useAppSelector(state => state.global.displayMissionsOverlay)
+  const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
+  const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
+
   const feature = map
     ?.getLayers()
     ?.getArray()
@@ -24,24 +40,39 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
     currentfeatureId.startsWith(Layers.MISSIONS.code) &&
     currentfeatureId !== `${Layers.MISSIONS.code}:${selectedMissionId}`
 
+  const updateHoveredMargins = (cardHeight: number) => {
+    if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
+      setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+    }
+  }
+
+  const updateSelectedMargins = (cardHeight: number) => {
+    if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
+      setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+    }
+  }
+
   return (
     <>
-      <OverlayPositionOnExtent
+      <OverlayPositionOnCentroid
         appClassName="overlay-mission-selected"
-        feature={displayMissionsOverlay && feature}
+        feature={displayMissionsOverlay ? feature : undefined}
+        featureIsShowed
         map={map}
+        options={selectedOptions}
         zIndex={6500}
       >
-        <MissionCard feature={feature} selected />
-      </OverlayPositionOnExtent>
-      <OverlayPositionOnExtent
+        <MissionCard feature={feature} selected updateMargins={updateSelectedMargins} />
+      </OverlayPositionOnCentroid>
+      <OverlayPositionOnCentroid
         appClassName="overlay-mission-hover"
-        feature={displayMissionsOverlay && displayHoveredFeature && currentFeatureOver}
+        feature={displayMissionsOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
+        options={hoveredOptions}
         zIndex={6000}
       >
-        <MissionCard feature={currentFeatureOver} />
-      </OverlayPositionOnExtent>
+        <MissionCard feature={currentFeatureOver} updateMargins={updateHoveredMargins} />
+      </OverlayPositionOnCentroid>
     </>
   )
 }

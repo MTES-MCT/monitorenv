@@ -1,4 +1,5 @@
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
 import { LineString, MultiPoint, MultiPolygon } from 'ol/geom'
@@ -21,7 +22,7 @@ export const missionZoneStyle = new Style({
   })
 })
 
-const missionWithCentroidStyleFactory = (status, type) =>
+const missionWithCentroidStyleFactory = (status, type) => [
   new Style({
     geometry: feature => {
       const extent = feature?.getGeometry()?.getExtent()
@@ -35,6 +36,7 @@ const missionWithCentroidStyleFactory = (status, type) =>
       src: `mission/${status}_${type}.png`
     })
   })
+]
 
 export const missionWithCentroidStyleFn = feature => {
   const missionStatus = feature.get('missionStatus') as MissionStatusEnum
@@ -57,27 +59,59 @@ export const missionWithCentroidStyleFn = feature => {
 }
 
 export const selectedMissionActionsStyle = [
+  // Surveillance icon
+  new Style({
+    geometry: feature => {
+      if (feature.get('actionType') !== ActionTypeEnum.SURVEILLANCE) {
+        return undefined
+      }
+      const geom = feature?.getGeometry() as MultiPolygon
+      const polygons = geom?.getPolygons()
+      const points = polygons?.map(p => getCenter(p.getExtent()))
+
+      if (!points) {
+        return undefined
+      }
+
+      return new MultiPoint(points)
+    },
+    image: new Icon({
+      scale: 1.1,
+      src: 'Observation.svg'
+    })
+  }),
+  // Surveillance zone
   new Style({
     fill: new Fill({
       color: 'rgba(86, 151, 210, .35)' // Blue Gray
     }),
-    image: new Icon({
-      displacement: [0, 14],
-      scale: 1.1,
-      src: 'Control.svg'
-    }),
+    geometry: feature => {
+      if (feature.get('actionType') !== ActionTypeEnum.SURVEILLANCE) {
+        return undefined
+      }
+
+      return feature.getGeometry()
+    },
     stroke: new Stroke({
       color: THEME.color.charcoal,
       width: 2
     })
   }),
+  // Close icon for controls
   new Style({
     geometry: feature => {
-      if (feature.get('actionType') === ActionTypeEnum.CONTROL) {
-        return feature.getGeometry()
+      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
+        return undefined
       }
 
-      return undefined
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
     },
     image: new Icon({
       color: THEME.color.charcoal,
@@ -85,36 +119,123 @@ export const selectedMissionActionsStyle = [
       src: 'Close.svg'
     })
   }),
+  // Control icon with infraction
   new Style({
     geometry: feature => {
-      if (feature.get('actionType') === ActionTypeEnum.SURVEILLANCE) {
-        const geom = feature?.getGeometry() as MultiPolygon
-        const polygons = geom?.getPolygons()
-        const points = polygons?.map(p => getCenter(p.getExtent()))
-
-        return points && new MultiPoint(points)
+      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
+        return undefined
+      }
+      const controlHasInfraction = feature.get('infractions').length > 0
+      if (!controlHasInfraction || feature.get('isGeometryComputedFromControls')) {
+        return undefined
       }
 
-      return undefined
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
     },
     image: new Icon({
+      color: THEME.color.charcoal,
+      displacement: [0, 18],
       scale: 1.1,
-      src: 'Observation.svg'
+      src: 'Control_filled.svg'
+    })
+  }),
+  // Control icon without infraction
+  new Style({
+    geometry: feature => {
+      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
+        return undefined
+      }
+      const controlHasInfraction = feature.get('infractions') && feature.get('infractions').length > 0
+      if (controlHasInfraction || feature.get('isGeometryComputedFromControls')) {
+        return undefined
+      }
+
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+    image: new Icon({
+      displacement: [0, 16],
+      scale: 1.1,
+      src: 'Control.svg'
+    })
+  }),
+  // Control zone or point
+  new Style({
+    geometry: feature => {
+      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
+        return undefined
+      }
+
+      // if mission zone is computed we want to display a "control zone"
+      if (feature.get('isGeometryComputedFromControls')) {
+        return feature.getGeometry()
+      }
+
+      const extent = feature.getGeometry()?.getExtent()
+      if (!extent) {
+        throw new Error('`extent` is undefined.')
+      }
+
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      lineCap: 'square',
+      lineDash: [2, 8],
+      width: 4
     })
   })
 ]
 
-export const selectedMissionZoneStyle = new Style({
-  fill: new Fill({
-    color: 'rgba(86, 151, 210, .25)' // Blue Gray
+export const selectedMissionZoneStyle = [
+  new Style({
+    fill: new Fill({
+      color: 'rgba(86, 151, 210, .25)' // Blue Gray
+    }),
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      lineCap: 'square',
+      lineDash: [2, 8],
+      width: 5
+    })
   }),
-  stroke: new Stroke({
-    color: THEME.color.charcoal,
-    lineCap: 'square',
-    lineDash: [2, 8],
-    width: 5
+  new Style({
+    geometry: feature => {
+      const overlayPostion = feature.get('overlayCoordinates')
+      if (isEmpty(overlayPostion)) {
+        return undefined
+      }
+
+      const extent = feature?.getGeometry()?.getExtent()
+      const center = extent && getCenter(extent)
+      if (!center) {
+        return undefined
+      }
+
+      return new LineString([overlayPostion.coordinates, center])
+    },
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
+    })
   })
-})
+]
 
 const missionToReportingsLinkStyle = feature => {
   if (!feature.get('attachedReportings') || feature.get('attachedReportings').length === 0) {
@@ -147,32 +268,29 @@ const missionToReportingsLinkStyle = feature => {
   )
 }
 
-const missionCircleStyle = feature => {
-  if (!feature.get('attachedReportings') || feature.get('attachedReportings').length === 0) {
-    return new Style({})
-  }
+const missionCircleStyle = new Style({
+  geometry: feature => {
+    if (!feature.get('attachedReportings') || feature.get('attachedReportings').length === 0) {
+      return undefined
+    }
+    const extent = feature?.getGeometry()?.getExtent()
+    const center = extent && getCenter(extent)
 
-  return new Style({
-    geometry: () => {
-      const extent = feature?.getGeometry()?.getExtent()
-      const center = extent && getCenter(extent)
-
-      return center && new Point(center)
-    },
-    image: new Circle({
-      displacement: [0, 14],
-      radius: 20,
-      stroke: new Stroke({
-        color: THEME.color.charcoal,
-        width: 2
-      })
+    return center && new Point(center)
+  },
+  image: new Circle({
+    displacement: [0, 27],
+    radius: 20,
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      width: 2
     })
   })
-}
+})
 
 export const selectedMissionStyle = feature => [
-  selectedMissionZoneStyle,
-  missionWithCentroidStyleFn(feature),
+  ...selectedMissionZoneStyle,
+  ...missionWithCentroidStyleFn(feature),
   ...missionToReportingsLinkStyle(feature),
-  missionCircleStyle(feature)
+  missionCircleStyle
 ]

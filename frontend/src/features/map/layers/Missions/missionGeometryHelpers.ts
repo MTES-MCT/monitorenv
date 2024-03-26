@@ -1,5 +1,6 @@
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
+import { circular } from 'ol/geom/Polygon'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
@@ -14,6 +15,7 @@ import {
 } from '../../../../domain/entities/missions'
 import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
 
+import type { Coordinates } from '@mtes-mct/monitor-ui'
 import type { Geometry } from 'ol/geom'
 
 export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layername: string) => {
@@ -33,6 +35,7 @@ export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, la
     controlUnits: mission.controlUnits,
     endDateTimeUtc: mission.endDateTimeUtc,
     envActions: mission.envActions,
+    isGeometryComputedFromControls: mission.isGeometryComputedFromControls,
     missionId: mission.id,
     missionSource: mission.missionSource,
     missionStatus: getMissionStatus(mission),
@@ -40,6 +43,7 @@ export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, la
     numberOfActions: mission.envActions?.length ?? 0,
     numberOfControls: getTotalOfControls(mission),
     numberOfSurveillance: getTotalOfSurveillances(mission),
+    overlayCoordinates: undefined,
     startDateTimeUtc: mission.startDateTimeUtc
   })
 
@@ -81,21 +85,37 @@ const getActionProperties = (action: EnvActionControl | EnvActionSurveillance | 
   }
 }
 
-const getActionFeature = (action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl) => {
+const getActionFeature = (
+  action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl,
+  isGeometryComputedFromControls: Boolean
+) => {
   const geoJSON = new GeoJSON()
   const actionProperties = getActionProperties(action)
   if (!action.geom) {
     return null
   }
-  const geometry = geoJSON.readGeometry(action.geom, {
+  let geometry = geoJSON.readGeometry(action.geom, {
     dataProjection: WSG84_PROJECTION,
     featureProjection: OPENLAYERS_PROJECTION
   })
+
+  // if the mission geometry is computed from the controls
+  // we want to display controls with a circular geometry
+  if (
+    action.actionType === ActionTypeEnum.CONTROL &&
+    isGeometryComputedFromControls &&
+    action.geom.coordinates.length > 0
+  ) {
+    const coordinates = action.geom.coordinates[0] as Coordinates
+    geometry = circular([coordinates[0], coordinates[1]], 4000, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+  }
+
   const feature = new Feature({
     geometry
   })
   feature.setId(`${Layers.ACTIONS.code}:${action.actionType}:${action.id}`)
   feature.setProperties({ ...actionProperties })
+  feature.setProperties({ ...actionProperties, isGeometryComputedFromControls })
 
   return feature
 }
@@ -104,11 +124,11 @@ const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActi
   f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
 
 export const getActionsFeatures = mission => {
-  const { envActions } = mission
+  const { envActions, isGeometryComputedFromControls } = mission
   if (envActions?.length && envActions?.length > 0) {
     return envActions
       .filter(isActionControlOrActionSurveillance)
-      .map(getActionFeature)
+      .map(action => getActionFeature(action, isGeometryComputedFromControls))
       .filter((f): f is Feature<Geometry> => !!f)
   }
 

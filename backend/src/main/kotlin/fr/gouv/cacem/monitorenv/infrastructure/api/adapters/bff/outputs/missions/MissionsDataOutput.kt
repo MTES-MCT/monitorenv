@@ -25,6 +25,7 @@ data class MissionsDataOutput(
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val attachedReportingIds: List<Int>? = listOf(),
+    val isGeometryComputedFromControls: Boolean,
 ) {
     companion object {
         fun fromMissionDTO(dto: MissionDTO): MissionsDataOutput {
@@ -42,10 +43,12 @@ data class MissionsDataOutput(
                 geom = dto.mission.geom,
                 startDateTimeUtc = dto.mission.startDateTimeUtc,
                 endDateTimeUtc = dto.mission.endDateTimeUtc,
-                envActions = dto.mission.envActions?.map {
+                envActions =
+                dto.mission.envActions?.map {
                     MissionEnvActionDataOutput.fromEnvActionEntity(
                         envActionEntity = it,
-                        envActionsAttachedToReportingIds = dto.envActionsAttachedToReportingIds,
+                        envActionsAttachedToReportingIds =
+                        dto.envActionsAttachedToReportingIds,
                     )
                 },
                 missionSource = dto.mission.missionSource,
@@ -53,6 +56,7 @@ data class MissionsDataOutput(
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
                 attachedReportingIds = dto.attachedReportingIds,
+                isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
             )
         }
     }

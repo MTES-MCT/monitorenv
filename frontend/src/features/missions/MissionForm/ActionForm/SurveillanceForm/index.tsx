@@ -18,20 +18,18 @@ import { useField, useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Header, StyledDeleteButton, Title, TitleWithIcon } from './style'
-import { SurveillanceThemes } from './Themes/SurveillanceThemes'
-import { CONTROL_PLAN_INIT } from '../../../../domain/entities/controlPlan'
-import { InteractionListener } from '../../../../domain/entities/map/constants'
+import { SurveillanceZonePicker } from './SurveillanceZonePicker'
+import { CONTROL_PLAN_INIT } from '../../../../../domain/entities/controlPlan'
 import {
   ActionTypeEnum,
   type EnvAction,
   type EnvActionSurveillance,
   type Mission
-} from '../../../../domain/entities/missions'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
-import { getFormattedReportingId } from '../../../Reportings/utils'
-import { MultiZonePicker } from '../../MultiZonePicker'
+} from '../../../../../domain/entities/missions'
+import { dateDifferenceInHours } from '../../../../../utils/dateDifferenceInHours'
+import { getFormattedReportingId } from '../../../../Reportings/utils'
+import { Header, StyledDeleteButton, Title, TitleWithIcon } from '../style'
+import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const {
@@ -50,13 +48,10 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const [, actionStartDateMeta] = useField(`envActions[${envActionIndex}].actionStartDateTimeUtc`)
   const [, actionEndDateMeta] = useField(`envActions[${envActionIndex}].actionEndDateTimeUtc`)
 
-  const [geomField, ,] = useField(`envActions[${envActionIndex}].geom`)
-
   const [durationMatchMissionField] = useField(`envActions[${envActionIndex}].durationMatchesMission`)
 
   const [envActionField] = useField(`envActions[${envActionIndex}]`)
 
-  const hasCustomZone = geomField.value && geomField.value.coordinates.length > 0
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length >= 1)
@@ -114,9 +109,6 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       return reporting
     })
   }
-
-  const listener = useAppSelector(state => state.draw.listener)
-  const isEditingZone = useMemo(() => listener === InteractionListener.SURVEILLANCE_ZONE, [listener])
 
   const duration = dateDifferenceInHours(
     envActionField.value.actionStartDateTimeUtc,
@@ -244,21 +236,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           />
         </FlexSelectorWrapper>
         <FlexSelectorWrapper>
-          <MultiZonePicker
-            addButtonLabel="Ajouter une zone de surveillance"
-            envActionIndex={envActionIndex}
-            interactionListener={InteractionListener.SURVEILLANCE_ZONE}
-            isLight
-            label="Zone de surveillance"
-            name={`envActions[${envActionIndex}].geom`}
-          />
-          <StyledFormikCheckbox
-            data-cy="surveillance-zone-matches-mission"
-            disabled={hasCustomZone || isEditingZone}
-            inline
-            label="Zone de surveillance équivalente à la zone de mission"
-            name={`envActions[${envActionIndex}].coverMissionZone`}
-          />
+          <SurveillanceZonePicker actionIndex={envActionIndex} />
         </FlexSelectorWrapper>
 
         <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { debounce } from 'lodash'
 import { getCenter } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -85,20 +86,29 @@ export function OverlayPositionOnCentroid({
       olOverlayObjectRef.current.setOffset(INITIAL_OFFSET_VALUE)
     }
     if (feature) {
-      currentCoordinates.current = feature.getGeometry().getExtent()
+      currentCoordinates.current = feature.getGeometry()?.getExtent()
     } else {
       currentCoordinates.current = undefined
     }
   }, [feature])
 
-  useEffect(() => {
-    const view = map.getView()
-    view.on('change:resolution', () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedHandleChangeResolution = useCallback(
+    debounce(() => {
       if (overlayCoordinates) {
         dispatch(removeAllOverlayCoordinates())
       }
+    }, 500),
+    [overlayCoordinates, dispatch]
+  )
+
+  useEffect(() => {
+    const view = map.getView()
+
+    view.on('change:resolution', () => {
+      debouncedHandleChangeResolution()
     })
-  }, [dispatch, map, overlayCoordinates])
+  }, [dispatch, map, overlayCoordinates, debouncedHandleChangeResolution])
 
   useEffect(() => {
     if (map) {
@@ -153,7 +163,7 @@ export function OverlayPositionOnCentroid({
     }
 
     if (overlayRef.current && olOverlayObjectRef.current) {
-      if (feature) {
+      if (feature && feature.getGeometry()) {
         const featureCenter = getCenter(feature.getGeometry().getExtent())
         olOverlayObjectRef.current.setPosition(featureCenter)
         const nextOverlayPosition = getNextOverlayPosition(featureCenter)

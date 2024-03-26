@@ -1,5 +1,11 @@
-import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
+import { Accent, Button, Icon, IconButton, Label, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
+import { setFitToExtent } from 'domain/shared_slices/Map'
+import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
+import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
@@ -7,47 +13,24 @@ import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import {
-  InteractionListener,
-  OLGeometryType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from '../../domain/entities/map/constants'
-import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { drawPolygon } from '../../domain/use_cases/draw/drawGeometry'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
-
+import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
 
-export type MultiZonePickerProps = {
-  addButtonLabel: string
-  envActionIndex?: number
-  interactionListener: InteractionListener
-  isLight?: boolean
-  label?: string | undefined
-  name: string
+const SURVEILLANCE_INTERACTION_LISTENER = InteractionListener.SURVEILLANCE_ZONE
+
+export type SurveillanceZonePickerProps = {
+  actionIndex: number
 }
-export function MultiZonePicker({
-  addButtonLabel,
-  envActionIndex,
-  interactionListener,
-  isLight,
-  label = undefined,
-  name
-}: MultiZonePickerProps) {
+
+export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerProps) {
+  const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
-  const { geometry } = useListenForDrawedGeometry(interactionListener)
-  const [field, meta, helpers] = useField(name)
-  const [, , coverMissionZoneHelpers] = useField(`envActions[${envActionIndex}].coverMissionZone`)
+  const { geometry } = useListenForDrawedGeometry(SURVEILLANCE_INTERACTION_LISTENER)
+  const [field, meta, helpers] = useField(`envActions[${actionIndex}].geom`)
   const { value } = field
 
   const listener = useAppSelector(state => state.draw.listener)
-  const isEditingZone = useMemo(
-    () => listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.SURVEILLANCE_ZONE,
-    [listener]
-  )
+  const isEditingZone = useMemo(() => listener === SURVEILLANCE_INTERACTION_LISTENER, [listener])
 
   const polygons = useMemo(() => {
     if (!value) {
@@ -60,8 +43,12 @@ export function MultiZonePicker({
   useEffect(() => {
     if (geometry?.type === OLGeometryType.MULTIPOLYGON && !_.isEqual(geometry, value)) {
       helpers.setValue(geometry)
+      if ((!values.geom || values.geom?.coordinates.length === 0) && values.envActions.length === 1) {
+        setFieldValue('geom', geometry)
+        setFieldValue('isGeometryComputedFromControls', true)
+      }
     }
-  }, [geometry, helpers, value])
+  }, [geometry, helpers, value, values.envActions.length, values.geom, setFieldValue])
 
   const handleCenterOnMap = (coordinates: Coordinate[][]) => {
     const firstRing = coordinates[0]
@@ -74,9 +61,8 @@ export function MultiZonePicker({
   }
 
   const handleAddZone = useCallback(() => {
-    dispatch(drawPolygon(value, interactionListener))
-    coverMissionZoneHelpers.setValue(false)
-  }, [coverMissionZoneHelpers, dispatch, value, interactionListener])
+    dispatch(drawPolygon(value, SURVEILLANCE_INTERACTION_LISTENER))
+  }, [dispatch, value])
 
   const deleteZone = useCallback(
     (index: number) => {
@@ -86,13 +72,17 @@ export function MultiZonePicker({
 
       const nextCoordinates = remove(index, 1, value.coordinates)
       helpers.setValue({ ...value, coordinates: nextCoordinates })
+      if (values.isGeometryComputedFromControls && values.envActions.length === 1) {
+        setFieldValue('geom', undefined)
+        setFieldValue('isGeometryComputedFromControls', false)
+      }
     },
-    [value, helpers]
+    [value, helpers, values.envActions.length, values.isGeometryComputedFromControls, setFieldValue]
   )
 
   return (
     <Field>
-      {label && <Label $isRequired>{label}</Label>}
+      <Label $isRequired>Zone de surveillance</Label>
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
@@ -100,14 +90,14 @@ export function MultiZonePicker({
         isFullWidth
         onClick={handleAddZone}
       >
-        {addButtonLabel}
+        Ajouter une zone de surveillance
       </Button>
 
       <>
         {polygons.map((polygonCoordinates, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <Row key={`zone-${index}`}>
-            <ZoneWrapper isLight={isLight}>
+            <ZoneWrapper isLight>
               Polygone dessiné {index + 1}
               {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
               {/* eslint-disable jsx-a11y/anchor-is-valid */}

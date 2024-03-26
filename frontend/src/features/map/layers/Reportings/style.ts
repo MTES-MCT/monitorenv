@@ -243,38 +243,38 @@ const reportingToMissionLinkStyle = feature =>
     })
   })
 
-const attachedMissionCircleStyle = feature =>
-  new Style({
-    geometry: () => {
-      const missionId = feature.get('missionId')
-      if (!missionId || (missionId && feature.get('detachedFromMissionAtUtc'))) {
-        return undefined
-      }
+const attachedMissionCircleStyle = new Style({
+  geometry: feature => {
+    const missionId = feature.get('missionId')
+    if (!missionId || (missionId && feature.get('detachedFromMissionAtUtc'))) {
+      return undefined
+    }
 
-      const missionGeom = feature.get('attachedMission')?.geom
-      const geoJSON = new GeoJSON()
-      const formattedMissionGeometry = geoJSON.readGeometry(missionGeom, {
-        dataProjection: WSG84_PROJECTION,
-        featureProjection: OPENLAYERS_PROJECTION
-      })
+    const missionGeom = feature.get('attachedMission')?.geom
+    const geoJSON = new GeoJSON()
+    const formattedMissionGeometry = geoJSON.readGeometry(missionGeom, {
+      dataProjection: WSG84_PROJECTION,
+      featureProjection: OPENLAYERS_PROJECTION
+    })
 
-      const missionExtent = formattedMissionGeometry?.getExtent()
-      const missionCenter = missionExtent && getCenter(missionExtent)
+    const missionExtent = formattedMissionGeometry?.getExtent()
+    const missionCenter = missionExtent && getCenter(missionExtent)
 
-      return missionCenter && new Point(missionCenter)
-    },
-    image: new Circle({
-      radius: 20,
-      stroke: new Stroke({
-        color: THEME.color.charcoal,
-        width: 2
-      })
+    return missionCenter && new Point(missionCenter)
+  },
+  image: new Circle({
+    displacement: [0, 27],
+    radius: 20,
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      width: 2
     })
   })
+})
 
 export const editingReportingStyleFn = feature => [
   reportingPinStyleFn(feature),
   ...selectedReportingStyleFn(feature),
   reportingToMissionLinkStyle(feature),
-  attachedMissionCircleStyle(feature)
+  attachedMissionCircleStyle
 ]

@@ -46,7 +46,6 @@ class CreateOrUpdateMissionDataInputUTests {
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
                 department = "TestDepartment",
                 facade = "TestFacade",
-                coverMissionZone = true,
                 observations = "Observations",
                 reportingIds = Optional.of(listOf(2, 3)),
             )
@@ -69,6 +68,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(),
                 envActions = listOf(envActionControl, envActionSurveillance, envActionNote),
+                isGeometryComputedFromControls = false,
             )
 
         // when

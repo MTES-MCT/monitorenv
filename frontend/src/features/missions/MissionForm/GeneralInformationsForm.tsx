@@ -8,14 +8,16 @@ import {
   FormikTextInput,
   FormikTextarea,
   MultiRadio,
-  useNewWindow
+  useNewWindow,
+  THEME
 } from '@mtes-mct/monitor-ui'
-import { FieldArray, useField, useFormikContext } from 'formik'
+import { FieldArray, useFormikContext } from 'formik'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
+import { MissionZonePicker } from './MissionZonePicker'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../domain/entities/controlPlan'
-import { InteractionListener } from '../../../domain/entities/map/constants'
 import {
   type Mission,
   MissionSourceEnum,
@@ -30,25 +32,26 @@ import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { getMissionTitle } from '../../../utils/getMissionTitle'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
-import { MultiZonePicker } from '../MultiZonePicker'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
-  const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
-  const [missionSourceField] = useField<MissionSourceEnum>('missionSource')
   const { errors, setFieldValue, values } = useFormikContext<Mission>()
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
 
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
 
   const routeParams = getMissionPageRoute(currentPath)
-  const missionIsNewMission = isNewMission(routeParams?.params?.id)
+  const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
 
-  const title = getMissionTitle(missionIsNewMission, values)
+  const title = useMemo(() => getMissionTitle(missionIsNewMission, values), [missionIsNewMission, values])
 
-  const actualYearForThemes = customDayjs(values?.startDateTimeUtc).year()
+  const missionIsFromMonitorFish =
+    values.missionSource === MissionSourceEnum.MONITORFISH || values.missionSource === MissionSourceEnum.POSEIDON_CNSP
+
+  const actualYearForThemes = useMemo(() => customDayjs(values?.startDateTimeUtc).year(), [values?.startDateTimeUtc])
+
   const updateMissionDateTime = (date: string | undefined) => {
     if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
       values?.envActions?.forEach((action, actionIndex) => {
@@ -74,7 +77,7 @@ export function GeneralInformationsForm() {
         <Title>{title}</Title>
         {!missionIsNewMission && (
           <StyledTagsContainer>
-            <MissionSourceTag source={missionSourceField?.value} />
+            <MissionSourceTag source={values.missionSource} />
             <MissionStatusTag status={getMissionStatus(values)} />
           </StyledTagsContainer>
         )}
@@ -129,21 +132,17 @@ export function GeneralInformationsForm() {
               options={missionTypeOptions}
             />
 
-            {(missionSourceField.value === MissionSourceEnum.MONITORFISH ||
-              missionSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
-              <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
-            )}
+            {missionIsFromMonitorFish && <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />}
           </StyledMissionType>
         </div>
-        {(missionSourceField.value === MissionSourceEnum.MONITORFISH ||
-          missionSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
+        {missionIsFromMonitorFish && (
           <MultiRadio
             disabled
             isInline
             label="Ordre de mission"
             name="hasMissionOrder"
             options={hasMissionOrderOptions}
-            value={hasMissionOrderField.value}
+            value={values.hasMissionOrder}
           />
         )}
 
@@ -156,12 +155,15 @@ export function GeneralInformationsForm() {
           />
         </StyledUnitsContainer>
 
-        <MultiZonePicker
-          addButtonLabel="Ajouter une zone de mission"
-          interactionListener={InteractionListener.MISSION_ZONE}
-          label="Localisations :"
-          name="geom"
-        />
+        <div>
+          <MissionZonePicker />
+          {values.isGeometryComputedFromControls && (
+            <ZoneComputedFromActions data-cy="mission-zone-computed-from-action">
+              Actuellement, la zone de mission est <b>automatiquement calculée</b> selon le point ou la zone de la
+              dernière action rapportée par l’unité.
+            </ZoneComputedFromActions>
+          )}
+        </div>
 
         <StyledObservationsContainer>
           <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
@@ -232,6 +234,13 @@ const StyledMissionType = styled.div`
 const StyledUnitsContainer = styled.div`
   display: flex;
   flex-direction: column;
+`
+
+const ZoneComputedFromActions = styled.div`
+  margin-top: 8px;
+  color: ${THEME.color.blueYonder};
+  background: ${THEME.color.blueYonder25};
+  padding: 16px;
 `
 
 const StyledObservationsContainer = styled.div`
