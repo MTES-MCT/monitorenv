@@ -12,15 +12,19 @@ data class MonitorFishMissionActionDataInput(
     val missionId: Int,
     val numberOfVesselsFlownOver: Int? = null,
     val vesselName: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
 ) {
     fun toMonitorFishMissionActionEntity(): MonitorFishMissionActionEntity {
         return MonitorFishMissionActionEntity(
             id = this.id,
-            missionId = this.missionId,
-            actionType = this.actionType,
-            vesselName = this.vesselName,
             actionDatetimeUtc = this.actionDatetimeUtc,
+            actionType = this.actionType,
+            latitude = this.latitude,
+            longitude = this.longitude,
+            missionId = this.missionId,
             numberOfVesselsFlownOver = this.numberOfVesselsFlownOver,
+            vesselName = this.vesselName,
         )
     }
 }

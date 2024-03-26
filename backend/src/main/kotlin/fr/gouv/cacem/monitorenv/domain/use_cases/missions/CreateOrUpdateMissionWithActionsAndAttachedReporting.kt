@@ -18,9 +18,12 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
+    private val getFullMissionById: GetFullMissionById,
 ) {
     private val logger =
-        LoggerFactory.getLogger(CreateOrUpdateMissionWithActionsAndAttachedReporting::class.java)
+        LoggerFactory.getLogger(
+            CreateOrUpdateMissionWithActionsAndAttachedReporting::class.java,
+        )
 
     @Throws(IllegalArgumentException::class)
     fun execute(
@@ -64,7 +67,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
             reportingRepository.attachEnvActionsToReportings(it.first, it.second)
         }
 
-        return missionRepository.findFullMissionById(savedMission.id)
+        return getFullMissionById.execute(savedMission.id)
     }
 
     private fun getListOfEnvActionIds(

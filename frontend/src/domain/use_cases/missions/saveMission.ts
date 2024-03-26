@@ -22,7 +22,7 @@ export const saveMission =
     } = getState()
     const selectedMissions = getState().missionForms.missions
 
-    const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings'])
+    const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings', 'fishActions'])
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
     await dispatch(missionFormsActions.setIsListeningToEvents(false))

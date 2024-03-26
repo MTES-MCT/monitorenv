@@ -9,4 +9,6 @@ data class MonitorFishMissionActionEntity(
     val missionId: Int,
     val numberOfVesselsFlownOver: Int?,
     val vesselName: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
 )
