@@ -1,46 +1,45 @@
+import { missionsAPI } from '@api/missionsAPI'
+import { setToast } from 'domain/shared_slices/Global'
 import { generatePath } from 'react-router'
 
-import { missionsAPI } from '../../../api/missionsAPI'
 import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
 import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
-import { setToast } from '../../shared_slices/Global'
 
-export const editMissionInLocalStore = (missionId: number) => async (dispatch, getState) => {
-  const { missions } = getState().missionForms
+export const editMissionInLocalStore =
+  (missionId: number, context: 'map' | 'sideWindow') => async (dispatch, getState) => {
+    const { missions } = getState().missionForms
 
-  const missionToEdit = missionsAPI.endpoints.getMission
+    const missionToEdit = missionsAPI.endpoints.getMission
 
-  if (missions[missionId]) {
-    await setMission(dispatch, missions[missionId])
+    if (missions[missionId]) {
+      await setMission(dispatch, missions[missionId])
 
-    return
-  }
-  try {
-    const missionRequest = dispatch(missionToEdit.initiate(missionId))
-    const missionResponse = await missionRequest.unwrap()
-
-    if (!missionResponse) {
-      throw Error()
+      return
     }
+    try {
+      const missionRequest = dispatch(missionToEdit.initiate(missionId))
+      const missionResponse = await missionRequest.unwrap()
 
-    const missionToSave = missionResponse
-    const missionFormatted = {
-      isFormDirty: false,
-      missionForm: missionToSave
+      if (!missionResponse) {
+        throw Error()
+      }
+
+      const missionToSave = missionResponse
+      const missionFormatted = {
+        isFormDirty: false,
+        missionForm: missionToSave
+      }
+
+      setMission(dispatch, missionFormatted)
+
+      await missionRequest.unsubscribe()
+    } catch (error) {
+      dispatch(setToast({ containerId: context, message: 'Erreur à la création ou à la modification de la mission' }))
     }
-
-    setMission(dispatch, missionFormatted)
-
-    await missionRequest.unsubscribe()
-  } catch (error) {
-    dispatch(
-      setToast({ containerId: 'sideWindow', message: 'Erreur à la création ou à la modification de la mission' })
-    )
   }
-}
 
 async function setMission(dispatch, mission) {
   await dispatch(missionFormsActions.setMission(mission))

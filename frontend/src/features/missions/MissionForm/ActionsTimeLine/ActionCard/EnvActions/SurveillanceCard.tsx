@@ -1,12 +1,12 @@
 import { Icon, THEME, customDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
-import { Accented, DurationWrapper, SummaryContent, Title, TitleAndButtonsContainer } from './style'
-import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
-import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
-import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
+import { useGetControlPlansByYear } from '../../../../../../hooks/useGetControlPlansByYear'
+import { dateDifferenceInHours } from '../../../../../../utils/dateDifferenceInHours'
+import { extractThemesAsText } from '../../../../../../utils/extractThemesAsText'
+import { Accented, DurationWrapper, SummaryContent, Title, TitleAndButtonsContainer } from '../style'
 
-import type { Mission } from '../../../../domain/entities/missions'
+import type { Mission } from '../../../../../../domain/entities/missions'
 
 export function SurveillanceCard({ action }) {
   const { values } = useFormikContext<Mission>()

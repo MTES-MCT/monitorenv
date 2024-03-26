@@ -409,4 +409,9 @@ context('Side Window > Mission Form > Mission actions', () => {
       }
     )
   })
+
+  it('Should display CNSP actions', () => {
+    cy.get('*[data-cy="edit-mission-53"]').click({ force: true })
+    cy.getDataCy('cnsp-action-text').should('have.length', 5)
+  })
 })

@@ -4,6 +4,7 @@ import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
 import type { ReportingDetailed } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
+import type { FishMissionAction } from '@features/missions/fishActions.types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export enum ActionTypeEnum {
@@ -210,6 +211,11 @@ export type ResourceUnit = {
   administration: string
 }
 
+export enum ActionSource {
+  MONITORENV = 'MONITORENV',
+  MONITORFISH = 'MONITORFISH'
+}
+
 // Mission from API
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
@@ -222,6 +228,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   endDateTimeUtc?: string
   envActions: EnvAction[]
   facade: SeaFrontEnum
+  fishActions: FishMissionAction.MissionAction[]
   geom?: GeoJSON.MultiPolygon
   hasMissionOrder?: boolean
   id: number
@@ -307,6 +314,7 @@ export type Infraction = NewInfraction & {
 }
 
 export type EnvActionForTimeline = Partial<EnvAction> & {
+  actionSource: string
   formattedReportingId: string
   formattedReportingIds: string[]
   timelineDate?: string

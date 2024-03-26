@@ -28,7 +28,8 @@ import {
 } from '../../../../../domain/entities/missions'
 import { dateDifferenceInHours } from '../../../../../utils/dateDifferenceInHours'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
-import { Header, StyledDeleteButton, Title, TitleWithIcon } from '../style'
+import { FormTitle } from '../../style'
+import { FormBody, Header, StyledDeleteButton, TitleWithIcon } from '../style'
 import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
@@ -139,7 +140,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       <Header>
         <TitleWithIcon>
           <Icon.Observation color={THEME.color.gunMetal} />
-          <Title>Surveillance</Title>
+          <FormTitle>Surveillance</FormTitle>
         </TitleWithIcon>
         <StyledDeleteButton
           accent={Accent.SECONDARY}
@@ -245,12 +246,6 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   )
 }
 
-const FormBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding-bottom: 48px;
-`
 const StyledToggle = styled.div`
   align-items: center;
   display: flex;

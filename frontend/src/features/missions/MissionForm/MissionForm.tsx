@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { ActionForm } from './ActionForm'
-import { ActionsForm } from './ActionsForm'
+import { ActionsTimeLine } from './ActionsTimeLine'
 import { CancelEditModal } from './CancelEditModal'
 import { CloseEditModal } from './CloseEditModal'
 import { DeleteModal } from './DeleteModal'
@@ -293,7 +293,10 @@ export function MissionForm({
           <GeneralInformationsForm />
         </FirstColumn>
         <SecondColumn>
-          <ActionsForm currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />
+          <ActionsTimeLine
+            currentActionIndex={currentActionIndex}
+            setCurrentActionIndex={handleSetCurrentActionIndex}
+          />
         </SecondColumn>
         <ThirdColumn>
           <ActionForm currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />

@@ -52,7 +52,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
   const handleEditMission = useCallback(() => {
-    dispatch(editMissionInLocalStore(missionId))
+    dispatch(editMissionInLocalStore(missionId, 'map'))
   }, [dispatch, missionId])
 
   const handleCloseOverlay = useCallback(() => {

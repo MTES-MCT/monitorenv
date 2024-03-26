@@ -1,49 +1,48 @@
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { ActionTypeEnum, type EnvActionForTimeline } from 'domain/entities/missions'
 
 import { ControlCard } from './ControlCard'
 import { NoteCard } from './NoteCard'
 import { ReportingCard } from './ReportingCard'
 import { ReportingHistory } from './ReportingHistory'
+import { SurveillanceCard } from './SurveillanceCard'
 import {
-  Action,
   ActionButtons,
   ActionSummaryWrapper,
   ButtonsWrapper,
   Card,
   ContentContainer,
   StyledTag,
-  TagsContainer,
-  TimeLine
-} from './style'
-import { SurveillanceCard } from './SurveillanceCard'
-import { ActionTypeEnum, type EnvActionForTimeline } from '../../../../domain/entities/missions'
-import { getDateAsLocalizedStringExpanded } from '../../../../utils/getDateAsLocalizedString'
+  TagsContainer
+} from '../style'
 
-import type { DetachedReportingForTimeline, ReportingForTimeline } from '../../../../domain/entities/reporting'
+import type { FishMissionAction } from '@features/missions/fishActions.types'
+import type { DetachedReportingForTimeline, ReportingForTimeline } from 'domain/entities/reporting'
 import type { MouseEventHandler } from 'react'
 
-type ActionCardProps = {
-  action: EnvActionForTimeline | ReportingForTimeline | DetachedReportingForTimeline
+type EnvActionsProps = {
+  action:
+    | EnvActionForTimeline
+    | ReportingForTimeline
+    | DetachedReportingForTimeline
+    | FishMissionAction.FishActionForTimeline
   duplicateAction: MouseEventHandler
   hasError: boolean
   removeAction: MouseEventHandler
-  selectAction: MouseEventHandler
   selected: boolean
   setCurrentActionIndex: (string) => void
 }
 
-export function ActionCards({
+export function EnvActions({
   action,
   duplicateAction,
   hasError,
   removeAction,
-  selectAction,
   selected,
   setCurrentActionIndex
-}: ActionCardProps) {
+}: EnvActionsProps) {
   return (
-    <Action data-cy="action-card" onClick={selectAction}>
-      <TimeLine>{getDateAsLocalizedStringExpanded(action.timelineDate)}</TimeLine>
+    <>
       {action.actionType === ActionTypeEnum.DETACHED_REPORTING ? (
         <ReportingHistory action={action} />
       ) : (
@@ -56,7 +55,6 @@ export function ActionCards({
               {action.actionType === ActionTypeEnum.REPORTING && (
                 <ReportingCard action={action} setCurrentActionIndex={setCurrentActionIndex} />
               )}
-
               {action.actionType !== ActionTypeEnum.REPORTING && (
                 <>
                   <ButtonsWrapper>
@@ -86,7 +84,6 @@ export function ActionCards({
                 </>
               )}
             </ContentContainer>
-
             {action.actionType === ActionTypeEnum.SURVEILLANCE && action.formattedReportingIds.length > 0 && (
               <TagsContainer>
                 {action.formattedReportingIds.map(reportingId => (
@@ -101,6 +98,6 @@ export function ActionCards({
           </ActionSummaryWrapper>
         </Card>
       )}
-    </Action>
+    </>
   )
 }

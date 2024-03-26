@@ -1,7 +1,7 @@
 import { Icon, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ActionTypeEnum } from '../../../../domain/entities/missions'
+import { ActionTypeEnum } from '../../../../../domain/entities/missions'
 
 export const Card = styled.div`
   flex: 1;
@@ -10,16 +10,16 @@ export const Card = styled.div`
 export const Action = styled.div`
   display: flex;
 `
-export const TimeLine = styled.div`
+export const TimeLine = styled.div<{ $isFishAction: boolean }>`
   display: flex;
-  width: 54px;
   margin-right: 16px;
   font-size: 13px;
   flex-direction: column;
   justify-content: center;
+  ${p => p.$isFishAction && `margin-bottom: 20px;`}
 `
 
-export const ActionSummaryWrapper = styled.div<{ $hasError: boolean; $selected: boolean; $type?: string }>`
+export const ActionSummaryWrapper = styled.div<{ $hasError?: boolean; $selected?: boolean; $type?: string }>`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
