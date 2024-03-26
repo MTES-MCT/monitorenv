@@ -59,6 +59,7 @@ JOIN points_per_action nb
 ON pos.action_id = nb.action_id
 ORDER BY pos.duration / nb.number_of_squares / square_area_km2
 
+CREATE INDEX ON public.analytics_surveillance_density_map (action_id);
 
 
 /* Delete prop `coverMissionZone` from `env_actions` table */
