@@ -13,16 +13,9 @@ class GetFullMissionById(
     private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
 ) {
     fun execute(missionId: Int): MissionDTO {
-        try {
-            val fullMission = missionRepository.findFullMissionById(missionId)
+        val fullMission = missionRepository.findFullMissionById(missionId)
 
-            val fishActions =
-                monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
-            return fullMission.copy(fishActions = fishActions)
-        } catch (e: NoSuchElementException) {
-            throw IllegalArgumentException(
-                "An error occurred while fetching the mission with id $missionId.",
-            )
-        }
+        val fishActions = monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
+        return fullMission.copy(fishActions = fishActions)
     }
 }
