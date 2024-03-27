@@ -31,7 +31,7 @@ const missionWithCentroidStyleFactory = (status, type) => [
       return center && new Point(center)
     },
     image: new Icon({
-      displacement: [0, 24],
+      displacement: [0, 20],
       scale: 0.5,
       src: `mission/${status}_${type}.png`
     })
@@ -366,7 +366,7 @@ const missionCircleStyle = new Style({
     return center && new Point(center)
   },
   image: new Circle({
-    displacement: [0, 27],
+    displacement: [0, 23],
     radius: 20,
     stroke: new Stroke({
       color: THEME.color.charcoal,

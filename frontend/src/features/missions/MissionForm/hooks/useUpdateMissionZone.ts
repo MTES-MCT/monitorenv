@@ -15,17 +15,17 @@ export const useUpdateMissionZone = sortedActions => {
   const { setFieldValue, values } = useFormikContext<Mission>()
   const previousFirstAction = usePrevious(sortedActions[0])
   const previousActionCoordinates = usePrevious(
-    sortedActions[0].actionSource === ActionSource.MONITORENV
+    sortedActions[0]?.actionSource === ActionSource.MONITORENV
       ? sortedActions[0]?.geom?.coordinates
-      : [sortedActions[0].latitude, sortedActions[0].longitude]
+      : [sortedActions[0]?.latitude, sortedActions[0]?.longitude]
   )
 
   const firstAction = sortedActions[0]
   const firstActionCoordinates = useMemo(
     () =>
-      sortedActions[0].actionSource === ActionSource.MONITORENV
+      sortedActions[0]?.actionSource === ActionSource.MONITORENV
         ? sortedActions[0]?.geom?.coordinates
-        : [sortedActions[0].latitude, sortedActions[0].longitude],
+        : [sortedActions[0]?.latitude, sortedActions[0]?.longitude],
     [sortedActions]
   )
 
@@ -46,7 +46,7 @@ export const useUpdateMissionZone = sortedActions => {
       return
     }
 
-    if (firstAction.actionSource === ActionSource.MONITORFISH && firstAction.latitude && firstAction.longitude) {
+    if (firstAction?.actionSource === ActionSource.MONITORFISH && firstAction?.latitude && firstAction?.longitude) {
       // on form mounted
       if (!previousFirstAction || !previousActionCoordinates) {
         return

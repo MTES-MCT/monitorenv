@@ -414,4 +414,13 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="edit-mission-53"]').click({ force: true })
     cy.getDataCy('cnsp-action-text').should('have.length', 5)
   })
+
+  it("Should display warning toast if fish api doesn't respond", () => {
+    cy.fill('Période', 'Un mois')
+    cy.wait(500)
+    cy.getDataCy('edit-mission-27').click({ force: true }).scrollIntoView()
+    cy.get('.Toastify__toast-body').contains(
+      'Problème de communication avec MonitorFish: impossible de récupérer les actions du CNSP'
+    )
+  })
 })

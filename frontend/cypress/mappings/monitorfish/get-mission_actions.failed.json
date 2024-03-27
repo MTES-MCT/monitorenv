@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/v1/mission_actions",
+    "queryParameters": {
+      "missionId": {
+        "matches": "27"
+      }
+    }
+  },
+  "response": {
+    "fault": "EMPTY_RESPONSE"
+  }
+}

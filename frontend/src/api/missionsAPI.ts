@@ -21,6 +21,11 @@ type CanDeleteMissionResponseType = {
   sources: MissionSourceEnum[]
 }
 
+type MissionResponseType = {
+  mission: Mission
+  status: number
+}
+
 const getStartDateFilter = startedAfterDateTime =>
   startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
 const getEndDateFilter = startedBeforeDateTime =>
@@ -80,9 +85,14 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
         url: `/v1/missions/${id}`
       })
     }),
-    getMission: builder.query<Mission, number>({
+    getMission: builder.query<MissionResponseType, number>({
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
-      query: id => `/v1/missions/${id}`
+      query: id => `/v1/missions/${id}`,
+      transformResponse: (mission: Mission, meta: any) => {
+        const status = meta?.response?.status
+
+        return { mission, status }
+      }
     }),
     getMissions: builder.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>

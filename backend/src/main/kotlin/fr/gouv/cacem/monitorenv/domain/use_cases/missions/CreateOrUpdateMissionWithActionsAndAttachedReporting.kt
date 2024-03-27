@@ -5,7 +5,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
-import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
@@ -16,7 +15,6 @@ import java.util.UUID
 class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
-    private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
     private val getFullMissionById: GetFullMissionById,
 ) {
@@ -30,7 +28,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
         mission: MissionEntity,
         attachedReportingIds: List<Int>,
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
-    ): MissionDTO {
+    ): Pair<Boolean, MissionDTO> {
         logger.info(
             "Create or update mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds",
         )

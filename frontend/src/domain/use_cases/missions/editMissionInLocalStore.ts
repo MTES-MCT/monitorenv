@@ -1,4 +1,5 @@
 import { missionsAPI } from '@api/missionsAPI'
+import { ErrorType } from 'domain/entities/errors'
 import { setToast } from 'domain/shared_slices/Global'
 import { generatePath } from 'react-router'
 
@@ -23,11 +24,21 @@ export const editMissionInLocalStore =
       const missionRequest = dispatch(missionToEdit.initiate(missionId))
       const missionResponse = await missionRequest.unwrap()
 
-      if (!missionResponse) {
+      if (!missionResponse.mission) {
         throw Error()
       }
 
-      const missionToSave = missionResponse
+      if (missionResponse.status === 206) {
+        dispatch(
+          setToast({
+            containerId: 'sideWindow',
+            message: 'Problème de communication avec MonitorFish: impossible de récupérer les actions du CNSP',
+            type: ErrorType.WARNING
+          })
+        )
+      }
+
+      const missionToSave = missionResponse.mission
       const missionFormatted = {
         isFormDirty: false,
         missionForm: missionToSave
