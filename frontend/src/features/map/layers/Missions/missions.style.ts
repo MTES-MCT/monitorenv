@@ -157,9 +157,6 @@ export const selectedMissionSurveillanceStyle = [
   // Surveillance icon
   new Style({
     geometry: feature => {
-      if (feature.get('actionType') !== ActionTypeEnum.SURVEILLANCE) {
-        return undefined
-      }
       const geom = feature?.getGeometry() as MultiPolygon
       const polygons = geom?.getPolygons()
       const points = polygons?.map(p => getCenter(p.getExtent()))
@@ -180,13 +177,6 @@ export const selectedMissionSurveillanceStyle = [
     fill: new Fill({
       color: 'rgba(86, 151, 210, .35)' // Blue Gray
     }),
-    geometry: feature => {
-      if (feature.get('actionType') !== ActionTypeEnum.SURVEILLANCE) {
-        return undefined
-      }
-
-      return feature.getGeometry()
-    },
     stroke: new Stroke({
       color: THEME.color.charcoal,
       width: 2

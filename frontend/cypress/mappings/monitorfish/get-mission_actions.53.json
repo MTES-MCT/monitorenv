@@ -162,7 +162,7 @@
         "portLocode": null,
         "portName": null,
         "seizureAndDiversionComments": null,
-        "otherComments": "",
+        "otherComments": "Une observation écrite par le CNSP",
         "gearOnboard": [],
         "speciesOnboard": [],
         "controlUnits": [],
@@ -278,7 +278,7 @@
       {
         "id": 4238,
         "vesselId": null,
-        "vesselName": null,
+        "vesselName": "UNKNOWN",
         "internalReferenceNumber": null,
         "externalReferenceNumber": null,
         "ircs": null,

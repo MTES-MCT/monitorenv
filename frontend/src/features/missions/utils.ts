@@ -11,3 +11,7 @@ export const getTotalOfControls = (mission: Partial<Mission | NewMission>) =>
 
 export const getTotalOfSurveillances = (mission: Partial<Mission | NewMission>) =>
   mission.envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE).length
+
+export function getVesselName(vesselName) {
+  return vesselName === 'UNKNOWN' ? 'Navire inconnu' : vesselName
+}

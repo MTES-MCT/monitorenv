@@ -11,6 +11,7 @@ data class MonitorFishMissionActionDataOutput(
     val longitude: Double? = null,
     val missionId: Int,
     val numberOfVesselsFlownOver: Int? = null,
+    val otherComments: String? = null,
     val vesselName: String? = null,
 ) {
 
@@ -27,6 +28,7 @@ data class MonitorFishMissionActionDataOutput(
                 missionId = monitorFishMissionActionEntity.missionId,
                 numberOfVesselsFlownOver =
                 monitorFishMissionActionEntity.numberOfVesselsFlownOver,
+                otherComments = monitorFishMissionActionEntity.otherComments,
                 vesselName = monitorFishMissionActionEntity.vesselName,
             )
     }

@@ -8,16 +8,26 @@ import { isEqual } from 'lodash'
 import { Feature } from 'ol'
 import { MultiPolygon } from 'ol/geom'
 import Polygon, { circular } from 'ol/geom/Polygon'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 export const useUpdateMissionZone = sortedActions => {
   const listener = useAppSelector(state => state.draw.listener)
   const { setFieldValue, values } = useFormikContext<Mission>()
   const previousFirstAction = usePrevious(sortedActions[0])
-  const previousActionCoordinates = usePrevious(sortedActions[0]?.geom?.coordinates)
+  const previousActionCoordinates = usePrevious(
+    sortedActions[0].actionSource === ActionSource.MONITORENV
+      ? sortedActions[0]?.geom?.coordinates
+      : [sortedActions[0].latitude, sortedActions[0].longitude]
+  )
 
   const firstAction = sortedActions[0]
-  const firstActionCoordinates = firstAction?.geom?.coordinates
+  const firstActionCoordinates = useMemo(
+    () =>
+      sortedActions[0].actionSource === ActionSource.MONITORENV
+        ? sortedActions[0]?.geom?.coordinates
+        : [sortedActions[0].latitude, sortedActions[0].longitude],
+    [sortedActions]
+  )
 
   useEffect(() => {
     // no need to update geom if we are in mission zone listener or if user add manually a zone
@@ -37,6 +47,10 @@ export const useUpdateMissionZone = sortedActions => {
     }
 
     if (firstAction.actionSource === ActionSource.MONITORFISH && firstAction.latitude && firstAction.longitude) {
+      // on form mounted
+      if (!previousFirstAction || !previousActionCoordinates) {
+        return
+      }
       if (
         isEqual(previousFirstAction, firstAction) &&
         isEqual(previousActionCoordinates, firstActionCoordinates) &&
@@ -51,7 +65,6 @@ export const useUpdateMissionZone = sortedActions => {
           OPENLAYERS_PROJECTION
         )
       }).getGeometry()
-
       setFieldValue('geom', convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon])))
       if (!values.isGeometryComputedFromControls) {
         setFieldValue('isGeometryComputedFromControls', true)
@@ -59,7 +72,13 @@ export const useUpdateMissionZone = sortedActions => {
     }
 
     if (firstAction?.actionType === ActionTypeEnum.CONTROL && firstAction?.geom) {
+      // on form mounted
+      if (!previousFirstAction || !previousActionCoordinates) {
+        return
+      }
       if (
+        previousFirstAction &&
+        previousActionCoordinates &&
         isEqual(previousFirstAction, firstAction) &&
         isEqual(previousActionCoordinates, firstActionCoordinates) &&
         values.geom &&

@@ -6,6 +6,7 @@ export namespace FishMissionAction {
     latitude: number
     longitude: number
     numberOfVesselsFlownOver: number
+    otherComments?: string
     vesselName: string
   }
 
