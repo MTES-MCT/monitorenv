@@ -16,6 +16,7 @@ export const TimeLine = styled.div<{ $isFishAction: boolean }>`
   font-size: 13px;
   flex-direction: column;
   justify-content: center;
+  width: 54px;
   ${p => p.$isFishAction && `margin-bottom: 20px;`}
 `
 
