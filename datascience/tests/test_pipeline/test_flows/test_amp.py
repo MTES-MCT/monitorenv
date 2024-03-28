@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.pipeline.flows.amp import (
+from datascience.src.pipeline.flows.amp import (
     load_new_amp,
     merge_hashes,
     select_ids_to_delete,
@@ -91,6 +91,24 @@ def new_amp() -> pd.DataFrame:
                 "Parc naturel marin",
                 "Réserve naturelle"
             ],
+            "mpa_type_cacem": [
+                "Parc national",
+                "Natura 2000",
+                "Parc naturel marin",
+                "Réserve naturelle"
+            ],
+            "ref_reg": [
+                "arrêté 1",
+                "arrêté 2",
+                "arrêté 3",
+                "arrêté 4",
+            ],
+            "url_legicem": [
+                "http://dummy_url_1",
+                "http://dummy_url_2",
+                "http://dummy_url_3",
+                "http://dummy_url_4",
+            ],
             "row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
@@ -107,7 +125,8 @@ def test_load_new_amp(new_amp):
         "monitorenv_remote", 
         "SELECT id, geom, "
             "mpa_oriname, des_desigfr, "
-            "mpa_type, row_hash "
+            "mpa_type, mpa_type_cacem, "
+            "ref_reg, url_legicem, row_hash "
             "FROM amp_cacem "
             "ORDER BY id"
     )
