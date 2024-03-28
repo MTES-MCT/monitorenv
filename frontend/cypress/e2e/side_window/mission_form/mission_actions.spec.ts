@@ -225,7 +225,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('save observations in surveillance Actions', () => {
+  it('Save observations in surveillance Actions', () => {
     // Given
     cy.wait(400)
 
@@ -347,7 +347,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('save other control actions', () => {
+  it('Save other control actions', () => {
     cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')

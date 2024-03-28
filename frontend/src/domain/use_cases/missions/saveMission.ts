@@ -38,7 +38,7 @@ export const saveMission =
 
         setTimeout(async () => {
           await dispatch(missionFormsActions.setIsListeningToEvents(true))
-        }, 500)
+        }, 250)
 
         // We save the new properties : `id`, `createdAt`, `updatedAt` after a mission creation/update
         if (missionIsNewMission) {
