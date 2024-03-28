@@ -41,6 +41,8 @@ class AmpsITests {
             name = "mon nom",
             designation = "ma designation",
             type = "mon type",
+            type_cacem = "mon type cacem",
+            url_legicem = "mon url legicem",
         )
         given(getAllAMPs.execute()).willReturn(listOf(amp))
 
@@ -53,5 +55,7 @@ class AmpsITests {
             .andExpect(jsonPath("$[0].name", equalTo(amp.name)))
             .andExpect(jsonPath("$[0].designation", equalTo(amp.designation)))
             .andExpect(jsonPath("$[0].type", equalTo(amp.type)))
+            .andExpect(jsonPath("$[0].type_cacem", equalTo(amp.type_cacem)))
+            .andExpect(jsonPath("$[0].url_legicem", equalTo(amp.url_legicem)))
     }
 }

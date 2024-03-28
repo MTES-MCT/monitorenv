@@ -9,6 +9,8 @@ data class AMPDataOutput(
     val name: String,
     val designation: String,
     val type: String,
+    val type_cacem: String? = null,
+    val url_legicem: String? = null,
 ) {
     companion object {
         fun fromAMPEntity(amp: AMPEntity) = AMPDataOutput(
@@ -17,6 +19,8 @@ data class AMPDataOutput(
             name = amp.name,
             designation = amp.designation,
             type = amp.type,
+            type_cacem = amp.type_cacem,
+            url_legicem = amp.url_legicem,
         )
     }
 }

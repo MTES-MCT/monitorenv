@@ -8,4 +8,6 @@ data class AMPEntity(
     val name: String,
     val designation: String,
     val type: String,
+    val type_cacem: String? = null,
+    val url_legicem: String? = null,
 )
