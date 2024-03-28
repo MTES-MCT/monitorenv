@@ -106,8 +106,8 @@ export const Columns = themes => [
     id: 'themeId',
     size: 230,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
-      const themeA = themes[rowA.original[columnId]]?.theme ?? ''
-      const themeB = themes[rowB.original[columnId]]?.theme ?? ''
+      const themeA: string = themes[rowA.original[columnId]]?.theme ?? ''
+      const themeB: string = themes[rowB.original[columnId]]?.theme ?? ''
 
       return themeA?.localeCompare(themeB)
     }
