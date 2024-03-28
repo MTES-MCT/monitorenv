@@ -23,6 +23,9 @@ data class AMPModel(
     @Column(name = "mpa_oriname")
     val name: String,
 
+    @Column(name = "ref_reg")
+    val ref_reg: String? = null,
+
     @Column(name = "mpa_type")
     val type: String,
 
@@ -38,6 +41,7 @@ data class AMPModel(
         geom = geom,
         name = name,
         designation = designation,
+        ref_reg = ref_reg,
         type = type,
         type_cacem = type_cacem,
         url_legicem = url_legicem,
