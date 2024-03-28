@@ -56,25 +56,23 @@ export const saveMission =
           await dispatch(missionActions.setSelectedMissionIdOnMap(missionUpdated.id))
           const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionUpdated.id })
           await dispatch(sideWindowActions.setCurrentPath(nextPath))
-
-          return
+        } else {
+          // for a mission already created we want to update the `updatedAt` value with the new one
+          const mission = selectedMissions[values.id]
+          dispatch(
+            missionFormsActions.setMission({
+              ...mission,
+              isFormDirty: false, // since mission has just been saved, it's not dirty anymore
+              missionForm: missionUpdated
+            })
+          )
         }
-
-        // for a mission already created we want to update the `updatedAt` value with the new one
-        const mission = selectedMissions[values.id]
-        dispatch(
-          missionFormsActions.setMission({
-            ...mission,
-            isFormDirty: false, // since mission has just been saved, it's not dirty anymore
-            missionForm: response.data
-          })
-        )
 
         if (reopen || !quitAfterSave) {
           return
         }
 
-        await dispatch(missionFormsActions.deleteSelectedMission(values.id))
+        await dispatch(missionFormsActions.deleteSelectedMission(missionUpdated.id))
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
 
