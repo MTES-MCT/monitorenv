@@ -1,14 +1,14 @@
 import styled from 'styled-components'
 
-import { SectionTitle, Section, List } from './RegulatoryMetadata.style'
+import { SectionTitle, Section, List } from './MetadataPanel.style'
 
-export function MetadataRegulatoryReferences({ regulatoryReference, url }) {
+export function RegulatorySummary({ regulatoryReference, url }) {
   return (
     regulatoryReference && (
       <Section>
         <SectionTitle>Résumé réglementaire sur Légicem</SectionTitle>
         <List>
-          <Reference data-cy="regulatory-layers-metadata-references">
+          <Reference data-cy="metadata-panel-references">
             <Link href={url} target="_blank">
               {regulatoryReference}
             </Link>

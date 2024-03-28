@@ -13,20 +13,37 @@ data class AMPModel(
     @Id
     @Column(name = "id")
     val id: Int,
-    @Column(name = "geom")
-    val geom: MultiPolygon,
-    @Column(name = "mpa_oriname")
-    val name: String,
+
     @Column(name = "des_desigfr")
     val designation: String,
+
+    @Column(name = "geom")
+    val geom: MultiPolygon,
+
+    @Column(name = "mpa_oriname")
+    val name: String,
+
+    @Column(name = "ref_reg")
+    val ref_reg: String? = null,
+
     @Column(name = "mpa_type")
     val type: String,
+
+    @Column(name = "mpa_type_cacem")
+    val type_cacem: String? = null,
+
+    @Column(name = "url_legicem")
+    val url_legicem: String? = null,
+
 ) {
     fun toAMP() = AMPEntity(
         id = id,
         geom = geom,
         name = name,
         designation = designation,
+        ref_reg = ref_reg,
         type = type,
+        type_cacem = type_cacem,
+        url_legicem = url_legicem,
     )
 }

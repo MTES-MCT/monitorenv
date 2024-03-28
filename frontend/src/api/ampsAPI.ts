@@ -17,6 +17,18 @@ const GET_AMP_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les Zones AMP"
 
 export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
+    getAMP: builder.query<AMP, number>({
+      query: id => `/v1/amps/${id}`,
+      transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
+      transformResponse: (response: AMPFromAPI) => {
+        const bbox = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
+
+        return {
+          ...response,
+          bbox
+        }
+      }
+    }),
     getAMPs: builder.query<EntityState<AMP>, void>({
       query: () => `/v1/amps`,
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
@@ -36,7 +48,7 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetAMPsQuery } = ampsAPI
+export const { useGetAMPQuery, useGetAMPsQuery } = ampsAPI
 
 export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs.select()], ampsQuery => {
   const ampIdsByName = ampsQuery.data?.ids.reduce((acc, id) => {

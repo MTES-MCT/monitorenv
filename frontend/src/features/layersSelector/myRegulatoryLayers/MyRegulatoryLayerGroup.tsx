@@ -12,6 +12,7 @@ import {
 } from '../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getMetadataIsOpenForRegulatoryLayerIds } from '../metadataPanel/slice'
 import { getExtentOfLayersGroup } from '../utils/getExtentOfLayersGroup'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
@@ -19,12 +20,11 @@ import type { RegulatoryLayerCompact } from '../../../domain/entities/regulatory
 
 export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string; layers: RegulatoryLayerCompact[] }) {
   const dispatch = useAppDispatch()
-  const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
-  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
   const groupLayerIds = layers.map(l => l.id)
+  const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
+  const metadataPanelIsOpen = useAppSelector(state => getMetadataIsOpenForRegulatoryLayerIds(state, groupLayerIds))
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const regulatoryZonesAreShowed = _.intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
-  const metadataIsShowed = _.includes(groupLayerIds, regulatoryMetadataLayerId)
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
 
   const fitToGroupExtent = () => {
@@ -55,7 +55,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
   }
 
   const toggleZonesAreOpen = () => {
-    if (!metadataIsShowed) {
+    if (!metadataPanelIsOpen) {
       setZonesAreOpen(!zonesAreOpen)
     }
   }
@@ -88,7 +88,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
           />
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>
-      <LayerSelector.GroupList isOpen={zonesAreOpen || metadataIsShowed} length={layers?.length}>
+      <LayerSelector.GroupList isOpen={zonesAreOpen || metadataPanelIsOpen} length={layers?.length}>
         {layers?.map(regulatoryZone => (
           <RegulatoryLayerZone key={regulatoryZone.id} regulatoryZone={regulatoryZone} />
         ))}

@@ -1,3 +1,4 @@
+import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { Feature } from 'ol'
 import GeoJSON from 'ol/format/GeoJSON'
 import { fromExtent } from 'ol/geom/Polygon'
@@ -18,7 +19,7 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
-  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
@@ -55,7 +56,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     if (map) {
       const features = getRegulatoryVectorSource().getFeatures()
       if (features?.length) {
-        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('layerId') === regulatoryMetadataLayerId))
+        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('id') === regulatoryMetadataLayerId))
       }
     }
   }, [map, regulatoryMetadataLayerId])

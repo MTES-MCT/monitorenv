@@ -1,3 +1,4 @@
+import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { Checkbox } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import styled from 'styled-components'
@@ -42,6 +43,7 @@ export function ResultList({ searchedText }: ResultListProps) {
     if (!isRegulatorySearchResultsVisible) {
       dispatch(setIsRegulatorySearchResultsVisible(true))
     }
+    dispatch(closeMetadataPanel())
     dispatch(setIsRegulatorySearchResultsExpanded(!isRegulatorySearchResultsExpanded))
     dispatch(setIsAmpSearchResultsExpanded(false))
   }
@@ -49,15 +51,18 @@ export function ResultList({ searchedText }: ResultListProps) {
     if (!isAmpSearchResultsVisible) {
       dispatch(setIsAmpSearchResultsVisible(true))
     }
+    dispatch(closeMetadataPanel())
     dispatch(setIsRegulatorySearchResultsExpanded(false))
     dispatch(setIsAmpSearchResultsExpanded(!isAmpSearchResultsExpanded))
   }
 
   const toggleAMPVisibility = () => {
+    dispatch(closeMetadataPanel())
     dispatch(setIsAmpSearchResultsExpanded(false))
     dispatch(setIsAmpSearchResultsVisible(!isAmpSearchResultsVisible))
   }
   const toggleRegulatoryVisibility = () => {
+    dispatch(closeMetadataPanel())
     dispatch(setIsRegulatorySearchResultsExpanded(false))
     dispatch(setIsRegulatorySearchResultsVisible(!isRegulatorySearchResultsVisible))
   }

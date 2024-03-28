@@ -12,7 +12,6 @@ import { LayerSelector } from '../../utils/LayerSelector.style'
 
 type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
-  clearSelectedLayer?: () => void
   groupExtent: number[]
   groupName: string
   layerIdToDisplay: number | undefined
@@ -25,7 +24,6 @@ type ResultListLayerGroupProps = {
 }
 export function ResultListLayerGroup({
   addLayers,
-  clearSelectedLayer,
   groupExtent,
   groupName,
   layerIds,
@@ -57,9 +55,6 @@ export function ResultListLayerGroup({
 
     if (!zonesAreOpen) {
       dispatch(setFitToExtent(groupExtent))
-    }
-    if (clearSelectedLayer) {
-      clearSelectedLayer()
     }
   }
 
