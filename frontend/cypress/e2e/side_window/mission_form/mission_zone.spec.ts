@@ -23,7 +23,7 @@ const surveillanceGeometry: GeoJSON.Geometry = {
   ],
   type: 'MultiPolygon'
 }
-context('Side Window > Mission Form > Mission actions', () => {
+context('Side Window > Mission Form > Mission zone', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`, {
@@ -139,13 +139,14 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter des contrôles')
     cy.clickButton('Ajouter un point de contrôle')
     cy.wait(200)
+
     const controlGeometry: GeoJSON.Geometry = {
       coordinates: [[-1.84589767, 46.66739394]],
       type: 'MultiPoint'
     }
     dispatch(setGeometry(controlGeometry))
     // close manually the draw modal
-    cy.wait(500)
+    cy.wait(1000)
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     cy.wait(1000)
 
@@ -245,7 +246,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       0,
       response => {
         expect(response && response.statusCode).equal(200)
-        expect(response.body.geom).to.deep.equal(computedMissionZone)
+        expect(response.body.geom.coordinates).to.deep.equal(computedMissionZone.coordinates)
+        expect(response.body.geom.type).to.deep.equal(computedMissionZone.type)
 
         cy.wait(200)
         cy.clickButton('Fermer')

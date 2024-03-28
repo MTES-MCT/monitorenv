@@ -1,5 +1,5 @@
 import { useAppSelector } from '@hooks/useAppSelector'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION, usePrevious } from '@mtes-mct/monitor-ui'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { ActionSource, ActionTypeEnum, type Mission } from 'domain/entities/missions'
@@ -8,28 +8,27 @@ import { isEqual } from 'lodash'
 import { Feature } from 'ol'
 import { MultiPolygon } from 'ol/geom'
 import Polygon, { circular } from 'ol/geom/Polygon'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useState } from 'react'
+
+function computeCircleZone(coordinates) {
+  const circleGeometry = new Feature({
+    geometry: circular(coordinates, 4000, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+  }).getGeometry()
+
+  return convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon]))
+}
 
 export const useUpdateMissionZone = sortedActions => {
+  const firstAction = sortedActions[0]
   const listener = useAppSelector(state => state.draw.listener)
   const { setFieldValue, values } = useFormikContext<Mission>()
-  const previousFirstAction = usePrevious(sortedActions[0])
-  const previousActionCoordinates = usePrevious(
-    sortedActions[0]?.actionSource === ActionSource.MONITORENV
-      ? sortedActions[0]?.geom?.coordinates
-      : [sortedActions[0]?.latitude, sortedActions[0]?.longitude]
-  )
-
-  const firstAction = sortedActions[0]
-  const firstActionCoordinates = useMemo(
-    () =>
-      sortedActions[0]?.actionSource === ActionSource.MONITORENV
-        ? sortedActions[0]?.geom?.coordinates
-        : [sortedActions[0]?.latitude, sortedActions[0]?.longitude],
-    [sortedActions]
-  )
+  const [actionGeom, setActionGeom] = useState(values.geom && firstAction?.geom ? firstAction?.geom : undefined)
 
   useEffect(() => {
+    // if user has added a zone manually and deleted it
+    if (!values.isGeometryComputedFromControls && actionGeom && values.geom?.coordinates.length === 0) {
+      setActionGeom(undefined)
+    }
     // no need to update geom if we are in mission zone listener or if user add manually a zone
     if (
       listener === InteractionListener.MISSION_ZONE ||
@@ -46,82 +45,53 @@ export const useUpdateMissionZone = sortedActions => {
       return
     }
 
-    if (firstAction?.actionSource === ActionSource.MONITORFISH && firstAction?.latitude && firstAction?.longitude) {
-      // on form mounted
-      if (!previousFirstAction || !previousActionCoordinates) {
-        return
-      }
-      if (
-        isEqual(previousFirstAction, firstAction) &&
-        isEqual(previousActionCoordinates, firstActionCoordinates) &&
-        values.geom &&
-        values.geom.coordinates?.length > 0
-      ) {
-        return
-      }
-      const circleGeometry = new Feature({
-        geometry: circular([firstAction.longitude, firstAction.latitude], 4000, 64).transform(
-          WSG84_PROJECTION,
-          OPENLAYERS_PROJECTION
-        )
-      }).getGeometry()
-      setFieldValue('geom', convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon])))
-      if (!values.isGeometryComputedFromControls) {
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
-    }
+    // EnvActions
+    if (firstAction?.geom && !isEqual(firstAction.geom, actionGeom)) {
+      // for control action we need to compute a circle for misison zone
+      if (firstAction?.actionType === ActionTypeEnum.CONTROL) {
+        const { coordinates } = firstAction.geom
+        if (coordinates.length === 0) {
+          setFieldValue('geom', undefined)
 
-    if (firstAction?.actionType === ActionTypeEnum.CONTROL && firstAction?.geom) {
-      // on form mounted
-      if (!previousFirstAction || !previousActionCoordinates) {
-        return
-      }
-      if (
-        previousFirstAction &&
-        previousActionCoordinates &&
-        isEqual(previousFirstAction, firstAction) &&
-        isEqual(previousActionCoordinates, firstActionCoordinates) &&
-        values.geom &&
-        values.geom.coordinates?.length > 0
-      ) {
-        return
-      }
-      const radius = 4000
-      const { coordinates } = firstAction.geom
-      if (coordinates.length === 0) {
-        return
+          return
+        }
+        const circleZone = computeCircleZone(coordinates[0])
+
+        setFieldValue('geom', circleZone)
       }
 
-      const circleGeometry = new Feature({
-        geometry: circular(coordinates[0], radius, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-      }).getGeometry()
+      if (firstAction?.actionType === ActionTypeEnum.SURVEILLANCE) {
+        setFieldValue('geom', firstAction.geom)
+      }
 
-      setFieldValue('geom', convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon])))
       if (!values.isGeometryComputedFromControls) {
         setFieldValue('isGeometryComputedFromControls', true)
       }
 
-      return
+      setActionGeom(firstAction.geom)
     }
+
+    // FishActions
     if (
-      firstAction?.actionType === ActionTypeEnum.SURVEILLANCE &&
-      firstAction?.geom &&
-      !isEqual(values.geom?.coordinates, firstAction.geom.coordinates)
+      firstAction?.actionSource === ActionSource.MONITORFISH &&
+      !isEqual([firstAction.latitude, firstAction.longitude], actionGeom)
     ) {
-      setFieldValue('geom', firstAction.geom)
+      const circleZone = computeCircleZone([firstAction.longitude, firstAction.latitude])
+
+      setFieldValue('geom', circleZone)
       if (!values.isGeometryComputedFromControls) {
         setFieldValue('isGeometryComputedFromControls', true)
       }
+
+      setActionGeom([firstAction.latitude, firstAction.longitude])
     }
   }, [
     values.isGeometryComputedFromControls,
     values.geom,
     setFieldValue,
     sortedActions,
-    previousFirstAction,
+    listener,
     firstAction,
-    previousActionCoordinates,
-    firstActionCoordinates,
-    listener
+    actionGeom
   ])
 }

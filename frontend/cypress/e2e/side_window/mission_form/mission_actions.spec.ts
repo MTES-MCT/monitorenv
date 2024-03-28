@@ -46,7 +46,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('allow only one theme and multiple subthemes in control actions', () => {
+  it('Allow only one theme and multiple subthemes in control actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
@@ -90,7 +90,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('save observations in control Actions', () => {
+  it('Save observations in control Actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
@@ -116,7 +116,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('allow multiple themes and multiple subthemes in surveillance actions', () => {
+  it('Allow multiple themes and multiple subthemes in surveillance actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
