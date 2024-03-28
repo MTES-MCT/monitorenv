@@ -27,7 +27,7 @@ export const getAMPColorWithAlpha = (group = '', layername = '') =>
 export const getAMPLayerStyle = feature => {
   const colorWithAlpha = getAMPColorWithAlpha(feature.get('designation'), feature.get('name'))
 
-  const style = getStyle(colorWithAlpha, false)
+  const style = getStyle(colorWithAlpha, feature.get('metadataIsShowed'))
 
   return style
 }
