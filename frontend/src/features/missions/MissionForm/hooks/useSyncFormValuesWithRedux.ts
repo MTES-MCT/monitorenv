@@ -13,7 +13,9 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const dispatch = useAppDispatch()
   const { dirty, validateForm, values } = useFormikContext<Mission>()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const selectedMissions = useAppSelector(state => state.missionForms.missions)
+  const activeMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
+  )
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
@@ -27,7 +29,7 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
     const isFormDirty = isMissionFormDirty(errors)
 
     dispatch(missionFormsActions.setMission({ engagedControlUnit, isFormDirty, missionForm: newValues }))
-  }, 500)
+  }, 250)
 
   /**
    * The form is dirty if:
@@ -45,7 +47,7 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
        * has been re-instantiated with the saved values.
        * We use the last `isFormDirty` value instead of `dirty`.
        */
-      return (activeMissionId && selectedMissions[activeMissionId]?.isFormDirty) || false
+      return activeMission?.isFormDirty ?? false
     }
 
     return !isEmpty(errors)
