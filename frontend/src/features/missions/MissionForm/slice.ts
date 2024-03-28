@@ -48,6 +48,19 @@ const missionFormsSlice = createSlice({
     setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload
     },
+    setCreatedMission(state, action: PayloadAction<{ createdMission: MissionInStateType; newId: string }>) {
+      const { newId } = action.payload
+      const createdMissionId = action.payload.createdMission.missionForm.id
+      if (!newId || !createdMissionId) {
+        return
+      }
+      const mission = state.missions[newId]
+      if (mission) {
+        delete state.missions[newId]
+        state.missions = { ...state.missions, [createdMissionId]: action.payload.createdMission }
+      }
+      state.activeMissionId = createdMissionId
+    },
     setEngagedControlUnit(state, action: PayloadAction<ControlUnit.EngagedControlUnit | undefined>) {
       const { activeMissionId } = state
 

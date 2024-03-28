@@ -42,28 +42,33 @@ export const saveMission =
 
         // We save the new properties : `id`, `createdAt`, `updatedAt` after a mission creation/update
         if (missionIsNewMission) {
-          const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionUpdated.id })
-          await dispatch(missionFormsActions.deleteSelectedMission(values.id))
-          dispatch(
-            missionFormsActions.setMission({
-              engagedControlUnit: undefined,
-              isFormDirty: false,
-              missionForm: response.data
+          await dispatch(
+            missionFormsActions.setCreatedMission({
+              createdMission: {
+                engagedControlUnit: undefined,
+                isFormDirty: false,
+                missionForm: missionUpdated
+              },
+              newId: values.id
             })
           )
+
           await dispatch(missionActions.setSelectedMissionIdOnMap(missionUpdated.id))
-          dispatch(sideWindowActions.setCurrentPath(nextPath))
-        } else {
-          // for a mission already created we want to update the `updatedAt` value with the new one
-          const mission = selectedMissions[values.id]
-          dispatch(
-            missionFormsActions.setMission({
-              ...mission,
-              isFormDirty: false, // since misison has just been saved, it's not dirty anymore
-              missionForm: response.data
-            })
-          )
+          const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionUpdated.id })
+          await dispatch(sideWindowActions.setCurrentPath(nextPath))
+
+          return
         }
+
+        // for a mission already created we want to update the `updatedAt` value with the new one
+        const mission = selectedMissions[values.id]
+        dispatch(
+          missionFormsActions.setMission({
+            ...mission,
+            isFormDirty: false, // since mission has just been saved, it's not dirty anymore
+            missionForm: response.data
+          })
+        )
 
         if (reopen || !quitAfterSave) {
           return
