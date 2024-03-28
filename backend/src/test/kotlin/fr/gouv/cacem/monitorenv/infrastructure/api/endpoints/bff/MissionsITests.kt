@@ -48,7 +48,7 @@ import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(Missions::class)])
-class LegacyMissionsITests {
+class MissionsITests {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
@@ -123,7 +123,7 @@ class LegacyMissionsITests {
                 envActionsAttachedToReportingIds = listOf(),
             ),
         )
-            .willReturn(expectedNewMission)
+            .willReturn(Pair(true, expectedNewMission))
         // When
         mockMvc.perform(
             put("/bff/v1/missions")
@@ -135,6 +135,37 @@ class LegacyMissionsITests {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.createdAtUtc", equalTo("2022-01-23T20:29:03Z")))
             .andExpect(jsonPath("$.updatedAtUtc", equalTo("2022-01-23T20:29:03Z")))
+    }
+
+    @Test
+    fun `Should get mission and false in response when MonitorFish doesn't respond`() {
+        // Given
+        val requestedId = 0
+
+        val expectedFirstMission =
+            MissionDTO(
+                mission =
+                MissionEntity(
+                    id = 10,
+                    missionTypes = listOf(MissionTypeEnum.SEA),
+                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORFISH,
+                    isClosed = false,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
+            )
+        // we test only if the route is called with the right arg
+        given(getFullMissionById.execute(requestedId)).willReturn(Pair(false, expectedFirstMission))
+
+        // When
+        mockMvc.perform(get("/bff/v1/missions/$requestedId"))
+            // Then
+            .andExpect(status().isPartialContent)
+            .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
+        verify(getFullMissionById).execute(requestedId)
     }
 
     @Test
@@ -594,7 +625,7 @@ class LegacyMissionsITests {
             )
 
         // we test only if the route is called with the right arg
-        given(getFullMissionById.execute(requestedId)).willReturn(expectedFirstMission)
+        given(getFullMissionById.execute(requestedId)).willReturn(Pair(true, expectedFirstMission))
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
@@ -805,7 +836,7 @@ class LegacyMissionsITests {
                 envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
             ),
         )
-            .willReturn(expectedUpdatedMission)
+            .willReturn(Pair(true, expectedUpdatedMission))
         // When
         mockMvc.perform(
             put("/bff/v1/missions/14")

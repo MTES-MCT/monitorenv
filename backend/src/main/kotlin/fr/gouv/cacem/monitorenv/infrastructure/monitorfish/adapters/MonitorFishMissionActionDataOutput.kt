@@ -7,8 +7,11 @@ data class MonitorFishMissionActionDataOutput(
     val id: Int,
     val actionDatetimeUtc: String,
     val actionType: MonitorFishActionTypeEnum,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
     val missionId: Int,
     val numberOfVesselsFlownOver: Int? = null,
+    val otherComments: String? = null,
     val vesselName: String? = null,
 ) {
 
@@ -18,12 +21,15 @@ data class MonitorFishMissionActionDataOutput(
         ) =
             MonitorFishMissionActionDataOutput(
                 id = monitorFishMissionActionEntity.id,
-                missionId = monitorFishMissionActionEntity.missionId,
-                actionType = monitorFishMissionActionEntity.actionType,
-                vesselName = monitorFishMissionActionEntity.vesselName,
                 actionDatetimeUtc = monitorFishMissionActionEntity.actionDatetimeUtc,
+                actionType = monitorFishMissionActionEntity.actionType,
+                latitude = monitorFishMissionActionEntity.latitude,
+                longitude = monitorFishMissionActionEntity.longitude,
+                missionId = monitorFishMissionActionEntity.missionId,
                 numberOfVesselsFlownOver =
                 monitorFishMissionActionEntity.numberOfVesselsFlownOver,
+                otherComments = monitorFishMissionActionEntity.otherComments,
+                vesselName = monitorFishMissionActionEntity.vesselName,
             )
     }
 }

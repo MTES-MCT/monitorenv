@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.ZonedDateTime
 
@@ -27,22 +29,23 @@ class Missions(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val canDeleteMission: CanDeleteMission,
-
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
     fun create(
-        @RequestBody
-        createMissionDataInput: CreateOrUpdateMissionDataInput,
-    ): MissionDataOutput {
-        val createdMission =
+        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput,
+    ): ResponseEntity<MissionDataOutput> {
+        val (fishActionsApiResponds, createdMission) =
             createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = createMissionDataInput.toMissionEntity(),
                 attachedReportingIds = createMissionDataInput.attachedReportingIds,
                 envActionsAttachedToReportingIds =
                 createMissionDataInput.getEnvActionsAttachedToReportings(),
             )
-        return MissionDataOutput.fromMissionDTO(createdMission)
+
+        val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
+
+        return ResponseEntity.status(returnCode).body(MissionDataOutput.fromMissionDTO(createdMission))
     }
 
     @DeleteMapping(value = ["/{missionId}"])
@@ -74,10 +77,12 @@ class Missions(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
         missionId: Int,
-    ): MissionDataOutput {
-        val mission = getFullMissionById.execute(missionId = missionId)
+    ): ResponseEntity<MissionDataOutput> {
+        val (fishActionsApiResponds, mission) = getFullMissionById.execute(missionId = missionId)
 
-        return MissionDataOutput.fromMissionDTO(mission)
+        val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
+
+        return ResponseEntity.status(returnCode).body(MissionDataOutput.fromMissionDTO(mission))
     }
 
     @GetMapping("")
@@ -141,16 +146,20 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
         @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput,
-    ): MissionDataOutput {
+    ): ResponseEntity<MissionDataOutput> {
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
-        return createOrUpdateMissionWithActionsAndAttachedReporting.execute(
-            mission = updateMissionDataInput.toMissionEntity(),
-            attachedReportingIds = updateMissionDataInput.attachedReportingIds,
-            envActionsAttachedToReportingIds =
-            updateMissionDataInput.getEnvActionsAttachedToReportings(),
-        )
-            .let { MissionDataOutput.fromMissionDTO(it) }
+        val (fishActionsApiResponds, mission) =
+            createOrUpdateMissionWithActionsAndAttachedReporting.execute(
+                mission = updateMissionDataInput.toMissionEntity(),
+                attachedReportingIds = updateMissionDataInput.attachedReportingIds,
+                envActionsAttachedToReportingIds =
+                updateMissionDataInput.getEnvActionsAttachedToReportings(),
+            )
+
+        val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
+
+        return ResponseEntity.status(returnCode).body(MissionDataOutput.fromMissionDTO(mission))
     }
 }

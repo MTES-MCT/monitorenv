@@ -3,7 +3,7 @@ import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
-import { selectedMissionStyle, selectedMissionActionsStyle } from './missions.style'
+import { selectedMissionStyle } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -59,7 +59,6 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: editingMissionActionsVectorSourceRef.current,
-      style: selectedMissionActionsStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.ACTIONS.zIndex

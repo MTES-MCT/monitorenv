@@ -1,7 +1,10 @@
+import { type Coordinates } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
+import { type Geometry } from 'ol/geom'
 import { circular } from 'ol/geom/Polygon'
 
+import { selectedMissionControlStyle, selectedMissionSurveillanceStyle } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import {
@@ -14,9 +17,6 @@ import {
   type NewEnvActionControl
 } from '../../../../domain/entities/missions'
 import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
-
-import type { Coordinates } from '@mtes-mct/monitor-ui'
-import type { Geometry } from 'ol/geom'
 
 export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layername: string) => {
   const geoJSON = new GeoJSON()
@@ -116,6 +116,14 @@ const getActionFeature = (
   feature.setId(`${Layers.ACTIONS.code}:${action.actionType}:${action.id}`)
   feature.setProperties({ ...actionProperties })
   feature.setProperties({ ...actionProperties, isGeometryComputedFromControls })
+
+  if (action.actionType === ActionTypeEnum.CONTROL) {
+    feature.setStyle(selectedMissionControlStyle)
+  }
+
+  if (action.actionType === ActionTypeEnum.SURVEILLANCE) {
+    feature.setStyle(selectedMissionSurveillanceStyle)
+  }
 
   return feature
 }

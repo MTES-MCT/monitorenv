@@ -12,10 +12,15 @@ class GetFullMissionById(
     private val missionRepository: IMissionRepository,
     private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
 ) {
-    fun execute(missionId: Int): MissionDTO {
+    fun execute(missionId: Int): Pair<Boolean, MissionDTO> {
         val fullMission = missionRepository.findFullMissionById(missionId)
 
-        val fishActions = monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
-        return fullMission.copy(fishActions = fishActions)
+        return try {
+            val fishActions = monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
+
+            Pair(true, fullMission.copy(fishActions = fishActions))
+        } catch (e: Exception) {
+            Pair(false, fullMission.copy(fishActions = listOf()))
+        }
     }
 }

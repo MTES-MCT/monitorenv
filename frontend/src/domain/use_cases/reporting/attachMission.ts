@@ -12,11 +12,11 @@ export const attachMission = (id: number) => async (dispatch, getState) => {
   try {
     const missionRequest = dispatch(missionsAPI.endpoints.getMission.initiate(id))
     const missionResponse = await missionRequest.unwrap()
-    if (!missionResponse) {
+    if (!missionResponse.mission) {
       throw Error()
     }
 
-    await dispatch(attachMissionToReportingSliceActions.setAttachedMission(missionResponse))
+    await dispatch(attachMissionToReportingSliceActions.setAttachedMission(missionResponse.mission))
 
     await missionRequest.unsubscribe()
   } catch (error) {

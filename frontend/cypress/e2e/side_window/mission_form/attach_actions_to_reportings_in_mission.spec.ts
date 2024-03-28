@@ -92,6 +92,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
   })
   it('A surveillance can be attached to multiple reportings', () => {
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+    cy.intercept('PUT', '/bff/v1/missions/53').as('updateMission')
 
     cy.wait(400)
     cy.getDataCy('edit-mission-53').click({ force: true })
@@ -106,8 +107,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.getDataCy('reporting-status-action-tag').contains('Srv faite')
     cy.wait(500)
 
-    cy.intercept('PUT', '/bff/v1/missions/53').as('updateMission')
-    cy.fill('Signalements', ['9', '11'])
+    cy.fill('Signalements', ['9', '11'], { delay: 500 })
     cy.getDataCy('reporting-status-action-tag').should('have.length', 3)
     cy.wait(500)
 

@@ -9,7 +9,7 @@
             "matches": "[0-9]+"
           },
           {
-            "doesNotMatch": "53"
+            "doesNotMatch": "(53|27)"
           }
         ]
       }

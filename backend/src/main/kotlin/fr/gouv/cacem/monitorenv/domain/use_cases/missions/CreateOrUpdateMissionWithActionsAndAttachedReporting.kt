@@ -5,7 +5,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
-import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
@@ -16,18 +15,20 @@ import java.util.UUID
 class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
-    private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
+    private val getFullMissionById: GetFullMissionById,
 ) {
     private val logger =
-        LoggerFactory.getLogger(CreateOrUpdateMissionWithActionsAndAttachedReporting::class.java)
+        LoggerFactory.getLogger(
+            CreateOrUpdateMissionWithActionsAndAttachedReporting::class.java,
+        )
 
     @Throws(IllegalArgumentException::class)
     fun execute(
         mission: MissionEntity,
         attachedReportingIds: List<Int>,
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
-    ): MissionDTO {
+    ): Pair<Boolean, MissionDTO> {
         logger.info(
             "Create or update mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds",
         )
@@ -64,7 +65,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
             reportingRepository.attachEnvActionsToReportings(it.first, it.second)
         }
 
-        return missionRepository.findFullMissionById(savedMission.id)
+        return getFullMissionById.execute(savedMission.id)
     }
 
     private fun getListOfEnvActionIds(

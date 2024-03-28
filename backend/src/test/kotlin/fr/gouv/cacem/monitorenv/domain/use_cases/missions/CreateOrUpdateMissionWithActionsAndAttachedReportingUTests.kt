@@ -36,6 +36,8 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
     @MockBean private lateinit var reportingRepository: IReportingRepository
 
+    @MockBean private lateinit var getFullMissionById: GetFullMissionById
+
     @Test
     fun `should attach mission to specified reportings`() {
         // Given
@@ -85,17 +87,17 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
-        given(missionRepository.findFullMissionById(100)).willReturn(expectedCreatedMission)
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
+        given(getFullMissionById.execute(100)).willReturn(Pair(true, expectedCreatedMission))
         // When
-        val createdMissionDTO =
+        val (_, createdMissionDTO) =
             CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
-                missionRepository = missionRepository,
                 reportingRepository = reportingRepository,
+                getFullMissionById = getFullMissionById,
             )
                 .execute(
                     mission = missionToCreate,
@@ -105,7 +107,6 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
         // Then
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
-        verify(missionRepository, times(1)).findFullMissionById(100)
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
     }
 
@@ -140,8 +141,8 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
             CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
-                missionRepository = missionRepository,
                 reportingRepository = reportingRepository,
+                getFullMissionById = getFullMissionById,
             )
                 .execute(
                     mission = missionToCreate,
@@ -209,18 +210,18 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
-        given(missionRepository.findFullMissionById(100)).willReturn(expectedCreatedMission)
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
+        given(getFullMissionById.execute(100)).willReturn(Pair(true, expectedCreatedMission))
 
         // When
-        val createdMissionDTO =
+        val (_, createdMissionDTO) =
             CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
-                missionRepository = missionRepository,
                 reportingRepository = reportingRepository,
+                getFullMissionById = getFullMissionById,
             )
                 .execute(
                     mission = missionToCreate,
@@ -246,7 +247,81 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 envActionAttachedToReportingIds.first,
                 envActionAttachedToReportingIds.second,
             )
-        verify(missionRepository, times(1)).findFullMissionById(100)
+        assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
+    }
+
+    @Test
+    fun `Should return status 206 if fish api doesn't responds`() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString =
+            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+        val envActionControl =
+            EnvActionControlEntity(
+                id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
+                geom = polygon,
+            )
+
+        val missionToCreate =
+            MissionEntity(
+                id = 100,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                facade = "Outre-Mer",
+                geom = polygon,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isClosed = false,
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                envActions = listOf(envActionControl),
+            )
+
+        val expectedCreatedMission =
+            MissionDTO(
+                mission =
+                MissionEntity(
+                    id = 100,
+                    missionTypes = listOf(MissionTypeEnum.LAND),
+                    facade = "Outre-Mer",
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isClosed = false,
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORENV,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
+            )
+
+        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
+        given(missionRepository.save(anyOrNull()))
+            .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
+        given(getFullMissionById.execute(100)).willReturn(Pair(false, expectedCreatedMission))
+
+        // When
+        val (fishResponds, createdMissionDTO) =
+            CreateOrUpdateMissionWithActionsAndAttachedReporting(
+                createOrUpdateMission = createOrUpdateMission,
+                createOrUpdateEnvActions = createOrUpdateEnvActions,
+                reportingRepository = reportingRepository,
+                getFullMissionById = getFullMissionById,
+            )
+                .execute(
+                    mission = missionToCreate,
+                    attachedReportingIds = listOf(),
+                    envActionsAttachedToReportingIds = listOf(),
+                )
+
+        // Then
+        assertThat(fishResponds).isFalse()
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
     }
 }

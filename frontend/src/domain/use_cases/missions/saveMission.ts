@@ -22,7 +22,7 @@ export const saveMission =
     } = getState()
     const selectedMissions = getState().missionForms.missions
 
-    const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings'])
+    const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings', 'fishActions'])
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
     await dispatch(missionFormsActions.setIsListeningToEvents(false))
@@ -36,7 +36,9 @@ export const saveMission =
       if ('data' in response) {
         const missionUpdated = response.data
 
-        await dispatch(missionFormsActions.setIsListeningToEvents(true))
+        setTimeout(async () => {
+          await dispatch(missionFormsActions.setIsListeningToEvents(true))
+        }, 250)
 
         // We save the new properties : `id`, `createdAt`, `updatedAt` after a mission creation/update
         if (missionIsNewMission) {

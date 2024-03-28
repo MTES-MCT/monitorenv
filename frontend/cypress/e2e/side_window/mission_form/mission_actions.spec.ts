@@ -46,7 +46,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('allow only one theme and multiple subthemes in control actions', () => {
+  it('Allow only one theme and multiple subthemes in control actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
@@ -90,7 +90,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('save observations in control Actions', () => {
+  it('Save observations in control Actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
@@ -116,7 +116,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('allow multiple themes and multiple subthemes in surveillance actions', () => {
+  it('Allow multiple themes and multiple subthemes in surveillance actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
@@ -225,7 +225,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('save observations in surveillance Actions', () => {
+  it('Save observations in surveillance Actions', () => {
     // Given
     cy.wait(400)
 
@@ -347,7 +347,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('save other control actions', () => {
+  it('Save other control actions', () => {
     cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
@@ -413,5 +413,14 @@ context('Side Window > Mission Form > Mission actions', () => {
   it('Should display CNSP actions', () => {
     cy.get('*[data-cy="edit-mission-53"]').click({ force: true })
     cy.getDataCy('cnsp-action-text').should('have.length', 5)
+  })
+
+  it("Should display warning toast if fish api doesn't respond", () => {
+    cy.fill('Période', 'Un mois')
+    cy.wait(500)
+    cy.getDataCy('edit-mission-27').click({ force: true }).scrollIntoView()
+    cy.get('.Toastify__toast-body').contains(
+      'Problème de communication avec MonitorFish: impossible de récupérer les actions du CNSP'
+    )
   })
 })
