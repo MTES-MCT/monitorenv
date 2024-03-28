@@ -8,7 +8,7 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 export function AmpLayers() {
   const dispatch = useAppDispatch()
 
-  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
+  const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
   const myAmpsIsOpen = useAppSelector(state => state.layerSidebar.myAmpsIsOpen)
 
   const onTitleClicked = () => {

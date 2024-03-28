@@ -1,5 +1,6 @@
 import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
+import { ampSlicePersistedReducer } from '../domain/shared_slices/Amp'
 import { drawReducer } from '../domain/shared_slices/Draw'
 import { globalReducer } from '../domain/shared_slices/Global'
 import { interestPointSlicePersistedReducer } from '../domain/shared_slices/InterestPoint'
@@ -10,7 +11,6 @@ import { missionFiltersPersistedReducer } from '../domain/shared_slices/MissionF
 import { regulatorySlicePersistedReducer } from '../domain/shared_slices/Regulatory'
 import { reportingSliceReducer } from '../domain/shared_slices/reporting'
 import { reportingFiltersPersistedReducer } from '../domain/shared_slices/ReportingsFilters'
-import { selectedAmpSlicePersistedReducer } from '../domain/shared_slices/SelectedAmp'
 import { semaphoresPersistedReducer } from '../domain/shared_slices/SemaphoresSlice'
 import { administrationTablePersistedReducer } from '../features/Administration/components/AdministrationTable/slice'
 import { backOfficeReducer } from '../features/BackOffice/slice'
@@ -35,6 +35,7 @@ export const homeReducers = {
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
   administrationTable: administrationTablePersistedReducer,
   administrative: administrativeSlicePersistedReducer,
+  amp: ampSlicePersistedReducer,
   attachMissionToReporting: attachMissionToReportingSliceReducer,
   attachReportingToMission: attachReportingToMissionsSliceReducer,
   backOffice: backOfficeReducer,
@@ -52,11 +53,10 @@ export const homeReducers = {
   mission: missionSliceReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionForms: missionFormsSliceReducer,
-  regulatory: regulatorySlicePersistedReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
+  regulatory: regulatorySlicePersistedReducer,
   reporting: reportingSliceReducer,
   reportingFilters: reportingFiltersPersistedReducer,
-  selectedAmp: selectedAmpSlicePersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,
   sideWindow: sideWindowReducer,
   station: stationReducer,

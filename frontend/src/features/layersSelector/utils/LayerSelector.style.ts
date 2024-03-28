@@ -10,13 +10,13 @@ const IconGroup = styled.span`
   flex: 0;
 `
 
-const Layer = styled.span<{ $metadataIsShown?: boolean; $selected?: boolean }>`
+const Layer = styled.span<{ $metadataIsShown?: boolean }>`
   user-select: none;
   display: flex;
   text-align: left;
   font-size: 13px;
   padding-left: 20px;
-  background: ${p => (p.$metadataIsShown || p.$selected ? p.theme.color.blueYonder25 : 'transparent')};
+  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : 'transparent')};
   color: ${p => p.theme.color.gunMetal};
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   align-items: center;

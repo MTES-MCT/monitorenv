@@ -8,8 +8,6 @@ import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
-import { setSelectedAmpLayerId } from '../../../../domain/shared_slices/SelectedAmp'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
@@ -17,9 +15,8 @@ import type { Feature } from 'ol'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function AMPLayers({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useAppDispatch()
-  const showedAmpLayerIds = useAppSelector(state => state.selectedAmp.showedAmpLayerIds)
+export function AMPLayers({ map }: BaseMapChildrenProps) {
+  const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
 
   const { data: ampLayers } = useGetAMPsQuery()
 
@@ -90,18 +87,6 @@ export function AMPLayers({ map, mapClickEvent }: BaseMapChildrenProps) {
       }
     }
   }, [map, ampLayers, showedAmpLayerIds])
-
-  useEffect(() => {
-    if (mapClickEvent?.feature) {
-      const { feature } = mapClickEvent
-      const featureId = feature?.getId()?.toString()
-
-      if (featureId?.includes(Layers.AMP.code)) {
-        const layerId = feature.get('layerId')
-        dispatch(setSelectedAmpLayerId(layerId))
-      }
-    }
-  }, [dispatch, mapClickEvent])
 
   return null
 }

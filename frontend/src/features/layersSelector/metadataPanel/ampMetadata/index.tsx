@@ -59,7 +59,7 @@ export function AmpMetadata() {
                 </Body>
               </Fields>
             </Zone>
-            <RegulatorySummary regulatoryReference={ampMetadata?.name} url={ampMetadata?.name} />
+            <RegulatorySummary regulatoryReference={ampMetadata?.ref_reg} url={ampMetadata?.url_legicem} />
           </Content>
         </>
       ) : (

@@ -6,6 +6,7 @@ export type AMPFromAPI = {
   geom: GeoJSON.MultiPolygon
   id: number
   name: string
+  ref_reg: string | null
   type: string
   type_cacem: string | null
   url_legicem: string | null
