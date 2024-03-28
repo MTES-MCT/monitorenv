@@ -46,12 +46,17 @@ export const useUpdateMissionZone = sortedActions => {
     }
 
     // EnvActions
-    if (firstAction?.geom && !isEqual(firstAction.geom, actionGeom)) {
-      // for control action we need to compute a circle for misison zone
+    if (
+      firstAction?.actionSource === ActionSource.MONITORENV &&
+      firstAction?.geom &&
+      !isEqual(firstAction.geom, actionGeom)
+    ) {
+      // for control action we need to compute a circle for mission zone
       if (firstAction?.actionType === ActionTypeEnum.CONTROL) {
         const { coordinates } = firstAction.geom
         if (coordinates.length === 0) {
           setFieldValue('geom', undefined)
+          setActionGeom(undefined)
 
           return
         }
@@ -76,6 +81,13 @@ export const useUpdateMissionZone = sortedActions => {
       firstAction?.actionSource === ActionSource.MONITORFISH &&
       !isEqual([firstAction.latitude, firstAction.longitude], actionGeom)
     ) {
+      if (!firstAction.latitude || !firstAction.longitude) {
+        setFieldValue('geom', undefined)
+        setFieldValue('isGeometryComputedFromControls', false)
+        setActionGeom(undefined)
+
+        return
+      }
       const circleZone = computeCircleZone([firstAction.longitude, firstAction.latitude])
 
       setFieldValue('geom', circleZone)
