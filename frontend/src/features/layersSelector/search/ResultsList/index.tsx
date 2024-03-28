@@ -42,16 +42,16 @@ export function ResultList({ searchedText }: ResultListProps) {
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
       dispatch(setIsRegulatorySearchResultsVisible(true))
-      dispatch(closeMetadataPanel())
     }
+    dispatch(closeMetadataPanel())
     dispatch(setIsRegulatorySearchResultsExpanded(!isRegulatorySearchResultsExpanded))
     dispatch(setIsAmpSearchResultsExpanded(false))
   }
   const toggleAMPs = () => {
     if (!isAmpSearchResultsVisible) {
       dispatch(setIsAmpSearchResultsVisible(true))
-      dispatch(closeMetadataPanel())
     }
+    dispatch(closeMetadataPanel())
     dispatch(setIsRegulatorySearchResultsExpanded(false))
     dispatch(setIsAmpSearchResultsExpanded(!isAmpSearchResultsExpanded))
   }
