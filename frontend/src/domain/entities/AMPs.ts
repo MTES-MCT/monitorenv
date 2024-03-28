@@ -7,5 +7,7 @@ export type AMPFromAPI = {
   id: number
   name: string
   type: string
+  type_cacem: string | null
+  url_legicem: string | null
 }
 export type AMP = AMPFromAPI & { bbox: Extent }
