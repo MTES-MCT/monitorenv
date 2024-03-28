@@ -8,6 +8,7 @@ export const List = styled.ul`
   font-size: 13px;
   color: ${p => p.theme.color.gunMetal};
   padding-bottom: 20px;
+  padding-left: 12px;
   margin: 0;
 `
 
