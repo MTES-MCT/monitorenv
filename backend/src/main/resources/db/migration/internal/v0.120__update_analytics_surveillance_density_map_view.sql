@@ -1,14 +1,17 @@
 /* Update analytics_actions views */
 DROP MATERIALIZED VIEW analytics_surveillance_density_map;
 
-CREATE MATERIALIZED VIEW analytics_surveillance_density_map AS
+CREATE MATERIALIZED VIEW public.analytics_surveillance_density_map AS
 
 WITH surveillance_geoms AS (
     SELECT
-        id AS action_id,
-        geom,
-        EXTRACT(EPOCH FROM action_end_datetime_utc - action_start_datetime_utc)::DOUBLE PRECISION / 3600.0 AS duration
-    FROM env_actions 
+        m.id AS mission_id,
+        a.id AS action_id,
+        a.geom,
+        EXTRACT(EPOCH FROM  a.action_end_datetime_utc - a.action_start_datetime_utc)::DOUBLE PRECISION / 3600.0 AS duration
+    FROM missions m
+    JOIN env_actions a
+    ON m.id = a.mission_id
     WHERE
         action_type = 'SURVEILLANCE' AND
         action_end_datetime_utc > action_start_datetime_utc
@@ -57,7 +60,7 @@ SELECT
 FROM surveillance_points pos
 JOIN points_per_action nb
 ON pos.action_id = nb.action_id
-ORDER BY pos.duration / nb.number_of_squares / square_area_km2
+ORDER BY pos.duration / nb.number_of_squares / square_area_km2;
 
 CREATE INDEX ON public.analytics_surveillance_density_map (action_id);
 
