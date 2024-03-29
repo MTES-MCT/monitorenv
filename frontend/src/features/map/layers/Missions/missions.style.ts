@@ -181,7 +181,8 @@ export const selectedMissionSurveillanceStyle = [
     stroke: new Stroke({
       color: THEME.color.charcoal,
       width: 2
-    })
+    }),
+    zIndex: 3
   })
 ]
 
