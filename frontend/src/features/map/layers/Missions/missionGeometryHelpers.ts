@@ -14,7 +14,8 @@ import {
   getMissionStatus,
   type Mission,
   type NewMission,
-  type NewEnvActionControl
+  type NewEnvActionControl,
+  CIRCULAR_ZONE_RADIUS
 } from '../../../../domain/entities/missions'
 import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
 
@@ -107,7 +108,10 @@ const getActionFeature = (
     action.geom.coordinates.length > 0
   ) {
     const coordinates = action.geom.coordinates[0] as Coordinates
-    geometry = circular([coordinates[0], coordinates[1]], 4000, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+    geometry = circular([coordinates[0], coordinates[1]], CIRCULAR_ZONE_RADIUS, 64).transform(
+      WSG84_PROJECTION,
+      OPENLAYERS_PROJECTION
+    )
   }
 
   const feature = new Feature({

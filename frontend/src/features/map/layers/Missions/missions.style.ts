@@ -8,7 +8,7 @@ import { Circle, Icon, Style } from 'ol/style'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { ActionTypeEnum, MissionStatusEnum, MissionTypeEnum } from '../../../../domain/entities/missions'
+import { MissionStatusEnum, MissionTypeEnum } from '../../../../domain/entities/missions'
 
 export const missionZoneStyle = new Style({
   fill: new Fill({
@@ -34,7 +34,8 @@ const missionWithCentroidStyleFactory = (status, type) => [
       displacement: [0, 20],
       scale: 0.5,
       src: `mission/${status}_${type}.png`
-    })
+    }),
+    zIndex: 2
   })
 ]
 
@@ -180,115 +181,11 @@ export const selectedMissionSurveillanceStyle = [
     stroke: new Stroke({
       color: THEME.color.charcoal,
       width: 2
-    })
-  }),
-  // Close icon for controls
-  new Style({
-    geometry: feature => {
-      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
-        return undefined
-      }
-
-      const extent = feature.getGeometry()?.getExtent()
-      if (!extent) {
-        throw new Error('`extent` is undefined.')
-      }
-
-      const center = getCenter(extent)
-
-      return new Point(center)
-    },
-    image: new Icon({
-      color: THEME.color.charcoal,
-      scale: 0.6,
-      src: 'Close.svg'
-    })
-  }),
-  // Control icon with infraction
-  new Style({
-    geometry: feature => {
-      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
-        return undefined
-      }
-      const controlHasInfraction = feature.get('infractions').length > 0
-      if (!controlHasInfraction) {
-        return undefined
-      }
-
-      const extent = feature.getGeometry()?.getExtent()
-      if (!extent) {
-        throw new Error('`extent` is undefined.')
-      }
-
-      const center = getCenter(extent)
-
-      return new Point(center)
-    },
-    image: new Icon({
-      color: THEME.color.charcoal,
-      displacement: [0, 18],
-      scale: 1.1,
-      src: 'Control_filled.svg'
-    })
-  }),
-  // Control icon without infraction
-  new Style({
-    geometry: feature => {
-      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
-        return undefined
-      }
-      const controlHasInfraction = feature.get('infractions') && feature.get('infractions').length > 0
-      if (controlHasInfraction) {
-        return undefined
-      }
-
-      const extent = feature.getGeometry()?.getExtent()
-      if (!extent) {
-        throw new Error('`extent` is undefined.')
-      }
-
-      const center = getCenter(extent)
-
-      return new Point(center)
-    },
-    image: new Icon({
-      displacement: [0, 16],
-      scale: 1.1,
-      src: 'Control.svg'
-    })
-  }),
-  // Control zone or point
-  new Style({
-    fill: new Fill({
-      color: 'rgba(86, 151, 210, .35)' // Blue Gray
     }),
-    geometry: feature => {
-      if (feature.get('actionType') !== ActionTypeEnum.CONTROL) {
-        return undefined
-      }
-
-      // if mission zone is computed we want to display a "control zone"
-      if (feature.get('isGeometryComputedFromControls')) {
-        return feature.getGeometry()
-      }
-
-      const extent = feature.getGeometry()?.getExtent()
-      if (!extent) {
-        throw new Error('`extent` is undefined.')
-      }
-
-      const center = getCenter(extent)
-
-      return new Point(center)
-    },
-    stroke: new Stroke({
-      color: THEME.color.charcoal,
-      lineCap: 'square',
-      lineDash: [2, 8],
-      width: 4
-    })
+    zIndex: 3
   })
 ]
+
 export const selectedMissionZoneStyle = [
   new Style({
     fill: new Fill({

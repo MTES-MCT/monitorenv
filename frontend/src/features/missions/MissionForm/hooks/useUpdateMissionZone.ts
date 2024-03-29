@@ -2,7 +2,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { InteractionListener } from 'domain/entities/map/constants'
-import { ActionSource, ActionTypeEnum, type Mission } from 'domain/entities/missions'
+import { ActionSource, ActionTypeEnum, CIRCULAR_ZONE_RADIUS, type Mission } from 'domain/entities/missions'
 import { useFormikContext } from 'formik'
 import { isEqual } from 'lodash'
 import { Feature } from 'ol'
@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 
 function computeCircleZone(coordinates) {
   const circleGeometry = new Feature({
-    geometry: circular(coordinates, 4000, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+    geometry: circular(coordinates, CIRCULAR_ZONE_RADIUS, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
   }).getGeometry()
 
   return convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon]))
@@ -69,7 +69,10 @@ export const useUpdateMissionZone = sortedActions => {
         setFieldValue('geom', firstAction.geom)
       }
 
-      if (!values.isGeometryComputedFromControls) {
+      if (
+        !values.isGeometryComputedFromControls &&
+        (firstAction?.actionType === ActionTypeEnum.CONTROL || firstAction?.actionType === ActionTypeEnum.SURVEILLANCE)
+      ) {
         setFieldValue('isGeometryComputedFromControls', true)
       }
 

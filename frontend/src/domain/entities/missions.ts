@@ -7,6 +7,8 @@ import type { SeaFrontEnum } from './seaFrontType'
 import type { FishMissionAction } from '@features/missions/fishActions.types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
+export const CIRCULAR_ZONE_RADIUS = 2000
+
 export enum ActionTypeEnum {
   CONTROL = 'CONTROL',
   DETACHED_REPORTING = 'DETACHED_REPORTING',
