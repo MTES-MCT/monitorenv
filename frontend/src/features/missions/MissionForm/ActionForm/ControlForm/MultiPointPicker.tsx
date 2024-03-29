@@ -1,5 +1,6 @@
 import { Accent, Button, Icon, IconButton, Label, type Coordinates } from '@mtes-mct/monitor-ui'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
+import { CIRCULAR_ZONE_RADIUS, type Mission } from 'domain/entities/missions'
 import { useField, useFormikContext } from 'formik'
 import { isEqual } from 'lodash'
 import { Feature } from 'ol'
@@ -24,7 +25,6 @@ import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../../../../hooks/useListenForDrawing'
 import { formatCoordinates } from '../../../../../utils/coordinates'
 
-import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
 
 const CONTROL_INTERACTION_LISTENER = InteractionListener.CONTROL_POINT
@@ -59,7 +59,7 @@ export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
       setValue(geometry)
       if ((!values.geom || values.geom?.coordinates.length === 0) && values.envActions.length === 1) {
         const circleGeometry = new Feature({
-          geometry: circular(geometry.coordinates[0] as Coordinates, 4000, 64).transform(
+          geometry: circular(geometry.coordinates[0] as Coordinates, CIRCULAR_ZONE_RADIUS, 64).transform(
             WSG84_PROJECTION,
             OPENLAYERS_PROJECTION
           )
