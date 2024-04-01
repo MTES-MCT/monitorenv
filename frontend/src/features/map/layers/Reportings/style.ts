@@ -263,7 +263,7 @@ const attachedMissionCircleStyle = new Style({
     return missionCenter && new Point(missionCenter)
   },
   image: new Circle({
-    displacement: [0, 27],
+    displacement: [0, 23],
     radius: 20,
     stroke: new Stroke({
       color: THEME.color.charcoal,
