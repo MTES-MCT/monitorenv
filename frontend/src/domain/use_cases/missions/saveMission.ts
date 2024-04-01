@@ -49,7 +49,7 @@ export const saveMission =
                 isFormDirty: false,
                 missionForm: missionUpdated
               },
-              newId: values.id
+              previousId: values.id
             })
           )
 
