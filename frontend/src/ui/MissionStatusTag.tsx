@@ -1,4 +1,4 @@
-import { Tag } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, Tag, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { missionStatusLabels } from '../domain/entities/missions'
@@ -6,36 +6,37 @@ import { missionStatusLabels } from '../domain/entities/missions'
 export function MissionStatusTag({ status }: { status: string }) {
   switch (status) {
     case missionStatusLabels.PENDING.code:
-      return <StatusTag bgColor={missionStatusLabels.PENDING.color}>{missionStatusLabels.PENDING.libelle}</StatusTag>
-    case missionStatusLabels.ENDED.code:
-      return <StatusTag bgColor={missionStatusLabels.ENDED.color}>{missionStatusLabels.ENDED.libelle}</StatusTag>
-
-    case missionStatusLabels.CLOSED.code:
       return (
         <StatusTag
-          bgColor={missionStatusLabels.CLOSED.color}
-          borderColor={missionStatusLabels.CLOSED.borderColor}
-          grayText
+          accent={Accent.PRIMARY}
+          color={THEME.color.charcoal}
+          Icon={Icon.Clock}
+          iconColor={THEME.color.blueGray}
         >
-          {missionStatusLabels.CLOSED.libelle}
+          {missionStatusLabels.PENDING.libelle}
+        </StatusTag>
+      )
+    case missionStatusLabels.ENDED.code:
+    case missionStatusLabels.CLOSED.code: // TODO: remove this line when the CLOSED status is removed
+      return (
+        <StatusTag accent={Accent.PRIMARY} Icon={Icon.Confirm} iconColor={THEME.color.charcoal}>
+          {missionStatusLabels.ENDED.libelle}
         </StatusTag>
       )
 
     case missionStatusLabels.UPCOMING.code:
-      return <StatusTag bgColor={missionStatusLabels.UPCOMING.color}>{missionStatusLabels.UPCOMING.libelle}</StatusTag>
+      return (
+        <StatusTag accent={Accent.PRIMARY} Icon={Icon.Clock} iconColor={THEME.color.blueNcs}>
+          {missionStatusLabels.UPCOMING.libelle}
+        </StatusTag>
+      )
 
     default:
       return null
   }
 }
 
-const StatusTag = styled(Tag)<{
-  bgColor: string
-  borderColor?: string | undefined
-  grayText?: boolean
-}>`
+const StatusTag = styled(Tag)`
   align-self: end;
-  color: ${p => (p.grayText ? p.theme.color.slateGray : p.theme.color.white)};
-  border: ${p => (p.borderColor ? `1px solid ${p.borderColor}` : '0px')};
-  background-color: ${p => p.bgColor};
+  padding: 1px 8px 3px 3px;
 `

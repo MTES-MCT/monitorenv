@@ -1,10 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import org.locationtech.jts.geom.Geometry
@@ -22,6 +19,7 @@ data class MissionEnvActionDataInput(
 
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
+    val completion: EnvActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataInput>? = null,
     val department: String? = null,
     val facade: String? = null,
@@ -68,6 +66,7 @@ data class MissionEnvActionDataInput(
                     actionNumberOfControls = this.actionNumberOfControls,
                     actionTargetType = this.actionTargetType,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
+                    completion = this.completion,
                     controlPlans =
                     this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,
@@ -88,6 +87,7 @@ data class MissionEnvActionDataInput(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
+                    completion = this.completion,
                     controlPlans =
                     this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,

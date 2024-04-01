@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
@@ -16,6 +17,7 @@ data class MissionEnvActionControlDataOutput(
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
+    val completion: EnvActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = listOf(),
     val department: String? = null,
     val facade: String? = null,
@@ -45,6 +47,7 @@ data class MissionEnvActionControlDataOutput(
                 actionStartDateTimeUtc = envActionControlEntity.actionStartDateTimeUtc,
                 actionEndDateTimeUtc = envActionControlEntity.actionEndDateTimeUtc,
                 actionTargetType = envActionControlEntity.actionTargetType,
+                completion = envActionControlEntity.completion,
                 controlPlans =
                 envActionControlEntity.controlPlans?.map {
                     MissionEnvActionControlPlanDataOutput

@@ -1,3 +1,5 @@
+import { actionFactory } from '@features/missions/Missions.helpers'
+import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   customDayjs,
   FormikNumberInput,
@@ -11,11 +13,13 @@ import {
   Icon,
   Size,
   THEME,
-  Toggle
+  Toggle,
+  pluralize,
+  Button
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
@@ -25,12 +29,19 @@ import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domai
 import { type Mission, type EnvActionControl, ActionTypeEnum } from '../../../../../domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
-import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
-import { FormTitle, Separator } from '../../style'
-import { FormBody, Header, StyledDeleteButton, TitleWithIcon } from '../style'
+import { Separator } from '../../style'
+import {
+  ActionThemes,
+  ActionTitle,
+  FormBody,
+  Header,
+  HeaderButtons,
+  StyledDeleteIconButton,
+  TitleWithIcon
+} from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
 export function ControlForm({
@@ -54,6 +65,9 @@ export function ControlForm({
   const actionDate =
     envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
   const actualYearForThemes = customDayjs(actionDate).year()
+  const themeIds = useMemo(() => currentAction?.controlPlans.map(controlPlan => controlPlan.themeId), [currentAction])
+  const { themes } = useGetControlPlans()
+  const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
@@ -153,6 +167,15 @@ export function ControlForm({
     setCurrentActionIndex(undefined)
     removeControlAction()
   }
+
+  const duplicateControl = useCallback(() => {
+    if (!currentAction) {
+      return
+    }
+    const duplicatedAction = actionFactory(currentAction)
+    setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
+  }, [currentAction, setFieldValue, envActions])
+
   const updateIsControlAttachedToReporting = (checked: boolean | undefined) => {
     setIsReportingListVisible(checked ?? false)
     if (!checked) {
@@ -192,24 +215,24 @@ export function ControlForm({
         <TitleWithIcon>
           <Icon.ControlUnit color={THEME.color.gunMetal} />
 
-          <FormTitle>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</FormTitle>
-          <SubTitle>
-            &nbsp;(
-            {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc, false)})
-          </SubTitle>
+          <ActionTitle>{pluralize('Contrôle', actionNumberOfControls ?? 0)}</ActionTitle>
+          <ActionThemes>{themesAsText}</ActionThemes>
         </TitleWithIcon>
-        <Separator />
+        <HeaderButtons>
+          <Button accent={Accent.SECONDARY} Icon={Icon.Duplicate} onClick={duplicateControl} size={Size.SMALL}>
+            Dupliquer
+          </Button>
 
-        <StyledDeleteButton
-          accent={Accent.SECONDARY}
-          Icon={Icon.Delete}
-          onClick={handleRemoveAction}
-          size={Size.SMALL}
-          title="supprimer"
-        >
-          Supprimer
-        </StyledDeleteButton>
+          <StyledDeleteIconButton
+            accent={Accent.SECONDARY}
+            Icon={Icon.Delete}
+            onClick={handleRemoveAction}
+            size={Size.SMALL}
+            title="supprimer"
+          />
+        </HeaderButtons>
       </Header>
+      <Separator />
       <FormBody>
         <div>
           <StyledToggle>
@@ -341,9 +364,4 @@ const ActionSummary = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
-`
-
-const SubTitle = styled.div`
-  font-size: 16px;
-  display: inline-block;
 `

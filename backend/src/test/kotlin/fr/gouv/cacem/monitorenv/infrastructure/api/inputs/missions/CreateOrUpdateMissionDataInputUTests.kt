@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionDataInput
@@ -29,6 +30,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completion = EnvActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 actionNumberOfControls = 3,
@@ -44,6 +46,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completion = EnvActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 observations = "Observations",
@@ -54,6 +57,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
+                completion = EnvActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
                 reportingIds = Optional.empty(),
             )

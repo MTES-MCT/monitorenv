@@ -8,9 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -48,49 +50,34 @@ class EnvActionModel(
     @JdbcType(UUIDJdbcType::class)
     @Column(name = "id", nullable = false, updatable = false, columnDefinition = "uuid")
     val id: UUID,
-
-    @Column(name = "action_start_datetime_utc")
-    val actionStartDateTime: Instant? = null,
-
-    @Column(name = "action_end_datetime_utc")
-    val actionEndDateTime: Instant? = null,
-
+    @Column(name = "action_start_datetime_utc") val actionStartDateTime: Instant? = null,
+    @Column(name = "action_end_datetime_utc") val actionEndDateTime: Instant? = null,
+    @Column(name = "action_completion", columnDefinition = "mission_action_completion")
+    @Enumerated(EnumType.STRING)
+    @Type(PostgreSQLEnumType::class)
+    val completion: EnvActionCompletionEnum? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: Geometry? = null,
-
     @Column(name = "action_type")
     @Enumerated(EnumType.STRING)
     val actionType: ActionTypeEnum,
-
     @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
     val value: String,
-
-    @Column(name = "facade")
-    val facade: String? = null,
-
-    @Column(name = "department")
-    val department: String? = null,
-
+    @Column(name = "facade") val facade: String? = null,
+    @Column(name = "department") val department: String? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
     val mission: MissionModel,
-
-    @Column(name = "is_administrative_control")
-    val isAdministrativeControl: Boolean? = null,
-
+    @Column(name = "is_administrative_control") val isAdministrativeControl: Boolean? = null,
     @Column(name = "is_compliance_with_water_regulations_control")
     val isComplianceWithWaterRegulationsControl: Boolean? = null,
-
     @Column(name = "is_safety_equipment_and_standards_compliance_control")
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
-
-    @Column(name = "is_seafarers_control")
-    val isSeafarersControl: Boolean? = null,
-
+    @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
     @OneToMany(
         fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",
@@ -99,7 +86,6 @@ class EnvActionModel(
     @JsonManagedReference
     @OrderBy("id")
     val attachedReporting: MutableSet<ReportingModel>? = LinkedHashSet(),
-
     @OneToMany(
         fetch = FetchType.EAGER,
         cascade = [CascadeType.ALL],
@@ -109,7 +95,6 @@ class EnvActionModel(
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("orderIndex")
     val controlPlanThemes: MutableSet<EnvActionsControlPlanThemeModel>? = LinkedHashSet(),
-
     @OneToMany(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
@@ -119,7 +104,6 @@ class EnvActionModel(
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("orderIndex")
     val controlPlanSubThemes: MutableSet<EnvActionsControlPlanSubThemeModel>? = LinkedHashSet(),
-
     @OneToMany(
         fetch = FetchType.EAGER,
         cascade = [CascadeType.ALL],
@@ -161,6 +145,7 @@ class EnvActionModel(
             actionEndDateTimeUtc = actionEndDateTime?.atZone(UTC),
             actionType = actionType,
             actionStartDateTimeUtc = actionStartDateTime?.atZone(UTC),
+            completion = completion,
             controlPlans = controlPlans,
             department = department,
             facade = facade,
@@ -188,6 +173,7 @@ class EnvActionModel(
                     actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
                     actionType = action.actionType,
                     actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
+                    completion = action.completion,
                     department = action.department,
                     facade = action.facade,
                     isAdministrativeControl = action.isAdministrativeControl,

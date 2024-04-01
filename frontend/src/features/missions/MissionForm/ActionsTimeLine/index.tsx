@@ -8,7 +8,7 @@ import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '.
 import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../../Missions.helpers'
 import { AttachReporting } from '../AttachReporting'
 import { useUpdateMissionZone } from '../hooks/useUpdateMissionZone'
-import { FormTitle } from '../style'
+import { FormTitle, Separator } from '../style'
 
 import type { DetachedReporting, Reporting } from '../../../../domain/entities/reporting'
 import type { FishMissionAction } from '../../fishActions.types'
@@ -141,8 +141,7 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
 
         <AttachReporting />
       </TitleWrapper>
-      {/* TODO : Add separator when no more source Tag */}
-      {/* <Separator /> */}
+      <Separator />
       <ActionsTimeline>
         {sortedActions ? (
           sortedActions.map((action, index) => {
@@ -187,7 +186,6 @@ const TitleWrapper = styled.div`
   align-items: baseline;
   display: flex;
   justify-content: space-between;
-  padding-bottom: 32px;
 `
 
 const ActionsTimeline = styled.div`

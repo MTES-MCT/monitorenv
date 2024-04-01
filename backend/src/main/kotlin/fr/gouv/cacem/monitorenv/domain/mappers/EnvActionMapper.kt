@@ -1,13 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceProperties
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
@@ -26,6 +20,7 @@ object EnvActionMapper {
         actionEndDateTimeUtc: ZonedDateTime?,
         actionType: ActionTypeEnum,
         actionStartDateTimeUtc: ZonedDateTime?,
+        completion: EnvActionCompletionEnum?,
         controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
@@ -48,6 +43,7 @@ object EnvActionMapper {
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                completion = completion,
                                 controlPlans = controlPlans,
                                 department = department,
                                 facade = facade,
@@ -62,6 +58,7 @@ object EnvActionMapper {
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                completion = completion,
                                 controlPlans = controlPlans,
                                 department = department,
                                 facade = facade,

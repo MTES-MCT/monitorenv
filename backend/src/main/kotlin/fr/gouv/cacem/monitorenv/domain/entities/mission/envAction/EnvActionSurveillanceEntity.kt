@@ -8,13 +8,15 @@ data class EnvActionSurveillanceEntity(
     override val id: UUID,
     override val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
+    override val completion: EnvActionCompletionEnum? = null,
     override val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
     override val geom: Geometry? = null,
     override val facade: String? = null,
     override val department: String? = null,
+
     val observations: String? = null,
 ) :
     EnvActionEntity(
-        actionType = ActionTypeEnum.SURVEILLANCE,
         id = id,
+        actionType = ActionTypeEnum.SURVEILLANCE,
     )

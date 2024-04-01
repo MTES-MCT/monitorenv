@@ -14,10 +14,11 @@ import {
 import { FieldArray, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
+import { CompletionStatusTag } from 'ui/CompletionStatusTag'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
 import { MissionZonePicker } from './MissionZonePicker'
-import { FormTitle } from './style'
+import { FormTitle, Separator } from './style'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../domain/entities/controlPlan'
 import {
   type Mission,
@@ -25,16 +26,20 @@ import {
   getMissionStatus,
   hasMissionOrderLabels,
   missionTypeEnum,
-  ActionTypeEnum
+  ActionTypeEnum,
+  FrontCompletionStatus
 } from '../../../domain/entities/missions'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { getMissionTitle } from '../../../utils/getMissionTitle'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
 
-export function GeneralInformationsForm() {
+export function GeneralInformationsForm({
+  missionCompletion = undefined
+}: {
+  missionCompletion?: FrontCompletionStatus
+}) {
   const { newWindowContainerRef } = useNewWindow()
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
@@ -72,57 +77,58 @@ export function GeneralInformationsForm() {
     setFieldValue('startDateTimeUtc', date)
   }
 
+  const missionStatus = useMemo(() => getMissionStatus(values), [values])
+
   return (
     <StyledContainer>
-      <StyledHeader $withPadding={missionIsNewMission}>
+      <StyledHeader>
         <FormTitle>{title}</FormTitle>
-        {!missionIsNewMission && (
-          <StyledTagsContainer>
-            <MissionSourceTag source={values.missionSource} />
-            <MissionStatusTag status={getMissionStatus(values)} />
-          </StyledTagsContainer>
-        )}
       </StyledHeader>
-      {/* TODO : Add separator when no more source Tag */}
-      {/* <Separator /> */}
+      <Separator />
 
       <StyledFormWrapper>
-        <div>
-          <StyledDatePickerContainer>
-            <DatePicker
-              data-cy="mission-start-date-time"
-              defaultValue={values?.startDateTimeUtc || undefined}
-              isCompact
-              isErrorMessageHidden
-              isRequired
-              isStringDate
-              label="Date de début (UTC)"
-              name="startDateTimeUtc"
-              onChange={updateMissionDateTime}
-              withTime
-            />
+        <DatesAndTagsContainer>
+          <div>
+            <StyledDatePickerContainer>
+              <DatePicker
+                data-cy="mission-start-date-time"
+                defaultValue={values?.startDateTimeUtc || undefined}
+                isCompact
+                isErrorMessageHidden
+                isRequired
+                isStringDate
+                label="Date de début (UTC)"
+                name="startDateTimeUtc"
+                onChange={updateMissionDateTime}
+                withTime
+              />
 
-            <StyledFormikDatePicker
-              baseContainer={newWindowContainerRef.current}
-              data-cy="mission-end-date-time"
-              isCompact
-              isEndDate
-              isErrorMessageHidden
-              isRequired
-              isStringDate
-              label="Date de fin (UTC)"
-              name="endDateTimeUtc"
-              withTime
-            />
-          </StyledDatePickerContainer>
-          {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
-          {errors.startDateTimeUtc && errors.startDateTimeUtc?.length > 1 && (
-            <FieldError>{errors.startDateTimeUtc}</FieldError>
-          )}
-          {errors.endDateTimeUtc && errors.endDateTimeUtc.length > 1 && (
-            <FieldError>{errors.endDateTimeUtc}</FieldError>
-          )}
-        </div>
+              <StyledFormikDatePicker
+                baseContainer={newWindowContainerRef.current}
+                data-cy="mission-end-date-time"
+                isCompact
+                isEndDate
+                isErrorMessageHidden
+                isRequired
+                isStringDate
+                label="Date de fin (UTC)"
+                name="endDateTimeUtc"
+                withTime
+              />
+            </StyledDatePickerContainer>
+            {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
+            {errors.startDateTimeUtc && errors.startDateTimeUtc?.length > 1 && (
+              <FieldError>{errors.startDateTimeUtc}</FieldError>
+            )}
+            {errors.endDateTimeUtc && errors.endDateTimeUtc.length > 1 && (
+              <FieldError>{errors.endDateTimeUtc}</FieldError>
+            )}
+          </div>
+          <StyledTagsContainer>
+            <MissionStatusTag status={missionStatus} />
+            <CompletionStatusTag completion={missionCompletion} />
+          </StyledTagsContainer>
+        </DatesAndTagsContainer>
 
         <div>
           <StyledMissionType>
@@ -197,18 +203,25 @@ const StyledFormWrapper = styled.div`
   gap: 24px;
 `
 
-const StyledHeader = styled.div<{ $withPadding: boolean }>`
+const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
   justify-content: space-between;
-  padding-bottom: ${p => (p.$withPadding ? '32px' : '0px')};
+  padding-top: 12px;
 `
 const StyledTagsContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   gap: 8px;
+`
+const DatesAndTagsContainer = styled.div`
+  align-items: start;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
 `
 
 const StyledDatePickerContainer = styled.div`

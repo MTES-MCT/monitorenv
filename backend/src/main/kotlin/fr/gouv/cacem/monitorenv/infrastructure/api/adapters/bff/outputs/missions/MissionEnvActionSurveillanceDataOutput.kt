@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -11,6 +12,7 @@ data class MissionEnvActionSurveillanceDataOutput(
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.SURVEILLANCE,
+    val completion: EnvActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = null,
     val department: String? = null,
     val facade: String? = null,
@@ -32,6 +34,7 @@ data class MissionEnvActionSurveillanceDataOutput(
                 id = envActionSurveillanceEntity.id,
                 actionEndDateTimeUtc = envActionSurveillanceEntity.actionEndDateTimeUtc,
                 actionStartDateTimeUtc = envActionSurveillanceEntity.actionStartDateTimeUtc,
+                completion = envActionSurveillanceEntity.completion,
                 controlPlans =
                 envActionSurveillanceEntity.controlPlans?.map {
                     MissionEnvActionControlPlanDataOutput

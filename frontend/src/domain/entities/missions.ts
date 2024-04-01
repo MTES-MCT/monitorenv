@@ -53,6 +53,18 @@ export const missionTypeEnum = {
   }
 }
 
+export enum CompletionStatus {
+  COMPLETED = 'COMPLETED',
+  TO_COMPLETE = 'TO_COMPLETE'
+}
+
+export enum FrontCompletionStatus {
+  COMPLETED = 'COMPLETED',
+  TO_COMPLETE = 'TO_COMPLETE',
+  TO_COMPLETE_MISSION_ENDED = 'TO_COMPLETE_MISSION_ENDED',
+  UP_TO_DATE = 'UP_TO_DATE'
+}
+
 export enum MissionTypeLabel {
   AIR = 'Air',
   LAND = 'Terre',
@@ -266,6 +278,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
+  completion: CompletionStatus
   controlPlans: ControlPlansData[]
   geom?: GeoJSON.MultiPolygon | GeoJSON.MultiPoint
   infractions: Infraction[] | NewInfraction[]
@@ -284,6 +297,7 @@ export type EnvActionControl = NewEnvActionControl & {
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
+  completion: CompletionStatus
   controlPlans: ControlPlansData[]
   durationMatchesMission?: boolean
   geom?: GeoJSON.MultiPolygon

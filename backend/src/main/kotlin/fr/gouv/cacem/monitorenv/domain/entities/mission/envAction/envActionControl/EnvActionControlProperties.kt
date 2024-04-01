@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
@@ -19,6 +20,7 @@ data class EnvActionControlProperties(
         actionEndDateTimeUtc: ZonedDateTime?,
         actionStartDateTimeUtc: ZonedDateTime?,
         controlPlans: List<EnvActionControlPlanEntity>?,
+        completion: EnvActionCompletionEnum?,
         department: String?,
         facade: String?,
         geom: Geometry?,
@@ -33,6 +35,7 @@ data class EnvActionControlProperties(
             actionNumberOfControls = actionNumberOfControls,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionTargetType = actionTargetType,
+            completion = completion,
             controlPlans = controlPlans,
             department = department,
             facade = facade,

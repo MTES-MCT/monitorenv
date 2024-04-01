@@ -12,4 +12,5 @@ export const FormTitle = styled.h2`
 export const Separator = styled.div`
   border-top: 1px solid ${p => p.theme.color.charcoal};
   margin-bottom: 24px;
+  margin-top: 8px;
 `

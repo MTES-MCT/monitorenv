@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitRes
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
@@ -118,7 +119,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         jpaMissionRepository.delete(3)
 
         // Then
-        customQueryCountListener!!.resetQueryCount()
+        customQueryCountListener.resetQueryCount()
         val nextMissionList =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
@@ -190,7 +191,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         // Then
         // MissionTypes are hardcoded in query. If you add a new mission type, you need to update the query
-        assertThat(MissionTypeEnum.values().size).isEqualTo(3)
+        assertThat(MissionTypeEnum.entries.size).isEqualTo(3)
         assertThat(MissionTypeEnum.SEA.name).isEqualTo("SEA")
         assertThat(MissionTypeEnum.LAND.name).isEqualTo("LAND")
         assertThat(MissionTypeEnum.AIR.name).isEqualTo("AIR")
@@ -537,6 +538,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             "33310163-4e22-4d3d-b585-dac4431eb4b5",
                         ),
                         facade = "Facade 1",
+                        completion = EnvActionCompletionEnum.TO_COMPLETE,
                         controlPlans = listOf(
                             EnvActionControlPlanEntity(
                                 subThemeIds = listOf(1),
@@ -558,6 +560,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         UUID.fromString(
                             "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
                         ),
+                        completion = EnvActionCompletionEnum.TO_COMPLETE,
                         facade = "Facade 2",
                         department = "Department 2",
                         geom = polygon,
@@ -867,12 +870,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 observations = "RAS",
                 actionNumberOfControls = 12,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
+                completion = EnvActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(infraction),
             )
         val surveillanceAction =
             EnvActionSurveillanceEntity(
                 id = UUID.fromString("325a8c12-7c13-465d-9b42-6aee473d8d3b"),
+                completion = EnvActionCompletionEnum.TO_COMPLETE,
                 observations = "This is a surveillance action",
             )
         val noteAction =
@@ -951,6 +956,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             EnvActionControlEntity(
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
+                completion = EnvActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 actionNumberOfControls = 4,
             )
