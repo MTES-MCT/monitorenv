@@ -5,7 +5,6 @@ import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.MultiPolygon
-import org.locationtech.jts.geom.Point
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -17,7 +16,7 @@ class JpaPostgisFunctionRepository : IPostgisFunctionRepository {
         return entityManager.createNativeQuery(
             """
          SELECT CASE
-            WHEN st_xmax(:geom)> 230 OR st_xmin(:geom)<-205
+            WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
                 THEN CAST(CAST(:geom AS geography) AS geometry)
             ELSE :geom END
             """.trimIndent(),
@@ -31,13 +30,22 @@ class JpaPostgisFunctionRepository : IPostgisFunctionRepository {
         return entityManager.createNativeQuery(
             """
          SELECT CASE
-            WHEN st_xmax(:geom)> 230 OR st_xmin(:geom)<-205
+            WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
                 THEN CAST(CAST(:geom AS geography) AS geometry)
             ELSE :geom END
             """.trimIndent(),
             Geometry::class.java,
         )
             .setParameter("geom", geometry)
-            .singleResult as Point
+            .singleResult as Geometry
+    }
+
+    companion object {
+        // Allow a geometry to cross the date line
+        // minimum westbound is near the australian coastline when reaching the area panning from france to the west
+        private const val MINIMUM_WESTBOUND = -205
+
+        // maximum eastbound is further east of the French Polynesia Archipelago panning from france to the east
+        private const val MAXIMUM_EASTBOUND = 230
     }
 }

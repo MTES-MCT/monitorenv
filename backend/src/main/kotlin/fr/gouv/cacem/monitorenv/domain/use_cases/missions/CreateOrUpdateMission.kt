@@ -25,20 +25,14 @@ class CreateOrUpdateMission(
         mission: MissionEntity?,
     ): MissionEntity {
         require(mission != null) { "No mission to create or update" }
-        val normalizedMission = if (mission.geom != null) {
-            mission.copy(
-                geom = postgisFunctionRepository.normalizeMultipolygon(mission.geom),
-            )
-        } else {
-            mission
-        }
+        val normalizedMission = mission.geom?.let { nonNullGeom ->
+            mission.copy(geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom))
+        } ?: mission
 
-        val facade = if (normalizedMission.geom != null) {
-            facadeRepository.findFacadeFromGeometry(
-                normalizedMission.geom,
-            )
-        } else { null }
-        val storedMission = if (normalizedMission.id != null) { missionRepository.findById(normalizedMission.id) } else { null }
+        val facade = normalizedMission.geom?.let { nonNullGeom ->
+            facadeRepository.findFacadeFromGeometry(nonNullGeom)
+        }
+        val storedMission = normalizedMission.id?.let { id -> missionRepository.findById(id) }
 
         val missionToSave =
             normalizedMission.copy(
