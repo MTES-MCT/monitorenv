@@ -1,6 +1,5 @@
 import { MultiRadio } from '@mtes-mct/monitor-ui'
-import { removeAllOverlayCoordinates } from 'domain/shared_slices/Global'
-import _, { isEmpty } from 'lodash'
+import { throttle } from 'lodash'
 import { ScaleLine, defaults as defaultControls } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'
@@ -19,7 +18,6 @@ import {
   type ReactElement
 } from 'react'
 import styled from 'styled-components'
-import { useDebouncedCallback } from 'use-debounce'
 
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants'
 import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
@@ -48,8 +46,6 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     ctrlKeyPressed: boolean
     feature: Feature<Geometry> | undefined
   }>({ ctrlKeyPressed: false, feature: undefined })
-
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const [currentFeatureOver, setCurrentFeatureOver] = useState<Feature<Geometry> | undefined>(undefined)
 
@@ -86,7 +82,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
   const handleMouseOverFeature = useMemo(
     () =>
-      _.throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
+      throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
         if (event && current_map) {
           const feature = current_map.forEachFeatureAtPixel<Feature<Geometry>>(
             event.pixel,
@@ -118,12 +114,6 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     return control.current
   }, [distanceUnit])
 
-  const debouncedHandleChangeResolution = useDebouncedCallback(() => {
-    if (!isEmpty(overlayCoordinates)) {
-      dispatch(removeAllOverlayCoordinates())
-    }
-  }, 250)
-
   useEffect(() => {
     if (currentMap) {
       return
@@ -150,13 +140,8 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
 
-    const view = initialMap.getView()
-    view.on('change:resolution', () => {
-      debouncedHandleChangeResolution()
-    })
-
     setCurrentMap(initialMap)
-  }, [currentMap, debouncedHandleChangeResolution, handleMapClick, handleMouseOverFeature, updateScaleControl])
+  }, [currentMap, handleMapClick, handleMouseOverFeature, updateScaleControl])
 
   const updateDistanceUnit = (value: DistanceUnit | undefined) => {
     if (!value) {

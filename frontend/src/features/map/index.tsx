@@ -26,6 +26,7 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
+import { ZoomListener } from './ZoomListener'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
 import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
@@ -47,6 +48,8 @@ export function Map() {
     //
     // -> only add child to BaseMap if it requires map or mapClickEvent
     >
+      {/* @ts-ignore */}
+      <ZoomListener />
       {/* @ts-ignore */}
       <MapAttributionsBox />
       {/* @ts-ignore */}
