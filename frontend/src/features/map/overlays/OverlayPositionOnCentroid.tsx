@@ -92,21 +92,21 @@ export function OverlayPositionOnCentroid({
     }
   }, [feature])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedHandleChangeResolution = useCallback(
-    debounce(() => {
-      if (overlayCoordinates) {
-        dispatch(removeAllOverlayCoordinates())
-      }
-    }, 500),
-    []
+    newOverlayCoordinates =>
+      debounce(() => {
+        if (newOverlayCoordinates) {
+          dispatch(removeAllOverlayCoordinates())
+        }
+      }, 500),
+    [dispatch]
   )
 
   useEffect(() => {
     const view = map.getView()
 
     view.on('change:resolution', () => {
-      debouncedHandleChangeResolution()
+      debouncedHandleChangeResolution(overlayCoordinates)
     })
   }, [dispatch, map, overlayCoordinates, debouncedHandleChangeResolution])
 
