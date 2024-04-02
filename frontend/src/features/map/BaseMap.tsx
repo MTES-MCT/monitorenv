@@ -1,5 +1,5 @@
 import { MultiRadio } from '@mtes-mct/monitor-ui'
-import _ from 'lodash'
+import { throttle } from 'lodash'
 import { ScaleLine, defaults as defaultControls } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'
@@ -82,7 +82,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
   const handleMouseOverFeature = useMemo(
     () =>
-      _.throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
+      throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
         if (event && current_map) {
           const feature = current_map.forEachFeatureAtPixel<Feature<Geometry>>(
             event.pixel,

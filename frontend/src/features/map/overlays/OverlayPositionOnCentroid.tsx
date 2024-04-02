@@ -1,14 +1,12 @@
 // @ts-nocheck
-import { debounce } from 'lodash'
 import { getCenter } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
-import { removeAllOverlayCoordinates, setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
+import { setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
 import type { Feature } from 'ol'
@@ -59,7 +57,6 @@ export function OverlayPositionOnCentroid({
   const isThrottled = useRef(false)
   const [showed, setShowed] = useState(false)
   const currentCoordinates = useRef([])
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
   const currentOffset = useRef(INITIAL_OFFSET_VALUE)
@@ -91,24 +88,6 @@ export function OverlayPositionOnCentroid({
       currentCoordinates.current = undefined
     }
   }, [feature])
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedHandleChangeResolution = useCallback(
-    debounce(() => {
-      if (overlayCoordinates) {
-        dispatch(removeAllOverlayCoordinates())
-      }
-    }, 500),
-    [overlayCoordinates, dispatch]
-  )
-
-  useEffect(() => {
-    const view = map.getView()
-
-    view.on('change:resolution', () => {
-      debouncedHandleChangeResolution()
-    })
-  }, [dispatch, map, overlayCoordinates, debouncedHandleChangeResolution])
 
   useEffect(() => {
     if (map) {
