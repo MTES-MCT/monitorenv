@@ -7,7 +7,7 @@ context('Search Places', () => {
   })
 
   it('A user can search a place and zoom on it when it is selected', () => {
-    cy.fill('Rechercher un lieu', 'Nantes', { delay: 200 })
+    cy.fill('Rechercher un lieu', 'Nantes', { delay: 400 })
     cy.url().should('include', '/#@-173695.64,5981051.92,12.96')
   })
 })
