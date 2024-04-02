@@ -5,11 +5,9 @@ import { isEmpty } from 'lodash'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
-type ZoomListenerProps = {
-  map?: any
-}
+import type { BaseMapChildrenProps } from './BaseMap'
 
-export function ZoomListener({ map }: ZoomListenerProps) {
+export function ZoomListener({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
 
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
