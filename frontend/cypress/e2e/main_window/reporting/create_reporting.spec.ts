@@ -28,6 +28,9 @@ context('Reporting', () => {
 
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
+    cy.fill('Thématique du signalement', 'Culture marine')
+    cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
+
     cy.fill('Saisi par', 'XYZ')
     cy.fill('Date et heure (UTC)', [2024, 5, 26, 23, 35])
 
@@ -62,7 +65,7 @@ context('Reporting', () => {
     cy.clickButton('Valider le signalement')
 
     // Then
-    cy.get('.Element-FieldError').should('have.length', 5)
+    cy.get('.Element-FieldError').should('have.length', 7)
   })
 
   it('A mission can be attached to a reporting', () => {
@@ -82,6 +85,9 @@ context('Reporting', () => {
     cy.clickButton('Valider le point')
 
     cy.get('.rs-radio').find('label').contains('Infraction (susp.)').click()
+
+    cy.fill('Thématique du signalement', 'Culture marine')
+    cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
 
     cy.fill('Saisi par', 'XYZ')
 
@@ -162,6 +168,9 @@ context('Reporting', () => {
 
     cy.get('.rs-radio').find('label').contains('Infraction').click()
 
+    cy.fill('Thématique du signalement', 'Culture marine')
+    cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
+
     cy.fill('Saisi par', 'XYZ')
     cy.fill('Date et heure (UTC)', [2024, 5, 26, 23, 35])
 
@@ -198,6 +207,7 @@ context('Reporting', () => {
     cy.clickButton('Valider le point')
     cy.fill('Type de signalement', 'Observation')
     cy.fill('Thématique du signalement', 'Mouillage individuel')
+    cy.fill('Sous-thématique du signalement', ['Mouillage réglementé par AMP'])
 
     cy.get('.Element-Legend').contains('Réponse à la VHF').should('be.visible')
     cy.fill('Réponse à la VHF', 'Oui')
@@ -221,7 +231,7 @@ context('Reporting', () => {
 
     cy.clickButton('Editer le signalement')
     cy.fill('Thématique du signalement', 'Bien culturel maritime')
-
+    cy.fill('Sous-thématique du signalement', ["Prospection d'un bien culturel maritime"])
     cy.clickButton('Enregistrer et quitter')
 
     cy.wait('@updateReporting').then(({ request, response }) => {
