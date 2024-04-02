@@ -90,7 +90,7 @@ export function HomePage() {
 
         <SideWindowLauncher />
 
-        <ToastContainer containerId="map" enableMultiContainer />
+        <ToastContainer containerId="map" />
       </Wrapper>
     </>
   )
