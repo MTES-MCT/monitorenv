@@ -1,0 +1,47 @@
+import { customDayjs, ExclamationPoint, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import styled from 'styled-components'
+
+export function MissingFieldsText({
+  missionEndDate,
+  totalMissingFields
+}: {
+  missionEndDate: string | undefined
+  totalMissingFields: number
+}) {
+  if (totalMissingFields === 0) {
+    return (
+      <MissingFieldsContainer>
+        <Icon.Confirm color={THEME.color.mediumSeaGreen} />{' '}
+        <Text $color={THEME.color.mediumSeaGreen}>Complété – les champs nécessaires aux statistiques sont remplis</Text>
+      </MissingFieldsContainer>
+    )
+  }
+
+  const now = customDayjs()
+  const isMissionEnded = missionEndDate && now.isAfter(missionEndDate)
+
+  return (
+    <MissingFieldsContainer>
+      <ExclamationPoint
+        backgroundColor={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal}
+        color={THEME.color.white}
+      />
+      <Text $color={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal}>
+        {totalMissingFields} {pluralize('champ', totalMissingFields)} {pluralize('nécessaire', totalMissingFields)} aux
+        statistiques à compléter
+      </Text>
+    </MissingFieldsContainer>
+  )
+}
+
+const MissingFieldsContainer = styled.div`
+  color: ${p => p.theme.color.gunMetal};
+  display: flex;
+  flex-direction: row;
+  font-weight: 700;
+  gap: 8px;
+`
+
+const Text = styled.p<{ $color: string }>`
+  color: ${p => p.$color};
+`

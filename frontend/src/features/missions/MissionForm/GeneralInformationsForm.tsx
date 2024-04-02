@@ -8,7 +8,6 @@ import {
   FormikTextInput,
   FormikTextarea,
   MultiRadio,
-  useNewWindow,
   THEME
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
@@ -40,7 +39,6 @@ export function GeneralInformationsForm({
 }: {
   missionCompletion?: FrontCompletionStatus
 }) {
-  const { newWindowContainerRef } = useNewWindow()
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
   const { errors, setFieldValue, values } = useFormikContext<Mission>()
@@ -104,7 +102,6 @@ export function GeneralInformationsForm({
               />
 
               <StyledFormikDatePicker
-                baseContainer={newWindowContainerRef.current}
                 data-cy="mission-end-date-time"
                 isCompact
                 isEndDate
@@ -199,6 +196,7 @@ const StyledContainer = styled.div`
 const StyledFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 16px;
   max-width: 484px;
   gap: 24px;
 `

@@ -91,7 +91,7 @@ export function MissionForm({
   const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty ?? false, [id, selectedMissions])
 
   useSyncFormValuesWithRedux(isAutoSaveEnabled)
-  const missionCompletion = useMissionAndActionsCompletion()
+  const { missionCompletionFrontStatus } = useMissionAndActionsCompletion()
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
 
@@ -292,7 +292,7 @@ export function MissionForm({
       />
       <Wrapper>
         <FirstColumn>
-          <GeneralInformationsForm missionCompletion={missionCompletion} />
+          <GeneralInformationsForm missionCompletion={missionCompletionFrontStatus} />
         </FirstColumn>
         <SecondColumn>
           <ActionsTimeLine

@@ -4,14 +4,17 @@ import {
   FrontCompletionStatus,
   getMissionStatus,
   MissionStatusEnum,
+  type EnvActionControl,
+  type EnvActionSurveillance,
   type Mission
 } from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
-import { useFormikContext } from 'formik'
-import { useEffect, useMemo } from 'react'
+import { useFormikContext, type FormikErrors } from 'formik'
+import { useEffect, useMemo, useState } from 'react'
 
 export function useMissionAndActionsCompletion() {
-  const { setFieldValue, values } = useFormikContext<Mission>()
+  const { errors, setFieldValue, values } = useFormikContext<Mission>()
+  const [actionsMissingFields, setActionsMissingFields] = useState({})
   const missionStatus = getMissionStatus(values)
   const hasAtLeastOnUncompletedAction = values.envActions.find(
     action =>
@@ -20,12 +23,7 @@ export function useMissionAndActionsCompletion() {
   )
 
   const isGeneralInformationsUncomplete =
-    !values.startDateTimeUtc ||
-    !values.endDateTimeUtc ||
-    !values.missionTypes ||
-    !values.openBy ||
-    !values.controlUnits ||
-    !values.controlUnits[0]?.id
+    errors.startDateTimeUtc ?? errors.endDateTimeUtc ?? errors.missionTypes ?? errors.openBy ?? errors.controlUnits
 
   const missionCompletion =
     hasAtLeastOnUncompletedAction || isGeneralInformationsUncomplete
@@ -53,47 +51,81 @@ export function useMissionAndActionsCompletion() {
   }, [missionCompletion, missionStatus])
 
   useEffect(() => {
-    values.envActions.forEach((action, index) => {
-      if (action.actionType === ActionTypeEnum.CONTROL) {
-        const isControlValid =
-          action.actionStartDateTimeUtc &&
-          action.actionNumberOfControls &&
-          action.actionTargetType &&
-          action.controlPlans.length > 0 &&
-          action.controlPlans[0]?.themeId &&
-          action.controlPlans[0]?.subThemeIds.length > 0 &&
-          action.geom &&
-          action.geom.coordinates.length > 0
+    const constrolOrSuveillanceActions = values.envActions.filter(
+      action => action.actionType === ActionTypeEnum.CONTROL || action.actionType === ActionTypeEnum.SURVEILLANCE
+    ) as (EnvActionControl | EnvActionSurveillance)[]
 
-        const isVehiculeTypeValid =
-          !action.actionTargetType || action.actionTargetType === TargetTypeEnum.VEHICLE ? action.vehicleType : true
+    const missingFieldsWithActionId = constrolOrSuveillanceActions.reduce(
+      (actionsMissingFieldsCollection, action, index) => {
+        const actionErrors = errors.envActions
+          ? (errors.envActions[index] as FormikErrors<EnvActionControl | EnvActionSurveillance>)
+          : undefined
 
-        if (isControlValid && isVehiculeTypeValid && action.completion === CompletionStatus.TO_COMPLETE) {
+        // common required fields
+        const isGeomValid = !!(action.geom && action.geom.coordinates.length > 0)
+        const isStartDateValid = !!(action.actionStartDateTimeUtc && !actionErrors?.actionStartDateTimeUtc)
+        const isSubThemeValid = !!(
+          action.controlPlans?.length > 0 &&
+          action.controlPlans[0] &&
+          action.controlPlans[0]?.subThemeIds?.length > 0
+        )
+        const isThemeValid = !!(action.controlPlans?.length > 0 && action.controlPlans[0]?.themeId)
+
+        const commonMissingActionFields: Array<Boolean> = [
+          !isStartDateValid,
+          !isThemeValid,
+          !isSubThemeValid,
+          !isGeomValid
+        ]
+
+        let actionSpecificMissingFields: Array<Boolean> = []
+        // Control Action
+        if (action.actionType === ActionTypeEnum.CONTROL) {
+          const isNumberOfControlsValid = !!(action.actionNumberOfControls && action.actionNumberOfControls > 0)
+          const isTargetTypeValid = !!action.actionTargetType
+          const isVehicleTypeValid =
+            action.actionTargetType && action.actionTargetType === TargetTypeEnum.VEHICLE ? !!action.vehicleType : true
+
+          actionSpecificMissingFields = [
+            ...commonMissingActionFields,
+            !isNumberOfControlsValid,
+            !isTargetTypeValid,
+            !isVehicleTypeValid
+          ]
+        }
+
+        // Surveillance action
+        if (action.actionType === ActionTypeEnum.SURVEILLANCE) {
+          const isEndDateValid = !!(action.actionEndDateTimeUtc && !actionErrors?.actionEndDateTimeUtc)
+          actionSpecificMissingFields = [...commonMissingActionFields, !isEndDateValid]
+        }
+
+        const missingFieldsLength = actionSpecificMissingFields.filter(missingField => missingField).length
+        const icActionValid = missingFieldsLength === 0
+        if (icActionValid && action.completion === CompletionStatus.TO_COMPLETE) {
           setFieldValue(`envActions[${index}].completion`, CompletionStatus.COMPLETED)
         }
-        if ((!isControlValid || !isVehiculeTypeValid) && action.completion === CompletionStatus.COMPLETED) {
+
+        if (!icActionValid && action.completion === CompletionStatus.COMPLETED) {
           setFieldValue(`envActions[${index}].completion`, CompletionStatus.TO_COMPLETE)
         }
-      } else if (action.actionType === ActionTypeEnum.SURVEILLANCE) {
-        const isSurveillanceValid =
-          action.actionStartDateTimeUtc &&
-          action.actionEndDateTimeUtc &&
-          action.controlPlans.length > 0 &&
-          action.controlPlans[0]?.themeId &&
-          action.controlPlans[0]?.subThemeIds.length > 0 &&
-          action.geom &&
-          action.geom.coordinates.length > 0
 
-        if (isSurveillanceValid && action.completion === CompletionStatus.TO_COMPLETE) {
-          setFieldValue(`envActions[${index}].completion`, CompletionStatus.COMPLETED)
+        return {
+          ...actionsMissingFieldsCollection,
+          [action.id]: missingFieldsLength
         }
+      },
+      {}
+    )
 
-        if (!isSurveillanceValid && action.completion === CompletionStatus.COMPLETED) {
-          setFieldValue(`envActions[${index}].completion`, CompletionStatus.TO_COMPLETE)
-        }
-      }
-    })
-  }, [values.envActions, missionCompletion, setFieldValue])
+    setActionsMissingFields(missingFieldsWithActionId)
 
-  return missionCompletionFrontStatus
+    // we don't need to listen the actionsMissingFields updated
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values.envActions, missionCompletion, setFieldValue, errors.envActions])
+
+  return {
+    actionsMissingFields,
+    missionCompletionFrontStatus
+  }
 }

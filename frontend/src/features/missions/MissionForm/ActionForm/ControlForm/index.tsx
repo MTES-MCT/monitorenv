@@ -32,11 +32,13 @@ import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
+import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
 import { Separator } from '../../style'
+import { MissingFieldsText } from '../MissingFieldsText'
 import {
   ActionThemes,
   ActionTitle,
-  FormBody,
+  ActionFormBody,
   Header,
   HeaderButtons,
   StyledDeleteIconButton,
@@ -57,8 +59,10 @@ export function ControlForm({
     errors,
     setFieldValue,
     setValues,
-    values: { attachedReportings, envActions, startDateTimeUtc }
+    values: { attachedReportings, endDateTimeUtc, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionControl>>()
+
+  const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
   const currentAction = envActions[envActionIndex]
@@ -233,7 +237,12 @@ export function ControlForm({
         </HeaderButtons>
       </Header>
       <Separator />
-      <FormBody>
+
+      <ActionFormBody>
+        <MissingFieldsText
+          missionEndDate={endDateTimeUtc}
+          totalMissingFields={actionsMissingFields[currentActionIndex]}
+        />
         <div>
           <StyledToggle>
             <Toggle
@@ -339,7 +348,7 @@ export function ControlForm({
           name={`envActions[${envActionIndex}].observations`}
         />
         <OtherControlTypesForm currentActionIndex={envActionIndex} />
-      </FormBody>
+      </ActionFormBody>
     </>
   )
 }

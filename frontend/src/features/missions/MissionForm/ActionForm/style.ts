@@ -20,12 +20,11 @@ export const StyledDeleteIconButton = styled(IconButton)`
     color: ${p => p.theme.color.maximumRed};
   }
 `
-export const FormBody = styled.div`
+export const ActionFormBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding-bottom: 48px;
-  padding-top: 12px:
 `
 
 export const ActionTitle = styled.h2`

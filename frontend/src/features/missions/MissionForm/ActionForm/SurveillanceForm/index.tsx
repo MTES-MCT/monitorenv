@@ -31,11 +31,13 @@ import {
 } from '../../../../../domain/entities/missions'
 import { dateDifferenceInHours } from '../../../../../utils/dateDifferenceInHours'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
+import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
 import { Separator } from '../../style'
+import { MissingFieldsText } from '../MissingFieldsText'
 import {
   ActionThemes,
   ActionTitle,
-  FormBody,
+  ActionFormBody,
   Header,
   HeaderButtons,
   StyledDeleteIconButton,
@@ -47,8 +49,10 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const {
     errors,
     setFieldValue,
-    values: { attachedReportings, envActions, startDateTimeUtc }
+    values: { attachedReportings, endDateTimeUtc, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionSurveillance>>()
+
+  const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const [actionsFields] = useField<EnvAction[]>('envActions')
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
@@ -185,7 +189,11 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </HeaderButtons>
       </Header>
       <Separator />
-      <FormBody>
+      <ActionFormBody>
+        <MissingFieldsText
+          missionEndDate={endDateTimeUtc}
+          totalMissingFields={actionsMissingFields[currentActionIndex]}
+        />
         <div>
           <StyledToggle>
             <Toggle
@@ -274,7 +282,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </FlexSelectorWrapper>
 
         <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
-      </FormBody>
+      </ActionFormBody>
     </>
   )
 }

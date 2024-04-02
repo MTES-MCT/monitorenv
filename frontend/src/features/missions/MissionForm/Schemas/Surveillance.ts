@@ -51,9 +51,9 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
-      geom: shouldUseAlternateValidationInTestEnvironment
+      geom: /* shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
-        : Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
+        : */ Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
       id: Yup.string().required()
     })
     .required()

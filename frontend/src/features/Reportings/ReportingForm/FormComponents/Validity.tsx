@@ -1,20 +1,11 @@
-import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs, useNewWindow } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
-import { ReportingContext } from '../../../../domain/shared_slices/Global'
 
-export function Validity({
-  mustIncreaseValidity,
-  reportingContext
-}: {
-  mustIncreaseValidity: boolean
-  reportingContext: ReportingContext
-}) {
-  const { newWindowContainerRef } = useNewWindow()
-  const ref = useRef<HTMLDivElement>(null)
+export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boolean }) {
   const { values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
@@ -38,15 +29,7 @@ export function Validity({
   return (
     <StyledValidityContainer>
       <div>
-        <FormikDatePicker
-          baseContainer={reportingContext === ReportingContext.MAP ? ref.current : newWindowContainerRef.current}
-          isCompact
-          isHistorical
-          isStringDate
-          label="Date et heure (UTC)"
-          name="createdAt"
-          withTime
-        />
+        <FormikDatePicker isCompact isHistorical isStringDate label="Date et heure (UTC)" name="createdAt" withTime />
         <StyledFormikNumberInput label="Validité (h)" min={1} name="validityTime" />
       </div>
 
