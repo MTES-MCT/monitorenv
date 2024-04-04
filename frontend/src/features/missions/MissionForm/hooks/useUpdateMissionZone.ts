@@ -8,7 +8,7 @@ import { isEqual } from 'lodash'
 import { Feature } from 'ol'
 import { MultiPolygon } from 'ol/geom'
 import Polygon, { circular } from 'ol/geom/Polygon'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 function computeCircleZone(coordinates) {
   const circleGeometry = new Feature({
@@ -19,7 +19,19 @@ function computeCircleZone(coordinates) {
 }
 
 export const useUpdateMissionZone = sortedActions => {
-  const firstAction = sortedActions[0]
+  const filteredActions = useMemo(
+    () =>
+      sortedActions.filter(
+        action =>
+          action.actionSource === ActionSource.MONITORFISH ||
+          (action.actionSource === ActionSource.MONITORENV &&
+            (action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL))
+      ),
+    [sortedActions]
+  )
+
+  const firstAction = filteredActions[0]
+
   const listener = useAppSelector(state => state.draw.listener)
   const { setFieldValue, values } = useFormikContext<Mission>()
   const [actionGeom, setActionGeom] = useState(values.geom && firstAction?.geom ? firstAction?.geom : undefined)
@@ -69,10 +81,7 @@ export const useUpdateMissionZone = sortedActions => {
         setFieldValue('geom', firstAction.geom)
       }
 
-      if (
-        !values.isGeometryComputedFromControls &&
-        (firstAction?.actionType === ActionTypeEnum.CONTROL || firstAction?.actionType === ActionTypeEnum.SURVEILLANCE)
-      ) {
+      if (!values.isGeometryComputedFromControls) {
         setFieldValue('isGeometryComputedFromControls', true)
       }
 
