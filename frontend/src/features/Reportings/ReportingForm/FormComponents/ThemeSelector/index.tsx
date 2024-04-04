@@ -8,7 +8,7 @@ import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlan
 import { updateTheme } from '../../formikUseCases/updateReportingThemes'
 
 export function ThemeSelector({ isLight = true, label, name }) {
-  const [currentThemeField] = useField<number | undefined>(name)
+  const [currentThemeField, currentThemeMeta] = useField<number | undefined>(name)
   const { setFieldValue, values } = useFormikContext<Reporting>()
 
   const year = customDayjs(values.createdAt ?? new Date().toISOString()).year()
@@ -37,7 +37,7 @@ export function ThemeSelector({ isLight = true, label, name }) {
         <Select
           key={name}
           data-cy="reporting-theme-selector"
-          isErrorMessageHidden
+          error={currentThemeMeta.error}
           isLight={isLight}
           label={label}
           name={name}

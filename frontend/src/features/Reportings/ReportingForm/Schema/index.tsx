@@ -43,6 +43,12 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
 
       return schema.nullable()
     }),
-    sourceType: Yup.string().nullable().required('Veuillez définir une source au signalement')
+    sourceType: Yup.string().nullable().required('Veuillez définir une source au signalement'),
+    subThemeIds: Yup.array()
+      .of(Yup.number().required())
+      .ensure()
+      .required()
+      .min(1, 'Veuillez définir les sous-thématiques du signalement'),
+    themeId: Yup.number().nullable().required('Veuillez définir la thématique du signalement')
   })
   .required()

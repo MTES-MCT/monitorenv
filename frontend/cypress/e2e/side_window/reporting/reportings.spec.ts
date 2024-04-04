@@ -27,6 +27,10 @@ context('Reportings', () => {
 
     cy.get('.rs-radio').find('label').contains('Autre').click()
     cy.fill('Nom, société ...', 'Reporting dupliqué')
+
+    cy.fill('Thématique du signalement', 'Culture marine')
+    cy.fill('Sous-thématique du signalement', ['Implantation'])
+
     cy.fill('Saisi par', 'CDA')
 
     cy.clickButton('Valider le signalement')
