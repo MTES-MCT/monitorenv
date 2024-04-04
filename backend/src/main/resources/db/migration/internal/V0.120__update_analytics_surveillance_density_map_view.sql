@@ -14,6 +14,7 @@ WITH surveillance_geoms AS (
     ON m.id = a.mission_id
     WHERE
         action_type = 'SURVEILLANCE' AND
+        ST_Area(a.geom) > 0 AND
         action_end_datetime_utc > action_start_datetime_utc
 ),
 
