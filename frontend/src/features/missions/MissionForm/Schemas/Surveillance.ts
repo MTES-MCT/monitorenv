@@ -20,11 +20,20 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
         .nullable()
         .test({
           message: 'La date de fin doit être postérieure à celle de début de mission',
-          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+          test: value => {
+            if (!ctx.from) {
+              return true
+            }
+
+            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+          }
         })
         .test({
           message: 'La date de fin doit être antérieure à celle de fin de mission',
           test: value => {
+            if (!ctx.from) {
+              return true
+            }
             if (!ctx.from[1].value.endDateTimeUtc) {
               return true
             }
@@ -38,11 +47,20 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
         .required('_')
         .test({
           message: 'La date de début doit être postérieure à celle de début de mission',
-          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+          test: value => {
+            if (!ctx.from[1]) {
+              return true
+            }
+
+            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+          }
         })
         .test({
           message: 'La date de début doit être antérieure à celle de fin de mission',
           test: value => {
+            if (!ctx.from) {
+              return true
+            }
             if (!ctx.from[1].value.endDateTimeUtc) {
               return true
             }
@@ -51,9 +69,9 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
-      geom: /* shouldUseAlternateValidationInTestEnvironment
+      geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
-        : */ Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
+        : Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
       id: Yup.string().required()
     })
     .required()
@@ -66,11 +84,20 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
         .required('_')
         .test({
           message: 'La date de fin doit être postérieure à celle de début de mission',
-          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+          test: value => {
+            if (!ctx.from) {
+              return true
+            }
+
+            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+          }
         })
         .test({
           message: 'La date de fin doit être antérieure à celle de fin de mission',
           test: value => {
+            if (!ctx.from) {
+              return true
+            }
             if (!ctx.from[1].value.endDateTimeUtc) {
               return true
             }
@@ -84,11 +111,20 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
         .required('_')
         .test({
           message: 'La date de début doit être postérieure à celle de début de mission',
-          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+          test: value => {
+            if (!ctx.from) {
+              return true
+            }
+
+            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+          }
         })
         .test({
           message: 'La date de début doit être antérieure à celle de fin de mission',
           test: value => {
+            if (!ctx.from) {
+              return true
+            }
             if (!ctx.from[1].value.endDateTimeUtc) {
               return true
             }

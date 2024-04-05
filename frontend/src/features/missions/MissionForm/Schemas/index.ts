@@ -60,7 +60,7 @@ const NewEnvActionSchema = Yup.lazy((value, context) => {
   return Yup.object().required()
 })
 
-const ClosedEnvActionSchema = Yup.lazy((value, context) => {
+export const ClosedEnvActionSchema = Yup.lazy((value, context) => {
   if (value.actionType === ActionTypeEnum.CONTROL) {
     return getClosedEnvActionControlSchema(context)
   }

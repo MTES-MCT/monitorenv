@@ -18,13 +18,14 @@ import {
   Button
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { SurveillanceZonePicker } from './SurveillanceZonePicker'
 import { CONTROL_PLAN_INIT } from '../../../../../domain/entities/controlPlan'
 import {
   ActionTypeEnum,
+  CompletionStatus,
   type EnvAction,
   type EnvActionSurveillance,
   type Mission
@@ -164,6 +165,18 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const updateEndDateTime = (date: string | undefined) => {
     setFieldValue(`envActions[${envActionIndex}].actionEndDateTimeUtc`, date)
   }
+
+  useEffect(() => {
+    if (actionsMissingFields[currentActionIndex] === 0 && currentAction?.completion === CompletionStatus.TO_COMPLETE) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.COMPLETED)
+
+      return
+    }
+
+    if (actionsMissingFields[currentActionIndex] > 0 && currentAction?.completion === CompletionStatus.COMPLETED) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.TO_COMPLETE)
+    }
+  }, [actionsMissingFields, setFieldValue, currentActionIndex, currentAction?.completion, envActionIndex])
 
   return (
     <>

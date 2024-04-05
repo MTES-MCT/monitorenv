@@ -19,14 +19,19 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
 import { MultiPointPicker } from './MultiPointPicker'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domain/entities/controlPlan'
-import { type Mission, type EnvActionControl, ActionTypeEnum } from '../../../../../domain/entities/missions'
+import {
+  type Mission,
+  type EnvActionControl,
+  ActionTypeEnum,
+  CompletionStatus
+} from '../../../../../domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
@@ -213,6 +218,18 @@ export function ControlForm({
     }
   }
 
+  useEffect(() => {
+    if (actionsMissingFields[currentActionIndex] === 0 && currentAction?.completion === CompletionStatus.TO_COMPLETE) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.COMPLETED)
+
+      return
+    }
+
+    if (actionsMissingFields[currentActionIndex] > 0 && currentAction?.completion === CompletionStatus.COMPLETED) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.TO_COMPLETE)
+    }
+  }, [actionsMissingFields, setFieldValue, currentActionIndex, currentAction?.completion, envActionIndex])
+
   return (
     <>
       <Header>
@@ -304,7 +321,7 @@ export function ControlForm({
             isErrorMessageHidden
             isLight
             isRequired
-            label="Nombre total de contrôles"
+            label="Nb total de contrôles"
             min={1}
             name={`envActions.${envActionIndex}.actionNumberOfControls`}
           />
