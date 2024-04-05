@@ -72,3 +72,20 @@ export const Field = styled.tr`
   background: none;
   line-height: 0.5em;
 `
+
+export const NoValue = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-weight: 300;
+  line-height: normal;
+  font-size: 13px;
+  display: block;
+`
+export const Zone = styled.div`
+  margin: 0;
+  padding: 10px 5px 9px 16px;
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+`
+export const Body = styled.tbody``

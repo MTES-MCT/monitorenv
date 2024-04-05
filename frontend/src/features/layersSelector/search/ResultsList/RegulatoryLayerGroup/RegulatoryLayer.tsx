@@ -12,12 +12,9 @@ import {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers
 } from '../../../../../domain/shared_slices/Regulatory'
-import {
-  closeRegulatoryMetadataPanel,
-  openRegulatoryMetadataPanel
-} from '../../../../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { closeMetadataPanel, openRegulatoryMetadataPanel } from '../../../metadataPanel/slice'
 import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
@@ -30,11 +27,11 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
       layer: result?.currentData?.entities[layerId]
     })
   })
-  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
-  const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
+  const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.metadataPanel)
 
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
-  const metadataIsShown = regulatoryMetadataPanelIsOpen && layerId === regulatoryMetadataLayerId
+  const metadataIsShown =
+    metadataPanelIsOpen && metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && layerId === metadataLayerId
 
   const ref = createRef<HTMLSpanElement>()
 
@@ -49,7 +46,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
 
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {
-      dispatch(closeRegulatoryMetadataPanel())
+      dispatch(closeMetadataPanel())
     } else {
       dispatch(openRegulatoryMetadataPanel(layerId))
     }
@@ -68,10 +65,10 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
   }
 
   useEffect(() => {
-    if (layerId === regulatoryMetadataLayerId && ref?.current) {
+    if (layerId === metadataLayerId && ref?.current) {
       ref.current.scrollIntoView(false)
     }
-  }, [layerId, regulatoryMetadataLayerId, ref])
+  }, [layerId, metadataLayerId, ref])
 
   return (
     <LayerSelector.Layer

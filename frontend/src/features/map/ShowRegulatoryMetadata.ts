@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
 import { Layers } from '../../domain/entities/layers/constants'
-import { openRegulatoryMetadataPanel } from '../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { openRegulatoryMetadataPanel } from '../layersSelector/metadataPanel/slice'
 
 import type { BaseMapChildrenProps } from './BaseMap'
 

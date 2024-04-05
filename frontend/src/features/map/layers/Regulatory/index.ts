@@ -1,3 +1,4 @@
+import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
@@ -18,7 +19,7 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
-  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
   function getVectorSource() {

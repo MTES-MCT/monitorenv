@@ -1,6 +1,4 @@
-import styled from 'styled-components'
-
-import { Key, Value, Fields, Field } from './RegulatoryMetadata.style'
+import { Body, Key, Value, Fields, Field, Zone, NoValue } from '../MetadataPanel.style'
 
 export function Identification({ entity_name, facade, thematique, type }) {
   return (
@@ -28,22 +26,3 @@ export function Identification({ entity_name, facade, thematique, type }) {
     </Zone>
   )
 }
-
-const NoValue = styled.span`
-  color: ${p => p.theme.color.slateGray};
-  font-weight: 300;
-  line-height: normal;
-  font-size: 13px;
-  display: block;
-`
-
-const Body = styled.tbody``
-
-const Zone = styled.div`
-  margin: 0;
-  padding: 10px 5px 9px 16px;
-  text-align: left;
-  display: flex;
-  flex-wrap: wrap;
-  border-bottom: 1px solid ${p => p.theme.color.lightGray};
-`
