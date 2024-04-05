@@ -4,9 +4,12 @@ md5(
   coalesce(geom::text,'')||
   coalesce(mpa_oriname,'')||
   coalesce(des_desigfr,'')||
-  coalesce(mpa_type,'')
+  coalesce(mpa_type,'') ||
+  coalesce(ref_reg,'')||
+  coalesce(url_legicem,'')
   ) as cacem_row_hash
-	FROM prod."Aires marines protégées"
+	FROM 
+    prod."Aires marines protégées"
   WHERE
     geom IS NOT NULL 
     AND st_isvalid(geom)
