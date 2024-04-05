@@ -1,7 +1,7 @@
 import { useAppSelector } from '@hooks/useAppSelector'
 
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
-import { hideAmpLayer, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
+import { hideAmpLayer, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/Amp'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { closeMetadataPanel, getMetadataIsOpenForAMPLayerId, openAMPMetadataPanel } from '../metadataPanel/slice'
 import { MyLayerZone } from '../utils/MyLayerZone'

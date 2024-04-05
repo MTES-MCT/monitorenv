@@ -4,23 +4,21 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
-  key: 'selectedAmp',
+  key: 'amp',
   storage,
   whitelist: ['selectedAmpLayerIds', 'showedAmpLayerIds']
 }
 
-type SelectedAmpSliceState = {
-  selectedAmpLayerId: number | undefined
+type AmpSliceState = {
   selectedAmpLayerIds: number[]
   showedAmpLayerIds: number[]
 }
-const initialState: SelectedAmpSliceState = {
-  selectedAmpLayerId: undefined,
+const initialState: AmpSliceState = {
   selectedAmpLayerIds: [],
   showedAmpLayerIds: []
 }
 
-const selectedAmpSlice = createSlice({
+const ampSlice = createSlice({
   initialState,
   name: 'amp',
   reducers: {
@@ -66,9 +64,6 @@ const selectedAmpSlice = createSlice({
       }
     },
 
-    setSelectedAmpLayerId(state, action) {
-      state.selectedAmpLayerId = action.payload
-    },
     /**
      * show AmpLayer
      * @memberOf AmpReducer
@@ -81,13 +76,7 @@ const selectedAmpSlice = createSlice({
   }
 })
 
-export const {
-  addAmpZonesToMyLayers,
-  hideAmpLayer,
-  hideAmpLayers,
-  removeAmpZonesFromMyLayers,
-  setSelectedAmpLayerId,
-  showAmpLayer
-} = selectedAmpSlice.actions
+export const { addAmpZonesToMyLayers, hideAmpLayer, hideAmpLayers, removeAmpZonesFromMyLayers, showAmpLayer } =
+  ampSlice.actions
 
-export const selectedAmpSlicePersistedReducer = persistReducer(persistConfig, selectedAmpSlice.reducer)
+export const ampSlicePersistedReducer = persistReducer(persistConfig, ampSlice.reducer)

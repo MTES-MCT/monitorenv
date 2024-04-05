@@ -69,7 +69,7 @@ export function MyLayerZone({
   }
 
   return (
-    <LayerSelector.Layer $selected={metadataIsShown}>
+    <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
       <LayerLegend layerType={layerType} name={name} type={type} />
       <LayerSelector.Name onClick={handleClickOnLayerName} title={displayedName}>
         {displayedName}

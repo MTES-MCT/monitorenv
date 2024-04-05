@@ -14,26 +14,30 @@ import {
 } from '../../../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { closeMetadataPanel, openRegulatoryMetadataPanel } from '../../../metadataPanel/slice'
+import {
+  closeMetadataPanel,
+  getDisplayedMetadataRegulatoryLayerId,
+  getMetadataIsOpenForRegulatoryLayerId,
+  openRegulatoryMetadataPanel
+} from '../../../metadataPanel/slice'
 import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useAppDispatch()
+  const ref = createRef<HTMLSpanElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
       layer: result?.currentData?.entities[layerId]
     })
   })
-  const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.metadataPanel)
+  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
-  const metadataIsShown =
-    metadataPanelIsOpen && metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && layerId === metadataLayerId
-
-  const ref = createRef<HTMLSpanElement>()
+  const metadataIsShown = useAppSelector(state => getMetadataIsOpenForRegulatoryLayerId(state, layerId))
 
   const handleSelectZone = e => {
     e.stopPropagation()
@@ -44,7 +48,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
     }
   }
 
-  const toggleRegulatoryZoneMetadata = () => {
+  const toggleZoneMetadata = () => {
     if (metadataIsShown) {
       dispatch(closeMetadataPanel())
     } else {
@@ -65,17 +69,17 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
   }
 
   useEffect(() => {
-    if (layerId === metadataLayerId && ref?.current) {
+    if (layerId === regulatoryMetadataLayerId && ref?.current) {
       ref.current.scrollIntoView(false)
     }
-  }, [layerId, metadataLayerId, ref])
+  }, [layerId, regulatoryMetadataLayerId, ref])
 
   return (
     <LayerSelector.Layer
       ref={ref}
       $metadataIsShown={metadataIsShown}
       data-cy="regulatory-result-zone"
-      onClick={toggleRegulatoryZoneMetadata}
+      onClick={toggleZoneMetadata}
     >
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
