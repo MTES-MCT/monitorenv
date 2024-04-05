@@ -1,4 +1,4 @@
-import { Accent, IconButton, Icon, Size, TextInput } from '@mtes-mct/monitor-ui'
+import { Accent, IconButton, Icon, Size, TextInput, Tag, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function SearchInput({
@@ -26,7 +26,11 @@ export function SearchInput({
         value={globalSearchText}
       />
       <div>
-        {!displayRegFilters && numberOfFilters > 0 && <NumberOfFilteredReg>{numberOfFilters}</NumberOfFilteredReg>}
+        {!displayRegFilters && numberOfFilters > 0 && (
+          <NumberOfFilters backgroundColor={THEME.color.maximumRed} color={THEME.color.white}>
+            {numberOfFilters}
+          </NumberOfFilters>
+        )}
         <IconButton
           accent={Accent.PRIMARY}
           className={displayRegFilters ? '_active' : ''}
@@ -51,16 +55,12 @@ const StyledTextInput = styled(TextInput)`
   }
 `
 
-const NumberOfFilteredReg = styled.span`
-  background: ${p => p.theme.color.maximumRed};
-  color: ${p => p.theme.color.white};
+const NumberOfFilters = styled(Tag)`
   position: absolute;
   top: -5px;
   right: -5px;
   z-index: 100;
-  border-radius: 8px;
-  height: 16px;
   font-size: 12px;
-  min-width: 16px;
-  line-height: 16px;
+  line-height: 13px;
+  padding: 0px 5px 1px;
 `
