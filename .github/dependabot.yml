@@ -10,7 +10,7 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "[Tech] "
-    labels: ["tech. enhancement"]
+    labels: ["tech. enhancement", "dependencies"]
 
   - package-ecosystem: "gradle"
     directory: "/backend"
@@ -21,7 +21,7 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "[Tech] "
-    labels: ["tech. enhancement"]
+    labels: ["tech. enhancement", "dependencies"]
 
   - package-ecosystem: "pip"
     directory: "/datascience"
@@ -31,7 +31,7 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "[Tech] "
-    labels: ["tech. enhancement"]
+    labels: ["tech. enhancement", "dependencies"]
     # Disable all dependencies update
     # TODO Re-enable once Env is migrated to Poetry-only.
     # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#open-pull-requests-limit
@@ -47,4 +47,4 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "[Tech] "
-    labels: ["tech. enhancement"]
+    labels: ["tech. enhancement", "dependencies"]
