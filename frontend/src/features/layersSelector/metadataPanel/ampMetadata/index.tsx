@@ -44,10 +44,6 @@ export function AmpMetadata() {
               onClick={onCloseIconClicked}
             />
           </Header>
-          <Warning>
-            <Icon.Warning size={30} />
-            Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
-          </Warning>
           <Content>
             <Zone>
               <Fields>
@@ -109,17 +105,6 @@ const Content = styled.div`
   background: ${p => p.theme.color.white};
   overflow-y: auto;
   max-height: 72vh;
-`
-
-const Warning = styled.div`
-  align-items: center;
-  background: ${p => p.theme.color.goldenPoppy};
-  color: ${p => p.theme.color.gunMetal};
-  display: flex;
-  font: normal normal bold 13px/18px Marianne;
-  gap: 16px;
-  padding: 10px;
-  text-align: left;
 `
 
 const CenteredFingerprintSpinner = styled(FingerprintSpinner)`
