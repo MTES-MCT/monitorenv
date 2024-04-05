@@ -6,7 +6,15 @@ import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administ
 
 type LayerTypeEnum = MonitorEnvLayers.AMP | MonitorEnvLayers.REGULATORY_ENV
 
-export function LayerLegend({ layerType, name, type }: { layerType: LayerTypeEnum; name: string; type: string }) {
+export function LayerLegend({
+  layerType,
+  name,
+  type
+}: {
+  layerType: LayerTypeEnum
+  name: string | null
+  type: string | null
+}) {
   switch (layerType) {
     case MonitorEnvLayers.AMP:
       return <Rectangle $vectorLayerColor={getAMPColorWithAlpha(type, name)} />

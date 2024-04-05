@@ -145,11 +145,5 @@ const getStyle = (color, metadataIsShowed) =>
     })
   })
 
-/**
- *
- * @param {string} group
- * @param {string} layername
- * @returns
- */
-export const getRegulatoryEnvColorWithAlpha = (group = '', layername = '') =>
-  getColorWithAlpha(stringToColorInGroup(`${group}`, `${layername}`), 0.6)
+export const getRegulatoryEnvColorWithAlpha = (type: string | null = '', name: string | null = '') =>
+  getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`), 0.6)
