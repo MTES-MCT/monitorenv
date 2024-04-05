@@ -107,7 +107,7 @@ export function SideWindow() {
                 )}
               </NewWindowContext.Provider>
 
-              <ToastContainer containerId="sideWindow" enableMultiContainer />
+              <ToastContainer containerId="sideWindow" />
             </>
           )}
         </Wrapper>
