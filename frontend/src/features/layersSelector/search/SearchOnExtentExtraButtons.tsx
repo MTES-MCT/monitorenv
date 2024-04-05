@@ -148,6 +148,7 @@ const ExtraButtonsWrapper = styled.div<{
   isVisible: boolean
   shouldReloadSearchOnExtent: boolean
 }>`
+  display: ${p => (p.isVisible ? 'flex' : 'none')};
   position: fixed;
   top: 15px;
   left: ${p => {
