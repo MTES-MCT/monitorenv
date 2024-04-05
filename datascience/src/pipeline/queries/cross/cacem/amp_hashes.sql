@@ -1,16 +1,15 @@
-SELECT amp.id,
+SELECT id,
 md5(
-  coalesce(amp.id::text,'')||
+  coalesce(id::text,'')||
   coalesce(geom::text,'')||
   coalesce(mpa_oriname,'')||
   coalesce(des_desigfr,'')||
   coalesce(mpa_type,'') ||
-  coalesce(mpa_type_cacem,'')||
+  coalesce(ref_reg,'')||
   coalesce(url_legicem,'')
   ) as cacem_row_hash
 	FROM 
-    prod."Aires marines protégées" amp
-    LEFT OUTER JOIN prod.amp_metadata_cacem ON (amp.id = amp_metadata_cacem.id)
+    prod."Aires marines protégées"
   WHERE
     geom IS NOT NULL 
     AND st_isvalid(geom)
