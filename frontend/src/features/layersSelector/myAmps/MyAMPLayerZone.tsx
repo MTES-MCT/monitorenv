@@ -17,7 +17,7 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
 
   const displayedName = amp?.type?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
-  const toggleRegulatoryZoneMetadata = () => {
+  const toggleAmpZoneMetadata = () => {
     if (metadataIsShown) {
       dispatch(closeMetadataPanel())
     } else {
@@ -37,7 +37,7 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
       name={amp.name}
       removeZone={handleRemoveZone}
       showLayer={() => dispatch(showAmpLayer(amp.id))}
-      toggleZoneMetadata={toggleRegulatoryZoneMetadata}
+      toggleZoneMetadata={toggleAmpZoneMetadata}
       type={amp.type}
     />
   )

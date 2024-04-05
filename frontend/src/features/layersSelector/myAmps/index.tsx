@@ -3,6 +3,7 @@ import { toggleMyAmps } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
+import { closeMetadataPanel } from '../metadataPanel/slice'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function AmpLayers() {
@@ -13,6 +14,9 @@ export function AmpLayers() {
 
   const onTitleClicked = () => {
     dispatch(toggleMyAmps())
+    if (myAmpsIsOpen) {
+      dispatch(closeMetadataPanel())
+    }
   }
 
   return (
