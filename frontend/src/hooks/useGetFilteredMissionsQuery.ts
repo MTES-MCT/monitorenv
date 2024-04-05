@@ -1,3 +1,4 @@
+import { isMissionPartOfSelectedCompletionStatus } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedCompletionStatus'
 import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
@@ -11,8 +12,8 @@ const TWO_MINUTES = 2 * 60 * 1000
 export const useGetFilteredMissionsQuery = () => {
   const {
     selectedAdministrationNames,
+    selectedCompletionStatus,
     selectedControlUnitIds,
-    selectedMissionSource,
     selectedMissionTypes,
     selectedSeaFronts,
     selectedStatuses,
@@ -27,7 +28,6 @@ export const useGetFilteredMissionsQuery = () => {
     isLoading
   } = useGetMissionsQuery(
     {
-      missionSource: selectedMissionSource,
       missionStatus: selectedStatuses,
       missionTypes: selectedMissionTypes,
       seaFronts: selectedSeaFronts,
@@ -54,9 +54,10 @@ export const useGetFilteredMissionsQuery = () => {
       mission =>
         isMissionPartOfSelectedAdministrationNames(mission, selectedAdministrationNames) &&
         isMissionPartOfSelectedControlUnitIds(mission, selectedControlUnitIds) &&
-        isMissionPartOfSelectedControlPlans(mission, selectedThemes)
+        isMissionPartOfSelectedControlPlans(mission, selectedThemes) &&
+        isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus)
     )
-  }, [missions, selectedAdministrationNames, selectedControlUnitIds, selectedThemes])
+  }, [missions, selectedAdministrationNames, selectedControlUnitIds, selectedThemes, selectedCompletionStatus])
 
   return { isError, isFetching, isLoading, missions: filteredMissions }
 }

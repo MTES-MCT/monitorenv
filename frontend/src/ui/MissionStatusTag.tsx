@@ -17,7 +17,6 @@ export function MissionStatusTag({ status }: { status: string }) {
         </StatusTag>
       )
     case missionStatusLabels.ENDED.code:
-    case missionStatusLabels.CLOSED.code: // TODO: remove this line when the CLOSED status is removed
       return (
         <StatusTag accent={Accent.PRIMARY} Icon={Icon.Confirm} iconColor={THEME.color.charcoal}>
           {missionStatusLabels.ENDED.libelle}

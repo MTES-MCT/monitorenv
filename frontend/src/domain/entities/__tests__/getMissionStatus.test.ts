@@ -14,17 +14,15 @@ describe('getMissionStatus()', () => {
     [tomorrow, yesterday, false, 'UPCOMING'],
     [tomorrow, tomorrow, false, 'UPCOMING']
   ]
-  const closedCases: Array<[string | undefined, string | undefined, boolean | undefined, string]> = openCases.map(
-    ([startDateTimeUtc, endDateTimeUtc]) => [startDateTimeUtc, endDateTimeUtc, true, 'CLOSED']
-  )
+
   const errorCases: Array<[string | undefined, string | undefined, boolean | undefined, string]> = openCases.map(
     ([, endDateTimeUtc]) => [undefined, endDateTimeUtc, true, 'ERROR']
   )
 
-  it.each([...openCases, ...closedCases, ...errorCases])(
-    'Given %p, %p and %p as `startDateTimeUtc`, `endDateTimeUtc` and `isClosed`. Should return %p',
-    (startDateTimeUtc, endDateTimeUtc, isClosed, expectedResult) => {
-      const result = getMissionStatus({ endDateTimeUtc, isClosed, startDateTimeUtc })
+  it.each([...openCases, ...errorCases])(
+    'Given %p, %p and %p as `startDateTimeUtc`, `endDateTimeUtc`. Should return %p',
+    (startDateTimeUtc, endDateTimeUtc, expectedResult) => {
+      const result = getMissionStatus({ endDateTimeUtc, startDateTimeUtc })
 
       expect(result).toEqual(expectedResult)
     }

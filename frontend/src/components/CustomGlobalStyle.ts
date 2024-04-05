@@ -55,8 +55,12 @@ html {
     line-height: normal;
   }
 
-  .rs-checkbox-checker > label {
-    line-height: normal !important;
+   .rs-checkox {
+    &:not(.rs-check-item) {
+        .rs-checkbox-checker > label {
+            line-height: normal !important;
+       }
+    }
   }
 
   .Element-Fieldset__InnerBox {
@@ -66,9 +70,5 @@ html {
       }
     }
   }
-  
 
-  .rs-radio-checker {
-    line-height: normal !important;
-  }
 `

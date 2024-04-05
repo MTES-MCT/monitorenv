@@ -1,9 +1,12 @@
 import {
+  getMissionCompletionFrontStatus,
+  hasAtLeastOnUncompletedEnvAction,
+  hasAtLeastOnUncompletedFishAction
+} from '@features/missions/utils'
+import {
   ActionTypeEnum,
   CompletionStatus,
-  FrontCompletionStatus,
   getMissionStatus,
-  MissionStatusEnum,
   type EnvActionControl,
   type EnvActionSurveillance,
   type Mission
@@ -16,18 +19,9 @@ import { ClosedEnvActionSchema } from '../Schemas'
 export function useMissionAndActionsCompletion() {
   const { errors, values } = useFormikContext<Mission>()
   const missionStatus = getMissionStatus(values)
-  const hasAtLeastOnUncompletedEnvAction = useMemo(
-    () =>
-      values.envActions.find(
-        action =>
-          (action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL) &&
-          action.completion === CompletionStatus.TO_COMPLETE
-      ),
-    [values.envActions]
-  )
-  const hasAtLeastOnUncompletedFishAction = useMemo(
-    () => values.fishActions.find(action => action.completion === CompletionStatus.TO_COMPLETE),
-    [values.fishActions]
+  const hasAtLeastOnUncompletedAction = useMemo(
+    () => hasAtLeastOnUncompletedEnvAction(values.envActions) || hasAtLeastOnUncompletedFishAction(values.fishActions),
+    [values.envActions, values.fishActions]
   )
 
   const isGeneralInformationsUncomplete = useMemo(
@@ -41,29 +35,14 @@ export function useMissionAndActionsCompletion() {
   )
 
   const missionCompletion =
-    hasAtLeastOnUncompletedEnvAction || isGeneralInformationsUncomplete || hasAtLeastOnUncompletedFishAction
+    hasAtLeastOnUncompletedAction || isGeneralInformationsUncomplete
       ? CompletionStatus.TO_COMPLETE
       : CompletionStatus.COMPLETED
 
-  const missionCompletionFrontStatus = useMemo(() => {
-    if (missionStatus === MissionStatusEnum.PENDING) {
-      if (missionCompletion === CompletionStatus.COMPLETED) {
-        return FrontCompletionStatus.UP_TO_DATE
-      }
-
-      return FrontCompletionStatus.TO_COMPLETE
-    }
-
-    if (missionStatus === MissionStatusEnum.ENDED) {
-      if (missionCompletion === CompletionStatus.COMPLETED) {
-        return FrontCompletionStatus.COMPLETED
-      }
-
-      return FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED
-    }
-
-    return undefined
-  }, [missionCompletion, missionStatus])
+  const missionCompletionFrontStatus = useMemo(
+    () => getMissionCompletionFrontStatus(missionStatus, missionCompletion),
+    [missionCompletion, missionStatus]
+  )
 
   const getActionsCompletion = useMemo(() => {
     const constrolOrSuveillanceActions = values.envActions.filter(

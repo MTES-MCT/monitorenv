@@ -10,9 +10,9 @@ export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
 export enum MissionFiltersEnum {
   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
+  COMPLETION_STATUS_FILTER = 'selectedCompletionStatus',
   PERIOD_FILTER = 'selectedPeriod',
   SEA_FRONT_FILTER = 'selectedSeaFronts',
-  SOURCE_FILTER = 'selectedMissionSource',
   STARTED_AFTER_FILTER = 'startedAfter',
   STARTED_BEFORE_FILTER = 'startedBefore',
   STATUS_FILTER = 'selectedStatuses',
@@ -24,8 +24,8 @@ export enum MissionFiltersEnum {
 type MissionFilterValues = {
   hasFilters: boolean
   selectedAdministrationNames: string[] | undefined
+  selectedCompletionStatus: string[] | undefined
   selectedControlUnitIds: number[] | undefined
-  selectedMissionSource: string | undefined
   selectedMissionTypes: string[] | undefined
   selectedPeriod: string
   selectedSeaFronts: string[] | undefined
@@ -44,8 +44,8 @@ export type MissionFiltersState = {
 const INITIAL_STATE: MissionFiltersState = {
   hasFilters: false,
   selectedAdministrationNames: undefined,
+  selectedCompletionStatus: undefined,
   selectedControlUnitIds: undefined,
-  selectedMissionSource: undefined,
   selectedMissionTypes: undefined,
   selectedPeriod: DATE_RANGE_LABEL.WEEK.value,
   selectedSeaFronts: undefined,

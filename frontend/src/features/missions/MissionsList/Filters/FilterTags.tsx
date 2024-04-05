@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
-import { missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
+import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import {
   MissionFiltersEnum,
   updateFilters,
@@ -18,6 +18,7 @@ export function FilterTags() {
   const dispatch = useAppDispatch()
   const {
     selectedAdministrationNames,
+    selectedCompletionStatus,
     selectedControlUnitIds,
     selectedMissionTypes,
     selectedSeaFronts,
@@ -45,6 +46,16 @@ export function FilterTags() {
 
   return (
     <StyledContainer data-cy="missions-filter-tags">
+      {selectedSeaFronts &&
+        selectedSeaFronts?.length > 0 &&
+        selectedSeaFronts.map(seaFront => (
+          <SingleTag
+            key={seaFront}
+            onDelete={() => onDeleteTag(seaFront, MissionFiltersEnum.SEA_FRONT_FILTER, selectedSeaFronts)}
+          >
+            {String(`Facade ${seaFront}`)}
+          </SingleTag>
+        ))}
       {selectedAdministrationNames &&
         selectedAdministrationNames?.length > 0 &&
         selectedAdministrationNames.map(admin => (
@@ -75,14 +86,11 @@ export function FilterTags() {
             {String(`Type ${missionTypeEnum[type].libelle}`)}
           </SingleTag>
         ))}
-      {selectedSeaFronts &&
-        selectedSeaFronts?.length > 0 &&
-        selectedSeaFronts.map(seaFront => (
-          <SingleTag
-            key={seaFront}
-            onDelete={() => onDeleteTag(seaFront, MissionFiltersEnum.SEA_FRONT_FILTER, selectedSeaFronts)}
-          >
-            {String(`Facade ${seaFront}`)}
+      {selectedThemes &&
+        selectedThemes?.length > 0 &&
+        selectedThemes.map(theme => (
+          <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
+            {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`)}
           </SingleTag>
         ))}
       {selectedStatuses &&
@@ -95,11 +103,16 @@ export function FilterTags() {
             {String(`Mission ${missionStatusLabels[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}
-      {selectedThemes &&
-        selectedThemes?.length > 0 &&
-        selectedThemes.map(theme => (
-          <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
-            {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`)}
+      {selectedCompletionStatus &&
+        selectedCompletionStatus?.length > 0 &&
+        selectedCompletionStatus.map(completionStatus => (
+          <SingleTag
+            key={completionStatus}
+            onDelete={() =>
+              onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
+            }
+          >
+            {String(`données ${FrontCompletionStatusLabel[completionStatus]}`)}
           </SingleTag>
         ))}
     </StyledContainer>

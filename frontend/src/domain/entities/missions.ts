@@ -65,6 +65,12 @@ export enum FrontCompletionStatus {
   UP_TO_DATE = 'UP_TO_DATE'
 }
 
+export enum FrontCompletionStatusLabel {
+  COMPLETED = 'Complétées',
+  TO_COMPLETE = 'À compléter',
+  UP_TO_DATE = 'À jour'
+}
+
 export enum MissionTypeLabel {
   AIR = 'Air',
   LAND = 'Terre',
@@ -150,8 +156,7 @@ export enum MissionStatusLabel {
   /* eslint-disable typescript-sort-keys/string-enum */
   UPCOMING = 'À venir',
   PENDING = 'En cours',
-  ENDED = 'Terminée',
-  CLOSED = 'Cloturée'
+  ENDED = 'Terminée'
   /* eslint-disable typescript-sort-keys/string-enum */
 }
 
@@ -164,17 +169,17 @@ export const missionStatusLabels = {
   },
   ENDED: {
     code: 'ENDED',
-    color: THEME.color.charcoal,
+    color: THEME.color.gunMetal,
     libelle: 'Terminée'
   },
   PENDING: {
     code: 'PENDING',
-    color: THEME.color.mediumSeaGreen,
+    color: THEME.color.blueGray,
     libelle: 'En cours'
   },
   UPCOMING: {
     code: 'UPCOMING',
-    color: THEME.color.yellowGreen,
+    color: '#7CBEF4',
     libelle: 'À venir'
   }
 }
@@ -195,11 +200,6 @@ export const missionSourceEnum = {
     label: 'CNSP',
     value: 'MONITORFISH'
   }
-}
-
-export enum MissionSourceLabel {
-  MONITORENV = 'CACEM',
-  MONITORFISH = 'CNSP'
 }
 
 export const relevantCourtEnum = {
@@ -338,19 +338,13 @@ export type EnvActionForTimeline = Partial<EnvAction> & {
 
 export const getMissionStatus = ({
   endDateTimeUtc,
-  isClosed,
   startDateTimeUtc
 }: {
   endDateTimeUtc?: string | null
-  isClosed?: Boolean
   startDateTimeUtc?: string | null
 }) => {
   if (!startDateTimeUtc) {
     return 'ERROR'
-  }
-
-  if (isClosed) {
-    return MissionStatusEnum.CLOSED
   }
 
   const now = customDayjs()

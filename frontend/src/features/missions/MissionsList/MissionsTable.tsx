@@ -110,6 +110,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                       style: {
                         maxWidth: cell.column.getSize(),
                         minWidth: cell.column.getSize(),
+                        padding: cell.column.id === 'geom' || cell.column.id === 'edit' ? '0px' : '10px 12px',
                         width: cell.column.getSize()
                       }
                     }}

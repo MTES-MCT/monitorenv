@@ -18,7 +18,7 @@ import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
 import { DateRangeEnum, DATE_RANGE_LABEL } from '../../../../domain/entities/dateRange'
-import { MissionSourceLabel, MissionTypeLabel, MissionStatusLabel } from '../../../../domain/entities/missions'
+import { MissionTypeLabel, MissionStatusLabel, FrontCompletionStatusLabel } from '../../../../domain/entities/missions'
 import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -31,8 +31,8 @@ export function MissionsTableFilters() {
   const {
     hasFilters,
     selectedAdministrationNames,
+    selectedCompletionStatus,
     selectedControlUnitIds,
-    selectedMissionSource,
     selectedMissionTypes,
     selectedPeriod,
     selectedSeaFronts,
@@ -95,8 +95,8 @@ export function MissionsTableFilters() {
   const dateRangesAsOptions = Object.values(DATE_RANGE_LABEL)
   const missionStatusesAsOptions = getOptionsFromLabelledEnum(MissionStatusLabel)
   const missionTypesAsOptions = getOptionsFromLabelledEnum(MissionTypeLabel)
-  const missionSourcesAsOptions = getOptionsFromLabelledEnum(MissionSourceLabel)
   const seaFrontsAsOptions = Object.values(seaFrontLabels)
+  const completionStatusAsOptions = getOptionsFromLabelledEnum(FrontCompletionStatusLabel)
 
   const onUpdatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
@@ -186,118 +186,135 @@ export function MissionsTableFilters() {
   return (
     <>
       <FilterWrapper ref={unitPickerRef}>
-        <StyledSelect
-          cleanable={false}
-          data-cy="select-period-filter"
-          isLabelHidden
-          label="Période"
-          name="Période"
-          onChange={onUpdatePeriodFilter as any}
-          options={dateRangesAsOptions}
-          placeholder="Date de mission depuis"
-          style={tagPickerStyle}
-          value={selectedPeriod}
-        />
+        <FilterWrapperLine>
+          <CheckPicker
+            data-cy="select-seaFronts-filter"
+            isLabelHidden
+            isTransparent
+            label="Facade"
+            name="seaFront"
+            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
+            options={seaFrontsAsOptions}
+            placeholder="Facade"
+            renderValue={() => selectedSeaFronts && <OptionValue>{`Facade (${selectedSeaFronts.length})`}</OptionValue>}
+            style={tagPickerStyle}
+            value={selectedSeaFronts}
+          />
+          <CheckPicker
+            data-cy="select-administration-filter"
+            isLabelHidden
+            isTransparent
+            label="Administration"
+            name="administration"
+            onChange={onUpdateAdministrationFilter as any}
+            options={activeAdministrations || []}
+            placeholder="Administration"
+            popupWidth={300}
+            renderValue={() =>
+              selectedAdministrationNames && (
+                <OptionValue>{`Administration (${selectedAdministrationNames.length})`}</OptionValue>
+              )
+            }
+            searchable
+            style={tagPickerStyle}
+            value={selectedAdministrationNames}
+          />
+          <CheckPicker
+            key={controlUnitsAsOptions.length}
+            customSearch={controlUnitCustomSearch}
+            data-cy="select-units-filter"
+            isLabelHidden
+            isTransparent
+            label="Unité"
+            name="controlUnit"
+            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
+            options={controlUnitsAsOptions as any}
+            placeholder="Unité"
+            popupWidth={300}
+            renderValue={() =>
+              selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
+            }
+            style={tagPickerStyle}
+            value={selectedControlUnitIds}
+          />
+        </FilterWrapperLine>
+        <FilterWrapperLine>
+          <StyledSelect
+            cleanable={false}
+            data-cy="select-period-filter"
+            isLabelHidden
+            isTransparent
+            label="Période"
+            name="Période"
+            onChange={onUpdatePeriodFilter as any}
+            options={dateRangesAsOptions}
+            placeholder="Date de mission depuis"
+            style={tagPickerStyle}
+            value={selectedPeriod}
+          />
 
-        <StyledSelect
-          data-cy="select-origin-filter"
-          isLabelHidden
-          label="Origine"
-          name="origine"
-          onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SOURCE_FILTER)}
-          options={missionSourcesAsOptions}
-          placeholder="Origine"
-          style={tagPickerStyle}
-          value={selectedMissionSource}
-        />
-        <CheckPicker
-          data-cy="select-administration-filter"
-          isLabelHidden
-          label="Administration"
-          name="administration"
-          onChange={onUpdateAdministrationFilter as any}
-          options={activeAdministrations || []}
-          placeholder="Administration"
-          popupWidth={300}
-          renderValue={() =>
-            selectedAdministrationNames && (
-              <OptionValue>{`Administration (${selectedAdministrationNames.length})`}</OptionValue>
-            )
-          }
-          searchable
-          style={tagPickerStyle}
-          value={selectedAdministrationNames}
-        />
-        <CheckPicker
-          key={controlUnitsAsOptions.length}
-          customSearch={controlUnitCustomSearch}
-          data-cy="select-units-filter"
-          isLabelHidden
-          label="Unité"
-          name="controlUnit"
-          onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
-          options={controlUnitsAsOptions as any}
-          placeholder="Unité"
-          popupWidth={300}
-          renderValue={() =>
-            selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
-          }
-          style={tagPickerStyle}
-          value={selectedControlUnitIds}
-        />
-        <CheckPicker
-          data-cy="select-types-filter"
-          isLabelHidden
-          label="Type de mission"
-          name="missionType"
-          onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
-          options={missionTypesAsOptions}
-          placeholder="Type de mission"
-          renderValue={() =>
-            selectedMissionTypes && <OptionValue>{`Type (${selectedMissionTypes.length})`}</OptionValue>
-          }
-          style={tagPickerStyle}
-          value={selectedMissionTypes}
-        />
-        <CheckPicker
-          data-cy="select-seaFronts-filter"
-          isLabelHidden
-          label="Facade"
-          name="seaFront"
-          onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
-          options={seaFrontsAsOptions}
-          placeholder="Facade"
-          renderValue={() => selectedSeaFronts && <OptionValue>{`Facade (${selectedSeaFronts.length})`}</OptionValue>}
-          style={tagPickerStyle}
-          value={selectedSeaFronts}
-        />
-        <CheckPicker
-          data-cy="select-statuses-filter"
-          isLabelHidden
-          label="Statut"
-          name="status"
-          onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
-          options={missionStatusesAsOptions}
-          placeholder="Statut"
-          renderValue={() => selectedStatuses && <OptionValue>{`Statut (${selectedStatuses.length})`}</OptionValue>}
-          style={tagPickerStyle}
-          value={selectedStatuses}
-        />
-        <CheckPicker
-          key={themesAsOptionsPerPeriod.length}
-          customSearch={themeCustomSearch}
-          data-cy="mission-theme-filter"
-          isLabelHidden
-          label="Thématique"
-          name="theme"
-          onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
-          options={themesAsOptionsPerPeriod}
-          placeholder="Thématique"
-          popupWidth={300}
-          renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
-          style={tagPickerStyle}
-          value={selectedThemes}
-        />
+          <CheckPicker
+            data-cy="select-types-filter"
+            isLabelHidden
+            isTransparent
+            label="Type de mission"
+            name="missionType"
+            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
+            options={missionTypesAsOptions}
+            placeholder="Type de mission"
+            renderValue={() =>
+              selectedMissionTypes && <OptionValue>{`Type (${selectedMissionTypes.length})`}</OptionValue>
+            }
+            style={tagPickerStyle}
+            value={selectedMissionTypes}
+          />
+          <CheckPicker
+            key={themesAsOptionsPerPeriod.length}
+            customSearch={themeCustomSearch}
+            data-cy="mission-theme-filter"
+            isLabelHidden
+            isTransparent
+            label="Thématique"
+            name="theme"
+            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
+            options={themesAsOptionsPerPeriod}
+            placeholder="Thématique"
+            popupWidth={300}
+            renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
+            style={tagPickerStyle}
+            value={selectedThemes}
+          />
+          <CheckPicker
+            data-cy="select-statuses-filter"
+            isLabelHidden
+            isTransparent
+            label="Statut de mission"
+            name="status"
+            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
+            options={missionStatusesAsOptions}
+            placeholder="Statut de mission"
+            renderValue={() => selectedStatuses && <OptionValue>{`Statut (${selectedStatuses.length})`}</OptionValue>}
+            style={tagPickerStyle}
+            value={selectedStatuses}
+          />
+          <CheckPicker
+            data-cy="select-completion-statuses-filter"
+            isLabelHidden
+            isTransparent
+            label="Etat des données"
+            name="completion"
+            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.COMPLETION_STATUS_FILTER)}
+            options={completionStatusAsOptions}
+            placeholder="Etat des données"
+            renderValue={() =>
+              selectedCompletionStatus && (
+                <OptionValue>{`Etat des données (${selectedCompletionStatus.length})`}</OptionValue>
+              )
+            }
+            style={tagPickerStyle}
+            value={selectedCompletionStatus}
+          />
+        </FilterWrapperLine>
       </FilterWrapper>
       <StyledTagsContainer>
         {isCustomPeriodVisible && (
@@ -330,6 +347,12 @@ export function MissionsTableFilters() {
 
 const FilterWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+`
+const FilterWrapperLine = styled.div`
+  display: flex;
   flex-wrap: wrap;
   align-items: end;
   gap: 10px;
@@ -346,7 +369,7 @@ const ResetFiltersButton = styled.div`
   }
 `
 
-const tagPickerStyle = { width: 165 }
+const tagPickerStyle = { width: 200 }
 
 const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,
