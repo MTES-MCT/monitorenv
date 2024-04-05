@@ -91,6 +91,18 @@ def new_amp() -> pd.DataFrame:
                 "Parc naturel marin",
                 "Réserve naturelle"
             ],
+            "mpa_type_cacem": [
+                "Parc national",
+                "Natura 2000",
+                "Parc naturel marin",
+                "Réserve naturelle"
+            ],
+            "url_legicem": [
+                "http://dummy_url_1",
+                "http://dummy_url_2",
+                "http://dummy_url_3",
+                "http://dummy_url_4",
+            ],
             "row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
@@ -107,7 +119,8 @@ def test_load_new_amp(new_amp):
         "monitorenv_remote", 
         "SELECT id, geom, "
             "mpa_oriname, des_desigfr, "
-            "mpa_type, row_hash "
+            "mpa_type, mpa_type_cacem, "
+            "url_legicem, row_hash "
             "FROM amp_cacem "
             "ORDER BY id"
     )
