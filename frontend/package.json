@@ -127,7 +127,7 @@
     "puppeteer": "21.7.0",
     "ramda": "0.29.1",
     "type-fest": "4.4.0",
-    "typescript": "5.2.2",
+    "typescript": "5.4.4",
     "vite": "5.2.8",
     "vite-plugin-svgr": "4.2.0",
     "vite-tsconfig-paths": "4.3.1",
