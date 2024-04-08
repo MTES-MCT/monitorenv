@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
@@ -20,7 +20,7 @@ data class EnvActionControlProperties(
         actionEndDateTimeUtc: ZonedDateTime?,
         actionStartDateTimeUtc: ZonedDateTime?,
         controlPlans: List<EnvActionControlPlanEntity>?,
-        completion: EnvActionCompletionEnum?,
+        completion: ActionCompletionEnum?,
         department: String?,
         facade: String?,
         geom: Geometry?,

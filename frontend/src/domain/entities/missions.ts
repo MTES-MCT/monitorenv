@@ -179,7 +179,7 @@ export const missionStatusLabels = {
   },
   UPCOMING: {
     code: 'UPCOMING',
-    color: '#7CBEF4',
+    color: THEME.color.mayaBlue,
     libelle: 'À venir'
   }
 }

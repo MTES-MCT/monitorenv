@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -12,7 +12,7 @@ data class MissionEnvActionSurveillanceDataOutput(
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.SURVEILLANCE,
-    val completion: EnvActionCompletionEnum? = null,
+    val completion: ActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = null,
     val department: String? = null,
     val facade: String? = null,
@@ -36,9 +36,14 @@ data class MissionEnvActionSurveillanceDataOutput(
                 actionStartDateTimeUtc = envActionSurveillanceEntity.actionStartDateTimeUtc,
                 completion = envActionSurveillanceEntity.completion,
                 controlPlans =
-                envActionSurveillanceEntity.controlPlans?.map {
-                    MissionEnvActionControlPlanDataOutput
-                        .fromEnvActionControlPlanEntity(it)
+                envActionSurveillanceEntity.controlPlans?.let { plans ->
+                    if (plans.isNotEmpty()) {
+                        plans.map { MissionEnvActionControlPlanDataOutput.fromEnvActionControlPlanEntity(it) }
+                    } else {
+                        // If the array is empty, return a list containing the default object
+                        val defaultControlPlans = MissionEnvActionControlPlanDataOutput(null, listOf(), listOf())
+                        listOf(defaultControlPlans)
+                    }
                 },
                 department = envActionSurveillanceEntity.department,
                 facade = envActionSurveillanceEntity.facade,

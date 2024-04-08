@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import kotlinx.serialization.Serializable
@@ -9,6 +10,7 @@ data class MonitorFishMissionActionDataInput(
     val id: Int,
     val actionDatetimeUtc: String,
     val actionType: MonitorFishActionTypeEnum,
+    val completion: ActionCompletionEnum,
     val latitude: Double? = null,
     val longitude: Double? = null,
     val missionId: Int,
@@ -21,6 +23,7 @@ data class MonitorFishMissionActionDataInput(
             id = this.id,
             actionDatetimeUtc = this.actionDatetimeUtc,
             actionType = this.actionType,
+            completion = this.completion,
             latitude = this.latitude,
             longitude = this.longitude,
             missionId = this.missionId,

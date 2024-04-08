@@ -1,10 +1,12 @@
+import { getMissionCompletionStatus } from '@features/missions/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import { editMissionInLocalStore } from 'domain/use_cases/missions/editMissionInLocalStore'
 import styled from 'styled-components'
+import { CompletionStatusTag } from 'ui/CompletionStatusTag'
+import { MissionStatusTag } from 'ui/MissionStatusTag'
 
 import { getMissionStatus, type Mission } from '../../../../domain/entities/missions'
-import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
 import { StatusActionTag } from '../../components/StatusActionTag'
 
@@ -21,6 +23,7 @@ export function AttachedMissionCard({
   if (!attachedMission) {
     return null
   }
+  const missionCompletion = getMissionCompletionStatus(attachedMission)
 
   const { controlUnits, endDateTimeUtc, missionTypes, startDateTimeUtc } = attachedMission || {}
 
@@ -78,7 +81,10 @@ export function AttachedMissionCard({
         <div>
           Mission {humanizeMissionTypes(missionTypes)} – {missionDurationText}
         </div>
-        <MissionStatusLabel missionStatus={missionStatus} />
+        <TagsContainer>
+          <MissionStatusTag status={missionStatus} />
+          <CompletionStatusTag completion={missionCompletion} />
+        </TagsContainer>
       </Body>
     </Wrapper>
   )
@@ -132,4 +138,10 @@ const ControlUnitTitle = styled.span`
 const Body = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 8px;
+`
+
+const TagsContainer = styled.div`
+  display: inline-flex;
+  gap: 8px;
 `

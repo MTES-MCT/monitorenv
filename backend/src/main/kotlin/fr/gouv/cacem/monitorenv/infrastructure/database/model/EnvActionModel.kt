@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
@@ -55,7 +55,7 @@ class EnvActionModel(
     @Column(name = "action_completion", columnDefinition = "mission_action_completion")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
-    val completion: EnvActionCompletionEnum? = null,
+    val completion: ActionCompletionEnum? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")

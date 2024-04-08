@@ -5,10 +5,10 @@ import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
@@ -39,8 +39,7 @@ import java.util.UUID
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
-    @Autowired
-    private val customQueryCountListener: CustomQueryCountListener? = null
+    @Autowired private val customQueryCountListener: CustomQueryCountListener? = null
 
     @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
 
@@ -54,9 +53,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         customQueryCountListener!!.resetQueryCount() // Reset the count before each test
     }
 
-    private val polygon = WKTReader().read(
-        "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
-    ) as MultiPolygon
+    private val polygon =
+        WKTReader()
+            .read(
+                "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
+            ) as
+            MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     @Test
@@ -190,7 +192,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
             )
         // Then
-        // MissionTypes are hardcoded in query. If you add a new mission type, you need to update the query
+        // MissionTypes are hardcoded in query. If you add a new mission type, you need to update
+        // the query
         assertThat(MissionTypeEnum.entries.size).isEqualTo(3)
         assertThat(MissionTypeEnum.SEA.name).isEqualTo("SEA")
         assertThat(MissionTypeEnum.LAND.name).isEqualTo("LAND")
@@ -463,12 +466,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         assertThat(
             mission.copy(
-                mission = mission.mission.copy(
+                mission =
+                mission.mission.copy(
                     createdAtUtc = null,
                     updatedAtUtc = null,
                 ),
             ),
-        ).isEqualTo(firstMission)
+        )
+            .isEqualTo(firstMission)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -538,8 +543,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             "33310163-4e22-4d3d-b585-dac4431eb4b5",
                         ),
                         facade = "Facade 1",
-                        completion = EnvActionCompletionEnum.TO_COMPLETE,
-                        controlPlans = listOf(
+                        completion = ActionCompletionEnum.TO_COMPLETE,
+                        controlPlans =
+                        listOf(
                             EnvActionControlPlanEntity(
                                 subThemeIds = listOf(1),
                                 tagIds = listOf(1, 2),
@@ -560,7 +566,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         UUID.fromString(
                             "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
                         ),
-                        completion = EnvActionCompletionEnum.TO_COMPLETE,
+                        completion = ActionCompletionEnum.TO_COMPLETE,
                         facade = "Facade 2",
                         department = "Department 2",
                         geom = polygon,
@@ -597,8 +603,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val newMissionCreated = jpaMissionRepository.save(newMission)
 
         // Then
-        assertThat(newMissionCreated.mission.createdAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
-        assertThat(newMissionCreated.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
+        assertThat(newMissionCreated.mission.createdAtUtc)
+            .isAfter(ZonedDateTime.now().minusMinutes(1))
+        assertThat(newMissionCreated.mission.updatedAtUtc)
+            .isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10121)
         assertThat(newMissionCreated.mission.controlUnits.first().name)
@@ -870,14 +878,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 observations = "RAS",
                 actionNumberOfControls = 12,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
-                completion = EnvActionCompletionEnum.TO_COMPLETE,
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(infraction),
             )
         val surveillanceAction =
             EnvActionSurveillanceEntity(
                 id = UUID.fromString("325a8c12-7c13-465d-9b42-6aee473d8d3b"),
-                completion = EnvActionCompletionEnum.TO_COMPLETE,
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "This is a surveillance action",
             )
         val noteAction =
@@ -939,12 +947,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val updatedMission = jpaMissionRepository.findFullMissionById(10)
         assertThat(
             updatedMission.copy(
-                mission = updatedMission.mission.copy(
+                mission =
+                updatedMission.mission.copy(
                     createdAtUtc = null,
                     updatedAtUtc = null,
                 ),
             ),
-        ).isEqualTo(expectedUpdatedMission)
+        )
+            .isEqualTo(expectedUpdatedMission)
     }
 
     @Test
@@ -956,7 +966,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             EnvActionControlEntity(
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
-                completion = EnvActionCompletionEnum.TO_COMPLETE,
+                controlPlans =
+                listOf(
+                    EnvActionControlPlanEntity(
+                        subThemeIds = listOf(1, 2, 3),
+                        themeId = 1,
+                    ),
+                ),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 actionNumberOfControls = 4,
             )
@@ -1008,47 +1025,60 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val updatedMission = jpaMissionRepository.findFullMissionById(10)
         assertThat(
             updatedMission.copy(
-                mission = updatedMission.mission.copy(
+                mission =
+                updatedMission.mission.copy(
                     createdAtUtc = null,
                     updatedAtUtc = null,
                 ),
             ),
-        ).isEqualTo(expectedUpdatedMission)
+        )
+            .isEqualTo(expectedUpdatedMission)
     }
 
     @Test
     @Transactional
     fun `save Should update subThemes of envActions`() {
         val mission = jpaMissionRepository.findById(34)
-        val envAction = mission.envActions?.find { it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807") }
+        val envAction =
+            mission.envActions?.find {
+                it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
+            }
         assertThat(envAction?.controlPlans?.size).isEqualTo(1)
         assertThat(envAction?.controlPlans?.get(0)?.subThemeIds?.size).isEqualTo(1)
-        val nextControlPlans = listOf(
-            EnvActionControlPlanEntity(
-                subThemeIds = listOf(53, 34),
-                themeId = 2,
-            ),
-            EnvActionControlPlanEntity(
-                tagIds = listOf(1, 2, 3),
-                themeId = 11,
-            ),
-            EnvActionControlPlanEntity(
-                themeId = 17,
-            ),
-        )
-        val nextMission = mission.copy(
-            envActions = mission.envActions?.map {
-                if (it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807") && it is EnvActionControlEntity) {
-                    it.copy(controlPlans = nextControlPlans)
-                } else {
-                    it
-                }
-            },
-        )
+        val nextControlPlans =
+            listOf(
+                EnvActionControlPlanEntity(
+                    subThemeIds = listOf(53, 34),
+                    themeId = 2,
+                ),
+                EnvActionControlPlanEntity(
+                    tagIds = listOf(1, 2, 3),
+                    themeId = 11,
+                ),
+                EnvActionControlPlanEntity(
+                    themeId = 17,
+                ),
+            )
+        val nextMission =
+            mission.copy(
+                envActions =
+                mission.envActions?.map {
+                    if (it.id ==
+                        UUID.fromString(
+                                "b8007c8a-5135-4bc3-816f-c69c7b75d807",
+                            ) && it is EnvActionControlEntity
+                    ) {
+                        it.copy(controlPlans = nextControlPlans)
+                    } else {
+                        it
+                    }
+                },
+            )
         val updatedMission = jpaMissionRepository.save(nextMission)
-        val updatedControlPlan = updatedMission.mission.envActions?.find {
-            it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
-        }?.controlPlans
+        val updatedControlPlan =
+            updatedMission.mission.envActions
+                ?.find { it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807") }
+                ?.controlPlans
         assertThat(updatedControlPlan?.size).isEqualTo(3)
         assertThat(updatedControlPlan?.get(0)?.subThemeIds?.size).isEqualTo(2)
         assertThat(updatedControlPlan?.get(0)?.subThemeIds?.get(0)).isEqualTo(53)

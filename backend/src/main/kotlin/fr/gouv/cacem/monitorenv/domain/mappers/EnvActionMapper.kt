@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlProperties
@@ -20,7 +21,7 @@ object EnvActionMapper {
         actionEndDateTimeUtc: ZonedDateTime?,
         actionType: ActionTypeEnum,
         actionStartDateTimeUtc: ZonedDateTime?,
-        completion: EnvActionCompletionEnum?,
+        completion: ActionCompletionEnum?,
         controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,

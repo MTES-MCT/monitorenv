@@ -73,10 +73,15 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
   }, [feature, updateMargins])
 
   const actionsText = useMemo(() => {
-    if (envActions.length > 0 && fishActions.length > 0) {
+    if (envActions.length > 0) {
       return (
         <MultipleControlUnits>
-          Actions <Bold>CACEM</Bold> et <Bold>CNSP</Bold>
+          Actions <Bold>CACEM</Bold>{' '}
+          {fishActions.length > 0 && (
+            <>
+              et <Bold>CNSP</Bold>
+            </>
+          )}
         </MultipleControlUnits>
       )
     }
@@ -85,13 +90,6 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
       return (
         <MultipleControlUnits>
           Actions <Bold>CNSP</Bold>
-        </MultipleControlUnits>
-      )
-    }
-    if (envActions.length > 0 && fishActions.length === 0) {
-      return (
-        <MultipleControlUnits>
-          Actions <Bold>CACEM</Bold>
         </MultipleControlUnits>
       )
     }

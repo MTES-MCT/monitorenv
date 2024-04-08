@@ -1,16 +1,14 @@
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Dot, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { ReportingTypeEnum, ReportingTypeLabels } from '../../../../domain/entities/reporting'
 
 export function getReportType(reportType: string) {
+  const color = reportType === ReportingTypeEnum.INFRACTION_SUSPICION ? THEME.color.maximumRed : THEME.color.blueGray
   if (reportType) {
     return (
       <StyledTypeContainer>
-        <Icon.DotFilled
-          color={reportType === ReportingTypeEnum.INFRACTION_SUSPICION ? THEME.color.maximumRed : THEME.color.blueGray}
-          size={12}
-        />
+        <Dot $backgroundColor={color} $borderColor={color} $size={10} />
         {ReportingTypeLabels[reportType]}
       </StyledTypeContainer>
     )

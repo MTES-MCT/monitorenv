@@ -7,17 +7,19 @@ describe('getMissionStatus()', () => {
   const yesterday = customDayjs.utc().subtract(1, 'day').toISOString()
   const tomorrow = customDayjs.utc().add(1, 'day').toISOString()
 
-  const openCases: Array<[string | undefined, string | undefined, boolean | undefined, string]> = [
-    [yesterday, undefined, false, 'PENDING'],
-    [yesterday, yesterday, false, 'ENDED'],
-    [yesterday, tomorrow, false, 'PENDING'],
-    [tomorrow, yesterday, false, 'UPCOMING'],
-    [tomorrow, tomorrow, false, 'UPCOMING']
+  const openCases: Array<[string | undefined, string | undefined, string]> = [
+    [yesterday, undefined, 'PENDING'],
+    [yesterday, yesterday, 'ENDED'],
+    [yesterday, tomorrow, 'PENDING'],
+    [tomorrow, yesterday, 'UPCOMING'],
+    [tomorrow, tomorrow, 'UPCOMING']
   ]
 
-  const errorCases: Array<[string | undefined, string | undefined, boolean | undefined, string]> = openCases.map(
-    ([, endDateTimeUtc]) => [undefined, endDateTimeUtc, true, 'ERROR']
-  )
+  const errorCases: Array<[string | undefined, string | undefined, string]> = openCases.map(([, endDateTimeUtc]) => [
+    undefined,
+    endDateTimeUtc,
+    'ERROR'
+  ])
 
   it.each([...openCases, ...errorCases])(
     'Given %p, %p and %p as `startDateTimeUtc`, `endDateTimeUtc`. Should return %p',

@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
@@ -17,7 +17,7 @@ data class MissionEnvActionControlDataOutput(
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
-    val completion: EnvActionCompletionEnum? = null,
+    val completion: ActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = listOf(),
     val department: String? = null,
     val facade: String? = null,
@@ -36,6 +36,7 @@ data class MissionEnvActionControlDataOutput(
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionType = ActionTypeEnum.CONTROL,
     ) {
+
     companion object {
         fun fromEnvActionControlEntity(
             envActionControlEntity: EnvActionControlEntity,
@@ -49,9 +50,18 @@ data class MissionEnvActionControlDataOutput(
                 actionTargetType = envActionControlEntity.actionTargetType,
                 completion = envActionControlEntity.completion,
                 controlPlans =
-                envActionControlEntity.controlPlans?.map {
-                    MissionEnvActionControlPlanDataOutput
-                        .fromEnvActionControlPlanEntity(it)
+                envActionControlEntity.controlPlans?.let { plans ->
+                    if (plans.isNotEmpty()) {
+                        plans.map { MissionEnvActionControlPlanDataOutput.fromEnvActionControlPlanEntity(it) }
+                    } else {
+                        // If the array is empty, return a list containing the default object
+                        val defaultControlPlans = MissionEnvActionControlPlanDataOutput(
+                            null,
+                            listOf(),
+                            listOf(),
+                        )
+                        listOf(defaultControlPlans)
+                    }
                 },
                 department = envActionControlEntity.department,
                 facade = envActionControlEntity.facade,

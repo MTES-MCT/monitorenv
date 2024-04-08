@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
@@ -19,7 +20,7 @@ data class MissionEnvActionDataInput(
 
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
-    val completion: EnvActionCompletionEnum? = null,
+    val completion: ActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataInput>? = null,
     val department: String? = null,
     val facade: String? = null,

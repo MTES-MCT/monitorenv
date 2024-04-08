@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 
@@ -7,6 +8,7 @@ data class MonitorFishMissionActionDataOutput(
     val id: Int,
     val actionDatetimeUtc: String,
     val actionType: MonitorFishActionTypeEnum,
+    val completion: ActionCompletionEnum,
     val latitude: Double? = null,
     val longitude: Double? = null,
     val missionId: Int,
@@ -23,6 +25,7 @@ data class MonitorFishMissionActionDataOutput(
                 id = monitorFishMissionActionEntity.id,
                 actionDatetimeUtc = monitorFishMissionActionEntity.actionDatetimeUtc,
                 actionType = monitorFishMissionActionEntity.actionType,
+                completion = monitorFishMissionActionEntity.completion,
                 latitude = monitorFishMissionActionEntity.latitude,
                 longitude = monitorFishMissionActionEntity.longitude,
                 missionId = monitorFishMissionActionEntity.missionId,

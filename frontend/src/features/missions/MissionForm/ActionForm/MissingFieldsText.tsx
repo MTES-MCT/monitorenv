@@ -1,4 +1,4 @@
-import { customDayjs, ExclamationPoint, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { customDayjs, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function MissingFieldsText({
@@ -22,10 +22,7 @@ export function MissingFieldsText({
 
   return (
     <MissingFieldsContainer>
-      <ExclamationPoint
-        backgroundColor={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal}
-        color={THEME.color.white}
-      />
+      <Icon.AttentionFilled color={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal} />
       <Text $color={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal}>
         {totalMissingFields} {pluralize('champ', totalMissingFields)} {pluralize('nécessaire', totalMissingFields)} aux
         statistiques à compléter
