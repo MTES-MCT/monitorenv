@@ -8,7 +8,8 @@ import {
   CheckPicker,
   getOptionsFromLabelledEnum,
   CustomSearch,
-  Icon
+  Icon,
+  Checkbox
 } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -38,6 +39,7 @@ export function MissionsTableFilters() {
     selectedSeaFronts,
     selectedStatuses,
     selectedThemes,
+    selectedWithEnvActions,
     startedAfter,
     startedBefore
   } = useAppSelector(state => state.missionFilters)
@@ -171,7 +173,7 @@ export function MissionsTableFilters() {
     )
   }
 
-  const onUpdateSimpleFilter = (nextSelectedValues: number[] | undefined, filterKey: MissionFiltersEnum) => {
+  const onUpdateSimpleFilter = (nextSelectedValues: number[] | undefined | boolean, filterKey: MissionFiltersEnum) => {
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues }))
   }
 
@@ -314,6 +316,12 @@ export function MissionsTableFilters() {
             style={tagPickerStyle}
             value={selectedCompletionStatus}
           />
+          <Checkbox
+            checked={selectedWithEnvActions}
+            label="Missions avec actions env."
+            name="missionsWithEnvActions"
+            onChange={value => onUpdateSimpleFilter(value ?? false, MissionFiltersEnum.WITH_ENV_ACTIONS_FILTER)}
+          />
         </FilterWrapperLine>
       </FilterWrapper>
       <StyledTagsContainer>
@@ -354,7 +362,7 @@ const FilterWrapper = styled.div`
 const FilterWrapperLine = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
+  align-items: center;
   gap: 10px;
 `
 

@@ -1,14 +1,16 @@
+import { Bold } from '@components/style'
+import { getMissionCompletionStatus } from '@features/missions/utils'
 import { Accent, Button, Icon, IconButton, Size, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
+import { CompletionStatusTag } from 'ui/CompletionStatusTag'
+import { MissionStatusTag } from 'ui/MissionStatusTag'
 
 import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
-import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
 import { missionActions } from '../../../missions/slice'
 
@@ -29,8 +31,9 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
   const {
     controlUnits,
     endDateTimeUtc,
+    envActions,
+    fishActions,
     missionId,
-    missionSource,
     missionStatus,
     missionTypes,
     numberOfControls,
@@ -51,6 +54,8 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
+  const missionCompletion = getMissionCompletionStatus(feature.getProperties())
+
   const handleEditMission = useCallback(() => {
     dispatch(editMissionInLocalStore(missionId, 'map'))
   }, [dispatch, missionId])
@@ -66,6 +71,33 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
       updateMargins(cardHeight === 0 ? 200 : cardHeight)
     }
   }, [feature, updateMargins])
+
+  const actionsText = useMemo(() => {
+    if (envActions.length > 0 && fishActions.length > 0) {
+      return (
+        <MultipleControlUnits>
+          Actions <Bold>CACEM</Bold> et <Bold>CNSP</Bold>
+        </MultipleControlUnits>
+      )
+    }
+
+    if (envActions.length === 0 && fishActions.length > 0) {
+      return (
+        <MultipleControlUnits>
+          Actions <Bold>CNSP</Bold>
+        </MultipleControlUnits>
+      )
+    }
+    if (envActions.length > 0 && fishActions.length === 0) {
+      return (
+        <MultipleControlUnits>
+          Actions <Bold>CACEM</Bold>
+        </MultipleControlUnits>
+      )
+    }
+
+    return null
+  }, [envActions, fishActions])
 
   if (!displayMissionsLayer || listener || isReportingAttachmentInProgress) {
     return null
@@ -106,7 +138,11 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
         />
       </Header>
 
-      <MissionSourceTag source={missionSource} styleProps={{ alignSelf: 'start' }} />
+      <TagsContainer>
+        <MissionStatusTag status={missionStatus} />
+        <CompletionStatusTag completion={missionCompletion} />
+      </TagsContainer>
+
       <Details>
         <div>
           {' '}
@@ -116,8 +152,8 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
           {numberOfControls} {pluralize('contrôle', numberOfControls)} et {numberOfSurveillance}{' '}
           {pluralize('surveillance', numberOfSurveillance)}
         </div>
+        {actionsText}
       </Details>
-      <MissionStatusLabel missionStatus={missionStatus} />
 
       {!isOnlyHoverable && (
         <EditButton
@@ -149,6 +185,11 @@ const Header = styled.div`
   flex-direction: row;
   align-items: start;
   justify-content: space-between;
+`
+
+const TagsContainer = styled.div`
+  display: inline-flex;
+  gap: 8px;
 `
 const MultipleControlUnits = styled.div`
   color: ${p => p.theme.color.slateGray};

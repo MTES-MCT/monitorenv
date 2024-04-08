@@ -32,7 +32,7 @@ export function hasAtLeastOnUncompletedEnvAction(envActions): boolean {
   )
 }
 export function hasAtLeastOnUncompletedFishAction(fishActions): boolean {
-  return !!fishActions.find(action => action.completion === CompletionStatus.TO_COMPLETE)
+  return !!fishActions?.find(action => action.completion === CompletionStatus.TO_COMPLETE)
 }
 
 export function getMissionCompletionFrontStatus(missionStatus, missionCompletion): FrontCompletionStatus | undefined {
@@ -57,9 +57,8 @@ export function getMissionCompletionFrontStatus(missionStatus, missionCompletion
 
 export function getMissionCompletionStatus(mission) {
   const missionStatus = getMissionStatus(mission)
-  const hasAtLeastOnUncompletedAction = hasAtLeastOnUncompletedEnvAction(
-    mission.envActions
-  ) /*  || hasAtLeastOnUncompletedFishAction(mission.fishActions) */
+  const hasAtLeastOnUncompletedAction =
+    hasAtLeastOnUncompletedEnvAction(mission.envActions) || hasAtLeastOnUncompletedFishAction(mission.fishActions)
 
   const missionCompletion = hasAtLeastOnUncompletedAction ? CompletionStatus.TO_COMPLETE : CompletionStatus.COMPLETED
 

@@ -55,13 +55,17 @@ html {
     line-height: normal;
   }
 
-   .rs-checkox {
-    &:not(.rs-check-item) {
-        .rs-checkbox-checker > label {
+
+  .Field-Checkbox {
+    > .rs-checkbox {
+        > .rs-checkbox-checker > label {
             line-height: normal !important;
-       }
-    }
+        }
+      }
   }
+ 
+  
+    
 
   .Element-Fieldset__InnerBox {
     > .Field-DateRangePicker__RangeCalendarPicker {

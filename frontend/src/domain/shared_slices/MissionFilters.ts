@@ -18,7 +18,8 @@ export enum MissionFiltersEnum {
   STATUS_FILTER = 'selectedStatuses',
   THEME_FILTER = 'selectedThemes',
   TYPE_FILTER = 'selectedMissionTypes',
-  UNIT_FILTER = 'selectedControlUnitIds'
+  UNIT_FILTER = 'selectedControlUnitIds',
+  WITH_ENV_ACTIONS_FILTER = 'selectedWithEnvActions'
 }
 
 type MissionFilterValues = {
@@ -31,6 +32,7 @@ type MissionFilterValues = {
   selectedSeaFronts: string[] | undefined
   selectedStatuses: string[] | undefined
   selectedThemes: number[] | undefined
+  selectedWithEnvActions: boolean
   startedAfter?: string
   startedBefore?: string
 }
@@ -51,6 +53,7 @@ const INITIAL_STATE: MissionFiltersState = {
   selectedSeaFronts: undefined,
   selectedStatuses: undefined,
   selectedThemes: undefined,
+  selectedWithEnvActions: false,
   startedAfter: SEVEN_DAYS_AGO,
   startedBefore: undefined
 }

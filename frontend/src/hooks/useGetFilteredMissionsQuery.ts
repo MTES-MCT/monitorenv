@@ -1,4 +1,5 @@
 import { isMissionPartOfSelectedCompletionStatus } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedCompletionStatus'
+import { isMissionPartOfSelectedWithEnvActions } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedWithEnvActions'
 import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
@@ -18,6 +19,7 @@ export const useGetFilteredMissionsQuery = () => {
     selectedSeaFronts,
     selectedStatuses,
     selectedThemes,
+    selectedWithEnvActions,
     startedAfter,
     startedBefore
   } = useAppSelector(state => state.missionFilters)
@@ -32,7 +34,8 @@ export const useGetFilteredMissionsQuery = () => {
       missionTypes: selectedMissionTypes,
       seaFronts: selectedSeaFronts,
       startedAfterDateTime: startedAfter ?? undefined,
-      startedBeforeDateTime: startedBefore ?? undefined
+      startedBeforeDateTime: startedBefore ?? undefined,
+      withEnvActions: selectedWithEnvActions
     },
     { pollingInterval: TWO_MINUTES }
   )
@@ -55,9 +58,17 @@ export const useGetFilteredMissionsQuery = () => {
         isMissionPartOfSelectedAdministrationNames(mission, selectedAdministrationNames) &&
         isMissionPartOfSelectedControlUnitIds(mission, selectedControlUnitIds) &&
         isMissionPartOfSelectedControlPlans(mission, selectedThemes) &&
-        isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus)
+        isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus) &&
+        isMissionPartOfSelectedWithEnvActions(mission, selectedWithEnvActions)
     )
-  }, [missions, selectedAdministrationNames, selectedControlUnitIds, selectedThemes, selectedCompletionStatus])
+  }, [
+    missions,
+    selectedAdministrationNames,
+    selectedControlUnitIds,
+    selectedThemes,
+    selectedCompletionStatus,
+    selectedWithEnvActions
+  ])
 
   return { isError, isFetching, isLoading, missions: filteredMissions }
 }

@@ -26,10 +26,10 @@ export function useMissionAndActionsCompletion() {
 
   const isGeneralInformationsUncomplete = useMemo(
     () =>
-      !!errors.startDateTimeUtc ??
-      !!errors.endDateTimeUtc ??
-      !!errors.missionTypes ??
-      !!errors.openBy ??
+      !!errors.startDateTimeUtc ||
+      !!errors.endDateTimeUtc ||
+      !!errors.missionTypes ||
+      !!errors.openBy ||
       !!errors.controlUnits,
     [errors]
   )
