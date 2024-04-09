@@ -220,6 +220,11 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.wait('@getMissions')
 
     cy.get('.Table-SimpleTable tr').should('have.length', 6)
+    cy.getDataCy('edit-mission-53').should('exist')
+    cy.getDataCy('edit-mission-38').should('exist')
+    cy.getDataCy('edit-mission-22').should('not.exist')
+    cy.getDataCy('edit-mission-43').should('not.exist')
+
     cy.fill('Missions avec actions env.', false)
   })
 })
