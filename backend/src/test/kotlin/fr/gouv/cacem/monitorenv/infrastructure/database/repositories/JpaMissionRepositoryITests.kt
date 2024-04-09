@@ -961,7 +961,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `save Should update mission with associated envActions`() {
         // Given
-
         val envAction =
             EnvActionControlEntity(
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -969,7 +968,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 controlPlans =
                 listOf(
                     EnvActionControlPlanEntity(
-                        subThemeIds = listOf(1, 2, 3),
+                        subThemeIds = listOf(48),
                         themeId = 1,
                     ),
                 ),
