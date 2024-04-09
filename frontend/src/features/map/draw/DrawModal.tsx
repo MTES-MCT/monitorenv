@@ -167,7 +167,9 @@ export function DrawModal() {
   return (
     <MapInteraction
       customTools={
-        (listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE) && (
+        (listener === InteractionListener.MISSION_ZONE ||
+          listener === InteractionListener.REPORTING_ZONE ||
+          listener === InteractionListener.SURVEILLANCE_ZONE) && (
           <IconGroup>
             <IconButton
               className={interactionType === InteractionType.POLYGON ? '_active' : undefined}
