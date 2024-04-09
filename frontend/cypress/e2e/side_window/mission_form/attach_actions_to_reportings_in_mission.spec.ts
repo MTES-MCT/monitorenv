@@ -45,23 +45,40 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.wait(400)
     cy.getDataCy('edit-mission-38').click({ force: true })
     cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('control-attached-reporting-tag').should('exist')
+    cy.getDataCy('reporting-status-action-tag').contains('Ctl fait')
     cy.intercept('PUT', `/bff/v1/missions/38`).as('updateMission')
     cy.getDataCy('control-form-toggle-reporting').click({ force: true })
 
     cy.getDataCy('control-attached-reporting-tag').should('not.exist')
-    cy.getDataCy('reporting-control-done').should('not.exist')
+    cy.getDataCy('reporting-status-action-tag').should('not.exist')
 
     // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-      const controlWithAttachedReporting = response?.body.envActions.find(
-        action => action.id === 'f3e90d3a-6ba4-4bb3-805e-d391508aa46d'
-      )
-      const attachedReporting = response?.body.attachedReportings.find(reporting => reporting.id === 8)
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {
+          envActions: [
+            {
+              id: 'f3e90d3a-6ba4-4bb3-805e-d391508aa46d',
+              reportingIds: []
+            }
+          ]
+        }
+      },
+      5,
+      0,
+      response => {
+        expect(response && response.statusCode).equal(200)
+        const controlWithAttachedReporting = response?.body.envActions.find(
+          action => action.id === 'f3e90d3a-6ba4-4bb3-805e-d391508aa46d'
+        )
+        const attachedReporting = response?.body.attachedReportings.find(reporting => reporting.id === 8)
 
-      expect(controlWithAttachedReporting.reportingIds.length).equal(0)
-      expect(attachedReporting.attachedEnvActionId).equal(null)
-    })
+        expect(controlWithAttachedReporting.reportingIds.length).equal(0)
+        expect(attachedReporting.attachedEnvActionId).equal(null)
+      }
+    )
   })
   it('A surveillance can be detached to reportings', () => {
     // Given

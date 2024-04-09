@@ -12,7 +12,9 @@ export function MissingFieldsText({
     return (
       <MissingFieldsContainer>
         <Icon.Confirm color={THEME.color.mediumSeaGreen} />{' '}
-        <Text $color={THEME.color.mediumSeaGreen}>Complété – les champs nécessaires aux statistiques sont remplis</Text>
+        <Text $color={THEME.color.mediumSeaGreen} data-cy="action-all-fields-are-filled-text">
+          Complété – les champs nécessaires aux statistiques sont remplis
+        </Text>
       </MissingFieldsContainer>
     )
   }
@@ -23,7 +25,10 @@ export function MissingFieldsText({
   return (
     <MissingFieldsContainer>
       <Icon.AttentionFilled color={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal} />
-      <Text $color={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal}>
+      <Text
+        $color={isMissionEnded ? THEME.color.maximumRed : THEME.color.charcoal}
+        data-cy="action-missing-fields-text"
+      >
         {totalMissingFields} {pluralize('champ', totalMissingFields)} {pluralize('nécessaire', totalMissingFields)} aux
         statistiques à compléter
       </Text>

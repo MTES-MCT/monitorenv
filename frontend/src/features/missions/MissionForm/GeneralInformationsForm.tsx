@@ -1,3 +1,4 @@
+import { CompletionStatusTag } from '@features/missions/components/CompletionStatusTag'
 import {
   customDayjs,
   DatePicker,
@@ -13,7 +14,6 @@ import {
 import { FieldArray, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
-import { CompletionStatusTag } from 'ui/CompletionStatusTag'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
 import { MissionZonePicker } from './MissionZonePicker'
@@ -29,10 +29,10 @@ import {
   FrontCompletionStatus
 } from '../../../domain/entities/missions'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { getMissionTitle } from '../../../utils/getMissionTitle'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
+import { MissionStatusTag } from '../components/MissionStatusTag'
 
 export function GeneralInformationsForm({
   missionCompletion = undefined

@@ -1,10 +1,10 @@
+import { CompletionStatusTag } from '@features/missions/components/CompletionStatusTag'
+import { MissionStatusTag } from '@features/missions/components/MissionStatusTag'
 import { getMissionCompletionStatus } from '@features/missions/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import { editMissionInLocalStore } from 'domain/use_cases/missions/editMissionInLocalStore'
 import styled from 'styled-components'
-import { CompletionStatusTag } from 'ui/CompletionStatusTag'
-import { MissionStatusTag } from 'ui/MissionStatusTag'
 
 import { getMissionStatus, type Mission } from '../../../../domain/entities/missions'
 import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'

@@ -30,20 +30,21 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.wait('@getMissions')
   })
 
-  it('Should filter missions by source', () => {
-    cy.fill('Origine', 'CACEM')
+  it('Should filter missions by completion status', () => {
+    cy.fill('Etat des données', ['Complétées'])
     cy.wait('@getMissions')
 
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('données Complétées')
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
       if (index === 0) {
         return
       }
 
-      cy.wrap(row).should('contain', 'CACEM')
+      cy.wrap(row).should('contain', 'Complétées')
     })
 
-    cy.fill('Administration', undefined)
+    cy.fill('Etat des données', undefined)
   })
 
   it('Should filter missions by administrations', () => {
@@ -185,6 +186,7 @@ context('Side Window > Mission List > Filter Bar', () => {
 
     cy.fill('Thématique', undefined)
   })
+
   it('Should themes filter depends on date filter', () => {
     cy.fill('Période', 'Période spécifique')
 
@@ -211,5 +213,13 @@ context('Side Window > Mission List > Filter Bar', () => {
 
     cy.get('*[data-cy="mission-theme-filter"]').click()
     cy.get('#theme-listbox > div').should('have.length', 34)
+  })
+
+  it('Should filter missions with env actions', () => {
+    cy.fill('Missions avec actions env.', true)
+    cy.wait('@getMissions')
+
+    cy.get('.Table-SimpleTable tr').should('have.length', 6)
+    cy.fill('Missions avec actions env.', false)
   })
 })

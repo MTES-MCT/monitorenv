@@ -1,6 +1,6 @@
 import { Accent, Icon, Tag, THEME } from '@mtes-mct/monitor-ui'
 
-import { missionStatusLabels } from '../domain/entities/missions'
+import { missionStatusLabels } from '../../../domain/entities/missions'
 
 export function MissionStatusTag({ status }: { status: string }) {
   switch (status) {
@@ -9,6 +9,7 @@ export function MissionStatusTag({ status }: { status: string }) {
         <Tag
           accent={Accent.PRIMARY}
           color={THEME.color.charcoal}
+          data-cy="mission-status-tag-pending"
           Icon={Icon.Clock}
           iconColor={THEME.color.blueGray}
           withCircleIcon
@@ -18,14 +19,26 @@ export function MissionStatusTag({ status }: { status: string }) {
       )
     case missionStatusLabels.ENDED.code:
       return (
-        <Tag accent={Accent.PRIMARY} Icon={Icon.Confirm} iconColor={THEME.color.charcoal} withCircleIcon>
+        <Tag
+          accent={Accent.PRIMARY}
+          data-cy="mission-status-tag-ended"
+          Icon={Icon.Confirm}
+          iconColor={THEME.color.charcoal}
+          withCircleIcon
+        >
           {missionStatusLabels.ENDED.libelle}
         </Tag>
       )
 
     case missionStatusLabels.UPCOMING.code:
       return (
-        <Tag accent={Accent.PRIMARY} Icon={Icon.Clock} iconColor={THEME.color.mayaBlue} withCircleIcon>
+        <Tag
+          accent={Accent.PRIMARY}
+          data-cy="mission-status-tag-upcoming"
+          Icon={Icon.Clock}
+          iconColor={THEME.color.mayaBlue}
+          withCircleIcon
+        >
           {missionStatusLabels.UPCOMING.libelle}
         </Tag>
       )

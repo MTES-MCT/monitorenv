@@ -11,6 +11,7 @@ export function CompletionStatusTag({ completion = undefined }: { completion?: F
         <Tag
           backgroundColor={THEME.color.gainsboro}
           color={THEME.color.mediumSeaGreen}
+          data-cy="completion-mission-status-tag-completed"
           Icon={Icon.Confirm}
           iconColor={THEME.color.mediumSeaGreen}
           withCircleIcon
@@ -23,6 +24,7 @@ export function CompletionStatusTag({ completion = undefined }: { completion?: F
         <Tag
           backgroundColor={THEME.color.gainsboro}
           color={THEME.color.mediumSeaGreen}
+          data-cy="completion-mission-status-tag-up-to-date"
           Icon={Icon.Confirm}
           iconColor={THEME.color.mediumSeaGreen}
           withCircleIcon
@@ -35,6 +37,7 @@ export function CompletionStatusTag({ completion = undefined }: { completion?: F
         <Tag
           backgroundColor={THEME.color.gainsboro}
           color={THEME.color.maximumRed}
+          data-cy="completion-mission-status-tag-to-completed-mission-ended"
           Icon={Icon.AttentionFilled}
           iconColor={THEME.color.maximumRed}
           withCircleIcon
@@ -48,6 +51,7 @@ export function CompletionStatusTag({ completion = undefined }: { completion?: F
         <Tag
           backgroundColor={THEME.color.gainsboro}
           color={THEME.color.charcoal}
+          data-cy="completion-mission-status-tag-to-completed"
           Icon={Icon.AttentionFilled}
           iconColor={THEME.color.charcoal}
           withCircleIcon

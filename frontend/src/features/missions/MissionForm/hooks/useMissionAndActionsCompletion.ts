@@ -1,8 +1,4 @@
-import {
-  getMissionCompletionFrontStatus,
-  hasAtLeastOnUncompletedEnvAction,
-  hasAtLeastOnUncompletedFishAction
-} from '@features/missions/utils'
+import { getMissionCompletionFrontStatus, hasAtLeastOnUncompletedEnvAction } from '@features/missions/utils'
 import {
   ActionTypeEnum,
   CompletionStatus,
@@ -20,8 +16,8 @@ export function useMissionAndActionsCompletion() {
   const { errors, values } = useFormikContext<Mission>()
   const missionStatus = getMissionStatus(values)
   const hasAtLeastOnUncompletedAction = useMemo(
-    () => hasAtLeastOnUncompletedEnvAction(values.envActions) || hasAtLeastOnUncompletedFishAction(values.fishActions),
-    [values.envActions, values.fishActions]
+    () => hasAtLeastOnUncompletedEnvAction(values.envActions),
+    [values.envActions]
   )
 
   const isGeneralInformationsUncomplete = useMemo(

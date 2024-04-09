@@ -1,7 +1,7 @@
 import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { missionStatusLabels } from '../domain/entities/missions'
+import { missionStatusLabels } from '../../../domain/entities/missions'
 
 export function MissionStatusLabel({ missionStatus }) {
   switch (missionStatus) {

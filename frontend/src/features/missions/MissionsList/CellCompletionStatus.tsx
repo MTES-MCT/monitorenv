@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { CompletionStatusLabel } from 'ui/CompletionStatusLabel'
 
+import { CompletionStatusLabel } from '../components/CompletionStatusLabel'
 import { getMissionCompletionStatus } from '../utils'
 
 export function CellCompletionStatus({ row }: { row?: any }) {
