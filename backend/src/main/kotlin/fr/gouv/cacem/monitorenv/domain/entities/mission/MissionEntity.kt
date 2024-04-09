@@ -10,7 +10,7 @@ data class MissionEntity(
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val openBy: String? = null,
-    val closedBy: String? = null,
+    val completedBy: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
     val facade: String? = null,

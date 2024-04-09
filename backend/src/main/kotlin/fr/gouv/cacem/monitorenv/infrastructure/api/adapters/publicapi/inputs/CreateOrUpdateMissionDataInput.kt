@@ -31,7 +31,7 @@ data class CreateOrUpdateMissionDataInput(
             missionTypes = this.missionTypes,
             controlUnits = this.controlUnits,
             openBy = this.openBy,
-            closedBy = this.closedBy,
+            completedBy = this.closedBy,
             observationsCacem = this.observationsCacem,
             observationsCnsp = this.observationsCnsp,
             facade = this.facade,

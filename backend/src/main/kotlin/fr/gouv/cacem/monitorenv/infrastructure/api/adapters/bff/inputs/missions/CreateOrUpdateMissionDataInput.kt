@@ -13,7 +13,7 @@ data class CreateOrUpdateMissionDataInput(
     val id: Int? = null,
     val attachedReportingIds: List<Int>,
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
-    val closedBy: String? = null,
+    val completedBy: String? = null,
     val envActions: List<MissionEnvActionDataInput>? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
@@ -35,7 +35,7 @@ data class CreateOrUpdateMissionDataInput(
 
         return MissionEntity(
             id = this.id,
-            closedBy = this.closedBy,
+            completedBy = this.completedBy,
             controlUnits = this.controlUnits,
             endDateTimeUtc = this.endDateTimeUtc,
             envActions = this.envActions?.map { it.toEnvActionEntity() },

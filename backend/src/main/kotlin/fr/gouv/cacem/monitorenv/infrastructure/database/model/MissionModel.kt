@@ -142,8 +142,8 @@ class MissionModel(
     @OrderBy("id")
     val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
 
-    @Column(name = "closed_by")
-    val closedBy: String? = null,
+    @Column(name = "completed_by")
+    val completedBy: String? = null,
 
     @Column(name = "created_at_utc", updatable = false)
     @CreationTimestamp
@@ -234,7 +234,7 @@ class MissionModel(
 
         return MissionEntity(
             id = id,
-            closedBy = closedBy,
+            completedBy = completedBy,
             controlUnits = mappedControlUnits ?: emptyList(),
             endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             createdAtUtc = createdAtUtc?.atZone(UTC),
@@ -333,7 +333,7 @@ class MissionModel(
             val missionModel =
                 MissionModel(
                     id = mission.id,
-                    closedBy = mission.closedBy,
+                    completedBy = mission.completedBy,
                     endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
                     facade = mission.facade,
                     geom = mission.geom,

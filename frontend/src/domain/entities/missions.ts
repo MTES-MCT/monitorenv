@@ -234,7 +234,7 @@ export enum ActionSource {
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
   attachedReportings: ReportingDetailed[]
-  closedBy: string
+  completedBy: string
   controlUnits: LegacyControlUnit[]
   createdAtUtc?: string | undefined
   detachedReportingIds: number[]
@@ -278,6 +278,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
+  completedBy: string
   completion: CompletionStatus
   controlPlans: ControlPlansData[]
   geom?: GeoJSON.MultiPolygon | GeoJSON.MultiPoint
@@ -287,6 +288,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
   isSeafarersControl?: boolean
   observations: string | null
+  openBy: string
   reportingIds: number[]
   vehicleType?: string
 }
@@ -297,11 +299,13 @@ export type EnvActionControl = NewEnvActionControl & {
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
+  completedBy: string
   completion: CompletionStatus
   controlPlans: ControlPlansData[]
   durationMatchesMission?: boolean
   geom?: GeoJSON.MultiPolygon
   observations: string | null
+  openBy: string
   reportingIds: number[]
 }
 

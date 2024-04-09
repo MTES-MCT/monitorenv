@@ -77,7 +77,7 @@ export const ClosedEnvActionSchema = Yup.lazy((value, context) => {
 
 const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
-    closedBy: Yup.string().nullable(),
+    completedBy: Yup.string().nullable(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.date()
       .nullable()
@@ -104,11 +104,10 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .required()
 
 const ClosedMissionSchema = NewMissionSchema.shape({
-  closedBy: Yup.string()
+  completedBy: Yup.string()
     .min(3, 'Minimum 3 lettres pour le Trigramme')
     .max(3, 'Maximum 3 lettres pour le Trigramme')
-    .nullable()
-    .required(HIDDEN_ERROR),
+    .nullable(),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
   envActions: Yup.array()
     .of(ClosedEnvActionSchema as any)

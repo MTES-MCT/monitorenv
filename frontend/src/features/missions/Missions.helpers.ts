@@ -106,7 +106,7 @@ export const missionFactory = (
   let formattedMission = {
     attachedReportingIds: attachedReporting ? [attachedReporting.id as number] : [],
     attachedReportings: attachedReporting ? [attachedReporting] : [],
-    closedBy: '',
+    completedBy: '',
     controlUnits: [controlUnitFactory()],
     detachedReportingIds: [],
     endDateTimeUtc: '',

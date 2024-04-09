@@ -24,6 +24,7 @@ abstract class EnvActionEntity(
     open val actionType: ActionTypeEnum,
     open val actionEndDateTimeUtc: ZonedDateTime? = null,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
+    open val completedBy: String? = null,
     open val completion: ActionCompletionEnum? = null,
     open val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
     open val department: String? = null,
@@ -33,4 +34,5 @@ abstract class EnvActionEntity(
     open val isComplianceWithWaterRegulationsControl: Boolean? = null,
     open val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     open val isSeafarersControl: Boolean? = null,
+    open val openBy: String? = null,
 )

@@ -178,6 +178,7 @@ class MissionsITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 controlPlans =
                 listOf(
@@ -195,6 +196,7 @@ class MissionsITests {
                 isSafetyEquipmentAndStandardsComplianceControl = false,
                 isSeafarersControl = false,
                 observations = "Observations de l'action de contrôle",
+                openBy = "ABC",
                 actionNumberOfControls = 2,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VEHICLE_LAND,
@@ -243,7 +245,7 @@ class MissionsITests {
                         ),
                     ),
                     openBy = "OpenBy",
-                    closedBy = "ClosedBy",
+                    completedBy = "CompletedBy",
                     facade = "Outre-Mer",
                     geom = polygon,
                     startDateTimeUtc =
@@ -337,7 +339,7 @@ class MissionsITests {
             )
             .andExpect(jsonPath("$[0].controlUnits[0].id", equalTo(1)))
             .andExpect(jsonPath("$[0].openBy", equalTo("OpenBy")))
-            .andExpect(jsonPath("$[0].closedBy", equalTo("ClosedBy")))
+            .andExpect(jsonPath("$[0].completedBy", equalTo("CompletedBy")))
             .andExpect(jsonPath("$[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$[0].startDateTimeUtc", equalTo("2022-01-15T04:50:09Z")))
@@ -384,6 +386,8 @@ class MissionsITests {
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$[0].envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$[0].envActions[0].department", equalTo("29")))
+            .andExpect(jsonPath("$[0].envActions[0].completedBy", equalTo("DEF")))
+            .andExpect(jsonPath("$[0].envActions[0].openBy", equalTo("ABC")))
             .andExpect(jsonPath("$[0].envActions[0].isAdministrativeControl", equalTo(false)))
             .andExpect(
                 jsonPath(
@@ -493,6 +497,7 @@ class MissionsITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 controlPlans =
                 listOf(
@@ -510,6 +515,7 @@ class MissionsITests {
                 isSafetyEquipmentAndStandardsComplianceControl = false,
                 isSeafarersControl = false,
                 observations = "Observations de l'action de contrôle",
+                openBy = "ABC",
                 actionNumberOfControls = 2,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VEHICLE_LAND,
@@ -558,7 +564,7 @@ class MissionsITests {
                         ),
                     ),
                     openBy = "OpenBy",
-                    closedBy = "ClosedBy",
+                    completedBy = "CompletedBy",
                     facade = "Outre-Mer",
                     geom = polygon,
                     startDateTimeUtc =
@@ -639,7 +645,7 @@ class MissionsITests {
             .andExpect(jsonPath("$.id", equalTo(10)))
             .andExpect(jsonPath("$.controlUnits[0].id", equalTo(1)))
             .andExpect(jsonPath("$.openBy", equalTo("OpenBy")))
-            .andExpect(jsonPath("$.closedBy", equalTo("ClosedBy")))
+            .andExpect(jsonPath("$.completedBy", equalTo("CompletedBy")))
             .andExpect(jsonPath("$.facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$.startDateTimeUtc", equalTo("2022-01-15T04:50:09Z")))
@@ -684,6 +690,8 @@ class MissionsITests {
             .andExpect(jsonPath("$.envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$.envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$.envActions[0].department", equalTo("29")))
+            .andExpect(jsonPath("$.envActions[0].completedBy", equalTo("DEF")))
+            .andExpect(jsonPath("$.envActions[0].openBy", equalTo("ABC")))
             .andExpect(jsonPath("$.envActions[0].isAdministrativeControl", equalTo(false)))
             .andExpect(
                 jsonPath(

@@ -340,7 +340,7 @@ context('Side Window > Mission Form > Main Form', () => {
               attachedReportingIds: [],
               attachedReportings: [],
               // Changed field
-              closedBy: 'LTH',
+              completedBy: 'LTH',
               controlUnits: [
                 {
                   administration: 'DREAL / DEAL',
@@ -397,7 +397,7 @@ context('Side Window > Mission Form > Main Form', () => {
       '@updateMission',
       {
         body: {
-          closedBy: 'LTH',
+          completedBy: 'LTH',
           observationsCnsp: 'Encore une observation',
           openBy: 'LTH'
         }

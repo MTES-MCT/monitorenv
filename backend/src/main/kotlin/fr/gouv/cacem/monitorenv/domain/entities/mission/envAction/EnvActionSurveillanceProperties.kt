@@ -12,22 +12,26 @@ data class EnvActionSurveillanceProperties(
         id: UUID,
         actionStartDateTimeUtc: ZonedDateTime?,
         actionEndDateTimeUtc: ZonedDateTime?,
+        completedBy: String?,
         completion: ActionCompletionEnum?,
         controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
         geom: Geometry?,
+        openBy: String?,
     ) =
         EnvActionSurveillanceEntity(
             id = id,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionEndDateTimeUtc = actionEndDateTimeUtc,
+            completedBy = completedBy,
             completion = completion,
             controlPlans = controlPlans,
             department = department,
             facade = facade,
             geom = geom,
             observations = observations,
+            openBy = openBy,
         )
     companion object {
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) =

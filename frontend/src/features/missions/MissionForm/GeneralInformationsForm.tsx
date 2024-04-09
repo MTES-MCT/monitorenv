@@ -178,11 +178,11 @@ export function GeneralInformationsForm({
           <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
           <StyledAuthorContainer>
             <FormikTextInput isErrorMessageHidden isRequired label="Ouvert par" name="openBy" />
-            <FormikTextInput isErrorMessageHidden isRequired label="Clôturé par" name="closedBy" />
+            <FormikTextInput isErrorMessageHidden isRequired label="Complété par" name="completedBy" />
           </StyledAuthorContainer>
           {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
-          {errors.openBy && errors.openBy !== HIDDEN_ERROR && <FieldError>{errors.openBy}</FieldError>}
-          {errors.closedBy && errors.closedBy !== HIDDEN_ERROR && <FieldError>{errors.closedBy}</FieldError>}
+          {errors.openBy && errors.openBy.length > 1 && <FieldError>{errors.openBy}</FieldError>}
+          {errors.completedBy && errors.completedBy.length > 1 && <FieldError>{errors.completedBy}</FieldError>}
         </StyledObservationsContainer>
       </StyledFormWrapper>
     </StyledContainer>

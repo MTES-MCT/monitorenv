@@ -16,6 +16,7 @@ data class MissionEnvActionControlDataOutput(
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
+    val completedBy: String? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = listOf(),
     val department: String? = null,
     val facade: String? = null,
@@ -26,6 +27,7 @@ data class MissionEnvActionControlDataOutput(
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     val isSeafarersControl: Boolean? = null,
     val observations: String? = null,
+    val openBy: String? = null,
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     MissionEnvActionDataOutput(
@@ -43,6 +45,7 @@ data class MissionEnvActionControlDataOutput(
                 actionStartDateTimeUtc = envActionControlEntity.actionStartDateTimeUtc,
                 actionEndDateTimeUtc = envActionControlEntity.actionEndDateTimeUtc,
                 actionTargetType = envActionControlEntity.actionTargetType,
+                completedBy = envActionControlEntity.completedBy,
                 controlPlans =
                 envActionControlEntity.controlPlans?.map {
                     MissionEnvActionControlPlanDataOutput
@@ -60,6 +63,7 @@ data class MissionEnvActionControlDataOutput(
                     .isSafetyEquipmentAndStandardsComplianceControl,
                 isSeafarersControl = envActionControlEntity.isSeafarersControl,
                 observations = envActionControlEntity.observations,
+                openBy = envActionControlEntity.openBy,
                 vehicleType = envActionControlEntity.vehicleType,
             )
     }

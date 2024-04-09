@@ -222,7 +222,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-    cy.get('[name="closedBy"]').scrollIntoView().type('PCF')
+    cy.get('[name="completedBy"]').scrollIntoView().type('PCF')
     cy.wait(250)
 
     // Add a control

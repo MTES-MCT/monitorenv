@@ -37,7 +37,7 @@ data class MissionDataOutput(
                 missionTypes = mission.missionTypes,
                 controlUnits = mission.controlUnits,
                 openBy = mission.openBy,
-                closedBy = mission.closedBy,
+                closedBy = mission.completedBy,
                 observationsCacem = mission.observationsCacem,
                 observationsCnsp = mission.observationsCnsp,
                 facade = mission.facade,
@@ -46,7 +46,8 @@ data class MissionDataOutput(
                 endDateTimeUtc = mission.endDateTimeUtc,
                 createdAtUtc = mission.createdAtUtc,
                 updatedAtUtc = mission.updatedAtUtc,
-                envActions = mission.envActions?.map {
+                envActions =
+                mission.envActions?.map {
                     MissionEnvActionDataOutput.fromEnvActionEntity(
                         envActionEntity = it,
                     )

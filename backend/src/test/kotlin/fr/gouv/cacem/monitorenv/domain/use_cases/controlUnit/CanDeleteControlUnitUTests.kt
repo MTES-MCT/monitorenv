@@ -19,7 +19,7 @@ val FAKE_MISSION =
         missionTypes = listOf(),
         controlUnits = listOf(),
         openBy = null,
-        closedBy = null,
+        completedBy = null,
         observationsCacem = null,
         observationsCnsp = null,
         facade = null,
@@ -68,11 +68,9 @@ val FAKE_REPORTING =
 
 @ExtendWith(SpringExtension::class)
 class CanDeleteControlUnitUTests {
-    @MockBean
-    private lateinit var missionRepository: IMissionRepository
+    @MockBean private lateinit var missionRepository: IMissionRepository
 
-    @MockBean
-    private lateinit var reportingRepository: IReportingRepository
+    @MockBean private lateinit var reportingRepository: IReportingRepository
 
     @Test
     fun `execute should return TRUE there are neither missions nor reportings attached to this control unit`() {
@@ -81,7 +79,8 @@ class CanDeleteControlUnitUTests {
         given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
         given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
 
-        val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
+        val result =
+            CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
         assertThat(result).isTrue()
     }
@@ -90,12 +89,14 @@ class CanDeleteControlUnitUTests {
     fun `execute should return FALSE when there are non-deleted missions attached to this control unit`() {
         val controlUnitId = 1
 
-        given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(
-            listOf(FAKE_MISSION),
-        )
+        given(missionRepository.findByControlUnitId(controlUnitId))
+            .willReturn(
+                listOf(FAKE_MISSION),
+            )
         given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
 
-        val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
+        val result =
+            CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
         assertThat(result).isFalse()
     }
@@ -104,12 +105,14 @@ class CanDeleteControlUnitUTests {
     fun `execute should return TRUE when there are only deleted missions attached to this control unit`() {
         val controlUnitId = 1
 
-        given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(
-            listOf(FAKE_MISSION.copy(isDeleted = true)),
-        )
+        given(missionRepository.findByControlUnitId(controlUnitId))
+            .willReturn(
+                listOf(FAKE_MISSION.copy(isDeleted = true)),
+            )
         given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
 
-        val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
+        val result =
+            CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
         assertThat(result).isTrue()
     }
@@ -119,11 +122,13 @@ class CanDeleteControlUnitUTests {
         val controlUnitId = 1
 
         given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
-        given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(
-            listOf(FAKE_REPORTING),
-        )
+        given(reportingRepository.findByControlUnitId(controlUnitId))
+            .willReturn(
+                listOf(FAKE_REPORTING),
+            )
 
-        val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
+        val result =
+            CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
         assertThat(result).isFalse()
     }
@@ -133,11 +138,13 @@ class CanDeleteControlUnitUTests {
         val controlUnitId = 1
 
         given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
-        given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(
-            listOf(FAKE_REPORTING.copy(isDeleted = true)),
-        )
+        given(reportingRepository.findByControlUnitId(controlUnitId))
+            .willReturn(
+                listOf(FAKE_REPORTING.copy(isDeleted = true)),
+            )
 
-        val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
+        val result =
+            CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
         assertThat(result).isTrue()
     }
