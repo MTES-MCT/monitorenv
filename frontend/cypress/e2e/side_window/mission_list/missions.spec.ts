@@ -29,9 +29,7 @@ context('Missions', () => {
     cy.get('*[data-cy="edit-mission-47"]').should('exist')
 
     cy.log('Administrations should be filtered')
-    cy.get('*[data-cy="edit-mission-48"]').should('exist')
-    cy.get('*[data-cy="select-administration-filter"]').click()
-    cy.get('div[role="option"]').find('label').contains('DDTM').forceClick()
+    cy.fill('Administration', ['DDTM'])
     cy.get('*[data-cy="edit-mission-48"]').should('not.exist')
 
     cy.log('Initialize filters')

@@ -158,7 +158,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by statuses', () => {
-    cy.fill('Statut', ['En cours'])
+    cy.fill('Statut de mission', ['En cours'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -169,7 +169,7 @@ context('Side Window > Mission List > Filter Bar', () => {
       cy.wrap(row).should('contain', 'En cours')
     })
 
-    cy.fill('Statut', undefined)
+    cy.fill('Statut de mission', undefined)
   })
 
   it('Should filter missions by themes', () => {
