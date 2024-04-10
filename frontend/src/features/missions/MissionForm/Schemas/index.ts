@@ -77,7 +77,10 @@ export const ClosedEnvActionSchema = Yup.lazy((value, context) => {
 
 const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
-    completedBy: Yup.string().nullable(),
+    completedBy: Yup.string()
+      .min(3, 'Minimum 3 lettres pour le trigramme')
+      .max(3, 'Maximum 3 lettres pour le trigramme')
+      .nullable(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.date()
       .nullable()
@@ -94,20 +97,14 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     isClosed: Yup.boolean().oneOf([false]).required(),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
-      .min(3, 'le Trigramme doit comporter 3 lettres')
-      .max(3, 'le Trigramme doit comporter 3 lettres')
-      .nullable()
-      // TODO [Missions] Delete when deploying the auto-save feature
-      .required(HIDDEN_ERROR),
+      .min(3, 'Minimum 3 lettres pour le trigramme')
+      .max(3, 'Maximum 3 lettres pour le trigramme')
+      .nullable(),
     startDateTimeUtc: Yup.date().required(HIDDEN_ERROR)
   })
   .required()
 
 const ClosedMissionSchema = NewMissionSchema.shape({
-  completedBy: Yup.string()
-    .min(3, 'Minimum 3 lettres pour le Trigramme')
-    .max(3, 'Maximum 3 lettres pour le Trigramme')
-    .nullable(),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
   envActions: Yup.array()
     .of(ClosedEnvActionSchema as any)

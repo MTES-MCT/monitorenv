@@ -181,8 +181,8 @@ export function GeneralInformationsForm({
             <FormikTextInput isErrorMessageHidden isRequired label="Complété par" name="completedBy" />
           </StyledAuthorContainer>
           {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
-          {errors.openBy && errors.openBy.length > 1 && <FieldError>{errors.openBy}</FieldError>}
-          {errors.completedBy && errors.completedBy.length > 1 && <FieldError>{errors.completedBy}</FieldError>}
+          {errors.openBy && errors.openBy !== HIDDEN_ERROR && <FieldError>{errors.openBy}</FieldError>}
+          {errors.completedBy && errors.completedBy !== HIDDEN_ERROR && <FieldError>{errors.completedBy}</FieldError>}
         </StyledObservationsContainer>
       </StyledFormWrapper>
     </StyledContainer>
