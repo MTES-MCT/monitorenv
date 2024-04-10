@@ -84,6 +84,7 @@ export function LayerSearch() {
       _.chain(amps?.entities)
         .map(l => l?.type)
         .uniq()
+        .filter(l => !!l)
         .map(l => ({ label: l, value: l }))
         .sortBy('label')
         .value() as Option<string>[],

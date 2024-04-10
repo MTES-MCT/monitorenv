@@ -15,7 +15,7 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
 
   const handleRemoveZone = () => dispatch(removeAmpZonesFromMyLayers([amp.id]))
 
-  const displayedName = amp?.type?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
+  const displayedName = amp?.type?.replace(/[_]/g, ' ') ?? 'AUNCUN NOM'
 
   const toggleAmpZoneMetadata = () => {
     if (metadataIsShown) {
