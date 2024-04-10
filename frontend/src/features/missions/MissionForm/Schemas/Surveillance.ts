@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import { ClosedControlPlansSchema } from './ControlPlans'
 import { ActionTypeEnum, type EnvActionSurveillance } from '../../../../domain/entities/missions'
 import { isCypress } from '../../../../utils/isCypress'
+import { HIDDEN_ERROR } from '../constants'
 
 const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
@@ -44,7 +45,7 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
         .min(Yup.ref('actionStartDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
       actionStartDateTimeUtc: Yup.date()
         .nullable()
-        .required('_')
+        .required(HIDDEN_ERROR)
         .test({
           message: 'La date de début doit être postérieure à celle de début de mission',
           test: value => {
@@ -81,7 +82,7 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
     .shape({
       actionEndDateTimeUtc: Yup.date()
         .nullable()
-        .required('_')
+        .required(HIDDEN_ERROR)
         .test({
           message: 'La date de fin doit être postérieure à celle de début de mission',
           test: value => {
@@ -108,7 +109,7 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
         .min(Yup.ref('actionStartDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
       actionStartDateTimeUtc: Yup.date()
         .nullable()
-        .required('_')
+        .required(HIDDEN_ERROR)
         .test({
           message: 'La date de début doit être postérieure à celle de début de mission',
           test: value => {

@@ -37,6 +37,7 @@ import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
+import { HIDDEN_ERROR } from '../../constants'
 import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
 import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
@@ -307,7 +308,7 @@ export function ControlForm({
             onChange={updateControlDate}
             withTime
           />
-          {actionStartDateTimeUtcErrorMessage && actionStartDateTimeUtcErrorMessage.length > 1 && (
+          {actionStartDateTimeUtcErrorMessage && actionStartDateTimeUtcErrorMessage !== HIDDEN_ERROR && (
             <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>
           )}
         </div>

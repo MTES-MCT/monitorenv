@@ -15,6 +15,7 @@ import { FieldArray, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { HIDDEN_ERROR } from './constants'
 import { ControlUnitsForm } from './ControlUnitsForm'
 import { MissionZonePicker } from './MissionZonePicker'
 import { FormTitle, Separator } from './style'
@@ -114,10 +115,10 @@ export function GeneralInformationsForm({
               />
             </StyledDatePickerContainer>
             {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
-            {errors.startDateTimeUtc && errors.startDateTimeUtc?.length > 1 && (
+            {errors.startDateTimeUtc && errors.startDateTimeUtc !== HIDDEN_ERROR && (
               <FieldError>{errors.startDateTimeUtc}</FieldError>
             )}
-            {errors.endDateTimeUtc && errors.endDateTimeUtc.length > 1 && (
+            {errors.endDateTimeUtc && errors.endDateTimeUtc !== HIDDEN_ERROR && (
               <FieldError>{errors.endDateTimeUtc}</FieldError>
             )}
           </div>
@@ -180,8 +181,8 @@ export function GeneralInformationsForm({
             <FormikTextInput isErrorMessageHidden isRequired label="Clôturé par" name="closedBy" />
           </StyledAuthorContainer>
           {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
-          {errors.openBy && errors.openBy.length > 1 && <FieldError>{errors.openBy}</FieldError>}
-          {errors.closedBy && errors.closedBy.length > 1 && <FieldError>{errors.closedBy}</FieldError>}
+          {errors.openBy && errors.openBy !== HIDDEN_ERROR && <FieldError>{errors.openBy}</FieldError>}
+          {errors.closedBy && errors.closedBy !== HIDDEN_ERROR && <FieldError>{errors.closedBy}</FieldError>}
         </StyledObservationsContainer>
       </StyledFormWrapper>
     </StyledContainer>

@@ -22,3 +22,5 @@ export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [
   // TODO add the update of the env actions
   'envActions'
 ]
+
+export const HIDDEN_ERROR = 'HIDDEN_ERROR'

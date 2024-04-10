@@ -32,6 +32,7 @@ import {
 } from '../../../../../domain/entities/missions'
 import { dateDifferenceInHours } from '../../../../../utils/dateDifferenceInHours'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
+import { HIDDEN_ERROR } from '../../constants'
 import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
 import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
@@ -276,10 +277,10 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             )}
           </StyledDatePickerContainer>
           {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
-          {actionErrors?.actionStartDateTimeUtc && actionErrors?.actionStartDateTimeUtc.length > 1 && (
+          {actionErrors?.actionStartDateTimeUtc && actionErrors?.actionStartDateTimeUtc !== HIDDEN_ERROR && (
             <FieldError>{actionErrors?.actionStartDateTimeUtc}</FieldError>
           )}
-          {actionErrors?.actionEndDateTimeUtc && actionErrors?.actionEndDateTimeUtc.length > 1 && (
+          {actionErrors?.actionEndDateTimeUtc && actionErrors?.actionEndDateTimeUtc !== HIDDEN_ERROR && (
             <FieldError>{actionErrors?.actionEndDateTimeUtc}</FieldError>
           )}
           <StyledFormikCheckbox

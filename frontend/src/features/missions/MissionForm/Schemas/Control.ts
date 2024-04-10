@@ -6,6 +6,7 @@ import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { isCypress } from '../../../../utils/isCypress'
+import { HIDDEN_ERROR } from '../constants'
 
 const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
@@ -56,7 +57,7 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
       actionNumberOfControls: Yup.number().required('Requis'),
       actionStartDateTimeUtc: Yup.string()
         .nullable()
-        .required('_')
+        .required(HIDDEN_ERROR)
         .test({
           message: 'La date doit être postérieure à celle de début de mission',
           test: value => {
