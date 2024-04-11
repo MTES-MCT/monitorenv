@@ -11,7 +11,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     })
   })
 
-  it('A mission should be created and closed with surveillances and valid dates', () => {
+  it('A mission should be created with surveillances and valid dates', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="add-mission"]').click()
@@ -109,7 +109,6 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // Start date of surveillance is before start date of mission
     cy.fill('Date et heure de début de surveillance', [2024, 5, 25, 23, 35])
-    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être postérieure à celle de début de mission')
 
@@ -132,12 +131,14 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
 
     // Valid end date of surveillance
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.fill('Date et heure de fin de surveillance', [2024, 5, 28, 13, 35])
 
     // Then
-    cy.wait('@updateAndCloseMission').then(({ response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
+
+      // TODO delete mission to clean data
     })
   })
 
@@ -241,8 +242,6 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // Date is before start date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 25, 23, 35])
-
-    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date doit être postérieure à celle de début de mission')
 
@@ -252,12 +251,14 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('.Element-FieldError').contains('La date doit être antérieure à celle de fin de mission')
 
     // Valid date
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 13, 16])
 
     // Then
-    cy.wait('@updateAndCloseMission').then(({ response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
+
+      // TODO delete mission to clean data
     })
   })
 })

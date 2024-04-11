@@ -96,7 +96,6 @@ class MissionsITests {
                     createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     isDeleted = false,
-                    isClosed = false,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
@@ -111,7 +110,6 @@ class MissionsITests {
                 geom = polygon,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(),
                 isGeometryComputedFromControls = false,
@@ -152,7 +150,6 @@ class MissionsITests {
                     startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                     isDeleted = false,
                     missionSource = MissionSourceEnum.MONITORFISH,
-                    isClosed = false,
                     hasMissionOrder = false,
                     isUnderJdp = false,
                     isGeometryComputedFromControls = false,
@@ -254,7 +251,6 @@ class MissionsITests {
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     observationsCacem = "obs cacem",
                     observationsCnsp = "obs cnsp",
-                    isClosed = false,
                     isDeleted = false,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
@@ -346,7 +342,6 @@ class MissionsITests {
             .andExpect(jsonPath("$[0].endDateTimeUtc", equalTo("2022-01-23T20:29:03Z")))
             .andExpect(jsonPath("$[0].observationsCacem", equalTo("obs cacem")))
             .andExpect(jsonPath("$[0].observationsCnsp", equalTo("obs cnsp")))
-            .andExpect(jsonPath("$[0].isClosed", equalTo(false)))
             .andExpect(jsonPath("$[0].isDeleted").doesNotExist())
             .andExpect(
                 jsonPath(
@@ -573,7 +568,6 @@ class MissionsITests {
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     observationsCacem = "obs cacem",
                     observationsCnsp = "obs cnsp",
-                    isClosed = false,
                     isDeleted = false,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
@@ -652,7 +646,6 @@ class MissionsITests {
             .andExpect(jsonPath("$.endDateTimeUtc", equalTo("2022-01-23T20:29:03Z")))
             .andExpect(jsonPath("$.observationsCacem", equalTo("obs cacem")))
             .andExpect(jsonPath("$.observationsCnsp", equalTo("obs cnsp")))
-            .andExpect(jsonPath("$.isClosed", equalTo(false)))
             .andExpect(jsonPath("$.isDeleted").doesNotExist())
             .andExpect(
                 jsonPath(
@@ -804,7 +797,6 @@ class MissionsITests {
                     observationsCacem = "updated observationsCacem",
                     startDateTimeUtc =
                     ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    isClosed = false,
                     isDeleted = false,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
@@ -832,7 +824,6 @@ class MissionsITests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 envActions = listOf(envAction),
                 missionSource = MissionSourceEnum.MONITORENV,
-                isClosed = false,
                 attachedReportingIds = listOf(1),
                 isGeometryComputedFromControls = false,
             )

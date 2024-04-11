@@ -295,46 +295,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findAll Should return filtered missions when status is set to CLOSED`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                seaFronts = null,
-                missionStatuses = listOf("CLOSED"),
-                pageNumber = null,
-                pageSize = null,
-            )
-        assertThat(missions).hasSize(18)
-
-        val queryCount = customQueryCountListener!!.getQueryCount()
-        println("Number of Queries Executed: $queryCount")
-    }
-
-    @Test
-    @Transactional
-    fun `findAll Should return filtered missions when status is set to CLOSED or UPCOMING`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                seaFronts = null,
-                missionStatuses = listOf("CLOSED", "UPCOMING"),
-                pageNumber = null,
-                pageSize = null,
-            )
-        assertThat(missions).hasSize(25)
-
-        val queryCount = customQueryCountListener!!.getQueryCount()
-        println("Number of Queries Executed: $queryCount")
-    }
-
-    @Test
-    @Transactional
     fun `findAll with pagenumber and pagesize Should return subset of missions`() {
         // When
         val missions =
@@ -420,7 +380,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-03-21T12:11:13Z"),
                     endDateTimeUtc = null,
                     geom = polygon,
-                    isClosed = false,
                     isDeleted = false,
                     envActions = listOf(),
                     missionSource = MissionSourceEnum.MONITORENV,
@@ -530,7 +489,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -656,7 +614,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -788,7 +745,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -828,7 +784,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -909,7 +864,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 observationsCnsp = null,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 isDeleted = false,
                 envActions = envActions,
                 missionSource = MissionSourceEnum.MONITORENV,
@@ -933,7 +887,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                     endDateTimeUtc =
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isClosed = false,
                     isDeleted = false,
                     envActions = envActions,
                     missionSource = MissionSourceEnum.MONITORENV,
@@ -986,7 +939,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 observationsCnsp = null,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 isDeleted = false,
                 envActions = listOf(envAction),
                 missionSource = MissionSourceEnum.MONITORENV,
@@ -1010,7 +962,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     createdAtUtc = null,
                     updatedAtUtc = null,
-                    isClosed = false,
                     isDeleted = false,
                     envActions = listOf(envAction),
                     missionSource = MissionSourceEnum.MONITORENV,

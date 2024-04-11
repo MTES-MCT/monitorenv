@@ -57,7 +57,7 @@ export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionCo
     .nullable()
     .required()
 
-export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
+export const getCompletionEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
   Yup.object()
     .shape({
       actionNumberOfControls: Yup.number().required('Requis'),

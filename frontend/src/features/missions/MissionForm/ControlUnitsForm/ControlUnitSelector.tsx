@@ -177,8 +177,8 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
   }
 
   return (
-    <RessourceUnitWrapper>
-      <AdministrationContainer>
+    <ControlUnitWrapper>
+      <RessourceUnitWrapper>
         <Select
           data-cy="add-control-administration"
           error={administrationMeta.error}
@@ -189,48 +189,51 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
           onChange={handleAdministrationChange}
           options={administrationsAsOption}
           searchable={administrationsAsOption.length > 10}
+          style={{ flex: 1 }}
           value={administrationField.value}
         />
-        {controlUnitIndex > 0 && (
-          <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeControlUnit} />
-        )}
-      </AdministrationContainer>
 
-      <div>
-        <Select
-          key={unitList.length}
-          customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
-          data-cy="add-control-unit"
-          error={unitNameMeta.error}
-          isErrorMessageHidden
-          isRequired
-          label={`Unité ${resourceUnitIndexDisplayed}`}
-          name={unitField.name}
-          onChange={handleUnitChange}
-          options={unitListAsOption ?? []}
-          searchable={unitList.length > 10}
-          value={unitField.value}
+        <div>
+          <Select
+            key={unitList.length}
+            customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
+            data-cy="add-control-unit"
+            error={unitNameMeta.error}
+            isErrorMessageHidden
+            isRequired
+            label={`Unité ${resourceUnitIndexDisplayed}`}
+            name={unitField.name}
+            onChange={handleUnitChange}
+            options={unitListAsOption ?? []}
+            searchable={unitList.length > 10}
+            style={{ flex: 1 }}
+            value={unitField.value}
+          />
+          {missionIsNewMission && <ControlUnitWarningMessage controlUnitIndex={controlUnitIndex} />}
+        </div>
+
+        <MultiSelect
+          cleanable={false}
+          disabled={!unitField.value}
+          label={`Moyen(s) ${resourceUnitIndexDisplayed}`}
+          name={resourcesField.name}
+          onChange={handleResourceChange}
+          options={resourcesAsOption ?? []}
+          style={{ flex: 1 }}
+          value={resourcesField.value.map(resource => resource.id)}
         />
-        {missionIsNewMission && <ControlUnitWarningMessage controlUnitIndex={controlUnitIndex} />}
-      </div>
 
-      <MultiSelect
-        cleanable={false}
-        disabled={!unitField.value}
-        label={`Moyen(s) ${resourceUnitIndexDisplayed}`}
-        name={resourcesField.name}
-        onChange={handleResourceChange}
-        options={resourcesAsOption ?? []}
-        value={resourcesField.value.map(resource => resource.id)}
-      />
-
-      <FormikTextInput
-        data-cy="control-unit-contact"
-        isErrorMessageHidden
-        label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
-        name={`controlUnits.${controlUnitIndex}.contact`}
-      />
-    </RessourceUnitWrapper>
+        <FormikTextInput
+          data-cy="control-unit-contact"
+          isErrorMessageHidden
+          label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
+          name={`controlUnits.${controlUnitIndex}.contact`}
+        />
+      </RessourceUnitWrapper>
+      {controlUnitIndex > 0 && (
+        <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeControlUnit} />
+      )}
+    </ControlUnitWrapper>
   )
 }
 
@@ -242,12 +245,14 @@ const RessourceUnitWrapper = styled.div`
   gap: 4px;
 `
 
-const AdministrationContainer = styled.div`
-  position: relative;
+const ControlUnitWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 8px;
 `
 
 const DeleteButton = styled(IconButton)`
-  position: absolute;
-  top: 21px;
-  left: calc(100% + 4px);
+  align-self: start;
+  margin-top: 20px;
 `

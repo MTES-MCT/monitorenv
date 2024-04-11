@@ -9,18 +9,15 @@ import { MissionSourceEnum, missionSourceEnum, type Mission } from '../../../dom
 
 type MissionFormBottomBarProps = {
   isAutoSaveEnabled: boolean
-  onCloseMission: MouseEventHandler<HTMLButtonElement>
   onDeleteMission: MouseEventHandler<HTMLButtonElement>
   onQuitFormEditing: MouseEventHandler<HTMLButtonElement>
-  onReopenMission: MouseEventHandler<HTMLButtonElement>
   onSaveMission: MouseEventHandler<HTMLButtonElement>
 }
+
 export function MissionFormBottomBar({
   isAutoSaveEnabled,
-  onCloseMission,
   onDeleteMission,
   onQuitFormEditing,
-  onReopenMission,
   onSaveMission
 }: MissionFormBottomBarProps) {
   const { values } = useFormikContext<Mission>()
@@ -31,7 +28,6 @@ export function MissionFormBottomBar({
     values?.missionSource === MissionSourceEnum.MONITORFISH
 
   const allowDeleteMission = !missionIsNewMission && allowEditMission
-  const allowCloseMission = !values?.isClosed
 
   const isFromMonitorFish = values.missionSource === MissionSourceEnum.MONITORFISH
 
@@ -70,29 +66,6 @@ export function MissionFormBottomBar({
       <Separator />
       <StyledButtonsContainer>
         <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
-        {allowCloseMission && allowEditMission && (
-          <Button
-            accent={Accent.SECONDARY}
-            data-cy="close-mission"
-            disabled={missionIsNewMission}
-            onClick={onCloseMission}
-            type="button"
-          >
-            Clôturer
-          </Button>
-        )}
-
-        {!allowCloseMission && allowEditMission && (
-          <Button
-            accent={Accent.SECONDARY}
-            data-cy="reopen-mission"
-            Icon={Icon.Unlock}
-            onClick={onReopenMission}
-            type="button"
-          >
-            Rouvrir la mission
-          </Button>
-        )}
         <Button
           accent={isAutoSaveEnabled ? Accent.PRIMARY : Accent.SECONDARY}
           data-cy="quit-edit-mission"

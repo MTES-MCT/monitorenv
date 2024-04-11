@@ -62,7 +62,6 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'Cross Etel'
             }
           ],
-          isClosed: false,
           missionTypes: ['SEA', 'LAND'],
           openBy: 'PCF'
         }
@@ -144,7 +143,6 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'Cross Etel'
             }
           ],
-          isClosed: false,
           missionTypes: ['SEA', 'LAND'],
           openBy: 'PCF'
         }
@@ -185,37 +183,6 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('[data-cy="mission-2"] > [aria-label="close"]').eq(0).click({ force: true })
     cy.wait(500)
-  })
-
-  it('A closed mission should be reopenable, editable and saved again', () => {
-    // Given
-    visitSideWindow()
-    cy.wait(200)
-    cy.get('*[data-cy="edit-mission-25"]').click({ force: true })
-
-    cy.intercept('PUT', `/bff/v1/missions/25`).as('updateMission')
-    cy.get('*[data-cy="reopen-mission"]').click()
-
-    // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-      expect(response && response.body.isClosed).equal(false)
-    })
-  })
-
-  it('A closed mission can be saved and stay closed', () => {
-    // Given
-    visitSideWindow()
-    cy.wait(200)
-    cy.get('*[data-cy="edit-mission-38"]').click({ force: true })
-    cy.intercept('PUT', '/bff/v1/missions/38').as('updateMission')
-    cy.fill("Contact de l'unité 1", 'Test')
-
-    // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-      expect(response && response.body.isClosed).equal(true)
-    })
   })
 
   it('A mission from monitorFish cannot be deleted', () => {
@@ -297,7 +264,6 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'PAM Jeanne Barret'
             }
           ],
-          isClosed: false,
           missionTypes: ['SEA', 'LAND'],
           openBy: 'PCF'
         }
@@ -373,7 +339,6 @@ context('Side Window > Mission Form > Main Form', () => {
               },
               hasMissionOrder: false,
               id: 43,
-              isClosed: false,
               isUnderJdp: false,
               missionSource: 'MONITORENV',
               missionTypes: ['SEA'],

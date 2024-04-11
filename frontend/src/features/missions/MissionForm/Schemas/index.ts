@@ -1,7 +1,8 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import * as Yup from 'yup'
 
-import { getClosedEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
-import { getClosedEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema } from './Surveillance'
+import { getCompletionEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
+import { getCompletionEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema } from './Surveillance'
 import {
   ActionTypeEnum,
   type EnvActionNote,
@@ -35,7 +36,7 @@ const ControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = Yup.object()
   })
   .defined()
 
-const ClosedControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = ControlUnitSchema.shape({
+const CompletionControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = ControlUnitSchema.shape({
   contact: Yup.string().nullable().notRequired()
 }).defined()
 
@@ -61,12 +62,12 @@ const NewEnvActionSchema = Yup.lazy((value, context) => {
   return Yup.object().required()
 })
 
-export const ClosedEnvActionSchema = Yup.lazy((value, context) => {
+export const CompletionEnvActionSchema = Yup.lazy((value, context) => {
   if (value.actionType === ActionTypeEnum.CONTROL) {
-    return getClosedEnvActionControlSchema(context)
+    return getCompletionEnvActionControlSchema(context)
   }
   if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
-    return getClosedEnvActionSurveillanceSchema(context)
+    return getCompletionEnvActionSurveillanceSchema(context)
   }
   if (value.actionType === ActionTypeEnum.NOTE) {
     return EnvActionNoteSchema
@@ -94,7 +95,6 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
       .of(NewEnvActionSchema as any)
       .nullable(),
     geom: Yup.object().nullable(),
-    isClosed: Yup.boolean().oneOf([false]).required(),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le trigramme')
@@ -104,18 +104,18 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   })
   .required()
 
-const ClosedMissionSchema = NewMissionSchema.shape({
-  controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
+const CompletionMissionSchema = NewMissionSchema.shape({
+  controlUnits: Yup.array().of(CompletionControlUnitSchema).ensure().defined().min(1),
   envActions: Yup.array()
-    .of(ClosedEnvActionSchema as any)
-    .nullable(),
-  isClosed: Yup.boolean().oneOf([true]).required(),
-  openBy: Yup.string().nullable()
+    .of(CompletionEnvActionSchema as any)
+    .nullable()
 })
 
 export const MissionSchema = Yup.lazy(value => {
-  if (value.isClosed) {
-    return ClosedMissionSchema
+  const now = customDayjs()
+  const isMissionEnded = value.endDateTimeUtc && now.isAfter(value.endDateTimeUtc)
+  if (isMissionEnded) {
+    return CompletionMissionSchema
   }
 
   return NewMissionSchema

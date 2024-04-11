@@ -72,7 +72,6 @@ class CreateOrUpdateMissionDataInputUTests {
                 facade = "Outre-Mer",
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(),
                 envActions = listOf(envActionControl, envActionSurveillance, envActionNote),

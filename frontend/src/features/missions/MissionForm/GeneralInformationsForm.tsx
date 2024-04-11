@@ -198,7 +198,6 @@ const StyledFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 16px;
-  max-width: 484px;
   gap: 24px;
 `
 
@@ -214,6 +213,9 @@ const StyledTagsContainer = styled.div`
   flex-direction: column;
   flex-shrink: 0;
   gap: 8px;
+  > span {
+    align-self: end;
+  }
 `
 const DatesAndTagsContainer = styled.div`
   align-items: start;

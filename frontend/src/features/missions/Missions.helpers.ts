@@ -112,7 +112,6 @@ export const missionFactory = (
     endDateTimeUtc: '',
     envActions: [],
     fishActions: [],
-    isClosed: false,
     isGeometryComputedFromControls: false,
     isUnderJdp: false,
     missionSource: MissionSourceEnum.MONITORENV,

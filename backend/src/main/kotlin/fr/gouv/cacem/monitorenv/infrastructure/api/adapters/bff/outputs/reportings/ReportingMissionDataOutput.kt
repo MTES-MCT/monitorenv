@@ -22,7 +22,6 @@ data class ReportingMissionDataOutput(
     val endDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionEntity>? = null,
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
 ) {
@@ -44,7 +43,6 @@ data class ReportingMissionDataOutput(
                 endDateTimeUtc = mission.endDateTimeUtc,
                 envActions = mission.envActions,
                 missionSource = mission.missionSource,
-                isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
             )

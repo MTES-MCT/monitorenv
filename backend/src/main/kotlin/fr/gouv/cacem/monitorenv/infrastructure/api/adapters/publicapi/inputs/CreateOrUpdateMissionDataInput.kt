@@ -20,7 +20,7 @@ data class CreateOrUpdateMissionDataInput(
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean,
+    val isClosed: Boolean = false, // TODO delete when Fish and RapportNav are removed
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val isGeometryComputedFromControls: Boolean,
@@ -38,7 +38,6 @@ data class CreateOrUpdateMissionDataInput(
             geom = this.geom,
             startDateTimeUtc = this.startDateTimeUtc,
             endDateTimeUtc = this.endDateTimeUtc,
-            isClosed = this.isClosed,
             isDeleted = false,
             missionSource = this.missionSource,
             hasMissionOrder = this.hasMissionOrder,

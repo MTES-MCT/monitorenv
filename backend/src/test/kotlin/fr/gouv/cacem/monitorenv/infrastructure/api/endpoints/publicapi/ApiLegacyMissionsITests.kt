@@ -82,7 +82,6 @@ class ApiLegacyMissionsITests {
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
                 hasMissionOrder = true,
@@ -98,7 +97,6 @@ class ApiLegacyMissionsITests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
                 hasMissionOrder = true,
                 isUnderJdp = true,
                 isGeometryComputedFromControls = false,
@@ -142,7 +140,6 @@ class ApiLegacyMissionsITests {
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
@@ -188,7 +185,6 @@ class ApiLegacyMissionsITests {
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
@@ -217,7 +213,6 @@ class ApiLegacyMissionsITests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
@@ -243,7 +238,6 @@ class ApiLegacyMissionsITests {
                 observationsCacem = "updated observations",
                 observationsCnsp = "updated observations",
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
                 hasMissionOrder = true,
@@ -259,7 +253,6 @@ class ApiLegacyMissionsITests {
                 observationsCnsp = "updated observations",
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
                 hasMissionOrder = true,
                 isUnderJdp = true,
                 isGeometryComputedFromControls = false,
@@ -370,7 +363,6 @@ class ApiLegacyMissionsITests {
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
@@ -402,7 +394,7 @@ class ApiLegacyMissionsITests {
 
         assertThat(missionUpdateEvent).contains("event:MISSION_UPDATE")
         assertThat(missionUpdateEvent).contains(
-            "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"isClosed\":false,\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
+            "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
         )
     }
 }

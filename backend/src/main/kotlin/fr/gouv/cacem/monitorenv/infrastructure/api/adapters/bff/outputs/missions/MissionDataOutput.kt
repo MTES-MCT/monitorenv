@@ -29,7 +29,6 @@ data class MissionDataOutput(
     val envActions: List<MissionEnvActionDataOutput>? = null,
     val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val attachedReportingIds: List<Int>? = listOf(),
@@ -102,7 +101,6 @@ data class MissionDataOutput(
                         .fromMonitorFishMissionActionEntity(it)
                 },
                 missionSource = dto.mission.missionSource,
-                isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
                 attachedReportingIds = dto.attachedReportingIds,

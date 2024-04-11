@@ -47,7 +47,6 @@ class CanDeleteControlUnitResourceUTests {
                         startDateTimeUtc = ZonedDateTime.now(),
                         endDateTimeUtc = null,
                         envActions = listOf(),
-                        isClosed = false,
                         isDeleted = false,
                         isGeometryComputedFromControls = false,
                         missionSource = MissionSourceEnum.MONITORENV,

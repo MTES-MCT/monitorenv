@@ -27,7 +27,6 @@ val FAKE_MISSION =
         startDateTimeUtc = ZonedDateTime.now(),
         endDateTimeUtc = null,
         envActions = listOf(),
-        isClosed = false,
         isDeleted = false,
         isGeometryComputedFromControls = false,
         missionSource = MissionSourceEnum.MONITORENV,

@@ -23,7 +23,7 @@ data class MissionDataOutput(
     val updatedAtUtc: ZonedDateTime? = null,
     val envActions: List<MissionEnvActionDataOutput>? = null,
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean,
+    val isClosed: Boolean, // TODO delete when Fish and RapportNav are removed
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val isGeometryComputedFromControls: Boolean,
@@ -53,7 +53,7 @@ data class MissionDataOutput(
                     )
                 },
                 missionSource = mission.missionSource,
-                isClosed = mission.isClosed,
+                isClosed = false, // TODO delete when Fish and RapportNav are removed
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
                 isGeometryComputedFromControls = mission.isGeometryComputedFromControls,

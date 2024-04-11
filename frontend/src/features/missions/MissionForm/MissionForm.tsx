@@ -20,11 +20,15 @@ import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
-import { ReopenModal } from './ReopenModal'
 import { missionFormsActions } from './slice'
 import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
-import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
+import {
+  FrontCompletionStatus,
+  type Mission,
+  MissionSourceEnum,
+  type NewMission
+} from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
@@ -32,6 +36,7 @@ import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
+import { getMissionCompletionStatus } from '../utils'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AtLeast } from '../../../types'
@@ -39,11 +44,10 @@ import type { AtLeast } from '../../../types'
 enum ModalTypes {
   ACTIONS = 'ACTIONS',
   CLOSE = 'CLOSE',
-  DELETE = 'DELETE',
-  REOPEN = 'REOPEN'
+  DELETE = 'DELETE'
 }
 
-type ModalProps = ModalTypes.ACTIONS | ModalTypes.REOPEN | ModalTypes.DELETE | ModalTypes.CLOSE
+type ModalProps = ModalTypes.ACTIONS | ModalTypes.DELETE | ModalTypes.CLOSE
 
 type MissionFormProps = {
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
@@ -81,7 +85,12 @@ export function MissionForm({
     }
 
     const now = customDayjs()
-    if (selectedMission?.endDateTimeUtc && now.isAfter(selectedMission?.endDateTimeUtc) && selectedMission?.isClosed) {
+    const missionStatus = getMissionCompletionStatus(selectedMission)
+    if (
+      selectedMission?.endDateTimeUtc &&
+      now.isAfter(selectedMission?.endDateTimeUtc) &&
+      missionStatus === FrontCompletionStatus.COMPLETED
+    ) {
       return false
     }
 
@@ -164,48 +173,6 @@ export function MissionForm({
     })
   }
 
-  const closeMission = () => {
-    validateForm({ ...values, isClosed: true }).then(errors => {
-      setFieldValue('isClosed', true)
-
-      if (isEmpty(errors)) {
-        dispatch(saveMission({ ...values, isClosed: true }, false, true))
-
-        return
-      }
-
-      setShouldValidateOnChange(true)
-    })
-  }
-
-  const reopenMission = () => {
-    validateForm({ ...values, isClosed: false }).then(errors => {
-      setFieldValue('isClosed', false)
-
-      if (isEmpty(errors)) {
-        if (isFormDirty) {
-          return setOpenModal(ModalTypes.REOPEN)
-        }
-
-        return validateReopenMission()
-      }
-
-      return setShouldValidateOnChange(true)
-    })
-  }
-
-  const validateReopenMission = async () => {
-    await dispatch(saveMission({ ...values, isClosed: false }, true, false))
-    dispatch(
-      setToast({
-        containerId: 'sideWindow',
-        message: 'La mission a bien été réouverte',
-        type: 'success'
-      })
-    )
-    setOpenModal(undefined)
-  }
-
   const confirmFormCancelation = () => {
     // when auto save is disabled, and form has changes we want to display specific modal
     if (!isAutoSaveEnabled && dirty && isEmpty(formErrors)) {
@@ -280,11 +247,6 @@ export function MissionForm({
         onConfirm={validateDeleteMission}
         open={openModal === ModalTypes.DELETE}
       />
-      <ReopenModal
-        onCancel={returnToEdition}
-        onConfirm={validateReopenMission}
-        open={openModal === ModalTypes.REOPEN}
-      />
       <ExternalActionsModal
         onClose={returnToEdition}
         open={openModal === ModalTypes.ACTIONS}
@@ -307,10 +269,8 @@ export function MissionForm({
 
       <MissionFormBottomBar
         isAutoSaveEnabled={isAutoSaveEnabled}
-        onCloseMission={closeMission}
         onDeleteMission={deleteMission}
         onQuitFormEditing={confirmFormCancelation}
-        onReopenMission={reopenMission}
         onSaveMission={submitMission}
       />
     </StyledFormContainer>

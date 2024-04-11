@@ -67,7 +67,7 @@ export const Columns = [
     size: 100
   },
   {
-    accessorFn: row => row.isClosed,
+    accessorFn: row => row,
     cell: ({ row }) => <CellStatus row={row} />,
     enableSorting: false,
     header: () => 'Statut',

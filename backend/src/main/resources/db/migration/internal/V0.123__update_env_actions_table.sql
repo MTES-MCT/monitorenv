@@ -1,3 +1,4 @@
+-- Update `closed_by` column by renaming it to `completed_by`
 ALTER TABLE public.missions
     RENAME COLUMN closed_by to completed_by;
 
@@ -18,3 +19,6 @@ WHERE
     missions.id = env_actions.mission_id AND
     action_type IN ('CONTROL', 'SURVEILLANCE') AND
     missions.closed;
+
+
+

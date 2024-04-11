@@ -146,7 +146,6 @@ export const vesselTypeLabel: Record<VesselTypeEnum, string> = {
 }
 
 export enum MissionStatusEnum {
-  CLOSED = 'CLOSED',
   ENDED = 'ENDED',
   PENDING = 'PENDING',
   UPCOMING = 'UPCOMING'
@@ -161,12 +160,6 @@ export enum MissionStatusLabel {
 }
 
 export const missionStatusLabels = {
-  CLOSED: {
-    borderColor: THEME.color.slateGray,
-    code: 'CLOSED',
-    color: THEME.color.white,
-    libelle: 'Cloturée'
-  },
   ENDED: {
     code: 'ENDED',
     color: THEME.color.gunMetal,
@@ -246,7 +239,6 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   geom?: GeoJSON.MultiPolygon
   hasMissionOrder?: boolean
   id: number
-  isClosed: boolean
   isGeometryComputedFromControls: boolean
   isUnderJdp?: boolean
   missionSource: MissionSourceEnum

@@ -52,10 +52,8 @@ export const missionWithCentroidStyleFn = feature => {
       return missionWithCentroidStyleFactory(MissionStatusEnum.PENDING, missionTypeLabel)
     case MissionStatusEnum.ENDED:
       return missionWithCentroidStyleFactory(MissionStatusEnum.ENDED, missionTypeLabel)
-    case MissionStatusEnum.CLOSED:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.CLOSED, missionTypeLabel)
     default:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.CLOSED, missionTypeLabel)
+      return missionWithCentroidStyleFactory(MissionStatusEnum.ENDED, missionTypeLabel)
   }
 }
 

@@ -83,7 +83,7 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
     })
     .required()
 
-export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveillance> =>
+export const getCompletionEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveillance> =>
   Yup.object()
     .shape({
       actionEndDateTimeUtc: Yup.date()
