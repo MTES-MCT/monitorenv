@@ -177,8 +177,8 @@ export function GeneralInformationsForm({
           <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
           <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
           <StyledAuthorContainer>
-            <FormikTextInput isErrorMessageHidden isRequired label="Ouvert par" name="openBy" />
-            <FormikTextInput isErrorMessageHidden isRequired label="Complété par" name="completedBy" />
+            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
+            <FormikTextInput isErrorMessageHidden label="Complété par" name="completedBy" />
           </StyledAuthorContainer>
           {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
           {errors.openBy && errors.openBy !== HIDDEN_ERROR && <FieldError>{errors.openBy}</FieldError>}

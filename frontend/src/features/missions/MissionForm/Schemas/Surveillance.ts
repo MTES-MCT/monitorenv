@@ -70,10 +70,16 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
+      completedBy: Yup.string().nullable(),
       geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
         : Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
-      id: Yup.string().required()
+      id: Yup.string().required(),
+      openBy: Yup.string()
+        .min(3, 'Minimum 3 lettres pour le trigramme')
+        .max(3, 'Maximum 3 lettres pour le trigramme')
+        .nullable()
+        .required(HIDDEN_ERROR)
     })
     .required()
 
@@ -134,10 +140,20 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
+      completedBy: Yup.string()
+        .min(3, 'Minimum 3 lettres pour le trigramme')
+        .max(3, 'Maximum 3 lettres pour le trigramme')
+        .nullable()
+        .required(HIDDEN_ERROR),
       controlPlans: Yup.array().ensure().of(ClosedControlPlansSchema).ensure().required().min(1),
       geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
         : Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
-      id: Yup.string().required()
+      id: Yup.string().required(),
+      openBy: Yup.string()
+        .min(3, 'Minimum 3 lettres pour le trigramme')
+        .max(3, 'Maximum 3 lettres pour le trigramme')
+        .nullable()
+        .required(HIDDEN_ERROR)
     })
     .required()

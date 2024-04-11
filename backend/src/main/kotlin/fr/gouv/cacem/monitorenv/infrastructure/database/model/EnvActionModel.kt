@@ -177,6 +177,7 @@ class EnvActionModel(
                     actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
                     actionType = action.actionType,
                     actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
+                    completedBy = action.completedBy,
                     completion = action.completion,
                     department = action.department,
                     facade = action.facade,
@@ -186,6 +187,7 @@ class EnvActionModel(
                     isSafetyEquipmentAndStandardsComplianceControl =
                     action.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = action.isSeafarersControl,
+                    openBy = action.openBy,
                     mission = mission,
                     geom = action.geom,
                     value = EnvActionMapper.envActionEntityToJSON(mapper, action),

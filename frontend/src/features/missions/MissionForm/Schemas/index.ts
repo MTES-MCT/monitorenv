@@ -109,7 +109,8 @@ const ClosedMissionSchema = NewMissionSchema.shape({
   envActions: Yup.array()
     .of(ClosedEnvActionSchema as any)
     .nullable(),
-  isClosed: Yup.boolean().oneOf([true]).required()
+  isClosed: Yup.boolean().oneOf([true]).required(),
+  openBy: Yup.string().nullable()
 })
 
 export const MissionSchema = Yup.lazy(value => {

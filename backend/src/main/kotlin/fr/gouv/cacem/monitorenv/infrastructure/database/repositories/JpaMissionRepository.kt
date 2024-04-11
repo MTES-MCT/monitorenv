@@ -48,7 +48,12 @@ class JpaMissionRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionDTO> {
-        val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
+        val pageable =
+            if (pageNumber != null && pageSize != null) {
+                PageRequest.of(pageNumber, pageSize)
+            } else {
+                Pageable.unpaged()
+            }
         return dbMissionRepository.findAll(
             controlUnitIds = controlUnitIds,
             missionSources = missionSources,
@@ -95,20 +100,26 @@ class JpaMissionRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionEntity> {
-        val pageable = if (pageNumber != null && pageSize != null) { PageRequest.of(pageNumber, pageSize) } else { Pageable.unpaged() }
+        val pageable =
+            if (pageNumber != null && pageSize != null) {
+                PageRequest.of(pageNumber, pageSize)
+            } else {
+                Pageable.unpaged()
+            }
 
-        val missions = dbMissionRepository.findAll(
-            controlUnitIds = controlUnitIds,
-            missionSources = missionSources,
-            missionStatuses = (missionStatuses),
-            missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
-            missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
-            missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
-            pageable = pageable,
-            seaFronts = seaFronts,
-            startedAfter = startedAfter,
-            startedBefore = startedBefore,
-        )
+        val missions =
+            dbMissionRepository.findAll(
+                controlUnitIds = controlUnitIds,
+                missionSources = missionSources,
+                missionStatuses = (missionStatuses),
+                missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
+                missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
+                missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
+                pageable = pageable,
+                seaFronts = seaFronts,
+                startedAfter = startedAfter,
+                startedBefore = startedBefore,
+            )
 
         return missions.map { it.toMissionEntity(mapper) }
     }
@@ -171,12 +182,10 @@ class JpaMissionRepository(
             MissionModel.fromMissionEntity(
                 mission = mission,
                 controlUnitResourceModelMap = controlUnitResourceModelMap,
-                controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap
-                    ?: emptyMap(),
+                controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap,
                 controlPlanSubThemesReferenceModelMap =
-                controlPlanSubThemesReferenceModelMap ?: emptyMap(),
-                controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap
-                    ?: emptyMap(),
+                controlPlanSubThemesReferenceModelMap,
+                controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
                 mapper = mapper,
             )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)

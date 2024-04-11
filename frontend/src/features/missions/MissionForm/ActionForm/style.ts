@@ -49,3 +49,10 @@ export const ActionThemes = styled.div`
   white-space: nowrap;
   max-width: 70%;
 `
+export const StyledAuthorContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  .Field-TextInput {
+    width: 120px;
+  }
+`
