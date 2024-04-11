@@ -1,6 +1,6 @@
 import { Accent, Tag, TagGroup } from '@mtes-mct/monitor-ui'
 
-import { getControlInfractionsTags } from '../features/missions/Missions.helpers'
+import { getControlInfractionsTags } from '../Missions.helpers'
 
 export function ControlInfractionsTags({ actionNumberOfControls, infractions }) {
   const { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras } =

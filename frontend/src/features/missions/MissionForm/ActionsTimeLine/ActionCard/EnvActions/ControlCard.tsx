@@ -3,8 +3,8 @@ import { useFormikContext } from 'formik'
 
 import { TargetTypeLabels } from '../../../../../../domain/entities/targetType'
 import { useGetControlPlansByYear } from '../../../../../../hooks/useGetControlPlansByYear'
-import { ControlInfractionsTags } from '../../../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../../../utils/extractThemesAsText'
+import { ControlInfractionsTags } from '../../../../components/ControlInfractionsTags'
 import { Accented, ControlSummary, SummaryContent, Title } from '../style'
 
 import type { Mission } from '../../../../../../domain/entities/missions'

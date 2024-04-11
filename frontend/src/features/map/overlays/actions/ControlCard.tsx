@@ -1,10 +1,10 @@
+import { ControlInfractionsTags } from '@features/missions/components/ControlInfractionsTags'
 import { THEME, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { TargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
-import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
 export function ControlCard({ feature }: { feature: any }) {

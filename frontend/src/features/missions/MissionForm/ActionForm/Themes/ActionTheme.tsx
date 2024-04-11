@@ -83,4 +83,5 @@ const ActionThemeWrapper = styled.div`
   flex-direction: column;
   flex: 1;
   gap: 8px;
+  width: 545px;
 `
