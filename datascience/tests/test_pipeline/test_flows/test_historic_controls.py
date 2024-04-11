@@ -113,7 +113,7 @@ historic_missions_df = pd.DataFrame(
             pd.Timestamp("17/04/2017 13:30:00"),
             pd.Timestamp("22/04/2017 10:30:00"),
         ],
-        "closed_by": ["VSQ", "VSQ", "GYT", "RIO", "CBG", "VSQ", "VSQ"],
+        "completed_by": ["VSQ", "VSQ", "GYT", "RIO", "CBG", "VSQ", "VSQ"],
         "mission_source": [
             "POSEIDON_CACEM",
             "POSEIDON_CACEM",
@@ -123,7 +123,6 @@ historic_missions_df = pd.DataFrame(
             "POSEIDON_CACEM",
             "POSEIDON_CACEM",
         ],
-        "closed": ["1", "1", "1", "1", "0", "1", "1"],
     }
 )
 historic_missions_units_df = pd.DataFrame(

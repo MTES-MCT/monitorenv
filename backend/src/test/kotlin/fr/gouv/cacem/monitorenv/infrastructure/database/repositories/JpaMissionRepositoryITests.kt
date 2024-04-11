@@ -253,7 +253,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
-        assertThat(missions).hasSize(7)
+        assertThat(missions).hasSize(10)
     }
 
     @Test
@@ -287,7 +287,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
-        assertThat(missions).hasSize(15)
+        assertThat(missions).hasSize(30)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
