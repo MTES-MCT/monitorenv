@@ -250,29 +250,35 @@ export const BaseLayerLabel: Record<BaseLayer, string> = {
   [BaseLayer.SHOM]: 'Carte marine (SHOM)'
 }
 
+// Priority of selectable items is determined by the order of the layers in this array
+// The first layer in the array has the highest priority
 export const SelectableLayers = [
   Layers.MISSIONS.code,
-  Layers.REGULATORY_ENV_PREVIEW.code,
-  Layers.REGULATORY_ENV.code,
-  Layers.AMP.code,
-  Layers.STATIONS.code,
-  Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code,
   Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
-  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
-]
-export const HoverableLayers = [
-  Layers.ACTIONS.code,
-  Layers.AMP.code,
-  Layers.AMP_PREVIEW.code,
-  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
-  Layers.MISSIONS.code,
-  Layers.REGULATORY_ENV_PREVIEW.code,
-  Layers.REGULATORY_ENV.code,
   Layers.REPORTING_TO_ATTACH_ON_MISSION.code,
   Layers.REPORTINGS.code,
   Layers.SEMAPHORES.code,
-  Layers.STATIONS.code
+  Layers.STATIONS.code,
+  Layers.AMP.code,
+  Layers.AMP_PREVIEW.code,
+  Layers.REGULATORY_ENV_PREVIEW.code,
+  Layers.REGULATORY_ENV.code
+]
+
+// Priority of hoverable items is determined by the order of the layers in this array
+// The first layer in the array has the highest priority
+export const HoverableLayers = [
+  Layers.ACTIONS.code,
+  Layers.MISSIONS.code,
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code,
+  Layers.REPORTINGS.code,
+  Layers.SEMAPHORES.code,
+  Layers.STATIONS.code,
+  Layers.AMP.code,
+  Layers.AMP_PREVIEW.code,
+  Layers.REGULATORY_ENV_PREVIEW.code,
+  Layers.REGULATORY_ENV.code
 ]
 
 export type RegulatoryOrAMPLayerType =

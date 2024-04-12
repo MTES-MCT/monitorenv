@@ -10,6 +10,7 @@ import {
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { MapClickEvent, OverlayItem, SerializedFeature } from 'domain/types/map'
+import type { FeatureLike } from 'ol/Feature'
 
 export const getClickedRegulatoryFeatures = (mapClickEvent: MapClickEvent) =>
   mapClickEvent.featureList?.filter(feature => {
@@ -46,3 +47,17 @@ export const getClickedItems = (mapClickEvent: MapClickEvent) => getOverlayItems
 
 export const getHoveredItems = (features: SerializedFeature<Record<string, any>>[] | undefined) =>
   getOverlayItemsFromFeatures(features)
+
+export const getHighestPriorityFeatures = (features: FeatureLike[], priorityOrderTypes: string[]) => {
+  const highestPriorityFeatureType = priorityOrderTypes.find(layerType =>
+    features.some(feature => String(feature.getId()).includes(layerType))
+  )
+  if (!highestPriorityFeatureType) {
+    return []
+  }
+  const highestPriorityFeatures = features.filter(feature =>
+    String(feature.getId()).includes(highestPriorityFeatureType)
+  )
+
+  return highestPriorityFeatures
+}

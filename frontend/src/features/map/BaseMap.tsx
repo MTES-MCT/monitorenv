@@ -25,6 +25,7 @@ import {
 } from 'react'
 import styled from 'styled-components'
 
+import { getHighestPriorityFeatures } from './utils'
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants'
 import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
 import { DistanceUnit, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
@@ -72,7 +73,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
   const handleMapClick = useCallback((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
     if (event && current_map) {
-      const featureList = current_map.getFeaturesAtPixel(event.pixel, {
+      const features = current_map.getFeaturesAtPixel(event.pixel, {
         hitTolerance: HIT_PIXEL_TO_TOLERANCE,
         layerFilter: layer => {
           const typedLayer = layer as VectorLayerWithName
@@ -82,8 +83,10 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           return !!layerName && SelectableLayers.includes(layerName)
         }
       })
-      const feature = getGeoJSONFromFeature<Record<string, any>>(featureList?.[0])
-      const featuresAsGeoJSON = getGeoJSONFromFeatureList(featureList)
+      const priorityFeatures = getHighestPriorityFeatures(features, SelectableLayers)
+
+      const feature = getGeoJSONFromFeature<Record<string, any>>(priorityFeatures?.[0])
+      const featuresAsGeoJSON = getGeoJSONFromFeatureList(priorityFeatures)
       const isCtrl = platformModifierKeyOnly(event)
       setMapClickEvent({
         coordinates: event.coordinate,
@@ -108,9 +111,11 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
               return !!layerName && HoverableLayers.includes(layerName)
             }
           })
-          setCurrentFeatureListOver(getGeoJSONFromFeatureList(features))
+          const priorityFeatures = getHighestPriorityFeatures(features, HoverableLayers)
 
-          setCurrentFeatureOver(getGeoJSONFromFeature(features?.[0]))
+          setCurrentFeatureListOver(getGeoJSONFromFeatureList(priorityFeatures))
+
+          setCurrentFeatureOver(getGeoJSONFromFeature(priorityFeatures?.[0]))
 
           setPixel(event.pixel)
         }
