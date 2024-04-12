@@ -27,7 +27,12 @@ import styled from 'styled-components'
 
 import { getHighestPriorityFeatures } from './utils'
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants'
-import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
+import {
+  HoverableLayers0To7,
+  HoverableLayers7To26,
+  SelectableLayers0To7,
+  SelectableLayers7To26
+} from '../../domain/entities/layers/constants'
 import { DistanceUnit, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setDistanceUnit } from '../../domain/shared_slices/Map'
 import { updateMeasurementsWithNewDistanceUnit } from '../../domain/use_cases/map/updateMeasurementsWithNewDistanceUnit'
@@ -73,6 +78,13 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
   const handleMapClick = useCallback((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
     if (event && current_map) {
+      const zoomLevel = current_map.getView().getZoom()
+      if (!zoomLevel) {
+        return
+      }
+
+      const priorityLayersOrder = zoomLevel < 7 ? SelectableLayers0To7 : SelectableLayers7To26
+
       const features = current_map.getFeaturesAtPixel(event.pixel, {
         hitTolerance: HIT_PIXEL_TO_TOLERANCE,
         layerFilter: layer => {
@@ -80,10 +92,11 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
           const layerName = typedLayer.name ?? typedLayer.get('name')
 
-          return !!layerName && SelectableLayers.includes(layerName)
+          return !!layerName && priorityLayersOrder.includes(layerName)
         }
       })
-      const priorityFeatures = getHighestPriorityFeatures(features, SelectableLayers)
+
+      const priorityFeatures = getHighestPriorityFeatures(features, priorityLayersOrder)
 
       const feature = getGeoJSONFromFeature<Record<string, any>>(priorityFeatures?.[0])
       const featuresAsGeoJSON = getGeoJSONFromFeatureList(priorityFeatures)
@@ -101,6 +114,13 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     () =>
       throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
         if (event && current_map) {
+          const zoomLevel = current_map.getView().getZoom()
+          if (!zoomLevel) {
+            return
+          }
+
+          const priorityLayersOrder = zoomLevel < 7 ? HoverableLayers0To7 : HoverableLayers7To26
+
           const features = current_map.getFeaturesAtPixel(event.pixel, {
             hitTolerance: HIT_PIXEL_TO_TOLERANCE,
             layerFilter: layer => {
@@ -108,10 +128,10 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
               const layerName = typedLayer.name ?? typedLayer.get('name')
 
-              return !!layerName && HoverableLayers.includes(layerName)
+              return !!layerName && priorityLayersOrder.includes(layerName)
             }
           })
-          const priorityFeatures = getHighestPriorityFeatures(features, HoverableLayers)
+          const priorityFeatures = getHighestPriorityFeatures(features, priorityLayersOrder)
 
           setCurrentFeatureListOver(getGeoJSONFromFeatureList(priorityFeatures))
 

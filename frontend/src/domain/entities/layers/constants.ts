@@ -252,7 +252,22 @@ export const BaseLayerLabel: Record<BaseLayer, string> = {
 
 // Priority of selectable items is determined by the order of the layers in this array
 // The first layer in the array has the highest priority
-export const SelectableLayers = [
+// Different hoverable arrays are used depending on the zoom level
+// Zoom level goes from 0 (furthest from earth) to 26 (closest from earth)
+export const SelectableLayers0To7 = [
+  Layers.MISSIONS.code,
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code,
+  Layers.REPORTINGS.code,
+  Layers.SEMAPHORES.code,
+  Layers.STATIONS.code,
+  Layers.AMP.code,
+  Layers.AMP_PREVIEW.code,
+  Layers.REGULATORY_ENV_PREVIEW.code,
+  Layers.REGULATORY_ENV.code
+]
+
+export const SelectableLayers7To26 = [
   Layers.MISSIONS.code,
   Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
   Layers.REPORTING_TO_ATTACH_ON_MISSION.code,
@@ -267,7 +282,20 @@ export const SelectableLayers = [
 
 // Priority of hoverable items is determined by the order of the layers in this array
 // The first layer in the array has the highest priority
-export const HoverableLayers = [
+// Different hoverable arrays are used depending on the zoom level
+// Zoom level goes from 0 (furthest from earth) to 26 (closest from earth)
+
+export const HoverableLayers0To7 = [
+  Layers.ACTIONS.code,
+  Layers.MISSIONS.code,
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code,
+  Layers.REPORTINGS.code,
+  Layers.SEMAPHORES.code,
+  Layers.STATIONS.code
+]
+
+export const HoverableLayers7To26 = [
   Layers.ACTIONS.code,
   Layers.MISSIONS.code,
   Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
