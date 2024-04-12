@@ -38,6 +38,10 @@ export function PinnedOverlay({
 const Card = styled.div`
   width: 440px;
   box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
+  cursor: pointer;
+  > * {
+    user-select: none;
+  }
 `
 const Header = styled.div`
   display: flex;
