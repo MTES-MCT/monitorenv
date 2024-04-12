@@ -26,6 +26,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
     }
 
     if (numberOfClickedFeatures === 1 && clickedAmpFeatures && clickedAmpFeatures.length === 1) {
+      dispatch(closeLayerOverlay())
       const feature = convertToFeature(clickedAmpFeatures[0])
       if (feature) {
         const layerId = feature.get('id')
