@@ -12,4 +12,4 @@ export type AMPFromAPI = {
 }
 export type AMP = AMPFromAPI & { bbox: Extent }
 
-export type AMPPRoperties = Omit<AMP, 'geometry' | 'geom'>
+export type AMPProperties = Omit<AMP, 'geometry' | 'geom'>

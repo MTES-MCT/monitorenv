@@ -1,11 +1,9 @@
 import { Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
+import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from '../../../domain/entities/layers/constants'
 import { getAMPColorWithAlpha } from '../../map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administrativeAndRegulatoryLayers.style'
-
-type LayerTypeEnum = MonitorEnvLayers.AMP | MonitorEnvLayers.REGULATORY_ENV
 
 export function LayerLegend({
   layerType,
@@ -13,15 +11,17 @@ export function LayerLegend({
   size = Size.SMALL,
   type
 }: {
-  layerType: LayerTypeEnum
+  layerType: RegulatoryOrAMPLayerType
   name: string | null
   size?: Size
   type: string | null
 }) {
   switch (layerType) {
     case MonitorEnvLayers.AMP:
+    case MonitorEnvLayers.AMP_PREVIEW:
       return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, name)} />
     case MonitorEnvLayers.REGULATORY_ENV:
+    case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
       return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, name)} />
     default:
       return <Rectangle $size={size} />

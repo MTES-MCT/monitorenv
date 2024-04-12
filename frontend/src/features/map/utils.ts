@@ -1,8 +1,13 @@
 // selectors taht will be moved to the slice
 
-import { Layers, MonitorEnvLayers } from 'domain/entities/layers/constants'
+import {
+  Layers,
+  MonitorEnvLayers,
+  type RegulatoryOrAMPLayerType,
+  RegulatoryOrAMPLayerTypeAsList
+} from 'domain/entities/layers/constants'
 
-import type { AMPPRoperties } from 'domain/entities/AMPs'
+import type { AMPProperties } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { MapClickEvent, OverlayItem, SerializedFeature } from 'domain/types/map'
 
@@ -22,18 +27,20 @@ export const getClickedAmpFeatures = (mapClickEvent: MapClickEvent) =>
 
     return featureId && (featureId.includes(Layers.AMP_PREVIEW.code) || featureId.includes(Layers.AMP.code))
   })
-
 export const getOverlayItemsFromFeatures = (features: SerializedFeature<Record<string, any>>[] | undefined) =>
   features?.reduce((acc, feature) => {
     const type = String(feature.id).split(':')[0]
 
-    if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.REGULATORY_ENV) {
+    if (RegulatoryOrAMPLayerTypeAsList.includes(type as MonitorEnvLayers)) {
       const { geometry, ...properties } = feature.properties
-      acc.push({ layerType: type, properties: properties as AMPPRoperties | RegulatoryLayerCompactProperties })
+      acc.push({
+        layerType: type as RegulatoryOrAMPLayerType,
+        properties: properties as AMPProperties | RegulatoryLayerCompactProperties
+      })
     }
 
     return acc
-  }, [] as OverlayItem[])
+  }, [] as OverlayItem<RegulatoryOrAMPLayerType, AMPProperties | RegulatoryLayerCompactProperties>[])
 
 export const getClickedItems = (mapClickEvent: MapClickEvent) => getOverlayItemsFromFeatures(mapClickEvent?.featureList)
 

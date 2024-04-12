@@ -274,3 +274,16 @@ export const HoverableLayers = [
   Layers.SEMAPHORES.code,
   Layers.STATIONS.code
 ]
+
+export type RegulatoryOrAMPLayerType =
+  | MonitorEnvLayers.AMP
+  | MonitorEnvLayers.AMP_PREVIEW
+  | MonitorEnvLayers.REGULATORY_ENV
+  | MonitorEnvLayers.REGULATORY_ENV_PREVIEW
+
+export const RegulatoryOrAMPLayerTypeAsList = [
+  MonitorEnvLayers.AMP,
+  MonitorEnvLayers.AMP_PREVIEW,
+  MonitorEnvLayers.REGULATORY_ENV,
+  MonitorEnvLayers.REGULATORY_ENV_PREVIEW
+]

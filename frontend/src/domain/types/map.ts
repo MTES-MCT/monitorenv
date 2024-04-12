@@ -3,15 +3,12 @@ import { GeoJSON } from 'ol/format'
 
 import { OPENLAYERS_PROJECTION, type InteractionListener, type InteractionType } from '../entities/map/constants'
 
-import type { AMPPRoperties } from 'domain/entities/AMPs'
-import type { MonitorEnvLayers } from 'domain/entities/layers/constants'
-import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { Coordinate } from 'ol/coordinate'
 import type { Geometry } from 'ol/geom'
 
-export type OverlayItem = {
-  layerType: MonitorEnvLayers.AMP | MonitorEnvLayers.REGULATORY_ENV
-  properties: AMPPRoperties | RegulatoryLayerCompactProperties
+export type OverlayItem<T, P> = {
+  layerType: T
+  properties: P
 }
 export type MapClickEvent = {
   coordinates: Coordinate | undefined
@@ -25,10 +22,10 @@ export type InteractionTypeAndListener = {
   type: InteractionType
 }
 
-export type SerializedFeature<P> = {
+export type SerializedFeature<T> = {
   geometry: Geometry
   id: string | number
-  properties: P
+  properties: T
 }
 
 export const convertToSerializedFeature = <P>(

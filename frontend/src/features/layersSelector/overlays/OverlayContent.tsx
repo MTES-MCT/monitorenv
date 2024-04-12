@@ -1,25 +1,27 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Size } from '@mtes-mct/monitor-ui'
-import { MonitorEnvLayers } from 'domain/entities/layers/constants'
+import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from 'domain/entities/layers/constants'
 import styled from 'styled-components'
 
 import { getName, getType } from './utils'
 import { openAMPMetadataPanel, openRegulatoryMetadataPanel } from '../metadataPanel/slice'
 import { LayerLegend } from '../utils/LayerLegend.style'
 
+import type { AMPProperties } from 'domain/entities/AMPs'
+import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { OverlayItem } from 'domain/types/map'
 
 type OverlayContentProps = {
-  items: OverlayItem[] | undefined
+  items: OverlayItem<RegulatoryOrAMPLayerType, AMPProperties | RegulatoryLayerCompactProperties>[] | undefined
 }
 
 export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
   const handleClick = (type, id) => () => {
-    if (type === MonitorEnvLayers.AMP) {
+    if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
       dispatch(openAMPMetadataPanel(id))
     }
-    if (type === MonitorEnvLayers.REGULATORY_ENV) {
+    if (type === MonitorEnvLayers.REGULATORY_ENV || type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW) {
       dispatch(openRegulatoryMetadataPanel(id))
     }
   }
@@ -33,8 +35,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
         return (
           <LayerItem key={item.properties.id} onClick={handleClick(item.layerType, item.properties.id)}>
             <LayerLegend layerType={item.layerType} name={name} size={Size.NORMAL} type={type} />
-            <Name>{name}</Name>
-            <Type> / {type}</Type>
+            <Name title={name}>{name}</Name>
+            <Type title={type ?? ''}> / {type}</Type>
           </LayerItem>
         )
       })}
@@ -55,16 +57,20 @@ const LayerItem = styled.li`
   padding: 7px 8px 8px 8px;
   background-color: ${p => p.theme.color.white};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
+`
+
+const Name = styled.span`
+  color: ${p => p.theme.color.gunMetal};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`
-const Name = styled.span`
-  color: ${p => p.theme.color.gunMetal};
   font: normal normal bold 13px/18px Marianne;
 `
 
 const Type = styled.span`
   color: ${p => p.theme.color.gunMetal};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font: normal normal normal 13px/18px Marianne;
 `

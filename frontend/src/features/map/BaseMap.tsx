@@ -70,32 +70,29 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   const [unitsSelectionIsOpen, setUnitsSelectionIsOpen] = useState(false)
   const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, unitsSelectionIsOpen)
 
-  const handleMapClick = useCallback(
-    (event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
-      if (event && current_map) {
-        const featureList = current_map.getFeaturesAtPixel(event.pixel, {
-          hitTolerance: HIT_PIXEL_TO_TOLERANCE,
-          layerFilter: layer => {
-            const typedLayer = layer as VectorLayerWithName
+  const handleMapClick = useCallback((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
+    if (event && current_map) {
+      const featureList = current_map.getFeaturesAtPixel(event.pixel, {
+        hitTolerance: HIT_PIXEL_TO_TOLERANCE,
+        layerFilter: layer => {
+          const typedLayer = layer as VectorLayerWithName
 
-            const layerName = typedLayer.name ?? typedLayer.get('name')
+          const layerName = typedLayer.name ?? typedLayer.get('name')
 
-            return !!layerName && SelectableLayers.includes(layerName)
-          }
-        })
-        const feature = getGeoJSONFromFeature<Record<string, any>>(featureList?.[0])
-        const featuresAsGeoJSON = getGeoJSONFromFeatureList(featureList)
-        const isCtrl = platformModifierKeyOnly(event)
-        setMapClickEvent({
-          coordinates: event.coordinate,
-          ctrlKeyPressed: isCtrl,
-          feature,
-          featureList: featuresAsGeoJSON
-        })
-      }
-    },
-    [setMapClickEvent]
-  )
+          return !!layerName && SelectableLayers.includes(layerName)
+        }
+      })
+      const feature = getGeoJSONFromFeature<Record<string, any>>(featureList?.[0])
+      const featuresAsGeoJSON = getGeoJSONFromFeatureList(featureList)
+      const isCtrl = platformModifierKeyOnly(event)
+      setMapClickEvent({
+        coordinates: event.coordinate,
+        ctrlKeyPressed: isCtrl,
+        feature,
+        featureList: featuresAsGeoJSON
+      })
+    }
+  }, [])
 
   const handleMouseOverFeature = useMemo(
     () =>
@@ -118,7 +115,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           setPixel(event.pixel)
         }
       }, 50),
-    [setCurrentFeatureOver]
+    []
   )
 
   const control = useRef<ScaleLine>()
