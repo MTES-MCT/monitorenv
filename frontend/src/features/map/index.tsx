@@ -1,5 +1,5 @@
-import { LayerOverlay } from '@features/layersSelector/overlays'
-import { LayersOverlay } from '@features/layersSelector/overlays/LayersOverlay'
+import { LayersOverlay } from '@features/layersSelector/overlays'
+import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
@@ -71,7 +71,7 @@ export function Map() {
       {/* @ts-ignore */}
       <AdministrativeLayers />
       {/* @ts-ignore */}
-      <LayerOverlay />
+      <LayerEvents />
       {/* @ts-ignore */}
       <LayersOverlay />
 

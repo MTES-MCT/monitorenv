@@ -1,53 +1,34 @@
-import { getClickedAmpFeatures, getClickedItems, getClickedRegulatoryFeatures } from '@features/map/utils'
-import { useAppDispatch } from '@hooks/useAppDispatch'
-import { convertToFeature } from 'domain/types/map'
-import { useEffect } from 'react'
+import { getHoveredItems } from '@features/map/utils'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { createPortal } from 'react-dom'
 
-import {
-  closeLayerOverlay,
-  closeMetadataPanel,
-  openAMPMetadataPanel,
-  openLayerOverlay,
-  openRegulatoryMetadataPanel,
-  setLayerOverlayItems
-} from '../metadataPanel/slice'
+import { HoveredOverlay } from './HoveredOverlay'
+import { OverlayPositionOnCoordinates } from './OverlayPositionOnCoordinate'
+import { PinnedOverlay } from './PinnedOverlay'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
-export function LayerOverlay({ mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useAppDispatch()
+export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChildrenProps) {
+  const { layerOverlayCoordinates, layerOverlayIsOpen, layerOverlayItems } = useAppSelector(
+    state => state.layersMetadata
+  )
+  const hoveredItems = getHoveredItems(currentFeatureListOver)
 
-  useEffect(() => {
-    const clickedAmpFeatures = getClickedAmpFeatures(mapClickEvent)
-    const clickedRegulatoryFeatures = getClickedRegulatoryFeatures(mapClickEvent)
-    const numberOfClickedFeatures = (clickedAmpFeatures?.length ?? 0) + (clickedRegulatoryFeatures?.length ?? 0)
-    if (numberOfClickedFeatures === 0) {
-      dispatch(closeLayerOverlay())
-    }
-
-    if (numberOfClickedFeatures === 1 && clickedAmpFeatures && clickedAmpFeatures.length === 1) {
-      const feature = convertToFeature(clickedAmpFeatures[0])
-      if (feature) {
-        const layerId = feature.get('id')
-        dispatch(openAMPMetadataPanel(layerId))
-      }
-    }
-
-    if (numberOfClickedFeatures === 1 && clickedRegulatoryFeatures && clickedRegulatoryFeatures.length === 1) {
-      const feature = convertToFeature(clickedRegulatoryFeatures[0])
-      if (feature) {
-        const layerId = feature.get('id')
-        dispatch(openRegulatoryMetadataPanel(layerId))
-      }
-    }
-
-    if (numberOfClickedFeatures > 1 && mapClickEvent.coordinates) {
-      dispatch(closeMetadataPanel())
-      dispatch(openLayerOverlay(mapClickEvent.coordinates))
-      const items = getClickedItems(mapClickEvent)
-      dispatch(setLayerOverlayItems(items))
-    }
-  }, [dispatch, mapClickEvent])
-
-  return null
+  return (
+    <>
+      <OverlayPositionOnCoordinates
+        coordinates={layerOverlayCoordinates}
+        layerOverlayIsOpen={layerOverlayIsOpen}
+        map={map}
+      >
+        {layerOverlayIsOpen && <PinnedOverlay items={layerOverlayItems} />}
+      </OverlayPositionOnCoordinates>
+      {createPortal(
+        !layerOverlayIsOpen && hoveredItems && hoveredItems.length > 0 && pixel && (
+          <HoveredOverlay items={hoveredItems} pixel={pixel} />
+        ),
+        document.body as HTMLElement
+      )}
+    </>
+  )
 }

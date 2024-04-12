@@ -49,7 +49,7 @@ export function OverlayPositionOnCoordinates({
   useEffect(() => {
     if (containerRef.current) {
       if (layerOverlayIsOpen) {
-        containerRef.current.style.display = 'flex'
+        containerRef.current.style.display = 'block'
         olOverlayRef.current?.setPosition(coordinates)
       } else {
         containerRef.current.style.display = 'none'
