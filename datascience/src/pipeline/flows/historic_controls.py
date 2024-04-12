@@ -254,7 +254,6 @@ def make_env_missions(missions_poseidon: pd.DataFrame) -> pd.DataFrame:
     missions_poseidon["facade"] = missions_poseidon["facade"].map(
         dict_new_facades
     )
-    missions_poseidon["closed"] = zeros_ones_to_bools(missions_poseidon.closed)
     missions_poseidon["deleted"] = False
 
     return missions_poseidon

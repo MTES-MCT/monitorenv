@@ -1,4 +1,4 @@
-import { customDayjs } from '@mtes-mct/monitor-ui'
+import { getIsMissionEnded } from '@features/missions/utils'
 import * as Yup from 'yup'
 
 import { getCompletionEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
@@ -112,8 +112,8 @@ const CompletionMissionSchema = NewMissionSchema.shape({
 })
 
 export const MissionSchema = Yup.lazy(value => {
-  const now = customDayjs()
-  const isMissionEnded = value.endDateTimeUtc && now.isAfter(value.endDateTimeUtc)
+  const isMissionEnded = getIsMissionEnded(value.endDateTimeUtc)
+
   if (isMissionEnded) {
     return CompletionMissionSchema
   }

@@ -398,7 +398,7 @@ def transformed_historic_missions() -> pd.DataFrame:
                 pd.Timestamp("17/04/2017 13:30:00"),
                 pd.Timestamp("22/04/2017 10:30:00"),
             ],
-            "closed_by": ["VSQ", "VSQ", "GYT", "RIO", "CBG", "VSQ", "VSQ"],
+            "completed_by": ["VSQ", "VSQ", "GYT", "RIO", "CBG", "VSQ", "VSQ"],
             "mission_source": [
                 "POSEIDON_CACEM",
                 "POSEIDON_CACEM",
@@ -408,7 +408,6 @@ def transformed_historic_missions() -> pd.DataFrame:
                 "POSEIDON_CACEM",
                 "POSEIDON_CACEM",
             ],
-            "closed": [True, True, True, True, False, True, True],
             "deleted": [False, False, False, False, False, False, False],
         }
     )
@@ -537,8 +536,8 @@ def test_flow(
 
     query_missions = (
         "SELECT id, mission_types, open_by, observations_cacem, facade,"
-        " start_datetime_utc, closed_by, mission_source,"
-        " closed, observations_cnsp, deleted, geom FROM missions ORDER BY id"
+        " start_datetime_utc, completed_by, mission_source,"
+        " observations_cnsp, deleted, geom FROM missions ORDER BY id"
     )
     initial_missions = read_query("monitorenv_remote", query_missions)
 

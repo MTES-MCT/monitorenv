@@ -1,3 +1,4 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import { sum } from 'lodash'
 
 import {
@@ -59,4 +60,13 @@ export function getMissionCompletionStatus(mission) {
   const missionCompletion = hasAtLeastOnUncompletedAction ? CompletionStatus.TO_COMPLETE : CompletionStatus.COMPLETED
 
   return getMissionCompletionFrontStatus(missionStatus, missionCompletion)
+}
+
+export function getIsMissionEnded(missionEndDate: string | undefined): boolean {
+  if (!missionEndDate) {
+    return false
+  }
+  const now = customDayjs()
+
+  return !!missionEndDate && now.isAfter(missionEndDate)
 }

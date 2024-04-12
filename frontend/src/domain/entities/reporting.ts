@@ -1,7 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
-import type { ActionTypeEnum, Mission } from './missions'
+import type { ActionSource, ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
@@ -68,14 +68,14 @@ export type TargetDetails = {
 }
 
 export type ReportingForTimeline = Partial<ReportingDetailed> & {
-  actionSource: string
+  actionSource: ActionSource
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string
 }
 
 export type DetachedReportingForTimeline = DetachedReporting & {
   action: string
-  actionSource: string
+  actionSource: ActionSource
   actionType: ActionTypeEnum.DETACHED_REPORTING
   timelineDate: string
 }

@@ -326,7 +326,7 @@ export type Infraction = NewInfraction & {
 }
 
 export type EnvActionForTimeline = Partial<EnvAction> & {
-  actionSource: string
+  actionSource: ActionSource
   formattedReportingId: string
   formattedReportingIds: string[]
   timelineDate?: string
