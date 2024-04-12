@@ -1,4 +1,5 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { Size } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import styled from 'styled-components'
 
@@ -31,7 +32,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
         return (
           <LayerItem key={item.properties.id} onClick={handleClick(item.layerType, item.properties.id)}>
-            <LayerLegend layerType={item.layerType} name={name} type={type} />
+            <LayerLegend layerType={item.layerType} name={name} size={Size.NORMAL} type={type} />
             <Name>{name}</Name>
             <Type> / {type}</Type>
           </LayerItem>
@@ -48,9 +49,15 @@ const Layerlist = styled.ul`
 `
 
 const LayerItem = styled.li`
-  padding: 5px;
-  background-color: white;
-  border-bottom: 1px solid #cccfd6; ;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 7px 8px 8px 8px;
+  background-color: ${p => p.theme.color.white};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};

@@ -32,13 +32,14 @@ const Menu = styled.div<{ x: number | undefined; y: number | undefined }>`
   top: ${p => String(p.y ?? 0 + 10)}px;
   left: ${p => String(p.x ?? 0 + 10)}px;
   width: 440px;
-  box-shadow: 0px 2px 4px #707785bf;
+  box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
   pointer-events: none;
 `
 const Footer = styled.div`
-  background-color: white;
+  background-color: ${p => p.theme.color.white};
   color: ${p => p.theme.color.slateGray};
   padding: 5px;
+  padding-left: 10px;
 `
 const More = styled.span`
   font: italic normal bold 13px/18px Marianne;

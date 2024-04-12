@@ -26,12 +26,14 @@ export function PinnedOverlay({ items }: { items: OverlayItem[] }) {
 
 const Card = styled.div`
   width: 440px;
+  box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
 `
 const Header = styled.div`
   display: flex;
+  height: 32px;
   justify-content: space-between;
   background-color: ${p => p.theme.color.lightGray};
   color: ${p => p.theme.color.gunMetal};
   font: normal normal medium 13px/18px Marianne;
-  padding: 5px;
+  padding: 8px 7px;
 `

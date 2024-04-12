@@ -92,7 +92,9 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
     if (map) {
       const features = getVectorSource().getFeatures()
       if (features?.length) {
-        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('layerId') === regulatoryMetadataLayerId))
+        features.forEach(f => {
+          f.set(metadataIsShowedPropertyName, f.get('id') === regulatoryMetadataLayerId)
+        })
       }
     }
   }, [map, regulatoryMetadataLayerId])

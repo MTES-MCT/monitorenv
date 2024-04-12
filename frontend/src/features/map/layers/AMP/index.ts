@@ -1,3 +1,4 @@
+import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
@@ -18,6 +19,7 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function AMPLayers({ map }: BaseMapChildrenProps) {
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
+  const shcwedAmpMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
   const { data: ampLayers } = useGetAMPsQuery()
 
@@ -74,6 +76,17 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
       }
     }
   }, [map, ampLayers, showedAmpLayerIds])
+
+  useEffect(() => {
+    if (map) {
+      const features = vectorSourceRef.current.getFeatures()
+      if (features?.length) {
+        features.forEach(f => {
+          f.set(metadataIsShowedPropertyName, f.get('id') === shcwedAmpMetadataLayerId)
+        })
+      }
+    }
+  }, [map, shcwedAmpMetadataLayerId])
 
   return null
 }
