@@ -4,6 +4,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
+import type { Extent } from 'ol/extent'
 
 export enum ReportingContext {
   MAP = 'map',
@@ -27,7 +28,7 @@ type Toast = {
 }
 
 type OverlayCoordinates = {
-  coordinates: [number, number]
+  coordinates: Extent
   name: string
 }
 type GlobalOverlayCoordinates = {

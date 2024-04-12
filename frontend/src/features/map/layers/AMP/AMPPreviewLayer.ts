@@ -15,6 +15,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { dottedLayerStyle } from '../styles/dottedLayer.style'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
@@ -23,39 +24,21 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const myAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds) // or showedAmpLayerIds ?
 
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)
 
-  const ampLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
-  const ampVectorSourceRef = useRef() as MutableRefObject<VectorSource>
+  const ampLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+  const ampVectorSourceRef = useRef(new VectorSource())
   const isThrottled = useRef(false)
 
-  function getAMPVectorSource() {
-    if (!ampVectorSourceRef.current) {
-      ampVectorSourceRef.current = new VectorSource({
-        features: []
-      })
-    }
-
-    return ampVectorSourceRef.current
-  }
-
   const searchExtentLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
-  const seachExtentVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  function getSearchExtentVectorSource() {
-    if (!seachExtentVectorSourceRef.current) {
-      seachExtentVectorSourceRef.current = new VectorSource({
-        features: []
-      })
-    }
-
-    return seachExtentVectorSourceRef.current
-  }
+  const seachExtentVectorSourceRef = useRef(new VectorSource())
 
   useEffect(() => {
     if (map) {
-      const features = getAMPVectorSource().getFeatures()
+      const features = ampVectorSourceRef.current.getFeatures()
       if (features?.length) {
         features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('id') === ampMetadataLayerId))
       }
@@ -64,9 +47,12 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     function refreshPreviewLayer() {
-      getAMPVectorSource().clear()
+      ampVectorSourceRef.current.clear()
       if (ampsSearchResult && ampLayers?.entities) {
         const features = ampsSearchResult.reduce((amplayers, id) => {
+          if (myAmpLayerIds.includes(id)) {
+            return amplayers
+          }
           const layer = ampLayers.entities[id]
 
           if (layer && layer.geom) {
@@ -88,7 +74,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
           return amplayers
         }, [] as Feature[])
-        getAMPVectorSource().addFeatures(features)
+        ampVectorSourceRef.current.addFeatures(features)
       }
     }
 
@@ -104,7 +90,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
         refreshPreviewLayer()
       }, 300)
     }
-  }, [map, ampsSearchResult, ampLayers])
+  }, [map, ampsSearchResult, ampLayers, myAmpLayerIds])
 
   useEffect(() => {
     function getLayer() {
@@ -115,11 +101,12 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
           },
           renderBuffer: 4,
           renderOrder: (a, b) => b.get('area') - a.get('area'),
-          source: getAMPVectorSource(),
+          source: ampVectorSourceRef.current,
           style: getAMPLayerStyle,
           updateWhileAnimating: true,
           updateWhileInteracting: true
         })
+        ampLayerRef.current.name = Layers.AMP.code
       }
 
       return ampLayerRef.current
@@ -149,10 +136,10 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (map) {
-      getSearchExtentVectorSource().clear()
+      seachExtentVectorSourceRef.current.clear()
       if (searchExtent) {
         const feature = new Feature(fromExtent(searchExtent))
-        getSearchExtentVectorSource().addFeature(feature)
+        seachExtentVectorSourceRef.current.addFeature(feature)
       }
     }
   }, [map, searchExtent])
@@ -161,7 +148,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     function getLayer() {
       if (!searchExtentLayerRef.current) {
         searchExtentLayerRef.current = new Vector({
-          source: getSearchExtentVectorSource(),
+          source: seachExtentVectorSourceRef.current,
           style: dottedLayerStyle,
           updateWhileAnimating: true,
           updateWhileInteracting: true

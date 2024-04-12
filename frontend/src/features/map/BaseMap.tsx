@@ -1,4 +1,10 @@
 import { MultiRadio } from '@mtes-mct/monitor-ui'
+import {
+  getGeoJSONFromFeature,
+  getGeoJSONFromFeatureList,
+  type MapClickEvent,
+  type SerializedFeature
+} from 'domain/types/map'
 import { throttle } from 'lodash'
 import { ScaleLine, defaults as defaultControls } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
@@ -29,25 +35,33 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
 
 import type { VectorLayerWithName } from '../../domain/types/layer'
-import type { MapClickEvent } from '../../types'
-import type { Feature, MapBrowserEvent } from 'ol'
-import type { Geometry } from 'ol/geom'
+import type { MapBrowserEvent } from 'ol'
 
 export type BaseMapChildrenProps = {
-  currentFeatureOver: Feature<Geometry> | undefined
+  currentFeatureListOver: SerializedFeature<Record<string, any>>[] | undefined
+  currentFeatureOver: SerializedFeature<Record<string, any>> | undefined
   map: OpenLayerMap
   mapClickEvent: MapClickEvent
+  pixel: number[] | undefined
 }
 
 export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
   const [currentMap, setCurrentMap] = useState<OpenLayerMap | undefined>(undefined)
-  const [mapClickEvent, setMapClickEvent] = useState<{
-    ctrlKeyPressed: boolean
-    feature: Feature<Geometry> | undefined
-  }>({ ctrlKeyPressed: false, feature: undefined })
+  const [mapClickEvent, setMapClickEvent] = useState<MapClickEvent>({
+    coordinates: undefined,
+    ctrlKeyPressed: false,
+    feature: undefined,
+    featureList: undefined
+  })
 
-  const [currentFeatureOver, setCurrentFeatureOver] = useState<Feature<Geometry> | undefined>(undefined)
+  const [currentFeatureOver, setCurrentFeatureOver] = useState<SerializedFeature<Record<string, any>> | undefined>(
+    undefined
+  )
+  const [currentFeatureListOver, setCurrentFeatureListOver] = useState<
+    SerializedFeature<Record<string, any>>[] | undefined
+  >(undefined)
+  const [pixel, setPixel] = useState<number[] | undefined>(undefined)
 
   const mapElement = useRef() as MutableRefObject<HTMLDivElement>
 
@@ -59,22 +73,25 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   const handleMapClick = useCallback(
     (event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
       if (event && current_map) {
-        const feature = current_map.forEachFeatureAtPixel<Feature<Geometry>>(
-          event.pixel,
-          featureAtPixel => featureAtPixel as Feature<Geometry>,
-          {
-            hitTolerance: HIT_PIXEL_TO_TOLERANCE,
-            layerFilter: layer => {
-              const typedLayer = layer as VectorLayerWithName
+        const featureList = current_map.getFeaturesAtPixel(event.pixel, {
+          hitTolerance: HIT_PIXEL_TO_TOLERANCE,
+          layerFilter: layer => {
+            const typedLayer = layer as VectorLayerWithName
 
-              const layerName = typedLayer.name ?? typedLayer.get('name')
+            const layerName = typedLayer.name ?? typedLayer.get('name')
 
-              return !!layerName && SelectableLayers.includes(layerName)
-            }
+            return !!layerName && SelectableLayers.includes(layerName)
           }
-        )
+        })
+        const feature = getGeoJSONFromFeature<Record<string, any>>(featureList?.[0])
+        const featuresAsGeoJSON = getGeoJSONFromFeatureList(featureList)
         const isCtrl = platformModifierKeyOnly(event)
-        setMapClickEvent({ ctrlKeyPressed: isCtrl, feature })
+        setMapClickEvent({
+          coordinates: event.coordinate,
+          ctrlKeyPressed: isCtrl,
+          feature,
+          featureList: featuresAsGeoJSON
+        })
       }
     },
     [setMapClickEvent]
@@ -84,19 +101,21 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     () =>
       throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
         if (event && current_map) {
-          const feature = current_map.forEachFeatureAtPixel<Feature<Geometry>>(
-            event.pixel,
-            featureAtPixel => featureAtPixel as Feature<Geometry>,
-            {
-              hitTolerance: HIT_PIXEL_TO_TOLERANCE,
-              layerFilter: layer => {
-                const typedLayer = layer as VectorLayerWithName
+          const features = current_map.getFeaturesAtPixel(event.pixel, {
+            hitTolerance: HIT_PIXEL_TO_TOLERANCE,
+            layerFilter: layer => {
+              const typedLayer = layer as VectorLayerWithName
 
-                return !!typedLayer.name && HoverableLayers.includes(typedLayer.name)
-              }
+              const layerName = typedLayer.name ?? typedLayer.get('name')
+
+              return !!layerName && HoverableLayers.includes(layerName)
             }
-          )
-          setCurrentFeatureOver(feature)
+          })
+          setCurrentFeatureListOver(getGeoJSONFromFeatureList(features))
+
+          setCurrentFeatureOver(getGeoJSONFromFeature(features?.[0]))
+
+          setPixel(event.pixel)
         }
       }, 50),
     [setCurrentFeatureOver]
@@ -167,9 +186,11 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           child =>
             child &&
             cloneElement(child, {
+              currentFeatureListOver,
               currentFeatureOver,
               map: currentMap,
-              mapClickEvent
+              mapClickEvent,
+              pixel
             })
         )}
       <StyledDistanceUnitContainer ref={wrapperRef}>

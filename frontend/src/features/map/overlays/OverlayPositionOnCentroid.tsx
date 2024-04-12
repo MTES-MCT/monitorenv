@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { getCenter } from 'ol/extent'
+import { getCenter, type Extent } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -9,8 +8,8 @@ import { setOverlayCoordinatesByName } from '../../../domain/shared_slices/Globa
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
+import type { FeatureLike } from 'ol/Feature'
+import type OpenLayerMap from 'ol/Map'
 
 const OVERLAY_HEIGHT = 174
 
@@ -27,9 +26,9 @@ const defaultMargins = {
 type OverlayPositionOnCentroidProps = {
   appClassName: string
   children: React.ReactNode
-  feature: Feature<Geometry> | null | undefined
+  feature: FeatureLike | null | undefined
   featureIsShowed?: boolean
-  map: any
+  map: OpenLayerMap
   options?: {
     margins?: {
       xLeft: number
@@ -52,35 +51,36 @@ export function OverlayPositionOnCentroid({
   zIndex
 }: OverlayPositionOnCentroidProps) {
   const dispatch = useAppDispatch()
-  const overlayRef = useRef<HTMLDivElement | null>(null)
-  const olOverlayObjectRef = useRef<Overlay | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const olOverlayRef = useRef<Overlay | null>(null)
+
   const isThrottled = useRef(false)
   const [showed, setShowed] = useState(false)
-  const currentCoordinates = useRef([])
+  const currentCoordinates = useRef<Extent | undefined>()
 
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
   const currentOffset = useRef(INITIAL_OFFSET_VALUE)
 
-  const overlayCallback = useCallback(
+  const attachContentToOverlay = useCallback(
     (ref: HTMLDivElement) => {
-      overlayRef.current = ref
+      containerRef.current = ref
       if (ref) {
-        olOverlayObjectRef.current = new Overlay({
+        olOverlayRef.current = new Overlay({
           className: `ol-overlay-container ol-selectable ${appClassName}`,
           element: ref,
           offset: currentOffset.current
         })
       } else {
-        olOverlayObjectRef.current = null
+        olOverlayRef.current = null
       }
     },
-    [overlayRef, olOverlayObjectRef, appClassName]
+    [containerRef, olOverlayRef, appClassName]
   )
 
   useEffect(() => {
-    if (olOverlayObjectRef.current) {
+    if (olOverlayRef.current) {
       currentOffset.current = INITIAL_OFFSET_VALUE
-      olOverlayObjectRef.current.setOffset(INITIAL_OFFSET_VALUE)
+      olOverlayRef.current.setOffset(INITIAL_OFFSET_VALUE)
     }
     if (feature) {
       currentCoordinates.current = feature.getGeometry()?.getExtent()
@@ -90,8 +90,8 @@ export function OverlayPositionOnCentroid({
   }, [feature])
 
   useEffect(() => {
-    if (map) {
-      map.addOverlay(olOverlayObjectRef.current)
+    if (map && olOverlayRef.current) {
+      map.addOverlay(olOverlayRef.current)
 
       if (featureIsShowed && !showed) {
         setShowed(true)
@@ -99,9 +99,11 @@ export function OverlayPositionOnCentroid({
     }
 
     return () => {
-      map.removeOverlay(olOverlayObjectRef.current)
+      if (map && olOverlayRef.current) {
+        map.removeOverlay(olOverlayRef.current)
+      }
     }
-  }, [map, olOverlayObjectRef, featureIsShowed, showed])
+  }, [map, olOverlayRef, featureIsShowed, showed])
 
   const moveCardWithThrottle = useCallback(
     (target, delay) => {
@@ -120,9 +122,10 @@ export function OverlayPositionOnCentroid({
           const nextYPixelCenter = pixel[1] + offset[1] + overlayTopLeftMargin[0]
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
-          const featureContext = feature.getId().split(':')[0]
-          dispatch(setOverlayCoordinatesByName({ coordinates: nextCoordinates, name: featureContext }))
-
+          const featureContext = String(feature?.getId())?.split(':')[0]
+          if (featureContext) {
+            dispatch(setOverlayCoordinatesByName({ coordinates: nextCoordinates, name: featureContext }))
+          }
           isThrottled.current = false
         }
       }, delay)
@@ -134,30 +137,31 @@ export function OverlayPositionOnCentroid({
     function getNextOverlayPosition(featureCenter) {
       const [x, y] = featureCenter
       const extent = map.getView().calculateExtent()
-      const boxSize = map.getView().getResolution() * OVERLAY_HEIGHT
+      const boxSize = (map.getView()?.getResolution() ?? 0) * OVERLAY_HEIGHT
 
       const position = getOverlayPositionForCentroid(boxSize, x, y, extent)
 
       return position
     }
 
-    if (overlayRef.current && olOverlayObjectRef.current) {
+    if (containerRef.current && olOverlayRef.current) {
       if (feature && feature.getGeometry()) {
-        const featureCenter = getCenter(feature.getGeometry().getExtent())
-        olOverlayObjectRef.current.setPosition(featureCenter)
+        const extent = feature.getGeometry()?.getExtent()
+        const featureCenter = extent && getCenter(extent)
+        olOverlayRef.current.setPosition(featureCenter)
         const nextOverlayPosition = getNextOverlayPosition(featureCenter)
         setOverlayTopLeftMargin(getTopLeftMargin(nextOverlayPosition, margins))
-        overlayRef.current.style.display = 'flex'
+        containerRef.current.style.display = 'flex'
       } else {
-        overlayRef.current.style.display = 'none'
+        containerRef.current.style.display = 'none'
       }
     }
-  }, [dispatch, feature, overlayRef, olOverlayObjectRef, map, margins])
+  }, [dispatch, feature, containerRef, olOverlayRef, map, margins])
 
-  useMoveOverlayWhenDragging(olOverlayObjectRef.current, map, currentOffset, moveCardWithThrottle, showed)
+  useMoveOverlayWhenDragging(olOverlayRef.current, map, currentOffset, moveCardWithThrottle, showed)
 
   return (
-    <OverlayComponent ref={overlayCallback} $overlayTopLeftMargin={overlayTopLeftMargin} $zIndex={zIndex}>
+    <OverlayComponent ref={attachContentToOverlay} $overlayTopLeftMargin={overlayTopLeftMargin} $zIndex={zIndex}>
       {feature && children}
     </OverlayComponent>
   )

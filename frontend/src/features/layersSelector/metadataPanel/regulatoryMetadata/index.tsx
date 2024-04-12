@@ -18,7 +18,7 @@ const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 export function RegulatoryMetadata() {
   const dispatch = useAppDispatch()
-  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.metadataPanel)
+  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
   const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(metadataLayerId ?? skipToken, {
     pollingInterval: FOUR_HOURS

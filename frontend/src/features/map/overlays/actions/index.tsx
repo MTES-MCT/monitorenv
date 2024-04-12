@@ -1,3 +1,5 @@
+import { convertToFeature } from 'domain/types/map'
+
 import { ControlCard } from './ControlCard'
 import { SurveillanceCard } from './SurveillanceCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -7,7 +9,8 @@ import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const currentfeatureId = currentFeatureOver?.getId()
+  const hoveredFeature = convertToFeature(currentFeatureOver)
+  const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' && currentfeatureId.startsWith(`${Layers.ACTIONS.code}`)
   const displayControlCard =
@@ -20,12 +23,12 @@ export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps)
   return (
     <OverlayPositionOnCentroid
       appClassName="overlay-action-hover"
-      feature={displayHoveredFeature ? currentFeatureOver : undefined}
+      feature={displayHoveredFeature ? hoveredFeature : undefined}
       map={map}
       zIndex={5500}
     >
-      {displayControlCard && <ControlCard feature={currentFeatureOver} />}
-      {displaySurveillanceCard && <SurveillanceCard feature={currentFeatureOver} />}
+      {displayControlCard && <ControlCard feature={hoveredFeature} />}
+      {displaySurveillanceCard && <SurveillanceCard feature={hoveredFeature} />}
     </OverlayPositionOnCentroid>
   )
 }

@@ -1,3 +1,5 @@
+import { convertToFeature } from 'domain/types/map'
+
 import { SemaphoreCard } from './SemaphoreCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -18,7 +20,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
   const displaySemaphoreOverlay = useAppSelector(state => state.global.displaySemaphoreOverlay)
 
-  const feature = map
+  const selectedFeature = map
     ?.getLayers()
     ?.getArray()
     ?.find(
@@ -27,7 +29,9 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     )
     ?.getSource()
     ?.getFeatureById(`${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`)
-  const currentfeatureId = currentFeatureOver?.getId()
+
+  const hoveredFeature = convertToFeature(currentFeatureOver)
+  const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.SEMAPHORES.code) &&
@@ -37,22 +41,22 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-selected"
-        feature={displaySemaphoreOverlay ? feature : undefined}
+        feature={displaySemaphoreOverlay ? selectedFeature : undefined}
         featureIsShowed
         map={map}
         options={{ margins: MARGINS }}
         zIndex={3000}
       >
-        <SemaphoreCard feature={feature} selected />
+        <SemaphoreCard feature={selectedFeature} selected />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-hover"
-        feature={displaySemaphoreOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
+        feature={displaySemaphoreOverlay && displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         options={{ margins: MARGINS }}
         zIndex={3000}
       >
-        <SemaphoreCard feature={currentFeatureOver} />
+        <SemaphoreCard feature={hoveredFeature} />
       </OverlayPositionOnCentroid>
     </>
   )

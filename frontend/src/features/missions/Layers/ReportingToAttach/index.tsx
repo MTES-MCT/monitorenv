@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -100,7 +101,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
   }, [isReportingAttachmentInProgress])
 
   useEffect(() => {
-    const feature = mapClickEvent?.feature
+    const feature = convertToFeature(mapClickEvent?.feature)
     if (feature && feature.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
       const { id } = feature.getProperties()
       dispatch(attachReportingFromMap(id))

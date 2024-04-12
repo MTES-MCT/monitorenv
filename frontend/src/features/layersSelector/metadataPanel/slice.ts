@@ -4,46 +4,73 @@ import { includes } from 'lodash'
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
 
 import type { HomeRootState } from '@store/index'
+import type { OverlayItem } from 'domain/types/map'
+import type { Coordinate } from 'ol/coordinate'
 
 type MetadataPanelSliceState = {
+  layerOverlayCoordinates: Coordinate | undefined
+  layerOverlayIsOpen: boolean
+  layerOverlayItems: OverlayItem[]
   metadataLayerId: number | undefined
   metadataLayerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP | undefined
   metadataPanelIsOpen: boolean
 }
 
-const metadataPanelSlice = createSlice({
+const layersMetadataSlice = createSlice({
   initialState: {
+    layerOverlayCoordinates: undefined,
+    layerOverlayIsOpen: false,
+    layerOverlayItems: [],
     metadataLayerId: undefined,
     metadataLayerType: undefined,
     metadataPanelIsOpen: false
   } as MetadataPanelSliceState,
-  name: 'metadataPanel',
+  name: 'layersMetadata',
   reducers: {
+    closeLayerOverlay(state) {
+      state.layerOverlayIsOpen = false
+      state.layerOverlayCoordinates = undefined
+      state.layerOverlayItems = []
+    },
     closeMetadataPanel(state) {
       state.metadataPanelIsOpen = false
       state.metadataLayerId = undefined
       state.metadataLayerType = undefined
     },
-    openAMPMetadataPanel(state, action) {
+    openAMPMetadataPanel(state, action: { payload: number }) {
       state.metadataPanelIsOpen = true
       state.metadataLayerType = MonitorEnvLayers.AMP
       state.metadataLayerId = action.payload
+    },
+    openLayerOverlay(state, action: { payload: Coordinate }) {
+      state.layerOverlayIsOpen = true
+      state.layerOverlayCoordinates = action.payload
     },
     openRegulatoryMetadataPanel(state, action) {
       state.metadataPanelIsOpen = true
       state.metadataLayerType = MonitorEnvLayers.REGULATORY_ENV
       state.metadataLayerId = action.payload
+    },
+    setLayerOverlayItems(state, action) {
+      state.layerOverlayItems = action.payload
     }
   }
 })
 
-export const { closeMetadataPanel, openAMPMetadataPanel, openRegulatoryMetadataPanel } = metadataPanelSlice.actions
+export const {
+  closeLayerOverlay,
+  closeMetadataPanel,
+  openAMPMetadataPanel,
+  openLayerOverlay,
+  openRegulatoryMetadataPanel,
+  setLayerOverlayItems
+} = layersMetadataSlice.actions
 
-export const metadataPanelSliceReducer = metadataPanelSlice.reducer
+export const layersMetadataSliceReducer = layersMetadataSlice.reducer
 
-const isMetadataPanelOpen = (state: HomeRootState) => state.metadataPanel.metadataPanelIsOpen
-const getMetadataLayerType = (state: HomeRootState) => state.metadataPanel.metadataLayerType
-const getMetadataLayerId = (state: HomeRootState) => state.metadataPanel.metadataLayerId
+const isMetadataPanelOpen = (state: HomeRootState) => state.layersMetadata.metadataPanelIsOpen
+const getMetadataLayerType = (state: HomeRootState) => state.layersMetadata.metadataLayerType
+const getMetadataLayerId = (state: HomeRootState) => state.layersMetadata.metadataLayerId
 
 export const getMetadataIsOpenForRegulatoryLayerId = createSelector(
   [isMetadataPanelOpen, getMetadataLayerType, getMetadataLayerId, (_, layerId: number) => layerId],

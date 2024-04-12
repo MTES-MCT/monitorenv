@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import { cloneDeep, reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -138,8 +139,8 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [isLayerVisible, GetVectorLayer])
 
   useEffect(() => {
-    if (mapClickEvent?.feature) {
-      const feature = mapClickEvent?.feature
+    const feature = convertToFeature(mapClickEvent?.feature)
+    if (feature) {
       if (feature.getId()?.toString()?.includes(Layers.SEMAPHORES.code)) {
         const { id } = feature.getProperties()
         dispatch(setSelectedSemaphore(id))

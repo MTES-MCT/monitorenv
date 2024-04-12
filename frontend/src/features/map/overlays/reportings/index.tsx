@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
@@ -34,7 +35,9 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     )
     ?.getSource()
     ?.getFeatureById(`${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`)
-  const currentfeatureId = currentFeatureOver?.getId()
+
+  const hoveredFeature = convertToFeature(currentFeatureOver)
+  const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.REPORTINGS.code) &&
@@ -66,12 +69,12 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
-        feature={displayReportingsOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
+        feature={displayReportingsOverlay && displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         options={hoveredOptions}
         zIndex={5000}
       >
-        <ReportingCard feature={currentFeatureOver} updateMargins={updateHoveredMargins} />
+        <ReportingCard feature={hoveredFeature} updateMargins={updateHoveredMargins} />
       </OverlayPositionOnCentroid>
     </>
   )

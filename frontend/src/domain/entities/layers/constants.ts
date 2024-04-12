@@ -262,11 +262,15 @@ export const SelectableLayers = [
   Layers.REPORTING_TO_ATTACH_ON_MISSION.code
 ]
 export const HoverableLayers = [
-  Layers.MISSIONS.code,
   Layers.ACTIONS.code,
-  Layers.STATIONS.code,
-  Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code,
+  Layers.AMP.code,
+  Layers.AMP_PREVIEW.code,
   Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
-  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
+  Layers.MISSIONS.code,
+  Layers.REGULATORY_ENV_PREVIEW.code,
+  Layers.REGULATORY_ENV.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code,
+  Layers.REPORTINGS.code,
+  Layers.SEMAPHORES.code,
+  Layers.STATIONS.code
 ]

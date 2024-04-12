@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
 import { MissionCard } from './MissionCard'
@@ -34,7 +35,9 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
     )
     ?.getSource()
     ?.getFeatureById(`${Layers.MISSIONS.code}:${selectedMissionId}`)
-  const currentfeatureId = currentFeatureOver?.getId()
+
+  const hoveredFeature = convertToFeature(currentFeatureOver)
+  const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.MISSIONS.code) &&
@@ -66,12 +69,12 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-mission-hover"
-        feature={displayMissionsOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
+        feature={displayMissionsOverlay && displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         options={hoveredOptions}
         zIndex={6000}
       >
-        <MissionCard feature={currentFeatureOver} updateMargins={updateHoveredMargins} />
+        <MissionCard feature={hoveredFeature} updateMargins={updateHoveredMargins} />
       </OverlayPositionOnCentroid>
     </>
   )

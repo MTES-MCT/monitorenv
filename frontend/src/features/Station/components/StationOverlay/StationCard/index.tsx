@@ -14,9 +14,9 @@ import { stationActions } from '../../../slice'
 
 import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import type { Station } from '../../../../../domain/entities/station'
-import type { Feature } from 'ol'
+import type { FeatureLike } from 'ol/Feature'
 
-export function StationCard({ feature, selected = false }: { feature: Feature; selected?: boolean }) {
+export function StationCard({ feature, selected = false }: { feature: FeatureLike; selected?: boolean }) {
   const [controlUnits, setControlUnits] = useState<ControlUnit.ControlUnit[]>([])
 
   const dispatch = useAppDispatch()

@@ -4,11 +4,6 @@ import type BaseLayer from 'ol/layer/Base'
 import type VectorImageLayer from 'ol/layer/VectorImage'
 import type VectorSource from 'ol/source/Vector'
 
-export type MapClickEvent = {
-  ctrlKeyPressed: boolean
-  feature?: Feature
-}
-
 export type MonitorEnvBaseLayer = BaseLayer & {
   layerId?: number
   type?: string

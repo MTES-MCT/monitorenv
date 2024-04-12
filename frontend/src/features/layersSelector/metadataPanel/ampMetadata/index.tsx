@@ -17,7 +17,7 @@ const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 export function AmpMetadata() {
   const dispatch = useAppDispatch()
-  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.metadataPanel)
+  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
   const { ampMetadata } = useGetAMPsQuery(undefined, {
     pollingInterval: FOUR_HOURS,

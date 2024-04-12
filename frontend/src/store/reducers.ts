@@ -17,7 +17,7 @@ import { backOfficeReducer } from '../features/BackOffice/slice'
 import { controlUnitDialogReducer } from '../features/ControlUnit/components/ControlUnitDialog/slice'
 import { controlUnitListDialogPersistedReducer } from '../features/ControlUnit/components/ControlUnitListDialog/slice'
 import { controlUnitTablePersistedReducer } from '../features/ControlUnit/components/ControlUnitTable/slice'
-import { metadataPanelSliceReducer } from '../features/layersSelector/metadataPanel/slice'
+import { layersMetadataSliceReducer } from '../features/layersSelector/metadataPanel/slice'
 import { layerSearchSliceReducer } from '../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../features/MainWindow/slice'
 import { attachReportingToMissionsSliceReducer } from '../features/missions/MissionForm/AttachReporting/slice'
@@ -44,12 +44,12 @@ export const homeReducers = {
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
   layerSearch: layerSearchSliceReducer,
+  layersMetadata: layersMetadataSliceReducer,
   mainWindow: mainWindowReducer,
   map: mapSliceReducer,
   mapControlUnitDialog: controlUnitDialogReducer,
   mapControlUnitListDialog: controlUnitListDialogPersistedReducer,
   measurement: measurementSlicePersistedReducer,
-  metadataPanel: metadataPanelSliceReducer,
   mission: missionSliceReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionForms: missionFormsSliceReducer,

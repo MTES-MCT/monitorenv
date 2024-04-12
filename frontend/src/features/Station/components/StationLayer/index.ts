@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
@@ -54,12 +55,12 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   // Features Events
 
   useEffect(() => {
-    const feature = mapClickEvent?.feature
+    const feature = convertToFeature(mapClickEvent?.feature)
     if (!feature) {
       return
     }
 
-    const featureId = mapClickEvent?.feature?.getId()?.toString()
+    const featureId = feature?.getId()?.toString()
     if (!featureId?.startsWith(Layers.STATIONS.code)) {
       return
     }
