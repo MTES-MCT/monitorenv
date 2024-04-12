@@ -39,6 +39,7 @@ const Header = styled.div`
   display: flex;
   height: 32px;
   justify-content: space-between;
+  align-items: center;
   background-color: ${p => p.theme.color.lightGray};
   color: ${p => p.theme.color.gunMetal};
   font: normal normal medium 13px/18px Marianne;

@@ -19,7 +19,7 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function AMPLayers({ map }: BaseMapChildrenProps) {
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
-  const shcwedAmpMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
+  const showedAmpMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
   const { data: ampLayers } = useGetAMPsQuery()
 
@@ -82,11 +82,11 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
       const features = vectorSourceRef.current.getFeatures()
       if (features?.length) {
         features.forEach(f => {
-          f.set(metadataIsShowedPropertyName, f.get('id') === shcwedAmpMetadataLayerId)
+          f.set(metadataIsShowedPropertyName, f.get('id') === showedAmpMetadataLayerId)
         })
       }
     }
-  }, [map, shcwedAmpMetadataLayerId])
+  }, [map, showedAmpMetadataLayerId])
 
   return null
 }

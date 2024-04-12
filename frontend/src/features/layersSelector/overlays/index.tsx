@@ -9,9 +9,11 @@ import { PinnedOverlay } from './PinnedOverlay'
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChildrenProps) {
-  const { layerOverlayCoordinates, layerOverlayIsOpen, layerOverlayItems } = useAppSelector(
-    state => state.layersMetadata
-  )
+  const { layerOverlayCoordinates, layerOverlayIsOpen, layerOverlayItems } = useAppSelector(state => ({
+    layerOverlayCoordinates: state.layersMetadata.layerOverlayCoordinates,
+    layerOverlayIsOpen: state.layersMetadata.layerOverlayIsOpen,
+    layerOverlayItems: state.layersMetadata.layerOverlayItems
+  }))
   const hoveredItems = getHoveredItems(currentFeatureListOver)
 
   return (

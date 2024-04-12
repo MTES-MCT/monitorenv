@@ -38,8 +38,8 @@ export function HoveredOverlay({
 
 const Menu = styled.div<{ x: number | undefined; y: number | undefined }>`
   position: absolute;
-  top: ${p => String(p.y ?? 0 + 10)}px;
-  left: ${p => String(p.x ?? 0 + 10)}px;
+  top: ${p => String(p.y)}px;
+  left: ${p => String(p.x)}px;
   width: 440px;
   box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
   pointer-events: none;
