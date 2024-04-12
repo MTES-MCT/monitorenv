@@ -24,7 +24,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
-  const myAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds) // or showedAmpLayerIds ?
+  const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
 
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)
@@ -50,7 +50,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
       ampVectorSourceRef.current.clear()
       if (ampsSearchResult && ampLayers?.entities) {
         const features = ampsSearchResult.reduce((amplayers, id) => {
-          if (myAmpLayerIds.includes(id)) {
+          if (showedAmpLayerIds.includes(id)) {
             return amplayers
           }
           const layer = ampLayers.entities[id]
@@ -90,7 +90,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
         refreshPreviewLayer()
       }, 300)
     }
-  }, [map, ampsSearchResult, ampLayers, myAmpLayerIds])
+  }, [map, ampsSearchResult, ampLayers, showedAmpLayerIds])
 
   useEffect(() => {
     function getLayer() {
