@@ -1,10 +1,15 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Size } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from 'domain/entities/layers/constants'
 import styled from 'styled-components'
 
 import { getName, getType } from './utils'
-import { openAMPMetadataPanel, openRegulatoryMetadataPanel } from '../metadataPanel/slice'
+import {
+  getDisplayedMetadataLayerIdAndType,
+  openAMPMetadataPanel,
+  openRegulatoryMetadataPanel
+} from '../metadataPanel/slice'
 import { LayerLegend } from '../utils/LayerLegend.style'
 
 import type { AMPProperties } from 'domain/entities/AMPs'
@@ -17,6 +22,8 @@ type OverlayContentProps = {
 
 export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
+  const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
+
   const handleClick = (type, id) => () => {
     if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
       dispatch(openAMPMetadataPanel(id))
@@ -31,9 +38,14 @@ export function OverlayContent({ items }: OverlayContentProps) {
       {items?.map(item => {
         const name = getName(item.properties, item.layerType)
         const type = getType(item.properties, item.layerType)
+        const isSelected = item.properties.id === layerId && item.layerType === layerType
 
         return (
-          <LayerItem key={item.properties.id} onClick={handleClick(item.layerType, item.properties.id)}>
+          <LayerItem
+            key={item.properties.id}
+            $isSelected={isSelected}
+            onClick={handleClick(item.layerType, item.properties.id)}
+          >
             <LayerLegend layerType={item.layerType} name={name} size={Size.NORMAL} type={type} />
             <Name title={name}>{name}</Name>
             <Type title={type ?? ''}> / {type}</Type>
@@ -48,14 +60,16 @@ const Layerlist = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 320px;
+  overflow-y: auto;
 `
 
-const LayerItem = styled.li`
+const LayerItem = styled.li<{ $isSelected: boolean }>`
   display: flex;
   align-items: center;
   height: 32px;
   padding: 7px 8px 8px 8px;
-  background-color: ${p => p.theme.color.white};
+  background-color: ${p => (p.$isSelected ? p.theme.color.blueYonder25 : p.theme.color.white)};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
 

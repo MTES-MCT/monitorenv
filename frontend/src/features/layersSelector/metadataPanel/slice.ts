@@ -104,3 +104,8 @@ export const getDisplayedMetadataRegulatoryLayerId = createSelector(
   [isMetadataPanelOpen, getMetadataLayerType, getMetadataLayerId],
   (isOpen, layerType, layerId) => (isOpen && layerType === MonitorEnvLayers.REGULATORY_ENV ? layerId : undefined)
 )
+
+export const getDisplayedMetadataLayerIdAndType = createSelector(
+  [getMetadataLayerType, getMetadataLayerId],
+  (layerType, layerId) => ({ layerId, layerType })
+)
