@@ -1,5 +1,5 @@
 import { getHoveredItems } from '@features/map/utils'
-import { useAppSelector } from '@hooks/useAppSelector'
+import { useShallowEqualSelector } from '@hooks/useAppSelector'
 import { createPortal } from 'react-dom'
 
 import { HoveredOverlay } from './HoveredOverlay'
@@ -9,7 +9,7 @@ import { PinnedOverlay } from './PinnedOverlay'
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChildrenProps) {
-  const { layerOverlayCoordinates, layerOverlayIsOpen, layerOverlayItems } = useAppSelector(state => ({
+  const { layerOverlayCoordinates, layerOverlayIsOpen, layerOverlayItems } = useShallowEqualSelector(state => ({
     layerOverlayCoordinates: state.layersMetadata.layerOverlayCoordinates,
     layerOverlayIsOpen: state.layersMetadata.layerOverlayIsOpen,
     layerOverlayItems: state.layersMetadata.layerOverlayItems
