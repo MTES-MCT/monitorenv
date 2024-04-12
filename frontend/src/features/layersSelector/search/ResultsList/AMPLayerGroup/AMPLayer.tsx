@@ -1,3 +1,9 @@
+import {
+  closeMetadataPanel,
+  getDisplayedMetadataAMPLayerId,
+  getMetadataIsOpenForAMPLayerId,
+  openAMPMetadataPanel
+} from '@features/layersSelector/metadataPanel/slice'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -7,12 +13,8 @@ import Highlighter from 'react-highlight-words'
 import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
+import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/Amp'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
-import {
-  addAmpZonesToMyLayers,
-  removeAmpZonesFromMyLayers,
-  setSelectedAmpLayerId
-} from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { LayerLegend } from '../../../utils/LayerLegend.style'
@@ -22,15 +24,17 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
+  const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
+
   const { layer } = useGetAMPsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       layer: data?.entities[layerId]
     })
   })
-  const selectedAmpLayerId = useAppSelector(state => state.selectedAmp.selectedAmpLayerId)
-  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
+  const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
   const isZoneSelected = selectedAmpLayerIds.includes(layerId)
+  const metadataIsShown = useAppSelector(state => getMetadataIsOpenForAMPLayerId(state, layerId))
 
   const handleSelectZone = e => {
     e.stopPropagation()
@@ -38,6 +42,14 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
       dispatch(removeAmpZonesFromMyLayers([layerId]))
     } else {
       dispatch(addAmpZonesToMyLayers([layerId]))
+    }
+  }
+
+  const toggleZoneMetadata = () => {
+    if (metadataIsShown) {
+      dispatch(closeMetadataPanel())
+    } else {
+      dispatch(openAMPMetadataPanel(layerId))
     }
   }
 
@@ -51,19 +63,18 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
     dispatch(setFitToExtent(extent))
-    dispatch(setSelectedAmpLayerId(layerId))
   }
 
   useEffect(() => {
-    if (selectedAmpLayerId === layerId && ref?.current) {
+    if (ampMetadataLayerId === layerId && ref?.current) {
       ref.current.scrollIntoView(false)
     }
-  }, [selectedAmpLayerId, ref, layerId])
+  }, [ampMetadataLayerId, ref, layerId])
 
   return (
-    <LayerSelector.Layer ref={ref} $selected={selectedAmpLayerId === layerId}>
+    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} onClick={toggleZoneMetadata}>
       <LayerLegend layerType={MonitorEnvLayers.AMP} name={layer?.name ?? 'aucun'} type={layer?.type ?? 'aucun'} />
-      <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type}>
+      <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type ?? 'aucun'}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"

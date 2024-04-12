@@ -5,18 +5,22 @@ import org.locationtech.jts.geom.MultiPolygon
 
 data class AMPDataOutput(
     val id: Int,
+    val designation: String,
     val geom: MultiPolygon,
     val name: String,
-    val designation: String,
-    val type: String,
+    val ref_reg: String? = null,
+    val type: String? = null,
+    val url_legicem: String? = null,
 ) {
     companion object {
         fun fromAMPEntity(amp: AMPEntity) = AMPDataOutput(
             id = amp.id,
+            designation = amp.designation,
             geom = amp.geom,
             name = amp.name,
-            designation = amp.designation,
+            ref_reg = amp.ref_reg,
             type = amp.type,
+            url_legicem = amp.url_legicem,
         )
     }
 }

@@ -9,8 +9,8 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 import type { AMP } from '../../../domain/entities/AMPs'
 
 export function AMPLayersList() {
-  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
-  const showedAmpLayerIds = useAppSelector(state => state.selectedAmp.showedAmpLayerIds)
+  const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
+  const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
 
   const { currentData: amps, isLoading } = useGetAMPsQuery()
   const selectedAmps = useMemo(

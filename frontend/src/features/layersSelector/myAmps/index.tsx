@@ -3,16 +3,20 @@ import { toggleMyAmps } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
+import { closeMetadataPanel } from '../metadataPanel/slice'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function AmpLayers() {
   const dispatch = useAppDispatch()
 
-  const selectedAmpLayerIds = useAppSelector(state => state.selectedAmp.selectedAmpLayerIds)
+  const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
   const myAmpsIsOpen = useAppSelector(state => state.layerSidebar.myAmpsIsOpen)
 
   const onTitleClicked = () => {
     dispatch(toggleMyAmps())
+    if (myAmpsIsOpen) {
+      dispatch(closeMetadataPanel())
+    }
   }
 
   return (

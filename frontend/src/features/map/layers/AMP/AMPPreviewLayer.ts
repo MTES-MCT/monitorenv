@@ -1,3 +1,4 @@
+import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { Feature } from 'ol'
 import GeoJSON from 'ol/format/GeoJSON'
 import { fromExtent } from 'ol/geom/Polygon'
@@ -18,6 +19,7 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
+  const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
@@ -52,6 +54,15 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   }
 
   useEffect(() => {
+    if (map) {
+      const features = getAMPVectorSource().getFeatures()
+      if (features?.length) {
+        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('id') === ampMetadataLayerId))
+      }
+    }
+  }, [map, ampMetadataLayerId])
+
+  useEffect(() => {
     function refreshPreviewLayer() {
       getAMPVectorSource().clear()
       if (ampsSearchResult && ampLayers?.entities) {
@@ -64,7 +75,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
             }).readFeature(layer.geom)
             const geometry = feature.getGeometry()
             const area = geometry && getArea(geometry)
-            feature.setId(`${Layers.AMP.code}:${layer.id}`)
+            feature.setId(`${Layers.AMP_PREVIEW.code}:${layer.id}`)
 
             feature.setProperties({
               area,

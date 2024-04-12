@@ -21,6 +21,7 @@ export enum MonitorEnvLayers {
   ACTIONS = 'ACTIONS',
   AEM = 'AEM',
   AMP = 'AMP',
+  AMP_PREVIEW = 'AMP_PREVIEW',
   BASE_LAYER = 'BASE_LAYER',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
@@ -159,6 +160,12 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     name: 'environment_amp_areas',
     type: LayerType.REGULATORY,
     zIndex: 925
+  },
+  [MonitorEnvLayers.AMP_PREVIEW]: {
+    code: 'AMP',
+    name: 'environment_amp_areas',
+    type: LayerType.REGULATORY,
+    zIndex: 935
   },
   [MonitorEnvLayers.REGULATORY_ENV_PREVIEW]: {
     code: MonitorEnvLayers.REGULATORY_ENV_PREVIEW,

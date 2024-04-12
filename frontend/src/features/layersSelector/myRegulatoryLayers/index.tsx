@@ -4,6 +4,7 @@ import { toggleMyRegulatoryZones } from '../../../domain/shared_slices/LayerSide
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
+import { closeMetadataPanel } from '../metadataPanel/slice'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function RegulatoryLayers() {
@@ -15,6 +16,9 @@ export function RegulatoryLayers() {
 
   const onTitleClicked = () => {
     dispatch(toggleMyRegulatoryZones())
+    if (myRegulatoryZonesIsOpen) {
+      dispatch(closeMetadataPanel())
+    }
   }
 
   return (

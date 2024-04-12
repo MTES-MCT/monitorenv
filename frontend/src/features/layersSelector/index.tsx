@@ -4,20 +4,21 @@ import styled from 'styled-components'
 
 import { AdministrativeLayers } from './administrative'
 import { BaseLayerList } from './base'
+import { AmpMetadata } from './metadataPanel/ampMetadata'
+import { RegulatoryMetadata } from './metadataPanel/regulatoryMetadata'
+import { closeMetadataPanel } from './metadataPanel/slice'
 import { AmpLayers } from './myAmps'
 import { RegulatoryLayers } from './myRegulatoryLayers'
-import { RegulatoryLayerZoneMetadata } from './regulatoryMetadata'
 import { LayerSearch } from './search'
 import { useGetAMPsQuery } from '../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../api/regulatoryLayersAPI'
+import { MonitorEnvLayers } from '../../domain/entities/layers/constants'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
-import { closeRegulatoryMetadataPanel } from '../../domain/shared_slices/RegulatoryMetadata'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar() {
-  const regulatoryMetadataPanelIsOpen = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataPanelIsOpen)
-  const regulatoryMetadataLayerId = useAppSelector(state => state.regulatoryMetadata.regulatoryMetadataLayerId)
+  const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.metadataPanel)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
   const regulatoryAreas = useGetRegulatoryLayersQuery()
@@ -27,7 +28,7 @@ export function LayersSidebar() {
 
   const toggleLayerSidebar = () => {
     if (isLayersSidebarVisible) {
-      dispatch(closeRegulatoryMetadataPanel())
+      dispatch(closeMetadataPanel())
     }
     dispatch(setDisplayedItems({ isLayersSidebarVisible: !isLayersSidebarVisible }))
   }
@@ -47,7 +48,7 @@ export function LayersSidebar() {
       />
       <Sidebar
         isLayersSidebarVisible={isLayersSidebarVisible}
-        isVisible={displayLayersSidebar && (isLayersSidebarVisible || regulatoryMetadataPanelIsOpen)}
+        isVisible={displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)}
       >
         <LayerSearch />
         <Layers>
@@ -56,12 +57,10 @@ export function LayersSidebar() {
           <AdministrativeLayers />
           <BaseLayerList />
         </Layers>
-        <RegulatoryZoneMetadataShifter
-          isLayersSidebarVisible={isLayersSidebarVisible}
-          regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
-        >
-          {regulatoryMetadataLayerId && <RegulatoryLayerZoneMetadata />}
-        </RegulatoryZoneMetadataShifter>
+        <MetadataPanelShifter isLayersSidebarVisible={isLayersSidebarVisible} metadataPanelIsOpen={metadataPanelIsOpen}>
+          {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
+          {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
+        </MetadataPanelShifter>
       </Sidebar>
       {(regulatoryAreas.isLoading || amps.isLoading) && (
         <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
@@ -77,13 +76,13 @@ export function LayersSidebar() {
   )
 }
 
-const RegulatoryZoneMetadataShifter = styled.div<{
+const MetadataPanelShifter = styled.div<{
   isLayersSidebarVisible: boolean
-  regulatoryMetadataPanelIsOpen: boolean
+  metadataPanelIsOpen: boolean
 }>`
   position: absolute;
   margin-left: ${p => {
-    if (p.regulatoryMetadataPanelIsOpen) {
+    if (p.metadataPanelIsOpen) {
       if (p.isLayersSidebarVisible) {
         return '355'
       }
@@ -95,7 +94,7 @@ const RegulatoryZoneMetadataShifter = styled.div<{
   }}px;
   margin-top: 45px;
   top: 0px;
-  opacity: ${props => (props.regulatoryMetadataPanelIsOpen ? 1 : 0)};
+  opacity: ${props => (props.metadataPanelIsOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   z-index: -1;
   transition: 0.5s all;

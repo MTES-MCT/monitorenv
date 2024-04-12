@@ -66,8 +66,8 @@ export function stringToColorInGroup(group: string, name: string, layerType?: st
   return stringToArrayItem(name, colorSet)
 }
 
-export const getColorWithAlpha = (color, alpha) => {
-  const [r, g, b] = Array.from(asArray(color))
+export const getColorWithAlpha = (color: string, alpha: number) => {
+  const [r, g, b] = Array.from(asArray(color)) as [number, number, number]
 
   return asString([r, g, b, alpha])
 }

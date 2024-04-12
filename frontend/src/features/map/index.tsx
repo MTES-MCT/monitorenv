@@ -25,6 +25,7 @@ import { ActionOverlay } from './overlays/actions'
 import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
+import { ShowAMPMetadata } from './ShowAMPMetadata'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 import { ZoomListener } from './ZoomListener'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
@@ -62,6 +63,8 @@ export function Map() {
       <AMPLayers />
       {/* @ts-ignore */}
       <AMPPreviewLayer />
+      {/* @ts-ignore */}
+      <ShowAMPMetadata />
       {/* @ts-ignore */}
       <RegulatoryLayers />
       {/* @ts-ignore */}

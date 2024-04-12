@@ -37,10 +37,12 @@ class AmpsITests {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         val amp = AMPEntity(
             id = 1,
+            designation = "ma designation",
             geom = polygon,
             name = "mon nom",
-            designation = "ma designation",
+            ref_reg = "ma ref reg",
             type = "mon type",
+            url_legicem = "mon url legicem",
         )
         given(getAllAMPs.execute()).willReturn(listOf(amp))
 
@@ -49,9 +51,11 @@ class AmpsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(amp.id)))
+            .andExpect(jsonPath("$[0].designation", equalTo(amp.designation)))
             .andExpect(jsonPath("$[0].geom").exists())
             .andExpect(jsonPath("$[0].name", equalTo(amp.name)))
-            .andExpect(jsonPath("$[0].designation", equalTo(amp.designation)))
+            .andExpect(jsonPath("$[0].ref_reg", equalTo(amp.ref_reg)))
             .andExpect(jsonPath("$[0].type", equalTo(amp.type)))
+            .andExpect(jsonPath("$[0].url_legicem", equalTo(amp.url_legicem)))
     }
 }
