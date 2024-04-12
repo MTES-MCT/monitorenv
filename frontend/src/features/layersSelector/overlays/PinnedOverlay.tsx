@@ -19,6 +19,10 @@ export function PinnedOverlay({
   const handleClick = () => {
     dispatch(closeLayerOverlay())
   }
+  // component should not be called if items.length < 2
+  if (items.length < 2) {
+    return null
+  }
 
   return (
     <Card>
