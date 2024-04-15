@@ -1,4 +1,4 @@
-import { FieldError, FormikMultiRadio, FormikTextarea, getOptionsFromLabelledEnum, Toggle } from '@mtes-mct/monitor-ui'
+import { FormikMultiRadio, FormikTextarea, getOptionsFromLabelledEnum, Toggle } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
@@ -199,14 +199,16 @@ export function FormContent({
 
         <div>
           <ReportTypeMultiRadio
+            error={errors.reportType}
+            isErrorMessageHidden
             isInline
+            isRequired
             label="Type de signalement"
             name="reportType"
             onChange={changeReportType}
             options={reportTypeOptions}
             value={values.reportType}
           />
-          {errors.reportType && <FieldError>{errors.reportType}</FieldError>}
         </div>
         <StyledThemeContainer>
           <ThemeSelector isLight={false} label="Thématique du signalement" name="themeId" />
@@ -223,7 +225,7 @@ export function FormContent({
 
         <Validity mustIncreaseValidity={mustIncreaseValidity} />
 
-        <StyledFormikTextInput label="Saisi par" name="openBy" />
+        <StyledFormikTextInput isErrorMessageHidden isRequired label="Saisi par" name="openBy" />
 
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />

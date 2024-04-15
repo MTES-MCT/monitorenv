@@ -29,8 +29,17 @@ export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boole
   return (
     <StyledValidityContainer>
       <div>
-        <FormikDatePicker isCompact isHistorical isStringDate label="Date et heure (UTC)" name="createdAt" withTime />
-        <StyledFormikNumberInput label="Validité (h)" min={1} name="validityTime" />
+        <FormikDatePicker
+          isCompact
+          isErrorMessageHidden
+          isHistorical
+          isRequired
+          isStringDate
+          label="Date et heure (UTC)"
+          name="createdAt"
+          withTime
+        />
+        <StyledFormikNumberInput isErrorMessageHidden isRequired label="Validité (h)" min={1} name="validityTime" />
       </div>
 
       {reportingStatus === ReportingStatusEnum.ARCHIVED && !mustIncreaseValidity && (

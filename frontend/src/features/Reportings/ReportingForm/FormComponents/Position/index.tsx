@@ -1,4 +1,4 @@
-import { Accent, Button, Label, Icon, FieldError } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Label, Icon } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useCallback } from 'react'
 
@@ -24,10 +24,10 @@ export function Position() {
 
   return (
     <div>
-      <Label hasError={!!meta.error}>Localisation</Label>
+      <Label $isRequired>Localisation</Label>
       <StyledPositionContainer>
         <Button
-          accent={Accent.SECONDARY}
+          accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
           disabled={field.value?.coordinates}
           Icon={Icon.Plus}
           isFullWidth
@@ -36,7 +36,7 @@ export function Position() {
           Ajouter une zone
         </Button>
         <Button
-          accent={Accent.SECONDARY}
+          accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
           disabled={field.value?.coordinates}
           Icon={Icon.Plus}
           isFullWidth
@@ -47,7 +47,6 @@ export function Position() {
       </StyledPositionContainer>
       <ZonePicker />
       <PointPicker />
-      {meta.error && <FieldError>{meta.error}</FieldError>}
     </div>
   )
 }

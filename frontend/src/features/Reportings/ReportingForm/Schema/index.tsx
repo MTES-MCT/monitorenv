@@ -49,6 +49,10 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
       .ensure()
       .required()
       .min(1, 'Veuillez définir les sous-thématiques du signalement'),
-    themeId: Yup.number().nullable().required('Veuillez définir la thématique du signalement')
+    themeId: Yup.number().nullable().required('Veuillez définir la thématique du signalement'),
+    validityTime: Yup.number()
+      .nullable()
+      .required('Veuillez définir la durée de validité du signalement')
+      .min(1, 'Veuillez définir une durée de validité supérieure à 0')
   })
   .required()

@@ -38,7 +38,9 @@ export function ThemeSelector({ isLight = true, label, name }) {
           key={name}
           data-cy="reporting-theme-selector"
           error={currentThemeMeta.error}
+          isErrorMessageHidden
           isLight={isLight}
+          isRequired
           label={label}
           name={name}
           onChange={handleUpdateTheme}

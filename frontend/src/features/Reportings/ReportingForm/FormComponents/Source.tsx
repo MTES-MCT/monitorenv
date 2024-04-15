@@ -1,7 +1,6 @@
 import {
   Accent,
   CustomSearch,
-  FieldError,
   FormikSelect,
   FormikTextInput,
   Icon,
@@ -34,7 +33,7 @@ export function Source() {
   const { data: units } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
-  const { errors, setFieldValue, values } = useFormikContext<Reporting>()
+  const { setFieldValue, values } = useFormikContext<Reporting>()
 
   // Semaphores
   const semaphoresOptions = useMemo(
@@ -128,23 +127,25 @@ export function Source() {
 
   return (
     <>
-      <div>
-        <MultiRadio
-          data-cy="reporting-source-selector"
-          isInline
-          label="Source"
-          name="sourceType"
-          onChange={changeSourceType}
-          options={sourceOptions}
-          value={values.sourceType}
-        />
-        {errors.sourceType && <FieldError>{errors.sourceType}</FieldError>}
-      </div>
+      <MultiRadio
+        data-cy="reporting-source-selector"
+        isErrorMessageHidden
+        isInline
+        isRequired
+        label="Source"
+        name="sourceType"
+        onChange={changeSourceType}
+        options={sourceOptions}
+        value={values.sourceType}
+      />
+
       {values?.sourceType === ReportingSourceEnum.SEMAPHORE && (
-        <SemaphoreWrapper $hasError={!!errors.semaphoreId}>
+        <SemaphoreWrapper>
           <FormikSelect
             customSearch={customSearchSemaphore}
             data-cy="add-semaphore-source"
+            isErrorMessageHidden
+            isRequired
             label="Nom du Sémaphore"
             name="semaphoreId"
             options={semaphoresOptions || []}
@@ -158,6 +159,8 @@ export function Source() {
       {values?.sourceType === ReportingSourceEnum.CONTROL_UNIT && (
         <FormikSelect
           customSearch={customSearchControlUnits}
+          isErrorMessageHidden
+          isRequired
           label="Nom de l'unité"
           name="controlUnitId"
           options={controlUnitsOptions || []}
@@ -166,19 +169,19 @@ export function Source() {
       )}
 
       {values?.sourceType === ReportingSourceEnum.OTHER && (
-        <FormikTextInput label="Nom, société ..." name="sourceName" />
+        <FormikTextInput isErrorMessageHidden isRequired label="Nom, société ..." name="sourceName" />
       )}
     </>
   )
 }
 
-const SemaphoreWrapper = styled.div<{ $hasError: boolean }>`
+const SemaphoreWrapper = styled.div`
   display: flex;
   gap: 8px;
   > div {
     flex: 1;
   }
   > button {
-    align-self: ${p => (p.$hasError ? 'center' : 'self-end')};
+    align-self: self-end;
   }
 `
