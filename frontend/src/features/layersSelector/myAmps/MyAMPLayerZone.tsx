@@ -1,4 +1,5 @@
 import { useAppSelector } from '@hooks/useAppSelector'
+import { getTitle } from 'domain/entities/layers/utils'
 
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
 import { hideAmpLayer, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/Amp'
@@ -15,7 +16,7 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
 
   const handleRemoveZone = () => dispatch(removeAmpZonesFromMyLayers([amp.id]))
 
-  const displayedName = amp?.type?.replace(/[_]/g, ' ') ?? 'AUNCUN NOM'
+  const displayedName = getTitle(amp?.type) ?? 'AUNCUN NOM'
 
   const toggleAmpZoneMetadata = () => {
     if (metadataIsShown) {

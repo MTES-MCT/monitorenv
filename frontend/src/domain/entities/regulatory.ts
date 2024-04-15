@@ -1,7 +1,5 @@
 import type { GeoJSON } from '../types/GeoJSON'
 
-export const getTitle = topic => (topic ? `${topic?.replace(/[_]/g, ' ')}` : '')
-
 export type RegulatoryLayerWithMetadataFromAPI = {
   entity_name: string
   facade: string

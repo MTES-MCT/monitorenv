@@ -92,7 +92,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
           const layerName = typedLayer.name ?? typedLayer.get('name')
 
-          return !!layerName && priorityLayersOrder.includes(layerName)
+          return !!layerName && priorityLayersOrder.flat().includes(layerName)
         }
       })
 
@@ -128,7 +128,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
 
               const layerName = typedLayer.name ?? typedLayer.get('name')
 
-              return !!layerName && priorityLayersOrder.includes(layerName)
+              return !!layerName && priorityLayersOrder.flat().includes(layerName)
             }
           })
           const priorityFeatures = getHighestPriorityFeatures(features, priorityLayersOrder)

@@ -7,22 +7,22 @@ import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administ
 
 export function LayerLegend({
   layerType,
-  name,
+  legendKey,
   size = Size.SMALL,
   type
 }: {
   layerType: RegulatoryOrAMPLayerType
-  name: string | null
+  legendKey?: string | null
   size?: Size
-  type: string | null
+  type?: string | null
 }) {
   switch (layerType) {
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
-      return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, name)} />
+      return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, legendKey)} />
     case MonitorEnvLayers.REGULATORY_ENV:
     case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
-      return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, name)} />
+      return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey)} />
     default:
       return <Rectangle $size={size} />
   }

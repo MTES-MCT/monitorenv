@@ -73,7 +73,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
 
   return (
     <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} onClick={toggleZoneMetadata}>
-      <LayerLegend layerType={MonitorEnvLayers.AMP} name={layer?.name ?? 'aucun'} type={layer?.type ?? 'aucun'} />
+      <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
       <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type ?? 'aucun'}>
         <Highlighter
           autoEscape

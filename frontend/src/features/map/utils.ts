@@ -48,15 +48,17 @@ export const getClickedItems = (mapClickEvent: MapClickEvent) => getOverlayItems
 export const getHoveredItems = (features: SerializedFeature<Record<string, any>>[] | undefined) =>
   getOverlayItemsFromFeatures(features)
 
-export const getHighestPriorityFeatures = (features: FeatureLike[], priorityOrderTypes: string[]) => {
-  const highestPriorityFeatureType = priorityOrderTypes.find(layerType =>
-    features.some(feature => String(feature.getId()).includes(layerType))
+export const getHighestPriorityFeatures = (features: FeatureLike[], priorityOrderTypes: Array<MonitorEnvLayers[]>) => {
+  const highestPriorityFeatureTypes = priorityOrderTypes.find(layerTypes =>
+    features.some(feature => layerTypes.some(layerType => String(feature.getId()).includes(layerType)))
   )
-  if (!highestPriorityFeatureType) {
+  if (!highestPriorityFeatureTypes) {
     return []
   }
   const highestPriorityFeatures = features.filter(feature =>
-    String(feature.getId()).includes(highestPriorityFeatureType)
+    highestPriorityFeatureTypes.some(highestPriorityFeatureType =>
+      String(feature.getId()).includes(highestPriorityFeatureType)
+    )
   )
 
   return highestPriorityFeatures

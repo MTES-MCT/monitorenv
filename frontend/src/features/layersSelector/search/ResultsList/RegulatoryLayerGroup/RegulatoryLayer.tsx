@@ -83,7 +83,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
     >
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
-        name={layer?.entity_name ?? 'aucun'}
+        legendKey={layer?.entity_name ?? 'aucun'}
         type={layer?.thematique ?? 'aucun'}
       />
       <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entity_name}>
