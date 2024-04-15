@@ -33,8 +33,6 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
     cy.wait(500)
-    cy.fill('Clôturé par', 'PCF')
-    cy.wait(250)
 
     // Add a surveillance
     cy.clickButton('Ajouter')

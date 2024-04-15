@@ -24,13 +24,13 @@ context('Missions', () => {
 
     cy.log('A default period filter should be set')
     cy.fill('Période', 'Une semaine')
-    cy.get('*[data-cy="edit-mission-47"]').scrollIntoView().should('not.exist')
+    cy.get('*[data-cy="edit-mission-47"]').should('not.exist')
     cy.fill('Période', 'Un mois')
     cy.get('*[data-cy="edit-mission-47"]').scrollIntoView().should('exist')
 
     cy.log('Administrations should be filtered')
     cy.fill('Administration', ['DDTM'])
-    cy.get('*[data-cy="edit-mission-48"]').scrollIntoView().should('not.exist')
+    cy.get('*[data-cy="edit-mission-48"]').should('not.exist')
 
     cy.log('Initialize filters')
     cy.get('*[data-cy="reinitialize-filters"]').click()
@@ -40,7 +40,7 @@ context('Missions', () => {
     cy.get('*[data-cy="edit-mission-38"]').scrollIntoView().should('exist')
     cy.fill('Unité', ['PAM Themis'])
     cy.get('*[data-cy="edit-mission-48"]').scrollIntoView().should('exist')
-    cy.get('*[data-cy="edit-mission-38"]').scrollIntoView().should('not.exist')
+    cy.get('*[data-cy="edit-mission-38"]').should('not.exist')
 
     cy.log('Units filter should be clear')
     cy.fill('Unité', undefined)

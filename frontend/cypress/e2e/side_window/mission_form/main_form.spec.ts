@@ -42,14 +42,12 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
+    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
+
     cy.fill('Unité 1', 'Cross Etel')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
-
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-
-    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
     // Then
     cy.waitForLastRequest(
@@ -63,8 +61,7 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'Cross Etel'
             }
           ],
-          missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF'
+          missionTypes: ['SEA', 'LAND']
         }
       },
       5
@@ -295,6 +292,8 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.wait(200)
     cy.get('*[data-cy="edit-mission-43"]').scrollIntoView().click({ force: true })
 
+    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
+
     cy.wait(500)
     cy.window()
       .its('mockEventSources' as any)
@@ -321,7 +320,8 @@ context('Side Window > Mission Form > Main Form', () => {
               ],
               detachedReportingIds: [],
               detachedReportings: [],
-              endDateTimeUtc: '2024-01-08T16:55:41.314507Z',
+              // Changed field to force mission is pending
+              endDateTimeUtc: '2027-01-08T16:55:41.314507Z',
               envActions: [],
               facade: 'NAMO',
               geom: {
@@ -356,7 +356,6 @@ context('Side Window > Mission Form > Main Form', () => {
       })
 
     cy.wait(500)
-    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
     cy.get('[name="missionTypes1"]').click({ force: true })
     cy.wait(250)
 
