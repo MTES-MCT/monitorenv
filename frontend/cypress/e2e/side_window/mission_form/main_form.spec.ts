@@ -364,6 +364,7 @@ context('Side Window > Mission Form > Main Form', () => {
       {
         body: {
           completedBy: 'LTH',
+          missionTypes: ['SEA', 'LAND'],
           observationsCnsp: 'Encore une observation',
           openBy: 'LTH'
         }
@@ -410,43 +411,40 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.fill("Contact de l'unité 2", 'Un autre contact')
     cy.wait(250)
 
-    cy.waitForLastRequest(
-      '@updateMission',
-      {
-        body: {
-          controlUnits: [
-            {
-              administration: 'DDTM',
-              contact: 'Un contact',
-              id: 10000,
-              isArchived: false,
-              name: 'Cultures marines – DDTM 40',
-              resources: [
-                { id: 1, name: 'Semi-rigide 1' },
-                { controlUnitId: 10000, id: 13, name: 'Voiture' }
-              ]
-            },
-            {
-              administration: 'DDTM',
-              contact: 'Un autre contact',
-              id: 10002,
-              isArchived: false,
-              name: 'DML 2A',
-              resources: []
-            }
+    cy.clickButton('Enregistrer')
+    cy.wait('@updateMission').then(({ response }) => {
+      if (!response) {
+        return
+      }
+
+      assert.deepEqual(response.body.controlUnits, [
+        {
+          administration: 'DDTM',
+          contact: 'Un contact',
+          id: 10000,
+          isArchived: false,
+          name: 'Cultures marines – DDTM 40',
+          resources: [
+            { controlUnitId: 10000, id: 1, name: 'Semi-rigide 1' },
+            { controlUnitId: 10000, id: 13, name: 'Voiture' }
           ]
+        },
+        {
+          administration: 'DDTM',
+          contact: 'Un autre contact',
+          id: 10002,
+          isArchived: false,
+          name: 'DML 2A',
+          resources: []
         }
-      },
-      5
-    )
-      .its('response.statusCode')
-      .should('eq', 200)
+      ])
+    })
 
     // -------------------------------------------------------------------------
     // Reset
 
     cy.wait(500)
-    cy.clickButton('Fermer')
+
     cy.get('*[data-cy="edit-mission-30"]').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
