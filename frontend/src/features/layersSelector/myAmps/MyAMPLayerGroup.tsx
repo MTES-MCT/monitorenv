@@ -78,7 +78,7 @@ export function MyAMPLayerGroup({
 
           <IconButton
             accent={Accent.TERTIARY}
-            color={THEME.color.lightGray}
+            color={THEME.color.slateGray}
             data-cy="my-amp-zone-delete"
             Icon={Icon.Close}
             onClick={handleRemoveZone}

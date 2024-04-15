@@ -97,7 +97,7 @@ export function MyLayerZone({
 
         <PaddedIconButton
           accent={Accent.TERTIARY}
-          color={THEME.color.lightGray}
+          color={THEME.color.slateGray}
           Icon={Icon.Close}
           onClick={removeZone}
           size={Size.SMALL}
