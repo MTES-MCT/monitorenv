@@ -96,6 +96,7 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by themes', () => {
+    cy.wait(200)
     cy.fill('Thématiques', ['Arrêté à visa environnemental'])
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Arrêté à visa environnemental')
 
@@ -201,9 +202,7 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    // because we have two enpty tr at the beginning and at the end of the table
-    // we add 2 to the length
-    cy.get('.Table-SimpleTable tr').should('have.length', 5)
+    cy.getDataCy('reporting-row').should('have.length', 3)
     cy.fill('Rechercher une cible', undefined)
   })
 
@@ -234,10 +233,10 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    cy.get('*[data-cy="reporting-theme-filter"]').click()
+    cy.getDataCy('reporting-theme-filter').click()
     cy.get('#themes-listbox > div').should('have.length', 34)
 
-    cy.get('*[data-cy="reporting-sub-theme-filter"]').click()
+    cy.getDataCy('reporting-sub-theme-filter').click()
     cy.get('#subThemes-listbox > div').should('have.length', 161)
   })
 })

@@ -1,4 +1,5 @@
 import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
@@ -126,8 +127,8 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [isLayerVisible])
 
   useEffect(() => {
-    if (mapClickEvent?.feature) {
-      const feature = mapClickEvent?.feature
+    const feature = convertToFeature(mapClickEvent?.feature)
+    if (feature) {
       if (feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
         const { missionId } = feature.getProperties()
         dispatch(missionActions.setSelectedMissionIdOnMap(missionId))

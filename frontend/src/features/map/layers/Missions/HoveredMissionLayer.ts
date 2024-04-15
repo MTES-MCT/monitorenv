@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
@@ -39,8 +40,9 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
 
   useEffect(() => {
     hoveredMissionVectorSourceRef.current?.clear(true)
-    if (currentFeatureOver && currentFeatureOver.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
-      hoveredMissionVectorSourceRef.current?.addFeature(currentFeatureOver)
+    const feature = convertToFeature(currentFeatureOver)
+    if (feature && feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
+      hoveredMissionVectorSourceRef.current?.addFeature(feature)
     }
   }, [currentFeatureOver])
 

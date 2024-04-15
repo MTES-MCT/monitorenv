@@ -20,7 +20,7 @@ context('LayerTree > Regulatory Layers', () => {
     cy.getDataCy('regulatory-layers-result-title').contains('2 résultat').click()
 
     cy.log("zoom on the regulation's zone and show metadata")
-    cy.getDataCy('result-group').contains('ZMEL_Cale_Querlen').click()
+    cy.getDataCy('result-group').contains('ZMEL Cale Querlen').click()
     cy.getDataCy('regulatory-result-zone').contains('Zone au sud de la cale').click()
     cy.getDataCy('regulatory-metadata-header').contains('ZMEL Cale Querlen').click()
     cy.wait(1000) // let OL do the rendering

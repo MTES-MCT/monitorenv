@@ -1,4 +1,5 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
@@ -72,7 +73,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
   }, [isMissionAttachmentInProgress])
 
   useEffect(() => {
-    const feature = mapClickEvent?.feature
+    const feature = convertToFeature(mapClickEvent?.feature)
     if (feature && feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
       const { missionId } = feature.getProperties()
       dispatch(attachMission(missionId))

@@ -1,33 +1,36 @@
+import { Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
+import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from '../../../domain/entities/layers/constants'
 import { getAMPColorWithAlpha } from '../../map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
-type LayerTypeEnum = MonitorEnvLayers.AMP | MonitorEnvLayers.REGULATORY_ENV
-
 export function LayerLegend({
   layerType,
-  name,
+  legendKey,
+  size = Size.SMALL,
   type
 }: {
-  layerType: LayerTypeEnum
-  name: string | null
-  type: string | null
+  layerType: RegulatoryOrAMPLayerType
+  legendKey?: string | null
+  size?: Size
+  type?: string | null
 }) {
   switch (layerType) {
     case MonitorEnvLayers.AMP:
-      return <Rectangle $vectorLayerColor={getAMPColorWithAlpha(type, name)} />
+    case MonitorEnvLayers.AMP_PREVIEW:
+      return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, legendKey)} />
     case MonitorEnvLayers.REGULATORY_ENV:
-      return <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, name)} />
+    case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
+      return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey)} />
     default:
-      return <Rectangle />
+      return <Rectangle $size={size} />
   }
 }
 
-const Rectangle = styled.div<{ $vectorLayerColor?: string }>`
-  width: 14px;
-  height: 14px;
+const Rectangle = styled.div<{ $size: Size; $vectorLayerColor?: string }>`
+  width: ${p => (p.$size === Size.SMALL ? '14px' : '16px')};
+  height: ${p => (p.$size === Size.SMALL ? '14px' : '16px')};
   background: ${p => p.$vectorLayerColor ?? p.theme.color.gainsboro};
   border: 1px solid ${p => p.theme.color.slateGray};
   display: inline-block;

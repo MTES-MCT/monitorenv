@@ -1,3 +1,5 @@
+import { getTitle } from 'domain/entities/layers/utils'
+
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
 import {
   hideRegulatoryLayer,
@@ -26,7 +28,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
 
   const handleRemoveZone = () => dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
 
-  const displayedName = regulatoryZone?.entity_name?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
+  const displayedName = getTitle(regulatoryZone?.entity_name) ?? 'AUNCUN NOM'
 
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {

@@ -3,13 +3,13 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { getTitle } from 'domain/entities/layers/utils'
 import { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import { Identification } from './Identification'
 import { MonitorEnvLayers } from '../../../../domain/entities/layers/constants'
-import { getTitle } from '../../../../domain/entities/regulatory'
 import { LayerLegend } from '../../utils/LayerLegend.style'
 import { RegulatorySummary } from '../RegulatorySummary'
 import { closeMetadataPanel } from '../slice'
@@ -18,7 +18,7 @@ const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 export function RegulatoryMetadata() {
   const dispatch = useAppDispatch()
-  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.metadataPanel)
+  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
   const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(metadataLayerId ?? skipToken, {
     pollingInterval: FOUR_HOURS
@@ -35,7 +35,7 @@ export function RegulatoryMetadata() {
           <Header data-cy="regulatory-metadata-header">
             <LayerLegend
               layerType={MonitorEnvLayers.REGULATORY_ENV}
-              name={regulatoryMetadata?.entity_name}
+              legendKey={regulatoryMetadata?.entity_name}
               type={regulatoryMetadata?.thematique}
             />
             <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>

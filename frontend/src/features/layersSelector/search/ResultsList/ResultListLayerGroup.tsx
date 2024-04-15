@@ -1,5 +1,6 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { getTitle } from 'domain/entities/layers/utils'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -66,7 +67,7 @@ export function ResultListLayerGroup({
             autoEscape
             highlightClassName="highlight"
             searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-            textToHighlight={groupName ?? ''}
+            textToHighlight={getTitle(groupName) ?? ''}
           />
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>

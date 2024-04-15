@@ -1,3 +1,6 @@
+import { LayersOverlay } from '@features/layersSelector/overlays'
+import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
+
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
 import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
@@ -25,8 +28,6 @@ import { ActionOverlay } from './overlays/actions'
 import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
-import { ShowAMPMetadata } from './ShowAMPMetadata'
-import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 import { ZoomListener } from './ZoomListener'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
@@ -64,15 +65,17 @@ export function Map() {
       {/* @ts-ignore */}
       <AMPPreviewLayer />
       {/* @ts-ignore */}
-      <ShowAMPMetadata />
-      {/* @ts-ignore */}
       <RegulatoryLayers />
       {/* @ts-ignore */}
       <RegulatoryPreviewLayer />
       {/* @ts-ignore */}
-      <ShowRegulatoryMetadata />
-      {/* @ts-ignore */}
       <AdministrativeLayers />
+      {/* @ts-ignore */}
+      <LayerEvents />
+      {/* @ts-ignore */}
+      <LayersOverlay />
+
+      {/* MAP */}
       {/* @ts-ignore */}
       <MeasurementLayer />
       {/* @ts-ignore */}

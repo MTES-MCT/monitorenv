@@ -1,8 +1,9 @@
+import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
@@ -11,59 +12,47 @@ import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function AMPLayers({ map }: BaseMapChildrenProps) {
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
+  const showedAmpMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
   const { data: ampLayers } = useGetAMPsQuery()
 
-  const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  function getVectorSource() {
-    if (!vectorSourceRef.current) {
-      vectorSourceRef.current = new VectorSource({
-        features: []
-      })
-    }
+  const vectorSourceRef = useRef(new VectorSource())
 
-    return vectorSourceRef.current
-  }
-  const layerRef = useRef() as MutableRefObject<Vector<VectorSource>>
+  const layerRef = useRef<VectorLayerWithName>(
+    new Vector({
+      renderBuffer: 4,
+      renderOrder: (a, b) => b.get('area') - a.get('area'),
+      source: vectorSourceRef.current,
+      style: getAMPLayerStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true
+    })
+  )
+  layerRef.current.name = Layers.AMP.code
 
   useEffect(() => {
-    function getLayer() {
-      if (!layerRef.current) {
-        layerRef.current = new Vector({
-          properties: {
-            name: Layers.AMP.code
-          },
-          renderBuffer: 4,
-          renderOrder: (a, b) => b.get('area') - a.get('area'),
-          source: getVectorSource(),
-          style: getAMPLayerStyle,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true
-        })
-      }
-
-      return layerRef.current
-    }
+    const layer = layerRef.current
     if (map) {
-      map.getLayers().push(getLayer())
+      map.getLayers().push(layerRef.current)
     }
 
     return () => {
       if (map) {
-        map.removeLayer(getLayer())
+        map.removeLayer(layer)
       }
     }
   }, [map])
 
   useEffect(() => {
     if (map) {
-      getVectorSource().clear()
+      vectorSourceRef.current.clear()
       if (ampLayers?.entities) {
         const features = showedAmpLayerIds.reduce((feats: Feature[], layerId) => {
           const ampLayer = ampLayers.entities[layerId]
@@ -83,10 +72,21 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
           return feats
         }, [])
 
-        getVectorSource().addFeatures(features)
+        vectorSourceRef.current.addFeatures(features)
       }
     }
   }, [map, ampLayers, showedAmpLayerIds])
+
+  useEffect(() => {
+    if (map) {
+      const features = vectorSourceRef.current.getFeatures()
+      if (features?.length) {
+        features.forEach(f => {
+          f.set(metadataIsShowedPropertyName, f.get('id') === showedAmpMetadataLayerId)
+        })
+      }
+    }
+  }, [map, showedAmpMetadataLayerId])
 
   return null
 }

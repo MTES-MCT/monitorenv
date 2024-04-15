@@ -1,0 +1,92 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { Size } from '@mtes-mct/monitor-ui'
+import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from 'domain/entities/layers/constants'
+import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
+import styled from 'styled-components'
+
+import { getGroupName, getLegendKey, getLegendType, getName, getTitle } from '../../../domain/entities/layers/utils'
+import {
+  getDisplayedMetadataLayerIdAndType,
+  openAMPMetadataPanel,
+  openRegulatoryMetadataPanel
+} from '../metadataPanel/slice'
+import { LayerLegend } from '../utils/LayerLegend.style'
+
+import type { AMPProperties } from 'domain/entities/AMPs'
+import type { OverlayItem } from 'domain/types/map'
+
+type OverlayContentProps = {
+  items: OverlayItem<RegulatoryOrAMPLayerType, AMPProperties | RegulatoryLayerCompactProperties>[] | undefined
+}
+
+export function OverlayContent({ items }: OverlayContentProps) {
+  const dispatch = useAppDispatch()
+  const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
+
+  const handleClick = (type, id) => () => {
+    if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
+      dispatch(openAMPMetadataPanel(id))
+    }
+    if (type === MonitorEnvLayers.REGULATORY_ENV || type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW) {
+      dispatch(openRegulatoryMetadataPanel(id))
+    }
+  }
+
+  return (
+    <Layerlist>
+      {items?.map(item => {
+        const groupName = getGroupName(item.properties, item.layerType)
+        const name = getName(item.properties, item.layerType)
+        const legendType = getLegendType(item.properties, item.layerType)
+        const legendKey = getLegendKey(item.properties, item.layerType)
+        const isSelected = item.properties.id === layerId && !!layerType && item.layerType.includes(layerType)
+
+        return (
+          <LayerItem
+            key={item.properties.id}
+            $isSelected={isSelected}
+            onClick={handleClick(item.layerType, item.properties.id)}
+          >
+            <LayerLegend layerType={item.layerType} legendKey={legendKey} size={Size.NORMAL} type={legendType} />
+            <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
+            <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || 'AUCUN NOM'}</Name>
+          </LayerItem>
+        )
+      })}
+    </Layerlist>
+  )
+}
+
+const Layerlist = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 320px;
+  overflow-y: auto;
+`
+
+const LayerItem = styled.li<{ $isSelected: boolean }>`
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 7px 8px 8px 8px;
+  background-color: ${p => (p.$isSelected ? p.theme.color.blueYonder25 : p.theme.color.white)};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+`
+
+const GroupName = styled.span`
+  color: ${p => p.theme.color.gunMetal};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: normal normal bold 13px/18px Marianne;
+`
+
+const Name = styled.span`
+  color: ${p => p.theme.color.gunMetal};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: normal normal normal 13px/18px Marianne;
+`

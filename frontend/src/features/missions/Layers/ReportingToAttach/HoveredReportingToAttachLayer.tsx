@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
@@ -34,11 +35,9 @@ export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseM
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
-    if (
-      currentFeatureOver &&
-      currentFeatureOver.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)
-    ) {
-      vectorSourceRef.current?.addFeature(currentFeatureOver)
+    const feature = convertToFeature(currentFeatureOver)
+    if (feature && feature.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
+      vectorSourceRef.current?.addFeature(feature)
     }
   }, [currentFeatureOver])
 

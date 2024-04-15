@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -23,7 +24,8 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapCh
 
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
 
-  const currentfeatureId = currentFeatureOver?.getId()
+  const hoveredFeature = convertToFeature(currentFeatureOver)
+  const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' && currentfeatureId.startsWith(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)
 
@@ -36,12 +38,12 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapCh
   return (
     <OverlayPositionOnCentroid
       appClassName="overlay-reporting-to-attach-hover"
-      feature={displayReportingToAttachLayer && displayHoveredFeature ? currentFeatureOver : undefined}
+      feature={displayReportingToAttachLayer && displayHoveredFeature ? hoveredFeature : undefined}
       map={map}
       options={hoveredOptions}
       zIndex={5000}
     >
-      <ReportingCard feature={currentFeatureOver} isOnlyHoverable updateMargins={updateHoveredMargins} />
+      <ReportingCard feature={hoveredFeature} isOnlyHoverable updateMargins={updateHoveredMargins} />
     </OverlayPositionOnCentroid>
   )
 }

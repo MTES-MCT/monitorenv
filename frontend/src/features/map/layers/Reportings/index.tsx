@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -147,7 +148,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [isLayerVisible])
 
   useEffect(() => {
-    const feature = mapClickEvent?.feature
+    const feature = convertToFeature(mapClickEvent?.feature)
     if (feature && feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
       const { id } = feature.getProperties()
       dispatch(reportingActions.setSelectedReportingIdOnMap(id))

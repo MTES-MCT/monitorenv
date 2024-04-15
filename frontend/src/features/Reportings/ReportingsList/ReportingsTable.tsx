@@ -119,6 +119,7 @@ export function ReportingsTable({
                 <TableWithSelectableRows.BodyTr
                   key={virtualRow.key}
                   $isHighlighted={!!Object.keys(openReportings).find(key => Number(key) === Number(row?.original.id))}
+                  data-cy="reporting-row"
                 >
                   {row?.getVisibleCells().map(cell => (
                     <StyledTd

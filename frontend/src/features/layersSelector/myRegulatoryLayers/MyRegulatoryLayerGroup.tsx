@@ -1,4 +1,5 @@
 import { IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
+import { getTitle } from 'domain/entities/layers/utils'
 import _ from 'lodash'
 import { useState } from 'react'
 
@@ -63,8 +64,12 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
-        <LayerSelector.GroupName data-cy="my-regulatory-group" onClick={handleClickOnGroupName} title={groupName}>
-          {groupName}
+        <LayerSelector.GroupName
+          data-cy="my-regulatory-group"
+          onClick={handleClickOnGroupName}
+          title={getTitle(groupName)}
+        >
+          {getTitle(groupName)}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.NumberOfZones>{`${layers?.length} / ${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
@@ -79,7 +84,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
 
           <IconButton
             accent={Accent.TERTIARY}
-            color={THEME.color.lightGray}
+            color={THEME.color.slateGray}
             data-cy="my-regulatory-group-delete"
             Icon={Icon.Close}
             onClick={handleRemoveZone}

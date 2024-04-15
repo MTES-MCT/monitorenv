@@ -2,12 +2,12 @@ import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { getTitle } from 'domain/entities/layers/utils'
 import { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../domain/entities/layers/constants'
-import { getTitle } from '../../../../domain/entities/regulatory'
 import { LayerLegend } from '../../utils/LayerLegend.style'
 import { Key, Value, Fields, Field, Zone, Body, NoValue } from '../MetadataPanel.style'
 import { RegulatorySummary } from '../RegulatorySummary'
@@ -17,7 +17,7 @@ const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 export function AmpMetadata() {
   const dispatch = useAppDispatch()
-  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.metadataPanel)
+  const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
   const { ampMetadata } = useGetAMPsQuery(undefined, {
     pollingInterval: FOUR_HOURS,
@@ -35,8 +35,8 @@ export function AmpMetadata() {
       {ampMetadata ? (
         <>
           <Header data-cy="regulatory-metadata-header">
-            <LayerLegend layerType={MonitorEnvLayers.AMP} name={ampMetadata?.name} type={ampMetadata?.type} />
-            <RegulatoryZoneName title={getTitle(ampMetadata?.name)}>{getTitle(ampMetadata?.name)}</RegulatoryZoneName>
+            <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={ampMetadata?.name} type={ampMetadata?.type} />
+            <Name title={getTitle(ampMetadata?.name)}>{getTitle(ampMetadata?.name)}</Name>
             <IconButton
               accent={Accent.TERTIARY}
               data-cy="regulatory-layers-metadata-close"
@@ -75,7 +75,7 @@ const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
   transition: all 0.5s;
 `
 
-const RegulatoryZoneName = styled.span`
+const Name = styled.span`
   flex: 1;
   line-height: initial;
   white-space: nowrap;

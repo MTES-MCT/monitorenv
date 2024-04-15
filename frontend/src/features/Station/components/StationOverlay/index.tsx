@@ -1,3 +1,4 @@
+import { convertToFeature } from 'domain/types/map'
 import { useMemo } from 'react'
 
 import { OVERLAY_MARGINS } from './constants'
@@ -9,9 +10,9 @@ import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPosition
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
-export function StationOverlay({ currentFeatureOver: hoveredFeature, map }: BaseMapChildrenProps) {
+export function StationOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const selectedBaseFeatureId = useAppSelector(state => state.station.selectedFeatureId)
-
+  const hoveredFeature = convertToFeature(currentFeatureOver)
   const selectedFeature = useMemo(
     () => findMapFeatureById(map, Layers.STATIONS.code, selectedBaseFeatureId),
 

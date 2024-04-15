@@ -250,23 +250,80 @@ export const BaseLayerLabel: Record<BaseLayer, string> = {
   [BaseLayer.SHOM]: 'Carte marine (SHOM)'
 }
 
-export const SelectableLayers = [
-  Layers.MISSIONS.code,
-  Layers.REGULATORY_ENV_PREVIEW.code,
-  Layers.REGULATORY_ENV.code,
-  Layers.AMP.code,
-  Layers.STATIONS.code,
-  Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code,
-  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
-  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
+// Priority of selectable items is determined by the order of the layers in this array
+// The first layer in the array has the highest priority
+// Different hoverable arrays are used depending on the zoom level
+// Zoom level goes from 0 (furthest from earth) to 26 (closest from earth)
+export const SelectableLayers0To7 = [
+  [MonitorEnvLayers.MISSIONS],
+  [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
+  [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
+  [MonitorEnvLayers.REPORTINGS],
+  [MonitorEnvLayers.SEMAPHORES],
+  [MonitorEnvLayers.STATIONS],
+  [
+    MonitorEnvLayers.AMP,
+    MonitorEnvLayers.AMP_PREVIEW,
+    MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
+    MonitorEnvLayers.REGULATORY_ENV
+  ]
 ]
-export const HoverableLayers = [
-  Layers.MISSIONS.code,
-  Layers.ACTIONS.code,
-  Layers.STATIONS.code,
-  Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code,
-  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
-  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
+
+export const SelectableLayers7To26 = [
+  [MonitorEnvLayers.MISSIONS],
+  [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
+  [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
+  [MonitorEnvLayers.REPORTINGS],
+  [MonitorEnvLayers.SEMAPHORES],
+  [MonitorEnvLayers.STATIONS],
+  [
+    MonitorEnvLayers.AMP,
+    MonitorEnvLayers.AMP_PREVIEW,
+    MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
+    MonitorEnvLayers.REGULATORY_ENV
+  ]
+]
+
+// Priority of hoverable items is determined by the order of the layers in this array
+// The first layer in the array has the highest priority
+// Different hoverable arrays are used depending on the zoom level
+// Zoom level goes from 0 (furthest from earth) to 26 (closest from earth)
+
+export const HoverableLayers0To7 = [
+  [MonitorEnvLayers.ACTIONS],
+  [MonitorEnvLayers.MISSIONS],
+  [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
+  [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
+  [MonitorEnvLayers.REPORTINGS],
+  [MonitorEnvLayers.SEMAPHORES],
+  [MonitorEnvLayers.STATIONS]
+]
+
+export const HoverableLayers7To26 = [
+  [MonitorEnvLayers.ACTIONS],
+  [MonitorEnvLayers.MISSIONS],
+  [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
+  [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
+  [MonitorEnvLayers.REPORTINGS],
+  [MonitorEnvLayers.SEMAPHORES],
+  [MonitorEnvLayers.STATIONS],
+  [
+    MonitorEnvLayers.AMP,
+    MonitorEnvLayers.AMP_PREVIEW,
+    MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
+    MonitorEnvLayers.REGULATORY_ENV
+  ]
+]
+
+export type RegulatoryOrAMPLayerType =
+  | MonitorEnvLayers.AMP
+  | MonitorEnvLayers.AMP_PREVIEW
+  | MonitorEnvLayers.REGULATORY_ENV
+  | MonitorEnvLayers.REGULATORY_ENV_PREVIEW
+
+export const RegulatoryOrAMPLayerTypeAsList = [
+  MonitorEnvLayers.AMP,
+  MonitorEnvLayers.AMP_PREVIEW,
+  MonitorEnvLayers.REGULATORY_ENV,
+  MonitorEnvLayers.REGULATORY_ENV_PREVIEW
 ]

@@ -70,7 +70,7 @@ export function MyLayerZone({
 
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
-      <LayerLegend layerType={layerType} name={name} type={type} />
+      <LayerLegend layerType={layerType} legendKey={name} type={type} />
       <LayerSelector.Name onClick={handleClickOnLayerName} title={displayedName}>
         {displayedName}
       </LayerSelector.Name>
@@ -97,7 +97,7 @@ export function MyLayerZone({
 
         <PaddedIconButton
           accent={Accent.TERTIARY}
-          color={THEME.color.lightGray}
+          color={THEME.color.slateGray}
           Icon={Icon.Close}
           onClick={removeZone}
           size={Size.SMALL}

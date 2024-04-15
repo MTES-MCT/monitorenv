@@ -10,8 +10,8 @@ const homeStore = configureStore({
     getDefaultMiddleware({
       // https://redux-toolkit.js.org/api/serializabilityMiddleware
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        ignoredPaths: ['layerSearch'],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, 'monitorenvPrivateApi/*'],
+        ignoredPaths: ['layerSearch', 'monitorenvPrivateApi'],
         // TODO Replace all Redux state Dates by strings & Error by a strict-typed POJO.
         isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error
       }
