@@ -1,4 +1,5 @@
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
+import { createPendingMission } from '../../utils/createPendingMission'
 import { getMissionEndDateWithTime } from '../../utils/getMissionEndDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 import { visitSideWindow } from '../../utils/visitSideWindow'
@@ -290,89 +291,83 @@ context('Side Window > Mission Form > Main Form', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
-    cy.get('*[data-cy="edit-mission-43"]').scrollIntoView().click({ force: true })
 
-    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
+    createPendingMission().then(response => {
+      const missionId = response.body.id
 
-    cy.wait(500)
-    cy.window()
-      .its('mockEventSources' as any)
-      .then(mockEventSources => {
-        mockEventSources['/api/v1/missions/sse'].emitOpen()
-        mockEventSources['/api/v1/missions/sse'].emit(
-          'MISSION_UPDATE',
-          new MessageEvent('MISSION_UPDATE', {
-            bubbles: true,
-            data: JSON.stringify({
-              attachedReportingIds: [],
-              attachedReportings: [],
-              // Changed field
-              completedBy: 'LTH',
-              controlUnits: [
-                {
-                  administration: 'DREAL / DEAL',
-                  contact: 'Full contact',
-                  id: 10018,
-                  isArchived: false,
-                  name: 'DREAL Pays-de-La-Loire',
-                  resources: []
-                }
-              ],
-              detachedReportingIds: [],
-              detachedReportings: [],
-              // Changed field to force mission is pending
-              endDateTimeUtc: '2027-01-08T16:55:41.314507Z',
-              envActions: [],
-              facade: 'NAMO',
-              geom: {
-                coordinates: [
-                  [
-                    [
-                      [-4.14598393, 49.02650252],
-                      [-3.85722498, 48.52088004],
-                      [-3.54255983, 48.92233858],
-                      [-3.86251979, 49.15131242],
-                      [-4.09368042, 49.18079556],
-                      [-4.14598393, 49.02650252]
-                    ]
-                  ]
+      cy.clickButton('Fermer')
+      cy.wait(500)
+      cy.get(`*[data-cy="edit-mission-${missionId}"]`).scrollIntoView().click({ force: true })
+
+      cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')
+      cy.wait(500)
+      cy.window()
+        .its('mockEventSources' as any)
+        .then(mockEventSources => {
+          mockEventSources['/api/v1/missions/sse'].emitOpen()
+          mockEventSources['/api/v1/missions/sse'].emit(
+            'MISSION_UPDATE',
+            new MessageEvent('MISSION_UPDATE', {
+              bubbles: true,
+              data: JSON.stringify({
+                attachedReportingIds: [],
+                attachedReportings: [],
+                // Changed field
+                completedBy: 'LTH',
+                controlUnits: [
+                  {
+                    administration: 'Gendarmerie Nationale',
+                    contact: null,
+                    id: 10020,
+                    isArchived: false,
+                    name: 'BN Toulon',
+                    resources: []
+                  }
                 ],
-                type: 'MultiPolygon'
-              },
-              hasMissionOrder: false,
-              id: 43,
-              isUnderJdp: false,
-              missionSource: 'MONITORENV',
-              missionTypes: ['SEA'],
-              observationsCacem: 'Anything box film quality. Lot series agent out rule end young pressure.',
-              // Changed field
-              observationsCnsp: 'Encore une observation',
-              // Changed field
-              openBy: 'LTH',
-              startDateTimeUtc: '2024-01-01T06:14:55.887549Z'
+                detachedReportingIds: [],
+                detachedReportings: [],
+                endDateTimeUtc: response.body.endDateTimeUtc,
+                envActions: [],
+                facade: null,
+                geom: null,
+                hasMissionOrder: false,
+                id: missionId,
+                isUnderJdp: false,
+                missionSource: 'MONITORENV',
+                missionTypes: ['SEA'],
+                observationsCacem: null,
+                // Changed field
+                observationsCnsp: 'Encore une observation',
+                // Changed field
+                openBy: 'LTH',
+                startDateTimeUtc: response.body.startDateTimeUtc
+              })
             })
-          })
-        )
-      })
+          )
+        })
 
-    cy.wait(500)
-    cy.get('[name="missionTypes1"]').click({ force: true })
-    cy.wait(250)
+      cy.wait(1500)
+      cy.get('[name="missionTypes1"]').click({ force: true })
+      cy.wait(250)
 
-    cy.waitForLastRequest(
-      '@updateMission',
-      {
-        body: {
-          completedBy: 'LTH',
-          missionTypes: ['SEA', 'LAND'],
-          observationsCnsp: 'Encore une observation',
-          openBy: 'LTH'
-        }
-      },
-      5
-    )
-      .its('response.statusCode')
-      .should('eq', 200)
+      cy.waitForLastRequest(
+        '@updateMission',
+        {
+          body: {
+            completedBy: 'LTH',
+            missionTypes: ['SEA', 'LAND'],
+            observationsCnsp: 'Encore une observation',
+            openBy: 'LTH'
+          }
+        },
+        5
+      )
+        .its('response.statusCode')
+        .should('eq', 200)
+
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
+    })
   })
 
   it('Should keep the existing archived resources when appending new resources', () => {

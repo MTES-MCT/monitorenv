@@ -22,12 +22,7 @@ import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { missionFormsActions } from './slice'
 import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
-import {
-  FrontCompletionStatus,
-  type Mission,
-  MissionSourceEnum,
-  type NewMission
-} from '../../../domain/entities/missions'
+import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
@@ -35,7 +30,6 @@ import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
-import { getMissionCompletionStatus } from '../utils'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AtLeast } from '../../../types'
@@ -113,13 +107,11 @@ export function MissionForm({
     if (!isMissionAutoSaveEnabled()) {
       return false
     }
-
     const now = customDayjs()
-    const missionStatus = getMissionCompletionStatus(selectedMission)
     if (
       selectedMission?.endDateTimeUtc &&
       now.isAfter(selectedMission?.endDateTimeUtc) &&
-      missionStatus === FrontCompletionStatus.COMPLETED
+      customDayjs(selectedMission?.endDateTimeUtc) < customDayjs(selectedMission?.endDateTimeUtc).add(2, 'days')
     ) {
       return false
     }
@@ -262,7 +254,7 @@ export function MissionForm({
         onChange={nextValues =>
           validateBeforeOnChange(
             nextValues,
-            true,
+            false,
             dispatch,
             validateForm,
             isAutoSaveEnabled,
