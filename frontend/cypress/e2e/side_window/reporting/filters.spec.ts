@@ -96,6 +96,7 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by themes', () => {
+    cy.wait(200)
     cy.fill('Thématiques', ['Arrêté à visa environnemental'])
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Arrêté à visa environnemental')
 
@@ -232,10 +233,10 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    cy.get('*[data-cy="reporting-theme-filter"]').click()
+    cy.getDataCy('reporting-theme-filter').click()
     cy.get('#themes-listbox > div').should('have.length', 34)
 
-    cy.get('*[data-cy="reporting-sub-theme-filter"]').click()
+    cy.getDataCy('reporting-sub-theme-filter').click()
     cy.get('#subThemes-listbox > div').should('have.length', 161)
   })
 })

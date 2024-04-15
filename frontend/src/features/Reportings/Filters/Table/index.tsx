@@ -200,7 +200,7 @@ export function TableReportingsFiltersWithRef(
             value={targetTypeFilter}
           />
           <CheckPicker
-            key={themesOptions.length}
+            key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
             customSearch={themeCustomSearch}
             data-cy="reporting-theme-filter"
             isLabelHidden
@@ -216,7 +216,7 @@ export function TableReportingsFiltersWithRef(
             value={themeFilter}
           />
           <CheckPicker
-            key={subThemesOptions.length}
+            key={`subtheme${subThemesOptions.length}${JSON.stringify(subThemesFilter)}`}
             customSearch={subThemeCustomSearch}
             data-cy="reporting-sub-theme-filter"
             isLabelHidden
