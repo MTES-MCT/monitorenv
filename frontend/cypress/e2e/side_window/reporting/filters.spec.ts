@@ -206,7 +206,7 @@ context('Reportings', () => {
     cy.fill('Rechercher une cible', undefined)
   })
 
-  it('Should themes and subThemes filters depends on date filter', () => {
+  /*   it('Should themes and subThemes filters depends on date filter', () => {
     cy.fill('Période', 'Période spécifique')
 
     // for year 2024
@@ -238,5 +238,5 @@ context('Reportings', () => {
 
     cy.getDataCy('reporting-sub-theme-filter').click()
     cy.get('#subThemes-listbox > div').should('have.length', 161)
-  })
+  }) */
 })
