@@ -88,7 +88,6 @@ class GetEngagedControlUnitsUTests {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
-                anyOrNull(),
             ),
         )
             .willReturn(

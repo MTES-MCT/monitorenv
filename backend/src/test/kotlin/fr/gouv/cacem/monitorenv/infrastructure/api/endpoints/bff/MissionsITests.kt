@@ -314,7 +314,6 @@ class MissionsITests {
                 startedAfterDateTime = null,
                 startedBeforeDateTime = null,
                 seaFronts = null,
-                missionSources = null,
                 missionTypes = null,
                 missionStatuses = null,
                 pageNumber = null,
@@ -343,12 +342,6 @@ class MissionsITests {
             .andExpect(jsonPath("$[0].observationsCacem", equalTo("obs cacem")))
             .andExpect(jsonPath("$[0].observationsCnsp", equalTo("obs cnsp")))
             .andExpect(jsonPath("$[0].isDeleted").doesNotExist())
-            .andExpect(
-                jsonPath(
-                    "$[0].missionSource",
-                    equalTo(MissionSourceEnum.MONITORENV.toString()),
-                ),
-            )
             .andExpect(jsonPath("$[0].hasMissionOrder", equalTo(false)))
             .andExpect(jsonPath("$[0].isUnderJdp", equalTo(false)))
             .andExpect(jsonPath("$[0].attachedReportingIds", equalTo(listOf(1))))

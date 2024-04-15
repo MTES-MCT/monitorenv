@@ -3,7 +3,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
@@ -20,7 +19,6 @@ class GetFullMissions(
     fun execute(
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
-        missionSources: List<MissionSourceEnum>?,
         missionTypes: List<MissionTypeEnum>?,
         missionStatuses: List<String>?,
         pageNumber: Int?,
@@ -34,11 +32,6 @@ class GetFullMissions(
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 missionTypes = missionTypes,
                 missionStatuses = missionStatuses,
-                missionSources = missionSources
-                    ?: listOf(
-                        MissionSourceEnum.MONITORENV,
-                        MissionSourceEnum.MONITORFISH,
-                    ),
                 seaFronts = seaFronts,
                 pageSize = pageSize,
                 pageNumber = pageNumber,

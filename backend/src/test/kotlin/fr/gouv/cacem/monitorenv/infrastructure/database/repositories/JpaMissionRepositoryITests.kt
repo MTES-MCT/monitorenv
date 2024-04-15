@@ -315,32 +315,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findAll should filter missions based on MissionSources`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                missionSources =
-                listOf(
-                    MissionSourceEnum.MONITORFISH,
-                    MissionSourceEnum.POSEIDON_CACEM,
-                    MissionSourceEnum.POSEIDON_CNSP,
-                ),
-                missionStatuses = null,
-                missionTypes = null,
-                pageNumber = null,
-                pageSize = null,
-                seaFronts = null,
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-            )
-        assertThat(missions).hasSize(3)
-
-        val queryCount = customQueryCountListener!!.getQueryCount()
-        println("Number of Queries Executed: $queryCount")
-    }
-
-    @Test
-    @Transactional
     fun `findByControlUnitId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
