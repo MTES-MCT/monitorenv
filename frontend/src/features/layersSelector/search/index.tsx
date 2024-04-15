@@ -82,7 +82,7 @@ export function LayerSearch() {
   const ampTypes = useMemo(
     () =>
       _.chain(amps?.entities)
-        .map(l => l?.type)
+        .map(l => l?.type?.trim())
         .uniq()
         .filter(l => !!l)
         .map(l => ({ label: l, value: l }))
@@ -97,13 +97,15 @@ export function LayerSearch() {
         .filter(l => !!l?.thematique)
         .map(l => l?.thematique.split(','))
         .flatMap(l => l)
-        .uniq()
         .filter(l => !!l)
+        .map(l => l?.trim())
+        .uniq()
         .map(l => ({ label: l, value: l }))
         .sortBy('label')
         .value() as Option<string>[],
     [regulatoryLayers]
   )
+
   const allowResetResults = !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult)
 
   return (
