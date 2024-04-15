@@ -201,9 +201,7 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    // because we have one empty tr at the end of the table
-    // we add 1 to the expected length (3 results + 1)
-    cy.get('.Table-SimpleTable tr').should('have.length', 4)
+    cy.getDataCy('reporting-row').should('have.length', 3)
     cy.fill('Rechercher une cible', undefined)
   })
 
