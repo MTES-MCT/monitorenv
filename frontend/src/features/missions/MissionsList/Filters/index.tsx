@@ -271,7 +271,7 @@ export function MissionsTableFilters() {
             value={selectedMissionTypes}
           />
           <CheckPicker
-            key={themesAsOptionsPerPeriod.length}
+            key={`theme${themesAsOptionsPerPeriod.length}${JSON.stringify(selectedThemes)}`}
             customSearch={themeCustomSearch}
             data-cy="mission-theme-filter"
             isLabelHidden

@@ -113,6 +113,7 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by sub-themes', () => {
+    cy.wait(200)
     cy.log('Sub-themes should be filtered')
     cy.fill('Sous-thématiques', ['Surveillance générale'])
     cy.getDataCy('reportings-filter-tags')
@@ -206,7 +207,7 @@ context('Reportings', () => {
     cy.fill('Rechercher une cible', undefined)
   })
 
-  /*   it('Should themes and subThemes filters depends on date filter', () => {
+  it('Should themes and subThemes filters depends on date filter', () => {
     cy.fill('Période', 'Période spécifique')
 
     // for year 2024
@@ -238,5 +239,5 @@ context('Reportings', () => {
 
     cy.getDataCy('reporting-sub-theme-filter').click()
     cy.get('#subThemes-listbox > div').should('have.length', 161)
-  }) */
+  })
 })
