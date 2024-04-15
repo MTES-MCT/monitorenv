@@ -15,7 +15,7 @@ import type { FishMissionAction } from '../../fishActions.types'
 
 export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
   const actionTimelineRef = useRef<HTMLDivElement>(null)
-  const actionTimelineHeight = Number(actionTimelineRef.current?.clientHeight) - 40 ?? undefined
+  const actionTimelineHeight = Number(actionTimelineRef.current?.clientHeight) - 40 || undefined
   const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const envActions = values?.envActions as EnvAction[]

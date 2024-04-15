@@ -1,4 +1,5 @@
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
+import { getMissionEndDateWithTime } from '../../utils/getMissionEndDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 import { visitSideWindow } from '../../utils/visitSideWindow'
 
@@ -193,7 +194,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('*[data-cy="select-period-filter"]').click()
     cy.get('div[data-key="MONTH"]').click()
 
-    cy.get('*[data-cy="edit-mission-50"]').click({ force: true })
+    cy.get('*[data-cy="edit-mission-50"]').scrollIntoView().click({ force: true })
 
     // Then
     cy.get('*[data-cy="delete-mission"]').should('be.disabled')
@@ -227,11 +228,11 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('*[data-cy="add-mission"]').click()
 
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const startDate = getUtcDateInMultipleFormats().utcDateTupleWithTime
+    const ennDate = getMissionEndDateWithTime(7, 'day')
 
-    cy.get('[name="missionTypes0"]').click({ force: true })
-    cy.get('[name="missionTypes1"]').click({ force: true })
+    cy.fill('Date de début (UTC)', startDate)
+    cy.fill('Date de fin (UTC)', ennDate)
 
     cy.fill('Unité 1', 'PAM Jeanne Barret')
     cy.wait('@getEngagedControlUnits')
@@ -239,6 +240,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.getDataCy('add-other-control-unit').should('be.disabled')
     cy.clickButton('Oui, la conserver')
+    cy.wait(250)
 
     // we want to test with a second engaged control unit
     cy.getDataCy('add-other-control-unit').should('not.be.disabled')
@@ -248,9 +250,10 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
     cy.clickButton('Oui, la conserver')
 
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
+
+    cy.get('[name="missionTypes0"]').click({ force: true })
+    cy.get('[name="missionTypes1"]').click({ force: true })
 
     // Then
     cy.waitForLastRequest(
@@ -264,8 +267,7 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'PAM Jeanne Barret'
             }
           ],
-          missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF'
+          missionTypes: ['SEA', 'LAND']
         }
       },
       5
@@ -281,7 +283,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
     // When
-    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
+    cy.get('*[data-cy="edit-mission-43"]').scrollIntoView().click({ force: true })
 
     // Then
     cy.get('body').should('not.contain', 'Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
@@ -291,7 +293,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
-    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
+    cy.get('*[data-cy="edit-mission-43"]').scrollIntoView().click({ force: true })
 
     cy.wait(500)
     cy.window()
@@ -391,7 +393,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', '/bff/v1/missions/30').as('getMission')
 
-    cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
+    cy.get('*[data-cy="edit-mission-30"]').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
@@ -446,7 +448,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait(500)
     cy.clickButton('Fermer')
-    cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
+    cy.get('*[data-cy="edit-mission-30"]').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
@@ -470,7 +472,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', '/bff/v1/missions/40').as('getMission')
 
-    cy.get('*[data-cy="edit-mission-40"]').click({ force: true }).wait(500)
+    cy.get('*[data-cy="edit-mission-40"]').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
