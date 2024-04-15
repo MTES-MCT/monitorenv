@@ -201,9 +201,9 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    // because we have two enpty tr at the beginning and at the end of the table
-    // we add 2 to the length
-    cy.get('.Table-SimpleTable tr').should('have.length', 5)
+    // because we have one empty tr at the end of the table
+    // we add 1 to the expected length (3 results + 1)
+    cy.get('.Table-SimpleTable tr').should('have.length', 4)
     cy.fill('Rechercher une cible', undefined)
   })
 
