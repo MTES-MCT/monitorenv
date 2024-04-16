@@ -11,8 +11,7 @@ SELECT
     m.DATE_DEBUT_MISSION as start_datetime_utc,
     m.DATE_FIN_MISSION as end_datetime_utc,
     m.TRIGRAMME_UTILISATEUR_CLOTURE AS closed_by,
-    'POSEIDON_CACEM' AS mission_source,
-    m.CLOTURER as closed
+    'POSEIDON_CACEM' AS mission_source
 FROM FMC2.FMC_BC_MISSION m
 LEFT JOIN FMC2.FMC_CODE_TYPE_CONTROLE typ
 ON m.IDC_FMC_TYPE_MISSION = typ.IDC_FMC_TYPE_CONTROLE
