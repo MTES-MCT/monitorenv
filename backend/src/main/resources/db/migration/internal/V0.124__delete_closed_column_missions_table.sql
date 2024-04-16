@@ -60,7 +60,7 @@ LEFT JOIN administrations adm
 ON adm.id = cu.administration_id
 WHERE
     NOT m.deleted AND
-    action_completion = 'COMPLETED' AND
+    completion = 'COMPLETED' AND
     action_type IN ('CONTROL', 'SURVEILLANCE') AND
     (t2.id IS NULL OR t3.id IS NULL OR t2.theme_id = t3.id)
 ORDER BY action_start_datetime_utc DESC;

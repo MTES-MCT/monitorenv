@@ -52,8 +52,8 @@ class EnvActionModel(
     val id: UUID,
     @Column(name = "action_start_datetime_utc") val actionStartDateTime: Instant? = null,
     @Column(name = "action_end_datetime_utc") val actionEndDateTime: Instant? = null,
-    @Column(name = "action_completed_by") val completedBy: String? = null,
-    @Column(name = "action_completion", columnDefinition = "mission_action_completion")
+    @Column(name = "completed_by") val completedBy: String? = null,
+    @Column(name = "completion", columnDefinition = "mission_action_completion")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val completion: ActionCompletionEnum? = null,
@@ -79,7 +79,7 @@ class EnvActionModel(
     @Column(name = "is_safety_equipment_and_standards_compliance_control")
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
-    @Column(name = "action_open_by") val openBy: String? = null,
+    @Column(name = "open_by") val openBy: String? = null,
     @OneToMany(
         fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",

@@ -1,6 +1,6 @@
 import { customDayjs, FormikEffect, usePrevious } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { debounce, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
@@ -20,7 +20,7 @@ import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { missionFormsActions } from './slice'
-import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
+import { isMissionAutoSaveEnabled, validateBeforeOnChange } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
@@ -49,36 +49,6 @@ type MissionFormProps = {
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
   setShouldValidateOnChange: (boolean) => void
 }
-
-const validateBeforeOnChange = debounce(
-  async (
-    nextValues,
-    forceSave,
-    dispatch,
-    validateForm,
-    isAutoSaveEnabled,
-    engagedControlUnit,
-    selectedMission,
-    missionEvent
-  ) => {
-    const errors = await validateForm()
-    const isValid = isEmpty(errors)
-
-    if (!isAutoSaveEnabled || !isValid) {
-      return
-    }
-
-    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
-      return
-    }
-
-    if (engagedControlUnit) {
-      return
-    }
-    dispatch(saveMission(nextValues, false, false))
-  },
-  500
-)
 
 export function MissionForm({
   engagedControlUnit,

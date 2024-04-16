@@ -292,7 +292,7 @@ export function ControlForm({
         <div>
           <DatePicker
             defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
-            error={currentActionErrors?.actionStartDateTimeUtc ?? ''}
+            error={currentActionErrors?.actionStartDateTimeUtc ?? undefined}
             isErrorMessageHidden
             isLight
             isRequired

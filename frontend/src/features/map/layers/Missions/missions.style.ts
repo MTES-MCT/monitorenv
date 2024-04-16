@@ -22,7 +22,7 @@ export const missionZoneStyle = new Style({
   })
 })
 
-const missionWithCentroidStyleFactory = (status, type, zIndex) => [
+const missionIconStyle = (status, type, zIndex) => [
   new Style({
     geometry: feature => {
       const extent = feature?.getGeometry()?.getExtent()
@@ -39,7 +39,7 @@ const missionWithCentroidStyleFactory = (status, type, zIndex) => [
   })
 ]
 
-export const missionWithCentroidStyleFn = feature => {
+export const missionStyleFn = feature => {
   const missionStatus = feature.get('missionStatus') as MissionStatusEnum
   const missionTypes = feature.get('missionTypes') as MissionTypeEnum[]
 
@@ -47,13 +47,13 @@ export const missionWithCentroidStyleFn = feature => {
 
   switch (missionStatus) {
     case MissionStatusEnum.UPCOMING:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.UPCOMING, missionTypeLabel, 4)
+      return missionIconStyle(MissionStatusEnum.UPCOMING, missionTypeLabel, 4)
     case MissionStatusEnum.PENDING:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.PENDING, missionTypeLabel, 3)
+      return missionIconStyle(MissionStatusEnum.PENDING, missionTypeLabel, 3)
     case MissionStatusEnum.ENDED:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.ENDED, missionTypeLabel, 2)
+      return missionIconStyle(MissionStatusEnum.ENDED, missionTypeLabel, 2)
     default:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.ENDED, missionTypeLabel, 2)
+      return missionIconStyle(MissionStatusEnum.ENDED, missionTypeLabel, 2)
   }
 }
 
@@ -272,7 +272,7 @@ const missionCircleStyle = new Style({
 
 export const selectedMissionStyle = feature => [
   ...selectedMissionZoneStyle,
-  ...missionWithCentroidStyleFn(feature),
+  ...missionStyleFn(feature),
   ...missionToReportingsLinkStyle(feature),
   missionCircleStyle
 ]

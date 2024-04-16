@@ -5,7 +5,7 @@ import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getMissionZoneFeature } from './missionGeometryHelpers'
-import { missionWithCentroidStyleFn } from './missions.style'
+import { missionStyleFn } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -96,7 +96,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: missionVectorSourceRef.current,
-      style: missionWithCentroidStyleFn,
+      style: missionStyleFn,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.MISSIONS.zIndex
