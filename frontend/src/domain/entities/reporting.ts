@@ -1,4 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+import { getTimeLeft } from '@features/Reportings/utils'
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { ActionSource, ActionTypeEnum, Mission } from './missions'
@@ -147,7 +148,7 @@ export const getReportingStatus = ({
   const endOfValidity = dayjs(createdAt)
     .add(validityTime ?? 0, 'hour')
     .toISOString()
-  const timeLeft = dayjs(endOfValidity).diff(dayjs(), 'hour', true)
+  const timeLeft = getTimeLeft(endOfValidity)
 
   if (timeLeft < 0 || isArchived) {
     return ReportingStatusEnum.ARCHIVED

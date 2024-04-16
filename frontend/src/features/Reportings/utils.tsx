@@ -1,4 +1,6 @@
-import _ from 'lodash'
+import { customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { isCypress } from '@utils/isCypress'
+import _, { isEqual } from 'lodash'
 import styled from 'styled-components'
 
 import { ReportingInfos } from './style'
@@ -11,6 +13,33 @@ import {
 import { vehicleTypeLabels, type VehicleTypeEnum } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
+
+/* Is auto-save enabled.
+ *
+ * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
+ * instead of `import.meta.env`.
+ */
+export const isReportingAutoSaveEnabled = () =>
+  isCypress()
+    ? window.Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED') === 'true'
+    : import.meta.env.FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED === 'true'
+
+/**
+ * should a Formik `onChange` event trigger `saveMission`.
+ */
+export function shouldSaveReporting(
+  previousValues: Partial<Reporting> | undefined,
+  nextValues: Partial<Reporting>
+): boolean {
+  if (!previousValues) {
+    return false
+  }
+
+  /**
+   * Send an update only if a field has beem modified
+   */
+  return !isEqual(previousValues, nextValues)
+}
 
 export function getReportingInitialValues(reporting: AtLeast<Reporting, 'id'> | Reporting): AtLeast<Reporting, 'id'> {
   return {
@@ -152,6 +181,9 @@ export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetails
   return targetDetailsAsTextA.localeCompare(targetDetailsAsTextB)
 }
 
+export function getTimeLeft(endOfValidity) {
+  return customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+}
 const ItalicTarget = styled.span`
   font-style: italic;
 `

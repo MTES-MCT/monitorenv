@@ -1,5 +1,7 @@
 import { Accent, Button, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
+import { createMissionFromReporting } from 'domain/use_cases/reporting/createMissionFromReporting'
 import { useFormikContext } from 'formik'
+import { isEmpty } from 'lodash'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
@@ -17,8 +19,8 @@ import { attachMissionToReportingSliceActions } from '../../slice'
 
 import type { Reporting } from '../../../../domain/entities/reporting'
 
-export function AttachMission({ onAttachMission }) {
-  const { handleSubmit, setFieldValue, values } = useFormikContext<Reporting>()
+export function AttachMission() {
+  const { setFieldValue, validateForm, values } = useFormikContext<Reporting>()
   const dispatch = useAppDispatch()
   const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
   const attachedMission = useAppSelector(state => state.attachMissionToReporting.attachedMission)
@@ -49,8 +51,12 @@ export function AttachMission({ onAttachMission }) {
   }
 
   const createMission = async () => {
-    onAttachMission(true)
-    handleSubmit()
+    const errors = await validateForm()
+    const isValid = isEmpty(errors)
+    if (!isValid) {
+      return
+    }
+    await dispatch(createMissionFromReporting(values))
   }
 
   // the form listens to the redux store to update the attached mission

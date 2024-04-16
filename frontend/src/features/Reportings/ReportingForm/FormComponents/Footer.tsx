@@ -1,23 +1,30 @@
 import { Accent, Icon, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { reopenReporting } from 'domain/use_cases/reporting/reopenReporting'
+import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useFormikContext } from 'formik'
-import _ from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
 import { ReportingContext } from '../../../../domain/shared_slices/Global'
-import { reopenReporting } from '../../../../domain/use_cases/reporting/reopenReporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
-import { isNewReporting } from '../../utils'
+import { StyledButton, ButtonWithWiteBg, StyledDeleteButton, StyledFooter } from '../../style'
+import { getTimeLeft, isNewReporting } from '../../utils'
 
-export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
+type ReportingFooterProps = {
+  isAutoSaveEnabled: boolean
+  onClose: () => void
+  onDelete: () => void
+  setMustIncreaseValidity: (value: boolean) => void
+}
+export function Footer({ isAutoSaveEnabled, onClose, onDelete, setMustIncreaseValidity }: ReportingFooterProps) {
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
-  const reportings = useAppSelector(state => state.reporting.reportings)
-  const reportingContext = useAppSelector(state =>
-    activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
-  )
+  const reportingContext =
+    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
+    ReportingContext.MAP
+
   const dispatch = useAppDispatch()
-  const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Reporting>()
+  const { setFieldValue, validateForm, values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
 
@@ -26,7 +33,7 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
       values?.validityTime ?? 0,
       'hour'
     )
-    const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+    const timeLeft = getTimeLeft(endOfValidity)
 
     if (timeLeft < 0) {
       setMustIncreaseValidity(true)
@@ -34,39 +41,32 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
       return
     }
     setMustIncreaseValidity(false)
-    validateForm({ ...values, isArchived: false }).then(async errors => {
-      if (_.isEmpty(errors)) {
-        if (!activeReportingId || !reportings || !reportings[activeReportingId]) {
-          return
-        }
-        dispatch(reopenReporting({ ...values, isArchived: false }, reportingContext ?? ReportingContext.MAP))
 
+    validateForm({ ...values, isArchived: false }).then(async errors => {
+      if (!isEmpty(errors)) {
         return
       }
-      setShouldValidateOnChange(true)
+      setFieldValue('isArchived', false)
+      dispatch(reopenReporting({ ...values, isArchived: false }, reportingContext))
     })
   }
 
   const handleArchive = async () => {
-    await setFieldValue('isArchived', true)
     validateForm().then(async errors => {
-      if (_.isEmpty(errors)) {
-        handleSubmit()
-
+      if (!isEmpty(errors)) {
         return
       }
-      await setFieldValue('isArchived', false)
-      setShouldValidateOnChange(true)
+      setFieldValue('isArchived', true)
+      dispatch(saveReporting({ ...values, isArchived: true }, reportingContext))
     })
   }
 
   if (isNewReporting(values.id)) {
     return (
       <StyledFooter $justify="end">
-        <StyledButton onClick={onCancel}>Annuler</StyledButton>
-        <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
-          Valider le signalement
-        </StyledSubmitButton>
+        <ButtonWithWiteBg accent={Accent.SECONDARY} onClick={onClose}>
+          Fermer
+        </ButtonWithWiteBg>
       </StyledFooter>
     )
   }
@@ -88,17 +88,18 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
           </StyledButton>
         ) : (
           <StyledButton Icon={Icon.Archive} onClick={handleArchive}>
-            Enregistrer et archiver
+            Archiver
           </StyledButton>
         )}
-        <StyledSubmitButton
-          accent={Accent.SECONDARY}
-          data-cy="save-reporting"
-          Icon={Icon.Save}
-          onClick={() => handleSubmit()}
-        >
-          Enregistrer et quitter
-        </StyledSubmitButton>
+        {isAutoSaveEnabled ? (
+          <ButtonWithWiteBg accent={Accent.SECONDARY} data-cy="close-reporting" onClick={onClose}>
+            Fermer
+          </ButtonWithWiteBg>
+        ) : (
+          <ButtonWithWiteBg accent={Accent.SECONDARY} data-cy="save-reporting" Icon={Icon.Save} onClick={onClose}>
+            Enregistrer et quitter
+          </ButtonWithWiteBg>
+        )}
       </div>
     </StyledFooter>
   )

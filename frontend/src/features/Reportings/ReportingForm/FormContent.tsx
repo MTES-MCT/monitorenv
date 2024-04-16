@@ -1,7 +1,14 @@
-import { FormikMultiRadio, FormikTextarea, getOptionsFromLabelledEnum, Toggle } from '@mtes-mct/monitor-ui'
+import {
+  FormikEffect,
+  FormikMultiRadio,
+  FormikTextarea,
+  getOptionsFromLabelledEnum,
+  Toggle
+} from '@mtes-mct/monitor-ui'
+import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useField, useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
-import { useEffect, useState } from 'react'
+import { debounce, isEmpty } from 'lodash'
+import { useEffect, useMemo, useState } from 'react'
 
 import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
@@ -44,22 +51,34 @@ import {
   StyledFormikTextInput,
   ReportTypeMultiRadio
 } from '../style'
+import { isReportingAutoSaveEnabled, shouldSaveReporting } from '../utils'
 
 import type { AtLeast } from '../../../types'
 
+const validateBeforeOnChange = debounce(
+  async (nextValues, dispatch, validateForm, isAutoSaveEnabled, selectedReporting, context) => {
+    const errors = await validateForm()
+    const isValid = isEmpty(errors)
+
+    if (!isAutoSaveEnabled || !isValid) {
+      return
+    }
+
+    if (!shouldSaveReporting(selectedReporting, nextValues)) {
+      return
+    }
+
+    dispatch(saveReporting(nextValues, context))
+  },
+  250
+)
+
 type FormContentProps = {
-  onAttachMission: (value: boolean) => void
   reducedReportingsOnContext: number
   selectedReporting: AtLeast<ReportingDetailed, 'id'> | undefined
-  setShouldValidateOnChange: (value: boolean) => void
 }
 
-export function FormContent({
-  onAttachMission,
-  reducedReportingsOnContext,
-  selectedReporting,
-  setShouldValidateOnChange
-}: FormContentProps) {
+export function FormContent({ reducedReportingsOnContext, selectedReporting }: FormContentProps) {
   const dispatch = useAppDispatch()
 
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
@@ -69,13 +88,28 @@ export function FormContent({
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
-  const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
+  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Reporting>>()
   const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
   const [mustIncreaseValidity, setMustIncreaseValidity] = useState(false)
 
   const isMapContext = reportingContext === ReportingContext.MAP
+  const isFormDirty = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.isFormDirty : false
+  )
+
+  const isAutoSaveEnabled = useMemo(() => {
+    if (!isReportingAutoSaveEnabled()) {
+      return false
+    }
+
+    if (selectedReporting?.isArchived) {
+      return false
+    }
+
+    return true
+  }, [selectedReporting])
 
   useEffect(() => {
     if (selectedReporting) {
@@ -85,7 +119,7 @@ export function FormContent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useSyncFormValuesWithRedux()
+  useSyncFormValuesWithRedux(isAutoSaveEnabled)
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
   const withVHFAnswerOptions = [
@@ -128,8 +162,8 @@ export function FormContent({
     setIsDeletModalOpen(true)
   }
 
-  const cancelNewReporting = async () => {
-    if (dirty) {
+  const closeReporting = async () => {
+    if (isFormDirty) {
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
     } else {
       await dispatch(reportingActions.deleteSelectedReporting(selectedReporting?.id))
@@ -166,6 +200,18 @@ export function FormContent({
 
   return (
     <StyledFormContainer>
+      <FormikEffect
+        onChange={nextValues =>
+          validateBeforeOnChange(
+            nextValues,
+            dispatch,
+            validateForm,
+            isAutoSaveEnabled,
+            selectedReporting,
+            reportingContext
+          )
+        }
+      />
       <CancelEditDialog
         key={`cancel-edit-modal-${selectedReporting.id}`}
         onCancel={returnToEdition}
@@ -242,13 +288,13 @@ export function FormContent({
           />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
-        <AttachMission onAttachMission={onAttachMission} />
+        <AttachMission />
       </StyledForm>
       <Footer
-        onCancel={cancelNewReporting}
+        isAutoSaveEnabled={isAutoSaveEnabled}
+        onClose={closeReporting}
         onDelete={deleteCurrentReporting}
         setMustIncreaseValidity={setMustIncreaseValidity}
-        setShouldValidateOnChange={setShouldValidateOnChange}
       />
     </StyledFormContainer>
   )

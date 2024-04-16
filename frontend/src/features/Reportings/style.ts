@@ -179,10 +179,12 @@ export const StyledFooter = styled.div<{ $justify?: string | undefined }>`
   display: flex;
   justify-content: ${p => p.$justify ?? 'space-between'};
   gap: 4px;
+  > div {
+    display: flex;
+  }
 `
-export const StyledSubmitButton = styled(Button)`
+export const ButtonWithWiteBg = styled(Button)`
   background-color: ${p => p.theme.color.white};
-  padding: 4px 12px;
 `
 export const StyledButton = styled(Button)`
   border: 1px solid ${p => p.theme.color.white};
