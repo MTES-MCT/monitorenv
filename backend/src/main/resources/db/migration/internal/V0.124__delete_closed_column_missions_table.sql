@@ -65,6 +65,7 @@ WHERE
     (t2.id IS NULL OR t3.id IS NULL OR t2.theme_id = t3.id)
 ORDER BY action_start_datetime_utc DESC;
 
+CREATE INDEX ON analytics_actions USING BRIN(action_start_datetime_utc);
 
 -- Drop `closed` column
 ALTER TABLE missions DROP COLUMN closed;
