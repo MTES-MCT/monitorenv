@@ -1,3 +1,5 @@
+import { isMissionPartOfSelectedCompletionStatus } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedCompletionStatus'
+import { isMissionPartOfSelectedWithEnvActions } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedWithEnvActions'
 import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
@@ -11,12 +13,13 @@ const TWO_MINUTES = 2 * 60 * 1000
 export const useGetFilteredMissionsQuery = () => {
   const {
     selectedAdministrationNames,
+    selectedCompletionStatus,
     selectedControlUnitIds,
-    selectedMissionSource,
     selectedMissionTypes,
     selectedSeaFronts,
     selectedStatuses,
     selectedThemes,
+    selectedWithEnvActions,
     startedAfter,
     startedBefore
   } = useAppSelector(state => state.missionFilters)
@@ -27,12 +30,12 @@ export const useGetFilteredMissionsQuery = () => {
     isLoading
   } = useGetMissionsQuery(
     {
-      missionSource: selectedMissionSource,
       missionStatus: selectedStatuses,
       missionTypes: selectedMissionTypes,
       seaFronts: selectedSeaFronts,
       startedAfterDateTime: startedAfter ?? undefined,
-      startedBeforeDateTime: startedBefore ?? undefined
+      startedBeforeDateTime: startedBefore ?? undefined,
+      withEnvActions: selectedWithEnvActions
     },
     { pollingInterval: TWO_MINUTES }
   )
@@ -54,9 +57,18 @@ export const useGetFilteredMissionsQuery = () => {
       mission =>
         isMissionPartOfSelectedAdministrationNames(mission, selectedAdministrationNames) &&
         isMissionPartOfSelectedControlUnitIds(mission, selectedControlUnitIds) &&
-        isMissionPartOfSelectedControlPlans(mission, selectedThemes)
+        isMissionPartOfSelectedControlPlans(mission, selectedThemes) &&
+        isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus) &&
+        isMissionPartOfSelectedWithEnvActions(mission, selectedWithEnvActions)
     )
-  }, [missions, selectedAdministrationNames, selectedControlUnitIds, selectedThemes])
+  }, [
+    missions,
+    selectedAdministrationNames,
+    selectedControlUnitIds,
+    selectedThemes,
+    selectedCompletionStatus,
+    selectedWithEnvActions
+  ])
 
   return { isError, isFetching, isLoading, missions: filteredMissions }
 }

@@ -1,3 +1,4 @@
+import { CompletionStatusTag } from '@features/missions/components/CompletionStatusTag'
 import {
   customDayjs,
   DatePicker,
@@ -8,16 +9,16 @@ import {
   FormikTextInput,
   FormikTextarea,
   MultiRadio,
-  useNewWindow,
   THEME
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { HIDDEN_ERROR } from './constants'
 import { ControlUnitsForm } from './ControlUnitsForm'
 import { MissionZonePicker } from './MissionZonePicker'
-import { FormTitle } from './style'
+import { FormTitle, Separator } from './style'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../domain/entities/controlPlan'
 import {
   type Mission,
@@ -25,17 +26,20 @@ import {
   getMissionStatus,
   hasMissionOrderLabels,
   missionTypeEnum,
-  ActionTypeEnum
+  ActionTypeEnum,
+  FrontCompletionStatus
 } from '../../../domain/entities/missions'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MissionSourceTag } from '../../../ui/MissionSourceTag'
-import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { getMissionTitle } from '../../../utils/getMissionTitle'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
+import { MissionStatusTag } from '../components/MissionStatusTag'
 
-export function GeneralInformationsForm() {
-  const { newWindowContainerRef } = useNewWindow()
+export function GeneralInformationsForm({
+  missionCompletion = undefined
+}: {
+  missionCompletion?: FrontCompletionStatus
+}) {
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
   const { errors, setFieldValue, values } = useFormikContext<Mission>()
@@ -72,57 +76,57 @@ export function GeneralInformationsForm() {
     setFieldValue('startDateTimeUtc', date)
   }
 
+  const missionStatus = useMemo(() => getMissionStatus(values), [values])
+
   return (
     <StyledContainer>
-      <StyledHeader $withPadding={missionIsNewMission}>
+      <StyledHeader>
         <FormTitle>{title}</FormTitle>
-        {!missionIsNewMission && (
-          <StyledTagsContainer>
-            <MissionSourceTag source={values.missionSource} />
-            <MissionStatusTag status={getMissionStatus(values)} />
-          </StyledTagsContainer>
-        )}
       </StyledHeader>
-      {/* TODO : Add separator when no more source Tag */}
-      {/* <Separator /> */}
+      <Separator />
 
       <StyledFormWrapper>
-        <div>
-          <StyledDatePickerContainer>
-            <DatePicker
-              data-cy="mission-start-date-time"
-              defaultValue={values?.startDateTimeUtc || undefined}
-              isCompact
-              isErrorMessageHidden
-              isRequired
-              isStringDate
-              label="Date de début (UTC)"
-              name="startDateTimeUtc"
-              onChange={updateMissionDateTime}
-              withTime
-            />
+        <DatesAndTagsContainer>
+          <div>
+            <StyledDatePickerContainer>
+              <DatePicker
+                data-cy="mission-start-date-time"
+                defaultValue={values?.startDateTimeUtc || undefined}
+                isCompact
+                isErrorMessageHidden
+                isRequired
+                isStringDate
+                label="Date de début (UTC)"
+                name="startDateTimeUtc"
+                onChange={updateMissionDateTime}
+                withTime
+              />
 
-            <StyledFormikDatePicker
-              baseContainer={newWindowContainerRef.current}
-              data-cy="mission-end-date-time"
-              isCompact
-              isEndDate
-              isErrorMessageHidden
-              isRequired
-              isStringDate
-              label="Date de fin (UTC)"
-              name="endDateTimeUtc"
-              withTime
-            />
-          </StyledDatePickerContainer>
-          {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
-          {errors.startDateTimeUtc && errors.startDateTimeUtc?.length > 1 && (
-            <FieldError>{errors.startDateTimeUtc}</FieldError>
-          )}
-          {errors.endDateTimeUtc && errors.endDateTimeUtc.length > 1 && (
-            <FieldError>{errors.endDateTimeUtc}</FieldError>
-          )}
-        </div>
+              <StyledFormikDatePicker
+                data-cy="mission-end-date-time"
+                isCompact
+                isEndDate
+                isErrorMessageHidden
+                isRequired
+                isStringDate
+                label="Date de fin (UTC)"
+                name="endDateTimeUtc"
+                withTime
+              />
+            </StyledDatePickerContainer>
+            {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
+            {errors.startDateTimeUtc && errors.startDateTimeUtc !== HIDDEN_ERROR && (
+              <FieldError>{errors.startDateTimeUtc}</FieldError>
+            )}
+            {errors.endDateTimeUtc && errors.endDateTimeUtc !== HIDDEN_ERROR && (
+              <FieldError>{errors.endDateTimeUtc}</FieldError>
+            )}
+          </div>
+          <StyledTagsContainer>
+            <MissionStatusTag status={missionStatus} />
+            <CompletionStatusTag completion={missionCompletion} />
+          </StyledTagsContainer>
+        </DatesAndTagsContainer>
 
         <div>
           <StyledMissionType>
@@ -177,8 +181,8 @@ export function GeneralInformationsForm() {
             <FormikTextInput isErrorMessageHidden isRequired label="Clôturé par" name="closedBy" />
           </StyledAuthorContainer>
           {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
-          {errors.openBy && errors.openBy.length > 1 && <FieldError>{errors.openBy}</FieldError>}
-          {errors.closedBy && errors.closedBy.length > 1 && <FieldError>{errors.closedBy}</FieldError>}
+          {errors.openBy && errors.openBy !== HIDDEN_ERROR && <FieldError>{errors.openBy}</FieldError>}
+          {errors.closedBy && errors.closedBy !== HIDDEN_ERROR && <FieldError>{errors.closedBy}</FieldError>}
         </StyledObservationsContainer>
       </StyledFormWrapper>
     </StyledContainer>
@@ -193,22 +197,30 @@ const StyledContainer = styled.div`
 const StyledFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 16px;
   max-width: 484px;
   gap: 24px;
 `
 
-const StyledHeader = styled.div<{ $withPadding: boolean }>`
+const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
   justify-content: space-between;
-  padding-bottom: ${p => (p.$withPadding ? '32px' : '0px')};
+  padding-top: 12px;
 `
 const StyledTagsContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   gap: 8px;
+`
+const DatesAndTagsContainer = styled.div`
+  align-items: start;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
 `
 
 const StyledDatePickerContainer = styled.div`

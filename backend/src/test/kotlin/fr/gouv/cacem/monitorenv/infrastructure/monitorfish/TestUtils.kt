@@ -9,6 +9,7 @@ class TestUtils {
                             "vesselName":"TY NOEM",
                             "internalReferenceNumber":"12345",
                             "externalReferenceNumber":"12345",
+                            "completion":"COMPLETED",
                             "ircs":"FP6588",
                             "flagState":"FR",
                             "districtCode":"SB",

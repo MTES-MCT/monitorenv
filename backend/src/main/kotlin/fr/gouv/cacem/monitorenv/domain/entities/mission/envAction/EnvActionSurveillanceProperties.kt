@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -11,6 +12,7 @@ data class EnvActionSurveillanceProperties(
         id: UUID,
         actionStartDateTimeUtc: ZonedDateTime?,
         actionEndDateTimeUtc: ZonedDateTime?,
+        completion: ActionCompletionEnum?,
         controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
@@ -20,6 +22,7 @@ data class EnvActionSurveillanceProperties(
             id = id,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionEndDateTimeUtc = actionEndDateTimeUtc,
+            completion = completion,
             controlPlans = controlPlans,
             department = department,
             facade = facade,

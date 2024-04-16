@@ -153,17 +153,17 @@ class JpaMissionRepository(
 
         // Create a map from controlPlanThemes mapping each id to a reference to the model
         val controlPlanThemesReferenceModelMap =
-            controlPlanThemes?.distinct()?.associateWith { id ->
+            controlPlanThemes.distinct().associateWith { id ->
                 dbControlPlanThemeRepository.getReferenceById(id)
             }
         // Create a map from controlPlanSubThemes mapping each id to a reference to the model
         val controlPlanSubThemesReferenceModelMap =
-            controlPlanSubThemes?.distinct()?.associateWith { id ->
+            controlPlanSubThemes.distinct().associateWith { id ->
                 dbControlPlanSubThemeRepository.getReferenceById(id)
             }
         // Create a map from controlPlanTags mapping each id to a reference to the model
         val controlPlanTagsReferenceModelMap =
-            controlPlanTags?.distinct()?.associateWith { id ->
+            controlPlanTags.distinct().associateWith { id ->
                 dbControlPlanTagRepository.getReferenceById(id)
             }
 

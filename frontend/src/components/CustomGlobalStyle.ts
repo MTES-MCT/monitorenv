@@ -55,9 +55,17 @@ html {
     line-height: normal;
   }
 
-  .rs-checkbox-checker > label {
-    line-height: normal !important;
+
+  .Field-Checkbox {
+    > .rs-checkbox {
+        > .rs-checkbox-checker > label {
+            line-height: normal !important;
+        }
+      }
   }
+ 
+  
+    
 
   .Element-Fieldset__InnerBox {
     > .Field-DateRangePicker__RangeCalendarPicker {
@@ -66,9 +74,5 @@ html {
       }
     }
   }
-  
 
-  .rs-radio-checker {
-    line-height: normal !important;
-  }
 `

@@ -15,6 +15,7 @@ import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useListenMissionEventUpdatesById } from './hooks/useListenMissionEventUpdatesById'
+import { useMissionAndActionsCompletion } from './hooks/useMissionAndActionsCompletion'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
@@ -90,6 +91,7 @@ export function MissionForm({
   const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty ?? false, [id, selectedMissions])
 
   useSyncFormValuesWithRedux(isAutoSaveEnabled)
+  const { missionCompletionFrontStatus } = useMissionAndActionsCompletion()
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
 
@@ -290,7 +292,7 @@ export function MissionForm({
       />
       <Wrapper>
         <FirstColumn>
-          <GeneralInformationsForm />
+          <GeneralInformationsForm missionCompletion={missionCompletionFrontStatus} />
         </FirstColumn>
         <SecondColumn>
           <ActionsTimeLine

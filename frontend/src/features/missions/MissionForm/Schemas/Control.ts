@@ -6,6 +6,7 @@ import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { isCypress } from '../../../../utils/isCypress'
+import { HIDDEN_ERROR } from '../constants'
 
 const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
@@ -22,11 +23,20 @@ export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionCo
         .nullable()
         .test({
           message: 'La date doit être postérieure à celle de début de mission',
-          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+          test: value => {
+            if (!ctx.from) {
+              return true
+            }
+
+            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+          }
         })
         .test({
           message: 'La date doit être antérieure à celle de fin de mission',
           test: value => {
+            if (!ctx.from) {
+              return true
+            }
             if (!ctx.from[1].value.endDateTimeUtc) {
               return true
             }
@@ -47,14 +57,23 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
       actionNumberOfControls: Yup.number().required('Requis'),
       actionStartDateTimeUtc: Yup.string()
         .nullable()
-        .required('_')
+        .required(HIDDEN_ERROR)
         .test({
           message: 'La date doit être postérieure à celle de début de mission',
-          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+          test: value => {
+            if (!ctx.from) {
+              return true
+            }
+
+            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+          }
         })
         .test({
           message: 'La date doit être antérieure à celle de fin de mission',
           test: value => {
+            if (!ctx.from) {
+              return true
+            }
             if (!ctx.from[1].value.endDateTimeUtc) {
               return true
             }

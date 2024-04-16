@@ -76,7 +76,6 @@ export function MapReportingsFiltersWithRef(
         <StyledStatusFilter $withBottomMargin>
           <>
             <Checkbox
-              key={AttachToMissionFilterLabels.ATTACHED}
               checked={!!isAttachedToMissionFilter}
               data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.ATTACHED}`}
               label={AttachToMissionFilterLabels.ATTACHED}
@@ -84,7 +83,6 @@ export function MapReportingsFiltersWithRef(
               onChange={isChecked => updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)}
             />
             <Checkbox
-              key={AttachToMissionFilterLabels.UNATTACHED}
               checked={!!isUnattachedToMissionFilter}
               data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.UNATTACHED}`}
               label={AttachToMissionFilterLabels.UNATTACHED}

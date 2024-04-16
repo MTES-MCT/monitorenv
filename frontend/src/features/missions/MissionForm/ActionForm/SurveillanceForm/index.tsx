@@ -1,3 +1,5 @@
+import { actionFactory } from '@features/missions/Missions.helpers'
+import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   customDayjs,
   FieldError,
@@ -12,31 +14,47 @@ import {
   Size,
   THEME,
   Label,
-  Toggle
+  Toggle,
+  Button
 } from '@mtes-mct/monitor-ui'
-import { useField, useFormikContext } from 'formik'
-import { useMemo, useState } from 'react'
+import { useField, useFormikContext, type FormikErrors } from 'formik'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { SurveillanceZonePicker } from './SurveillanceZonePicker'
 import { CONTROL_PLAN_INIT } from '../../../../../domain/entities/controlPlan'
 import {
   ActionTypeEnum,
+  CompletionStatus,
   type EnvAction,
   type EnvActionSurveillance,
   type Mission
 } from '../../../../../domain/entities/missions'
 import { dateDifferenceInHours } from '../../../../../utils/dateDifferenceInHours'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
-import { FormTitle } from '../../style'
-import { FormBody, Header, StyledDeleteButton, TitleWithIcon } from '../style'
+import { HIDDEN_ERROR } from '../../constants'
+import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
+import { Separator } from '../../style'
+import { MissingFieldsText } from '../MissingFieldsText'
+import {
+  ActionThemes,
+  ActionTitle,
+  ActionFormBody,
+  Header,
+  HeaderButtons,
+  StyledDeleteIconButton,
+  TitleWithIcon
+} from '../style'
 import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const {
+    errors,
     setFieldValue,
-    values: { attachedReportings, envActions, startDateTimeUtc }
+    values: { attachedReportings, endDateTimeUtc, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionSurveillance>>()
+
+  const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const [actionsFields] = useField<EnvAction[]>('envActions')
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
@@ -45,9 +63,15 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
   const actualYearForThemes = customDayjs(actionDate).year()
 
+  const themeIds = useMemo(() => currentAction?.controlPlans.map(controlPlan => controlPlan.themeId), [currentAction])
+  const { themes } = useGetControlPlans()
+  const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
+
   const { reportingIds = [] } = currentAction ?? {}
-  const [, actionStartDateMeta] = useField(`envActions[${envActionIndex}].actionStartDateTimeUtc`)
-  const [, actionEndDateMeta] = useField(`envActions[${envActionIndex}].actionEndDateTimeUtc`)
+  const actionErrors = useMemo(
+    () => (errors?.envActions ? errors?.envActions[envActionIndex] : undefined),
+    [envActionIndex, errors?.envActions]
+  ) as FormikErrors<EnvActionSurveillance>
 
   const [durationMatchMissionField] = useField(`envActions[${envActionIndex}].durationMatchesMission`)
 
@@ -121,6 +145,14 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     remove(envActionIndex)
   }
 
+  const duplicateSurveillance = useCallback(() => {
+    if (!currentAction) {
+      return
+    }
+    const duplicatedAction = actionFactory(currentAction)
+    setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
+  }, [currentAction, setFieldValue, envActions])
+
   const updateStartDateTime = (date: string | undefined) => {
     const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
     if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
@@ -135,24 +167,47 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     setFieldValue(`envActions[${envActionIndex}].actionEndDateTimeUtc`, date)
   }
 
+  useEffect(() => {
+    if (actionsMissingFields[currentActionIndex] === 0 && currentAction?.completion === CompletionStatus.TO_COMPLETE) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.COMPLETED)
+
+      return
+    }
+
+    if (actionsMissingFields[currentActionIndex] > 0 && currentAction?.completion === CompletionStatus.COMPLETED) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.TO_COMPLETE)
+    }
+  }, [actionsMissingFields, setFieldValue, currentActionIndex, currentAction?.completion, envActionIndex])
+
   return (
     <>
       <Header>
         <TitleWithIcon>
           <Icon.Observation color={THEME.color.gunMetal} />
-          <FormTitle>Surveillance</FormTitle>
+
+          <ActionTitle>Surveillance</ActionTitle>
+          <ActionThemes>{themeIds && themeIds?.length > 1 ? themesAsText?.join(', ') : themesAsText}</ActionThemes>
         </TitleWithIcon>
-        <StyledDeleteButton
-          accent={Accent.SECONDARY}
-          Icon={Icon.Delete}
-          onClick={handleRemoveAction}
-          size={Size.SMALL}
-          title="supprimer"
-        >
-          Supprimer
-        </StyledDeleteButton>
+        <HeaderButtons>
+          <Button accent={Accent.SECONDARY} Icon={Icon.Duplicate} onClick={duplicateSurveillance} size={Size.SMALL}>
+            Dupliquer
+          </Button>
+
+          <StyledDeleteIconButton
+            accent={Accent.SECONDARY}
+            Icon={Icon.Delete}
+            onClick={handleRemoveAction}
+            size={Size.SMALL}
+            title="supprimer"
+          />
+        </HeaderButtons>
       </Header>
-      <FormBody>
+      <Separator />
+      <ActionFormBody>
+        <MissingFieldsText
+          missionEndDate={endDateTimeUtc}
+          totalMissingFields={actionsMissingFields[currentActionIndex]}
+        />
         <div>
           <StyledToggle>
             <Toggle
@@ -186,7 +241,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               data-cy="surveillance-start-date-time"
               defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
-              error={actionStartDateMeta.error}
+              error={actionErrors?.actionStartDateTimeUtc}
               isCompact
               isErrorMessageHidden
               isLabelHidden
@@ -203,7 +258,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               data-cy="surveillance-end-date-time"
               defaultValue={currentAction?.actionEndDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
-              error={actionEndDateMeta.error}
+              error={actionErrors?.actionEndDateTimeUtc}
               isCompact
               isErrorMessageHidden
               isLabelHidden
@@ -222,11 +277,11 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             )}
           </StyledDatePickerContainer>
           {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
-          {actionStartDateMeta.error && actionStartDateMeta.error.length > 1 && (
-            <FieldError>{actionStartDateMeta.error}</FieldError>
+          {actionErrors?.actionStartDateTimeUtc && actionErrors?.actionStartDateTimeUtc !== HIDDEN_ERROR && (
+            <FieldError>{actionErrors?.actionStartDateTimeUtc}</FieldError>
           )}
-          {actionEndDateMeta.error && actionEndDateMeta.error.length > 1 && (
-            <FieldError>{actionEndDateMeta.error}</FieldError>
+          {actionErrors?.actionEndDateTimeUtc && actionErrors?.actionEndDateTimeUtc !== HIDDEN_ERROR && (
+            <FieldError>{actionErrors?.actionEndDateTimeUtc}</FieldError>
           )}
           <StyledFormikCheckbox
             data-cy="surveillance-duration-matches-mission"
@@ -241,7 +296,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </FlexSelectorWrapper>
 
         <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
-      </FormBody>
+      </ActionFormBody>
     </>
   )
 }

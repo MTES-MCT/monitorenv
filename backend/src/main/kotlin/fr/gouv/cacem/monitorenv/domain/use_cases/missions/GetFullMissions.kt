@@ -6,12 +6,16 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetFullMissions(private val missionRepository: IMissionRepository) {
+class GetFullMissions(
+    private val missionRepository: IMissionRepository,
+    private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetFullMissions::class.java)
     fun execute(
         startedAfterDateTime: ZonedDateTime?,
@@ -42,6 +46,16 @@ class GetFullMissions(private val missionRepository: IMissionRepository) {
 
         logger.info("Found ${missions.size} mission(s)")
 
-        return missions
+        return missions.map { missionAndFishActions ->
+            val mission = missionAndFishActions.mission
+
+            try {
+                val fishActions =
+                    monitorFishMissionActionsRepository.findFishMissionActionsById(mission.id!!)
+                MissionDTO(mission = mission, fishActions = fishActions)
+            } catch (e: Exception) {
+                MissionDTO(mission = mission, fishActions = listOf())
+            }
+        }
     }
 }

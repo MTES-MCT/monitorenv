@@ -41,9 +41,9 @@ const getAllThemesAndSubThemesAsString = (
       return acc
     }, {})
 
-  const getThemeAndSubThemesString = ([theme, subThemesAsString]) => `${theme} : ${subThemesAsString?.join(' / ')}`
+  const getThemeAndSubThemesString = ([theme, subThemesAsString]) => `${theme}  (${subThemesAsString?.join(', ')})`
 
-  return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString).join(' ; ')
+  return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString).join(' - ')
 }
 
 export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {

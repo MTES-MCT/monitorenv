@@ -15,7 +15,8 @@ import {
   type Infraction,
   type NewEnvActionControl,
   type EnvActionNote,
-  ActionSource
+  ActionSource,
+  CompletionStatus
 } from '../../domain/entities/missions'
 import {
   type DetachedReporting,
@@ -49,6 +50,7 @@ export const actionFactory = ({
         actionNumberOfControls: undefined,
         actionTargetType: undefined,
         actionType: ActionTypeEnum.CONTROL,
+        completion: CompletionStatus.TO_COMPLETE,
         controlPlans: [
           {
             subThemeIds: [],
@@ -75,6 +77,7 @@ export const actionFactory = ({
     default:
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
+        completion: CompletionStatus.TO_COMPLETE,
         controlPlans: [
           {
             subThemeIds: [],

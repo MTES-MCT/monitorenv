@@ -56,7 +56,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill('Date et heure du contrôle (UTC)', [2023, 10, 11, 12, 12])
     cy.wait(250)
 
-    cy.fill('Nombre total de contrôles', 2)
+    cy.fill('Nb total de contrôles', 2)
     cy.wait(250)
     cy.fill('Type de cible', 'Personne morale')
     cy.wait(250)
@@ -113,9 +113,13 @@ context('Side Window > Mission Form > Validation on close', () => {
 
     // we fill all the required inputs
     // since we fill dates with past dates autosaved is disabled
+    cy.getDataCy('mission-status-tag-pending').should('exist')
+    cy.getDataCy('completion-mission-status-tag-to-completed').should('exist')
     cy.fill('Date de début (UTC)', [2023, 10, 11, 7, 35])
     cy.wait(250)
     cy.fill('Date de fin (UTC)', [2023, 10, 12, 7, 35])
+    cy.getDataCy('mission-status-tag-pending').should('not.exist')
+    cy.getDataCy('mission-status-tag-ended').should('exist')
     cy.wait(250)
     cy.fill('Type de mission', ['Air'])
     cy.wait(250)
@@ -136,9 +140,6 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.clickButton('Ajouter des contrôles')
     cy.wait(250)
 
-    // can't test this one because there is map interaction
-    // cy.contains('Point de contrôle requis').should('exist')
-
     // we fill all the required inputs
     cy.fill('Thématique de contrôle', 'Police des espèces protégées')
     // TODO understand why `cy.fill` doesn't work here
@@ -151,7 +152,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.fill('Date et heure du contrôle (UTC)', [2023, 10, 11, 12, 12])
     cy.wait(250)
 
-    cy.fill('Nombre total de contrôles', 2)
+    cy.fill('Nb total de contrôles', 2)
     cy.wait(250)
     cy.fill('Type de cible', 'Personne morale')
     cy.wait(250)
@@ -194,7 +195,7 @@ context('Side Window > Mission Form > Validation on close', () => {
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.wait(250)
 
-    // Then
+    cy.getDataCy('completion-mission-status-tag-completed').should('exist')
 
     cy.clickButton('Enregistrer')
 

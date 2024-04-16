@@ -1,18 +1,33 @@
-import { Accent, FormikTextarea, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { actionFactory } from '@features/missions/Missions.helpers'
+import { Accent, Button, FormikTextarea, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
+import { useField, useFormikContext } from 'formik'
+import { useCallback } from 'react'
 
-import { Header, StyledDeleteButton, TitleWithIcon } from './style'
-import { type EnvAction } from '../../../../domain/entities/missions'
-import { FormTitle } from '../style'
+import { Header, HeaderButtons, StyledDeleteIconButton, TitleWithIcon } from './style'
+import { type EnvAction, type EnvActionNote, type Mission } from '../../../../domain/entities/missions'
+import { FormTitle, Separator } from '../style'
 
 export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const [actionsFields] = useField<EnvAction[]>('envActions')
+  const {
+    setFieldValue,
+    values: { envActions }
+  } = useFormikContext<Mission<EnvActionNote>>()
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
+  const currentAction = envActions[envActionIndex]
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
     remove(currentActionIndex)
   }
+
+  const duplicateNote = useCallback(() => {
+    if (!currentAction) {
+      return
+    }
+    const duplicatedAction = actionFactory(currentAction)
+    setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
+  }, [currentAction, setFieldValue, envActions])
 
   return (
     <>
@@ -22,17 +37,21 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
           <FormTitle>Note</FormTitle>
         </TitleWithIcon>
 
-        <StyledDeleteButton
-          accent={Accent.SECONDARY}
-          Icon={Icon.Delete}
-          onClick={handleRemoveAction}
-          size={Size.SMALL}
-          title="supprimer"
-        >
-          Supprimer
-        </StyledDeleteButton>
-      </Header>
+        <HeaderButtons>
+          <Button accent={Accent.SECONDARY} Icon={Icon.Duplicate} onClick={duplicateNote} size={Size.SMALL}>
+            Dupliquer
+          </Button>
 
+          <StyledDeleteIconButton
+            accent={Accent.SECONDARY}
+            Icon={Icon.Delete}
+            onClick={handleRemoveAction}
+            size={Size.SMALL}
+            title="supprimer"
+          />
+        </HeaderButtons>
+      </Header>
+      <Separator />
       <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
     </>
   )

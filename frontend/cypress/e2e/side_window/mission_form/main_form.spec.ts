@@ -22,8 +22,10 @@ context('Side Window > Mission Form > Main Form', () => {
     })
 
     cy.get('*[data-cy="add-mission"]').click()
+    cy.getDataCy('mission-status-tag-pending').should('exist')
+    cy.getDataCy('completion-mission-status-tag-to-completed').should('exist')
 
-    //  cy.get('div').contains('Mission non enregistrée.')
+    cy.get('div').contains('Mission non enregistrée.')
     cy.get('.Element-Tag').contains('Enregistrement auto. actif')
     // When
     cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
@@ -69,8 +71,8 @@ context('Side Window > Mission Form > Main Form', () => {
     )
       .its('response.statusCode')
       .should('eq', 200)
-    //  cy.get('div').contains('Mission créée par le')
-    //  cy.get('div').contains('Dernière modification enregistrée')
+    cy.get('div').contains('Mission créée par le')
+    cy.get('div').contains('Dernière modification enregistrée')
   })
 
   it('A mission should be created When auto-save is not enabled', () => {

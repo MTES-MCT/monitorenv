@@ -1,6 +1,6 @@
+import { Italic } from '@components/style'
 import { FishMissionAction } from '@features/missions/fishActions.types'
 import styled from 'styled-components'
-import { Italic } from 'ui/Italic'
 
 import { AirControlCard } from './AirControlCard'
 import { AirSurveillanceCard } from './AirSurveillanceCard'

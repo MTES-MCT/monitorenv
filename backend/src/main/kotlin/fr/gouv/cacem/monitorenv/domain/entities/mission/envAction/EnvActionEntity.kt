@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -23,6 +24,7 @@ abstract class EnvActionEntity(
     open val actionType: ActionTypeEnum,
     open val actionEndDateTimeUtc: ZonedDateTime? = null,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
+    open val completion: ActionCompletionEnum? = null,
     open val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
     open val department: String? = null,
     open val facade: String? = null,

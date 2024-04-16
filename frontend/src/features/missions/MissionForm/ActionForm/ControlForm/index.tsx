@@ -1,3 +1,5 @@
+import { actionFactory } from '@features/missions/Missions.helpers'
+import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   customDayjs,
   FormikNumberInput,
@@ -11,26 +13,43 @@ import {
   Icon,
   Size,
   THEME,
-  Toggle
+  Toggle,
+  pluralize,
+  Button
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
 import { MultiPointPicker } from './MultiPointPicker'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domain/entities/controlPlan'
-import { type Mission, type EnvActionControl, ActionTypeEnum } from '../../../../../domain/entities/missions'
+import {
+  type Mission,
+  type EnvActionControl,
+  ActionTypeEnum,
+  CompletionStatus
+} from '../../../../../domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
-import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
-import { FormTitle, Separator } from '../../style'
-import { FormBody, Header, StyledDeleteButton, TitleWithIcon } from '../style'
+import { HIDDEN_ERROR } from '../../constants'
+import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
+import { Separator } from '../../style'
+import { MissingFieldsText } from '../MissingFieldsText'
+import {
+  ActionThemes,
+  ActionTitle,
+  ActionFormBody,
+  Header,
+  HeaderButtons,
+  StyledDeleteIconButton,
+  TitleWithIcon
+} from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
 export function ControlForm({
@@ -46,14 +65,19 @@ export function ControlForm({
     errors,
     setFieldValue,
     setValues,
-    values: { attachedReportings, envActions, startDateTimeUtc }
+    values: { attachedReportings, endDateTimeUtc, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionControl>>()
+
+  const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
   const currentAction = envActions[envActionIndex]
   const actionDate =
     envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
   const actualYearForThemes = customDayjs(actionDate).year()
+  const themeIds = useMemo(() => currentAction?.controlPlans.map(controlPlan => controlPlan.themeId), [currentAction])
+  const { themes } = useGetControlPlans()
+  const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
@@ -153,6 +177,15 @@ export function ControlForm({
     setCurrentActionIndex(undefined)
     removeControlAction()
   }
+
+  const duplicateControl = useCallback(() => {
+    if (!currentAction) {
+      return
+    }
+    const duplicatedAction = actionFactory(currentAction)
+    setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
+  }, [currentAction, setFieldValue, envActions])
+
   const updateIsControlAttachedToReporting = (checked: boolean | undefined) => {
     setIsReportingListVisible(checked ?? false)
     if (!checked) {
@@ -186,31 +219,48 @@ export function ControlForm({
     }
   }
 
+  useEffect(() => {
+    if (actionsMissingFields[currentActionIndex] === 0 && currentAction?.completion === CompletionStatus.TO_COMPLETE) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.COMPLETED)
+
+      return
+    }
+
+    if (actionsMissingFields[currentActionIndex] > 0 && currentAction?.completion === CompletionStatus.COMPLETED) {
+      setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.TO_COMPLETE)
+    }
+  }, [actionsMissingFields, setFieldValue, currentActionIndex, currentAction?.completion, envActionIndex])
+
   return (
     <>
       <Header>
         <TitleWithIcon>
           <Icon.ControlUnit color={THEME.color.gunMetal} />
 
-          <FormTitle>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</FormTitle>
-          <SubTitle>
-            &nbsp;(
-            {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc, false)})
-          </SubTitle>
+          <ActionTitle>{pluralize('Contrôle', actionNumberOfControls ?? 0)}</ActionTitle>
+          <ActionThemes>{themesAsText}</ActionThemes>
         </TitleWithIcon>
-        <Separator />
+        <HeaderButtons>
+          <Button accent={Accent.SECONDARY} Icon={Icon.Duplicate} onClick={duplicateControl} size={Size.SMALL}>
+            Dupliquer
+          </Button>
 
-        <StyledDeleteButton
-          accent={Accent.SECONDARY}
-          Icon={Icon.Delete}
-          onClick={handleRemoveAction}
-          size={Size.SMALL}
-          title="supprimer"
-        >
-          Supprimer
-        </StyledDeleteButton>
+          <StyledDeleteIconButton
+            accent={Accent.SECONDARY}
+            Icon={Icon.Delete}
+            onClick={handleRemoveAction}
+            size={Size.SMALL}
+            title="supprimer"
+          />
+        </HeaderButtons>
       </Header>
-      <FormBody>
+      <Separator />
+
+      <ActionFormBody>
+        <MissingFieldsText
+          missionEndDate={endDateTimeUtc}
+          totalMissingFields={actionsMissingFields[currentActionIndex]}
+        />
         <div>
           <StyledToggle>
             <Toggle
@@ -258,7 +308,7 @@ export function ControlForm({
             onChange={updateControlDate}
             withTime
           />
-          {actionStartDateTimeUtcErrorMessage && actionStartDateTimeUtcErrorMessage.length > 1 && (
+          {actionStartDateTimeUtcErrorMessage && actionStartDateTimeUtcErrorMessage !== HIDDEN_ERROR && (
             <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>
           )}
         </div>
@@ -272,7 +322,7 @@ export function ControlForm({
             isErrorMessageHidden
             isLight
             isRequired
-            label="Nombre total de contrôles"
+            label="Nb total de contrôles"
             min={1}
             name={`envActions.${envActionIndex}.actionNumberOfControls`}
           />
@@ -316,7 +366,7 @@ export function ControlForm({
           name={`envActions[${envActionIndex}].observations`}
         />
         <OtherControlTypesForm currentActionIndex={envActionIndex} />
-      </FormBody>
+      </ActionFormBody>
     </>
   )
 }
@@ -341,9 +391,4 @@ const ActionSummary = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
-`
-
-const SubTitle = styled.div`
-  font-size: 16px;
-  display: inline-block;
 `

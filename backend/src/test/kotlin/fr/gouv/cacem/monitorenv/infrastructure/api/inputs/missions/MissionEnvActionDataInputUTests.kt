@@ -1,4 +1,5 @@
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
@@ -27,6 +28,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 actionNumberOfControls = 3,
@@ -51,6 +53,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 observations = "Observations",
@@ -70,6 +73,7 @@ class MissionEnvActionDataInputUTests {
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
                 reportingIds = Optional.empty(),
             )
@@ -87,6 +91,7 @@ class MissionEnvActionDataInputUTests {
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
                 reportingIds = Optional.of(listOf(1, 2, 3)),
             )
@@ -102,6 +107,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 observations = "Observations",
@@ -119,6 +125,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 actionNumberOfControls = 3,
@@ -140,6 +147,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 actionNumberOfControls = 3,

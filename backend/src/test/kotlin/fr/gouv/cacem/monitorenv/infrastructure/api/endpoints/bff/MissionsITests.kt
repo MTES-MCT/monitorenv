@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -177,6 +178,7 @@ class MissionsITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 controlPlans =
                 listOf(
                     EnvActionControlPlanEntity(
@@ -491,6 +493,7 @@ class MissionsITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 controlPlans =
                 listOf(
                     EnvActionControlPlanEntity(
@@ -807,6 +810,7 @@ class MissionsITests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
+                completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 actionNumberOfControls = 4,
                 reportingIds = Optional.of(listOf(1)),

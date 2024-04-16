@@ -14,6 +14,7 @@ type MissionsFilter = {
   seaFronts?: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
+  withEnvActions?: boolean
 }
 
 type CanDeleteMissionResponseType = {

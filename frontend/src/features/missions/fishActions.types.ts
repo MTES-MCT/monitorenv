@@ -1,7 +1,10 @@
+import type { CompletionStatus } from 'domain/entities/missions'
+
 export namespace FishMissionAction {
   export interface MissionAction {
     actionDatetimeUtc: string
     actionType: MissionActionType
+    completion: CompletionStatus
     id: number
     latitude: number
     longitude: number

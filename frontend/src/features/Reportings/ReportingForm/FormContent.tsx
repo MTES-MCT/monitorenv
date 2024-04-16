@@ -221,7 +221,7 @@ export function FormContent({
           )}
         </StyledThemeContainer>
 
-        <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />
+        <Validity mustIncreaseValidity={mustIncreaseValidity} />
 
         <StyledFormikTextInput label="Saisi par" name="openBy" />
 

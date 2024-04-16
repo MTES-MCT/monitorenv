@@ -1,9 +1,9 @@
 import { CellActionThemes } from '../CellActionThemes'
+import { CellCompletionStatus } from '../CellCompletionStatus'
 import { CellEditMission } from '../CellEditMission'
 import { CellLocalizeMission } from '../CellLocalizeMission'
 import { CellStatus } from '../CellStatus'
 import { getDateCell } from '../getDateCell'
-import { getMissionSourceCell } from '../getMissionSourceCell'
 import { getMissionTypeCell } from '../getMissionTypeCell'
 import { getNumberOfControlsCell } from '../getNumberOfControlsCell'
 import { getResourcesCell } from '../getResourcesCell'
@@ -15,7 +15,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
-    size: 180
+    size: 140
   },
   {
     accessorFn: row => row.endDateTimeUtc,
@@ -23,32 +23,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
-    size: 180
-  },
-  {
-    accessorFn: row => row.missionSource,
-    cell: info => getMissionSourceCell(info.getValue()),
-    enableSorting: true,
-    header: () => 'Origine',
-    id: 'missionSource',
-    size: 90
-  },
-  {
-    accessorFn: row => row.controlUnits,
-    cell: info => getResourcesCell(info.getValue()),
-    enableSorting: false,
-    header: () => 'Unité (Administration)',
-    id: 'unitAndAdministration',
-    maxSize: 280,
-    minSize: 230
-  },
-  {
-    accessorFn: row => row.missionTypes,
-    cell: info => getMissionTypeCell(info.getValue()),
-    enableSorting: false,
-    header: () => 'Type',
-    id: 'type',
-    size: 90
+    size: 140
   },
   {
     accessorFn: row => row.facade,
@@ -56,25 +31,40 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Facade',
     id: 'seaFront',
-    size: 100
+    size: 96
   },
+  {
+    accessorFn: row => row.missionTypes,
+    cell: info => getMissionTypeCell(info.getValue()),
+    enableSorting: false,
+    header: () => 'Type',
+    id: 'type',
+    size: 120
+  },
+  {
+    accessorFn: row => row.controlUnits,
+    cell: info => getResourcesCell(info.getValue()),
+    enableSorting: false,
+    header: () => 'Unité (Administration)',
+    id: 'unitAndAdministration',
+    size: 310
+  },
+
   {
     accessorFn: row => row.envActions,
     cell: info => <CellActionThemes envActions={info.getValue()} />,
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    maxSize: 280,
-    minSize: 100,
-    size: 230
+    size: 544
   },
   {
     accessorFn: row => row.envActions,
     cell: info => getNumberOfControlsCell(info.getValue()),
     enableSorting: false,
-    header: () => 'Nbre contrôles',
+    header: () => 'Contrôles',
     id: 'controls',
-    size: 110
+    size: 100
   },
   {
     accessorFn: row => row.isClosed,
@@ -83,6 +73,14 @@ export const Columns = [
     header: () => 'Statut',
     id: 'status',
     size: 120
+  },
+  {
+    accessorFn: row => row,
+    cell: ({ row }) => <CellCompletionStatus row={row} />,
+    enableSorting: false,
+    header: () => 'État données',
+    id: 'completion',
+    size: 136
   },
   {
     accessorFn: row => row.geom,
@@ -98,6 +96,6 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'edit',
-    size: 100
+    size: 55
   }
 ]

@@ -287,6 +287,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
+    cy.getDataCy('action-missing-fields-text').contains('2 champs nécessaires aux statistiques à compléter')
+
     cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click({ force: true }) // id 105
 
@@ -296,16 +298,23 @@ context('Side Window > Mission Form > Mission actions', () => {
       .contains("Découverte d'une épave maritime")
       .click({ force: true }) // id 128
     cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
+
+    cy.getDataCy('action-all-fields-are-filled-text').should('exist')
+
     // Add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
+    cy.getDataCy('action-missing-fields-text').contains('6 champs nécessaires aux statistiques à compléter')
+
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
+
+    cy.wait(250)
     // Then
     cy.waitForLastRequest('@updateMission', {}, 5, 0, response => {
       expect(response && response.statusCode).equal(200)
@@ -332,17 +341,23 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.intercept('PUT', `/bff/v1/missions/${id}`).as('updateMissionTwo')
       cy.fill('Date de fin (UTC)', [2023, 5, 28, 14, 15])
 
-      cy.wait('@updateMissionTwo').then(({ response: newResponse }) => {
+      cy.getDataCy('completion-mission-status-tag-to-completed-mission-ended').should('exist')
+
+      cy.waitForLastRequest('@updateMissionTwo', {}, 5, 0, newResponse => {
         const { envActions: updatedEnvActions } = newResponse && newResponse.body
         expect(updatedEnvActions.length).equal(2)
 
         // control
         const updatedControl = updatedEnvActions[0]
-        expect(updatedControl.controlPlans.length).equal(0)
+        expect(updatedControl.controlPlans[0].themeId).equal(null)
+        expect(updatedControl.controlPlans[0].subThemeIds.length).equal(0)
 
         // surveillance
         const updatedSurveillance = updatedEnvActions[1]
-        expect(updatedSurveillance.controlPlans.length).equal(0)
+        expect(updatedSurveillance.controlPlans[0].themeId).equal(null)
+        expect(updatedSurveillance.controlPlans[0].subThemeIds.length).equal(0)
+
+        cy.getDataCy('completion-mission-status-tag-to-completed-mission-ended').should('exist')
       })
     })
   })
