@@ -22,7 +22,7 @@ export const missionZoneStyle = new Style({
   })
 })
 
-const missionWithCentroidStyleFactory = (status, type) => [
+const missionIconStyle = (status, type, zIndex) => [
   new Style({
     geometry: feature => {
       const extent = feature?.getGeometry()?.getExtent()
@@ -35,11 +35,11 @@ const missionWithCentroidStyleFactory = (status, type) => [
       scale: 0.5,
       src: `mission/${status}_${type}.png`
     }),
-    zIndex: 2
+    zIndex
   })
 ]
 
-export const missionWithCentroidStyleFn = feature => {
+export const missionStyleFn = feature => {
   const missionStatus = feature.get('missionStatus') as MissionStatusEnum
   const missionTypes = feature.get('missionTypes') as MissionTypeEnum[]
 
@@ -47,15 +47,13 @@ export const missionWithCentroidStyleFn = feature => {
 
   switch (missionStatus) {
     case MissionStatusEnum.UPCOMING:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.UPCOMING, missionTypeLabel)
+      return missionIconStyle(MissionStatusEnum.UPCOMING, missionTypeLabel, 4)
     case MissionStatusEnum.PENDING:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.PENDING, missionTypeLabel)
+      return missionIconStyle(MissionStatusEnum.PENDING, missionTypeLabel, 3)
     case MissionStatusEnum.ENDED:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.ENDED, missionTypeLabel)
-    case MissionStatusEnum.CLOSED:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.CLOSED, missionTypeLabel)
+      return missionIconStyle(MissionStatusEnum.ENDED, missionTypeLabel, 2)
     default:
-      return missionWithCentroidStyleFactory(MissionStatusEnum.CLOSED, missionTypeLabel)
+      return missionIconStyle(MissionStatusEnum.ENDED, missionTypeLabel, 2)
   }
 }
 
@@ -274,7 +272,7 @@ const missionCircleStyle = new Style({
 
 export const selectedMissionStyle = feature => [
   ...selectedMissionZoneStyle,
-  ...missionWithCentroidStyleFn(feature),
+  ...missionStyleFn(feature),
   ...missionToReportingsLinkStyle(feature),
   missionCircleStyle
 ]

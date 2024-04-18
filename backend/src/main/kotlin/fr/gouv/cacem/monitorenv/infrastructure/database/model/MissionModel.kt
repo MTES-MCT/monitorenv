@@ -142,8 +142,8 @@ class MissionModel(
     @OrderBy("id")
     val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
 
-    @Column(name = "closed_by")
-    val closedBy: String? = null,
+    @Column(name = "completed_by")
+    val completedBy: String? = null,
 
     @Column(name = "created_at_utc", updatable = false)
     @CreationTimestamp
@@ -173,9 +173,6 @@ class MissionModel(
 
     @Column(name = "has_mission_order", nullable = false)
     val hasMissionOrder: Boolean,
-
-    @Column(name = "closed", nullable = false)
-    val isClosed: Boolean,
 
     @Column(name = "deleted", nullable = false)
     val isDeleted: Boolean,
@@ -234,7 +231,7 @@ class MissionModel(
 
         return MissionEntity(
             id = id,
-            closedBy = closedBy,
+            completedBy = completedBy,
             controlUnits = mappedControlUnits ?: emptyList(),
             endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             createdAtUtc = createdAtUtc?.atZone(UTC),
@@ -243,7 +240,6 @@ class MissionModel(
             facade = facade,
             geom = geom,
             hasMissionOrder = hasMissionOrder,
-            isClosed = isClosed,
             isDeleted = isDeleted,
             isGeometryComputedFromControls = isGeometryComputedFromControls,
             isUnderJdp = isUnderJdp,
@@ -333,12 +329,11 @@ class MissionModel(
             val missionModel =
                 MissionModel(
                     id = mission.id,
-                    closedBy = mission.closedBy,
+                    completedBy = mission.completedBy,
                     endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
                     facade = mission.facade,
                     geom = mission.geom,
                     hasMissionOrder = mission.hasMissionOrder,
-                    isClosed = mission.isClosed,
                     isDeleted = false,
                     isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
                     isUnderJdp = mission.isUnderJdp,

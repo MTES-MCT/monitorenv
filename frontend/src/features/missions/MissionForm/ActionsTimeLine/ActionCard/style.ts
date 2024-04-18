@@ -8,16 +8,23 @@ export const Card = styled.div`
 `
 
 export const Action = styled.div`
+  align-items: center;
   display: flex;
+  flex-direction: row;
 `
 export const TimeLine = styled.div<{ $isFishAction: boolean }>`
+  background: ${p => p.theme.color.cultured};
   display: flex;
-  margin-right: 16px;
+  margin: 16px 16px 16px 0px;
   font-size: 13px;
   flex-direction: column;
+  -webkit-box-pack: center;
   justify-content: center;
-  width: 54px;
-  ${p => p.$isFishAction && `margin-bottom: 20px;`}
+  width: 60px;
+  padding: 16px 0px;
+  z-index: 1;
+  position: relative;
+  ${p => p.$isFishAction && `padding-bottom: 20px;`}
 `
 
 export const ActionSummaryWrapper = styled.div<{ $hasError?: boolean; $selected?: boolean; $type?: string }>`

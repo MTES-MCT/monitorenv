@@ -1,7 +1,8 @@
+import { getIsMissionEnded } from '@features/missions/utils'
 import * as Yup from 'yup'
 
-import { getClosedEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
-import { getClosedEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema } from './Surveillance'
+import { getCompletionEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
+import { getCompletionEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema } from './Surveillance'
 import {
   ActionTypeEnum,
   type EnvActionNote,
@@ -35,7 +36,7 @@ const ControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = Yup.object()
   })
   .defined()
 
-const ClosedControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = ControlUnitSchema.shape({
+const CompletionControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = ControlUnitSchema.shape({
   contact: Yup.string().nullable().notRequired()
 }).defined()
 
@@ -61,12 +62,12 @@ const NewEnvActionSchema = Yup.lazy((value, context) => {
   return Yup.object().required()
 })
 
-export const ClosedEnvActionSchema = Yup.lazy((value, context) => {
+export const CompletionEnvActionSchema = Yup.lazy((value, context) => {
   if (value.actionType === ActionTypeEnum.CONTROL) {
-    return getClosedEnvActionControlSchema(context)
+    return getCompletionEnvActionControlSchema(context)
   }
   if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
-    return getClosedEnvActionSurveillanceSchema(context)
+    return getCompletionEnvActionSurveillanceSchema(context)
   }
   if (value.actionType === ActionTypeEnum.NOTE) {
     return EnvActionNoteSchema
@@ -77,7 +78,10 @@ export const ClosedEnvActionSchema = Yup.lazy((value, context) => {
 
 const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
-    closedBy: Yup.string().nullable(),
+    completedBy: Yup.string()
+      .min(3, 'Minimum 3 lettres pour le trigramme')
+      .max(3, 'Maximum 3 lettres pour le trigramme')
+      .nullable(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.date()
       .nullable()
@@ -91,34 +95,27 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
       .of(NewEnvActionSchema as any)
       .nullable(),
     geom: Yup.object().nullable(),
-    isClosed: Yup.boolean().oneOf([false]).required(),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
-      .min(3, 'le Trigramme doit comporter 3 lettres')
-      .max(3, 'le Trigramme doit comporter 3 lettres')
-      .nullable()
-      // TODO [Missions] Delete when deploying the auto-save feature
-      .required(HIDDEN_ERROR),
+      .min(3, 'Minimum 3 lettres pour le trigramme')
+      .max(3, 'Maximum 3 lettres pour le trigramme')
+      .nullable(),
     startDateTimeUtc: Yup.date().required(HIDDEN_ERROR)
   })
   .required()
 
-const ClosedMissionSchema = NewMissionSchema.shape({
-  closedBy: Yup.string()
-    .min(3, 'Minimum 3 lettres pour le Trigramme')
-    .max(3, 'Maximum 3 lettres pour le Trigramme')
-    .nullable()
-    .required(HIDDEN_ERROR),
-  controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
+const CompletionMissionSchema = NewMissionSchema.shape({
+  controlUnits: Yup.array().of(CompletionControlUnitSchema).ensure().defined().min(1),
   envActions: Yup.array()
-    .of(ClosedEnvActionSchema as any)
-    .nullable(),
-  isClosed: Yup.boolean().oneOf([true]).required()
+    .of(CompletionEnvActionSchema as any)
+    .nullable()
 })
 
 export const MissionSchema = Yup.lazy(value => {
-  if (value.isClosed) {
-    return ClosedMissionSchema
+  const isMissionEnded = getIsMissionEnded(value.endDateTimeUtc)
+
+  if (isMissionEnded) {
+    return CompletionMissionSchema
   }
 
   return NewMissionSchema

@@ -13,7 +13,7 @@ data class ReportingMissionDataOutput(
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
     val openBy: String? = null,
-    val closedBy: String? = null,
+    val completedBy: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
     val facade: String? = null,
@@ -22,7 +22,6 @@ data class ReportingMissionDataOutput(
     val endDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionEntity>? = null,
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
 ) {
@@ -35,7 +34,7 @@ data class ReportingMissionDataOutput(
                 missionTypes = mission.missionTypes,
                 controlUnits = mission.controlUnits,
                 openBy = mission.openBy,
-                closedBy = mission.closedBy,
+                completedBy = mission.completedBy,
                 observationsCacem = mission.observationsCacem,
                 observationsCnsp = mission.observationsCnsp,
                 facade = mission.facade,
@@ -44,7 +43,6 @@ data class ReportingMissionDataOutput(
                 endDateTimeUtc = mission.endDateTimeUtc,
                 envActions = mission.envActions,
                 missionSource = mission.missionSource,
-                isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
             )

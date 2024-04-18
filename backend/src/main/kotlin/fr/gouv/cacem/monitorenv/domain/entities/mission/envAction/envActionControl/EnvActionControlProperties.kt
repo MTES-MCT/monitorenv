@@ -20,6 +20,7 @@ data class EnvActionControlProperties(
         actionEndDateTimeUtc: ZonedDateTime?,
         actionStartDateTimeUtc: ZonedDateTime?,
         controlPlans: List<EnvActionControlPlanEntity>?,
+        completedBy: String?,
         completion: ActionCompletionEnum?,
         department: String?,
         facade: String?,
@@ -28,6 +29,7 @@ data class EnvActionControlProperties(
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
+        openBy: String?,
     ) =
         EnvActionControlEntity(
             id = id,
@@ -35,6 +37,7 @@ data class EnvActionControlProperties(
             actionNumberOfControls = actionNumberOfControls,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionTargetType = actionTargetType,
+            completedBy = completedBy,
             completion = completion,
             controlPlans = controlPlans,
             department = department,
@@ -48,6 +51,7 @@ data class EnvActionControlProperties(
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
             observations = observations,
+            openBy = openBy,
             vehicleType = vehicleType,
         )
 

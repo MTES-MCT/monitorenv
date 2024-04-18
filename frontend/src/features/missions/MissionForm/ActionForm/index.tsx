@@ -106,7 +106,6 @@ const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 32px 19px 32px 32px;
-
   color: ${p => p.theme.color.slateGray};
   background-color: ${p => p.theme.color.gainsboro};
   overflow-y: auto;

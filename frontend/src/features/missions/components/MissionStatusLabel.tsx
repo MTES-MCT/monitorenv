@@ -29,7 +29,7 @@ export function MissionStatusLabel({ missionStatus }) {
       )
 
     default:
-      return <StatusWrapper color={missionStatusLabels.CLOSED.borderColor}>No status</StatusWrapper>
+      return null
   }
 }
 const StatusWrapper = styled.div<{ color: string; smallMargin?: boolean }>`

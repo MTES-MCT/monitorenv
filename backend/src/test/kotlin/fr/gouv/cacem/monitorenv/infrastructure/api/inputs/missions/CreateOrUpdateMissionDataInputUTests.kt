@@ -30,6 +30,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completedBy = "ABC",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
@@ -38,6 +39,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
+                openBy = "DEF",
                 reportingIds = Optional.of(listOf(1)),
             )
         val envActionSurveillance =
@@ -46,10 +48,12 @@ class CreateOrUpdateMissionDataInputUTests {
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 observations = "Observations",
+                openBy = "ABC",
                 reportingIds = Optional.of(listOf(2, 3)),
             )
         val envActionNote =
@@ -68,7 +72,6 @@ class CreateOrUpdateMissionDataInputUTests {
                 facade = "Outre-Mer",
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(),
                 envActions = listOf(envActionControl, envActionSurveillance, envActionNote),

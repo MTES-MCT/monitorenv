@@ -12,12 +12,14 @@ data class MissionEnvActionSurveillanceDataOutput(
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.SURVEILLANCE,
+    val completedBy: String? = null,
     val completion: ActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = null,
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
     val observations: String? = null,
+    val openBy: String? = null,
     val reportingIds: List<Int>,
 ) :
     MissionEnvActionDataOutput(
@@ -34,14 +36,24 @@ data class MissionEnvActionSurveillanceDataOutput(
                 id = envActionSurveillanceEntity.id,
                 actionEndDateTimeUtc = envActionSurveillanceEntity.actionEndDateTimeUtc,
                 actionStartDateTimeUtc = envActionSurveillanceEntity.actionStartDateTimeUtc,
+                completedBy = envActionSurveillanceEntity.completedBy,
                 completion = envActionSurveillanceEntity.completion,
                 controlPlans =
                 envActionSurveillanceEntity.controlPlans?.let { plans ->
                     if (plans.isNotEmpty()) {
-                        plans.map { MissionEnvActionControlPlanDataOutput.fromEnvActionControlPlanEntity(it) }
+                        plans.map {
+                            MissionEnvActionControlPlanDataOutput
+                                .fromEnvActionControlPlanEntity(it)
+                        }
                     } else {
-                        // If the array is empty, return a list containing the default object
-                        val defaultControlPlans = MissionEnvActionControlPlanDataOutput(null, listOf(), listOf())
+                        // If the array is empty, return a list containing the
+                        // default object
+                        val defaultControlPlans =
+                            MissionEnvActionControlPlanDataOutput(
+                                null,
+                                listOf(),
+                                listOf(),
+                            )
                         listOf(defaultControlPlans)
                     }
                 },
@@ -49,6 +61,7 @@ data class MissionEnvActionSurveillanceDataOutput(
                 facade = envActionSurveillanceEntity.facade,
                 geom = envActionSurveillanceEntity.geom,
                 observations = envActionSurveillanceEntity.observations,
+                openBy = envActionSurveillanceEntity.openBy,
                 reportingIds = reportingIds,
             )
     }

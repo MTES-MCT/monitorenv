@@ -146,7 +146,6 @@ export const vesselTypeLabel: Record<VesselTypeEnum, string> = {
 }
 
 export enum MissionStatusEnum {
-  CLOSED = 'CLOSED',
   ENDED = 'ENDED',
   PENDING = 'PENDING',
   UPCOMING = 'UPCOMING'
@@ -161,12 +160,6 @@ export enum MissionStatusLabel {
 }
 
 export const missionStatusLabels = {
-  CLOSED: {
-    borderColor: THEME.color.slateGray,
-    code: 'CLOSED',
-    color: THEME.color.white,
-    libelle: 'Cloturée'
-  },
   ENDED: {
     code: 'ENDED',
     color: THEME.color.gunMetal,
@@ -234,7 +227,7 @@ export enum ActionSource {
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
   attachedReportings: ReportingDetailed[]
-  closedBy: string
+  completedBy: string
   controlUnits: LegacyControlUnit[]
   createdAtUtc?: string | undefined
   detachedReportingIds: number[]
@@ -246,7 +239,6 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   geom?: GeoJSON.MultiPolygon
   hasMissionOrder?: boolean
   id: number
-  isClosed: boolean
   isGeometryComputedFromControls: boolean
   isUnderJdp?: boolean
   missionSource: MissionSourceEnum
@@ -278,6 +270,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
+  completedBy: string
   completion: CompletionStatus
   controlPlans: ControlPlansData[]
   geom?: GeoJSON.MultiPolygon | GeoJSON.MultiPoint
@@ -287,6 +280,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
   isSeafarersControl?: boolean
   observations: string | null
+  openBy: string
   reportingIds: number[]
   vehicleType?: string
 }
@@ -297,11 +291,13 @@ export type EnvActionControl = NewEnvActionControl & {
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
+  completedBy: string
   completion: CompletionStatus
   controlPlans: ControlPlansData[]
   durationMatchesMission?: boolean
   geom?: GeoJSON.MultiPolygon
   observations: string | null
+  openBy: string
   reportingIds: number[]
 }
 
@@ -330,7 +326,7 @@ export type Infraction = NewInfraction & {
 }
 
 export type EnvActionForTimeline = Partial<EnvAction> & {
-  actionSource: string
+  actionSource: ActionSource
   formattedReportingId: string
   formattedReportingIds: string[]
   timelineDate?: string

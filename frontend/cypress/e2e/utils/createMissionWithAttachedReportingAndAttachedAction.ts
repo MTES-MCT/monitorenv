@@ -61,28 +61,37 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.fill('Unité 1', 'BN Toulon')
 
-    cy.get('*[data-cy="control-unit-contact"]').first().type('Contact 012345')
-
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
-    return cy.waitForLastRequest('@createMission', {}, 5, undefined, missionResponse => {
-      const missionId = missionResponse.body.id
-      cy.clickButton('Lier un signalement')
+    return cy.waitForLastRequest(
+      '@createMission',
+      {
+        body: {
+          missionTypes: ['SEA']
+        }
+      },
+      5,
+      undefined,
+      missionResponse => {
+        const missionId = missionResponse.body.id
+        cy.clickButton('Lier un signalement')
 
-      dispatch(
-        attachReportingToMissionSliceActions.setAttachedReportings([
-          {
-            ...reporting,
-            missionId
-          }
-        ])
-      )
+        dispatch(
+          attachReportingToMissionSliceActions.setAttachedReportings([
+            {
+              ...reporting,
+              missionId
+            }
+          ])
+        )
 
-      cy.clickButton('Ajouter un contrôle')
+        cy.clickButton('Ajouter un contrôle')
 
-      return Promise.resolve(missionResponse)
-    })
+        cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
+        cy.wait(250)
+
+        return Promise.resolve(missionResponse)
+      }
+    )
   })
 }

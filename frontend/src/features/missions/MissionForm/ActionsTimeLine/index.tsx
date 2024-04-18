@@ -1,6 +1,6 @@
 import { customDayjs as dayjs, Dropdown, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { ActionCard } from './ActionCard'
@@ -14,6 +14,8 @@ import type { DetachedReporting, Reporting } from '../../../../domain/entities/r
 import type { FishMissionAction } from '../../fishActions.types'
 
 export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
+  const actionTimelineRef = useRef<HTMLDivElement>(null)
+  const actionTimelineHeight = Number(actionTimelineRef.current?.clientHeight) - 40 || undefined
   const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const envActions = values?.envActions as EnvAction[]
@@ -142,30 +144,33 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
         <AttachReporting />
       </TitleWrapper>
       <Separator />
-      <ActionsTimeline>
+      <ActionsTimeline ref={actionTimelineRef}>
+        <VerticalLine $height={actionTimelineHeight} />
         {sortedActions ? (
-          sortedActions.map((action, index) => {
-            const envActionsIndex = envActions?.findIndex(a => a.id === action.id)
-            const envActionsErrors =
-              errors?.envActions &&
-              envActionsIndex !== undefined &&
-              envActionsIndex >= 0 &&
-              errors?.envActions[envActionsIndex]
+          <>
+            {sortedActions.map((action, index) => {
+              const envActionsIndex = envActions?.findIndex(a => a.id === action.id)
+              const envActionsErrors =
+                errors?.envActions &&
+                envActionsIndex !== undefined &&
+                envActionsIndex >= 0 &&
+                errors?.envActions[envActionsIndex]
 
-            return (
-              <ActionCard
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                action={action}
-                duplicateAction={() => handleDuplicateAction(action.id)}
-                hasError={!!envActionsErrors}
-                removeAction={() => handleRemoveAction(action.id)}
-                selectAction={() => handleSelectAction(action.id)}
-                selected={String(action.id) === String(currentActionIndex)}
-                setCurrentActionIndex={setCurrentActionIndex}
-              />
-            )
-          })
+              return (
+                <ActionCard
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  action={action}
+                  duplicateAction={() => handleDuplicateAction(action.id)}
+                  hasError={!!envActionsErrors}
+                  removeAction={() => handleRemoveAction(action.id)}
+                  selectAction={() => handleSelectAction(action.id)}
+                  selected={String(action.id) === String(currentActionIndex)}
+                  setCurrentActionIndex={setCurrentActionIndex}
+                />
+              )
+            })}
+          </>
         ) : (
           <NoActionWrapper>
             <NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction>
@@ -194,6 +199,7 @@ const ActionsTimeline = styled.div`
   flex-direction: column;
   gap: 16px;
   margin-top: 16px;
+  position: relative;
 `
 
 const NoActionWrapper = styled.div`
@@ -205,4 +211,12 @@ const NoActionWrapper = styled.div`
 const NoAction = styled.div`
   text-align: center;
   font-style: italic;
+`
+const VerticalLine = styled.div<{ $height?: number }>`
+  border-left: 1px solid ${p => p.theme.color.slateGray};
+  height: ${p => p.$height ?? '0'};
+  left: 4%;
+  margin-top: 16px;
+  position: absolute;
+  width: 1px;
 `

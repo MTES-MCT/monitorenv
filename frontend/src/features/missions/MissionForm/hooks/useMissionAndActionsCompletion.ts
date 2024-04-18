@@ -10,7 +10,7 @@ import {
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 
-import { ClosedEnvActionSchema } from '../Schemas'
+import { CompletionEnvActionSchema } from '../Schemas'
 
 export function useMissionAndActionsCompletion() {
   const { errors, values } = useFormikContext<Mission>()
@@ -21,12 +21,7 @@ export function useMissionAndActionsCompletion() {
   )
 
   const isGeneralInformationsUncomplete = useMemo(
-    () =>
-      !!errors.startDateTimeUtc ||
-      !!errors.endDateTimeUtc ||
-      !!errors.missionTypes ||
-      !!errors.openBy ||
-      !!errors.controlUnits,
+    () => !!errors.startDateTimeUtc || !!errors.endDateTimeUtc || !!errors.missionTypes || !!errors.controlUnits,
     [errors]
   )
 
@@ -47,7 +42,7 @@ export function useMissionAndActionsCompletion() {
 
     return constrolOrSuveillanceActions.reduce((actionsMissingFieldsCollection, action) => {
       try {
-        ClosedEnvActionSchema.validateSync(action, { abortEarly: false })
+        CompletionEnvActionSchema.validateSync(action, { abortEarly: false })
 
         return {
           ...actionsMissingFieldsCollection,

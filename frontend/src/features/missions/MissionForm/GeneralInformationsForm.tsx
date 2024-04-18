@@ -177,12 +177,12 @@ export function GeneralInformationsForm({
           <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
           <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
           <StyledAuthorContainer>
-            <FormikTextInput isErrorMessageHidden isRequired label="Ouvert par" name="openBy" />
-            <FormikTextInput isErrorMessageHidden isRequired label="Clôturé par" name="closedBy" />
+            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
+            <FormikTextInput isErrorMessageHidden label="Complété par" name="completedBy" />
           </StyledAuthorContainer>
           {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
           {errors.openBy && errors.openBy !== HIDDEN_ERROR && <FieldError>{errors.openBy}</FieldError>}
-          {errors.closedBy && errors.closedBy !== HIDDEN_ERROR && <FieldError>{errors.closedBy}</FieldError>}
+          {errors.completedBy && errors.completedBy !== HIDDEN_ERROR && <FieldError>{errors.completedBy}</FieldError>}
         </StyledObservationsContainer>
       </StyledFormWrapper>
     </StyledContainer>
@@ -198,7 +198,6 @@ const StyledFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 16px;
-  max-width: 484px;
   gap: 24px;
 `
 
@@ -214,6 +213,9 @@ const StyledTagsContainer = styled.div`
   flex-direction: column;
   flex-shrink: 0;
   gap: 8px;
+  > span {
+    align-self: end;
+  }
 `
 const DatesAndTagsContainer = styled.div`
   align-items: start;

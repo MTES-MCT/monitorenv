@@ -15,7 +15,8 @@ import {
   THEME,
   Label,
   Toggle,
-  Button
+  Button,
+  FormikTextInput
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -43,7 +44,8 @@ import {
   Header,
   HeaderButtons,
   StyledDeleteIconButton,
-  TitleWithIcon
+  TitleWithIcon,
+  StyledAuthorContainer
 } from '../style'
 import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
@@ -296,6 +298,33 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </FlexSelectorWrapper>
 
         <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
+        <div>
+          <StyledAuthorContainer>
+            <FormikTextInput
+              data-cy="surveillance-open-by"
+              isErrorMessageHidden
+              isLight
+              isRequired
+              label="Ouvert par"
+              name={`envActions[${envActionIndex}].openBy`}
+            />
+            <FormikTextInput
+              data-cy="surveillance-completed-by"
+              isErrorMessageHidden
+              isLight
+              isRequired
+              label="Complété par"
+              name={`envActions[${envActionIndex}].completedBy`}
+            />
+          </StyledAuthorContainer>
+          {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
+          {actionErrors?.openBy && actionErrors?.openBy !== HIDDEN_ERROR && (
+            <FieldError>{actionErrors.openBy}</FieldError>
+          )}
+          {actionErrors?.completedBy && actionErrors?.completedBy !== HIDDEN_ERROR && (
+            <FieldError>{actionErrors.completedBy}</FieldError>
+          )}
+        </div>
       </ActionFormBody>
     </>
   )

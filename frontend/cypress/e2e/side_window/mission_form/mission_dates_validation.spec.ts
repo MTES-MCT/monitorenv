@@ -11,13 +11,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     })
   })
 
-  it('A mission should be created and closed with surveillances and valid dates', () => {
+  it('A mission should be created with surveillances and valid dates', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="add-mission"]').click()
-
-    cy.get('form').submit()
-    cy.wait(100)
 
     // When
     cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
@@ -26,19 +23,16 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes1"]').click({ force: true })
 
     cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(250)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
     cy.wait(500)
-    cy.fill('Clôturé par', 'PCF')
-    cy.wait(250)
 
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
+    cy.getDataCy('surveillance-open-by').type('ABC')
     cy.get('*[data-cy="envaction-theme-selector"]').click()
     cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
@@ -96,6 +90,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
+    cy.getDataCy('surveillance-open-by').type('ABC')
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage individuel').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
@@ -109,7 +104,6 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // Start date of surveillance is before start date of mission
     cy.fill('Date et heure de début de surveillance', [2024, 5, 25, 23, 35])
-    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être postérieure à celle de début de mission')
 
@@ -132,13 +126,45 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
 
     // Valid end date of surveillance
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.fill('Date et heure de fin de surveillance', [2024, 5, 28, 13, 35])
 
     // Then
-    cy.wait('@updateAndCloseMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-    })
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {
+          endDateTimeUtc: '2024-05-28T14:15:00Z',
+          envActions: [
+            {
+              actionEndDateTimeUtc: '2024-05-28T13:35:00.000Z',
+              actionStartDateTimeUtc: '2024-05-26T23:35:00.000Z'
+            },
+            {
+              actionEndDateTimeUtc: '2024-05-28T14:15:00Z',
+              actionStartDateTimeUtc: '2024-05-26T12:00:00Z'
+            }
+          ],
+          startDateTimeUtc: '2024-05-26T12:00:00Z'
+        }
+      },
+      5,
+      0,
+      response => {
+        if (!response) {
+          return
+        }
+        expect(response.statusCode).equal(200)
+        const id = response.body.id
+        cy.clickButton('Fermer')
+
+        // clean
+        cy.getDataCy(`edit-mission-${id}`).scrollIntoView().click({ force: true })
+        cy.getDataCy('action-card').eq(0).click()
+        cy.clickButton('Supprimer la mission')
+        cy.clickButton('Confirmer la suppression')
+      }
+    )
   })
 
   it('A mission should be created with same surveillance and mission dates', () => {
@@ -155,35 +181,33 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
     cy.clickOutside()
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
     cy.wait(200)
 
-    cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-    cy.wait('@createMission')
-
     cy.intercept('PUT', `/bff/v1/missions/*`).as('updateMission')
 
-    // Add a second surveillance
+    // Add a surveillance
     cy.wait(200)
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
+    cy.getDataCy('surveillance-open-by').type('ABC')
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
 
     cy.waitForLastRequest(
       '@updateMission',
       {
         body: {
+          endDateTimeUtc: '2024-05-28T14:15:00Z',
           envActions: [
             {
               actionEndDateTimeUtc: '2024-05-28T14:15:00Z',
               actionStartDateTimeUtc: '2024-05-26T12:00:00Z'
             }
-          ]
+          ],
+          startDateTimeUtc: '2024-05-26T12:00:00Z'
         }
       },
       5,
@@ -216,19 +240,17 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes1"]').click({ force: true })
 
     cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-    cy.get('[name="closedBy"]').scrollIntoView().type('PCF')
     cy.wait(250)
 
     // Add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
 
+    cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
@@ -241,8 +263,6 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     // Date is before start date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 25, 23, 35])
-
-    cy.clickButton('Clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date doit être postérieure à celle de début de mission')
 
@@ -252,12 +272,22 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('.Element-FieldError').contains('La date doit être antérieure à celle de fin de mission')
 
     // Valid date
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateAndCloseMission')
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 13, 16])
 
     // Then
-    cy.wait('@updateAndCloseMission').then(({ response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
+      if (!response) {
+        return
+      }
+
       expect(response && response.statusCode).equal(200)
+      const missionId = response.body.id
+      cy.clickButton('Fermer')
+
+      cy.getDataCy(`edit-mission-${missionId}`).click({ force: true })
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
     })
   })
 })

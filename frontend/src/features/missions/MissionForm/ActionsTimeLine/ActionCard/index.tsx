@@ -5,6 +5,7 @@ import { FishActions } from './FishActions'
 import { Action, TimeLine } from './style'
 import { ActionSource, type EnvActionForTimeline } from '../../../../../domain/entities/missions'
 import { getDateAsLocalizedStringExpanded } from '../../../../../utils/getDateAsLocalizedString'
+import { CompletionStatusIcon } from '../CompletionStatusIcon'
 
 import type { DetachedReportingForTimeline, ReportingForTimeline } from '../../../../../domain/entities/reporting'
 import type { MouseEventHandler } from 'react'
@@ -43,6 +44,7 @@ export function ActionCard({
     <Action data-cy="action-card" onClick={onClickCard}>
       <TimeLine $isFishAction={action.actionSource === ActionSource.MONITORFISH}>
         {getDateAsLocalizedStringExpanded(action.timelineDate)}
+        {action.actionSource === ActionSource.MONITORENV && <CompletionStatusIcon action={action} />}
       </TimeLine>
 
       {action.actionSource === ActionSource.MONITORENV && (

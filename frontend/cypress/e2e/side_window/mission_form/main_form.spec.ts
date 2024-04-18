@@ -1,4 +1,6 @@
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
+import { createPendingMission } from '../../utils/createPendingMission'
+import { getMissionEndDateWithTime } from '../../utils/getMissionEndDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 import { visitSideWindow } from '../../utils/visitSideWindow'
 
@@ -41,14 +43,12 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
+    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
+
     cy.fill('Unité 1', 'Cross Etel')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
-
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-
-    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
     // Then
     cy.waitForLastRequest(
@@ -62,9 +62,7 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'Cross Etel'
             }
           ],
-          isClosed: false,
-          missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF'
+          missionTypes: ['SEA', 'LAND']
         }
       },
       5
@@ -144,7 +142,6 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'Cross Etel'
             }
           ],
-          isClosed: false,
           missionTypes: ['SEA', 'LAND'],
           openBy: 'PCF'
         }
@@ -187,37 +184,6 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.wait(500)
   })
 
-  it('A closed mission should be reopenable, editable and saved again', () => {
-    // Given
-    visitSideWindow()
-    cy.wait(200)
-    cy.get('*[data-cy="edit-mission-25"]').click({ force: true })
-
-    cy.intercept('PUT', `/bff/v1/missions/25`).as('updateMission')
-    cy.get('*[data-cy="reopen-mission"]').click()
-
-    // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-      expect(response && response.body.isClosed).equal(false)
-    })
-  })
-
-  it('A closed mission can be saved and stay closed', () => {
-    // Given
-    visitSideWindow()
-    cy.wait(200)
-    cy.get('*[data-cy="edit-mission-38"]').click({ force: true })
-    cy.intercept('PUT', '/bff/v1/missions/38').as('updateMission')
-    cy.fill("Contact de l'unité 1", 'Test')
-
-    // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-      expect(response && response.body.isClosed).equal(true)
-    })
-  })
-
   it('A mission from monitorFish cannot be deleted', () => {
     // Given
     visitSideWindow()
@@ -226,7 +192,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('*[data-cy="select-period-filter"]').click()
     cy.get('div[data-key="MONTH"]').click()
 
-    cy.get('*[data-cy="edit-mission-50"]').click({ force: true })
+    cy.get('*[data-cy="edit-mission-50"]').scrollIntoView().click({ force: true })
 
     // Then
     cy.get('*[data-cy="delete-mission"]').should('be.disabled')
@@ -260,11 +226,11 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('*[data-cy="add-mission"]').click()
 
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const startDate = getUtcDateInMultipleFormats().utcDateTupleWithTime
+    const ennDate = getMissionEndDateWithTime(7, 'day')
 
-    cy.get('[name="missionTypes0"]').click({ force: true })
-    cy.get('[name="missionTypes1"]').click({ force: true })
+    cy.fill('Date de début (UTC)', startDate)
+    cy.fill('Date de fin (UTC)', ennDate)
 
     cy.fill('Unité 1', 'PAM Jeanne Barret')
     cy.wait('@getEngagedControlUnits')
@@ -272,6 +238,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.getDataCy('add-other-control-unit').should('be.disabled')
     cy.clickButton('Oui, la conserver')
+    cy.wait(250)
 
     // we want to test with a second engaged control unit
     cy.getDataCy('add-other-control-unit').should('not.be.disabled')
@@ -281,9 +248,10 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
     cy.clickButton('Oui, la conserver')
 
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
+
+    cy.get('[name="missionTypes0"]').click({ force: true })
+    cy.get('[name="missionTypes1"]').click({ force: true })
 
     // Then
     cy.waitForLastRequest(
@@ -297,9 +265,7 @@ context('Side Window > Mission Form > Main Form', () => {
               name: 'PAM Jeanne Barret'
             }
           ],
-          isClosed: false,
-          missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF'
+          missionTypes: ['SEA', 'LAND']
         }
       },
       5
@@ -315,7 +281,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
     // When
-    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
+    cy.get('*[data-cy="edit-mission-43"]').scrollIntoView().click({ force: true })
 
     // Then
     cy.get('body').should('not.contain', 'Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
@@ -325,87 +291,83 @@ context('Side Window > Mission Form > Main Form', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
-    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
 
-    cy.wait(500)
-    cy.window()
-      .its('mockEventSources' as any)
-      .then(mockEventSources => {
-        mockEventSources['/api/v1/missions/sse'].emitOpen()
-        mockEventSources['/api/v1/missions/sse'].emit(
-          'MISSION_UPDATE',
-          new MessageEvent('MISSION_UPDATE', {
-            bubbles: true,
-            data: JSON.stringify({
-              attachedReportingIds: [],
-              attachedReportings: [],
-              // Changed field
-              closedBy: 'LTH',
-              controlUnits: [
-                {
-                  administration: 'DREAL / DEAL',
-                  contact: 'Full contact',
-                  id: 10018,
-                  isArchived: false,
-                  name: 'DREAL Pays-de-La-Loire',
-                  resources: []
-                }
-              ],
-              detachedReportingIds: [],
-              detachedReportings: [],
-              endDateTimeUtc: '2024-01-08T16:55:41.314507Z',
-              envActions: [],
-              facade: 'NAMO',
-              geom: {
-                coordinates: [
-                  [
-                    [
-                      [-4.14598393, 49.02650252],
-                      [-3.85722498, 48.52088004],
-                      [-3.54255983, 48.92233858],
-                      [-3.86251979, 49.15131242],
-                      [-4.09368042, 49.18079556],
-                      [-4.14598393, 49.02650252]
-                    ]
-                  ]
+    createPendingMission().then(response => {
+      const missionId = response.body.id
+
+      cy.clickButton('Fermer')
+      cy.wait(500)
+      cy.get(`*[data-cy="edit-mission-${missionId}"]`).scrollIntoView().click({ force: true })
+
+      cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')
+      cy.wait(500)
+      cy.window()
+        .its('mockEventSources' as any)
+        .then(mockEventSources => {
+          mockEventSources['/api/v1/missions/sse'].emitOpen()
+          mockEventSources['/api/v1/missions/sse'].emit(
+            'MISSION_UPDATE',
+            new MessageEvent('MISSION_UPDATE', {
+              bubbles: true,
+              data: JSON.stringify({
+                attachedReportingIds: [],
+                attachedReportings: [],
+                // Changed field
+                completedBy: 'LTH',
+                controlUnits: [
+                  {
+                    administration: 'Gendarmerie Nationale',
+                    contact: null,
+                    id: 10020,
+                    isArchived: false,
+                    name: 'BN Toulon',
+                    resources: []
+                  }
                 ],
-                type: 'MultiPolygon'
-              },
-              hasMissionOrder: false,
-              id: 43,
-              isClosed: false,
-              isUnderJdp: false,
-              missionSource: 'MONITORENV',
-              missionTypes: ['SEA'],
-              observationsCacem: 'Anything box film quality. Lot series agent out rule end young pressure.',
-              // Changed field
-              observationsCnsp: 'Encore une observation',
-              // Changed field
-              openBy: 'LTH',
-              startDateTimeUtc: '2024-01-01T06:14:55.887549Z'
+                detachedReportingIds: [],
+                detachedReportings: [],
+                endDateTimeUtc: response.body.endDateTimeUtc,
+                envActions: [],
+                facade: null,
+                geom: null,
+                hasMissionOrder: false,
+                id: missionId,
+                isUnderJdp: false,
+                missionSource: 'MONITORENV',
+                missionTypes: ['SEA'],
+                observationsCacem: null,
+                // Changed field
+                observationsCnsp: 'Encore une observation',
+                // Changed field
+                openBy: 'LTH',
+                startDateTimeUtc: response.body.startDateTimeUtc
+              })
             })
-          })
-        )
-      })
+          )
+        })
 
-    cy.wait(500)
-    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
-    cy.get('[name="missionTypes1"]').click({ force: true })
-    cy.wait(250)
+      cy.wait(1500)
+      cy.get('[name="missionTypes1"]').click({ force: true })
+      cy.wait(250)
 
-    cy.waitForLastRequest(
-      '@updateMission',
-      {
-        body: {
-          closedBy: 'LTH',
-          observationsCnsp: 'Encore une observation',
-          openBy: 'LTH'
-        }
-      },
-      5
-    )
-      .its('response.statusCode')
-      .should('eq', 200)
+      cy.waitForLastRequest(
+        '@updateMission',
+        {
+          body: {
+            completedBy: 'LTH',
+            missionTypes: ['SEA', 'LAND'],
+            observationsCnsp: 'Encore une observation',
+            openBy: 'LTH'
+          }
+        },
+        5
+      )
+        .its('response.statusCode')
+        .should('eq', 200)
+
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
+    })
   })
 
   it('Should keep the existing archived resources when appending new resources', () => {
@@ -426,7 +388,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', '/bff/v1/missions/30').as('getMission')
 
-    cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
+    cy.get('*[data-cy="edit-mission-30"]').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
@@ -444,44 +406,41 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.fill("Contact de l'unité 2", 'Un autre contact')
     cy.wait(250)
 
-    cy.waitForLastRequest(
-      '@updateMission',
-      {
-        body: {
-          controlUnits: [
-            {
-              administration: 'DDTM',
-              contact: 'Un contact',
-              id: 10000,
-              isArchived: false,
-              name: 'Cultures marines – DDTM 40',
-              resources: [
-                { id: 1, name: 'Semi-rigide 1' },
-                { controlUnitId: 10000, id: 13, name: 'Voiture' }
-              ]
-            },
-            {
-              administration: 'DDTM',
-              contact: 'Un autre contact',
-              id: 10002,
-              isArchived: false,
-              name: 'DML 2A',
-              resources: []
-            }
+    cy.clickButton('Enregistrer')
+    cy.wait('@updateMission').then(({ response }) => {
+      if (!response) {
+        return
+      }
+
+      assert.deepEqual(response.body.controlUnits, [
+        {
+          administration: 'DDTM',
+          contact: 'Un contact',
+          id: 10000,
+          isArchived: false,
+          name: 'Cultures marines – DDTM 40',
+          resources: [
+            { controlUnitId: 10000, id: 1, name: 'Semi-rigide 1' },
+            { controlUnitId: 10000, id: 13, name: 'Voiture' }
           ]
+        },
+        {
+          administration: 'DDTM',
+          contact: 'Un autre contact',
+          id: 10002,
+          isArchived: false,
+          name: 'DML 2A',
+          resources: []
         }
-      },
-      5
-    )
-      .its('response.statusCode')
-      .should('eq', 200)
+      ])
+    })
 
     // -------------------------------------------------------------------------
     // Reset
 
     cy.wait(500)
-    cy.clickButton('Fermer')
-    cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
+
+    cy.get('*[data-cy="edit-mission-30"]').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
@@ -505,7 +464,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', '/bff/v1/missions/40').as('getMission')
 
-    cy.get('*[data-cy="edit-mission-40"]').click({ force: true }).wait(500)
+    cy.get('*[data-cy="edit-mission-40"]').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 

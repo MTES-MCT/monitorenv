@@ -51,7 +51,6 @@ class GetEngagedControlUnitsUTests {
                     endDateTimeUtc =
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     isDeleted = false,
-                    isClosed = false,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
@@ -73,7 +72,6 @@ class GetEngagedControlUnitsUTests {
                     endDateTimeUtc =
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     isDeleted = false,
-                    isClosed = false,
                     missionSource = MissionSourceEnum.MONITORFISH,
                     hasMissionOrder = false,
                     isUnderJdp = false,
@@ -83,7 +81,6 @@ class GetEngagedControlUnitsUTests {
 
         given(
             getFullMissions.execute(
-                anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),

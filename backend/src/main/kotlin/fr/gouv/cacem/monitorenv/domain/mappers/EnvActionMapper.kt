@@ -21,6 +21,7 @@ object EnvActionMapper {
         actionEndDateTimeUtc: ZonedDateTime?,
         actionType: ActionTypeEnum,
         actionStartDateTimeUtc: ZonedDateTime?,
+        completedBy: String?,
         completion: ActionCompletionEnum?,
         controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
@@ -30,6 +31,7 @@ object EnvActionMapper {
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
+        openBy: String?,
         value: String?,
     ): EnvActionEntity {
         return try {
@@ -44,11 +46,13 @@ object EnvActionMapper {
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                completedBy = completedBy,
                                 completion = completion,
                                 controlPlans = controlPlans,
                                 department = department,
                                 facade = facade,
                                 geom = geom,
+                                openBy = openBy,
                             )
                     ActionTypeEnum.CONTROL ->
                         mapper.readValue(
@@ -59,6 +63,7 @@ object EnvActionMapper {
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                completedBy = completedBy,
                                 completion = completion,
                                 controlPlans = controlPlans,
                                 department = department,
@@ -70,6 +75,7 @@ object EnvActionMapper {
                                 isSafetyEquipmentAndStandardsComplianceControl =
                                 isSafetyEquipmentAndStandardsComplianceControl,
                                 isSeafarersControl = isSeafarersControl,
+                                openBy = openBy,
                             )
                     ActionTypeEnum.NOTE ->
                         mapper.readValue(

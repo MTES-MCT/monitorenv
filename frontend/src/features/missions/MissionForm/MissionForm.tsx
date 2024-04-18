@@ -4,7 +4,6 @@ import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
-import { useDebouncedCallback } from 'use-debounce'
 
 import { ActionForm } from './ActionForm'
 import { ActionsTimeLine } from './ActionsTimeLine'
@@ -20,9 +19,8 @@ import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
-import { ReopenModal } from './ReopenModal'
 import { missionFormsActions } from './slice'
-import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
+import { isMissionAutoSaveEnabled, validateBeforeOnChange } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
@@ -39,11 +37,10 @@ import type { AtLeast } from '../../../types'
 enum ModalTypes {
   ACTIONS = 'ACTIONS',
   CLOSE = 'CLOSE',
-  DELETE = 'DELETE',
-  REOPEN = 'REOPEN'
+  DELETE = 'DELETE'
 }
 
-type ModalProps = ModalTypes.ACTIONS | ModalTypes.REOPEN | ModalTypes.DELETE | ModalTypes.CLOSE
+type ModalProps = ModalTypes.ACTIONS | ModalTypes.DELETE | ModalTypes.CLOSE
 
 type MissionFormProps = {
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
@@ -52,6 +49,7 @@ type MissionFormProps = {
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
   setShouldValidateOnChange: (boolean) => void
 }
+
 export function MissionForm({
   engagedControlUnit,
   id,
@@ -79,9 +77,12 @@ export function MissionForm({
     if (!isMissionAutoSaveEnabled()) {
       return false
     }
-
     const now = customDayjs()
-    if (selectedMission?.endDateTimeUtc && now.isAfter(selectedMission?.endDateTimeUtc) && selectedMission?.isClosed) {
+    if (
+      selectedMission?.endDateTimeUtc &&
+      now.isAfter(selectedMission?.endDateTimeUtc) &&
+      customDayjs(selectedMission?.endDateTimeUtc) < customDayjs(selectedMission?.endDateTimeUtc).add(2, 'days')
+    ) {
       return false
     }
 
@@ -164,48 +165,6 @@ export function MissionForm({
     })
   }
 
-  const closeMission = () => {
-    validateForm({ ...values, isClosed: true }).then(errors => {
-      setFieldValue('isClosed', true)
-
-      if (isEmpty(errors)) {
-        dispatch(saveMission({ ...values, isClosed: true }, false, true))
-
-        return
-      }
-
-      setShouldValidateOnChange(true)
-    })
-  }
-
-  const reopenMission = () => {
-    validateForm({ ...values, isClosed: false }).then(errors => {
-      setFieldValue('isClosed', false)
-
-      if (isEmpty(errors)) {
-        if (isFormDirty) {
-          return setOpenModal(ModalTypes.REOPEN)
-        }
-
-        return validateReopenMission()
-      }
-
-      return setShouldValidateOnChange(true)
-    })
-  }
-
-  const validateReopenMission = async () => {
-    await dispatch(saveMission({ ...values, isClosed: false }, true, false))
-    dispatch(
-      setToast({
-        containerId: 'sideWindow',
-        message: 'La mission a bien été réouverte',
-        type: 'success'
-      })
-    )
-    setOpenModal(undefined)
-  }
-
   const confirmFormCancelation = () => {
     // when auto save is disabled, and form has changes we want to display specific modal
     if (!isAutoSaveEnabled && dirty && isEmpty(formErrors)) {
@@ -220,28 +179,18 @@ export function MissionForm({
     }
   }
 
-  const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave = false) => {
-    const errors = await validateForm()
-    const isValid = isEmpty(errors)
-
-    if (!isAutoSaveEnabled || !isValid) {
-      return
-    }
-
-    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
-      return
-    }
-
-    if (engagedControlUnit) {
-      return
-    }
-
-    dispatch(saveMission(nextValues, false, false))
-  }, 250)
-
   useEffect(() => {
     if (isNewMission && !engagedControlUnit && previousEngagedControlUnit !== engagedControlUnit) {
-      validateBeforeOnChange(values, true)
+      validateBeforeOnChange(
+        values,
+        true,
+        dispatch,
+        validateForm,
+        isAutoSaveEnabled,
+        engagedControlUnit,
+        selectedMission,
+        missionEvent
+      )
     }
     // we want to trigger the `validateBeforeOnChange` when engagedControlUnit change
     // so when user confirm mission creation even if the control unit is engaged
@@ -271,7 +220,20 @@ export function MissionForm({
 
   return (
     <StyledFormContainer>
-      <FormikEffect onChange={validateBeforeOnChange} />
+      <FormikEffect
+        onChange={nextValues =>
+          validateBeforeOnChange(
+            nextValues,
+            false,
+            dispatch,
+            validateForm,
+            isAutoSaveEnabled,
+            engagedControlUnit,
+            selectedMission,
+            missionEvent
+          )
+        }
+      />
       <FormikSyncMissionFields missionId={id} />
       <CancelEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={sideWindow.showConfirmCancelModal} />
       <CloseEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={openModal === ModalTypes.CLOSE} />
@@ -279,11 +241,6 @@ export function MissionForm({
         onCancel={returnToEdition}
         onConfirm={validateDeleteMission}
         open={openModal === ModalTypes.DELETE}
-      />
-      <ReopenModal
-        onCancel={returnToEdition}
-        onConfirm={validateReopenMission}
-        open={openModal === ModalTypes.REOPEN}
       />
       <ExternalActionsModal
         onClose={returnToEdition}
@@ -307,10 +264,8 @@ export function MissionForm({
 
       <MissionFormBottomBar
         isAutoSaveEnabled={isAutoSaveEnabled}
-        onCloseMission={closeMission}
         onDeleteMission={deleteMission}
         onQuitFormEditing={confirmFormCancelation}
-        onReopenMission={reopenMission}
         onSaveMission={submitMission}
       />
     </StyledFormContainer>

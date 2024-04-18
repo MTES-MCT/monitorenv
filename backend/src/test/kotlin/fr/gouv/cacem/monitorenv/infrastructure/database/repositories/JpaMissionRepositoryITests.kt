@@ -253,7 +253,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
-        assertThat(missions).hasSize(7)
+        assertThat(missions).hasSize(10)
     }
 
     @Test
@@ -287,47 +287,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
             )
-        assertThat(missions).hasSize(15)
-
-        val queryCount = customQueryCountListener!!.getQueryCount()
-        println("Number of Queries Executed: $queryCount")
-    }
-
-    @Test
-    @Transactional
-    fun `findAll Should return filtered missions when status is set to CLOSED`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                seaFronts = null,
-                missionStatuses = listOf("CLOSED"),
-                pageNumber = null,
-                pageSize = null,
-            )
-        assertThat(missions).hasSize(18)
-
-        val queryCount = customQueryCountListener!!.getQueryCount()
-        println("Number of Queries Executed: $queryCount")
-    }
-
-    @Test
-    @Transactional
-    fun `findAll Should return filtered missions when status is set to CLOSED or UPCOMING`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-                missionTypes = null,
-                seaFronts = null,
-                missionStatuses = listOf("CLOSED", "UPCOMING"),
-                pageNumber = null,
-                pageSize = null,
-            )
-        assertThat(missions).hasSize(25)
+        assertThat(missions).hasSize(30)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -348,32 +308,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = 10,
             )
         assertThat(missions).hasSize(10)
-
-        val queryCount = customQueryCountListener!!.getQueryCount()
-        println("Number of Queries Executed: $queryCount")
-    }
-
-    @Test
-    @Transactional
-    fun `findAll should filter missions based on MissionSources`() {
-        // When
-        val missions =
-            jpaMissionRepository.findAllFullMissions(
-                missionSources =
-                listOf(
-                    MissionSourceEnum.MONITORFISH,
-                    MissionSourceEnum.POSEIDON_CACEM,
-                    MissionSourceEnum.POSEIDON_CNSP,
-                ),
-                missionStatuses = null,
-                missionTypes = null,
-                pageNumber = null,
-                pageSize = null,
-                seaFronts = null,
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-                startedBefore = null,
-            )
-        assertThat(missions).hasSize(3)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -412,7 +346,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     id = 10,
                     missionTypes = listOf(MissionTypeEnum.LAND),
                     openBy = "KIM",
-                    closedBy = "TRA",
+                    completedBy = "TRA",
                     facade = "NAMO",
                     observationsCacem =
                     "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
@@ -420,7 +354,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-03-21T12:11:13Z"),
                     endDateTimeUtc = null,
                     geom = polygon,
-                    isClosed = false,
                     isDeleted = false,
                     envActions = listOf(),
                     missionSource = MissionSourceEnum.MONITORENV,
@@ -530,7 +463,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -656,7 +588,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -788,7 +719,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -828,7 +758,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
@@ -902,14 +831,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 id = 10,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 openBy = "John Smith",
-                closedBy = "Carol Tim",
+                completedBy = "Carol Tim",
                 facade = "MEMN",
                 geom = polygon,
                 observationsCacem = null,
                 observationsCnsp = null,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 isDeleted = false,
                 envActions = envActions,
                 missionSource = MissionSourceEnum.MONITORENV,
@@ -924,7 +852,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     id = 10,
                     missionTypes = listOf(MissionTypeEnum.LAND),
                     openBy = "John Smith",
-                    closedBy = "Carol Tim",
+                    completedBy = "Carol Tim",
                     facade = "MEMN",
                     geom = polygon,
                     observationsCacem = null,
@@ -933,7 +861,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                     endDateTimeUtc =
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isClosed = false,
                     isDeleted = false,
                     envActions = envActions,
                     missionSource = MissionSourceEnum.MONITORENV,
@@ -986,7 +913,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 observationsCnsp = null,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
                 isDeleted = false,
                 envActions = listOf(envAction),
                 missionSource = MissionSourceEnum.MONITORENV,
@@ -1010,7 +936,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     createdAtUtc = null,
                     updatedAtUtc = null,
-                    isClosed = false,
                     isDeleted = false,
                     envActions = listOf(envAction),
                     missionSource = MissionSourceEnum.MONITORENV,

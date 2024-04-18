@@ -52,7 +52,8 @@ class EnvActionModel(
     val id: UUID,
     @Column(name = "action_start_datetime_utc") val actionStartDateTime: Instant? = null,
     @Column(name = "action_end_datetime_utc") val actionEndDateTime: Instant? = null,
-    @Column(name = "action_completion", columnDefinition = "mission_action_completion")
+    @Column(name = "completed_by") val completedBy: String? = null,
+    @Column(name = "completion", columnDefinition = "mission_action_completion")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val completion: ActionCompletionEnum? = null,
@@ -78,6 +79,7 @@ class EnvActionModel(
     @Column(name = "is_safety_equipment_and_standards_compliance_control")
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
+    @Column(name = "open_by") val openBy: String? = null,
     @OneToMany(
         fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",
@@ -145,6 +147,7 @@ class EnvActionModel(
             actionEndDateTimeUtc = actionEndDateTime?.atZone(UTC),
             actionType = actionType,
             actionStartDateTimeUtc = actionStartDateTime?.atZone(UTC),
+            completedBy = completedBy,
             completion = completion,
             controlPlans = controlPlans,
             department = department,
@@ -155,6 +158,7 @@ class EnvActionModel(
             isSafetyEquipmentAndStandardsComplianceControl =
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
+            openBy = openBy,
             value = value,
         )
     }
@@ -173,6 +177,7 @@ class EnvActionModel(
                     actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
                     actionType = action.actionType,
                     actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
+                    completedBy = action.completedBy,
                     completion = action.completion,
                     department = action.department,
                     facade = action.facade,
@@ -182,6 +187,7 @@ class EnvActionModel(
                     isSafetyEquipmentAndStandardsComplianceControl =
                     action.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = action.isSeafarersControl,
+                    openBy = action.openBy,
                     mission = mission,
                     geom = action.geom,
                     value = EnvActionMapper.envActionEntityToJSON(mapper, action),

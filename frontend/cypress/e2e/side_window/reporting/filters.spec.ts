@@ -113,6 +113,7 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by sub-themes', () => {
+    cy.wait(200)
     cy.log('Sub-themes should be filtered')
     cy.fill('Sous-thématiques', ['Surveillance générale'])
     cy.getDataCy('reportings-filter-tags')

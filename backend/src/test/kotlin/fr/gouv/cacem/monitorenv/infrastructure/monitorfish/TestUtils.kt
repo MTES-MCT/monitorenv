@@ -73,7 +73,7 @@ class TestUtils {
                             "vesselTargeted":"NO",
                             "hasSomeGearsSeized":false,
                             "hasSomeSpeciesSeized":false,
-                            "closedBy":null,
+                            "completedBy":null,
                             "isDeleted": false,
                             "isFromPoseidon":false,
                             "isAdministrativeControl":null,

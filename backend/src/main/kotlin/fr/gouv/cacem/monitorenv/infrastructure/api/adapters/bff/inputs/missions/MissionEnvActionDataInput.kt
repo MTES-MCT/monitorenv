@@ -20,11 +20,13 @@ data class MissionEnvActionDataInput(
 
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
+    val completedBy: String? = null,
     val completion: ActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataInput>? = null,
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
+    val openBy: String? = null,
 
     // EnvActionControl Properties
     val actionNumberOfControls: Int? = null,
@@ -67,6 +69,7 @@ data class MissionEnvActionDataInput(
                     actionNumberOfControls = this.actionNumberOfControls,
                     actionTargetType = this.actionTargetType,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
+                    completedBy = this.completedBy,
                     completion = this.completion,
                     controlPlans =
                     this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
@@ -81,6 +84,7 @@ data class MissionEnvActionDataInput(
                     this.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = this.isSeafarersControl,
                     observations = this.observations,
+                    openBy = this.openBy,
                     vehicleType = this.vehicleType,
                 )
             ActionTypeEnum.SURVEILLANCE ->
@@ -88,6 +92,7 @@ data class MissionEnvActionDataInput(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
+                    completedBy = this.completedBy,
                     completion = this.completion,
                     controlPlans =
                     this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
@@ -95,6 +100,7 @@ data class MissionEnvActionDataInput(
                     facade = this.facade,
                     geom = this.geom,
                     observations = this.observations,
+                    openBy = this.openBy,
                 )
             ActionTypeEnum.NOTE ->
                 return EnvActionNoteEntity(

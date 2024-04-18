@@ -1,4 +1,5 @@
-import { customDayjs, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { getIsMissionEnded } from '@features/missions/utils'
+import { Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function MissingFieldsText({
@@ -19,8 +20,7 @@ export function MissingFieldsText({
     )
   }
 
-  const now = customDayjs()
-  const isMissionEnded = missionEndDate && now.isAfter(missionEndDate)
+  const isMissionEnded = getIsMissionEnded(missionEndDate)
 
   return (
     <MissingFieldsContainer>

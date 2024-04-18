@@ -19,7 +19,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
     })
 
     const missionId = 49
-    cy.get('*[data-cy="edit-mission-49"]').click({ force: true })
+    cy.get('*[data-cy="edit-mission-49"]').scrollIntoView().click({ force: true })
 
     cy.intercept({ method: 'GET', url: `/bff/v1/missions/${missionId}/can_delete?source=MONITORENV` }).as(
       'canDeleteMission'
@@ -56,7 +56,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
 
   it('A mission should not be deleted if actions have been created in MonitorFish', () => {
     visitSideWindow()
-    cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
+    cy.get('*[data-cy="edit-mission-34"]').scrollIntoView().click({ force: true })
 
     cy.intercept(
       { method: 'GET', url: '/bff/v1/missions/34/can_delete?source=MONITORENV' },
@@ -94,7 +94,6 @@ context('Side Window > Mission Form > Delete Mission', () => {
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
-      cy.fill('Clôturé par', 'PCF')
 
       cy.wait(500)
       cy.waitForLastRequest('@updateMission', {}, 5, 0, missionResponse => {

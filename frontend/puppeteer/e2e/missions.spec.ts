@@ -129,26 +129,6 @@ describe('Missions Form', () => {
       await wait(2000)
 
       /**
-       * User A close mission
-       */
-      const close = await pageA.waitForSelector('[data-cy="close-mission"]')
-      await close.click()
-      await wait(2000)
-      await pageB.waitForSelector('.Element-Tag')
-      await assertContains(pageB, '.Element-Tag', 'Cloturée')
-      await wait(2000)
-
-      /**
-       * User B re-open mission
-       */
-      const secondReopen = await pageB.waitForSelector('[data-cy="reopen-mission"]')
-      await secondReopen.click()
-      await wait(2000)
-      await pageB.waitForSelector('.Element-Tag')
-      await assertContains(pageB, '.Element-Tag', 'À venir')
-      await wait(2000)
-
-      /**
        * User A re-edit mission in form
        */
       await pageA.click('[data-cy="edit-mission-25"]')
@@ -156,10 +136,6 @@ describe('Missions Form', () => {
       await pageA.waitForSelector('.Element-Tag')
       await assertContains(pageA, '.Element-Tag', 'À venir')
       await wait(200)
-
-      const finalClose = await pageA.waitForSelector('[data-cy="close-mission"]')
-      await finalClose.click()
-      await wait(3000)
     },
     TIMEOUT
   )

@@ -45,7 +45,8 @@ class Missions(
 
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
 
-        return ResponseEntity.status(returnCode).body(MissionDataOutput.fromMissionDTO(createdMission))
+        return ResponseEntity.status(returnCode)
+            .body(MissionDataOutput.fromMissionDTO(createdMission))
     }
 
     @DeleteMapping(value = ["/{missionId}"])
@@ -102,9 +103,6 @@ class Missions(
         @RequestParam(name = "startedBeforeDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         startedBeforeDateTime: ZonedDateTime?,
-        @Parameter(description = "Origine")
-        @RequestParam(name = "missionSource", required = false)
-        missionSources: List<MissionSourceEnum>?,
         @Parameter(description = "Types de mission")
         @RequestParam(name = "missionTypes", required = false)
         missionTypes: List<MissionTypeEnum>?,
@@ -119,7 +117,6 @@ class Missions(
             getFullMissions.execute(
                 startedAfterDateTime = startedAfterDateTime,
                 startedBeforeDateTime = startedBeforeDateTime,
-                missionSources = missionSources,
                 missionStatuses = missionStatuses,
                 missionTypes = missionTypes,
                 pageNumber = pageNumber,

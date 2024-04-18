@@ -57,24 +57,16 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                 OR (
                     'UPCOMING' IN :missionStatuses AND (
                     mission.startDateTimeUtc >= now()
-                    AND mission.isClosed = FALSE
                     ))
                 OR (
                     'PENDING' IN :missionStatuses AND (
                     (mission.endDateTimeUtc IS NULL OR mission.endDateTimeUtc >= now())
                     AND (mission.startDateTimeUtc <= now())
-                    AND mission.isClosed = FALSE
                     )
                 )
                 OR (
                     'ENDED' IN :missionStatuses AND (
                     mission.endDateTimeUtc < now()
-                    AND mission.isClosed = FALSE
-                    )
-                )
-                OR (
-                    'CLOSED' IN :missionStatuses AND (
-                    mission.isClosed = TRUE
                     )
                 )
             )

@@ -28,6 +28,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
@@ -36,6 +37,7 @@ class MissionEnvActionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
+                openBy = "ABC",
                 reportingIds = Optional.of(listOf(1)),
             )
 
@@ -53,10 +55,12 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 observations = "Observations",
+                openBy = "ABC",
                 reportingIds = Optional.of(listOf()),
             )
 
@@ -107,10 +111,12 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
                 observations = "Observations",
+                openBy = "ABC",
                 reportingIds = Optional.empty(),
             )
 
@@ -125,6 +131,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
@@ -133,6 +140,7 @@ class MissionEnvActionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
+                openBy = "ABC",
                 reportingIds = Optional.empty(),
             )
 
@@ -147,6 +155,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
+                completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 department = "TestDepartment",
                 facade = "TestFacade",
@@ -155,6 +164,7 @@ class MissionEnvActionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
+                openBy = "ABC",
                 reportingIds = Optional.of(listOf(1, 2)),
             )
 

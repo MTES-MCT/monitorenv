@@ -40,14 +40,13 @@ context('Side Window > Mission Form > Mission zone', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
 
     cy.fill('Unité 1', 'Cross Etel')
-    cy.getDataCy('control-unit-contact').type('Contact 012345')
-    cy.wait(250)
-    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
     cy.wait(500)
 
     // Add a surveillance
     cy.clickButton('Ajouter')
+    cy.wait(250)
     cy.clickButton('Ajouter une surveillance')
+    cy.getDataCy('surveillance-open-by').type('ABC')
     cy.wait(250)
     cy.clickButton('Ajouter une zone de surveillance')
     cy.wait(250)
@@ -139,6 +138,8 @@ context('Side Window > Mission Form > Mission zone', () => {
     cy.clickButton('Ajouter des contrôles')
     cy.clickButton('Ajouter un point de contrôle')
     cy.wait(200)
+
+    cy.getDataCy('control-open-by').type('ABC')
 
     const controlGeometry: GeoJSON.Geometry = {
       coordinates: [[-1.84589767, 46.66739394]],

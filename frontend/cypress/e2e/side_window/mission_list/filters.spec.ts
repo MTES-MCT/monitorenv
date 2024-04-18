@@ -173,6 +173,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by themes', () => {
+    cy.wait(200)
     cy.fill('Thématique', ['Mouillage individuel'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)

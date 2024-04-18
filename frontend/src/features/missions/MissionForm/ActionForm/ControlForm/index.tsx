@@ -15,9 +15,10 @@ import {
   THEME,
   Toggle,
   pluralize,
-  Button
+  Button,
+  FormikTextInput
 } from '@mtes-mct/monitor-ui'
-import { FieldArray, useFormikContext, getIn } from 'formik'
+import { FieldArray, useFormikContext, type FormikErrors } from 'formik'
 import _ from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -48,7 +49,8 @@ import {
   Header,
   HeaderButtons,
   StyledDeleteIconButton,
-  TitleWithIcon
+  TitleWithIcon,
+  StyledAuthorContainer
 } from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
@@ -84,18 +86,10 @@ export function ControlForm({
   const { actionNumberOfControls, actionTargetType, reportingIds, vehicleType } = currentAction ?? {}
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length === 1)
 
-  const actionTargetTypeErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${envActionIndex}].actionTargetType`) ?? '',
-    [errors, envActionIndex]
-  )
-  const actionVehicleTypeErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${envActionIndex}].vehicleType`) ?? '',
-    [errors, envActionIndex]
-  )
-  const actionStartDateTimeUtcErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${envActionIndex}].actionStartDateTimeUtc`) ?? '',
-    [errors, envActionIndex]
-  )
+  const currentActionErrors = (errors.envActions ? errors.envActions[envActionIndex] : undefined) as
+    | FormikErrors<EnvActionControl>
+    | undefined
+
   const canAddInfraction =
     actionNumberOfControls &&
     actionNumberOfControls > 0 &&
@@ -298,7 +292,7 @@ export function ControlForm({
         <div>
           <DatePicker
             defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
-            error={actionStartDateTimeUtcErrorMessage}
+            error={currentActionErrors?.actionStartDateTimeUtc ?? undefined}
             isErrorMessageHidden
             isLight
             isRequired
@@ -308,9 +302,10 @@ export function ControlForm({
             onChange={updateControlDate}
             withTime
           />
-          {actionStartDateTimeUtcErrorMessage && actionStartDateTimeUtcErrorMessage !== HIDDEN_ERROR && (
-            <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>
-          )}
+          {currentActionErrors?.actionStartDateTimeUtc &&
+            currentActionErrors?.actionStartDateTimeUtc !== HIDDEN_ERROR && (
+              <FieldError>{currentActionErrors?.actionStartDateTimeUtc}</FieldError>
+            )}
         </div>
         <MultiPointPicker actionIndex={envActionIndex} />
 
@@ -328,7 +323,7 @@ export function ControlForm({
           />
 
           <TargetSelector
-            error={actionTargetTypeErrorMessage}
+            error={currentActionErrors?.actionTargetType ?? ''}
             isRequired
             name={`envActions.${envActionIndex}.actionTargetType`}
             onChange={onTargetTypeChange}
@@ -338,7 +333,7 @@ export function ControlForm({
 
           <VehicleTypeSelector
             disabled={actionTargetType !== TargetTypeEnum.VEHICLE}
-            error={actionVehicleTypeErrorMessage}
+            error={currentActionErrors?.vehicleType ?? ''}
             isRequired
             name={`envActions.${envActionIndex}.vehicleType`}
             onChange={onVehicleTypeChange}
@@ -366,6 +361,33 @@ export function ControlForm({
           name={`envActions[${envActionIndex}].observations`}
         />
         <OtherControlTypesForm currentActionIndex={envActionIndex} />
+        <div>
+          <StyledAuthorContainer>
+            <FormikTextInput
+              data-cy="control-open-by"
+              isErrorMessageHidden
+              isLight
+              isRequired
+              label="Ouvert par"
+              name={`envActions[${envActionIndex}].openBy`}
+            />
+            <FormikTextInput
+              data-cy="control-completed-by"
+              isErrorMessageHidden
+              isLight
+              isRequired
+              label="Complété par"
+              name={`envActions[${envActionIndex}].completedBy`}
+            />
+          </StyledAuthorContainer>
+          {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
+          {currentActionErrors?.openBy && currentActionErrors?.openBy !== HIDDEN_ERROR && (
+            <FieldError>{currentActionErrors.openBy}</FieldError>
+          )}
+          {currentActionErrors?.completedBy && currentActionErrors?.completedBy !== HIDDEN_ERROR && (
+            <FieldError>{currentActionErrors.completedBy}</FieldError>
+          )}
+        </div>
       </ActionFormBody>
     </>
   )

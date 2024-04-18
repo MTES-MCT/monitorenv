@@ -11,7 +11,7 @@ import { attachMission } from '../../../../domain/use_cases/reporting/attachMiss
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getMissionZoneFeature } from '../../../map/layers/Missions/missionGeometryHelpers'
-import { missionWithCentroidStyleFn } from '../../../map/layers/Missions/missions.style'
+import { missionStyleFn } from '../../../map/layers/Missions/missions.style'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
@@ -44,7 +44,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
     new VectorLayer({
       renderBuffer: 7,
       source: vectorSourceRef.current,
-      style: missionWithCentroidStyleFn,
+      style: missionStyleFn,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
