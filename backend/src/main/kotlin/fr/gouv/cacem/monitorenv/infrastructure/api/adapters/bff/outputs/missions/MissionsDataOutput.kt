@@ -4,7 +4,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -21,7 +20,6 @@ data class MissionsDataOutput(
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<MissionEnvActionDataOutput>? = null,
-    val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
     val missionSource: MissionSourceEnum,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
@@ -50,12 +48,6 @@ data class MissionsDataOutput(
                         envActionEntity = it,
                         envActionsAttachedToReportingIds =
                         dto.envActionsAttachedToReportingIds,
-                    )
-                },
-                fishActions =
-                dto.fishActions?.map {
-                    MonitorFishMissionActionDataOutput.fromMonitorFishMissionActionEntity(
-                        it,
                     )
                 },
                 missionSource = dto.mission.missionSource,
