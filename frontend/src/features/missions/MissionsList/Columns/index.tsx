@@ -7,6 +7,9 @@ import { getDateCell } from '../getDateCell'
 import { getMissionTypeCell } from '../getMissionTypeCell'
 import { getNumberOfControlsCell } from '../getNumberOfControlsCell'
 import { getResourcesCell } from '../getResourcesCell'
+import { sortCompletion, sortNumberOfControls, sortStatus } from '../utils'
+
+import type { Row } from '@tanstack/react-table'
 
 export const Columns = [
   {
@@ -73,32 +76,32 @@ export const Columns = [
   {
     accessorFn: row => row.envActions,
     cell: info => getNumberOfControlsCell(info.getValue()),
-    enableSorting: false,
     header: () => 'Ctr.',
-    id: 'controls',
+    id: 'envActions',
     maxSize: 41,
     minSize: 41,
-    size: 41 // +24(padding) + 1(border) = 66
+    size: 41, // +24(padding) + 1(border) = 66
+    sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => sortNumberOfControls(rowA, rowB, columnId)
   },
   {
     accessorFn: row => row,
     cell: ({ row }) => <CellStatus row={row} />,
-    enableSorting: false,
     header: () => 'Statut',
     id: 'status',
     maxSize: 82,
     minSize: 82,
-    size: 82 // +24(padding) + 1(border) = 107
+    size: 82, // +24(padding) + 1(border) = 107
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
   },
   {
     accessorFn: row => row,
     cell: ({ row }) => <CellCompletionStatus row={row} />,
-    enableSorting: false,
     header: () => 'État données',
     id: 'completion',
     maxSize: 102,
     minSize: 102,
-    size: 102 // +24(padding) + 1(border) = 127
+    size: 102, // +24(padding) + 1(border) = 127
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {
     accessorFn: row => row.geom,
