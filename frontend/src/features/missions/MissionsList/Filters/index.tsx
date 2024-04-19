@@ -193,12 +193,12 @@ export function MissionsTableFilters() {
             data-cy="select-seaFronts-filter"
             isLabelHidden
             isTransparent
-            label="Facade"
+            label="Façade"
             name="seaFront"
             onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
             options={seaFrontsAsOptions}
-            placeholder="Facade"
-            renderValue={() => selectedSeaFronts && <OptionValue>{`Facade (${selectedSeaFronts.length})`}</OptionValue>}
+            placeholder="Façade"
+            renderValue={() => selectedSeaFronts && <OptionValue>{`Façade (${selectedSeaFronts.length})`}</OptionValue>}
             style={tagPickerStyle}
             value={selectedSeaFronts}
           />
@@ -318,7 +318,7 @@ export function MissionsTableFilters() {
           />
           <Checkbox
             checked={selectedWithEnvActions}
-            label="Missions avec actions env."
+            label="Missions avec actions CACEM"
             name="missionsWithEnvActions"
             onChange={value => onUpdateSimpleFilter(value ?? false, MissionFiltersEnum.WITH_ENV_ACTIONS_FILTER)}
           />

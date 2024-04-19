@@ -129,19 +129,21 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
     <FormWrapper>
       <TitleWrapper>
         <FormTitle>Actions réalisées en mission</FormTitle>
-        <Dropdown Icon={Icon.Plus} noCaret title="Ajouter">
-          <Dropdown.Item Icon={Icon.ControlUnit} onClick={handleAddControlAction}>
-            Ajouter des contrôles
-          </Dropdown.Item>
-          <Dropdown.Item Icon={Icon.Observation} onClick={handleAddSurveillanceAction}>
-            Ajouter une surveillance
-          </Dropdown.Item>
-          <Dropdown.Item Icon={Icon.Note} onClick={handleAddNoteAction}>
-            Ajouter une note libre
-          </Dropdown.Item>
-        </Dropdown>
+        <ButtonsWrapper>
+          <Dropdown Icon={Icon.Plus} noCaret title="Ajouter">
+            <Dropdown.Item Icon={Icon.ControlUnit} onClick={handleAddControlAction}>
+              Ajouter des contrôles
+            </Dropdown.Item>
+            <Dropdown.Item Icon={Icon.Observation} onClick={handleAddSurveillanceAction}>
+              Ajouter une surveillance
+            </Dropdown.Item>
+            <Dropdown.Item Icon={Icon.Note} onClick={handleAddNoteAction}>
+              Ajouter une note libre
+            </Dropdown.Item>
+          </Dropdown>
 
-        <AttachReporting />
+          <AttachReporting />
+        </ButtonsWrapper>
       </TitleWrapper>
       <Separator />
       <ActionsTimeline ref={actionTimelineRef}>
@@ -191,6 +193,17 @@ const TitleWrapper = styled.div`
   align-items: baseline;
   display: flex;
   justify-content: space-between;
+`
+const ButtonsWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+
+  // TODO update this in monitor-ui - Dropdown component
+  > div {
+    > button {
+      padding: 5px 12px 6px !important;
+    }
+  }
 `
 
 const ActionsTimeline = styled.div`

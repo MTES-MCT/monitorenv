@@ -1,5 +1,4 @@
 import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
-import { MissionEventProvider } from 'context/MissionEventContext'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { SideWindow } from '.'
@@ -73,9 +72,7 @@ export function SideWindowLauncher() {
       showPrompt={hasAtLeastOneMissionFormDirty || hasAtLeastOneReportingFormDirty}
       title="MonitorEnv"
     >
-      <MissionEventProvider>
-        <SideWindow />
-      </MissionEventProvider>
+      <SideWindow />
     </NewWindow>
   )
 }

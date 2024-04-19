@@ -8,6 +8,7 @@ import { HomePage } from '@pages/HomePage'
 import { homeStore } from '@store/index'
 import { isBrowserSupported } from '@utils/isBrowserSupported'
 import { isCypress } from '@utils/isCypress'
+import { MissionEventProvider } from 'context/MissionEventContext'
 import { Provider as ReduxProvider } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
@@ -36,14 +37,17 @@ export function App() {
       <RsuiteCustomProvider disableRipple locale={FR_FR_LOCALE}>
         <ReduxProvider store={homeStore}>
           <PersistGate loading={undefined} persistor={persistor}>
-            <Router>
-              <Routes>
-                <Route element={<BackOfficePage />} path="/backoffice/*" />
-                <Route element={<SideWindow />} path="/side_window" />
-                <Route element={<HomePage />} path="/" />
-              </Routes>
-            </Router>
+            <MissionEventProvider>
+              <Router>
+                <Routes>
+                  <Route element={<BackOfficePage />} path="/backoffice/*" />
 
+                  <Route element={<SideWindow />} path="/side_window" />
+
+                  <Route element={<HomePage />} path="/" />
+                </Routes>
+              </Router>
+            </MissionEventProvider>
             <ToastNotification />
           </PersistGate>
         </ReduxProvider>

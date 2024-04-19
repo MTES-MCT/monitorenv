@@ -143,7 +143,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by sea fronts', () => {
-    cy.fill('Facade', ['MED'])
+    cy.fill('Façade', ['MED'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -154,7 +154,7 @@ context('Side Window > Mission List > Filter Bar', () => {
       cy.wrap(row).should('contain', 'MED')
     })
 
-    cy.fill('Facade', undefined)
+    cy.fill('Façade', undefined)
   })
 
   it('Should filter missions by statuses', () => {
@@ -217,7 +217,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions with env actions', () => {
-    cy.fill('Missions avec actions env.', true)
+    cy.fill('Missions avec actions CACEM', true)
     cy.wait('@getMissions')
 
     cy.get('.Table-SimpleTable tr').should('have.length', 6)
@@ -226,6 +226,6 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('edit-mission-22').should('not.exist')
     cy.getDataCy('edit-mission-43').should('not.exist')
 
-    cy.fill('Missions avec actions env.', false)
+    cy.fill('Missions avec actions CACEM', false)
   })
 })
