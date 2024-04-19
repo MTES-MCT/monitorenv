@@ -34,7 +34,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.fill('Etat des données', ['Complétées'])
     cy.wait('@getMissions')
 
-    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('données Complétées')
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Données complétées')
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
       if (index === 0) {

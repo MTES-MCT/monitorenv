@@ -313,11 +313,13 @@ context('Side Window > Mission Form > Main Form', () => {
                 attachedReportingIds: [],
                 attachedReportings: [],
                 // Changed field
-                completedBy: 'LTH',
+                // TODO : uncomment this field when Fish andRapportNav have deleted closedBy field
+                // completedBy: 'LTH',
                 controlUnits: [
                   {
                     administration: 'Gendarmerie Nationale',
-                    contact: null,
+                    // Changed field
+                    contact: 'contact',
                     id: 10020,
                     isArchived: false,
                     name: 'BN Toulon',
@@ -346,7 +348,7 @@ context('Side Window > Mission Form > Main Form', () => {
           )
         })
 
-      cy.wait(1500)
+      cy.wait(500)
       cy.get('[name="missionTypes1"]').click({ force: true })
       cy.wait(250)
 
@@ -354,7 +356,18 @@ context('Side Window > Mission Form > Main Form', () => {
         '@updateMission',
         {
           body: {
-            completedBy: 'LTH',
+            controlUnits: [
+              {
+                administration: 'Gendarmerie Nationale',
+                contact: 'contact',
+                id: 10020,
+                isArchived: false,
+                name: 'BN Toulon',
+                resources: []
+              }
+            ],
+            // TODO : uncomment this field when Fish andRapportNav have deleted closedBy field
+            // completedBy: 'LTH',
             missionTypes: ['SEA', 'LAND'],
             observationsCnsp: 'Encore une observation',
             openBy: 'LTH'

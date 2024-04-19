@@ -134,7 +134,7 @@ context('Reportings', () => {
 
   it('Should filter reportings by sea-fronts', () => {
     cy.fill('Façade', [SeaFrontLabel.NAMO])
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Facade NAMO')
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Façade NAMO')
 
     cy.wait('@getReportings')
 
