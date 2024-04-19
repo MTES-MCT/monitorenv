@@ -1,7 +1,7 @@
-import _ from 'lodash'
+import { getTotalOfControls } from '../utils'
 
 export function getNumberOfControlsCell(envActions) {
-  const numberOfControls = _.reduce(envActions, (sum, action) => sum + (action.actionNumberOfControls || 0), 0)
+  const numberOfControls = getTotalOfControls(envActions)
 
   return numberOfControls > 0 ? numberOfControls : '-'
 }

@@ -7,26 +7,23 @@ import {
   FrontCompletionStatus,
   getMissionStatus,
   MissionStatusEnum,
-  type Mission,
-  type NewMission
+  type EnvAction
 } from '../../domain/entities/missions'
 
-export const getTotalOfControls = (mission: Partial<Mission | NewMission>) =>
+export const getTotalOfControls = (envActions: Array<Partial<EnvAction>>) =>
   sum(
-    mission.envActions?.map(
-      control => (control.actionType === ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0
-    )
+    envActions?.map(control => (control.actionType === ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0)
   )
 
-export const getTotalOfSurveillances = (mission: Partial<Mission | NewMission>) =>
-  mission.envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE).length
+export const getTotalOfSurveillances = (envActions: Array<Partial<EnvAction>>) =>
+  envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE).length
 
 export function getVesselName(vesselName) {
   return vesselName === 'UNKNOWN' ? 'Navire inconnu' : vesselName
 }
 
 export function hasAtLeastOnUncompletedEnvAction(envActions): boolean {
-  return !!envActions.find(
+  return !!envActions?.find(
     action =>
       (action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL) &&
       action.completion === CompletionStatus.TO_COMPLETE
