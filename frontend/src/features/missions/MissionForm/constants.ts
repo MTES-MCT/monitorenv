@@ -19,8 +19,8 @@ export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [
   'updatedAtUtc',
   // We do not update this field as it is not used by the form
   'createdAtUtc',
-  // TODO add the update of the env actions
-  'envActions'
+  // TODO to delete when fish and rapportNav are removed `closedBy`in their forms
+  'completedBy'
 ]
 
 export const HIDDEN_ERROR = 'HIDDEN_ERROR'

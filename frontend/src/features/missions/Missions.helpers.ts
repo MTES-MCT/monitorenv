@@ -183,7 +183,7 @@ type ActionsForTimeLine = Record<string, ReportingForTimeline | EnvActionForTime
 
 const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
   envActions?.reduce((newEnvActionsCollection, action) => {
-    if (action.actionType === ActionTypeEnum.CONTROL && action.reportingIds.length === 1) {
+    if (action.actionType === ActionTypeEnum.CONTROL && action.reportingIds?.length === 1) {
       const attachedReporting = attachedReportings?.find(reporting => reporting.id === action.reportingIds[0])
 
       return {

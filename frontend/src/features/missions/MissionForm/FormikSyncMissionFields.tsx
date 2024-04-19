@@ -1,10 +1,10 @@
+import { useMissionEventContext } from 'context/useMissionEventContext'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
 import { omit } from 'lodash'
 import { useEffect } from 'react'
 
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
-import { useListenMissionEventUpdatesById } from './hooks/useListenMissionEventUpdatesById'
 
 import type { Mission } from '../../../domain/entities/missions'
 
@@ -16,7 +16,8 @@ type FormikSyncMissionFormProps = {
  */
 export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProps) {
   const { setFieldValue, values } = useFormikContext<Mission>()
-  const missionEvent = useListenMissionEventUpdatesById(missionId)
+  const { getMissionEventById, setMissionEventInContext } = useMissionEventContext()
+  const missionEvent = getMissionEventById(missionId)
 
   useEffect(
     () => {
@@ -37,6 +38,11 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
         console.log(`SSE: setting form key "${key}" to "${JSON.stringify(missionEvent[key])}"`)
         setFieldValue(key, missionEvent[key])
       })
+
+      // we need to wait for the form to be updated before removing the mission event from the context
+      setTimeout(() => {
+        setMissionEventInContext(undefined)
+      }, 500)
     },
 
     // We don't want to trigger infinite re-renders since `setFieldValue` changes after each rendering

@@ -1,4 +1,5 @@
 import { customDayjs, FormikEffect, usePrevious } from '@mtes-mct/monitor-ui'
+import { useMissionEventContext } from 'context/useMissionEventContext'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
@@ -13,7 +14,6 @@ import { DeleteModal } from './DeleteModal'
 import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
-import { useListenMissionEventUpdatesById } from './hooks/useListenMissionEventUpdatesById'
 import { useMissionAndActionsCompletion } from './hooks/useMissionAndActionsCompletion'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
@@ -62,7 +62,9 @@ export function MissionForm({
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
-  const missionEvent = useListenMissionEventUpdatesById(id)
+  const { getMissionEventById } = useMissionEventContext()
+  const missionEvent = getMissionEventById(id)
+
   const {
     dirty,
     errors: formErrors,
