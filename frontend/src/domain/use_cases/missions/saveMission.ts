@@ -52,13 +52,20 @@ export const saveMission =
           await dispatch(missionActions.setSelectedMissionIdOnMap(missionUpdated.id))
           const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionUpdated.id })
           await dispatch(sideWindowActions.setCurrentPath(nextPath))
+
+          // wait for the mission to be updated in the form before displaying the banner
+          setTimeout(async () => {
+            await dispatch(missionFormsActions.setShowCreatedBanner({ id: missionUpdated.id, showBanner: true }))
+          }, 250)
         } else {
           // for a mission already created we want to update the `updatedAt` value with the new one
           const mission = selectedMissions[values.id]
           dispatch(
             missionFormsActions.setMission({
               ...mission,
-              isFormDirty: false, // since mission has just been saved, it's not dirty anymore
+              displayCreatedMissionBanner: false,
+              isFormDirty: false,
+              // since mission has just been saved, it's not dirty anymore
               missionForm: missionUpdated
             })
           )

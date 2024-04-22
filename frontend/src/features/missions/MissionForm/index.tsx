@@ -1,3 +1,4 @@
+import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -44,6 +45,22 @@ export function MissionFormWrapper() {
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
+      {selectedMission?.displayCreatedMissionBanner && (
+        <Banner
+          isClosable
+          isCollapsible={false}
+          isHiddenByDefault={false}
+          level={Level.SUCCESS}
+          top="0"
+          withAutomaticClosing
+        >
+          <MissionCreatedText>
+            <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+            La mission a bien été créée
+          </MissionCreatedText>
+        </Banner>
+      )}
+
       <Formik
         key={missionValues.id}
         enableReinitialize
@@ -72,6 +89,7 @@ export function MissionFormWrapper() {
 const EditMissionWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
   width: 100%;
 `
 const DisabledMissionBackground = styled.div`
@@ -81,4 +99,10 @@ const DisabledMissionBackground = styled.div`
   width: 100%;
   height: 100%;
   z-index: 5;
+`
+const MissionCreatedText = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 `

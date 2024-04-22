@@ -1,4 +1,4 @@
-import { customDayjs, FormikEffect, usePrevious } from '@mtes-mct/monitor-ui'
+import { Banner, customDayjs, FormikEffect, Icon, Level, THEME, usePrevious } from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/useMissionEventContext'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -22,7 +22,12 @@ import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { missionFormsActions } from './slice'
 import { isMissionAutoSaveEnabled, validateBeforeOnChange } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
-import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
+import {
+  FrontCompletionStatus,
+  type Mission,
+  MissionSourceEnum,
+  type NewMission
+} from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
@@ -30,6 +35,7 @@ import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
+import { getIsMissionEnded } from '../utils'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AtLeast } from '../../../types'
@@ -58,10 +64,12 @@ export function MissionForm({
   setShouldValidateOnChange
 }: MissionFormProps) {
   const dispatch = useAppDispatch()
+
   const sideWindow = useAppSelector(state => state.sideWindow)
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
+
   const { getMissionEventById } = useMissionEventContext()
   const missionEvent = getMissionEventById(id)
 
@@ -79,12 +87,10 @@ export function MissionForm({
     if (!isMissionAutoSaveEnabled()) {
       return false
     }
+
+    const isMissionEnded = getIsMissionEnded(selectedMission?.endDateTimeUtc)
     const now = customDayjs()
-    if (
-      selectedMission?.endDateTimeUtc &&
-      now.isAfter(selectedMission?.endDateTimeUtc) &&
-      customDayjs(selectedMission?.endDateTimeUtc) < customDayjs(selectedMission?.endDateTimeUtc).add(2, 'days')
-    ) {
+    if (isMissionEnded && selectedMission && now.subtract(48, 'hours').isAfter(selectedMission.endDateTimeUtc)) {
       return false
     }
 
@@ -222,6 +228,23 @@ export function MissionForm({
 
   return (
     <StyledFormContainer>
+      {missionCompletionFrontStatus === FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED && (
+        <Banner
+          closingDelay={10000}
+          isClosable={false}
+          isCollapsible
+          isHiddenByDefault={false}
+          level={Level.ERROR}
+          top="0"
+          withAutomaticClosing
+        >
+          <MissionEndedText>
+            <Icon.AttentionFilled color={THEME.color.maximumRed} />
+            Veuillez compléter ou corriger les éléments en rouge
+          </MissionEndedText>
+        </Banner>
+      )}
+
       <FormikEffect
         onChange={nextValues =>
           validateBeforeOnChange(
@@ -278,6 +301,12 @@ const StyledFormContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+`
+const MissionEndedText = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 `
 
 const Wrapper = styled.div`

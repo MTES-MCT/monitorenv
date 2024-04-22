@@ -27,7 +27,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.getDataCy('mission-status-tag-pending').should('exist')
     cy.getDataCy('completion-mission-status-tag-to-completed').should('exist')
 
-    cy.get('div').contains('Mission non enregistrée.')
+    cy.get('div').contains('Mission non créée.')
     cy.get('.Element-Tag').contains('Enregistrement auto. actif')
     // When
     cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
@@ -71,6 +71,7 @@ context('Side Window > Mission Form > Main Form', () => {
       .should('eq', 200)
     cy.get('div').contains('Mission créée par le')
     cy.get('div').contains('Dernière modification enregistrée')
+    cy.get('.Component-Banner').contains('La mission a bien été créée')
   })
 
   it('A mission should be created When auto-save is not enabled', () => {
@@ -483,5 +484,13 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.getDataCy('add-control-unit').find('.rs-picker-toggle-value').contains('Unité archivée')
     cy.getDataCy('add-control-administration').find('.rs-picker-toggle-value').contains('Administration Archivée 2')
+  })
+
+  it('Should display missing fields banner if mission is ended and has missing fields', () => {
+    visitSideWindow()
+    cy.fill('Période', 'Un mois')
+    cy.wait(500)
+    cy.getDataCy('edit-mission-27').scrollIntoView().click({ force: true })
+    cy.get('.Component-Banner').contains('euillez compléter ou corriger les éléments en rouge')
   })
 })
