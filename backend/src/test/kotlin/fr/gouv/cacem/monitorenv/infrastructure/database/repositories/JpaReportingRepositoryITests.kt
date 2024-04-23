@@ -419,6 +419,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
         assertThat(reportingDTO.reporting.isArchived).isEqualTo(false)
         assertThat(reportingDTO.reporting.openBy).isEqualTo("CDA")
+        assertThat(reportingDTO.reporting.createdAt)
+            .isAfter(ZonedDateTime.now().minusMinutes(1))
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
         assertThat(numberOfExistingReportingsAfterSave).isEqualTo(12)

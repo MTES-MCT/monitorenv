@@ -1,8 +1,9 @@
 import { customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { isCypress } from '@utils/isCypress'
-import _, { isEqual } from 'lodash'
+import _, { isEqual, omit } from 'lodash'
 import styled from 'styled-components'
 
+import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './ReportingForm/constants'
 import { ReportingInfos } from './style'
 import { ReportingSourceEnum, type Reporting, type TargetDetails } from '../../domain/entities/reporting'
 import {
@@ -36,9 +37,12 @@ export function shouldSaveReporting(
   }
 
   /**
-   * Send an update only if a field has beem modified
+   * Send an update only if a field has beem modified except for updatedAtUtcField
    */
-  return !isEqual(previousValues, nextValues)
+  return !isEqual(
+    omit(previousValues, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
+    omit(nextValues, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
+  )
 }
 
 export function getReportingInitialValues(reporting: AtLeast<Reporting, 'id'> | Reporting): AtLeast<Reporting, 'id'> {

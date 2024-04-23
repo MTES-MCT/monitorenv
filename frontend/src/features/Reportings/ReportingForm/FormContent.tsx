@@ -1,10 +1,14 @@
+import { Italic } from '@components/style'
+import { AutoSaveTag } from '@features/missions/MissionForm/AutoSaveTag'
 import {
+  customDayjs,
   FormikEffect,
   FormikMultiRadio,
   FormikTextarea,
   getOptionsFromLabelledEnum,
   Toggle
 } from '@mtes-mct/monitor-ui'
+import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useField, useFormikContext } from 'formik'
 import { debounce, isEmpty } from 'lodash'
@@ -49,7 +53,8 @@ import {
   StyledThemeContainer,
   StyledToggle,
   StyledFormikTextInput,
-  ReportTypeMultiRadio
+  ReportTypeMultiRadio,
+  SaveBanner
 } from '../style'
 import { isReportingAutoSaveEnabled, shouldSaveReporting } from '../utils'
 
@@ -97,6 +102,11 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   const isMapContext = reportingContext === ReportingContext.MAP
   const isFormDirty = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.isFormDirty : false
+  )
+
+  const formattedUpdatedDate = useMemo(
+    () => values.updatedAtUtc && getDateAsLocalizedStringVeryCompact(values.updatedAtUtc),
+    [values.updatedAtUtc]
   )
 
   const isAutoSaveEnabled = useMemo(() => {
@@ -194,6 +204,21 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     dispatch(reduceOrCollapseReportingForm(reportingContext))
   }
 
+  useEffect(() => {
+    if (!isAutoSaveEnabled) {
+      return
+    }
+    if (
+      values?.updatedAtUtc &&
+      !customDayjs(selectedReporting?.updatedAtUtc).isSame(customDayjs(values?.updatedAtUtc), 'minutes')
+    ) {
+      setFieldValue('updatedAtUtc', selectedReporting?.updatedAtUtc)
+    }
+
+    // there's no need to listen for changes in `values`, since `updatedAtUtc` is read-only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedReporting?.updatedAtUtc, isAutoSaveEnabled])
+
   if (!selectedReporting || isEmpty(values)) {
     return null
   }
@@ -236,6 +261,15 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         reduceOrCollapseReporting={reduceOrCollapseReporting}
         reporting={selectedReporting}
       />
+      <SaveBanner>
+        {!values?.updatedAtUtc && <Italic>Signalement non créé</Italic>}
+        {values?.updatedAtUtc && (
+          <>
+            <Italic>Dernière modification le {formattedUpdatedDate}</Italic>
+            <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
+          </>
+        )}
+      </SaveBanner>
       <StyledForm $totalReducedReportings={reducedReportingsOnContext}>
         <Source />
         <Target />

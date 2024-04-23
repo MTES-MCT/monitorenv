@@ -12,12 +12,12 @@ export const StyledFormContainer = styled.div`
   }
 `
 export const StyledForm = styled.div<{ $totalReducedReportings: number }>`
-  padding: 32px;
+  padding: 16px 32px 32px 31px;
   padding-right: calc(32px - var(--scrollbar-width || 0px));
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: calc(100vh - 108px - ${p => p.$totalReducedReportings * 52}px);
+  height: calc(100vh - 146px - ${p => p.$totalReducedReportings * 52}px);
   overflow-y: auto;
 `
 
@@ -34,6 +34,7 @@ export const ReportingHeader = styled.div`
   gap: 8px;
   flex: 1;
 `
+
 export const ReportingTitle = styled.div`
   align-items: center;
   display: flex;
@@ -43,6 +44,16 @@ export const ReportingTitle = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+
+export const SaveBanner = styled.div`
+  box-shadow: 0px 3px 6px #00000029;
+  color: ${p => p.theme.color.slateGray};
+  display: flex;
+  height: 38px;
+  justify-content: space-between;
+  padding: 10px 16px;
+  z-index: 1;
 `
 export const ReportingInfosContainer = styled.div`
   display: flex;

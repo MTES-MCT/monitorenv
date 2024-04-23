@@ -31,6 +31,7 @@ export type Reporting = {
   targetDetails?: TargetDetails[]
   targetType?: ReportingTargetTypeEnum
   themeId?: number
+  updatedAtUtc: string | undefined
   validityTime?: number
   vehicleType?: string
   withVHFAnswer?: boolean | undefined
