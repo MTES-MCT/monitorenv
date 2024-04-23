@@ -39,6 +39,7 @@ class JpaMissionRepository(
     @Transactional
     override fun findAllFullMissions(
         controlUnitIds: List<Int>?,
+        missionSources: List<MissionSourceEnum>?,
         missionStatuses: List<String>?,
         missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
@@ -59,7 +60,7 @@ class JpaMissionRepository(
             missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
             missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
             missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
-            missionSources = null,
+            missionSources = missionSources,
             pageable = pageable,
             seaFronts = seaFronts,
             startedAfter = startedAfter,

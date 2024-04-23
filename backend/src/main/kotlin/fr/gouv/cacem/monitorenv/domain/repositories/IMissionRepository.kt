@@ -17,6 +17,7 @@ interface IMissionRepository {
 
     fun findAllFullMissions(
         controlUnitIds: List<Int>? = null,
+        missionSources: List<MissionSourceEnum>? = null,
         missionStatuses: List<String>?,
         missionTypes: List<MissionTypeEnum>?,
         pageNumber: Int?,
