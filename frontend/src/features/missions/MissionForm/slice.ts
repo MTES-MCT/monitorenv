@@ -5,6 +5,7 @@ import type { Mission, NewMission } from '../../../domain/entities/missions'
 import type { AtLeast } from '../../../types'
 
 export type MissionInStateType = {
+  displayCreatedMissionBanner?: boolean
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   isFormDirty: boolean
   missionForm: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>
@@ -57,7 +58,10 @@ const missionFormsSlice = createSlice({
       const missionWithPreviousId = state.missions[previousId]
       if (missionWithPreviousId) {
         delete state.missions[previousId]
-        state.missions = { ...state.missions, [createdMissionId]: action.payload.createdMission }
+        state.missions = {
+          ...state.missions,
+          [createdMissionId]: action.payload.createdMission
+        }
       }
       state.activeMissionId = createdMissionId
     },
@@ -87,6 +91,13 @@ const missionFormsSlice = createSlice({
         state.missions = { ...state.missions, [id]: action.payload }
       }
       state.activeMissionId = id
+    },
+    setShowCreatedBanner(state, action: PayloadAction<{ id: number; showBanner: boolean }>) {
+      const { id, showBanner } = action.payload
+      const mission = state.missions[id]
+      if (mission) {
+        mission.displayCreatedMissionBanner = showBanner
+      }
     },
     updateUnactiveMission(state, action: PayloadAction<AtLeast<Partial<Mission>, 'id'>>) {
       const { id } = action.payload

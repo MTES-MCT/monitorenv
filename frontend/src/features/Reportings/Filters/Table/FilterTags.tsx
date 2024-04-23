@@ -110,7 +110,7 @@ export function FilterTags() {
             accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(seaFront, ReportingsFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
           >
-            {String(`Facade ${seaFront}`)}
+            {String(`Façade ${seaFront}`)}
           </SingleTag>
         ))}
     </StyledContainer>

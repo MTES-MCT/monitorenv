@@ -9,7 +9,6 @@ import { Route } from './Route'
 import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
-import { MissionEventContext } from '../../context/MissionEventContext'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext } from '../../domain/shared_slices/Global'
 import { switchTab } from '../../domain/use_cases/missions/switchTab'
@@ -98,9 +97,7 @@ export function SideWindow() {
                   <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
                   <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-                  <MissionEventContext.Provider value={missionEvent}>
-                    <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
-                  </MissionEventContext.Provider>
+                  <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
                 </StyledRouteContainer>
                 {isReportingsButtonIsActive && (
                   <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />

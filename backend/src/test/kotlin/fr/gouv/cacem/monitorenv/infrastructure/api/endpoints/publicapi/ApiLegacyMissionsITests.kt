@@ -49,7 +49,8 @@ class ApiLegacyMissionsITests {
 
     @MockBean private lateinit var deleteMission: DeleteMission
 
-    @MockBean private lateinit var bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission
+    @MockBean
+    private lateinit var bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission
 
     @MockBean private lateinit var canDeleteMission: CanDeleteMission
 
@@ -282,15 +283,13 @@ class ApiLegacyMissionsITests {
 
     @Test
     fun `Should delete mission`() {
-        mockMvc.perform(delete("/api/v1/missions/20"))
-            .andExpect(status().isOk)
+        mockMvc.perform(delete("/api/v1/missions/20")).andExpect(status().isOk)
         Mockito.verify(bypassActionCheckAndDeleteMission).execute(20)
     }
 
     @Test
     fun `Should delete mission with api v2`() {
-        mockMvc.perform(delete("/api/v2/missions/20?source=MONITORFISH"))
-            .andExpect(status().isOk)
+        mockMvc.perform(delete("/api/v2/missions/20?source=MONITORFISH")).andExpect(status().isOk)
         Mockito.verify(deleteMission).execute(20, MissionSourceEnum.MONITORFISH)
     }
 
@@ -313,7 +312,12 @@ class ApiLegacyMissionsITests {
         val source = MissionSourceEnum.MONITORFISH
 
         given(canDeleteMission.execute(missionId = missionId, source = source))
-            .willReturn(CanDeleteMissionResponse(canDelete = false, sources = listOf(MissionSourceEnum.MONITORENV)))
+            .willReturn(
+                CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.MONITORENV),
+                ),
+            )
 
         mockMvc.perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
             .andExpect(status().isOk)
@@ -323,20 +327,21 @@ class ApiLegacyMissionsITests {
     @Test
     fun `Should get all engaged control units`() {
         // Given
-        given(getEngagedControlUnits.execute()).willReturn(
-            listOf(
-                Pair(
-                    LegacyControlUnitEntity(
-                        id = 123,
-                        administration = "Admin",
-                        resources = listOf(),
-                        isArchived = false,
-                        name = "Control Unit Name",
+        given(getEngagedControlUnits.execute())
+            .willReturn(
+                listOf(
+                    Pair(
+                        LegacyControlUnitEntity(
+                            id = 123,
+                            administration = "Admin",
+                            resources = listOf(),
+                            isArchived = false,
+                            name = "Control Unit Name",
+                        ),
+                        listOf(MissionSourceEnum.MONITORFISH),
                     ),
-                    listOf(MissionSourceEnum.MONITORFISH),
                 ),
-            ),
-        )
+            )
 
         // When
         mockMvc.perform(get("/api/v1/missions/engaged_control_units"))
@@ -353,22 +358,26 @@ class ApiLegacyMissionsITests {
         val multipolygonString =
             "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val updateMissionEvent = UpdateMissionEvent(
-            mission = MissionEntity(
-                id = 132,
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                facade = "Outre-Mer",
-                geom = polygon,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-            ),
-        )
+        val updateMissionEvent =
+            UpdateMissionEvent(
+                mission =
+                MissionEntity(
+                    id = 132,
+                    missionTypes = listOf(MissionTypeEnum.SEA),
+                    facade = "Outre-Mer",
+                    geom = polygon,
+                    observationsCnsp = null,
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORFISH,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
+            )
 
         // When we send an event from another thread
         object : Thread() {
@@ -380,22 +389,25 @@ class ApiLegacyMissionsITests {
                     println(ex)
                 }
             }
-        }.start()
+        }
+            .start()
 
         // Then
-        val missionUpdateEvent = mockMvc.perform(get("/api/v1/missions/sse"))
-            .andExpect(status().isOk)
-            .andExpect(request().asyncStarted())
-            .andExpect(request().asyncResult(nullValue()))
-            .andExpect(header().string("Content-Type", "text/event-stream"))
-            .andDo(MockMvcResultHandlers.log())
-            .andReturn()
-            .response
-            .contentAsString
+        val missionUpdateEvent =
+            mockMvc.perform(get("/api/v1/missions/sse"))
+                .andExpect(status().isOk)
+                .andExpect(request().asyncStarted())
+                .andExpect(request().asyncResult(nullValue()))
+                .andExpect(header().string("Content-Type", "text/event-stream"))
+                .andDo(MockMvcResultHandlers.log())
+                .andReturn()
+                .response
+                .contentAsString
 
         assertThat(missionUpdateEvent).contains("event:MISSION_UPDATE")
-        assertThat(missionUpdateEvent).contains(
-            "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"isClosed\":false,\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
-        )
+        assertThat(missionUpdateEvent)
+            .contains(
+                "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"completedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"isClosed\":false,\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
+            )
     }
 }

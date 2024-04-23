@@ -53,7 +53,7 @@ export function FilterTags() {
             key={seaFront}
             onDelete={() => onDeleteTag(seaFront, MissionFiltersEnum.SEA_FRONT_FILTER, selectedSeaFronts)}
           >
-            {String(`Facade ${seaFront}`)}
+            {String(`Façade ${seaFront}`)}
           </SingleTag>
         ))}
       {selectedAdministrationNames &&
@@ -112,7 +112,7 @@ export function FilterTags() {
               onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
             }
           >
-            {String(`données ${FrontCompletionStatusLabel[completionStatus]}`)}
+            {String(`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`)}
           </SingleTag>
         ))}
     </StyledContainer>

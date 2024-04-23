@@ -35,7 +35,7 @@ export function MissionStatusTag({ status }: { status: string }) {
         <Tag
           accent={Accent.PRIMARY}
           data-cy="mission-status-tag-upcoming"
-          Icon={Icon.Clock}
+          Icon={Icon.ClockDashed}
           iconColor={THEME.color.mayaBlue}
           withCircleIcon
         >

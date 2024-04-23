@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
-import { getMissionCompletionStatus } from './utils'
+import { getIsMissionEnded, getMissionCompletionStatus } from './utils'
 import { FrontCompletionStatus } from '../../domain/entities/missions'
 
 const pendingMission = {
@@ -79,5 +79,13 @@ describe('mission utils', () => {
 
     const missionCompletionUpcoming = getMissionCompletionStatus(missionUpcoming)
     expect(missionCompletionUpcoming).toBe(undefined)
+  })
+
+  it('getIsMissionEnded Should return true if the mission is ended', async () => {
+    const isMissionEnded = getIsMissionEnded(endedMission.endDateTimeUtc)
+    expect(isMissionEnded).toBe(true)
+
+    const isMissionNotEnded = getIsMissionEnded(pendingMission.endDateTimeUtc)
+    expect(isMissionNotEnded).toBe(false)
   })
 })

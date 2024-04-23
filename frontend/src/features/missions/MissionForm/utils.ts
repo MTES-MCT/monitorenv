@@ -89,7 +89,8 @@ export const validateBeforeOnChange = debounce(
     if (engagedControlUnit) {
       return
     }
+
     dispatch(saveMission(nextValues, false, false))
   },
-  500
+  400
 )

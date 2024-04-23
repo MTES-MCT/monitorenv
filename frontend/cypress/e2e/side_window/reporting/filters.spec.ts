@@ -133,8 +133,8 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by sea-fronts', () => {
-    cy.fill('Facade', [SeaFrontLabel.NAMO])
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Facade NAMO')
+    cy.fill('Façade', [SeaFrontLabel.NAMO])
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Façade NAMO')
 
     cy.wait('@getReportings')
 
@@ -147,7 +147,7 @@ context('Reportings', () => {
       cy.wrap(row).should('contain', 'NAMO')
     })
 
-    cy.fill('Facade', undefined)
+    cy.fill('Façade', undefined)
   })
 
   it('Should filter reportings by status', () => {

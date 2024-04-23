@@ -234,12 +234,12 @@ export function TableReportingsFiltersWithRef(
           />
           <CheckPicker
             isLabelHidden
-            label="Facade"
+            label="Façade"
             name="seaFront"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
             options={seaFrontsOptions}
-            placeholder="Facade"
-            renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
+            placeholder="Façade"
+            renderValue={() => seaFrontFilter && <OptionValue>{`Façade (${seaFrontFilter.length})`}</OptionValue>}
             size="sm"
             style={tagPickerStyle}
             value={seaFrontFilter}

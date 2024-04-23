@@ -39,16 +39,6 @@ class GetFullMissions(
 
         logger.info("Found ${missions.size} mission(s)")
 
-        return missions.map { missionAndFishActions ->
-            val mission = missionAndFishActions.mission
-
-            try {
-                val fishActions =
-                    monitorFishMissionActionsRepository.findFishMissionActionsById(mission.id!!)
-                MissionDTO(mission = mission, fishActions = fishActions)
-            } catch (e: Exception) {
-                MissionDTO(mission = mission, fishActions = listOf())
-            }
-        }
+        return missions
     }
 }

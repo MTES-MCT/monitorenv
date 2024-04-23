@@ -11,7 +11,8 @@ INSERT INTO public.env_actions (id, mission_id, action_type, value, action_start
 ('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 49, 'CONTROL'     , '{"themes": [{"theme": "AMP sans réglementation particulière", "subThemes": ["Contrôle dans une AMP sans réglementation particulière"], "protectedSpecies": []}], "infractions": [{"id": "e56648c1-6ca3-4d5e-a5d2-114aa7c17126", "natinf": ["10231", "10228"], "toProcess": true, "vesselSize": 11, "vesselType": null, "companyName": null, "formalNotice": "PENDING", "observations": "RAS", "relevantCourt": "PRE", "infractionType": "WAITING", "registrationNumber": null, "controlledPersonIdentity": "M DURAND"}], "vehicleType": null, "actionTargetType": "INDIVIDUAL", "actionNumberOfControls": 1}', NULL, '0104000020E61000000100000001010000003B0DADC6D4BB01C0A8387A2964714740', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ABC', null),
 ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 34, 'SURVEILLANCE', '{"themes": [{"theme": "Police des espèces protégées et de leurs habitats (faune et flore)", "subThemes": ["Destruction, capture, arrachage", "Atteinte aux habitats d''espèces protégées"], "protectedSpecies": ["FLORA", "BIRDS"]}, {"theme": "Police des mouillages", "subThemes": ["Mouillage individuel", "ZMEL"], "protectedSpecies": []}], "duration": 0.0, "observations": "RAS", "protectedSpecies": []}', '2022-07-16 10:03:12.588693', '0106000020E61000000100000001030000000100000009000000AD0812BCE168E4BFCCDEEA3227BD4840BE63AEABD812E4BF1C5E8873F8AC484044BD156CA117DABF84C0E2AF49AC48408E16A14DE463CCBFBC9F7168A2A5484008BF4C12D0F97B3F9494F5EA3CAB4840399BF9438A28B43FDC4BF050D9BB48404BAA02B73C2CCCBF24A79C8362CD4840BC46F7A9D24DE1BFA0238D36B2D04840AD0812BCE168E4BFCCDEEA3227BD4840', 'MEMN', NULL, '2022-07-16 12:03:12.588693', NULL, NULL, NULL, NULL, 'ABC', 'DEF'),
 ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 34, 'CONTROL'     , '{"themes": [{"theme": "Police des mouillages", "subThemes": ["Mouillage individuel", "ZMEL"], "protectedSpecies": []}], "observations": "RAS", "infractions": [{"id": "5d5b7829-68cd-4436-8c0b-1cc8db7788a0", "natinf": ["10038","10231"], "toProcess": false, "vesselSize": 45, "vesselType": "COMMERCIAL", "companyName": null, "formalNotice": "PENDING", "observations": "Pas d''observations", "relevantCourt": "LOCAL_COURT", "infractionType": "WITH_REPORT", "registrationNumber": "BALTIK", "controlledPersonIdentity": "John Doe"}], "vehicleType": "VESSEL", "actionTargetType": "VEHICLE", "actionNumberOfControls": 1}', '2022-07-16 09:01:12.588693', '0104000020E610000001000000010100000047A07E6651E3DEBF044620AB65C54840', NULL, NULL,  '2022-07-16 12:03:12.588693', NULL, NULL, NULL, NULL, 'ABC', NULL),
-('4d9a3139-6c60-49a5-b443-0e6238a6a120', 41, 'CONTROL'     , '{"themes": [{"theme": "Police des mouillages", "subThemes": ["Contrôle administratif"], "protectedSpecies": []}], "infractions": [], "vehicleType": null, "observations": "", "actionTargetType": null, "actionNumberOfControls": null}','2022-07-01 02:44:16.588693', NULL, NULL, NULL, NULL, TRUE, TRUE, TRUE, TRUE, 'ABC', 'DEF')
+('4d9a3139-6c60-49a5-b443-0e6238a6a120', 41, 'CONTROL'     , '{"themes": [{"theme": "Police des mouillages", "subThemes": ["Contrôle administratif"], "protectedSpecies": []}], "infractions": [], "vehicleType": null, "observations": "", "actionTargetType": null, "actionNumberOfControls": null}',NULL, NULL, NULL, NULL, NULL, TRUE, TRUE, TRUE, TRUE, 'ABC', 'DEF'),
+('5865b619-3280-4c67-94ca-9f15da7d5aa7', 27, 'CONTROL'     , '{"infractions": [], "vehicleType": "VESSEL", "observations": "", "actionTargetType": "VEHICLE", "actionNumberOfControls": 1}','2022-07-01 02:44:16.588693', NULL, NULL, NULL, NULL, FALSE, FALSE, FALSE, FALSE, 'ABC', 'EFG')
 ;
 
 
@@ -35,7 +36,8 @@ INSERT INTO public.env_actions_control_plan_themes (env_action_id, theme_id) VAL
 ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 15),
 ('e2257638-ddef-4611-960c-7675a3254c38', 9),
 ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 12),
-('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 1)
+('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 1),
+('5865b619-3280-4c67-94ca-9f15da7d5aa7', 3)
 ;
 
 INSERT INTO public.env_actions_control_plan_sub_themes(env_action_id, subtheme_id) VALUES
@@ -49,7 +51,8 @@ INSERT INTO public.env_actions_control_plan_sub_themes(env_action_id, subtheme_i
 ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 117),
 ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 118),
 ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 102),
-('4d9a3139-6c60-49a5-b443-0e6238a6a120', 42)
+('4d9a3139-6c60-49a5-b443-0e6238a6a120', 42),
+('5865b619-3280-4c67-94ca-9f15da7d5aa7', 5)
 ;
 
 INSERT INTO public.env_actions_control_plan_tags(env_action_id, tag_id) VALUES

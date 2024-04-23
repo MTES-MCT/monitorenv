@@ -53,7 +53,7 @@ export function MissionFormBottomBar({
       <Separator />
       <MissionInfos>
         <span>
-          {!values?.createdAtUtc && <>Mission non enregistrée.</>}
+          {!values?.createdAtUtc && <>Mission non créée.</>}
           {values?.createdAtUtc && (
             <>
               Mission créée par le {missionSourceEnum[values?.missionSource]?.label} le{' '}

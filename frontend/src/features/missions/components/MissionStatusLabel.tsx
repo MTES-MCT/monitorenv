@@ -23,7 +23,7 @@ export function MissionStatusLabel({ missionStatus }) {
     case missionStatusLabels.UPCOMING.code:
       return (
         <StatusWrapper color={missionStatusLabels.UPCOMING.color}>
-          <Icon.Clock color={missionStatusLabels.UPCOMING.color} />
+          <Icon.ClockDashed color={missionStatusLabels.UPCOMING.color} />
           {missionStatusLabels.UPCOMING.libelle}
         </StatusWrapper>
       )

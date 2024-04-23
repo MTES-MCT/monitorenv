@@ -42,8 +42,8 @@ export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, la
     missionStatus: getMissionStatus(mission),
     missionTypes: mission.missionTypes,
     numberOfActions: mission.envActions?.length ?? 0,
-    numberOfControls: getTotalOfControls(mission),
-    numberOfSurveillance: getTotalOfSurveillances(mission),
+    numberOfControls: getTotalOfControls(mission.envActions ?? []),
+    numberOfSurveillance: getTotalOfSurveillances(mission.envActions ?? []),
     overlayCoordinates: undefined,
     startDateTimeUtc: mission.startDateTimeUtc
   })

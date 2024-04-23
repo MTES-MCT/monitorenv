@@ -7,6 +7,9 @@ import { getDateCell } from '../getDateCell'
 import { getMissionTypeCell } from '../getMissionTypeCell'
 import { getNumberOfControlsCell } from '../getNumberOfControlsCell'
 import { getResourcesCell } from '../getResourcesCell'
+import { sortCompletion, sortNumberOfControls, sortStatus } from '../utils'
+
+import type { Row } from '@tanstack/react-table'
 
 export const Columns = [
   {
@@ -15,7 +18,9 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
-    size: 140
+    maxSize: 109,
+    minSize: 109,
+    size: 109 // +24(padding) + 1(border) = 134
   },
   {
     accessorFn: row => row.endDateTimeUtc,
@@ -23,15 +28,19 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
-    size: 140
+    maxSize: 109,
+    minSize: 109,
+    size: 109 // +24(padding) + 1(border) = 134
   },
   {
     accessorFn: row => row.facade,
     cell: info => info.getValue(),
     enableSorting: true,
-    header: () => 'Facade',
+    header: () => 'Façade',
     id: 'seaFront',
-    size: 96
+    maxSize: 71,
+    minSize: 71,
+    size: 71 // +24(padding) + 1(border) = 96
   },
   {
     accessorFn: row => row.missionTypes,
@@ -39,7 +48,9 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
-    size: 120
+    maxSize: 95,
+    minSize: 95,
+    size: 95 // +24(padding) + 1(border) = 120
   },
   {
     accessorFn: row => row.controlUnits,
@@ -47,7 +58,9 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
-    size: 310
+    maxSize: 231,
+    minSize: 231,
+    size: 231 // +24(padding) + 1(border) = 256
   },
 
   {
@@ -56,31 +69,39 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 544
+    maxSize: 367,
+    minSize: 367,
+    size: 367 // +24(padding) + 1(border) = 392
   },
   {
     accessorFn: row => row.envActions,
     cell: info => getNumberOfControlsCell(info.getValue()),
-    enableSorting: false,
-    header: () => 'Contrôles',
-    id: 'controls',
-    size: 100
+    header: () => 'Ctr.',
+    id: 'envActions',
+    maxSize: 41,
+    minSize: 41,
+    size: 41, // +24(padding) + 1(border) = 66
+    sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => sortNumberOfControls(rowA, rowB, columnId)
   },
   {
     accessorFn: row => row,
     cell: ({ row }) => <CellStatus row={row} />,
-    enableSorting: false,
     header: () => 'Statut',
     id: 'status',
-    size: 120
+    maxSize: 82,
+    minSize: 82,
+    size: 82, // +24(padding) + 1(border) = 107
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
   },
   {
     accessorFn: row => row,
     cell: ({ row }) => <CellCompletionStatus row={row} />,
-    enableSorting: false,
     header: () => 'État données',
     id: 'completion',
-    size: 136
+    maxSize: 102,
+    minSize: 102,
+    size: 102, // +24(padding) + 1(border) = 127
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {
     accessorFn: row => row.geom,
@@ -88,7 +109,9 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 55
+    maxSize: 28,
+    minSize: 28,
+    size: 28
   },
   {
     accessorFn: row => row.id,
@@ -96,6 +119,8 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'edit',
-    size: 55
+    maxSize: 34,
+    minSize: 34,
+    size: 34
   }
 ]
