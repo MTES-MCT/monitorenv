@@ -404,13 +404,10 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     // uncheck all fields
     cy.fill('Contrôle administratif', false)
-    cy.wait(200)
     cy.fill('Respect du code de la navigation sur le plan d’eau', false)
-    cy.wait(200)
     cy.fill('Gens de mer', false)
-    cy.wait(200)
     cy.fill('Equipement de sécurité et respect des normes', false)
-    cy.wait(400)
+    cy.wait(200)
 
     cy.waitForLastRequest(
       '@updateMission',
