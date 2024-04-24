@@ -33,6 +33,7 @@ export const saveReporting =
           dispatch(
             reportingActions.setCreatedReporting({ createdReporting: newReporting, previousId: String(values.id) })
           )
+          dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         } else {
           dispatch(
             reportingActions.setReporting({

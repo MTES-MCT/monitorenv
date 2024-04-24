@@ -1,3 +1,4 @@
+import { Italic } from '@components/style'
 import { Button, FormikTextInput, IconButton, MultiRadio, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -54,6 +55,9 @@ export const SaveBanner = styled.div`
   justify-content: space-between;
   padding: 10px 16px;
   z-index: 1;
+`
+export const StyledItalic = styled(Italic)`
+  font-size: 13px;
 `
 export const ReportingInfosContainer = styled.div`
   display: flex;

@@ -91,7 +91,8 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
-                    updatedAtUtc = ZonedDateTime.parse(
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
                         "2022-01-15T14:50:09Z",
                     ),
                     withVHFAnswer = null,
@@ -130,7 +131,8 @@ class ReportingsITests {
                 validityTime = 10,
                 isArchived = false,
                 openBy = "CDA",
-                updatedAtUtc = ZonedDateTime.parse(
+                updatedAtUtc =
+                ZonedDateTime.parse(
                     "2022-01-15T14:50:09Z",
                 ),
             )
@@ -170,7 +172,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
-            .andExpect(jsonPath("$.updatedAt").value("2022-01-15T14:50:09Z"))
+            .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
     }
 
     @Test
@@ -207,7 +209,8 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
-                    updatedAtUtc = ZonedDateTime.parse(
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
                         "2022-01-15T14:50:09Z",
                     ),
                 ),
@@ -255,7 +258,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
-            .andExpect(jsonPath("$.updatedAt").value("2022-01-15T14:50:09Z"))
+            .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
     }
 
     @Test
@@ -352,7 +355,8 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
-                    updatedAtUtc = ZonedDateTime.parse(
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
                         "2022-01-15T14:50:09Z",
                     ),
                 ),
@@ -390,8 +394,9 @@ class ReportingsITests {
                     validityTime = 10,
                     isArchived = false,
                     openBy = "CDA",
-                    updatedAtUtc = ZonedDateTime.parse(
-                        "2022-01-16T14:50:09Z",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
                     ),
                 ),
             )
@@ -428,7 +433,8 @@ class ReportingsITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
-            .andExpect(jsonPath("$.createdAt").value("2022-01-16T14:50:09Z"))
+            .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
+            .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
     }
 
     @Test

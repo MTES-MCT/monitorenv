@@ -1,5 +1,5 @@
 import { Italic } from '@components/style'
-import { AutoSaveTag } from '@features/missions/MissionForm/AutoSaveTag'
+import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import {
   customDayjs,
   FormikEffect,
@@ -54,7 +54,8 @@ import {
   StyledToggle,
   StyledFormikTextInput,
   ReportTypeMultiRadio,
-  SaveBanner
+  SaveBanner,
+  StyledItalic
 } from '../style'
 import { isReportingAutoSaveEnabled, shouldSaveReporting } from '../utils'
 
@@ -265,7 +266,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         {!values?.updatedAtUtc && <Italic>Signalement non créé</Italic>}
         {values?.updatedAtUtc && (
           <>
-            <Italic>Dernière modification le {formattedUpdatedDate}</Italic>
+            <StyledItalic>Dernière modification le {formattedUpdatedDate}</StyledItalic>
             <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
           </>
         )}

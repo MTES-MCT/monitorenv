@@ -67,6 +67,7 @@ const reportingSlice = createSlice({
         state.reportings = { ...state.reportings, [createdReportingId]: action.payload.createdReporting }
       }
       state.activeReportingId = createdReportingId
+      state.selectedReportingIdOnMap = createdReportingId
     },
     setIsConfirmCancelDialogVisible(state, action: PayloadAction<boolean>) {
       state.isConfirmCancelDialogVisible = action.payload

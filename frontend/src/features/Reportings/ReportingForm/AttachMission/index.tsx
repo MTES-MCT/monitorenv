@@ -7,12 +7,11 @@ import styled from 'styled-components'
 
 import { AttachedMissionCard } from './AttachedMissionCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
+import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
 } from '../../../../domain/use_cases/map/updateMapInteractionListeners'
-import { unattachMissionFromReporting } from '../../../../domain/use_cases/reporting/unattachMissionFromReporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { attachMissionToReportingSliceActions } from '../../slice'
@@ -24,10 +23,6 @@ export function AttachMission() {
   const dispatch = useAppDispatch()
   const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
   const attachedMission = useAppSelector(state => state.attachMissionToReporting.attachedMission)
-  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
-  const reportingContext = useAppSelector(state =>
-    activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
-  )
 
   const attachMission = () => {
     dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
@@ -35,19 +30,11 @@ export function AttachMission() {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.ATTACH_MISSION))
   }
 
-  const unattachMission = () => {
+  const unattachMission = async () => {
+    await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     setFieldValue('detachedFromMissionAtUtc', new Date().toISOString())
     setFieldValue('attachedEnvActionId', null)
     setFieldValue('hasNoUnitAvailable', false)
-
-    const valuesUpdated = {
-      ...values,
-      attachedEnvActionId: undefined,
-      detachedFromMissionAtUtc: new Date().toISOString(),
-      hasNoUnitAvailable: false
-    }
-
-    dispatch(unattachMissionFromReporting(valuesUpdated, reportingContext ?? ReportingContext.MAP))
   }
 
   const createMission = async () => {
@@ -63,13 +50,13 @@ export function AttachMission() {
   // because of the map interaction to attach mission
   useEffect(() => {
     if ((missionId && missionId !== values.missionId) || (!missionId && values.missionId)) {
-      setFieldValue('missionId', missionId)
+      setFieldValue('missionId', missionId ?? null)
       setFieldValue('attachedMission', attachedMission)
       setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
-      setFieldValue('detachedFromMissionAtUtc', undefined)
+      setFieldValue('detachedFromMissionAtUtc', null)
       setFieldValue('hasNoUnitAvailable', false)
     }
-  }, [missionId, setFieldValue, dispatch, values.missionId, attachedMission])
+  }, [missionId, setFieldValue, dispatch, values.missionId, attachedMission, values.attachedToMissionAtUtc])
 
   const isButtonDisabled = !values.isControlRequired || values.isArchived
 
