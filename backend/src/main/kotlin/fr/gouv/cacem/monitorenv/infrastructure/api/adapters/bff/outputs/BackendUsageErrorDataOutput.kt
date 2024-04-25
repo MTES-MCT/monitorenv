@@ -1,7 +1,9 @@
-package fr.gouv.cacem.monitorenv.domain.exceptions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
+
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 
 /**
- * Domain exception to throw when a request is valid but the backend cannot process it.
+ * Error output to use when the request is valid but the backend cannot process it.
  *
  * It's called "usage" because this request likely comes from an end-user action that's no longer valid
  * which happens when their client data is not up-to-date with the backend.
@@ -11,12 +13,12 @@ package fr.gouv.cacem.monitorenv.domain.exceptions
  * - A user tries to delete a resource that doesn't exist anymore.
  *
  * ## Logging
- * This exception is NOT logged on the Backend side.
+ * The related exception is NOT logged on the Backend side.
  * It should NOT be logged on the Frontend side,
  * it should rather display a comprehensible error message to the end-user.
  */
-open class BackendUsageException(
+data class BackendUsageErrorDataOutput(
     val code: BackendUsageErrorCode,
-    final override val message: String? = null,
     val data: Any? = null,
-) : Throwable(code.name)
+    val message: String? = null,
+)
