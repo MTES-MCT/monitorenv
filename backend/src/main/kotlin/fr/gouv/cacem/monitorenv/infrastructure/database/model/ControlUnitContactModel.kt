@@ -44,7 +44,7 @@ data class ControlUnitContactModel(
     @Column(name = "is_sms_distribution_contact", nullable = false)
     val isSmsDistributionContact: Boolean? = false,
 
-    ) {
+) {
     companion object {
         fun fromControlUnitContact(
             controlUnitContact: ControlUnitContactEntity,

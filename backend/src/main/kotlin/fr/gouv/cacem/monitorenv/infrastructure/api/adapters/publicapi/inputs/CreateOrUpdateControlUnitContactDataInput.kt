@@ -19,6 +19,7 @@ data class CreateOrUpdateControlUnitContactDataInput(
             name = this.name,
             phone = this.phone,
             isEmailDistributionContact = this.isEmailDistributionContact,
-            isSmsDistributionContact = this.isSmsDistributionContact)
+            isSmsDistributionContact = this.isSmsDistributionContact,
+        )
     }
 }
