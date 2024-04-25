@@ -48,7 +48,7 @@ export const editMissionInLocalStore =
 
       await missionRequest.unsubscribe()
     } catch (error) {
-      dispatch(setToast({ containerId: context, message: 'Erreur à la création ou à la modification de la mission' }))
+      dispatch(setToast({ containerId: context, message: 'Erreur à la récupération de la mission' }))
     }
   }
 

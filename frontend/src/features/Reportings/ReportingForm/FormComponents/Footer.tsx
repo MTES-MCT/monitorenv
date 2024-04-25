@@ -1,6 +1,5 @@
 import { Accent, Icon, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { reopenReporting } from 'domain/use_cases/reporting/reopenReporting'
-import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 
@@ -15,9 +14,16 @@ type ReportingFooterProps = {
   isAutoSaveEnabled: boolean
   onClose: () => void
   onDelete: () => void
+  onSave: () => void
   setMustIncreaseValidity: (value: boolean) => void
 }
-export function Footer({ isAutoSaveEnabled, onClose, onDelete, setMustIncreaseValidity }: ReportingFooterProps) {
+export function Footer({
+  isAutoSaveEnabled,
+  onClose,
+  onDelete,
+  onSave,
+  setMustIncreaseValidity
+}: ReportingFooterProps) {
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext =
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
@@ -57,7 +63,6 @@ export function Footer({ isAutoSaveEnabled, onClose, onDelete, setMustIncreaseVa
         return
       }
       setFieldValue('isArchived', true)
-      dispatch(saveReporting({ ...values, isArchived: true }, reportingContext))
     })
   }
 
@@ -96,7 +101,7 @@ export function Footer({ isAutoSaveEnabled, onClose, onDelete, setMustIncreaseVa
             Fermer
           </ButtonWithWiteBg>
         ) : (
-          <ButtonWithWiteBg accent={Accent.SECONDARY} data-cy="save-reporting" Icon={Icon.Save} onClick={onClose}>
+          <ButtonWithWiteBg accent={Accent.SECONDARY} data-cy="save-reporting" Icon={Icon.Save} onClick={onSave}>
             Enregistrer et quitter
           </ButtonWithWiteBg>
         )}

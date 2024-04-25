@@ -173,6 +173,15 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     setIsDeletModalOpen(true)
   }
 
+  const saveAndQuit = () => {
+    if (isEmpty(errors)) {
+      dispatch(saveReporting(values, reportingContext, true))
+
+      return
+    }
+    dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
+  }
+
   const closeReporting = async () => {
     if (isFormDirty) {
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
@@ -329,6 +338,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         isAutoSaveEnabled={isAutoSaveEnabled}
         onClose={closeReporting}
         onDelete={deleteCurrentReporting}
+        onSave={saveAndQuit}
         setMustIncreaseValidity={setMustIncreaseValidity}
       />
     </StyledFormContainer>
