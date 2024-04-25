@@ -37,7 +37,7 @@ class GetControlUnitContactsUTests {
                     name = "Contact 1",
                     phone = "123-456-7890",
                     isEmailDistributionContact = true,
-                    isSmsDistributionContact = false
+                    isSmsDistributionContact = false,
                 ),
             ),
             FullControlUnitContactDTO(
@@ -57,7 +57,7 @@ class GetControlUnitContactsUTests {
                     name = "Contact 2",
                     phone = "098-765-4321",
                     isEmailDistributionContact = false,
-                    isSmsDistributionContact = true
+                    isSmsDistributionContact = true,
                 ),
             ),
         )
