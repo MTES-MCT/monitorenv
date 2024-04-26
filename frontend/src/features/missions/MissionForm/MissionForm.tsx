@@ -8,7 +8,7 @@ import {
   THEME,
   usePrevious
 } from '@mtes-mct/monitor-ui'
-import { useMissionEventContext } from 'context/useMissionEventContext'
+import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'

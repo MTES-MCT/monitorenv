@@ -9,6 +9,7 @@ import {
   Toggle
 } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
+import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -24,7 +25,9 @@ import { Target } from './FormComponents/Target'
 import { ThemeSelector } from './FormComponents/ThemeSelector'
 import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelector'
 import { Validity } from './FormComponents/Validity'
+import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
+import { isReportingAutoSaveEnabled, shouldSaveReporting } from './utils'
 import {
   type Reporting,
   ReportingTypeEnum,
@@ -58,7 +61,6 @@ import {
   SaveBanner,
   StyledItalic
 } from '../style'
-import { isReportingAutoSaveEnabled, shouldSaveReporting } from '../utils'
 
 import type { AtLeast } from '../../../types'
 
@@ -92,6 +94,9 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     () => values.updatedAtUtc && getDateAsLocalizedStringVeryCompact(values.updatedAtUtc),
     [values.updatedAtUtc]
   )
+
+  const { getReportingEventById } = useReportingEventContext()
+  const reportingEvent = getReportingEventById(activeReportingId)
 
   const isAutoSaveEnabled = useMemo(() => {
     if (!isReportingAutoSaveEnabled()) {
@@ -205,7 +210,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
       return
     }
 
-    if (!shouldSaveReporting(selectedReporting, nextValues)) {
+    if (!shouldSaveReporting(selectedReporting, reportingEvent, nextValues)) {
       return
     }
     dispatch(saveReporting(nextValues, reportingContext))
@@ -221,10 +226,17 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     ) {
       setFieldValue('updatedAtUtc', selectedReporting?.updatedAtUtc)
     }
+    if (
+      reportingEvent &&
+      !customDayjs(reportingEvent.updatedAtUtc).isSame(customDayjs(values?.updatedAtUtc), 'minutes')
+    ) {
+      setFieldValue('updatedAtUtc', reportingEvent?.updatedAtUtc)
+    }
 
+    // we want to listen to `updatedAtUtc` after `saveReporting` or when a reporting event is received
     // there's no need to listen for changes in `values`, since `updatedAtUtc` is read-only
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedReporting?.updatedAtUtc, isAutoSaveEnabled])
+  }, [selectedReporting?.updatedAtUtc, isAutoSaveEnabled, reportingEvent])
 
   if (!selectedReporting || isEmpty(values)) {
     return null
@@ -233,6 +245,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   return (
     <StyledFormContainer>
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues)} />
+      <FormikSyncReportingFields reportingId={selectedReporting.id} />
       <CancelEditDialog
         key={`cancel-edit-modal-${selectedReporting.id}`}
         onCancel={returnToEdition}

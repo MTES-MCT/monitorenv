@@ -17,6 +17,7 @@ export type SelectedReportingType = {
 type ReportingState = {
   activeReportingId: number | string | undefined
   isConfirmCancelDialogVisible: boolean
+  isListeningToEvents: boolean
   reportings: SelectedReportingType
   selectedReportingIdOnMap: number | string | undefined
 }
@@ -24,6 +25,7 @@ type ReportingState = {
 const INITIAL_STATE: ReportingState = {
   activeReportingId: undefined,
   isConfirmCancelDialogVisible: false,
+  isListeningToEvents: true,
   reportings: {},
   selectedReportingIdOnMap: undefined
 }
@@ -86,6 +88,9 @@ const reportingSlice = createSlice({
         }
       }
     },
+    setIsListeningToEvents(state, action: PayloadAction<boolean>) {
+      state.isListeningToEvents = action.payload
+    },
     setReporting(state, action: PayloadAction<ReportingType>) {
       const { id } = action.payload.reporting
       if (!id) {
@@ -129,6 +134,26 @@ const reportingSlice = createSlice({
     },
     setSelectedReportingIdOnMap(state, action: PayloadAction<number | undefined>) {
       state.selectedReportingIdOnMap = action.payload
+    },
+    updateUnactiveReporting(state, action: PayloadAction<AtLeast<Partial<Reporting>, 'id'>>) {
+      const { id } = action.payload
+
+      // If the mission is active, hence the form is open, the form will be updated from Formik (see FormikSyncMissionFields.ts)
+      if (!id || id === state.activeReportingId) {
+        return
+      }
+
+      const reporting = state.reportings[id]
+      if (reporting) {
+        state.reportings[id] = {
+          ...reporting,
+          reporting: {
+            // We keep all data not received from the Reporting event (see REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)
+            ...reporting.reporting,
+            ...action.payload
+          } as Reporting
+        }
+      }
     }
   }
 })
