@@ -55,7 +55,7 @@ INSERT INTO public.control_unit_resources(
     (   10,       1,           10018,        'PAM Themis', 'PATROL_BOAT');
 
 INSERT INTO public.control_unit_contacts (
-    control_unit_id,                         email,              name,            phone,         created_at_utc,         updated_at_utc, is_email_distribution_contact, is_sms_distribution_contact) VALUES
+    control_unit_id,                         email,              name,            phone,         created_at_utc,         updated_at_utc, is_email_subscription_contact, is_sms_subscription_contact) VALUES
     (         10018,      'p602@ca.plane.pour.moi',      'UNIT_CHIEF', 'Balance ton 06', '2020-01-05 12:36:52Z', '2022-01-05 10:36:22Z',                         false,                        true),
     (         10018,     'diffusion.p602@email.fr',          'OFFICE',             NULL, '2020-02-08 00:36:42Z', '2022-01-05 10:37:22Z',                          true,                        true),
     (         10018, 'diffusion_bis.p602@email.fr',          'OFFICE',             NULL, '2020-02-08 00:36:42Z', '2022-01-05 10:37:22Z',                          true,                        true),

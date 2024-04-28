@@ -6,6 +6,6 @@ data class ControlUnitContactEntity(
     val email: String? = null,
     val name: String,
     val phone: String? = null,
-    val isEmailDistributionContact: Boolean? = false,
-    val isSmsDistributionContact: Boolean? = false,
+    val isEmailSubscriptionContact: Boolean? = false,
+    val isSmsSubscriptionContact: Boolean? = false,
 )

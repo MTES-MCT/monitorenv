@@ -8,6 +8,6 @@ ON cu.id = cuc.control_unit_id
 WHERE
     cu.id IN :control_unit_ids
     AND email IS NOT NULL
-    AND is_email_distribution_contact
+    AND is_email_subscription_contact
 GROUP BY 1, 2
 ORDER BY 1, 2
