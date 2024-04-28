@@ -65,8 +65,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Contact 1",
                             phone = "06 01 xx xx xx",
                             email = "email_1",
-                            isEmailDistributionContact = true,
-                            isSmsDistributionContact = false,
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
                         ),
                         ControlUnitContactEntity(
                             id = 2,
@@ -74,8 +74,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Contact 2",
                             email = null,
                             phone = "06 02 xx xx xx",
-                            isEmailDistributionContact = false,
-                            isSmsDistributionContact = true,
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = true,
                         ),
                     ),
                     controlUnitResources =
@@ -310,8 +310,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             email = "email_1",
                             name = "Contact 1",
                             phone = "06 01 xx xx xx",
-                            isEmailDistributionContact = true,
-                            isSmsDistributionContact = false,
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
                         ),
                         ControlUnitContactEntity(
                             id = 2,
@@ -319,8 +319,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             email = null,
                             name = "Contact 2",
                             phone = "06 02 xx xx xx",
-                            isEmailDistributionContact = false,
-                            isSmsDistributionContact = true,
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = true,
                         ),
                     ),
                     controlUnitResources =

@@ -57,8 +57,8 @@ class ControlUnitContactsITests {
             email = null,
             name = "Contact Name",
             phone = null,
-            isEmailDistributionContact = true,
-            isSmsDistributionContact = false,
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = false,
         )
 
         val newControlUnitContactData = CreateOrUpdateControlUnitContactDataInput(
@@ -100,8 +100,8 @@ class ControlUnitContactsITests {
                 email = null,
                 name = "Contact Name",
                 phone = null,
-                isEmailDistributionContact = true,
-                isSmsDistributionContact = false,
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = false,
             ),
         )
 
@@ -134,8 +134,8 @@ class ControlUnitContactsITests {
                     email = null,
                     name = "Contact Name",
                     phone = null,
-                    isEmailDistributionContact = true,
-                    isSmsDistributionContact = false,
+                    isEmailSubscriptionContact = true,
+                    isSmsSubscriptionContact = false,
                 ),
             ),
 
@@ -155,8 +155,8 @@ class ControlUnitContactsITests {
                     email = null,
                     name = "Contact Name 2",
                     phone = null,
-                    isEmailDistributionContact = true,
-                    isSmsDistributionContact = false,
+                    isEmailSubscriptionContact = true,
+                    isSmsSubscriptionContact = false,
                 ),
             ),
         )
@@ -178,8 +178,8 @@ class ControlUnitContactsITests {
             email = null,
             name = "Updated Contact Name",
             phone = null,
-            isEmailDistributionContact = true,
-            isSmsDistributionContact = false,
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = false,
         )
 
         val nextControlUnitContactData = CreateOrUpdateControlUnitContactDataInput(

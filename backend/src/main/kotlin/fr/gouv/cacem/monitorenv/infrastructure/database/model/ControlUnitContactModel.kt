@@ -38,11 +38,11 @@ data class ControlUnitContactModel(
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,
 
-    @Column(name = "is_email_distribution_contact", nullable = false)
-    val isEmailDistributionContact: Boolean? = false,
+    @Column(name = "is_email_subscription_contact", nullable = false)
+    val isEmailSubscriptionContact: Boolean? = false,
 
-    @Column(name = "is_sms_distribution_contact", nullable = false)
-    val isSmsDistributionContact: Boolean? = false,
+    @Column(name = "is_sms_subscription_contact", nullable = false)
+    val isSmsSubscriptionContact: Boolean? = false,
 
 ) {
     companion object {
@@ -56,8 +56,8 @@ data class ControlUnitContactModel(
                 email = controlUnitContact.email,
                 name = controlUnitContact.name,
                 phone = controlUnitContact.phone,
-                isEmailDistributionContact = controlUnitContact.isEmailDistributionContact,
-                isSmsDistributionContact = controlUnitContact.isSmsDistributionContact,
+                isEmailSubscriptionContact = controlUnitContact.isEmailSubscriptionContact,
+                isSmsSubscriptionContact = controlUnitContact.isSmsSubscriptionContact,
             )
         }
     }
@@ -69,8 +69,8 @@ data class ControlUnitContactModel(
             email,
             name,
             phone,
-            isEmailDistributionContact,
-            isSmsDistributionContact,
+            isEmailSubscriptionContact,
+            isSmsSubscriptionContact,
         )
     }
 
@@ -83,6 +83,6 @@ data class ControlUnitContactModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone, isEmailDistributionContact = $isEmailDistributionContact, isSmsDistributionContact = $isSmsDistributionContact)"
+        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone, isEmailSubscriptionContact = $isEmailSubscriptionContact, isSmsSubscriptionContact = $isSmsSubscriptionContact)"
     }
 }
