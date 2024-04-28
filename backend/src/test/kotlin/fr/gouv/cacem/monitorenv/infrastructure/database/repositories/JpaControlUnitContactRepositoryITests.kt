@@ -34,11 +34,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 10000,
-                    name = "Contact 1",
-                    phone = "06 01 xx xx xx",
                     email = "email_1",
                     isEmailSubscriptionContact = true,
                     isSmsSubscriptionContact = false,
+                    name = "Contact 1",
+                    phone = "06 01 xx xx xx",
                 ),
             ),
         )
@@ -57,11 +57,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact = ControlUnitContactEntity(
                     id = 3,
                     controlUnitId = 10003,
-                    name = "Contact 3",
-                    phone = null,
                     email = "email_3",
                     isEmailSubscriptionContact = false,
                     isSmsSubscriptionContact = true,
+                    name = "Contact 3",
+                    phone = null,
                 ),
             ),
         )
@@ -86,11 +86,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 10000,
-                    name = "Contact 1",
                     email = "email_1",
-                    phone = "06 01 xx xx xx",
                     isEmailSubscriptionContact = true,
                     isSmsSubscriptionContact = false,
+                    name = "Contact 1",
+                    phone = "06 01 xx xx xx",
                 ),
             ),
         )
@@ -104,11 +104,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         val newControlUnitContact = ControlUnitContactEntity(
             controlUnitId = 10000,
-            name = "Contact Name",
-            phone = "0123456789",
             email = "Adresse email",
             isEmailSubscriptionContact = false,
             isSmsSubscriptionContact = true,
+            name = "Contact Name",
+            phone = "0123456789",
         )
 
         val createdControlUnitContact = jpaControlUnitContactRepository.save(newControlUnitContact)
@@ -121,10 +121,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val nextControlUnitContact = ControlUnitContactEntity(
             id = 4,
             controlUnitId = 10001,
-            name = "Updated Contact Name",
-            phone = "9876543210",
+            email = null,
             isEmailSubscriptionContact = true,
             isSmsSubscriptionContact = true,
+            name = "Updated Contact Name",
+            phone = "9876543210",
         )
 
         val updatedControlUnitContact = jpaControlUnitContactRepository.save(nextControlUnitContact)

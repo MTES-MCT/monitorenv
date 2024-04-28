@@ -12,8 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
-class GetControlUnitContactsUTests {
-
+class GetV1ControlUnitContactsUTests {
     @MockBean
     private lateinit var controlUnitContactRepository: IControlUnitContactRepository
 
@@ -34,10 +33,10 @@ class GetControlUnitContactsUTests {
                     id = 1,
                     controlUnitId = 1,
                     email = "contact1@example.com",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
                     name = "Contact 1",
                     phone = "123-456-7890",
-                    isEmailSubscriptionContact = true,
-                    isSmsSubscriptionContact = false,
                 ),
             ),
             FullControlUnitContactDTO(
@@ -54,10 +53,10 @@ class GetControlUnitContactsUTests {
                     id = 2,
                     controlUnitId = 2,
                     email = "contact2@example.com",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
                     name = "Contact 2",
                     phone = "098-765-4321",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = true,
                 ),
             ),
         )

@@ -22,13 +22,19 @@ data class ControlUnitContactModel(
     val controlUnit: ControlUnitModel,
 
     @Column(name = "email")
-    val email: String? = null,
+    val email: String?,
+
+    @Column(name = "is_email_subscription_contact")
+    val isEmailSubscriptionContact: Boolean,
+
+    @Column(name = "is_sms_subscription_contact")
+    val isSmsSubscriptionContact: Boolean,
 
     @Column(name = "name")
     val name: String,
 
     @Column(name = "phone")
-    val phone: String? = null,
+    val phone: String?,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
@@ -37,13 +43,6 @@ data class ControlUnitContactModel(
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,
-
-    @Column(name = "is_email_subscription_contact", nullable = false)
-    val isEmailSubscriptionContact: Boolean? = false,
-
-    @Column(name = "is_sms_subscription_contact", nullable = false)
-    val isSmsSubscriptionContact: Boolean? = false,
-
 ) {
     companion object {
         fun fromControlUnitContact(
@@ -54,10 +53,10 @@ data class ControlUnitContactModel(
                 id = controlUnitContact.id,
                 controlUnit = controlUnitModel,
                 email = controlUnitContact.email,
-                name = controlUnitContact.name,
-                phone = controlUnitContact.phone,
                 isEmailSubscriptionContact = controlUnitContact.isEmailSubscriptionContact,
                 isSmsSubscriptionContact = controlUnitContact.isSmsSubscriptionContact,
+                name = controlUnitContact.name,
+                phone = controlUnitContact.phone,
             )
         }
     }
@@ -67,10 +66,10 @@ data class ControlUnitContactModel(
             id,
             controlUnitId = requireNotNull(controlUnit.id),
             email,
-            name,
-            phone,
             isEmailSubscriptionContact,
             isSmsSubscriptionContact,
+            name,
+            phone,
         )
     }
 
