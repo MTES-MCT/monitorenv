@@ -51,10 +51,9 @@ class CreateOrUpdateControlUnitContactUTests {
     @Test
     fun `execute should unsubcribe other control unit contacts from emails if a new one is subscribing to emails`() {
         // Given
-        val requestedId = 1
         val updatedControlUnitContact = ControlUnitContactEntity(
-            id = requestedId,
-            controlUnitId = 2,
+            id = 1,
+            controlUnitId = 5,
             email = "bob@example.org",
             isEmailSubscriptionContact = true,
             isSmsSubscriptionContact = false,
@@ -79,7 +78,7 @@ class CreateOrUpdateControlUnitContactUTests {
             ),
             controlUnitContacts = listOf(
                 ControlUnitContactEntity(
-                    id = requestedId,
+                    id = updatedControlUnitContact.id,
                     controlUnitId = 5,
                     email = "contact1@example.org",
                     isEmailSubscriptionContact = false,
@@ -117,22 +116,26 @@ class CreateOrUpdateControlUnitContactUTests {
             ),
             controlUnitResources = listOf(),
         )
-        given(controlUnitRepository.findById(requestedId)).willReturn(firstRepositoryOutputMock)
+        given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
+            .willReturn(firstRepositoryOutputMock)
 
         val secondRepositoryExpectedInput = firstRepositoryOutputMock.controlUnitContacts[1].copy(
             isEmailSubscriptionContact = false,
         )
         val secondRepositoryOutputMock = secondRepositoryExpectedInput
-        given(controlUnitContactRepository.save(secondRepositoryExpectedInput)).willReturn(secondRepositoryOutputMock)
+        given(controlUnitContactRepository.save(secondRepositoryExpectedInput))
+            .willReturn(secondRepositoryOutputMock)
 
         val thirdRepositoryExpectedInput = firstRepositoryOutputMock.controlUnitContacts[2].copy(
             isEmailSubscriptionContact = false,
         )
         val thirdRepositoryOutputMock = thirdRepositoryExpectedInput
-        given(controlUnitContactRepository.save(thirdRepositoryExpectedInput)).willReturn(thirdRepositoryOutputMock)
+        given(controlUnitContactRepository.save(thirdRepositoryExpectedInput))
+            .willReturn(thirdRepositoryOutputMock)
 
         val fourthRepositoryOutputMock = updatedControlUnitContact
-        given(controlUnitContactRepository.save(updatedControlUnitContact)).willReturn(fourthRepositoryOutputMock)
+        given(controlUnitContactRepository.save(updatedControlUnitContact))
+            .willReturn(fourthRepositoryOutputMock)
 
         // When
         val result = CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
@@ -141,7 +144,7 @@ class CreateOrUpdateControlUnitContactUTests {
         // Then
         assertThat(result).isEqualTo(fourthRepositoryOutputMock)
 
-        BDDMockito.verify(controlUnitRepository).findById(requestedId)
+        BDDMockito.verify(controlUnitRepository).findById(updatedControlUnitContact.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(secondRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(thirdRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(updatedControlUnitContact)
