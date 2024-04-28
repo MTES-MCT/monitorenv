@@ -78,7 +78,7 @@ const StyledForm = styled.form`
   background-color: ${p => p.theme.color.gainsboro};
   padding: 16px;
 
-  > div:not(:first-child),
+  > div:not(:first-child, .Component-Banner),
   .Component-Message {
     margin-top: 16px;
   }

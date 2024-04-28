@@ -1,4 +1,4 @@
-import { Accent, Button, ControlUnit, FormikTextInput, Icon, Level, Message } from '@mtes-mct/monitor-ui'
+import { Accent, Banner, Button, ControlUnit, FormikTextInput, Icon, Level, Message } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -13,6 +13,8 @@ type FormikIsEmailSubscriptionContactToggleProps = {
 export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionContactToggleProps) {
   const { setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
   const [isConfirmationMessageOpened, setIsConfirmationMessageOpened] = useState(false)
+  const [isNoEmailSubscriptionContactWarningBannerOpened, setIsNoEmailSubscriptionContactWarningBannerOpened] =
+    useState(false)
   const [otherContactSubscribedEmail, setOtherContactSubscribedEmail] = useState<string | undefined>(undefined)
 
   const askForConfirmation = () => {
@@ -37,10 +39,23 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
     setOtherContactSubscribedEmail(undefined)
   }
 
+  const resetIsNoEmailSubscriptionContactWarningBannerOpened = () => {
+    setIsNoEmailSubscriptionContactWarningBannerOpened(false)
+  }
+
   const toggle = () => {
     setIsConfirmationMessageOpened(false)
 
-    setFieldValue('isEmailSubscriptionContact', !values.isEmailSubscriptionContact)
+    const willBeSubscribed = !values.isEmailSubscriptionContact
+    // Since there can be only one email subscription contact per control unit,
+    // if this one is being subscribed, we need to warn the user that this control unit will no longer receive any email
+    if (!willBeSubscribed) {
+      setIsNoEmailSubscriptionContactWarningBannerOpened(true)
+    } else {
+      resetIsNoEmailSubscriptionContactWarningBannerOpened()
+    }
+
+    setFieldValue('isEmailSubscriptionContact', willBeSubscribed)
   }
 
   // TODO Add subscription icon in monitor-ui and replace `Icon.Vms` with it.
@@ -83,21 +98,38 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
             Voulez-vous la remplacer par : <b>{values.email}</b> ?
           </p>
 
-          <ActionsWrapper>
+          <ActionBar>
             <Button accent={Accent.WARNING} onClick={toggle}>
               Oui, la remplacer
             </Button>
             <Button accent={Accent.WARNING} onClick={closeConfirmationMessage}>
               Non, conserver l’adresse actuelle
             </Button>
-          </ActionsWrapper>
+          </ActionBar>
         </Message>
+      )}
+
+      {isNoEmailSubscriptionContactWarningBannerOpened && (
+        // TODO Why do we have both `closingDelay` & `withAutomaticClosing`? => monitor-ui
+        // If `closingDelay` is set, `withAutomaticClosing` should be `true` by default. => monitor-ui
+        <Banner
+          closingDelay={115000}
+          isClosable
+          isFixed
+          level={Level.WARNING}
+          onClose={resetIsNoEmailSubscriptionContactWarningBannerOpened}
+          top="0"
+          withAutomaticClosing
+        >
+          Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses
+          activités de contrôle.
+        </Banner>
       )}
     </>
   )
 }
 
-const ActionsWrapper = styled.div`
+const ActionBar = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 16px;
