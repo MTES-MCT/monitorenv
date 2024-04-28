@@ -54,27 +54,40 @@ jobs:
           echo $VERSION
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
-  build:
-    name: Run unit tests, build and package
+  unit_test_backend:
+    name: Run backend unit tests
     needs: version
     runs-on: ubuntu-22.04
     env:
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-      PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
       - name: Show version
         run: echo "VERSION:${{ env.VERSION }} ENV_PROFILE:${{ env.ENV_PROFILE }}"
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
         with:
+          # https://github.com/actions/setup-java/blob/main/README.md#Supported-distributions
+          distribution: zulu
           java-version: 17
-          distribution: "dragonwell"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unit test
+        run: make test-back
+
+  unit_test_frontend:
+    name: Run frontend unit tests
+    needs: version
+    runs-on: ubuntu-22.04
+    env:
+      PUPPETEER_SKIP_DOWNLOAD: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -96,7 +109,27 @@ jobs:
         working-directory: ./frontend
 
       - name: Unit test
-        run: make test
+        run: npm run test:unit --coverage
+        working-directory: ./frontend
+
+      - name: Upload coverage
+        run: npx codecov
+        working-directory: ./frontend
+
+  build:
+    name: Build and package
+    needs: version
+    runs-on: ubuntu-22.04
+    env:
+      ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
+      VERSION: ${{needs.version.outputs.VERSION}}
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+    steps:
+      - name: Show version
+        run: echo "VERSION:${{ env.VERSION }} ENV_PROFILE:${{ env.ENV_PROFILE }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         id: buildx
@@ -257,8 +290,8 @@ jobs:
 
   push_to_registry:
     name: Push to registry
-    needs: [version, e2e_test]
-    # needs: [version, e2e_test, e2e_multi_windows_test]
+    needs: [version, unit_test_backend, unit_test_frontend, e2e_test]
+    # needs: [version, e2e_test, e2e_multi_windows_test, unit_test_frontend, e2e_test]
     runs-on: ubuntu-22.04
     if: startsWith(github.ref, 'refs/heads/dependabot') == false
     env:
