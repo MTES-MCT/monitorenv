@@ -1,9 +1,9 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
+
 import { monitorenvPublicApi } from './api'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
 import { newUserError } from '../libs/UserError'
-
-import type { ControlUnit } from '../domain/entities/controlUnit'
 
 const CAN_DELETE_CONTROL_UNIT_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette unité de contrôle est supprimable."
 export const DELETE_CONTROL_UNIT_ERROR_MESSAGE = [

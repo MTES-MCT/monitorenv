@@ -1,4 +1,4 @@
-import { Accent, FormikTextInput, Icon, IconButton, Select } from '@mtes-mct/monitor-ui'
+import { Accent, ControlUnit, FormikTextInput, Icon, IconButton, Select } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -6,8 +6,7 @@ import styled from 'styled-components'
 import {
   CONTROL_UNIT_CONTACT_PREDEFINED_NAMES,
   SORTED_CONTROL_UNIT_CONTACT_PREDEFINED_NAMES_AS_OPTIONS
-} from './constants'
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
+} from '../constants'
 
 export function FormikNameSelect() {
   const [field, meta, helpers] = useField<string | undefined>('name')

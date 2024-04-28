@@ -1,9 +1,8 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { Section } from './shared/Section'
 import { TextareaForm } from './shared/TextareaForm'
-
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
 type AreaNoteProps = {
   controlUnit: ControlUnit.ControlUnit

@@ -1,7 +1,7 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
+
 import { monitorenvPublicApi } from './api'
 import { FrontendApiError } from '../libs/FrontendApiError'
-
-import type { ControlUnit } from '../domain/entities/controlUnit'
 
 const GET_CONTROL_UNIT_CONTACT_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette contact."
 const GET_CONTROL_UNIT_CONTACTS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des contacts."

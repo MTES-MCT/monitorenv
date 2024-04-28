@@ -1,8 +1,8 @@
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
-import type { UndefineExceptArrays } from '@mtes-mct/monitor-ui'
+import type { ControlUnit, UndefineExcept } from '@mtes-mct/monitor-ui'
 
-export type ControlUnitContactFormValues = UndefineExceptArrays<
-  ControlUnit.ControlUnitContactData | ControlUnit.NewControlUnitContactData
+export type ControlUnitContactFormValues = UndefineExcept<
+  ControlUnit.ControlUnitContactData | ControlUnit.NewControlUnitContactData,
+  'isEmailSubscriptionContact' | 'isSmsSubscriptionContact'
 > & {
   id?: number
 }

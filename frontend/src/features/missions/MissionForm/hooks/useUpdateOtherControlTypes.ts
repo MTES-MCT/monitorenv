@@ -1,7 +1,6 @@
-import { usePrevious } from '@mtes-mct/monitor-ui'
+import { ControlUnit, usePrevious } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
-import { ControlUnit } from '../../../../domain/entities/controlUnit'
 import { ActionTypeEnum, type Mission } from '../../../../domain/entities/missions'
 
 export const useUpdateOtherControlTypes = () => {

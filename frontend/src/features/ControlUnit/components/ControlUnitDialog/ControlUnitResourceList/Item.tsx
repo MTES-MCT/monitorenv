@@ -1,9 +1,8 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, ControlUnit, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { Placeholder } from './Placeholder'
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 import type { Promisable } from 'type-fest'
 

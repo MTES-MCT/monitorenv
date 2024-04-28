@@ -1,7 +1,6 @@
-import { getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { ControlUnit, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { object, string } from 'yup'
 
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import { sortCollectionByLocalizedProps } from '../../../../../utils/sortCollectionByLocalizedProps'
 
 import type { ControlUnitContactFormValues } from './types'
@@ -24,6 +23,8 @@ export const CONTROL_UNIT_CONTACT_FORM_SCHEMA = object().shape(
 export const INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES: ControlUnitContactFormValues = {
   controlUnitId: undefined,
   email: undefined,
+  isEmailSubscriptionContact: false,
+  isSmsSubscriptionContact: false,
   name: undefined,
   phone: undefined
 }

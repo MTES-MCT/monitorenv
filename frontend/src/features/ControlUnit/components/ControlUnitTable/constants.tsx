@@ -1,9 +1,8 @@
-import { Icon, Size } from '@mtes-mct/monitor-ui'
+import { type ControlUnit, Icon, Size } from '@mtes-mct/monitor-ui'
 
 import { NavIconButton } from '../../../../ui/NavIconButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { ColumnDef } from '@tanstack/react-table'
 
 export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnit>> = [

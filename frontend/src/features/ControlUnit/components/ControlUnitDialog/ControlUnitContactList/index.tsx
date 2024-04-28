@@ -1,4 +1,4 @@
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, type ControlUnit, Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -18,7 +18,6 @@ import { Section } from '../shared/Section'
 import { TextareaForm } from '../shared/TextareaForm'
 
 import type { ControlUnitContactFormValues } from './types'
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 type ControlUnitContactListProps = {
   controlUnit: ControlUnit.ControlUnit
@@ -109,6 +108,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           controlUnitContact.id === editedControlUnitContactId ? (
             <StyledEditionForm
               key={controlUnitContact.id}
+              controlUnit={controlUnit}
               initialValues={editedControlUnitContact}
               onCancel={closeForm}
               onDelete={askForDeletionConfirmation}
@@ -121,6 +121,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
 
         {isNewControlUnitContactFormOpen ? (
           <StyledCreationForm
+            controlUnit={controlUnit}
             initialValues={editedControlUnitContact}
             onCancel={closeForm}
             onSubmit={createOrUpdateControlUnitContact}

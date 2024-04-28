@@ -1,7 +1,5 @@
-import { getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { ControlUnit, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { object, string } from 'yup'
-
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 import type { ControlUnitResourceFormValues } from './types'
 

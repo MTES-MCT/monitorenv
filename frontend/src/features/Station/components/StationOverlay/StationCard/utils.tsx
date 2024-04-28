@@ -1,7 +1,6 @@
-import { Tag, pluralize } from '@mtes-mct/monitor-ui'
+import { ControlUnit, Tag, pluralize } from '@mtes-mct/monitor-ui'
 import { isEmpty } from 'lodash/fp'
 
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import { getIconFromControlUnitResourceType } from '../../../../ControlUnit/components/ControlUnitDialog/ControlUnitResourceList/utils'
 
 export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlUnit.ControlUnit, stationId: number) {

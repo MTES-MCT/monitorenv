@@ -1,7 +1,7 @@
+import { ControlUnit } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { getIconFromControlUnitResourceType } from './utils'
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 type PlaceholderProps = {
   type: ControlUnit.ControlUnitResourceType

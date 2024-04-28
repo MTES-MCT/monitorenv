@@ -1,4 +1,4 @@
-import { MapMenuDialog } from '@mtes-mct/monitor-ui'
+import { type ControlUnit, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { uniq } from 'lodash/fp'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -12,7 +12,6 @@ import { useHasMapInteraction } from '../../../../../hooks/useHasMapInteraction'
 import { FrontendError } from '../../../../../libs/FrontendError'
 import { stationActions } from '../../../slice'
 
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import type { Station } from '../../../../../domain/entities/station'
 import type { FeatureLike } from 'ol/Feature'
 

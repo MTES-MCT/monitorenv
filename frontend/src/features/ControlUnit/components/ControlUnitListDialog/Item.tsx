@@ -1,4 +1,4 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, type ControlUnit, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { property, uniqBy } from 'lodash/fp'
 import { createEmpty, extend } from 'ol/extent'
 import { fromLonLat } from 'ol/proj'
@@ -14,8 +14,6 @@ import { FrontendError } from '../../../../libs/FrontendError'
 import { mainWindowActions } from '../../../MainWindow/slice'
 import { stationActions } from '../../../Station/slice'
 import { controlUnitDialogActions } from '../ControlUnitDialog/slice'
-
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
 export type ItemProps = {
   controlUnit: ControlUnit.ControlUnit
