@@ -28,8 +28,8 @@ class CreateOrUpdateControlUnitContactUTests {
         val newControlUnitContact = ControlUnitContactEntity(
             controlUnitId = 2,
             email = "bob@example.org",
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = false,
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = true,
             name = "Contact Name",
             phone = "0033123456789",
         )
@@ -49,7 +49,67 @@ class CreateOrUpdateControlUnitContactUTests {
     }
 
     @Test
-    fun `execute should unsubcribe other control unit contacts from emails if a new one is subscribing to emails`() {
+    fun `execute should unsubscribe the contact from emails or sms if they are subscribed to emails or sms but have no email or phone`() {
+        // Given
+        val updatedControlUnitContact = ControlUnitContactEntity(
+            id = 1,
+            controlUnitId = 2,
+            email = null,
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = true,
+            name = "Contact Name",
+            phone = null,
+        )
+
+        val firstRepositoryOutputMock = FullControlUnitDTO(
+            administration = AdministrationEntity(
+                id = 3,
+                isArchived = false,
+                name = "Administration Name",
+            ),
+            controlUnit = ControlUnitEntity(
+                id = 2,
+                administrationId = 3,
+                areaNote = null,
+                departmentAreaInseeCode = null,
+                isArchived = false,
+                name = "Unit Name",
+                termsNote = null,
+            ),
+            controlUnitContacts = listOf(
+                updatedControlUnitContact.copy(
+                    email = "bob@example.org",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
+                    phone = "0033123456789",
+                ),
+            ),
+            controlUnitResources = listOf(),
+        )
+        given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
+            .willReturn(firstRepositoryOutputMock)
+
+        val secondRepositoryInputExpectation = updatedControlUnitContact.copy(
+            isEmailSubscriptionContact = false,
+            isSmsSubscriptionContact = false,
+        )
+        val secondRepositoryOutputMock = secondRepositoryInputExpectation
+        given(controlUnitContactRepository.save(secondRepositoryInputExpectation)).willReturn(
+            secondRepositoryOutputMock,
+        )
+
+        // When
+        val result = CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+            .execute(updatedControlUnitContact)
+
+        // Then
+        assertThat(result).isEqualTo(secondRepositoryOutputMock)
+
+        BDDMockito.verify(controlUnitContactRepository).save(secondRepositoryInputExpectation)
+    }
+
+    @Test
+    fun `execute should unsubscribe other control unit contacts from emails if a new one is subscribing to emails`() {
         // Given
         val updatedControlUnitContact = ControlUnitContactEntity(
             id = 1,

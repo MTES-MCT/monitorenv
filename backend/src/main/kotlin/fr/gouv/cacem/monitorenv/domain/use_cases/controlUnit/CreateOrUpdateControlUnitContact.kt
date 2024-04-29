@@ -16,7 +16,9 @@ class CreateOrUpdateControlUnitContact(
             unsubscribeOtherContactsFromEmail(controlUnitContact.controlUnitId, controlUnitContact.id)
         }
 
-        return controlUnitContactRepository.save(controlUnitContact)
+        val validControlUnitContact = validateSubscriptions(controlUnitContact)
+
+        return controlUnitContactRepository.save(validControlUnitContact)
     }
 
     private fun unsubscribeOtherContactsFromEmail(controlUnitId: Int, controlUnitContactId: Int) {
@@ -30,5 +32,24 @@ class CreateOrUpdateControlUnitContact(
 
             controlUnitContactRepository.save(updatedControlUnitContact)
         }
+    }
+
+    /**
+     * If the contact is subscribed to emails/sms but has no email/phone, we unsubscribe them from emails/sms.
+     */
+    private fun validateSubscriptions(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
+        return controlUnitContact.copy(
+            isEmailSubscriptionContact = if (controlUnitContact.isEmailSubscriptionContact && controlUnitContact.email == null) {
+                false
+            } else {
+                controlUnitContact.isEmailSubscriptionContact
+            },
+
+            isSmsSubscriptionContact = if (controlUnitContact.isSmsSubscriptionContact && controlUnitContact.phone == null) {
+                false
+            } else {
+                controlUnitContact.isSmsSubscriptionContact
+            },
+        )
     }
 }
