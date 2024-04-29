@@ -36,7 +36,7 @@ export function Form({ className, controlUnit, initialValues, onCancel, onDelete
       {({ handleSubmit }) => (
         <div className={className} style={style}>
           <Title>{isNew ? 'Ajouter un contact' : 'Éditer un contact'}</Title>
-          <StyledForm onSubmit={handleSubmit}>
+          <StyledForm data-cy="ControlUnitDialog-control-unit-contact-form" onSubmit={handleSubmit}>
             <FormikNameSelect />
             <FormikPhoneField />
             <FormikEmailField controlUnit={controlUnit} />
