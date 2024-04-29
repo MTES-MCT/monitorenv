@@ -37,62 +37,186 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
     cy.clickButton('Ajouter')
 
-    cy.wait('@createControlUnitContact').then(interception => {
-      if (!interception.response) {
-        assert.fail('`interception.response` is undefined.')
+    cy.wait('@createControlUnitContact').then(createInterception => {
+      if (!createInterception.response) {
+        assert.fail('`createInterception.response` is undefined.')
       }
 
-      assert.deepInclude(interception.request.body, {
+      assert.deepInclude(createInterception.request.body, {
         email: 'foo@example.org',
+        isEmailSubscriptionContact: false,
+        isSmsSubscriptionContact: false,
         name: 'ADJUNCT',
         phone: '0123456789'
       })
+
+      const newControlUnitContactId = createInterception.response.body.id
+
+      cy.get('p').contains('Ajouter un contact').should('not.exist')
+      cy.contains('Adjoint').should('be.visible')
+
+      // -------------------------------------------------------------------------
+      // Edit
+
+      cy.intercept('PUT', `/api/v1/control_unit_contacts/${newControlUnitContactId}`).as('updateControlUnitContact')
+
+      cy.getDataCy('ControlUnitDialog-control-unit-contact')
+        .filter(`[data-id="${newControlUnitContactId}"]`)
+        .clickButton('Éditer ce contact')
+
+      cy.fill('Nom du contact', 'Passerelle')
+      cy.fill('Numéro de téléphone', '9876543210')
+      cy.fill('Adresse mail', 'bar@example.org')
+
+      cy.clickButton('Enregistrer les modifications')
+
+      cy.wait('@updateControlUnitContact').then(interception => {
+        if (!interception.response) {
+          assert.fail('`interception.response` is undefined.')
+        }
+
+        assert.deepInclude(interception.request.body, {
+          email: 'bar@example.org',
+          id: newControlUnitContactId,
+          isEmailSubscriptionContact: false,
+          isSmsSubscriptionContact: false,
+          name: 'BRIDGE',
+          phone: '9876543210'
+        })
+      })
+
+      cy.get('p').contains('Éditer un contact').should('not.exist')
+      cy.contains('Enregistrer les modifications').should('not.exist')
+      cy.contains('Passerelle').should('be.visible')
+
+      // -------------------------------------------------------------------------
+      // Delete
+
+      cy.intercept('DELETE', `/api/v1/control_unit_contacts/${newControlUnitContactId}`).as('deleteControlUnitContact')
+
+      cy.getDataCy('ControlUnitDialog-control-unit-contact')
+        .filter(`[data-id="${newControlUnitContactId}"]`)
+        .clickButton('Éditer ce contact')
+      cy.clickButton('Supprimer ce contact')
+      cy.clickButton('Supprimer')
+
+      cy.wait('@deleteControlUnitContact')
+
+      cy.contains('Passerelle').should('not.exist')
     })
+  })
 
-    cy.get('p').contains('Ajouter un contact').should('not.exist')
-    cy.contains('Adjoint').should('be.visible')
+  it('Should subscribe and unsubscribe contact to emails and sms', () => {
+    cy.intercept('POST', `/api/v1/control_unit_contacts`).as('createControlUnitContact')
 
-    // -------------------------------------------------------------------------
-    // Edit
+    cy.clickButton('Ajouter un contact')
+    cy.fill('Nom du contact', 'Adjoint')
+    cy.fill('Numéro de téléphone', '0987654321')
+    cy.fill('Adresse mail', 'baz@example.org')
+    cy.clickButton('Ajouter')
 
-    cy.intercept('PUT', `/api/v1/control_unit_contacts/4`).as('updateControlUnitContact')
-
-    cy.getDataCy('ControlUnitDialog-control-unit-contact').filter('[data-id="4"]').clickButton('Éditer ce contact')
-
-    cy.fill('Nom du contact', 'Passerelle')
-    cy.fill('Numéro de téléphone', '9876543210')
-    cy.fill('Adresse mail', 'bar@example.org')
-
-    cy.clickButton('Enregistrer les modifications')
-
-    cy.wait('@updateControlUnitContact').then(interception => {
-      if (!interception.response) {
-        assert.fail('`interception.response` is undefined.')
+    cy.wait('@createControlUnitContact').then(createInterception => {
+      if (!createInterception.response) {
+        assert.fail('`createInterception.response` is undefined.')
       }
 
-      assert.deepInclude(interception.request.body, {
-        email: 'bar@example.org',
-        id: 4,
-        name: 'BRIDGE',
-        phone: '9876543210'
+      const newControlUnitContactId = createInterception.response.body.id
+      cy.intercept('PUT', `/api/v1/control_unit_contacts/${newControlUnitContactId}`).as('updateControlUnitContact')
+      cy.getDataCy('ControlUnitDialog-control-unit-contact')
+        .filter(`[data-id="${newControlUnitContactId}"]`)
+        .clickButton('Éditer ce contact')
+
+      // -------------------------------------------------------------------------
+      // Subscribe email
+
+      cy.clickButton('Inscrire cette adresse à la liste de diffusion')
+
+      // Warning confirmation message
+      cy.getDataCy('ControlUnitDialog-control-unit-contact-form')
+        .find('.Component-Message>')
+        .should('be.visible')
+        .contains('Attention')
+        .parent()
+        .contains('email_1')
+        .parent()
+        .contains('baz@example.org')
+
+      cy.clickButton('Oui, la remplacer')
+
+      // Info message
+      cy.getDataCy('ControlUnitDialog-control-unit-contact-form')
+        .find('.Component-Message>')
+        .should('be.visible')
+        .contains('Adresse de diffusion')
+
+      // -------------------------------------------------------------------------
+      // Subscribe phone
+
+      cy.clickButton('Inscrire ce numéro à la liste de diffusion')
+
+      cy.clickButton('Enregistrer les modifications')
+
+      cy.wait('@updateControlUnitContact').then(updateInterception => {
+        if (!updateInterception.response) {
+          assert.fail('`interception.response` is undefined.')
+        }
+
+        assert.deepInclude(updateInterception.request.body, {
+          email: 'baz@example.org',
+          isEmailSubscriptionContact: true,
+          isSmsSubscriptionContact: true,
+          phone: '0987654321'
+        })
       })
+
+      cy.getDataCy('ControlUnitDialog-control-unit-contact')
+        .filter(`[data-id="${newControlUnitContactId}"]`)
+        .clickButton('Éditer ce contact')
+
+      // -------------------------------------------------------------------------
+      // Unsubscribe email
+
+      cy.clickButton('Retirer cette adresse de la liste de diffusion des préavis et des bilans d’activités de contrôle')
+
+      // Warning banner
+      cy.get('.Component-Banner')
+        .should('be.visible')
+        .contains(
+          'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.'
+        )
+
+      // -------------------------------------------------------------------------
+      // Unsubscribe phone
+
+      cy.clickButton('Désinscrire ce numéro de la liste de diffusion')
+
+      cy.clickButton('Enregistrer les modifications')
+
+      cy.wait('@updateControlUnitContact').then(interception => {
+        if (!interception.response) {
+          assert.fail('`interception.response` is undefined.')
+        }
+
+        assert.deepInclude(interception.request.body, {
+          email: 'baz@example.org',
+          isEmailSubscriptionContact: false,
+          isSmsSubscriptionContact: false,
+          phone: '0987654321'
+        })
+      })
+
+      // -------------------------------------------------------------------------
+      // Delete
+
+      cy.intercept('DELETE', `/api/v1/control_unit_contacts/${newControlUnitContactId}`).as('deleteControlUnitContact')
+
+      cy.getDataCy('ControlUnitDialog-control-unit-contact')
+        .filter(`[data-id="${newControlUnitContactId}"]`)
+        .clickButton('Éditer ce contact')
+      cy.clickButton('Supprimer ce contact')
+      cy.clickButton('Supprimer')
+
+      cy.wait('@deleteControlUnitContact')
     })
-
-    cy.get('p').contains('Éditer un contact').should('not.exist')
-    cy.contains('Enregistrer les modifications').should('not.exist')
-    cy.contains('Passerelle').should('be.visible')
-
-    // -------------------------------------------------------------------------
-    // Delete
-
-    cy.intercept('DELETE', `/api/v1/control_unit_contacts/4`).as('deleteControlUnitContact')
-
-    cy.getDataCy('ControlUnitDialog-control-unit-contact').filter('[data-id="4"]').clickButton('Éditer ce contact')
-    cy.clickButton('Supprimer ce contact')
-    cy.clickButton('Supprimer')
-
-    cy.wait('@deleteControlUnitContact')
-
-    cy.contains('Passerelle').should('not.exist')
   })
 })
