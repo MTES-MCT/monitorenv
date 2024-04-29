@@ -1,5 +1,10 @@
 import { BannerStack } from '@features/MainWindow/components/BannerStack'
-import { useCallback, useMemo } from 'react'
+import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/ReportingForm/constants'
+import { useListenReportingEventUpdates } from '@features/Reportings/ReportingForm/hooks/useListenReportingEventUpdates'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { reportingActions } from 'domain/shared_slices/reporting'
+import { omit } from 'lodash'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
@@ -25,6 +30,8 @@ import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
+  const dispatch = useAppDispatch()
+
   const displayDrawModal = useAppSelector(state => state.global.displayDrawModal)
   const displayInterestPoint = useAppSelector(state => state.global.displayInterestPoint)
   const displayLocateOnMap = useAppSelector(state => state.global.displayLocateOnMap)
@@ -39,6 +46,7 @@ export function HomePage() {
 
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const reportings = useAppSelector(state => state.reporting.reportings)
+  const reportingEvent = useListenReportingEventUpdates()
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => !!Object.values(selectedMissions).find(mission => mission.isFormDirty),
@@ -65,6 +73,17 @@ export function HomePage() {
   )
 
   useBeforeUnload(beforeUnload)
+
+  /**
+   * Use to update reportings opened in the side window but not actives
+   */
+  useEffect(() => {
+    if (!reportingEvent) {
+      return
+    }
+
+    dispatch(reportingActions.updateUnactiveReporting(omit(reportingEvent, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)))
+  }, [dispatch, reportingEvent])
 
   return (
     <>

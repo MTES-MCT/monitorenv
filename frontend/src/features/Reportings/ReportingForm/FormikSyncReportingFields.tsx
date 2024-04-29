@@ -1,3 +1,4 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
@@ -5,6 +6,7 @@ import { omit } from 'lodash'
 import { useEffect } from 'react'
 
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
+import { attachMissionToReportingSliceActions } from '../slice'
 
 import type { Reporting } from 'domain/entities/reporting'
 
@@ -15,6 +17,7 @@ type FormikSyncMissionFormProps = {
  * Sync
  */
 export function FormikSyncReportingFields({ reportingId }: FormikSyncMissionFormProps) {
+  const dispatch = useAppDispatch()
   const { setFieldValue, values } = useFormikContext<Reporting>()
   const { getReportingEventById, setReportingEventInContext } = useReportingEventContext()
   const reportingEvent = getReportingEventById(reportingId)
@@ -37,6 +40,9 @@ export function FormikSyncReportingFields({ reportingId }: FormikSyncMissionForm
         // eslint-disable-next-line no-console
         console.log(`SSE: setting form key "${key}" to "${JSON.stringify(reportingEvent[key])}"`)
         setFieldValue(key, reportingEvent[key])
+        if (key === 'attachedMission') {
+          dispatch(attachMissionToReportingSliceActions.setAttachedMission(reportingEvent.attachedMission))
+        }
       })
 
       // we need to wait for the form to be updated before removing the reporting event from the context

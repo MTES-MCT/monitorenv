@@ -1,5 +1,7 @@
 import { isCypress } from '@utils/isCypress'
-import { isEqual, omit } from 'lodash'
+import { undefinedize } from '@utils/undefinedize'
+import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
+import { debounce, isEmpty, isEqual, omit } from 'lodash'
 
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 
@@ -23,9 +25,9 @@ export const isReportingAutoUpdateEnabled = () =>
  * should a Formik `onChange` event trigger `saveMission`.
  */
 export function shouldSaveReporting(
-  previousValues: Partial<Reporting> | undefined,
-  reportingEvent: Partial<Reporting> | undefined,
-  nextValues: Partial<Reporting>
+  previousValues: Reporting | undefined,
+  reportingEvent: Reporting | undefined,
+  nextValues: Reporting
 ): boolean {
   if (!previousValues) {
     return false
@@ -36,8 +38,8 @@ export function shouldSaveReporting(
    */
   if (
     isEqual(
-      omit(reportingEvent, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
-      omit(nextValues, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
+      omit(undefinedize(reportingEvent), [...REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM, 'attachedMission']),
+      omit(undefinedize(nextValues), [...REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM, 'attachedMission'])
     )
   ) {
     return false
@@ -47,7 +49,25 @@ export function shouldSaveReporting(
    * Send an update only if a field has beem modified except for updatedAtUtcField
    */
   return !isEqual(
-    omit(previousValues, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
-    omit(nextValues, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
+    omit(undefinedize(previousValues), [...REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM, 'attachedMission']),
+    omit(undefinedize(nextValues), [...REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM, 'attachedMission'])
   )
 }
+
+export const validateBeforeOnChange = debounce(
+  async (nextValues, dispatch, validateForm, isAutoSaveEnabled, selectedReporting, context, reportingEvent) => {
+    const errors = await validateForm()
+    const isValid = isEmpty(errors)
+
+    if (!isAutoSaveEnabled || !isValid) {
+      return
+    }
+
+    if (!shouldSaveReporting(selectedReporting, reportingEvent, nextValues)) {
+      return
+    }
+
+    dispatch(saveReporting(nextValues, context))
+  },
+  400
+)

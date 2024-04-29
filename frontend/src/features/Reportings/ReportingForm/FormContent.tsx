@@ -27,7 +27,7 @@ import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelec
 import { Validity } from './FormComponents/Validity'
 import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
-import { isReportingAutoSaveEnabled, shouldSaveReporting } from './utils'
+import { isReportingAutoSaveEnabled, validateBeforeOnChange } from './utils'
 import {
   type Reporting,
   ReportingTypeEnum,

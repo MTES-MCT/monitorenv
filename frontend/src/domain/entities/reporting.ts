@@ -6,35 +6,35 @@ import type { ActionSource, ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
-  actionTaken?: string
-  attachedEnvActionId?: string
-  attachedMission?: Mission
-  attachedToMissionAtUtc?: string
+  actionTaken: string | undefined
+  attachedEnvActionId: string
+  attachedMission: Mission | undefined
+  attachedToMissionAtUtc: string | undefined
   controlStatus: ControlStatusEnum
-  controlUnitId?: number
+  controlUnitId: number | undefined
   createdAt: string | undefined
-  description?: string
-  detachedFromMissionAtUtc?: string
-  geom: Record<string, any>[]
-  hasNoUnitAvailable?: boolean | undefined
+  description: string | undefined
+  detachedFromMissionAtUtc: string | undefined
+  geom: Record<string, any>[] | undefined
+  hasNoUnitAvailable: boolean | undefined
   id: number | string
-  isArchived?: boolean
-  isControlRequired?: boolean | undefined
-  missionId?: number
+  isArchived: boolean
+  isControlRequired: boolean | undefined
+  missionId: number | undefined
   openBy: string
   reportType: ReportingTypeEnum
-  reportingId?: number
-  semaphoreId?: number
-  sourceName?: string
+  reportingId: number | undefined
+  semaphoreId: number | undefined
+  sourceName: string | undefined
   sourceType: ReportingSourceEnum
-  subThemeIds?: number[]
-  targetDetails?: TargetDetails[]
-  targetType?: ReportingTargetTypeEnum
-  themeId?: number
+  subThemeIds: number[]
+  targetDetails: TargetDetails[]
+  targetType: ReportingTargetTypeEnum
+  themeId: number
   updatedAtUtc: string | undefined
-  validityTime?: number
-  vehicleType?: string
-  withVHFAnswer?: boolean | undefined
+  validityTime: number
+  vehicleType: string | undefined
+  withVHFAnswer: boolean | undefined
 }
 
 export type ReportingDetailed = Reporting & {
