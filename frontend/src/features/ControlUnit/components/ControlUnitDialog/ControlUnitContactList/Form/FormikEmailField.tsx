@@ -11,7 +11,7 @@ type FormikIsEmailSubscriptionContactToggleProps = {
   controlUnit: ControlUnit.ControlUnit
 }
 export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionContactToggleProps) {
-  const { errors, setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
+  const { setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
   const [isConfirmationMessageOpened, setIsConfirmationMessageOpened] = useState(false)
   const [isNoEmailSubscriptionContactWarningBannerOpened, setIsNoEmailSubscriptionContactWarningBannerOpened] =
     useState(false)
@@ -58,7 +58,6 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
     setFieldValue('isEmailSubscriptionContact', willBeSubscribed)
   }
 
-  // TODO Add subscription icon in monitor-ui and replace `Icon.Vms` with it.
   return (
     <>
       <FieldWithButton>
@@ -71,14 +70,13 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
         />
         {values.isEmailSubscriptionContact ? (
           <FieldWithButton.IconButtonOn
-            Icon={Icon.Vms}
+            Icon={Icon.Subscription}
             onClick={toggle}
             title="Retirer cette adresse de la liste de diffusion des préavis et des bilans d’activités de contrôle"
           />
         ) : (
           <FieldWithButton.IconButtonOff
-            disabled={!values.email || !!errors.email}
-            Icon={Icon.Vms}
+            Icon={Icon.Subscription}
             onClick={askForConfirmation}
             title="Inscrire cette adresse à la liste de diffusion"
           />
@@ -86,7 +84,7 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
       </FieldWithButton>
 
       {values.isEmailSubscriptionContact && (
-        <Message Icon={Icon.Vms} level={Level.INFO}>
+        <Message Icon={Icon.Subscription} level={Level.INFO}>
           <p>
             <strong>Adresse de diffusion</strong>
             <br />

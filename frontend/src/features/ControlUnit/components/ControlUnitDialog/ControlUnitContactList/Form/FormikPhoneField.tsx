@@ -6,13 +6,12 @@ import { FieldWithButton } from './FieldWithButton'
 import type { ControlUnitContactFormValues } from '../types'
 
 export function FormikPhoneField() {
-  const { errors, setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
+  const { setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
 
   const toggle = () => {
     setFieldValue('isSmsSubscriptionContact', !values.isSmsSubscriptionContact)
   }
 
-  // TODO Add subscription icon in monitor-ui and replace `Icon.Vms` with it.
   return (
     <FieldWithButton>
       <FormikTextInput
@@ -25,14 +24,13 @@ export function FormikPhoneField() {
 
       {values.isSmsSubscriptionContact ? (
         <FieldWithButton.IconButtonOn
-          Icon={Icon.Vms}
+          Icon={Icon.Subscription}
           onClick={toggle}
           title="Désinscrire ce numéro de la liste de diffusion"
         />
       ) : (
         <FieldWithButton.IconButtonOff
-          disabled={!values.phone || !!errors.phone}
-          Icon={Icon.Vms}
+          Icon={Icon.Subscription}
           onClick={toggle}
           title="Inscrire ce numéro à la liste de diffusion"
         />

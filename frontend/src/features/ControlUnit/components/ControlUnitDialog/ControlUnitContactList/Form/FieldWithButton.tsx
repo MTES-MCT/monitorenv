@@ -15,7 +15,7 @@ const IconButtonOff = styled(IconButton)`
   background-color: ${p => p.theme.color.white};
   border-color: ${p => p.theme.color.white};
   color: ${p => p.theme.color.charcoal};
-  padding: 4.5px;
+  padding: 4px;
 
   &:hover {
     background-color: ${p => p.theme.color.white};
