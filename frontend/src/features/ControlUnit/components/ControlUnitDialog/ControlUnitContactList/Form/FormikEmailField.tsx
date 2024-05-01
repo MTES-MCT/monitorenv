@@ -78,7 +78,7 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
           <FieldWithButton.IconButtonOff
             Icon={Icon.Subscription}
             onClick={askForConfirmation}
-            title="Inscrire cette adresse à la liste de diffusion"
+            title="Ajouter cette adresse à la liste de diffusion des préavis et des bilans d’activités de contrôle"
           />
         )}
       </FieldWithButton>

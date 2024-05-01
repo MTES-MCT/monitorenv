@@ -26,13 +26,13 @@ export function FormikPhoneField() {
         <FieldWithButton.IconButtonOn
           Icon={Icon.Subscription}
           onClick={toggle}
-          title="Désinscrire ce numéro de la liste de diffusion"
+          title="Retirer ce numéro de la liste de diffusion des préavis et des bilans d’activités de contrôle"
         />
       ) : (
         <FieldWithButton.IconButtonOff
           Icon={Icon.Subscription}
           onClick={toggle}
-          title="Inscrire ce numéro à la liste de diffusion"
+          title="Ajouter ce numéro à la liste de diffusion des préavis et des bilans d’activités de contrôle"
         />
       )}
     </FieldWithButton>

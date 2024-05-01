@@ -129,7 +129,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
       // -------------------------------------------------------------------------
       // Subscribe email
 
-      cy.clickButton('Inscrire cette adresse à la liste de diffusion')
+      cy.clickButton('Ajouter cette adresse à la liste de diffusion des préavis et des bilans d’activités de contrôle')
 
       // Warning confirmation message
       cy.getDataCy('ControlUnitDialog-control-unit-contact-form')
@@ -152,7 +152,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
       // -------------------------------------------------------------------------
       // Subscribe phone
 
-      cy.clickButton('Inscrire ce numéro à la liste de diffusion')
+      cy.clickButton('Ajouter ce numéro à la liste de diffusion des préavis et des bilans d’activités de contrôle')
 
       cy.clickButton('Enregistrer les modifications')
 
@@ -188,7 +188,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
       // -------------------------------------------------------------------------
       // Unsubscribe phone
 
-      cy.clickButton('Désinscrire ce numéro de la liste de diffusion')
+      cy.clickButton('Retirer ce numéro de la liste de diffusion des préavis et des bilans d’activités de contrôle')
 
       cy.clickButton('Enregistrer les modifications')
 
