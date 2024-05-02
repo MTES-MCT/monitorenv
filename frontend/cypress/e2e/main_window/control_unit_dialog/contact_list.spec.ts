@@ -24,18 +24,20 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
   })
 
   it('Should add, edit and delete a contact', () => {
-    goToMainWindowAndOpenControlUnit(10000)
+    goToMainWindowAndOpenControlUnit(10023)
 
     // -------------------------------------------------------------------------
     // Create
 
-    cy.intercept('POST', `/api/v1/control_unit_contacts`).as('createControlUnitContact')
+    cy.intercept('POST', `/api/v2/control_unit_contacts`).as('createControlUnitContact')
 
     cy.clickButton('Ajouter un contact')
 
     cy.fill('Nom du contact', 'Adjoint')
     cy.fill('Numéro de téléphone', '0123456789')
+    cy.clickButton('Ajouter ce numéro à la liste de diffusion des préavis et des bilans d’activités de contrôle')
     cy.fill('Adresse mail', 'foo@example.org')
+    cy.clickButton('Ajouter cette adresse à la liste de diffusion des préavis et des bilans d’activités de contrôle')
 
     cy.clickButton('Ajouter')
 
@@ -46,8 +48,8 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
       assert.deepInclude(createInterception.request.body, {
         email: 'foo@example.org',
-        isEmailSubscriptionContact: false,
-        isSmsSubscriptionContact: false,
+        isEmailSubscriptionContact: true,
+        isSmsSubscriptionContact: true,
         name: 'ADJUNCT',
         phone: '0123456789'
       })
@@ -58,9 +60,9 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
       cy.contains('Adjoint').should('be.visible')
 
       // -------------------------------------------------------------------------
-      // Edit
+      // Update
 
-      cy.intercept('PUT', `/api/v1/control_unit_contacts/${newControlUnitContactId}`).as('updateControlUnitContact')
+      cy.intercept('PATCH', `/api/v1/control_unit_contacts/${newControlUnitContactId}`).as('patchControlUnitContact')
 
       cy.getDataCy('ControlUnitDialog-control-unit-contact')
         .filter(`[data-id="${newControlUnitContactId}"]`)
@@ -72,7 +74,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
       cy.clickButton('Enregistrer les modifications')
 
-      cy.wait('@updateControlUnitContact').then(interception => {
+      cy.wait('@patchControlUnitContact').then(interception => {
         if (!interception.response) {
           assert.fail('`interception.response` is undefined.')
         }
@@ -80,8 +82,8 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
         assert.deepInclude(interception.request.body, {
           email: 'bar@example.org',
           id: newControlUnitContactId,
-          isEmailSubscriptionContact: false,
-          isSmsSubscriptionContact: false,
+          isEmailSubscriptionContact: true,
+          isSmsSubscriptionContact: true,
           name: 'BRIDGE',
           phone: '9876543210'
         })
@@ -111,7 +113,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
   it('Should subscribe and unsubscribe contact to emails and sms', () => {
     goToMainWindowAndOpenControlUnit(10023)
 
-    cy.intercept('POST', `/api/v1/control_unit_contacts`).as('createControlUnitContact')
+    cy.intercept('POST', `/api/v2/control_unit_contacts`).as('createControlUnitContact')
 
     cy.clickButton('Ajouter un contact')
     cy.fill('Nom du contact', 'Adjoint')
@@ -139,11 +141,11 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
         const secondControlUnitContactId = secondCreateInterception.response.body.id
 
-        cy.intercept('PUT', `/api/v1/control_unit_contacts/${firstControlUnitContactId}`).as(
-          'updateFirstControlUnitContact'
+        cy.intercept('PATCH', `/api/v1/control_unit_contacts/${firstControlUnitContactId}`).as(
+          'patchFirstControlUnitContact'
         )
-        cy.intercept('PUT', `/api/v1/control_unit_contacts/${secondControlUnitContactId}`).as(
-          'updateSecondControlUnitContact'
+        cy.intercept('PATCH', `/api/v1/control_unit_contacts/${secondControlUnitContactId}`).as(
+          'patchSecondControlUnitContact'
         )
 
         // Edit first contact
@@ -172,12 +174,12 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
         // Update first contact
         cy.clickButton('Enregistrer les modifications')
 
-        cy.wait('@updateFirstControlUnitContact').then(updateInterception => {
-          if (!updateInterception.response) {
+        cy.wait('@patchFirstControlUnitContact').then(patchInterception => {
+          if (!patchInterception.response) {
             assert.fail('`interception.response` is undefined.')
           }
 
-          assert.deepInclude(updateInterception.request.body, {
+          assert.deepInclude(patchInterception.request.body, {
             email: 'first.contact@example.org',
             id: firstControlUnitContactId,
             isEmailSubscriptionContact: true,
@@ -224,12 +226,12 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
         // Update second contact
         cy.clickButton('Enregistrer les modifications')
 
-        cy.wait('@updateSecondControlUnitContact').then(updateInterception => {
-          if (!updateInterception.response) {
+        cy.wait('@patchSecondControlUnitContact').then(patchInterception => {
+          if (!patchInterception.response) {
             assert.fail('`interception.response` is undefined.')
           }
 
-          assert.deepInclude(updateInterception.request.body, {
+          assert.deepInclude(patchInterception.request.body, {
             email: 'second.contact@example.org',
             id: secondControlUnitContactId,
             isEmailSubscriptionContact: true,
@@ -265,7 +267,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
             'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.'
           )
 
-        cy.wait('@updateSecondControlUnitContact').then(interception => {
+        cy.wait('@patchSecondControlUnitContact').then(interception => {
           if (!interception.response) {
             assert.fail('`interception.response` is undefined.')
           }

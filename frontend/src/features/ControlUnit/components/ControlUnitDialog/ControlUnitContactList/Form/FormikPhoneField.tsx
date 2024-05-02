@@ -14,13 +14,7 @@ export function FormikPhoneField() {
 
   return (
     <FieldWithButton>
-      <FormikTextInput
-        isLight
-        label="Numéro de téléphone"
-        name="phone"
-        readOnly={values.isSmsSubscriptionContact}
-        type="tel"
-      />
+      <FormikTextInput isLight label="Numéro de téléphone" name="phone" type="tel" />
 
       {values.isSmsSubscriptionContact ? (
         <FieldWithButton.IconButtonOn

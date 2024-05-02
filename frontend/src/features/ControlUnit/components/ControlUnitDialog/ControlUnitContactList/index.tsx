@@ -11,7 +11,7 @@ import { sortControlUnitContactsByQualifiedName } from './utils'
 import {
   controlUnitContactsAPI,
   useCreateControlUnitContactMutation,
-  useUpdateControlUnitContactMutation
+  usePatchControlUnitContactMutation
 } from '../../../../../api/controlUnitContactsAPI'
 import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
@@ -28,7 +28,7 @@ type ControlUnitContactListProps = {
 export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitContactListProps) {
   const dispatch = useAppDispatch()
   const [createControlUnitContact] = useCreateControlUnitContactMutation()
-  const [updateControlUnitContact] = useUpdateControlUnitContactMutation()
+  const [updateControlUnitContact] = usePatchControlUnitContactMutation()
 
   const [noEmailSubscriptionContactWarningBannerRank, setNoEmailSubscriptionContactWarningBannerRank] = useState<
     number | undefined

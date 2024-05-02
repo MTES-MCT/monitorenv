@@ -49,13 +49,7 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
   return (
     <>
       <FieldWithButton>
-        <FormikTextInput
-          isLight
-          label="Adresse mail"
-          name="email"
-          readOnly={values.isEmailSubscriptionContact}
-          type="email"
-        />
+        <FormikTextInput isLight label="Adresse mail" name="email" type="email" />
         {values.isEmailSubscriptionContact ? (
           <FieldWithButton.IconButtonOn
             Icon={Icon.Subscription}
