@@ -63,7 +63,7 @@ const Left = styled.div`
 
     > .Element-IconBox {
       margin-left: 8px;
-      margin-bottom: -2px;
+      margin-bottom: -1px;
     }
   }
 `

@@ -1,3 +1,4 @@
+import { BannerStack } from '@features/MainWindow/components/BannerStack'
 import { useCallback, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
@@ -67,8 +68,11 @@ export function HomePage() {
 
   return (
     <>
-      <Healthcheck />
+      {/* TODO Move this wrapper to `@features/MainWindow/components/MainWindowLayout.tsx`. */}
       <Wrapper>
+        <Healthcheck />
+        <BannerStack />
+
         <Map />
         <LayersSidebar />
         <RightMenuOnHoverArea />
@@ -88,10 +92,10 @@ export function HomePage() {
 
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
 
-        <SideWindowLauncher />
-
         <ToastContainer containerId="map" />
       </Wrapper>
+
+      <SideWindowLauncher />
     </>
   )
 }
