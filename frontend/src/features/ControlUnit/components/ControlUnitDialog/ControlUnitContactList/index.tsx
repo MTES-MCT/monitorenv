@@ -1,7 +1,7 @@
 import { addMainWindowBanner } from '@features/MainWindow/dispatchers/addMainWindowBanner'
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { Accent, Button, type ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES } from './constants'
@@ -26,13 +26,12 @@ type ControlUnitContactListProps = {
   onSubmit: (nextControlUnit: ControlUnit.ControlUnit) => any
 }
 export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitContactListProps) {
+  const noEmailSubscriptionContactWarningBannerRankRef = useRef<number | undefined>(undefined)
+
   const dispatch = useAppDispatch()
   const [createControlUnitContact] = useCreateControlUnitContactMutation()
   const [updateControlUnitContact] = usePatchControlUnitContactMutation()
 
-  const [noEmailSubscriptionContactWarningBannerRank, setNoEmailSubscriptionContactWarningBannerRank] = useState<
-    number | undefined
-  >(undefined)
   const [editedControlUnitContactId, setEditedControlUnitContactId] = useState<number | undefined>(undefined)
   const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isNewControlUnitContactFormOpen, setIsNewControlUnitContactFormOpen] = useState(false)
@@ -64,28 +63,39 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     setIsNewControlUnitContactFormOpen(false)
   }, [])
 
-  const confirmDeletion = useCallback(async () => {
+  const confirmDeletion = async () => {
     if (!editedControlUnitContactId) {
       throw new FrontendError('`editedControlUnitContactId` is undefined.')
+    }
+
+    // There can only be one email subscription contact per control unit,
+    // meaning that if the user is trying to delete the only email subscription contact,
+    // we need to warn them that the control unit will no longer receive any email
+    const controlUnitContactToDelete = controlUnit.controlUnitContacts.find(
+      controlUnitContact => controlUnitContact.id === editedControlUnitContactId
+    )
+    if (!controlUnitContactToDelete) {
+      throw new FrontendError('`deletedControlUnitContact` is undefined.')
+    }
+    if (controlUnitContactToDelete.isEmailSubscriptionContact) {
+      noEmailSubscriptionContactWarningBannerRankRef.current = showNoEmailSubscriptionContactWarningBanner()
     }
 
     await dispatch(controlUnitContactsAPI.endpoints.deleteControlUnitContact.initiate(editedControlUnitContactId))
 
     closeDialogsAndModals()
     closeForm()
-  }, [closeDialogsAndModals, closeForm, dispatch, editedControlUnitContactId])
+  }
 
   const createOrUpdateControlUnitContact = async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
     if (isNewControlUnitContactFormOpen) {
       const newControlUnitContact = controlUnitContactFormValues as ControlUnit.NewControlUnitContactData
 
       if (
-        noEmailSubscriptionContactWarningBannerRank !== undefined &&
+        noEmailSubscriptionContactWarningBannerRankRef.current !== undefined &&
         newControlUnitContact.isEmailSubscriptionContact
       ) {
-        setNoEmailSubscriptionContactWarningBannerRank(undefined)
-
-        dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerRank))
+        hideNoEmailSubscriptionContactWarningBanner()
       }
 
       await createControlUnitContact(newControlUnitContact)
@@ -103,23 +113,9 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
         nextControlUnitContact.id === currentControlUnitEmailSubscriptionContact.id &&
         !nextControlUnitContact.isEmailSubscriptionContact
       ) {
-        const nextNoEmailSubscriptionContactWarningBannerRank = dispatch(
-          addMainWindowBanner({
-            children:
-              'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.',
-            closingDelay: 115000,
-            isClosable: true,
-            isFixed: true,
-            level: Level.WARNING,
-            withAutomaticClosing: true
-          })
-        )
-
-        setNoEmailSubscriptionContactWarningBannerRank(nextNoEmailSubscriptionContactWarningBannerRank)
-      } else if (noEmailSubscriptionContactWarningBannerRank !== undefined) {
-        setNoEmailSubscriptionContactWarningBannerRank(undefined)
-
-        dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerRank))
+        noEmailSubscriptionContactWarningBannerRankRef.current = showNoEmailSubscriptionContactWarningBanner()
+      } else if (noEmailSubscriptionContactWarningBannerRankRef.current !== undefined) {
+        hideNoEmailSubscriptionContactWarningBanner()
       }
 
       await updateControlUnitContact(controlUnitContactFormValues as ControlUnit.ControlUnitContactData)
@@ -137,6 +133,32 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     setEditedControlUnitContactId(nextEditedControlUnitResourceId)
     setIsNewControlUnitContactFormOpen(false)
   }, [])
+
+  const hideNoEmailSubscriptionContactWarningBanner = () => {
+    if (noEmailSubscriptionContactWarningBannerRankRef.current === undefined) {
+      throw new FrontendError('`noEmailSubscriptionContactWarningBannerRankRef.current` is undefined.')
+    }
+
+    dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerRankRef.current))
+
+    noEmailSubscriptionContactWarningBannerRankRef.current = undefined
+  }
+
+  /**
+   * @returns Rank of the banner that was added to the main window
+   */
+  const showNoEmailSubscriptionContactWarningBanner = () =>
+    dispatch(
+      addMainWindowBanner({
+        children:
+          'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.',
+        closingDelay: 115000,
+        isClosable: true,
+        isFixed: true,
+        level: Level.WARNING,
+        withAutomaticClosing: true
+      })
+    )
 
   return (
     <Section>

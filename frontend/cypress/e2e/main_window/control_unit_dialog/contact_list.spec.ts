@@ -104,6 +104,13 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
       cy.clickButton('Supprimer ce contact')
       cy.clickButton('Supprimer')
 
+      // Warning banner
+      cy.get('.Component-Banner')
+        .should('be.visible')
+        .contains(
+          'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.'
+        )
+
       cy.wait('@deleteControlUnitContact')
 
       cy.contains('Passerelle').should('not.exist')
