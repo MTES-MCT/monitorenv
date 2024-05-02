@@ -1,6 +1,3 @@
-import { addMainWindowBanner } from '@features/MainWindow/dispatchers/addMainWindowBanner'
-import { mainWindowActions } from '@features/MainWindow/slice'
-import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, ControlUnit, FormikTextInput, Icon, Level, Message } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { useState } from 'react'
@@ -16,12 +13,7 @@ type FormikIsEmailSubscriptionContactToggleProps = {
 export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionContactToggleProps) {
   const { setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
 
-  const dispatch = useAppDispatch()
-
   const [isConfirmationMessageOpened, setIsConfirmationMessageOpened] = useState(false)
-  const [noEmailSubscriptionContactWarningBannerRank, setNoEmailSubscriptionContactWarningBannerRank] = useState<
-    number | undefined
-  >(undefined)
   const [otherContactSubscribedEmail, setOtherContactSubscribedEmail] = useState<string | undefined>(undefined)
 
   const askForConfirmation = () => {
@@ -50,25 +42,6 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
     setIsConfirmationMessageOpened(false)
 
     const willBeSubscribed = !values.isEmailSubscriptionContact
-    // Since there can be only one email subscription contact per control unit,
-    // if this one is being subscribed, we need to warn the user that this control unit will no longer receive any email
-    if (!willBeSubscribed) {
-      const nextNoEmailSubscriptionContactWarningBannerRank = dispatch(
-        addMainWindowBanner({
-          children:
-            'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.',
-          closingDelay: 115000,
-          isClosable: true,
-          isFixed: true,
-          level: Level.WARNING,
-          withAutomaticClosing: true
-        })
-      )
-
-      setNoEmailSubscriptionContactWarningBannerRank(nextNoEmailSubscriptionContactWarningBannerRank)
-    } else if (noEmailSubscriptionContactWarningBannerRank !== undefined) {
-      dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerRank))
-    }
 
     setFieldValue('isEmailSubscriptionContact', willBeSubscribed)
   }

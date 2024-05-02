@@ -23,6 +23,15 @@ const mainWindowSlice = createSlice({
   name: 'mainWindow',
   reducers: {
     /**
+     * Add a banner to the stack.
+     *
+     * @internal /!\ This action is not meant to be dispatched directly. Use `addMainWindowBanner()` dispatcher instead.
+     */
+    addBanner(state, action: PayloadAction<BannerStackItem>) {
+      bannerStackAdapter.addOne(state.bannerStack, action.payload)
+    },
+
+    /**
      * Remove a banner from the stack.
      *
      * @param rank The rank of the banner to remove.

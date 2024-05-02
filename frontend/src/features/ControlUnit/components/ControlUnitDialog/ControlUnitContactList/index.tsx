@@ -1,4 +1,6 @@
-import { Accent, Button, type ControlUnit, Icon } from '@mtes-mct/monitor-ui'
+import { addMainWindowBanner } from '@features/MainWindow/dispatchers/addMainWindowBanner'
+import { mainWindowActions } from '@features/MainWindow/slice'
+import { Accent, Button, type ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -28,6 +30,9 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
   const [createControlUnitContact] = useCreateControlUnitContactMutation()
   const [updateControlUnitContact] = useUpdateControlUnitContactMutation()
 
+  const [noEmailSubscriptionContactWarningBannerRank, setNoEmailSubscriptionContactWarningBannerRank] = useState<
+    number | undefined
+  >(undefined)
   const [editedControlUnitContactId, setEditedControlUnitContactId] = useState<number | undefined>(undefined)
   const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isNewControlUnitContactFormOpen, setIsNewControlUnitContactFormOpen] = useState(false)
@@ -70,18 +75,58 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     closeForm()
   }, [closeDialogsAndModals, closeForm, dispatch, editedControlUnitContactId])
 
-  const createOrUpdateControlUnitContact = useCallback(
-    async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
-      if (isNewControlUnitContactFormOpen) {
-        await createControlUnitContact(controlUnitContactFormValues as ControlUnit.NewControlUnitContactData)
-      } else {
-        await updateControlUnitContact(controlUnitContactFormValues as ControlUnit.ControlUnitContactData)
+  const createOrUpdateControlUnitContact = async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
+    if (isNewControlUnitContactFormOpen) {
+      const newControlUnitContact = controlUnitContactFormValues as ControlUnit.NewControlUnitContactData
+
+      if (
+        noEmailSubscriptionContactWarningBannerRank !== undefined &&
+        newControlUnitContact.isEmailSubscriptionContact
+      ) {
+        setNoEmailSubscriptionContactWarningBannerRank(undefined)
+
+        dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerRank))
       }
 
-      closeForm()
-    },
-    [closeForm, createControlUnitContact, isNewControlUnitContactFormOpen, updateControlUnitContact]
-  )
+      await createControlUnitContact(newControlUnitContact)
+    } else {
+      const currentControlUnitEmailSubscriptionContact = controlUnit.controlUnitContacts.find(
+        controlUnitContact => controlUnitContact.isEmailSubscriptionContact
+      )
+      const nextControlUnitContact = controlUnitContactFormValues as ControlUnit.ControlUnitContactData
+
+      // There can only be one email subscription contact per control unit,
+      // meaning that if the user is trying to unsubscribe the current email subscription contact,
+      // we need to warn them that the control unit will no longer receive any email
+      if (
+        !!currentControlUnitEmailSubscriptionContact &&
+        nextControlUnitContact.id === currentControlUnitEmailSubscriptionContact.id &&
+        !nextControlUnitContact.isEmailSubscriptionContact
+      ) {
+        const nextNoEmailSubscriptionContactWarningBannerRank = dispatch(
+          addMainWindowBanner({
+            children:
+              'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.',
+            closingDelay: 115000,
+            isClosable: true,
+            isFixed: true,
+            level: Level.WARNING,
+            withAutomaticClosing: true
+          })
+        )
+
+        setNoEmailSubscriptionContactWarningBannerRank(nextNoEmailSubscriptionContactWarningBannerRank)
+      } else if (noEmailSubscriptionContactWarningBannerRank !== undefined) {
+        setNoEmailSubscriptionContactWarningBannerRank(undefined)
+
+        dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerRank))
+      }
+
+      await updateControlUnitContact(controlUnitContactFormValues as ControlUnit.ControlUnitContactData)
+    }
+
+    closeForm()
+  }
 
   const openCreationForm = useCallback(() => {
     setEditedControlUnitContactId(undefined)

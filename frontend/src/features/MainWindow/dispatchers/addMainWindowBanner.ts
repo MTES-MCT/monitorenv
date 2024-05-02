@@ -1,4 +1,4 @@
-import { bannerStackAdapter } from '../slice'
+import { bannerStackAdapter, mainWindowActions } from '../slice'
 
 import type { BannerStackItemProps } from '../components/BannerStack/types'
 import type { HomeAppThunk } from '@store/index'
@@ -11,13 +11,12 @@ import type { HomeAppThunk } from '@store/index'
  */
 export const addMainWindowBanner =
   (props: BannerStackItemProps): HomeAppThunk<number> =>
-  (_, getState) => {
+  (dispatch, getState) => {
     const { bannerStack } = getState().mainWindow
-
     const nextRank = bannerStackAdapter.getSelectors().selectAll(bannerStack).length + 1
     const bannerStackItem = { props, rank: nextRank }
 
-    bannerStackAdapter.addOne(bannerStack, bannerStackItem)
+    dispatch(mainWindowActions.addBanner(bannerStackItem))
 
     return nextRank
   }
