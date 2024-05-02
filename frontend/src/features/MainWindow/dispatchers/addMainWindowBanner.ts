@@ -1,6 +1,6 @@
 import { bannerStackAdapter, mainWindowActions } from '../slice'
 
-import type { BannerStackItemProps } from '../components/BannerStack/types'
+import type { BannerStackItemProps } from '../types'
 import type { HomeAppThunk } from '@store/index'
 
 /**

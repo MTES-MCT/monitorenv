@@ -1,7 +1,7 @@
 import { Banner, type BannerProps } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import type { BannerStackItemProps } from './types'
+import type { BannerStackItemProps } from '../../types'
 import type { Promisable } from 'type-fest'
 
 type ItemProps = {
