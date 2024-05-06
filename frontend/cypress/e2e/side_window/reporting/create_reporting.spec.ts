@@ -47,8 +47,8 @@ context('Reportings', () => {
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
     // change date year
-    const { utcDateAsShortString: dateForApi, utcDateTupleWithTime: dateForCalendar } = getUtcDateInMultipleFormats()
-    cy.fill('Date et heure (UTC)', dateForCalendar)
+    const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
+    cy.fill('Date et heure (UTC)', asDatePickerDateTime)
     cy.wait(250)
     cy.fill('Thématique du signalement', 'Rejet')
     cy.fill('Sous-thématique du signalement', ['Carénage sauvage'])
@@ -61,7 +61,7 @@ context('Reportings', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        createdAt: `${dateForApi}:00.000Z`,
+        createdAt: `${asApiDateTime}:00.000Z`,
         openBy: 'XYZ',
         reportType: 'OBSERVATION',
         semaphoreId: 35,

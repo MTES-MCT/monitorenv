@@ -25,10 +25,10 @@ export const useSyncFormValuesWithRedux = (isAutoSaveEnabled: boolean) => {
       }
 
       const errors = await validateForm()
-      const isFormDirty = isReportingFormDirty(errors)
+      const isFormDirtyOrErrored = isReportingFormDirtyOrErrored(errors)
 
       dispatch(reportingActions.setReportingState(newValues))
-      dispatch(reportingActions.setIsDirty(isFormDirty))
+      dispatch(reportingActions.setIsDirty(isFormDirtyOrErrored))
     },
 
     250
@@ -38,7 +38,7 @@ export const useSyncFormValuesWithRedux = (isAutoSaveEnabled: boolean) => {
    * - In auto-save mode, an error is found (hence the form is not saved)
    * - In manual save mode, values have been modified (using the `dirty` props of Formik)
    */
-  function isReportingFormDirty(errors: FormikErrors<Reporting>) {
+  function isReportingFormDirtyOrErrored(errors: FormikErrors<Reporting>) {
     if (!isAutoSaveEnabled) {
       if (dirty) {
         return dirty

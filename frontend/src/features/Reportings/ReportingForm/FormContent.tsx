@@ -11,8 +11,9 @@ import {
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useField, useFormikContext } from 'formik'
-import { debounce, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
@@ -60,24 +61,6 @@ import {
 import { isReportingAutoSaveEnabled, shouldSaveReporting } from '../utils'
 
 import type { AtLeast } from '../../../types'
-
-const validateBeforeOnChange = debounce(
-  async (nextValues, dispatch, validateForm, isAutoSaveEnabled, selectedReporting, context) => {
-    const errors = await validateForm()
-    const isValid = isEmpty(errors)
-
-    if (!isAutoSaveEnabled || !isValid) {
-      return
-    }
-
-    if (!shouldSaveReporting(selectedReporting, nextValues)) {
-      return
-    }
-
-    dispatch(saveReporting(nextValues, context))
-  },
-  250
-)
 
 type FormContentProps = {
   reducedReportingsOnContext: number
@@ -214,6 +197,20 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     dispatch(reduceOrCollapseReportingForm(reportingContext))
   }
 
+  const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
+    const formErrors = await validateForm()
+    const isValid = isEmpty(formErrors)
+
+    if (!isAutoSaveEnabled || !isValid) {
+      return
+    }
+
+    if (!shouldSaveReporting(selectedReporting, nextValues)) {
+      return
+    }
+    dispatch(saveReporting(nextValues, reportingContext))
+  }, 250)
+
   useEffect(() => {
     if (!isAutoSaveEnabled) {
       return
@@ -235,18 +232,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
 
   return (
     <StyledFormContainer>
-      <FormikEffect
-        onChange={nextValues =>
-          validateBeforeOnChange(
-            nextValues,
-            dispatch,
-            validateForm,
-            isAutoSaveEnabled,
-            selectedReporting,
-            reportingContext
-          )
-        }
-      />
+      <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues)} />
       <CancelEditDialog
         key={`cancel-edit-modal-${selectedReporting.id}`}
         onCancel={returnToEdition}
