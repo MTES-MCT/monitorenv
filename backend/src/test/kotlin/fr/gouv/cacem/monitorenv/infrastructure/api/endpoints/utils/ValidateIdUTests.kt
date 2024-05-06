@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestErrorCode
@@ -17,20 +17,20 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class FakeController(
-    override val objectMapper: ObjectMapper,
-) : BaseController(objectMapper) {
+    private val objectMapper: ObjectMapper,
+) {
     @PatchMapping(value = ["/api/v1/fakes/{fakeId}"], consumes = ["application/json"])
     fun patch(
         @PathVariable(name = "fakeId")
         fakeId: Int,
         @RequestBody partialFakeAsJson: String,
     ) {
-        validateId(partialFakeAsJson, "id", fakeId)
+        validateId(partialFakeAsJson, "id", fakeId, objectMapper)
     }
 }
 
 @ExtendWith(SpringExtension::class)
-class BaseControllerUTests {
+class ValidateIdUTests {
     private lateinit var fakeController: FakeController
     private val objectMapper = ObjectMapper()
 

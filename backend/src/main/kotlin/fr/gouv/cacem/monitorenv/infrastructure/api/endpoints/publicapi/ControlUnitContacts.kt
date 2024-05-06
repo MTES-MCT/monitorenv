@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.Cre
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInputV2
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitContactDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitContactDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.BaseController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils.validateId
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -24,8 +24,8 @@ class ControlUnitContacts(
     private val deleteControlUnitContact: DeleteControlUnitContact,
     private val getControlUnitContacts: GetControlUnitContacts,
     private val getControlUnitContactById: GetControlUnitContactById,
-    override val objectMapper: ObjectMapper,
-) : BaseController(objectMapper) {
+    private val objectMapper: ObjectMapper,
+) {
     @PostMapping("/v1/control_unit_contacts", consumes = ["application/json"])
     @Operation(summary = "Create a control unit contact")
     @ResponseStatus(HttpStatus.CREATED)
@@ -109,7 +109,7 @@ class ControlUnitContacts(
         controlUnitContactId: Int,
         @RequestBody incompleteControlUnitContactAsJson: String,
     ): ControlUnitContactDataOutput {
-        validateId(incompleteControlUnitContactAsJson, "id", controlUnitContactId)
+        validateId(incompleteControlUnitContactAsJson, "id", controlUnitContactId, objectMapper)
 
         val existingFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
         val patchedControlUnitContact = CreateOrUpdateControlUnitContactDataInputV2
