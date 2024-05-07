@@ -85,9 +85,10 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.wait(400)
     cy.getDataCy('edit-mission-53').click({ force: true })
-    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('action-card').eq(2).click()
 
     cy.intercept('PUT', `/bff/v1/missions/53`).as('updateMission')
+    cy.wait(250)
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
 
     cy.getDataCy('surveillance-attached-reportings-tags').should('not.exist')
@@ -113,7 +114,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
 
     cy.wait(400)
     cy.getDataCy('edit-mission-53').click({ force: true })
-    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('action-card').eq(2).click()
     cy.wait(200)
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
     cy.wait(200)

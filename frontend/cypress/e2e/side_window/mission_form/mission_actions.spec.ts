@@ -60,18 +60,31 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     // When
     cy.fill('Thématique de contrôle', 'Espèce protégée') // id 103
+    cy.wait(250)
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]')
+      .contains("Destruction, capture, arrachage d'espèces protégées")
+      .click({ force: true }) // id 117
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention des espèces protégées').click({ force: true }) // id 120
+
+    cy.wait(250)
+    cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
+    cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true }) // id 15
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true }) // id 11
+    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
+
+    /*  
+    TODO: fix this command in monitor-ui
     cy.fill(
       'Sous-thématiques de contrôle',
       ["Destruction, capture, arrachage d'espèces protégées", 'Détention des espèces protégées'], // id 117 and 120
       { delay: 250 }
-    )
-    cy.wait(250)
-    cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
+    ) 
     cy.fill('Précisions sur la thématique', ['Habitat', 'Oiseaux'], { delay: 250 }) // id 15 and 11
-    cy.wait(250)
-
+    */
     cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
-    cy.wait(250)
+    cy.wait(500)
 
     // Then
     cy.waitForLastRequest(
