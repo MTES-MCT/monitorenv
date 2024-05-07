@@ -2,7 +2,14 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { InteractionListener } from 'domain/entities/map/constants'
-import { ActionSource, ActionTypeEnum, CIRCULAR_ZONE_RADIUS, type Mission } from 'domain/entities/missions'
+import {
+  ActionSource,
+  ActionTypeEnum,
+  CIRCULAR_ZONE_RADIUS,
+  type ActionsTypeForTimeLine,
+  type ControlOrSurveillance,
+  type Mission
+} from 'domain/entities/missions'
 import { useFormikContext } from 'formik'
 import { isEqual } from 'lodash'
 import { Feature } from 'ol'
@@ -18,29 +25,32 @@ function computeCircleZone(coordinates) {
   return convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon]))
 }
 
-export const useUpdateMissionZone = sortedActions => {
-  const filteredActions = useMemo(
+export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine>) => {
+  const filteredEnvActions = useMemo(
     () =>
       sortedActions.filter(
         action =>
-          action.actionSource === ActionSource.MONITORFISH ||
-          (action.actionSource === ActionSource.MONITORENV &&
-            (action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL))
-      ),
+          action.actionSource === ActionSource.MONITORENV &&
+          (action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL)
+      ) as Array<ControlOrSurveillance>,
     [sortedActions]
   )
 
-  const firstAction = filteredActions[0]
+  const firstAction = filteredEnvActions[0]
+  const firstActionWithDate = firstAction?.actionStartDateTimeUtc ? firstAction : undefined
 
   const listener = useAppSelector(state => state.draw.listener)
   const { setFieldValue, values } = useFormikContext<Mission>()
-  const [actionGeom, setActionGeom] = useState(values.geom && firstAction?.geom ? firstAction?.geom : undefined)
+  const [actionGeom, setActionGeom] = useState(
+    values.geom && firstActionWithDate?.geom ? firstActionWithDate?.geom : undefined
+  )
 
   useEffect(() => {
     // if user has added a zone manually and deleted it
     if (!values.isGeometryComputedFromControls && actionGeom && values.geom?.coordinates.length === 0) {
       setActionGeom(undefined)
     }
+
     // no need to update geom if we are in mission zone listener or if user add manually a zone
     if (
       listener === InteractionListener.MISSION_ZONE ||
@@ -49,65 +59,37 @@ export const useUpdateMissionZone = sortedActions => {
       return
     }
 
-    // if action has been deleted
-    if ((!firstAction || firstAction.geom?.coordinates.length === 0) && values.isGeometryComputedFromControls) {
+    // if no action in mission, we clean the misison zone if it was computed from actions
+    if (filteredEnvActions.length === 0 && values.fishActions.length === 0 && values.isGeometryComputedFromControls) {
       setFieldValue('geom', undefined)
       setFieldValue('isGeometryComputedFromControls', false)
 
       return
     }
 
-    // EnvActions
-    if (
-      firstAction?.actionSource === ActionSource.MONITORENV &&
-      firstAction?.geom &&
-      !isEqual(firstAction.geom, actionGeom)
-    ) {
-      // for control action we need to compute a circle for mission zone
-      if (firstAction?.actionType === ActionTypeEnum.CONTROL) {
-        const { coordinates } = firstAction.geom
-        if (coordinates.length === 0) {
-          setFieldValue('geom', undefined)
-          setActionGeom(undefined)
+    if (firstActionWithDate?.geom?.coordinates.length === 0) {
+      return
+    }
 
+    if (firstActionWithDate?.geom && !isEqual(firstActionWithDate.geom, actionGeom)) {
+      // for control action we need to compute a circle for mission zone
+      if (firstActionWithDate.actionType === ActionTypeEnum.CONTROL) {
+        const { coordinates } = firstActionWithDate.geom
+        if (coordinates.length === 0) {
           return
         }
         const circleZone = computeCircleZone(coordinates[0])
-
         setFieldValue('geom', circleZone)
       }
 
-      if (firstAction?.actionType === ActionTypeEnum.SURVEILLANCE) {
-        setFieldValue('geom', firstAction.geom)
+      if (firstActionWithDate.actionType === ActionTypeEnum.SURVEILLANCE) {
+        setFieldValue('geom', firstActionWithDate.geom)
       }
 
       if (!values.isGeometryComputedFromControls) {
         setFieldValue('isGeometryComputedFromControls', true)
       }
-
-      setActionGeom(firstAction.geom)
-    }
-
-    // FishActions
-    if (
-      firstAction?.actionSource === ActionSource.MONITORFISH &&
-      !isEqual([firstAction.latitude, firstAction.longitude], actionGeom)
-    ) {
-      if (!firstAction.latitude || !firstAction.longitude) {
-        setFieldValue('geom', undefined)
-        setFieldValue('isGeometryComputedFromControls', false)
-        setActionGeom(undefined)
-
-        return
-      }
-      const circleZone = computeCircleZone([firstAction.longitude, firstAction.latitude])
-
-      setFieldValue('geom', circleZone)
-      if (!values.isGeometryComputedFromControls) {
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
-
-      setActionGeom([firstAction.latitude, firstAction.longitude])
+      setActionGeom(firstActionWithDate.geom)
     }
   }, [
     values.isGeometryComputedFromControls,
@@ -116,6 +98,10 @@ export const useUpdateMissionZone = sortedActions => {
     sortedActions,
     listener,
     firstAction,
-    actionGeom
+    actionGeom,
+    values.fishActions.length,
+    filteredEnvActions.length,
+    firstActionWithDate?.geom,
+    firstActionWithDate?.actionType
   ])
 }

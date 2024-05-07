@@ -1,12 +1,7 @@
-import { Accent, Button, Icon, IconButton, Label, type Coordinates } from '@mtes-mct/monitor-ui'
-import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
-import { CIRCULAR_ZONE_RADIUS, type Mission } from 'domain/entities/missions'
-import { useField, useFormikContext } from 'formik'
+import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import { useField } from 'formik'
 import { isEqual } from 'lodash'
-import { Feature } from 'ol'
 import { boundingExtent } from 'ol/extent'
-import { MultiPolygon } from 'ol/geom'
-import Polygon, { circular } from 'ol/geom/Polygon'
 import { transformExtent } from 'ol/proj'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -34,7 +29,6 @@ export type MultiPointPickerProps = {
 }
 
 export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
-  const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
@@ -57,18 +51,8 @@ export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
   useEffect(() => {
     if (geometry?.type === OLGeometryType.MULTIPOINT && !isEqual(geometry, value)) {
       setValue(geometry)
-      if ((!values.geom || values.geom?.coordinates.length === 0) && values.envActions.length === 1) {
-        const circleGeometry = new Feature({
-          geometry: circular(geometry.coordinates[0] as Coordinates, CIRCULAR_ZONE_RADIUS, 64).transform(
-            WSG84_PROJECTION,
-            OPENLAYERS_PROJECTION
-          )
-        }).getGeometry()
-        setFieldValue('geom', convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon])))
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
     }
-  }, [geometry, setValue, value, values.envActions.length, values.geom, setFieldValue])
+  }, [geometry, setValue, value])
 
   const handleCenterOnMap = coordinates => {
     if (!coordinates) {
@@ -90,12 +74,8 @@ export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
       }
       const nextCoordinates = remove(index, 1, value.coordinates)
       setValue({ ...value, coordinates: nextCoordinates })
-      if (values.isGeometryComputedFromControls && values.envActions.length === 1) {
-        setFieldValue('geom', undefined)
-        setFieldValue('isGeometryComputedFromControls', false)
-      }
     },
-    [value, setValue, values.isGeometryComputedFromControls, values.envActions.length, setFieldValue]
+    [value, setValue]
   )
 
   return (

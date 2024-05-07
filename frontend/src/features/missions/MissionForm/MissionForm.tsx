@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { ActionForm } from './ActionForm'
 import { ActionsTimeLine } from './ActionsTimeLine'
@@ -20,7 +21,7 @@ import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { missionFormsActions } from './slice'
-import { isMissionAutoSaveEnabled, validateBeforeOnChange } from './utils'
+import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
 import {
   FrontCompletionStatus,
@@ -187,18 +188,28 @@ export function MissionForm({
     }
   }
 
+  const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave) => {
+    const errors = await validateForm()
+    const isValid = isEmpty(errors)
+
+    if (!isAutoSaveEnabled || !isValid) {
+      return
+    }
+
+    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
+      return
+    }
+
+    if (engagedControlUnit) {
+      return
+    }
+
+    dispatch(saveMission(nextValues, false, false))
+  }, 300)
+
   useEffect(() => {
     if (isNewMission && !engagedControlUnit && previousEngagedControlUnit !== engagedControlUnit) {
-      validateBeforeOnChange(
-        values,
-        true,
-        dispatch,
-        validateForm,
-        isAutoSaveEnabled,
-        engagedControlUnit,
-        selectedMission,
-        missionEvent
-      )
+      validateBeforeOnChange(values, true)
     }
     // we want to trigger the `validateBeforeOnChange` when engagedControlUnit change
     // so when user confirm mission creation even if the control unit is engaged
@@ -245,20 +256,7 @@ export function MissionForm({
         </Banner>
       )}
 
-      <FormikEffect
-        onChange={nextValues =>
-          validateBeforeOnChange(
-            nextValues,
-            false,
-            dispatch,
-            validateForm,
-            isAutoSaveEnabled,
-            engagedControlUnit,
-            selectedMission,
-            missionEvent
-          )
-        }
-      />
+      <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues, false)} />
       <FormikSyncMissionFields missionId={id} />
       <CancelEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={sideWindow.showConfirmCancelModal} />
       <CloseEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={openModal === ModalTypes.CLOSE} />

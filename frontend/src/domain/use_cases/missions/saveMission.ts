@@ -60,12 +60,12 @@ export const saveMission =
         } else {
           // for a mission already created we want to update the `updatedAt` value with the new one
           const mission = selectedMissions[values.id]
-          dispatch(
+          await dispatch(
             missionFormsActions.setMission({
               ...mission,
               displayCreatedMissionBanner: false,
-              isFormDirty: false,
               // since mission has just been saved, it's not dirty anymore
+              isFormDirty: false,
               missionForm: missionUpdated
             })
           )
