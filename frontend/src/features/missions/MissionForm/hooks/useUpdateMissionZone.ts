@@ -51,23 +51,28 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
       setActionGeom(undefined)
     }
 
+    // if no action in mission, we clean the mission zone if it was computed from actions
+    if (filteredEnvActions.length === 0 && values.fishActions.length === 0 && values.isGeometryComputedFromControls) {
+      setFieldValue('geom', undefined)
+      setFieldValue('isGeometryComputedFromControls', false)
+      setActionGeom(undefined)
+
+      return
+    }
+    // As a action from Fish is newer, we do not update the mission location
+    if (sortedActions[0]?.actionSource === ActionSource.MONITORFISH) {
+      return
+    }
+
+    if (firstActionWithDate?.geom?.coordinates.length === 0) {
+      return
+    }
+
     // no need to update geom if we are in mission zone listener or if user add manually a zone
     if (
       listener === InteractionListener.MISSION_ZONE ||
       (!values.isGeometryComputedFromControls && values.geom && values.geom.coordinates.length > 0)
     ) {
-      return
-    }
-
-    // if no action in mission, we clean the misison zone if it was computed from actions
-    if (filteredEnvActions.length === 0 && values.fishActions.length === 0 && values.isGeometryComputedFromControls) {
-      setFieldValue('geom', undefined)
-      setFieldValue('isGeometryComputedFromControls', false)
-
-      return
-    }
-
-    if (firstActionWithDate?.geom?.coordinates.length === 0) {
       return
     }
 
