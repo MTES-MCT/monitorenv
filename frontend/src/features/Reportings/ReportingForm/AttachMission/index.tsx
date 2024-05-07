@@ -58,7 +58,7 @@ export function AttachMission() {
     if (reportingEvent) {
       return
     }
-    if (missionId && missionId !== values.missionId) {
+    if ((missionId && missionId !== values.missionId) || (!missionId && values.missionId)) {
       setFieldValue('missionId', missionId ?? null)
       setFieldValue('attachedMission', attachedMission)
       setFieldValue('attachedToMissionAtUtc', customDayjs().utc().format())

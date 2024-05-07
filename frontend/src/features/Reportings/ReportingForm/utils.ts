@@ -1,11 +1,11 @@
 import { isCypress } from '@utils/isCypress'
 import { undefinedize } from '@utils/undefinedize'
-import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
-import { debounce, isEmpty, isEqual, omit } from 'lodash'
+import { isEqual, omit } from 'lodash'
 
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 
-import type { Reporting } from 'domain/entities/reporting'
+import type { Reporting, ReportingDetailed } from 'domain/entities/reporting'
+import type { AtLeast } from 'types'
 /* Is auto-save enabled.
  *
  * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
@@ -25,7 +25,7 @@ export const isReportingAutoUpdateEnabled = () =>
  * should a Formik `onChange` event trigger `saveMission`.
  */
 export function shouldSaveReporting(
-  previousValues: Reporting | undefined,
+  previousValues: AtLeast<ReportingDetailed, 'id'> | undefined,
   reportingEvent: Reporting | undefined,
   nextValues: Reporting
 ): boolean {
@@ -53,21 +53,3 @@ export function shouldSaveReporting(
     omit(undefinedize(nextValues), [...REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM, 'attachedMission'])
   )
 }
-
-export const validateBeforeOnChange = debounce(
-  async (nextValues, dispatch, validateForm, isAutoSaveEnabled, selectedReporting, context, reportingEvent) => {
-    const errors = await validateForm()
-    const isValid = isEmpty(errors)
-
-    if (!isAutoSaveEnabled || !isValid) {
-      return
-    }
-
-    if (!shouldSaveReporting(selectedReporting, reportingEvent, nextValues)) {
-      return
-    }
-
-    dispatch(saveReporting(nextValues, context))
-  },
-  400
-)
