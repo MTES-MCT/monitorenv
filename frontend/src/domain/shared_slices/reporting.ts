@@ -55,6 +55,20 @@ const reportingSlice = createSlice({
       state.activeReportingId = action.payload
       state.selectedReportingIdOnMap = action.payload
     },
+    setCreatedReporting(state, action: PayloadAction<{ createdReporting: ReportingType; previousId: string }>) {
+      const { previousId } = action.payload
+      const createdReportingId = action.payload.createdReporting.reporting.id
+      if (!previousId || !createdReportingId) {
+        return
+      }
+      const missionWithPreviousId = state.reportings[previousId]
+      if (missionWithPreviousId) {
+        delete state.reportings[previousId]
+        state.reportings = { ...state.reportings, [createdReportingId]: action.payload.createdReporting }
+      }
+      state.activeReportingId = createdReportingId
+      state.selectedReportingIdOnMap = createdReportingId
+    },
     setIsConfirmCancelDialogVisible(state, action: PayloadAction<boolean>) {
       state.isConfirmCancelDialogVisible = action.payload
     },

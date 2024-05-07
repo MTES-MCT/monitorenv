@@ -33,6 +33,7 @@ import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
+import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.generator.EventType
 import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
 import org.locationtech.jts.geom.Geometry
@@ -165,6 +166,10 @@ class ReportingModel(
     )
     val attachedEnvAction: EnvActionModel? = null,
 
+    @Column(name = "updated_at_utc")
+    @UpdateTimestamp
+    val updatedAtUtc: Instant? = null,
+
     @Column(name = "with_vhf_answer")
     val withVHFAnswer: Boolean? = null,
 ) {
@@ -198,6 +203,7 @@ class ReportingModel(
             attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
             detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
             attachedEnvActionId = attachedEnvAction?.id,
+            updatedAtUtc = updatedAtUtc?.atZone(UTC),
             withVHFAnswer = withVHFAnswer,
         )
 
@@ -271,6 +277,7 @@ class ReportingModel(
                 attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
                 detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
                 attachedEnvAction = envActionReference,
+                updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
                 withVHFAnswer = reporting.withVHFAnswer,
             )
     }

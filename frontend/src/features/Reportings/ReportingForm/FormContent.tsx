@@ -1,7 +1,19 @@
-import { FieldError, FormikMultiRadio, FormikTextarea, getOptionsFromLabelledEnum, Toggle } from '@mtes-mct/monitor-ui'
+import { Italic } from '@components/style'
+import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
+import {
+  customDayjs,
+  FormikEffect,
+  FormikMultiRadio,
+  FormikTextarea,
+  getOptionsFromLabelledEnum,
+  Toggle
+} from '@mtes-mct/monitor-ui'
+import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
+import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
@@ -42,24 +54,20 @@ import {
   StyledThemeContainer,
   StyledToggle,
   StyledFormikTextInput,
-  ReportTypeMultiRadio
+  ReportTypeMultiRadio,
+  SaveBanner,
+  StyledItalic
 } from '../style'
+import { isReportingAutoSaveEnabled, shouldSaveReporting } from '../utils'
 
 import type { AtLeast } from '../../../types'
 
 type FormContentProps = {
-  onAttachMission: (value: boolean) => void
   reducedReportingsOnContext: number
   selectedReporting: AtLeast<ReportingDetailed, 'id'> | undefined
-  setShouldValidateOnChange: (value: boolean) => void
 }
 
-export function FormContent({
-  onAttachMission,
-  reducedReportingsOnContext,
-  selectedReporting,
-  setShouldValidateOnChange
-}: FormContentProps) {
+export function FormContent({ reducedReportingsOnContext, selectedReporting }: FormContentProps) {
   const dispatch = useAppDispatch()
 
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
@@ -69,13 +77,33 @@ export function FormContent({
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
-  const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
+  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Reporting>>()
   const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
   const [mustIncreaseValidity, setMustIncreaseValidity] = useState(false)
 
   const isMapContext = reportingContext === ReportingContext.MAP
+  const isFormDirty = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.isFormDirty : false
+  )
+
+  const formattedUpdatedDate = useMemo(
+    () => values.updatedAtUtc && getDateAsLocalizedStringVeryCompact(values.updatedAtUtc),
+    [values.updatedAtUtc]
+  )
+
+  const isAutoSaveEnabled = useMemo(() => {
+    if (!isReportingAutoSaveEnabled()) {
+      return false
+    }
+
+    if (selectedReporting?.isArchived) {
+      return false
+    }
+
+    return true
+  }, [selectedReporting])
 
   useEffect(() => {
     if (selectedReporting) {
@@ -85,7 +113,7 @@ export function FormContent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useSyncFormValuesWithRedux()
+  useSyncFormValuesWithRedux(isAutoSaveEnabled)
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
   const withVHFAnswerOptions = [
@@ -128,8 +156,17 @@ export function FormContent({
     setIsDeletModalOpen(true)
   }
 
-  const cancelNewReporting = async () => {
-    if (dirty) {
+  const saveAndQuit = () => {
+    if (isEmpty(errors)) {
+      dispatch(saveReporting(values, reportingContext, true))
+
+      return
+    }
+    dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
+  }
+
+  const closeReporting = async () => {
+    if (isFormDirty) {
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
     } else {
       await dispatch(reportingActions.deleteSelectedReporting(selectedReporting?.id))
@@ -160,12 +197,42 @@ export function FormContent({
     dispatch(reduceOrCollapseReportingForm(reportingContext))
   }
 
+  const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
+    const formErrors = await validateForm()
+    const isValid = isEmpty(formErrors)
+
+    if (!isAutoSaveEnabled || !isValid) {
+      return
+    }
+
+    if (!shouldSaveReporting(selectedReporting, nextValues)) {
+      return
+    }
+    dispatch(saveReporting(nextValues, reportingContext))
+  }, 250)
+
+  useEffect(() => {
+    if (!isAutoSaveEnabled) {
+      return
+    }
+    if (
+      values?.updatedAtUtc &&
+      !customDayjs(selectedReporting?.updatedAtUtc).isSame(customDayjs(values?.updatedAtUtc), 'minutes')
+    ) {
+      setFieldValue('updatedAtUtc', selectedReporting?.updatedAtUtc)
+    }
+
+    // there's no need to listen for changes in `values`, since `updatedAtUtc` is read-only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedReporting?.updatedAtUtc, isAutoSaveEnabled])
+
   if (!selectedReporting || isEmpty(values)) {
     return null
   }
 
   return (
     <StyledFormContainer>
+      <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues)} />
       <CancelEditDialog
         key={`cancel-edit-modal-${selectedReporting.id}`}
         onCancel={returnToEdition}
@@ -190,6 +257,15 @@ export function FormContent({
         reduceOrCollapseReporting={reduceOrCollapseReporting}
         reporting={selectedReporting}
       />
+      <SaveBanner>
+        {!values?.updatedAtUtc && <Italic>Signalement non créé</Italic>}
+        {values?.updatedAtUtc && (
+          <>
+            <StyledItalic>Dernière modification le {formattedUpdatedDate}</StyledItalic>
+            <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
+          </>
+        )}
+      </SaveBanner>
       <StyledForm $totalReducedReportings={reducedReportingsOnContext}>
         <Source />
         <Target />
@@ -199,14 +275,16 @@ export function FormContent({
 
         <div>
           <ReportTypeMultiRadio
+            error={errors.reportType}
+            isErrorMessageHidden
             isInline
+            isRequired
             label="Type de signalement"
             name="reportType"
             onChange={changeReportType}
             options={reportTypeOptions}
             value={values.reportType}
           />
-          {errors.reportType && <FieldError>{errors.reportType}</FieldError>}
         </div>
         <StyledThemeContainer>
           <ThemeSelector isLight={false} label="Thématique du signalement" name="themeId" />
@@ -223,7 +301,7 @@ export function FormContent({
 
         <Validity mustIncreaseValidity={mustIncreaseValidity} />
 
-        <StyledFormikTextInput label="Saisi par" name="openBy" />
+        <StyledFormikTextInput isErrorMessageHidden isRequired label="Saisi par" name="openBy" />
 
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
@@ -240,13 +318,14 @@ export function FormContent({
           />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
-        <AttachMission onAttachMission={onAttachMission} />
+        <AttachMission />
       </StyledForm>
       <Footer
-        onCancel={cancelNewReporting}
+        isAutoSaveEnabled={isAutoSaveEnabled}
+        onClose={closeReporting}
         onDelete={deleteCurrentReporting}
+        onSave={saveAndQuit}
         setMustIncreaseValidity={setMustIncreaseValidity}
-        setShouldValidateOnChange={setShouldValidateOnChange}
       />
     </StyledFormContainer>
   )

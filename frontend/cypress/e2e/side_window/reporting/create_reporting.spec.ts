@@ -1,5 +1,6 @@
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
 import { FAKE_API_PUT_RESPONSE } from '../../constants'
+import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
 import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 
@@ -8,7 +9,11 @@ const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 context('Reportings', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
+    cy.visit(`/side_window`, {
+      onBeforeLoad() {
+        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
+      }
+    })
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.clickButton('signalements')
     cy.wait('@getReportings')
@@ -40,16 +45,15 @@ context('Reportings', () => {
     cy.fill('Sous-thématique du signalement', ['Atteinte aux biens culturels', 'Contrôle administratif'])
 
     cy.get('.rs-radio').find('label').contains('Observation').click()
-    cy.fill('Saisi par', 'XYZ')
 
     // change date year
-    cy.fill('Date et heure (UTC)', [2024, 5, 26, 23, 35])
+    const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
+    cy.fill('Date et heure (UTC)', asDatePickerDateTime)
+    cy.wait(250)
     cy.fill('Thématique du signalement', 'Rejet')
     cy.fill('Sous-thématique du signalement', ['Carénage sauvage'])
 
-    cy.clickButton('Valider le signalement')
-
-    // Then
+    cy.fill('Saisi par', 'XYZ')
 
     cy.wait('@createReporting').then(interception => {
       if (!interception.response) {
@@ -57,7 +61,7 @@ context('Reportings', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        createdAt: '2024-05-26T23:35:00.000Z',
+        createdAt: `${asApiDateTime}:00.000Z`,
         openBy: 'XYZ',
         reportType: 'OBSERVATION',
         semaphoreId: 35,

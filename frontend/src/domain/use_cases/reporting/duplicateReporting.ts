@@ -22,7 +22,14 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
     const duplicatedReporting = {
       context: ReportingContext.SIDE_WINDOW,
       isFormDirty: false,
-      reporting: getReportingInitialValues({ ...reportingResponse, createdAt: new Date().toISOString(), id })
+      reporting: getReportingInitialValues({
+        ...reportingResponse,
+        createdAt: new Date().toISOString(),
+        id,
+        isArchived: false,
+        openBy: undefined,
+        updatedAtUtc: undefined
+      })
     }
 
     await dispatch(reportingActions.setReporting(duplicatedReporting))

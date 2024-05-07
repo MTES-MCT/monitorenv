@@ -11,9 +11,11 @@ import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../ma
 import type { Reporting } from '../../entities/reporting'
 
 export const saveReporting =
-  (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext) => async dispatch => {
+  (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext, quitAfterSave = false) =>
+  async dispatch => {
     const valuesToSave = omit(values, ['attachedMission'])
-    const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
+    const reportingIsNew = isNewReporting(values.id)
+    const newOrNextReportingData = reportingIsNew ? { ...valuesToSave, id: undefined } : valuesToSave
     const endpoint = isNewReporting(values.id)
       ? reportingsAPI.endpoints.createReporting
       : reportingsAPI.endpoints.updateReporting
@@ -21,6 +23,31 @@ export const saveReporting =
     try {
       const response = await dispatch(endpoint.initiate(newOrNextReportingData))
       if ('data' in response) {
+        if (reportingIsNew) {
+          const newReporting = {
+            context: reportingContext,
+            isFormDirty: false,
+            reporting: response.data
+          }
+
+          dispatch(
+            reportingActions.setCreatedReporting({ createdReporting: newReporting, previousId: String(values.id) })
+          )
+          dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+        } else {
+          dispatch(
+            reportingActions.setReporting({
+              context: reportingContext,
+              isFormDirty: false,
+              reporting: response.data
+            })
+          )
+        }
+
+        if (!quitAfterSave) {
+          return
+        }
+
         if (reportingContext === ReportingContext.MAP) {
           dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
         }

@@ -1,3 +1,4 @@
+import { Italic } from '@components/style'
 import { Button, FormikTextInput, IconButton, MultiRadio, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -12,12 +13,12 @@ export const StyledFormContainer = styled.div`
   }
 `
 export const StyledForm = styled.div<{ $totalReducedReportings: number }>`
-  padding: 32px;
+  padding: 16px 32px 32px 31px;
   padding-right: calc(32px - var(--scrollbar-width || 0px));
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: calc(100vh - 108px - ${p => p.$totalReducedReportings * 52}px);
+  height: calc(100vh - 146px - ${p => p.$totalReducedReportings * 52}px);
   overflow-y: auto;
 `
 
@@ -34,6 +35,7 @@ export const ReportingHeader = styled.div`
   gap: 8px;
   flex: 1;
 `
+
 export const ReportingTitle = styled.div`
   align-items: center;
   display: flex;
@@ -43,6 +45,19 @@ export const ReportingTitle = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+
+export const SaveBanner = styled.div`
+  box-shadow: 0px 3px 6px #00000029;
+  color: ${p => p.theme.color.slateGray};
+  display: flex;
+  height: 38px;
+  justify-content: space-between;
+  padding: 10px 16px;
+  z-index: 1;
+`
+export const StyledItalic = styled(Italic)`
+  font-size: 13px;
 `
 export const ReportingInfosContainer = styled.div`
   display: flex;
@@ -179,10 +194,12 @@ export const StyledFooter = styled.div<{ $justify?: string | undefined }>`
   display: flex;
   justify-content: ${p => p.$justify ?? 'space-between'};
   gap: 4px;
+  > div {
+    display: flex;
+  }
 `
-export const StyledSubmitButton = styled(Button)`
+export const ButtonWithWiteBg = styled(Button)`
   background-color: ${p => p.theme.color.white};
-  padding: 4px 12px;
 `
 export const StyledButton = styled(Button)`
   border: 1px solid ${p => p.theme.color.white};

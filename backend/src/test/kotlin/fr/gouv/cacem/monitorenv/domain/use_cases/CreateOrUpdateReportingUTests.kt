@@ -94,6 +94,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
+                updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
             )
         val reportingWithSemaphoreDTO =
@@ -117,6 +118,7 @@ class CreateOrUpdateReportingUTests {
                     validityTime = 10,
                     isArchived = false,
                     isDeleted = false,
+                    updatedAtUtc = ZonedDateTime.now(),
                     openBy = "CDA",
                 ),
             )
@@ -139,6 +141,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
+                updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
             )
         val reportingWithControlUnitDTO =
@@ -162,6 +165,7 @@ class CreateOrUpdateReportingUTests {
                     validityTime = 10,
                     isArchived = false,
                     isDeleted = false,
+                    updatedAtUtc = ZonedDateTime.now(),
                     openBy = "CDA",
                 ),
             )
@@ -258,6 +262,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
+                updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
             )
 
@@ -305,6 +310,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
+                updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
             )
 
@@ -352,6 +358,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
+                updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
             )
 
@@ -373,6 +380,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
+                updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
             )
         val reportingWithoutSourceName =
@@ -392,6 +400,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
+                updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
             )
 
@@ -475,6 +484,7 @@ class CreateOrUpdateReportingUTests {
                 missionId = 10,
                 attachedToMissionAtUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 detachedFromMissionAtUtc = null,
+                updatedAtUtc = ZonedDateTime.now(),
             )
 
         // given(reportingRepository.save(reportingWithNewAttachedMission))
@@ -506,6 +516,7 @@ class CreateOrUpdateReportingUTests {
                         attachedToMissionAtUtc =
                         ZonedDateTime.parse("2023-08-15T04:50:09Z"),
                         detachedFromMissionAtUtc = null,
+                        updatedAtUtc = ZonedDateTime.now(),
                     ),
                 ),
             )

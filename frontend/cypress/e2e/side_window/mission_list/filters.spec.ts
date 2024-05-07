@@ -26,7 +26,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     const expectedEndDate = getUtcDateInMultipleFormats('2023-05-31T23:59:59.000Z')
 
     cy.fill('Période', 'Période spécifique')
-    cy.fill('Période spécifique', [expectedStartDate.utcDateTuple, expectedEndDate.utcDateTuple])
+    cy.fill('Période spécifique', [expectedStartDate.asDatePickerDate, expectedEndDate.asDatePickerDate])
     cy.wait('@getMissions')
   })
 

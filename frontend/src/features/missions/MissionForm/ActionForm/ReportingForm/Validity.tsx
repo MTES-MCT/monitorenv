@@ -1,3 +1,4 @@
+import { getTimeLeft } from '@features/Reportings/utils'
 import { TextInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -12,7 +13,7 @@ export function Validity({ reporting }: { reporting: Reporting }) {
   const endOfValidity = localizedCreatedAt.add(reporting.validityTime ?? 0, 'hour')
   const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
-  const timeLeft = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+  const timeLeft = getTimeLeft(endOfValidity)
 
   let remainingMinutes = 0
   if (timeLeft < 1 && timeLeft > 0) {

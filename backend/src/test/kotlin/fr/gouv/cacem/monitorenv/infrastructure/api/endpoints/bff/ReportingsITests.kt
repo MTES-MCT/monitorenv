@@ -91,6 +91,10 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
                     withVHFAnswer = null,
                 ),
                 semaphore =
@@ -127,6 +131,10 @@ class ReportingsITests {
                 validityTime = 10,
                 isArchived = false,
                 openBy = "CDA",
+                updatedAtUtc =
+                ZonedDateTime.parse(
+                    "2022-01-15T14:50:09Z",
+                ),
             )
 
         given(createOrUpdateReporting.execute(any())).willReturn(reporting)
@@ -164,6 +172,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
+            .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
     }
 
     @Test
@@ -200,6 +209,10 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
                 ),
                 semaphore =
                 SemaphoreEntity(
@@ -245,6 +258,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
+            .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
     }
 
     @Test
@@ -341,6 +355,10 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
                 ),
                 semaphore =
                 SemaphoreEntity(
@@ -376,6 +394,10 @@ class ReportingsITests {
                     validityTime = 10,
                     isArchived = false,
                     openBy = "CDA",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
                 ),
             )
 
@@ -411,6 +433,8 @@ class ReportingsITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
+            .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
+            .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
     }
 
     @Test

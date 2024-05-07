@@ -35,12 +35,7 @@ export function Header({
     ReportingContext.MAP
 
   const statusTag = () => {
-    const reportingStatus = getReportingStatus({
-      createdAt: reporting?.createdAt,
-      isArchived: reporting?.isArchived,
-      reportType: reporting?.reportType,
-      validityTime: reporting?.validityTime
-    })
+    const reportingStatus = getReportingStatus(reporting)
     if (reportingStatus === ReportingStatusEnum.ARCHIVED) {
       return <StyledArchivedTag accent={Accent.PRIMARY}>Archivé</StyledArchivedTag>
     }

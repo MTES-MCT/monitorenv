@@ -4,8 +4,8 @@ import { useFormikContext } from 'formik'
 import { useMemo, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
-import { AutoSaveTag } from './AutoSaveTag'
 import { MissionSourceEnum, missionSourceEnum, type Mission } from '../../../domain/entities/missions'
+import { AutoSaveTag } from '../../commonComponents/AutoSaveTag'
 
 type MissionFormBottomBarProps = {
   isAutoSaveEnabled: boolean

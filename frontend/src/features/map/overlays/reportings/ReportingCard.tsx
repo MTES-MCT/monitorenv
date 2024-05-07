@@ -1,14 +1,4 @@
-import {
-  Accent,
-  Button,
-  Icon,
-  IconButton,
-  Size,
-  THEME,
-  Tag,
-  customDayjs,
-  getLocalizedDayjs
-} from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -22,7 +12,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
-import { getFormattedReportingId } from '../../../Reportings/utils'
+import { getFormattedReportingId, getTimeLeft } from '../../../Reportings/utils'
 
 type ReportingCardProps = {
   feature: any
@@ -93,7 +83,7 @@ export function ReportingCard({
 
   const creationDate = getLocalizedDayjs(createdAt).format('DD MMM YYYY à HH:mm')
   const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
-  const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+  const timeLeft = getTimeLeft(endOfValidity)
 
   const subThemesFormatted = subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ')
 

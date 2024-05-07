@@ -11,6 +11,7 @@ import { attachMissionToReportingSliceActions } from '../../slice'
 
 export function AttachMissionToReportingModal() {
   const dispatch = useAppDispatch()
+
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )

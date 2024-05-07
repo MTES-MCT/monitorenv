@@ -1,10 +1,11 @@
-import { Icon, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { getTimeLeft } from '@features/Reportings/utils'
+import { Icon, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function CellValidityTime({ row }) {
   const { createdAt, isArchived, validityTime } = row.original
   const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
-  const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+  const timeLeft = getTimeLeft(endOfValidity)
 
   const timeLeftText = () => {
     if (timeLeft < 0 || isArchived) {

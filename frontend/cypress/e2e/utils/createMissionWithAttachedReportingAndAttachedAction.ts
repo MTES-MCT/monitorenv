@@ -43,7 +43,7 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
   cy.get('.rs-radio').find('label').contains('Infraction').click()
   cy.fill('Saisi par', 'XYZ')
 
-  cy.clickButton('Valider le signalement')
+  cy.wait(250)
 
   return cy.wait('@createReporting').then(({ response }) => {
     expect(response && response.statusCode).equal(201)

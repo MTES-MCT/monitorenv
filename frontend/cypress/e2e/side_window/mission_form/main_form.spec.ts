@@ -227,7 +227,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('*[data-cy="add-mission"]').click()
 
-    const startDate = getUtcDateInMultipleFormats().utcDateTupleWithTime
+    const startDate = getUtcDateInMultipleFormats().asDatePickerDateTime
     const ennDate = getMissionEndDateWithTime(7, 'day')
 
     cy.fill('Date de début (UTC)', startDate)
@@ -392,10 +392,10 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
     cy.fill('Période', 'Période spécifique')
-    const startDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(6, 'month').toISOString()
-    const endDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(3, 'month').toISOString()
-    const startDate = getUtcDateInMultipleFormats(startDateInString).utcDateTuple
-    const endDate = getUtcDateInMultipleFormats(endDateInString).utcDateTuple
+    const startDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(6, 'month').toISOString()
+    const endDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(3, 'month').toISOString()
+    const startDate = getUtcDateInMultipleFormats(startDateInString).asDatePickerDate
+    const endDate = getUtcDateInMultipleFormats(endDateInString).asDatePickerDate
     cy.fill('Période spécifique', [startDate, endDate])
 
     cy.wait('@getMissions')
@@ -468,10 +468,10 @@ context('Side Window > Mission Form > Main Form', () => {
     visitSideWindow()
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
     cy.fill('Période', 'Période spécifique')
-    const startDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(6, 'month').toISOString()
-    const endDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.toISOString()
-    const startDate = getUtcDateInMultipleFormats(startDateInString).utcDateTuple
-    const endDate = getUtcDateInMultipleFormats(endDateInString).utcDateTuple
+    const startDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(6, 'month').toISOString()
+    const endDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.toISOString()
+    const startDate = getUtcDateInMultipleFormats(startDateInString).asDatePickerDate
+    const endDate = getUtcDateInMultipleFormats(endDateInString).asDatePickerDate
     cy.fill('Période spécifique', [startDate, endDate])
 
     cy.wait('@getMissions')

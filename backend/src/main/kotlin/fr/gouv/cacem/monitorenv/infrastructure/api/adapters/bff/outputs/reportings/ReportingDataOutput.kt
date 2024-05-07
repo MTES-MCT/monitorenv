@@ -45,6 +45,7 @@ data class ReportingDataOutput(
     val attachedEnvActionId: UUID? = null,
     val attachedMission: ReportingMissionDataOutput? = null,
     val controlStatus: ControlStatusEnum? = null,
+    val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
 ) {
     companion object {
@@ -115,6 +116,7 @@ data class ReportingDataOutput(
                     null
                 },
                 controlStatus = dto.controlStatus,
+                updatedAtUtc = dto.reporting.updatedAtUtc,
                 withVHFAnswer = dto.reporting.withVHFAnswer,
             )
         }

@@ -1,7 +1,11 @@
 context('Reportings', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
+    cy.visit(`/side_window`, {
+      onBeforeLoad() {
+        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
+      }
+    })
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.clickButton('signalements')
     cy.wait('@getReportings')
@@ -32,8 +36,6 @@ context('Reportings', () => {
     cy.fill('Sous-thématique du signalement', ['Implantation'])
 
     cy.fill('Saisi par', 'CDA')
-
-    cy.clickButton('Valider le signalement')
 
     cy.wait('@createReporting').then(({ response }) => {
       expect(response && response.body.sourceName).equal('Reporting dupliqué')
@@ -69,6 +71,7 @@ context('Reportings', () => {
     cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
     cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
+    cy.wait(200)
 
     cy.get('*[data-id="reporting-collapse-or-expand-button-new-1"]').click()
 
@@ -90,7 +93,6 @@ context('Reportings', () => {
     cy.clickButton('Détacher la mission')
 
     cy.wait(500)
-    cy.clickButton('Enregistrer et quitter')
 
     cy.wait('@updateReporting').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)

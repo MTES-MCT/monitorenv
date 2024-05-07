@@ -19,8 +19,8 @@ context('Side Window > Mission Form > Delete Mission', () => {
     })
 
     const missionId = 49
-    cy.get('*[data-cy="edit-mission-49"]').scrollIntoView().click({ force: true })
-
+    cy.get(`*[data-cy="edit-mission-${missionId}"]`).scrollIntoView().click({ force: true })
+    cy.wait(250)
     cy.intercept({ method: 'GET', url: `/bff/v1/missions/${missionId}/can_delete?source=MONITORENV` }).as(
       'canDeleteMission'
     )

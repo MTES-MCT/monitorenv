@@ -27,7 +27,11 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
       return schema.nullable()
     }),
     geom: ReportingZoneSchema,
-    openBy: Yup.string().nullable().required('Requis'),
+    openBy: Yup.string()
+      .min(3, 'Minimum 3 lettres pour le trigramme')
+      .max(3, 'Maximum 3 lettres pour le trigramme')
+      .nullable()
+      .required('Requis'),
     reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),
     semaphoreId: Yup.number().when('sourceType', (sourceType, schema) => {
       if (sourceType === ReportingSourceEnum.SEMAPHORE) {
@@ -49,6 +53,10 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
       .ensure()
       .required()
       .min(1, 'Veuillez définir les sous-thématiques du signalement'),
-    themeId: Yup.number().nullable().required('Veuillez définir la thématique du signalement')
+    themeId: Yup.number().nullable().required('Veuillez définir la thématique du signalement'),
+    validityTime: Yup.number()
+      .nullable()
+      .required('Veuillez définir la durée de validité du signalement')
+      .min(1, 'Veuillez définir une durée de validité supérieure à 0')
   })
   .required()

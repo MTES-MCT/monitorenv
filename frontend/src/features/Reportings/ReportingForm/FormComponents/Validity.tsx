@@ -1,3 +1,4 @@
+import { getTimeLeft } from '@features/Reportings/utils'
 import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
@@ -14,7 +15,7 @@ export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boole
   const endOfValidity = getLocalizedDayjs(createdAt).add(values?.validityTime ?? 0, 'hour')
   const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
-  const timeLeft = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+  const timeLeft = getTimeLeft(endOfValidity)
 
   let remainingMinutes = 0
   if (timeLeft < 1 && timeLeft > 0) {
@@ -29,8 +30,17 @@ export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boole
   return (
     <StyledValidityContainer>
       <div>
-        <FormikDatePicker isCompact isHistorical isStringDate label="Date et heure (UTC)" name="createdAt" withTime />
-        <StyledFormikNumberInput label="Validité (h)" min={1} name="validityTime" />
+        <FormikDatePicker
+          isCompact
+          isErrorMessageHidden
+          isHistorical
+          isRequired
+          isStringDate
+          label="Date et heure (UTC)"
+          name="createdAt"
+          withTime
+        />
+        <StyledFormikNumberInput isErrorMessageHidden isRequired label="Validité (h)" min={1} name="validityTime" />
       </div>
 
       {reportingStatus === ReportingStatusEnum.ARCHIVED && !mustIncreaseValidity && (

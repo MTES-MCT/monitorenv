@@ -30,7 +30,9 @@ export function SubThemesSelector({ isLight = false, label, name, theme }: SubTh
           key={`${year}-${theme}`}
           data-cy="reporting-subtheme-selector"
           disabled={!theme}
+          isErrorMessageHidden
           isLight={isLight}
+          isRequired
           label={label}
           name={name}
           options={subThemesByYearAsOptions}
