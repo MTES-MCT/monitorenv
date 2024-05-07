@@ -46,7 +46,7 @@ export function SearchReportings() {
           <ReportingsFilters context={ReportingFilterContext.MAP} />
         </MapMenuDialog.Body>
         <MapMenuDialog.Footer>
-          <Button Icon={Icon.Plus} isFullWidth onClick={createReporting}>
+          <Button data-cy="add-reporting" Icon={Icon.Plus} isFullWidth onClick={createReporting}>
             Ajouter un signalement
           </Button>
           <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleReportingsWindow}>

@@ -112,6 +112,7 @@ export function AttachMission() {
       <UnattachButtonContainer>
         <Button
           accent={Accent.SECONDARY}
+          data-cy="unattach-mission-button"
           disabled={values.isArchived}
           Icon={Icon.Unlink}
           isFullWidth={false}
