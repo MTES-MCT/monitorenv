@@ -2,12 +2,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,18 +24,6 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         val afterFullAdministration = jpaAdministrationRepository.findById(2006)
 
         assertThat(afterFullAdministration.administration.isArchived).isTrue()
-    }
-
-    @Test
-    @Transactional
-    fun `archiveById() should throw the expected exception when the administration is linked to unarchived control units`() {
-        // Then
-        val exception = assertThrows<BackendUsageException> {
-            // When
-            jpaAdministrationRepository.archiveById(1005)
-        }
-
-        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNARCHIVED_CHILD)
     }
 
     @Test

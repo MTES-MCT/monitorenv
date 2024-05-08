@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
@@ -18,14 +16,6 @@ class JpaAdministrationRepository(
 ) : IAdministrationRepository {
     @Transactional
     override fun archiveById(administrationId: Int) {
-        val fullAdministration = findById(administrationId)
-        if (fullAdministration.controlUnits.any { !it.isArchived }) {
-            throw BackendUsageException(
-                BackendUsageErrorCode.UNARCHIVED_CHILD,
-                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.",
-            )
-        }
-
         dbAdministrationRepository.archiveById(administrationId)
     }
 

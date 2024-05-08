@@ -1,4 +1,4 @@
 package fr.gouv.cacem.monitorenv.domain.exceptions
 
-@Deprecated("Use `BackendException` instead.")
+@Deprecated("Use `BackendUsageException` instead.")
 class CouldNotDeleteException(message: String) : RuntimeException(message)
