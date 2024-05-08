@@ -60,7 +60,7 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>> {
             } else {
                 throw BackendRequestException(
                     BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
-                    "${dataInputClassName}: Property `$propName` is not of type `Boolean`.",
+                    "$dataInputClassName: Property `$propName` is not of type `Boolean`.",
                 )
             }
 
@@ -69,7 +69,7 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>> {
             } else {
                 throw BackendRequestException(
                     BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
-                    "${dataInputClassName}: Property `$propName` is not of type `Int`.",
+                    "$dataInputClassName: Property `$propName` is not of type `Int`.",
                 )
             }
 
@@ -78,12 +78,12 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>> {
             } else {
                 throw BackendRequestException(
                     BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
-                    "${dataInputClassName}: Property `$propName` is not of type `String`.",
+                    "$dataInputClassName: Property `$propName` is not of type `String`.",
                 )
             }
 
             else -> throw BackendInternalException(
-                "${dataInputClassName}: Unsupported type `$propType` for property `$propName`.",
+                "$dataInputClassName: Unsupported type `$propType` for property `$propName`.",
             )
         }
     }

@@ -11,14 +11,16 @@ class CreateOrUpdateControlUnitContact(
     private val controlUnitContactRepository: IControlUnitContactRepository,
 ) {
     fun execute(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
+        val validControlUnitContact = validateSubscriptions(controlUnitContact)
+
+        val createdOrUpdatedControlUnitContact = controlUnitContactRepository.save(validControlUnitContact)
+
         // There can only be one contact per control unit with an email subscription
         if (controlUnitContact.id != null && controlUnitContact.isEmailSubscriptionContact) {
             unsubscribeOtherContactsFromEmail(controlUnitContact.controlUnitId, controlUnitContact.id)
         }
 
-        val validControlUnitContact = validateSubscriptions(controlUnitContact)
-
-        return controlUnitContactRepository.save(validControlUnitContact)
+        return createdOrUpdatedControlUnitContact
     }
 
     private fun unsubscribeOtherContactsFromEmail(controlUnitId: Int, controlUnitContactId: Int) {
