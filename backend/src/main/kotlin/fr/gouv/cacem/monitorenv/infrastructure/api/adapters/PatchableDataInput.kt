@@ -21,9 +21,9 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(private val clazz: 
             val propType = clazz.memberProperties.find { it.name == parameter.name }
             val nextPropValueFromRequest = nextDataFromRequestAsJsonNode.get(parameter.name)
 
-            if (nextPropValueFromRequest != null && !nextPropValueFromRequest.isMissingNode) {
-                // A JSON value set to `null` won't set `nextPropValueFromRequest` to `null`,
-                // it's a valid value that `JsonNode` can check using `.isNull()` method.
+            // - If the JSON property is absent, `JsonNode.get()` returns `null`.
+            // - If the JSON property is explicitly set to `null`, `JsonNode.isNull()` returns `true`.
+            if (nextPropValueFromRequest != null) {
                 if (nextPropValueFromRequest.isNull) {
                     return@associateWith null
                 }
