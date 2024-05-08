@@ -3,8 +3,8 @@ import { createEntityAdapter, createSlice, type EntityState, type PayloadAction 
 import type { BannerStackItem } from './types'
 
 export const bannerStackAdapter = createEntityAdapter({
-  selectId: (bannerStackItem: BannerStackItem) => bannerStackItem.rank,
-  sortComparer: (a, b) => a.rank - b.rank
+  selectId: (bannerStackItem: BannerStackItem) => bannerStackItem.id,
+  sortComparer: (a, b) => a.id - b.id
 })
 
 interface MainWindowState {
@@ -34,7 +34,7 @@ const mainWindowSlice = createSlice({
     /**
      * Remove a banner from the stack.
      *
-     * @param rank The rank of the banner to remove.
+     * @param action.payload ID of the banner to remove.
      */
     removeBanner(state, action: PayloadAction<number>) {
       bannerStackAdapter.removeOne(state.bannerStack, action.payload)

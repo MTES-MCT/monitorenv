@@ -1,5 +1,5 @@
-import { addMainWindowBanner } from '@features/MainWindow/dispatchers/addMainWindowBanner'
 import { mainWindowActions } from '@features/MainWindow/slice'
+import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { Accent, Button, type ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -8,14 +8,11 @@ import { INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES } from './constants'
 import { Form } from './Form'
 import { Item } from './Item'
 import { sortControlUnitContactsByQualifiedName } from './utils'
-import {
-  controlUnitContactsAPI,
-  useCreateControlUnitContactMutation,
-  usePatchControlUnitContactMutation
-} from '../../../../../api/controlUnitContactsAPI'
+import { controlUnitContactsAPI } from '../../../../../api/controlUnitContactsAPI'
 import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../../libs/FrontendError'
+import { createOrUpdateControlUnitContact } from '../../../useCases/createOrUpdateControlUnitContact'
 import { Section } from '../shared/Section'
 import { TextareaForm } from '../shared/TextareaForm'
 
@@ -26,11 +23,9 @@ type ControlUnitContactListProps = {
   onSubmit: (nextControlUnit: ControlUnit.ControlUnit) => any
 }
 export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitContactListProps) {
-  const noEmailSubscriptionContactWarningBannerRankRef = useRef<number | undefined>(undefined)
+  const noEmailSubscriptionContactWarningBannerIdRef = useRef<number | undefined>(undefined)
 
   const dispatch = useAppDispatch()
-  const [createControlUnitContact] = useCreateControlUnitContactMutation()
-  const [updateControlUnitContact] = usePatchControlUnitContactMutation()
 
   const [editedControlUnitContactId, setEditedControlUnitContactId] = useState<number | undefined>(undefined)
   const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
@@ -78,7 +73,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       throw new FrontendError('`deletedControlUnitContact` is undefined.')
     }
     if (controlUnitContactToDelete.isEmailSubscriptionContact) {
-      noEmailSubscriptionContactWarningBannerRankRef.current = showNoEmailSubscriptionContactWarningBanner()
+      noEmailSubscriptionContactWarningBannerIdRef.current = showNoEmailSubscriptionContactWarningBanner()
     }
 
     await dispatch(controlUnitContactsAPI.endpoints.deleteControlUnitContact.initiate(editedControlUnitContactId))
@@ -87,39 +82,28 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     closeForm()
   }
 
-  const createOrUpdateControlUnitContact = async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
-    if (isNewControlUnitContactFormOpen) {
-      const newControlUnitContact = controlUnitContactFormValues as ControlUnit.NewControlUnitContactData
-
-      if (
-        noEmailSubscriptionContactWarningBannerRankRef.current !== undefined &&
-        newControlUnitContact.isEmailSubscriptionContact
-      ) {
-        hideNoEmailSubscriptionContactWarningBanner()
-      }
-
-      await createControlUnitContact(newControlUnitContact)
-    } else {
-      const currentControlUnitEmailSubscriptionContact = controlUnit.controlUnitContacts.find(
-        controlUnitContact => controlUnitContact.isEmailSubscriptionContact
+  const submit = async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
+    const hadAnEmailSubscriptionContact = controlUnit.controlUnitContacts.some(
+      controlUnitContact =>
+        controlUnitContact.id !== controlUnitContactFormValues.id && controlUnitContact.isEmailSubscriptionContact
+    )
+    const willHaveAnEmailSubscriptionContact =
+      controlUnitContactFormValues.isEmailSubscriptionContact ||
+      controlUnit.controlUnitContacts.some(
+        controlUnitContact =>
+          controlUnitContact.id !== controlUnitContactFormValues.id && controlUnitContact.isEmailSubscriptionContact
       )
-      const nextControlUnitContact = controlUnitContactFormValues as ControlUnit.ControlUnitContactData
 
-      // There can only be one email subscription contact per control unit,
-      // meaning that if the user is trying to unsubscribe the current email subscription contact,
-      // we need to warn them that the control unit will no longer receive any email
-      if (
-        !!currentControlUnitEmailSubscriptionContact &&
-        nextControlUnitContact.id === currentControlUnitEmailSubscriptionContact.id &&
-        !nextControlUnitContact.isEmailSubscriptionContact
-      ) {
-        noEmailSubscriptionContactWarningBannerRankRef.current = showNoEmailSubscriptionContactWarningBanner()
-      } else if (noEmailSubscriptionContactWarningBannerRankRef.current !== undefined) {
-        hideNoEmailSubscriptionContactWarningBanner()
-      }
-
-      await updateControlUnitContact(controlUnitContactFormValues as ControlUnit.ControlUnitContactData)
+    // There can only be one email subscription contact per control unit,
+    // meaning that if the user is trying to unsubscribe the current email subscription contact,
+    // we need to warn them that the control unit will no longer receive any email
+    if (hadAnEmailSubscriptionContact && !willHaveAnEmailSubscriptionContact) {
+      noEmailSubscriptionContactWarningBannerIdRef.current = showNoEmailSubscriptionContactWarningBanner()
+    } else {
+      hideNoEmailSubscriptionContactWarningBannerIfAny()
     }
+
+    dispatch(createOrUpdateControlUnitContact(controlUnitContactFormValues))
 
     closeForm()
   }
@@ -134,18 +118,18 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     setIsNewControlUnitContactFormOpen(false)
   }, [])
 
-  const hideNoEmailSubscriptionContactWarningBanner = () => {
-    if (noEmailSubscriptionContactWarningBannerRankRef.current === undefined) {
-      throw new FrontendError('`noEmailSubscriptionContactWarningBannerRankRef.current` is undefined.')
+  const hideNoEmailSubscriptionContactWarningBannerIfAny = () => {
+    if (noEmailSubscriptionContactWarningBannerIdRef.current === undefined) {
+      return
     }
 
-    dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerRankRef.current))
+    dispatch(mainWindowActions.removeBanner(noEmailSubscriptionContactWarningBannerIdRef.current))
 
-    noEmailSubscriptionContactWarningBannerRankRef.current = undefined
+    noEmailSubscriptionContactWarningBannerIdRef.current = undefined
   }
 
   /**
-   * @returns Rank of the banner that was added to the main window
+   * @returns ID of the banner that was added to the main window.
    */
   const showNoEmailSubscriptionContactWarningBanner = () =>
     dispatch(
@@ -179,7 +163,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
               initialValues={editedControlUnitContact}
               onCancel={closeForm}
               onDelete={askForDeletionConfirmation}
-              onSubmit={createOrUpdateControlUnitContact}
+              onSubmit={submit}
             />
           ) : (
             <Item key={controlUnitContact.id} controlUnitContact={controlUnitContact} onEdit={openEditionForm} />
@@ -191,7 +175,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
             controlUnit={controlUnit}
             initialValues={editedControlUnitContact}
             onCancel={closeForm}
-            onSubmit={createOrUpdateControlUnitContact}
+            onSubmit={submit}
           />
         ) : (
           <div>

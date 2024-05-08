@@ -19,18 +19,18 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
   const askForConfirmation = () => {
     // If the user is trying to subscribe this contact while another contact is already subscribed, ask for confirmation
     if (!values.isEmailSubscriptionContact) {
-      const maybeOtherEmailSubscriptionContact = controlUnit.controlUnitContacts.find(
+      const otherEmailSubscriptionContact = controlUnit.controlUnitContacts.find(
         controlUnitContact => controlUnitContact.id !== values.id && controlUnitContact.isEmailSubscriptionContact
       )
-      if (maybeOtherEmailSubscriptionContact && maybeOtherEmailSubscriptionContact.email) {
-        setOtherContactSubscribedEmail(maybeOtherEmailSubscriptionContact.email)
+      if (otherEmailSubscriptionContact && otherEmailSubscriptionContact.email) {
+        setOtherContactSubscribedEmail(otherEmailSubscriptionContact.email)
         setIsConfirmationMessageOpened(true)
 
         return
       }
     }
 
-    toggle()
+    toggleSubscription()
   }
 
   const closeConfirmationMessage = () => {
@@ -38,7 +38,7 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
     setOtherContactSubscribedEmail(undefined)
   }
 
-  const toggle = () => {
+  const toggleSubscription = () => {
     setIsConfirmationMessageOpened(false)
 
     const willBeSubscribed = !values.isEmailSubscriptionContact
@@ -53,7 +53,7 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
         {values.isEmailSubscriptionContact ? (
           <FieldWithButton.IconButtonOn
             Icon={Icon.Subscription}
-            onClick={toggle}
+            onClick={toggleSubscription}
             title="Retirer cette adresse de la liste de diffusion des préavis et des bilans d’activités de contrôle"
           />
         ) : (
@@ -86,7 +86,7 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
           </p>
 
           <ActionBar>
-            <Button accent={Accent.WARNING} onClick={toggle}>
+            <Button accent={Accent.WARNING} onClick={toggleSubscription}>
               Oui, la remplacer
             </Button>
             <Button accent={Accent.WARNING} onClick={closeConfirmationMessage}>

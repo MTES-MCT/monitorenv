@@ -33,7 +33,7 @@ class ControlUnitContacts(
     fun createV1(
         @RequestBody createControlUnitContactDataInput: CreateControlUnitContactDataInputV1,
     ): ControlUnitContactDataOutput {
-        val newControlUnitContact = createControlUnitContactDataInput.toNewControlUnitContact()
+        val newControlUnitContact = createControlUnitContactDataInput.toControlUnitContact()
         val createdControlUnitContact = createOrUpdateControlUnitContact.execute(newControlUnitContact)
 
         return ControlUnitContactDataOutput.fromControlUnitContact(createdControlUnitContact)

@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
-class GetV1ControlUnitContactsUTests {
+class GetControlUnitContactsUTests {
     @MockBean
     private lateinit var controlUnitContactRepository: IControlUnitContactRepository
 

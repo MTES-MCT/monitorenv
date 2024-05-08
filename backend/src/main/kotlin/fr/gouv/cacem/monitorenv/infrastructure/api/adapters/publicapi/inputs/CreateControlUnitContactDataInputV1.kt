@@ -9,7 +9,7 @@ data class CreateControlUnitContactDataInputV1(
     val name: String,
     val phone: String?,
 ) {
-    fun toNewControlUnitContact(): ControlUnitContactEntity {
+    fun toControlUnitContact(): ControlUnitContactEntity {
         return ControlUnitContactEntity(
             id = this.id,
             controlUnitId = this.controlUnitId,

@@ -17,8 +17,6 @@ class CreateOrUpdateControlUnitContact(
         }
 
         val validControlUnitContact = validateSubscriptions(controlUnitContact)
-        print("controlUnitContact: $controlUnitContact")
-        print("validControlUnitContact: $validControlUnitContact")
 
         return controlUnitContactRepository.save(validControlUnitContact)
     }

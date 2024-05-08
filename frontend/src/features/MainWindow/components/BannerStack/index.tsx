@@ -24,8 +24,8 @@ export function BannerStack() {
 
   return (
     <Wrapper>
-      {bannerStackItems.map(({ props, rank }) => (
-        <Item key={`banner-${rank}`} bannerProps={props} bannerStackRank={rank} onCloseOrAutoclose={remove} />
+      {bannerStackItems.map(({ id, props }) => (
+        <Item key={`banner-${id}`} bannerProps={props} bannerStackRank={id} onCloseOrAutoclose={remove} />
       ))}
     </Wrapper>
   )
