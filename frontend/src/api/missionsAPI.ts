@@ -87,6 +87,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     getMission: builder.query<MissionResponseType, number>({
+      keepUnusedDataFor: 0,
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `/v1/missions/${id}`,
       transformResponse: (mission: Mission, meta: any) => {
