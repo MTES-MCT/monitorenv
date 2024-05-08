@@ -11,7 +11,7 @@ type FormikIsEmailSubscriptionContactToggleProps = {
   controlUnit: ControlUnit.ControlUnit
 }
 export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionContactToggleProps) {
-  const { setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
+  const { errors, setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
 
   const [isConfirmationMessageOpened, setIsConfirmationMessageOpened] = useState(false)
   const [otherContactSubscribedEmail, setOtherContactSubscribedEmail] = useState<string | undefined>(undefined)
@@ -48,7 +48,7 @@ export function FormikEmailField({ controlUnit }: FormikIsEmailSubscriptionConta
 
   return (
     <>
-      <FieldWithButton>
+      <FieldWithButton $hasError={!!errors.email}>
         <FormikTextInput isLight label="Adresse mail" name="email" type="email" />
         {values.isEmailSubscriptionContact ? (
           <FieldWithButton.IconButtonOn

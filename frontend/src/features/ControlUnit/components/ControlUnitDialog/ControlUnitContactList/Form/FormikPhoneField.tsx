@@ -1,20 +1,22 @@
 import { FormikTextInput, Icon } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { useFormikContext } from 'formik'
 
 import { FieldWithButton } from './FieldWithButton'
 
+import type { ControlUnitContactFormValues } from '../types'
+
 export function FormikPhoneField() {
-  const [input, , props] = useField<boolean>('isSmsSubscriptionContact')
+  const { errors, setFieldValue, values } = useFormikContext<ControlUnitContactFormValues>()
 
   const toggleSubscription = () => {
-    props.setValue(!input.value)
+    setFieldValue('isSmsSubscriptionContact', !values.isSmsSubscriptionContact)
   }
 
   return (
-    <FieldWithButton>
+    <FieldWithButton $hasError={!!errors.phone}>
       <FormikTextInput isLight label="Numéro de téléphone" name="phone" type="tel" />
 
-      {input.value ? (
+      {values.isSmsSubscriptionContact ? (
         <FieldWithButton.IconButtonOn
           Icon={Icon.Subscription}
           onClick={toggleSubscription}

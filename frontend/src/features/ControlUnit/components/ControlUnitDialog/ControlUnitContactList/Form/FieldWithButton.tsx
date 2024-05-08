@@ -1,13 +1,20 @@
 import { IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-const BareFieldWithIconButton = styled.div`
-  display: flex;
+// TODO Replace this dirty hack with an `IconButton` prop in some monitor-ui fields.
+const BareFieldWithIconButton = styled.div<{
+  $hasError: boolean
+}>`
   align-items: flex-end;
+  display: flex;
 
   > *:first-child {
     flex-grow: 1;
     margin-right: 4px;
+  }
+
+  > .Element-IconButton {
+    margin-bottom: ${p => (p.$hasError ? '22px' : 0)};
   }
 `
 
