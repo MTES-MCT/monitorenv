@@ -11,7 +11,9 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
     val isSmsSubscriptionContact: Boolean,
     val name: String,
     val phone: String?,
-) : PatchableDataInput<CreateOrUpdateControlUnitContactDataInputV2>() {
+) : PatchableDataInput<CreateOrUpdateControlUnitContactDataInputV2>(
+    CreateOrUpdateControlUnitContactDataInputV2::class,
+) {
     fun toControlUnitContact(): ControlUnitContactEntity {
         return ControlUnitContactEntity(
             id = this.id,

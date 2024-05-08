@@ -9,20 +9,20 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
-abstract class PatchableDataInput<T : PatchableDataInput<T>> {
-    inline fun <reified T : PatchableDataInput<T>> patchFromRequestData(
+abstract class PatchableDataInput<T : PatchableDataInput<T>>(private val clazz: KClass<T>) {
+    fun patchFromRequestData(
         objectMapper: ObjectMapper,
         requestDataJson: String,
     ): T {
         val nextDataFromRequestAsJsonNode = objectMapper.readTree(requestDataJson)
 
-        val constructor = T::class.primaryConstructor!!
+        val constructor = clazz.primaryConstructor!!
         val params = constructor.parameters.associateWith { parameter ->
-            val propType = T::class.memberProperties.find { it.name == parameter.name }
+            val propType = clazz.memberProperties.find { it.name == parameter.name }
             val nextPropValueFromRequest = nextDataFromRequestAsJsonNode.get(parameter.name)
 
             if (nextPropValueFromRequest != null && !nextPropValueFromRequest.isMissingNode) {
-                // A JSON value set to `null` won't set `maybeNextPropValueFromRequest` to `null`,
+                // A JSON value set to `null` won't set `nextPropValueFromRequest` to `null`,
                 // it's a valid value that `JsonNode` can check using `.isNull()` method.
                 if (nextPropValueFromRequest.isNull) {
                     return@associateWith null
@@ -32,13 +32,12 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>> {
                     nextPropValueFromRequest,
                     parameter.name
                         ?: throw BackendInternalException(
-                            "${T::class.simpleName}: Property name not found.",
+                            "${this::class.simpleName}: Property name not found.",
                         ),
                     propType?.returnType?.classifier as? KClass<*>
                         ?: throw BackendInternalException(
-                            "${T::class.simpleName}: Type for `${parameter.name}` not found.",
+                            "${this::class.simpleName}: Type for `${parameter.name}` not found.",
                         ),
-                    T::class.simpleName,
                 )
             }
 
@@ -48,19 +47,14 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>> {
         return constructor.callBy(params)
     }
 
-    fun convertJsonValueToType(
-        jsonNode: JsonNode,
-        propName: String,
-        propType: KClass<*>,
-        dataInputClassName: String?,
-    ): Any {
+    private fun convertJsonValueToType(jsonNode: JsonNode, propName: String, propType: KClass<*>): Any {
         return when (propType) {
             Boolean::class -> if (jsonNode.isBoolean) {
                 jsonNode.asBoolean()
             } else {
                 throw BackendRequestException(
                     BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
-                    "$dataInputClassName: Property `$propName` is not of type `Boolean`.",
+                    "${this::class.simpleName}: Property `$propName` is not of type `Boolean`.",
                 )
             }
 
@@ -69,7 +63,7 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>> {
             } else {
                 throw BackendRequestException(
                     BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
-                    "$dataInputClassName: Property `$propName` is not of type `Int`.",
+                    "${this::class.simpleName}: Property `$propName` is not of type `Int`.",
                 )
             }
 
@@ -78,12 +72,12 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>> {
             } else {
                 throw BackendRequestException(
                     BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
-                    "$dataInputClassName: Property `$propName` is not of type `String`.",
+                    "${this::class.simpleName}: Property `$propName` is not of type `String`.",
                 )
             }
 
             else -> throw BackendInternalException(
-                "$dataInputClassName: Unsupported type `$propType` for property `$propName`.",
+                "${this::class.simpleName}: Unsupported type `$propType` for property `$propName`.",
             )
         }
     }

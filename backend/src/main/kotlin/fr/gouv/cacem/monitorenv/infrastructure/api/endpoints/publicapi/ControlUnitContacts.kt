@@ -93,10 +93,7 @@ class ControlUnitContacts(
         val existingFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
         val patchedControlUnitContact = CreateOrUpdateControlUnitContactDataInputV2
             .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
-            .patchFromRequestData<CreateOrUpdateControlUnitContactDataInputV2>(
-                objectMapper,
-                partialControlUnitContactAsJson,
-            )
+            .patchFromRequestData(objectMapper, partialControlUnitContactAsJson)
             .toControlUnitContact()
         val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(patchedControlUnitContact)
 
@@ -117,10 +114,7 @@ class ControlUnitContacts(
         val existingFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
         val patchedControlUnitContact = CreateOrUpdateControlUnitContactDataInputV2
             .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
-            .patchFromRequestData<CreateOrUpdateControlUnitContactDataInputV2>(
-                objectMapper,
-                incompleteControlUnitContactAsJson,
-            )
+            .patchFromRequestData(objectMapper, incompleteControlUnitContactAsJson)
             .toControlUnitContact()
         val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(patchedControlUnitContact)
 

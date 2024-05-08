@@ -29,7 +29,7 @@ data class FakeDataInput(
     val isDeleted: Boolean,
     val isUpdated: Boolean,
     val rank: Int,
-) : PatchableDataInput<FakeDataInput>() {
+) : PatchableDataInput<FakeDataInput>(FakeDataInput::class) {
     companion object {
         fun fromFakeEntity(entity: FakeEntity): FakeDataInput {
             return FakeDataInput(
@@ -75,7 +75,7 @@ class PatchableDataInputUTests {
         // When
         val result = FakeDataInput
             .fromFakeEntity(existingFakeEntityFromDatabase)
-            .patchFromRequestData<FakeDataInput>(objectMapper, fakeRequestDataAsJson)
+            .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
 
         // Then
         assertThat(result).isEqualTo(
@@ -102,7 +102,7 @@ class PatchableDataInputUTests {
         // When
         val result = FakeDataInput
             .fromFakeEntity(existingFakeEntityFromDatabase)
-            .patchFromRequestData<FakeDataInput>(objectMapper, fakeRequestDataAsJson)
+            .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
 
         // Then
         assertThat(result).isEqualTo(
@@ -130,7 +130,7 @@ class PatchableDataInputUTests {
             // When
             FakeDataInput
                 .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData<FakeDataInput>(objectMapper, fakeRequestDataAsJson)
+                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
         }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `isAwesome` is not of type `Boolean`.")
@@ -148,7 +148,7 @@ class PatchableDataInputUTests {
             // When
             FakeDataInput
                 .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData<FakeDataInput>(objectMapper, fakeRequestDataAsJson)
+                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
         }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `rank` is not of type `Int`.")
@@ -166,7 +166,7 @@ class PatchableDataInputUTests {
             // When
             FakeDataInput
                 .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData<FakeDataInput>(objectMapper, fakeRequestDataAsJson)
+                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
         }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `name` is not of type `String`.")
@@ -176,7 +176,7 @@ class PatchableDataInputUTests {
     fun `patchFromRequestData Should throw a BackendInternalException for an unsupported type`() {
         data class FakeDataInput(
             val anUnsupportedTypedProp: Any,
-        ) : PatchableDataInput<FakeDataInput>()
+        ) : PatchableDataInput<FakeDataInput>(FakeDataInput::class)
 
         // Given
         val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
@@ -187,7 +187,7 @@ class PatchableDataInputUTests {
         val exception = assertThrows<BackendInternalException> {
             // When
             FakeDataInput(anUnsupportedTypedProp = "A value")
-                .patchFromRequestData<FakeDataInput>(objectMapper, fakeRequestDataAsJson)
+                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
         }
         assertThat(exception).hasMessageContaining(
             "FakeDataInput: Unsupported type `class kotlin.Any` for property `anUnsupportedTypedProp`.",
