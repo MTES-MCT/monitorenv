@@ -4,7 +4,13 @@ import { useCallback, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { ActionCard } from './ActionCard'
-import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '../../../../domain/entities/missions'
+import {
+  ActionTypeEnum,
+  type ActionsTypeForTimeLine,
+  type EnvAction,
+  type Mission,
+  type NewMission
+} from '../../../../domain/entities/missions'
 import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../../Missions.helpers'
 import { AttachReporting } from '../AttachReporting'
 import { useUpdateMissionZone } from '../hooks/useUpdateMissionZone'
@@ -37,7 +43,7 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
     [envActions, attachedReportings, detachedReportings, attachedReportingIds, fishActions]
   )
 
-  const sortedActions = useMemo(
+  const sortedActions: Array<ActionsTypeForTimeLine> = useMemo(
     () =>
       actions &&
       Object.values(actions).sort((a: any, b: any) => {

@@ -16,7 +16,8 @@ import {
   type NewEnvActionControl,
   type EnvActionNote,
   ActionSource,
-  CompletionStatus
+  CompletionStatus,
+  type ActionsTypeForTimeLine
 } from '../../domain/entities/missions'
 import {
   type DetachedReporting,
@@ -179,7 +180,7 @@ export const getControlInfractionsTags = (actionNumberOfControls, infractions) =
   return { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras, totalInfractions }
 }
 
-type ActionsForTimeLine = Record<string, ReportingForTimeline | EnvActionForTimeline>
+export type ActionsForTimeLine = Record<string, ActionsTypeForTimeLine>
 
 const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
   envActions?.reduce((newEnvActionsCollection, action) => {
@@ -225,7 +226,7 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
         timelineDate: action?.actionStartDateTimeUtc
       }
     }
-  }, {} as EnvActionForTimeline)
+  }, {} as EnvActionForTimeline) || []
 
 const formattedReportingsForTimeline = attachedReportings =>
   attachedReportings?.reduce(

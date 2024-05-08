@@ -15,7 +15,7 @@ export const Action = styled.div`
 export const TimeLine = styled.div<{ $isFishAction: boolean }>`
   background: ${p => p.theme.color.cultured};
   display: flex;
-  margin: 16px 16px 16px 0px;
+  margin: Opx 16px 0px 0px;
   font-size: 13px;
   flex-direction: column;
   -webkit-box-pack: center;

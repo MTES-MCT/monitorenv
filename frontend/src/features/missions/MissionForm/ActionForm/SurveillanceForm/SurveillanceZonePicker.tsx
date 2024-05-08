@@ -5,7 +5,7 @@ import { Accent, Button, Icon, IconButton, Label, OPENLAYERS_PROJECTION, WSG84_P
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
-import { useField, useFormikContext } from 'formik'
+import { useField } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
@@ -13,7 +13,6 @@ import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import type { Mission } from 'domain/entities/missions'
 import type { Coordinate } from 'ol/coordinate'
 
 const SURVEILLANCE_INTERACTION_LISTENER = InteractionListener.SURVEILLANCE_ZONE
@@ -23,7 +22,6 @@ export type SurveillanceZonePickerProps = {
 }
 
 export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerProps) {
-  const { setFieldValue, values } = useFormikContext<Mission>()
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(SURVEILLANCE_INTERACTION_LISTENER)
   const [field, meta, helpers] = useField(`envActions[${actionIndex}].geom`)
@@ -43,12 +41,8 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
   useEffect(() => {
     if (geometry?.type === OLGeometryType.MULTIPOLYGON && !_.isEqual(geometry, value)) {
       helpers.setValue(geometry)
-      if ((!values.geom || values.geom?.coordinates.length === 0) && values.envActions.length === 1) {
-        setFieldValue('geom', geometry)
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
     }
-  }, [geometry, helpers, value, values.envActions.length, values.geom, setFieldValue])
+  }, [geometry, helpers, value])
 
   const handleCenterOnMap = (coordinates: Coordinate[][]) => {
     const firstRing = coordinates[0]
@@ -72,12 +66,8 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
 
       const nextCoordinates = remove(index, 1, value.coordinates)
       helpers.setValue({ ...value, coordinates: nextCoordinates })
-      if (values.isGeometryComputedFromControls && values.envActions.length === 1) {
-        setFieldValue('geom', undefined)
-        setFieldValue('isGeometryComputedFromControls', false)
-      }
     },
-    [value, helpers, values.envActions.length, values.isGeometryComputedFromControls, setFieldValue]
+    [value, helpers]
   )
 
   return (

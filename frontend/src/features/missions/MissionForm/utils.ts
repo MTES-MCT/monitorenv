@@ -1,5 +1,4 @@
-import { saveMission } from 'domain/use_cases/missions/saveMission'
-import { debounce, isEmpty, isEqual, omit } from 'lodash'
+import { isEqual, omit } from 'lodash'
 
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 import { isCypress } from '../../../utils/isCypress'
@@ -46,11 +45,16 @@ export function shouldSaveMission(
   }
 
   const filteredPreviousValues = {
-    ...previousValues,
+    ...omit(previousValues, [
+      'attachedReportingIds',
+      'attachedReportings',
+      'detachedReportingIds',
+      'detachedReportings'
+    ]),
     envActions: filterActionsFormInternalProperties(previousValues)
   }
   const filteredNextValues = {
-    ...nextValues,
+    ...omit(nextValues, ['attachedReportingIds', 'attachedReportings', 'detachedReportingIds', 'detachedReportings']),
     envActions: filterActionsFormInternalProperties(nextValues)
   }
 
@@ -63,34 +67,3 @@ export function shouldSaveMission(
 function filterActionsFormInternalProperties(values: Partial<Mission | NewMission>) {
   return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) ?? []
 }
-
-export const validateBeforeOnChange = debounce(
-  async (
-    nextValues,
-    forceSave,
-    dispatch,
-    validateForm,
-    isAutoSaveEnabled,
-    engagedControlUnit,
-    selectedMission,
-    missionEvent
-  ) => {
-    const errors = await validateForm()
-    const isValid = isEmpty(errors)
-
-    if (!isAutoSaveEnabled || !isValid) {
-      return
-    }
-
-    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
-      return
-    }
-
-    if (engagedControlUnit) {
-      return
-    }
-
-    dispatch(saveMission(nextValues, false, false))
-  },
-  400
-)

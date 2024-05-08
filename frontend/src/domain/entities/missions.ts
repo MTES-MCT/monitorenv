@@ -2,7 +2,7 @@ import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
 
 import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
-import type { ReportingDetailed } from './reporting'
+import type { DetachedReportingForTimeline, ReportingDetailed, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
 import type { FishMissionAction } from '@features/missions/fishActions.types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -301,6 +301,12 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   reportingIds: number[]
 }
 
+export type ControlOrSurveillance =
+  | EnvActionControl
+  | EnvActionSurveillance
+  | NewEnvActionControl
+  | EnvActionSurveillance
+
 export type EnvActionNote = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE
   observations?: string | null
@@ -325,12 +331,18 @@ export type Infraction = NewInfraction & {
   infractionType: InfractionTypeEnum
 }
 
-export type EnvActionForTimeline = Partial<EnvAction> & {
+export type EnvActionForTimeline = EnvAction & {
   actionSource: ActionSource
   formattedReportingId: string
   formattedReportingIds: string[]
   timelineDate?: string
 }
+
+export type ActionsTypeForTimeLine =
+  | ReportingForTimeline
+  | DetachedReportingForTimeline
+  | EnvActionForTimeline
+  | FishMissionAction.FishActionForTimeline
 
 export const getMissionStatus = ({
   endDateTimeUtc,

@@ -29,7 +29,7 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
     const isFormDirty = isMissionFormDirty(errors)
 
     dispatch(missionFormsActions.setMission({ engagedControlUnit, isFormDirty, missionForm: newValues }))
-  }, 250)
+  }, 350)
 
   /**
    * The form is dirty if:

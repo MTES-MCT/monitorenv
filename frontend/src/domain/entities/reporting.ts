@@ -44,8 +44,9 @@ export type ReportingDetailed = Reporting & {
 export type DetachedReporting = {
   attachedToMissionAtUtc?: string
   detachedFromMissionAtUtc?: string
-  missionId?: number
-  reportingId?: number
+  id: number
+  missionId: number
+  reportingId: number
 }
 
 export enum ControlStatusEnum {

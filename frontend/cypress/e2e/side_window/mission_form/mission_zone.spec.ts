@@ -136,21 +136,20 @@ context('Side Window > Mission Form > Mission zone', () => {
     // Add control  which is most recent than surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
+    cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
+    cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 27, 23, 35])
     cy.clickButton('Ajouter un point de contrôle')
     cy.wait(200)
-
-    cy.getDataCy('control-open-by').type('ABC')
 
     const controlGeometry: GeoJSON.Geometry = {
       coordinates: [[-1.84589767, 46.66739394]],
       type: 'MultiPoint'
     }
     dispatch(setGeometry(controlGeometry))
-    // close manually the draw modal
     cy.wait(1000)
+    // close manually the draw modal
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     cy.wait(1000)
-
     const computedMissionZone: GeoJSON.Geometry = {
       coordinates: [
         [
@@ -226,10 +225,6 @@ context('Side Window > Mission Form > Mission zone', () => {
       type: 'MultiPolygon'
     }
 
-    // close manually the draw modal
-    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-    cy.wait(1000)
-
     // Check geom values
     cy.waitForLastRequest(
       '@createMission',
@@ -237,6 +232,7 @@ context('Side Window > Mission Form > Mission zone', () => {
         body: {
           envActions: [
             {
+              actionStartDateTimeUtc: '2024-05-27T23:35:00.000Z',
               actionType: 'CONTROL',
               geom: controlGeometry
             }
