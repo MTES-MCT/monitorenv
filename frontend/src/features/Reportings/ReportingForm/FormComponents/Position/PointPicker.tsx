@@ -91,13 +91,14 @@ const Field = styled.div`
 `
 const Center = styled.div`
   cursor: pointer;
+  display: flex;
   margin-left: auto;
   margin-right: 8px;
   color: ${p => p.theme.color.slateGray};
   text-decoration: underline;
-  > div {
-    vertical-align: middle;
-    padding-right: 8px;
+
+  > .Element-IconBox {
+    margin-right: 8px;
   }
 `
 
