@@ -1,3 +1,4 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { chain } from 'lodash'
 import { generatePath } from 'react-router'
 
@@ -10,7 +11,6 @@ import { sideWindowPaths } from '../../entities/sideWindow'
 
 import type { HomeAppThunk } from '../../../store'
 import type { ReportingDetailed } from '../../entities/reporting'
-import type { ControlUnit } from '@mtes-mct/monitor-ui'
 
 export const addMission =
   ({

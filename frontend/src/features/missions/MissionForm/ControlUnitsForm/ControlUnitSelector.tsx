@@ -1,5 +1,6 @@
 import {
   Accent,
+  type ControlUnit,
   CustomSearch,
   FormikTextInput,
   getOptionsFromIdAndName,
@@ -23,8 +24,6 @@ import { isNewMission } from '../../../../utils/isNewMission'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 import { getMissionPageRoute } from '../../../../utils/routes'
 import { missionFormsActions } from '../slice'
-
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
 type ControlUnitSelectorProps = {
   controlUnitIndex: number

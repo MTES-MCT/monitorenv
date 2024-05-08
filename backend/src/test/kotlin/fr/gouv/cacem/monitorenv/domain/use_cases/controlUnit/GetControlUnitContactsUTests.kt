@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetControlUnitContactsUTests {
-
     @MockBean
     private lateinit var controlUnitContactRepository: IControlUnitContactRepository
 
@@ -34,6 +33,8 @@ class GetControlUnitContactsUTests {
                     id = 1,
                     controlUnitId = 1,
                     email = "contact1@example.com",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
                     name = "Contact 1",
                     phone = "123-456-7890",
                 ),
@@ -52,6 +53,8 @@ class GetControlUnitContactsUTests {
                     id = 2,
                     controlUnitId = 2,
                     email = "contact2@example.com",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
                     name = "Contact 2",
                     phone = "098-765-4321",
                 ),

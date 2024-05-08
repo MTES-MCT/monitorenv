@@ -2,11 +2,12 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.administration
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotArchiveException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -36,11 +37,10 @@ class ArchiveAdministrationUTests {
 
         given(canArchiveAdministration.execute(administrationId)).willReturn(false)
 
-        assertThatThrownBy {
+        val exception = assertThrows<BackendUsageException> {
             ArchiveAdministration(administrationRepository, canArchiveAdministration).execute(administrationId)
         }
-            .isInstanceOf(CouldNotArchiveException::class.java)
 
-        verifyNoMoreInteractions(administrationRepository)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNARCHIVED_CHILD)
     }
 }

@@ -20,6 +20,11 @@ HOST_MIGRATIONS_FOLDER = os.getenv(
     "HOST_MIGRATIONS_FOLDER", LOCAL_MIGRATIONS_FOLDER
 )
 
+EMAIL_TEMPLATES_LOCATION = LIBRARY_LOCATION / Path("pipeline/emails/templates")
+EMAIL_STYLESHEETS_LOCATION = LIBRARY_LOCATION / Path(
+    "pipeline/emails/stylesheets"
+)
+
 # Must be set to true when running tests locally
 TEST_LOCAL = os.getenv("TEST_LOCAL", "False").lower() in (
     "true",
@@ -39,6 +44,24 @@ RUN_LOCAL = os.getenv("RUN_LOCAL", "False").lower() in (
 )
 if RUN_LOCAL:
     load_dotenv(ROOT_DIRECTORY / ".env")
+
+# Must be set to true to avoid external side effects (emails, data.gouv uploads...) in
+# integration
+IS_INTEGRATION = os.getenv("IS_INTEGRATION", "False").lower() in (
+    "true",
+    "t",
+    "yes",
+    "y",
+)
+
+# Must be set to true to send controls data to the CACEM_EMAIL_ADDRESS, and
+# not to real email addressees (control units)
+TEST_MODE = os.getenv("TEST_MODE", "False").lower() in (
+    "true",
+    "t",
+    "yes",
+    "y",
+)
 
 # Flow execution configuration
 DOCKER_IMAGE = "ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline"
@@ -69,3 +92,13 @@ HISTORIC_CONTROL_UNITS_MAX_ID = 9999
 
 # Shift ids from Poseidon to MonitorEnv
 POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT = -100000
+
+# Email server
+EMAIL_SERVER_URL = os.environ.get("EMAIL_SERVER_URL")
+EMAIL_SERVER_PORT = os.environ.get("EMAIL_SERVER_PORT")
+MONITORENV_SENDER_EMAIL_ADDRESS = os.environ.get(
+    "MONITORENV_SENDER_EMAIL_ADDRESS"
+)
+
+# Recipients
+CACEM_EMAIL_ADDRESS = os.environ.get("CACEM_EMAIL_ADDRESS")

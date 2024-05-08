@@ -1,4 +1,13 @@
-import { Banner, customDayjs, FormikEffect, Icon, Level, THEME, usePrevious } from '@mtes-mct/monitor-ui'
+import {
+  Banner,
+  type ControlUnit,
+  customDayjs,
+  FormikEffect,
+  Icon,
+  Level,
+  THEME,
+  usePrevious
+} from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/useMissionEventContext'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -38,7 +47,6 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { getIsMissionEnded } from '../utils'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AtLeast } from '../../../types'
 
 enum ModalTypes {

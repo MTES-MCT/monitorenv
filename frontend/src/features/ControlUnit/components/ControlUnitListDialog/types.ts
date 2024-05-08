@@ -1,4 +1,4 @@
-import type { ControlUnit } from '@mtes-mct/monitor-ui'
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
 export type FiltersState = {
   administrationId?: number

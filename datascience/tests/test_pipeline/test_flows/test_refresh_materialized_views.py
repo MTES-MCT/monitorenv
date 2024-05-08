@@ -57,8 +57,8 @@ def test_refresh_analytics_actions(reset_test_data):
 
     actions_after_refresh = read_query("monitorenv_remote", query)
 
-    assert len(initial_actions) == 5
-    assert len(actions_before_refresh) == 5
+    assert len(initial_actions) == 7
+    assert len(actions_before_refresh) == 7
     assert len(actions_after_refresh) == 1
 
     pd.testing.assert_frame_equal(initial_actions, actions_before_refresh)

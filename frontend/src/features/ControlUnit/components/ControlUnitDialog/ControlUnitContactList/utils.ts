@@ -1,8 +1,7 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { sortBy } from 'lodash/fp'
 
 import { CONTROL_UNIT_CONTACT_PREDEFINED_NAMES } from './constants'
-
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 /**
  * Sort control unit contacts by qualified name.

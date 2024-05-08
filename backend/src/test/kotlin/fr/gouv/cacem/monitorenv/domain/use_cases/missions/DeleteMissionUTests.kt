@@ -1,13 +1,15 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.*
-import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
@@ -143,7 +145,6 @@ class DeleteMissionUTests {
                 mission = missionToDelete,
                 attachedReportingIds = null,
             ),
-
         )
 
         val throwable = Assertions.catchThrowable {
@@ -159,8 +160,8 @@ class DeleteMissionUTests {
         }
         Assertions.assertThat(throwable).isInstanceOf(
             BackendUsageException(
-                ErrorCode.EXISTING_MISSION_ACTION,
-                errorSources,
+                code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
+                data = errorSources,
             )::class.java,
         )
     }

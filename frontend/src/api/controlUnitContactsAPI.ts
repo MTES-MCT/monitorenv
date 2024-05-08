@@ -1,7 +1,7 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
+
 import { monitorenvPublicApi } from './api'
 import { FrontendApiError } from '../libs/FrontendApiError'
-
-import type { ControlUnit } from '../domain/entities/controlUnit'
 
 const GET_CONTROL_UNIT_CONTACT_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette contact."
 const GET_CONTROL_UNIT_CONTACTS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des contacts."
@@ -13,7 +13,7 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
       query: newControlUnitContactData => ({
         body: newControlUnitContactData,
         method: 'POST',
-        url: `/v1/control_unit_contacts`
+        url: `/v2/control_unit_contacts`
       })
     }),
 
@@ -37,11 +37,11 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
       transformErrorResponse: response => new FrontendApiError(GET_CONTROL_UNIT_CONTACTS_ERROR_MESSAGE, response)
     }),
 
-    updateControlUnitContact: builder.mutation<void, ControlUnit.ControlUnitContactData>({
+    patchControlUnitContact: builder.mutation<void, ControlUnit.ControlUnitContactData>({
       invalidatesTags: () => [{ type: 'ControlUnits' }],
       query: nextControlUnitContactData => ({
         body: nextControlUnitContactData,
-        method: 'PUT',
+        method: 'PATCH',
         url: `/v1/control_unit_contacts/${nextControlUnitContactData.id}`
       })
     })
@@ -53,5 +53,5 @@ export const {
   useDeleteControlUnitContactMutation,
   useGetControlUnitContactQuery,
   useGetControlUnitContactsQuery,
-  useUpdateControlUnitContactMutation
+  usePatchControlUnitContactMutation
 } = controlUnitContactsAPI

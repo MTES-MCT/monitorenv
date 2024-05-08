@@ -1,4 +1,5 @@
 import { getIsMissionEnded } from '@features/missions/utils'
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import * as Yup from 'yup'
 
 import { getCompletionEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
@@ -11,7 +12,6 @@ import {
 } from '../../../../domain/entities/missions'
 import { HIDDEN_ERROR } from '../constants'
 
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { LegacyControlUnit } from '../../../../domain/entities/legacyControlUnit'
 
 const MissionTypesSchema = Yup.array()

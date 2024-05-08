@@ -1,11 +1,10 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { displayControlUnitResourcesFromControlUnit } from './utils'
 import { globalActions } from '../../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { controlUnitDialogActions } from '../../../../ControlUnit/components/ControlUnitDialog/slice'
-
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 type ItemProps = {
   controlUnit: ControlUnit.ControlUnit

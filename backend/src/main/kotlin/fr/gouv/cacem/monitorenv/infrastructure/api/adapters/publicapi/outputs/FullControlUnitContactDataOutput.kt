@@ -9,6 +9,8 @@ data class FullControlUnitContactDataOutput(
     val email: String? = null,
     val name: String,
     val phone: String? = null,
+    val isEmailSubscriptionContact: Boolean? = false,
+    val isSmsSubscriptionContact: Boolean? = false,
 ) {
     companion object {
         fun fromFullControlUnitContact(
@@ -23,6 +25,8 @@ data class FullControlUnitContactDataOutput(
                 email = fullControlUnitContact.controlUnitContact.email,
                 name = fullControlUnitContact.controlUnitContact.name,
                 phone = fullControlUnitContact.controlUnitContact.phone,
+                isEmailSubscriptionContact = fullControlUnitContact.controlUnitContact.isEmailSubscriptionContact,
+                isSmsSubscriptionContact = fullControlUnitContact.controlUnitContact.isSmsSubscriptionContact,
             )
         }
     }

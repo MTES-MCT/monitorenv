@@ -8,13 +8,16 @@ from prefect.storage.local import Local
 from config import (
     DOCKER_IMAGE,
     FLOWS_LOCATION,
+    IS_INTEGRATION,
     MONITORENV_VERSION,
     ROOT_DIRECTORY,
+    TEST_MODE,
 )
 from src.pipeline.flows import (
     admin_areas,
     amp,
     control_objectives,
+    email_actions_to_units,
     facade_areas,
     facade_areas_unextended,
     fao_areas,
@@ -30,7 +33,19 @@ from src.pipeline.flows import (
 
 ################################ Define flow schedules ################################
 amp.flow.schedule = CronSchedule("22 0 * * *")
-
+email_actions_to_units.flow.schedule = Schedule(
+    clocks=[
+        clocks.CronClock(
+            "* * * * *",
+            parameter_defaults={
+                "start_days_ago": 7,
+                "end_days_ago": 1,
+                "test_mode": TEST_MODE,
+                "is_integration": IS_INTEGRATION,
+            },
+        ),
+    ]
+)
 infractions.flow.schedule = CronSchedule("2 8,14 * * *")
 
 refresh_materialized_view.flow.schedule = Schedule(
@@ -59,6 +74,7 @@ flows_to_register = [
     admin_areas.flow,
     amp.flow,
     control_objectives.flow,
+    email_actions_to_units.flow,
     facade_areas.flow,
     facade_areas_unextended.flow,
     fao_areas.flow,

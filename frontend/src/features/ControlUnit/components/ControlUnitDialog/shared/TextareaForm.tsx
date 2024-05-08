@@ -1,8 +1,7 @@
-import { Accent, Button, Label, Textarea, type TextareaProps } from '@mtes-mct/monitor-ui'
+import { Accent, Button, type ControlUnit, Label, Textarea, type TextareaProps } from '@mtes-mct/monitor-ui'
 import { useCallback, useState, type FormEvent, type ChangeEvent } from 'react'
 import styled from 'styled-components'
 
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import type { Promisable } from 'type-fest'
 
 type TextareaFormProps = Omit<TextareaProps, 'name' | 'onSubmit'> & {

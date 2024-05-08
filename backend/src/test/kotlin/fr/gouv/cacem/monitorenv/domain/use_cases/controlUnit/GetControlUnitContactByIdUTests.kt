@@ -34,6 +34,8 @@ class GetControlUnitContactByIdUTests {
                 controlUnitId = 0,
                 email = null,
                 name = "Control Unit Contact Name",
+                isEmailSubscriptionContact = false,
+                isSmsSubscriptionContact = false,
                 phone = null,
             ),
         )

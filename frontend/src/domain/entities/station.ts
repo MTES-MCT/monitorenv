@@ -1,4 +1,4 @@
-import type { ControlUnit } from './controlUnit'
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
 export namespace Station {
   export interface Station {

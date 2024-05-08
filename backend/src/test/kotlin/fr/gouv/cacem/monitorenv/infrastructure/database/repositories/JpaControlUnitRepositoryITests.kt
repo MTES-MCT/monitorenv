@@ -14,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaControlUnitRepositoryITests : AbstractDBTests() {
-    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    @Autowired
+    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
     @Test
     @Transactional
@@ -62,16 +63,20 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ControlUnitContactEntity(
                             id = 1,
                             controlUnitId = 10000,
-                            email = null,
+                            email = "email_1",
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
                             name = "Contact 1",
-                            phone = null,
+                            phone = "06 01 xx xx xx",
                         ),
                         ControlUnitContactEntity(
                             id = 2,
                             controlUnitId = 10000,
                             email = null,
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = true,
                             name = "Contact 2",
-                            phone = null,
+                            phone = "06 02 xx xx xx",
                         ),
                     ),
                     controlUnitResources =
@@ -303,16 +308,20 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ControlUnitContactEntity(
                             id = 1,
                             controlUnitId = 10000,
-                            email = null,
+                            email = "email_1",
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
                             name = "Contact 1",
-                            phone = null,
+                            phone = "06 01 xx xx xx",
                         ),
                         ControlUnitContactEntity(
                             id = 2,
                             controlUnitId = 10000,
                             email = null,
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = true,
                             name = "Contact 2",
-                            phone = null,
+                            phone = "06 02 xx xx xx",
                         ),
                     ),
                     controlUnitResources =

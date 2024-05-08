@@ -5,9 +5,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEn
 data class ControlUnitContactDataOutput(
     val id: Int,
     val controlUnitId: Int,
-    val email: String? = null,
+    val email: String?,
+    val isEmailSubscriptionContact: Boolean,
+    val isSmsSubscriptionContact: Boolean,
     val name: String,
-    val phone: String? = null,
+    val phone: String?,
 ) {
     companion object {
         fun fromControlUnitContact(controlUnitContact: ControlUnitContactEntity): ControlUnitContactDataOutput {
@@ -15,6 +17,8 @@ data class ControlUnitContactDataOutput(
                 id = requireNotNull(controlUnitContact.id),
                 controlUnitId = controlUnitContact.controlUnitId,
                 email = controlUnitContact.email,
+                isEmailSubscriptionContact = controlUnitContact.isEmailSubscriptionContact,
+                isSmsSubscriptionContact = controlUnitContact.isSmsSubscriptionContact,
                 name = controlUnitContact.name,
                 phone = controlUnitContact.phone,
             )

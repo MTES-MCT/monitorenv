@@ -1,6 +1,6 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { Mission, NewMission } from '../../../domain/entities/missions'
 import type { AtLeast } from '../../../types'
 

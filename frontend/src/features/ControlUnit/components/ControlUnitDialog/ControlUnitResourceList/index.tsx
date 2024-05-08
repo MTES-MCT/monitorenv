@@ -1,6 +1,6 @@
 // import styled from 'styled-components'
 
-import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Button, ControlUnit, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -15,7 +15,6 @@ import {
 } from '../../../../../api/controlUnitResourcesAPI'
 import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../../components/Dialog'
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../../libs/FrontendError'
 import { isEmptyish } from '../../../../../utils/isEmptyish'

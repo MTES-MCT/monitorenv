@@ -45,11 +45,11 @@ INSERT INTO public.control_units(
 SELECT setval('control_units_id_seq', (SELECT max(id) FROM control_units), true);
 
 INSERT INTO public.control_unit_contacts
-    (   id, control_unit_id,           name)
+    (   id, control_unit_id,           name,     email,            phone, is_email_subscription_contact,is_sms_subscription_contact)
 VALUES
-    (    1,           10000,    'Contact 1'),
-    (    2,           10000,    'Contact 2'),
-    (    3,           10003,    'Contact 3');
+    (    1,           10000,    'Contact 1', 'email_1', '06 01 xx xx xx',                          true,                      false),
+    (    2,           10000,    'Contact 2',      null, '06 02 xx xx xx',                         false,                       true),
+    (    3,           10003,    'Contact 3', 'email_3',             null,                         false,                       true);
 
 SELECT setval('control_unit_contacts_id_seq', 3, true);
 

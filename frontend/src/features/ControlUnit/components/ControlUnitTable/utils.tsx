@@ -1,9 +1,8 @@
-import { CustomSearch, type Filter, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { type ControlUnit, CustomSearch, type Filter, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 
 import { CONTROL_UNIT_TABLE_COLUMNS } from './constants'
 
 import type { FiltersState } from './types'
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 

@@ -1,7 +1,7 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { number, object, string } from 'yup'
 
 import type { ControlUnitFormValues } from './types'
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { ColumnDef } from '@tanstack/react-table'
 
 export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitContactData>> = [

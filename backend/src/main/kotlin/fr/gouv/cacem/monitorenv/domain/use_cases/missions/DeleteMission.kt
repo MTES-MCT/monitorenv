@@ -3,14 +3,14 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @UseCase
 class DeleteMission(
@@ -40,8 +40,8 @@ class DeleteMission(
                 }
 
             throw BackendUsageException(
-                ErrorCode.EXISTING_MISSION_ACTION,
-                errorSources,
+                code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
+                data = errorSources,
             )
         }
 

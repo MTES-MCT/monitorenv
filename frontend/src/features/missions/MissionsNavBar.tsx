@@ -95,6 +95,7 @@ const StyledResponsiveNav = styled(ResponsiveNav)`
   display: flex;
   box-shadow: 0px 3px 4px #7077854d;
   height: 48px;
+
   > .rs-nav-item {
     width: 360px;
     border-radius: 0px !important;
@@ -110,11 +111,13 @@ const StyledResponsiveNav = styled(ResponsiveNav)`
       font-weight: 500;
       border-radius: 0px;
       border: 0px !important;
+
       > .rs-icon {
         color: ${p => p.theme.color.slateGray} !important;
       }
     }
-    > span {
+
+    > span:not(.Element-IconBox) {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

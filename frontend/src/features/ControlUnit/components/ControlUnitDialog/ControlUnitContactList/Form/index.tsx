@@ -1,23 +1,26 @@
-import { Accent, Button, FormikTextInput, Icon, IconButton, THEME, useKey } from '@mtes-mct/monitor-ui'
+import { Accent, Button, ControlUnit, Icon, IconButton, THEME, useKey } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
 import styled from 'styled-components'
 
-import { CONTROL_UNIT_CONTACT_FORM_SCHEMA } from './constants'
+import { FormikEmailField } from './FormikEmailField'
 import { FormikNameSelect } from './FormikNameSelect'
+import { FormikPhoneField } from './FormikPhoneField'
+import { CONTROL_UNIT_CONTACT_FORM_SCHEMA } from '../constants'
 
-import type { ControlUnitContactFormValues } from './types'
+import type { ControlUnitContactFormValues } from '../types'
 import type { CSSProperties } from 'react'
 import type { Promisable } from 'type-fest'
 
 export type FormProps = {
   className?: string
+  controlUnit: ControlUnit.ControlUnit
   initialValues: ControlUnitContactFormValues
   onCancel: () => Promisable<void>
   onDelete?: () => Promisable<void>
   onSubmit: (controlUnitContactFormValues: ControlUnitContactFormValues) => void
   style?: CSSProperties
 }
-export function Form({ className, initialValues, onCancel, onDelete, onSubmit, style }: FormProps) {
+export function Form({ className, controlUnit, initialValues, onCancel, onDelete, onSubmit, style }: FormProps) {
   const key = useKey([initialValues])
   const isNew = !initialValues.id
 
@@ -33,10 +36,10 @@ export function Form({ className, initialValues, onCancel, onDelete, onSubmit, s
       {({ handleSubmit }) => (
         <div className={className} style={style}>
           <Title>{isNew ? 'Ajouter un contact' : 'Éditer un contact'}</Title>
-          <StyledForm onSubmit={handleSubmit}>
+          <StyledForm data-cy="ControlUnitDialog-control-unit-contact-form" onSubmit={handleSubmit}>
             <FormikNameSelect />
-            <FormikTextInput isLight label="Numéro de téléphone" name="phone" type="tel" />
-            <FormikTextInput isLight label="Adresse mail" name="email" type="email" />
+            <FormikPhoneField />
+            <FormikEmailField controlUnit={controlUnit} />
 
             <ActionBar>
               <div>
@@ -75,7 +78,8 @@ const StyledForm = styled.form`
   background-color: ${p => p.theme.color.gainsboro};
   padding: 16px;
 
-  > div:not(:first-child) {
+  > div:not(:first-child, .Component-Banner),
+  .Component-Message {
     margin-top: 16px;
   }
 `
@@ -91,7 +95,8 @@ const ActionBar = styled.div`
   }
 `
 
-// TODO Add `borderColor` in Monitor UI.
+// TODO Add prop `Level` in Monitor UI to `<IconButton />`. Why is there a "DANGER" both in `Accent` and `Level`?
+// TODO Check padding in monitor-ui.
 const DeleteButton = styled(IconButton)`
   border-color: ${p => p.theme.color.maximumRed};
   padding: 0 4px;

@@ -1,8 +1,6 @@
-import { FormikCheckbox } from '@mtes-mct/monitor-ui'
+import { ControlUnit, FormikCheckbox } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
-
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 import type { Mission } from '../../../../../domain/entities/missions'
 

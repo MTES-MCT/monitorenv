@@ -1,6 +1,7 @@
+import { type ControlUnit } from '@mtes-mct/monitor-ui'
+
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ApiErrorCode } from './types'
-import { ControlUnit } from '../domain/entities/controlUnit'
 import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
 import { FrontendApiError } from '../libs/FrontendApiError'
 

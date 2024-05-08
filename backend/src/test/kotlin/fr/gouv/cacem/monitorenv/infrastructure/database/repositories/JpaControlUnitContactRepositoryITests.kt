@@ -34,8 +34,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 10000,
+                    email = "email_1",
+                    isEmailSubscriptionContact = true,
+                    isSmsSubscriptionContact = false,
                     name = "Contact 1",
-                    phone = null,
+                    phone = "06 01 xx xx xx",
                 ),
             ),
         )
@@ -54,6 +57,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact = ControlUnitContactEntity(
                     id = 3,
                     controlUnitId = 10003,
+                    email = "email_3",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = true,
                     name = "Contact 3",
                     phone = null,
                 ),
@@ -80,8 +86,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 10000,
+                    email = "email_1",
+                    isEmailSubscriptionContact = true,
+                    isSmsSubscriptionContact = false,
                     name = "Contact 1",
-                    phone = null,
+                    phone = "06 01 xx xx xx",
                 ),
             ),
         )
@@ -95,6 +104,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         val newControlUnitContact = ControlUnitContactEntity(
             controlUnitId = 10000,
+            email = "Adresse email",
+            isEmailSubscriptionContact = false,
+            isSmsSubscriptionContact = true,
             name = "Contact Name",
             phone = "0123456789",
         )
@@ -109,6 +121,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val nextControlUnitContact = ControlUnitContactEntity(
             id = 4,
             controlUnitId = 10001,
+            email = null,
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = true,
             name = "Updated Contact Name",
             phone = "9876543210",
         )

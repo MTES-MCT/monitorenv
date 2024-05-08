@@ -1,12 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
-import fr.gouv.cacem.monitorenv.domain.entities.ErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendUsageError
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.*
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
@@ -20,53 +19,92 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
-class ControllersExceptionHandler() {
+class ControllersExceptionHandler {
     private val logger: Logger = LoggerFactory.getLogger(ControllersExceptionHandler::class.java)
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: Exception): ApiError {
-        logger.error(e.message, e)
-        return ApiError(IllegalArgumentException(e.message.toString(), e))
+    // -------------------------------------------------------------------------
+    // Domain exceptions
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(BackendInternalException::class)
+    fun handleBackendInternalException(e: BackendInternalException): BackendInternalErrorDataOutput {
+        return BackendInternalErrorDataOutput()
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NoSuchElementException::class)
-    fun handleNoSuchElementException(e: Exception): ApiError {
-        logger.error(e.message, e)
-        return ApiError(NoSuchElementException(e.message.toString(), e))
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MissingServletRequestParameterException::class)
-    fun handleNoParameter(e: MissingServletRequestParameterException): MissingParameterApiError {
-        logger.error(e.message, e)
-        return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleNoParameter(e: HttpMessageNotReadableException): ApiError {
-        logger.error(e.message, e)
-        return ApiError(e)
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UnarchivedChildException::class)
-    fun handleUnarchivedChildException(e: UnarchivedChildException): ApiError {
-        logger.error(e.message, e)
-        return ApiError(ErrorCode.UNARCHIVED_CHILD.name)
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ReportingAlreadyAttachedException::class)
-    fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
-        return ApiError(ErrorCode.CHILD_ALREADY_ATTACHED.name)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(BackendRequestException::class)
+    fun handleBackendRequestException(e: BackendRequestException): BackendRequestErrorDataOutput {
+        return BackendRequestErrorDataOutput(code = e.code, data = e.data, message = null)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BackendUsageException::class)
-    fun handleBackendUsageError(e: BackendUsageException): BackendUsageError {
-        return BackendUsageError(code = e.code, data = e.data)
+    fun handleBackendUsageException(e: BackendUsageException): BackendUsageErrorDataOutput {
+        return BackendUsageErrorDataOutput(code = e.code, data = e.data, message = null)
+    }
+
+    // -------------------------------------------------------------------------
+    // Legacy exceptions
+
+    // TODO Migrate to new error handling logic.
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(e: Exception): ApiError {
+        logger.error(e.message, e)
+
+        return ApiError(IllegalArgumentException(e.message.toString(), e))
+    }
+
+    // TODO Migrate to new error handling logic.
+    // Which cases does this exception cover?
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchElementException::class)
+    fun handleNoSuchElementException(e: Exception): ApiError {
+        logger.error(e.message, e)
+
+        return ApiError(NoSuchElementException(e.message.toString(), e))
+    }
+
+    // TODO Migrate to new error handling logic.
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun handleNoParameter(e: MissingServletRequestParameterException): MissingParameterApiError {
+        logger.error(e.message, e)
+
+        return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
+    }
+
+    // TODO Migrate to new error handling logic.
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleNoParameter(e: HttpMessageNotReadableException): ApiError {
+        logger.error(e.message, e)
+
+        return ApiError(e)
+    }
+
+    // TODO Migrate to new error handling logic.
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ReportingAlreadyAttachedException::class)
+    fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
+        return ApiError(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED.name)
+    }
+
+    // -------------------------------------------------------------------------
+    // Infrastructure and unhandled domain exceptions
+    // - Unhandled domain exceptions are a bug, thus an unexpected exception.
+    // - Infrastructure exceptions are not supposed to bubble up until here.
+    //   They should be caught or transformed into domain exceptions.
+    //   If that happens, it's a bug, thus an unexpected exception.
+
+    /**
+     * Catch-all for unexpected exceptions.
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception::class)
+    fun handleUnexpectedException(e: Exception): BackendInternalErrorDataOutput {
+        logger.error(e.message, e)
+
+        return BackendInternalErrorDataOutput()
     }
 }

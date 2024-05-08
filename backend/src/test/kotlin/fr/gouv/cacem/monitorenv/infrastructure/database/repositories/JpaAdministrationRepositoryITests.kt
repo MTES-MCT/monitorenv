@@ -3,9 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
@@ -26,17 +24,6 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         val afterFullAdministration = jpaAdministrationRepository.findById(2006)
 
         assertThat(afterFullAdministration.administration.isArchived).isTrue()
-    }
-
-    @Test
-    @Transactional
-    fun `archiveById() should throw the expected exception when the administration is linked to unarchived control units`() {
-        val throwable = catchThrowable {
-            jpaAdministrationRepository.archiveById(1005)
-        }
-
-        // Then
-        assertThat(throwable).isInstanceOf(UnarchivedChildException::class.java)
     }
 
     @Test

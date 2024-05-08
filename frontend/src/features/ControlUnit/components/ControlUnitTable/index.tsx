@@ -1,4 +1,4 @@
-import { DataTable, THEME } from '@mtes-mct/monitor-ui'
+import { type ControlUnit, DataTable, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -19,7 +19,6 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { CellContext } from '@tanstack/react-table'
 
 export function ControlUnitTable() {

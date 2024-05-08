@@ -22,13 +22,19 @@ data class ControlUnitContactModel(
     val controlUnit: ControlUnitModel,
 
     @Column(name = "email")
-    val email: String? = null,
+    val email: String?,
+
+    @Column(name = "is_email_subscription_contact")
+    val isEmailSubscriptionContact: Boolean,
+
+    @Column(name = "is_sms_subscription_contact")
+    val isSmsSubscriptionContact: Boolean,
 
     @Column(name = "name")
     val name: String,
 
     @Column(name = "phone")
-    val phone: String? = null,
+    val phone: String?,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
@@ -47,6 +53,8 @@ data class ControlUnitContactModel(
                 id = controlUnitContact.id,
                 controlUnit = controlUnitModel,
                 email = controlUnitContact.email,
+                isEmailSubscriptionContact = controlUnitContact.isEmailSubscriptionContact,
+                isSmsSubscriptionContact = controlUnitContact.isSmsSubscriptionContact,
                 name = controlUnitContact.name,
                 phone = controlUnitContact.phone,
             )
@@ -58,6 +66,8 @@ data class ControlUnitContactModel(
             id,
             controlUnitId = requireNotNull(controlUnit.id),
             email,
+            isEmailSubscriptionContact,
+            isSmsSubscriptionContact,
             name,
             phone,
         )
@@ -72,6 +82,6 @@ data class ControlUnitContactModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone)"
+        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone, isEmailSubscriptionContact = $isEmailSubscriptionContact, isSmsSubscriptionContact = $isSmsSubscriptionContact)"
     }
 }

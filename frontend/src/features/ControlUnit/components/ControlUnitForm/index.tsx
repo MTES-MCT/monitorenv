@@ -1,6 +1,7 @@
 import {
   Accent,
   Button,
+  type ControlUnit,
   DataTable,
   FormikCheckbox,
   FormikSelect,
@@ -31,7 +32,6 @@ import { isNotArchived } from '../../../../utils/isNotArchived'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 
 import type { ControlUnitFormValues } from './types'
-import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
 export function ControlUnitForm() {
   const { controlUnitId } = useParams()
