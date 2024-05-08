@@ -42,7 +42,7 @@ class ValidateIdUTests {
     @Test
     fun `validateId should throw an exception when id is missing in JSON`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().toString()
+        val fakeRequestDataAsJson = "{}"
 
         // Then
         val exception = assertThrows<BackendRequestException> {
@@ -56,9 +56,7 @@ class ValidateIdUTests {
     @Test
     fun `validateId should throw an exception when id is null in JSON`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            putNull("id")
-        }.toString()
+        val fakeRequestDataAsJson = "{ \"id\": null }"
 
         // Then
         val exception = assertThrows<BackendRequestException> {
@@ -72,9 +70,7 @@ class ValidateIdUTests {
     @Test
     fun `validateId should throw an exception when id is not an integer`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("id", "string")
-        }.toString()
+        val fakeRequestDataAsJson = "{ \"id\": \"not an integer\" }"
 
         // Then
         val exception = assertThrows<BackendRequestException> {
@@ -88,9 +84,7 @@ class ValidateIdUTests {
     @Test
     fun `validateId should throw an exception when id in JSON does not match id from request path`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("id", 2)
-        }.toString()
+        val fakeRequestDataAsJson = "{ \"id\": 2 }"
 
         // Then
         val exception = assertThrows<BackendRequestException> {
@@ -106,9 +100,7 @@ class ValidateIdUTests {
     @Test
     fun `validateId should not throw any exception when id in JSON matches id from request path`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("id", 1)
-        }.toString()
+        val fakeRequestDataAsJson = "{ \"id\": 1 }"
 
         // Then
         assertDoesNotThrow {

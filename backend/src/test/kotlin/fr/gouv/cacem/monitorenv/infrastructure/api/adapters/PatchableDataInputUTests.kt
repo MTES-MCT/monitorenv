@@ -66,11 +66,13 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should return the expected data input instance`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("name", "A new name")
-            putNull("description")
-            put("isUpdated", true)
-        }.toString()
+        val fakeRequestDataAsJson = """
+            {
+                "name": "A new name",
+                "description": null,
+                "isUpdated": true
+            }
+        """.trimIndent()
 
         // When
         val result = FakeDataInput
@@ -94,10 +96,12 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should ignore extra properties from the request data JSON`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("name", "A new name")
-            put("anNonExistingProperty", "A lost value")
-        }.toString()
+        val fakeRequestDataAsJson = """
+            {
+                "name": "A new name",
+                "anNonExistingProperty": "A lost value"
+            }
+        """.trimIndent()
 
         // When
         val result = FakeDataInput
@@ -121,9 +125,11 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should throw a BackendRequestException for an incorrect Boolean type`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("isAwesome", "Not a Boolean")
-        }.toString()
+        val fakeRequestDataAsJson = """
+            {
+                "isAwesome": "Not a Boolean"
+            }
+        """.trimIndent()
 
         // Then
         val exception = assertThrows<BackendRequestException> {
@@ -139,9 +145,11 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should throw a BackendRequestException for an incorrect Int type`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("rank", "Not an Int")
-        }.toString()
+        val fakeRequestDataAsJson = """
+            {
+                "rank": "Not an Int"
+            }
+        """.trimIndent()
 
         // Then
         val exception = assertThrows<BackendRequestException> {
@@ -157,9 +165,11 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should throw a BackendRequestException for an incorrect String type`() {
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("name", 42)
-        }.toString()
+        val fakeRequestDataAsJson = """
+            {
+                "name": 42
+            }
+        """.trimIndent()
 
         // Then
         val exception = assertThrows<BackendRequestException> {
@@ -179,9 +189,11 @@ class PatchableDataInputUTests {
         ) : PatchableDataInput<FakeDataInput>(FakeDataInput::class)
 
         // Given
-        val fakeRequestDataAsJson = objectMapper.createObjectNode().apply {
-            put("anUnsupportedTypedProp", "Another value")
-        }.toString()
+        val fakeRequestDataAsJson = """
+            {
+                "anUnsupportedTypedProp": "Another value"
+            }
+        """.trimIndent()
 
         // Then
         val exception = assertThrows<BackendInternalException> {
