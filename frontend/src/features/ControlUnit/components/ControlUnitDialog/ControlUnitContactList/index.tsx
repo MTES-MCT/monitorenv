@@ -84,8 +84,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
 
   const submit = async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
     const hadAnEmailSubscriptionContact = controlUnit.controlUnitContacts.some(
-      controlUnitContact =>
-        controlUnitContact.id !== controlUnitContactFormValues.id && controlUnitContact.isEmailSubscriptionContact
+      controlUnitContact => controlUnitContact.isEmailSubscriptionContact
     )
     const willHaveAnEmailSubscriptionContact =
       controlUnitContactFormValues.isEmailSubscriptionContact ||
