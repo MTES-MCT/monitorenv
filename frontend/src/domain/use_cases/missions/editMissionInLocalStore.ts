@@ -21,14 +21,13 @@ export const editMissionInLocalStore =
       return
     }
     try {
-      const missionRequest = dispatch(missionToEdit.initiate(missionId))
-      const missionResponse = await missionRequest.unwrap()
+      const missionResponse = await dispatch(missionToEdit.initiate(missionId, { forceRefetch: true }))
 
-      if (!missionResponse.mission) {
+      if (!missionResponse.data) {
         throw Error()
       }
 
-      if (missionResponse.status === 206) {
+      if (missionResponse.data.status === 206) {
         dispatch(
           setToast({
             containerId: 'sideWindow',
@@ -38,15 +37,13 @@ export const editMissionInLocalStore =
         )
       }
 
-      const missionToSave = missionResponse.mission
+      const missionToSave = missionResponse.data.mission
       const missionFormatted = {
         isFormDirty: false,
         missionForm: missionToSave
       }
 
       setMission(dispatch, missionFormatted)
-
-      await missionRequest.unsubscribe()
     } catch (error) {
       dispatch(setToast({ containerId: context, message: 'Erreur à la récupération de la mission' }))
     }
