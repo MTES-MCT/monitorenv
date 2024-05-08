@@ -11,16 +11,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import io.hypersistence.utils.hibernate.type.array.ListArrayType
-import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.*
-import org.hibernate.annotations.Parameter
+import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -185,13 +182,9 @@ class MissionModel(
 
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType::class)
+    @JdbcType(PostgreSQLEnumJdbcType::class)
     val missionSource: MissionSourceEnum,
 
-    @Type(
-        ListArrayType::class,
-        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
-    )
     @Column(name = "mission_types", columnDefinition = "text[]")
     val missionTypes: List<MissionTypeEnum>,
 

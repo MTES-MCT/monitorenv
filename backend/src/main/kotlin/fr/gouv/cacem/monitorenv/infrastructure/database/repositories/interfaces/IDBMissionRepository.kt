@@ -56,17 +56,17 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                 :missionStatuses IS NULL
                 OR (
                     'UPCOMING' IN :missionStatuses AND (
-                    mission.startDateTimeUtc >= now()
+                    mission.startDateTimeUtc >= CAST(now() AS timestamp)
                     ))
                 OR (
                     'PENDING' IN :missionStatuses AND (
-                    (mission.endDateTimeUtc IS NULL OR mission.endDateTimeUtc >= now())
-                    AND (mission.startDateTimeUtc <= now())
+                    (mission.endDateTimeUtc IS NULL OR mission.endDateTimeUtc >= CAST(now() AS timestamp))
+                    AND (mission.startDateTimeUtc <= CAST(now() AS timestamp))
                     )
                 )
                 OR (
                     'ENDED' IN :missionStatuses AND (
-                    mission.endDateTimeUtc < now()
+                    mission.endDateTimeUtc < CAST(now() AS timestamp)
                     )
                 )
             )
