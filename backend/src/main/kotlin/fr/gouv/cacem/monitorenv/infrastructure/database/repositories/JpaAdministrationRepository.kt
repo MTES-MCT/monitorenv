@@ -1,11 +1,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
@@ -19,7 +20,8 @@ class JpaAdministrationRepository(
     override fun archiveById(administrationId: Int) {
         val fullAdministration = findById(administrationId)
         if (fullAdministration.controlUnits.any { !it.isArchived }) {
-            throw UnarchivedChildException(
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNARCHIVED_CHILD,
                 "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.",
             )
         }

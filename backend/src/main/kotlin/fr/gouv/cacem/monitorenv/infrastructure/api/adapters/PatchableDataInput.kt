@@ -3,8 +3,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestException
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor

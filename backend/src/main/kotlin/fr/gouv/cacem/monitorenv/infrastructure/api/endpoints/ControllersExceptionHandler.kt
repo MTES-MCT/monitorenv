@@ -1,8 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
-import fr.gouv.cacem.monitorenv.domain.exceptions.*
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
+import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.*
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
@@ -78,15 +81,6 @@ class ControllersExceptionHandler {
         logger.error(e.message, e)
 
         return ApiError(e)
-    }
-
-    // TODO Migrate to new error handling logic.
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UnarchivedChildException::class)
-    fun handleUnarchivedChildException(e: UnarchivedChildException): ApiError {
-        logger.error(e.message, e)
-
-        return ApiError(BackendUsageErrorCode.UNARCHIVED_CHILD.name)
     }
 
     // TODO Migrate to new error handling logic.

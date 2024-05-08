@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestErrorCode
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 
 /**
  * Error output to use when the request is invalid.

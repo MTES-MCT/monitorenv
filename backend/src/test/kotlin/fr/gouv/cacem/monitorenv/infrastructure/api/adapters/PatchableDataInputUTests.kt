@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestException
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

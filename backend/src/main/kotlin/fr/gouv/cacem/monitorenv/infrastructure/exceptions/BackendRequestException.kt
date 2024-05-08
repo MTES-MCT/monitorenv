@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.exceptions
+package fr.gouv.cacem.monitorenv.infrastructure.exceptions
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

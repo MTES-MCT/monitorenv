@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.exceptions
+package fr.gouv.cacem.monitorenv.infrastructure.exceptions
 
 /**
  * Error code thrown when the request is invalid.
@@ -15,6 +15,9 @@ package fr.gouv.cacem.monitorenv.domain.exceptions
  * **Don't forget to mirror any update here in the corresponding Frontend enum.**
  */
 enum class BackendRequestErrorCode {
+    /** Thrown when the request body ID doesn't match the ID in the request path. */
+    BODY_ID_MISMATCH_REQUEST_PATH_ID,
+
     /** Thrown when a request body property has an unexpected type. */
     WRONG_REQUEST_BODY_PROPERTY_TYPE,
 }

@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendRequestException
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -97,7 +97,7 @@ class ValidateIdUTests {
             // When
             fakeController.patch(1, fakeRequestDataAsJson)
         }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
+        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.BODY_ID_MISMATCH_REQUEST_PATH_ID)
         assertThat(exception).hasMessageContaining(
             "Request data `id` ('2') doesn't match the {id} in the request path ('1').",
         )
