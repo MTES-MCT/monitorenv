@@ -1,6 +1,6 @@
 import { Bold } from '@components/style'
-import { CompletionStatusTag } from '@features/Mission/components/CompletionStatusTag'
-import { MissionStatusTag } from '@features/Mission/components/MissionStatusTag'
+import { CompletionStatusTag } from '@features/Mission/components/Shared/CompletionStatusTag'
+import { MissionStatusTag } from '@features/Mission/components/Shared/MissionStatusTag'
 import { missionActions } from '@features/Mission/slice'
 import { getMissionCompletionStatus } from '@features/Mission/utils'
 import { Accent, Button, Icon, IconButton, Size, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
@@ -9,10 +9,10 @@ import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
+import { editMissionInLocalStore } from '../../../Mission/useCases/editMissionInLocalStore'
 
 type MissionCardProps = {
   feature: any

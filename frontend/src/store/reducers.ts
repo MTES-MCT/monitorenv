@@ -1,5 +1,5 @@
-import { attachReportingToMissionsSliceReducer } from '@features/Mission/MissionForm/AttachReporting/slice'
-import { missionFormsSliceReducer } from '@features/Mission/MissionForm/slice'
+import { attachReportingToMissionsSliceReducer } from '@features/Mission/components/MissionForm/AttachReporting/slice'
+import { missionFormsSliceReducer } from '@features/Mission/components/MissionForm/slice'
 import { missionSliceReducer } from '@features/Mission/slice'
 
 import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'

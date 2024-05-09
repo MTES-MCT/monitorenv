@@ -10,11 +10,11 @@ import { ControlUnitResourceList } from './ControlUnitResourceList'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitQuery, useUpdateControlUnitMutation } from '../../../../api/controlUnitsAPI'
 import { globalActions } from '../../../../domain/shared_slices/Global'
-import { addMission } from '../../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { mainWindowActions } from '../../../MainWindow/slice'
+import { addMission } from '../../../Mission/useCases/addMission'
 
 export function ControlUnitDialog() {
   const dispatch = useAppDispatch()

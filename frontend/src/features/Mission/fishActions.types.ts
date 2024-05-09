@@ -1,10 +1,10 @@
-import type { ActionSource, CompletionStatus } from 'domain/entities/missions'
+import { Mission } from './mission.type'
 
 export namespace FishMissionAction {
   export interface MissionAction {
     actionDatetimeUtc: string
     actionType: MissionActionType
-    completion: CompletionStatus
+    completion: Mission.CompletionStatus
     id: number
     latitude: number
     longitude: number
@@ -25,7 +25,7 @@ export namespace FishMissionAction {
   }
 
   export type FishActionForTimeline = Partial<FishMissionAction.MissionAction> & {
-    actionSource: ActionSource
+    actionSource: Mission.ActionSource
     actionType: FishMissionAction.MissionActionType
     timelineDate: string
   }

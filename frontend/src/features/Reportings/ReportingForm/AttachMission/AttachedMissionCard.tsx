@@ -1,12 +1,12 @@
-import { CompletionStatusTag } from '@features/Mission/components/CompletionStatusTag'
-import { MissionStatusTag } from '@features/Mission/components/MissionStatusTag'
-import { getMissionCompletionStatus } from '@features/Mission/utils'
+import { CompletionStatusTag } from '@features/Mission/components/Shared/CompletionStatusTag'
+import { MissionStatusTag } from '@features/Mission/components/Shared/MissionStatusTag'
+import { Mission } from '@features/Mission/mission.type'
+import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionInLocalStore'
+import { getMissionCompletionStatus, getMissionStatus } from '@features/Mission/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
-import { editMissionInLocalStore } from 'domain/use_cases/missions/editMissionInLocalStore'
 import styled from 'styled-components'
 
-import { getMissionStatus, type Mission } from '../../../../domain/entities/missions'
 import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
 import { StatusActionTag } from '../../components/StatusActionTag'
 
@@ -16,7 +16,7 @@ export function AttachedMissionCard({
   attachedMission,
   controlStatus
 }: {
-  attachedMission: Mission | undefined
+  attachedMission: Mission.Mission | undefined
   controlStatus: ControlStatusEnum
 }) {
   const dispatch = useAppDispatch()

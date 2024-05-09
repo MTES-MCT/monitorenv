@@ -1,14 +1,14 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+import { Mission } from '@features/Mission/mission.type'
 import { getTimeLeft } from '@features/Reportings/utils'
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
-import type { ActionSource, ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
   actionTaken?: string
   attachedEnvActionId?: string
-  attachedMission?: Mission
+  attachedMission?: Mission.Mission
   attachedToMissionAtUtc?: string
   controlStatus: ControlStatusEnum
   controlUnitId?: number
@@ -71,15 +71,15 @@ export type TargetDetails = {
 }
 
 export type ReportingForTimeline = Partial<ReportingDetailed> & {
-  actionSource: ActionSource
-  actionType: ActionTypeEnum.REPORTING
+  actionSource: Mission.ActionSource
+  actionType: Mission.ActionTypeEnum.REPORTING
   timelineDate: string
 }
 
 export type DetachedReportingForTimeline = DetachedReporting & {
   action: string
-  actionSource: ActionSource
-  actionType: ActionTypeEnum.DETACHED_REPORTING
+  actionSource: Mission.ActionSource
+  actionType: Mission.ActionTypeEnum.DETACHED_REPORTING
   timelineDate: string
 }
 

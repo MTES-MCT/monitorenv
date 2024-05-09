@@ -1,4 +1,4 @@
-import { missionFormsActions } from '@features/Mission/MissionForm/slice'
+import { missionFormsActions } from '@features/Mission/components/MissionForm/slice'
 import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo } from 'react'
 

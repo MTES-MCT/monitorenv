@@ -4,10 +4,11 @@ import { useMemo } from 'react'
 import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
+import { Mission } from './mission.type'
+import { deleteTab } from './useCases/deleteTab'
+import { switchTab } from './useCases/switchTab'
+import { getMissionStatus } from './utils'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { deleteTab } from '../../domain/use_cases/missions/deleteTab'
-import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { getMissionTitle } from '../../utils/getMissionTitle'
@@ -18,7 +19,10 @@ function MissionStatus({ mission }) {
 
   return (
     <div>
-      <StyledStatus borderColor={missionStatusLabels[status]?.borderColor} color={missionStatusLabels[status]?.color} />
+      <StyledStatus
+        borderColor={Mission.missionStatusLabels[status]?.borderColor}
+        color={Mission.missionStatusLabels[status]?.color}
+      />
     </div>
   )
 }

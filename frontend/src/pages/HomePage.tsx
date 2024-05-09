@@ -1,6 +1,6 @@
 import { BannerStack } from '@features/MainWindow/components/BannerStack'
-import { AttachReportingToMissionModal } from '@features/Mission/MissionForm/AttachReporting/AttachReportingToMissionModal'
-import { MissionsMenu } from '@features/Mission/MissionsButton'
+import { AttachReportingToMissionModal } from '@features/Mission/components/MissionForm/AttachReporting/AttachReportingToMissionModal'
+import { MissionsMenu } from '@features/Mission/components/MissionsButton'
 import { useCallback, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'

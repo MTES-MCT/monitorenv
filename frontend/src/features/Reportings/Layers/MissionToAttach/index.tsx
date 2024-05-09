@@ -1,3 +1,4 @@
+import { Mission } from '@features/Mission/mission.type'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
@@ -6,7 +7,6 @@ import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { useGetMissionsQuery } from '../../../../api/missionsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { MissionStatusEnum } from '../../../../domain/entities/missions'
 import { attachMission } from '../../../../domain/use_cases/reporting/attachMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -26,7 +26,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
 
   const { data: missions } = useGetMissionsQuery(
     {
-      missionStatus: [MissionStatusEnum.PENDING],
+      missionStatus: [Mission.MissionStatusEnum.PENDING],
       startedAfterDateTime: customDayjs.utc().startOf('day').subtract(90, 'day').toISOString()
     },
     { skip: !isMissionAttachmentInProgress }

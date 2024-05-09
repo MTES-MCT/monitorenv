@@ -1,13 +1,13 @@
+import { Mission } from '@features/Mission/mission.type'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ApiErrorCode } from './types'
-import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
 import { FrontendApiError } from '../libs/FrontendApiError'
 
 const CAN_DELETE_MISSION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette mission est supprimable."
 
-type MissionsResponse = Mission[]
+type MissionsResponse = Mission.Mission[]
 type MissionsFilter = {
   missionSource?: string
   missionStatus?: string[]
@@ -20,11 +20,11 @@ type MissionsFilter = {
 
 type CanDeleteMissionResponseType = {
   canDelete: boolean
-  sources: MissionSourceEnum[]
+  sources: Mission.MissionSourceEnum[]
 }
 
 type MissionResponseType = {
-  mission: Mission
+  mission: Mission.Mission
   status: number
 }
 
@@ -46,7 +46,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       forceRefetch: () => true,
       query: id => ({
         method: 'GET',
-        url: `/v1/missions/${id}/can_delete?source=${MissionSourceEnum.MONITORENV}`
+        url: `/v1/missions/${id}/can_delete?source=${Mission.MissionSourceEnum.MONITORENV}`
       }),
       transformErrorResponse: error => new FrontendApiError(CAN_DELETE_MISSION_ERROR_MESSAGE, error),
       transformResponse: (response: CanDeleteMissionResponseType) => {
@@ -65,7 +65,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
         return response
       }
     }),
-    createMission: builder.mutation<Mission, MissionData>({
+    createMission: builder.mutation<Mission.Mission, Mission.MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },
@@ -91,7 +91,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       keepUnusedDataFor: 0,
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `/v1/missions/${id}`,
-      transformResponse: (mission: Mission, meta: any) => {
+      transformResponse: (mission: Mission.Mission, meta: any) => {
         const status = meta?.response?.status
 
         return { mission, status }
@@ -117,7 +117,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           .filter(v => v)
           .join('&')
     }),
-    updateMission: builder.mutation<Mission, MissionData>({
+    updateMission: builder.mutation<Mission.Mission, Mission.MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [], detachedReportingIds = [], id }) => [
         { id, type: 'Missions' },
         { id: 'LIST', type: 'Missions' },

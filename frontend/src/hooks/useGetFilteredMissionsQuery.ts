@@ -1,12 +1,12 @@
-import { isMissionPartOfSelectedCompletionStatus } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedCompletionStatus'
-import { isMissionPartOfSelectedWithEnvActions } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedWithEnvActions'
+import { isMissionPartOfSelectedAdministrationNames } from '@features/Mission/useCases/filters/isMissionPartOfSelectedAdministrationNames'
+import { isMissionPartOfSelectedCompletionStatus } from '@features/Mission/useCases/filters/isMissionPartOfSelectedCompletionStatus'
+import { isMissionPartOfSelectedControlPlans } from '@features/Mission/useCases/filters/isMissionPartOfSelectedControlPlans'
+import { isMissionPartOfSelectedControlUnitIds } from '@features/Mission/useCases/filters/isMissionPartOfSelectedControlUnitIds'
+import { isMissionPartOfSelectedWithEnvActions } from '@features/Mission/useCases/filters/isMissionPartOfSelectedWithEnvActions'
 import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
 import { useGetMissionsQuery } from '../api/missionsAPI'
-import { isMissionPartOfSelectedAdministrationNames } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedAdministrationNames'
-import { isMissionPartOfSelectedControlPlans } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedControlPlans'
-import { isMissionPartOfSelectedControlUnitIds } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedControlUnitIds'
 
 const TWO_MINUTES = 2 * 60 * 1000
 

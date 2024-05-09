@@ -1,4 +1,4 @@
-import { attachReportingToMissionSliceActions } from '@features/Mission/MissionForm/AttachReporting/slice'
+import { attachReportingToMissionSliceActions } from '@features/Mission/components/MissionForm/AttachReporting/slice'
 
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { resetInteraction } from '../../shared_slices/Draw'

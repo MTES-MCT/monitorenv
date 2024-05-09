@@ -2,11 +2,11 @@ import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { mainWindowActions } from '../../../features/MainWindow/slice'
+import { addMission } from '../../../features/Mission/useCases/addMission'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
-import { addMission } from '../missions/addMission'
 
 import type { Reporting } from '../../entities/reporting'
 

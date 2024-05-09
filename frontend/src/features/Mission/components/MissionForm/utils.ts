@@ -1,0 +1,68 @@
+import { Mission } from '@features/Mission/mission.type'
+import { isEqual, omit } from 'lodash'
+
+import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
+import { isCypress } from '../../../../utils/isCypress'
+
+/**
+ * Is auto-save enabled.
+ *
+ * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
+ * instead of `import.meta.env`.
+ */
+export const isMissionAutoSaveEnabled = () =>
+  isCypress()
+    ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED') === 'true'
+    : import.meta.env.FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED === 'true'
+export const isMissionAutoUpdateEnabled = () =>
+  isCypress()
+    ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE') === 'true'
+    : import.meta.env.FRONTEND_MISSION_FORM_AUTO_UPDATE === 'true'
+
+/**
+ * should a Formik `onChange` event trigger `saveMission`.
+ */
+export function shouldSaveMission(
+  previousValues: Partial<Mission.Mission | Mission.NewMission> | undefined,
+  missionEvent: Partial<Mission.Mission> | undefined,
+  nextValues: Partial<Mission.Mission | Mission.NewMission>
+): boolean {
+  if (!previousValues) {
+    return false
+  }
+
+  /**
+   * If a mission event has just been received, block the re-submit of the same fields.
+   */
+  if (
+    isEqual(
+      omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
+      omit(nextValues, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
+    )
+  ) {
+    return false
+  }
+
+  const filteredPreviousValues = {
+    ...omit(previousValues, [
+      'attachedReportingIds',
+      'attachedReportings',
+      'detachedReportingIds',
+      'detachedReportings'
+    ]),
+    envActions: filterActionsFormInternalProperties(previousValues)
+  }
+  const filteredNextValues = {
+    ...omit(nextValues, ['attachedReportingIds', 'attachedReportings', 'detachedReportingIds', 'detachedReportings']),
+    envActions: filterActionsFormInternalProperties(nextValues)
+  }
+
+  /**
+   * Send an update only if a field has beem modified
+   */
+  return !isEqual(filteredPreviousValues, filteredNextValues)
+}
+
+function filterActionsFormInternalProperties(values: Partial<Mission.Mission | Mission.NewMission>) {
+  return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) ?? []
+}

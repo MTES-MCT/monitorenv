@@ -1,8 +1,8 @@
 import { describe, expect, it } from '@jest/globals'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
-import { getIsMissionEnded, getMissionCompletionStatus } from './utils'
-import { FrontCompletionStatus } from '../../domain/entities/missions'
+import { Mission } from './mission.type'
+import { getIsMissionEnded, getMissionCompletionStatus, getMissionStatus } from './utils'
 
 const pendingMission = {
   endDateTimeUtc: customDayjs().add(3, 'day').toISOString(),
@@ -66,16 +66,16 @@ const missionToCompleteEnded = {
 describe('mission utils', () => {
   it('getMissionCompletionStatus Should the mission completion status', async () => {
     const missionCompletionUpToDate = getMissionCompletionStatus(missionUpToDate)
-    expect(missionCompletionUpToDate).toBe(FrontCompletionStatus.UP_TO_DATE)
+    expect(missionCompletionUpToDate).toBe(Mission.FrontCompletionStatus.UP_TO_DATE)
 
     const missionCompletionCompleted = getMissionCompletionStatus(missionCompleted)
-    expect(missionCompletionCompleted).toBe(FrontCompletionStatus.COMPLETED)
+    expect(missionCompletionCompleted).toBe(Mission.FrontCompletionStatus.COMPLETED)
 
     const missionCompletionToComplete = getMissionCompletionStatus(missionToComplete)
-    expect(missionCompletionToComplete).toBe(FrontCompletionStatus.TO_COMPLETE)
+    expect(missionCompletionToComplete).toBe(Mission.FrontCompletionStatus.TO_COMPLETE)
 
     const missionCompletionToCompleteEnded = getMissionCompletionStatus(missionToCompleteEnded)
-    expect(missionCompletionToCompleteEnded).toBe(FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED)
+    expect(missionCompletionToCompleteEnded).toBe(Mission.FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED)
 
     const missionCompletionUpcoming = getMissionCompletionStatus(missionUpcoming)
     expect(missionCompletionUpcoming).toBe(undefined)
@@ -87,5 +87,33 @@ describe('mission utils', () => {
 
     const isMissionNotEnded = getIsMissionEnded(pendingMission.endDateTimeUtc)
     expect(isMissionNotEnded).toBe(false)
+  })
+
+  it('getMissionStatus Should return the mission status', async () => {
+    const yesterday = customDayjs.utc().subtract(1, 'day').toISOString()
+    const tomorrow = customDayjs.utc().add(1, 'day').toISOString()
+
+    const openCases: Array<[string | undefined, string | undefined, string]> = [
+      [yesterday, undefined, 'PENDING'],
+      [yesterday, yesterday, 'ENDED'],
+      [yesterday, tomorrow, 'PENDING'],
+      [tomorrow, yesterday, 'UPCOMING'],
+      [tomorrow, tomorrow, 'UPCOMING']
+    ]
+
+    const errorCases: Array<[string | undefined, string | undefined, string]> = openCases.map(([, endDateTimeUtc]) => [
+      undefined,
+      endDateTimeUtc,
+      'ERROR'
+    ])
+
+    it.each([...openCases, ...errorCases])(
+      'Given %p, %p and %p as `startDateTimeUtc`, `endDateTimeUtc`. Should return %p',
+      (startDateTimeUtc, endDateTimeUtc, expectedResult) => {
+        const result = getMissionStatus({ endDateTimeUtc, startDateTimeUtc })
+
+        expect(result).toEqual(expectedResult)
+      }
+    )
   })
 })

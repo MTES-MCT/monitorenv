@@ -1,4 +1,4 @@
-import { missionTypeEnum } from '../domain/entities/missions'
+import { Mission } from '@features/Mission/mission.type'
 
 /**
  * format mission types to a string
@@ -9,8 +9,8 @@ export function humanizeMissionTypes(missionTypes: string[] | undefined): string
   }
   const firstMissionTypeIndex = missionTypes[0]
   if (missionTypes.length === 1 && firstMissionTypeIndex) {
-    return missionTypeEnum[firstMissionTypeIndex]?.libelle
+    return Mission.missionTypeLabels[firstMissionTypeIndex]?.libelle
   }
 
-  return missionTypes.map(missionType => missionTypeEnum[missionType]?.libelle).toString()
+  return missionTypes.map(missionType => Mission.missionTypeLabels[missionType]?.libelle).toString()
 }

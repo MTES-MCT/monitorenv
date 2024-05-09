@@ -1,22 +1,41 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { sum } from 'lodash'
 
-import {
-  ActionTypeEnum,
-  CompletionStatus,
-  FrontCompletionStatus,
-  getMissionStatus,
-  MissionStatusEnum,
-  type EnvAction
-} from '../../domain/entities/missions'
+import { Mission } from './mission.type'
 
-export const getTotalOfControls = (envActions: Array<Partial<EnvAction>>) =>
+export const getMissionStatus = ({
+  endDateTimeUtc,
+  startDateTimeUtc
+}: {
+  endDateTimeUtc?: string | null
+  startDateTimeUtc?: string | null
+}) => {
+  if (!startDateTimeUtc) {
+    return 'ERROR'
+  }
+
+  const now = customDayjs()
+
+  if (customDayjs(startDateTimeUtc).isAfter(now)) {
+    return Mission.MissionStatusEnum.UPCOMING
+  }
+
+  if (endDateTimeUtc && customDayjs(endDateTimeUtc).isBefore(now)) {
+    return Mission.MissionStatusEnum.ENDED
+  }
+
+  return Mission.MissionStatusEnum.PENDING
+}
+
+export const getTotalOfControls = (envActions: Array<Partial<Mission.EnvAction>>) =>
   sum(
-    envActions?.map(control => (control.actionType === ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0)
+    envActions?.map(
+      control => (control.actionType === Mission.ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0
+    )
   )
 
-export const getTotalOfSurveillances = (envActions: Array<Partial<EnvAction>>) =>
-  envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE).length
+export const getTotalOfSurveillances = (envActions: Array<Partial<Mission.EnvAction>>) =>
+  envActions?.filter(action => action.actionType === Mission.ActionTypeEnum.SURVEILLANCE).length
 
 export function getVesselName(vesselName) {
   return vesselName === 'UNKNOWN' ? 'Navire inconnu' : vesselName
@@ -25,26 +44,30 @@ export function getVesselName(vesselName) {
 export function hasAtLeastOnUncompletedEnvAction(envActions): boolean {
   return !!envActions?.find(
     action =>
-      (action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL) &&
-      action.completion === CompletionStatus.TO_COMPLETE
+      (action.actionType === Mission.ActionTypeEnum.SURVEILLANCE ||
+        action.actionType === Mission.ActionTypeEnum.CONTROL) &&
+      action.completion === Mission.CompletionStatus.TO_COMPLETE
   )
 }
 
-export function getMissionCompletionFrontStatus(missionStatus, missionCompletion): FrontCompletionStatus | undefined {
-  if (missionStatus === MissionStatusEnum.PENDING) {
-    if (missionCompletion === CompletionStatus.COMPLETED) {
-      return FrontCompletionStatus.UP_TO_DATE
+export function getMissionCompletionFrontStatus(
+  missionStatus,
+  missionCompletion
+): Mission.FrontCompletionStatus | undefined {
+  if (missionStatus === Mission.MissionStatusEnum.PENDING) {
+    if (missionCompletion === Mission.CompletionStatus.COMPLETED) {
+      return Mission.FrontCompletionStatus.UP_TO_DATE
     }
 
-    return FrontCompletionStatus.TO_COMPLETE
+    return Mission.FrontCompletionStatus.TO_COMPLETE
   }
 
-  if (missionStatus === MissionStatusEnum.ENDED) {
-    if (missionCompletion === CompletionStatus.COMPLETED) {
-      return FrontCompletionStatus.COMPLETED
+  if (missionStatus === Mission.MissionStatusEnum.ENDED) {
+    if (missionCompletion === Mission.CompletionStatus.COMPLETED) {
+      return Mission.FrontCompletionStatus.COMPLETED
     }
 
-    return FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED
+    return Mission.FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED
   }
 
   return undefined
@@ -54,7 +77,9 @@ export function getMissionCompletionStatus(mission) {
   const missionStatus = getMissionStatus(mission)
   const hasAtLeastOnUncompletedAction = hasAtLeastOnUncompletedEnvAction(mission.envActions)
 
-  const missionCompletion = hasAtLeastOnUncompletedAction ? CompletionStatus.TO_COMPLETE : CompletionStatus.COMPLETED
+  const missionCompletion = hasAtLeastOnUncompletedAction
+    ? Mission.CompletionStatus.TO_COMPLETE
+    : Mission.CompletionStatus.COMPLETED
 
   return getMissionCompletionFrontStatus(missionStatus, missionCompletion)
 }

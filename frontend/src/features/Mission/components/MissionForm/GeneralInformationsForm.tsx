@@ -1,0 +1,263 @@
+import { CompletionStatusTag } from '@features/Mission/components/Shared/CompletionStatusTag'
+import { Mission } from '@features/Mission/mission.type'
+import { getMissionStatus } from '@features/Mission/utils'
+import {
+  customDayjs,
+  DatePicker,
+  FieldError,
+  FormikCheckbox,
+  FormikDatePicker,
+  FormikMultiCheckbox,
+  FormikTextInput,
+  FormikTextarea,
+  MultiRadio,
+  THEME,
+  getOptionsFromLabelledEnum
+} from '@mtes-mct/monitor-ui'
+import { FieldArray, useFormikContext } from 'formik'
+import { useMemo } from 'react'
+import styled from 'styled-components'
+
+import { HIDDEN_ERROR } from './constants'
+import { ControlUnitsForm } from './ControlUnitsForm'
+import { MissionZonePicker } from './MissionZonePicker'
+import { FormTitle, Separator } from './style'
+import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../domain/entities/controlPlan'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getMissionTitle } from '../../../../utils/getMissionTitle'
+import { isNewMission } from '../../../../utils/isNewMission'
+import { getMissionPageRoute } from '../../../../utils/routes'
+import { MissionStatusTag } from '../Shared/MissionStatusTag'
+
+export function GeneralInformationsForm({
+  missionCompletion = undefined
+}: {
+  missionCompletion?: Mission.FrontCompletionStatus
+}) {
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+
+  const { errors, setFieldValue, values } = useFormikContext<Mission.Mission>()
+  const missionTypeOptions = getOptionsFromLabelledEnum(Mission.MissionTypeLabel)
+
+  const hasMissionOrderOptions = Object.values(Mission.hasMissionOrderLabels)
+
+  const routeParams = getMissionPageRoute(currentPath)
+  const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
+
+  const title = useMemo(() => getMissionTitle(missionIsNewMission, values), [missionIsNewMission, values])
+
+  const missionIsFromMonitorFish =
+    values.missionSource === Mission.MissionSourceEnum.MONITORFISH ||
+    values.missionSource === Mission.MissionSourceEnum.POSEIDON_CNSP
+
+  const actualYearForThemes = useMemo(() => customDayjs(values?.startDateTimeUtc).year(), [values?.startDateTimeUtc])
+
+  const updateMissionDateTime = (date: string | undefined) => {
+    if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
+      values?.envActions?.forEach((action, actionIndex) => {
+        if (action.actionType === Mission.ActionTypeEnum.CONTROL && !action.actionStartDateTimeUtc) {
+          setFieldValue(`envActions[${actionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
+        }
+        if (
+          action.actionType === Mission.ActionTypeEnum.SURVEILLANCE &&
+          (!action.actionStartDateTimeUtc || (action.actionStartDateTimeUtc && action.durationMatchesMission))
+        ) {
+          action?.controlPlans?.forEach((_, index) => {
+            setFieldValue(`envActions[${actionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
+          })
+        }
+      })
+    }
+    setFieldValue('startDateTimeUtc', date)
+  }
+
+  const missionStatus = useMemo(() => getMissionStatus(values), [values])
+
+  return (
+    <StyledContainer>
+      <StyledHeader>
+        <FormTitle>{title}</FormTitle>
+      </StyledHeader>
+      <Separator />
+
+      <StyledFormWrapper>
+        <DatesAndTagsContainer>
+          <div>
+            <StyledDatePickerContainer>
+              <DatePicker
+                data-cy="mission-start-date-time"
+                defaultValue={values?.startDateTimeUtc || undefined}
+                isCompact
+                isErrorMessageHidden
+                isRequired
+                isStringDate
+                label="Date de début (UTC)"
+                name="startDateTimeUtc"
+                onChange={updateMissionDateTime}
+                withTime
+              />
+
+              <StyledFormikDatePicker
+                data-cy="mission-end-date-time"
+                isCompact
+                isEndDate
+                isErrorMessageHidden
+                isRequired
+                isStringDate
+                label="Date de fin (UTC)"
+                name="endDateTimeUtc"
+                withTime
+              />
+            </StyledDatePickerContainer>
+            {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
+            {errors.startDateTimeUtc && errors.startDateTimeUtc !== HIDDEN_ERROR && (
+              <FieldError>{errors.startDateTimeUtc}</FieldError>
+            )}
+            {errors.endDateTimeUtc && errors.endDateTimeUtc !== HIDDEN_ERROR && (
+              <FieldError>{errors.endDateTimeUtc}</FieldError>
+            )}
+          </div>
+          <StyledTagsContainer>
+            <MissionStatusTag status={missionStatus} />
+            <CompletionStatusTag completion={missionCompletion} />
+          </StyledTagsContainer>
+        </DatesAndTagsContainer>
+
+        <div>
+          <StyledMissionType>
+            <FormikMultiCheckbox
+              data-cy="mission-types"
+              isErrorMessageHidden
+              isInline
+              isRequired
+              label="Type de mission"
+              name="missionTypes"
+              options={missionTypeOptions}
+            />
+
+            {missionIsFromMonitorFish && <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />}
+          </StyledMissionType>
+        </div>
+        {missionIsFromMonitorFish && (
+          <MultiRadio
+            disabled
+            isInline
+            label="Ordre de mission"
+            name="hasMissionOrder"
+            options={hasMissionOrderOptions}
+            value={values.hasMissionOrder}
+          />
+        )}
+
+        <StyledUnitsContainer>
+          <FieldArray
+            name="controlUnits"
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
+            render={props => <ControlUnitsForm {...props} />}
+            validateOnChange={false}
+          />
+        </StyledUnitsContainer>
+
+        <div>
+          <MissionZonePicker />
+          {values.isGeometryComputedFromControls && (
+            <ZoneComputedFromActions data-cy="mission-zone-computed-from-action">
+              Actuellement, la zone de mission est <b>automatiquement calculée</b> selon le point ou la zone de la
+              dernière action rapportée par l’unité.
+            </ZoneComputedFromActions>
+          )}
+        </div>
+
+        <StyledObservationsContainer>
+          <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
+          <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
+          <StyledAuthorContainer>
+            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
+            <FormikTextInput isErrorMessageHidden label="Complété par" name="completedBy" />
+          </StyledAuthorContainer>
+          {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
+          {errors.openBy && errors.openBy !== HIDDEN_ERROR && <FieldError>{errors.openBy}</FieldError>}
+          {errors.completedBy && errors.completedBy !== HIDDEN_ERROR && <FieldError>{errors.completedBy}</FieldError>}
+        </StyledObservationsContainer>
+      </StyledFormWrapper>
+    </StyledContainer>
+  )
+}
+
+const StyledContainer = styled.div`
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+`
+const StyledFormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  gap: 24px;
+`
+
+const StyledHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
+  padding-top: 12px;
+`
+const StyledTagsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 8px;
+  > span {
+    align-self: end;
+  }
+`
+const DatesAndTagsContainer = styled.div`
+  align-items: start;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
+`
+
+const StyledDatePickerContainer = styled.div`
+  display: flex;
+  gap: 16px;
+`
+const StyledFormikDatePicker = styled(FormikDatePicker)`
+  p {
+    max-width: 200px;
+  }
+`
+
+const StyledMissionType = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 48px;
+`
+
+const StyledUnitsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const ZoneComputedFromActions = styled.div`
+  margin-top: 8px;
+  color: ${THEME.color.blueYonder};
+  background: ${THEME.color.blueYonder25};
+  padding: 16px;
+`
+
+const StyledObservationsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+const StyledAuthorContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  .Field-TextInput {
+    width: 120px;
+  }
+`

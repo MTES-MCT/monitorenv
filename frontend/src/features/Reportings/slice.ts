@@ -1,10 +1,9 @@
+import { Mission } from '@features/Mission/mission.type'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { Mission } from '../../domain/entities/missions'
-
 type AttachMissionToReportingSliceState = {
-  attachedMission: Mission | undefined
-  initialAttachedMission: Mission | undefined
+  attachedMission: Mission.Mission | undefined
+  initialAttachedMission: Mission.Mission | undefined
   initialMissionId: number | undefined
   isMissionAttachmentInProgress: boolean
   missionId: number | undefined
@@ -29,7 +28,7 @@ const attachMissionToReportingSlice = createSlice({
       state.attachedMission = action.payload
       state.missionId = action.payload?.id
     },
-    setInitialAttachedMission(state, action: PayloadAction<Mission | undefined>) {
+    setInitialAttachedMission(state, action: PayloadAction<Mission.Mission | undefined>) {
       state.initialMissionId = action.payload?.id
       state.initialAttachedMission = action.payload
     },

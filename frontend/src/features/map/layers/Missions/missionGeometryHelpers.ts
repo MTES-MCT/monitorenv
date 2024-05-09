@@ -1,4 +1,5 @@
-import { getTotalOfControls, getTotalOfSurveillances } from '@features/Mission/utils'
+import { Mission } from '@features/Mission/mission.type'
+import { getMissionStatus, getTotalOfControls, getTotalOfSurveillances } from '@features/Mission/utils'
 import { type Coordinates } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
@@ -8,18 +9,8 @@ import { circular } from 'ol/geom/Polygon'
 import { selectedMissionControlStyle, selectedMissionSurveillanceStyle } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
-import {
-  ActionTypeEnum,
-  type EnvActionControl,
-  type EnvActionSurveillance,
-  getMissionStatus,
-  type Mission,
-  type NewMission,
-  type NewEnvActionControl,
-  CIRCULAR_ZONE_RADIUS
-} from '../../../../domain/entities/missions'
 
-export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layername: string) => {
+export const getMissionZoneFeature = (mission: Partial<Mission.Mission | Mission.NewMission>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(mission.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -51,7 +42,7 @@ export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, la
   return feature
 }
 
-const getActionControlProperties = (action: EnvActionControl | NewEnvActionControl) => {
+const getActionControlProperties = (action: Mission.EnvActionControl | Mission.NewEnvActionControl) => {
   const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionType, controlPlans, infractions } =
     action
 
@@ -65,7 +56,7 @@ const getActionControlProperties = (action: EnvActionControl | NewEnvActionContr
   }
 }
 
-const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
+const getActionSurveillanceProperties = (action: Mission.EnvActionSurveillance) => {
   const { actionEndDateTimeUtc, actionStartDateTimeUtc, actionType, controlPlans } = action
 
   return {
@@ -76,18 +67,20 @@ const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
   }
 }
 
-const getActionProperties = (action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl) => {
+const getActionProperties = (
+  action: Mission.EnvActionControl | Mission.EnvActionSurveillance | Mission.NewEnvActionControl
+) => {
   switch (action.actionType) {
-    case ActionTypeEnum.CONTROL:
+    case Mission.ActionTypeEnum.CONTROL:
       return getActionControlProperties(action)
-    case ActionTypeEnum.SURVEILLANCE:
+    case Mission.ActionTypeEnum.SURVEILLANCE:
     default:
       return getActionSurveillanceProperties(action)
   }
 }
 
 const getActionFeature = (
-  action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl,
+  action: Mission.EnvActionControl | Mission.EnvActionSurveillance | Mission.NewEnvActionControl,
   isGeometryComputedFromControls: Boolean
 ) => {
   const geoJSON = new GeoJSON()
@@ -103,12 +96,12 @@ const getActionFeature = (
   // if the mission geometry is computed from the controls
   // we want to display controls with a circular geometry
   if (
-    action.actionType === ActionTypeEnum.CONTROL &&
+    action.actionType === Mission.ActionTypeEnum.CONTROL &&
     isGeometryComputedFromControls &&
     action.geom.coordinates.length > 0
   ) {
     const coordinates = action.geom.coordinates[0] as Coordinates
-    geometry = circular([coordinates[0], coordinates[1]], CIRCULAR_ZONE_RADIUS, 64).transform(
+    geometry = circular([coordinates[0], coordinates[1]], Mission.CIRCULAR_ZONE_RADIUS, 64).transform(
       WSG84_PROJECTION,
       OPENLAYERS_PROJECTION
     )
@@ -121,19 +114,21 @@ const getActionFeature = (
   feature.setProperties({ ...actionProperties })
   feature.setProperties({ ...actionProperties, isGeometryComputedFromControls })
 
-  if (action.actionType === ActionTypeEnum.CONTROL) {
+  if (action.actionType === Mission.ActionTypeEnum.CONTROL) {
     feature.setStyle(selectedMissionControlStyle)
   }
 
-  if (action.actionType === ActionTypeEnum.SURVEILLANCE) {
+  if (action.actionType === Mission.ActionTypeEnum.SURVEILLANCE) {
     feature.setStyle(selectedMissionSurveillanceStyle)
   }
 
   return feature
 }
 
-const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActionSurveillance | NewEnvActionControl =>
-  f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
+const isActionControlOrActionSurveillance = (
+  f
+): f is Mission.EnvActionControl | Mission.EnvActionSurveillance | Mission.NewEnvActionControl =>
+  f.actionType === Mission.ActionTypeEnum.CONTROL || f.actionType === Mission.ActionTypeEnum.SURVEILLANCE
 
 export const getActionsFeatures = mission => {
   const { envActions, isGeometryComputedFromControls } = mission

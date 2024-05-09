@@ -1,3 +1,4 @@
+import { Mission } from '@features/Mission/mission.type'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
@@ -7,8 +8,6 @@ import Point from 'ol/geom/Point'
 import { Circle, Icon, Style } from 'ol/style'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
-
-import { MissionStatusEnum, MissionTypeEnum } from '../../../../domain/entities/missions'
 
 export const missionZoneStyle = new Style({
   fill: new Fill({
@@ -40,20 +39,20 @@ const missionIconStyle = (status, type, zIndex) => [
 ]
 
 export const missionStyleFn = feature => {
-  const missionStatus = feature.get('missionStatus') as MissionStatusEnum
-  const missionTypes = feature.get('missionTypes') as MissionTypeEnum[]
+  const missionStatus = feature.get('missionStatus') as Mission.MissionStatusEnum
+  const missionTypes = feature.get('missionTypes') as Mission.MissionTypeEnum[]
 
   const missionTypeLabel = missionTypes?.length > 1 ? 'MULTI' : missionTypes[0]
 
   switch (missionStatus) {
-    case MissionStatusEnum.UPCOMING:
-      return missionIconStyle(MissionStatusEnum.UPCOMING, missionTypeLabel, 4)
-    case MissionStatusEnum.PENDING:
-      return missionIconStyle(MissionStatusEnum.PENDING, missionTypeLabel, 3)
-    case MissionStatusEnum.ENDED:
-      return missionIconStyle(MissionStatusEnum.ENDED, missionTypeLabel, 2)
+    case Mission.MissionStatusEnum.UPCOMING:
+      return missionIconStyle(Mission.MissionStatusEnum.UPCOMING, missionTypeLabel, 4)
+    case Mission.MissionStatusEnum.PENDING:
+      return missionIconStyle(Mission.MissionStatusEnum.PENDING, missionTypeLabel, 3)
+    case Mission.MissionStatusEnum.ENDED:
+      return missionIconStyle(Mission.MissionStatusEnum.ENDED, missionTypeLabel, 2)
     default:
-      return missionIconStyle(MissionStatusEnum.ENDED, missionTypeLabel, 2)
+      return missionIconStyle(Mission.MissionStatusEnum.ENDED, missionTypeLabel, 2)
   }
 }
 

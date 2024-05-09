@@ -1,9 +1,9 @@
+import { Mission } from '@features/Mission/mission.type'
 import { convertToFeature } from 'domain/types/map'
 
 import { ControlCard } from './ControlCard'
 import { SurveillanceCard } from './SurveillanceCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { ActionTypeEnum } from '../../../../domain/entities/missions'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
@@ -15,10 +15,10 @@ export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps)
     typeof currentfeatureId === 'string' && currentfeatureId.startsWith(`${Layers.ACTIONS.code}`)
   const displayControlCard =
     typeof currentfeatureId === 'string' &&
-    currentfeatureId.startsWith(`${Layers.ACTIONS.code}:${ActionTypeEnum.CONTROL}`)
+    currentfeatureId.startsWith(`${Layers.ACTIONS.code}:${Mission.ActionTypeEnum.CONTROL}`)
   const displaySurveillanceCard =
     typeof currentfeatureId === 'string' &&
-    currentfeatureId.startsWith(`${Layers.ACTIONS.code}:${ActionTypeEnum.SURVEILLANCE}`)
+    currentfeatureId.startsWith(`${Layers.ACTIONS.code}:${Mission.ActionTypeEnum.SURVEILLANCE}`)
 
   return (
     <OverlayPositionOnCentroid
