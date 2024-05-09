@@ -107,13 +107,13 @@ describe('mission utils', () => {
       'ERROR'
     ])
 
-    it.each([...openCases, ...errorCases])(
-      'Given %p, %p and %p as `startDateTimeUtc`, `endDateTimeUtc`. Should return %p',
-      (startDateTimeUtc, endDateTimeUtc, expectedResult) => {
-        const result = getMissionStatus({ endDateTimeUtc, startDateTimeUtc })
+    const cases = [...openCases, ...errorCases]
+    // Given %p, %p and %p as `startDateTimeUtc`, `endDateTimeUtc`. Should return %p
 
-        expect(result).toEqual(expectedResult)
-      }
-    )
+    return cases.map(([startDateTimeUtc, endDateTimeUtc, expectedResult]) => {
+      const result = getMissionStatus({ endDateTimeUtc, startDateTimeUtc })
+
+      return expect(result).toEqual(expectedResult)
+    })
   })
 })
