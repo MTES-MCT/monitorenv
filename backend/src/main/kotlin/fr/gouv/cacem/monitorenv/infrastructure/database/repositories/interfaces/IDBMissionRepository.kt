@@ -35,11 +35,11 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
             AND
             ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE)
                 OR (
-                (:missionTypeAIR = TRUE AND (  CAST(mission.missionTypes as String) like '%AIR%'))
+                (:missionTypeAIR = TRUE AND (CAST(mission.missionTypes as String) like '%AIR%'))
                 OR
-                (:missionTypeLAND = TRUE AND (  CAST(mission.missionTypes as String) like '%LAND%'))
+                (:missionTypeLAND = TRUE AND (CAST(mission.missionTypes as String) like '%LAND%'))
                 OR
-                (:missionTypeSEA = TRUE AND (  CAST(mission.missionTypes as String) like '%SEA%'))
+                (:missionTypeSEA = TRUE AND (CAST(mission.missionTypes as String) like '%SEA%'))
             ))
             AND
              (
