@@ -45,16 +45,11 @@ export function shouldSaveMission(
   }
 
   const filteredPreviousValues = {
-    ...omit(previousValues, [
-      'attachedReportingIds',
-      'attachedReportings',
-      'detachedReportingIds',
-      'detachedReportings'
-    ]),
+    ...omit(previousValues, ['attachedReportings', 'detachedReportings']),
     envActions: filterActionsFormInternalProperties(previousValues)
   }
   const filteredNextValues = {
-    ...omit(nextValues, ['attachedReportingIds', 'attachedReportings', 'detachedReportingIds', 'detachedReportings']),
+    ...omit(nextValues, ['attachedReportings', 'detachedReportings']),
     envActions: filterActionsFormInternalProperties(nextValues)
   }
 
