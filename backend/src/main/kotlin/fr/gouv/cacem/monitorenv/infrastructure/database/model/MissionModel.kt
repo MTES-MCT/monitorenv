@@ -11,16 +11,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import io.hypersistence.utils.hibernate.type.array.ListArrayType
-import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.*
-import org.hibernate.annotations.Parameter
+import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -34,73 +31,117 @@ import java.time.ZoneOffset.UTC
 @Entity
 @NamedEntityGraph(
     name = "MissionModel.fullLoad",
-    attributeNodes = [
+    attributeNodes =
+    [
         NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
-        NamedAttributeNode("attachedReportings", subgraph = "subgraph.attachedReportings"),
-        NamedAttributeNode("controlResources", subgraph = "subgraph.missionControlResources"),
-        NamedAttributeNode("controlUnits", subgraph = "subgraph.missionControlUnits"),
+        NamedAttributeNode(
+            "attachedReportings",
+            subgraph = "subgraph.attachedReportings",
+        ),
+        NamedAttributeNode(
+            "controlResources",
+            subgraph = "subgraph.missionControlResources",
+        ),
+        NamedAttributeNode(
+            "controlUnits",
+            subgraph = "subgraph.missionControlUnits",
+        ),
     ],
-    subgraphs = [
+    subgraphs =
+    [
         NamedSubgraph(
             name = "subgraph.envActions",
-            attributeNodes = [
+            attributeNodes =
+            [
                 NamedAttributeNode("controlPlanThemes"),
-                NamedAttributeNode("controlPlanSubThemes", subgraph = "subgraph.linkedControlPlanSubThemes"),
-                NamedAttributeNode("controlPlanTags", subgraph = "subgraph.linkedControlPlanTags"),
+                NamedAttributeNode(
+                    "controlPlanSubThemes",
+                    subgraph =
+                    "subgraph.linkedControlPlanSubThemes",
+                ),
+                NamedAttributeNode(
+                    "controlPlanTags",
+                    subgraph = "subgraph.linkedControlPlanTags",
+                ),
                 NamedAttributeNode("attachedReporting"),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.attachedReportings",
-            attributeNodes = [
-                NamedAttributeNode("controlPlanSubThemes", subgraph = "subgraph.linkedControlPlanSubThemes"),
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanSubThemes",
+                    subgraph =
+                    "subgraph.linkedControlPlanSubThemes",
+                ),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.linkedControlPlanSubThemes",
-            attributeNodes = [
-                NamedAttributeNode("controlPlanSubTheme", subgraph = "subgraph.controlPlanSubThemes"),
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanSubTheme",
+                    subgraph = "subgraph.controlPlanSubThemes",
+                ),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.controlPlanSubThemes",
-            attributeNodes = [
+            attributeNodes =
+            [
                 NamedAttributeNode("controlPlanTheme"),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.linkedControlPlanTags",
-            attributeNodes = [
-                NamedAttributeNode("controlPlanTag", subgraph = "subgraph.controlPlanTags"),
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanTag",
+                    subgraph = "subgraph.controlPlanTags",
+                ),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.controlPlanTags",
-            attributeNodes = [
+            attributeNodes =
+            [
                 NamedAttributeNode("controlPlanTheme"),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.missionControlResources",
-            attributeNodes = [
-                NamedAttributeNode("resource", subgraph = "subgraph.controlResource"),
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "resource",
+                    subgraph = "subgraph.controlResource",
+                ),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.missionControlUnits",
-            attributeNodes = [
-                NamedAttributeNode("unit", subgraph = "subgraph.controlUnit"),
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "unit",
+                    subgraph = "subgraph.controlUnit",
+                ),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.controlUnit",
-            attributeNodes = [
+            attributeNodes =
+            [
                 NamedAttributeNode("administration"),
             ],
         ),
         NamedSubgraph(
             name = "subgraph.controlResource",
-            attributeNodes = [
+            attributeNodes =
+            [
                 NamedAttributeNode("station"),
             ],
         ),
@@ -113,13 +154,11 @@ class MissionModel(
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
-
     @OneToMany(mappedBy = "mission", fetch = FetchType.EAGER)
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
     val attachedReportings: MutableSet<ReportingModel>? = LinkedHashSet(),
-
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -130,7 +169,6 @@ class MissionModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
     val controlResources: MutableSet<MissionControlResourceModel>? = LinkedHashSet(),
-
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -141,14 +179,10 @@ class MissionModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
     val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
-
-    @Column(name = "completed_by")
-    val completedBy: String? = null,
-
+    @Column(name = "completed_by") val completedBy: String? = null,
     @Column(name = "created_at_utc", updatable = false)
     @CreationTimestamp
     val createdAtUtc: Instant? = null,
-
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -159,66 +193,37 @@ class MissionModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
     val envActions: MutableSet<EnvActionModel>? = LinkedHashSet(),
-
-    @Column(name = "end_datetime_utc")
-    val endDateTimeUtc: Instant? = null,
-
-    @Column(name = "facade")
-    val facade: String? = null,
-
+    @Column(name = "end_datetime_utc") val endDateTimeUtc: Instant? = null,
+    @Column(name = "facade") val facade: String? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
-
-    @Column(name = "has_mission_order", nullable = false)
-    val hasMissionOrder: Boolean,
-
-    @Column(name = "deleted", nullable = false)
-    val isDeleted: Boolean,
-
+    @Column(name = "has_mission_order", nullable = false) val hasMissionOrder: Boolean,
+    @Column(name = "deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "is_geometry_computed_from_controls", nullable = false)
     val isGeometryComputedFromControls: Boolean,
-
-    @Column(name = "is_under_jdp", nullable = false)
-    val isUnderJdp: Boolean,
-
+    @Column(name = "is_under_jdp", nullable = false) val isUnderJdp: Boolean,
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType::class)
+    @JdbcType(PostgreSQLEnumJdbcType::class)
     val missionSource: MissionSourceEnum,
-
-    @Type(
-        ListArrayType::class,
-        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
-    )
     @Column(name = "mission_types", columnDefinition = "text[]")
+    @Enumerated(EnumType.STRING)
     val missionTypes: List<MissionTypeEnum>,
-
-    @Column(name = "observations_cacem")
-    val observationsCacem: String? = null,
-
-    @Column(name = "observations_cnsp")
-    val observationsCnsp: String? = null,
-
-    @Column(name = "open_by")
-    val openBy: String? = null,
-
-    @Column(name = "start_datetime_utc")
-    val startDateTimeUtc: Instant,
-
-    @Column(name = "updated_at_utc")
-    @UpdateTimestamp
-    val updatedAtUtc: Instant? = null,
-
+    @Column(name = "observations_cacem") val observationsCacem: String? = null,
+    @Column(name = "observations_cnsp") val observationsCnsp: String? = null,
+    @Column(name = "open_by") val openBy: String? = null,
+    @Column(name = "start_datetime_utc") val startDateTimeUtc: Instant,
+    @Column(name = "updated_at_utc") @UpdateTimestamp val updatedAtUtc: Instant? = null,
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val mappedControlUnits =
             controlUnits?.map { missionControlUnitModel ->
                 val mappedControlUnitResources =
-                    controlResources
-                        ?.map { it.toLegacyControlUnitResource() }
-                        ?.filter { it.controlUnitId == missionControlUnitModel.unit.id }
+                    controlResources?.map { it.toLegacyControlUnitResource() }?.filter {
+                        it.controlUnitId == missionControlUnitModel.unit.id
+                    }
 
                 missionControlUnitModel
                     .unit
@@ -350,8 +355,10 @@ class MissionModel(
                     EnvActionModel.fromEnvActionEntity(
                         action = it,
                         mission = missionModel,
-                        controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap,
-                        controlPlanSubThemesReferenceModelMap = controlPlanSubThemesReferenceModelMap,
+                        controlPlanThemesReferenceModelMap =
+                        controlPlanThemesReferenceModelMap,
+                        controlPlanSubThemesReferenceModelMap =
+                        controlPlanSubThemesReferenceModelMap,
                         controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
                         mapper = mapper,
                     ),

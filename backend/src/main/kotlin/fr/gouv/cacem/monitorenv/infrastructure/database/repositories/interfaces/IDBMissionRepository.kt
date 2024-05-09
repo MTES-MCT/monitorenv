@@ -35,20 +35,26 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
             AND
             ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE)
                 OR (
-                (:missionTypeAIR = TRUE AND (  CAST(mission.missionTypes as String) like '%AIR%'))
+                (:missionTypeAIR = TRUE AND (CAST(mission.missionTypes as String) like '%AIR%'))
                 OR
-                (:missionTypeLAND = TRUE AND (  CAST(mission.missionTypes as String) like '%LAND%'))
+                (:missionTypeLAND = TRUE AND (CAST(mission.missionTypes as String) like '%LAND%'))
                 OR
-                (:missionTypeSEA = TRUE AND (  CAST(mission.missionTypes as String) like '%SEA%'))
+                (:missionTypeSEA = TRUE AND (CAST(mission.missionTypes as String) like '%SEA%'))
             ))
             AND
              (
-                (mission.startDateTimeUtc >= :startedAfter
-                    AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.startDateTimeUtc <= CAST(:startedBefore AS timestamp))
+                (mission.startDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                    AND (
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.startDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
+                    )
                 )
                 OR (
-                    mission.endDateTimeUtc >= :startedAfter
-                    AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.endDateTimeUtc <= CAST(:startedBefore AS timestamp))
+                    mission.endDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                    AND (
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.endDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
+                    )
                 )
             )
             AND (:seaFronts IS NULL OR mission.facade IN :seaFronts)
@@ -56,19 +62,20 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                 :missionStatuses IS NULL
                 OR (
                     'UPCOMING' IN :missionStatuses AND (
-                    mission.startDateTimeUtc >= now()
+                    mission.startDateTimeUtc >= CAST(now() AS timestamp)
                     ))
                 OR (
                     'PENDING' IN :missionStatuses AND (
-                    (mission.endDateTimeUtc IS NULL OR mission.endDateTimeUtc >= now())
-                    AND (mission.startDateTimeUtc <= now())
+                    (mission.endDateTimeUtc IS NULL OR mission.endDateTimeUtc >= CAST(now() AS timestamp))
+                    AND (mission.startDateTimeUtc <= CAST(now() AS timestamp))
                     )
                 )
                 OR (
                     'ENDED' IN :missionStatuses AND (
-                    mission.endDateTimeUtc < now()
+                    mission.endDateTimeUtc < CAST(now() AS timestamp)
                     )
                 )
+
             )
             AND (:missionSources IS NULL
                 OR mission.missionSource IN (:missionSources)
