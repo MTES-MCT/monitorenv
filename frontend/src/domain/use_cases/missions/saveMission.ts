@@ -1,10 +1,10 @@
+import { missionFormsActions } from '@features/Mission/MissionForm/slice'
+import { missionActions } from '@features/Mission/slice'
 import omit from 'lodash/omit'
 import { generatePath } from 'react-router'
 
 import { missionsAPI } from '../../../api/missionsAPI'
 import { ApiErrorCode } from '../../../api/types'
-import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
-import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'

@@ -1,3 +1,7 @@
+import { attachReportingToMissionsSliceReducer } from '@features/Mission/MissionForm/AttachReporting/slice'
+import { missionFormsSliceReducer } from '@features/Mission/MissionForm/slice'
+import { missionSliceReducer } from '@features/Mission/slice'
+
 import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
 import { ampSlicePersistedReducer } from '../domain/shared_slices/Amp'
@@ -20,9 +24,6 @@ import { controlUnitTablePersistedReducer } from '../features/ControlUnit/compon
 import { layersMetadataSliceReducer } from '../features/layersSelector/metadataPanel/slice'
 import { layerSearchSliceReducer } from '../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../features/MainWindow/slice'
-import { attachReportingToMissionsSliceReducer } from '../features/missions/MissionForm/AttachReporting/slice'
-import { missionFormsSliceReducer } from '../features/missions/MissionForm/slice'
-import { missionSliceReducer } from '../features/missions/slice'
 import { attachMissionToReportingSliceReducer } from '../features/Reportings/slice'
 import { sideWindowReducer } from '../features/SideWindow/slice'
 import { stationTablePersistedReducer } from '../features/Station/components/StationTable/slice'

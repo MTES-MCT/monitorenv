@@ -1,4 +1,4 @@
-import { attachReportingToMissionSliceActions } from '@features/missions/MissionForm/AttachReporting/slice'
+import { attachReportingToMissionSliceActions } from '@features/Mission/MissionForm/AttachReporting/slice'
 import { setGeometry } from 'domain/shared_slices/Draw'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'

@@ -1,4 +1,4 @@
-import { getMissionCompletionStatus } from '@features/missions/utils'
+import { getMissionCompletionStatus } from '@features/Mission/utils'
 
 import { FrontCompletionStatus, type Mission } from '../../../entities/missions'
 

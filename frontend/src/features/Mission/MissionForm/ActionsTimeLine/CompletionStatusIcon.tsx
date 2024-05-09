@@ -1,4 +1,4 @@
-import { getIsMissionEnded } from '@features/missions/utils'
+import { getIsMissionEnded } from '@features/Mission/utils'
 import { Icon, THEME } from '@mtes-mct/monitor-ui'
 import { ActionTypeEnum, type Mission, type NewMission } from 'domain/entities/missions'
 import { useFormikContext } from 'formik'

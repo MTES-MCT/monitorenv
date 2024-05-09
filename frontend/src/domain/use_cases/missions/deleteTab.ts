@@ -1,8 +1,8 @@
+import { attachReportingToMissionSliceActions } from '@features/Mission/MissionForm/AttachReporting/slice'
+import { missionFormsActions, type MissionInStateType } from '@features/Mission/MissionForm/slice'
+import { missionActions } from '@features/Mission/slice'
 import { generatePath } from 'react-router'
 
-import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
-import { missionFormsActions, type MissionInStateType } from '../../../features/missions/MissionForm/slice'
-import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'

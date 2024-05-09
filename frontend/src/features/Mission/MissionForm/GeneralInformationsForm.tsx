@@ -1,4 +1,4 @@
-import { CompletionStatusTag } from '@features/missions/components/CompletionStatusTag'
+import { CompletionStatusTag } from '@features/Mission/components/CompletionStatusTag'
 import {
   customDayjs,
   DatePicker,

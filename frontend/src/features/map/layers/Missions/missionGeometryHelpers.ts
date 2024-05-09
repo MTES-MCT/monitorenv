@@ -1,3 +1,4 @@
+import { getTotalOfControls, getTotalOfSurveillances } from '@features/Mission/utils'
 import { type Coordinates } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
@@ -17,7 +18,6 @@ import {
   type NewEnvActionControl,
   CIRCULAR_ZONE_RADIUS
 } from '../../../../domain/entities/missions'
-import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
 
 export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layername: string) => {
   const geoJSON = new GeoJSON()

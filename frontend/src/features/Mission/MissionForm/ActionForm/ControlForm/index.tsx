@@ -1,4 +1,4 @@
-import { actionFactory } from '@features/missions/Missions.helpers'
+import { actionFactory } from '@features/Mission/Missions.helpers'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   customDayjs,

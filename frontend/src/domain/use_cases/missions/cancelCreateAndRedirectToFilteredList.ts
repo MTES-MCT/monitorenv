@@ -1,8 +1,8 @@
+import { missionFormsActions } from '@features/Mission/MissionForm/slice'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { generatePath } from 'react-router'
 
 import { deleteTab } from './deleteTab'
-import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
 import { DateRangeEnum } from '../../entities/dateRange'
 import { MissionStatusEnum } from '../../entities/missions'
 import { sideWindowPaths } from '../../entities/sideWindow'

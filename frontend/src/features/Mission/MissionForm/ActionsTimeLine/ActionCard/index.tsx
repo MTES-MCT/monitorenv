@@ -1,4 +1,4 @@
-import { FishMissionAction } from '@features/missions/fishActions.types'
+import { FishMissionAction } from '@features/Mission/fishActions.types'
 
 import { EnvActions } from './EnvActions'
 import { FishActions } from './FishActions'

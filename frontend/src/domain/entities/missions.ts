@@ -4,7 +4,7 @@ import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
 import type { DetachedReportingForTimeline, ReportingDetailed, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
-import type { FishMissionAction } from '@features/missions/fishActions.types'
+import type { FishMissionAction } from '@features/Mission/fishActions.types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const CIRCULAR_ZONE_RADIUS = 1500

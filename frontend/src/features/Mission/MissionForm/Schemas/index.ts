@@ -1,4 +1,4 @@
-import { getIsMissionEnded } from '@features/missions/utils'
+import { getIsMissionEnded } from '@features/Mission/utils'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import * as Yup from 'yup'
 

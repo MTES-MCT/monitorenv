@@ -1,16 +1,16 @@
-import { getVesselName } from '@features/missions/utils'
+import { getVesselName } from '@features/Mission/utils'
 import { Icon, THEME } from '@mtes-mct/monitor-ui'
 
 import { Accented, SummaryContent, Title } from '../style'
 
-export function LandControlCard({ action }) {
+export function AirControlCard({ action }) {
   const vesselName = getVesselName(action.vesselName)
 
   return (
     <>
-      <Icon.Anchor color={THEME.color.charcoal} size={20} />
+      <Icon.Plane color={THEME.color.charcoal} size={20} />
       <SummaryContent>
-        <Title>Contrôle à la débarque</Title>
+        <Title>Contrôle aérien</Title>
         <br />
         <Accented>{vesselName}</Accented>
       </SummaryContent>

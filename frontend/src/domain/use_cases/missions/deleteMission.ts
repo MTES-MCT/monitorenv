@@ -1,5 +1,6 @@
+import { missionFormsActions } from '@features/Mission/MissionForm/slice'
+
 import { missionsAPI } from '../../../api/missionsAPI'
-import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'

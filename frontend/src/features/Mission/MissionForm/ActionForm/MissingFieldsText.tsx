@@ -1,4 +1,4 @@
-import { getIsMissionEnded } from '@features/missions/utils'
+import { getIsMissionEnded } from '@features/Mission/utils'
 import { Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 

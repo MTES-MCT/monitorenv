@@ -1,4 +1,4 @@
-import { getMissionCompletionFrontStatus, hasAtLeastOnUncompletedEnvAction } from '@features/missions/utils'
+import { getMissionCompletionFrontStatus, hasAtLeastOnUncompletedEnvAction } from '@features/Mission/utils'
 import {
   ActionTypeEnum,
   CompletionStatus,

@@ -1,4 +1,4 @@
-import { actionFactory } from '@features/missions/Missions.helpers'
+import { actionFactory } from '@features/Mission/Missions.helpers'
 import { Accent, Button, FormikTextarea, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useCallback } from 'react'

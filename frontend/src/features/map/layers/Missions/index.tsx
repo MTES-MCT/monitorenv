@@ -1,3 +1,4 @@
+import { missionActions } from '@features/Mission/slice'
 import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
@@ -11,7 +12,6 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
-import { missionActions } from '../../../missions/slice'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'

@@ -1,11 +1,11 @@
 import { missionsAPI } from '@api/missionsAPI'
+import { attachReportingToMissionSliceActions } from '@features/Mission/MissionForm/AttachReporting/slice'
+import { missionFormsActions } from '@features/Mission/MissionForm/slice'
+import { missionActions } from '@features/Mission/slice'
 import { ErrorType } from 'domain/entities/errors'
 import { setToast } from 'domain/shared_slices/Global'
 import { generatePath } from 'react-router'
 
-import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
-import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
-import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 

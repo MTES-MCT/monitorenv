@@ -16,7 +16,7 @@ import {
   TagsContainer
 } from '../style'
 
-import type { FishMissionAction } from '@features/missions/fishActions.types'
+import type { FishMissionAction } from '@features/Mission/fishActions.types'
 import type { DetachedReportingForTimeline, ReportingForTimeline } from 'domain/entities/reporting'
 import type { MouseEventHandler } from 'react'
 

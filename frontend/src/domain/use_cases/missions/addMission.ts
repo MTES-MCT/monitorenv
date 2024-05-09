@@ -1,10 +1,10 @@
+import { attachReportingToMissionSliceActions } from '@features/Mission/MissionForm/AttachReporting/slice'
+import { missionFormsActions } from '@features/Mission/MissionForm/slice'
+import { missionFactory } from '@features/Mission/Missions.helpers'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { chain } from 'lodash'
 import { generatePath } from 'react-router'
 
-import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
-import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
-import { missionFactory } from '../../../features/missions/Missions.helpers'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { sideWindowPaths } from '../../entities/sideWindow'

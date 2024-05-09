@@ -1,3 +1,4 @@
+import { missionFormsActions } from '@features/Mission/MissionForm/slice'
 import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo } from 'react'
 
@@ -8,7 +9,6 @@ import { reportingActions } from '../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { mainWindowActions } from '../MainWindow/slice'
-import { missionFormsActions } from '../missions/MissionForm/slice'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()

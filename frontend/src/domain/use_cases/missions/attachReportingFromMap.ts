@@ -1,5 +1,6 @@
+import { attachReportingToMissionSliceActions } from '@features/Mission/MissionForm/AttachReporting/slice'
+
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { setToast } from '../../shared_slices/Global'
 
 export const attachReportingFromMap = (reportingId: number) => async (dispatch, getState) => {
