@@ -221,8 +221,9 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
       return
     }
     if (
-      values?.updatedAtUtc &&
-      !customDayjs(selectedReporting?.updatedAtUtc).isSame(customDayjs(values?.updatedAtUtc), 'minutes')
+      (values?.updatedAtUtc &&
+        !customDayjs(selectedReporting?.updatedAtUtc).isSame(customDayjs(values?.updatedAtUtc), 'minutes')) ||
+      (!values.updatedAtUtc && selectedReporting?.updatedAtUtc)
     ) {
       setFieldValue('updatedAtUtc', selectedReporting?.updatedAtUtc)
     }
@@ -271,13 +272,12 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         reporting={selectedReporting}
       />
       <SaveBanner>
-        {!values?.updatedAtUtc && <Italic>Signalement non créé</Italic>}
-        {values?.updatedAtUtc && (
-          <>
-            <StyledItalic>Dernière modification le {formattedUpdatedDate}</StyledItalic>
-            <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
-          </>
+        {!values?.updatedAtUtc ? (
+          <Italic>Signalement non créé</Italic>
+        ) : (
+          <StyledItalic>Dernière modification le {formattedUpdatedDate}</StyledItalic>
         )}
+        <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
       </SaveBanner>
       <StyledForm $totalReducedReportings={reducedReportingsOnContext}>
         <Source />
