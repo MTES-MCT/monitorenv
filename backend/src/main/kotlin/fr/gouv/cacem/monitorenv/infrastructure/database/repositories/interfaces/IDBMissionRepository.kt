@@ -43,12 +43,18 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
             ))
             AND
              (
-                (mission.startDateTimeUtc >= :startedAfter
-                    AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.startDateTimeUtc <= CAST(:startedBefore AS timestamp))
+                (mission.startDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                    AND (
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.startDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
+                    )
                 )
                 OR (
-                    mission.endDateTimeUtc >= :startedAfter
-                    AND (CAST(:startedBefore AS timestamp) IS NULL OR mission.endDateTimeUtc <= CAST(:startedBefore AS timestamp))
+                    mission.endDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                    AND (
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.endDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
+                    )
                 )
             )
             AND (:seaFronts IS NULL OR mission.facade IN :seaFronts)
@@ -69,6 +75,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                     mission.endDateTimeUtc < CAST(now() AS timestamp)
                     )
                 )
+
             )
             AND (:missionSources IS NULL
                 OR mission.missionSource IN (:missionSources)
