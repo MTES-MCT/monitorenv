@@ -328,7 +328,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
-    cy.getDataCy('action-missing-fields-text').contains('4 champs nécessaires aux statistiques à compléter')
+    cy.getDataCy('action-missing-fields-text').contains('3 champs nécessaires aux statistiques à compléter')
 
     cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click({ force: true }) // id 105
@@ -348,7 +348,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
-    cy.getDataCy('action-missing-fields-text').contains('8 champs nécessaires aux statistiques à compléter')
+    cy.getDataCy('action-missing-fields-text').contains('7 champs nécessaires aux statistiques à compléter')
 
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
@@ -400,6 +400,11 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.wait(250)
       cy.get('*[data-cy="action-card"]').eq(1).click()
       cy.getDataCy('action-missing-fields-text').contains('2 champs nécessaires aux statistiques à compléter')
+
+      // delete created mission
+      cy.clickButton('Supprimer la mission')
+      cy.wait(400)
+      cy.get('*[name="delete-mission-modal-confirm"]').click()
     })
   })
 
