@@ -61,7 +61,7 @@ export const saveMission =
           // wait for the mission to be updated in the form before displaying the banner
           setTimeout(async () => {
             await dispatch(missionFormsActions.setShowCreatedBanner({ id: missionUpdated.id, showBanner: true }))
-          }, 350)
+          }, 250)
         } else {
           // for a mission already created we want to update the `updatedAt` value with the new one
           const mission = selectedMissions[values.id]
