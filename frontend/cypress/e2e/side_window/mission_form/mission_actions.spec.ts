@@ -60,18 +60,23 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     // When
     cy.fill('Thématique de contrôle', 'Espèce protégée') // id 103
-    cy.wait(250)
+    cy.wait(300)
+
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]')
       .contains("Destruction, capture, arrachage d'espèces protégées")
       .click({ force: true }) // id 117
+    cy.wait(300)
     cy.get('*[data-cy="envaction-theme-element"]').contains('Détention des espèces protégées').click({ force: true }) // id 120
 
-    cy.wait(250)
+    cy.wait(300)
     cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
     cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true }) // id 15
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true }) // id 11
+    cy.wait(700)
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Flore').click({ force: true }) // id 14
+    cy.wait(700)
+
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
 
     /*  
@@ -81,10 +86,9 @@ context('Side Window > Mission Form > Mission actions', () => {
       ["Destruction, capture, arrachage d'espèces protégées", 'Détention des espèces protégées'], // id 117 and 120
       { delay: 250 }
     ) 
-    cy.fill('Précisions sur la thématique', ['Habitat', 'Oiseaux'], { delay: 250 }) // id 15 and 11
+    cy.fill('Précisions sur la thématique', ['Habitat', 'Flore'], { delay: 250 }) // id 15 and 14
     */
     cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
-    cy.wait(500)
 
     // Then
     cy.waitForLastRequest(
@@ -93,13 +97,13 @@ context('Side Window > Mission Form > Mission actions', () => {
         body: {
           envActions: [
             {
-              controlPlans: [{ subThemeIds: [117, 120], tagIds: [15, 11], themeId: 103 }],
+              controlPlans: [{ subThemeIds: [117, 120], tagIds: [14, 15], themeId: 103 }],
               id: 'b8007c8a-5135-4bc3-816f-c69c7b75d807'
             }
           ]
         }
       },
-      10,
+      7,
       0,
       response => {
         expect(response && response.statusCode).equal(200)
@@ -114,7 +118,7 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(controlPlans[0].subThemeIds[1]).equal(120)
         expect(controlPlans[0].tagIds.length).equal(2)
         expect(controlPlans[0].tagIds[0]).equal(15)
-        expect(controlPlans[0].tagIds[1]).equal(11)
+        expect(controlPlans[0].tagIds[1]).equal(14)
       }
     )
   })
@@ -421,7 +425,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.fill('Respect du code de la navigation sur le plan d’eau', false)
     cy.fill('Gens de mer', false)
     cy.fill('Equipement de sécurité et respect des normes', false)
-    cy.wait(200)
+    cy.wait(300)
 
     cy.waitForLastRequest(
       '@updateMission',

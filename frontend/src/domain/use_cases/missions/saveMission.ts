@@ -22,7 +22,8 @@ export const saveMission =
     } = getState()
     const selectedMissions = getState().missionForms.missions
 
-    const sortedActions = values.envActions.sort((a, b) => a.id - b.id)
+    const actions = [...values.envActions]
+    const sortedActions = actions.sort((a, b) => a.id - b.id)
     const valuesToSave = omit({ ...values, envActions: sortedActions }, [
       'attachedReportings',
       'detachedReportings',

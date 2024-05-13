@@ -22,10 +22,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
+    cy.fill('Unité 1', 'Cross Gris Nez', { delay: 100 })
     cy.wait(250)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.get('*[data-cy="add-control-unit"]').contains('Cross Gris Nez')
 
     cy.wait(500)
 
@@ -179,11 +179,11 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
+    cy.fill('Unité 1', 'DF 61 Port-de-Bouc', { delay: 100 })
     cy.clickOutside()
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.get('*[data-cy="add-control-administration"]').contains('Douane')
+    cy.get('*[data-cy="add-control-unit"]').contains('DF 61 Port-de-Bouc')
     cy.wait(200)
 
     cy.intercept('PUT', `/bff/v1/missions/*`).as('updateMission')
@@ -239,10 +239,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
+    cy.fill('Unité 1', 'Cultures marines – DDTM 40', { delay: 100 })
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.get('*[data-cy="add-control-administration"]').contains('DDTM')
+    cy.get('*[data-cy="add-control-unit"]').contains('Cultures marines – DDTM 40')
 
     cy.wait(250)
 

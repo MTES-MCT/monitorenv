@@ -213,7 +213,7 @@ export function MissionForm({
     }
 
     dispatch(saveMission(nextValues, false, false))
-  }, 300)
+  }, 350)
 
   useEffect(() => {
     if (isNewMission && !engagedControlUnit && previousEngagedControlUnit !== engagedControlUnit) {
