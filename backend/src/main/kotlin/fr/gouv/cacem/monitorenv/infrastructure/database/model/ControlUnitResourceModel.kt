@@ -5,13 +5,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.JdbcType
+import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
-import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import java.time.Instant
 
 @Entity
@@ -47,7 +47,7 @@ data class ControlUnitResourceModel(
 
     @Column(name = "type", nullable = false, columnDefinition = "control_unit_resource_type")
     @Enumerated(EnumType.STRING)
-    @JdbcType(PostgreSQLEnumJdbcType::class)
+    @Type(PostgreSQLEnumType::class)
     val type: ControlUnitResourceType,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
