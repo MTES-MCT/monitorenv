@@ -143,8 +143,7 @@ export const getCompletionEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf
       completedBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
-        .nullable()
-        .required(HIDDEN_ERROR),
+        .nullable(),
       controlPlans: Yup.array().ensure().of(ClosedControlPlansSchema).ensure().required().min(1),
       geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
