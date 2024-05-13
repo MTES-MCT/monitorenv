@@ -6,6 +6,7 @@ import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 
 import type { Reporting, ReportingDetailed } from 'domain/entities/reporting'
 import type { AtLeast } from 'types'
+
 /* Is auto-save enabled.
  *
  * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
@@ -22,7 +23,7 @@ export const isReportingAutoUpdateEnabled = () =>
     : import.meta.env.FRONTEND_REPORTING_FORM_AUTO_UPDATE === 'true'
 
 /**
- * should a Formik `onChange` event trigger `saveMission`.
+ * should a Formik `onChange` event trigger `saveReporting`.
  */
 export function shouldSaveReporting(
   previousValues: AtLeast<ReportingDetailed, 'id'> | undefined,

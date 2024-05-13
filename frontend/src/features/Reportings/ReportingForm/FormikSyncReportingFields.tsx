@@ -10,13 +10,13 @@ import { attachMissionToReportingSliceActions } from '../slice'
 
 import type { Reporting } from 'domain/entities/reporting'
 
-type FormikSyncMissionFormProps = {
+type FormikSyncReportingFormProps = {
   reportingId: string | number | undefined
 }
 /**
  * Sync
  */
-export function FormikSyncReportingFields({ reportingId }: FormikSyncMissionFormProps) {
+export function FormikSyncReportingFields({ reportingId }: FormikSyncReportingFormProps) {
   const dispatch = useAppDispatch()
   const { setFieldValue, values } = useFormikContext<Reporting>()
   const { getReportingEventById, setReportingEventInContext } = useReportingEventContext()

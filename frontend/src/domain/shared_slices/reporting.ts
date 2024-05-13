@@ -138,7 +138,7 @@ const reportingSlice = createSlice({
     updateUnactiveReporting(state, action: PayloadAction<AtLeast<Partial<Reporting>, 'id'>>) {
       const { id } = action.payload
 
-      // If the mission is active, hence the form is open, the form will be updated from Formik (see FormikSyncMissionFields.ts)
+      // If the reporting is active, hence the form is open, the form will be updated from Formik (see FormikSyncMissionFields.ts)
       if (!id || id === state.activeReportingId) {
         return
       }
@@ -148,7 +148,6 @@ const reportingSlice = createSlice({
         state.reportings[id] = {
           ...reporting,
           reporting: {
-            // We keep all data not received from the Reporting event (see REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)
             ...reporting.reporting,
             ...action.payload
           } as Reporting

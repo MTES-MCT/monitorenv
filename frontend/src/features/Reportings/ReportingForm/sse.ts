@@ -1,4 +1,4 @@
-import { isMissionAutoUpdateEnabled } from '@features/missions/MissionForm/utils'
+import { isReportingAutoUpdateEnabled } from './utils'
 
 import type { Reporting } from '../../../domain/entities/reporting'
 
@@ -8,7 +8,7 @@ export const reportingEventListener = (callback: (reporting: Reporting) => void)
   // eslint-disable-next-line no-console
   console.log(`SSE: received a reporting update.`)
 
-  if (!isMissionAutoUpdateEnabled()) {
+  if (!isReportingAutoUpdateEnabled()) {
     // eslint-disable-next-line no-console
     console.log(
       'Skipping automatic update of reporting form. ' +
