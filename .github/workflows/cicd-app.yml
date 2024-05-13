@@ -212,6 +212,9 @@ jobs:
       - name: Run docker images
         run: make run-infra-for-frontend-tests
 
+      - name: Backend logs
+        run: make logs-backend > backend.log 2>&1 &
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -239,6 +242,10 @@ jobs:
           record: true
           wait-on: "http://localhost:8880"
           working-directory: ./frontend
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ./backend.log
 
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
