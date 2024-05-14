@@ -128,16 +128,23 @@ export function DrawModal() {
   const handleCancel = () => {
     handleReset()
 
-    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+    // we add timeout to avoid the modal to close before the reset is done
+    // and the geometry has been set in the form concerned
+    setTimeout(() => {
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+    }, 300)
   }
 
   const handleReset = () => {
     if (!initialGeometry) {
-      return dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+      dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+
+      return
     }
 
-    return dispatch(setGeometry(initialGeometry))
+    dispatch(setGeometry(initialGeometry))
   }
+
   const handleValidate = () => {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
