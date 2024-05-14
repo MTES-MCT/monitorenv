@@ -1,17 +1,17 @@
-import { type FormikErrors, useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
+import { useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { NewMissionSchema } from '../Schemas'
 import { missionFormsActions } from '../slice'
 
 import type { Mission } from '../../../../domain/entities/missions'
 
 export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const dispatch = useAppDispatch()
-  const { dirty, validateForm, values } = useFormikContext<Mission>()
+  const { dirty, values } = useFormikContext<Mission>()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const activeMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
@@ -25,8 +25,7 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
       return
     }
 
-    const errors = await validateForm()
-    const isFormDirty = isMissionFormDirty(errors)
+    const isFormDirty = isMissionFormDirty()
 
     dispatch(missionFormsActions.setMission({ engagedControlUnit, isFormDirty, missionForm: newValues }))
   }, 350)
@@ -36,7 +35,7 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
    * - In auto-save mode, an error is found (hence the form is not saved)
    * - In manual save mode, values have been modified (using the `dirty` props of Formik)
    */
-  function isMissionFormDirty(errors: FormikErrors<Mission>) {
+  function isMissionFormDirty() {
     if (!isAutoSaveEnabled) {
       if (dirty) {
         return dirty
@@ -50,7 +49,13 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
       return activeMission?.isFormDirty ?? false
     }
 
-    return !isEmpty(errors)
+    try {
+      NewMissionSchema.validateSync(values, { abortEarly: false })
+
+      return false
+    } catch (e: any) {
+      return true
+    }
   }
 
   useEffect(() => {

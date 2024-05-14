@@ -312,7 +312,6 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               data-cy="surveillance-completed-by"
               isErrorMessageHidden
               isLight
-              isRequired
               label="Complété par"
               name={`envActions[${envActionIndex}].completedBy`}
             />

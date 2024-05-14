@@ -375,7 +375,6 @@ export function ControlForm({
               data-cy="control-completed-by"
               isErrorMessageHidden
               isLight
-              isRequired
               label="Complété par"
               name={`envActions[${envActionIndex}].completedBy`}
             />
