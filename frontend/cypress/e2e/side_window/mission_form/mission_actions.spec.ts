@@ -338,6 +338,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       .contains("Découverte d'une épave maritime")
       .click({ force: true }) // id 128
     cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
+    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
     cy.getDataCy('surveillance-open-by').type('ABC')
     cy.getDataCy('surveillance-completed-by').type('ABC')
 
