@@ -29,6 +29,7 @@ import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
+import { NewMissionSchema } from './Schemas'
 import { missionFormsActions } from './slice'
 import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
@@ -62,16 +63,9 @@ type MissionFormProps = {
   id: number | string
   isNewMission: boolean
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
-  setShouldValidateOnChange: (boolean) => void
 }
 
-export function MissionForm({
-  engagedControlUnit,
-  id,
-  isNewMission,
-  selectedMission,
-  setShouldValidateOnChange
-}: MissionFormProps) {
+export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMission }: MissionFormProps) {
   const dispatch = useAppDispatch()
 
   const sideWindow = useAppSelector(state => state.sideWindow)
@@ -169,8 +163,6 @@ export function MissionForm({
   }
 
   const submitMission = () => {
-    setShouldValidateOnChange(false)
-
     validateForm().then(errors => {
       if (isEmpty(errors)) {
         dispatch(saveMission(values, false, true))
@@ -178,7 +170,6 @@ export function MissionForm({
         return
       }
       dispatch(sideWindowActions.setShowConfirmCancelModal(true))
-      setShouldValidateOnChange(true)
     })
   }
 
@@ -189,6 +180,7 @@ export function MissionForm({
 
       return
     }
+
     if (isFormDirty) {
       dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     } else {
@@ -197,14 +189,7 @@ export function MissionForm({
   }
 
   const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave) => {
-    const errors = await validateForm()
-    const isValid = isEmpty(errors)
-
-    if (!isAutoSaveEnabled || !isValid) {
-      return
-    }
-
-    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
+    if (!isAutoSaveEnabled) {
       return
     }
 
@@ -212,7 +197,15 @@ export function MissionForm({
       return
     }
 
-    dispatch(saveMission(nextValues, false, false))
+    try {
+      NewMissionSchema.validateSync(values, { abortEarly: false })
+      if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
+        return
+      }
+
+      dispatch(saveMission(nextValues, false, false))
+      // eslint-disable-next-line no-empty
+    } catch (e: any) {}
   }, 300)
 
   useEffect(() => {

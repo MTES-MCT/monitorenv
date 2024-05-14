@@ -76,7 +76,7 @@ export const CompletionEnvActionSchema = Yup.lazy((value, context) => {
   return Yup.object().required()
 })
 
-const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
+export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
     completedBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le trigramme')

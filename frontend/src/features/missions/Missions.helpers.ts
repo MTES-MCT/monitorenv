@@ -107,7 +107,7 @@ export const missionFactory = (
   let formattedMission = {
     attachedReportingIds: attachedReporting ? [attachedReporting.id as number] : [],
     attachedReportings: attachedReporting ? [attachedReporting] : [],
-    completedBy: '',
+    completedBy: undefined,
     controlUnits: [controlUnitFactory()],
     detachedReportingIds: [],
     endDateTimeUtc: '',
@@ -119,7 +119,7 @@ export const missionFactory = (
     missionTypes: [],
     observationsCacem: '',
     observationsCnsp: '',
-    openBy: '',
+    openBy: undefined,
     startDateTimeUtc: startDate.toISOString(),
     ...mission
   }

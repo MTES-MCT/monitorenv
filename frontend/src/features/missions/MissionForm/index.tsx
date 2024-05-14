@@ -1,7 +1,7 @@
 import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
@@ -20,8 +20,6 @@ export function MissionFormWrapper() {
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
-
-  const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
 
@@ -67,8 +65,7 @@ export function MissionFormWrapper() {
         initialValues={missionValues}
         onSubmit={noop}
         validateOnBlur={false}
-        validateOnChange={shouldValidateOnChange}
-        validateOnMount={false}
+        validateOnMount
         validationSchema={MissionSchema}
       >
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
@@ -77,7 +74,6 @@ export function MissionFormWrapper() {
             id={activeMissionId}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.missionForm}
-            setShouldValidateOnChange={setShouldValidateOnChange}
           />
         </Form>
       </Formik>
