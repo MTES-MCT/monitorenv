@@ -27,7 +27,9 @@ class ControllersExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BackendInternalException::class)
-    fun handleBackendInternalException(e: BackendInternalException): BackendInternalErrorDataOutput {
+    fun handleBackendInternalException(
+        e: BackendInternalException,
+    ): BackendInternalErrorDataOutput {
         return BackendInternalErrorDataOutput()
     }
 
@@ -97,14 +99,12 @@ class ControllersExceptionHandler {
     //   They should be caught or transformed into domain exceptions.
     //   If that happens, it's a bug, thus an unexpected exception.
 
-    /**
-     * Catch-all for unexpected exceptions.
-     */
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    /** Catch-all for unexpected exceptions. */
+    /*     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception::class)
     fun handleUnexpectedException(e: Exception): BackendInternalErrorDataOutput {
         logger.error(e.message, e)
 
         return BackendInternalErrorDataOutput()
-    }
+    } */
 }
