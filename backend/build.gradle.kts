@@ -63,7 +63,7 @@ dependencies {
     api("com.google.code.gson:gson:2.10.1")
     api("org.springframework.boot:spring-boot-starter-cache:3.2.5")
     api("com.github.ben-manes.caffeine:caffeine:3.1.5")
-    api("org.springframework.security:spring-security-test:6.1.5")
+    api("org.springframework.security:spring-security-test:6.2.4")
     api("org.testcontainers:testcontainers:1.19.2")
     api("io.hypersistence:hypersistence-utils-hibernate-63:3.7.5")
     api("org.assertj:assertj-core:3.24.2")
