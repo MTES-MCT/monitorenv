@@ -87,6 +87,11 @@ def get_control_unit_ids(env_action: pd.DataFrame) -> List[int]:
 
 @task(checkpoint=False)
 def extract_control_units(control_unit_ids: List[str]) -> pd.DataFrame:
+    if not control_unit_ids:
+        return pd.DataFrame(
+            columns=["control_unit_id", "control_unit_name", "email_addresses"]
+        )
+
     return extract(
         "monitorenv_remote",
         "monitorenv/control_units.sql",

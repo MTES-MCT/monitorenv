@@ -278,9 +278,9 @@ def sample_control_unit_actions() -> ControlUnitActions:
 
 
 @pytest.fixture
-def control_unit_actions_sent_messages() -> List[
-    ControlUnitActionsSentMessage
-]:
+def control_unit_actions_sent_messages() -> (
+    List[ControlUnitActionsSentMessage]
+):
 
     return [
         ControlUnitActionsSentMessage(
@@ -413,6 +413,19 @@ def test_extract_control_units(
     )
     units["email_addresses"] = units.email_addresses.map(sorted)
     pd.testing.assert_frame_equal(units, expected_control_units)
+
+
+def test_extract_control_units_without_control_unit_ids(reset_test_data):
+    control_units_as_data_frame = extract_control_units.run(
+        control_unit_ids=[]
+    )
+
+    pd.testing.assert_frame_equal(
+        control_units_as_data_frame,
+        pd.DataFrame(
+            columns=["control_unit_id", "control_unit_name", "email_addresses"]
+        ),
+    )
 
 
 def test_to_control_unit_actions(expected_env_actions, expected_control_units):
