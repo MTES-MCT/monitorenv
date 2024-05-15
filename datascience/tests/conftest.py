@@ -142,7 +142,7 @@ def start_remote_database_container(
     )
 
     timeout = 30
-    stop_time = 10
+    stop_time = 5
     elapsed_time = 0
     healthcheck_exit_code = None
 

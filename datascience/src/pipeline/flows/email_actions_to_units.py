@@ -87,11 +87,6 @@ def get_control_unit_ids(env_action: pd.DataFrame) -> List[int]:
 
 @task(checkpoint=False)
 def extract_control_units(control_unit_ids: List[str]) -> pd.DataFrame:
-    if not control_unit_ids:
-        return pd.DataFrame(
-            columns=["control_unit_id", "control_unit_name", "email_addresses"]
-        )
-
     return extract(
         "monitorenv_remote",
         "monitorenv/control_units.sql",
@@ -330,6 +325,11 @@ def load_emails_sent_to_control_units(
     )
 
 
+@task(checkpoint=False)
+def get_is_control_unit_ids_empty(control_unit_ids: List[int]) -> bool:
+    return len(control_unit_ids) == 0
+
+
 with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
     flow_not_running = check_flow_not_running()
     with case(flow_not_running, True):
@@ -348,29 +348,36 @@ with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
         )
         env_actions = extract_env_actions(period=period)
         control_unit_ids = get_control_unit_ids(env_actions)
-        control_units = extract_control_units(control_unit_ids)
 
-        control_unit_actions = to_control_unit_actions(
-            env_actions, period, control_units
+        is_control_unit_ids_empty = get_is_control_unit_ids_empty(
+            control_unit_ids
         )
+        with case(is_control_unit_ids_empty, False):
+            control_units = extract_control_units(control_unit_ids)
 
-        html = render.map(control_unit_actions, template=unmapped(template))
+            control_unit_actions = to_control_unit_actions(
+                env_actions, period, control_units
+            )
 
-        message = create_email.map(
-            html=html,
-            actions=control_unit_actions,
-            test_mode=unmapped(test_mode),
-        )
-        message = filter_results(message)
+            html = render.map(
+                control_unit_actions, template=unmapped(template)
+            )
 
-        sent_messages = send_env_actions_email.map(
-            message,
-            control_unit_actions,
-            is_integration=unmapped(is_integration),
-        )
+            message = create_email.map(
+                html=html,
+                actions=control_unit_actions,
+                test_mode=unmapped(test_mode),
+            )
+            message = filter_results(message)
 
-        sent_messages = flatten(sent_messages)
-        sent_messages = control_unit_actions_list_to_df(sent_messages)
-        load_emails_sent_to_control_units(sent_messages)
+            sent_messages = send_env_actions_email.map(
+                message,
+                control_unit_actions,
+                is_integration=unmapped(is_integration),
+            )
+
+            sent_messages = flatten(sent_messages)
+            sent_messages = control_unit_actions_list_to_df(sent_messages)
+            load_emails_sent_to_control_units(sent_messages)
 
 flow.file_name = Path(__file__).name
