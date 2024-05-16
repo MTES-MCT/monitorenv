@@ -64,7 +64,7 @@ function filterActionsFormInternalProperties(values: Partial<Mission | NewMissio
   return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) ?? []
 }
 
-export function getIsMissionFormValid(mission: Partial<Mission | NewMission>): Boolean {
+export function getIsMissionFormValid(mission: Partial<Mission | NewMission>): boolean {
   try {
     NewMissionSchema.validateSync(mission, { abortEarly: false })
 

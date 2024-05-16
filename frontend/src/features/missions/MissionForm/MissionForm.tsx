@@ -236,8 +236,8 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues, false)} />
       <FormikSyncMissionFields missionId={id} />
       <CancelEditModal
-        dirty={dirty}
         isAutoSaveEnabled={isAutoSaveEnabled}
+        isDirty={dirty}
         isMissionFormValid={isMissionFormValid}
         onCancel={returnToEdition}
         onConfirm={cancelForm}

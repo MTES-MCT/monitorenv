@@ -3,22 +3,22 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 type CancelEditModalProps = {
-  dirty: Boolean
-  isAutoSaveEnabled: Boolean
-  isMissionFormValid: Boolean
+  isAutoSaveEnabled: boolean
+  isDirty: boolean
+  isMissionFormValid: boolean
   onCancel: () => void
   onConfirm: () => void
   open: boolean
 }
 export function CancelEditModal({
-  dirty,
   isAutoSaveEnabled,
+  isDirty,
   isMissionFormValid,
   onCancel,
   onConfirm,
   open
 }: CancelEditModalProps) {
-  const isMissionUnsaved = !isAutoSaveEnabled && dirty && isMissionFormValid
+  const isMissionUnsaved = !isAutoSaveEnabled && isDirty && isMissionFormValid
   const title = isMissionUnsaved ? 'Enregistrer les modifications' : 'Enregistrement impossible'
 
   const body = useMemo(() => {
