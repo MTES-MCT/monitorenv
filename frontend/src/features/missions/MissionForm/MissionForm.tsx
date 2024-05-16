@@ -10,7 +10,6 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/useMissionEventContext'
 import { useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
@@ -19,7 +18,6 @@ import { useDebouncedCallback } from 'use-debounce'
 import { ActionForm } from './ActionForm'
 import { ActionsTimeLine } from './ActionsTimeLine'
 import { CancelEditModal } from './CancelEditModal'
-import { CloseEditModal } from './CloseEditModal'
 import { DeleteModal } from './DeleteModal'
 import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
@@ -29,9 +27,8 @@ import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
-import { NewMissionSchema } from './Schemas'
 import { missionFormsActions } from './slice'
-import { isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
+import { getIsMissionFormValid, isMissionAutoSaveEnabled, shouldSaveMission } from './utils'
 import { missionsAPI } from '../../../api/missionsAPI'
 import {
   FrontCompletionStatus,
@@ -52,11 +49,10 @@ import type { AtLeast } from '../../../types'
 
 enum ModalTypes {
   ACTIONS = 'ACTIONS',
-  CLOSE = 'CLOSE',
   DELETE = 'DELETE'
 }
 
-type ModalProps = ModalTypes.ACTIONS | ModalTypes.DELETE | ModalTypes.CLOSE
+type ModalProps = ModalTypes.ACTIONS | ModalTypes.DELETE
 
 type MissionFormProps = {
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
@@ -76,13 +72,7 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
   const { getMissionEventById } = useMissionEventContext()
   const missionEvent = getMissionEventById(id)
 
-  const {
-    dirty,
-    errors: formErrors,
-    setFieldValue,
-    validateForm,
-    values
-  } = useFormikContext<Partial<Mission | NewMission>>()
+  const { dirty, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const previousEngagedControlUnit = usePrevious(engagedControlUnit)
 
@@ -110,6 +100,8 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [openModal, setOpenModal] = useState<ModalProps | undefined>(undefined)
   const [actionsSources, setActionsSources] = useState<MissionSourceEnum[]>([])
+
+  const isMissionFormValid = useMemo(() => getIsMissionFormValid(values), [values])
 
   // the form listens to the redux store to update the attached reportings
   // because of the map interaction to attach reportings
@@ -162,26 +154,18 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
     await dispatch(missionFormsActions.deleteSelectedMission(id))
   }
 
-  const submitMission = () => {
-    validateForm().then(errors => {
-      if (isEmpty(errors)) {
-        dispatch(saveMission(values, false, true))
-
-        return
-      }
-      dispatch(sideWindowActions.setShowConfirmCancelModal(true))
-    })
-  }
-
-  const confirmFormCancelation = () => {
-    // when auto save is disabled, and form has changes we want to display specific modal
-    if (!isAutoSaveEnabled && dirty && isEmpty(formErrors)) {
-      setOpenModal(ModalTypes.CLOSE)
+  const submitMission = async () => {
+    if (isMissionFormValid) {
+      dispatch(saveMission(values, false, true))
 
       return
     }
 
-    if (isFormDirty) {
+    dispatch(sideWindowActions.setShowConfirmCancelModal(true))
+  }
+
+  const confirmFormCancelation = () => {
+    if ((!isAutoSaveEnabled && dirty && isMissionFormValid) || isFormDirty) {
       dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     } else {
       cancelForm()
@@ -189,23 +173,15 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
   }
 
   const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave) => {
-    if (!isAutoSaveEnabled) {
+    if (!isAutoSaveEnabled || engagedControlUnit || !isMissionFormValid) {
       return
     }
 
-    if (engagedControlUnit) {
+    if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
       return
     }
 
-    try {
-      NewMissionSchema.validateSync(values, { abortEarly: false })
-      if (!shouldSaveMission(selectedMission, missionEvent, nextValues) && !forceSave) {
-        return
-      }
-
-      dispatch(saveMission(nextValues, false, false))
-      // eslint-disable-next-line no-empty
-    } catch (e: any) {}
+    dispatch(saveMission(nextValues, false, false))
   }, 300)
 
   useEffect(() => {
@@ -259,8 +235,14 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
 
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues, false)} />
       <FormikSyncMissionFields missionId={id} />
-      <CancelEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={sideWindow.showConfirmCancelModal} />
-      <CloseEditModal onCancel={returnToEdition} onConfirm={cancelForm} open={openModal === ModalTypes.CLOSE} />
+      <CancelEditModal
+        isAutoSaveEnabled={isAutoSaveEnabled}
+        isDirty={dirty}
+        isMissionFormValid={isMissionFormValid}
+        onCancel={returnToEdition}
+        onConfirm={cancelForm}
+        open={sideWindow.showConfirmCancelModal}
+      />
       <DeleteModal
         onCancel={returnToEdition}
         onConfirm={validateDeleteMission}

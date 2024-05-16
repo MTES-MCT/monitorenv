@@ -4,8 +4,8 @@ import { useDebouncedCallback } from 'use-debounce'
 
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { NewMissionSchema } from '../Schemas'
 import { missionFormsActions } from '../slice'
+import { getIsMissionFormValid } from '../utils'
 
 import type { Mission } from '../../../../domain/entities/missions'
 
@@ -49,13 +49,9 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
       return activeMission?.isFormDirty ?? false
     }
 
-    try {
-      NewMissionSchema.validateSync(values, { abortEarly: false })
+    const isMissionFormValid = getIsMissionFormValid(values)
 
-      return false
-    } catch (e: any) {
-      return true
-    }
+    return !isMissionFormValid
   }
 
   useEffect(() => {

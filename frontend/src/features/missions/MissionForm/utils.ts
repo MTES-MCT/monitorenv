@@ -1,6 +1,7 @@
 import { isEqual, omit } from 'lodash'
 
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
+import { NewMissionSchema } from './Schemas'
 import { isCypress } from '../../../utils/isCypress'
 
 import type { Mission, NewMission } from '../../../domain/entities/missions'
@@ -61,4 +62,14 @@ export function shouldSaveMission(
 
 function filterActionsFormInternalProperties(values: Partial<Mission | NewMission>) {
   return values.envActions?.map(envAction => omit(envAction, 'durationMatchesMission')) ?? []
+}
+
+export function getIsMissionFormValid(mission: Partial<Mission | NewMission>): boolean {
+  try {
+    NewMissionSchema.validateSync(mission, { abortEarly: false })
+
+    return true
+  } catch (e: any) {
+    return false
+  }
 }
