@@ -159,7 +159,6 @@ export function GeneralInformationsForm({
             name="controlUnits"
             /* eslint-disable-next-line react/jsx-props-no-spreading */
             render={props => <ControlUnitsForm {...props} />}
-            validateOnChange={false}
           />
         </StyledUnitsContainer>
 

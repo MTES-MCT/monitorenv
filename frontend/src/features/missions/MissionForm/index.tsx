@@ -64,7 +64,6 @@ export function MissionFormWrapper() {
         enableReinitialize
         initialValues={missionValues}
         onSubmit={noop}
-        validateOnBlur={false}
         validateOnMount
         validationSchema={MissionSchema}
       >
