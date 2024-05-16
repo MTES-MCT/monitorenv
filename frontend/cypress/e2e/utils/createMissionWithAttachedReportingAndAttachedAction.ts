@@ -52,6 +52,7 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
 
     // Attach the reporting to a mission
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
     cy.clickButton('missions')
     cy.clickButton('Ajouter une nouvelle mission')
 
@@ -60,8 +61,6 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
 
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.fill('Unité 1', 'BN Toulon')
-
-    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
     return cy.waitForLastRequest(
       '@createMission',

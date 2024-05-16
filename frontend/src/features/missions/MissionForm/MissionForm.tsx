@@ -72,7 +72,7 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
   const { getMissionEventById } = useMissionEventContext()
   const missionEvent = getMissionEventById(id)
 
-  const { dirty, setFieldValue, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
+  const { dirty, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const previousEngagedControlUnit = usePrevious(engagedControlUnit)
 
@@ -156,10 +156,7 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
 
   const submitMission = async () => {
     if (isMissionFormValid) {
-      // we need to validate form to reset `dirty` prop
-      validateForm().then(() => {
-        dispatch(saveMission(values, false, false))
-      })
+      dispatch(saveMission(values, false, true))
 
       return
     }
