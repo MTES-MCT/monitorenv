@@ -1,7 +1,7 @@
 import { usePrevious } from '@mtes-mct/monitor-ui'
 import GeoJSON from 'ol/format/GeoJSON'
 import LineString from 'ol/geom/LineString'
-import Draw from 'ol/interaction/Draw'
+import Draw, { DrawEvent } from 'ol/interaction/Draw'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
@@ -10,11 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
 import { InterestPointLine } from '../../../domain/entities/interestPointLine'
-import {
-  coordinatesAreModified,
-  coordinatesOrTypeAreModified,
-  interestPointType
-} from '../../../domain/entities/interestPoints'
+import { coordinatesAreModified, coordinatesOrTypeAreModified } from '../../../domain/entities/interestPoints'
 import { Layers } from '../../../domain/entities/layers/constants'
 import { MapToolType, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { globalActions } from '../../../domain/shared_slices/Global'
@@ -164,7 +160,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           coordinates: null,
           name: null,
           observations: null,
-          type: null,
+          // type: null,
           uuid: uuidv4()
         })
       )
@@ -205,20 +201,20 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     function handleDrawEvents() {
       if (drawObject) {
         drawObject.once(DRAW_START_EVENT, event => {
-          function startDrawing(e, type) {
+          function startDrawing(e: DrawEvent) {
             dispatch(
               updateInterestPointBeingDrawed({
                 coordinates: e.feature.getGeometry().getLastCoordinate(),
                 name: null,
                 observations: null,
-                type,
+                // type,
                 // TODO Check that.
                 uuid: interestPointBeingDrawed!.uuid
               })
             )
           }
 
-          startDrawing(event, interestPointBeingDrawed?.type ?? interestPointType.OTHER)
+          startDrawing(event)
         })
 
         drawObject.once(DRAW_ABORT_EVENT, () => {

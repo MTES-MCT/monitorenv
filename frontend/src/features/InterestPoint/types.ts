@@ -8,7 +8,7 @@ export type InterestPoint = {
   feature?: Feature<LineString>
   name: string
   observations: string
-  type: string
+  // type: string
   uuid: string
 }
 
@@ -17,7 +17,7 @@ export type NewInterestPoint = {
   feature?: Feature<LineString>
   name: string | null
   observations: string | null
-  type: string | null
+  // type: string | null
   uuid: string
 }
 
