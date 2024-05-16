@@ -4,10 +4,7 @@ import CircleStyle from 'ol/style/Circle'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { InterestPointLine } from '../../../../domain/entities/interestPointLine'
-import { INTEREST_POINT_STYLE, interestPointType } from '../../../../domain/entities/interestPoints'
-
-const interestPointStylesCache = new Map()
+import { INTEREST_POINT_STYLE } from '../../../../domain/entities/interestPoints'
 
 const lineStyle = new Style({
   stroke: new Stroke({
@@ -18,43 +15,22 @@ const lineStyle = new Style({
 })
 
 export const getInterestPointStyle = (feature, resolution) => {
-  const type = feature.get(InterestPointLine.typeProperty)
-
   if (feature?.getId()?.toString()?.includes('line')) {
     return [lineStyle]
   }
 
-  if (!interestPointStylesCache.has(type)) {
-    const filename = getFilename(type)
+  const style = new Style({
+    image: new Icon({
+      offset: [0, 0],
+      size: [30, 79],
+      src: 'Point_interet_feature_autre.png'
+    }),
+    zIndex: INTEREST_POINT_STYLE
+  })
 
-    const style = new Style({
-      image: new Icon({
-        offset: [0, 0],
-        size: [30, 79],
-        src: filename
-      }),
-      zIndex: INTEREST_POINT_STYLE
-    })
-
-    interestPointStylesCache.set(type, [style])
-  }
-
-  const style = interestPointStylesCache.get(type)
-  style[0].getImage().setScale(1 / resolution ** (1 / 8) + 0.3)
+  style.getImage()?.setScale(1 / resolution ** (1 / 8) + 0.3)
 
   return style
-}
-
-const getFilename = type => {
-  switch (type) {
-    case interestPointType.CONTROL_ENTITY:
-      return 'Point_interet_feature_moyen.png'
-    case interestPointType.FISHING_VESSEL:
-      return 'Point_interet_feature_navire.png'
-    case interestPointType.OTHER:
-    default:
-      return 'Point_interet_feature_autre.png'
-  }
 }
 
 export const POIStyle = new Style({
