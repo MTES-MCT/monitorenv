@@ -42,6 +42,8 @@ import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened
 
 import type { VectorLayerWithName } from '../../domain/types/layer'
 import type { MapBrowserEvent } from 'ol'
+import type VectorLayer from 'ol/layer/Vector'
+import type VectorSource from 'ol/source/Vector'
 
 export type BaseMapChildrenProps = {
   currentFeatureListOver: SerializedFeature<Record<string, any>>[] | undefined
@@ -50,6 +52,8 @@ export type BaseMapChildrenProps = {
   mapClickEvent: MapClickEvent
   pixel: number[] | undefined
 }
+
+type VectorLayerType = VectorLayerWithName & VectorLayer<VectorSource>
 
 export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
@@ -88,7 +92,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
       const features = current_map.getFeaturesAtPixel(event.pixel, {
         hitTolerance: HIT_PIXEL_TO_TOLERANCE,
         layerFilter: layer => {
-          const typedLayer = layer as VectorLayerWithName
+          const typedLayer = layer as VectorLayerType
 
           const layerName = typedLayer.name ?? typedLayer.get('name')
 
@@ -124,7 +128,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           const features = current_map.getFeaturesAtPixel(event.pixel, {
             hitTolerance: HIT_PIXEL_TO_TOLERANCE,
             layerFilter: layer => {
-              const typedLayer = layer as VectorLayerWithName
+              const typedLayer = layer as VectorLayerType
 
               const layerName = typedLayer.name ?? typedLayer.get('name')
 

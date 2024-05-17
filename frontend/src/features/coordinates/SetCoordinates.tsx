@@ -1,3 +1,4 @@
+import { Label } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
@@ -39,7 +40,12 @@ export function SetCoordinates({ coordinates, updateCoordinates }: SetCoordinate
     }
   }, [coordinates, updateCoordinates, coordinatesFormat])
 
-  return <Body>{getCoordinatesInput()}</Body>
+  return (
+    <div>
+      <Label>Coordonnées</Label>
+      <Body>{getCoordinatesInput()}</Body>
+    </div>
+  )
 }
 
 const Body = styled.div`
@@ -52,7 +58,6 @@ const Body = styled.div`
     border: none;
     color: ${p => p.theme.color.gunMetal};
     height: 27px;
-    margin-top: 7px;
     padding-left: 8px;
   }
 `

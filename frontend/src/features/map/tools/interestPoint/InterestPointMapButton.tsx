@@ -1,9 +1,10 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
-import { globalActions } from '../../../../domain/shared_slices/Global'
+import { globalActions, setDisplayedItems } from '../../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
@@ -14,13 +15,11 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
 import { ButtonWrapper } from '../../../MainWindow/components/RightMenu/ButtonWrapper'
-import { MapToolButton } from '../MapToolButton'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
-  const displayInterestPoint = useAppSelector(state => state.global.displayInterestPoint)
-  const healthcheckTextWarning = useAppSelector(state => state.global.healthcheckTextWarning)
   const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
+  const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
 
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
   const wrapperRef = useRef(null)
@@ -38,29 +37,39 @@ export function InterestPointMapButton() {
     }
   }, [dispatch, isOpen])
 
-  const openOrCloseInterestPoint = useCallback(() => {
+  const toggleInterestPointMenu = useCallback(() => {
     if (!isOpen) {
-      dispatch(drawInterestPoint())
+      if (displayInterestPointLayer) {
+        dispatch(drawInterestPoint())
+      }
+      dispatch(
+        setDisplayedItems({
+          isControlUnitDialogVisible: false,
+          isControlUnitListDialogVisible: false,
+          isSearchMissionsVisible: false,
+          isSearchReportingsVisible: false,
+          isSearchSemaphoreVisible: false
+        })
+      )
+      dispatch(reduceReportingFormOnMap())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     } else {
       close()
     }
-    dispatch(reduceReportingFormOnMap())
-  }, [close, dispatch, isOpen])
+  }, [close, dispatch, isOpen, displayInterestPointLayer])
 
   return (
     <ButtonWrapper ref={wrapperRef} topPosition={346}>
-      <MapToolButton
-        dataCy="interest-point"
-        icon={Icon.Landmark}
-        isHidden={!displayInterestPoint}
-        isOpen={isOpen}
-        onClick={openOrCloseInterestPoint}
-        style={{ top: 301 }}
-        title={"Créer un point d'intérêt"}
-      />
+      {isOpen && <EditInterestPoint close={close} />}
 
-      <EditInterestPoint close={close} healthcheckTextWarning={healthcheckTextWarning} isOpen={isOpen} />
+      <MenuWithCloseButton.ButtonOnMap
+        className={isOpen ? '_active' : undefined}
+        data-cy="interest-point"
+        Icon={Icon.Landmark}
+        onClick={toggleInterestPointMenu}
+        size={Size.LARGE}
+        title="Créer un point d'intérêt"
+      />
     </ButtonWrapper>
   )
 }

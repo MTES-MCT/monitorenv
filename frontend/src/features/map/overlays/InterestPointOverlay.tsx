@@ -3,7 +3,7 @@ import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
 import { getLength } from 'ol/sphere'
-import { createRef, useCallback, useEffect, useRef, useState } from 'react'
+import { createRef, useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
@@ -31,7 +31,7 @@ function coordinatesAreModified(nextCoordinates: Coordinate, previousCoordinates
 type InterestPointOverlayProps = {
   coordinates: Coordinate
   deleteInterestPoint: (uuid: string) => void
-  featureIsShowed: boolean
+  isVisible: boolean
   map: any
   modifyInterestPoint: (uuid: string) => void
   moveLine: (uuid: string, previousCoordinates: number[], nextCoordinates: number[], offset: number[]) => void
@@ -42,7 +42,7 @@ type InterestPointOverlayProps = {
 export function InterestPointOverlay({
   coordinates,
   deleteInterestPoint,
-  featureIsShowed,
+  isVisible,
   map,
   modifyInterestPoint,
   moveLine,
@@ -57,7 +57,6 @@ export function InterestPointOverlay({
   const currentCoordinates = useRef([])
   const interestPointCoordinates = useRef(coordinates)
   const isThrottled = useRef(false)
-  const [showed, setShowed] = useState(false)
   const overlayRef = useRef<Overlay | null>(null)
   const setOverlayRef = () => {
     if (overlayRef.current === null) {
@@ -102,7 +101,7 @@ export function InterestPointOverlay({
     [interestPointCoordinates.current]
   )
 
-  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, showed)
+  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, isVisible)
   const previousCoordinates = usePrevious(coordinates)
 
   useEffect(() => {
@@ -126,9 +125,6 @@ export function InterestPointOverlay({
         overlayRef.current?.setElement(ref.current ?? undefined)
 
         map.addOverlay(overlayRef.current)
-        if (featureIsShowed) {
-          setShowed(true)
-        }
 
         return () => {
           map.removeOverlay(overlayRef.current)
@@ -146,7 +142,7 @@ export function InterestPointOverlay({
   return (
     <WrapperToBeKeptForDOMManagement>
       <div ref={ref}>
-        {showed ? (
+        {isVisible ? (
           <InterestPointOverlayElement>
             <Header>
               <Name data-cy="interest-point-name" title={name ?? 'Aucun Libellé'}>
@@ -158,6 +154,7 @@ export function InterestPointOverlay({
                 Icon={Icon.Edit}
                 onClick={() => modifyInterestPoint(uuid)}
                 size={Size.SMALL}
+                title="Editer"
               />
               <IconButton
                 accent={Accent.TERTIARY}
@@ -165,6 +162,7 @@ export function InterestPointOverlay({
                 Icon={Icon.Delete}
                 onClick={() => deleteInterestPoint(uuid)}
                 size={Size.SMALL}
+                title="Supprimer"
               />
             </Header>
             <Body data-cy="interest-point-observations">{observations ?? 'Aucune observation'}</Body>
