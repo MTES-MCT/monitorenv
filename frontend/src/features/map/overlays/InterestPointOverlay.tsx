@@ -184,16 +184,17 @@ const Body = styled.div`
   font-weight: 500;
   text-align: left;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  word-wrap: break-word;
 `
 
-const Footer = styled.div`
+const Footer = styled.footer`
   padding: 3px;
   font-size: 12px;
   text-align: center;
   color: ${p => p.theme.color.slateGray};
 `
 
-const Header = styled.div`
+const Header = styled.header`
   display: flex;
   height: 30px;
   background: ${p => p.theme.color.gainsboro};
