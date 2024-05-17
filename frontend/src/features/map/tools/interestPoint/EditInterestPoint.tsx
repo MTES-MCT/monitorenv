@@ -16,21 +16,6 @@ import { MapToolBox } from '../MapToolBox'
 
 import type { Coordinate } from 'ol/coordinate'
 
-// const INTEREST_POINT_OPTIONS: Array<Option> = [
-//   {
-//     label: 'Moyen de contrôle',
-//     value: interestPointType.CONTROL_ENTITY
-//   },
-//   {
-//     label: 'Navire de pêche',
-//     value: interestPointType.FISHING_VESSEL
-//   },
-//   {
-//     label: 'Autre point',
-//     value: interestPointType.OTHER
-//   }
-// ]
-
 // TODO Refactor this component
 // - Move the state logic to the reducer
 // - Use formik (or at least uncontrolled form components)
@@ -45,13 +30,6 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
   const { interestPointBeingDrawed, isEditing } = useAppSelector(state => state.interestPoint)
 
   const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
-
-  // const defaultType = interestPointBeingDrawed?.type
-  //   ? INTEREST_POINT_OPTIONS.find(interestPointOption => interestPointOption.value === interestPointBeingDrawed.type)
-  //       ?.value
-  //   : INTEREST_POINT_OPTIONS[2]?.value
-
-  // const [selectedOption, setSelectedOption] = useState()
 
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
@@ -100,21 +78,6 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
     [dispatch, interestPointBeingDrawed?.observations]
   )
 
-  // const updateType = useCallback(
-  //   option => {
-  //     setSelectedOption(option)
-  //     if (option && interestPointBeingDrawed?.type !== option) {
-  //       dispatch(
-  //         updateInterestPointKeyBeingDrawed({
-  //           key: 'type',
-  //           value: option
-  //         })
-  //       )
-  //     }
-  //   },
-  //   [dispatch, interestPointBeingDrawed?.type]
-  // )
-
   /**
    * Compare with previous coordinates and update interest point coordinates
    * @param {Coordinate} nextCoordinates - Coordinates ([latitude, longitude]) to update, in decimal format.
@@ -155,16 +118,11 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
         const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
         dispatch(setFitToExtent(extent))
       }
-
-      // // reset state
-      // setSelectedOption(undefined)
     }
   }
 
   const cancel = () => {
     close()
-    // reset state
-    // setSelectedOption(undefined)
   }
 
   return (
@@ -177,16 +135,6 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
               <Label>Coordonnées</Label>
               <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
             </div>
-
-            {/* <MultiRadio
-              key={interestPointBeingDrawed?.uuid}
-              data-cy="interest-point-type-radio"
-              label="Type de point"
-              name="interestPointTypeRadio"
-              onChange={updateType}
-              options={INTEREST_POINT_OPTIONS}
-              value={selectedOption ?? defaultType}
-            /> */}
 
             <div>
               <Label>Libellé du point</Label>

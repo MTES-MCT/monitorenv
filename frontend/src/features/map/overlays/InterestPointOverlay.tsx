@@ -1,4 +1,4 @@
-import { Accent, Icon, IconButton, Size, usePrevious, type Coordinates } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
@@ -11,12 +11,14 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getCoordinates } from '../../../utils/coordinates'
 
+import type { Coordinate } from 'ol/coordinate'
+
 const X = 0
 const Y = 1
 export const initialOffsetValue = [-90, 10]
 
 // TODO Move that into a utils file.
-function coordinatesAreModified(nextCoordinates: Coordinates, previousCoordinates: Coordinates): boolean {
+function coordinatesAreModified(nextCoordinates: Coordinate, previousCoordinates: Coordinate): boolean {
   return (
     !Number.isNaN(nextCoordinates[0]) &&
     !Number.isNaN(nextCoordinates[1]) &&
@@ -27,7 +29,7 @@ function coordinatesAreModified(nextCoordinates: Coordinates, previousCoordinate
 }
 
 type InterestPointOverlayProps = {
-  coordinates: Coordinates
+  coordinates: Coordinate
   deleteInterestPoint: (uuid: string) => void
   featureIsShowed: boolean
   map: any

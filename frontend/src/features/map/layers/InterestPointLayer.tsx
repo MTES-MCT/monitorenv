@@ -1,6 +1,8 @@
 import { usePrevious } from '@mtes-mct/monitor-ui'
+import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import LineString from 'ol/geom/LineString'
+import Point from 'ol/geom/Point'
 import Draw, { DrawEvent } from 'ol/interaction/Draw'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -8,7 +10,7 @@ import { getLength } from 'ol/sphere'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
+import { POIStyle, getInterestPointStyle } from './styles/interestPoint.style'
 import { InterestPointLine } from '../../../domain/entities/interestPointLine'
 import { coordinatesAreModified, coordinatesOrTypeAreModified } from '../../../domain/entities/interestPoints'
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -30,7 +32,7 @@ import { InterestPointOverlay } from '../overlays/InterestPointOverlay'
 
 import type { NewInterestPoint } from '../../InterestPoint/types'
 import type { BaseMapChildrenProps } from '../BaseMap'
-import type Feature from 'ol/Feature'
+import type { Coordinate } from 'ol/coordinate'
 
 const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
@@ -57,7 +59,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   const [interestPointToCoordinates, setInterestPointToCoordinates] = useState(new Map())
   const previousInterestPointBeingDrawed = usePrevious<NewInterestPoint | null>(interestPointBeingDrawed)
   const deleteInterestPoint = useCallback(
-    uuid => {
+    (uuid: string) => {
       const feature = GetVectorSource().getFeatureById(uuid)
       if (feature) {
         GetVectorSource().removeFeature(feature)
@@ -75,7 +77,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     [dispatch]
   )
   const moveInterestPointLine = useCallback(
-    (uuid, coordinates, nextCoordinates, offset) => {
+    (uuid: string | number, coordinates: Coordinate, nextCoordinates: Coordinate, offset: any) => {
       const featureId = InterestPointLine.getFeatureId(uuid)
 
       if (interestPointToCoordinates.has(featureId)) {
@@ -83,9 +85,9 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
         const interestPointFeature = GetVectorSource().getFeatureById(uuid)
 
         if (existingLabelLineFeature) {
-          const geom = interestPointFeature?.getGeometry()
-          if (geom) {
-            existingLabelLineFeature.setGeometry(new LineString([geom.getCoordinates(), nextCoordinates]))
+          const geometry = interestPointFeature?.getGeometry()
+          if (geometry) {
+            existingLabelLineFeature.setGeometry(new LineString([nextCoordinates, geometry.getFlatCoordinates()]))
           }
         }
       } else {
@@ -102,7 +104,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   )
 
   const modifyInterestPoint = useCallback(
-    uuid => {
+    (uuid: string) => {
       dispatch(globalActions.hideSideButtons())
       dispatch(editInterestPoint(uuid))
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
@@ -114,7 +116,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     const interestPointVectorLayer = new VectorLayer({
       renderBuffer: 7,
       source: GetVectorSource(),
-      style: (feature, resolution) => getInterestPointStyle(feature, resolution),
+      style: (feature, resolution) => getInterestPointStyle(feature?.getId()?.toString()?.includes('line'), resolution),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.INTEREST_POINT.zIndex
@@ -160,7 +162,6 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           coordinates: null,
           name: null,
           observations: null,
-          // type: null,
           uuid: uuidv4()
         })
       )
@@ -202,16 +203,19 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       if (drawObject) {
         drawObject.once(DRAW_START_EVENT, event => {
           function startDrawing(e: DrawEvent) {
-            dispatch(
-              updateInterestPointBeingDrawed({
-                coordinates: e.feature.getGeometry().getLastCoordinate(),
-                name: null,
-                observations: null,
-                // type,
-                // TODO Check that.
-                uuid: interestPointBeingDrawed!.uuid
-              })
-            )
+            const geometry = e.feature.getGeometry()
+            if (geometry instanceof Point) {
+              const coordinates = geometry.getLastCoordinate()
+              dispatch(
+                updateInterestPointBeingDrawed({
+                  coordinates,
+                  name: null,
+                  observations: null,
+                  // TODO Check that.
+                  uuid: interestPointBeingDrawed!.uuid
+                })
+              )
+            }
           }
 
           startDrawing(event)
@@ -246,9 +250,11 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
         if (drawingFeatureToUpdate && coordinatesOrTypeAreModified(drawingFeatureToUpdate, interestPointBeingDrawed)) {
           const { feature, ...interestPointWithoutFeature } = interestPointBeingDrawed
-          const geom = drawingFeatureToUpdate.getGeometry()
-          // TODO Remove this any.
-          geom?.setCoordinates(interestPointWithoutFeature.coordinates as any)
+          const geometry = drawingFeatureToUpdate.getGeometry()
+          if (interestPointWithoutFeature.coordinates) {
+            // TODO [17/05/2024] typage à refacto: Openlayer fonctionne avec Coordinate[] et Coordinate
+            geometry?.setCoordinates(interestPointWithoutFeature.coordinates as unknown as Coordinate[])
+          }
           drawingFeatureToUpdate.setProperties(interestPointWithoutFeature)
 
           const nextFeature = new GeoJSON().writeFeatureObject(drawingFeatureToUpdate, {

@@ -4,7 +4,8 @@ export const interestPointType = {
   OTHER: 'OTHER'
 }
 
-export const INTEREST_POINT_STYLE = 150
+export const INTEREST_POINT_STYLE_ZINDEX = 150
+export const INTEREST_POINT_STYLE_ICON_FILENAME = 'interest_point.svg'
 
 export function coordinatesOrTypeAreModified(drawingFeatureToUpdate, interestPointBeingDrawed) {
   return (
