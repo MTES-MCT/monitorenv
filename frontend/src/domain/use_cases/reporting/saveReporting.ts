@@ -20,6 +20,7 @@ export const saveReporting =
       ? reportingsAPI.endpoints.createReporting
       : reportingsAPI.endpoints.updateReporting
 
+    await dispatch(reportingActions.setIsListeningToEvents(false))
     try {
       const response = await dispatch(endpoint.initiate(newOrNextReportingData))
       if ('data' in response) {
@@ -43,6 +44,10 @@ export const saveReporting =
             })
           )
         }
+
+        setTimeout(async () => {
+          await dispatch(reportingActions.setIsListeningToEvents(true))
+        }, 500)
 
         if (!quitAfterSave) {
           return

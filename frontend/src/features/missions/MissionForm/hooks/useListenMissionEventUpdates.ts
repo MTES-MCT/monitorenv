@@ -1,4 +1,4 @@
-import { useMissionEventContext } from 'context/useMissionEventContext'
+import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { useEffect, useRef } from 'react'
 
 import { useAppSelector } from '../../../../hooks/useAppSelector'

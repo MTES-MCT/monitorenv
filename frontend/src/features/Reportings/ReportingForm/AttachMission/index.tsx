@@ -1,4 +1,5 @@
-import { Accent, Button, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, customDayjs, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
+import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import { createMissionFromReporting } from 'domain/use_cases/reporting/createMissionFromReporting'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -24,6 +25,9 @@ export function AttachMission() {
   const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
   const attachedMission = useAppSelector(state => state.attachMissionToReporting.attachedMission)
 
+  const { getReportingEventById } = useReportingEventContext()
+  const reportingEvent = getReportingEventById(values.id)
+
   const attachMission = () => {
     dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
     dispatch(attachMissionToReportingSliceActions.setInitialAttachedMission(values.attachedMission))
@@ -32,9 +36,11 @@ export function AttachMission() {
 
   const unattachMission = async () => {
     await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
-    setFieldValue('detachedFromMissionAtUtc', new Date().toISOString())
+    setFieldValue('detachedFromMissionAtUtc', customDayjs().utc().format())
     setFieldValue('attachedEnvActionId', null)
     setFieldValue('hasNoUnitAvailable', false)
+    setFieldValue('missionId', null)
+    setFieldValue('attachedMission', null)
   }
 
   const createMission = async () => {
@@ -49,14 +55,25 @@ export function AttachMission() {
   // the form listens to the redux store to update the attached mission
   // because of the map interaction to attach mission
   useEffect(() => {
+    if (reportingEvent) {
+      return
+    }
     if ((missionId && missionId !== values.missionId) || (!missionId && values.missionId)) {
       setFieldValue('missionId', missionId ?? null)
       setFieldValue('attachedMission', attachedMission)
-      setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
+      setFieldValue('attachedToMissionAtUtc', customDayjs().utc().format())
       setFieldValue('detachedFromMissionAtUtc', null)
       setFieldValue('hasNoUnitAvailable', false)
     }
-  }, [missionId, setFieldValue, dispatch, values.missionId, attachedMission, values.attachedToMissionAtUtc])
+  }, [
+    missionId,
+    setFieldValue,
+    dispatch,
+    values.missionId,
+    attachedMission,
+    values.attachedToMissionAtUtc,
+    reportingEvent
+  ])
 
   const isButtonDisabled = !values.isControlRequired || values.isArchived
 
@@ -95,6 +112,7 @@ export function AttachMission() {
       <UnattachButtonContainer>
         <Button
           accent={Accent.SECONDARY}
+          data-cy="unattach-mission-button"
           disabled={values.isArchived}
           Icon={Icon.Unlink}
           isFullWidth={false}

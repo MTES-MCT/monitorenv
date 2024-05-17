@@ -30,6 +30,7 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
@@ -47,6 +48,8 @@ class CreateOrUpdateReportingUTests {
 
     @MockBean private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
 
+    @MockBean private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
     @Test
     fun `Should throw an exception when input is null`() {
         // When
@@ -56,6 +59,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
+                    eventPublisher = applicationEventPublisher,
                 )
                     .execute(null)
             }
@@ -213,6 +217,7 @@ class CreateOrUpdateReportingUTests {
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
+                eventPublisher = applicationEventPublisher,
             )
                 .execute(reportingWithSemaphore)
 
@@ -227,6 +232,7 @@ class CreateOrUpdateReportingUTests {
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
+                eventPublisher = applicationEventPublisher,
             )
                 .execute(reportingWithControlUnit)
 
@@ -273,6 +279,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
+                    eventPublisher = applicationEventPublisher,
                 )
                     .execute(reporting)
             }
@@ -321,6 +328,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
+                    eventPublisher = applicationEventPublisher,
                 )
                     .execute(reporting)
             }
@@ -411,6 +419,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
+                    eventPublisher = applicationEventPublisher,
                 )
                     .execute(reportingWithControlUnitId)
             }
@@ -427,6 +436,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
+                    eventPublisher = applicationEventPublisher,
                 )
                     .execute(reportingWithSemaphoreId)
             }
@@ -443,6 +453,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
+                    eventPublisher = applicationEventPublisher,
                 )
                     .execute(reportingWithoutSourceName)
             }
@@ -527,6 +538,7 @@ class CreateOrUpdateReportingUTests {
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
+                eventPublisher = applicationEventPublisher,
             )
                 .execute(reportingWithNewAttachedMission)
         }

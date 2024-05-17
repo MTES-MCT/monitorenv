@@ -172,7 +172,7 @@ export function ReportingCard({
         isAttachToMission={missionId && !detachedFromMissionAtUtc}
       />
       {!isOnlyHoverable && (
-        <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
+        <StyledButton data-cy="map-edit-reporting" Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
           Editer le signalement
         </StyledButton>
       )}

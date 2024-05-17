@@ -1,4 +1,4 @@
-import { useMissionEventContext } from 'context/useMissionEventContext'
+import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
 import { omit } from 'lodash'

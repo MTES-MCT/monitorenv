@@ -8,7 +8,8 @@ import { HomePage } from '@pages/HomePage'
 import { homeStore } from '@store/index'
 import { isBrowserSupported } from '@utils/isBrowserSupported'
 import { isCypress } from '@utils/isCypress'
-import { MissionEventProvider } from 'context/MissionEventContext'
+import { MissionEventProvider } from 'context/mission/MissionEventContext'
+import { ReportingEventProvider } from 'context/reporting/ReportingEventContext'
 import { Provider as ReduxProvider } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
@@ -38,15 +39,17 @@ export function App() {
         <ReduxProvider store={homeStore}>
           <PersistGate loading={undefined} persistor={persistor}>
             <MissionEventProvider>
-              <Router>
-                <Routes>
-                  <Route element={<BackOfficePage />} path="/backoffice/*" />
+              <ReportingEventProvider>
+                <Router>
+                  <Routes>
+                    <Route element={<BackOfficePage />} path="/backoffice/*" />
 
-                  <Route element={<SideWindow />} path="/side_window" />
+                    <Route element={<SideWindow />} path="/side_window" />
 
-                  <Route element={<HomePage />} path="/" />
-                </Routes>
-              </Router>
+                    <Route element={<HomePage />} path="/" />
+                  </Routes>
+                </Router>
+              </ReportingEventProvider>
             </MissionEventProvider>
             <ToastNotification />
           </PersistGate>

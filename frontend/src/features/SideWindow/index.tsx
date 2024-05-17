@@ -1,4 +1,7 @@
+import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/ReportingForm/constants'
+import { useListenReportingEventUpdates } from '@features/Reportings/ReportingForm/hooks/useListenReportingEventUpdates'
 import { Icon, SideMenu, type NewWindowContextValue, NewWindowContext } from '@mtes-mct/monitor-ui'
+import { reportingActions } from 'domain/shared_slices/reporting'
 import { omit } from 'lodash'
 import { useEffect, useMemo, useState, useRef, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
@@ -30,6 +33,7 @@ export function SideWindow() {
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
   const [isFirstRender, setIsFirstRender] = useState(true)
   const missionEvent = useListenMissionEventUpdates()
+  const reportingEvent = useListenReportingEventUpdates()
 
   const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
@@ -44,6 +48,17 @@ export function SideWindow() {
 
     dispatch(missionFormsActions.updateUnactiveMission(omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES)))
   }, [dispatch, missionEvent])
+
+  /**
+   * Use to update reportings opened in the side window but not actives
+   */
+  useEffect(() => {
+    if (!reportingEvent) {
+      return
+    }
+
+    dispatch(reportingActions.updateUnactiveReporting(omit(reportingEvent, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)))
+  }, [dispatch, reportingEvent])
 
   const navigate = nextPath => {
     if (!nextPath) {

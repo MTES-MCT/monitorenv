@@ -18,8 +18,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.Reportings
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.SSEReporting
+import org.assertj.core.api.Assertions
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
@@ -28,18 +32,21 @@ import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(Reportings::class)])
+@WebMvcTest(value = [Reportings::class, SSEReporting::class])
 class ReportingsITests {
     @Autowired private lateinit var mockedApi: MockMvc
 
@@ -56,6 +63,10 @@ class ReportingsITests {
     @MockBean private lateinit var deleteReportings: DeleteReportings
 
     @MockBean private lateinit var archiveReportings: ArchiveReportings
+
+    @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
+    @Autowired private lateinit var sseReporting: SSEReporting
 
     @Test
     fun `Should create a new Reporting`() {
@@ -476,5 +487,76 @@ class ReportingsITests {
             .andExpect(status().isNoContent())
 
         Mockito.verify(deleteReportings).execute(listOf(1, 2, 3))
+    }
+
+    @Test
+    fun `Should receive an event When listening to reporting updates`() {
+        // Given
+        val polygon =
+            WKTReader()
+                .read(
+                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+                )
+        val updateReportingEvent =
+            UpdateReportingEvent(
+                ReportingDTO(
+                    reporting =
+                    ReportingEntity(
+                        id = 1,
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 1,
+                        geom = polygon,
+                        description = "description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        themeId = 12,
+                        subThemeIds = listOf(64, 82),
+                        isControlRequired = true,
+                        hasNoUnitAvailable = true,
+                        createdAt =
+                        ZonedDateTime.parse(
+                            "2022-01-15T04:50:09Z",
+                        ),
+                        validityTime = 10,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "CDA",
+                        updatedAtUtc =
+                        ZonedDateTime.parse(
+                            "2022-01-15T14:50:09Z",
+                        ),
+                    ),
+                ),
+            )
+
+        // When we send an event from another thread
+        object : Thread() {
+            override fun run() {
+                try {
+                    sleep(250)
+                    applicationEventPublisher.publishEvent(updateReportingEvent)
+                } catch (ex: InterruptedException) {
+                    println(ex)
+                }
+            }
+        }
+            .start()
+
+        // Then
+        val missionUpdateEvent =
+            mockedApi.perform(get("/bff/v1/reportings/sse"))
+                .andExpect(status().isOk)
+                .andExpect(MockMvcResultMatchers.request().asyncStarted())
+                .andExpect(MockMvcResultMatchers.request().asyncResult(Matchers.nullValue()))
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", "text/event-stream"))
+                .andDo(MockMvcResultHandlers.log())
+                .andReturn()
+                .response
+                .contentAsString
+
+        Assertions.assertThat(missionUpdateEvent).contains("event:REPORTING_UPDATE")
+        Assertions.assertThat(missionUpdateEvent)
+            .contains(
+                "data:{\"id\":1,\"reportingId\":null,\"sourceType\":\"SEMAPHORE\",\"semaphoreId\":1,\"semaphore\":null,\"controlUnitId\":null,\"controlUnit\":null,\"displayedSource\":null,\"sourceName\":null,\"targetType\":null,\"vehicleType\":null,\"targetDetails\":[],\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-61,14],[-61,15],[-60,15],[-60,14],[-61,14]]]]},\"seaFront\":null,\"description\":\"description\",\"reportType\":\"INFRACTION_SUSPICION\",\"themeId\":12,\"subThemeIds\":[64,82],\"actionTaken\":null,\"isControlRequired\":true,\"hasNoUnitAvailable\":true,\"createdAt\":\"2022-01-15T04:50:09Z\",\"validityTime\":10,\"isArchived\":false,\"openBy\":\"CDA\",\"missionId\":null,\"attachedToMissionAtUtc\":null,\"detachedFromMissionAtUtc\":null,\"attachedEnvActionId\":null,\"attachedMission\":null,\"controlStatus\":\"CONTROL_TO_BE_DONE\",\"updatedAtUtc\":\"2022-01-15T14:50:09Z\",\"withVHFAnswer\":null}\n",
+            )
     }
 }
