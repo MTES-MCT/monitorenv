@@ -137,6 +137,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         <MapMenuDialog.Title>Créer un point d&apos;intérêt</MapMenuDialog.Title>
         <MapMenuDialog.VisibilityButton
           accent={Accent.SECONDARY}
+          data-cy="hide-all-interest-point"
           Icon={displayInterestPointLayer ? Icon.Display : Icon.Hide}
           onClick={() => {
             dispatch(setDisplayedItems({ displayInterestPointLayer: !displayInterestPointLayer }))
