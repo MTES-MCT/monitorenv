@@ -1,12 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
-import { THEME } from '@mtes-mct/monitor-ui'
-import { Icon, Stroke, Style } from 'ol/style'
 
-import { getInterestPointStyle } from './interestPoint.style'
-import {
-  INTEREST_POINT_STYLE_ICON_FILENAME,
-  INTEREST_POINT_STYLE_ZINDEX
-} from '../../../../domain/entities/interestPoints'
+import { getIconStyle, getInterestPointStyle, getStrokeStyles } from './interestPoint.style'
 
 describe('getInterestPointStyle', () => {
   it('should return stroke style when it should style it', async () => {
@@ -18,15 +12,7 @@ describe('getInterestPointStyle', () => {
     const strokeStyle = getInterestPointStyle(shouldStyleStroke, dummyResolution)
 
     // Then
-    const styleExpected = [
-      new Style({
-        stroke: new Stroke({
-          color: THEME.color.slateGray,
-          lineDash: [4, 4],
-          width: 2
-        })
-      })
-    ]
+    const styleExpected = getStrokeStyles()
 
     expect(strokeStyle).toEqual(styleExpected)
   })
@@ -39,15 +25,7 @@ describe('getInterestPointStyle', () => {
     const strokeStyle = getInterestPointStyle(shouldStyleStroke, dummyResolution)
 
     // Then
-    const styleExpected = new Style({
-      image: new Icon({
-        offset: [0, 0],
-        scale: 1 / dummyResolution ** (1 / 8) + 0.3,
-        size: [30, 79],
-        src: INTEREST_POINT_STYLE_ICON_FILENAME
-      }),
-      zIndex: INTEREST_POINT_STYLE_ZINDEX
-    })
+    const styleExpected = getIconStyle(dummyResolution)
 
     expect(styleExpected).toEqual(strokeStyle)
   })
