@@ -10,6 +10,10 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from 'domain/use_cases/map/updateMapInteractionListeners'
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -155,6 +159,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     if (reportingContext === ReportingContext.MAP) {
       dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
     }
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
 
   const deleteCurrentReporting = () => {

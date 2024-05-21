@@ -1,4 +1,4 @@
-import { type Coordinates, CoordinatesInput, IconButton, Icon } from '@mtes-mct/monitor-ui'
+import { type Coordinates, CoordinatesInput, IconButton, Icon, usePrevious } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
@@ -24,7 +24,6 @@ import {
 } from '../../../domain/use_cases/map/updateMapInteractionListeners'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { usePrevious } from '../../../hooks/usePrevious'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 import { SideWindowStatus } from '../../SideWindow/slice'
