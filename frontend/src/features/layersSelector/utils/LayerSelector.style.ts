@@ -130,6 +130,7 @@ const NoLayerSelected = styled.div`
 const NumberOfZones = styled.span`
   color: ${p => p.theme.color.slateGray};
   font-weight: 400;
+  padding-right: 3px;
 `
 
 const Wrapper = styled.div<{ $hasPinnedLayers?: boolean; $isExpanded: boolean }>`
