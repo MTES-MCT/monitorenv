@@ -3,7 +3,7 @@ import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
 import { getLength } from 'ol/sphere'
-import { createRef, useCallback, useEffect, useRef } from 'react'
+import { createRef, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
@@ -56,6 +56,7 @@ export function InterestPointOverlay({
   const currentOffset = useRef(initialOffsetValue)
   const currentCoordinates = useRef([])
   const interestPointCoordinates = useRef(coordinates)
+  const [isMounted, setIsMounted] = useState(false)
   const isThrottled = useRef(false)
   const overlayRef = useRef<Overlay | null>(null)
   const setOverlayRef = () => {
@@ -70,6 +71,10 @@ export function InterestPointOverlay({
     }
   }
   setOverlayRef()
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const moveInterestPointWithThrottle = useCallback(
     (target, delay) => {
@@ -101,7 +106,7 @@ export function InterestPointOverlay({
     [interestPointCoordinates.current]
   )
 
-  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, isVisible)
+  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, isMounted)
   const previousCoordinates = usePrevious(coordinates)
 
   useEffect(() => {
