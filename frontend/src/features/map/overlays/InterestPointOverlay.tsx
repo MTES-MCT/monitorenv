@@ -183,7 +183,7 @@ export function InterestPointOverlay({
   )
 }
 
-const Body = styled.div`
+const Body = styled.p`
   padding: 10px;
   font-size: 13px;
   font-weight: 500;
@@ -213,7 +213,7 @@ const WrapperToBeKeptForDOMManagement = styled.div`
   z-index: 300;
 `
 
-const InterestPointOverlayElement = styled.div`
+const InterestPointOverlayElement = styled.section`
   background: ${p => p.theme.color.white};
   cursor: grabbing;
   width: 183px;

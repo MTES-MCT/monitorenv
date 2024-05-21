@@ -10,7 +10,7 @@ import { getLength } from 'ol/sphere'
 import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { POIStyle, getInterestPointStyle } from './styles/interestPoint.style'
+import { POIStyle, getInterestPointStyle, getLinesStyle } from './styles/interestPoint.style'
 import { InterestPointLine } from '../../../domain/entities/interestPointLine'
 import { coordinatesAreModified, coordinatesOrTypeAreModified } from '../../../domain/entities/interestPoints'
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -21,7 +21,7 @@ import {
   editInterestPoint,
   endInterestPointDraw,
   removeInterestPoint,
-  resetInterestPointFeatureDeletion,
+  resetInterestPointToDelete,
   updateInterestPointBeingDrawed,
   updateInterestPointKeyBeingDrawed
 } from '../../../domain/shared_slices/InterestPoint'
@@ -44,27 +44,18 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
 
-  const { interestPointBeingDrawed, interestPoints, isDrawing, isEditing, triggerInterestPointFeatureDeletion } =
-    useAppSelector(state => state.interestPoint)
+  const { interestPointBeingDrawed, interestPoints, interestPointToDelete, isDrawing, isEditing } = useAppSelector(
+    state => state.interestPoint
+  )
 
   const [drawObject, setDrawObject] = useState<Draw>()
 
-  const [interestPointToCoordinates, setInterestPointToCoordinates] = useState(new Map())
+  const [interestsPointsToCoordinate, setInterestsPointsToCoordinate] = useState(new Map())
   const previousInterestPointBeingDrawed = usePrevious<NewInterestPoint | null>(interestPointBeingDrawed)
   const deleteInterestPoint = useCallback(
     (uuid: string) => {
-      const feature = interestPointVectorSourceRef.current.getFeatureById(uuid)
-      if (feature) {
-        interestPointVectorSourceRef.current.removeFeature(feature)
-        interestPointVectorSourceRef.current.changed()
-      }
-
-      const featureLine = interestPointVectorSourceRef.current.getFeatureById(InterestPointLine.getFeatureId(uuid))
-      if (featureLine) {
-        interestPointVectorSourceRef.current.removeFeature(featureLine)
-        interestPointVectorSourceRef.current.changed()
-      }
-
+      removePoint(uuid)
+      removeLine(uuid)
       dispatch(removeInterestPoint(uuid))
     },
     [dispatch]
@@ -73,27 +64,17 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     (uuid: string | number, coordinates: Coordinate, nextCoordinates: Coordinate, offset: any) => {
       const featureId = InterestPointLine.getFeatureId(uuid)
 
-      if (interestPointToCoordinates.has(featureId)) {
-        const existingLabelLineFeature = interestPointVectorSourceRef.current.getFeatureById(featureId)
-        const interestPointFeature = interestPointVectorSourceRef.current.getFeatureById(uuid)
-
-        if (existingLabelLineFeature) {
-          const geometry = interestPointFeature?.getGeometry()
-          if (geometry) {
-            existingLabelLineFeature.setGeometry(new LineString([nextCoordinates, geometry.getFlatCoordinates()]))
-          }
-        }
+      if (interestsPointsToCoordinate.has(featureId)) {
+        updateLineFromExistingFeature(featureId, uuid, nextCoordinates)
       } else {
-        const interestPointLineFeature = InterestPointLine.getFeature(coordinates, nextCoordinates, featureId)
-
-        interestPointVectorSourceRef.current.addFeature(interestPointLineFeature)
+        addLineToFeature(coordinates, nextCoordinates, featureId)
       }
 
-      const nextVesselToCoordinates = interestPointToCoordinates
-      interestPointToCoordinates.set(featureId, { coordinates: nextCoordinates, offset })
-      setInterestPointToCoordinates(nextVesselToCoordinates)
+      const nextFeatureToCoordinates = interestsPointsToCoordinate
+      interestsPointsToCoordinate.set(featureId, { coordinates: nextCoordinates, offset })
+      setInterestsPointsToCoordinate(nextFeatureToCoordinates)
     },
-    [interestPointToCoordinates]
+    [interestsPointsToCoordinate]
   )
 
   const modifyInterestPoint = useCallback(
@@ -112,7 +93,8 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: interestPointVectorSourceRef.current,
-      style: (feature, resolution) => getInterestPointStyle(feature?.getId()?.toString()?.includes('line'), resolution),
+      style: (feature, resolution) =>
+        shouldStyledLines(feature) ? getLinesStyle() : getInterestPointStyle(resolution),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.INTEREST_POINT.zIndex
@@ -237,11 +219,11 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   }, [dispatch, drawObject, interestPointBeingDrawed])
 
   useEffect(() => {
-    if (triggerInterestPointFeatureDeletion) {
-      deleteInterestPoint(triggerInterestPointFeatureDeletion)
-      resetInterestPointFeatureDeletion()
+    if (interestPointToDelete) {
+      deleteInterestPoint(interestPointToDelete)
+      resetInterestPointToDelete()
     }
-  }, [deleteInterestPoint, triggerInterestPointFeatureDeletion])
+  }, [deleteInterestPoint, interestPointToDelete])
 
   useEffect(() => {
     function modifyFeatureWhenCoordinatesOrTypeModified() {
@@ -293,8 +275,8 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
         if (distance > 10) {
           const featureId = InterestPointLine.getFeatureId(interestPointBeingDrawed.uuid)
-          if (interestPointToCoordinates.has(featureId)) {
-            interestPointToCoordinates.delete(featureId)
+          if (interestsPointsToCoordinate.has(featureId)) {
+            interestsPointsToCoordinate.delete(featureId)
             const feature = interestPointVectorSourceRef.current.getFeatureById(featureId)
             if (feature && !!interestPointBeingDrawed.coordinates) {
               feature.setGeometry(
@@ -307,7 +289,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     }
 
     initLineWhenInterestPointCoordinatesModified()
-  }, [interestPointBeingDrawed, interestPointToCoordinates, previousInterestPointBeingDrawed])
+  }, [interestPointBeingDrawed, interestsPointsToCoordinate, previousInterestPointBeingDrawed])
 
   useEffect(() => {
     interestPointVectorLayer.current.setVisible(displayInterestPointLayer)
@@ -346,4 +328,42 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       ) : null}
     </div>
   )
+
+  function shouldStyledLines(feature) {
+    return feature?.getId()?.toString()?.includes('line')
+  }
+
+  function addLineToFeature(coordinates: Coordinate, nextCoordinates: Coordinate, featureId: string) {
+    const interestPointLineFeature = InterestPointLine.getFeature(coordinates, nextCoordinates, featureId)
+
+    interestPointVectorSourceRef.current.addFeature(interestPointLineFeature)
+  }
+
+  function updateLineFromExistingFeature(featureId: string, uuid: string | number, nextCoordinates: Coordinate) {
+    const existingLabelLineFeature = interestPointVectorSourceRef.current.getFeatureById(featureId)
+    const interestPointFeature = interestPointVectorSourceRef.current.getFeatureById(uuid)
+
+    if (existingLabelLineFeature) {
+      const geometry = interestPointFeature?.getGeometry()
+      if (geometry) {
+        existingLabelLineFeature.setGeometry(new LineString([nextCoordinates, geometry.getFlatCoordinates()]))
+      }
+    }
+  }
+
+  function removeLine(uuid: string) {
+    const featureLine = interestPointVectorSourceRef.current.getFeatureById(InterestPointLine.getFeatureId(uuid))
+    if (featureLine) {
+      interestPointVectorSourceRef.current.removeFeature(featureLine)
+      interestPointVectorSourceRef.current.changed()
+    }
+  }
+
+  function removePoint(uuid: string) {
+    const feature = interestPointVectorSourceRef.current.getFeatureById(uuid)
+    if (feature) {
+      interestPointVectorSourceRef.current.removeFeature(feature)
+      interestPointVectorSourceRef.current.changed()
+    }
+  }
 }

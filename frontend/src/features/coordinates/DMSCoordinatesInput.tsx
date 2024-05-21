@@ -49,11 +49,6 @@ const Body = styled.div`
   text-align: left;
 
   input {
-    background: ${p => p.theme.color.gainsboro};
-    border: none;
-    height: 27px;
-    margin-top: 7px;
-    padding-left: 8px;
     width: 200px;
   }
 `

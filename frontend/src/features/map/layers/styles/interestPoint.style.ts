@@ -19,7 +19,7 @@ export const getIconStyle = (resolution: number) =>
     zIndex: INTEREST_POINT_STYLE_ZINDEX
   })
 
-export const getStrokeStyles = () => [
+export const getLinesStyle = () => [
   new Style({
     stroke: new Stroke({
       color: THEME.color.slateGray,
@@ -29,13 +29,7 @@ export const getStrokeStyles = () => [
   })
 ]
 
-export const getInterestPointStyle = (shouldStyleStroke: boolean | undefined, resolution: number) => {
-  if (shouldStyleStroke) {
-    return getStrokeStyles()
-  }
-
-  return getIconStyle(resolution)
-}
+export const getInterestPointStyle = (resolution: number) => getIconStyle(resolution)
 
 export const POIStyle = new Style({
   image: new CircleStyle({

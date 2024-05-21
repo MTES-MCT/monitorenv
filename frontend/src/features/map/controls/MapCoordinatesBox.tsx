@@ -79,18 +79,16 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
         <Header data-cy="coordinates-selection" onClick={() => setCoordinatesSelectionIsOpen(false)}>
           Unités des coordonnées
         </Header>
-        <RadioContainer>
-          <MultiRadio
-            data-cy="coordinates-radio"
-            isInline
-            isLabelHidden
-            label="Unités des coordonnées"
-            name="coordinatesRadio"
-            onChange={selectCordinatesFormat}
-            options={COORDINATES_OPTIONS}
-            value={coordinatesFormat}
-          />
-        </RadioContainer>
+        <StyledMultiRadio
+          data-cy="coordinates-radio"
+          isInline
+          isLabelHidden
+          label="Unités des coordonnées"
+          name="coordinatesRadio"
+          onChange={selectCordinatesFormat}
+          options={COORDINATES_OPTIONS}
+          value={coordinatesFormat}
+        />
       </CoordinatesTypeSelection>
       <Coordinates onClick={() => setCoordinatesSelectionIsOpen(!coordinatesSelectionIsOpen)}>
         {getShowedCoordinates(coordinates, coordinatesFormat)} ({coordinatesFormat})
@@ -112,11 +110,11 @@ const getShowedCoordinates = (coordinates, coordinatesFormat) => {
 const StyledCoordinatesContainer = styled.div`
   z-index: 2;
 `
-const RadioContainer = styled.div`
+const StyledMultiRadio = styled(MultiRadio)`
   padding: 12px;
 `
 
-const Header = styled.span`
+const Header = styled.header`
   background-color: ${p => p.theme.color.charcoal};
   color: ${p => p.theme.color.gainsboro};
   padding: 5px 0;
