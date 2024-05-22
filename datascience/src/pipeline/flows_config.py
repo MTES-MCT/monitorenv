@@ -78,6 +78,7 @@ semaphores.flow.schedule = CronSchedule("3 5,15 * * *")
 flows_to_register = [
     admin_areas.flow,
     amp_cacem.flow,
+    amp_ofb.flow,
     control_objectives.flow,
     email_actions_to_units.flow,
     facade_areas.flow,
