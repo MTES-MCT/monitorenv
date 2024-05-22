@@ -25,6 +25,8 @@ local_migrations_folders = [
     Path(LOCAL_MIGRATIONS_FOLDER) / "layers",
 ]
 
+cacem_migrations_folders = TEST_DATA_LOCATION / Path("cacem_database")
+
 host_migrations_folders = [
     Path(HOST_MIGRATIONS_FOLDER) / "internal",
     Path(HOST_MIGRATIONS_FOLDER) / "layers",
@@ -169,10 +171,10 @@ def start_remote_database_container(
 @pytest.fixture(scope="session")
 def create_tables(set_environment_variables, start_remote_database_container):
     container = start_remote_database_container
-    migrations = get_migrations_in_folders(local_migrations_folders)
+    migrations_monitorenv = get_migrations_in_folders(local_migrations_folders)
 
-    print("Creating tables")
-    for m in migrations:
+    print("Creating tables for monitorenv database")
+    for m in migrations_monitorenv:
 
         print(f"{m.major}.{m.minor}.{m.patch}: {m.path.name}")
 
@@ -197,7 +199,18 @@ def create_tables(set_environment_variables, start_remote_database_container):
             raise Exception(
                 f"Error running migration {m.path.name}. Error message is: {result.output}"
             )
+        
 
+@pytest.fixture()
+def create_cacem_tables(create_tables):
+    e = create_engine("cacem_local")
+    cacem_data_scripts = get_migrations_in_folder(cacem_migrations_folders)
+    print("Creating tables for cacem database")
+
+    with e.begin() as connection:
+        for s in cacem_data_scripts:
+            print(f"{s.major}.{s.minor}.{s.patch}: {s.path.name}")
+            connection.execute(text(s.script))
 
 @pytest.fixture()
 def reset_test_data(create_tables):

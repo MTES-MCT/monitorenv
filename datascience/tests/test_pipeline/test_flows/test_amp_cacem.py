@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.pipeline.flows.amp import (
+from src.pipeline.flows.amp_cacem import (
     load_new_amp,
     merge_hashes,
     select_ids_to_delete,

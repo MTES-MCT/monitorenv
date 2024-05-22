@@ -84,6 +84,12 @@ FAO_AREAS_URL = (
     "typeName=fifao:FAO_AREAS_CWP&outputFormat=SHAPE-ZIP"
 )
 
+AMP_AREAS_URL = (
+    "https://wxs.ofb.fr/geoserver/gestion/ows?"
+    "service=WFS&request=GetFeature&version=2.0.0&"
+    "typeName=ges_omon_amp_ofb_pol_3857_vue&"
+    "outputFormat=SHAPE-ZIP"
+)
 # Prefect Server endpoint
 PREFECT_SERVER_URL = os.getenv("PREFECT_SERVER_URL")
 
