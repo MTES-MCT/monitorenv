@@ -257,7 +257,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
         )
 
 
-with Flow("maj amp depuis ofb") as flow:
+with Flow("update amp from ofb") as flow:
     amp_areas = extract_amp_areas(url=AMP_AREAS_URL, proxies=PROXIES)
     amp_areas = transform_amp_areas(amp_areas)
     load_amp_areas(amp_areas)
