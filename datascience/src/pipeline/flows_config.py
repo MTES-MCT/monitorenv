@@ -15,7 +15,8 @@ from config import (
 )
 from src.pipeline.flows import (
     admin_areas,
-    amp,
+    amp_cacem,
+    amp_ofb,
     control_objectives,
     email_actions_to_units,
     facade_areas,
@@ -32,7 +33,10 @@ from src.pipeline.flows import (
 )
 
 ################################ Define flow schedules ################################
-amp.flow.schedule = CronSchedule("22 0 * * *")
+amp_ofb.flow.schedule = CronSchedule("2 0 * * *")
+
+amp_cacem.flow.schedule = CronSchedule("22 0 * * *")
+
 email_actions_to_units.flow.schedule = Schedule(
     clocks=[
         clocks.CronClock(
@@ -46,6 +50,7 @@ email_actions_to_units.flow.schedule = Schedule(
         ),
     ]
 )
+
 infractions.flow.schedule = CronSchedule("2 8,14 * * *")
 
 refresh_materialized_view.flow.schedule = Schedule(
@@ -72,7 +77,7 @@ semaphores.flow.schedule = CronSchedule("3 5,15 * * *")
 ###################### List flows to register with prefect server #####################
 flows_to_register = [
     admin_areas.flow,
-    amp.flow,
+    amp_cacem.flow,
     control_objectives.flow,
     email_actions_to_units.flow,
     facade_areas.flow,
