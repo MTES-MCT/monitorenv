@@ -75,12 +75,15 @@ const LayerItem = styled.li<{ $isSelected: boolean }>`
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
 
+// using average width of 7px per character to approximate min-width
+// more precise calculation would require measuring text width with access to the dom
 const GroupName = styled.span`
   color: ${p => p.theme.color.gunMetal};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font: normal normal bold 13px/18px Marianne;
+  min-width: ${p => (p.title?.length && p.title.length * 7 > 220 ? 200 : 0)}px;
 `
 
 const Name = styled.span`
@@ -89,4 +92,5 @@ const Name = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
   font: normal normal normal 13px/18px Marianne;
+  flex: 1;
 `
