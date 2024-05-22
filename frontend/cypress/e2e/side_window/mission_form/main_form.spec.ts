@@ -313,9 +313,7 @@ context('Side Window > Mission Form > Main Form', () => {
               data: JSON.stringify({
                 attachedReportingIds: [],
                 attachedReportings: [],
-                // Changed field
-                // TODO : uncomment this field when Fish andRapportNav have deleted closedBy field
-                // completedBy: 'LTH',
+                completedBy: 'LTH',
                 controlUnits: [
                   {
                     administration: 'Gendarmerie Nationale',

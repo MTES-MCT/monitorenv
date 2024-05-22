@@ -12,7 +12,6 @@ data class MissionDataOutput(
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
     val openBy: String? = null,
-    val closedBy: String? = null, // TODO delete when Fish and RapportNav are removed
     val completedBy: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
@@ -24,7 +23,6 @@ data class MissionDataOutput(
     val updatedAtUtc: ZonedDateTime? = null,
     val envActions: List<MissionEnvActionDataOutput>? = null,
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean, // TODO delete when Fish and RapportNav are removed
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val isGeometryComputedFromControls: Boolean,
@@ -38,8 +36,6 @@ data class MissionDataOutput(
                 missionTypes = mission.missionTypes,
                 controlUnits = mission.controlUnits,
                 openBy = mission.openBy,
-                closedBy =
-                mission.completedBy, // TODO delete when Fish and RapportNav are removed
                 completedBy = mission.completedBy,
                 observationsCacem = mission.observationsCacem,
                 observationsCnsp = mission.observationsCnsp,
@@ -56,7 +52,6 @@ data class MissionDataOutput(
                     )
                 },
                 missionSource = mission.missionSource,
-                isClosed = false, // TODO delete when Fish and RapportNav are removed
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
                 isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
