@@ -16,6 +16,36 @@ from src.pipeline.utils import psql_insert_copy
 
 AMP_AREAS_FILE_PATH = LIBRARY_LOCATION / "pipeline/data/amp_areas.zip"
 
+AMP_AREAS_COLUMNS = [
+            "mpa_id",
+            "mpa_pid",
+            "gid",
+            "des_id",
+            "mpa_status",
+            "mpa_name",
+            "mpa_oriname",
+            "des_desigfr",
+            "des_desigtype",
+            "mpa_datebegin",
+            "mpa_statusyr",
+            "mpa_wdpaid",
+            "mpa_wdpapid",
+            "mpa_mnhnid",
+            "mpa_marine",
+            "mpa_calcarea",
+            "mpa_calcmarea",
+            "mpa_reparea",
+            "mpa_repmarea",
+            "mpa_url",
+            "mpa_updatewhen",
+            "iucn_idiucn",
+            "subloc_code",
+            "subloc_name",
+            "country_piso3",
+            "country_iso3",
+            "country_iso3namefr",
+            "geom"
+        ]
 
 @task(checkpoint=False)
 def extract_amp_areas(url: str, proxies: dict) -> gpd.GeoDataFrame:
@@ -54,15 +84,13 @@ def transform_amp_areas(amp_areas: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 
     amp_areas = amp_areas.copy(deep=True)
     amp_areas.columns = amp_areas.columns.map(str.lower)
-    # amp_areas = amp_areas.drop(columns=["id"])
-    amp_areas = gpd.GeoDataFrame(amp_areas)
     amp_areas = amp_areas.rename(columns={
         "geometry"  : "geom",
         "nom"       : "mpa_name",
         "mpa_orinam": "mpa_oriname",
         "des_desigf": "des_desigfr",
         "des_desigt": "des_desigtype",
-        "debut"     : "mpa_datebegin",
+        "mpa_datebe": "mpa_datebegin",
         "mpa_statu0": "mpa_statusyr",
         "mpa_wdpapi": "mpa_wdpapid",
         "mpa_calcar": "mpa_calcarea",
@@ -79,7 +107,7 @@ def transform_amp_areas(amp_areas: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         })
     amp_areas = amp_areas.set_geometry("geom")
     amp_areas["geom"] = amp_areas.geom.map(to_multipolygon)
-
+    amp_areas = amp_areas.to_crs("EPSG:4326")
     return amp_areas
 
 
@@ -96,7 +124,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             text(
           "CREATE TEMP TABLE tmp_amp_ofb("
           "    id serial PRIMARY KEY,"
-          "    geom geometry,"
+          "    geom geometry(multipolygon, 4326),"
           "    mpa_id integer UNIQUE NOT NULL,"
           "    mpa_pid integer,"
           "    gid integer,"
@@ -137,36 +165,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             ]
         )
 
-        columns_to_load = [
-            "mpa_id",
-            "mpa_pid",
-            "gid",
-            "des_id",
-            "mpa_status",
-            "mpa_name",
-            "mpa_oriname",
-            "des_desigfr",
-            "des_desigtype",
-            "mpa_datebegin",
-            "mpa_statusyr",
-            "mpa_wdpaid",
-            "mpa_wdpapid",
-            "mpa_mnhnid",
-            "mpa_marine",
-            "mpa_calcarea",
-            "mpa_calcmarea",
-            "mpa_reparea",
-            "mpa_repmarea",
-            "mpa_url",
-            "mpa_updatewhen",
-            "iucn_idiucn",
-            "subloc_code",
-            "subloc_name",
-            "country_piso3",
-            "country_iso3",
-            "country_iso3namefr",
-            "geom"
-        ]
+        columns_to_load = AMP_AREAS_COLUMNS
 
         logger.info("Loading amp to temporary table")
 

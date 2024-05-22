@@ -1,8 +1,8 @@
 import geopandas as gpd
-import pandas as pd
+from geopandas.testing import assert_geodataframe_equal
 import pytest
 
-from src.pipeline.flows.amp_ofb import load_amp_areas
+from src.pipeline.flows.amp_ofb import AMP_AREAS_COLUMNS, load_amp_areas, transform_amp_areas
 
 from src.read_query import read_query
 from tests.test_pipeline.test_shared_tasks.test_geometries import make_square_multipolygon
@@ -82,7 +82,9 @@ def amp_areas_from_ofb() -> gpd.GeoDataFrame:
                 make_square_multipolygon(-110, 60, 10, 10),
             ],
            
-        }
+        },
+        crs="EPSG:4326",
+        geometry="geom",
     )
 
 @pytest.fixture
@@ -152,35 +154,50 @@ def amp_areas_after_upsert() -> gpd.GeoDataFrame:
             "country_piso3": ["FRA updated", "FRA", "FRA", "FRA", "FRA"],
             "country_iso3": ["FRA updated", "FRA", "FRA", "FRA", "FRA"],
             "country_iso3namefr": ["France updated", "France", "France", "France", "France"],
-            # comparing geometries is tricky, so we'll skip it for now
-            # error is MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0))) != MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))
-            # "geom": [
-            #     make_square_multipolygon(0, 0, 10, 10),
-            #     make_square_multipolygon(120, -20, 15, 10),
-            #     make_square_multipolygon(-60, 10, 5, 10),
-            #     make_square_multipolygon(-10, 45, 180, 5),
-            #     make_square_multipolygon(-110, 60, 10, 10),
-            # ],
+            "geom": [
+                make_square_multipolygon(0, 0, 10, 10),
+                make_square_multipolygon(120, -20, 15, 10),
+                make_square_multipolygon(-60, 10, 5, 10),
+                make_square_multipolygon(-10, 45, 180, 5),
+                make_square_multipolygon(-110, 60, 10, 10),
+            ],
             "mpa_type": [None, None, None, None, "MPA Type 1"],
             "ref_reg": [ None, None, None, None, "Résumé reg"],
             "url_legicem": [None, None, None, None, "url legicem 1"],    
            
-        }
+        },
+        crs="EPSG:4326",
+        geometry="geom",
     )
+
+
+def test_transform_amp_areas(amp_areas_from_ofb):
+
+    downloaded_amps = gpd.read_file("tests/test_data/zip_files/amp_areas.zip")
+    transformed_amp = transform_amp_areas.run(downloaded_amps)
+
+    assert amp_areas_from_ofb.crs == transformed_amp.crs
+    
+    columns_to_load = AMP_AREAS_COLUMNS
+    assert amp_areas_from_ofb[columns_to_load].columns.equals(transformed_amp[columns_to_load].columns)
+
 
 def test_load_amp_areas(create_cacem_tables, amp_areas_from_ofb, amp_areas_after_upsert):
     load_amp_areas.run(amp_areas_from_ofb)
     loaded_amp = read_query(
-        "monitorenv_remote",
-        "SELECT mpa_id, mpa_pid, gid, des_id, mpa_status, "
+        db = "monitorenv_remote",
+        query= "SELECT mpa_id, mpa_pid, gid, des_id, mpa_status, "
         "mpa_name, mpa_oriname, des_desigfr, des_desigtype, "
         "mpa_datebegin, mpa_statusyr, mpa_wdpaid, mpa_wdpapid, "
         "mpa_mnhnid, mpa_marine, mpa_url, mpa_calcarea, "
         "mpa_calcmarea, mpa_reparea, mpa_repmarea, mpa_updatewhen, "
         "iucn_idiucn, subloc_code, subloc_name, country_piso3, "
-        "country_iso3, country_iso3namefr, mpa_type, ref_reg, url_legicem "
+        "country_iso3, country_iso3namefr, geom, mpa_type, ref_reg, url_legicem "
         "FROM prod.\"Aires marines protégées\" "
-        "ORDER BY mpa_id")
+        "ORDER BY mpa_id",
+        backend="geopandas",
+        geom_col="geom",
+        crs=4326)
     
-    
-    pd.testing.assert_frame_equal(amp_areas_after_upsert, loaded_amp)
+    assert_geodataframe_equal(amp_areas_after_upsert, loaded_amp)
+
