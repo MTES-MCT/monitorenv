@@ -57,7 +57,7 @@ def transform_amp_areas(amp_areas: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     # amp_areas = amp_areas.drop(columns=["id"])
     amp_areas = gpd.GeoDataFrame(amp_areas)
     amp_areas = amp_areas.rename(columns={
-        "geometry"  : "wkb_geometry",
+        "geometry"  : "geom",
         "nom"       : "mpa_name",
         "mpa_orinam": "mpa_oriname",
         "des_desigf": "des_desigfr",
@@ -78,7 +78,7 @@ def transform_amp_areas(amp_areas: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         "country_i0": "country_iso3namefr"
         })
     amp_areas = amp_areas.set_geometry("geom")
-    amp_areas["geom"] = amp_areas.wkb_geometry.map(to_multipolygon)
+    amp_areas["geom"] = amp_areas.geom.map(to_multipolygon)
 
     return amp_areas
 
@@ -88,7 +88,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
 
     logger = prefect.context.get("logger")
 
-    e = create_engine("monitorenv_remote")
+    e = create_engine("cacem_local")
 
     with e.begin() as connection:
         logger.info("Creating temporary table")
@@ -96,7 +96,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             text(
           "CREATE TEMP TABLE tmp_amp_ofb("
           "    id serial PRIMARY KEY,"
-          "    geom geometry(Polygon,4326),"
+          "    geom geometry,"
           "    mpa_id integer UNIQUE NOT NULL,"
           "    mpa_pid integer,"
           "    gid integer,"
@@ -130,21 +130,23 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
         )
 
         amp_areas = prepare_df_for_loading(
-            amp_areas,
-            logger,
+            df = amp_areas,
+            logger = logger,
+            nullable_integer_columns = [
+                "mpa_marine"
+            ]
         )
 
         columns_to_load = [
-            "geom",
             "mpa_id",
             "mpa_pid",
             "gid",
+            "des_id",
+            "mpa_status",
             "mpa_name",
             "mpa_oriname",
-            "des_id",
             "des_desigfr",
             "des_desigtype",
-            "mpa_status",
             "mpa_datebegin",
             "mpa_statusyr",
             "mpa_wdpaid",
@@ -162,7 +164,8 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             "subloc_name",
             "country_piso3",
             "country_iso3",
-            "country_iso3namefr"
+            "country_iso3namefr",
+            "geom"
         ]
 
         logger.info("Loading amp to temporary table")
@@ -179,9 +182,11 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
 
         connection.execute(
             text(
-                "UPDATE public.amp_cacem p "
+                "UPDATE prod.\"Aires marines protégées\" p "
                 "SET "
-                "    geom = ep.geom, "
+                "    geom = st_multi(ep.geom), "
+                "    mpa_pid = ep.mpa_pid, "
+                "    gid = ep.gid, "
                 "    mpa_name = ep.mpa_name, "
                 "    mpa_oriname = ep.mpa_oriname, "
                 "    des_id = ep.des_id, "
@@ -214,7 +219,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
         logger.info("Delete amp not existing in temporary table")
         connection.execute(
             text(
-                "DELETE FROM public.amp_cacem p "
+                "DELETE FROM prod.\"Aires marines protégées\" p "
                 "WHERE p.mpa_id NOT IN "
                 "    (SELECT mpa_id FROM tmp_amp_ofb);"
             )
@@ -223,7 +228,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
         logger.info("Insert missing amp from temporary table")
         connection.execute(
             text(
-                "INSERT INTO public.amp_cacem ("
+                "INSERT INTO prod.\"Aires marines protégées\" ("
                 "    geom, mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
                 "    des_id, des_desigfr, des_desigtype, mpa_status, "
                 "    mpa_datebegin, mpa_statusyr, mpa_wdpaid, mpa_wdpapid, "
@@ -233,7 +238,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
                 "    country_iso3, country_iso3namefr "
                 "    )"
                 "SELECT "
-                "    geom, mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
+                "    st_multi(geom), mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
                 "    des_id, des_desigfr, des_desigtype, mpa_status, "
                 "    mpa_datebegin, mpa_statusyr, mpa_wdpaid, mpa_wdpapid, "
                 "    mpa_mnhnid, mpa_marine, mpa_calcarea, mpa_calcmarea, "
@@ -242,13 +247,13 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
                 "    country_iso3, country_iso3namefr "
                 "FROM tmp_amp_ofb "
                 "WHERE mpa_id NOT IN "
-                "    (SELECT mpa_id FROM public.amp_cacem);"
+                "    (SELECT mpa_id FROM prod.\"Aires marines protégées\");"
             )
         )
 
 
 with Flow("AMP areas") as flow:
-    amp_areas = extract_amp_areas(srl=AMP_AREAS_URL, proxies=PROXIES)
+    amp_areas = extract_amp_areas(url=AMP_AREAS_URL, proxies=PROXIES)
     amp_areas = transform_amp_areas(amp_areas)
     load_amp_areas(amp_areas)
 
