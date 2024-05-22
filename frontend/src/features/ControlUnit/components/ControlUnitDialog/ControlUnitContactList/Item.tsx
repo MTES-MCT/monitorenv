@@ -46,7 +46,6 @@ const Wrapper = styled.div`
   color: ${p => p.theme.color.slateGray};
   display: flex;
   margin-top: 8px;
-  padding: 8px 16px;
 
   > p:not(:first-child) {
     margin: 8px 0 0;
@@ -55,6 +54,7 @@ const Wrapper = styled.div`
 
 const Left = styled.div`
   flex-grow: 1;
+  padding: 8px 16px 12px;
 
   > p {
     align-items: center;
@@ -68,7 +68,9 @@ const Left = styled.div`
   }
 `
 
-const Right = styled.div``
+const Right = styled.div`
+  padding: 0 1px;
+`
 
 const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};
