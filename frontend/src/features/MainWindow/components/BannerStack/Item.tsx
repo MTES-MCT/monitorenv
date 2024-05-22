@@ -6,14 +6,14 @@ import type { Promisable } from 'type-fest'
 
 type ItemProps = {
   bannerProps: BannerStackItemProps
-  bannerStackRank: number
+  bannerStackId: number
   onCloseOrAutoclose: (bannerStackKey: number) => Promisable<void>
 }
-export function Item({ bannerProps, bannerStackRank, onCloseOrAutoclose }: ItemProps) {
+export function Item({ bannerProps, bannerStackId, onCloseOrAutoclose }: ItemProps) {
   const controlledBannerProps: BannerProps = {
     ...bannerProps,
-    onAutoClose: () => onCloseOrAutoclose(bannerStackRank),
-    onClose: () => onCloseOrAutoclose(bannerStackRank),
+    onAutoClose: () => onCloseOrAutoclose(bannerStackId),
+    onClose: () => onCloseOrAutoclose(bannerStackId),
     top: '0'
   }
 

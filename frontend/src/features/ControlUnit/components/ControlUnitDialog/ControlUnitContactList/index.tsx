@@ -135,7 +135,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       addMainWindowBanner({
         children:
           'Cette unité n’a actuellement plus d’adresse de diffusion. Elle ne recevra plus de préavis ni de bilan de ses activités de contrôle.',
-        closingDelay: 115000,
+        closingDelay: 15000,
         isClosable: true,
         isFixed: true,
         level: Level.WARNING,
