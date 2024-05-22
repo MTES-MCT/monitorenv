@@ -11,10 +11,10 @@ from tests.test_pipeline.test_shared_tasks.test_geometries import make_square_mu
 def amp_areas_from_ofb() -> gpd.GeoDataFrame:
     return gpd.GeoDataFrame(
         {
-            "mpa_id": [ 3, 4, 7, 92, 735],
-            "mpa_pid": [1, 2, 3, 4, 7],
-            "gid": [1, 2, 3, 4, 7],
-            "des_id": [1, 2, 3, 4, 7],
+            "mpa_id": [ 3.0, 4, 7, 92, 735],
+            "mpa_pid": [1.0, 2, 3, 4, 7],
+            "gid": [1.0, 2, 3, 4, 7],
+            "des_id": [1.0, 2, 3, 4, 7],
             "mpa_status": ["designated", "designated", "proposed", "proposed", "proposed"],
             "mpa_name": [
                 "AMP 1 updated",
@@ -51,11 +51,11 @@ def amp_areas_from_ofb() -> gpd.GeoDataFrame:
                 "2003-01-01",
                 "2004-01-01",
             ],
-            "mpa_statusyr": [2024, 2001, 2002, 2003, 2004],
-            "mpa_wdpaid": [106767, 555526886, 555526887, 555526888, 555526889],
+            "mpa_statusyr": [2024.0, 2001, 2002, 2003, 2004],
+            "mpa_wdpaid": [106767.0, 555526886, 555526887, 555526888, 555526889],
             "mpa_wdpapid": ["WDPA 1", "WDPA 2", "WDPA 3", "WDPA 4", "WDPA 5"],
             "mpa_mnhnid": ["FR3600138", "FR1100014", None, "FR11014", "FR11330014"],
-            "mpa_marine": [1, 0, 1, None, 1],
+            "mpa_marine": [1.0, 0, 1, None, 1],
             "mpa_url": ["URL 1", "URL 2", "URL 3", "URL 4", None],
             "mpa_calcarea": [100.1, 200, 300, 400, 500],
             "mpa_calcmarea": [100.1, 200, 300, 400, 500],

@@ -161,6 +161,12 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             df = amp_areas,
             logger = logger,
             nullable_integer_columns = [
+                "gid",
+                "mpa_id",
+                "mpa_pid",
+                "des_id",
+                "mpa_statusyr",
+                "mpa_wdpaid",
                 "mpa_marine"
             ]
         )
@@ -251,7 +257,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
         )
 
 
-with Flow("AMP areas") as flow:
+with Flow("maj amp depuis ofb") as flow:
     amp_areas = extract_amp_areas(url=AMP_AREAS_URL, proxies=PROXIES)
     amp_areas = transform_amp_areas(amp_areas)
     load_amp_areas(amp_areas)
