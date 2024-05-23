@@ -35,6 +35,7 @@ data class ReportingEntity(
     val attachedEnvActionId: UUID? = null,
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
+    val isInfractionProven: Boolean,
 ) {
     fun validate() {
         when (sourceType) {

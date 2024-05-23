@@ -182,6 +182,13 @@ export const StyledToggle = styled.div`
   flex: 1;
   gap: 8px;
 `
+export const StyledInfractionProven = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 8px;
+`
+
 export const StyledFormikTextInput = styled(FormikTextInput)`
   width: 90px;
 `

@@ -129,6 +129,7 @@ class ReportingModel(
     val attachedEnvAction: EnvActionModel? = null,
     @Column(name = "updated_at_utc") @UpdateTimestamp val updatedAtUtc: Instant? = null,
     @Column(name = "with_vhf_answer") val withVHFAnswer: Boolean? = null,
+    @Column(name = "is_infraction_proven") val isInfractionProven: Boolean,
 ) {
 
     fun toReporting() =
@@ -162,6 +163,7 @@ class ReportingModel(
             attachedEnvActionId = attachedEnvAction?.id,
             updatedAtUtc = updatedAtUtc?.atZone(UTC),
             withVHFAnswer = withVHFAnswer,
+            isInfractionProven = isInfractionProven,
         )
 
     fun toReportingDTO(objectMapper: ObjectMapper) =
@@ -236,6 +238,7 @@ class ReportingModel(
                 attachedEnvAction = envActionReference,
                 updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
                 withVHFAnswer = reporting.withVHFAnswer,
+                isInfractionProven = reporting.isInfractionProven,
             )
     }
 }

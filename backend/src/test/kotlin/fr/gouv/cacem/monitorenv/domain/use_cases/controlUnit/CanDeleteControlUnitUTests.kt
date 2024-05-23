@@ -63,6 +63,7 @@ val FAKE_REPORTING =
         attachedToMissionAtUtc = null,
         detachedFromMissionAtUtc = null,
         attachedEnvActionId = null,
+        isInfractionProven = true,
     )
 
 @ExtendWith(SpringExtension::class)

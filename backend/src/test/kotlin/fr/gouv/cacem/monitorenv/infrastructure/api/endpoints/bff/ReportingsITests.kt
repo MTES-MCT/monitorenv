@@ -107,6 +107,7 @@ class ReportingsITests {
                         "2022-01-15T14:50:09Z",
                     ),
                     withVHFAnswer = null,
+                    isInfractionProven = true,
                 ),
                 semaphore =
                 SemaphoreEntity(
@@ -146,6 +147,7 @@ class ReportingsITests {
                 ZonedDateTime.parse(
                     "2022-01-15T14:50:09Z",
                 ),
+                isInfractionProven = true,
             )
 
         given(createOrUpdateReporting.execute(any())).willReturn(reporting)
@@ -224,6 +226,7 @@ class ReportingsITests {
                     ZonedDateTime.parse(
                         "2022-01-15T14:50:09Z",
                     ),
+                    isInfractionProven = true,
                 ),
                 semaphore =
                 SemaphoreEntity(
@@ -305,6 +308,7 @@ class ReportingsITests {
                     isArchived = false,
                     isDeleted = false,
                     openBy = "CDA",
+                    isInfractionProven = true,
                 ),
             )
 
@@ -370,6 +374,7 @@ class ReportingsITests {
                     ZonedDateTime.parse(
                         "2022-01-15T14:50:09Z",
                     ),
+                    isInfractionProven = true,
                 ),
                 semaphore =
                 SemaphoreEntity(
@@ -409,6 +414,7 @@ class ReportingsITests {
                     ZonedDateTime.parse(
                         "2022-01-15T14:50:09Z",
                     ),
+                    isInfractionProven = true,
                 ),
             )
 
@@ -524,6 +530,7 @@ class ReportingsITests {
                         ZonedDateTime.parse(
                             "2022-01-15T14:50:09Z",
                         ),
+                        isInfractionProven = true,
                     ),
                 ),
             )
@@ -543,11 +550,17 @@ class ReportingsITests {
 
         // Then
         val missionUpdateEvent =
-            mockedApi.perform(get("/bff/v1/reportings/sse"))
+            mockedApi
+                .perform(get("/bff/v1/reportings/sse"))
                 .andExpect(status().isOk)
                 .andExpect(MockMvcResultMatchers.request().asyncStarted())
-                .andExpect(MockMvcResultMatchers.request().asyncResult(Matchers.nullValue()))
-                .andExpect(MockMvcResultMatchers.header().string("Content-Type", "text/event-stream"))
+                .andExpect(
+                    MockMvcResultMatchers.request().asyncResult(Matchers.nullValue()),
+                )
+                .andExpect(
+                    MockMvcResultMatchers.header()
+                        .string("Content-Type", "text/event-stream"),
+                )
                 .andDo(MockMvcResultHandlers.log())
                 .andReturn()
                 .response
@@ -556,7 +569,7 @@ class ReportingsITests {
         Assertions.assertThat(missionUpdateEvent).contains("event:REPORTING_UPDATE")
         Assertions.assertThat(missionUpdateEvent)
             .contains(
-                "data:{\"id\":1,\"reportingId\":null,\"sourceType\":\"SEMAPHORE\",\"semaphoreId\":1,\"semaphore\":null,\"controlUnitId\":null,\"controlUnit\":null,\"displayedSource\":null,\"sourceName\":null,\"targetType\":null,\"vehicleType\":null,\"targetDetails\":[],\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-61,14],[-61,15],[-60,15],[-60,14],[-61,14]]]]},\"seaFront\":null,\"description\":\"description\",\"reportType\":\"INFRACTION_SUSPICION\",\"themeId\":12,\"subThemeIds\":[64,82],\"actionTaken\":null,\"isControlRequired\":true,\"hasNoUnitAvailable\":true,\"createdAt\":\"2022-01-15T04:50:09Z\",\"validityTime\":10,\"isArchived\":false,\"openBy\":\"CDA\",\"missionId\":null,\"attachedToMissionAtUtc\":null,\"detachedFromMissionAtUtc\":null,\"attachedEnvActionId\":null,\"attachedMission\":null,\"controlStatus\":\"CONTROL_TO_BE_DONE\",\"updatedAtUtc\":\"2022-01-15T14:50:09Z\",\"withVHFAnswer\":null}\n",
+                "data:{\"id\":1,\"reportingId\":null,\"sourceType\":\"SEMAPHORE\",\"semaphoreId\":1,\"semaphore\":null,\"controlUnitId\":null,\"controlUnit\":null,\"displayedSource\":null,\"sourceName\":null,\"targetType\":null,\"vehicleType\":null,\"targetDetails\":[],\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-61,14],[-61,15],[-60,15],[-60,14],[-61,14]]]]},\"seaFront\":null,\"description\":\"description\",\"reportType\":\"INFRACTION_SUSPICION\",\"themeId\":12,\"subThemeIds\":[64,82],\"actionTaken\":null,\"isControlRequired\":true,\"hasNoUnitAvailable\":true,\"createdAt\":\"2022-01-15T04:50:09Z\",\"validityTime\":10,\"isArchived\":false,\"openBy\":\"CDA\",\"missionId\":null,\"attachedToMissionAtUtc\":null,\"detachedFromMissionAtUtc\":null,\"attachedEnvActionId\":null,\"attachedMission\":null,\"controlStatus\":\"CONTROL_TO_BE_DONE\",\"updatedAtUtc\":\"2022-01-15T14:50:09Z\",\"withVHFAnswer\":null,\"isInfractionProven\":true}\n",
             )
     }
 }

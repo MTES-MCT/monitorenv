@@ -47,6 +47,7 @@ data class ReportingDataOutput(
     val controlStatus: ControlStatusEnum? = null,
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
+    val isInfractionProven: Boolean,
 ) {
     companion object {
         fun fromReportingDTO(
@@ -118,6 +119,7 @@ data class ReportingDataOutput(
                 controlStatus = dto.controlStatus,
                 updatedAtUtc = dto.reporting.updatedAtUtc,
                 withVHFAnswer = dto.reporting.withVHFAnswer,
+                isInfractionProven = dto.reporting.isInfractionProven,
             )
         }
     }
