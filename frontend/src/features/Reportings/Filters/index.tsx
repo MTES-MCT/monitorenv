@@ -135,71 +135,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
 
   const updatePeriodFilter = period => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
-    setIsCustomPeriodVisible(false)
-    switch (period) {
-      case ReportingDateRangeEnum.DAY:
-        dispatch(
-          reportingsFiltersActions.updateFilters({
-            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().subtract(24, 'hour').toISOString()
-          })
-        )
-        dispatch(
-          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
-        )
-        break
-
-      case ReportingDateRangeEnum.WEEK:
-        dispatch(
-          reportingsFiltersActions.updateFilters({
-            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
-          })
-        )
-        dispatch(
-          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
-        )
-        break
-
-      case ReportingDateRangeEnum.MONTH:
-        dispatch(
-          reportingsFiltersActions.updateFilters({
-            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
-          })
-        )
-        dispatch(
-          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
-        )
-        break
-      case ReportingDateRangeEnum.YEAR:
-        dispatch(
-          reportingsFiltersActions.updateFilters({
-            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().startOf('year').toISOString()
-          })
-        )
-        dispatch(
-          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
-        )
-        break
-
-      case ReportingDateRangeEnum.CUSTOM:
-        setIsCustomPeriodVisible(true)
-        break
-
-      default:
-        dispatch(
-          reportingsFiltersActions.updateFilters({
-            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
-          })
-        )
-        dispatch(
-          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
-        )
-        break
-    }
+    setIsCustomPeriodVisible(period === ReportingDateRangeEnum.CUSTOM)
   }
 
   const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {

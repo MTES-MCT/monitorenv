@@ -7,7 +7,7 @@ import storage from 'redux-persist/lib/storage'
 import { ReportingDateRangeEnum } from '../entities/dateRange'
 import { StatusFilterEnum } from '../entities/reporting'
 
-export const LAST_24_HOURS = customDayjs.utc().subtract(24, 'hour').toISOString()
+export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
 
 export type SourceFilterProps = {
   id: number
@@ -55,12 +55,12 @@ const initialState: ReportingsFiltersSliceType = {
   hasFilters: false,
   isAttachedToMissionFilter: false,
   isUnattachedToMissionFilter: false,
-  periodFilter: ReportingDateRangeEnum.DAY,
+  periodFilter: ReportingDateRangeEnum.MONTH,
   seaFrontFilter: undefined,
   searchQueryFilter: undefined,
   sourceFilter: undefined,
   sourceTypeFilter: undefined,
-  startedAfter: LAST_24_HOURS,
+  startedAfter: LAST_30_DAYS,
   startedBefore: undefined,
   statusFilter: [StatusFilterEnum.IN_PROGRESS],
   subThemesFilter: undefined,

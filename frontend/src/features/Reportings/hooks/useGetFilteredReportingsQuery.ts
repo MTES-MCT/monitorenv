@@ -1,3 +1,5 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
+import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { filter } from 'lodash'
 import { useMemo } from 'react'
 
@@ -13,6 +15,7 @@ export const useGetFilteredReportingsQuery = () => {
   const {
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,
+    periodFilter,
     seaFrontFilter,
     searchQueryFilter,
     sourceFilter,
@@ -47,6 +50,37 @@ export const useGetFilteredReportingsQuery = () => {
     return undefined
   }, [searchQueryFilter])
 
+  const datesForApi = useMemo(() => {
+    let startedAfterDate = startedAfter ?? undefined
+    const startedBeforeDate = startedBefore ?? undefined
+    switch (periodFilter) {
+      case ReportingDateRangeEnum.DAY:
+        startedAfterDate = customDayjs.utc().subtract(24, 'hour').toISOString()
+
+        break
+
+      case ReportingDateRangeEnum.WEEK:
+        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+
+        break
+
+      case ReportingDateRangeEnum.MONTH:
+        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
+
+        break
+      case ReportingDateRangeEnum.YEAR:
+        startedAfterDate = customDayjs.utc().startOf('year').toISOString()
+
+        break
+
+      case ReportingDateRangeEnum.CUSTOM:
+      default:
+        break
+    }
+
+    return { startedAfterDate, startedBeforeDate }
+  }, [startedAfter, startedBefore, periodFilter])
+
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
@@ -55,8 +89,8 @@ export const useGetFilteredReportingsQuery = () => {
       seaFronts: seaFrontFilter,
       searchQuery: formattedQuerySearch,
       sourcesType: sourceTypeFilter,
-      startedAfterDateTime: startedAfter ?? undefined,
-      startedBeforeDateTime: startedBefore ?? undefined,
+      startedAfterDateTime: datesForApi.startedAfterDate,
+      startedBeforeDateTime: datesForApi.startedBeforeDate,
       status: statusFilter,
       targetTypes: targetTypeFilter
     },
