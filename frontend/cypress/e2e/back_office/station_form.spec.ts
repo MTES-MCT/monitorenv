@@ -37,12 +37,11 @@ context('Back Office > Station Form', () => {
 
     cy.clickButton('Créer')
 
-    cy.wait('@createStation').then(interception => {
-      if (!interception.response) {
+    cy.wait('@createStation').then(({ request, response }) => {
+      if (!response) {
         assert.fail('`interception.response` is undefined.')
       }
-
-      assert.deepEqual(interception.request.body, {
+      assert.deepEqual(request.body, {
         latitude: 1.2,
         longitude: 3.4,
         name: newBaseName

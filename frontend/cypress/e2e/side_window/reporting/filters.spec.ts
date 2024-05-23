@@ -9,6 +9,9 @@ context('Reportings', () => {
     cy.clickButton('signalements')
     cy.wait('@getReportings')
   })
+  afterEach(() => {
+    cy.getDataCy('reinitialize-filters').click({ force: true })
+  })
 
   it('Should filter reportings for the last seven days', () => {
     cy.fill('Période', '7 derniers jours')
@@ -16,8 +19,6 @@ context('Reportings', () => {
     cy.wait('@getReportings')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-
-    cy.fill('Période', '24 dernières heures')
   })
   it('Should filter reportings by source type', () => {
     cy.fill('Type de source', [ReportingSourceLabels.SEMAPHORE])
@@ -34,9 +35,6 @@ context('Reportings', () => {
 
       cy.wrap(row).should('contain', 'Sémaphore')
     })
-
-    // here we test if the clear button worked correctly
-    cy.fill('Type de source', undefined)
   })
 
   it('Should filter reportings by source', () => {
@@ -54,8 +52,6 @@ context('Reportings', () => {
 
       cy.wrap(row).should('contain', 'Sémaphore de Fécamp')
     })
-    // here we test if the clear button worked correctly
-    cy.fill('Source', undefined)
   })
 
   it('Should filter reportings by type', () => {
@@ -90,9 +86,6 @@ context('Reportings', () => {
 
       cy.wrap(row).should('contain', 'La description du signalement')
     })
-
-    // here we test if the clear button worked correctly
-    cy.fill('Type de cible', undefined)
   })
 
   it('Should filter reportings by themes', () => {
@@ -108,8 +101,6 @@ context('Reportings', () => {
 
       cy.wrap(row).should('contain', 'Arrêté à visa environnemental')
     })
-
-    cy.fill('Thématiques', undefined)
   })
 
   it('Should filter reportings by sub-themes', () => {
@@ -128,8 +119,6 @@ context('Reportings', () => {
 
       cy.wrap(row).should('contain', 'Surveillance générale')
     })
-
-    cy.fill('Sous-thématiques', undefined)
   })
 
   it('Should filter reportings by sea-fronts', () => {
@@ -146,8 +135,6 @@ context('Reportings', () => {
 
       cy.wrap(row).should('contain', 'NAMO')
     })
-
-    cy.fill('Façade', undefined)
   })
 
   it('Should filter reportings by status', () => {
@@ -193,9 +180,6 @@ context('Reportings', () => {
 
       cy.wrap(row).should('not.contain', 'Mission')
     })
-
-    // clean filter
-    cy.getDataCy('attach-to-mission-filter-UNATTACHED').click()
   })
 
   it('Should filter reportings by search query', () => {

@@ -309,7 +309,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('Sould create surveillance and control actions with valid themes and subthemes depending on mission year', () => {
+  it('Should create surveillance and control actions with valid themes and subthemes depending on mission year', () => {
     // Given
     cy.wait(400)
 
