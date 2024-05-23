@@ -1,4 +1,10 @@
+import { attachReportingToMissionSliceActions } from '@features/missions/MissionForm/AttachReporting/slice'
+import { getFormattedReportingId } from '@features/Reportings/utils'
+
 import { createMissionWithAttachedReportingAndAttachedAction } from '../../utils/createMissionWithAttachedReportingAndAttachedAction'
+import { createReportingOnSideWindow } from '../../utils/createReportingOnSideWindow'
+
+const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 context('Side Window > Mission Form > Attach action to reporting', () => {
   beforeEach(() => {
@@ -10,6 +16,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
         Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
+    cy.wait(500)
   })
 
   it('A control can be attached to a reporting', () => {
@@ -168,13 +175,62 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
   })
 
   it('A control with infraction can be created from a reporting', () => {
-    createMissionWithAttachedReportingAndAttachedAction().then(() => {
-      cy.clickButton('Editer')
-      cy.getDataCy('infraction-form').should('be.visible')
+    cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
 
-      cy.getDataCy('infraction-form-registrationNumber').should('have.value', '123456789')
-      cy.getDataCy('infraction-form-controlledPersonIdentity').should('have.value', 'Le Bateau 2000')
-      cy.getDataCy('infraction-form-vessel-size').should('have.value', 13)
+    // create a reporting
+    createReportingOnSideWindow().then(reportingResponse => {
+      const firstReporting = reportingResponse?.body
+
+      // create another reporting and attach it to a new mission
+      createMissionWithAttachedReportingAndAttachedAction().then(missionResponse => {
+        const missionId = missionResponse.body.id
+        cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')
+        cy.clickButton('Editer')
+        cy.getDataCy('infraction-form').should('be.visible')
+
+        cy.getDataCy('infraction-form-registrationNumber').should('have.value', '123456789')
+        cy.getDataCy('infraction-form-controlledPersonIdentity').should('have.value', 'Le Bateau 2000')
+        cy.getDataCy('infraction-form-vessel-size').should('have.value', 13)
+        cy.fill("Type d'infraction", 'Avec PV')
+        cy.fill('Mise en demeure', 'En attente')
+        cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+
+        return cy.waitForLastRequest(
+          '@updateMission',
+          {
+            body: {
+              envActions: [
+                {
+                  openBy: 'ABC'
+                }
+              ],
+              missionTypes: ['SEA']
+            }
+          },
+          5,
+          undefined,
+          response => {
+            const attachedReporting = response.body.attachedReportings
+            // we attach the first created reporting to mission and update reporting attached to action
+            cy.clickButton('Lier un signalement')
+            dispatch(
+              attachReportingToMissionSliceActions.setAttachedReportings([
+                ...attachedReporting,
+                { ...firstReporting, missionId }
+              ])
+            )
+
+            const formattedReportingId = getFormattedReportingId(firstReporting.reportingId)
+            cy.fill('Signalements', formattedReportingId)
+
+            cy.getDataCy('infraction-form-registrationNumber').should('have.value', '987654321')
+            cy.getDataCy('infraction-form-controlledPersonIdentity').should('have.value', 'The Boat')
+            cy.get('.Field-MultiRadio').contains("Type d'infraction").get('[aria-checked="true"]').contains('Avec PV')
+            cy.get('.Field-MultiRadio').contains('Mise en demeure').get('[aria-checked="true"]').contains('En attente')
+            cy.get('[name="infraction-natinf"]').should('have.value', 1508)
+          }
+        )
+      })
     })
   })
 })

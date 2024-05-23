@@ -12,7 +12,7 @@ import { TargetTypeEnum } from '../../../../../../domain/entities/targetType'
 import type { MouseEventHandler } from 'react'
 
 const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
-const formalNoticeOPtions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
+const formalNoticeOptions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
 type InfractionFormProps = {
   currentInfractionIndex: number
@@ -61,7 +61,7 @@ export function InfractionForm({
         isRequired
         label="Mise en demeure"
         name={`${infractionPath}.formalNotice`}
-        options={formalNoticeOPtions}
+        options={formalNoticeOptions}
       />
 
       <NatinfSelector infractionPath={infractionPath} />

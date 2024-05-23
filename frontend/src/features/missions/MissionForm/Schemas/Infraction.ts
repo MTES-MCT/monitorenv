@@ -43,7 +43,7 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
   vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
 })
 
-export const ClosedInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
+export const CompletionInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
   formalNotice: Yup.mixed().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
   infractionType: Yup.mixed().oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT]).required()
 })
