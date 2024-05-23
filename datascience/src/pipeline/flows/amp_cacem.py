@@ -127,7 +127,7 @@ def load_new_amp(new_amp: pd.DataFrame):
     )
 
 
-with Flow("amp") as flow:
+with Flow("import amp cacem") as flow:
 
     local_hashes = extract_local_hashes()
     remote_hashes = extract_remote_hashes()
