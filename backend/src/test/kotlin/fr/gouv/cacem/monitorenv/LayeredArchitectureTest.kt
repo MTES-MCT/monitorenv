@@ -34,5 +34,4 @@ class LayeredArchitectureTest {
             .should().dependOnClassesThat().resideInAnyPackage(SPRING_PACKAGE)
             .check(importedClasses)
     }
-
 }
