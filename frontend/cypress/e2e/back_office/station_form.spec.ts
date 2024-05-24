@@ -39,7 +39,7 @@ context('Back Office > Station Form', () => {
 
     cy.wait('@createStation').then(({ request, response }) => {
       if (!response) {
-        assert.fail('`interception.response` is undefined.')
+        assert.fail('response is undefined.')
       }
       assert.deepEqual(request.body, {
         latitude: 1.2,
@@ -64,12 +64,12 @@ context('Back Office > Station Form', () => {
 
     cy.clickButton('Mettre à jour')
 
-    cy.wait('@updateStation').then(interception => {
-      if (!interception.response) {
-        assert.fail('`interception.response` is undefined.')
+    cy.wait('@updateStation').then(({ request: requestOfUpdate, response: responseOfUpdate }) => {
+      if (!responseOfUpdate) {
+        assert.fail('response is undefined.')
       }
 
-      assert.deepInclude(interception.request.body, {
+      assert.deepInclude(requestOfUpdate.body, {
         latitude: 5.6,
         longitude: 7.8,
         name: nextBaseName

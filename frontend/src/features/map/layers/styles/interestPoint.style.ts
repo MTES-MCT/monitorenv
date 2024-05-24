@@ -9,7 +9,7 @@ import {
   INTEREST_POINT_STYLE_ZINDEX
 } from '../../../../domain/entities/interestPoints'
 
-export const getIconStyle = (resolution: number) =>
+const getIconStyle = (resolution: number) =>
   new Style({
     image: new Icon({
       displacement: [0, 10],
@@ -19,7 +19,7 @@ export const getIconStyle = (resolution: number) =>
     zIndex: INTEREST_POINT_STYLE_ZINDEX
   })
 
-export const getLinesStyle = () => [
+export const getLineStyle = () => [
   new Style({
     stroke: new Stroke({
       color: THEME.color.slateGray,

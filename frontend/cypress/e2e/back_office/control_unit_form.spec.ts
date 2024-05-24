@@ -40,7 +40,7 @@ context('Back Office > Control Unit Form', () => {
 
     cy.wait('@createControlUnit').then(({ request, response }) => {
       if (!response) {
-        assert.fail('`interception.response` is undefined.')
+        assert.fail('response is undefined.')
       }
       const id = response.body.id
 
@@ -70,7 +70,7 @@ context('Back Office > Control Unit Form', () => {
 
       cy.wait('@updateControlUnit').then(({ request: requestOfUpdate, response: responseOfUpdate }) => {
         if (!responseOfUpdate) {
-          assert.fail('`interception.response` is undefined.')
+          assert.fail('response is undefined.')
         }
 
         assert.deepInclude(requestOfUpdate.body, {

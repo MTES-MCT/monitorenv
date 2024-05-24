@@ -213,8 +213,8 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.fill('Période', 'Période spécifique')
     cy.fill('Période spécifique', [expectedStartDate, expectedEndDate])
-    const unite = 'PAM Jeanne Barret'
-    cy.fill('Unité', [unite])
+    const controlUnit = 'PAM Jeanne Barret'
+    cy.fill('Unité', [controlUnit])
     cy.fill('Statut de mission', ['En cours'])
 
     cy.get('.Table-SimpleTable tr').then(rows => {
@@ -222,7 +222,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
       // When
       cy.get('*[data-cy="add-mission"]').click()
-      cy.fill('Unité 1', unite)
+      cy.fill('Unité 1', controlUnit)
       cy.wait('@getEngagedControlUnits')
 
       // Then

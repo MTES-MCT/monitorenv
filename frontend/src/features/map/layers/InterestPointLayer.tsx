@@ -10,7 +10,7 @@ import { getLength } from 'ol/sphere'
 import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { POIStyle, getInterestPointStyle, getLinesStyle } from './styles/interestPoint.style'
+import { POIStyle, getInterestPointStyle, getLineStyle } from './styles/interestPoint.style'
 import { InterestPointLine } from '../../../domain/entities/interestPointLine'
 import { coordinatesAreModified, coordinatesOrTypeAreModified } from '../../../domain/entities/interestPoints'
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -93,8 +93,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: interestPointVectorSourceRef.current,
-      style: (feature, resolution) =>
-        shouldStyledLines(feature) ? getLinesStyle() : getInterestPointStyle(resolution),
+      style: (feature, resolution) => (isFeatureIsALine(feature) ? getLineStyle() : getInterestPointStyle(resolution)),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.INTEREST_POINT.zIndex
@@ -329,7 +328,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     </div>
   )
 
-  function shouldStyledLines(feature) {
+  function isFeatureIsALine(feature) {
     return feature?.getId()?.toString()?.includes('line')
   }
 

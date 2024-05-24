@@ -6,21 +6,21 @@ import {
   type SerializedFeature
 } from 'domain/types/map'
 import { throttle } from 'lodash'
-import { ScaleLine, defaults as defaultControls } from 'ol/control'
+import { defaults as defaultControls, ScaleLine } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import View from 'ol/View'
 import {
+  Children,
   cloneElement,
   useCallback,
-  useMemo,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type MutableRefObject,
-  Children,
   type ReactElement
 } from 'react'
 import styled from 'styled-components'
@@ -42,8 +42,6 @@ import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened
 
 import type { VectorLayerWithName } from '../../domain/types/layer'
 import type { MapBrowserEvent } from 'ol'
-import type VectorLayer from 'ol/layer/Vector'
-import type VectorSource from 'ol/source/Vector'
 
 export type BaseMapChildrenProps = {
   currentFeatureListOver: SerializedFeature<Record<string, any>>[] | undefined
@@ -52,8 +50,6 @@ export type BaseMapChildrenProps = {
   mapClickEvent: MapClickEvent
   pixel: number[] | undefined
 }
-
-type VectorLayerType = VectorLayerWithName & VectorLayer<VectorSource>
 
 export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
@@ -92,7 +88,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
       const features = current_map.getFeaturesAtPixel(event.pixel, {
         hitTolerance: HIT_PIXEL_TO_TOLERANCE,
         layerFilter: layer => {
-          const typedLayer = layer as VectorLayerType
+          const typedLayer = layer as VectorLayerWithName
 
           const layerName = typedLayer.name ?? typedLayer.get('name')
 
@@ -128,7 +124,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           const features = current_map.getFeaturesAtPixel(event.pixel, {
             hitTolerance: HIT_PIXEL_TO_TOLERANCE,
             layerFilter: layer => {
-              const typedLayer = layer as VectorLayerType
+              const typedLayer = layer as VectorLayerWithName
 
               const layerName = typedLayer.name ?? typedLayer.get('name')
 
