@@ -40,7 +40,7 @@ amp_cacem.flow.schedule = CronSchedule("22 0 * * *")
 email_actions_to_units.flow.schedule = Schedule(
     clocks=[
         clocks.CronClock(
-            "* * * * *",
+            "0 5 * * 1",
             parameter_defaults={
                 "start_days_ago": 7,
                 "end_days_ago": 1,
