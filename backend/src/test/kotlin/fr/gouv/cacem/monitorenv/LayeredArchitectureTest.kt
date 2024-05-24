@@ -20,15 +20,16 @@ private const val SPRING_PACKAGE = "org.springframework.."
 class LayeredArchitectureTest {
 
     @ArchTest
-    val hexagonalArchitecture =
+    fun `classes in domain layer should use Spring framework`(importedClasses: JavaClasses) {
         layeredArchitecture().consideringAllDependencies().layer(DOMAIN).definedBy(DOMAIN_PACKAGE)
             .layer(API).definedBy(API_PACKAGE).layer(DATABASE).definedBy(DATABASE_PACKAGE)
             .whereLayer(DOMAIN).mayOnlyBeAccessedByLayers(API)
             .whereLayer(API).mayNotBeAccessedByAnyLayer()
-            .whereLayer(DATABASE).mayOnlyAccessLayers(DOMAIN)
+            .whereLayer(DATABASE).mayOnlyAccessLayers(DOMAIN).check(importedClasses)
+    }
 
     @ArchTest
-    fun `no classes in domain layer should use Spring framework`(importedClasses: JavaClasses) {
+    fun `no classes in domain layer should not use Spring framework`(importedClasses: JavaClasses) {
         noClasses()
             .that().resideInAPackage(DOMAIN_PACKAGE)
             .should().dependOnClassesThat().resideInAnyPackage(SPRING_PACKAGE)
