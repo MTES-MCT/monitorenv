@@ -1,7 +1,7 @@
 import { Accent, Button, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-type MapIntercationProps = {
+type MapInteractionProps = {
   children?: React.ReactNode
   customTools?: React.ReactNode
   isValidatedButtonDisabled?: boolean
@@ -22,7 +22,7 @@ export function MapInteraction({
   resetButtonText = undefined,
   title,
   validateButtonText
-}: MapIntercationProps) {
+}: MapInteractionProps) {
   return (
     <Wrapper>
       <Panel>
@@ -61,7 +61,7 @@ const Wrapper = styled.div`
 const Panel = styled.div`
   box-shadow: 0px 3px 6px #00000029;
 `
-const Header = styled.div`
+const Header = styled.header`
   align-items: center;
   background: ${p => p.theme.color.charcoal};
   display: flex;
