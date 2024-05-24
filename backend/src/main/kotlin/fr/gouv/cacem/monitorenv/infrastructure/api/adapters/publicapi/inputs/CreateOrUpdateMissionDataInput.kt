@@ -12,7 +12,6 @@ data class CreateOrUpdateMissionDataInput(
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val openBy: String? = null,
-    val closedBy: String? = null, // TODO delete when Fish and RapportNav are removed
     val completedBy: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
@@ -21,7 +20,6 @@ data class CreateOrUpdateMissionDataInput(
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean = false, // TODO delete when Fish and RapportNav are removed
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val isGeometryComputedFromControls: Boolean,
@@ -32,8 +30,7 @@ data class CreateOrUpdateMissionDataInput(
             missionTypes = this.missionTypes,
             controlUnits = this.controlUnits,
             openBy = this.openBy,
-            // TODO delete condition and closedBy when Fish and RapportNav are removed
-            completedBy = this.completedBy ?: this.closedBy,
+            completedBy = this.completedBy,
             observationsCacem = this.observationsCacem,
             observationsCnsp = this.observationsCnsp,
             facade = this.facade,

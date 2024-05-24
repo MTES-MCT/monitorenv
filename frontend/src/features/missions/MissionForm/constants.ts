@@ -19,11 +19,7 @@ export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [
   // We do not update this field as it is not used by the form
   'updatedAtUtc',
   // We do not update this field as it is not used by the form
-  'createdAtUtc',
-  // TODO to delete  this three fields when fish and rapportNav are removed `closedBy`in their forms
-  'completedBy',
-  'closedBy',
-  'isClosed'
+  'createdAtUtc'
 ]
 
 export const HIDDEN_ERROR = 'HIDDEN_ERROR'
