@@ -80,7 +80,8 @@ const Wrapper = styled(MapMenuDialog.Container)<{
   bottom: 0;
   /* TODO Remove margin in monitor-ui. */
   margin: 0;
-  max-height: none;
+  max-height: 100%;
+  height: fit-content;
   position: absolute;
   right: ${p => (p.$isRightMenuOpened ? 56 : 8)}px;
   top: 0;
