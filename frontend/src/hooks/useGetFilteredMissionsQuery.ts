@@ -1,3 +1,5 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { isMissionPartOfSelectedCompletionStatus } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedCompletionStatus'
 import { isMissionPartOfSelectedWithEnvActions } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedWithEnvActions'
 import { useMemo } from 'react'
@@ -16,6 +18,7 @@ export const useGetFilteredMissionsQuery = () => {
     selectedCompletionStatus,
     selectedControlUnitIds,
     selectedMissionTypes,
+    selectedPeriod,
     selectedSeaFronts,
     selectedStatuses,
     selectedThemes,
@@ -23,6 +26,35 @@ export const useGetFilteredMissionsQuery = () => {
     startedAfter,
     startedBefore
   } = useAppSelector(state => state.missionFilters)
+
+  const datesForApi = useMemo(() => {
+    let startedAfterDate = startedAfter ?? undefined
+    const startedBeforeDate = startedBefore ?? undefined
+
+    switch (selectedPeriod) {
+      case DateRangeEnum.DAY:
+        startedAfterDate = customDayjs.utc().subtract(24, 'hour').toISOString()
+
+        break
+
+      case DateRangeEnum.WEEK:
+        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+
+        break
+
+      case DateRangeEnum.MONTH:
+        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
+
+        break
+
+      case DateRangeEnum.CUSTOM:
+      default:
+        break
+    }
+
+    return { startedAfterDate, startedBeforeDate }
+  }, [startedAfter, startedBefore, selectedPeriod])
+
   const {
     data: missions,
     isError,
@@ -33,8 +65,8 @@ export const useGetFilteredMissionsQuery = () => {
       missionStatus: selectedStatuses,
       missionTypes: selectedMissionTypes,
       seaFronts: selectedSeaFronts,
-      startedAfterDateTime: startedAfter ?? undefined,
-      startedBeforeDateTime: startedBefore ?? undefined,
+      startedAfterDateTime: datesForApi.startedAfterDate,
+      startedBeforeDateTime: datesForApi.startedBeforeDate,
       withEnvActions: selectedWithEnvActions
     },
     { pollingInterval: TWO_MINUTES }
