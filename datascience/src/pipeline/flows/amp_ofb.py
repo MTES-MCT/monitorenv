@@ -124,7 +124,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             text(
           "CREATE TEMP TABLE tmp_amp_ofb("
           "    id serial PRIMARY KEY,"
-          "    geom geometry(multipolygon, 4326),"
+          "    geom geometry,"
           "    mpa_id integer UNIQUE NOT NULL,"
           "    mpa_pid integer,"
           "    gid integer,"
@@ -189,7 +189,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             text(
                 "UPDATE prod.\"Aires marines protégées\" p "
                 "SET "
-                "    geom = st_multi(ep.geom), "
+                "    geom = st_multi(st_setsrid(ep.geom,4326)), " 
                 "    mpa_pid = ep.mpa_pid, "
                 "    gid = ep.gid, "
                 "    mpa_name = ep.mpa_name, "
@@ -243,7 +243,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
                 "    country_iso3, country_iso3namefr "
                 "    )"
                 "SELECT "
-                "    st_multi(geom), mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
+                "    st_multi(st_setsrid(geom,4326)), mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
                 "    des_id, des_desigfr, des_desigtype, mpa_status, "
                 "    mpa_datebegin, mpa_statusyr, mpa_wdpaid, mpa_wdpapid, "
                 "    mpa_mnhnid, mpa_marine, mpa_calcarea, mpa_calcmarea, "
