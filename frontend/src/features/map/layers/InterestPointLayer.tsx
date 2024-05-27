@@ -1,3 +1,4 @@
+import { usePrevious } from '@mtes-mct/monitor-ui'
 import GeoJSON from 'ol/format/GeoJSON'
 import LineString from 'ol/geom/LineString'
 import Draw from 'ol/interaction/Draw'
@@ -29,7 +30,6 @@ import {
 import { saveInterestPointFeature } from '../../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { usePrevious } from '../../../hooks/usePrevious'
 import { InterestPointOverlay } from '../overlays/InterestPointOverlay'
 
 import type { NewInterestPoint } from '../../InterestPoint/types'

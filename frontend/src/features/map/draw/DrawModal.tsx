@@ -1,4 +1,4 @@
-import { type Coordinates, CoordinatesInput, IconButton, Icon } from '@mtes-mct/monitor-ui'
+import { type Coordinates, CoordinatesInput, IconButton, Icon, usePrevious } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
@@ -24,7 +24,6 @@ import {
 } from '../../../domain/use_cases/map/updateMapInteractionListeners'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { usePrevious } from '../../../hooks/usePrevious'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 import { SideWindowStatus } from '../../SideWindow/slice'
@@ -125,13 +124,26 @@ export function DrawModal() {
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
   }
+  const handleCancel = () => {
+    handleReset()
+
+    // we add timeout to avoid the modal to close before the reset is done
+    // and the geometry has been set in the form concerned
+    setTimeout(() => {
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+    }, 300)
+  }
+
   const handleReset = () => {
     if (!initialGeometry) {
-      return dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+      dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+
+      return
     }
 
-    return dispatch(setGeometry(initialGeometry))
+    dispatch(setGeometry(initialGeometry))
   }
+
   const handleValidate = () => {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
@@ -190,6 +202,7 @@ export function DrawModal() {
         )
       }
       isValidatedButtonDisabled={!isGeometryValid}
+      onCancel={handleCancel}
       onReset={handleReset}
       onValidate={handleValidate}
       title={`Vous êtes en train d'ajouter ${listener && titlePlaceholder[listener]}`}
