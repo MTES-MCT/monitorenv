@@ -241,7 +241,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
 
-    cy.fill('Unité 1', 'Cross Etel')
+    cy.fill('Unité 1', 'Brigade fluviale de Rouen')
     cy.wait(250)
 
     // Add a note
@@ -276,7 +276,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
 
-    cy.fill('Unité 1', 'Cross Etel')
+    cy.fill('Unité 1', 'Brigade fluviale de Rouen')
     cy.wait(250)
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
@@ -320,7 +320,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.fill('Date de fin (UTC)', endDate)
 
     cy.get('[name="missionTypes0"]').click({ force: true })
-    cy.fill('Unité 1', 'Cross Etel')
+    cy.fill('Unité 1', 'Brigade fluviale de Rouen')
 
     cy.wait(250)
 
