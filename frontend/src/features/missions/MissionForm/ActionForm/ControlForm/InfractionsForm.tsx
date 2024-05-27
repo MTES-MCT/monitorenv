@@ -74,7 +74,7 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
         </InfractionsWrapper>
       ) : (
         <NoActionWrapper>
-          <NoAction>aucun contrôle avec infraction enregistré pour le moment</NoAction>
+          <NoAction>Aucun contrôle avec infraction enregistré pour le moment</NoAction>
         </NoActionWrapper>
       )}
     </div>
@@ -106,5 +106,8 @@ const NoActionWrapper = styled.div`
 `
 
 const NoAction = styled.div`
+  color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
+  font-style: italic;
   text-align: center;
 `

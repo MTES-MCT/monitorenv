@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import styled from 'styled-components'
 
 import {
   ActionTypeEnum,
@@ -41,9 +42,16 @@ const getAllThemesAndSubThemesAsString = (
       return acc
     }, {})
 
-  const getThemeAndSubThemesString = ([theme, subThemesAsString]) => `${theme}  (${subThemesAsString?.join(', ')})`
+  const getThemeAndSubThemesString = ([theme, subThemesAsString]) => ({
+    component: (
+      <>
+        {theme} <SubThemesContainer>({subThemesAsString?.join(', ')})</SubThemesContainer>
+      </>
+    ),
+    title: `${theme} (${subThemesAsString?.join(', ')})`
+  })
 
-  return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString).join(' - ')
+  return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString)
 }
 
 export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
@@ -52,10 +60,23 @@ export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
     () => getAllThemesAndSubThemesAsString(envActions, subThemes, themes),
     [envActions, subThemes, themes]
   )
+  const cellTitle = useMemo(() => cellContent?.map(content => content.title).join(' - '), [cellContent])
 
-  return cellContent !== '' ? (
-    <span data-cy="cell-envActions-themes" title={cellContent}>
-      {cellContent}
-    </span>
-  ) : null
+  return cellContent?.length > 0
+    ? cellContent.map((content, index) => (
+        <ThemesAndSubThemesContainer key={content.title} data-cy="cell-envActions-themes" title={cellTitle}>
+          {content.component}
+          {index < cellContent.length - 1 ? ' - ' : ''}
+        </ThemesAndSubThemesContainer>
+      ))
+    : null
 }
+
+const ThemesAndSubThemesContainer = styled.span`
+  color: ${p => p.theme.color.charcoal};
+  font-weight: 500;
+`
+const SubThemesContainer = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-weight: 400;
+`

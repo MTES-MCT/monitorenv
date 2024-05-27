@@ -1,4 +1,5 @@
 import { Accent, Icon, IconButton, Search, Size } from '@mtes-mct/monitor-ui'
+import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -64,7 +65,7 @@ const Wrapper = styled.div<{
   }
 `
 const StyledSearch = styled(Search)`
-  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
+  box-shadow: 0px 3px 6px ${p => getColorWithAlpha(p.theme.color.slateGray, 0.25)};
 `
 
 // TODO delete padding when Monitor-ui component have good padding

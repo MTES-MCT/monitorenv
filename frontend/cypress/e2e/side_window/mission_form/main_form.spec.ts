@@ -246,6 +246,10 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.getDataCy('add-other-control-unit').should('be.disabled')
     cy.clickButton('Oui, la conserver')
+
+    // As this control unit only has one resource, the entry must be pre-filled with the single resource.
+    cy.get('.rs-tag-text').contains('PAM Jeanne Barret')
+
     cy.wait(250)
 
     // we want to test with a second engaged control unit

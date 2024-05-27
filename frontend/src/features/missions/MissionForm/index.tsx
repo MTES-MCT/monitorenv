@@ -93,7 +93,7 @@ const DisabledMissionBackground = styled.div`
   opacity: 0.6;
   width: 100%;
   height: 100%;
-  z-index: 5;
+  z-index: 6;
 `
 const MissionCreatedText = styled.div`
   align-items: center;
