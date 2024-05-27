@@ -37,6 +37,9 @@ export function FormikSyncReportingFields({ reportingId }: FormikSyncReportingFo
        * We iterate and use `setFieldValue` on each diff key to avoid a global re-render of the <ReportingForm/> component
        */
       Object.keys(receivedDiff).forEach(key => {
+        if (values[key] === undefined && JSON.stringify(reportingEvent[key]) === 'null') {
+          return
+        }
         // eslint-disable-next-line no-console
         console.log(`SSE: setting form key "${key}" to "${JSON.stringify(reportingEvent[key])}"`)
         setFieldValue(key, reportingEvent[key])
