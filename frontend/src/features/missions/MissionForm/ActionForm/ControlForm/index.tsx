@@ -210,9 +210,12 @@ export function ControlForm({
     const reportingToAttachIndex = attachedReportings?.findIndex(reporting => reporting.id === reportingId)
     if (reportingToAttachIndex !== -1) {
       setFieldValue(`attachedReportings[${reportingToAttachIndex}].attachedEnvActionId`, currentAction?.id)
-
       // prefill infractions with the reporting details
       const reporting = attachedReportings[reportingToAttachIndex]
+      setFieldValue(`envActions[${envActionIndex}].controlPlans`, [
+        { subThemeIds: reporting?.subThemeIds, tagIds: [], themeId: reporting?.themeId }
+      ])
+
       if (
         reporting &&
         reporting.targetType !== ReportingTargetTypeEnum.OTHER &&
