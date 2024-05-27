@@ -1,4 +1,4 @@
-import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, usePrevious } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'

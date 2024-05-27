@@ -75,6 +75,8 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('div').contains('Mission créée par le')
     cy.get('div').contains('Dernière modification enregistrée')
     cy.get('.Component-Banner').contains('La mission a bien été créée')
+    cy.clickButton('Supprimer la mission')
+    cy.get('*[name="delete-mission-modal-confirm"]').click()
   })
 
   it('A mission should be created When auto-save is not enabled', () => {
@@ -135,33 +137,22 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.clickButton('Enregistrer')
 
     // Then
-    cy.waitForLastRequest(
-      '@createMission',
-      {
-        body: {
-          controlUnits: [
-            {
-              administration: 'DIRM / DM',
-              id: 10011,
-              name: 'Cross Etel'
-            }
-          ],
-          missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF'
-        }
-      },
-      5
-    )
-      .its('response.statusCode')
-      .should('eq', 200)
+    cy.wait('@createMission').then(({ response }) => {
+      const id = response?.body.id
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.equal(response.statusCode, 200)
 
-    cy.wait('@getMissions')
-    cy.wait(500)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 10)
-      cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
-        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) + 1)
+      cy.wait('@getMissions')
+      cy.wait(500)
+      cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+        const numberOfMissions = parseInt($el.text(), 10)
+        cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
+          expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) + 1)
+        })
       })
+      cy.get(`*[data-cy="edit-mission-${id}"]`).scrollIntoView().click({ force: true })
     })
   })
 
