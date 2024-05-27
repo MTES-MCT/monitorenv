@@ -7,6 +7,10 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.visit(`/side_window`).wait(1000)
   })
 
+  afterEach(() => {
+    cy.getDataCy('reinitialize-filters').click()
+  })
+
   it('Should filter missions for the current day', () => {
     cy.fill('Période', 'Aujourd’hui')
     cy.wait('@getMissions')
@@ -43,8 +47,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'Complétées')
     })
-
-    cy.fill('Etat des données', undefined)
   })
 
   it('Should filter missions by administrations', () => {
@@ -58,7 +60,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'DDTM')
     })
-    cy.fill('Administration', undefined)
   })
 
   it('Should filter missions by units', () => {
@@ -72,8 +73,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'BSN Ste Maxime')
     })
-
-    cy.fill('Unité', undefined)
   })
 
   it('Should filter missions by administration, and units filter accordingly.', () => {
@@ -121,10 +120,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'DREAL Pays-de-La-Loire (DREAL / DEAL)')
     })
-
-    // clear filters
-    cy.fill('Administration', undefined)
-    cy.fill('Unité', undefined)
   })
 
   it('Should filter missions by types', () => {
@@ -138,8 +133,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'Mer')
     })
-
-    cy.fill('Type de mission', undefined)
   })
 
   it('Should filter missions by sea fronts', () => {
@@ -153,11 +146,9 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'MED')
     })
-
-    cy.fill('Façade', undefined)
   })
 
-  it('Should filter missions by statuses', () => {
+  it('Should filter missions by status', () => {
     cy.fill('Statut de mission', ['En cours'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -168,8 +159,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'En cours')
     })
-
-    cy.fill('Statut de mission', undefined)
   })
 
   it('Should filter missions by themes', () => {
@@ -184,8 +173,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'Mouillage individuel')
     })
-
-    cy.fill('Thématique', undefined)
   })
 
   it('Should themes filter depends on date filter', () => {
@@ -225,7 +212,5 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('edit-mission-38').should('exist')
     cy.getDataCy('edit-mission-22').should('not.exist')
     cy.getDataCy('edit-mission-43').should('not.exist')
-
-    cy.fill('Missions avec actions CACEM', false)
   })
 })

@@ -60,6 +60,7 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.ACTIONS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
+
   ;(selectedMissionActionsVectorLayerRef.current as VectorLayerWithName).name = Layers.ACTIONS.code
 
   useEffect(() => {

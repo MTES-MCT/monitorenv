@@ -38,12 +38,13 @@ context('Back Office > Control Unit Form', () => {
 
     cy.clickButton('Créer')
 
-    cy.wait('@createControlUnit').then(interception => {
-      if (!interception.response) {
-        assert.fail('`interception.response` is undefined.')
+    cy.wait('@createControlUnit').then(({ request, response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
       }
+      const id = response.body.id
 
-      assert.deepEqual(interception.request.body, {
+      assert.deepEqual(request.body, {
         administrationId: 1007,
         areaNote: null,
         departmentAreaInseeCode: '50',
@@ -51,65 +52,65 @@ context('Back Office > Control Unit Form', () => {
         name: 'Unité 1',
         termsNote: null
       })
-    })
 
-    // -------------------------------------------------------------------------
-    // Edit
+      // -------------------------------------------------------------------------
+      // Edit
 
-    cy.intercept('PUT', `/api/v2/control_units/10122`).as('updateControlUnit')
+      cy.intercept('PUT', `/api/v2/control_units/${id}`).as('updateControlUnit')
 
-    cy.getTableRowById(10122).clickButton('Éditer cette unité de contrôle')
+      cy.getTableRowById(id).clickButton('Éditer cette unité de contrôle')
 
-    expectPathToBe('/backoffice/control_units/10122')
+      expectPathToBe(`/backoffice/control_units/${id}`)
 
-    cy.fill('Administration', 'AFB')
-    cy.fill('Nom', 'Unité 2')
-    cy.fill('Département', 'Vendée')
+      cy.fill('Administration', 'AFB')
+      cy.fill('Nom', 'Unité 2')
+      cy.fill('Département', 'Vendée')
 
-    cy.clickButton('Mettre à jour')
+      cy.clickButton('Mettre à jour')
 
-    cy.wait('@updateControlUnit').then(interception => {
-      if (!interception.response) {
-        assert.fail('`interception.response` is undefined.')
-      }
+      cy.wait('@updateControlUnit').then(({ request: requestOfUpdate, response: responseOfUpdate }) => {
+        if (!responseOfUpdate) {
+          assert.fail('response is undefined.')
+        }
 
-      assert.deepInclude(interception.request.body, {
-        administrationId: 1002,
-        areaNote: null,
-        departmentAreaInseeCode: '85',
-        id: 10122,
-        isArchived: false,
-        name: 'Unité 2',
-        termsNote: null
+        assert.deepInclude(requestOfUpdate.body, {
+          administrationId: 1002,
+          areaNote: null,
+          departmentAreaInseeCode: '85',
+          id,
+          isArchived: false,
+          name: 'Unité 2',
+          termsNote: null
+        })
       })
+
+      // -------------------------------------------------------------------------
+      // Archive
+
+      cy.intercept('PUT', `/api/v2/control_units/${id}/archive`).as('archiveControlUnit')
+
+      cy.getTableRowById(id).clickButton('Archiver cette unité de contrôle')
+      cy.clickButton('Archiver')
+
+      cy.wait('@archiveControlUnit')
+
+      cy.getTableRowById(id).should('not.exist')
+      cy.clickButton('Unités archivées')
+      cy.getTableRowById(id).should('exist')
+
+      // -------------------------------------------------------------------------
+      // Delete
+
+      cy.intercept('DELETE', `/api/v2/control_units/${id}`).as('deleteControlUnit')
+
+      cy.getTableRowById(id).clickButton('Supprimer cette unité de contrôle')
+      cy.clickButton('Supprimer')
+
+      cy.wait('@deleteControlUnit')
+
+      cy.getTableRowById(id).should('not.exist')
+      cy.clickButton('Unités actives')
+      cy.getTableRowById(id).should('not.exist')
     })
-
-    // -------------------------------------------------------------------------
-    // Archive
-
-    cy.intercept('PUT', `/api/v2/control_units/10122/archive`).as('archiveControlUnit')
-
-    cy.getTableRowById(10122).clickButton('Archiver cette unité de contrôle')
-    cy.clickButton('Archiver')
-
-    cy.wait('@archiveControlUnit')
-
-    cy.getTableRowById(10122).should('not.exist')
-    cy.clickButton('Unités archivées')
-    cy.getTableRowById(10122).should('exist')
-
-    // -------------------------------------------------------------------------
-    // Delete
-
-    cy.intercept('DELETE', `/api/v2/control_units/10122`).as('deleteControlUnit')
-
-    cy.getTableRowById(10122).clickButton('Supprimer cette unité de contrôle')
-    cy.clickButton('Supprimer')
-
-    cy.wait('@deleteControlUnit')
-
-    cy.getTableRowById(10122).should('not.exist')
-    cy.clickButton('Unités actives')
-    cy.getTableRowById(10122).should('not.exist')
   })
 })

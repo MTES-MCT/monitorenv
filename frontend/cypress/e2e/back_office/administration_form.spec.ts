@@ -31,66 +31,67 @@ context('Back Office > Administration Form', () => {
 
     cy.clickButton('Créer')
 
-    cy.wait('@createAdministration').then(interception => {
-      if (!interception.response) {
-        assert.fail('`interception.response` is undefined.')
+    cy.wait('@createAdministration').then(({ request, response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
       }
+      const id = response.body.id
 
-      assert.deepEqual(interception.request.body, {
+      assert.deepEqual(request.body, {
         isArchived: false,
         name: 'Administration 1'
       })
-    })
 
-    // -------------------------------------------------------------------------
-    // Edit
+      // -------------------------------------------------------------------------
+      // Edit
 
-    cy.intercept('PUT', `/api/v1/administrations/2007`).as('updateAdministration')
+      cy.intercept('PUT', `/api/v1/administrations/${id}`).as('updateAdministration')
 
-    cy.getTableRowById(2007).clickButton('Éditer cette administration')
+      cy.getTableRowById(id).clickButton('Éditer cette administration')
 
-    cy.fill('Nom', 'Administration 2')
+      cy.fill('Nom', 'Administration 2')
 
-    cy.clickButton('Mettre à jour')
+      cy.clickButton('Mettre à jour')
 
-    cy.wait('@updateAdministration').then(interception => {
-      if (!interception.response) {
-        assert.fail('`interception.response` is undefined.')
-      }
+      cy.wait('@updateAdministration').then(({ request: requestOfUpdate, response: responseOfUpdate }) => {
+        if (!responseOfUpdate) {
+          assert.fail('response is undefined.')
+        }
 
-      assert.deepInclude(interception.request.body, {
-        id: 2007,
-        isArchived: false,
-        name: 'Administration 2'
+        assert.deepInclude(requestOfUpdate.body, {
+          id,
+          isArchived: false,
+          name: 'Administration 2'
+        })
       })
+
+      // -------------------------------------------------------------------------
+      // Archive
+
+      cy.intercept('PUT', `/api/v1/administrations/${id}/archive`).as('archiveAdministration')
+
+      cy.getTableRowById(id).clickButton('Archiver cette administration')
+      cy.clickButton('Archiver')
+
+      cy.wait('@archiveAdministration')
+
+      cy.getTableRowById(id).should('not.exist')
+      cy.clickButton('Administrations archivées')
+      cy.getTableRowById(id).should('exist')
+
+      // -------------------------------------------------------------------------
+      // Delete
+
+      cy.intercept('DELETE', `/api/v1/administrations/${id}`).as('deleteAdministration')
+
+      cy.getTableRowById(id).clickButton('Supprimer cette administration')
+      cy.clickButton('Supprimer')
+
+      cy.wait('@deleteAdministration')
+
+      cy.getTableRowById(id).should('not.exist')
+      cy.clickButton('Administrations actives')
+      cy.getTableRowById(id).should('not.exist')
     })
-
-    // -------------------------------------------------------------------------
-    // Archive
-
-    cy.intercept('PUT', `/api/v1/administrations/2007/archive`).as('archiveAdministration')
-
-    cy.getTableRowById(2007).clickButton('Archiver cette administration')
-    cy.clickButton('Archiver')
-
-    cy.wait('@archiveAdministration')
-
-    cy.getTableRowById(2007).should('not.exist')
-    cy.clickButton('Administrations archivées')
-    cy.getTableRowById(2007).should('exist')
-
-    // -------------------------------------------------------------------------
-    // Delete
-
-    cy.intercept('DELETE', `/api/v1/administrations/2007`).as('deleteAdministration')
-
-    cy.getTableRowById(2007).clickButton('Supprimer cette administration')
-    cy.clickButton('Supprimer')
-
-    cy.wait('@deleteAdministration')
-
-    cy.getTableRowById(2007).should('not.exist')
-    cy.clickButton('Administrations actives')
-    cy.getTableRowById(2007).should('not.exist')
   })
 })

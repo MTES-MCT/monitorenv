@@ -6,21 +6,21 @@ import {
   type SerializedFeature
 } from 'domain/types/map'
 import { throttle } from 'lodash'
-import { ScaleLine, defaults as defaultControls } from 'ol/control'
+import { defaults as defaultControls, ScaleLine } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import View from 'ol/View'
 import {
+  Children,
   cloneElement,
   useCallback,
-  useMemo,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type MutableRefObject,
-  Children,
   type ReactElement
 } from 'react'
 import styled from 'styled-components'

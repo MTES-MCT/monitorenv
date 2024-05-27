@@ -6,18 +6,18 @@ import type { InterestPoint, NewInterestPoint } from '../../features/InterestPoi
 
 interface InterestPointState {
   interestPointBeingDrawed: NewInterestPoint | null
+  interestPointToDelete: string | null
   interestPoints: InterestPoint[]
   isDrawing: boolean
   isEditing: boolean
-  triggerInterestPointFeatureDeletion: string | null
 }
 
 const INITIAL_STATE: InterestPointState = {
   interestPointBeingDrawed: null,
   interestPoints: [],
+  interestPointToDelete: null,
   isDrawing: false,
-  isEditing: false,
-  triggerInterestPointFeatureDeletion: null
+  isEditing: false
 }
 
 const persistConfig = {
@@ -46,7 +46,7 @@ const interestPointSlice = createSlice({
      */
     deleteInterestPointBeingDrawed(state) {
       if (state.interestPointBeingDrawed && !!state.interestPointBeingDrawed.uuid) {
-        state.triggerInterestPointFeatureDeletion = state.interestPointBeingDrawed.uuid
+        state.interestPointToDelete = state.interestPointBeingDrawed.uuid
       }
       state.interestPointBeingDrawed = null
     },
@@ -81,14 +81,13 @@ const interestPointSlice = createSlice({
      */
     removeInterestPoint(state, action: PayloadAction<string>) {
       state.interestPoints = state.interestPoints.filter(interestPoint => interestPoint.uuid !== action.payload)
-      state.isEditing = false
     },
 
     /**
      * Reset the trigger of the interest point deletion feature currently showed
      */
-    resetInterestPointFeatureDeletion(state) {
-      state.triggerInterestPointFeatureDeletion = null
+    resetInterestPointToDelete(state) {
+      state.interestPointToDelete = null
     },
 
     /**
@@ -133,7 +132,7 @@ export const {
   editInterestPoint,
   endInterestPointDraw,
   removeInterestPoint,
-  resetInterestPointFeatureDeletion,
+  resetInterestPointToDelete,
   updateInterestPointBeingDrawed,
   updateInterestPointKeyBeingDrawed
 } = interestPointSlice.actions

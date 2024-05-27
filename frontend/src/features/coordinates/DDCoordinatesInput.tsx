@@ -106,12 +106,4 @@ const Error = styled.span`
 const Body = styled.div`
   font-size: 13px;
   text-align: left;
-
-  input {
-    background: ${p => p.theme.color.gainsboro};
-    border: none;
-    height: 27px;
-    margin-top: 7px;
-    padding-left: 8px;
-  }
 `

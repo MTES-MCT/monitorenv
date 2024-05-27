@@ -122,7 +122,6 @@ export function CustomCircleRange() {
     >
       <Header>Définir une valeur</Header>
       <Body>
-        <p>Coordonnées</p>
         <SetCoordinates coordinates={circleCoordinates} updateCoordinates={updateCoordinates} />
         <p>Distance (rayon)</p>
         <input

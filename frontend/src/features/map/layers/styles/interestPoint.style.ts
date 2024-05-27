@@ -4,58 +4,32 @@ import CircleStyle from 'ol/style/Circle'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { InterestPointLine } from '../../../../domain/entities/interestPointLine'
-import { INTEREST_POINT_STYLE, interestPointType } from '../../../../domain/entities/interestPoints'
+import {
+  INTEREST_POINT_STYLE_ICON_FILENAME,
+  INTEREST_POINT_STYLE_ZINDEX
+} from '../../../../domain/entities/interestPoints'
 
-const interestPointStylesCache = new Map()
-
-const lineStyle = new Style({
-  stroke: new Stroke({
-    color: THEME.color.slateGray,
-    lineDash: [4, 4],
-    width: 2
+const getIconStyle = (resolution: number) =>
+  new Style({
+    image: new Icon({
+      displacement: [0, 10],
+      scale: 1 / resolution ** (1 / 8) + 0.3,
+      src: INTEREST_POINT_STYLE_ICON_FILENAME
+    }),
+    zIndex: INTEREST_POINT_STYLE_ZINDEX
   })
-})
 
-export const getInterestPointStyle = (feature, resolution) => {
-  const type = feature.get(InterestPointLine.typeProperty)
-
-  if (feature?.getId()?.toString()?.includes('line')) {
-    return [lineStyle]
-  }
-
-  if (!interestPointStylesCache.has(type)) {
-    const filename = getFilename(type)
-
-    const style = new Style({
-      image: new Icon({
-        offset: [0, 0],
-        size: [30, 79],
-        src: filename
-      }),
-      zIndex: INTEREST_POINT_STYLE
+export const getLineStyle = () => [
+  new Style({
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
     })
+  })
+]
 
-    interestPointStylesCache.set(type, [style])
-  }
-
-  const style = interestPointStylesCache.get(type)
-  style[0].getImage().setScale(1 / resolution ** (1 / 8) + 0.3)
-
-  return style
-}
-
-const getFilename = type => {
-  switch (type) {
-    case interestPointType.CONTROL_ENTITY:
-      return 'Point_interet_feature_moyen.png'
-    case interestPointType.FISHING_VESSEL:
-      return 'Point_interet_feature_navire.png'
-    case interestPointType.OTHER:
-    default:
-      return 'Point_interet_feature_autre.png'
-  }
-}
+export const getInterestPointStyle = (resolution: number) => getIconStyle(resolution)
 
 export const POIStyle = new Style({
   image: new CircleStyle({

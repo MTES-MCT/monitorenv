@@ -2,6 +2,8 @@ import { FAKE_MISSION_WITH_EXTERNAL_ACTIONS } from '../../constants'
 import { createMissionWithAttachedReportingAndAttachedAction } from '../../utils/createMissionWithAttachedReportingAndAttachedAction'
 import { visitSideWindow } from '../../utils/visitSideWindow'
 
+import type { Mission } from 'domain/entities/missions'
+
 context('Side Window > Mission Form > Delete Mission', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -24,9 +26,8 @@ context('Side Window > Mission Form > Delete Mission', () => {
     cy.intercept({ method: 'GET', url: `/bff/v1/missions/${missionId}/can_delete?source=MONITORENV` }).as(
       'canDeleteMission'
     )
-    cy.intercept({
-      method: 'DELETE',
-      url: `/bff/v1/missions/${missionId}`
+    cy.intercept('DELETE', `/bff/v1/missions/${missionId}`, {
+      statusCode: 200
     }).as('deleteMission')
 
     cy.get('*[data-cy="delete-mission"]').click()
@@ -44,12 +45,14 @@ context('Side Window > Mission Form > Delete Mission', () => {
     cy.wait('@deleteMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
-    cy.wait('@getMissions')
-    cy.wait(500)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 10)
+    cy.wait('@getMissions').then(({ response }) => {
+      if (!response) {
+        assert.fail('response is undefined')
+      }
+      const numberOfMissions = (response.body as Array<Mission>).filter(({ id }) => id !== missionId)
+
       cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
-        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) - 1)
+        expect(numberOfMissions.length).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) - 1)
       })
     })
   })

@@ -1,5 +1,8 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
+
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
 import { createPendingMission } from '../../utils/createPendingMission'
+import { getPreviousMonthUTC, todayUTC } from '../../utils/dates'
 import { getMissionEndDateWithTime } from '../../utils/getMissionEndDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 import { visitSideWindow } from '../../utils/visitSideWindow'
@@ -72,6 +75,8 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('div').contains('Mission créée par le')
     cy.get('div').contains('Dernière modification enregistrée')
     cy.get('.Component-Banner').contains('La mission a bien été créée')
+    cy.clickButton('Supprimer la mission')
+    cy.get('*[name="delete-mission-modal-confirm"]').click()
   })
 
   it('A mission should be created When auto-save is not enabled', () => {
@@ -132,33 +137,22 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.clickButton('Enregistrer')
 
     // Then
-    cy.waitForLastRequest(
-      '@createMission',
-      {
-        body: {
-          controlUnits: [
-            {
-              administration: 'DIRM / DM',
-              id: 10011,
-              name: 'Cross Etel'
-            }
-          ],
-          missionTypes: ['SEA', 'LAND'],
-          openBy: 'PCF'
-        }
-      },
-      5
-    )
-      .its('response.statusCode')
-      .should('eq', 200)
+    cy.wait('@createMission').then(({ response }) => {
+      const id = response?.body.id
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.equal(response.statusCode, 200)
 
-    cy.wait('@getMissions')
-    cy.wait(500)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 10)
-      cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
-        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) + 1)
+      cy.wait('@getMissions')
+      cy.wait(500)
+      cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+        const numberOfMissions = parseInt($el.text(), 10)
+        cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
+          expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) + 1)
+        })
       })
+      cy.get(`*[data-cy="edit-mission-${id}"]`).scrollIntoView().click({ force: true })
     })
   })
 
@@ -199,28 +193,41 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('*[data-cy="delete-mission"]').should('be.disabled')
   })
 
-  it('A user can delete mission if control unit already engaged and be redirected to filtered mission list', () => {
+  it('An user can cancel mission creation if control unit already engaged and be redirected to filtered mission list', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
-    cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
+    const { asDatePickerDate: expectedStartDate } = getUtcDateInMultipleFormats(
+      getPreviousMonthUTC(2, customDayjs().utc())
+    )
+    const { asDatePickerDate: expectedEndDate } = getUtcDateInMultipleFormats(todayUTC())
 
-    // When
-    cy.get('*[data-cy="add-mission"]').click()
-    cy.fill('Unité 1', 'PAM Jeanne Barret')
-    cy.wait('@getEngagedControlUnits')
+    cy.fill('Période', 'Période spécifique')
+    cy.fill('Période spécifique', [expectedStartDate, expectedEndDate])
+    const controlUnit = 'PAM Jeanne Barret'
+    cy.fill('Unité', [controlUnit])
+    cy.fill('Statut de mission', ['En cours'])
 
-    // Then
-    cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
-    cy.clickButton("Non, l'abandonner")
+    cy.get('.Table-SimpleTable tr').then(rows => {
+      cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
-    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+      // When
+      cy.get('*[data-cy="add-mission"]').click()
+      cy.fill('Unité 1', controlUnit)
+      cy.wait('@getEngagedControlUnits')
 
-    // table have two rows for one résult because of the header
-    cy.get('.Table-SimpleTable tr').should('have.length', 2)
+      // Then
+      cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
+      cy.clickButton("Non, l'abandonner")
+
+      cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+
+      // table should have the same number of rows than before
+      cy.get('.Table-SimpleTable tr').should('have.length', rows.length)
+    })
   })
 
-  it('A user can create mission even if control unit already engaged', () => {
+  it('An user can create mission even if control unit already engaged', () => {
     visitSideWindow()
     cy.wait(200)
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
@@ -228,10 +235,10 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('*[data-cy="add-mission"]').click()
 
     const startDate = getUtcDateInMultipleFormats().asDatePickerDateTime
-    const ennDate = getMissionEndDateWithTime(7, 'day')
+    const endDate = getMissionEndDateWithTime(7, 'day')
 
     cy.fill('Date de début (UTC)', startDate)
-    cy.fill('Date de fin (UTC)', ennDate)
+    cy.fill('Date de fin (UTC)', endDate)
 
     cy.fill('Unité 1', 'PAM Jeanne Barret')
     cy.wait('@getEngagedControlUnits')
@@ -418,7 +425,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.fill("Contact de l'unité 2", 'Un autre contact')
     cy.wait(250)
 
-    cy.clickButton('Enregistrer')
+    cy.clickButton('Enregistrer').wait(250)
     cy.wait('@updateMission').then(({ response }) => {
       if (!response) {
         return

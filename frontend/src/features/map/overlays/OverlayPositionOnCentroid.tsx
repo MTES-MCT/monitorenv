@@ -55,11 +55,16 @@ export function OverlayPositionOnCentroid({
   const olOverlayRef = useRef<Overlay | null>(null)
 
   const isThrottled = useRef(false)
-  const [showed, setShowed] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
   const currentCoordinates = useRef<Extent | undefined>()
 
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
   const currentOffset = useRef(INITIAL_OFFSET_VALUE)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const attachContentToOverlay = useCallback(
     (ref: HTMLDivElement) => {
@@ -92,10 +97,6 @@ export function OverlayPositionOnCentroid({
   useEffect(() => {
     if (map && olOverlayRef.current) {
       map.addOverlay(olOverlayRef.current)
-
-      if (featureIsShowed && !showed) {
-        setShowed(true)
-      }
     }
 
     return () => {
@@ -103,7 +104,7 @@ export function OverlayPositionOnCentroid({
         map.removeOverlay(olOverlayRef.current)
       }
     }
-  }, [map, olOverlayRef, featureIsShowed, showed])
+  }, [map, olOverlayRef, featureIsShowed])
 
   const moveCardWithThrottle = useCallback(
     (target, delay) => {
@@ -158,7 +159,7 @@ export function OverlayPositionOnCentroid({
     }
   }, [dispatch, feature, containerRef, olOverlayRef, map, margins])
 
-  useMoveOverlayWhenDragging(olOverlayRef.current, map, currentOffset, moveCardWithThrottle, showed)
+  useMoveOverlayWhenDragging(olOverlayRef.current, map, currentOffset, moveCardWithThrottle, isMounted)
 
   return (
     <OverlayComponent ref={attachContentToOverlay} $overlayTopLeftMargin={overlayTopLeftMargin} $zIndex={zIndex}>

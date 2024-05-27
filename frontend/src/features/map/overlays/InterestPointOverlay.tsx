@@ -1,4 +1,4 @@
-import { Accent, Icon, IconButton, Size, usePrevious, type Coordinates } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, usePrevious } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
@@ -11,12 +11,14 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getCoordinates } from '../../../utils/coordinates'
 
+import type { Coordinate } from 'ol/coordinate'
+
 const X = 0
 const Y = 1
 export const initialOffsetValue = [-90, 10]
 
 // TODO Move that into a utils file.
-function coordinatesAreModified(nextCoordinates: Coordinates, previousCoordinates: Coordinates): boolean {
+function coordinatesAreModified(nextCoordinates: Coordinate, previousCoordinates: Coordinate): boolean {
   return (
     !Number.isNaN(nextCoordinates[0]) &&
     !Number.isNaN(nextCoordinates[1]) &&
@@ -27,9 +29,9 @@ function coordinatesAreModified(nextCoordinates: Coordinates, previousCoordinate
 }
 
 type InterestPointOverlayProps = {
-  coordinates: Coordinates
+  coordinates: Coordinate
   deleteInterestPoint: (uuid: string) => void
-  featureIsShowed: boolean
+  isVisible: boolean
   map: any
   modifyInterestPoint: (uuid: string) => void
   moveLine: (uuid: string, previousCoordinates: number[], nextCoordinates: number[], offset: number[]) => void
@@ -40,7 +42,7 @@ type InterestPointOverlayProps = {
 export function InterestPointOverlay({
   coordinates,
   deleteInterestPoint,
-  featureIsShowed,
+  isVisible,
   map,
   modifyInterestPoint,
   moveLine,
@@ -54,8 +56,8 @@ export function InterestPointOverlay({
   const currentOffset = useRef(initialOffsetValue)
   const currentCoordinates = useRef([])
   const interestPointCoordinates = useRef(coordinates)
+  const [isMounted, setIsMounted] = useState(false)
   const isThrottled = useRef(false)
-  const [showed, setShowed] = useState(false)
   const overlayRef = useRef<Overlay | null>(null)
   const setOverlayRef = () => {
     if (overlayRef.current === null) {
@@ -69,6 +71,10 @@ export function InterestPointOverlay({
     }
   }
   setOverlayRef()
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const moveInterestPointWithThrottle = useCallback(
     (target, delay) => {
@@ -100,7 +106,7 @@ export function InterestPointOverlay({
     [interestPointCoordinates.current]
   )
 
-  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, showed)
+  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, isMounted)
   const previousCoordinates = usePrevious(coordinates)
 
   useEffect(() => {
@@ -124,9 +130,6 @@ export function InterestPointOverlay({
         overlayRef.current?.setElement(ref.current ?? undefined)
 
         map.addOverlay(overlayRef.current)
-        if (featureIsShowed) {
-          setShowed(true)
-        }
 
         return () => {
           map.removeOverlay(overlayRef.current)
@@ -144,7 +147,7 @@ export function InterestPointOverlay({
   return (
     <WrapperToBeKeptForDOMManagement>
       <div ref={ref}>
-        {showed ? (
+        {isVisible ? (
           <InterestPointOverlayElement>
             <Header>
               <Name data-cy="interest-point-name" title={name ?? 'Aucun Libellé'}>
@@ -156,6 +159,7 @@ export function InterestPointOverlay({
                 Icon={Icon.Edit}
                 onClick={() => modifyInterestPoint(uuid)}
                 size={Size.SMALL}
+                title="Editer"
               />
               <IconButton
                 accent={Accent.TERTIARY}
@@ -163,6 +167,7 @@ export function InterestPointOverlay({
                 Icon={Icon.Delete}
                 onClick={() => deleteInterestPoint(uuid)}
                 size={Size.SMALL}
+                title="Supprimer"
               />
             </Header>
             <Body data-cy="interest-point-observations">{observations ?? 'Aucune observation'}</Body>
@@ -178,22 +183,23 @@ export function InterestPointOverlay({
   )
 }
 
-const Body = styled.div`
+const Body = styled.p`
   padding: 10px;
   font-size: 13px;
   font-weight: 500;
   text-align: left;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  word-wrap: break-word;
 `
 
-const Footer = styled.div`
+const Footer = styled.footer`
   padding: 3px;
   font-size: 12px;
   text-align: center;
   color: ${p => p.theme.color.slateGray};
 `
 
-const Header = styled.div`
+const Header = styled.header`
   display: flex;
   height: 30px;
   background: ${p => p.theme.color.gainsboro};
@@ -207,7 +213,7 @@ const WrapperToBeKeptForDOMManagement = styled.div`
   z-index: 300;
 `
 
-const InterestPointOverlayElement = styled.div`
+const InterestPointOverlayElement = styled.section`
   background: ${p => p.theme.color.white};
   cursor: grabbing;
   width: 183px;
