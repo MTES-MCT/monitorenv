@@ -140,6 +140,10 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
       unitNameHelpers.setValue(foundUnit.name)
       administrationHelpers.setValue(foundUnit.administration)
 
+      if (foundUnit.resources.length === 1 && foundUnit.resources[0]) {
+        resourcesHelpers.setValue([foundUnit.resources[0]])
+      }
+
       if (missionIsNewMission) {
         const controlUnitAlreadyEngaged = engagedControlUnits.find(engaged => engaged.controlUnit.id === value)
         if (controlUnitAlreadyEngaged) {
@@ -213,6 +217,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
 
         <MultiSelect
           cleanable={false}
+          data-cy="add-control-unit-resource"
           disabled={!unitField.value}
           label={`Moyen(s) ${resourceUnitIndexDisplayed}`}
           name={resourcesField.name}

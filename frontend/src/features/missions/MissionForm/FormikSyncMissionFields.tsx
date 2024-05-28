@@ -34,6 +34,9 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
        * We iterate and use `setFieldValue` on each diff key to avoid a global re-render of the <MissionForm/> component
        */
       Object.keys(receivedDiff).forEach(key => {
+        if (values[key] === undefined && JSON.stringify(missionEvent[key]) === 'null') {
+          return
+        }
         // eslint-disable-next-line no-console
         console.log(`SSE: setting form key "${key}" to "${JSON.stringify(missionEvent[key])}"`)
         setFieldValue(key, missionEvent[key])
