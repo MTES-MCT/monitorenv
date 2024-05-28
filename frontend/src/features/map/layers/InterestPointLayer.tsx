@@ -17,13 +17,12 @@ import { Layers } from '../../../domain/entities/layers/constants'
 import { MapToolType, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { globalActions } from '../../../domain/shared_slices/Global'
 import {
-  deleteInterestPointBeingDrawed,
   editInterestPoint,
-  endInterestPointDraw,
+  endDrawingInterestPoint,
+  removeCurrentInterestPoint,
   removeInterestPoint,
-  resetInterestPointToDelete,
-  updateInterestPointBeingDrawed,
-  updateInterestPointKeyBeingDrawed
+  updateCurrentInterestPoint,
+  updateCurrentInterestPointProperty
 } from '../../../domain/shared_slices/InterestPoint'
 import { saveInterestPointFeature } from '../../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
@@ -44,22 +43,36 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
 
-  const { interestPointBeingDrawed, interestPoints, interestPointToDelete, isDrawing, isEditing } = useAppSelector(
-    state => state.interestPoint
-  )
+  const { currentInterestPoint, interestPoints, isDrawing, isEditing } = useAppSelector(state => state.interestPoint)
 
   const [drawObject, setDrawObject] = useState<Draw>()
 
   const [interestsPointsToCoordinate, setInterestsPointsToCoordinate] = useState(new Map())
-  const previousInterestPointBeingDrawed = usePrevious<NewInterestPoint | null>(interestPointBeingDrawed)
+  const previousInterestPoint = usePrevious<NewInterestPoint | null>(currentInterestPoint)
+
   const deleteInterestPoint = useCallback(
     (uuid: string) => {
       removePoint(uuid)
       removeLine(uuid)
       dispatch(removeInterestPoint(uuid))
+      dispatch(endDrawingInterestPoint())
+
+      dispatch(globalActions.setIsMapToolVisible(undefined))
     },
     [dispatch]
   )
+
+  const deleteCurrentInterestPoint = useCallback(
+    (uuid: string) => {
+      removePoint(uuid)
+      removeLine(uuid)
+      dispatch(removeCurrentInterestPoint())
+      dispatch(endDrawingInterestPoint())
+      dispatch(globalActions.setIsMapToolVisible(undefined))
+    },
+    [dispatch]
+  )
+
   const moveInterestPointLine = useCallback(
     (uuid: string | number, coordinates: Coordinate, nextCoordinates: Coordinate, offset: any) => {
       const featureId = InterestPointLine.getFeatureId(uuid)
@@ -129,6 +142,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
           return feats
         }, [] as Array<Feature<LineString>>)
+
         interestPointVectorSourceRef.current.addFeatures(features)
       }
     }
@@ -139,7 +153,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     function addEmptyNextInterestPoint() {
       dispatch(
-        updateInterestPointBeingDrawed({
+        updateCurrentInterestPoint({
           coordinates: null,
           name: null,
           observations: null,
@@ -188,12 +202,12 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
             if (geometry instanceof Point) {
               const coordinates = geometry.getLastCoordinate()
               dispatch(
-                updateInterestPointBeingDrawed({
+                updateCurrentInterestPoint({
                   coordinates,
                   name: null,
                   observations: null,
                   // TODO Check that.
-                  uuid: interestPointBeingDrawed!.uuid
+                  uuid: currentInterestPoint!.uuid
                 })
               )
             }
@@ -203,36 +217,26 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
         })
 
         drawObject.once(DRAW_ABORT_EVENT, () => {
-          dispatch(endInterestPointDraw())
-          dispatch(deleteInterestPointBeingDrawed())
+          dispatch(endDrawingInterestPoint())
         })
 
         drawObject.once(DRAW_END_EVENT, event => {
           dispatch(saveInterestPointFeature(event.feature))
-          dispatch(endInterestPointDraw())
+          dispatch(endDrawingInterestPoint())
         })
       }
     }
 
     handleDrawEvents()
-  }, [dispatch, drawObject, interestPointBeingDrawed])
-
-  useEffect(() => {
-    if (interestPointToDelete) {
-      deleteInterestPoint(interestPointToDelete)
-      resetInterestPointToDelete()
-    }
-  }, [deleteInterestPoint, interestPointToDelete])
+  }, [dispatch, drawObject, currentInterestPoint])
 
   useEffect(() => {
     function modifyFeatureWhenCoordinatesOrTypeModified() {
-      if (interestPointBeingDrawed?.coordinates?.length && interestPointBeingDrawed?.uuid) {
-        const drawingFeatureToUpdate = interestPointVectorSourceRef.current.getFeatureById(
-          interestPointBeingDrawed.uuid
-        )
+      if (currentInterestPoint?.coordinates?.length && currentInterestPoint?.uuid) {
+        const drawingFeatureToUpdate = interestPointVectorSourceRef.current.getFeatureById(currentInterestPoint.uuid)
 
-        if (drawingFeatureToUpdate && coordinatesOrTypeAreModified(drawingFeatureToUpdate, interestPointBeingDrawed)) {
-          const { feature, ...interestPointWithoutFeature } = interestPointBeingDrawed
+        if (drawingFeatureToUpdate && coordinatesOrTypeAreModified(drawingFeatureToUpdate, currentInterestPoint)) {
+          const { feature, ...interestPointWithoutFeature } = currentInterestPoint
           const geometry = drawingFeatureToUpdate.getGeometry()
           if (interestPointWithoutFeature.coordinates) {
             // TODO [17/05/2024] typage à refacto: Openlayer fonctionne avec Coordinate[] et Coordinate
@@ -245,7 +249,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           })
 
           dispatch(
-            updateInterestPointKeyBeingDrawed({
+            updateCurrentInterestPointProperty({
               key: 'feature',
               value: nextFeature
             })
@@ -255,32 +259,27 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     }
 
     modifyFeatureWhenCoordinatesOrTypeModified()
-  }, [dispatch, interestPointBeingDrawed])
+  }, [dispatch, currentInterestPoint])
 
   useEffect(() => {
     function initLineWhenInterestPointCoordinatesModified() {
       if (
-        interestPointBeingDrawed &&
-        previousInterestPointBeingDrawed &&
-        coordinatesAreModified(interestPointBeingDrawed, previousInterestPointBeingDrawed) &&
-        !!interestPointBeingDrawed.coordinates &&
-        !!previousInterestPointBeingDrawed.coordinates
+        currentInterestPoint &&
+        previousInterestPoint &&
+        coordinatesAreModified(currentInterestPoint, previousInterestPoint) &&
+        !!currentInterestPoint.coordinates &&
+        !!previousInterestPoint.coordinates
       ) {
-        const line = new LineString([
-          interestPointBeingDrawed.coordinates,
-          previousInterestPointBeingDrawed.coordinates
-        ])
+        const line = new LineString([currentInterestPoint.coordinates, previousInterestPoint.coordinates])
         const distance = getLength(line, { projection: OPENLAYERS_PROJECTION })
 
         if (distance > 10) {
-          const featureId = InterestPointLine.getFeatureId(interestPointBeingDrawed.uuid)
+          const featureId = InterestPointLine.getFeatureId(currentInterestPoint.uuid)
           if (interestsPointsToCoordinate.has(featureId)) {
             interestsPointsToCoordinate.delete(featureId)
             const feature = interestPointVectorSourceRef.current.getFeatureById(featureId)
-            if (feature && !!interestPointBeingDrawed.coordinates) {
-              feature.setGeometry(
-                new LineString([interestPointBeingDrawed.coordinates, interestPointBeingDrawed.coordinates])
-              )
+            if (feature && !!currentInterestPoint.coordinates) {
+              feature.setGeometry(new LineString([currentInterestPoint.coordinates, currentInterestPoint.coordinates]))
             }
           }
         }
@@ -288,7 +287,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     }
 
     initLineWhenInterestPointCoordinatesModified()
-  }, [interestPointBeingDrawed, interestsPointsToCoordinate, previousInterestPointBeingDrawed])
+  }, [currentInterestPoint, interestsPointsToCoordinate, previousInterestPoint])
 
   useEffect(() => {
     interestPointVectorLayer.current.setVisible(displayInterestPointLayer)
@@ -312,17 +311,17 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
             />
           ))
         : null}
-      {interestPointBeingDrawed && !isEditing && !!interestPointBeingDrawed.coordinates ? (
+      {currentInterestPoint && !isEditing && !!currentInterestPoint.coordinates ? (
         <InterestPointOverlay
-          coordinates={interestPointBeingDrawed.coordinates}
-          deleteInterestPoint={() => dispatch(endInterestPointDraw()) && dispatch(deleteInterestPointBeingDrawed())}
+          coordinates={currentInterestPoint.coordinates}
+          deleteInterestPoint={deleteCurrentInterestPoint}
           isVisible={displayInterestPointLayer}
           map={map}
           modifyInterestPoint={() => {}}
           moveLine={moveInterestPointLine}
-          name={interestPointBeingDrawed.name!}
-          observations={interestPointBeingDrawed.observations}
-          uuid={interestPointBeingDrawed.uuid}
+          name={currentInterestPoint.name!}
+          observations={currentInterestPoint.observations}
+          uuid={currentInterestPoint.uuid}
         />
       ) : null}
     </div>
@@ -360,6 +359,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
   function removePoint(uuid: string) {
     const feature = interestPointVectorSourceRef.current.getFeatureById(uuid)
+
     if (feature) {
       interestPointVectorSourceRef.current.removeFeature(feature)
       interestPointVectorSourceRef.current.changed()

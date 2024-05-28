@@ -8,10 +8,9 @@ import styled from 'styled-components'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import {
   addInterestPoint,
-  deleteInterestPointBeingDrawed,
-  drawInterestPoint,
-  endInterestPointDraw,
-  updateInterestPointKeyBeingDrawed
+  endDrawingInterestPoint,
+  startDrawingInterestPoint,
+  updateCurrentInterestPointProperty
 } from '../../../../domain/shared_slices/InterestPoint'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { saveInterestPointFeature } from '../../../../domain/use_cases/interestPoint/saveInterestPointFeature'
@@ -31,19 +30,19 @@ type EditInterestPointProps = {
 export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
 
-  const { interestPointBeingDrawed, isEditing } = useAppSelector(state => state.interestPoint)
+  const { currentInterestPoint, isEditing } = useAppSelector(state => state.interestPoint)
   const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
 
   const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
 
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
-    if (!interestPointBeingDrawed?.coordinates?.length) {
+    if (!currentInterestPoint?.coordinates?.length) {
       return []
     }
 
     const [latitude, longitude] = getCoordinates(
-      interestPointBeingDrawed.coordinates,
+      currentInterestPoint.coordinates,
       OPENLAYERS_PROJECTION,
       CoordinatesFormat.DECIMAL_DEGREES,
       false
@@ -53,34 +52,34 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     }
 
     return [parseFloat(latitude.replace(/°/g, '')), parseFloat(longitude.replace(/°/g, ''))]
-  }, [interestPointBeingDrawed?.coordinates])
+  }, [currentInterestPoint?.coordinates])
 
   const updateName = useCallback(
     name => {
-      if (interestPointBeingDrawed?.name !== name) {
+      if (currentInterestPoint?.name !== name) {
         dispatch(
-          updateInterestPointKeyBeingDrawed({
+          updateCurrentInterestPointProperty({
             key: 'name',
             value: name
           })
         )
       }
     },
-    [dispatch, interestPointBeingDrawed?.name]
+    [dispatch, currentInterestPoint?.name]
   )
 
   const updateObservations = useCallback(
     observations => {
-      if (interestPointBeingDrawed?.observations !== observations) {
+      if (currentInterestPoint?.observations !== observations) {
         dispatch(
-          updateInterestPointKeyBeingDrawed({
+          updateCurrentInterestPointProperty({
             key: 'observations',
             value: observations
           })
         )
       }
     },
-    [dispatch, interestPointBeingDrawed?.observations]
+    [dispatch, currentInterestPoint?.observations]
   )
 
   /**
@@ -101,7 +100,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           // Convert to [longitude, latitude] and OpenLayers projection
           const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
           dispatch(
-            updateInterestPointKeyBeingDrawed({
+            updateCurrentInterestPointProperty({
               key: 'coordinates',
               value: updatedCoordinates
             })
@@ -142,10 +141,9 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           onClick={() => {
             dispatch(setDisplayedItems({ displayInterestPointLayer: !displayInterestPointLayer }))
             if (displayInterestPointLayer) {
-              dispatch(endInterestPointDraw())
-              dispatch(deleteInterestPointBeingDrawed())
+              dispatch(endDrawingInterestPoint())
             } else {
-              dispatch(drawInterestPoint())
+              dispatch(startDrawingInterestPoint())
             }
           }}
         />
@@ -158,7 +156,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           label="Libellé du point"
           name="name"
           onChange={updateName}
-          value={interestPointBeingDrawed?.name ?? ''}
+          value={currentInterestPoint?.name ?? ''}
         />
 
         <Textarea
@@ -166,7 +164,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           label="Observations"
           name="observations"
           onChange={updateObservations}
-          value={interestPointBeingDrawed?.observations ?? ''}
+          value={currentInterestPoint?.observations ?? ''}
         />
       </StyledDialogBody>
       <MapMenuDialog.Footer>

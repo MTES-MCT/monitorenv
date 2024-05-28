@@ -1,16 +1,12 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { endDrawingInterestPoint, startDrawingInterestPoint } from 'domain/shared_slices/InterestPoint'
+import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
+import { useCallback, useMemo, useRef } from 'react'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
 import { globalActions, setDisplayedItems } from '../../../../domain/shared_slices/Global'
-import {
-  deleteInterestPointBeingDrawed,
-  drawInterestPoint,
-  endInterestPointDraw
-} from '../../../../domain/shared_slices/InterestPoint'
-import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
@@ -22,6 +18,7 @@ export function InterestPointMapButton() {
   const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
 
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
+
   const wrapperRef = useRef(null)
 
   const close = useCallback(() => {
@@ -30,18 +27,8 @@ export function InterestPointMapButton() {
 
   useEscapeFromKeyboardAndExecute(close)
 
-  useEffect(() => {
-    if (!isOpen) {
-      dispatch(endInterestPointDraw())
-      dispatch(deleteInterestPointBeingDrawed())
-    }
-  }, [dispatch, isOpen])
-
   const toggleInterestPointMenu = useCallback(() => {
     if (!isOpen) {
-      if (displayInterestPointLayer) {
-        dispatch(drawInterestPoint())
-      }
       dispatch(
         setDisplayedItems({
           isControlUnitDialogVisible: false,
@@ -53,10 +40,16 @@ export function InterestPointMapButton() {
       )
       dispatch(reduceReportingFormOnMap())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
+      if (displayInterestPointLayer) {
+        dispatch(startDrawingInterestPoint())
+      } else {
+        dispatch(endDrawingInterestPoint())
+      }
     } else {
-      close()
+      dispatch(globalActions.setIsMapToolVisible(undefined))
+      dispatch(endDrawingInterestPoint())
     }
-  }, [close, dispatch, isOpen, displayInterestPointLayer])
+  }, [dispatch, isOpen, displayInterestPointLayer])
 
   return (
     <ButtonWrapper ref={wrapperRef} topPosition={346}>

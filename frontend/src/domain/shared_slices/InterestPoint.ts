@@ -4,18 +4,16 @@ import storage from 'redux-persist/lib/storage'
 
 import type { InterestPoint, NewInterestPoint } from '../../features/InterestPoint/types'
 
-interface InterestPointState {
-  interestPointBeingDrawed: NewInterestPoint | null
-  interestPointToDelete: string | null
+export interface InterestPointState {
+  currentInterestPoint: NewInterestPoint | null
   interestPoints: InterestPoint[]
   isDrawing: boolean
   isEditing: boolean
 }
 
 const INITIAL_STATE: InterestPointState = {
-  interestPointBeingDrawed: null,
+  currentInterestPoint: null,
   interestPoints: [],
-  interestPointToDelete: null,
   isDrawing: false,
   isEditing: false
 }
@@ -34,36 +32,17 @@ const interestPointSlice = createSlice({
      * Add a new interest point
      */
     addInterestPoint(state) {
-      if (!state.isEditing && !!state.interestPointBeingDrawed) {
-        state.interestPoints = state.interestPoints.concat(state.interestPointBeingDrawed as any)
+      if (!state.isEditing && !!state.currentInterestPoint) {
+        state.interestPoints = state.interestPoints.concat(state.currentInterestPoint as InterestPoint)
       }
       state.isDrawing = false
-      state.interestPointBeingDrawed = null
-    },
-
-    /**
-     * Delete the interest point being drawed and trigger the deletion of the interest point feature currently showed
-     */
-    deleteInterestPointBeingDrawed(state) {
-      if (state.interestPointBeingDrawed && !!state.interestPointBeingDrawed.uuid) {
-        state.interestPointToDelete = state.interestPointBeingDrawed.uuid
-      }
-      state.interestPointBeingDrawed = null
-    },
-
-    /**
-     * Start drawing an interest point with a clickable map
-     */
-    drawInterestPoint(state) {
-      state.isDrawing = true
-      state.isEditing = false
     },
 
     /**
      * Edit an existing interest point
      */
     editInterestPoint(state, action: PayloadAction<string>) {
-      state.interestPointBeingDrawed =
+      state.currentInterestPoint =
         state.interestPoints.find(interestPoint => interestPoint.uuid === action.payload) ?? null
       state.isEditing = true
     },
@@ -71,9 +50,16 @@ const interestPointSlice = createSlice({
     /**
      * End drawing
      */
-    endInterestPointDraw(state) {
+    endDrawingInterestPoint(state) {
       state.isDrawing = false
       state.isEditing = false
+    },
+
+    removeCurrentInterestPoint(state) {
+      if (state.currentInterestPoint && !!state.currentInterestPoint.uuid) {
+        removeInterestPoint(state.currentInterestPoint.uuid)
+      }
+      state.currentInterestPoint = null
     },
 
     /**
@@ -84,37 +70,38 @@ const interestPointSlice = createSlice({
     },
 
     /**
-     * Reset the trigger of the interest point deletion feature currently showed
+     * Start drawing an interest point with a clickable map
      */
-    resetInterestPointToDelete(state) {
-      state.interestPointToDelete = null
+    startDrawingInterestPoint(state) {
+      state.isDrawing = true
+      state.isEditing = false
     },
 
     /**
-     * Update the interest point being drawed
+     * Update the current interest point
      */
-    updateInterestPointBeingDrawed(state, action: PayloadAction<NewInterestPoint | null>) {
-      state.interestPointBeingDrawed = action.payload
+    updateCurrentInterestPoint(state, action: PayloadAction<NewInterestPoint | null>) {
+      state.currentInterestPoint = action.payload
     },
 
     /**
-     * Update the specified key of the interest point being drawed
+     * Update the specified key of the current interest point
      */
-    updateInterestPointKeyBeingDrawed(
+    updateCurrentInterestPointProperty(
       state,
       action: PayloadAction<{
         key: keyof InterestPoint
         value: any
       }>
     ) {
-      const nextInterestPointBeingDrawed = { ...state.interestPointBeingDrawed }
-      nextInterestPointBeingDrawed[action.payload.key] = action.payload.value
+      const currentInterestPoint = { ...state.currentInterestPoint }
+      currentInterestPoint[action.payload.key] = action.payload.value
       // TODO Remove this cast. Used to ease JS => TS migration.
-      state.interestPointBeingDrawed = nextInterestPointBeingDrawed as InterestPoint
+      state.currentInterestPoint = currentInterestPoint as InterestPoint
 
       if (state.isEditing) {
         state.interestPoints = state.interestPoints.map(interestPoint => {
-          if (!!state.interestPointBeingDrawed && interestPoint.uuid === state.interestPointBeingDrawed.uuid) {
+          if (interestPoint.uuid === state.currentInterestPoint?.uuid) {
             interestPoint[action.payload.key] = action.payload.value
           }
 
@@ -127,14 +114,13 @@ const interestPointSlice = createSlice({
 
 export const {
   addInterestPoint,
-  deleteInterestPointBeingDrawed,
-  drawInterestPoint,
   editInterestPoint,
-  endInterestPointDraw,
+  endDrawingInterestPoint,
+  removeCurrentInterestPoint,
   removeInterestPoint,
-  resetInterestPointToDelete,
-  updateInterestPointBeingDrawed,
-  updateInterestPointKeyBeingDrawed
+  startDrawingInterestPoint,
+  updateCurrentInterestPoint,
+  updateCurrentInterestPointProperty
 } = interestPointSlice.actions
 
 export const interestPointSlicePersistedReducer = persistReducer(persistConfig, interestPointSlice.reducer)
