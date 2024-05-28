@@ -63,9 +63,9 @@ export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
   const cellTitle = useMemo(() => cellContent?.map(content => content.title).join(' - '), [cellContent])
 
   return cellContent?.length > 0
-    ? cellContent.map((content, index) => (
-        <ThemesAndSubThemesContainer key={content.title} data-cy="cell-envActions-themes" title={cellTitle}>
-          {content.component}
+    ? cellContent.map(({ component, title }, index) => (
+        <ThemesAndSubThemesContainer key={title} data-cy="cell-envActions-themes" title={cellTitle}>
+          {component}
           {index < cellContent.length - 1 ? ' - ' : ''}
         </ThemesAndSubThemesContainer>
       ))
