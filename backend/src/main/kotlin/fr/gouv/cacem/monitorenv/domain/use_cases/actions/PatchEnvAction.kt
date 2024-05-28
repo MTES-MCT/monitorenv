@@ -15,7 +15,6 @@ class PatchEnvAction(
 ) {
 
     fun execute(id: UUID, partialEnvAction: EnvActionEntity): EnvActionEntity {
-
         envActionRepository.findById(id)?.let {
             return envActionRepository.save(mergeData.merge(it, partialEnvAction))
         }

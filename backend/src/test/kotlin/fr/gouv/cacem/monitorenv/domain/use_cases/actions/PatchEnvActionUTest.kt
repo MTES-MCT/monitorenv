@@ -21,7 +21,6 @@ class PatchEnvActionUTest {
 
     private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, mergeData)
 
-
     @Test
     fun `execute() should return the saved patched entity when it exists`() {
         // Given
@@ -32,11 +31,9 @@ class PatchEnvActionUTest {
         val envActionFromDatabase = anEnvAction(id, ZonedDateTime.now(), ZonedDateTime.now().plusDays(2))
         val envActionMerged = anEnvAction(envActionFromDatabase.id, today, tomorrow)
 
-
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)
         given(mergeData.merge(envActionFromDatabase, partialEnvAction)).willReturn(envActionMerged)
         given(envActionRepository.save(envActionMerged)).willReturn(envActionMerged)
-
 
         // When
         val patchedEnvAction = patchEnvAction.execute(id, partialEnvAction)
@@ -56,7 +53,6 @@ class PatchEnvActionUTest {
         val partialEnvAction = anEnvAction(id, today, tomorrow)
 
         given(envActionRepository.findById(id)).willReturn(null)
-
 
         // When & Then
         assertThrows<BackendUsageException> { patchEnvAction.execute(id, partialEnvAction) }

@@ -29,6 +29,5 @@ class EnvAction(private val objectMapper: ObjectMapper, private val patchEnvActi
         val partialConcreteEnvActionEntity =
             objectMapper.readValue(partialEnvAction, ConcreteEnvActionEntity::class.java)
         return EnvActionOutput.fromEntity(patchEnvAction.execute(id, partialConcreteEnvActionEntity))
-
     }
 }
