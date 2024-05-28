@@ -254,7 +254,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
                 "    country_iso3, country_iso3namefr "
                 "FROM tmp_amp_ofb "
                 "WHERE mpa_id NOT IN "
-                "    (SELECT mpa_id FROM prod.\"Aires marines protégées\");"
+                "    (SELECT mpa_id FROM prod.\"Aires marines protégées\" WHERE mpa_id is not null);"
             )
         )
         logger.info(f"Number of rows inserted: {inserted_rows.rowcount}")
