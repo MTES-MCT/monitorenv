@@ -124,7 +124,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
             text(
           "CREATE TEMP TABLE tmp_amp_ofb("
           "    id serial PRIMARY KEY,"
-          "    geom geometry(multipolygon, 4326),"
+          "    geom geometry,"
           "    mpa_id integer UNIQUE NOT NULL,"
           "    mpa_pid integer,"
           "    gid integer,"
@@ -185,11 +185,11 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
 
         logger.info("Updating amp from temporary table")
 
-        connection.execute(
+        updated_rows = connection.execute(
             text(
                 "UPDATE prod.\"Aires marines protégées\" p "
                 "SET "
-                "    geom = st_multi(ep.geom), "
+                "    geom = st_multi(st_setsrid(ep.geom,4326)), " 
                 "    mpa_pid = ep.mpa_pid, "
                 "    gid = ep.gid, "
                 "    mpa_name = ep.mpa_name, "
@@ -220,18 +220,20 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
                 "WHERE p.mpa_id = ep.mpa_id;"
             )
         )
+        logger.info(f"Number of rows updated: {updated_rows.rowcount}")
 
         logger.info("Delete amp not existing in temporary table")
-        connection.execute(
+        deleted_rows = connection.execute(
             text(
                 "DELETE FROM prod.\"Aires marines protégées\" p "
                 "WHERE p.mpa_id NOT IN "
                 "    (SELECT mpa_id FROM tmp_amp_ofb);"
             )
         )
+        logger.info(f"Number of rows deleted: {deleted_rows.rowcount}")
 
         logger.info("Insert missing amp from temporary table")
-        connection.execute(
+        inserted_rows = connection.execute(
             text(
                 "INSERT INTO prod.\"Aires marines protégées\" ("
                 "    geom, mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
@@ -243,7 +245,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
                 "    country_iso3, country_iso3namefr "
                 "    )"
                 "SELECT "
-                "    st_multi(geom), mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
+                "    st_multi(st_setsrid(geom,4326)), mpa_id, mpa_pid, gid, mpa_name, mpa_oriname, "
                 "    des_id, des_desigfr, des_desigtype, mpa_status, "
                 "    mpa_datebegin, mpa_statusyr, mpa_wdpaid, mpa_wdpapid, "
                 "    mpa_mnhnid, mpa_marine, mpa_calcarea, mpa_calcmarea, "
@@ -252,9 +254,10 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
                 "    country_iso3, country_iso3namefr "
                 "FROM tmp_amp_ofb "
                 "WHERE mpa_id NOT IN "
-                "    (SELECT mpa_id FROM prod.\"Aires marines protégées\");"
+                "    (SELECT mpa_id FROM prod.\"Aires marines protégées\" WHERE mpa_id is not null);"
             )
         )
+        logger.info(f"Number of rows inserted: {inserted_rows.rowcount}")
 
 
 with Flow("update amp from ofb") as flow:
