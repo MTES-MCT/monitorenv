@@ -38,7 +38,7 @@ export const getFeatureStyle = ((feature: Feature) => {
       fill: new Fill({
         color: THEME.color.white
       }),
-      font: `11px 'Open Sans'`,
+      font: `700 11px 'Open Sans'`,
       offsetX: 16.5,
       offsetY: -35.5,
       text: featureProps.controlUnitsCount.toString(),
