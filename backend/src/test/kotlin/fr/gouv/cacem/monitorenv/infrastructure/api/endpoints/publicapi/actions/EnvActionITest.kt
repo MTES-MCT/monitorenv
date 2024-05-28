@@ -29,7 +29,7 @@ class EnvActionITest {
     @Test
     fun `UpdateAction() should call the usecase and return the updated resources`() {
         // Given
-        val id = 1;
+        val id = 1
         val yesterday = ZonedDateTime.now().minusDays(1).format(DateTimeFormatter.ISO_INSTANT)
         val tomorrow = ZonedDateTime.now().plusDays(1).format(DateTimeFormatter.ISO_INSTANT)
         val partialAction = """

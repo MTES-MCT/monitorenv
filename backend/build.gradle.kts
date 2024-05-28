@@ -90,7 +90,6 @@ dependencies {
     testImplementation("net.java.dev.jna:jna:5.14.0")
     // TODO: move in tests only
     api("net.ttddyy:datasource-proxy:1.10")
-
 }
 
 group = "fr.gouv.cacem"
