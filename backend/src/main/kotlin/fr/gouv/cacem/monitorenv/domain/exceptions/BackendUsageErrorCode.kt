@@ -29,4 +29,7 @@ enum class BackendUsageErrorCode {
 
     /** Thrown when attempting to delete a mission that has actions created by other applications. */
     EXISTING_MISSION_ACTION,
+
+    /** Thrown when attempting to find an entity that has does not exist. */
+    ENTITY_NOT_FOUND,
 }
