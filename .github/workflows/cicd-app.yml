@@ -317,6 +317,8 @@ jobs:
           environment: ${{ env.ENV_PROFILE }}
           version: ${{ env.VERSION }}
           sourcemaps: ./frontend_build
+          ignore_missing: true
+          ignore_empty: true
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
