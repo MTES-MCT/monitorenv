@@ -38,6 +38,7 @@ export function MissionsMenu() {
       setDisplayedItems({
         isControlUnitDialogVisible: false,
         isControlUnitListDialogVisible: false,
+        isMapToolVisible: undefined,
         isSearchMissionsVisible: !isSearchMissionsVisible,
         isSearchReportingsVisible: false,
         isSearchSemaphoreVisible: false
