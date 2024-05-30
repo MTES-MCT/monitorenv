@@ -4,6 +4,7 @@ import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { ActionSource, ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
+import type { VesselTypeEnum } from './vesselType'
 
 export type Reporting = {
   actionTaken: string | undefined
@@ -90,6 +91,7 @@ export type TargetDetails = {
   operatorName?: string
   size?: number
   vesselName?: string
+  vesselType?: VesselTypeEnum
 }
 
 export type ReportingForTimeline = Partial<ReportingDetailed> & {
