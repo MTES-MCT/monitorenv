@@ -20,37 +20,29 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
         />
       )}
 
-      {
-        vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
-          <>
-            <StyledVesselForm>
-              <FormikTextInput label="MMSI" name={`${infractionPath}.mmsi`} />
-              <FormikTextInput label="Nom du navire" name={`${infractionPath}.vesselName`} />
-            </StyledVesselForm>
-            <StyledVesselForm>
-              <FormikTextInput label="IMO" name={`${infractionPath}.imo`} />
-              <FormikTextInput label="Nom du capitaine" name={`${infractionPath}.controlledPersonIdentity`} />
-            </StyledVesselForm>
-            <StyledVesselForm>
-              <FormikTextInput label="Immatriculation" name={`${infractionPath}.registrationNumber`} />
-              <FormikNumberInput label="Taille" name={`${infractionPath}.vesselSize`} />
-            </StyledVesselForm>
-            <StyledVesselForm>
-              <VesselTypeSelector name={`${infractionPath}.vesselType`} />
-            </StyledVesselForm>
-          </>
-        )
-        /*  <>
-          <VesselTypeSelector name={`${infractionPath}.vesselType`} />
-
-          <FormikNumberInput
-            data-cy="infraction-form-vessel-size"
-            label="Taille du navire"
-            min={0}
-            name={`${infractionPath}.vesselSize`}
-          />
-        </> */
-      }
+      {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
+        <>
+          <StyledVesselForm>
+            <FormikTextInput label="MMSI" name={`${infractionPath}.mmsi`} />
+            <FormikTextInput label="Nom du navire" name={`${infractionPath}.vesselName`} />
+          </StyledVesselForm>
+          <StyledVesselForm>
+            <FormikTextInput label="IMO" name={`${infractionPath}.imo`} />
+            <FormikTextInput label="Nom du capitaine" name={`${infractionPath}.controlledPersonIdentity`} />
+          </StyledVesselForm>
+          <StyledVesselForm>
+            <FormikTextInput
+              data-cy="infraction-form-registrationNumber"
+              label="Immatriculation"
+              name={`${infractionPath}.registrationNumber`}
+            />
+            <FormikNumberInput label="Taille" name={`${infractionPath}.vesselSize`} />
+          </StyledVesselForm>
+          <StyledVesselForm>
+            <VesselTypeSelector name={`${infractionPath}.vesselType`} />
+          </StyledVesselForm>
+        </>
+      )}
     </FormGroup>
   )
 }
