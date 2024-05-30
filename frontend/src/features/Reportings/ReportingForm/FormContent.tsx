@@ -72,8 +72,6 @@ import { isNewReporting } from '../utils'
 
 import type { AtLeast } from '../../../types'
 
-const FORM_BOTTOM = 700
-
 const WITH_VHF_ANSWER_OPTIONS = [
   { label: 'Oui', value: true },
   { label: 'Non', value: false }
@@ -88,6 +86,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   const dispatch = useAppDispatch()
 
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [scrollTop, setScrollTop] = useState(0)
   const { scrollPosition, setScrollPosition } = useReportingEventContext()
 
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
@@ -238,7 +237,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     const reportingIsNew = isNewReporting(values.id)
 
     if (reportingIsNew) {
-      setScrollPosition(FORM_BOTTOM)
+      setScrollPosition(scrollTop)
     }
     await dispatch(saveReporting(nextValues, reportingContext))
   }, 250)
@@ -274,6 +273,10 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     // and we want to keep the scroll position of the form
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const onScroll = e => {
+    setScrollTop(e.currentTarget.scrollTop)
+  }
 
   if (!selectedReporting || isEmpty(values)) {
     return null
@@ -315,7 +318,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         )}
         <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
       </SaveBanner>
-      <StyledForm ref={scrollRef} $totalReducedReportings={reducedReportingsOnContext}>
+      <StyledForm ref={scrollRef} $totalReducedReportings={reducedReportingsOnContext} onScroll={onScroll}>
         <Source />
         <Target />
         <Position />
