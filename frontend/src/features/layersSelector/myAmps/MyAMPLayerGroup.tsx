@@ -66,7 +66,7 @@ export function MyAMPLayerGroup({
           {groupName}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
-          <LayerSelector.NumberOfZones>{`${layers?.length} / ${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
+          <LayerSelector.NumberOfZones>{`${layers?.length}/${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
           <IconButton
             accent={Accent.TERTIARY}
             color={ampZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}

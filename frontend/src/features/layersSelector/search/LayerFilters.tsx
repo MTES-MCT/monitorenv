@@ -1,4 +1,5 @@
-import { type Option, Accent, CheckPicker, SingleTag } from '@mtes-mct/monitor-ui'
+import { type Option, Accent, CheckPicker, CustomSearch, SingleTag } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 type LayerFiltersProps = {
@@ -35,9 +36,17 @@ export function LayerFilters({
     setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== v))
   }
 
+  const regulatoryThemesCustomSearch = useMemo(
+    () => new CustomSearch(regulatoryThemes as Array<Option>, ['label']),
+    [regulatoryThemes]
+  )
+
+  const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
+
   return (
     <FiltersWrapper>
       <CheckPicker
+        customSearch={regulatoryThemesCustomSearch}
         isLabelHidden
         label="Thématique réglementaire"
         name="regulatoryThemes"
@@ -66,6 +75,7 @@ export function LayerFilters({
       </TagWrapper>
 
       <CheckPicker
+        customSearch={AMPCustomSearch}
         isLabelHidden
         label="Type d'AMP"
         name="ampTypes"

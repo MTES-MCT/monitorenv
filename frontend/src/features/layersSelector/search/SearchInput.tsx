@@ -61,6 +61,4 @@ const NumberOfFilters = styled(Tag)`
   right: -5px;
   z-index: 100;
   font-size: 12px;
-  line-height: 13px;
-  padding: 0px 5px 1px;
 `
