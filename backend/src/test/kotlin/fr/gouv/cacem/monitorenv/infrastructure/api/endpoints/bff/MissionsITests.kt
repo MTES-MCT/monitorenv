@@ -213,6 +213,9 @@ class MissionsITests {
                         controlledPersonIdentity = "Captain Flame",
                         vesselType = VesselTypeEnum.COMMERCIAL,
                         vesselSize = 23,
+                        vesselName = "Vessel Name",
+                        mmsi = "123456789",
+                        imo = "987654321",
                     ),
                 ),
             )
@@ -524,6 +527,9 @@ class MissionsITests {
                         controlledPersonIdentity = "Captain Flame",
                         vesselType = VesselTypeEnum.COMMERCIAL,
                         vesselSize = 23,
+                        vesselName = "Vessel Name",
+                        mmsi = "123456789",
+                        imo = "987654321",
                     ),
                 ),
             )

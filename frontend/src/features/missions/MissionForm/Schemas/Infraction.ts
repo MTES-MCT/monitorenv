@@ -1,11 +1,7 @@
+import { VesselTypeEnum } from 'domain/entities/vesselType'
 import * as Yup from 'yup'
 
-import {
-  FormalNoticeEnum,
-  InfractionTypeEnum,
-  type Infraction,
-  VesselTypeEnum
-} from '../../../../domain/entities/missions'
+import { FormalNoticeEnum, InfractionTypeEnum, type Infraction } from '../../../../domain/entities/missions'
 
 Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
   Yup.mixed().test({
@@ -24,7 +20,9 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
   controlledPersonIdentity: Yup.string().nullable(),
   formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required(),
   id: Yup.string().required(),
+  imo: Yup.string().nullable(),
   infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required(),
+  mmsi: Yup.string().nullable(),
   natinf: Yup.array()
     .of(Yup.string().ensure())
     .when('infractionType', {
@@ -37,6 +35,7 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
   registrationNumber: Yup.string().nullable(),
   relevantCourt: Yup.string().nullable(),
   toProcess: Yup.boolean().required(),
+  vesselName: Yup.string().nullable(),
   vesselSize: Yup.number().nullable(),
   // @ts-ignore
   // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'

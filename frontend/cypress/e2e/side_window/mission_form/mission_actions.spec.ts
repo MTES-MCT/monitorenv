@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import { createPendingMission } from '../../utils/createPendingMission'
 import { getFutureDate } from '../../utils/getFutureDate'
 
 context('Side Window > Mission Form > Mission actions', () => {
@@ -480,5 +481,67 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('.Toastify__toast-body').contains(
       'Problème de communication avec MonitorFish: impossible de récupérer les actions du CNSP'
     )
+  })
+
+  it('Should save infraction with vessel type is "VESSEL"', () => {
+    createPendingMission().then(({ body }) => {
+      const mission = body
+
+      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
+
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Nb total de contrôles', 1)
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('MMSI', '123456789')
+      cy.fill('Nom du navire', 'BALTIK')
+      cy.fill('IMO', 'IMO123')
+      cy.fill('Nom du capitaine', 'John Doe')
+      cy.fill('Immatriculation', 'ABC123')
+      cy.fill('Taille', 45)
+      cy.fill('Type de navire', 'Commerce')
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Mise en demeure', 'Oui')
+      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+
+      cy.getDataCy('control-open-by').type('ABC')
+      cy.wait(250)
+
+      cy.wait('@updateMission').then(({ request, response }) => {
+        // check request
+        const requestInfraction = request.body.envActions[0].infractions[0]
+        expect(requestInfraction.mmsi).equal('123456789')
+        expect(requestInfraction.vesselName).equal('BALTIK')
+        expect(requestInfraction.imo).equal('IMO123')
+        expect(requestInfraction.controlledPersonIdentity).equal('John Doe')
+        expect(requestInfraction.registrationNumber).equal('ABC123')
+        expect(requestInfraction.vesselSize).equal(45)
+        expect(requestInfraction.vesselType).equal('COMMERCIAL')
+
+        // check response
+        const responseInfraction = response?.body.envActions[0].infractions[0]
+        expect(response && response.statusCode).equal(200)
+        expect(responseInfraction.mmsi).equal('123456789')
+        expect(responseInfraction.vesselName).equal('BALTIK')
+        expect(responseInfraction.imo).equal('IMO123')
+        expect(responseInfraction.controlledPersonIdentity).equal('John Doe')
+        expect(responseInfraction.registrationNumber).equal('ABC123')
+        expect(responseInfraction.vesselSize).equal(45)
+        expect(responseInfraction.vesselType).equal('COMMERCIAL')
+
+        // clean
+        cy.wait(250)
+        cy.clickButton('Fermer')
+        cy.getDataCy(`edit-mission-${mission.id}`).click({ force: true })
+        cy.clickButton('Supprimer la mission')
+        cy.clickButton('Confirmer la suppression')
+      })
+    })
   })
 })

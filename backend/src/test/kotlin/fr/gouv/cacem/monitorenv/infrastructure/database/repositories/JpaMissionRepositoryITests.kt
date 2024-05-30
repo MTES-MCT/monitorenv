@@ -800,6 +800,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 controlledPersonIdentity = "Dick Hoover",
                 vesselType = VesselTypeEnum.FISHING,
                 vesselSize = 23,
+                vesselName = "Vessel Name",
+                mmsi = "123456789",
+                imo = "987654321",
             )
         val controlAction =
             EnvActionControlEntity(

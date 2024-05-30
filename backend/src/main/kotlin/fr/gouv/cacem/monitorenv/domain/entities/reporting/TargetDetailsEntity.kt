@@ -7,4 +7,5 @@ data class TargetDetailsEntity(
     val vesselName: String? = null,
     val operatorName: String? = null,
     val size: Int? = null,
+    val vesselType: String? = null,
 )
