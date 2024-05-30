@@ -28,7 +28,11 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
           </StyledVesselForm>
           <StyledVesselForm>
             <FormikTextInput label="IMO" name={`${infractionPath}.imo`} />
-            <FormikTextInput label="Nom du capitaine" name={`${infractionPath}.controlledPersonIdentity`} />
+            <FormikTextInput
+              data-cy="infraction-form-controlledPersonIdentity"
+              label="Nom du capitaine"
+              name={`${infractionPath}.controlledPersonIdentity`}
+            />
           </StyledVesselForm>
           <StyledVesselForm>
             <FormikTextInput
@@ -36,7 +40,11 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
               label="Immatriculation"
               name={`${infractionPath}.registrationNumber`}
             />
-            <FormikNumberInput label="Taille" name={`${infractionPath}.vesselSize`} />
+            <FormikNumberInput
+              data-cy="infraction-form-vessel-size"
+              label="Taille"
+              name={`${infractionPath}.vesselSize`}
+            />
           </StyledVesselForm>
           <StyledVesselForm>
             <VesselTypeSelector name={`${infractionPath}.vesselType`} />
