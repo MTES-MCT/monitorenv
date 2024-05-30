@@ -1,8 +1,7 @@
 import { Accent, Button, Icon, MapMenuDialog, TextInput, Textarea } from '@mtes-mct/monitor-ui'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
-import { boundingExtent } from 'ol/extent'
-import { transform, transformExtent } from 'ol/proj'
-import { useCallback, useMemo, useState } from 'react'
+import { transform } from 'ol/proj'
+import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
@@ -12,7 +11,6 @@ import {
   startDrawingInterestPoint,
   updateCurrentInterestPointProperty
 } from '../../../../domain/shared_slices/InterestPoint'
-import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { saveInterestPointFeature } from '../../../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -32,8 +30,6 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
 
   const { currentInterestPoint, isEditing } = useAppSelector(state => state.interestPoint)
   const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
-
-  const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
 
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
@@ -96,7 +92,6 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
             return
           }
 
-          setLocalCoordinates(nextCoordinates)
           // Convert to [longitude, latitude] and OpenLayers projection
           const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
           dispatch(
@@ -116,12 +111,6 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
       dispatch(saveInterestPointFeature())
       dispatch(addInterestPoint())
       close()
-
-      if (!isEditing) {
-        const formattedCoordinates = [localCoordinates[1], localCoordinates[0]] as Coordinate
-        const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-        dispatch(setFitToExtent(extent))
-      }
     }
   }
 
