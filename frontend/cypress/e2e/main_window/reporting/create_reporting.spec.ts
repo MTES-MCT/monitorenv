@@ -1,4 +1,5 @@
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
+import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
 context('Reporting', () => {
   beforeEach(() => {
@@ -37,7 +38,8 @@ context('Reporting', () => {
     cy.fill('Thématique du signalement', 'Culture marine')
     cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
 
-    cy.fill('Date et heure (UTC)', [2024, 5, 26, 23, 35])
+    const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
+    cy.fill('Date et heure (UTC)', asDatePickerDateTime)
     cy.fill('Saisi par', 'XYZ')
 
     // Then
@@ -47,7 +49,7 @@ context('Reporting', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        createdAt: '2024-05-26T23:35:00.000Z',
+        createdAt: `${asApiDateTime}:00.000Z`,
         openBy: 'XYZ',
         reportType: 'OBSERVATION',
         semaphoreId: 35,

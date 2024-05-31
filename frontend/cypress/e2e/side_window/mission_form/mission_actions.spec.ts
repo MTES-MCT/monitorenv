@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { getMissionEndDateWithTime } from '../../utils/getMissionEndDate'
+import { getFutureDate } from '../../utils/getFutureDate'
 
 context('Side Window > Mission Form > Mission actions', () => {
   beforeEach(() => {
@@ -237,8 +237,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter une nouvelle mission')
 
     // When
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const endDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', endDate)
     cy.get('[name="missionTypes0"]').click({ force: true })
 
     cy.fill('Unité 1', 'Brigade fluviale de Rouen')
@@ -272,8 +272,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter une nouvelle mission')
 
     // When
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const endDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', endDate)
     cy.get('[name="missionTypes0"]').click({ force: true })
 
     cy.fill('Unité 1', 'Brigade fluviale de Rouen')
@@ -316,7 +316,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter une nouvelle mission')
 
     // When
-    const endDate = getMissionEndDateWithTime(7, 'day')
+    const endDate = getFutureDate(7, 'day')
     cy.fill('Date de fin (UTC)', endDate)
 
     cy.get('[name="missionTypes0"]').click({ force: true })

@@ -4,6 +4,7 @@ import {
 } from 'domain/use_cases/map/updateMapInteractionListeners'
 
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
+import { getFutureDate } from '../../utils/getFutureDate'
 
 import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 
@@ -35,8 +36,8 @@ context('Side Window > Mission Form > Mission zone', () => {
 
     // Create mission with surveillance
     cy.clickButton('Ajouter une nouvelle mission')
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const endDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', endDate)
     cy.get('[name="missionTypes0"]').click({ force: true })
 
     cy.fill('Unité 1', 'Cross Etel')
@@ -46,7 +47,7 @@ context('Side Window > Mission Form > Mission zone', () => {
     cy.clickButton('Ajouter')
     cy.wait(250)
     cy.clickButton('Ajouter une surveillance')
-    cy.getDataCy('surveillance-open-by').type('ABC')
+    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.wait(250)
     cy.clickButton('Ajouter une zone de surveillance')
     cy.wait(250)
@@ -111,12 +112,6 @@ context('Side Window > Mission Form > Mission zone', () => {
         cy.wait(200)
         cy.clickButton('Fermer')
         cy.wait(200)
-        cy.fill('Période', 'Période spécifique')
-        cy.fill('Période spécifique', [
-          [2024, 5, 26],
-          [2024, 5, 28]
-        ])
-        cy.wait(200)
 
         // Delete mission
         const id = response.body.id
@@ -137,7 +132,8 @@ context('Side Window > Mission Form > Mission zone', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
     cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
-    cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 27, 23, 35])
+    const controlEndDate = getFutureDate(5, 'day')
+    cy.fill('Date et heure du contrôle (UTC)', controlEndDate)
     cy.clickButton('Ajouter un point de contrôle')
     cy.wait(200)
 
@@ -232,7 +228,6 @@ context('Side Window > Mission Form > Mission zone', () => {
         body: {
           envActions: [
             {
-              actionStartDateTimeUtc: '2024-05-27T23:35:00.000Z',
               actionType: 'CONTROL',
               geom: controlGeometry
             }
@@ -248,12 +243,6 @@ context('Side Window > Mission Form > Mission zone', () => {
 
         cy.wait(200)
         cy.clickButton('Fermer')
-        cy.wait(200)
-        cy.fill('Période', 'Période spécifique')
-        cy.fill('Période spécifique', [
-          [2024, 5, 26],
-          [2024, 5, 28]
-        ])
         cy.wait(200)
 
         // Delete mission
