@@ -212,16 +212,18 @@ export function ControlForm({
       setFieldValue(`attachedReportings[${reportingToAttachIndex}].attachedEnvActionId`, currentAction?.id)
       // prefill infractions with the reporting details
       const reporting = attachedReportings[reportingToAttachIndex]
-      setFieldValue(`envActions[${envActionIndex}].controlPlans`, [
-        { subThemeIds: reporting?.subThemeIds, tagIds: [], themeId: reporting?.themeId }
-      ])
 
-      if (
-        reporting &&
-        reporting.targetType !== ReportingTargetTypeEnum.OTHER &&
-        reporting.targetDetails &&
-        reporting.targetDetails.length > 0
-      ) {
+      if (reporting) {
+        const resetInfraction = {
+          companyName: undefined,
+          controlledPersonIdentity: undefined,
+          imo: undefined,
+          mmsi: undefined,
+          registrationNumber: undefined,
+          vesselName: undefined,
+          vesselSize: undefined,
+          vesselType: undefined
+        }
         const updatedInfractions = reporting.targetDetails.map(target => {
           switch (reporting.targetType) {
             case ReportingTargetTypeEnum.VEHICLE:
@@ -229,35 +231,54 @@ export function ControlForm({
                 controlledPersonIdentity: target?.vesselName ?? target?.operatorName,
                 registrationNumber: target?.externalReferenceNumber,
                 ...(reporting.vehicleType === VehicleTypeEnum.VESSEL && {
-                  vesselSize: target?.size
+                  imo: target?.imo,
+                  mmsi: target?.mmsi,
+                  vesselName: target?.vesselName,
+                  vesselSize: target?.size,
+                  vesselType: target?.vesselType
                 })
               }
 
             case ReportingTargetTypeEnum.COMPANY:
               return {
+                ...resetInfraction,
                 companyName: target?.operatorName,
                 controlledPersonIdentity: target?.vesselName
               }
 
-            default:
+            case ReportingTargetTypeEnum.INDIVIDUAL:
               return {
-                controlledPersonIdentity: target?.operatorName
+                ...resetInfraction,
+                controlledPersonIdentity: target?.vesselName
               }
+
+            case ReportingTargetTypeEnum.OTHER:
+            default:
+              return resetInfraction
           }
         })
+
+        const updatedVehicleType =
+          reporting.targetType === ReportingTargetTypeEnum.VEHICLE ? reporting.vehicleType : undefined
+        const updatedTargetType =
+          reporting.targetType === ReportingTargetTypeEnum.OTHER ? undefined : reporting.targetType
 
         if (currentAction?.infractions?.length === 1) {
           setFieldValue(`envActions[${envActionIndex}].infractions[0]`, {
             ...currentAction.infractions[0],
             ...updatedInfractions[0]
           })
-
-          return
         }
 
         if (currentAction?.infractions?.length && currentAction?.infractions?.length > 1) {
           setFieldValue(`envActions[${envActionIndex}].infractions`, updatedInfractions)
         }
+
+        setFieldValue(`envActions[${envActionIndex}].controlPlans`, [
+          { subThemeIds: reporting?.subThemeIds, tagIds: [], themeId: reporting?.themeId }
+        ])
+        setFieldValue(`envActions[${envActionIndex}].vehicleType`, updatedVehicleType)
+        setFieldValue(`envActions[${envActionIndex}].actionTargetType`, updatedTargetType)
       }
     }
   }
