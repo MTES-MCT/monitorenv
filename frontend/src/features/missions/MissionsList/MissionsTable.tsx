@@ -10,6 +10,8 @@ import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
 import type { Mission } from '../../../domain/entities/missions'
 
+const TABLE_WIDTH = 1550
+
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
@@ -61,12 +63,8 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
               {headerGroup.headers.map(header => (
                 <SimpleTable.Th
                   {...{
-                    key: header.id,
-                    style: {
-                      maxWidth: header.column.getSize(),
-                      minWidth: header.column.getSize(),
-                      width: header.column.getSize()
-                    }
+                    $width: header.column.getSize(),
+                    key: header.id
                   }}
                 >
                   {header.isPlaceholder ? undefined : (
@@ -134,6 +132,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
 const StyledMissionsContainer = styled.div`
   overflow: auto;
+  width: ${TABLE_WIDTH}px;
 `
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;

@@ -19,25 +19,23 @@ export const Columns = themes => [
   {
     accessorFn: row => row.reportingId,
     cell: ({ row }) => (
-      <div>
-        <TableWithSelectableRows.RowCheckbox
-          disabled={!row.getCanSelect()}
-          isChecked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler(row)}
-        />
-      </div>
+      <TableWithSelectableRows.RowCheckbox
+        checked={row.getIsSelected()}
+        disabled={!row.getCanSelect()}
+        onChange={row.getToggleSelectedHandler(row)}
+      />
     ),
     enableSorting: false,
     header: ({ table }) => (
       <TableWithSelectableRows.RowCheckbox
-        isChecked={table.getIsAllRowsSelected()}
-        isIndeterminate={table.getIsSomeRowsSelected()}
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
         onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
 
     id: 'select',
-    size: 45
+    size: 25
   },
   {
     accessorFn: row => row.reportingId,
@@ -45,7 +43,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'reportingId',
-    size: 82
+    size: 95
   },
   {
     accessorFn: row => row.createdAt,
@@ -53,7 +51,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Date (UTC)',
     id: 'createdAt',
-    size: 118
+    size: 135
   },
   {
     accessorFn: row => row.validityTime,
@@ -61,7 +59,7 @@ export const Columns = themes => [
     enableSorting: false, // TODO see how we can sort on timeLeft and not validityTime
     header: () => 'Fin dans',
     id: 'validityTime',
-    size: 75
+    size: 70
   },
   {
     accessorFn: row => row.displayedSource,
@@ -73,7 +71,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    size: 180
+    size: 235
   },
   {
     accessorFn: row => row.reportType,
@@ -81,7 +79,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Type',
     id: 'reportType',
-    size: 130
+    size: 150
   },
   {
     accessorFn: row => row.targetDetails,
@@ -104,7 +102,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Thématique',
     id: 'themeId',
-    size: 230,
+    size: 255,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       const themeA: string = themes[rowA.original[columnId]]?.theme ?? ''
       const themeB: string = themes[rowB.original[columnId]]?.theme ?? ''
@@ -118,7 +116,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 90
+    size: 115
   },
   {
     accessorFn: row => row.status,
@@ -126,7 +124,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Statut',
     id: 'isArchived',
-    size: 90,
+    size: 105,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       if (rowA.original[columnId] > rowB.original[columnId]) {
         return -1
@@ -149,7 +147,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 90
+    size: 115
   },
   {
     accessorFn: row => row.geom,
@@ -164,7 +162,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 85
+    size: 110
   },
   {
     accessorFn: row => row.geom,
@@ -172,8 +170,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-
-    size: 50
+    size: 55
   },
   {
     accessorFn: row => row.id,
@@ -181,7 +178,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'id',
-    size: 95
+    size: 115
   }
 ]
 

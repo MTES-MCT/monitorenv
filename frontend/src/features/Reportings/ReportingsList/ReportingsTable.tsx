@@ -54,10 +54,10 @@ export function ReportingsTable({
   const { rows } = table.getRowModel()
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 2,
+    estimateSize: () => 40,
     getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
     getScrollElement: () => tableContainerRef.current,
-    overscan: 40
+    overscan: 10
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
@@ -81,26 +81,29 @@ export function ReportingsTable({
         totalReportings={reportings?.length || 0}
       />
       <StyledReportingsContainer ref={tableContainerRef}>
-        <TableWithSelectableRows.Table>
+        <TableWithSelectableRows.Table $withRowCheckbox>
           <TableWithSelectableRows.Head>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
                   <StyledTh key={header.id} $width={header.column.getSize()}>
-                    <TableWithSelectableRows.SortContainer
-                      className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.id === 'select' && flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.id !== 'select' && !header.isPlaceholder && (
+                      <TableWithSelectableRows.SortContainer
+                        className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext())}
 
-                      {header.column.getCanSort() &&
-                        ({
-                          asc: <Icon.SortSelectedUp size={14} />,
-                          desc: <Icon.SortSelectedDown size={14} />
-                        }[header.column.getIsSorted() as string] ?? (
-                          <Icon.SortingChevrons color={THEME.color.lightGray} size={14} />
-                        ))}
-                    </TableWithSelectableRows.SortContainer>
+                        {header.column.getCanSort() &&
+                          ({
+                            asc: <Icon.SortSelectedUp size={14} />,
+                            desc: <Icon.SortSelectedDown size={14} />
+                          }[header.column.getIsSorted() as string] ?? (
+                            <Icon.SortingChevrons color={THEME.color.lightGray} size={14} />
+                          ))}
+                      </TableWithSelectableRows.SortContainer>
+                    )}
                   </StyledTh>
                 ))}
               </tr>
@@ -126,10 +129,6 @@ export function ReportingsTable({
                       key={cell.id}
                       $hasRightBorder={!!(cell.column.id === 'geom')}
                       $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
-                      $isHighlighted={
-                        !!Object.keys(openReportings).find(key => Number(key) === Number(row?.original.id))
-                      }
-                      $width={cell.column.getSize()}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </StyledTd>
@@ -152,23 +151,19 @@ const StyledReportingsContainer = styled.div`
   overflow: auto;
   width: ${TABLE_WIDTH}px;
 `
-const StyledTh = styled(TableWithSelectableRows.Th)`
-  &:first-child {
-    padding: 4px 16px 4px 4px;
-  }
-`
+const StyledTh = styled(TableWithSelectableRows.Th)``
 
 const StyledTd = styled(TableWithSelectableRows.Td)`
   &:first-child {
     padding: 4px 16px 4px 4px;
   }
   &:nth-child(11) {
-    padding: 4px 4px 4px 16px;
+    padding: 4px 0px 4px 16px;
   }
   &:nth-child(12) {
-    padding: 4px;
+    padding: 4px 0px;
   }
   &:nth-child(13) {
-    padding: 4px 16px 4px 12px;
+    padding: 4px 0px;
   }
 `

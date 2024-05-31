@@ -18,9 +18,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
-    maxSize: 109,
-    minSize: 109,
-    size: 109 // +24(padding) + 1(border) = 134
+    size: 135
   },
   {
     accessorFn: row => row.endDateTimeUtc,
@@ -28,9 +26,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
-    maxSize: 109,
-    minSize: 109,
-    size: 109 // +24(padding) + 1(border) = 134
+    size: 135
   },
   {
     accessorFn: row => row.facade,
@@ -38,9 +34,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    maxSize: 71,
-    minSize: 71,
-    size: 71 // +24(padding) + 1(border) = 96
+    size: 96
   },
   {
     accessorFn: row => row.missionTypes,
@@ -48,9 +42,7 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
-    maxSize: 95,
-    minSize: 95,
-    size: 95 // +24(padding) + 1(border) = 120
+    size: 120
   },
   {
     accessorFn: row => row.controlUnits,
@@ -58,9 +50,7 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
-    maxSize: 231,
-    minSize: 231,
-    size: 231 // +24(padding) + 1(border) = 256
+    size: 256
   },
 
   {
@@ -69,18 +59,14 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    maxSize: 367,
-    minSize: 367,
-    size: 367 // +24(padding) + 1(border) = 392
+    size: 392
   },
   {
     accessorFn: row => row.envActions,
     cell: info => getNumberOfControlsCell(info.getValue()),
     header: () => 'Ctr.',
     id: 'envActions',
-    maxSize: 41,
-    minSize: 41,
-    size: 41, // +24(padding) + 1(border) = 66
+    size: 66,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => sortNumberOfControls(rowA, rowB, columnId)
   },
   {
@@ -88,9 +74,7 @@ export const Columns = [
     cell: ({ row }) => <CellStatus row={row} />,
     header: () => 'Statut',
     id: 'status',
-    maxSize: 82,
-    minSize: 82,
-    size: 82, // +24(padding) + 1(border) = 107
+    size: 107,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
   },
   {
@@ -98,9 +82,7 @@ export const Columns = [
     cell: ({ row }) => <CellCompletionStatus row={row} />,
     header: () => 'État données',
     id: 'completion',
-    maxSize: 102,
-    minSize: 102,
-    size: 102, // +24(padding) + 1(border) = 127
+    size: 127,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {
@@ -109,9 +91,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    maxSize: 28,
-    minSize: 28,
-    size: 28
+    size: 52
   },
   {
     accessorFn: row => row.id,
@@ -119,8 +99,6 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'edit',
-    maxSize: 34,
-    minSize: 34,
-    size: 34
+    size: 52
   }
 ]
