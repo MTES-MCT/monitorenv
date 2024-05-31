@@ -286,6 +286,9 @@ context('Side Window > Mission Form > Main Form', () => {
     )
       .its('response.statusCode')
       .should('eq', 200)
+    cy.wait(500)
+    cy.clickButton('Supprimer la mission')
+    cy.clickButton('Confirmer la suppression')
   })
 
   it('A warning should not be displayed When it is an edited mission', () => {

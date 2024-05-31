@@ -386,7 +386,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       const id = response && response.body.id
       // update mission date to 2023
-      cy.fill('Date de début (UTC)', [2023, 5, 26, 12, 0])
+      cy.fill('Date de début (UTC)', [2023, 5, 26, 12, 0], { delay: 400 })
       cy.intercept('PUT', `/bff/v1/missions/${id}`).as('updateMissionTwo')
       cy.fill('Date de fin (UTC)', [2023, 5, 28, 14, 15])
 
