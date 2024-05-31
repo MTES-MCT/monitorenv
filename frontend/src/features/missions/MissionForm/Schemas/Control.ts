@@ -2,7 +2,7 @@ import _ from 'lodash'
 import * as Yup from 'yup'
 
 import { ClosedControlPlansSchema } from './ControlPlans'
-import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
+import { CompletionInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { isCypress } from '../../../../utils/isCypress'
@@ -98,7 +98,7 @@ export const getCompletionEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvA
         ? Yup.object().nullable()
         : Yup.array().of(ControlPointSchema).ensure().min(1, 'Point de contrôle requis'),
       id: Yup.string().required(),
-      infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
+      infractions: Yup.array().of(CompletionInfractionSchema).ensure().required(),
       openBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
