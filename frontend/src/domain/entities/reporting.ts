@@ -20,6 +20,7 @@ export type Reporting = {
   id: number | string
   isArchived: boolean
   isControlRequired: boolean | undefined
+  isInfractionProven: boolean
   missionId: number | undefined
   openBy: string
   reportType: ReportingTypeEnum
@@ -49,6 +50,27 @@ export type DetachedReporting = {
   reportingId: number
 }
 
+export enum InfractionProvenEnum {
+  NOT_PROVEN = 'NOT_PROVEN',
+  PROVEN = 'PROVEN'
+}
+
+export const InfractionProvenLabels = {
+  PROVEN: {
+    label: 'Avéré',
+    value: true
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  NOT_PROVEN: {
+    label: 'Non avéré',
+    value: false
+  }
+}
+
+export enum ProvenFiltersLabels {
+  PROVEN = 'Avéré',
+  NOT_PROVEN = 'Non avéré'
+}
 export enum ControlStatusEnum {
   CONTROL_TO_BE_DONE = 'CONTROL_TO_BE_DONE',
   CONTROL_DONE = 'CONTROL_DONE',

@@ -6,6 +6,7 @@ import {
   FormikMultiRadio,
   FormikTextarea,
   getOptionsFromLabelledEnum,
+  Label,
   Toggle
 } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
@@ -37,7 +38,8 @@ import {
   ReportingTypeEnum,
   ReportingTypeLabels,
   type ReportingDetailed,
-  INDIVIDUAL_ANCHORING_THEME_ID
+  INDIVIDUAL_ANCHORING_THEME_ID,
+  InfractionProvenLabels
 } from '../../../domain/entities/reporting'
 import {
   setReportingFormVisibility,
@@ -63,7 +65,8 @@ import {
   StyledFormikTextInput,
   ReportTypeMultiRadio,
   SaveBanner,
-  StyledItalic
+  StyledItalic,
+  StyledInfractionProven
 } from '../style'
 
 import type { AtLeast } from '../../../types'
@@ -124,6 +127,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
 
   useSyncFormValuesWithRedux(isAutoSaveEnabled)
 
+  const infractionProvenOptions = Object.values(InfractionProvenLabels)
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
   const withVHFAnswerOptions = [
     { label: 'Oui', value: true },
@@ -323,6 +327,18 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
 
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
+
+        <StyledInfractionProven>
+          <Label>Le signalement est </Label>
+          <FormikMultiRadio
+            isErrorMessageHidden
+            isInline
+            isLabelHidden
+            label="Le signalement est"
+            name="isInfractionProven"
+            options={infractionProvenOptions}
+          />
+        </StyledInfractionProven>
 
         <StyledToggle>
           <Toggle

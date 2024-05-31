@@ -391,6 +391,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
+                isInfractionProven = true,
             )
 
         jpaReportingRepository.save(newReporting)

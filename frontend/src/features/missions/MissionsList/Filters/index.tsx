@@ -102,53 +102,7 @@ export function MissionsTableFilters() {
 
   const onUpdatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
-    setIsCustomPeriodVisible(false)
-
-    switch (nextDateRange) {
-      case DateRangeEnum.DAY:
-        dispatch(
-          updateFilters({
-            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs().utc().startOf('day').toISOString()
-          })
-        )
-        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
-        break
-
-      case DateRangeEnum.WEEK:
-        dispatch(
-          updateFilters({
-            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
-          })
-        )
-        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
-        break
-
-      case DateRangeEnum.MONTH:
-        dispatch(
-          updateFilters({
-            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
-          })
-        )
-        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
-        break
-
-      case DateRangeEnum.CUSTOM:
-        setIsCustomPeriodVisible(true)
-        break
-
-      default:
-        dispatch(
-          updateFilters({
-            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
-          })
-        )
-        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
-        break
-    }
+    setIsCustomPeriodVisible(nextDateRange === DateRangeEnum.CUSTOM)
   }
 
   const onUpdateAdministrationFilter = (nextSelectedAdministrationIds: string[] | undefined) => {

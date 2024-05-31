@@ -27,77 +27,83 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 class DeleteMissionUTests {
-    @MockBean
-    private lateinit var missionRepository: IMissionRepository
+    @MockBean private lateinit var missionRepository: IMissionRepository
 
-    @MockBean
-    private lateinit var reportingRepository: IReportingRepository
+    @MockBean private lateinit var reportingRepository: IReportingRepository
 
-    @MockBean
-    private lateinit var canDeleteMission: CanDeleteMission
+    @MockBean private lateinit var canDeleteMission: CanDeleteMission
 
     @Test
     fun `execute Should detach reporting attached to mission and action attached to reporting`() {
         val missionId = 100
-        val reporting = ReportingEntity(
-            id = 1,
-            attachedEnvActionId = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
-            detachedFromMissionAtUtc = null,
-            isArchived = false,
-            createdAt = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            isDeleted = false,
-        )
-        val envActions = listOf(
-            EnvActionControlEntity(
-                id =
-                UUID.fromString(
-                    "33310163-4e22-4d3d-b585-dac4431eb4b5",
+        val reporting =
+            ReportingEntity(
+                id = 1,
+                attachedEnvActionId =
+                UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
+                detachedFromMissionAtUtc = null,
+                isArchived = false,
+                createdAt = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isDeleted = false,
+                isInfractionProven = true,
+            )
+        val envActions =
+            listOf(
+                EnvActionControlEntity(
+                    id =
+                    UUID.fromString(
+                        "33310163-4e22-4d3d-b585-dac4431eb4b5",
+                    ),
+                    geom = null,
                 ),
+            )
+        val missionToDelete =
+            MissionEntity(
+                id = missionId,
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                envActions = envActions,
+                facade = "Outre-Mer",
                 geom = null,
-            ),
-        )
-        val missionToDelete = MissionEntity(
-            id = missionId,
-            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            envActions = envActions,
-            facade = "Outre-Mer",
-            geom = null,
-            hasMissionOrder = false,
-            isDeleted = false,
-            isGeometryComputedFromControls = false,
-            isUnderJdp = false,
-            missionSource = MissionSourceEnum.MONITORENV,
-            missionTypes = listOf(MissionTypeEnum.LAND),
-            startDateTimeUtc = ZonedDateTime.parse("2022-01-27T20:29:03Z"),
-        )
+                hasMissionOrder = false,
+                isDeleted = false,
+                isGeometryComputedFromControls = false,
+                isUnderJdp = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-27T20:29:03Z"),
+            )
 
-        val expectedUpdatedReporting = ReportingEntity(
-            id = 1,
-            attachedEnvActionId = null,
-            createdAt = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            detachedFromMissionAtUtc = ZonedDateTime.now(),
-            isArchived = false,
-            isDeleted = false,
-        )
+        val expectedUpdatedReporting =
+            ReportingEntity(
+                id = 1,
+                attachedEnvActionId = null,
+                createdAt = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                detachedFromMissionAtUtc = ZonedDateTime.now(),
+                isArchived = false,
+                isDeleted = false,
+                isInfractionProven = true,
+            )
         given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH))
             .willReturn(CanDeleteMissionResponse(true, listOf()))
-        given(missionRepository.findFullMissionById(missionId)).willReturn(
-            MissionDTO(
-                mission = missionToDelete,
-                attachedReportingIds = listOf(1),
-            ),
-
-        )
+        given(missionRepository.findFullMissionById(missionId))
+            .willReturn(
+                MissionDTO(
+                    mission = missionToDelete,
+                    attachedReportingIds = listOf(1),
+                ),
+            )
         given(reportingRepository.findById(1)).willReturn(ReportingDTO(reporting = reporting))
-        given(reportingRepository.save(expectedUpdatedReporting)).willReturn(
-            ReportingDTO(reporting = expectedUpdatedReporting),
-        )
+        given(reportingRepository.save(expectedUpdatedReporting))
+            .willReturn(
+                ReportingDTO(reporting = expectedUpdatedReporting),
+            )
 
         DeleteMission(
             missionRepository = missionRepository,
             reportingRepository = reportingRepository,
             canDeleteMission = canDeleteMission,
-        ).execute(missionId, MissionSourceEnum.MONITORFISH)
+        )
+            .execute(missionId, MissionSourceEnum.MONITORFISH)
 
         argumentCaptor<ReportingEntity>().apply {
             verify(reportingRepository).save(capture())
@@ -124,81 +130,91 @@ class DeleteMissionUTests {
                 geom = polygon,
             )
 
-        val missionToDelete = MissionEntity(
-            id = missionId,
-            missionTypes = listOf(MissionTypeEnum.LAND),
-            facade = "Outre-Mer",
-            geom = null,
-            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV,
-            hasMissionOrder = false,
-            isUnderJdp = false,
-            isGeometryComputedFromControls = false,
-            envActions = listOf(envActionControl),
-        )
+        val missionToDelete =
+            MissionEntity(
+                id = missionId,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                facade = "Outre-Mer",
+                geom = null,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                envActions = listOf(envActionControl),
+            )
         given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH))
             .willReturn(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV)))
-        given(missionRepository.findFullMissionById(missionId)).willReturn(
-            MissionDTO(
-                mission = missionToDelete,
-                attachedReportingIds = null,
-            ),
-        )
+        given(missionRepository.findFullMissionById(missionId))
+            .willReturn(
+                MissionDTO(
+                    mission = missionToDelete,
+                    attachedReportingIds = null,
+                ),
+            )
 
-        val throwable = Assertions.catchThrowable {
-            DeleteMission(
-                missionRepository = missionRepository,
-                reportingRepository = reportingRepository,
-                canDeleteMission = canDeleteMission,
-            ).execute(missionId, MissionSourceEnum.MONITORFISH)
-        }
+        val throwable =
+            Assertions.catchThrowable {
+                DeleteMission(
+                    missionRepository = missionRepository,
+                    reportingRepository = reportingRepository,
+                    canDeleteMission = canDeleteMission,
+                )
+                    .execute(missionId, MissionSourceEnum.MONITORFISH)
+            }
 
-        val errorSources = object {
-            var sources = listOf(MissionSourceEnum.MONITORENV)
-        }
-        Assertions.assertThat(throwable).isInstanceOf(
-            BackendUsageException(
-                code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
-                data = errorSources,
-            )::class.java,
-        )
+        val errorSources =
+            object {
+                var sources = listOf(MissionSourceEnum.MONITORENV)
+            }
+        Assertions.assertThat(throwable)
+            .isInstanceOf(
+                BackendUsageException(
+                    code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
+                    data = errorSources,
+                )::class
+                    .java,
+            )
     }
 
     @Test
     fun `execute should delete mission when canDeleteMission returns true`() {
         val missionId = 100
 
-        val missionToDelete = MissionEntity(
-            id = missionId,
-            missionTypes = listOf(MissionTypeEnum.LAND),
-            facade = "Outre-Mer",
-            geom = null,
-            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV,
-            hasMissionOrder = false,
-            isUnderJdp = false,
-            isGeometryComputedFromControls = false,
-            envActions = listOf(),
-        )
+        val missionToDelete =
+            MissionEntity(
+                id = missionId,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                facade = "Outre-Mer",
+                geom = null,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                envActions = listOf(),
+            )
 
         given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH))
             .willReturn(CanDeleteMissionResponse(true, listOf()))
-        given(missionRepository.findFullMissionById(missionId)).willReturn(
-            MissionDTO(
-                mission = missionToDelete,
-                attachedReportingIds = listOf(),
-            ),
-        )
+        given(missionRepository.findFullMissionById(missionId))
+            .willReturn(
+                MissionDTO(
+                    mission = missionToDelete,
+                    attachedReportingIds = listOf(),
+                ),
+            )
 
         DeleteMission(
             missionRepository = missionRepository,
             reportingRepository = reportingRepository,
             canDeleteMission = canDeleteMission,
-        ).execute(missionId, MissionSourceEnum.MONITORFISH)
+        )
+            .execute(missionId, MissionSourceEnum.MONITORFISH)
 
         verify(missionRepository).delete(missionId)
     }

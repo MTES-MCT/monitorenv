@@ -100,6 +100,7 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
+                isInfractionProven = true,
             )
         val reportingWithSemaphoreDTO =
             ReportingDTO(
@@ -124,6 +125,7 @@ class CreateOrUpdateReportingUTests {
                     isDeleted = false,
                     updatedAtUtc = ZonedDateTime.now(),
                     openBy = "CDA",
+                    isInfractionProven = true,
                 ),
             )
         val reportingWithControlUnit =
@@ -147,6 +149,7 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
+                isInfractionProven = true,
             )
         val reportingWithControlUnitDTO =
             ReportingDTO(
@@ -171,6 +174,7 @@ class CreateOrUpdateReportingUTests {
                     isDeleted = false,
                     updatedAtUtc = ZonedDateTime.now(),
                     openBy = "CDA",
+                    isInfractionProven = true,
                 ),
             )
 
@@ -270,6 +274,7 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
+                isInfractionProven = true,
             )
 
         // When
@@ -319,6 +324,7 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
+                isInfractionProven = true,
             )
 
         // When
@@ -368,6 +374,7 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
+                isInfractionProven = true,
             )
 
         val reportingWithSemaphoreId =
@@ -390,6 +397,7 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
+                isInfractionProven = true,
             )
         val reportingWithoutSourceName =
             ReportingEntity(
@@ -410,6 +418,7 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
                 openBy = "CDA",
+                isInfractionProven = true,
             )
 
         // When
@@ -496,6 +505,7 @@ class CreateOrUpdateReportingUTests {
                 attachedToMissionAtUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 detachedFromMissionAtUtc = null,
                 updatedAtUtc = ZonedDateTime.now(),
+                isInfractionProven = true,
             )
 
         // given(reportingRepository.save(reportingWithNewAttachedMission))
@@ -528,6 +538,7 @@ class CreateOrUpdateReportingUTests {
                         ZonedDateTime.parse("2023-08-15T04:50:09Z"),
                         detachedFromMissionAtUtc = null,
                         updatedAtUtc = ZonedDateTime.now(),
+                        isInfractionProven = true,
                     ),
                 ),
             )

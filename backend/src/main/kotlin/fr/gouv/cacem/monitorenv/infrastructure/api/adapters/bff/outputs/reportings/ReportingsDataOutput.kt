@@ -41,6 +41,7 @@ data class ReportingsDataOutput(
     val attachedEnvActionId: UUID? = null,
     val controlStatus: ControlStatusEnum? = null,
     val withVHFAnswer: Boolean? = null,
+    val isInfractionProven: Boolean,
 ) {
     companion object {
         fun fromReportingDTO(
@@ -87,6 +88,7 @@ data class ReportingsDataOutput(
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
                 controlStatus = dto.controlStatus,
                 withVHFAnswer = dto.reporting.withVHFAnswer,
+                isInfractionProven = dto.reporting.isInfractionProven,
             )
         }
     }

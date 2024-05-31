@@ -42,6 +42,7 @@ object TestUtils {
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
+                isInfractionProven = true,
             ),
         )
     }
@@ -84,6 +85,7 @@ object TestUtils {
                     "2022-01-15T04:50:09Z",
                 ),
                 detachedFromMissionAtUtc = null,
+                isInfractionProven = true,
             ),
         )
     }

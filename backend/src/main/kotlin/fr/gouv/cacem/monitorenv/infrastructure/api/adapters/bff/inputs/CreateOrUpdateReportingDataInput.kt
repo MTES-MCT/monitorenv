@@ -38,6 +38,7 @@ data class CreateOrUpdateReportingDataInput(
     val attachedEnvActionId: UUID? = null,
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
+    val isInfractionProven: Boolean,
 ) {
     fun toReportingEntity(): ReportingEntity {
         return ReportingEntity(
@@ -69,6 +70,7 @@ data class CreateOrUpdateReportingDataInput(
             attachedEnvActionId = this.attachedEnvActionId,
             updatedAtUtc = this.updatedAtUtc,
             withVHFAnswer = this.withVHFAnswer,
+            isInfractionProven = this.isInfractionProven,
         )
     }
 }

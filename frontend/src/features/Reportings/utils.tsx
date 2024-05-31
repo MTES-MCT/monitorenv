@@ -16,6 +16,7 @@ import type { AtLeast } from '../../types'
 export function getReportingInitialValues(reporting: AtLeast<Reporting, 'id'> | Reporting): AtLeast<Reporting, 'id'> {
   return {
     geom: undefined,
+    isInfractionProven: true,
     sourceType: ReportingSourceEnum.SEMAPHORE,
     validityTime: 24,
     ...reporting

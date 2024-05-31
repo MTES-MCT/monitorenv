@@ -147,7 +147,8 @@ class MissionsITests {
                 MissionEntity(
                     id = 10,
                     missionTypes = listOf(MissionTypeEnum.SEA),
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                     isDeleted = false,
                     missionSource = MissionSourceEnum.MONITORFISH,
                     hasMissionOrder = false,
@@ -292,6 +293,7 @@ class MissionsITests {
                             isArchived = false,
                             isDeleted = false,
                             openBy = "OpenBy",
+                            isInfractionProven = true,
                         ),
                         semaphore =
                         SemaphoreEntity(
@@ -602,6 +604,7 @@ class MissionsITests {
                             isArchived = false,
                             isDeleted = false,
                             openBy = "OpenBy",
+                            isInfractionProven = true,
                         ),
                         semaphore =
                         SemaphoreEntity(
