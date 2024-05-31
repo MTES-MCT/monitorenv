@@ -118,26 +118,20 @@ export function InterestPointOverlay({
     }
   }, [coordinates, previousCoordinates])
 
-  useEffect(
-    () => {
-      if (map) {
-        overlayRef.current?.setPosition(coordinates ?? undefined)
-        overlayRef.current?.setElement(ref.current ?? undefined)
+  useEffect(() => {
+    if (map) {
+      overlayRef.current?.setPosition(coordinates ?? undefined)
+      overlayRef.current?.setElement(ref.current ?? undefined)
 
-        map.addOverlay(overlayRef.current)
+      map.addOverlay(overlayRef.current)
 
-        return () => {
-          map.removeOverlay(overlayRef.current)
-        }
+      return () => {
+        map.removeOverlay(overlayRef.current)
       }
+    }
 
-      return noop
-    },
-
-    // TODO Disabled for migration purpose. Remove and fix dependencies.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [overlayRef.current, coordinates, map]
-  )
+    return noop
+  }, [coordinates, map, ref])
 
   return (
     <WrapperToBeKeptForDOMManagement>

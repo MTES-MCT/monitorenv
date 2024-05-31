@@ -21,7 +21,6 @@ import type { Coordinate } from 'ol/coordinate'
 
 // TODO Refactor this component
 // - Move the state logic to the reducer
-// - Use formik (or at least uncontrolled form components)
 type EditInterestPointProps = {
   close: () => void
 }

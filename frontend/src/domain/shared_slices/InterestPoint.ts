@@ -99,6 +99,7 @@ const interestPointSlice = createSlice({
       }>
     ) {
       const currentInterestPoint = { ...state.currentInterestPoint }
+
       currentInterestPoint[action.payload.key] = action.payload.value
       state.currentInterestPoint = currentInterestPoint
 
