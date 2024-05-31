@@ -1,18 +1,21 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import { v4 as uuidv4 } from 'uuid'
 
 import type { InterestPoint, NewInterestPoint } from '../../features/InterestPoint/types'
 
 export interface InterestPointState {
-  currentInterestPoint: NewInterestPoint | null
+  currentInterestPoint: NewInterestPoint
   interestPoints: InterestPoint[]
   isDrawing: boolean
   isEditing: boolean
 }
 
+const newInterestPoint = () => ({ coordinates: null, name: null, observations: null, uuid: uuidv4() })
+
 const INITIAL_STATE: InterestPointState = {
-  currentInterestPoint: null,
+  currentInterestPoint: newInterestPoint(),
   interestPoints: [],
   isDrawing: false,
   isEditing: false
@@ -35,7 +38,9 @@ const interestPointSlice = createSlice({
       if (!state.isEditing && !!state.currentInterestPoint) {
         state.interestPoints = state.interestPoints.concat(state.currentInterestPoint as InterestPoint)
       }
-      state.isDrawing = false
+      state.currentInterestPoint = newInterestPoint()
+      //  TODO a déplacer dans le usecase de sauvegarde
+      state.isEditing = false
     },
 
     /**
@@ -43,7 +48,7 @@ const interestPointSlice = createSlice({
      */
     editInterestPoint(state, action: PayloadAction<string>) {
       state.currentInterestPoint =
-        state.interestPoints.find(interestPoint => interestPoint.uuid === action.payload) ?? null
+        state.interestPoints.find(interestPoint => interestPoint.uuid === action.payload) ?? newInterestPoint()
       state.isEditing = true
     },
 
@@ -52,35 +57,34 @@ const interestPointSlice = createSlice({
      */
     endDrawingInterestPoint(state) {
       state.isDrawing = false
-      state.isEditing = false
-    },
-
-    removeCurrentInterestPoint(state) {
-      if (state.currentInterestPoint && !!state.currentInterestPoint.uuid) {
-        removeInterestPoint(state.currentInterestPoint.uuid)
-      }
-      state.currentInterestPoint = null
     },
 
     /**
-     * Delete an existing interest point
+     * Delete the current interest point
+     */
+    removeCurrentInterestPoint(state) {
+      removeInterestPoint(state.currentInterestPoint.uuid)
+      state.currentInterestPoint = newInterestPoint()
+    },
+
+    /**
+     * Delete a persisted interest point
      */
     removeInterestPoint(state, action: PayloadAction<string>) {
       state.interestPoints = state.interestPoints.filter(interestPoint => interestPoint.uuid !== action.payload)
     },
 
     /**
-     * Start drawing an interest point with a clickable map
+     * Start drawing an interest point
      */
     startDrawingInterestPoint(state) {
       state.isDrawing = true
-      state.isEditing = false
     },
 
     /**
      * Update the current interest point
      */
-    updateCurrentInterestPoint(state, action: PayloadAction<NewInterestPoint | null>) {
+    updateCurrentInterestPoint(state, action: PayloadAction<NewInterestPoint>) {
       state.currentInterestPoint = action.payload
     },
 
@@ -96,8 +100,7 @@ const interestPointSlice = createSlice({
     ) {
       const currentInterestPoint = { ...state.currentInterestPoint }
       currentInterestPoint[action.payload.key] = action.payload.value
-      // TODO Remove this cast. Used to ease JS => TS migration.
-      state.currentInterestPoint = currentInterestPoint as InterestPoint
+      state.currentInterestPoint = currentInterestPoint
 
       if (state.isEditing) {
         state.interestPoints = state.interestPoints.map(interestPoint => {

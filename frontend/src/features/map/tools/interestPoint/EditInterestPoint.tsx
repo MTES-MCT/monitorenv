@@ -1,7 +1,7 @@
 import { Accent, Button, Icon, MapMenuDialog, TextInput, Textarea } from '@mtes-mct/monitor-ui'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { transform } from 'ol/proj'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
@@ -28,8 +28,23 @@ type EditInterestPointProps = {
 export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
 
-  const { currentInterestPoint, isEditing } = useAppSelector(state => state.interestPoint)
-  const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
+  const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
+
+  const isEditing = useAppSelector(state => state.interestPoint.isEditing)
+
+  const [isEyeOpen, setIsEyeOpen] = useState(true)
+
+  useEffect(() => {
+    dispatch(setDisplayedItems({ displayInterestPointLayer: isEyeOpen }))
+    if (isEyeOpen) {
+      dispatch(startDrawingInterestPoint())
+    } else {
+      dispatch(endDrawingInterestPoint())
+    }
+  }, [dispatch, isEyeOpen])
+
+  // TODO: Modifier monitor-ui pour changer le typage des children de string à ReactNode
+  const textButton = `${isEditing ? 'Enregistrer' : 'Créer'} le point`
 
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
@@ -122,18 +137,13 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     <MapMenuDialog.Container data-cy="save-interest-point">
       <MapMenuDialog.Header>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
-        <MapMenuDialog.Title>Créer un point d&apos;intérêt</MapMenuDialog.Title>
+        <MapMenuDialog.Title>{isEditing ? 'Éditer' : 'Créer'} un point d&apos;intérêt</MapMenuDialog.Title>
         <MapMenuDialog.VisibilityButton
           accent={Accent.SECONDARY}
           data-cy="hide-all-interest-point"
-          Icon={displayInterestPointLayer ? Icon.Display : Icon.Hide}
+          Icon={isEyeOpen ? Icon.Display : Icon.Hide}
           onClick={() => {
-            dispatch(setDisplayedItems({ displayInterestPointLayer: !displayInterestPointLayer }))
-            if (displayInterestPointLayer) {
-              dispatch(endDrawingInterestPoint())
-            } else {
-              dispatch(startDrawingInterestPoint())
-            }
+            setIsEyeOpen(!isEyeOpen)
           }}
         />
       </MapMenuDialog.Header>
@@ -158,7 +168,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
       </StyledDialogBody>
       <MapMenuDialog.Footer>
         <Button data-cy="interest-point-save" onClick={saveInterestPoint}>
-          Créer le point
+          {textButton}
         </Button>
         <Button accent={Accent.SECONDARY} disabled={isEditing} onClick={cancel}>
           Annuler

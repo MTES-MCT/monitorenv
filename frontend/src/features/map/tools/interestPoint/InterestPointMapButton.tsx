@@ -15,13 +15,13 @@ import { ButtonWrapper } from '../../../MainWindow/components/RightMenu/ButtonWr
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
   const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
-  const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
 
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
 
   const wrapperRef = useRef(null)
 
   const close = useCallback(() => {
+    dispatch(endDrawingInterestPoint())
     dispatch(globalActions.setIsMapToolVisible(undefined))
   }, [dispatch])
 
@@ -39,17 +39,12 @@ export function InterestPointMapButton() {
         })
       )
       dispatch(reduceReportingFormOnMap())
+      dispatch(startDrawingInterestPoint())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
-      if (displayInterestPointLayer) {
-        dispatch(startDrawingInterestPoint())
-      } else {
-        dispatch(endDrawingInterestPoint())
-      }
     } else {
-      dispatch(globalActions.setIsMapToolVisible(undefined))
-      dispatch(endDrawingInterestPoint())
+      close()
     }
-  }, [dispatch, isOpen, displayInterestPointLayer])
+  }, [dispatch, isOpen, close])
 
   return (
     <ButtonWrapper ref={wrapperRef} topPosition={346}>
