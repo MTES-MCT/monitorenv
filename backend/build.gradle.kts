@@ -84,7 +84,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test:3.2.5")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.0")
     testImplementation("org.testcontainers:junit-jupiter:1.19.2")
-    testImplementation("net.java.dev.jna:jna:5.13.0")
+    testImplementation("net.java.dev.jna:jna:5.14.0")
     // TODO: move in tests only
     api("net.ttddyy:datasource-proxy:1.10")
 }
