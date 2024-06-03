@@ -10,6 +10,8 @@ import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
 import type { Mission } from '../../../domain/entities/missions'
 
+const TABLE_WIDTH = 1550
+
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
@@ -59,23 +61,11 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <SimpleTable.Th
-                  {...{
-                    key: header.id,
-                    style: {
-                      maxWidth: header.column.getSize(),
-                      minWidth: header.column.getSize(),
-                      width: header.column.getSize()
-                    }
-                  }}
-                >
+                <SimpleTable.Th key={header.id} $width={header.column.getSize()}>
                   {header.isPlaceholder ? undefined : (
-                    // TODO pass props as usual: className={}
                     <SimpleTable.SortContainer
-                      {...{
-                        className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
-                        onClick: header.column.getToggleSortingHandler()
-                      }}
+                      className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                      onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
 
@@ -104,15 +94,13 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
               <SimpleTable.BodyTr key={virtualRow.key}>
                 {row?.getVisibleCells().map(cell => (
                   <SimpleTable.Td
-                    {...{
-                      $isCenter: !!(cell.column.id === 'geom' || cell.column.id === 'edit'),
-                      key: cell.id,
-                      style: {
-                        maxWidth: cell.column.getSize(),
-                        minWidth: cell.column.getSize(),
-                        padding: cell.column.id === 'geom' || cell.column.id === 'edit' ? '0px' : '10px 12px',
-                        width: cell.column.getSize()
-                      }
+                    key={cell.id}
+                    $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
+                    style={{
+                      maxWidth: cell.column.getSize(),
+                      minWidth: cell.column.getSize(),
+                      padding: cell.column.id === 'geom' || cell.column.id === 'edit' ? '0px' : '10px 12px',
+                      width: cell.column.getSize()
                     }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -134,6 +122,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
 const StyledMissionsContainer = styled.div`
   overflow: auto;
+  width: ${TABLE_WIDTH}px;
 `
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;

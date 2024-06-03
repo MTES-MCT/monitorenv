@@ -3,7 +3,8 @@ import { Icon, THEME, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
+import { useLocation } from 'react-router'
+import styled, { css } from 'styled-components'
 
 import { Columns } from './Columns'
 import { GroupActions } from './GroupActions'
@@ -21,6 +22,8 @@ export function ReportingsTable({
   isLoading: boolean
   reportings: (ReportingDetailed | undefined)[]
 }) {
+  const location = useLocation()
+
   const openReportings = useAppSelector(state => state.reporting.reportings)
   const { themes } = useGetControlPlans()
   const [rowSelection, setRowSelection] = useState({})
@@ -54,10 +57,10 @@ export function ReportingsTable({
   const { rows } = table.getRowModel()
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 2,
+    estimateSize: () => 40,
     getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
     getScrollElement: () => tableContainerRef.current,
-    overscan: 40
+    overscan: 10
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
@@ -81,27 +84,30 @@ export function ReportingsTable({
         totalReportings={reportings?.length || 0}
       />
       <StyledReportingsContainer ref={tableContainerRef}>
-        <TableWithSelectableRows.Table>
+        <StyledTable $isSideWindowOpenInTab={location.pathname === '/side_window'} $withRowCheckbox>
           <TableWithSelectableRows.Head>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <StyledTh key={header.id} $width={header.column.getSize()}>
-                    <TableWithSelectableRows.SortContainer
-                      className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      {flexRender(header.column.columnDef.header, header.getContext())}
+                  <TableWithSelectableRows.Th key={header.id} $width={header.column.getSize()}>
+                    {header.id === 'select' && flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.id !== 'select' && !header.isPlaceholder && (
+                      <TableWithSelectableRows.SortContainer
+                        className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext())}
 
-                      {header.column.getCanSort() &&
-                        ({
-                          asc: <Icon.SortSelectedUp size={14} />,
-                          desc: <Icon.SortSelectedDown size={14} />
-                        }[header.column.getIsSorted() as string] ?? (
-                          <Icon.SortingChevrons color={THEME.color.lightGray} size={14} />
-                        ))}
-                    </TableWithSelectableRows.SortContainer>
-                  </StyledTh>
+                        {header.column.getCanSort() &&
+                          ({
+                            asc: <Icon.SortSelectedUp size={14} />,
+                            desc: <Icon.SortSelectedDown size={14} />
+                          }[header.column.getIsSorted() as string] ?? (
+                            <Icon.SortingChevrons color={THEME.color.lightGray} size={14} />
+                          ))}
+                      </TableWithSelectableRows.SortContainer>
+                    )}
+                  </TableWithSelectableRows.Th>
                 ))}
               </tr>
             ))}
@@ -126,10 +132,6 @@ export function ReportingsTable({
                       key={cell.id}
                       $hasRightBorder={!!(cell.column.id === 'geom')}
                       $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
-                      $isHighlighted={
-                        !!Object.keys(openReportings).find(key => Number(key) === Number(row?.original.id))
-                      }
-                      $width={cell.column.getSize()}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </StyledTd>
@@ -142,7 +144,7 @@ export function ReportingsTable({
               <td aria-label="empty-line-for-scroll" style={{ height: '50px' }} />
             </tr>
           </tbody>
-        </TableWithSelectableRows.Table>
+        </StyledTable>
       </StyledReportingsContainer>
     </>
   )
@@ -152,10 +154,55 @@ const StyledReportingsContainer = styled.div`
   overflow: auto;
   width: ${TABLE_WIDTH}px;
 `
-const StyledTh = styled(TableWithSelectableRows.Th)`
-  &:first-child {
-    padding: 4px 16px 4px 4px;
-  }
+
+/*
+Hack to fix the strange checkbox vertical position inconsistency
+between the side window access via /side_window and the one opened as a new window.
+The position is correct when accessed via /side_window (and not when opened as a new window).
+*/
+const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInTab: boolean }>`
+  ${p =>
+    !p.$isSideWindowOpenInTab &&
+    css`
+      .rs-checkbox {
+        > .rs-checkbox-checker {
+          > label {
+            line-height: inherit;
+          }
+        }
+      }
+
+      > thead {
+        > tr {
+          > th:first-child {
+            > .rs-checkbox {
+              > .rs-checkbox-checker {
+                > label {
+                  .rs-checkbox-wrapper {
+                    top: -8px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      > tbody {
+        > tr {
+          > td:first-child {
+            > .rs-checkbox {
+              > .rs-checkbox-checker {
+                > label {
+                  .rs-checkbox-wrapper {
+                    top: -8px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `}
 `
 
 const StyledTd = styled(TableWithSelectableRows.Td)`
@@ -163,12 +210,12 @@ const StyledTd = styled(TableWithSelectableRows.Td)`
     padding: 4px 16px 4px 4px;
   }
   &:nth-child(11) {
-    padding: 4px 4px 4px 16px;
+    padding: 4px 0px 4px 16px;
   }
   &:nth-child(12) {
-    padding: 4px;
+    padding: 4px 0px;
   }
   &:nth-child(13) {
-    padding: 4px 16px 4px 12px;
+    padding: 4px 0px;
   }
 `

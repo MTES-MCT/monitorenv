@@ -214,7 +214,7 @@ context('Side Window > Mission Form > Main Form', () => {
       cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
       // When
-      cy.get('*[data-cy="add-mission"]').click()
+      cy.get('*[data-cy="add-mission"]').click({ force: true })
       cy.fill('Unité 1', controlUnit)
       cy.wait('@getEngagedControlUnits')
 
