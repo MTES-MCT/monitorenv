@@ -153,7 +153,9 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
       </TitleWrapper>
       <Separator />
       {values.hasRapportNavActions?.containsActionsAddedByUnit && (
-        <RapportNavActionsText>Des données ont été ajoutées par l&apos;unité dans la mission.</RapportNavActionsText>
+        <RapportNavActionsText data-cy="rapportNav-actions-text">
+          Des données ont été ajoutées par l&apos;unité dans la mission.
+        </RapportNavActionsText>
       )}
       <ActionsTimeline ref={actionTimelineRef}>
         <VerticalLine $height={actionTimelineHeight} />

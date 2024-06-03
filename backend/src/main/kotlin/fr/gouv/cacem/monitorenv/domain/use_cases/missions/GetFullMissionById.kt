@@ -20,7 +20,7 @@ class GetFullMissionById(
         return try {
             val fishActions = monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
 
-            val hasRapportNavActions = rapportNavMissionActionsRepository.findRapportnavMissionActionsById(missionId)
+            val hasRapportNavActions = rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)
 
             Pair(true, fullMission.copy(fishActions = fishActions, hasRapportNavActions = hasRapportNavActions))
         } catch (e: Exception) {

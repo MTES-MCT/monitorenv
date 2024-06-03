@@ -13,31 +13,31 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class APIRapportNavMissionActionsRepository(
-        val apiClient: ApiClient,
-        val rapportnavProperties: RapportnavProperties,
+    val apiClient: ApiClient,
+    val rapportnavProperties: RapportnavProperties,
 ) : IRapportNavMissionActionsRepository {
-    private val logger: Logger =
-            LoggerFactory.getLogger(APIRapportNavMissionActionsRepository::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(APIRapportNavMissionActionsRepository::class.java)
 
-    override fun findRapportnavMissionActionsById(missionId: Int): RapportNavMissionActionEntity {
-        val missionActionsUrl = "${rapportnavProperties.url}/api/v1/missions/$missionId"
+    override fun findRapportNavMissionActionsById(missionId: Int): RapportNavMissionActionEntity {
+        val missionActionsUrl =
+            "${rapportnavProperties.url}/api/v1/missions/$missionId"
 
         return runBlocking {
             try {
                 val rapportNavMissionActions =
-                        apiClient
-                                .httpClient
-                                .get(missionActionsUrl)
-                                .body<RapportNavMissionActionEntity>()
+                    apiClient
+                        .httpClient
+                        .get(missionActionsUrl)
+                        .body<RapportNavMissionActionEntity>()
                 logger.info(
-                        "Fetched is mission has actions and the result is : $rapportNavMissionActions"
+                    "Fetched is mission has actions and the result is : $rapportNavMissionActions",
                 )
 
                 return@runBlocking rapportNavMissionActions
             } catch (e: Exception) {
                 logger.error(
-                        "Could not fetch mission actions from rapportNav at $missionActionsUrl",
-                        e
+                    "Could not fetch mission actions from rapportNav at $missionActionsUrl",
+                    e,
                 )
 
                 throw NoSuchElementException()
