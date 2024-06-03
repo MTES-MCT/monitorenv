@@ -1,8 +1,7 @@
+import { type InterestPointState, updateInterestPointByProperty } from '@features/InterestPoint/slice'
 import { getGeoJSONFromFeature } from 'domain/types/map'
 import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
-
-import { updateCurrentInterestPointProperty, type InterestPointState } from '../../shared_slices/InterestPoint'
 
 export const saveInterestPointFeature = (feature?: Feature | undefined) => (dispatch, getState) => {
   const { currentInterestPoint }: InterestPointState = getState().interestPoint
@@ -23,7 +22,7 @@ export const saveInterestPointFeature = (feature?: Feature | undefined) => (disp
   const geoJSONFeature = getGeoJSONFromFeature(featureToSave)
 
   dispatch(
-    updateCurrentInterestPointProperty({
+    updateInterestPointByProperty({
       key: 'feature',
       value: geoJSONFeature
     })

@@ -1,10 +1,10 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { EditInterestPoint } from '@features/InterestPoint/components/EditInterestPoint'
+import { endDrawingInterestPoint, startDrawingInterestPoint } from '@features/InterestPoint/slice'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
-import { endDrawingInterestPoint, startDrawingInterestPoint } from 'domain/shared_slices/InterestPoint'
 import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
 import { globalActions, setDisplayedItems } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -20,14 +20,21 @@ export function InterestPointMapButton() {
 
   const wrapperRef = useRef(null)
 
+  useEffect(() => {
+    if (isOpen) {
+      dispatch(startDrawingInterestPoint())
+    } else {
+      dispatch(endDrawingInterestPoint())
+    }
+  }, [dispatch, isOpen])
+
   const close = useCallback(() => {
-    dispatch(endDrawingInterestPoint())
     dispatch(globalActions.setIsMapToolVisible(undefined))
   }, [dispatch])
 
   useEscapeFromKeyboardAndExecute(close)
 
-  const toggleInterestPointMenu = useCallback(() => {
+  const toggleInterestPointMenu = () => {
     if (!isOpen) {
       dispatch(
         setDisplayedItems({
@@ -39,12 +46,11 @@ export function InterestPointMapButton() {
         })
       )
       dispatch(reduceReportingFormOnMap())
-      dispatch(startDrawingInterestPoint())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     } else {
       close()
     }
-  }, [dispatch, isOpen, close])
+  }
 
   return (
     <ButtonWrapper ref={wrapperRef} topPosition={346}>

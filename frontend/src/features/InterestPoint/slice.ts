@@ -3,7 +3,7 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { v4 as uuidv4 } from 'uuid'
 
-import type { InterestPoint, NewInterestPoint } from '../../features/InterestPoint/types'
+import type { NewInterestPoint, InterestPoint } from './types'
 
 export interface InterestPointState {
   currentInterestPoint: NewInterestPoint
@@ -39,7 +39,6 @@ const interestPointSlice = createSlice({
         state.interestPoints = state.interestPoints.concat(state.currentInterestPoint as InterestPoint)
       }
       state.currentInterestPoint = newInterestPoint()
-      //  TODO a déplacer dans le usecase de sauvegarde
       state.isEditing = false
     },
 
@@ -72,6 +71,9 @@ const interestPointSlice = createSlice({
      */
     removeInterestPoint(state, action: PayloadAction<string>) {
       state.interestPoints = state.interestPoints.filter(interestPoint => interestPoint.uuid !== action.payload)
+      if (state.currentInterestPoint.uuid === action.payload) {
+        state.currentInterestPoint = newInterestPoint()
+      }
     },
 
     /**
@@ -91,7 +93,7 @@ const interestPointSlice = createSlice({
     /**
      * Update the specified key of the current interest point
      */
-    updateCurrentInterestPointProperty(
+    updateInterestPointByProperty(
       state,
       action: PayloadAction<{
         key: keyof InterestPoint
@@ -103,15 +105,13 @@ const interestPointSlice = createSlice({
       currentInterestPoint[action.payload.key] = action.payload.value
       state.currentInterestPoint = currentInterestPoint
 
-      if (state.isEditing) {
-        state.interestPoints = state.interestPoints.map(interestPoint => {
-          if (interestPoint.uuid === state.currentInterestPoint?.uuid) {
-            interestPoint[action.payload.key] = action.payload.value
-          }
+      state.interestPoints = state.interestPoints.map(interestPoint => {
+        if (interestPoint.uuid === state.currentInterestPoint?.uuid) {
+          interestPoint[action.payload.key] = action.payload.value
+        }
 
-          return interestPoint
-        })
-      }
+        return interestPoint
+      })
     }
   }
 })
@@ -124,7 +124,7 @@ export const {
   removeInterestPoint,
   startDrawingInterestPoint,
   updateCurrentInterestPoint,
-  updateCurrentInterestPointProperty
+  updateInterestPointByProperty
 } = interestPointSlice.actions
 
 export const interestPointSlicePersistedReducer = persistReducer(persistConfig, interestPointSlice.reducer)

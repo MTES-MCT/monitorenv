@@ -1,36 +1,36 @@
-import { usePrevious } from '@mtes-mct/monitor-ui'
-import Feature from 'ol/Feature'
-import GeoJSON from 'ol/format/GeoJSON'
-import LineString from 'ol/geom/LineString'
-import Point from 'ol/geom/Point'
-import Draw, { DrawEvent } from 'ol/interaction/Draw'
+import {
+  removeInterestPoint,
+  endDrawingInterestPoint,
+  removeCurrentInterestPoint,
+  editInterestPoint,
+  updateCurrentInterestPoint,
+  updateInterestPointByProperty
+} from '@features/InterestPoint/slice'
+import { saveInterestPointFeature } from '@features/InterestPoint/use_cases/saveInterestPointFeature'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { usePrevious, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { InterestPointLine } from 'domain/entities/interestPointLine'
+import { coordinatesOrTypeAreModified, coordinatesAreModified } from 'domain/entities/interestPoints'
+import { Layers } from 'domain/entities/layers/constants'
+import { MapToolType } from 'domain/entities/map/constants'
+import { globalActions } from 'domain/shared_slices/Global'
+import { GeoJSON } from 'ol/format'
+import { LineString, Point } from 'ol/geom'
+import { Draw } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
-import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
+import { useState, useCallback, useRef, type MutableRefObject, useEffect } from 'react'
 
-import { POIStyle, getInterestPointStyle, getLineStyle } from './styles/interestPoint.style'
-import { InterestPointLine } from '../../../domain/entities/interestPointLine'
-import { coordinatesAreModified, coordinatesOrTypeAreModified } from '../../../domain/entities/interestPoints'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { MapToolType, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { globalActions } from '../../../domain/shared_slices/Global'
-import {
-  editInterestPoint,
-  endDrawingInterestPoint,
-  removeCurrentInterestPoint,
-  removeInterestPoint,
-  updateCurrentInterestPoint,
-  updateCurrentInterestPointProperty
-} from '../../../domain/shared_slices/InterestPoint'
-import { saveInterestPointFeature } from '../../../domain/use_cases/interestPoint/saveInterestPointFeature'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getLineStyle, getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
 import { InterestPointOverlay } from '../overlays/InterestPointOverlay'
 
-import type { NewInterestPoint } from '../../InterestPoint/types'
 import type { BaseMapChildrenProps } from '../BaseMap'
+import type { NewInterestPoint } from '@features/InterestPoint/types'
+import type { Feature } from 'ol'
 import type { Coordinate } from 'ol/coordinate'
+import type { DrawEvent } from 'ol/interaction/Draw'
 
 const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
@@ -181,17 +181,15 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   }, [map, isDrawing])
 
   useEffect(() => {
-    function waitForUnwantedZoomAndQuitInteraction() {
-      setTimeout(() => {
-        if (map && drawObject) {
-          map.removeInteraction(drawObject)
-        }
-      }, 300)
+    function quitInteraction() {
+      if (map && drawObject) {
+        map.removeInteraction(drawObject)
+      }
     }
+
     if (!isDrawing && drawObject) {
       setDrawObject(undefined)
-
-      waitForUnwantedZoomAndQuitInteraction()
+      quitInteraction()
     }
   }, [map, drawObject, isDrawing])
 
@@ -240,7 +238,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
           const geometry = drawingFeatureToUpdate.getGeometry()
           if (interestPointWithoutFeature.coordinates) {
-            // TODO [17/05/2024] typage à refacto: Openlayer fonctionne avec Coordinate[] et Coordinate
+            // FIXME [17/05/2024] typage à refacto: Openlayer fonctionne avec Coordinate[] et Coordinate
             geometry?.setCoordinates(interestPointWithoutFeature.coordinates as unknown as Coordinate[])
           }
           drawingFeatureToUpdate.setProperties(interestPointWithoutFeature)
@@ -250,7 +248,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           })
 
           dispatch(
-            updateCurrentInterestPointProperty({
+            updateInterestPointByProperty({
               key: 'feature',
               value: nextFeature
             })
@@ -267,8 +265,8 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       if (
         previousInterestPoint &&
         coordinatesAreModified(currentInterestPoint, previousInterestPoint) &&
-        !!currentInterestPoint.coordinates &&
-        !!previousInterestPoint.coordinates
+        currentInterestPoint.coordinates &&
+        previousInterestPoint.coordinates
       ) {
         const line = new LineString([currentInterestPoint.coordinates, previousInterestPoint.coordinates])
         const distance = getLength(line, { projection: OPENLAYERS_PROJECTION })
@@ -306,7 +304,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           moveLine={moveInterestPointLine}
         />
       ))}
-      {!isPersisted(currentInterestPoint.uuid) ? (
+      {currentInterestPoint.coordinates && !isPersisted(currentInterestPoint.uuid) && (
         <InterestPointOverlay
           deleteInterestPoint={deleteCurrentInterestPoint}
           interestPoint={currentInterestPoint}
@@ -315,7 +313,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           modifyInterestPoint={() => {}}
           moveLine={moveInterestPointLine}
         />
-      ) : null}
+      )}
     </div>
   )
 

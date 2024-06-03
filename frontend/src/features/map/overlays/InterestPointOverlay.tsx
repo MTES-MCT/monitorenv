@@ -96,9 +96,7 @@ export function InterestPointOverlay({
       }, delay)
     },
 
-    // TODO Disabled for migration purpose. Remove and fix dependencies.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [interestPointCoordinates.current]
+    [map, moveLine, uuid]
   )
 
   useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, isMounted)

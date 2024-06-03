@@ -1,21 +1,31 @@
-import { Accent, Button, Icon, MapMenuDialog, TextInput, Textarea } from '@mtes-mct/monitor-ui'
+import { SetCoordinates } from '@features/coordinates/SetCoordinates'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import {
+  Accent,
+  Button,
+  CoordinatesFormat,
+  Icon,
+  MapMenuDialog,
+  OPENLAYERS_PROJECTION,
+  TextInput,
+  Textarea,
+  WSG84_PROJECTION,
+  coordinatesAreDistinct,
+  getCoordinates
+} from '@mtes-mct/monitor-ui'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import {
   addInterestPoint,
   endDrawingInterestPoint,
   startDrawingInterestPoint,
-  updateCurrentInterestPointProperty
-} from '../../../../domain/shared_slices/InterestPoint'
-import { saveInterestPointFeature } from '../../../../domain/use_cases/interestPoint/saveInterestPointFeature'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordinates'
-import { SetCoordinates } from '../../../coordinates/SetCoordinates'
+  updateInterestPointByProperty
+} from '../slice'
+import { saveInterestPointFeature } from '../use_cases/saveInterestPointFeature'
 
 import type { Coordinate } from 'ol/coordinate'
 
@@ -42,7 +52,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     }
   }, [dispatch, isEyeOpen])
 
-  // TODO: Modifier monitor-ui pour changer le typage des children de string à ReactNode
+  // TODO: Modifier monitor-ui pour changer le typage des children de  undefined à ReactNode
   const textButton = `${isEditing ? 'Enregistrer' : 'Créer'} le point`
 
   /** Coordinates formatted in DD [latitude, longitude] */
@@ -65,10 +75,10 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
   }, [currentInterestPoint?.coordinates])
 
   const updateName = useCallback(
-    name => {
+    (name: string | undefined) => {
       if (currentInterestPoint?.name !== name) {
         dispatch(
-          updateCurrentInterestPointProperty({
+          updateInterestPointByProperty({
             key: 'name',
             value: name
           })
@@ -79,10 +89,10 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
   )
 
   const updateObservations = useCallback(
-    observations => {
+    (observations: string | undefined) => {
       if (currentInterestPoint?.observations !== observations) {
         dispatch(
-          updateCurrentInterestPointProperty({
+          updateInterestPointByProperty({
             key: 'observations',
             value: observations
           })
@@ -109,7 +119,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           // Convert to [longitude, latitude] and OpenLayers projection
           const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
           dispatch(
-            updateCurrentInterestPointProperty({
+            updateInterestPointByProperty({
               key: 'coordinates',
               value: updatedCoordinates
             })
@@ -119,7 +129,6 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     },
     [dispatch]
   )
-
   const saveInterestPoint = () => {
     if (coordinates?.length > 0) {
       dispatch(saveInterestPointFeature())
@@ -136,7 +145,9 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     <MapMenuDialog.Container data-cy="save-interest-point">
       <MapMenuDialog.Header>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
-        <MapMenuDialog.Title>{isEditing ? 'Éditer' : 'Créer'} un point d&apos;intérêt</MapMenuDialog.Title>
+        <MapMenuDialog.Title data-cy="interest-point-title">
+          {isEditing ? 'Éditer' : 'Créer'} un point d&apos;intérêt
+        </MapMenuDialog.Title>
         <MapMenuDialog.VisibilityButton
           accent={Accent.SECONDARY}
           data-cy="hide-all-interest-point"

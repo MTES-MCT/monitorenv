@@ -46,25 +46,22 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-coordinates').contains('47.5525° -007.5563°')
     })
 
-    // TODO understand why coordinate are diffents on CI ('47° 42.11′ N 007° 34.500′ W')
-    /*   it('An interest should be edited When DMD coordinates are selected', () => {
-    // When
-    cy.getDataCy('coordinates-selection').click({ force: true })
-    cy.get('#root').click(159, 1000)
-    cy.fill('Unités des coordonnées', 'DMD')
-    cy.getDataCy('interest-point').click()
-    cy.wait(500)
-    cy.get('#root').click(590, 580)
-    cy.getDataCy('interest-point-name-input').type('Phénomène')
-    cy.getDataCy('interest-point-save').click()
+    it('An interest should be edited When DMD coordinates are selected', () => {
+      // When
+      cy.getDataCy('coordinates-selection').click({ force: true })
+      cy.get('#root').click(159, 1000)
+      cy.fill('Unités des coordonnées', 'DMD')
+      cy.getDataCy('interest-point').click()
+      cy.get('#root').click(590, 580)
+      cy.getDataCy('interest-point-name-input').type('Phénomène')
+      cy.getDataCy('interest-point-save').click()
 
-    cy.wait(500)
-    cy.getDataCy('interest-point-edit').click({ force: true })
-    cy.getDataCy('dmd-coordinates-input').eq(1).type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
+      cy.getDataCy('interest-point-edit').click({ force: true })
+      cy.getDataCy('dmd-coordinates-input').eq(1).type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
 
-    // Then
-    cy.getDataCy('interest-point-coordinates').contains('47° 42.043′ N 007° 34.500′ W')
-  }) */
+      // Then
+      cy.getDataCy('interest-point-coordinates').contains('47° 42.043′ N 007° 34.500′ W')
+    })
 
     it('should be edited with East value when DMS coordinates are selected', () => {
       // When
@@ -84,10 +81,11 @@ context('InterestPoint', () => {
       cy.getDataCy('save-interest-point').should('not.exist')
 
       cy.getDataCy('interest-point-edit').should('not.be.visible')
+      // Force because the interest point is not in the DOM anymore
       cy.getDataCy('interest-point-edit').click({ force: true })
       cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
       cy.get('.rs-radio').first().should('have.class', 'rs-radio-checked')
-      cy.getDataCy('interest-point-save').click({ timeout: 10000 })
+      cy.getDataCy('interest-point-save').click()
 
       cy.getDataCy('interest-point-coordinates').first().contains('47° 42′')
       cy.getDataCy('interest-point-coordinates').first().contains('N')
@@ -111,9 +109,7 @@ context('InterestPoint', () => {
     it('in drawing mode should be stopped when closing the interest point tool', () => {
       // When
       cy.getDataCy('interest-point').click()
-      cy.wait(100)
       cy.get('body').type('{esc}')
-      cy.wait(200)
       cy.get('#root').click(490, 580)
       cy.getDataCy('interest-point-save').should('not.exist')
       cy.getDataCy('interest-point-edit').should('not.exist')
@@ -145,12 +141,45 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-name').should('be.visible')
 
       // When
-      cy.getDataCy('interest-point').click()
-      cy.getDataCy('hide-all-interest-point').click()
-      cy.getDataCy('hide-all-interest-point').click()
+      cy.getDataCy('interest-point-edit').click()
+      cy.getDataCy('hide-all-interest-point').click().click()
 
       // Then
       cy.getDataCy('interest-point-name').should('be.visible')
+    })
+    it('should be displayed on map by default when opening the interest point tool', () => {
+      // Given
+      cy.getDataCy('interest-point').click()
+      cy.get('#root').click(490, 580)
+
+      cy.getDataCy('interest-point-name-input').type('Phénomène')
+      cy.getDataCy('interest-point-save').click()
+      cy.getDataCy('interest-point-name').should('be.visible')
+
+      // When
+      cy.getDataCy('interest-point').click()
+      cy.getDataCy('hide-all-interest-point').click()
+      cy.getDataCy('interest-point').click().click()
+
+      // Then
+      cy.getDataCy('interest-point-name').should('be.visible')
+    })
+
+    it('title should change to edit wording when editing an existing interest point ', () => {
+      // Given
+      cy.getDataCy('interest-point').click()
+      cy.get('#root').click(490, 580)
+
+      cy.getDataCy('interest-point-title').should('contain', "Créer un point d'intérêt")
+      cy.getDataCy('interest-point-save').should('contain', 'Créer le point')
+      cy.getDataCy('interest-point-save').click()
+
+      // When
+      cy.getDataCy('interest-point-edit').click()
+
+      // Then
+      cy.getDataCy('interest-point-title').should('contain', "Éditer un point d'intérêt")
+      cy.getDataCy('interest-point-save').should('contain', 'Enregistrer le point')
     })
   })
   describe('Multiple interest points ', () => {
@@ -175,7 +204,6 @@ context('InterestPoint', () => {
 
       cy.getDataCy('interest-point').click()
       cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '__° __′ __″ _ ___° __′ __″ _')
-      cy.wait(400)
       cy.get('#root').click(650, 690)
       cy.getDataCy('interest-point-name-input').type('Phénomène 3')
       cy.getDataCy('interest-point-observations-input').type('Est encore encore dans la bergerie')
