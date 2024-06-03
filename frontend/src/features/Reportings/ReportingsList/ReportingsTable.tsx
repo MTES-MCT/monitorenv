@@ -3,7 +3,8 @@ import { Icon, THEME, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
+import { useLocation } from 'react-router'
+import styled, { css } from 'styled-components'
 
 import { Columns } from './Columns'
 import { GroupActions } from './GroupActions'
@@ -21,6 +22,8 @@ export function ReportingsTable({
   isLoading: boolean
   reportings: (ReportingDetailed | undefined)[]
 }) {
+  const location = useLocation()
+
   const openReportings = useAppSelector(state => state.reporting.reportings)
   const { themes } = useGetControlPlans()
   const [rowSelection, setRowSelection] = useState({})
@@ -81,12 +84,12 @@ export function ReportingsTable({
         totalReportings={reportings?.length || 0}
       />
       <StyledReportingsContainer ref={tableContainerRef}>
-        <TableWithSelectableRows.Table $withRowCheckbox>
+        <StyledTable $isSideWindowOpenInTab={location.pathname === '/side_window'} $withRowCheckbox>
           <TableWithSelectableRows.Head>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <StyledTh key={header.id} $width={header.column.getSize()}>
+                  <TableWithSelectableRows.Th key={header.id} $width={header.column.getSize()}>
                     {header.id === 'select' && flexRender(header.column.columnDef.header, header.getContext())}
                     {header.id !== 'select' && !header.isPlaceholder && (
                       <TableWithSelectableRows.SortContainer
@@ -104,7 +107,7 @@ export function ReportingsTable({
                           ))}
                       </TableWithSelectableRows.SortContainer>
                     )}
-                  </StyledTh>
+                  </TableWithSelectableRows.Th>
                 ))}
               </tr>
             ))}
@@ -141,7 +144,7 @@ export function ReportingsTable({
               <td aria-label="empty-line-for-scroll" style={{ height: '50px' }} />
             </tr>
           </tbody>
-        </TableWithSelectableRows.Table>
+        </StyledTable>
       </StyledReportingsContainer>
     </>
   )
@@ -151,7 +154,56 @@ const StyledReportingsContainer = styled.div`
   overflow: auto;
   width: ${TABLE_WIDTH}px;
 `
-const StyledTh = styled(TableWithSelectableRows.Th)``
+
+/*
+Hack to fix the strange checkbox vertical position inconsistency
+between the side window access via /side_window and the one opened as a new window.
+The position is correct when accessed via /side_window (and not when opened as a new window).
+*/
+const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInTab: boolean }>`
+  ${p =>
+    !p.$isSideWindowOpenInTab &&
+    css`
+      .rs-checkbox {
+        > .rs-checkbox-checker {
+          > label {
+            line-height: inherit;
+          }
+        }
+      }
+
+      > thead {
+        > tr {
+          > th:first-child {
+            > .rs-checkbox {
+              > .rs-checkbox-checker {
+                > label {
+                  .rs-checkbox-wrapper {
+                    top: -8px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      > tbody {
+        > tr {
+          > td:first-child {
+            > .rs-checkbox {
+              > .rs-checkbox-checker {
+                > label {
+                  .rs-checkbox-wrapper {
+                    top: -8px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `}
+`
 
 const StyledTd = styled(TableWithSelectableRows.Td)`
   &:first-child {
