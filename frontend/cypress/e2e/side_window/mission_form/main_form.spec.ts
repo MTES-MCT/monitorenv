@@ -3,7 +3,7 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
 import { createPendingMission } from '../../utils/createPendingMission'
 import { getPreviousMonthUTC, todayUTC } from '../../utils/dates'
-import { getMissionEndDateWithTime } from '../../utils/getMissionEndDate'
+import { getFutureDate } from '../../utils/getFutureDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 import { visitSideWindow } from '../../utils/visitSideWindow'
 
@@ -32,17 +32,18 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.get('div').contains('Mission non créée.')
     cy.get('.Element-Tag').contains('Enregistrement auto. actif')
-    // When
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
 
     // with wrong end date of mission
-    cy.fill('Date de fin (UTC)', [2024, 5, 25, 14, 15])
+    const wrongEndDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(5, 'day').toISOString()
+    const wrongEndDate = getUtcDateInMultipleFormats(wrongEndDateInString).asDatePickerDateTime
+    cy.fill('Date de fin (UTC)', wrongEndDate)
     cy.get('form').submit()
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à la date de début')
 
     // with good date
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const correctEndDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', correctEndDate)
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
@@ -96,17 +97,18 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('form').submit()
     cy.wait(100)
     cy.get('.Element-Tag').contains('Enregistrement auto. inactif')
-    // When
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
 
     // with wrong end date of mission
-    cy.fill('Date de fin (UTC)', [2024, 5, 25, 14, 15])
+    const wrongEndDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(5, 'day').toISOString()
+    const wrongEndDate = getUtcDateInMultipleFormats(wrongEndDateInString).asDatePickerDateTime
+    cy.fill('Date de fin (UTC)', wrongEndDate)
     cy.get('form').submit()
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à la date de début')
 
     // with good date
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const correctEndDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', correctEndDate)
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
@@ -235,7 +237,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('*[data-cy="add-mission"]').click()
 
     const startDate = getUtcDateInMultipleFormats().asDatePickerDateTime
-    const endDate = getMissionEndDateWithTime(7, 'day')
+    const endDate = getFutureDate(7, 'day')
 
     cy.fill('Date de début (UTC)', startDate)
     cy.fill('Date de fin (UTC)', endDate)
@@ -284,6 +286,9 @@ context('Side Window > Mission Form > Main Form', () => {
     )
       .its('response.statusCode')
       .should('eq', 200)
+    cy.wait(500)
+    cy.clickButton('Supprimer la mission')
+    cy.clickButton('Confirmer la suppression')
   })
 
   it('A warning should not be displayed When it is an edited mission', () => {

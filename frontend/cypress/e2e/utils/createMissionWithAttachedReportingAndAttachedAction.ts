@@ -1,6 +1,8 @@
 import { attachReportingToMissionSliceActions } from '@features/missions/MissionForm/AttachReporting/slice'
 import { setGeometry } from 'domain/shared_slices/Draw'
 
+import { getFutureDate } from './getFutureDate'
+
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 const dispatch = action => cy.window().its('store').invoke('dispatch', action)
@@ -56,8 +58,8 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
     cy.clickButton('missions')
     cy.clickButton('Ajouter une nouvelle mission')
 
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const endDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', endDate)
 
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.fill('Unité 1', 'BN Toulon')

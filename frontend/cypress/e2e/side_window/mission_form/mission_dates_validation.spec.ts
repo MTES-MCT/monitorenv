@@ -1,5 +1,8 @@
 /// <reference types="cypress" />
 
+import { getFutureDate } from '../../utils/getFutureDate'
+import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+
 context('Side Window > Mission Form > Mission dates', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -17,8 +20,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="add-mission"]').click()
 
     // When
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
+    cy.fill('Date de début (UTC)', asDatePickerDateTime)
+    const missionEndDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', missionEndDate)
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
@@ -102,50 +107,50 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.getDataCy('action-card').eq(0).click()
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
 
+    const dateBeforeStartDateMissionInString = getUtcDateInMultipleFormats()
+      .asDayjsUtcDate.subtract(5, 'day')
+      .toISOString()
+    const dateBeforeStartDateMission = getUtcDateInMultipleFormats(
+      dateBeforeStartDateMissionInString
+    ).asDatePickerDateTime
+
+    const dateAfterEndDateMission = getFutureDate(10, 'day')
+
     // Start date of surveillance is before start date of mission
-    cy.fill('Date et heure de début de surveillance', [2024, 5, 25, 23, 35])
+    cy.fill('Date et heure de début de surveillance', dateBeforeStartDateMission)
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être postérieure à celle de début de mission')
 
     // Start date of surveillance is after end date of mission
-    cy.fill('Date et heure de début de surveillance', [2024, 5, 28, 15, 35])
+    cy.fill('Date et heure de début de surveillance', dateAfterEndDateMission)
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être antérieure à celle de fin de mission')
 
     // Valid start date of surveillance
-    cy.fill('Date et heure de début de surveillance', [2024, 5, 26, 23, 35])
+    const validSurveillanceStartDate = getFutureDate(1, 'day')
+    cy.fill('Date et heure de début de surveillance', validSurveillanceStartDate)
 
     // End date of surveillance is before start date of mission
-    cy.fill('Date et heure de fin de surveillance', [2024, 5, 25, 23, 35])
+    cy.fill('Date et heure de fin de surveillance', dateBeforeStartDateMission)
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à celle de début de mission')
 
     // End date of surveillance is after end date of mission
-    cy.fill('Date et heure de fin de surveillance', [2024, 5, 28, 15, 35])
+    cy.fill('Date et heure de fin de surveillance', dateAfterEndDateMission)
     cy.wait(250)
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
 
     // Valid end date of surveillance
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
-    cy.fill('Date et heure de fin de surveillance', [2024, 5, 28, 13, 35])
+    const validSurveillanceEndDate = getFutureDate(4, 'day')
+    cy.fill('Date et heure de fin de surveillance', validSurveillanceEndDate)
 
     // Then
     cy.waitForLastRequest(
       '@updateMission',
       {
         body: {
-          endDateTimeUtc: '2024-05-28T14:15:00Z',
-          envActions: [
-            {
-              actionEndDateTimeUtc: '2024-05-28T13:35:00.000Z',
-              actionStartDateTimeUtc: '2024-05-26T23:35:00.000Z'
-            },
-            {
-              actionEndDateTimeUtc: '2024-05-28T14:15:00Z',
-              actionStartDateTimeUtc: '2024-05-26T12:00:00Z'
-            }
-          ],
-          startDateTimeUtc: '2024-05-26T12:00:00Z'
+          startDateTimeUtc: `${asApiDateTime}:00Z`
         }
       },
       5,
@@ -173,17 +178,19 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="add-mission"]').click()
 
     // When
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
+    cy.fill('Date de début (UTC)', asDatePickerDateTime)
+    const endDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', endDate)
 
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
+    cy.fill('Unité 1', 'DF 25 Libecciu', { delay: 100 })
     cy.clickOutside()
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.get('*[data-cy="add-control-administration"]').contains('Douane')
+    cy.get('*[data-cy="add-control-unit"]').contains('DF 25 Libecciu')
     cy.wait(200)
 
     cy.intercept('PUT', `/bff/v1/missions/*`).as('updateMission')
@@ -200,14 +207,7 @@ context('Side Window > Mission Form > Mission dates', () => {
       '@updateMission',
       {
         body: {
-          endDateTimeUtc: '2024-05-28T14:15:00Z',
-          envActions: [
-            {
-              actionEndDateTimeUtc: '2024-05-28T14:15:00Z',
-              actionStartDateTimeUtc: '2024-05-26T12:00:00Z'
-            }
-          ],
-          startDateTimeUtc: '2024-05-26T12:00:00Z'
+          startDateTimeUtc: `${asApiDateTime}:00Z`
         }
       },
       5,
@@ -233,16 +233,16 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="add-mission"]').click()
 
     // When
-    cy.fill('Date de début (UTC)', [2024, 5, 26, 12, 0])
-    cy.fill('Date de fin (UTC)', [2024, 5, 28, 14, 15])
+    const endDate = getFutureDate(7, 'day')
+    cy.fill('Date de fin (UTC)', endDate)
 
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
-    cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
+    cy.fill('Unité 1', 'DF 61 Port-de-Bouc', { delay: 100 })
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.get('*[data-cy="add-control-administration"]').contains('Douane')
+    cy.get('*[data-cy="add-control-unit"]').contains('DF 61 Port-de-Bouc')
 
     cy.wait(250)
 
@@ -261,19 +261,29 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
     cy.fill('Type de cible', 'Personne morale')
 
+    const dateBeforeStartDateMissionInString = getUtcDateInMultipleFormats()
+      .asDayjsUtcDate.subtract(5, 'day')
+      .toISOString()
+    const dateBeforeStartDateMission = getUtcDateInMultipleFormats(
+      dateBeforeStartDateMissionInString
+    ).asDatePickerDateTime
+
+    const dateAfterEndDateMission = getFutureDate(10, 'day')
+
     // Date is before start date of mission
-    cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 25, 23, 35])
+    cy.fill('Date et heure du contrôle (UTC)', dateBeforeStartDateMission)
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date doit être postérieure à celle de début de mission')
 
     // Date is after end date of mission
-    cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 14, 16])
+    cy.fill('Date et heure du contrôle (UTC)', dateAfterEndDateMission)
     cy.wait(250)
     cy.get('.Element-FieldError').contains('La date doit être antérieure à celle de fin de mission')
 
     // Valid date
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
-    cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 13, 16])
+    const controlEndDate = getFutureDate(5, 'day')
+    cy.fill('Date et heure du contrôle (UTC)', controlEndDate)
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
