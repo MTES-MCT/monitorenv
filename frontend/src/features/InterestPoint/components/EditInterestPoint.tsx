@@ -25,7 +25,7 @@ import {
   startDrawingInterestPoint,
   updateInterestPointByProperty
 } from '../slice'
-import { saveInterestPointFeature } from '../use_cases/saveInterestPointFeature'
+import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
 
 import type { Coordinate } from 'ol/coordinate'
 

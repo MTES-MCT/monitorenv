@@ -6,7 +6,7 @@ import {
   updateCurrentInterestPoint,
   updateInterestPointByProperty
 } from '@features/InterestPoint/slice'
-import { saveInterestPointFeature } from '@features/InterestPoint/use_cases/saveInterestPointFeature'
+import { saveInterestPointFeature } from '@features/InterestPoint/useCases/saveInterestPointFeature'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, usePrevious } from '@mtes-mct/monitor-ui'
