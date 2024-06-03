@@ -11,6 +11,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getCoordinates } from '../../../utils/coordinates'
 
+import type { InterestPoint, NewInterestPoint } from '@features/InterestPoint/types'
 import type { Coordinate } from 'ol/coordinate'
 
 const X = 0
@@ -29,26 +30,20 @@ function coordinatesAreModified(nextCoordinates: Coordinate, previousCoordinates
 }
 
 type InterestPointOverlayProps = {
-  coordinates: Coordinate
   deleteInterestPoint: (uuid: string) => void
+  interestPoint: InterestPoint | NewInterestPoint
   isVisible: boolean
   map: any
   modifyInterestPoint: (uuid: string) => void
   moveLine: (uuid: string, previousCoordinates: number[], nextCoordinates: number[], offset: number[]) => void
-  name: string | null
-  observations: string | null
-  uuid: string
 }
 export function InterestPointOverlay({
-  coordinates,
   deleteInterestPoint,
+  interestPoint: { coordinates, name, observations, uuid },
   isVisible,
   map,
   modifyInterestPoint,
-  moveLine,
-  name,
-  observations,
-  uuid
+  moveLine
 }: InterestPointOverlayProps) {
   const { coordinatesFormat } = useAppSelector(state => state.map)
 
@@ -65,7 +60,7 @@ export function InterestPointOverlay({
         autoPan: false,
         element: ref.current ?? undefined,
         offset: currentOffset.current,
-        position: coordinates,
+        position: coordinates ?? undefined,
         positioning: 'center-left'
       })
     }
@@ -101,9 +96,7 @@ export function InterestPointOverlay({
       }, delay)
     },
 
-    // TODO Disabled for migration purpose. Remove and fix dependencies.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [interestPointCoordinates.current]
+    [map, moveLine, uuid]
   )
 
   useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, isMounted)
@@ -123,26 +116,20 @@ export function InterestPointOverlay({
     }
   }, [coordinates, previousCoordinates])
 
-  useEffect(
-    () => {
-      if (map) {
-        overlayRef.current?.setPosition(coordinates)
-        overlayRef.current?.setElement(ref.current ?? undefined)
+  useEffect(() => {
+    if (map) {
+      overlayRef.current?.setPosition(coordinates ?? undefined)
+      overlayRef.current?.setElement(ref.current ?? undefined)
 
-        map.addOverlay(overlayRef.current)
+      map.addOverlay(overlayRef.current)
 
-        return () => {
-          map.removeOverlay(overlayRef.current)
-        }
+      return () => {
+        map.removeOverlay(overlayRef.current)
       }
+    }
 
-      return noop
-    },
-
-    // TODO Disabled for migration purpose. Remove and fix dependencies.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [overlayRef.current, coordinates, map]
-  )
+    return noop
+  }, [coordinates, map, ref])
 
   return (
     <WrapperToBeKeptForDOMManagement>

@@ -1,9 +1,10 @@
+import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
+
 import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
 import { ampSlicePersistedReducer } from '../domain/shared_slices/Amp'
 import { drawReducer } from '../domain/shared_slices/Draw'
 import { globalReducer } from '../domain/shared_slices/Global'
-import { interestPointSlicePersistedReducer } from '../domain/shared_slices/InterestPoint'
 import { layerSidebarSlice } from '../domain/shared_slices/LayerSidebar'
 import { mapSliceReducer } from '../domain/shared_slices/Map'
 import { measurementSlicePersistedReducer } from '../domain/shared_slices/Measurement'

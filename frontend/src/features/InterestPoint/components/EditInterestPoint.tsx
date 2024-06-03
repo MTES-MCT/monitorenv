@@ -1,49 +1,68 @@
-import { Accent, Button, Icon, MapMenuDialog, TextInput, Textarea } from '@mtes-mct/monitor-ui'
+import { SetCoordinates } from '@features/coordinates/SetCoordinates'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import {
+  Accent,
+  Button,
+  CoordinatesFormat,
+  Icon,
+  MapMenuDialog,
+  OPENLAYERS_PROJECTION,
+  TextInput,
+  Textarea,
+  WSG84_PROJECTION,
+  coordinatesAreDistinct,
+  getCoordinates
+} from '@mtes-mct/monitor-ui'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
-import { boundingExtent } from 'ol/extent'
-import { transform, transformExtent } from 'ol/proj'
-import { useCallback, useMemo, useState } from 'react'
+import { transform } from 'ol/proj'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import {
   addInterestPoint,
-  deleteInterestPointBeingDrawed,
-  drawInterestPoint,
-  endInterestPointDraw,
-  updateInterestPointKeyBeingDrawed
-} from '../../../../domain/shared_slices/InterestPoint'
-import { setFitToExtent } from '../../../../domain/shared_slices/Map'
-import { saveInterestPointFeature } from '../../../../domain/use_cases/interestPoint/saveInterestPointFeature'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordinates'
-import { SetCoordinates } from '../../../coordinates/SetCoordinates'
+  endDrawingInterestPoint,
+  startDrawingInterestPoint,
+  updateInterestPointByProperty
+} from '../slice'
+import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
 
 import type { Coordinate } from 'ol/coordinate'
 
 // TODO Refactor this component
 // - Move the state logic to the reducer
-// - Use formik (or at least uncontrolled form components)
 type EditInterestPointProps = {
   close: () => void
 }
 export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
 
-  const { interestPointBeingDrawed, isEditing } = useAppSelector(state => state.interestPoint)
-  const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
+  const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
 
-  const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
+  const isEditing = useAppSelector(state => state.interestPoint.isEditing)
+
+  const [isEyeOpen, setIsEyeOpen] = useState(true)
+
+  useEffect(() => {
+    dispatch(setDisplayedItems({ displayInterestPointLayer: isEyeOpen }))
+    if (isEyeOpen) {
+      dispatch(startDrawingInterestPoint())
+    } else {
+      dispatch(endDrawingInterestPoint())
+    }
+  }, [dispatch, isEyeOpen])
+
+  // TODO: Modifier monitor-ui pour changer le typage des children de  undefined à ReactNode
+  const textButton = `${isEditing ? 'Enregistrer' : 'Créer'} le point`
 
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
-    if (!interestPointBeingDrawed?.coordinates?.length) {
+    if (!currentInterestPoint?.coordinates?.length) {
       return []
     }
 
     const [latitude, longitude] = getCoordinates(
-      interestPointBeingDrawed.coordinates,
+      currentInterestPoint.coordinates,
       OPENLAYERS_PROJECTION,
       CoordinatesFormat.DECIMAL_DEGREES,
       false
@@ -53,34 +72,34 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     }
 
     return [parseFloat(latitude.replace(/°/g, '')), parseFloat(longitude.replace(/°/g, ''))]
-  }, [interestPointBeingDrawed?.coordinates])
+  }, [currentInterestPoint?.coordinates])
 
   const updateName = useCallback(
-    name => {
-      if (interestPointBeingDrawed?.name !== name) {
+    (name: string | undefined) => {
+      if (currentInterestPoint?.name !== name) {
         dispatch(
-          updateInterestPointKeyBeingDrawed({
+          updateInterestPointByProperty({
             key: 'name',
             value: name
           })
         )
       }
     },
-    [dispatch, interestPointBeingDrawed?.name]
+    [dispatch, currentInterestPoint?.name]
   )
 
   const updateObservations = useCallback(
-    observations => {
-      if (interestPointBeingDrawed?.observations !== observations) {
+    (observations: string | undefined) => {
+      if (currentInterestPoint?.observations !== observations) {
         dispatch(
-          updateInterestPointKeyBeingDrawed({
+          updateInterestPointByProperty({
             key: 'observations',
             value: observations
           })
         )
       }
     },
-    [dispatch, interestPointBeingDrawed?.observations]
+    [dispatch, currentInterestPoint?.observations]
   )
 
   /**
@@ -97,11 +116,10 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
             return
           }
 
-          setLocalCoordinates(nextCoordinates)
           // Convert to [longitude, latitude] and OpenLayers projection
           const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
           dispatch(
-            updateInterestPointKeyBeingDrawed({
+            updateInterestPointByProperty({
               key: 'coordinates',
               value: updatedCoordinates
             })
@@ -111,18 +129,11 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     },
     [dispatch]
   )
-
   const saveInterestPoint = () => {
     if (coordinates?.length > 0) {
       dispatch(saveInterestPointFeature())
       dispatch(addInterestPoint())
       close()
-
-      if (!isEditing) {
-        const formattedCoordinates = [localCoordinates[1], localCoordinates[0]] as Coordinate
-        const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-        dispatch(setFitToExtent(extent))
-      }
     }
   }
 
@@ -134,19 +145,15 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     <MapMenuDialog.Container data-cy="save-interest-point">
       <MapMenuDialog.Header>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
-        <MapMenuDialog.Title>Créer un point d&apos;intérêt</MapMenuDialog.Title>
+        <MapMenuDialog.Title data-cy="interest-point-title">
+          {isEditing ? 'Éditer' : 'Créer'} un point d&apos;intérêt
+        </MapMenuDialog.Title>
         <MapMenuDialog.VisibilityButton
           accent={Accent.SECONDARY}
           data-cy="hide-all-interest-point"
-          Icon={displayInterestPointLayer ? Icon.Display : Icon.Hide}
+          Icon={isEyeOpen ? Icon.Display : Icon.Hide}
           onClick={() => {
-            dispatch(setDisplayedItems({ displayInterestPointLayer: !displayInterestPointLayer }))
-            if (displayInterestPointLayer) {
-              dispatch(endInterestPointDraw())
-              dispatch(deleteInterestPointBeingDrawed())
-            } else {
-              dispatch(drawInterestPoint())
-            }
+            setIsEyeOpen(!isEyeOpen)
           }}
         />
       </MapMenuDialog.Header>
@@ -158,7 +165,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           label="Libellé du point"
           name="name"
           onChange={updateName}
-          value={interestPointBeingDrawed?.name ?? ''}
+          value={currentInterestPoint?.name ?? ''}
         />
 
         <Textarea
@@ -166,12 +173,12 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           label="Observations"
           name="observations"
           onChange={updateObservations}
-          value={interestPointBeingDrawed?.observations ?? ''}
+          value={currentInterestPoint?.observations ?? ''}
         />
       </StyledDialogBody>
       <MapMenuDialog.Footer>
         <Button data-cy="interest-point-save" onClick={saveInterestPoint}>
-          Créer le point
+          {textButton}
         </Button>
         <Button accent={Accent.SECONDARY} disabled={isEditing} onClick={cancel}>
           Annuler
