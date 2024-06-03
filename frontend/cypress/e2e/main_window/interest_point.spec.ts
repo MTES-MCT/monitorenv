@@ -107,6 +107,16 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-coordinates').should('not.exist')
     })
 
+    it('not saved should be deleted when closing interest point tool', () => {
+      // When
+      cy.getDataCy('interest-point').click()
+      cy.get('#root').click(490, 580)
+      cy.getDataCy('interest-point').click()
+
+      // Then
+      cy.getDataCy('interest-point-coordinates').should('not.exist')
+    })
+
     it('in drawing mode should be stopped when closing the interest point tool', () => {
       // When
       cy.getDataCy('interest-point').click()

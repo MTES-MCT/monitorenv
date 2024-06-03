@@ -1,16 +1,20 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { EditInterestPoint } from '@features/InterestPoint/components/EditInterestPoint'
-import { endDrawingInterestPoint, startDrawingInterestPoint } from '@features/InterestPoint/slice'
+import {
+  endDrawingInterestPoint,
+  removeUnsavedInterestPoint,
+  startDrawingInterestPoint
+} from '@features/InterestPoint/slice'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { MapToolType } from '../../../../domain/entities/map/constants'
-import { globalActions, setDisplayedItems } from '../../../../domain/shared_slices/Global'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
-import { ButtonWrapper } from '../../../MainWindow/components/RightMenu/ButtonWrapper'
+import { MapToolType } from '../../../domain/entities/map/constants'
+import { globalActions, setDisplayedItems } from '../../../domain/shared_slices/Global'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useEscapeFromKeyboardAndExecute } from '../../../hooks/useEscapeFromKeyboardAndExecute'
+import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapper'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
@@ -25,6 +29,7 @@ export function InterestPointMapButton() {
       dispatch(startDrawingInterestPoint())
     } else {
       dispatch(endDrawingInterestPoint())
+      dispatch(removeUnsavedInterestPoint())
     }
   }, [dispatch, isOpen])
 

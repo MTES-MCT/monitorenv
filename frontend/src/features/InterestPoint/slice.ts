@@ -76,6 +76,12 @@ const interestPointSlice = createSlice({
       }
     },
 
+    removeUnsavedInterestPoint(state) {
+      if (!state.interestPoints.find(interestPoint => interestPoint.uuid === state.currentInterestPoint.uuid)) {
+        state.currentInterestPoint = newInterestPoint()
+      }
+    },
+
     /**
      * Start drawing an interest point
      */
@@ -122,6 +128,7 @@ export const {
   endDrawingInterestPoint,
   removeCurrentInterestPoint,
   removeInterestPoint,
+  removeUnsavedInterestPoint,
   startDrawingInterestPoint,
   updateCurrentInterestPoint,
   updateInterestPointByProperty

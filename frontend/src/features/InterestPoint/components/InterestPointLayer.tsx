@@ -1,17 +1,17 @@
 import {
-  removeInterestPoint,
+  editInterestPoint,
   endDrawingInterestPoint,
   removeCurrentInterestPoint,
-  editInterestPoint,
+  removeInterestPoint,
   updateCurrentInterestPoint,
   updateInterestPointByProperty
 } from '@features/InterestPoint/slice'
 import { saveInterestPointFeature } from '@features/InterestPoint/use_cases/saveInterestPointFeature'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { usePrevious, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { OPENLAYERS_PROJECTION, usePrevious } from '@mtes-mct/monitor-ui'
 import { InterestPointLine } from 'domain/entities/interestPointLine'
-import { coordinatesOrTypeAreModified, coordinatesAreModified } from 'domain/entities/interestPoints'
+import { coordinatesAreModified, coordinatesOrTypeAreModified } from 'domain/entities/interestPoints'
 import { Layers } from 'domain/entities/layers/constants'
 import { MapToolType } from 'domain/entities/map/constants'
 import { globalActions } from 'domain/shared_slices/Global'
@@ -21,15 +21,17 @@ import { Draw } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
-import { useState, useCallback, useRef, type MutableRefObject, useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
 
-import { getLineStyle, getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
-import { InterestPointOverlay } from '../overlays/InterestPointOverlay'
+import { InterestPointOverlay } from './InterestPointOverlay'
+import { POIStyle, getInterestPointStyle, getLineStyle } from '../../map/layers/styles/interestPoint.style'
+import { removeLine, removePoint, removeResidualElement } from '../utils'
 
-import type { BaseMapChildrenProps } from '../BaseMap'
+import type { BaseMapChildrenProps } from '../../map/BaseMap'
 import type { NewInterestPoint } from '@features/InterestPoint/types'
 import type { Feature } from 'ol'
 import type { Coordinate } from 'ol/coordinate'
+import type { FeatureLike } from 'ol/Feature'
 import type { DrawEvent } from 'ol/interaction/Draw'
 
 const DRAW_START_EVENT = 'drawstart'
@@ -51,10 +53,21 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   const [interestsPointsToCoordinate, setInterestsPointsToCoordinate] = useState(new Map())
   const previousInterestPoint = usePrevious<NewInterestPoint>(currentInterestPoint)
 
+  const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
+
+  const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
+
+  // Clean residual interest point from layer when closing
+  useEffect(() => {
+    if (!isOpen) {
+      removeResidualElement(currentInterestPoint.uuid, interestPoints, interestPointVectorSourceRef)
+    }
+  }, [currentInterestPoint.uuid, interestPoints, isOpen])
+
   const deleteInterestPoint = useCallback(
     (uuid: string) => {
-      removePoint(uuid)
-      removeLine(uuid)
+      removePoint(uuid, interestPointVectorSourceRef)
+      removeLine(uuid, interestPointVectorSourceRef)
       dispatch(removeInterestPoint(uuid))
       dispatch(globalActions.setIsMapToolVisible(undefined))
     },
@@ -63,8 +76,8 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
   const deleteCurrentInterestPoint = useCallback(
     (uuid: string) => {
-      removePoint(uuid)
-      removeLine(uuid)
+      removePoint(uuid, interestPointVectorSourceRef)
+      removeLine(uuid, interestPointVectorSourceRef)
       dispatch(removeCurrentInterestPoint())
       dispatch(globalActions.setIsMapToolVisible(undefined))
     },
@@ -88,29 +101,16 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     [interestsPointsToCoordinate]
   )
 
-  const removeResidualElement = useCallback(
-    (uuid: string) => {
-      function isNotPersisted() {
-        return !interestPoints.find(interestPoint => interestPoint.uuid === uuid)
-      }
-      if (isNotPersisted()) {
-        removeLine(uuid)
-        removePoint(uuid)
-      }
-    },
-    [interestPoints]
-  )
-
   const modifyInterestPoint = useCallback(
     (uuid: string) => {
       // FIXME (30/05/2024): find another solution to remove residual point
-      removeResidualElement(currentInterestPoint.uuid)
+      removeResidualElement(currentInterestPoint.uuid, interestPoints, interestPointVectorSourceRef)
 
       dispatch(globalActions.hideSideButtons())
       dispatch(editInterestPoint(uuid))
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     },
-    [currentInterestPoint.uuid, dispatch, removeResidualElement]
+    [currentInterestPoint.uuid, dispatch, interestPoints]
   )
 
   const interestPointVectorSourceRef = useRef(new VectorSource({ wrapX: false })) as MutableRefObject<
@@ -321,7 +321,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     return interestPoints.find(interestPoint => interestPoint.uuid === uuid)
   }
 
-  function isFeatureIsALine(feature) {
+  function isFeatureIsALine(feature: FeatureLike) {
     return feature?.getId()?.toString()?.includes('line')
   }
 
@@ -340,23 +340,6 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       if (geometry) {
         existingLabelLineFeature.setGeometry(new LineString([nextCoordinates, geometry.getFlatCoordinates()]))
       }
-    }
-  }
-
-  function removeLine(uuid: string) {
-    const featureLine = interestPointVectorSourceRef.current.getFeatureById(InterestPointLine.getFeatureId(uuid))
-    if (featureLine) {
-      interestPointVectorSourceRef.current.removeFeature(featureLine)
-      interestPointVectorSourceRef.current.changed()
-    }
-  }
-
-  function removePoint(uuid: string) {
-    const feature = interestPointVectorSourceRef.current.getFeatureById(uuid)
-
-    if (feature) {
-      interestPointVectorSourceRef.current.removeFeature(feature)
-      interestPointVectorSourceRef.current.changed()
     }
   }
 }
