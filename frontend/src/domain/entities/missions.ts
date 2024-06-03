@@ -6,6 +6,7 @@ import type { DetachedReportingForTimeline, ReportingDetailed, ReportingForTimel
 import type { SeaFrontEnum } from './seaFrontType'
 import type { VesselTypeEnum } from './vesselType'
 import type { FishMissionAction } from '@features/missions/fishActions.types'
+import type { RapportNavMissionAction } from '@features/missions/rapportNavActions.types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const CIRCULAR_ZONE_RADIUS = 2000
@@ -225,6 +226,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   fishActions: FishMissionAction.MissionAction[]
   geom?: GeoJSON.MultiPolygon
   hasMissionOrder?: boolean
+  hasRapportNavActions: RapportNavMissionAction.MissionAction
   id: number
   isGeometryComputedFromControls: boolean
   isUnderJdp?: boolean

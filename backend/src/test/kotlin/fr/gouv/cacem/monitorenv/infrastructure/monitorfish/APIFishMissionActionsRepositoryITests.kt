@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class APIMissionActionsRepositoryITests {
+class APIFishMissionActionsRepositoryITests {
 
     @Test
     fun `findFishMissionActionsById Should return the mission actions with array of actions`() {
@@ -30,7 +30,7 @@ class APIMissionActionsRepositoryITests {
             monitorfishProperties.xApiKey = "TEST"
 
             // When
-            val missionActions = APIMissionActionsRepository(apiClient, monitorfishProperties)
+            val missionActions = APIFishMissionActionsRepository(apiClient, monitorfishProperties)
                 .findFishMissionActionsById(1)
             assertThat(missionActions).isNotEmpty
         }
@@ -54,7 +54,7 @@ class APIMissionActionsRepositoryITests {
             monitorfishProperties.xApiKey = "TEST"
 
             // When
-            val missionActions = APIMissionActionsRepository(apiClient, monitorfishProperties)
+            val missionActions = APIFishMissionActionsRepository(apiClient, monitorfishProperties)
                 .findFishMissionActionsById(1)
             assertThat(missionActions).isEmpty()
         }

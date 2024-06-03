@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
 @Repository
-class APIMissionActionsRepository(
+class APIFishMissionActionsRepository(
     val apiClient: ApiClient,
     val monitorfishProperties: MonitorfishProperties,
 ) : IMonitorFishMissionActionsRepository {
-    private val logger: Logger = LoggerFactory.getLogger(APIMissionActionsRepository::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(APIFishMissionActionsRepository::class.java)
 
     override fun findFishMissionActionsById(missionId: Int): List<MonitorFishMissionActionEntity> {
         val missionActionsUrl =
