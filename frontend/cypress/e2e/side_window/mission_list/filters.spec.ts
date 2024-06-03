@@ -8,7 +8,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   afterEach(() => {
-    cy.getDataCy('reinitialize-filters').click()
+    cy.getDataCy('reinitialize-filters').scrollIntoView().click()
   })
 
   it('Should filter missions for the current day', () => {
