@@ -1,5 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction
 
+import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
+
 data class InfractionEntity(
     val id: String,
     val natinf: List<String>? = listOf(),

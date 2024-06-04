@@ -214,7 +214,7 @@ export function ControlForm({
       const reporting = attachedReportings[reportingToAttachIndex]
 
       if (reporting) {
-        const resetInfraction = {
+        const newInfraction = {
           companyName: undefined,
           controlledPersonIdentity: undefined,
           imo: undefined,
@@ -241,20 +241,20 @@ export function ControlForm({
 
             case ReportingTargetTypeEnum.COMPANY:
               return {
-                ...resetInfraction,
+                ...newInfraction,
                 companyName: target?.operatorName,
                 controlledPersonIdentity: target?.vesselName
               }
 
             case ReportingTargetTypeEnum.INDIVIDUAL:
               return {
-                ...resetInfraction,
+                ...newInfraction,
                 controlledPersonIdentity: target?.vesselName
               }
 
             case ReportingTargetTypeEnum.OTHER:
             default:
-              return resetInfraction
+              return newInfraction
           }
         })
 

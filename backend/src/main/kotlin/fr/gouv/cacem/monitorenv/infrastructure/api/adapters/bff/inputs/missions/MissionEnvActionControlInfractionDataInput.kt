@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
+import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 
 data class MissionEnvActionControlInfractionDataInput(
     val id: String,

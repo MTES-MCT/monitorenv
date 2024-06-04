@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
@@ -198,26 +196,7 @@ class MissionsITests {
                 actionNumberOfControls = 2,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VEHICLE_LAND,
-                infractions =
-                listOf(
-                    InfractionEntity(
-                        id = "d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b",
-                        natinf = listOf("27001"),
-                        observations = "Observations de l'infraction",
-                        registrationNumber = "AB-123-CD",
-                        companyName = "Company Name",
-                        relevantCourt = "LOCAL_COURT",
-                        infractionType = InfractionTypeEnum.WAITING,
-                        formalNotice = FormalNoticeEnum.NO,
-                        toProcess = false,
-                        controlledPersonIdentity = "Captain Flame",
-                        vesselType = VesselTypeEnum.COMMERCIAL,
-                        vesselSize = 23,
-                        vesselName = "Vessel Name",
-                        mmsi = "123456789",
-                        imo = "987654321",
-                    ),
-                ),
+                infractions = TestUtils.getControlInfraction(),
             )
 
         val expectedFirstMission =
@@ -512,26 +491,7 @@ class MissionsITests {
                 actionNumberOfControls = 2,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VEHICLE_LAND,
-                infractions =
-                listOf(
-                    InfractionEntity(
-                        id = "d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b",
-                        natinf = listOf("27001"),
-                        observations = "Observations de l'infraction",
-                        registrationNumber = "AB-123-CD",
-                        companyName = "Company Name",
-                        relevantCourt = "LOCAL_COURT",
-                        infractionType = InfractionTypeEnum.WAITING,
-                        formalNotice = FormalNoticeEnum.NO,
-                        toProcess = false,
-                        controlledPersonIdentity = "Captain Flame",
-                        vesselType = VesselTypeEnum.COMMERCIAL,
-                        vesselSize = 23,
-                        vesselName = "Vessel Name",
-                        mmsi = "123456789",
-                        imo = "987654321",
-                    ),
-                ),
+                infractions = TestUtils.getControlInfraction(),
             )
 
         val expectedFirstMission =

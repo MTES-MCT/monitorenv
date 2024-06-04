@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
@@ -17,7 +18,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable

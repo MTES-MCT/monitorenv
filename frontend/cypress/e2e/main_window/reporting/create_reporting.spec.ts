@@ -92,7 +92,6 @@ context('Reporting', () => {
     cy.get('#root').click(582, 546, { timeout: 10000 })
     cy.wait(250)
     cy.clickButton('Lier à la mission')
-    cy.wait(500)
 
     // Then
     cy.waitForLastRequest(
@@ -127,7 +126,6 @@ context('Reporting', () => {
 
     // When
     cy.clickButton('Détacher la mission')
-    cy.wait(1000)
 
     // Then
     cy.wait('@updateReporting').then(interception => {
@@ -267,7 +265,6 @@ context('Reporting', () => {
       cy.fill('Immatriculation', 'ABC123')
       cy.fill('Taille', 45)
       cy.fill('Type de navire', 'Commerce')
-      cy.wait(250)
 
       cy.waitForLastRequest(
         '@updateReporting',
