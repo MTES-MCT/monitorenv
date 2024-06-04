@@ -57,7 +57,7 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
     api("org.springframework.boot:spring-boot-configuration-processor:3.2.5")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     api("com.neovisionaries:nv-i18n:1.29")
     api("org.http4k:http4k-client-apache:5.10.4.0")
     api("com.google.code.gson:gson:2.10.1")
