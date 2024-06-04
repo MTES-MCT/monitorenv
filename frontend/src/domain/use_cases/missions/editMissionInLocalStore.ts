@@ -32,7 +32,8 @@ export const editMissionInLocalStore =
         dispatch(
           setToast({
             containerId: 'sideWindow',
-            message: 'Problème de communication avec MonitorFish: impossible de récupérer les actions du CNSP',
+            message:
+              "Problème de communication avec MonitorFish ou RapportNav: impossible de récupérer les événements du CNSP ou de l'unité",
             type: ErrorType.WARNING
           })
         )
