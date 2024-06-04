@@ -5,12 +5,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
 class CanDeleteMission(
     private val missionRepository: IMissionRepository,
     private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
+    private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository,
 ) {
     private val logger = LoggerFactory.getLogger(CanDeleteMission::class.java)
 
@@ -19,21 +21,48 @@ class CanDeleteMission(
         logger.info("Check if mission $missionId can be deleted")
 
         if (source == MissionSourceEnum.MONITORFISH) {
-            val envActions = missionRepository.findById(missionId).envActions
-            if (!envActions.isNullOrEmpty()) {
-                return CanDeleteMissionResponse(
-                    canDelete = false,
-                    sources = listOf(MissionSourceEnum.MONITORENV),
-                )
-            }
-
-            return CanDeleteMissionResponse(canDelete = true, sources = listOf())
+            return canMonitorFishDeleteMission(missionId)
         }
 
+        return canMonitorEnvDeleteMission(missionId)
+    }
+
+    private fun canMonitorFishDeleteMission(missionId: Int): CanDeleteMissionResponse {
+        val envActions = missionRepository.findById(missionId).envActions
+        if (!envActions.isNullOrEmpty()) {
+            return CanDeleteMissionResponse(
+                canDelete = false,
+                sources = listOf(MissionSourceEnum.MONITORENV),
+            )
+        }
+
+        return CanDeleteMissionResponse(canDelete = true, sources = listOf())
+    }
+
+    private fun canMonitorEnvDeleteMission(missionId: Int): CanDeleteMissionResponse {
         try {
             val fishActions =
                 monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)
-            if (fishActions.isNotEmpty()) {
+
+            val rapportNavActions = rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)
+
+            if (fishActions.isNotEmpty() && rapportNavActions.containsActionsAddedByUnit) {
+                return CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.MONITORFISH, MissionSourceEnum.RAPPORT_NAV),
+                )
+            }
+
+            if (fishActions.isEmpty() && rapportNavActions.containsActionsAddedByUnit) {
+                return CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.RAPPORT_NAV),
+                )
+            }
+
+            if (fishActions.isNotEmpty() &&
+                !rapportNavActions.containsActionsAddedByUnit
+            ) {
                 return CanDeleteMissionResponse(
                     canDelete = false,
                     sources = listOf(MissionSourceEnum.MONITORFISH),

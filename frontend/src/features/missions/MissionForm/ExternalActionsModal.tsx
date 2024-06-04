@@ -1,4 +1,5 @@
 import { Button, Dialog, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { MissionSourceEnum } from '../../../domain/entities/missions'
@@ -11,6 +12,19 @@ type ExternalActionsModalProps = {
 
 export function ExternalActionsModal({ onClose, open, sources }: ExternalActionsModalProps) {
   const isCNSP = sources.includes(MissionSourceEnum.MONITORFISH)
+  const isRapportNav = sources.includes(MissionSourceEnum.RAPPORT_NAV)
+
+  const sourceText = useMemo(() => {
+    if (isCNSP && !isRapportNav) {
+      return 'le CNSP'
+    }
+
+    if (!isCNSP && isRapportNav) {
+      return "l'unité"
+    }
+
+    return "le CNSP et l'unité"
+  }, [isCNSP, isRapportNav])
 
   return (
     open && (
@@ -20,13 +34,11 @@ export function ExternalActionsModal({ onClose, open, sources }: ExternalActions
           <Alert>
             <Icon.Attention color={THEME.color.maximumRed} size={30} />
           </Alert>
-          <Text>{`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${
-            isCNSP ? 'le CNSP' : ''
-          }.`}</Text>
+          <Text>{`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}</Text>
           <Bold>
-            {`Si vous souhaitez tout de même la supprimer, veuillez contacter  ${
-              isCNSP ? 'le CNSP' : ''
-            } pour qu'il supprime d'abord
+            {`Si vous souhaitez tout de même la supprimer, veuillez contacter ${sourceText} pour qu'${
+              isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'
+            } d'abord
             ses événements.`}
           </Bold>
         </Dialog.Body>
