@@ -28,15 +28,37 @@ class CanDeleteMission(
     }
 
     private fun canMonitorFishDeleteMission(missionId: Int): CanDeleteMissionResponse {
-        val envActions = missionRepository.findById(missionId).envActions
-        if (!envActions.isNullOrEmpty()) {
-            return CanDeleteMissionResponse(
-                canDelete = false,
-                sources = listOf(MissionSourceEnum.MONITORENV),
-            )
-        }
+        try {
+            val envActions = missionRepository.findById(missionId).envActions
+            val rapportNavActions = rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)
 
-        return CanDeleteMissionResponse(canDelete = true, sources = listOf())
+            if (!envActions.isNullOrEmpty() && rapportNavActions.containsActionsAddedByUnit) {
+                return CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.RAPPORT_NAV),
+                )
+            }
+
+            if (envActions.isNullOrEmpty() && rapportNavActions.containsActionsAddedByUnit) {
+                return CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.RAPPORT_NAV),
+                )
+            }
+
+            if (!envActions.isNullOrEmpty() &&
+                !rapportNavActions.containsActionsAddedByUnit
+            ) {
+                return CanDeleteMissionResponse(
+                    canDelete = false,
+                    sources = listOf(MissionSourceEnum.MONITORENV),
+                )
+            }
+
+            return CanDeleteMissionResponse(canDelete = true, sources = listOf())
+        } catch (e: NoSuchElementException) {
+            return CanDeleteMissionResponse(canDelete = false, sources = listOf())
+        }
     }
 
     private fun canMonitorEnvDeleteMission(missionId: Int): CanDeleteMissionResponse {

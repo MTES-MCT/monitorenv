@@ -34,7 +34,7 @@ export function ExternalActionsModal({ onClose, open, sources }: ExternalActions
           <Alert>
             <Icon.Attention color={THEME.color.maximumRed} size={30} />
           </Alert>
-          <Text>{`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}</Text>
+          <Text data-cy="external-action-modal-text">{`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}</Text>
           <Bold>
             {`Si vous souhaitez tout de même la supprimer, veuillez contacter ${sourceText} pour qu'${
               isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'
