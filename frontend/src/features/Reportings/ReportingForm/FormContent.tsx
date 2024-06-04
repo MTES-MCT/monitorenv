@@ -18,7 +18,7 @@ import {
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { AttachMission } from './AttachMission'
@@ -68,8 +68,14 @@ import {
   StyledItalic,
   StyledInfractionProven
 } from '../style'
+import { isNewReporting } from '../utils'
 
 import type { AtLeast } from '../../../types'
+
+const WITH_VHF_ANSWER_OPTIONS = [
+  { label: 'Oui', value: true },
+  { label: 'Non', value: false }
+]
 
 type FormContentProps = {
   reducedReportingsOnContext: number
@@ -78,6 +84,10 @@ type FormContentProps = {
 
 export function FormContent({ reducedReportingsOnContext, selectedReporting }: FormContentProps) {
   const dispatch = useAppDispatch()
+
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [scrollTop, setScrollTop] = useState(0)
+  const { scrollPosition, setScrollPosition } = useReportingEventContext()
 
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
@@ -129,10 +139,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
 
   const infractionProvenOptions = Object.values(InfractionProvenLabels)
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
-  const withVHFAnswerOptions = [
-    { label: 'Oui', value: true },
-    { label: 'Non', value: false }
-  ]
+
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
     setFieldValue('isControlRequired', reportType === ReportingTypeEnum.INFRACTION_SUSPICION)
@@ -212,6 +219,10 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   }
 
   const validateBeforeOnChange = useDebouncedCallback(async nextValues => {
+    if (scrollPosition !== 0) {
+      setScrollPosition(0)
+    }
+
     const formErrors = await validateForm()
     const isValid = isEmpty(formErrors)
 
@@ -222,7 +233,13 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     if (!shouldSaveReporting(selectedReporting, reportingEvent, nextValues)) {
       return
     }
-    dispatch(saveReporting(nextValues, reportingContext))
+
+    const reportingIsNew = isNewReporting(values.id)
+
+    if (reportingIsNew) {
+      setScrollPosition(scrollTop)
+    }
+    await dispatch(saveReporting(nextValues, reportingContext))
   }, 250)
 
   useEffect(() => {
@@ -247,6 +264,19 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     // there's no need to listen for changes in `values`, since `updatedAtUtc` is read-only
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedReporting?.updatedAtUtc, isAutoSaveEnabled, reportingEvent])
+
+  useEffect(() => {
+    if (scrollPosition && scrollRef.current) {
+      scrollRef.current.scrollTo({ top: scrollPosition })
+    }
+    // when we created a reporting we replace the form with the form created with its id
+    // and we want to keep the scroll position of the form
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const onScroll = e => {
+    setScrollTop(e.currentTarget.scrollTop)
+  }
 
   if (!selectedReporting || isEmpty(values)) {
     return null
@@ -288,7 +318,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         )}
         <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
       </SaveBanner>
-      <StyledForm $totalReducedReportings={reducedReportingsOnContext}>
+      <StyledForm ref={scrollRef} $totalReducedReportings={reducedReportingsOnContext} onScroll={onScroll}>
         <Source />
         <Target />
         <Position />
@@ -317,7 +347,12 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
             theme={themeField?.value}
           />
           {values.themeId === INDIVIDUAL_ANCHORING_THEME_ID && (
-            <FormikMultiRadio isInline label="Réponse à la VHF" name="withVHFAnswer" options={withVHFAnswerOptions} />
+            <FormikMultiRadio
+              isInline
+              label="Réponse à la VHF"
+              name="withVHFAnswer"
+              options={WITH_VHF_ANSWER_OPTIONS}
+            />
           )}
         </StyledThemeContainer>
 

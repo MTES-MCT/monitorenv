@@ -1,5 +1,6 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 
+import { Title } from './FormComponents/Title'
 import { ReportingStatusEnum, getReportingStatus, type ReportingDetailed } from '../../../domain/entities/reporting'
 import { ReportingContext } from '../../../domain/shared_slices/Global'
 import { closeReporting } from '../../../domain/use_cases/reporting/closeReporting'
@@ -14,7 +15,6 @@ import {
   ReportingTitle,
   StyledArchivedTag
 } from '../style'
-import { getReportingTitle } from '../utils'
 
 import type { AtLeast } from '../../../types'
 
@@ -52,7 +52,7 @@ export function Header({
       <ReportingTitle data-cy="reporting-title">
         <ReportingInfosContainer>
           <Icon.Report />
-          {getReportingTitle(reporting)}
+          <Title reporting={reporting} />
         </ReportingInfosContainer>
         <div>{statusTag()}</div>
       </ReportingTitle>

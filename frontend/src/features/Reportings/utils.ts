@@ -1,14 +1,8 @@
 import { customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
-import styled from 'styled-components'
 
-import { ReportingInfos } from './style'
 import { ReportingSourceEnum, type Reporting, type TargetDetails } from '../../domain/entities/reporting'
-import {
-  ReportingTargetTypeLabels,
-  ReportingTargetTypeEnum,
-  GENERIC_TARGET_TYPE
-} from '../../domain/entities/targetType'
+import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../domain/entities/targetType'
 import { vehicleTypeLabels, type VehicleTypeEnum } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
@@ -29,35 +23,6 @@ export function isNewReporting(id: string | number | undefined) {
   }
 
   return id?.toString().includes('new') ?? false
-}
-
-export const getReportingTitle = reporting => {
-  if (!reporting) {
-    return undefined
-  }
-  const { id, reportingId } = reporting || {}
-
-  if (isNewReporting(id)) {
-    return `NOUVEAU SIGNALEMENT (${String(id).slice(4)})`
-  }
-
-  const targetAsText = getTargetDetailsAsText({
-    description: reporting.description,
-    targetDetails: reporting.targetDetails,
-    targetType: reporting.targetType,
-    vehicleType: reporting.vehicleType
-  })
-
-  return (
-    <ReportingInfos>
-      <span>{`${getFormattedReportingId(reportingId)} - `}</span>
-      {GENERIC_TARGET_TYPE.includes(targetAsText) ? (
-        <ItalicTarget title={targetAsText}>{targetAsText}</ItalicTarget>
-      ) : (
-        <span title={targetAsText}>{targetAsText}</span>
-      )}
-    </ReportingInfos>
-  )
 }
 
 export const createIdForNewReporting = reportings => {
@@ -157,6 +122,3 @@ export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetails
 export function getTimeLeft(endOfValidity) {
   return customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 }
-const ItalicTarget = styled.span`
-  font-style: italic;
-`

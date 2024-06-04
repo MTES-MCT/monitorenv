@@ -1,4 +1,5 @@
 import { Accent, Button, Icon, IconButton, Tag } from '@mtes-mct/monitor-ui'
+import { vesselTypeLabel, type VesselTypeEnum } from 'domain/entities/vesselType'
 import { useField } from 'formik'
 import styled, { css } from 'styled-components'
 
@@ -6,8 +7,6 @@ import {
   FormalNoticeEnum,
   InfractionTypeEnum,
   infractionTypeLabels,
-  VesselTypeEnum,
-  vesselTypeLabel,
   type EnvActionControl,
   type Infraction
 } from '../../../../../domain/entities/missions'

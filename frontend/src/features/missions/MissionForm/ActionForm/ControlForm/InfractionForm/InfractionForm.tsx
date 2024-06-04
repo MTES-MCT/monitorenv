@@ -40,11 +40,13 @@ export function InfractionForm({
         <InfractionFormHeaderCompany infractionPath={infractionPath} />
       )}
 
-      <FormikTextInput
-        data-cy="infraction-form-controlledPersonIdentity"
-        label="Identité de la personne contrôlée"
-        name={`${infractionPath}.controlledPersonIdentity`}
-      />
+      {actionTargetField.value !== TargetTypeEnum.VEHICLE && (
+        <FormikTextInput
+          data-cy="infraction-form-controlledPersonIdentity"
+          label="Identité de la personne contrôlée"
+          name={`${infractionPath}.controlledPersonIdentity`}
+        />
+      )}
 
       <FormikMultiRadio
         isErrorMessageHidden

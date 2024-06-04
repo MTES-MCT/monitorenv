@@ -1,36 +1,42 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
+import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 
 data class MissionEnvActionControlInfractionDataInput(
     val id: String,
+    val companyName: String? = null,
+    val controlledPersonIdentity: String? = null,
+    val formalNotice: FormalNoticeEnum,
+    val imo: String? = null,
+    val infractionType: InfractionTypeEnum,
+    val mmsi: String? = null,
     val natinf: List<String>? = listOf(),
     val observations: String? = null,
     val registrationNumber: String? = null,
-    val companyName: String? = null,
     val relevantCourt: String? = null,
-    val infractionType: InfractionTypeEnum,
-    val formalNotice: FormalNoticeEnum,
     val toProcess: Boolean,
-    val controlledPersonIdentity: String? = null,
+    val vesselName: String? = null,
     val vesselType: VesselTypeEnum? = null,
     val vesselSize: Number? = null,
 ) {
     fun toInfractionEntity() =
         InfractionEntity(
             id = id,
+            companyName = companyName,
+            controlledPersonIdentity = controlledPersonIdentity,
+            formalNotice = formalNotice,
+            imo = imo,
+            infractionType = infractionType,
+            mmsi = mmsi,
             natinf = natinf,
             observations = observations,
             registrationNumber = registrationNumber,
-            companyName = companyName,
             relevantCourt = relevantCourt,
-            infractionType = infractionType,
-            formalNotice = formalNotice,
             toProcess = toProcess,
-            controlledPersonIdentity = controlledPersonIdentity,
+            vesselName = vesselName,
             vesselType = vesselType,
             vesselSize = vesselSize,
         )

@@ -4,6 +4,7 @@ import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
 import type { DetachedReportingForTimeline, ReportingDetailed, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
+import type { VesselTypeEnum } from './vesselType'
 import type { FishMissionAction } from '@features/missions/fishActions.types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -129,20 +130,6 @@ export const hasMissionOrderLabels = {
     label: 'Non',
     value: false
   }
-}
-
-export enum VesselTypeEnum {
-  COMMERCIAL = 'COMMERCIAL',
-  FISHING = 'FISHING',
-  MOTOR = 'MOTOR',
-  SAILING = 'SAILING'
-}
-
-export const vesselTypeLabel: Record<VesselTypeEnum, string> = {
-  COMMERCIAL: 'Commerce',
-  FISHING: 'Pêche',
-  MOTOR: 'Moteur',
-  SAILING: 'Voilier'
 }
 
 export enum MissionStatusEnum {
@@ -317,12 +304,15 @@ export type NewInfraction = {
   controlledPersonIdentity?: string | null
   formalNotice?: FormalNoticeEnum
   id: string
+  imo?: string | null
   infractionType?: InfractionTypeEnum
+  mmsi?: string | null
   natinf?: string[]
   observations?: string | null
   registrationNumber?: string | null
   relevantCourt?: string | null
   toProcess: boolean
+  vesselName?: string | null
   vesselSize?: Number | null
   vesselType?: VesselTypeEnum | null
 }

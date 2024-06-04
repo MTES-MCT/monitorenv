@@ -1,3 +1,4 @@
+import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
 import {
   Accent,
   Button,
@@ -109,6 +110,11 @@ export function TargetDetails({ form, push, remove }) {
                       />
                       <FormikNumberInput isLight label="Taille" name={`targetDetails.${index}.size`} />
                     </StyledVesselForm>
+                    <VesselTypeSelector
+                      isLight
+                      name={`targetDetails.${index}.vesselType`}
+                      style={{ marginBottom: '8px', width: '200px' }}
+                    />
                   </>
                 )}
                 {index > 0 && (

@@ -1,4 +1,5 @@
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
+import { createReporting } from '../../utils/createReporting'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
 context('Reporting', () => {
@@ -91,7 +92,6 @@ context('Reporting', () => {
     cy.get('#root').click(582, 546, { timeout: 10000 })
     cy.wait(250)
     cy.clickButton('Lier à la mission')
-    cy.wait(500)
 
     // Then
     cy.waitForLastRequest(
@@ -126,7 +126,6 @@ context('Reporting', () => {
 
     // When
     cy.clickButton('Détacher la mission')
-    cy.wait(1000)
 
     // Then
     cy.wait('@updateReporting').then(interception => {
@@ -247,5 +246,67 @@ context('Reporting', () => {
     // delete reporting
     cy.clickButton('Supprimer le signalement')
     cy.clickButton('Confirmer la suppression')
+  })
+
+  it('Should save target detail when vessel type is "VESSEL"', () => {
+    cy.clickButton('Chercher des signalements')
+    cy.clickButton('Ajouter un signalement')
+    createReporting().then(({ response: createdResponse }) => {
+      const reporting = createdResponse?.body
+      cy.intercept('PUT', `/bff/v1/reportings/${reporting.id}`).as('updateReporting')
+
+      // Fill in the vessel informations
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+      cy.fill('MMSI', '123456789')
+      cy.fill('Nom du navire', 'BALTIK')
+      cy.fill('IMO', 'IMO123')
+      cy.fill('Nom du capitaine', 'John Doe')
+      cy.fill('Immatriculation', 'ABC123')
+      cy.fill('Taille', 45)
+      cy.fill('Type de navire', 'Commerce')
+
+      cy.waitForLastRequest(
+        '@updateReporting',
+        {
+          body: {
+            targetDetails: [
+              {
+                externalReferenceNumber: 'ABC123',
+                imo: 'IMO123',
+                mmsi: '123456789',
+                operatorName: 'John Doe',
+                size: 45,
+                vesselName: 'BALTIK',
+                vesselType: 'COMMERCIAL'
+              }
+            ],
+            targetType: 'VEHICLE',
+            vehicleType: 'VESSEL'
+          }
+        },
+        12,
+        0,
+        response => {
+          // check response
+          const reportingUpdated = response?.body.targetDetails[0]
+          expect(response && response.statusCode).equal(200)
+          expect(response?.body.vehicleType).equal('VESSEL')
+          expect(response?.body.targetType).equal('VEHICLE')
+          expect(reportingUpdated.mmsi).equal('123456789')
+          expect(reportingUpdated.vesselName).equal('BALTIK')
+          expect(reportingUpdated.imo).equal('IMO123')
+          expect(reportingUpdated.operatorName).equal('John Doe')
+          expect(reportingUpdated.externalReferenceNumber).equal('ABC123')
+          expect(reportingUpdated.size).equal(45)
+          expect(reportingUpdated.vesselType).equal('COMMERCIAL')
+
+          // clean
+          cy.wait(250)
+          cy.clickButton('Supprimer le signalement')
+          cy.clickButton('Confirmer la suppression')
+        }
+      )
+    })
   })
 })
