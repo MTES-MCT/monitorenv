@@ -71,7 +71,7 @@ export function ResultListLayerGroup({
           />
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
-          <LayerSelector.ZonesNumber>{`${layerIds.length} / ${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
+          <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           <IconButton
             accent={Accent.TERTIARY}
             aria-label="Sélectionner la/les zone(s)"

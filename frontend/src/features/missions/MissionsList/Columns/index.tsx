@@ -18,7 +18,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
-    size: 135
+    size: 153
   },
   {
     accessorFn: row => row.endDateTimeUtc,
@@ -26,7 +26,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
-    size: 135
+    size: 153
   },
   {
     accessorFn: row => row.facade,
@@ -34,7 +34,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 96
+    size: 110
   },
   {
     accessorFn: row => row.missionTypes,
@@ -42,7 +42,7 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
-    size: 120
+    size: 136
   },
   {
     accessorFn: row => row.controlUnits,
@@ -50,7 +50,7 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
-    size: 256
+    size: 300
   },
 
   {
@@ -59,14 +59,14 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 392
+    size: 444
   },
   {
     accessorFn: row => row.envActions,
     cell: info => getNumberOfControlsCell(info.getValue()),
     header: () => 'Ctr.',
     id: 'envActions',
-    size: 66,
+    size: 75,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => sortNumberOfControls(rowA, rowB, columnId)
   },
   {
@@ -74,7 +74,7 @@ export const Columns = [
     cell: ({ row }) => <CellStatus row={row} />,
     header: () => 'Statut',
     id: 'status',
-    size: 107,
+    size: 121,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
   },
   {
@@ -82,7 +82,7 @@ export const Columns = [
     cell: ({ row }) => <CellCompletionStatus row={row} />,
     header: () => 'État données',
     id: 'completion',
-    size: 127,
+    size: 144,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {
@@ -91,7 +91,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 52
+    size: 56
   },
   {
     accessorFn: row => row.id,
@@ -99,6 +99,6 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'edit',
-    size: 52
+    size: 62
   }
 ]

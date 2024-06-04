@@ -72,7 +72,7 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
           {getTitle(groupName)}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
-          <LayerSelector.NumberOfZones>{`${layers?.length} / ${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
+          <LayerSelector.NumberOfZones>{`${layers?.length}/${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
           <IconButton
             accent={Accent.TERTIARY}
             aria-label={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}

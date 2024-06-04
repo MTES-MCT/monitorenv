@@ -35,7 +35,7 @@ export const Columns = themes => [
     ),
 
     id: 'select',
-    size: 25
+    size: 52
   },
   {
     accessorFn: row => row.reportingId,
@@ -43,7 +43,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'reportingId',
-    size: 95
+    size: 100
   },
   {
     accessorFn: row => row.createdAt,
@@ -51,7 +51,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Date (UTC)',
     id: 'createdAt',
-    size: 135
+    size: 136
   },
   {
     accessorFn: row => row.validityTime,
@@ -59,7 +59,7 @@ export const Columns = themes => [
     enableSorting: false, // TODO see how we can sort on timeLeft and not validityTime
     header: () => 'Fin dans',
     id: 'validityTime',
-    size: 70
+    size: 87
   },
   {
     accessorFn: row => row.displayedSource,
@@ -71,7 +71,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    size: 235
+    size: 208
   },
   {
     accessorFn: row => row.reportType,
@@ -93,7 +93,7 @@ export const Columns = themes => [
     ),
     header: () => 'Cible',
     id: 'targetDetails',
-    size: 165,
+    size: 190,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortTargetDetails(rowA.original, rowB.original)
   },
   {
@@ -102,7 +102,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Thématique',
     id: 'themeId',
-    size: 255,
+    size: 265,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       const themeA: string = themes[rowA.original[columnId]]?.theme ?? ''
       const themeB: string = themes[rowB.original[columnId]]?.theme ?? ''
@@ -116,7 +116,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 115
+    size: 104
   },
   {
     accessorFn: row => row.status,
@@ -124,7 +124,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Statut',
     id: 'isArchived',
-    size: 105,
+    size: 104,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       if (rowA.original[columnId] > rowB.original[columnId]) {
         return -1
@@ -147,7 +147,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 115
+    size: 104
   },
   {
     accessorFn: row => row.geom,
@@ -162,7 +162,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 110
+    size: 98
   },
   {
     accessorFn: row => row.geom,
@@ -170,7 +170,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 55
+    size: 58
   },
   {
     accessorFn: row => row.id,
@@ -178,7 +178,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'id',
-    size: 115
+    size: 110
   }
 ]
 

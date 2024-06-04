@@ -5,12 +5,11 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Columns } from './Columns'
+import { TABLE_WIDTH } from '../../../constants'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
 import type { Mission } from '../../../domain/entities/missions'
-
-const TABLE_WIDTH = 1550
 
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
