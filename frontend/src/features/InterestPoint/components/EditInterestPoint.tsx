@@ -20,10 +20,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import {
-  addInterestPoint,
+  saveInterestPoint,
   endDrawingInterestPoint,
   startDrawingInterestPoint,
-  updateInterestPointByProperty
+  cancelEditingInterestPoint,
+  updateCurrentInterestPoint
 } from '../slice'
 import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
 
@@ -77,29 +78,28 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
   const updateName = useCallback(
     (name: string | undefined) => {
       if (currentInterestPoint?.name !== name) {
-        dispatch(
-          updateInterestPointByProperty({
-            key: 'name',
-            value: name
-          })
-        )
+        const updatedName = name === undefined ? null : name
+
+        const { name: currentName, ...currentInterestPointWithoutName } = currentInterestPoint
+
+        dispatch(updateCurrentInterestPoint({ name: updatedName, ...currentInterestPointWithoutName }))
       }
     },
-    [dispatch, currentInterestPoint?.name]
+    [currentInterestPoint, dispatch]
   )
 
   const updateObservations = useCallback(
     (observations: string | undefined) => {
       if (currentInterestPoint?.observations !== observations) {
+        const updatedObservations = observations === undefined ? null : observations
+        const { observations: currentObservations, ...currentInterestPointWithoutObservations } = currentInterestPoint
+
         dispatch(
-          updateInterestPointByProperty({
-            key: 'observations',
-            value: observations
-          })
+          updateCurrentInterestPoint({ observations: updatedObservations, ...currentInterestPointWithoutObservations })
         )
       }
     },
-    [dispatch, currentInterestPoint?.observations]
+    [currentInterestPoint, dispatch]
   )
 
   /**
@@ -118,26 +118,24 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
 
           // Convert to [longitude, latitude] and OpenLayers projection
           const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+          const { coordinates: currentCoordinates, ...currentInterestPointWithoutCoordinates } = currentInterestPoint
+
           dispatch(
-            updateInterestPointByProperty({
-              key: 'coordinates',
-              value: updatedCoordinates
-            })
+            updateCurrentInterestPoint({ coordinates: updatedCoordinates, ...currentInterestPointWithoutCoordinates })
           )
         }
       }
     },
-    [dispatch]
+    [currentInterestPoint, dispatch]
   )
-  const saveInterestPoint = () => {
-    if (coordinates?.length > 0) {
-      dispatch(saveInterestPointFeature())
-      dispatch(addInterestPoint())
-      close()
-    }
+  const save = () => {
+    dispatch(saveInterestPointFeature())
+    dispatch(saveInterestPoint())
+    close()
   }
 
   const cancel = () => {
+    dispatch(cancelEditingInterestPoint())
     close()
   }
 
@@ -177,10 +175,10 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         />
       </StyledDialogBody>
       <MapMenuDialog.Footer>
-        <Button data-cy="interest-point-save" onClick={saveInterestPoint}>
+        <Button data-cy="interest-point-save" disabled={coordinates.length === 0} onClick={save}>
           {textButton}
         </Button>
-        <Button accent={Accent.SECONDARY} disabled={isEditing} onClick={cancel}>
+        <Button accent={Accent.SECONDARY} data-cy="interest-point-cancel" onClick={cancel}>
           Annuler
         </Button>
       </MapMenuDialog.Footer>

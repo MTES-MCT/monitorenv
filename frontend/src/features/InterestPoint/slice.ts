@@ -31,23 +31,16 @@ const interestPointSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'interestPoint',
   reducers: {
-    /**
-     * Add a new interest point
-     */
-    addInterestPoint(state) {
-      if (!state.isEditing && !!state.currentInterestPoint) {
-        state.interestPoints = state.interestPoints.concat(state.currentInterestPoint as InterestPoint)
-      }
+    cancelEditingInterestPoint(state) {
       state.currentInterestPoint = newInterestPoint()
       state.isEditing = false
     },
-
     /**
      * Edit an existing interest point
      */
     editInterestPoint(state, action: PayloadAction<string>) {
       state.currentInterestPoint =
-        state.interestPoints.find(interestPoint => interestPoint.uuid === action.payload) ?? newInterestPoint()
+        state.interestPoints.find(interestPoint => interestPoint.uuid === action.payload) ?? state.currentInterestPoint
       state.isEditing = true
     },
 
@@ -63,7 +56,6 @@ const interestPointSlice = createSlice({
      */
     removeCurrentInterestPoint(state) {
       removeInterestPoint(state.currentInterestPoint.uuid)
-      state.currentInterestPoint = newInterestPoint()
     },
 
     /**
@@ -73,6 +65,7 @@ const interestPointSlice = createSlice({
       state.interestPoints = state.interestPoints.filter(interestPoint => interestPoint.uuid !== action.payload)
       if (state.currentInterestPoint.uuid === action.payload) {
         state.currentInterestPoint = newInterestPoint()
+        state.isEditing = false
       }
     },
 
@@ -80,6 +73,24 @@ const interestPointSlice = createSlice({
       if (!state.interestPoints.find(interestPoint => interestPoint.uuid === state.currentInterestPoint.uuid)) {
         state.currentInterestPoint = newInterestPoint()
       }
+    },
+
+    /**
+     * Add a new interest point
+     */
+    saveInterestPoint(state) {
+      const index = state.interestPoints.findIndex(
+        interestPoint => interestPoint.uuid === state.currentInterestPoint.uuid
+      )
+
+      if (index === -1) {
+        state.interestPoints.push(state.currentInterestPoint as InterestPoint)
+      } else {
+        state.interestPoints[index] = state.currentInterestPoint as InterestPoint
+      }
+
+      state.currentInterestPoint = newInterestPoint()
+      state.isEditing = false
     },
 
     /**
@@ -94,44 +105,20 @@ const interestPointSlice = createSlice({
      */
     updateCurrentInterestPoint(state, action: PayloadAction<NewInterestPoint>) {
       state.currentInterestPoint = action.payload
-    },
-
-    /**
-     * Update the specified key of the current interest point
-     */
-    updateInterestPointByProperty(
-      state,
-      action: PayloadAction<{
-        key: keyof InterestPoint
-        value: any
-      }>
-    ) {
-      const currentInterestPoint = { ...state.currentInterestPoint }
-
-      currentInterestPoint[action.payload.key] = action.payload.value
-      state.currentInterestPoint = currentInterestPoint
-
-      state.interestPoints = state.interestPoints.map(interestPoint => {
-        if (interestPoint.uuid === state.currentInterestPoint?.uuid) {
-          interestPoint[action.payload.key] = action.payload.value
-        }
-
-        return interestPoint
-      })
     }
   }
 })
 
 export const {
-  addInterestPoint,
+  cancelEditingInterestPoint,
   editInterestPoint,
   endDrawingInterestPoint,
   removeCurrentInterestPoint,
   removeInterestPoint,
   removeUnsavedInterestPoint,
+  saveInterestPoint,
   startDrawingInterestPoint,
-  updateCurrentInterestPoint,
-  updateInterestPointByProperty
+  updateCurrentInterestPoint
 } = interestPointSlice.actions
 
 export const interestPointSlicePersistedReducer = persistReducer(persistConfig, interestPointSlice.reducer)

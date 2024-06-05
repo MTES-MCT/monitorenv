@@ -107,6 +107,24 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-coordinates').should('not.exist')
     })
 
+    it('should retrieve initial attributes when clicking on cancel button', () => {
+      // When
+      cy.getDataCy('interest-point').click()
+      cy.get('#root').click(490, 580)
+      cy.getDataCy('interest-point-name-input').type('Initial point')
+      cy.getDataCy('interest-point-observations-input').type('Est dans la bergerie')
+      cy.getDataCy('interest-point-save').click()
+
+      cy.getDataCy('interest-point-edit').click()
+      cy.getDataCy('interest-point-name-input').clear().type('Edited point')
+      cy.getDataCy('interest-point-observations-input').clear().type("n'est pas dans la bergerie")
+      cy.getDataCy('interest-point-cancel').click()
+
+      // Then
+      cy.getDataCy('interest-point-name').should('contain', 'Initial point')
+      cy.getDataCy('interest-point-observations').should('contain', 'Est dans la bergerie')
+    })
+
     it('not saved should be deleted when closing interest point tool', () => {
       // When
       cy.getDataCy('interest-point').click()
