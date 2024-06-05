@@ -8,7 +8,7 @@ type VesselTypeSelectorProps = {
   name: string
   style?: CSSProperties
 }
-export function VesselTypeSelector({ isLight = false, name, style = { width: '170px' } }: VesselTypeSelectorProps) {
+export function VesselTypeSelector({ isLight = false, name, style }: VesselTypeSelectorProps) {
   const vesselTypeFieldList = getOptionsFromLabelledEnum(vesselTypeLabel)
 
   return (

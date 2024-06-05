@@ -228,7 +228,7 @@ export function ControlForm({
           switch (reporting.targetType) {
             case ReportingTargetTypeEnum.VEHICLE:
               return {
-                controlledPersonIdentity: target?.vesselName ?? target?.operatorName,
+                controlledPersonIdentity: target?.operatorName,
                 registrationNumber: target?.externalReferenceNumber,
                 ...(reporting.vehicleType === VehicleTypeEnum.VESSEL && {
                   imo: target?.imo,

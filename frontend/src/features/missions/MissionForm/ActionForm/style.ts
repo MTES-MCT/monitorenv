@@ -47,7 +47,7 @@ export const ActionThemes = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 70%;
+  max-width: 338px;
 `
 export const StyledAuthorContainer = styled.div`
   display: flex;

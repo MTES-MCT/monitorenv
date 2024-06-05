@@ -1,6 +1,7 @@
-import { CustomSearch, MultiSelect } from '@mtes-mct/monitor-ui'
+import { CustomSearch, MultiSelect, type Option } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
+import styled from 'styled-components'
 
 import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
 
@@ -21,7 +22,7 @@ export function NatinfSelector({ infractionPath }) {
   const [natinfField, meta, natinfHelpers] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
   const { data, isError, isLoading } = useGetInfractionsQuery()
 
-  const sortedNatinfs = useMemo(
+  const sortedNatinfs: Array<Option<string>> = useMemo(
     () =>
       (data &&
         [...data]
@@ -30,9 +31,10 @@ export function NatinfSelector({ infractionPath }) {
       [],
     [data]
   )
-  const setValue = (nextValue: string[] | undefined) => {
+  const setValue = nextValue => {
     natinfHelpers.setValue(nextValue)
   }
+
   const customSearch = useMemo(() => new CustomSearch(sortedNatinfs, ['label', 'value']), [sortedNatinfs])
 
   if (isError) {
@@ -44,7 +46,7 @@ export function NatinfSelector({ infractionPath }) {
   }
 
   return (
-    <MultiSelect
+    <StyledMultiSelect
       block
       customSearch={customSearch}
       error={meta.error}
@@ -53,9 +55,16 @@ export function NatinfSelector({ infractionPath }) {
       label="NATINF"
       name="infraction-natinf"
       onChange={setValue}
-      options={sortedNatinfs}
+      options={sortedNatinfs as Array<Option<string>>}
       searchable
       value={natinfField.value}
     />
   )
 }
+
+const StyledMultiSelect = styled(MultiSelect)`
+  .rs-tag {
+    /* TODO Investigate both these props which are a hack to fix long NATINFs breaking the layout. */
+    max-width: 450px !important;
+  }
+`

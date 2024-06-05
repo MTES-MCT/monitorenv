@@ -46,7 +46,7 @@ export function SubThemesSelector({
       {isError && <Msg>Erreur</Msg>}
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
-        <MultiSelect
+        <StyledMultiSelect
           // force update when name or theme changes
           key={`${actionIndex}-${themeId}-${subThemes.length}`}
           data-cy="envaction-subtheme-selector"
@@ -67,3 +67,10 @@ export function SubThemesSelector({
 }
 
 const Msg = styled.div``
+
+const StyledMultiSelect = styled(MultiSelect)`
+  .rs-tag {
+    /* TODO Investigate both these props which are a hack to fix long NATINFs breaking the layout. */
+    max-width: 450px !important;
+  }
+`
