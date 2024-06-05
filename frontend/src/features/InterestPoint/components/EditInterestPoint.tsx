@@ -10,28 +10,23 @@ import {
   OPENLAYERS_PROJECTION,
   TextInput,
   Textarea,
-  WSG84_PROJECTION,
-  coordinatesAreDistinct,
   getCoordinates
 } from '@mtes-mct/monitor-ui'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
-import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import {
-  saveInterestPoint,
-  endDrawingInterestPoint,
-  startDrawingInterestPoint,
   cancelEditingInterestPoint,
-  updateCurrentInterestPoint
+  endDrawingInterestPoint,
+  saveInterestPoint,
+  startDrawingInterestPoint
 } from '../slice'
 import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
+import { updateCoordinatesAction } from '../useCases/updateCoordinates'
+import { updateNameAction } from '../useCases/updateName'
+import { updateObservationsAction } from '../useCases/updateObservations'
 
-import type { Coordinate } from 'ol/coordinate'
-
-// TODO Refactor this component
-// - Move the state logic to the reducer
 type EditInterestPointProps = {
   close: () => void
 }
@@ -77,29 +72,16 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
 
   const updateName = useCallback(
     (name: string | undefined) => {
-      if (currentInterestPoint?.name !== name) {
-        const updatedName = name === undefined ? null : name
-
-        const { name: currentName, ...currentInterestPointWithoutName } = currentInterestPoint
-
-        dispatch(updateCurrentInterestPoint({ name: updatedName, ...currentInterestPointWithoutName }))
-      }
+      dispatch(updateNameAction(name))
     },
-    [currentInterestPoint, dispatch]
+    [dispatch]
   )
 
   const updateObservations = useCallback(
     (observations: string | undefined) => {
-      if (currentInterestPoint?.observations !== observations) {
-        const updatedObservations = observations === undefined ? null : observations
-        const { observations: currentObservations, ...currentInterestPointWithoutObservations } = currentInterestPoint
-
-        dispatch(
-          updateCurrentInterestPoint({ observations: updatedObservations, ...currentInterestPointWithoutObservations })
-        )
-      }
+      dispatch(updateObservationsAction(observations))
     },
-    [currentInterestPoint, dispatch]
+    [dispatch]
   )
 
   /**
@@ -108,25 +90,10 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
    * @param {Coordinate} coordinates - Previous coordinates ([latitude, longitude]), in decimal format.
    */
   const updateCoordinates = useCallback(
-    (nextCoordinates: Coordinate, previousCoordinates: Coordinate) => {
-      if (nextCoordinates?.length) {
-        if (!previousCoordinates?.length || coordinatesAreDistinct(nextCoordinates, previousCoordinates)) {
-          const [latitude, longitude] = nextCoordinates
-          if (!latitude || !longitude) {
-            return
-          }
-
-          // Convert to [longitude, latitude] and OpenLayers projection
-          const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-          const { coordinates: currentCoordinates, ...currentInterestPointWithoutCoordinates } = currentInterestPoint
-
-          dispatch(
-            updateCurrentInterestPoint({ coordinates: updatedCoordinates, ...currentInterestPointWithoutCoordinates })
-          )
-        }
-      }
+    (nextCoordinates, previousCoordinates) => {
+      dispatch(updateCoordinatesAction(nextCoordinates, previousCoordinates))
     },
-    [currentInterestPoint, dispatch]
+    [dispatch]
   )
   const save = () => {
     dispatch(saveInterestPointFeature())

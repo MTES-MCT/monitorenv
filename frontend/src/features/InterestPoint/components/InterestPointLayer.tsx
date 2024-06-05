@@ -3,7 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, usePrevious } from '@mtes-mct/monitor-ui'
 import { InterestPointLine } from 'domain/entities/interestPointLine'
-import { areCoordinatesModified, areFeatureCoordinatesModified } from 'domain/entities/interestPoints'
+import { areCoordinatesModified } from 'domain/entities/interestPoints'
 import { Layers } from 'domain/entities/layers/constants'
 import { MapToolType } from 'domain/entities/map/constants'
 import { globalActions } from 'domain/shared_slices/Global'
@@ -14,12 +14,12 @@ import { Draw } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
-import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
+import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
 
 import { InterestPointOverlay } from './InterestPointOverlay'
 import { POIStyle, getInterestPointStyle, getLineStyle } from '../../map/layers/styles/interestPoint.style'
+import { modifyFeatureWhenCoordinatesAreModifiedAction } from '../useCases/layer/modifyFeatureWhenCoordinatesAreModified'
 import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
-import { removeLine, removePoint, removeResidualElement } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../map/BaseMap'
 import type { NewInterestPoint } from '@features/InterestPoint/types'
@@ -46,21 +46,8 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   const [interestsPointsToCoordinate, setInterestsPointsToCoordinate] = useState(new Map())
   const previousInterestPoint = usePrevious<NewInterestPoint>(currentInterestPoint)
 
-  const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
-
-  const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
-
-  // Clean residual interest point from layer when closing
-  useEffect(() => {
-    if (!isOpen) {
-      removeResidualElement(currentInterestPoint.uuid, interestPoints, interestPointVectorSourceRef)
-    }
-  }, [currentInterestPoint.uuid, interestPoints, isOpen])
-
   const deleteInterestPoint = useCallback(
     (uuid: string) => {
-      removePoint(uuid, interestPointVectorSourceRef)
-      removeLine(uuid, interestPointVectorSourceRef)
       dispatch(removeInterestPoint(uuid))
       dispatch(globalActions.setIsMapToolVisible(undefined))
     },
@@ -86,14 +73,11 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
   const modifyInterestPoint = useCallback(
     (uuid: string) => {
-      // FIXME (30/05/2024): find another solution to remove residual point
-      removeResidualElement(currentInterestPoint.uuid, interestPoints, interestPointVectorSourceRef)
-
       dispatch(globalActions.hideSideButtons())
       dispatch(editInterestPoint(uuid))
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     },
-    [currentInterestPoint.uuid, dispatch, interestPoints]
+    [dispatch]
   )
 
   const interestPointVectorSourceRef = useRef(new VectorSource({ wrapX: false })) as MutableRefObject<
@@ -139,13 +123,19 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
           return feats
         }, [] as Array<Feature<LineString>>)
-
+        if (currentInterestPoint.feature) {
+          const currentFeature = new GeoJSON({
+            featureProjection: OPENLAYERS_PROJECTION
+          }).readFeature(currentInterestPoint.feature)
+          features.push(currentFeature as Feature<LineString>)
+        }
+        interestPointVectorSourceRef.current.clear()
         interestPointVectorSourceRef.current.addFeatures(features)
       }
     }
 
     drawExistingFeaturesOnMap()
-  }, [map, interestPoints])
+  }, [map, interestPoints, currentInterestPoint])
 
   useEffect(() => {
     function drawNewFeatureOnMap() {
@@ -208,33 +198,8 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   }, [dispatch, drawObject, currentInterestPoint])
 
   useEffect(() => {
-    function modifyFeatureWhenCoordinatesAreModified() {
-      if (currentInterestPoint.coordinates?.length) {
-        const drawingFeatureToUpdate = interestPointVectorSourceRef.current.getFeatureById(currentInterestPoint.uuid)
-
-        if (drawingFeatureToUpdate && areFeatureCoordinatesModified(drawingFeatureToUpdate, currentInterestPoint)) {
-          const { feature, ...interestPointWithoutFeature } = currentInterestPoint
-
-          const geometry = drawingFeatureToUpdate.getGeometry()
-          if (interestPointWithoutFeature.coordinates) {
-            // FIXME [17/05/2024] typage à refacto: Openlayer fonctionne avec Coordinate[] et Coordinate
-            geometry?.setCoordinates(interestPointWithoutFeature.coordinates as unknown as Coordinate[])
-          }
-          drawingFeatureToUpdate.setProperties(interestPointWithoutFeature)
-
-          const nextFeature = new GeoJSON().writeFeatureObject(drawingFeatureToUpdate, {
-            featureProjection: OPENLAYERS_PROJECTION
-          })
-
-          const { feature: currentFeature, ...currentInterestPointWithoutFeature } = currentInterestPoint
-
-          dispatch(updateCurrentInterestPoint({ feature: nextFeature, ...currentInterestPointWithoutFeature }))
-        }
-      }
-    }
-
-    modifyFeatureWhenCoordinatesAreModified()
-  }, [currentInterestPoint, dispatch])
+    dispatch(modifyFeatureWhenCoordinatesAreModifiedAction(interestPointVectorSourceRef))
+  }, [dispatch])
 
   useEffect(() => {
     function initLineWhenInterestPointCoordinatesModified() {
