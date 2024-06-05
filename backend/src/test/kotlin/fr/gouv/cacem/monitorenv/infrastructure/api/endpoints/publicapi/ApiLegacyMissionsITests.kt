@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.LegacyMissions
@@ -208,16 +209,19 @@ class ApiLegacyMissionsITests {
         val requestedId = 0
 
         val expectedFirstMission =
-            MissionEntity(
-                id = 10,
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
+            MissionDTO(
+                mission = MissionEntity(
+                    id = 10,
+                    missionTypes = listOf(MissionTypeEnum.SEA),
+                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORFISH,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
             )
+
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
 
@@ -233,6 +237,7 @@ class ApiLegacyMissionsITests {
     fun `update mission should return updated mission`() {
         // Given
         val expectedUpdatedMission =
+
             MissionEntity(
                 id = 14,
                 missionTypes = listOf(MissionTypeEnum.SEA),
@@ -406,7 +411,7 @@ class ApiLegacyMissionsITests {
         assertThat(missionUpdateEvent).contains("event:MISSION_UPDATE")
         assertThat(missionUpdateEvent)
             .contains(
-                "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"completedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
+                "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"completedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false,\"hasRapportNavActions\":null}",
             )
     }
 }
