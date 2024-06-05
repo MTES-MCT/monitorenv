@@ -479,7 +479,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.wait(500)
     cy.getDataCy('edit-mission-27').scrollIntoView().click({ force: true })
     cy.get('.Toastify__toast-body').contains(
-      'Problème de communication avec MonitorFish: impossible de récupérer les actions du CNSP'
+      "Problème de communication avec MonitorFish ou RapportNav: impossible de récupérer les événements du CNSP ou de l'unité"
     )
   })
 

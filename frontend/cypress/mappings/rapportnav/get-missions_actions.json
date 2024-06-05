@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPattern": "/api/v1/missions/(!53)"
+    "urlPattern": "/api/v1/missions/((?!53)[0-9]*)"
   },
   "response": {
     "status": 200,
@@ -12,6 +12,9 @@
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Request-Headers": "*"
     },
-    "jsonBody": null
+    "jsonBody": {
+      "id": 1,
+      "containsActionsAddedByUnit": false
+    }
   }
 }
