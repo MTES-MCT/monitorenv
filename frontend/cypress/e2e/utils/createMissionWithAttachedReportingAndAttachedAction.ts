@@ -27,6 +27,7 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
 
   cy.fill('Type de véhicule', 'Navire')
   cy.fill('Nom du navire', 'Le Bateau 2000')
+  cy.fill('Nom du capitaine', 'Capitaine Crochet')
   cy.fill('Immatriculation', '123456789')
   cy.fill('Taille', 13)
 
