@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.infrastructure.api.utils.validateId
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.assertj.core.api.Assertions.assertThat

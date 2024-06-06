@@ -40,15 +40,11 @@ if (!container) {
 }
 const root = createRoot(container)
 
-const { IS_OIDC_ENABLED, oidcConfig } = getOIDCConfig()
+const { oidcConfig } = getOIDCConfig()
 
-if (IS_OIDC_ENABLED) {
-  root.render(
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <AuthProvider {...oidcConfig}>
-      <App />
-    </AuthProvider>
-  )
-} else {
-  root.render(<App />)
-}
+root.render(
+  // eslint-disable-next-line react/jsx-props-no-spreading
+  <AuthProvider {...oidcConfig}>
+    <App />
+  </AuthProvider>
+)
