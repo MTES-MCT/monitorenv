@@ -10,7 +10,7 @@ import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
-import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
+import { useEscapeKey } from '../../../../hooks/useEscapeKey'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
 import { ButtonWrapper } from '../../../MainWindow/components/RightMenu/ButtonWrapper'
 import { MapToolButton } from '../MapToolButton'
@@ -30,7 +30,7 @@ export function MeasurementMapButton() {
     dispatch(globalActions.setIsMapToolVisible(undefined))
   })
 
-  useEscapeFromKeyboardAndExecute(() => {
+  useEscapeKey(() => {
     dispatch(setMeasurementTypeToAdd(undefined))
     dispatch(globalActions.setIsMapToolVisible(undefined))
   })

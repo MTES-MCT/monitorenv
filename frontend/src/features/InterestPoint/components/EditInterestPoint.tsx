@@ -16,22 +16,17 @@ import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import {
-  cancelEditingInterestPoint,
-  endDrawingInterestPoint,
-  removeInterestPoint,
-  saveInterestPoint,
-  startDrawingInterestPoint
-} from '../slice'
+import { endDrawingInterestPoint, removeInterestPoint, saveInterestPoint, startDrawingInterestPoint } from '../slice'
 import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
 import { updateCoordinatesAction } from '../useCases/updateCoordinates'
 import { updateNameAction } from '../useCases/updateName'
 import { updateObservationsAction } from '../useCases/updateObservations'
 
 type EditInterestPointProps = {
+  cancel: () => void
   close: () => void
 }
-export function EditInterestPoint({ close }: EditInterestPointProps) {
+export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
@@ -102,11 +97,6 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     close()
   }
 
-  const cancel = () => {
-    dispatch(cancelEditingInterestPoint())
-    close()
-  }
-
   const remove = () => {
     dispatch(removeInterestPoint(currentInterestPoint.uuid))
     close()
@@ -115,7 +105,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
   return (
     <MapMenuDialog.Container data-cy="save-interest-point">
       <MapMenuDialog.Header>
-        <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
+        <MapMenuDialog.CloseButton data-cy="interest-point-close" Icon={Icon.Close} onClick={cancel} />
         <MapMenuDialog.Title data-cy="interest-point-title">
           {isEditing ? 'Éditer' : 'Créer'} un point d&apos;intérêt
         </MapMenuDialog.Title>
