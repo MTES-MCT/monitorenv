@@ -3,7 +3,7 @@ import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { useAuth } from 'react-oidc-context'
 import { Navigate } from 'react-router-dom'
 
-export function RequireAuth({ children, requireSuperUser = false }) {
+export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
   const oidcConfig = getOIDCConfig()
   const auth = useAuth()
   const { data: user } = useGetCurrentUserAuthorizationQuery(undefined, { skip: !auth?.isAuthenticated })
@@ -13,11 +13,19 @@ export function RequireAuth({ children, requireSuperUser = false }) {
   }
 
   if (!auth.isAuthenticated) {
-    return <Navigate replace to="/login" />
+    if (redirect) {
+      return <Navigate replace to="/login" />
+    }
+
+    return null
   }
 
   if (requireSuperUser && !user?.isSuperUser) {
-    return <Navigate replace to="/register" />
+    if (redirect) {
+      return <Navigate replace to="/register" />
+    }
+
+    return null
   }
 
   return children

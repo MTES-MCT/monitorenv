@@ -52,7 +52,7 @@ export function App() {
 
                     <Route
                       element={
-                        <RequireAuth>
+                        <RequireAuth redirect requireSuperUser>
                           <BackOfficePage />
                         </RequireAuth>
                       }
@@ -61,7 +61,7 @@ export function App() {
 
                     <Route
                       element={
-                        <RequireAuth>
+                        <RequireAuth redirect requireSuperUser>
                           <SideWindow />
                         </RequireAuth>
                       }
@@ -70,7 +70,7 @@ export function App() {
 
                     <Route
                       element={
-                        <RequireAuth>
+                        <RequireAuth redirect>
                           <HomePage />
                         </RequireAuth>
                       }
@@ -79,7 +79,7 @@ export function App() {
 
                     <Route
                       element={
-                        <RequireAuth>
+                        <RequireAuth redirect requireSuperUser>
                           <HomePage />
                         </RequireAuth>
                       }
