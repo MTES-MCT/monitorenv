@@ -52,6 +52,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-jpa:3.3.1")
     api("org.hibernate.orm:hibernate-spatial:6.5.2.Final")
     api("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
+    api("com.neovisionaries:nv-i18n:1.29") // not used ?
     api("org.n52.jackson:jackson-datatype-jts:1.2.10")
     api("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     api("org.flywaydb:flyway-core:10.5.0")
@@ -61,7 +62,6 @@ dependencies {
     api("org.springframework.boot:spring-boot-configuration-processor:3.3.1")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
-    api("com.neovisionaries:nv-i18n:1.29")
     api("org.http4k:http4k-client-apache:5.23.0.0")
     api("com.google.code.gson:gson:2.11.0")
     api("org.springframework.boot:spring-boot-starter-cache:3.3.1")
@@ -88,6 +88,10 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.1")
     testImplementation("org.testcontainers:junit-jupiter:1.19.8")
     testImplementation("net.java.dev.jna:jna:5.14.0")
+    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.springframework.security:spring-security-test:6.3.0")
+    testImplementation("org.testcontainers:testcontainers:1.19.2")
+    testImplementation("org.testcontainers:postgresql:1.19.2")
     // TODO: move in tests only
     api("net.ttddyy:datasource-proxy:1.10")
 }
