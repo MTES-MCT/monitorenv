@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import org.springframework.boot.info.BuildProperties
 import org.springframework.web.bind.annotation.GetMapping

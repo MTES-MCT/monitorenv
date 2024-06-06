@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
@@ -27,7 +28,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@Import(WebSecurityConfig::class, MapperConfiguration::class)
+@Import(SentryConfig::class, MapperConfiguration::class)
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(ControlUnitResources::class)])
 class ControlUnitResourcesITests {
     @Autowired
