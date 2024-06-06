@@ -1,4 +1,4 @@
-import { editInterestPoint, removeInterestPoint, updateCurrentInterestPoint } from '@features/InterestPoint/slice'
+import { editInterestPoint, removeInterestPoint } from '@features/InterestPoint/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, usePrevious } from '@mtes-mct/monitor-ui'
@@ -9,7 +9,7 @@ import { MapToolType } from 'domain/entities/map/constants'
 import { globalActions } from 'domain/shared_slices/Global'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
-import { LineString, Point } from 'ol/geom'
+import { LineString } from 'ol/geom'
 import { Draw } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -19,15 +19,14 @@ import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 
 import { InterestPointOverlay } from './InterestPointOverlay'
 import { POIStyle, getInterestPointStyle, getLineStyle } from '../../map/layers/styles/interestPoint.style'
 import { modifyFeatureWhenCoordinatesAreModifiedAction } from '../useCases/layer/modifyFeatureWhenCoordinatesAreModified'
+import { startDrawingAction } from '../useCases/layer/startDrawing'
 import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
 
 import type { BaseMapChildrenProps } from '../../map/BaseMap'
 import type { NewInterestPoint } from '@features/InterestPoint/types'
 import type { Coordinate } from 'ol/coordinate'
 import type { FeatureLike } from 'ol/Feature'
-import type { DrawEvent } from 'ol/interaction/Draw'
 
-const DRAW_START_EVENT = 'drawstart'
 const DRAW_END_EVENT = 'drawend'
 
 export const MIN_ZOOM = 7
@@ -80,13 +79,18 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     [dispatch]
   )
 
-  const interestPointVectorSourceRef = useRef(new VectorSource({ wrapX: false })) as MutableRefObject<
+  const openEdition = useCallback(() => {
+    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
+  }, [dispatch])
+
+  const vectorSourceRef = useRef(new VectorSource({ wrapX: false })) as MutableRefObject<
     VectorSource<Feature<LineString>>
   >
-  const interestPointVectorLayer = useRef(
+  const vectorLayer = useRef(
     new VectorLayer({
       renderBuffer: 7,
-      source: interestPointVectorSourceRef.current,
+      source: vectorSourceRef.current,
       style: (feature, resolution) => (isFeatureIsALine(feature) ? getLineStyle() : getInterestPointStyle(resolution)),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
@@ -95,7 +99,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   ) as MutableRefObject<VectorLayer<VectorSource>>
 
   useEffect(() => {
-    const layer = interestPointVectorLayer.current
+    const layer = vectorLayer.current
     map?.getLayers().push(layer)
 
     return () => {
@@ -106,31 +110,38 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     function drawExistingFeaturesOnMap() {
       if (map) {
-        const features = interestPoints.reduce((feats, interestPoint) => {
-          if (interestPoint.feature) {
-            const nextFeature = new GeoJSON({
-              featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(interestPoint.feature)
+        const features = interestPoints
+          .filter(item => item.uuid !== currentInterestPoint.uuid)
+          .reduce((feats, interestPoint) => {
+            if (interestPoint.feature) {
+              const nextFeature = new GeoJSON({
+                featureProjection: OPENLAYERS_PROJECTION
+              }).readFeature(interestPoint.feature)
 
-            const { feature, ...interestPointWithoutFeature } = interestPoint
-            nextFeature.setProperties(interestPointWithoutFeature)
+              const { feature, ...interestPointWithoutFeature } = interestPoint
+              nextFeature.setProperties(interestPointWithoutFeature)
 
-            // TODO Check and remove this cast.
-            feats.push(nextFeature as Feature<LineString>)
+              // FIXME Remove this cast.
+              feats.push(nextFeature as Feature<LineString>)
+
+              return feats
+            }
 
             return feats
-          }
+          }, [] as Array<Feature<LineString>>)
+        const { feature: currentFeature, ...currentInterestPointWithoutFeature } = currentInterestPoint
 
-          return feats
-        }, [] as Array<Feature<LineString>>)
-        if (currentInterestPoint.feature) {
-          const currentFeature = new GeoJSON({
+        if (currentFeature) {
+          const currentFeatureToDraw = new GeoJSON({
             featureProjection: OPENLAYERS_PROJECTION
           }).readFeature(currentInterestPoint.feature)
-          features.push(currentFeature as Feature<LineString>)
+          currentFeatureToDraw.setProperties(currentInterestPointWithoutFeature)
+
+          // FIXME Remove this cast.
+          features.push(currentFeatureToDraw as Feature<LineString>)
         }
-        interestPointVectorSourceRef.current.clear()
-        interestPointVectorSourceRef.current.addFeatures(features)
+        vectorSourceRef.current.clear()
+        vectorSourceRef.current.addFeatures(features)
       }
     }
 
@@ -140,7 +151,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     function drawNewFeatureOnMap() {
       const draw = new Draw({
-        source: interestPointVectorSourceRef.current,
+        source: vectorSourceRef.current,
         stopClick: true,
         style: POIStyle,
         type: 'Point'
@@ -169,24 +180,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     function handleDrawEvents() {
       if (drawObject) {
-        drawObject.once(DRAW_START_EVENT, event => {
-          function startDrawing(e: DrawEvent) {
-            const geometry = e.feature.getGeometry()
-            if (geometry instanceof Point) {
-              const coordinates = geometry.getCoordinates()
-              dispatch(
-                updateCurrentInterestPoint({
-                  coordinates,
-                  name: currentInterestPoint.name,
-                  observations: currentInterestPoint.observations,
-                  uuid: currentInterestPoint.uuid
-                })
-              )
-            }
-          }
-
-          startDrawing(event)
-        })
+        dispatch(startDrawingAction(drawObject))
 
         drawObject.once(DRAW_END_EVENT, event => {
           dispatch(saveInterestPointFeature(event.feature))
@@ -195,10 +189,10 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     }
 
     handleDrawEvents()
-  }, [dispatch, drawObject, currentInterestPoint])
+  }, [currentInterestPoint, dispatch, drawObject])
 
   useEffect(() => {
-    dispatch(modifyFeatureWhenCoordinatesAreModifiedAction(interestPointVectorSourceRef))
+    dispatch(modifyFeatureWhenCoordinatesAreModifiedAction(vectorSourceRef))
   }, [dispatch])
 
   useEffect(() => {
@@ -216,7 +210,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           const featureId = InterestPointLine.getFeatureId(currentInterestPoint.uuid)
           if (interestsPointsToCoordinate.has(featureId)) {
             interestsPointsToCoordinate.delete(featureId)
-            const feature = interestPointVectorSourceRef.current.getFeatureById(featureId)
+            const feature = vectorSourceRef.current.getFeatureById(featureId)
             if (feature && !!currentInterestPoint.coordinates) {
               feature.setGeometry(new LineString([currentInterestPoint.coordinates, currentInterestPoint.coordinates]))
             }
@@ -229,7 +223,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   }, [currentInterestPoint, interestsPointsToCoordinate, previousInterestPoint])
 
   useEffect(() => {
-    interestPointVectorLayer.current.setVisible(displayInterestPointLayer)
+    vectorLayer.current.setVisible(displayInterestPointLayer)
   }, [displayInterestPointLayer])
 
   return (
@@ -253,7 +247,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           interestPoint={currentInterestPoint}
           isVisible={displayInterestPointLayer}
           map={map}
-          modifyInterestPoint={() => {}}
+          modifyInterestPoint={openEdition}
           moveLine={moveInterestPointLine}
         />
       )}
@@ -267,12 +261,12 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   function addLineToFeature(coordinates: Coordinate, nextCoordinates: Coordinate, featureId: string) {
     const interestPointLineFeature = InterestPointLine.getFeature(coordinates, nextCoordinates, featureId)
 
-    interestPointVectorSourceRef.current.addFeature(interestPointLineFeature)
+    vectorSourceRef.current.addFeature(interestPointLineFeature)
   }
 
   function updateLineFromExistingFeature(featureId: string, uuid: string | number, nextCoordinates: Coordinate) {
-    const existingLabelLineFeature = interestPointVectorSourceRef.current.getFeatureById(featureId)
-    const interestPointFeature = interestPointVectorSourceRef.current.getFeatureById(uuid)
+    const existingLabelLineFeature = vectorSourceRef.current.getFeatureById(featureId)
+    const interestPointFeature = vectorSourceRef.current.getFeatureById(uuid)
 
     if (existingLabelLineFeature) {
       const geometry = interestPointFeature?.getGeometry()

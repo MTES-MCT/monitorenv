@@ -1,14 +1,17 @@
 import { updateCurrentInterestPoint, type InterestPointState } from '../slice'
 
-export const updateObservationsAction = (observations: string | undefined) => (dispatch, getState) => {
-  const { currentInterestPoint }: InterestPointState = getState().interestPoint
+import type { Dispatch } from 'redux'
 
-  if (currentInterestPoint?.observations !== observations) {
-    const updatedObservations = observations === undefined ? null : observations
-    const { observations: currentObservations, ...currentInterestPointWithoutObservations } = currentInterestPoint
+export const updateObservationsAction =
+  (observations: string | undefined) => (dispatch: Dispatch, getState: () => { interestPoint: InterestPointState }) => {
+    const { currentInterestPoint }: InterestPointState = getState().interestPoint
 
-    dispatch(
-      updateCurrentInterestPoint({ observations: updatedObservations, ...currentInterestPointWithoutObservations })
-    )
+    if (currentInterestPoint?.observations !== observations) {
+      const updatedObservations = observations === undefined ? null : observations
+      const { observations: currentObservations, ...currentInterestPointWithoutObservations } = currentInterestPoint
+
+      dispatch(
+        updateCurrentInterestPoint({ observations: updatedObservations, ...currentInterestPointWithoutObservations })
+      )
+    }
   }
-}

@@ -39,7 +39,7 @@ export function InterestPointMapButton() {
 
   useEscapeFromKeyboardAndExecute(close)
 
-  const toggleInterestPointMenu = () => {
+  const toggleInterestPointMenu = useCallback(() => {
     if (!isOpen) {
       dispatch(
         setDisplayedItems({
@@ -55,7 +55,7 @@ export function InterestPointMapButton() {
     } else {
       close()
     }
-  }
+  }, [close, dispatch, isOpen])
 
   return (
     <ButtonWrapper ref={wrapperRef} topPosition={346}>

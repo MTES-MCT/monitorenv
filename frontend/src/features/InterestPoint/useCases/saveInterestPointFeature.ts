@@ -1,30 +1,29 @@
 import { updateCurrentInterestPoint, type InterestPointState } from '@features/InterestPoint/slice'
 import { getGeoJSONFromFeature } from 'domain/types/map'
 import Feature from 'ol/Feature'
-import Point from 'ol/geom/Point'
+import { Point, type LineString } from 'ol/geom'
 
-import type { LineString } from 'ol/geom'
+import type { Dispatch } from 'redux'
 
-export const saveInterestPointFeature = (feature?: Feature | undefined) => (dispatch, getState) => {
-  const { currentInterestPoint }: InterestPointState = getState().interestPoint
+export const saveInterestPointFeature =
+  (feature?: Feature) => (dispatch: Dispatch, getState: () => { interestPoint: InterestPointState }) => {
+    const { currentInterestPoint } = getState().interestPoint
 
-  if (currentInterestPoint?.feature || !currentInterestPoint.coordinates) {
-    return
+    if (!currentInterestPoint.coordinates) {
+      return
+    }
+
+    const { feature: currentFeature, ...currentInterestPointWithoutFeature } = currentInterestPoint
+    const featureToSave =
+      feature ??
+      new Feature({
+        geometry: new Point(currentInterestPoint.coordinates),
+        properties: currentInterestPointWithoutFeature
+      })
+    featureToSave.setId(currentInterestPoint.uuid)
+
+    // FIXME: remove force cast
+    const geoJSONFeature = getGeoJSONFromFeature(featureToSave) as unknown as Feature<LineString>
+
+    dispatch(updateCurrentInterestPoint({ feature: geoJSONFeature, ...currentInterestPointWithoutFeature }))
   }
-
-  const featureToSave =
-    feature ??
-    new Feature({
-      geometry: new Point(currentInterestPoint.coordinates),
-      properties: currentInterestPoint
-    })
-
-  featureToSave.setId(currentInterestPoint?.uuid)
-
-  // FIXME: had to force cast
-  const geoJSONFeature = getGeoJSONFromFeature(featureToSave) as unknown as Feature<LineString>
-
-  const { feature: currentFeature, ...currentInterestPointWithoutFeature } = currentInterestPoint
-
-  dispatch(updateCurrentInterestPoint({ feature: geoJSONFeature, ...currentInterestPointWithoutFeature }))
-}

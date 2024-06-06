@@ -1,13 +1,16 @@
 import { updateCurrentInterestPoint, type InterestPointState } from '../slice'
 
-export const updateNameAction = (name: string | undefined) => (dispatch, getState) => {
-  const { currentInterestPoint }: InterestPointState = getState().interestPoint
+import type { Dispatch } from 'redux'
 
-  if (currentInterestPoint?.name !== name) {
-    const updatedName = name === undefined ? null : name
+export const updateNameAction =
+  (name: string | undefined) => (dispatch: Dispatch, getState: () => { interestPoint: InterestPointState }) => {
+    const { currentInterestPoint }: InterestPointState = getState().interestPoint
 
-    const { name: currentName, ...currentInterestPointWithoutName } = currentInterestPoint
+    if (currentInterestPoint?.name !== name) {
+      const updatedName = name === undefined ? null : name
 
-    dispatch(updateCurrentInterestPoint({ name: updatedName, ...currentInterestPointWithoutName }))
+      const { name: currentName, ...currentInterestPointWithoutName } = currentInterestPoint
+
+      dispatch(updateCurrentInterestPoint({ name: updatedName, ...currentInterestPointWithoutName }))
+    }
   }
-}
