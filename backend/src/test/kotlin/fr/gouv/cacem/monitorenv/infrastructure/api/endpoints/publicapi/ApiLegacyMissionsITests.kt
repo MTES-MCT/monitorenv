@@ -52,38 +52,28 @@ import java.time.ZonedDateTime
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [LegacyMissions::class, SSEMission::class])
 class ApiLegacyMissionsITests {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var createOrUpdateMission: CreateOrUpdateMission
+    @MockBean private lateinit var createOrUpdateMission: CreateOrUpdateMission
 
-    @MockBean
-    private lateinit var getMissions: GetMissions
+    @MockBean private lateinit var getMissions: GetMissions
 
-    @MockBean
-    private lateinit var getMissionWithRapportNavActions: GetMissionWithRapportNavActions
+    @MockBean private lateinit var getMissionWithRapportNavActions: GetMissionWithRapportNavActions
 
     @MockBean
     private lateinit var bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission
 
-    @MockBean
-    private lateinit var canDeleteMission: CanDeleteMission
+    @MockBean private lateinit var canDeleteMission: CanDeleteMission
 
-    @MockBean
-    private lateinit var getMissionsByIds: GetMissionsByIds
+    @MockBean private lateinit var getMissionsByIds: GetMissionsByIds
 
-    @MockBean
-    private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+    @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
-    @Autowired
-    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
-    @Autowired
-    private lateinit var sseMissionController: SSEMission
+    @Autowired private lateinit var sseMissionController: SSEMission
 
     @Test
     fun `Should create a new mission`() {
@@ -231,10 +221,12 @@ class ApiLegacyMissionsITests {
 
         val expectedFirstMission =
             MissionDTO(
-                mission = MissionEntity(
+                mission =
+                MissionEntity(
                     id = 10,
                     missionTypes = listOf(MissionTypeEnum.SEA),
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                     isDeleted = false,
                     missionSource = MissionSourceEnum.MONITORFISH,
                     hasMissionOrder = false,
@@ -258,7 +250,6 @@ class ApiLegacyMissionsITests {
     fun `update mission should return updated mission`() {
         // Given
         val expectedUpdatedMission =
-
             MissionEntity(
                 id = 14,
                 missionTypes = listOf(MissionTypeEnum.SEA),
