@@ -1,4 +1,4 @@
-import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Button } from '@mtes-mct/monitor-ui'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { useAuth } from 'react-oidc-context'
@@ -10,7 +10,9 @@ import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 export function Login() {
   const oidcConfig = getOIDCConfig()
   const auth = useAuth()
-  const { data: user, isSuccess } = useGetCurrentUserAuthorizationQuery(undefined, { skip: !auth?.isAuthenticated })
+  const { data: user, isSuccess } = useGetCurrentUserAuthorizationQueryOverride(undefined, {
+    skip: !auth?.isAuthenticated
+  })
 
   const logout = () => {
     auth.removeUser()
