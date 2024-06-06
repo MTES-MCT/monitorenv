@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AlertUnsupportedBrowser } from '@components/AlertUnsupportedBrowser'
 import { CustomGlobalStyle } from '@components/CustomGlobalStyle'
 import { RequireAuth } from '@components/RequireAuth'
