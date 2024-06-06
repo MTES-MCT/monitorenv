@@ -4,6 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -26,6 +28,7 @@ data class MissionDataOutput(
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val isGeometryComputedFromControls: Boolean,
+    val hasRapportNavActions: RapportNavMissionActionEntity? = null,
 ) {
     companion object {
         fun fromMissionEntity(mission: MissionEntity): MissionDataOutput {
@@ -55,6 +58,36 @@ data class MissionDataOutput(
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
                 isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
+            )
+        }
+        fun fromMissionDTO(missionDto: MissionDTO): MissionDataOutput {
+            requireNotNull(missionDto.mission.id) { "a mission must have an id" }
+
+            return MissionDataOutput(
+                id = missionDto.mission.id,
+                missionTypes = missionDto.mission.missionTypes,
+                controlUnits = missionDto.mission.controlUnits,
+                openBy = missionDto.mission.openBy,
+                completedBy = missionDto.mission.completedBy,
+                observationsCacem = missionDto.mission.observationsCacem,
+                observationsCnsp = missionDto.mission.observationsCnsp,
+                facade = missionDto.mission.facade,
+                geom = missionDto.mission.geom,
+                startDateTimeUtc = missionDto.mission.startDateTimeUtc,
+                endDateTimeUtc = missionDto.mission.endDateTimeUtc,
+                createdAtUtc = missionDto.mission.createdAtUtc,
+                updatedAtUtc = missionDto.mission.updatedAtUtc,
+                envActions =
+                missionDto.mission.envActions?.map {
+                    MissionEnvActionDataOutput.fromEnvActionEntity(
+                        envActionEntity = it,
+                    )
+                },
+                missionSource = missionDto.mission.missionSource,
+                hasMissionOrder = missionDto.mission.hasMissionOrder,
+                isUnderJdp = missionDto.mission.isUnderJdp,
+                isGeometryComputedFromControls = missionDto.mission.isGeometryComputedFromControls,
+                hasRapportNavActions = missionDto.hasRapportNavActions,
             )
         }
     }

@@ -152,6 +152,11 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
         </ButtonsWrapper>
       </TitleWrapper>
       <Separator />
+      {values.hasRapportNavActions?.containsActionsAddedByUnit && (
+        <RapportNavActionsText data-cy="rapportNav-actions-text">
+          Des données ont été ajoutées par l&apos;unité dans la mission.
+        </RapportNavActionsText>
+      )}
       <ActionsTimeline ref={actionTimelineRef}>
         <VerticalLine $height={actionTimelineHeight} />
         {sortedActions ? (
@@ -210,6 +215,12 @@ const ButtonsWrapper = styled.div`
       padding: 5px 12px 6px !important;
     }
   }
+`
+
+const RapportNavActionsText = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
+  font-style: italic;
 `
 
 const ActionsTimeline = styled.div`

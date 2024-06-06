@@ -110,7 +110,7 @@ class LegacyMissions(
     ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
-        return MissionDataOutput.fromMissionEntity(mission)
+        return MissionDataOutput.fromMissionDTO(mission)
     }
 
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])

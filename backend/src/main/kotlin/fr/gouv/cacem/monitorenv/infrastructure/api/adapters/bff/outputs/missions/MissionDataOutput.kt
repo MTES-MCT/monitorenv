@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurve
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -36,6 +37,7 @@ data class MissionDataOutput(
     val detachedReportingIds: List<Int>? = listOf(),
     val detachedReportings: List<MissionDetachedReportingDataOutput>? = listOf(),
     val isGeometryComputedFromControls: Boolean,
+    val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
 ) {
 
     companion object {
@@ -114,6 +116,9 @@ data class MissionDataOutput(
                     MissionDetachedReportingDataOutput.fromReporting(it.reporting)
                 },
                 isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
+                hasRapportNavActions = dto.hasRapportNavActions?.let {
+                    RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(it)
+                },
             )
         }
     }

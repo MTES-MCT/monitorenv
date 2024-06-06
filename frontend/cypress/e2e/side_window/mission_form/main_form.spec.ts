@@ -507,4 +507,10 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.getDataCy('edit-mission-27').scrollIntoView().click({ force: true })
     cy.get('.Component-Banner').contains('euillez compléter ou corriger les éléments en rouge')
   })
+
+  it('Should display text in timeline if data has been added to the mission by the control unit in RapportNav. ', () => {
+    visitSideWindow()
+    cy.get('*[data-cy="edit-mission-53"]').scrollIntoView().click({ force: true }).wait(500)
+    cy.getDataCy('rapportNav-actions-text').should('be.visible')
+  })
 })
