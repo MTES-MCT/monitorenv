@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { getOIDCUser } from 'auth/getOIDCUser'
 
 import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
 
@@ -18,7 +19,18 @@ export const geoserverApi = createApi({
 
 // We'll need that later on for authentication.
 const monitorenvPrivateApiQuery = fetchBaseQuery({
-  baseUrl: '/bff'
+  baseUrl: '/bff',
+  prepareHeaders: headers => {
+    const user = getOIDCUser()
+    const token = user?.access_token
+
+    // If we have a token set in state, we pass it.
+    if (token) {
+      headers.set('authorization', `Bearer ${token}`)
+    }
+
+    return headers
+  }
 })
 export const monitorenvPrivateApi = createApi({
   baseQuery: async (args, api, extraOptions) => {

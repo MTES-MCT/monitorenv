@@ -1,3 +1,4 @@
+import { Account } from '@features/Account/components/Account'
 import { BannerStack } from '@features/MainWindow/components/BannerStack'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/ReportingForm/hooks/useListenReportingEventUpdates'
@@ -38,6 +39,7 @@ export function HomePage() {
   const displayMeasurement = useAppSelector(state => state.global.displayMeasurement)
   const displayMissionMenuButton = useAppSelector(state => state.global.displayMissionMenuButton)
   const displayReportingsButton = useAppSelector(state => state.global.displayReportingsButton)
+  const displayAccountButton = useAppSelector(state => state.global.displayAccountButton)
   const isRightMenuControlUnitListButtonVisible = useAppSelector(
     state => state.global.displayRightMenuControlUnitListButton
   )
@@ -108,6 +110,7 @@ export function HomePage() {
 
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
+        {displayAccountButton && <Account />}
 
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
 

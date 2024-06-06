@@ -1,0 +1,32 @@
+{
+  "realm": "monitor",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "monitorenv",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000"
+      ],
+      "publicClient": true
+    }
+  ],
+  "users": [
+    {
+      "username": "monitorenvuser",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

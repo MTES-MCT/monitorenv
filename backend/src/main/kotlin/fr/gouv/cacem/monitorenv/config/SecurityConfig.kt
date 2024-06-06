@@ -55,7 +55,7 @@ class SecurityConfig(
                         "/favicon-32.ico",
                         "/asset-manifest.json",
                         "/swagger-ui/**",
-                        // Used to redirect to the frontend SPA, see SpaController.kt
+                        // Used to redirect to the frontend SPA, see Spa.kt
                         "/error",
                         "/api/**",
                         "/version",
