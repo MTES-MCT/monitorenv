@@ -9,10 +9,11 @@ export const Header = styled.div`
 `
 
 export const TitleWithIcon = styled.div`
-  align-items: end;
+  align-items: center;
   display: flex;
   flex-direction: row;
   gap: 8px;
+  min-width: 0;
 `
 
 export const StyledDeleteIconButton = styled(IconButton)`
@@ -39,6 +40,7 @@ export const ActionTitle = styled.h2`
 export const HeaderButtons = styled.div`
   display: flex;
   gap: 8px;
+  margin-left: 8px;
 `
 export const ActionThemes = styled.div`
   color: ${p => p.theme.color.charcoal};
@@ -47,7 +49,8 @@ export const ActionThemes = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 338px;
+  min-width: 0;
+  flex: 1;
 `
 export const StyledAuthorContainer = styled.div`
   display: flex;

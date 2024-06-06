@@ -300,7 +300,6 @@ export function ControlForm({
       <Header>
         <TitleWithIcon>
           <Icon.ControlUnit color={THEME.color.gunMetal} />
-
           <ActionTitle>{pluralize('Contrôle', actionNumberOfControls ?? 0)}</ActionTitle>
           <ActionThemes>{themesAsText}</ActionThemes>
         </TitleWithIcon>

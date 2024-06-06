@@ -308,4 +308,5 @@ const SecondColumn = styled.div`
 `
 const ThirdColumn = styled.div`
   flex: 1;
+  max-width: 33%;
 `

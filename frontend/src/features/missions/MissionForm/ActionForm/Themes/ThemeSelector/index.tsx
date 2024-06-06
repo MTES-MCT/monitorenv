@@ -29,7 +29,7 @@ export function ThemeSelector({ actionIndex, isError, isLoading, label, themeInd
       {isError && <Msg>Erreur</Msg>}
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
-        <StyledSelect
+        <Select
           key={`${actionIndex}-${themes.length}`}
           data-cy="envaction-theme-selector"
           error={currentThemeProps.error}
@@ -49,10 +49,3 @@ export function ThemeSelector({ actionIndex, isError, isLoading, label, themeInd
 }
 
 const Msg = styled.div``
-
-const StyledSelect = styled(Select)`
-  .rs-picker-toggle {
-    /* TODO Investigate both these props which are a hack to fix long NATINFs breaking the layout. */
-    max-width: 567px !important;
-  }
-`
