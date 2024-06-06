@@ -83,6 +83,15 @@ export function App() {
                           <HomePage />
                         </RequireAuth>
                       }
+                      path="/ext"
+                    />
+
+                    <Route
+                      element={
+                        <RequireAuth>
+                          <HomePage />
+                        </RequireAuth>
+                      }
                       path="/"
                     />
                   </Routes>
