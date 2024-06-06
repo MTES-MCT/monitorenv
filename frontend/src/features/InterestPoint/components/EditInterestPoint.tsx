@@ -19,6 +19,7 @@ import styled from 'styled-components'
 import {
   cancelEditingInterestPoint,
   endDrawingInterestPoint,
+  removeInterestPoint,
   saveInterestPoint,
   startDrawingInterestPoint
 } from '../slice'
@@ -106,6 +107,11 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     close()
   }
 
+  const remove = () => {
+    dispatch(removeInterestPoint(currentInterestPoint.uuid))
+    close()
+  }
+
   return (
     <MapMenuDialog.Container data-cy="save-interest-point">
       <MapMenuDialog.Header>
@@ -145,6 +151,12 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         <Button data-cy="interest-point-save" disabled={coordinates.length === 0} onClick={save}>
           {textButton}
         </Button>
+        {isEditing && (
+          <Button accent={Accent.SECONDARY} data-cy="interest-point-edit-delete" onClick={remove}>
+            Supprimer
+          </Button>
+        )}
+
         <Button accent={Accent.SECONDARY} data-cy="interest-point-cancel" onClick={cancel}>
           Annuler
         </Button>

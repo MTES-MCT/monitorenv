@@ -107,6 +107,18 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-coordinates').should('not.exist')
     })
 
+    it('should be deleted when clicking on remove button in edit mode', () => {
+      // When
+      cy.getDataCy('interest-point').click()
+      cy.get('#root').click(490, 580)
+      cy.getDataCy('interest-point-save').click()
+      cy.getDataCy('interest-point-edit').click()
+      cy.getDataCy('interest-point-edit-delete').click()
+
+      // Then
+      cy.getDataCy('interest-point-coordinates').should('not.exist')
+    })
+
     it('should retrieve initial attributes when clicking on cancel button', () => {
       // When
       cy.getDataCy('interest-point').click()

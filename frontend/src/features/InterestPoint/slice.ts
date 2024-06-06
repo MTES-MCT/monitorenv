@@ -52,13 +52,6 @@ const interestPointSlice = createSlice({
     },
 
     /**
-     * Delete the current interest point
-     */
-    removeCurrentInterestPoint(state) {
-      removeInterestPoint(state.currentInterestPoint.uuid)
-    },
-
-    /**
      * Delete a persisted interest point
      */
     removeInterestPoint(state, action: PayloadAction<string>) {
@@ -113,7 +106,6 @@ export const {
   cancelEditingInterestPoint,
   editInterestPoint,
   endDrawingInterestPoint,
-  removeCurrentInterestPoint,
   removeInterestPoint,
   removeUnsavedInterestPoint,
   saveInterestPoint,
