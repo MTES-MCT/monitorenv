@@ -8,8 +8,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMis
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import org.junit.Assert
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
@@ -24,9 +24,6 @@ class GetMissionByIdUTests {
 
     @MockBean
     private lateinit var rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository
-
-    @MockBean
-    private lateinit var getMissionById: GetMissionById
 
     @Test
     fun `execute should return mission with rapportNavActions`() {
@@ -68,9 +65,9 @@ class GetMissionByIdUTests {
             rapportNavActions,
         )
 
-        val result = getMissionById.execute(missionId)
+        val result = GetMissionById(missionRepository, rapportNavMissionActionsRepository).execute(missionId)
 
-        Assert.assertEquals(mission.copy(hasRapportNavActions = rapportNavActions), result)
+        assertThat(result).isEqualTo(mission.copy(hasRapportNavActions = rapportNavActions))
     }
 
     @Test
@@ -109,9 +106,9 @@ class GetMissionByIdUTests {
             RuntimeException::class.java,
         )
 
-        val result = getMissionById.execute(missionId)
+        val result = GetMissionById(missionRepository, rapportNavMissionActionsRepository).execute(missionId)
 
-        Assert.assertEquals(mission.copy(hasRapportNavActions = null), result)
+        assertThat(mission.copy(hasRapportNavActions = null)).isEqualTo(result)
     }
 
     @Test
@@ -154,8 +151,8 @@ class GetMissionByIdUTests {
             rapportNavActions,
         )
 
-        val result = getMissionById.execute(missionId)
+        val result = GetMissionById(missionRepository, rapportNavMissionActionsRepository).execute(missionId)
 
-        Assert.assertEquals(mission.copy(hasRapportNavActions = rapportNavActions), result)
+        assertThat(mission.copy(hasRapportNavActions = rapportNavActions)).isEqualTo(result)
     }
 }
