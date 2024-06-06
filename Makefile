@@ -47,6 +47,9 @@ dev-run-back-debug:
 dev-run-keycloak:
 	docker compose up -d keycloak
 
+dev-run-keycloak:
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d keycloak
+
 dev-run-infra:
 	@echo "Preparing database"
 	docker compose up -d db
