@@ -42,7 +42,7 @@ export function ReportingCard({
         switch (action.targetType) {
           case ReportingTargetTypeEnum.VEHICLE:
             return infractionFactory({
-              controlledPersonIdentity: target?.vesselName ?? target?.operatorName,
+              controlledPersonIdentity: target?.operatorName,
               registrationNumber: target?.externalReferenceNumber,
               ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
                 imo: target?.imo,

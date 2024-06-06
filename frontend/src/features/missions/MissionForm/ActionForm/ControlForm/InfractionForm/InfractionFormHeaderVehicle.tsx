@@ -24,7 +24,11 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
         <>
           <StyledVesselForm>
             <FormikTextInput label="MMSI" name={`${infractionPath}.mmsi`} />
-            <FormikTextInput label="Nom du navire" name={`${infractionPath}.vesselName`} />
+            <FormikTextInput
+              data-cy="infraction-form-vesselName"
+              label="Nom du navire"
+              name={`${infractionPath}.vesselName`}
+            />
           </StyledVesselForm>
           <StyledVesselForm>
             <FormikTextInput label="IMO" name={`${infractionPath}.imo`} />
@@ -47,7 +51,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
             />
           </StyledVesselForm>
           <StyledVesselForm>
-            <VesselTypeSelector name={`${infractionPath}.vesselType`} />
+            <VesselTypeSelector name={`${infractionPath}.vesselType`} style={{ flex: '0 1 49%' }} />
           </StyledVesselForm>
         </>
       )}

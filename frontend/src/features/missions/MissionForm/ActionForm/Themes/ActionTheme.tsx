@@ -83,4 +83,5 @@ const ActionThemeWrapper = styled.div`
   flex-direction: column;
   flex: 1;
   gap: 8px;
+  max-width: 567px;
 `

@@ -58,20 +58,16 @@ export enum InfractionProvenEnum {
 
 export const InfractionProvenLabels = {
   PROVEN: {
-    label: 'Avéré',
+    label: 'avéré',
     value: true
   },
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   NOT_PROVEN: {
-    label: 'Non avéré',
+    label: 'non avéré',
     value: false
   }
 }
 
-export enum ProvenFiltersLabels {
-  PROVEN = 'Avéré',
-  NOT_PROVEN = 'Non avéré'
-}
 export enum ControlStatusEnum {
   CONTROL_TO_BE_DONE = 'CONTROL_TO_BE_DONE',
   CONTROL_DONE = 'CONTROL_DONE',

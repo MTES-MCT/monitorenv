@@ -30,9 +30,10 @@ export function NatinfSelector({ infractionPath }) {
       [],
     [data]
   )
-  const setValue = (nextValue: string[] | undefined) => {
+  const setValue = nextValue => {
     natinfHelpers.setValue(nextValue)
   }
+
   const customSearch = useMemo(() => new CustomSearch(sortedNatinfs, ['label', 'value']), [sortedNatinfs])
 
   if (isError) {

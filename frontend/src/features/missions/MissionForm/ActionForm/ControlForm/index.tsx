@@ -228,7 +228,7 @@ export function ControlForm({
           switch (reporting.targetType) {
             case ReportingTargetTypeEnum.VEHICLE:
               return {
-                controlledPersonIdentity: target?.vesselName ?? target?.operatorName,
+                controlledPersonIdentity: target?.operatorName,
                 registrationNumber: target?.externalReferenceNumber,
                 ...(reporting.vehicleType === VehicleTypeEnum.VESSEL && {
                   imo: target?.imo,
@@ -300,7 +300,6 @@ export function ControlForm({
       <Header>
         <TitleWithIcon>
           <Icon.ControlUnit color={THEME.color.gunMetal} />
-
           <ActionTitle>{pluralize('Contrôle', actionNumberOfControls ?? 0)}</ActionTitle>
           <ActionThemes>{themesAsText}</ActionThemes>
         </TitleWithIcon>
