@@ -153,7 +153,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         </Button>
         {isEditing && (
           <Button accent={Accent.SECONDARY} data-cy="interest-point-edit-delete" onClick={remove}>
-            Supprimer
+            Supprimer le point
           </Button>
         )}
 
