@@ -41,7 +41,7 @@ import { StationOverlay } from '../Station/components/StationOverlay'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
-export function Map() {
+export function Map({ isSuperUser }) {
   return (
     <BaseMap
     // BaseMap forwards map & mapClickEvent as props to children
@@ -77,65 +77,65 @@ export function Map() {
 
       {/* MAP */}
       {/* @ts-ignore */}
-      <MeasurementLayer />
+      {isSuperUser && <MeasurementLayer />}
       {/* @ts-ignore */}
-      <InterestPointLayer />
+      {isSuperUser && <InterestPointLayer />}
       {/* @ts-ignore */}
       <MapExtentController />
       {/* @ts-ignore */}
       <MapHistory />
       {/* @ts-ignore */}
-      <DrawLayer />
+      {isSuperUser && <DrawLayer />}
 
       {/* MISSION */}
       {/* @ts-ignore */}
-      <MissionsLayer />
+      {isSuperUser && <MissionsLayer />}
       {/* @ts-ignore */}
-      <SelectedMissionLayer />
+      {isSuperUser && <SelectedMissionLayer />}
       {/* @ts-ignore */}
-      <EditingMissionLayer />
+      {isSuperUser && <EditingMissionLayer />}
       {/* @ts-ignore */}
-      <HoveredMissionLayer />
+      {isSuperUser && <HoveredMissionLayer />}
       {/* @ts-ignore */}
-      <MissionOverlays />
+      {isSuperUser && <MissionOverlays />}
       {/* @ts-ignore */}
-      <ActionOverlay />
+      {isSuperUser && <ActionOverlay />}
       {/* @ts-ignore */}
-      <ReportingToAttachLayer />
+      {isSuperUser && <ReportingToAttachLayer />}
       {/* @ts-ignore */}
-      <HoveredReportingToAttachLayer />
+      {isSuperUser && <HoveredReportingToAttachLayer />}
       {/* @ts-ignore */}
-      <ReportingToAttachOverlays />
+      {isSuperUser && <ReportingToAttachOverlays />}
 
       {/* SEMAPHORE */}
       {/* @ts-ignore */}
       <SemaphoresLayer />
       {/* @ts-ignore */}
-      <SemaphoreOverlay />
+      <SemaphoreOverlay isSuperUser={isSuperUser} />
 
       {/* REPORTING */}
       {/* @ts-ignore */}
-      <EditingReportingLayer />
+      {isSuperUser && <EditingReportingLayer />}
       {/* @ts-ignore */}
-      <SelectedReportingLayer />
+      {isSuperUser && <SelectedReportingLayer />}
       {/* @ts-ignore */}
-      <HoveredReportingLayer />
+      {isSuperUser && <HoveredReportingLayer />}
       {/* @ts-ignore */}
-      <ReportingsLayer />
+      {isSuperUser && <ReportingsLayer />}
       {/* @ts-ignore */}
-      <ReportingOverlay />
+      {isSuperUser && <ReportingOverlay />}
       {/* @ts-ignore */}
-      <StationLayer />
+      {isSuperUser && <StationLayer />}
       {/* @ts-ignore */}
-      <StationOverlay />
+      {isSuperUser && <StationOverlay />}
       {/* @ts-ignore */}
-      <MissionToAttachLayer />
+      {isSuperUser && <MissionToAttachLayer />}
       {/* @ts-ignore */}
-      <HoveredMissionToAttachLayer />
+      {isSuperUser && <HoveredMissionToAttachLayer />}
       {/* @ts-ignore */}
-      <SelectedMissionToAttachLayer />
+      {isSuperUser && <SelectedMissionToAttachLayer />}
       {/* @ts-ignore */}
-      <MissionToAttachOverlays />
+      {isSuperUser && <MissionToAttachOverlays />}
     </BaseMap>
   )
 }
