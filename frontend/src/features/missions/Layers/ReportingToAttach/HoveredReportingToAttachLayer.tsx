@@ -4,7 +4,7 @@ import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { hoveredReportingStyleFn } from '../../../map/layers/Reportings/style'
+import { hoveredReportingStyleFn } from '../../../Reportings/Layers/Reporting/style'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'

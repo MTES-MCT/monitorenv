@@ -11,10 +11,10 @@ import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetFilteredReportingsQuery } from '../../../Reportings/hooks/useGetFilteredReportingsQuery'
+import { useGetFilteredReportingsQuery } from '../../hooks/useGetFilteredReportingsQuery'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 

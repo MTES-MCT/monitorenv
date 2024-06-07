@@ -86,7 +86,10 @@ export const SummaryContent = styled.div`
   flex: 1;
   color: ${p => p.theme.color.gunMetal};
 `
-
+export const SummaryContentFirstPart = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 export const NoteContent = styled.div`
   color: ${p => p.theme.color.gunMetal};
   font: normal normal normal 14px/20px Marianne;
@@ -124,7 +127,7 @@ export const DurationWrapper = styled.div`
   color: ${p => p.theme.color.slateGray};
 `
 
-export const ReportingDate = styled.p`
+export const ReportingDate = styled.span`
   color: ${p => p.theme.color.slateGray};
   padding-bottom: 8px;
 `
@@ -137,4 +140,11 @@ export const TagsContainer = styled.div`
   justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
+`
+
+export const ControlContainer = styled.div<{ $isEndAlign: boolean }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: ${p => (p.$isEndAlign ? 'end' : 'start')};
+  padding-top: 16px;
 `

@@ -10,9 +10,9 @@ import { editReportingInLocalStore } from '../../../../domain/use_cases/reportin
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
-import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
-import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
-import { getFormattedReportingId, getTimeLeft } from '../../../Reportings/utils'
+import { LinkToMissionTag } from '../../components/LinkToMissionTag'
+import { StatusActionTag } from '../../components/StatusActionTag'
+import { getFormattedReportingId, getTargetDetailsSubText, getTargetName, getTimeLeft } from '../../utils'
 
 type ReportingCardProps = {
   feature: any
@@ -70,15 +70,17 @@ export function ReportingCard({
     createdAt,
     description,
     detachedFromMissionAtUtc,
-    displayedSource,
     id,
     isArchived,
     missionId,
     reportingId,
     reportType,
     subThemeIds,
+    targetDetails,
+    targetType,
     themeId,
-    validityTime
+    validityTime,
+    vehicleType
   } = feature.getProperties()
 
   const creationDate = getLocalizedDayjs(createdAt).format('DD MMM YYYY à HH:mm')
@@ -86,6 +88,16 @@ export function ReportingCard({
   const timeLeft = getTimeLeft(endOfValidity)
 
   const subThemesFormatted = subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ')
+
+  const targetName = useMemo(
+    () => getTargetName({ target: targetDetails[0], targetType, vehicleType }),
+    [targetDetails, vehicleType, targetType]
+  )
+
+  const targetDetailsText = useMemo(
+    () => getTargetDetailsSubText({ target: targetDetails[0], targetType, vehicleType }),
+    [targetDetails, vehicleType, targetType]
+  )
 
   const timeLeftText = useMemo(() => {
     if (timeLeft < 0 || isArchived) {
@@ -128,8 +140,8 @@ export function ReportingCard({
     <Wrapper ref={ref} data-cy="reporting-overlay">
       <StyledHeader>
         <StyledHeaderFirstLine>
-          <StyledBoldText>{`SIGNALEMENT ${getFormattedReportingId(reportingId)}`}</StyledBoldText>
-          <StyledBoldText>{displayedSource}</StyledBoldText>
+          <StyledBoldText>{`${getFormattedReportingId(reportingId)} - ${targetName}`}</StyledBoldText>
+          <StyledBoldText>{targetDetailsText}</StyledBoldText>
           <StyledGrayText>
             <StyledBullet
               color={

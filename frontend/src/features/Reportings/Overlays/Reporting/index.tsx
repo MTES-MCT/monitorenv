@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { ReportingCard } from './ReportingCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
+import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 const OPTIONS = {
   margins: {

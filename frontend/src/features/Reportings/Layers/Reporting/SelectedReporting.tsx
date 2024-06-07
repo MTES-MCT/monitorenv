@@ -9,7 +9,7 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)

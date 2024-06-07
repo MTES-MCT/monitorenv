@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { ReportingSourceEnum, type Reporting, type TargetDetails } from '../../domain/entities/reporting'
 import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../domain/entities/targetType'
-import { vehicleTypeLabels, type VehicleTypeEnum } from '../../domain/entities/vehicleType'
+import { VehicleTypeEnum, vehicleTypeLabels } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
 
@@ -121,4 +121,41 @@ export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetails
 
 export function getTimeLeft(endOfValidity) {
   return customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+}
+
+export function getTargetName({ target, targetType, vehicleType }) {
+  if (targetType === ReportingTargetTypeEnum.VEHICLE) {
+    if (vehicleType === VehicleTypeEnum.VESSEL) {
+      return target?.vesselName
+    }
+
+    return target?.operatorName
+  }
+
+  return target?.vesselName ?? ''
+}
+
+export function getTargetDetailsSubText({ target, targetType, vehicleType }) {
+  if (targetType === ReportingTargetTypeEnum.VEHICLE) {
+    if (vehicleType === VehicleTypeEnum.VESSEL) {
+      let targetId = ''
+      if (target?.mmsi) {
+        targetId = `(MMSI: ${target?.mmsi}`
+      } else if (!target?.mmsi && target?.externalReferenceNumber) {
+        targetId = `(Immat: ${target?.externalReferenceNumber}`
+      } else if (!target?.mmsi && !target?.externalReferenceNumber && target?.imo) {
+        targetId = `(IMO: ${target?.imo}`
+      }
+
+      if (targetId !== '') {
+        return `${targetId}${target?.size ? ` - ${target?.size}m)` : ')'}`
+      }
+
+      return `${target?.size ? `(${target?.size}m)` : ''}`
+    }
+
+    return target?.externalReferenceNumber
+  }
+
+  return target?.operatorName ?? ''
 }

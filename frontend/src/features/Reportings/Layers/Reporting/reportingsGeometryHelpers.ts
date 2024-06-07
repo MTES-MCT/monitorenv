@@ -41,8 +41,11 @@ export const getReportingZoneFeature = (
     semaphoreId: reporting.semaphoreId,
     sourceName: reporting.sourceName,
     subThemeIds: reporting.subThemeIds,
+    targetDetails: reporting.targetDetails,
+    targetType: reporting.targetType,
     themeId: reporting.themeId,
-    validityTime: reporting.validityTime
+    validityTime: reporting.validityTime,
+    vehicleType: reporting.vehicleType
   })
 
   return feature
@@ -78,8 +81,11 @@ export const getEditingReportingZoneFeature = (reporting: AtLeast<ReportingDetai
     semaphoreId: reporting.semaphoreId,
     sourceName: reporting.sourceName,
     subThemeIds: reporting.subThemeIds,
+    targetDetails: reporting.targetDetails,
+    targetType: reporting.targetType,
     themeId: reporting.themeId,
-    validityTime: reporting.validityTime
+    validityTime: reporting.validityTime,
+    vehicleType: reporting.vehicleType
   })
 
   return feature

@@ -7,7 +7,7 @@ import { hoveredReportingStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function HoveredReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const vectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>

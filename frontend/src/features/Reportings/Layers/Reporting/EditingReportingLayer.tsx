@@ -9,7 +9,7 @@ import { VisibilityState } from '../../../../domain/shared_slices/Global'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)

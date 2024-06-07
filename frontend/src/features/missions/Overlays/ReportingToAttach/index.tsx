@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
-import { ReportingCard } from '../../../map/overlays/reportings/ReportingCard'
+import { ReportingCard } from '../../../Reportings/Overlays/Reporting/ReportingCard'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
