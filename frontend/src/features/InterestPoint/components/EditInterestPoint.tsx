@@ -10,31 +10,23 @@ import {
   OPENLAYERS_PROJECTION,
   TextInput,
   Textarea,
-  WSG84_PROJECTION,
-  coordinatesAreDistinct,
   getCoordinates
 } from '@mtes-mct/monitor-ui'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
-import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import {
-  addInterestPoint,
-  endDrawingInterestPoint,
-  startDrawingInterestPoint,
-  updateInterestPointByProperty
-} from '../slice'
+import { endDrawingInterestPoint, removeInterestPoint, saveInterestPoint, startDrawingInterestPoint } from '../slice'
 import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
+import { updateCoordinatesAction } from '../useCases/updateCoordinates'
+import { updateNameAction } from '../useCases/updateName'
+import { updateObservationsAction } from '../useCases/updateObservations'
 
-import type { Coordinate } from 'ol/coordinate'
-
-// TODO Refactor this component
-// - Move the state logic to the reducer
 type EditInterestPointProps = {
+  cancel: () => void
   close: () => void
 }
-export function EditInterestPoint({ close }: EditInterestPointProps) {
+export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
@@ -76,30 +68,16 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
 
   const updateName = useCallback(
     (name: string | undefined) => {
-      if (currentInterestPoint?.name !== name) {
-        dispatch(
-          updateInterestPointByProperty({
-            key: 'name',
-            value: name
-          })
-        )
-      }
+      dispatch(updateNameAction(name))
     },
-    [dispatch, currentInterestPoint?.name]
+    [dispatch]
   )
 
   const updateObservations = useCallback(
     (observations: string | undefined) => {
-      if (currentInterestPoint?.observations !== observations) {
-        dispatch(
-          updateInterestPointByProperty({
-            key: 'observations',
-            value: observations
-          })
-        )
-      }
+      dispatch(updateObservationsAction(observations))
     },
-    [dispatch, currentInterestPoint?.observations]
+    [dispatch]
   )
 
   /**
@@ -108,43 +86,26 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
    * @param {Coordinate} coordinates - Previous coordinates ([latitude, longitude]), in decimal format.
    */
   const updateCoordinates = useCallback(
-    (nextCoordinates: Coordinate, previousCoordinates: Coordinate) => {
-      if (nextCoordinates?.length) {
-        if (!previousCoordinates?.length || coordinatesAreDistinct(nextCoordinates, previousCoordinates)) {
-          const [latitude, longitude] = nextCoordinates
-          if (!latitude || !longitude) {
-            return
-          }
-
-          // Convert to [longitude, latitude] and OpenLayers projection
-          const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-          dispatch(
-            updateInterestPointByProperty({
-              key: 'coordinates',
-              value: updatedCoordinates
-            })
-          )
-        }
-      }
+    (nextCoordinates, previousCoordinates) => {
+      dispatch(updateCoordinatesAction(nextCoordinates, previousCoordinates))
     },
     [dispatch]
   )
-  const saveInterestPoint = () => {
-    if (coordinates?.length > 0) {
-      dispatch(saveInterestPointFeature())
-      dispatch(addInterestPoint())
-      close()
-    }
+  const save = () => {
+    dispatch(saveInterestPointFeature())
+    dispatch(saveInterestPoint())
+    close()
   }
 
-  const cancel = () => {
+  const remove = () => {
+    dispatch(removeInterestPoint(currentInterestPoint.uuid))
     close()
   }
 
   return (
     <MapMenuDialog.Container data-cy="save-interest-point">
       <MapMenuDialog.Header>
-        <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
+        <MapMenuDialog.CloseButton data-cy="interest-point-close" Icon={Icon.Close} onClick={cancel} />
         <MapMenuDialog.Title data-cy="interest-point-title">
           {isEditing ? 'Éditer' : 'Créer'} un point d&apos;intérêt
         </MapMenuDialog.Title>
@@ -177,10 +138,16 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         />
       </StyledDialogBody>
       <MapMenuDialog.Footer>
-        <Button data-cy="interest-point-save" onClick={saveInterestPoint}>
+        <Button data-cy="interest-point-save" disabled={coordinates.length === 0} onClick={save}>
           {textButton}
         </Button>
-        <Button accent={Accent.SECONDARY} disabled={isEditing} onClick={cancel}>
+        {isEditing && (
+          <Button accent={Accent.SECONDARY} data-cy="interest-point-edit-delete" onClick={remove}>
+            Supprimer le point
+          </Button>
+        )}
+
+        <Button accent={Accent.SECONDARY} data-cy="interest-point-cancel" onClick={cancel}>
           Annuler
         </Button>
       </MapMenuDialog.Footer>

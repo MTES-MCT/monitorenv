@@ -1,6 +1,7 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { EditInterestPoint } from '@features/InterestPoint/components/EditInterestPoint'
 import {
+  cancelEditingInterestPoint,
   endDrawingInterestPoint,
   removeUnsavedInterestPoint,
   startDrawingInterestPoint
@@ -13,7 +14,7 @@ import { MapToolType } from '../../../domain/entities/map/constants'
 import { globalActions, setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useEscapeFromKeyboardAndExecute } from '../../../hooks/useEscapeFromKeyboardAndExecute'
+import { useEscapeKey } from '../../../hooks/useEscapeKey'
 import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapper'
 
 export function InterestPointMapButton() {
@@ -37,9 +38,14 @@ export function InterestPointMapButton() {
     dispatch(globalActions.setIsMapToolVisible(undefined))
   }, [dispatch])
 
-  useEscapeFromKeyboardAndExecute(close)
+  const cancel = useCallback(() => {
+    dispatch(cancelEditingInterestPoint())
+    close()
+  }, [dispatch, close])
 
-  const toggleInterestPointMenu = () => {
+  useEscapeKey(cancel)
+
+  const toggleInterestPointMenu = useCallback(() => {
     if (!isOpen) {
       dispatch(
         setDisplayedItems({
@@ -55,11 +61,11 @@ export function InterestPointMapButton() {
     } else {
       close()
     }
-  }
+  }, [close, dispatch, isOpen])
 
   return (
     <ButtonWrapper ref={wrapperRef} topPosition={346}>
-      {isOpen && <EditInterestPoint close={close} />}
+      {isOpen && <EditInterestPoint cancel={cancel} close={close} />}
 
       <MenuWithCloseButton.ButtonOnMap
         className={isOpen ? '_active' : undefined}

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-export const useEscapeFromKeyboardAndExecute = (callback?: () => void) => {
+export const useEscapeKey = (onEscape?: () => void) => {
   useEffect(() => {
     const escapeFromKeyboard = event => {
-      if (event.key === 'Escape' && callback) {
-        callback()
+      if (event.key === 'Escape' && onEscape) {
+        onEscape()
       }
     }
 
@@ -13,5 +13,5 @@ export const useEscapeFromKeyboardAndExecute = (callback?: () => void) => {
     return () => {
       document.removeEventListener('keydown', escapeFromKeyboard, false)
     }
-  }, [callback])
+  }, [onEscape])
 }
