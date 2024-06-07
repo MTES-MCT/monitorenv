@@ -13,8 +13,6 @@ import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 
 import type { ReportingDetailed } from '../../../domain/entities/reporting'
 
-const TABLE_WIDTH = 1776 // (1920 (CACEM screen size) - 64 (left menu) - 40 (padding left) - 40 (padding right))
-
 export function ReportingsTable({
   isLoading,
   reportings
@@ -152,7 +150,6 @@ export function ReportingsTable({
 
 const StyledReportingsContainer = styled.div`
   overflow: auto;
-  width: ${TABLE_WIDTH}px;
 `
 
 /*
@@ -180,6 +177,7 @@ const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInT
                 > label {
                   .rs-checkbox-wrapper {
                     top: -8px;
+                    left: -21px;
                   }
                 }
               }
@@ -206,14 +204,11 @@ const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInT
 `
 
 const StyledTd = styled(TableWithSelectableRows.Td)`
-  &:first-child {
-    padding: 4px 16px 4px 4px;
-  }
   &:nth-child(11) {
     padding: 4px 0px 4px 16px;
   }
   &:nth-child(12) {
-    padding: 4px 0px;
+    padding: 4px;
   }
   &:nth-child(13) {
     padding: 4px 0px;
