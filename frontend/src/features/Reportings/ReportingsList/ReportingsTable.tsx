@@ -8,7 +8,6 @@ import styled, { css } from 'styled-components'
 
 import { Columns } from './Columns'
 import { GroupActions } from './GroupActions'
-import { TABLE_WIDTH } from '../../../constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 
@@ -151,7 +150,6 @@ export function ReportingsTable({
 
 const StyledReportingsContainer = styled.div`
   overflow: auto;
-  width: ${TABLE_WIDTH}px;
 `
 
 /*

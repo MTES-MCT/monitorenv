@@ -5,7 +5,6 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Columns } from './Columns'
-import { TABLE_WIDTH } from '../../../constants'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
@@ -121,7 +120,6 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
 const StyledMissionsContainer = styled.div`
   overflow: auto;
-  width: ${TABLE_WIDTH}px;
 `
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;
