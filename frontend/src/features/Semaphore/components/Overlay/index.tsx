@@ -8,7 +8,7 @@ import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPosition
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
-const MARGINS = {
+const SUPER_USER_MARGINS = {
   xLeft: 50,
   xMiddle: 30,
   xRight: -55,
@@ -16,7 +16,19 @@ const MARGINS = {
   yMiddle: 100,
   yTop: -170
 }
-export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
+
+const MARGINS = {
+  ...SUPER_USER_MARGINS,
+  yBottom: 10,
+  yMiddle: 10,
+  yTop: -70
+}
+
+type SemaphoreOverlayProps = BaseMapChildrenProps & {
+  isSuperUser: boolean
+}
+
+export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map }: SemaphoreOverlayProps) {
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
   const displaySemaphoreOverlay = useAppSelector(state => state.global.displaySemaphoreOverlay)
 
@@ -44,19 +56,19 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         feature={displaySemaphoreOverlay ? selectedFeature : undefined}
         featureIsShowed
         map={map}
-        options={{ margins: MARGINS }}
+        options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
         zIndex={3000}
       >
-        <SemaphoreCard feature={selectedFeature} selected />
+        <SemaphoreCard feature={selectedFeature} isSuperUser={isSuperUser} selected />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-hover"
         feature={displaySemaphoreOverlay && displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
-        options={{ margins: MARGINS }}
+        options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
         zIndex={3000}
       >
-        <SemaphoreCard feature={hoveredFeature} />
+        <SemaphoreCard feature={hoveredFeature} isSuperUser={isSuperUser} />
       </OverlayPositionOnCentroid>
     </>
   )
