@@ -17,6 +17,8 @@ import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
 import { RegulatoryLayers } from './layers/Regulatory'
 import { RegulatoryPreviewLayer } from './layers/Regulatory/RegulatoryPreviewLayer'
 import { SemaphoresLayer } from './layers/Semaphores'
+import { HoveredSemaphoreLayer } from './layers/Semaphores/HoveredSemaphoreLayer'
+import { SelectedSemaphoreLayer } from './layers/Semaphores/SelectedSemaphoreLayer'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
@@ -110,6 +112,10 @@ export function Map() {
       {/* SEMAPHORE */}
       {/* @ts-ignore */}
       <SemaphoresLayer />
+      {/* @ts-ignore */}
+      <HoveredSemaphoreLayer />
+      {/* @ts-ignore */}
+      <SelectedSemaphoreLayer />
       {/* @ts-ignore */}
       <SemaphoreOverlay />
 

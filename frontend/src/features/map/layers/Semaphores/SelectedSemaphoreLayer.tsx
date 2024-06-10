@@ -1,0 +1,103 @@
+import { useGetReportingsQuery } from '@api/reportingsAPI'
+import VectorLayer from 'ol/layer/Vector'
+import VectorSource from 'ol/source/Vector'
+import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+
+import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
+import { selectedSemaphoresStyleFn } from './style'
+import { getReportingsBySemaphoreId } from './utils'
+import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
+
+import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
+
+export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
+  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
+  const isSemaphoreHighlighted = useAppSelector(state => state.semaphoresSlice.isSemaphoreHighlighted)
+  const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
+
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
+  // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = useMemo(
+    () => displaySemaphoresLayer && !hasMapInteraction && !!selectedSemaphoreId,
+    [displaySemaphoresLayer, hasMapInteraction, selectedSemaphoreId]
+  )
+
+  const { data: semaphores } = useGetSemaphoresQuery()
+  const { data: reportings } = useGetReportingsQuery()
+
+  const semaphore = useMemo(() => {
+    const semaphoresList = semaphores?.entities
+    if (!selectedSemaphoreId || !semaphoresList) {
+      return undefined
+    }
+
+    return semaphoresList[selectedSemaphoreId]
+  }, [semaphores, selectedSemaphoreId])
+
+  const reportingsBySemaphoreId = getReportingsBySemaphoreId(reportings)
+
+  const semaphorePoint = useMemo(() => {
+    if (!selectedSemaphoreId || !semaphore) {
+      return undefined
+    }
+    const semaphoreFeature = getSemaphoreZoneFeature(semaphore, Layers.SEMAPHORES.code)
+    const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
+
+    semaphoreFeature.setProperties({
+      isHighlighted: semaphoreFeature.getId() === selectedSemaphore && isSemaphoreHighlighted,
+      isSelected: true,
+      overlayCoordinates:
+        semaphoreFeature.getId() === selectedSemaphore ? overlayCoordinates[Layers.SEMAPHORES.code] : undefined,
+      reportingsAttachedToSemaphore: reportingsBySemaphoreId[selectedSemaphoreId]
+    })
+
+    return semaphoreFeature
+  }, [selectedSemaphoreId, semaphore, isSemaphoreHighlighted, overlayCoordinates, reportingsBySemaphoreId])
+
+  const selectedSemaphoreVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
+    VectorSource<Feature<Geometry>>
+  >
+  const selectedSemaphoreVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: selectedSemaphoreVectorSourceRef.current,
+      style: selectedSemaphoresStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.SEMAPHORES.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(selectedSemaphoreVectorLayerRef.current as VectorLayerWithName).name = Layers.SEMAPHORES.code
+
+  useEffect(() => {
+    if (map) {
+      map.getLayers().push(selectedSemaphoreVectorLayerRef.current)
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      return () => map.removeLayer(selectedSemaphoreVectorLayerRef.current)
+    }
+
+    return () => {}
+  }, [map])
+
+  useEffect(() => {
+    selectedSemaphoreVectorSourceRef.current?.clear(true)
+    if (semaphorePoint) {
+      selectedSemaphoreVectorSourceRef.current?.addFeature(semaphorePoint)
+    }
+  }, [semaphorePoint])
+
+  useEffect(() => {
+    selectedSemaphoreVectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
+
+  return null
+}
