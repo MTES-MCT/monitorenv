@@ -41,7 +41,7 @@ export function ReportingCard({
       vehicleType: action.vehicleType
     })
 
-    return `${targetName} ${targetDetails}`
+    return `${targetName} ${targetDetails ? `(${targetDetails})` : ''}`
   }, [action.targetDetails, action.targetType, action.vehicleType])
 
   const addAttachedControl = e => {

@@ -1,4 +1,6 @@
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
+import { vehicleTypeLabels } from 'domain/entities/vehicleType'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -89,15 +91,25 @@ export function ReportingCard({
 
   const subThemesFormatted = subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ')
 
-  const targetName = useMemo(
-    () => getTargetName({ target: targetDetails[0], targetType, vehicleType }),
-    [targetDetails, vehicleType, targetType]
-  )
+  const targetName = useMemo(() => {
+    if (targetDetails.length > 1) {
+      if (vehicleType) {
+        return `${targetDetails.length} ${vehicleTypeLabels[vehicleType].label}s`
+      }
 
-  const targetDetailsText = useMemo(
-    () => getTargetDetailsSubText({ target: targetDetails[0], targetType, vehicleType }),
-    [targetDetails, vehicleType, targetType]
-  )
+      return `${targetDetails.length} ${ReportingTargetTypeLabels[targetType]}s`
+    }
+
+    return getTargetName({ target: targetDetails[0], targetType, vehicleType })
+  }, [targetDetails, vehicleType, targetType])
+
+  const targetDetailsText = useMemo(() => {
+    if (targetDetails.length > 1) {
+      return undefined
+    }
+
+    return getTargetDetailsSubText({ target: targetDetails[0], targetType, vehicleType })
+  }, [targetDetails, vehicleType, targetType])
 
   const timeLeftText = useMemo(() => {
     if (timeLeft < 0 || isArchived) {
@@ -141,7 +153,7 @@ export function ReportingCard({
       <StyledHeader>
         <StyledHeaderFirstLine>
           <StyledBoldText>{`${getFormattedReportingId(reportingId)} - ${targetName}`}</StyledBoldText>
-          <StyledBoldText>{targetDetailsText}</StyledBoldText>
+          {targetDetailsText && <StyledBoldText>{targetDetailsText}</StyledBoldText>}
           <StyledGrayText>
             <StyledBullet
               color={
@@ -200,7 +212,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 0 0 345px;
+  flex: 0 0 360px;
 `
 const StyledHeader = styled.div`
   display: flex;
@@ -214,7 +226,7 @@ const StyledHeaderFirstLine = styled.div`
   flex-direction: column;
   align-items: start;
   > span {
-    max-width: 190px;
+    max-width: 210px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

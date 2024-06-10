@@ -126,13 +126,13 @@ export function getTimeLeft(endOfValidity) {
 export function getTargetName({ target, targetType, vehicleType }) {
   if (targetType === ReportingTargetTypeEnum.VEHICLE) {
     if (vehicleType === VehicleTypeEnum.VESSEL) {
-      return target?.vesselName
+      return target?.vesselName ?? ''
     }
 
-    return target?.operatorName
+    return target?.externalReferenceNumber ?? ''
   }
 
-  return target?.vesselName ?? ''
+  return target?.operatorName ?? ''
 }
 
 export function getTargetDetailsSubText({ target, targetType, vehicleType }) {
@@ -140,22 +140,22 @@ export function getTargetDetailsSubText({ target, targetType, vehicleType }) {
     if (vehicleType === VehicleTypeEnum.VESSEL) {
       let targetId = ''
       if (target?.mmsi) {
-        targetId = `(MMSI: ${target?.mmsi}`
+        targetId = `MMSI ${target?.mmsi}`
       } else if (!target?.mmsi && target?.externalReferenceNumber) {
-        targetId = `(Immat: ${target?.externalReferenceNumber}`
+        targetId = `Immat ${target?.externalReferenceNumber}`
       } else if (!target?.mmsi && !target?.externalReferenceNumber && target?.imo) {
-        targetId = `(IMO: ${target?.imo}`
+        targetId = `IMO ${target?.imo}`
       }
 
       if (targetId !== '') {
-        return `${targetId}${target?.size ? ` - ${target?.size}m)` : ')'}`
+        return `${targetId}${target?.size ? ` - ${target?.size}m` : ''}`
       }
 
       return `${target?.size ? `(${target?.size}m)` : ''}`
     }
 
-    return target?.externalReferenceNumber
+    return target?.operatorName
   }
 
-  return target?.operatorName ?? ''
+  return target?.vesselName
 }
