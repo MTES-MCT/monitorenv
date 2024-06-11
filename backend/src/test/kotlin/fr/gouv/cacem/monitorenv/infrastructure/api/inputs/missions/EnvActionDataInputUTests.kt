@@ -5,25 +5,26 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionDataInput
-import org.junit.jupiter.api.Assertions.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.Optional
 import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
-class MissionEnvActionDataInputUTests {
+class EnvActionDataInputUTests {
 
-    @MockBean private lateinit var missionEnvActionDataInput: MissionEnvActionDataInput
+    @MockBean
+    private lateinit var envActionDataInput: EnvActionDataInput
 
     @Test
     fun toEnvActionEntityControlType() {
         val input =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
@@ -38,7 +39,7 @@ class MissionEnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = Optional.of(listOf(1)),
+                reportingIds = listOf(1),
             )
 
         val entity = input.toEnvActionEntity()
@@ -50,7 +51,7 @@ class MissionEnvActionDataInputUTests {
     @Test
     fun toEnvActionEntitySurveillanceType() {
         val input =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
@@ -61,7 +62,7 @@ class MissionEnvActionDataInputUTests {
                 facade = "TestFacade",
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = Optional.of(listOf()),
+                reportingIds = listOf(1),
             )
 
         val entity = input.toEnvActionEntity()
@@ -73,13 +74,13 @@ class MissionEnvActionDataInputUTests {
     @Test
     fun toEnvActionEntityNoteType() {
         val input =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
-                reportingIds = Optional.empty(),
+                reportingIds = listOf(),
             )
 
         val entity = input.toEnvActionEntity()
@@ -91,13 +92,13 @@ class MissionEnvActionDataInputUTests {
     @Test
     fun `toEnvActionEntity should fail when reportingIds is set in Note Action`() {
         val input =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
-                reportingIds = Optional.of(listOf(1, 2, 3)),
+                reportingIds = listOf(1, 2, 3),
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -106,7 +107,7 @@ class MissionEnvActionDataInputUTests {
     @Test
     fun `toEnvActionEntity should fail when reportingIds is not set for Surveillance Action`() {
         val input =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
@@ -117,7 +118,7 @@ class MissionEnvActionDataInputUTests {
                 facade = "TestFacade",
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = Optional.empty(),
+                reportingIds = listOf(),
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -126,7 +127,7 @@ class MissionEnvActionDataInputUTests {
     @Test
     fun `toEnvActionEntity should fail when reportingIds is not set for control Actions`() {
         val input =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
@@ -141,7 +142,7 @@ class MissionEnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = Optional.empty(),
+                reportingIds = listOf(),
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -150,7 +151,7 @@ class MissionEnvActionDataInputUTests {
     @Test
     fun `toEnvActionEntity should fail when reportingIds is set with more than 1 id for control Actions`() {
         val input =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
@@ -165,7 +166,7 @@ class MissionEnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = Optional.of(listOf(1, 2)),
+                reportingIds = listOf(1, 2),
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }

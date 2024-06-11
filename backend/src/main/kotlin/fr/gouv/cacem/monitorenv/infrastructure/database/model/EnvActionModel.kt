@@ -158,10 +158,12 @@ class EnvActionModel(
             isSafetyEquipmentAndStandardsComplianceControl =
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
+            missionId = mission.id,
             openBy = openBy,
             value = value,
         )
     }
+
     companion object {
         fun fromEnvActionEntity(
             action: EnvActionEntity,
@@ -194,31 +196,34 @@ class EnvActionModel(
                 )
             action.controlPlans?.forEach {
                 if (it.themeId == null) return@forEach
-                envActionModel.controlPlanThemes?.add(
-                    EnvActionsControlPlanThemeModel.fromEnvActionControlPlanThemeEntity(
-                        envAction = envActionModel,
-                        controlPlanTheme = controlPlanThemesReferenceModelMap[it.themeId]!!,
-                    ),
-                )
-                it.subThemeIds?.forEach { subThemeId ->
-                    envActionModel.controlPlanSubThemes?.add(
-                        EnvActionsControlPlanSubThemeModel
-                            .fromEnvActionControlPlanSubThemeEntity(
-                                envAction = envActionModel,
-                                controlPlanSubTheme =
-                                controlPlanSubThemesReferenceModelMap[
-                                    subThemeId,
-                                ]!!,
-                            ),
-                    )
-                }
-                it.tagIds?.forEach { tagId ->
-                    envActionModel.controlPlanTags?.add(
-                        EnvActionsControlPlanTagModel.fromEnvActionControlPlanTagEntity(
+                controlPlanThemesReferenceModelMap[it.themeId]?.let { controlPlanTheme ->
+                    envActionModel.controlPlanThemes?.add(
+                        EnvActionsControlPlanThemeModel.fromEnvActionControlPlanThemeEntity(
                             envAction = envActionModel,
-                            controlPlanTag = controlPlanTagsReferenceModelMap[tagId]!!,
+                            controlPlanTheme = controlPlanTheme,
                         ),
                     )
+                }
+                it.subThemeIds?.forEach { subThemeId ->
+                    controlPlanSubThemesReferenceModelMap[subThemeId]?.let { controlPlanSubTheme ->
+                        envActionModel.controlPlanSubThemes?.add(
+                            EnvActionsControlPlanSubThemeModel
+                                .fromEnvActionControlPlanSubThemeEntity(
+                                    envAction = envActionModel,
+                                    controlPlanSubTheme = controlPlanSubTheme,
+                                ),
+                        )
+                    }
+                }
+                it.tagIds?.forEach { tagId ->
+                    controlPlanTagsReferenceModelMap[tagId]?.let { controlPlanTag ->
+                        envActionModel.controlPlanTags?.add(
+                            EnvActionsControlPlanTagModel.fromEnvActionControlPlanTagEntity(
+                                envAction = envActionModel,
+                                controlPlanTag = controlPlanTag,
+                            ),
+                        )
+                    }
                 }
             }
             return envActionModel

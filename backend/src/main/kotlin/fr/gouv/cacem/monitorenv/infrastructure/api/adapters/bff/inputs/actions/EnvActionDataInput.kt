@@ -1,24 +1,31 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.Patchable
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlInfractionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlPlanDataInput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.Optional
 import java.util.UUID
 
-data class MissionEnvActionDataInput(
+data class EnvActionDataInput(
     val id: UUID,
     val actionType: ActionTypeEnum,
+    @Patchable
     val actionStartDateTimeUtc: ZonedDateTime? = null,
 
     // Common to all action Types
     val observations: String? = null,
 
     // EnvActionControl + EnvSurveillance Properties
+    @Patchable
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val completedBy: String? = null,
     val completion: ActionCompletionEnum? = null,
@@ -39,21 +46,23 @@ data class MissionEnvActionDataInput(
     val isSeafarersControl: Boolean? = null,
 
     // complementary properties
-    val reportingIds: Optional<List<Int>>,
+    val reportingIds: List<Int>,
 ) {
-    fun validate() {
+    private fun validate() {
         when (actionType) {
             ActionTypeEnum.CONTROL ->
-                require(this.reportingIds.isPresent && this.reportingIds.get().size < 2) {
+                require(this.reportingIds.isNotEmpty() && this.reportingIds.size < 2) {
                     "ReportingIds must not be null and maximum 1 id for Controls"
                 }
+
             ActionTypeEnum.SURVEILLANCE ->
-                require(this.reportingIds.isPresent) {
+                require(this.reportingIds.isNotEmpty()) {
                     "ReportingIds must not be null for Surveillance Action"
                 }
+
             ActionTypeEnum.NOTE ->
                 require(
-                    !this.reportingIds.isPresent,
+                    this.reportingIds.isEmpty(),
                 ) { "ReportingIds must not be present for Notes" }
         }
     }
@@ -87,6 +96,7 @@ data class MissionEnvActionDataInput(
                     openBy = this.openBy,
                     vehicleType = this.vehicleType,
                 )
+
             ActionTypeEnum.SURVEILLANCE ->
                 return EnvActionSurveillanceEntity(
                     id = this.id,
@@ -102,12 +112,14 @@ data class MissionEnvActionDataInput(
                     observations = this.observations,
                     openBy = this.openBy,
                 )
+
             ActionTypeEnum.NOTE ->
                 return EnvActionNoteEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     observations = this.observations,
                 )
+
             else -> throw Exception("Action type not supported")
         }
     }

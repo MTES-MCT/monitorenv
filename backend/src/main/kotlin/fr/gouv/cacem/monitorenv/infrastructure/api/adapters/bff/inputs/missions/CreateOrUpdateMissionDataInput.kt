@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -14,7 +15,7 @@ data class CreateOrUpdateMissionDataInput(
     val attachedReportingIds: List<Int>,
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val completedBy: String? = null,
-    val envActions: List<MissionEnvActionDataInput>? = null,
+    val envActions: List<EnvActionDataInput>? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
     val hasMissionOrder: Boolean? = false,
@@ -59,7 +60,7 @@ data class CreateOrUpdateMissionDataInput(
                 it.actionType == ActionTypeEnum.SURVEILLANCE ||
                     it.actionType == ActionTypeEnum.CONTROL
             }
-            ?.map { Pair(it.id, it.reportingIds.get()) }
+            ?.map { Pair(it.id, it.reportingIds) }
             ?: listOf()
     }
 }

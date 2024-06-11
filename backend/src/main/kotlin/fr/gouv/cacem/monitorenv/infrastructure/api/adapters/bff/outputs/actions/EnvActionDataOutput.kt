@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttached
 import java.time.ZonedDateTime
 import java.util.UUID
 
-abstract class MissionEnvActionDataOutput(
+abstract class EnvActionDataOutput(
     open val id: UUID,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val actionType: ActionTypeEnum,
@@ -18,10 +18,10 @@ abstract class MissionEnvActionDataOutput(
         fun fromEnvActionEntity(
             envActionEntity: EnvActionEntity,
             envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?,
-        ): MissionEnvActionDataOutput {
+        ): EnvActionDataOutput {
             return when (envActionEntity.actionType) {
                 ActionTypeEnum.CONTROL ->
-                    MissionEnvActionControlDataOutput.fromEnvActionControlEntity(
+                    EnvActionControlDataOutput.fromEnvActionControlEntity(
                         envActionControlEntity = envActionEntity as EnvActionControlEntity,
                         reportingIds =
                         envActionsAttachedToReportingIds
@@ -29,8 +29,9 @@ abstract class MissionEnvActionDataOutput(
                             ?.second
                             ?: listOf(),
                     )
+
                 ActionTypeEnum.SURVEILLANCE ->
-                    MissionEnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
+                    EnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
                         envActionSurveillanceEntity =
                         envActionEntity as EnvActionSurveillanceEntity,
                         reportingIds =
@@ -39,8 +40,33 @@ abstract class MissionEnvActionDataOutput(
                             ?.second
                             ?: listOf(),
                     )
+
                 ActionTypeEnum.NOTE ->
-                    MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
+                    EnvActionNoteDataOutput.fromEnvActionNoteEntity(
+                        envActionEntity as EnvActionNoteEntity,
+                    )
+            }
+        }
+
+        fun fromEnvActionEntity(
+            envActionEntity: EnvActionEntity,
+        ): EnvActionDataOutput {
+            return when (envActionEntity.actionType) {
+                ActionTypeEnum.CONTROL ->
+                    EnvActionControlDataOutput.fromEnvActionControlEntity(
+                        envActionControlEntity = envActionEntity as EnvActionControlEntity,
+                        listOf(),
+                    )
+
+                ActionTypeEnum.SURVEILLANCE ->
+                    EnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
+                        envActionSurveillanceEntity =
+                        envActionEntity as EnvActionSurveillanceEntity,
+                        listOf(),
+                    )
+
+                ActionTypeEnum.NOTE ->
+                    EnvActionNoteDataOutput.fromEnvActionNoteEntity(
                         envActionEntity as EnvActionNoteEntity,
                     )
             }

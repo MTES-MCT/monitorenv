@@ -8,6 +8,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionControlDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionNoteDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionSurveillanceDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
@@ -27,7 +31,7 @@ data class MissionDataOutput(
     val endDateTimeUtc: ZonedDateTime? = null,
     val createdAtUtc: ZonedDateTime? = null,
     val updatedAtUtc: ZonedDateTime? = null,
-    val envActions: List<MissionEnvActionDataOutput>? = null,
+    val envActions: List<EnvActionDataOutput>? = null,
     val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
     val missionSource: MissionSourceEnum,
     val hasMissionOrder: Boolean,
@@ -63,7 +67,7 @@ data class MissionDataOutput(
                     dto.mission.envActions?.map {
                         when (it.actionType) {
                             ActionTypeEnum.CONTROL ->
-                                MissionEnvActionControlDataOutput
+                                EnvActionControlDataOutput
                                     .fromEnvActionControlEntity(
                                         envActionControlEntity =
                                         it as EnvActionControlEntity,
@@ -76,8 +80,9 @@ data class MissionDataOutput(
                                             ?.second
                                             ?: listOf(),
                                     )
+
                             ActionTypeEnum.SURVEILLANCE -> {
-                                MissionEnvActionSurveillanceDataOutput
+                                EnvActionSurveillanceDataOutput
                                     .fromEnvActionSurveillanceEntity(
                                         envActionSurveillanceEntity =
                                         it as EnvActionSurveillanceEntity,
@@ -90,8 +95,9 @@ data class MissionDataOutput(
                                             ?: listOf(),
                                     )
                             }
+
                             ActionTypeEnum.NOTE ->
-                                MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
+                                EnvActionNoteDataOutput.fromEnvActionNoteEntity(
                                     it as EnvActionNoteEntity,
                                 )
                         }

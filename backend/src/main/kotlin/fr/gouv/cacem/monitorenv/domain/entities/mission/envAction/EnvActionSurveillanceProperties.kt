@@ -17,6 +17,7 @@ data class EnvActionSurveillanceProperties(
         controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
+        missionId: Int?,
         geom: Geometry?,
         openBy: String?,
     ) =
@@ -30,9 +31,11 @@ data class EnvActionSurveillanceProperties(
             department = department,
             facade = facade,
             geom = geom,
+            missionId = missionId,
             observations = observations,
             openBy = openBy,
         )
+
     companion object {
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) =
             EnvActionSurveillanceProperties(

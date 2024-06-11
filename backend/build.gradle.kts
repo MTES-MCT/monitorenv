@@ -9,7 +9,6 @@ plugins {
     kotlin("plugin.jpa") version "1.9.10"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     kotlin("plugin.serialization") version "1.9.21"
-    id("org.jetbrains.kotlin.kapt") version "2.0.0"
 }
 
 repositories {
@@ -77,8 +76,6 @@ dependencies {
     api("io.sentry:sentry:6.31.0")
     api("io.sentry:sentry-log4j2:7.8.0")
     api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
-    implementation("org.mapstruct:mapstruct:1.5.5.Final")
-    kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
     runtimeOnly("org.springframework.boot:spring-boot-devtools:3.2.5")
     runtimeOnly("org.postgresql:postgresql:42.6.0")
     testImplementation("io.ktor:ktor-client-mock-jvm:2.3.7")
@@ -160,13 +157,6 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     android.set(false)
     outputToConsole.set(true)
     ignoreFailures.set(true)
-}
-
-kapt {
-    correctErrorTypes = true
-    arguments {
-        arg("mapstruct.defaultComponentModel", "spring")
-    }
 }
 
 tasks.named<Test>("test") {
