@@ -8,7 +8,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.Patchable
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlInfractionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlPlanDataInput
 import org.locationtech.jts.geom.Geometry
@@ -18,14 +17,12 @@ import java.util.UUID
 data class EnvActionDataInput(
     val id: UUID,
     val actionType: ActionTypeEnum,
-    @Patchable
     val actionStartDateTimeUtc: ZonedDateTime? = null,
 
     // Common to all action Types
     val observations: String? = null,
 
     // EnvActionControl + EnvSurveillance Properties
-    @Patchable
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val completedBy: String? = null,
     val completion: ActionCompletionEnum? = null,
