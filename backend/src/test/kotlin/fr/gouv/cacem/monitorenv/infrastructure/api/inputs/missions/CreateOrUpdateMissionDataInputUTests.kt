@@ -10,16 +10,10 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.E
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.UUID
 
-@ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionDataInputUTests {
-    @MockBean
-    private lateinit var envActionDataInput: EnvActionDataInput
 
     @Test
     fun `getEnvActionsAttachedToReportings should return reportingIds pairs`() {

@@ -32,7 +32,7 @@ class EnvActionsControlPlanThemeModel(
     @Column(name = "order_index", updatable = false, insertable = false)
     val orderIndex: Int? = null,
 
-    ) {
+) {
     companion object {
         fun fromEnvActionControlPlanThemeEntity(
             envAction: EnvActionModel,
