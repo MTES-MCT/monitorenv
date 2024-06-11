@@ -12,12 +12,10 @@ import org.junit.jupiter.api.assertThrows
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
 
-@SpringBootTest(properties = ["monitorenv.scheduling.enabled=false"])
 class JpaReportingRepositoryITests : AbstractDBTests() {
     @Autowired private lateinit var jpaReportingRepository: JpaReportingRepository
 
