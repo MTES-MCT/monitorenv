@@ -1,6 +1,6 @@
 import { RegulatoryLayersList } from './MyRegulatoryLayersList'
 import { getSelectedRegulatoryLayers } from '../../../api/regulatoryLayersAPI'
-import { toggleMyRegulatoryZones } from '../../../domain/shared_slices/LayerSidebar'
+import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
@@ -15,7 +15,7 @@ export function RegulatoryLayers() {
   const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryLayers(state))
 
   const onTitleClicked = () => {
-    dispatch(toggleMyRegulatoryZones())
+    dispatch(layerSidebarActions.toggleMyRegulatoryZones())
     if (myRegulatoryZonesIsOpen) {
       dispatch(closeMetadataPanel())
     }

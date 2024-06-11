@@ -50,7 +50,15 @@ export function useSearchLayers({ amps, regulatoryLayers }) {
         let searchedAMPS
         let itemSchema
         if (shouldSearchByText || shouldSeachTroughAMPTypes) {
-          const filterWithTextExpression = shouldSearchByText ? { $path: ['name'], $val: searchedText } : undefined
+          const filterWithTextExpression = shouldSearchByText
+            ? {
+                $or: [
+                  { $path: ['name'], $val: searchedText },
+                  { $path: ['type'], $val: searchedText }
+                ],
+                $val: searchedText
+              }
+            : undefined
           const filterWithType = shouldSeachTroughAMPTypes
             ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) }
             : undefined

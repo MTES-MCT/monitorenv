@@ -2,7 +2,7 @@ import { MultiRadio, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { BaseLayerLabel } from '../../../domain/entities/layers/constants'
-import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
+import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -16,7 +16,7 @@ export function BaseLayerList() {
   const baselayerIsOpen = useAppSelector(state => state.layerSidebar.baselayerIsOpen)
   const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
   const onSectionTitleClicked = () => {
-    dispatch(toggleBaseLayer())
+    dispatch(layerSidebarActions.toggleBaseLayer())
   }
   const handleSelectBaseLayer = layercode => {
     dispatch(selectBaseLayer(layercode))

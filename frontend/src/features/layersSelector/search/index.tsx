@@ -1,6 +1,7 @@
 import { type Option } from '@mtes-mct/monitor-ui'
+import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { useSearchLayers } from './hooks/useSearchLayers'
@@ -25,8 +26,7 @@ export function LayerSearch() {
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
-
-  const [displayRegFilters, setDisplayRegFilters] = useState<boolean>(false)
+  const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
 
   const debouncedSearchLayers = useSearchLayers({ amps, regulatoryLayers })
 
@@ -75,8 +75,8 @@ export function LayerSearch() {
     })
   }
 
-  const toggleRegFilters = () => {
-    setDisplayRegFilters(!displayRegFilters)
+  const openOrCloseRegFilters = () => {
+    dispatch(layerSidebarActions.toggleRegFilters())
   }
 
   const ampTypes = useMemo(
@@ -118,7 +118,7 @@ export function LayerSearch() {
           globalSearchText={globalSearchText}
           placeholder="Rechercher une zone"
           setGlobalSearchText={handleSearchInputChange}
-          toggleRegFilters={toggleRegFilters}
+          toggleRegFilters={openOrCloseRegFilters}
         />
         {displayRegFilters && (
           <LayerFilters
