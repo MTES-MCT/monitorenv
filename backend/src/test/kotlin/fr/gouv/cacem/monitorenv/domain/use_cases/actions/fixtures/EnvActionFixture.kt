@@ -12,17 +12,6 @@ import java.util.UUID
 class EnvActionFixture {
 
     companion object {
-        fun anEnvAction(
-            mapper: ObjectMapper,
-            id: UUID,
-        ): EnvActionEntity {
-            return anEnvAction(
-                mapper,
-                id = id,
-                startTime = ZonedDateTime.now(),
-                endTime = ZonedDateTime.now().plusDays(1),
-            )
-        }
 
         fun anEnvAction(
             mapper: ObjectMapper,
@@ -59,7 +48,5 @@ class EnvActionFixture {
             val jsonNode = objectMapper.readTree(partialEnvActionAsJson)
             return PatchableEntity(jsonNode)
         }
-
-
     }
 }

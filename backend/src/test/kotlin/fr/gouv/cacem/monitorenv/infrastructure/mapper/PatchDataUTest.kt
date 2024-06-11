@@ -19,7 +19,7 @@ class PatchDataUTest {
     private val objectMapper = MapperConfiguration().objectMapper()
 
     private val patchData = PatchData<EnvActionEntity>(objectMapper)
-    
+
     @Test
     fun `patch should override properties when setted`() {
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
@@ -33,7 +33,9 @@ class PatchDataUTest {
         val patchableEntity = PatchableEntity(jsonNode)
         val patched = patchData.execute(
             anEnvAction(
-                objectMapper, UUID.randomUUID(), startTime = yesterday,
+                objectMapper,
+                UUID.randomUUID(),
+                startTime = yesterday,
                 endTime = today,
             ),
             patchableEntity,
@@ -57,7 +59,9 @@ class PatchDataUTest {
 
         val patched = patchData.execute(
             anEnvAction(
-                objectMapper, UUID.randomUUID(), startTime = yesterday,
+                objectMapper,
+                UUID.randomUUID(),
+                startTime = yesterday,
                 endTime = today,
             ),
             patchableEntity,
@@ -82,7 +86,9 @@ class PatchDataUTest {
         // When
         val patched = patchData.execute(
             anEnvAction(
-                objectMapper, UUID.randomUUID(), startTime = yesterday,
+                objectMapper,
+                UUID.randomUUID(),
+                startTime = yesterday,
                 endTime = today,
             ),
             patchableEntity,
@@ -107,7 +113,9 @@ class PatchDataUTest {
         val exception = assertThrows<BackendRequestException> {
             patchData.execute(
                 anEnvAction(
-                    objectMapper, UUID.randomUUID(), startTime = yesterday,
+                    objectMapper,
+                    UUID.randomUUID(),
+                    startTime = yesterday,
                     endTime = today,
                 ),
                 patchableEntity,
@@ -131,7 +139,9 @@ class PatchDataUTest {
         val exception = assertThrows<BackendRequestException> {
             patchData.execute(
                 anEnvAction(
-                    objectMapper, UUID.randomUUID(), startTime = yesterday,
+                    objectMapper,
+                    UUID.randomUUID(),
+                    startTime = yesterday,
                     endTime = today,
                 ),
                 patchableEntity,
@@ -155,7 +165,9 @@ class PatchDataUTest {
         val exception = assertThrows<BackendRequestException> {
             patchData.execute(
                 anEnvAction(
-                    objectMapper, UUID.randomUUID(), startTime = yesterday,
+                    objectMapper,
+                    UUID.randomUUID(),
+                    startTime = yesterday,
                     endTime = today,
                 ),
                 patchableEntity,

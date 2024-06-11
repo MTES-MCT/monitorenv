@@ -76,42 +76,6 @@ class EnvActionITest {
             )
     }
 
-    fun `patch()`() {
-        // Given
-        val id = UUID.randomUUID()
-        val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
-        val today = ZonedDateTime.now(ZoneOffset.UTC)
-        val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val partialEnvActionAsJson = """
-            { "actionEndDateTimeUtc": "$tomorrow",
-              "actionStartDateTimeUtc": "$today" }
-        """.trimIndent()
-        val patchedEnvAction = anEnvAction(objectMapper, id, yesterday, today)
-
-        given(patchEnvAction.execute(eq(id), any())).willReturn(patchedEnvAction)
-
-        // When
-        mockMvc.perform(
-            patch("/api/v1/actions/$id")
-                .content(partialEnvActionAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(
-                jsonPath(
-                    "$.actionEndDateTimeUtc",
-                    equalTo(patchedEnvAction.actionEndDateTimeUtc?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
-                ),
-            )
-            .andExpect(
-                jsonPath(
-                    "$.actionStartDateTimeUtc",
-                    equalTo(patchedEnvAction.actionStartDateTimeUtc?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
-                ),
-            )
-    }
-
     @Test
     fun `patch() should return 422 when the use case throw BackendRequestException`() {
         // Given
