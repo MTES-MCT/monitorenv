@@ -80,7 +80,7 @@ export const useGooglePlacesAPI = search => {
         }
         setResults([])
       },
-      500,
+      300,
       {
         leading: true,
         trailing: true
