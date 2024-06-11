@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/authorization/management")
 @Tag(name = "APIs for management of user authorizations")
 class UserManagementController(
-        private val saveUser: SaveUser,
-        private val deleteUser: DeleteUser,
+    private val saveUser: SaveUser,
+    private val deleteUser: DeleteUser,
 ) {
 
     @PostMapping(value = [""], consumes = ["application/json"])
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new user")
     fun saveUser(
-            @RequestBody user: AddUserDataInput,
+        @RequestBody user: AddUserDataInput,
     ) {
         return saveUser.execute(user.toUserAuthorization())
     }
@@ -29,7 +29,9 @@ class UserManagementController(
     @DeleteMapping(value = ["/{email}"])
     @Operation(summary = "Delete a given user")
     fun deleteUser(
-            @PathParam("User email") @PathVariable(name = "email") email: String,
+        @PathParam("User email")
+        @PathVariable(name = "email")
+        email: String,
     ) {
         return deleteUser.execute(email)
     }
