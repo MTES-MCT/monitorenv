@@ -11,12 +11,28 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import jakarta.persistence.*
+import jakarta.persistence.Basic
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.NamedAttributeNode
+import jakarta.persistence.NamedEntityGraph
+import jakarta.persistence.NamedSubgraph
+import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.*
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.JdbcType
+import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
@@ -208,6 +224,7 @@ class MissionModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val missionSource: MissionSourceEnum,
+    // FIXME (10/06/2024) 'Basic' attribute type should not be a container
     @Column(name = "mission_types", columnDefinition = "text[]")
     @Enumerated(EnumType.STRING)
     val missionTypes: List<MissionTypeEnum>,
@@ -241,7 +258,7 @@ class MissionModel(
             endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             createdAtUtc = createdAtUtc?.atZone(UTC),
             updatedAtUtc = updatedAtUtc?.atZone(UTC),
-            envActions = envActions!!.map { it.toActionEntity(objectMapper) },
+            envActions = envActions?.map { it.toActionEntity(objectMapper) },
             facade = facade,
             geom = geom,
             hasMissionOrder = hasMissionOrder,

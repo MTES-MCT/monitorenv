@@ -1,12 +1,14 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.actions
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.aPatchableEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
-import fr.gouv.cacem.monitorenv.domain.use_cases.actions.interactors.IDataMerger
+import fr.gouv.cacem.monitorenv.domain.use_cases.actions.interactors.IDataPatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -17,44 +19,48 @@ import java.util.UUID
 class PatchEnvActionUTest {
 
     private val envActionRepository: IEnvActionRepository = mock()
-    private val mergeData: IDataMerger<EnvActionEntity> = mock()
-
-    private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, mergeData)
+    private val patchData: IDataPatcher<EnvActionEntity> = mock()
+    private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, patchData)
+    private val objectMapper: ObjectMapper = ObjectMapper()
 
     @Test
-    fun `execute() should return the saved patched entity when it exists`() {
+    fun `execute() should return the patched entity`() {
         // Given
         val id = UUID.randomUUID()
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
-        val partialEnvAction = anEnvAction(id, today, tomorrow)
-        val envActionFromDatabase = anEnvAction(id, ZonedDateTime.now(), ZonedDateTime.now().plusDays(2))
-        val envActionMerged = anEnvAction(envActionFromDatabase.id, today, tomorrow)
+
+        val patchableEntity = aPatchableEntity(objectMapper)
+        val envActionFromDatabase = anEnvAction(objectMapper, id, ZonedDateTime.now(), ZonedDateTime.now().plusDays(2))
+        val envActionPatched = anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow)
 
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)
-        given(mergeData.merge(envActionFromDatabase, partialEnvAction)).willReturn(envActionMerged)
-        given(envActionRepository.save(envActionMerged)).willReturn(envActionMerged)
+        given(patchData.execute(envActionFromDatabase, patchableEntity, EnvActionEntity::class)).willReturn(
+            envActionPatched,
+        )
+        given(envActionRepository.save(envActionPatched)).willReturn(envActionPatched)
 
         // When
-        val patchedEnvAction = patchEnvAction.execute(id, partialEnvAction)
+        val savedEnvAction = patchEnvAction.execute(id, patchableEntity)
 
         // Then
-        assertThat(patchedEnvAction.actionStartDateTimeUtc).isEqualTo(partialEnvAction.actionStartDateTimeUtc)
-        assertThat(patchedEnvAction.actionEndDateTimeUtc).isEqualTo(partialEnvAction.actionEndDateTimeUtc)
-        verify(envActionRepository).save(envActionMerged)
+        assertThat(savedEnvAction.actionStartDateTimeUtc).isEqualTo(envActionPatched.actionStartDateTimeUtc)
+        assertThat(savedEnvAction.actionEndDateTimeUtc).isEqualTo(envActionPatched.actionEndDateTimeUtc)
+        verify(envActionRepository).save(envActionPatched)
     }
 
     @Test
-    fun `execute() should throw BackendUsageException when the entity does not exist`() {
+    fun `execute() should throw BackendUsageException with message when the entity does not exist`() {
         // Given
         val id = UUID.randomUUID()
-        val today = ZonedDateTime.now()
-        val tomorrow = ZonedDateTime.now().plusDays(1)
-        val partialEnvAction = anEnvAction(id, today, tomorrow)
+        val aPatchableEntity = aPatchableEntity(objectMapper)
 
         given(envActionRepository.findById(id)).willReturn(null)
 
         // When & Then
-        assertThrows<BackendUsageException> { patchEnvAction.execute(id, partialEnvAction) }
+        val exception =
+            assertThrows<BackendUsageException> { patchEnvAction.execute(id, aPatchableEntity) }
+
+        assertThat(exception.message).isEqualTo("envAction $id not found")
     }
 }

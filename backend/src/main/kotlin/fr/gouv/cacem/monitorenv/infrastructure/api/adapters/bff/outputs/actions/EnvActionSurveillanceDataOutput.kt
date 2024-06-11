@@ -1,13 +1,14 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionEnvActionControlPlanDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
-data class MissionEnvActionSurveillanceDataOutput(
+data class EnvActionSurveillanceDataOutput(
     override val id: UUID,
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
@@ -22,7 +23,7 @@ data class MissionEnvActionSurveillanceDataOutput(
     val openBy: String? = null,
     val reportingIds: List<Int>,
 ) :
-    MissionEnvActionDataOutput(
+    EnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionType = ActionTypeEnum.SURVEILLANCE,
@@ -32,7 +33,7 @@ data class MissionEnvActionSurveillanceDataOutput(
             envActionSurveillanceEntity: EnvActionSurveillanceEntity,
             reportingIds: List<Int>,
         ) =
-            MissionEnvActionSurveillanceDataOutput(
+            EnvActionSurveillanceDataOutput(
                 id = envActionSurveillanceEntity.id,
                 actionEndDateTimeUtc = envActionSurveillanceEntity.actionEndDateTimeUtc,
                 actionStartDateTimeUtc = envActionSurveillanceEntity.actionStartDateTimeUtc,
@@ -42,8 +43,7 @@ data class MissionEnvActionSurveillanceDataOutput(
                 envActionSurveillanceEntity.controlPlans?.let { plans ->
                     if (plans.isNotEmpty()) {
                         plans.map {
-                            MissionEnvActionControlPlanDataOutput
-                                .fromEnvActionControlPlanEntity(it)
+                            MissionEnvActionControlPlanDataOutput.fromEnvActionControlPlanEntity(it)
                         }
                     } else {
                         // If the array is empty, return a list containing the

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.Patchable
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -22,7 +23,9 @@ import java.util.UUID
 abstract class EnvActionEntity(
     open val id: UUID,
     open val actionType: ActionTypeEnum,
+    @Patchable
     open val actionEndDateTimeUtc: ZonedDateTime? = null,
+    @Patchable
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val completedBy: String? = null,
     open val completion: ActionCompletionEnum? = null,
@@ -34,5 +37,6 @@ abstract class EnvActionEntity(
     open val isComplianceWithWaterRegulationsControl: Boolean? = null,
     open val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     open val isSeafarersControl: Boolean? = null,
+    open val missionId: Int? = null,
     open val openBy: String? = null,
 )

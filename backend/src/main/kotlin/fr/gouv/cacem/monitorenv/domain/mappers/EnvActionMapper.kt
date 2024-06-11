@@ -2,7 +2,13 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceProperties
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
@@ -13,7 +19,7 @@ import java.util.UUID
 
 @Component
 object EnvActionMapper {
-    private const val jsonbNullString = "null"
+    private const val JSONB_NULL_STRING = "null"
 
     fun getEnvActionEntityFromJSON(
         mapper: ObjectMapper,
@@ -31,11 +37,12 @@ object EnvActionMapper {
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
+        missionId: Int?,
         openBy: String?,
         value: String?,
     ): EnvActionEntity {
         return try {
-            if (!value.isNullOrEmpty() && value != jsonbNullString) {
+            if (!value.isNullOrEmpty() && value != JSONB_NULL_STRING) {
                 when (actionType) {
                     ActionTypeEnum.SURVEILLANCE ->
                         mapper.readValue(
@@ -52,8 +59,10 @@ object EnvActionMapper {
                                 department = department,
                                 facade = facade,
                                 geom = geom,
+                                missionId = missionId,
                                 openBy = openBy,
                             )
+
                     ActionTypeEnum.CONTROL ->
                         mapper.readValue(
                             value,
@@ -75,8 +84,10 @@ object EnvActionMapper {
                                 isSafetyEquipmentAndStandardsComplianceControl =
                                 isSafetyEquipmentAndStandardsComplianceControl,
                                 isSeafarersControl = isSeafarersControl,
+                                missionId = missionId,
                                 openBy = openBy,
                             )
+
                     ActionTypeEnum.NOTE ->
                         mapper.readValue(
                             value,
@@ -85,6 +96,7 @@ object EnvActionMapper {
                             .toEnvActionNoteEntity(
                                 id = id,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                missionId = missionId,
                             )
                 }
             } else {
@@ -104,12 +116,14 @@ object EnvActionMapper {
                             envAction as EnvActionSurveillanceEntity,
                         ),
                     )
+
                 ActionTypeEnum.CONTROL ->
                     mapper.writeValueAsString(
                         EnvActionControlProperties.fromEnvActionControlEntity(
                             envAction as EnvActionControlEntity,
                         ),
                     )
+
                 ActionTypeEnum.NOTE ->
                     mapper.writeValueAsString(
                         EnvActionNoteProperties.fromEnvActionNoteEntity(
