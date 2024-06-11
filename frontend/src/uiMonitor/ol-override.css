@@ -18,7 +18,6 @@
   font-size: 15px;
   padding-bottom: 5px;
   color: #fff;
-  
 }
 
 .ol-scale-line {
@@ -59,8 +58,10 @@
 }
 
 .ol-overlay-container {
-  height: 0;
-  width: 0;
+  &:not(.measurement-overlay) {
+    height: 0;
+    width: 0;
+  }
 }
 
 .ol-unselectable.ol-control > ul {
