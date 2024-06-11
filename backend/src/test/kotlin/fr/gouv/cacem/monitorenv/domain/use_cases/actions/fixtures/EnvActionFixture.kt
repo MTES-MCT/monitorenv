@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.entities.PatchableEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
@@ -39,14 +38,6 @@ class EnvActionFixture {
                 missionId = 1,
                 value = "{}",
             )
-        }
-
-        fun aPatchableEntity(objectMapper: ObjectMapper): PatchableEntity {
-            val partialEnvActionAsJson = """
-            {}
-            """.trimIndent()
-            val jsonNode = objectMapper.readTree(partialEnvActionAsJson)
-            return PatchableEntity(jsonNode)
         }
     }
 }

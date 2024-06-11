@@ -7,8 +7,8 @@ import java.util.UUID
 
 data class EnvActionSurveillanceEntity(
     override val id: UUID,
-    override val actionEndDateTimeUtc: ZonedDateTime? = null,
-    override val actionStartDateTimeUtc: ZonedDateTime? = null,
+    override var actionEndDateTimeUtc: ZonedDateTime? = null,
+    override var actionStartDateTimeUtc: ZonedDateTime? = null,
     override val completedBy: String? = null,
     override val completion: ActionCompletionEnum? = null,
     override val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
