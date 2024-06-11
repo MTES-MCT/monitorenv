@@ -9,8 +9,6 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.PatchEnvAction
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -77,19 +75,12 @@ class EnvActionITest {
     }
 
     @Test
-    fun `patch() should return 422 when the use case throw BackendRequestException`() {
+    fun `patch() should return 400 when the input contains an unknown property`() {
         // Given
         val id = UUID.randomUUID()
         val partialEnvActionAsJson = """
             { "unknownProperty": null }
         """.trimIndent()
-
-        given(
-            patchEnvAction.execute(
-                eq(id),
-                any(),
-            ),
-        ).willThrow(BackendRequestException(BackendRequestErrorCode.BODY_ID_MISMATCH_REQUEST_PATH_ID))
 
         // When
         mockMvc.perform(
@@ -98,7 +89,25 @@ class EnvActionITest {
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
-            .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+    }
+
+    @Test
+    fun `patch() should return 400 when the input contains an incorrect type`() {
+        // Given
+        val id = UUID.randomUUID()
+        val partialEnvActionAsJson = """
+            { "actionStartDateTimeUtc": "incorrect type" }
+        """.trimIndent()
+
+        // When
+        mockMvc.perform(
+            patch("/api/v1/actions/$id")
+                .content(partialEnvActionAsJson)
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
     }
 
     @Test

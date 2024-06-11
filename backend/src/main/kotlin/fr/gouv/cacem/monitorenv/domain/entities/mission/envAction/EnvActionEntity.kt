@@ -24,9 +24,9 @@ abstract class EnvActionEntity(
     open val id: UUID,
     open val actionType: ActionTypeEnum,
     @Patchable
-    open val actionEndDateTimeUtc: ZonedDateTime? = null,
+    open var actionEndDateTimeUtc: ZonedDateTime? = null,
     @Patchable
-    open val actionStartDateTimeUtc: ZonedDateTime? = null,
+    open var actionStartDateTimeUtc: ZonedDateTime? = null,
     open val completedBy: String? = null,
     open val completion: ActionCompletionEnum? = null,
     open val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),

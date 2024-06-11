@@ -1,8 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.actions
 
-import com.fasterxml.jackson.databind.JsonNode
-import fr.gouv.cacem.monitorenv.domain.entities.PatchableEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.PatchEnvAction
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.PatchableEnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -21,8 +20,11 @@ class EnvAction(
 ) {
     @PatchMapping("/actions/{id}")
     @Operation(summary = "patch an existing action", description = "action")
-    fun patch(@PathVariable id: UUID, @RequestBody partialEnvActionAsJson: JsonNode): EnvActionDataOutput {
-        val envActionEntity = patchEnvAction.execute(id, PatchableEntity(partialEnvActionAsJson))
+    fun patch(
+        @PathVariable id: UUID,
+        @RequestBody partialEnvActionDataInput: PatchableEnvActionDataInput,
+    ): EnvActionDataOutput {
+        val envActionEntity = patchEnvAction.execute(id, partialEnvActionDataInput.toPatchableEnvActionEntity())
         return EnvActionDataOutput.fromEnvActionEntity(envActionEntity)
     }
 }
