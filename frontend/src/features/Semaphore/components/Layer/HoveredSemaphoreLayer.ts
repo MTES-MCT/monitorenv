@@ -6,7 +6,7 @@ import { useEffect, useRef, type MutableRefObject } from 'react'
 import { reportingLinkStyle } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'

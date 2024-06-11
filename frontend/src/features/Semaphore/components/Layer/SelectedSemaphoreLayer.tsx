@@ -4,14 +4,14 @@ import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
-import { selectedSemaphoresStyleFn } from './style'
+import { getSelectedSemaphoreStyle } from './style'
 import { getReportingsBySemaphoreId } from './utils'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
@@ -69,7 +69,7 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: selectedSemaphoreVectorSourceRef.current,
-      style: selectedSemaphoresStyleFn,
+      style: getSelectedSemaphoreStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.SEMAPHORES.zIndex

@@ -4,7 +4,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
-import { semaphoresStyleFn } from './style'
+import { getSemaphoreStyle } from './style'
 import { getSemaphoresPoint } from './utils'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -14,7 +14,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
@@ -41,7 +41,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: semaphoreVectorSourceRef.current,
-      style: semaphoresStyleFn,
+      style: getSemaphoreStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.SEMAPHORES.zIndex

@@ -74,7 +74,7 @@ const semaphoreCircleStyle = new Style({
   })
 })
 
-export const semaphoresStyleFn = feature => {
+export const getSemaphoreStyle = feature => {
   const isSemaphoreHighlighted = feature.get('isHighlighted')
   let semaphoreStyle = new Style({
     image: new Icon({
@@ -94,4 +94,4 @@ export const semaphoresStyleFn = feature => {
   return [lineStyle, semaphoreStyle, semaphoreCircleStyle]
 }
 
-export const selectedSemaphoresStyleFn = feature => [...semaphoresStyleFn(feature), reportingLinkStyle]
+export const getSelectedSemaphoreStyle = feature => [...getSemaphoreStyle(feature), reportingLinkStyle]

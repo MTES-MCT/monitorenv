@@ -1,18 +1,16 @@
-import { Accent, CustomSearch, Icon, MapMenuDialog, Search, Size } from '@mtes-mct/monitor-ui'
+import { useGetSemaphoresQuery } from '@api/semaphoresAPI'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { Accent, CustomSearch, Icon, MapMenuDialog, OPENLAYERS_PROJECTION, Search, Size } from '@mtes-mct/monitor-ui'
+import { setDisplayedItems } from 'domain/shared_slices/Global'
+import { setFitToExtent } from 'domain/shared_slices/Map'
+import { addSemaphore, setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { reduce } from 'lodash'
 import { GeoJSON } from 'ol/format'
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { setDisplayedItems } from '../../../domain/shared_slices/Global'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresSlice'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-
-import type { Semaphore } from '../../../domain/entities/semaphore'
+import type { Semaphore } from 'domain/entities/semaphore'
 
 export function SearchSemaphores() {
   const dispatch = useAppDispatch()
