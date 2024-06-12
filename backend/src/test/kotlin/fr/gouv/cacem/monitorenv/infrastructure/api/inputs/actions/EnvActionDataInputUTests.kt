@@ -1,3 +1,5 @@
+package fr.gouv.cacem.monitorenv.infrastructure.api.inputs.actions
+
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
@@ -6,10 +8,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurve
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.ZonedDateTime
+import java.util.Optional
 import java.util.UUID
 
 class EnvActionDataInputUTests {
@@ -32,13 +34,13 @@ class EnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = listOf(1),
+                reportingIds = Optional.of(listOf(1)),
             )
 
         val entity = input.toEnvActionEntity()
 
         // Perform assertions to verify the correctness of the conversion
-        assertTrue(entity is EnvActionControlEntity)
+        Assertions.assertTrue(entity is EnvActionControlEntity)
     }
 
     @Test
@@ -55,13 +57,13 @@ class EnvActionDataInputUTests {
                 facade = "TestFacade",
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = listOf(1),
+                reportingIds = Optional.of(listOf()),
             )
 
         val entity = input.toEnvActionEntity()
 
         // Perform assertions to verify the correctness of the conversion
-        assertTrue(entity is EnvActionSurveillanceEntity)
+        Assertions.assertTrue(entity is EnvActionSurveillanceEntity)
     }
 
     @Test
@@ -73,13 +75,13 @@ class EnvActionDataInputUTests {
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
-                reportingIds = listOf(),
+                reportingIds = Optional.empty(),
             )
 
         val entity = input.toEnvActionEntity()
 
         // Perform assertions to verify the correctness of the conversion
-        assertTrue(entity is EnvActionNoteEntity)
+        Assertions.assertTrue(entity is EnvActionNoteEntity)
     }
 
     @Test
@@ -91,10 +93,10 @@ class EnvActionDataInputUTests {
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
-                reportingIds = listOf(1, 2, 3),
+                reportingIds = Optional.of(listOf(1, 2, 3)),
             )
 
-        assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
+        Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
     }
 
     @Test
@@ -111,10 +113,10 @@ class EnvActionDataInputUTests {
                 facade = "TestFacade",
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = listOf(),
+                reportingIds = Optional.empty(),
             )
 
-        assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
+        Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
     }
 
     @Test
@@ -135,10 +137,10 @@ class EnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = listOf(),
+                reportingIds = Optional.empty(),
             )
 
-        assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
+        Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
     }
 
     @Test
@@ -159,9 +161,9 @@ class EnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = listOf(1, 2),
+                reportingIds = Optional.of(listOf(1, 2)),
             )
 
-        assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
+        Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
     }
 }

@@ -12,6 +12,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlPlanDataInput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
+import java.util.Optional
 import java.util.UUID
 
 data class EnvActionDataInput(
@@ -43,23 +44,23 @@ data class EnvActionDataInput(
     val isSeafarersControl: Boolean? = null,
 
     // complementary properties
-    val reportingIds: List<Int>,
+    val reportingIds: Optional<List<Int>>,
 ) {
     private fun validate() {
         when (actionType) {
             ActionTypeEnum.CONTROL ->
-                require(this.reportingIds.isNotEmpty() && this.reportingIds.size < 2) {
+                require(this.reportingIds.isPresent && this.reportingIds.get().size < 2) {
                     "ReportingIds must not be null and maximum 1 id for Controls"
                 }
 
             ActionTypeEnum.SURVEILLANCE ->
-                require(this.reportingIds.isNotEmpty()) {
+                require(this.reportingIds.isPresent) {
                     "ReportingIds must not be null for Surveillance Action"
                 }
 
             ActionTypeEnum.NOTE ->
                 require(
-                    this.reportingIds.isEmpty(),
+                    !this.reportingIds.isPresent,
                 ) { "ReportingIds must not be present for Notes" }
         }
     }

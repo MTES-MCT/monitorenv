@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.ZonedDateTime
+import java.util.Optional
 import java.util.UUID
 
 class CreateOrUpdateMissionDataInputUTests {
@@ -34,7 +35,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "DEF",
-                reportingIds = listOf(1),
+                reportingIds = Optional.of(listOf(1)),
             )
         val envActionSurveillance =
             EnvActionDataInput(
@@ -48,7 +49,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 facade = "TestFacade",
                 observations = "Observations",
                 openBy = "ABC",
-                reportingIds = listOf(2, 3),
+                reportingIds = Optional.of(listOf(2, 3)),
             )
         val envActionNote =
             EnvActionDataInput(
@@ -57,7 +58,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
-                reportingIds = listOf(),
+                reportingIds = Optional.of(listOf()),
             )
         val missionDataInput =
             CreateOrUpdateMissionDataInput(
