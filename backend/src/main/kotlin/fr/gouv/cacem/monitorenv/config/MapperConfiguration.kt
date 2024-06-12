@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.config
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -22,7 +21,7 @@ class MapperConfiguration {
         mapper.registerModule(JavaTimeModule())
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         mapper.propertyNamingStrategy = PropertyNamingStrategies.LOWER_CAMEL_CASE
-        mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+//        mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
         return mapper
     }
