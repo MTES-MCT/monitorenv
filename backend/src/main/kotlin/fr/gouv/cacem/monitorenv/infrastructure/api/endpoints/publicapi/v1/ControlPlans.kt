@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlans
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlansByYear
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/bff/v1/control_plans")
+@RequestMapping("/api/v1/control_plans")
 @Tag(
     name = "Control Plan Themes, SubThemes and tags",
     description = "API des sous thématiques des plan de contrôle",

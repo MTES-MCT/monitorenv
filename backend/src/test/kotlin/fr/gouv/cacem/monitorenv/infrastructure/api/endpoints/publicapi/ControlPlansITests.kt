@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanTagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanThemeEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlans
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlansByYear
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.ControlPlans
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ControlPlans
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,11 +22,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @Import(WebSecurityConfig::class)
 @WebMvcTest(value = [(ControlPlans::class)])
 class ControlPlansITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var getControlPlansByYear: GetControlPlansByYear
+    @MockBean
+    private lateinit var getControlPlansByYear: GetControlPlansByYear
 
-    @MockBean private lateinit var getControlPlans: GetControlPlans
+    @MockBean
+    private lateinit var getControlPlans: GetControlPlans
 
     @Test
     fun `Should get all control plan themes`() {
@@ -62,7 +65,7 @@ class ControlPlansITests {
             )
         BDDMockito.given(getControlPlans.execute()).willReturn(controlPlan)
         // When
-        mockMvc.perform(get("/bff/v1/control_plans"))
+        mockMvc.perform(get("/api/v1/control_plans"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.themes[\"1\"].id").value(controlPlanTheme1.id))
@@ -116,7 +119,7 @@ class ControlPlansITests {
             )
         BDDMockito.given(getControlPlansByYear.execute(2024)).willReturn(controlPlan)
         // When
-        mockMvc.perform(get("/bff/v1/control_plans/2024"))
+        mockMvc.perform(get("/api/v1/control_plans/2024"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.themes[\"1\"].id").value(controlPlanTheme1.id))
