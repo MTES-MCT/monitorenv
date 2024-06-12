@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.actions.interactors
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
-import java.time.ZonedDateTime
 import java.util.Optional
 
 @UseCase
@@ -27,14 +26,14 @@ class MergeEnvActionEntity {
         return envActionEntity
     }
 
-    private fun getValueFromOptional(
-        actionEndDateTimeUtc: ZonedDateTime?,
-        oActionEndDateTimeUtc: Optional<ZonedDateTime>?,
-    ) = if (oActionEndDateTimeUtc == null) {
-        actionEndDateTimeUtc
-    } else if (oActionEndDateTimeUtc.isEmpty) {
-        null
-    } else {
-        oActionEndDateTimeUtc.get()
+    private fun <T> getValueFromOptional(
+        existingValue: T?,
+        optional: Optional<T>?,
+    ): T? {
+        return when {
+            optional == null -> existingValue
+            optional.isPresent -> optional.get()
+            else -> null
+        }
     }
 }
