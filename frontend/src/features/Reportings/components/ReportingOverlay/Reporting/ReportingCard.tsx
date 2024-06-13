@@ -217,7 +217,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 0 0 360px;
+  flex: 0 0 345px;
 `
 const StyledHeader = styled.div`
   display: flex;
@@ -231,7 +231,7 @@ const StyledHeaderFirstLine = styled.div`
   flex-direction: column;
   align-items: start;
   > span {
-    max-width: 210px;
+    max-width: 190px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -2,7 +2,7 @@ import { Italic } from '@components/style'
 import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { mainWindowActions } from '@features/MainWindow/slice'
-import { useSyncFormValuesWithRedux } from '@features/missions/MissionForm/hooks/useSyncFormValuesWithRedux'
+import { useSyncFormValuesWithRedux } from '@features/Reportings/hooks/useSyncFormValuesWithRedux'
 import { attachMissionToReportingSliceActions } from '@features/Reportings/slice'
 import {
   Separator,
