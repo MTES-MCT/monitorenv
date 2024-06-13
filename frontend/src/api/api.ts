@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { setAuthorizationHeader } from './utils/setAuthorizationHeaders'
 import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
 
 import type { BackendApiErrorResponse } from './types'
@@ -18,7 +19,8 @@ export const geoserverApi = createApi({
 
 // We'll need that later on for authentication.
 const monitorenvPrivateApiQuery = fetchBaseQuery({
-  baseUrl: '/bff'
+  baseUrl: '/bff',
+  prepareHeaders: setAuthorizationHeader
 })
 export const monitorenvPrivateApi = createApi({
   baseQuery: async (args, api, extraOptions) => {

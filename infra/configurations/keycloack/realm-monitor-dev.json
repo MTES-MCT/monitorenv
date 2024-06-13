@@ -1,0 +1,50 @@
+{
+  "realm": "monitor",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "monitorenv",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000"
+      ],
+      "publicClient": true
+    }
+  ],
+  "users": [
+    {
+      "username": "monitorenv",
+      "email": "another@email.com",
+      "firstName": "Monitor",
+      "lastName": "Env",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "monitorenv",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "superuser",
+      "email": "dummy@email.gouv.fr",
+      "firstName": "SuperMonitor",
+      "lastName": "Env",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "monitorenv",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

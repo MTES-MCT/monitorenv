@@ -1,5 +1,6 @@
 // Don't forget to mirror any update here in the backend enum.
 export enum ApiErrorCode {
+  AUTHENTICATION_REQUIRED = 'AUTHENTICATION_REQUIRED',
   /** Thrown when attempting to attach a mission to a reporting that has already a mission attached. */
   CHILD_ALREADY_ATTACHED = 'CHILD_ALREADY_ATTACHED',
 
@@ -25,4 +26,10 @@ export interface BackendApiBooleanResponse {
 export interface CustomRTKErrorResponse {
   data: BackendApiErrorResponse
   status: number | 'FETCH_ERROR' | 'PARSING_ERROR' | 'TIMEOUT_ERROR' | 'CUSTOM_ERROR'
+}
+
+export interface Meta {
+  response?: {
+    headers: Headers
+  }
 }
