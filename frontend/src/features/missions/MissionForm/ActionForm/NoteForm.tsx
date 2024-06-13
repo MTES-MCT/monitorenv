@@ -7,18 +7,18 @@ import { Header, HeaderButtons, StyledDeleteIconButton, TitleWithIcon } from './
 import { type EnvAction, type EnvActionNote, type Mission } from '../../../../domain/entities/missions'
 import { FormTitle, Separator } from '../style'
 
-export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) {
+export function NoteForm({ currentActionId, remove, setCurrentActionId }) {
   const [actionsFields] = useField<EnvAction[]>('envActions')
   const {
     setFieldValue,
     values: { envActions }
   } = useFormikContext<Mission<EnvActionNote>>()
-  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
+  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionId))
   const currentAction = envActions[envActionIndex]
 
   const handleRemoveAction = () => {
-    setCurrentActionIndex(undefined)
-    remove(currentActionIndex)
+    setCurrentActionId(undefined)
+    remove(currentActionId)
   }
 
   const duplicateNote = useCallback(() => {

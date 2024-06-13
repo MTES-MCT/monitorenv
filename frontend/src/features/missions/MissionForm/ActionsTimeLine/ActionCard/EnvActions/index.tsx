@@ -30,7 +30,7 @@ type EnvActionsProps = {
   hasError: boolean
   removeAction: MouseEventHandler
   selected: boolean
-  setCurrentActionIndex: (string) => void
+  setCurrentActionId: (id: string) => void
 }
 
 export function EnvActions({
@@ -39,7 +39,7 @@ export function EnvActions({
   hasError,
   removeAction,
   selected,
-  setCurrentActionIndex
+  setCurrentActionId
 }: EnvActionsProps) {
   return (
     <>
@@ -53,7 +53,7 @@ export function EnvActions({
               {action.actionType === ActionTypeEnum.SURVEILLANCE && <SurveillanceCard action={action} />}
               {action.actionType === ActionTypeEnum.NOTE && <NoteCard action={action} />}
               {action.actionType === ActionTypeEnum.REPORTING && (
-                <ReportingCard action={action} setCurrentActionIndex={setCurrentActionIndex} />
+                <ReportingCard action={action} setCurrentActionId={setCurrentActionId} />
               )}
               {action.actionType !== ActionTypeEnum.REPORTING && (
                 <>

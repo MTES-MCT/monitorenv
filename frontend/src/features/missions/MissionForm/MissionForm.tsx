@@ -55,13 +55,20 @@ enum ModalTypes {
 type ModalProps = ModalTypes.ACTIONS | ModalTypes.DELETE
 
 type MissionFormProps = {
+  activeActionId: string | undefined
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   id: number | string
   isNewMission: boolean
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
 }
 
-export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMission }: MissionFormProps) {
+export function MissionForm({
+  activeActionId,
+  engagedControlUnit,
+  id,
+  isNewMission,
+  selectedMission
+}: MissionFormProps) {
   const dispatch = useAppDispatch()
 
   const sideWindow = useAppSelector(state => state.sideWindow)
@@ -97,7 +104,6 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
 
-  const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [openModal, setOpenModal] = useState<ModalProps | undefined>(undefined)
   const [actionsSources, setActionsSources] = useState<MissionSourceEnum[]>([])
 
@@ -112,8 +118,8 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
     }
   }, [attachedReportingIds, values?.attachedReportingIds?.length, setFieldValue, attachedReportings])
 
-  const handleSetCurrentActionIndex = index => {
-    setCurrentActionIndex(index)
+  const handleSetCurrentActionId = (actionId: string | undefined) => {
+    dispatch(missionFormsActions.setActiveActionId(actionId))
   }
 
   const returnToEdition = () => {
@@ -258,13 +264,10 @@ export function MissionForm({ engagedControlUnit, id, isNewMission, selectedMiss
           <GeneralInformationsForm missionCompletion={missionCompletionFrontStatus} />
         </FirstColumn>
         <SecondColumn>
-          <ActionsTimeLine
-            currentActionIndex={currentActionIndex}
-            setCurrentActionIndex={handleSetCurrentActionIndex}
-          />
+          <ActionsTimeLine currentActionId={activeActionId} setCurrentActionId={handleSetCurrentActionId} />
         </SecondColumn>
         <ThirdColumn>
-          <ActionForm currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />
+          <ActionForm currentActionId={activeActionId} setCurrentActionId={handleSetCurrentActionId} />
         </ThirdColumn>
       </Wrapper>
 

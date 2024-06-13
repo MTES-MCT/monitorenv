@@ -24,10 +24,10 @@ const EMPTY_VALUE = '--'
 
 export function ReportingForm({
   reportingActionIndex,
-  setCurrentActionIndex
+  setCurrentActionId: setCurrentActionIndex
 }: {
   reportingActionIndex: number
-  setCurrentActionIndex: (string) => void
+  setCurrentActionId: (string) => void
 }) {
   const dispatch = useAppDispatch()
   const { subThemes, themes } = useGetControlPlans()

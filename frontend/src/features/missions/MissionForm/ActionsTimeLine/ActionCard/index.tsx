@@ -21,7 +21,7 @@ type ActionCardProps = {
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler
   selected: boolean
-  setCurrentActionIndex: (string) => void
+  setCurrentActionId: (actionId: string) => void
 }
 
 export function ActionCard({
@@ -31,7 +31,7 @@ export function ActionCard({
   removeAction,
   selectAction,
   selected,
-  setCurrentActionIndex
+  setCurrentActionId
 }: ActionCardProps) {
   const onClickCard = id => {
     if (action.actionSource !== ActionSource.MONITORENV) {
@@ -54,7 +54,7 @@ export function ActionCard({
           hasError={hasError}
           removeAction={removeAction}
           selected={selected}
-          setCurrentActionIndex={setCurrentActionIndex}
+          setCurrentActionId={setCurrentActionId}
         />
       )}
       {action.actionSource === ActionSource.MONITORFISH && <FishActions action={action} />}

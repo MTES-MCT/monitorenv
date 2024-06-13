@@ -5,6 +5,7 @@ import type { Mission, NewMission } from '../../../domain/entities/missions'
 import type { AtLeast } from '../../../types'
 
 export type MissionInStateType = {
+  activeActionId?: string | undefined
   displayCreatedMissionBanner?: boolean
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   isFormDirty: boolean
@@ -45,6 +46,15 @@ const missionFormsSlice = createSlice({
     },
     resetMissions() {
       return INITIAL_STATE
+    },
+
+    setActiveActionId(state, action: PayloadAction<string | undefined>) {
+      if (state.activeMissionId) {
+        const activeMission = state.missions[state.activeMissionId]
+        if (activeMission) {
+          activeMission.activeActionId = action.payload
+        }
+      }
     },
     setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload

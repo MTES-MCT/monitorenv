@@ -56,13 +56,13 @@ import {
 import { ActionTheme } from '../Themes/ActionTheme'
 
 export function ControlForm({
-  currentActionIndex,
+  currentActionId,
   removeControlAction,
-  setCurrentActionIndex
+  setCurrentActionId
 }: {
-  currentActionIndex: string
+  currentActionId: string
   removeControlAction: () => void
-  setCurrentActionIndex: (string) => void
+  setCurrentActionId: (string) => void
 }) {
   const { newWindowContainerRef } = useNewWindow()
   const {
@@ -74,7 +74,7 @@ export function ControlForm({
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
 
-  const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
+  const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionId))
   const currentAction = envActions[envActionIndex]
   const actionDate =
     envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
@@ -170,7 +170,7 @@ export function ControlForm({
   }
 
   const handleRemoveAction = () => {
-    setCurrentActionIndex(undefined)
+    setCurrentActionId(undefined)
     removeControlAction()
   }
 
@@ -286,16 +286,16 @@ export function ControlForm({
   }
 
   useEffect(() => {
-    if (actionsMissingFields[currentActionIndex] === 0 && currentAction?.completion === CompletionStatus.TO_COMPLETE) {
+    if (actionsMissingFields[currentActionId] === 0 && currentAction?.completion === CompletionStatus.TO_COMPLETE) {
       setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.COMPLETED)
 
       return
     }
 
-    if (actionsMissingFields[currentActionIndex] > 0 && currentAction?.completion === CompletionStatus.COMPLETED) {
+    if (actionsMissingFields[currentActionId] > 0 && currentAction?.completion === CompletionStatus.COMPLETED) {
       setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.TO_COMPLETE)
     }
-  }, [actionsMissingFields, setFieldValue, currentActionIndex, currentAction?.completion, envActionIndex])
+  }, [actionsMissingFields, setFieldValue, currentActionId, currentAction?.completion, envActionIndex])
 
   return (
     <>
@@ -322,10 +322,7 @@ export function ControlForm({
       <Separator />
 
       <ActionFormBody>
-        <MissingFieldsText
-          missionEndDate={endDateTimeUtc}
-          totalMissingFields={actionsMissingFields[currentActionIndex]}
-        />
+        <MissingFieldsText missionEndDate={endDateTimeUtc} totalMissingFields={actionsMissingFields[currentActionId]} />
         <div>
           <StyledToggle>
             <Toggle

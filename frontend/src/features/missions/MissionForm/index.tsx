@@ -14,11 +14,16 @@ import type { Mission as MissionType, NewMission } from '../../../domain/entitie
 
 export function MissionFormWrapper() {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+
   const selectedMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
   )
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
+  )
+
+  const activeActionId = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.activeActionId : undefined
   )
 
   const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
@@ -69,6 +74,7 @@ export function MissionFormWrapper() {
       >
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm
+            activeActionId={activeActionId}
             engagedControlUnit={selectedMission?.engagedControlUnit ?? undefined}
             id={activeMissionId}
             isNewMission={missionIsNewMission}

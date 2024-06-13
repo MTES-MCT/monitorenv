@@ -31,7 +31,7 @@ export function SideWindow() {
   const dispatch = useAppDispatch()
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
-  const [isFirstRender, setIsFirstRender] = useState(true)
+  const [isMounted, setIsMounted] = useState(false)
   const missionEvent = useListenMissionEventUpdates()
   const reportingEvent = useListenReportingEventUpdates()
 
@@ -60,7 +60,7 @@ export function SideWindow() {
     dispatch(reportingActions.updateUnactiveReporting(omit(reportingEvent, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)))
   }, [dispatch, reportingEvent])
 
-  const navigate = nextPath => {
+  const navigate = (nextPath: string) => {
     if (!nextPath) {
       return
     }
@@ -79,11 +79,11 @@ export function SideWindow() {
         : { current: window.document.createElement('div') }
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isFirstRender]
+    [isMounted]
   )
 
   useEffect(() => {
-    setIsFirstRender(false)
+    setIsMounted(true)
   }, [])
 
   return (
@@ -98,13 +98,13 @@ export function SideWindow() {
                     Icon={Icon.MissionAction}
                     isActive={isMissionButtonIsActive}
                     onClick={() => navigate(generatePath(sideWindowPaths.MISSIONS))}
-                    title="missions"
+                    title="Missions et contrôles"
                   />
                   <SideMenu.Button
                     Icon={Icon.Report}
                     isActive={isReportingsButtonIsActive}
                     onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
-                    title="signalements"
+                    title="Signalements"
                   />
                 </SideMenu>
 
