@@ -3,26 +3,26 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { hoveredReportingStyleFn } from '../../../Reportings/components/ReportingLayer/Reporting/style'
+import { Layers } from '../../../../../domain/entities/layers/constants'
+import { missionZoneStyle } from '../../../../map/layers/Missions/missions.style'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../map/BaseMap'
+import type { VectorLayerWithName } from '../../../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 
-export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function HoveredMissionToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const vectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
 
   const vectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
       source: vectorSourceRef.current,
-      style: hoveredReportingStyleFn,
+      style: missionZoneStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
-      zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex
+      zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION.code
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
@@ -36,7 +36,7 @@ export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseM
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
     const feature = convertToFeature(currentFeatureOver)
-    if (feature && feature.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
+    if (feature && feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
       vectorSourceRef.current?.addFeature(feature)
     }
   }, [currentFeatureOver])
