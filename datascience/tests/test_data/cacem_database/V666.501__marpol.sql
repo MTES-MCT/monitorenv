@@ -1,4 +1,5 @@
-
+CREATE SCHEMA IF NOT EXISTS prod;
+DROP TABLE IF EXISTS prod.marpol;
 CREATE TABLE prod.marpol (
     id integer PRIMARY KEY,
     geom public.geometry(MultiPolygon,4326),

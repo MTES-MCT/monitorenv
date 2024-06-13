@@ -1,4 +1,4 @@
-CREATE SCHEMA prod;
+CREATE SCHEMA IF NOT EXISTS prod;
 DROP TABLE IF EXISTS prod."Aires marines protégées";
 CREATE TABLE IF NOT EXISTS prod."Aires marines protégées" (
   id                 serial NOT NULL PRIMARY KEY,
