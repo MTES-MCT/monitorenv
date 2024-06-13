@@ -19,9 +19,9 @@ internal class MutableHttpServletRequest(request: HttpServletRequest?) : HttpSer
 
     override fun getHeader(name: String): String {
         // check the custom headers first
+        // else return from into the original wrapped object
         val headerValue = customHeaders[name]
         return headerValue ?: (request as HttpServletRequest).getHeader(name)
-        // else return from into the original wrapped object
     }
 
     override fun getHeaderNames(): Enumeration<String> {
@@ -29,11 +29,11 @@ internal class MutableHttpServletRequest(request: HttpServletRequest?) : HttpSer
         val set: MutableSet<String> = HashSet(customHeaders.keys)
 
         // now add the headers from the wrapped request object
-        val e = (request as HttpServletRequest).headerNames
-        while (e.hasMoreElements()) {
+        val headersNameEnum = (request as HttpServletRequest).headerNames
+        while (headersNameEnum.hasMoreElements()) {
             // add the names of the request headers into the list
-            val n = e.nextElement()
-            set.add(n)
+            val header = headersNameEnum.nextElement()
+            set.add(header)
         }
 
         // create an enumeration from the set and return

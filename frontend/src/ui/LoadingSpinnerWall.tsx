@@ -6,6 +6,8 @@ export type LoadingSpinnerWallProps = {
   isVesselShowed?: boolean
   message?: string
 }
+// TODO: adjust design to MonitorEnv
+
 export function LoadingSpinnerWall({ isVesselShowed = false, message = 'Chargement...' }: LoadingSpinnerWallProps) {
   return (
     <Wrapper data-cy="first-loader">

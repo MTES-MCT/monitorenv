@@ -19,18 +19,11 @@ class GetIsAuthorizedUser(
             return true
         }
 
+        /**
+         * If the user is not found in the `UserAuthorizationRepository` and the path
+         * is super-user protected, reject
+         */
         val hashedEmail = hash(email)
-
-        val userAuthorization = try {
-            userAuthorizationRepository.findByHashedEmail(hashedEmail)
-        } catch (e: Throwable) {
-            /**
-             * If the user is not found in the `UserAuthorizationRepository` and the path
-             * is super-user protected, reject
-             */
-            return false
-        }
-
-        return userAuthorization.isSuperUser
+        return userAuthorizationRepository.findByHashedEmail(hashedEmail)?.isSuperUser ?: false
     }
 }

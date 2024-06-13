@@ -15,16 +15,16 @@ class GetAuthorizedUser(
     fun execute(email: String): UserAuthorization {
         val hashedEmail = hash(email)
 
-        return try {
-            userAuthorizationRepository.findByHashedEmail(hashedEmail)
-        } catch (e: Throwable) {
-            logger.info("User $hashedEmail not found, defaulting to super-user=false")
+        val userAuthorization = userAuthorizationRepository.findByHashedEmail(hashedEmail)
 
-            // By default, a user not found is not super-user
-            UserAuthorization(
-                hashedEmail = hashedEmail,
-                isSuperUser = false,
-            )
+        if (userAuthorization != null) {
+            return userAuthorization
         }
+
+        logger.info("User $hashedEmail not found, defaulting to super-user=false")
+        return UserAuthorization(
+            hashedEmail = hashedEmail,
+            isSuperUser = false,
+        )
     }
 }

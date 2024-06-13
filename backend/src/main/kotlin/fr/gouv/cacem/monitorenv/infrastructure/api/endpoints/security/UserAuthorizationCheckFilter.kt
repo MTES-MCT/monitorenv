@@ -44,7 +44,7 @@ class UserAuthorizationCheckFilter(
         val authorizationHeaderContent = request.getHeader("Authorization")
         val headerType: String? = authorizationHeaderContent?.split(" ")?.get(0)
 
-        if (oidcProperties.enabled?.equals(false) == true) {
+        if (oidcProperties.enabled == false) {
             logger.debug("OIDC disabled: user authorization is not checked.")
             filterChain.doFilter(request, response)
 
@@ -76,7 +76,7 @@ class UserAuthorizationCheckFilter(
 
         try {
             val userInfoResponse = apiClient.httpClient.get(
-                oidcProperties.issuerUri!! + oidcProperties.userinfoEndpoint!!,
+                oidcProperties.issuerUri + oidcProperties.userinfoEndpoint,
             ) {
                 headers {
                     append(Authorization, authorizationHeaderContent!!)

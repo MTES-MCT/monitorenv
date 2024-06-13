@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -63,9 +62,7 @@ class GetIsAuthorizedUserUTests {
 
     @Test
     fun `execute Should return false When the user is not found When the path is super-user protected`() {
-        given(userAuthorizationRepository.findByHashedEmail(any())).willThrow(
-            EmptyResultDataAccessException("User not found", 1),
-        )
+        given(userAuthorizationRepository.findByHashedEmail(any())).willReturn(null)
 
         // When
         val isAuthorized = GetIsAuthorizedUser(userAuthorizationRepository).execute(
