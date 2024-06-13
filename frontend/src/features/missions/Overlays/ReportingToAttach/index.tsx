@@ -1,10 +1,10 @@
+import { ReportingCard } from '@features/Reportings/components/ReportingOverlay/Reporting/ReportingCard'
 import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
-import { ReportingCard } from '../../../map/overlays/reportings/ReportingCard'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 

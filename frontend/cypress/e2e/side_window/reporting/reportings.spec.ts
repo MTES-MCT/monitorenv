@@ -65,10 +65,10 @@ context('Reportings', () => {
 
     // create new reporting
     cy.clickButton('Ajouter un nouveau signalement')
+    cy.wait(500)
     cy.get('*[data-cy="reporting-title"]').contains('NOUVEAU SIGNALEMENT (1)')
 
-    cy.get('*[data-cy="add-semaphore-source"]').click({ force: true })
-    cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
+    cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
     cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
     cy.wait(200)

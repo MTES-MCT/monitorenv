@@ -1,5 +1,6 @@
-import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/ReportingForm/constants'
-import { useListenReportingEventUpdates } from '@features/Reportings/ReportingForm/hooks/useListenReportingEventUpdates'
+import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
+import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
+import { ReportingsList } from '@features/Reportings/components/ReportingsList'
 import { Icon, SideMenu, type NewWindowContextValue, NewWindowContext } from '@mtes-mct/monitor-ui'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import { omit } from 'lodash'
@@ -25,7 +26,6 @@ import { missionFormsActions } from '../missions/MissionForm/slice'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
-import { ReportingsList } from '../Reportings/ReportingsList'
 
 export function SideWindow() {
   const dispatch = useAppDispatch()

@@ -118,7 +118,6 @@ const getActionFeature = (
     geometry
   })
   feature.setId(`${Layers.ACTIONS.code}:${action.actionType}:${action.id}`)
-  feature.setProperties({ ...actionProperties })
   feature.setProperties({ ...actionProperties, isGeometryComputedFromControls })
 
   if (action.actionType === ActionTypeEnum.CONTROL) {

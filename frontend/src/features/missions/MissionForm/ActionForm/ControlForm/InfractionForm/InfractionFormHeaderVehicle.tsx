@@ -51,7 +51,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
             />
           </StyledVesselForm>
           <StyledVesselForm>
-            <VesselTypeSelector name={`${infractionPath}.vesselType`} style={{ flex: '0 1 49%' }} />
+            <VesselTypeSelector name={`${infractionPath}.vesselType`} style={{ flex: '0 1 48.5%' }} />
           </StyledVesselForm>
         </>
       )}

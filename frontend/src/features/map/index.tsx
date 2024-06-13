@@ -16,26 +16,28 @@ import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
 import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
 import { RegulatoryLayers } from './layers/Regulatory'
 import { RegulatoryPreviewLayer } from './layers/Regulatory/RegulatoryPreviewLayer'
-import { ReportingsLayer } from './layers/Reportings'
-import { EditingReportingLayer } from './layers/Reportings/EditingReportingLayer'
-import { HoveredReportingLayer } from './layers/Reportings/HoveredReportingLayer'
-import { SelectedReportingLayer } from './layers/Reportings/SelectedReporting'
-import { SemaphoresLayer } from './layers/Semaphores'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
 import { MissionOverlays } from './overlays/missions'
-import { ReportingOverlay } from './overlays/reportings'
-import { SemaphoreOverlay } from './overlays/semaphores'
 import { ZoomListener } from './ZoomListener'
 import { InterestPointLayer } from '../InterestPoint/components/InterestPointLayer'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
 import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
-import { MissionToAttachLayer } from '../Reportings/Layers/MissionToAttach'
-import { HoveredMissionToAttachLayer } from '../Reportings/Layers/MissionToAttach/HoveredMissionToAttachLayer'
-import { SelectedMissionToAttachLayer } from '../Reportings/Layers/MissionToAttach/SelectedMissionToAttachLayer'
-import { MissionToAttachOverlays } from '../Reportings/Overlays/MissionToAttach'
+import { MissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach'
+import { HoveredMissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach/HoveredMissionToAttachLayer'
+import { SelectedMissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach/SelectedMissionToAttachLayer'
+import { ReportingsLayer } from '../Reportings/components/ReportingLayer/Reporting'
+import { EditingReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/EditingReportingLayer'
+import { HoveredReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/HoveredReportingLayer'
+import { SelectedReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/SelectedReporting'
+import { MissionToAttachOverlays } from '../Reportings/components/ReportingOverlay/MissionToAttach'
+import { ReportingOverlay } from '../Reportings/components/ReportingOverlay/Reporting'
+import { SemaphoresLayer } from '../Semaphore/components/Layer'
+import { HoveredSemaphoreLayer } from '../Semaphore/components/Layer/HoveredSemaphoreLayer'
+import { SelectedSemaphoreLayer } from '../Semaphore/components/Layer/SelectedSemaphoreLayer'
+import { SemaphoreOverlay } from '../Semaphore/components/Overlay'
 import { StationLayer } from '../Station/components/StationLayer'
 import { StationOverlay } from '../Station/components/StationOverlay'
 
@@ -110,6 +112,10 @@ export function Map() {
       {/* SEMAPHORE */}
       {/* @ts-ignore */}
       <SemaphoresLayer />
+      {/* @ts-ignore */}
+      <HoveredSemaphoreLayer />
+      {/* @ts-ignore */}
+      <SelectedSemaphoreLayer />
       {/* @ts-ignore */}
       <SemaphoreOverlay />
 

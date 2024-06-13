@@ -3,7 +3,6 @@ import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 
 import {
   ActionTypeEnum,
@@ -15,9 +14,9 @@ import { ControlStatusEnum, type ReportingForTimeline } from '../../../../../../
 import { useGetControlPlans } from '../../../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../../../utils/getDateAsLocalizedString'
 import { StatusActionTag } from '../../../../../Reportings/components/StatusActionTag'
-import { getFormattedReportingId } from '../../../../../Reportings/utils'
+import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '../../../../../Reportings/utils'
 import { actionFactory, infractionFactory } from '../../../../Missions.helpers'
-import { Accented, ReportingDate, SummaryContent } from '../style'
+import { Accented, ControlContainer, ReportingDate, SummaryContent, SummaryContentFirstPart } from '../style'
 
 export function ReportingCard({
   action,
@@ -28,6 +27,22 @@ export function ReportingCard({
 }) {
   const { themes } = useGetControlPlans()
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
+
+  const targetText = useMemo(() => {
+    const targetName = getTargetName({
+      target: action.targetDetails?.[0],
+      targetType: action.targetType,
+      vehicleType: action.vehicleType
+    })
+
+    const targetDetails = getTargetDetailsSubText({
+      target: action.targetDetails?.[0],
+      targetType: action.targetType,
+      vehicleType: action.vehicleType
+    })
+
+    return `${targetName} ${targetDetails ? `(${targetDetails})` : ''}`
+  }, [action.targetDetails, action.targetType, action.vehicleType])
 
   const addAttachedControl = e => {
     e.stopPropagation()
@@ -115,8 +130,11 @@ export function ReportingCard({
     <>
       <Icon.Report color={THEME.color.charcoal} size={20} />
       <SummaryContent>
-        <Accented>{`Signalement ${getFormattedReportingId(action.reportingId)} ${action.displayedSource}`}</Accented>
-        <ReportingDate>{getDateAsLocalizedStringCompact(action.createdAt)}</ReportingDate>
+        <SummaryContentFirstPart>
+          <span>{`Signalement ${getFormattedReportingId(action.reportingId)}`}</span>
+          <Accented>{targetText}</Accented>
+          <ReportingDate>{getDateAsLocalizedStringCompact(action.createdAt)}</ReportingDate>
+        </SummaryContentFirstPart>
         {action.themeId && (
           <>
             <Accented>{themes[action.themeId]?.theme}</Accented>
@@ -139,10 +157,3 @@ export function ReportingCard({
     </>
   )
 }
-
-const ControlContainer = styled.div<{ $isEndAlign: boolean }>`
-  display: flex;
-  flex-direction: row;
-  justify-content: ${p => (p.$isEndAlign ? 'end' : 'start')};
-  padding-top: 16px;
-`
