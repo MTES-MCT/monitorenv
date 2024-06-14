@@ -22,7 +22,8 @@ export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnit
   {
     accessorFn: row => row.name,
     header: () => 'Nom',
-    id: 'name'
+    id: 'name',
+    size: 400
   },
   {
     accessorFn: row => row.id,
