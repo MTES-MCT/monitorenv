@@ -8,7 +8,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapper'
 
-export function SearchSemaphoreButton() {
+export function SearchSemaphoreButton({ isSuperUser }: { isSuperUser: boolean | undefined }) {
   const dispatch = useAppDispatch()
   const isSearchSemaphoreVisible = useAppSelector(state => state.global.isSearchSemaphoreVisible)
 
@@ -19,7 +19,7 @@ export function SearchSemaphoreButton() {
   }
 
   return (
-    <ButtonWrapper topPosition={178}>
+    <ButtonWrapper topPosition={isSuperUser ? 178 : 82}>
       {isSearchSemaphoreVisible && <SearchSemaphores />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchSemaphoreVisible ? '_active' : undefined}

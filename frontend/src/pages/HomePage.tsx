@@ -110,7 +110,7 @@ export function HomePage() {
 
         {displayMissionMenuButton && isSuperUser && <MissionsMenu />}
         {displayReportingsButton && isSuperUser && <ReportingsButton />}
-        {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
+        {displaySearchSemaphoreButton && <SearchSemaphoreButton isSuperUser={isSuperUser} />}
         {isRightMenuControlUnitListButtonVisible && isSuperUser && <ControlUnitListButton />}
 
         {displayMeasurement && isSuperUser && <MeasurementMapButton />}
