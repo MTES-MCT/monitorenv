@@ -356,7 +356,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           )}
         </StyledThemeContainer>
 
-        <Validity mustIncreaseValidity={mustIncreaseValidity} />
+        <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />
 
         <StyledFormikTextInput isErrorMessageHidden isRequired label="Saisi par" name="openBy" />
 

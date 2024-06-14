@@ -9,7 +9,8 @@ import {
   getOptionsFromLabelledEnum,
   CustomSearch,
   Icon,
-  Checkbox
+  Checkbox,
+  useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -28,6 +29,8 @@ import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 
 export function MissionsTableFilters() {
+  const { newWindowContainerRef } = useNewWindow()
+
   const dispatch = useAppDispatch()
   const {
     hasFilters,
@@ -283,6 +286,7 @@ export function MissionsTableFilters() {
           <StyledCustomPeriodContainer>
             <DateRangePicker
               key="dateRange"
+              baseContainer={newWindowContainerRef.current}
               data-cy="datepicker-missionStartedAfter"
               defaultValue={
                 startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined

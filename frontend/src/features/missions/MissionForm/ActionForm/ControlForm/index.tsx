@@ -16,7 +16,8 @@ import {
   Toggle,
   pluralize,
   Button,
-  FormikTextInput
+  FormikTextInput,
+  useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, type FormikErrors } from 'formik'
 import _ from 'lodash'
@@ -63,6 +64,7 @@ export function ControlForm({
   removeControlAction: () => void
   setCurrentActionIndex: (string) => void
 }) {
+  const { newWindowContainerRef } = useNewWindow()
   const {
     errors,
     setFieldValue,
@@ -360,6 +362,7 @@ export function ControlForm({
 
         <div>
           <DatePicker
+            baseContainer={newWindowContainerRef.current}
             defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
             error={currentActionErrors?.actionStartDateTimeUtc ?? undefined}
             isErrorMessageHidden

@@ -1,4 +1,12 @@
-import { CheckPicker, DateRangePicker, Checkbox, Icon, CustomSearch, type Option } from '@mtes-mct/monitor-ui'
+import {
+  CheckPicker,
+  DateRangePicker,
+  Checkbox,
+  Icon,
+  CustomSearch,
+  type Option,
+  useNewWindow
+} from '@mtes-mct/monitor-ui'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -31,6 +39,7 @@ export function TableReportingsFiltersWithRef(
   },
   ref
 ) {
+  const { newWindowContainerRef } = useNewWindow()
   const {
     hasFilters,
     isAttachedToMissionFilter,
@@ -252,6 +261,7 @@ export function TableReportingsFiltersWithRef(
             <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
             <DateRangePicker
               key="dateRange"
+              baseContainer={newWindowContainerRef.current}
               data-cy="datepicker-missionStartedAfter"
               defaultValue={
                 startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
