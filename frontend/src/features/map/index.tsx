@@ -48,6 +48,55 @@ import { StationOverlay } from '../Station/components/StationOverlay'
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
 export function Map({ isSuperUser, isVigilanceAreaEnabled }) {
+  if (!isSuperUser) {
+    return (
+      <BaseMap
+      // BaseMap forwards map & mapClickEvent as props to children
+      // handleMovingAndZoom={handleMovingAndZoom}
+      // handlePointerMove={handlePointerMove}
+      //
+      // -> only add child to BaseMap if it requires map or mapClickEvent
+      >
+        {/* @ts-ignore */}
+        <ZoomListener />
+        {/* @ts-ignore */}
+        <MapAttributionsBox />
+        {/* @ts-ignore */}
+        <MapCoordinatesBox />
+        {/* @ts-ignore */}
+        <MapLayer />
+
+        {/* ZONE */}
+        {/* @ts-ignore */}
+        <AMPLayers />
+        {/* @ts-ignore */}
+        <AMPPreviewLayer />
+        {/* @ts-ignore */}
+        <RegulatoryLayers />
+        {/* @ts-ignore */}
+        <RegulatoryPreviewLayer />
+        {/* @ts-ignore */}
+        <AdministrativeLayers />
+        {/* @ts-ignore */}
+        <LayerEvents />
+        {/* @ts-ignore */}
+        <LayersOverlay />
+
+        {/* MAP */}
+        {/* @ts-ignore */}
+        <MapExtentController />
+        {/* @ts-ignore */}
+        <MapHistory />
+
+        {/* SEMAPHORE */}
+        {/* @ts-ignore */}
+        <SemaphoresLayer />
+        {/* @ts-ignore */}
+        <SemaphoreOverlay isSuperUser={false} />
+      </BaseMap>
+    )
+  }
+
   return (
     <BaseMap
     // BaseMap forwards map & mapClickEvent as props to children
@@ -83,35 +132,35 @@ export function Map({ isSuperUser, isVigilanceAreaEnabled }) {
 
       {/* MAP */}
       {/* @ts-ignore */}
-      {isSuperUser && <MeasurementLayer />}
+      <MeasurementLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <InterestPointLayer />}
+      <InterestPointLayer />
       {/* @ts-ignore */}
       <MapExtentController />
       {/* @ts-ignore */}
       <MapHistory />
       {/* @ts-ignore */}
-      {isSuperUser && <DrawLayer />}
+      <DrawLayer />
 
       {/* MISSION */}
       {/* @ts-ignore */}
-      {isSuperUser && <MissionsLayer />}
+      <MissionsLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <SelectedMissionLayer />}
+      <SelectedMissionLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <EditingMissionLayer />}
+      <EditingMissionLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <HoveredMissionLayer />}
+      <HoveredMissionLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <MissionOverlays />}
+      <MissionOverlays />
       {/* @ts-ignore */}
-      {isSuperUser && <ActionOverlay />}
+      <ActionOverlay />
       {/* @ts-ignore */}
-      {isSuperUser && <ReportingToAttachLayer />}
+      <ReportingToAttachLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <HoveredReportingToAttachLayer />}
+      <HoveredReportingToAttachLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <ReportingToAttachOverlays />}
+      <ReportingToAttachOverlays />
 
       {/* SEMAPHORE */}
       {/* @ts-ignore */}
@@ -121,31 +170,31 @@ export function Map({ isSuperUser, isVigilanceAreaEnabled }) {
       {/* @ts-ignore */}
       <SelectedSemaphoreLayer />
       {/* @ts-ignore */}
-      <SemaphoreOverlay isSuperUser={isSuperUser} />
+      <SemaphoreOverlay isSuperUser />
 
       {/* REPORTING */}
       {/* @ts-ignore */}
-      {isSuperUser && <EditingReportingLayer />}
+      <EditingReportingLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <SelectedReportingLayer />}
+      <SelectedReportingLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <HoveredReportingLayer />}
+      <HoveredReportingLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <ReportingsLayer />}
+      <ReportingsLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <ReportingOverlay />}
+      <ReportingOverlay />
       {/* @ts-ignore */}
-      {isSuperUser && <StationLayer />}
+      <StationLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <StationOverlay />}
+      <StationOverlay />
       {/* @ts-ignore */}
-      {isSuperUser && <MissionToAttachLayer />}
+      <MissionToAttachLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <HoveredMissionToAttachLayer />}
+      <HoveredMissionToAttachLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <SelectedMissionToAttachLayer />}
+      <SelectedMissionToAttachLayer />
       {/* @ts-ignore */}
-      {isSuperUser && <MissionToAttachOverlays />}
+      <MissionToAttachOverlays />
 
       {/* VIGILANCE AREA */}
       {/* @ts-ignore */}

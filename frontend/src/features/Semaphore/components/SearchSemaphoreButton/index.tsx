@@ -8,7 +8,7 @@ import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceRepor
 
 import { SearchSemaphores } from './SearchSemaphores'
 
-export function SearchSemaphoreButton() {
+export function SearchSemaphoreButton({ isSuperUser }: { isSuperUser: boolean | undefined }) {
   const dispatch = useAppDispatch()
   const isSearchSemaphoreVisible = useAppSelector(state => state.global.isSearchSemaphoreVisible)
 
@@ -19,7 +19,7 @@ export function SearchSemaphoreButton() {
   }
 
   return (
-    <ButtonWrapper topPosition={178}>
+    <ButtonWrapper topPosition={isSuperUser ? 178 : 82}>
       {isSearchSemaphoreVisible && <SearchSemaphores />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchSemaphoreVisible ? '_active' : undefined}
