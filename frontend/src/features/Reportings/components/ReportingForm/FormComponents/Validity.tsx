@@ -1,11 +1,18 @@
 import { getTimeLeft } from '@features/Reportings/utils'
-import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs, useNewWindow } from '@mtes-mct/monitor-ui'
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
+import { ReportingContext } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boolean }) {
+type ValidityProps = {
+  mustIncreaseValidity: boolean
+  reportingContext: ReportingContext
+}
+export function Validity({ mustIncreaseValidity, reportingContext }: ValidityProps) {
+  const { newWindowContainerRef } = useNewWindow()
+
   const { values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
@@ -30,6 +37,7 @@ export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boole
     <StyledValidityContainer>
       <div>
         <FormikDatePicker
+          baseContainer={reportingContext === ReportingContext.SIDE_WINDOW ? newWindowContainerRef.current : undefined}
           isCompact
           isErrorMessageHidden
           isHistorical

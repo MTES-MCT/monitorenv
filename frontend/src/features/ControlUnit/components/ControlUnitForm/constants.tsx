@@ -15,7 +15,8 @@ export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Con
   {
     accessorFn: row => row.name,
     header: () => 'Nom',
-    id: 'name'
+    id: 'name',
+    size: 400
   }
 ]
 
@@ -30,7 +31,8 @@ export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Co
   {
     accessorFn: row => row.name,
     header: () => 'Nom',
-    id: 'name'
+    id: 'name',
+    size: 400
   }
 ]
 

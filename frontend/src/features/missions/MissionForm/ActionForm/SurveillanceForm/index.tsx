@@ -16,7 +16,8 @@ import {
   Label,
   Toggle,
   Button,
-  FormikTextInput
+  FormikTextInput,
+  useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -50,6 +51,8 @@ import {
 import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
+  const { newWindowContainerRef } = useNewWindow()
+
   const {
     errors,
     setFieldValue,
@@ -240,6 +243,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           <StyledDatePickerContainer>
             <StyledDatePicker
               key={`start-date-${durationMatchMissionField.value}`}
+              baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-start-date-time"
               defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
@@ -257,6 +261,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             />
             <StyledDatePicker
               key={`end-date-${durationMatchMissionField.value}`}
+              baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-end-date-time"
               defaultValue={currentAction?.actionEndDateTimeUtc ?? undefined}
               disabled={!!durationMatchMissionField.value}
