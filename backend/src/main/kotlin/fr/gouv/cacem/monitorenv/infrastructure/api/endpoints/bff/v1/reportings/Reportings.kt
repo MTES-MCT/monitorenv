@@ -31,8 +31,9 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.time.ZonedDateTime
 
+// TODO: remove "/v1" from the path for BFF (BFF endpoints should not be versionned)
 @RestController
-@RequestMapping("/bff/v1/reportings")
+@RequestMapping("/bff")
 @Tag(description = "API des Signalements", name = "BFF.Reportings")
 class Reportings(
     private val createOrUpdateReporting: CreateOrUpdateReporting,
@@ -44,14 +45,14 @@ class Reportings(
     private val sseReporting: SSEReporting,
 ) {
 
-    @PutMapping(value = ["/archive"])
+    @PutMapping(value = ["/v1/reportings/archive"])
     @Operation(summary = "Archive multiple reportings")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun archiveReportings(@RequestBody ids: List<Int>) {
         archiveReportings.execute(ids)
     }
 
-    @PutMapping("", consumes = ["application/json"])
+    @PutMapping("/v1/reportings", consumes = ["application/json"])
     @Operation(summary = "Create a new reporting")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
@@ -62,7 +63,7 @@ class Reportings(
         return ReportingDataOutput.fromReportingDTO(createdReporting)
     }
 
-    @DeleteMapping(value = ["/{id}"])
+    @DeleteMapping(value = ["/v1/reportings/{id}"])
     @Operation(summary = "Delete a reporting")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
@@ -73,14 +74,14 @@ class Reportings(
         deleteReporting.execute(id = id)
     }
 
-    @PutMapping(value = ["/delete"])
+    @PutMapping(value = ["/v1/reportings/delete"])
     @Operation(summary = "Delete multiple reportings")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteReportings(@RequestBody ids: List<Int>) {
         deleteReportings.execute(ids)
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v1/reportings/{id}")
     @Operation(summary = "Get reporting by id")
     fun get(
         @PathParam("reporting id")
@@ -90,7 +91,7 @@ class Reportings(
         return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
     }
 
-    @GetMapping("")
+    @GetMapping("/v1/reportings")
     @Operation(summary = "Get reportings")
     fun getAll(
         @Parameter(description = "Is Attached to mission")
@@ -145,7 +146,7 @@ class Reportings(
             .map { ReportingsDataOutput.fromReportingDTO(it) }
     }
 
-    @PutMapping(value = ["/{id}"], consumes = ["application/json"])
+    @PutMapping(value = ["/v1/reportings/{id}"], consumes = ["application/json"])
     @Operation(summary = "update a reporting")
     fun update(
         @PathParam("reporting id")
@@ -163,7 +164,8 @@ class Reportings(
     /**
      * This method create the connexion to the frontend (with EventSource)
      */
-    @GetMapping(value = ["/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    // TODO: secure SSE endpoint with JWT authentication
+    @GetMapping(value = ["/reportings/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun createReportingSSE(): SseEmitter {
         return sseReporting.registerListener()
     }

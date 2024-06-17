@@ -26,15 +26,7 @@ class SecurityConfig(
         http
             .csrf { it.disable() }
             .authorizeHttpRequests { authorize ->
-                if (oidcProperties.enabled == null || oidcProperties.enabled == false) {
-                    logger.warn(
-                        """
-                        ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
-                        """.trimIndent(),
-                    )
-
-                    authorize.requestMatchers("/**").permitAll()
-                } else {
+                if (oidcProperties.enabled == true) {
                     logger.info(
                         """
                         ✅ OIDC Authentication is enabled.
@@ -61,18 +53,28 @@ class SecurityConfig(
                         "/api/**",
                         "/version",
                         // TODO: secure SSE endpoints
-                        "/bff/v1/reportings/sse/**",
-                        "/api/v1/missions/sse/**",
+                        "/bff/reportings/sse/**",
                     ).permitAll()
                         .anyRequest()
                         .authenticated()
+                } else {
+                    logger.warn(
+                        """
+                        ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
+                        """.trimIndent(),
+                    )
+
+                    authorize.requestMatchers("/**").permitAll()
                 }
-            }.oauth2ResourceServer {
-                    oauth2ResourceServer ->
+            }
+
+        if (oidcProperties.enabled == true) {
+            http.oauth2ResourceServer { oauth2ResourceServer ->
                 oauth2ResourceServer
                     .jwt(Customizer.withDefaults())
                     .authenticationEntryPoint(authenticationEntryPoint)
             }
+        }
 
         return http.build()
     }

@@ -9,4 +9,5 @@ class OIDCProperties {
     var enabled: Boolean? = false
     var userinfoEndpoint: String? = null
     var issuerUri: String? = null
+    var cacheInMinutes: Int = 120
 }
