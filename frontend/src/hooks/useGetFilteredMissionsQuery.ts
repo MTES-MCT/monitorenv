@@ -33,7 +33,7 @@ export const useGetFilteredMissionsQuery = () => {
 
     switch (selectedPeriod) {
       case DateRangeEnum.DAY:
-        startedAfterDate = customDayjs.utc().subtract(24, 'hour').toISOString()
+        startedAfterDate = customDayjs().utc().startOf('day').toISOString()
 
         break
 
