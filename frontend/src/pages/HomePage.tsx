@@ -3,6 +3,7 @@ import { BannerStack } from '@features/MainWindow/components/BannerStack'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/ReportingForm/hooks/useListenReportingEventUpdates'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -32,6 +33,10 @@ import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
   const dispatch = useAppDispatch()
+
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, {})
+
+  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
   const displayDrawModal = useAppSelector(state => state.global.displayDrawModal)
   const displayInterestPoint = useAppSelector(state => state.global.displayInterestPoint)
@@ -94,22 +99,22 @@ export function HomePage() {
         <Healthcheck />
         <BannerStack />
 
-        <Map />
+        <Map isSuperUser={isSuperUser} />
         <LayersSidebar />
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         <AttachMissionToReportingModal />
         <AttachReportingToMissionModal />
         {displayLocateOnMap && <LocateOnMap />}
-        {isControlUnitDialogVisible && <ControlUnitDialog />}
+        {isControlUnitDialogVisible && isSuperUser && <ControlUnitDialog />}
 
-        {displayMissionMenuButton && <MissionsMenu />}
-        {displayReportingsButton && <ReportingsButton />}
-        {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
-        {isRightMenuControlUnitListButtonVisible && <ControlUnitListButton />}
+        {displayMissionMenuButton && isSuperUser && <MissionsMenu />}
+        {displayReportingsButton && isSuperUser && <ReportingsButton />}
+        {displaySearchSemaphoreButton && <SearchSemaphoreButton isSuperUser={isSuperUser} />}
+        {isRightMenuControlUnitListButtonVisible && isSuperUser && <ControlUnitListButton />}
 
-        {displayMeasurement && <MeasurementMapButton />}
-        {displayInterestPoint && <InterestPointMapButton />}
+        {displayMeasurement && isSuperUser && <MeasurementMapButton />}
+        {displayInterestPoint && isSuperUser && <InterestPointMapButton />}
         {displayAccountButton && <Account />}
 
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />

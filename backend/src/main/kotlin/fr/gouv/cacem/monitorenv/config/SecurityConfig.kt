@@ -41,34 +41,37 @@ class SecurityConfig(
                         """.trimIndent(),
                     )
 
-                    authorize.requestMatchers(
-                        "/",
-                        "/index.html",
-                        "/*.js",
-                        "/*.png",
-                        "/*.svg",
-                        "/static/**",
-                        "/assets/**",
-                        "/map-icons/**",
-                        "/flags/**",
-                        "/robots.txt",
-                        "/favicon-32.ico",
-                        "/asset-manifest.json",
-                        "/swagger-ui/**",
-                        "v3/**",
-                        // Used to redirect to the frontend SPA, see Spa.kt
-                        "/error",
-                        "/api/**",
-                        "/version",
-                        // TODO: secure SSE endpoints
-                        "/bff/v1/reportings/sse/**",
-                        "/api/v1/missions/sse/**",
-                    ).permitAll()
+                    authorize
+                        .requestMatchers(
+                            "/",
+                            "/index.html",
+                            "/*.js",
+                            "/*.png",
+                            "/*.svg",
+                            "/static/**",
+                            "/assets/**",
+                            "/map-icons/**",
+                            "/flags/**",
+                            "/robots.txt",
+                            "/favicon-32.ico",
+                            "/asset-manifest.json",
+                            "/swagger-ui/**",
+                            "v3/**",
+                            // Used to redirect to the frontend SPA, see Spa.kt
+                            "/error",
+                            "/api/**",
+                            "/version",
+                            "/ext",
+                            // TODO: secure SSE endpoints
+                            "/bff/v1/reportings/sse/**",
+                            "/api/v1/missions/sse/**",
+                        )
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
                 }
-            }.oauth2ResourceServer {
-                    oauth2ResourceServer ->
+            }
+            .oauth2ResourceServer { oauth2ResourceServer ->
                 oauth2ResourceServer
                     .jwt(Customizer.withDefaults())
                     .authenticationEntryPoint(authenticationEntryPoint)
@@ -79,11 +82,12 @@ class SecurityConfig(
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration().apply {
-            allowedOrigins = listOf("*")
-            allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
-        }
+        val configuration =
+            CorsConfiguration().apply {
+                allowedOrigins = listOf("*")
+                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
+                allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
+            }
 
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)

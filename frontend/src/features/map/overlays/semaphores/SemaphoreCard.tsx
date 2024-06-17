@@ -41,8 +41,15 @@ const MAIL_TOOLTIP_STATE = {
 }
 const hoverTooltip = (text, className) => <StyledTooltip className={className}>{text}</StyledTooltip>
 
-export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
+type SemaphoreCardProps = {
+  feature: any
+  isSuperUser: boolean
+  selected?: boolean
+}
+
+export function SemaphoreCard({ feature, isSuperUser, selected = false }: SemaphoreCardProps) {
   const dispatch = useAppDispatch()
+
   const displaySemaphoresLayer = useAppSelector(state => state.global.displaySemaphoresLayer)
   const hasMapInteraction = useHasMapInteraction()
 
@@ -91,54 +98,56 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
         />
       </StyledHeader>
 
-      <StyledContactContainer>
-        {phoneNumber && (
-          <StyledContactLine>
-            <Whisper
-              controlId="phone-tooltip"
-              onClick={onCopyPhone}
-              placement="left"
-              speaker={hoverTooltip(tooltipPhoneState.text, tooltipPhoneState.className)}
-              trigger={tooltipPhoneState.trigger as OverlayTriggerType}
-            >
-              <span>
-                <StyledCopyButton
-                  accent={Accent.TERTIARY}
-                  color={THEME.color.slateGray}
-                  Icon={Icon.Duplicate}
-                  iconSize={20}
-                />
-              </span>
-            </Whisper>
-            <span>Contact&nbsp;:&nbsp;{phoneNumber}</span>
-          </StyledContactLine>
-        )}
-        {email && (
-          <StyledContactLine>
-            <Whisper
-              controlId="mail-tooltip"
-              onClick={onCopyMail}
-              placement="left"
-              speaker={hoverTooltip(tooltipMailState.text, tooltipMailState.className)}
-              trigger={tooltipMailState.trigger as OverlayTriggerType}
-            >
-              <span>
-                <StyledCopyButton
-                  accent={Accent.TERTIARY}
-                  color={THEME.color.slateGray}
-                  Icon={Icon.Duplicate}
-                  iconSize={20}
-                />
-              </span>
-            </Whisper>
-            <span>{email}</span>
-          </StyledContactLine>
-        )}
+      {isSuperUser && (
+        <StyledContactContainer>
+          {phoneNumber && (
+            <StyledContactLine>
+              <Whisper
+                controlId="phone-tooltip"
+                onClick={onCopyPhone}
+                placement="left"
+                speaker={hoverTooltip(tooltipPhoneState.text, tooltipPhoneState.className)}
+                trigger={tooltipPhoneState.trigger as OverlayTriggerType}
+              >
+                <span>
+                  <StyledCopyButton
+                    accent={Accent.TERTIARY}
+                    color={THEME.color.slateGray}
+                    Icon={Icon.Duplicate}
+                    iconSize={20}
+                  />
+                </span>
+              </Whisper>
+              <span>Contact&nbsp;:&nbsp;{phoneNumber}</span>
+            </StyledContactLine>
+          )}
+          {email && (
+            <StyledContactLine>
+              <Whisper
+                controlId="mail-tooltip"
+                onClick={onCopyMail}
+                placement="left"
+                speaker={hoverTooltip(tooltipMailState.text, tooltipMailState.className)}
+                trigger={tooltipMailState.trigger as OverlayTriggerType}
+              >
+                <span>
+                  <StyledCopyButton
+                    accent={Accent.TERTIARY}
+                    color={THEME.color.slateGray}
+                    Icon={Icon.Duplicate}
+                    iconSize={20}
+                  />
+                </span>
+              </Whisper>
+              <span>{email}</span>
+            </StyledContactLine>
+          )}
 
-        <StyledButton Icon={Icon.Plus} isFullWidth onClick={createSemaphoreReporting}>
-          Créer un signalement
-        </StyledButton>
-      </StyledContactContainer>
+          <StyledButton Icon={Icon.Plus} isFullWidth onClick={createSemaphoreReporting}>
+            Créer un signalement
+          </StyledButton>
+        </StyledContactContainer>
+      )}
     </Wrapper>
   )
 }

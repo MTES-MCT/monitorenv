@@ -41,7 +41,56 @@ import { StationOverlay } from '../Station/components/StationOverlay'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
-export function Map() {
+export function Map({ isSuperUser }) {
+  if (!isSuperUser) {
+    return (
+      <BaseMap
+      // BaseMap forwards map & mapClickEvent as props to children
+      // handleMovingAndZoom={handleMovingAndZoom}
+      // handlePointerMove={handlePointerMove}
+      //
+      // -> only add child to BaseMap if it requires map or mapClickEvent
+      >
+        {/* @ts-ignore */}
+        <ZoomListener />
+        {/* @ts-ignore */}
+        <MapAttributionsBox />
+        {/* @ts-ignore */}
+        <MapCoordinatesBox />
+        {/* @ts-ignore */}
+        <MapLayer />
+
+        {/* ZONE */}
+        {/* @ts-ignore */}
+        <AMPLayers />
+        {/* @ts-ignore */}
+        <AMPPreviewLayer />
+        {/* @ts-ignore */}
+        <RegulatoryLayers />
+        {/* @ts-ignore */}
+        <RegulatoryPreviewLayer />
+        {/* @ts-ignore */}
+        <AdministrativeLayers />
+        {/* @ts-ignore */}
+        <LayerEvents />
+        {/* @ts-ignore */}
+        <LayersOverlay />
+
+        {/* MAP */}
+        {/* @ts-ignore */}
+        <MapExtentController />
+        {/* @ts-ignore */}
+        <MapHistory />
+
+        {/* SEMAPHORE */}
+        {/* @ts-ignore */}
+        <SemaphoresLayer />
+        {/* @ts-ignore */}
+        <SemaphoreOverlay isSuperUser={false} />
+      </BaseMap>
+    )
+  }
+
   return (
     <BaseMap
     // BaseMap forwards map & mapClickEvent as props to children
@@ -111,7 +160,7 @@ export function Map() {
       {/* @ts-ignore */}
       <SemaphoresLayer />
       {/* @ts-ignore */}
-      <SemaphoreOverlay />
+      <SemaphoreOverlay isSuperUser />
 
       {/* REPORTING */}
       {/* @ts-ignore */}
