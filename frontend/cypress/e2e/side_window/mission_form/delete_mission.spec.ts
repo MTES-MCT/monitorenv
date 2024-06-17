@@ -124,7 +124,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
 
           cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
 
-          cy.clickButton('signalements')
+          cy.clickButton('Signalements')
           cy.wait('@getReportings')
 
           cy.getDataCy(`edit-reporting-${attachedReportingId}`).click({ force: true })

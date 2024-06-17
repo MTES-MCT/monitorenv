@@ -544,4 +544,39 @@ context('Side Window > Mission Form > Mission actions', () => {
       })
     })
   })
+
+  it('Should keep pending action when switching tabs', () => {
+    createPendingMission().then(({ body }) => {
+      const mission = body
+
+      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
+
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Nb total de contrôles', 1)
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('MMSI', '123456789')
+      cy.fill('Nom du navire', 'BALTIK')
+      cy.fill('IMO', 'IMO123')
+      cy.fill('Nom du capitaine', 'John Doe')
+
+      cy.getDataCy('mission-0').first().click({ force: true })
+      cy.getDataCy('mission-1').first().click({ force: true })
+      cy.clickButton('Editer')
+      cy.get('input[name="envActions[0].infractions[0].mmsi"]').should('have.value', '123456789')
+      cy.get('input[name="envActions[0].infractions[0].vesselName"]').should('have.value', 'BALTIK')
+      cy.get('input[name="envActions[0].infractions[0].imo"]').should('have.value', 'IMO123')
+      cy.get('input[name="envActions[0].infractions[0].controlledPersonIdentity"]').should('have.value', 'John Doe')
+
+      // delete created mission
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
+    })
+  })
 })

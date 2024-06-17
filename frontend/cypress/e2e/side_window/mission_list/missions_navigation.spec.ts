@@ -38,8 +38,8 @@ context('Mission', () => {
     cy.clickButton("Retourner à l'édition")
 
     // navigate between reportings and missions
-    cy.clickButton('signalements')
-    cy.clickButton('missions')
+    cy.clickButton('Signalements')
+    cy.clickButton('Missions et contrôles')
 
     // we want to check whether the second mission has been saved correctly
     cy.get('[data-cy="mission-2"]').first().forceClick().wait(250)
@@ -78,8 +78,8 @@ context('Mission', () => {
     cy.clickButton("Retourner à l'édition")
 
     // navigate between reportings and missions
-    cy.clickButton('signalements')
-    cy.clickButton('missions')
+    cy.clickButton('Signalements')
+    cy.clickButton('Missions et contrôles')
 
     // we want to check whether the second mission has been saved correctly
     cy.get('[data-cy="mission-2"]').first().forceClick().wait(250)

@@ -5,7 +5,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 export function createReportingOnSideWindow() {
-  cy.clickButton('signalements')
+  cy.clickButton('Signalements')
   cy.clickButton('Ajouter un nouveau signalement')
   cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
   cy.wait(500)

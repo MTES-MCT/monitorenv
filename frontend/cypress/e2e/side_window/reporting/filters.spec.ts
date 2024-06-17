@@ -6,7 +6,7 @@ context('Reportings', () => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
-    cy.clickButton('signalements')
+    cy.clickButton('Signalements')
     cy.wait('@getReportings')
   })
   afterEach(() => {

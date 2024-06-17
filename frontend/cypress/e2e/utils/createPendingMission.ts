@@ -3,7 +3,7 @@ import { getFutureDate } from './getFutureDate'
 export function createPendingMission() {
   cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
   cy.intercept('PUT', '/bff/v1/missions').as('createMission')
-  cy.clickButton('missions')
+  cy.clickButton('Missions et contrôles')
   cy.clickButton('Ajouter une nouvelle mission')
 
   const endDate = getFutureDate(7, 'day')

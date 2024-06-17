@@ -14,8 +14,8 @@ context('Reportings', () => {
         Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
-    cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
-    cy.clickButton('signalements')
+    cy.intercept('GET', '/bff/v1/rhe mission form Should be updated When a miportings*').as('getReportings')
+    cy.clickButton('Signalements')
     cy.wait('@getReportings')
   })
 
