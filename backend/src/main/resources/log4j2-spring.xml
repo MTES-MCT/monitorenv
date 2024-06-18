@@ -11,8 +11,8 @@
         <Sentry name="Sentry" dsn="${SENTRY_DSN}" />
         <!-- Default path is the path within the docker image -->
         <!-- This path can be overriden in dev -->
-        <RollingFile name="Kibana" fileName="${env:BACKEND_LOG_FOLDER:-/home/monitorenv}/logs/kibana.log"
-                     filePattern="${env:BACKEND_LOG_FOLDER:-/home/monitorenv}/logs/${date:yyyy-MM}/kibana-%d{yyyy-MM-dd}-%i.log.gz">
+        <RollingFile name="Kibana" fileName="${env:MONITORENV_LOGS_FOLDER:-/home/monitorenv}/logs/kibana.log"
+                     filePattern="${env:MONITORENV_LOGS_FOLDER:-/home/monitorenv}/logs/${date:yyyy-MM}/kibana-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout pattern="%d{ISO8601} | %-5.5p | %-16.16t | %-32.32c{1} | %-32.32C %4L | %m%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB"/>
