@@ -63,11 +63,11 @@ make dev-run-front
 
 ### First Setup
 
-__TODO__
+**TODO**
 
 ### Local Development
 
-__TODO__
+**TODO**
 
 ## Technical Stack
 
@@ -91,6 +91,7 @@ __TODO__
   - Testing: Pytest
 
 ---
+
 ---
 
 ## Legacy Instructions
