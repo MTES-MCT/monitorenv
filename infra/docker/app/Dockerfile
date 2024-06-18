@@ -39,7 +39,7 @@ ARG VERSION
 ARG ENV_PROFILE
 
 COPY frontend/ /tmp/frontend/
-COPY infra/ /tmp/infra/
+COPY infra/docker/app/env.sh /tmp/infra/docker/app/env.sh
 WORKDIR /tmp/frontend
 
 # Files are expected to be in /tmp/frontend/build
@@ -85,7 +85,6 @@ ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
 
 # Copy files for the back
 COPY --from=buildBack /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
-COPY infra/configurations/backend /home/monitorenv/configurations/
 
 USER monitorenv
 
