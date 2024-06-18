@@ -1,5 +1,6 @@
 import { getHoveredItems } from '@features/map/utils'
 import { useShallowEqualSelector } from '@hooks/useAppSelector'
+import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { createPortal } from 'react-dom'
 
 import { HoveredOverlay } from './HoveredOverlay'
@@ -15,6 +16,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
     layerOverlayItems: state.layersMetadata.layerOverlayItems
   }))
   const hoveredItems = getHoveredItems(currentFeatureListOver)
+  const hasMapListerner = useHasMapInteraction()
 
   return (
     <>
@@ -26,7 +28,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
         {layerOverlayIsOpen && <PinnedOverlay items={layerOverlayItems} />}
       </OverlayPositionOnCoordinates>
       {createPortal(
-        !layerOverlayIsOpen && hoveredItems && hoveredItems.length > 0 && pixel && (
+        !layerOverlayIsOpen && !hasMapListerner && hoveredItems && hoveredItems.length > 0 && pixel && (
           <HoveredOverlay items={hoveredItems} pixel={pixel} />
         ),
         document.body as HTMLElement

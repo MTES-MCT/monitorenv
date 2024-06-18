@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 type LayerSidebarSliceState = {
   administrativeZonesIsOpen: boolean
+  areRegFiltersOpen: boolean
   baselayerIsOpen: boolean
   myAmpsIsOpen: boolean
   myRegulatoryZonesIsOpen: boolean
@@ -9,6 +10,7 @@ type LayerSidebarSliceState = {
 
 const initialState: LayerSidebarSliceState = {
   administrativeZonesIsOpen: false,
+  areRegFiltersOpen: false,
   baselayerIsOpen: false,
   myAmpsIsOpen: false,
   myRegulatoryZonesIsOpen: false
@@ -18,48 +20,40 @@ export const layerSidebarSlice = createSlice({
   initialState,
   name: 'layerSidebar',
   reducers: {
+    closeAll() {
+      return { ...initialState }
+    },
     toggleAdministrativeZones(state) {
-      if (state.administrativeZonesIsOpen) {
-        state.administrativeZonesIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = true
-        state.baselayerIsOpen = false
-        state.myAmpsIsOpen = false
-        state.myRegulatoryZonesIsOpen = false
+      return {
+        ...initialState,
+        administrativeZonesIsOpen: !state.administrativeZonesIsOpen
       }
     },
     toggleBaseLayer(state) {
-      if (state.baselayerIsOpen) {
-        state.baselayerIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = false
-        state.baselayerIsOpen = true
-        state.myAmpsIsOpen = false
-        state.myRegulatoryZonesIsOpen = false
+      return {
+        ...initialState,
+        baselayerIsOpen: !state.baselayerIsOpen
       }
     },
     toggleMyAmps(state) {
-      if (state.myAmpsIsOpen) {
-        state.myAmpsIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = false
-        state.baselayerIsOpen = false
-        state.myAmpsIsOpen = true
-        state.myRegulatoryZonesIsOpen = false
+      return {
+        ...initialState,
+        myAmpsIsOpen: !state.myAmpsIsOpen
       }
     },
     toggleMyRegulatoryZones(state) {
-      if (state.myRegulatoryZonesIsOpen) {
-        state.myRegulatoryZonesIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = false
-        state.baselayerIsOpen = false
-        state.myAmpsIsOpen = false
-        state.myRegulatoryZonesIsOpen = true
+      return {
+        ...initialState,
+        myRegulatoryZonesIsOpen: !state.myRegulatoryZonesIsOpen
+      }
+    },
+    toggleRegFilters(state) {
+      return {
+        ...initialState,
+        areRegFiltersOpen: !state.areRegFiltersOpen
       }
     }
   }
 })
 
-export const { toggleAdministrativeZones, toggleBaseLayer, toggleMyAmps, toggleMyRegulatoryZones } =
-  layerSidebarSlice.actions
+export const layerSidebarActions = layerSidebarSlice.actions

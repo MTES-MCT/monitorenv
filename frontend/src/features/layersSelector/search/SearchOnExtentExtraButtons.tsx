@@ -15,7 +15,7 @@ import {
   setSearchExtent,
   setShouldFilterSearchOnMapExtent
 } from './slice'
-import { closeMetadataPanel } from '../metadataPanel/slice'
+import { closeLayerOverlay, closeMetadataPanel } from '../metadataPanel/slice'
 
 type SearchOnExtentExtraButtonsProps = {
   allowResetResults: boolean
@@ -71,6 +71,7 @@ export function SearchOnExtentExtraButtons({
     dispatch(setFilteredAmpTypes([]))
     dispatch(resetSearchExtent())
     dispatch(closeMetadataPanel())
+    dispatch(closeLayerOverlay())
   }
 
   const toggleFilterSearchOnMapExtent = () => {

@@ -26,7 +26,7 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "18.0.2",
+    "@mtes-mct/monitor-ui": "18.0.4",
     "@reduxjs/toolkit": "1.9.7",
     "@rsuite/responsive-nav": "5.0.2",
     "@sentry/browser": "7.73.0",
@@ -44,7 +44,7 @@
     "jsts": "2.11.0",
     "lodash": "4.17.21",
     "ol": "9.0.0",
-    "ol-mapbox-style": "12.2.1",
+    "ol-mapbox-style": "12.3.3",
     "ramda": "0.29.1",
     "re-reselect": "5.1.0",
     "react": "18.2.0",

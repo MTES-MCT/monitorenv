@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 import { AdministrativeLayer } from './AdministrativeLayer'
 import { administrativeLayers } from '../../../domain/entities/administrativeLayers'
-import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSidebar'
+import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
@@ -13,7 +13,7 @@ export function AdministrativeLayers() {
   const administrativeZonesIsOpen = useAppSelector(state => state.layerSidebar.administrativeZonesIsOpen)
 
   const onSectionTitleClicked = () => {
-    dispatch(toggleAdministrativeZones())
+    dispatch(layerSidebarActions.toggleAdministrativeZones())
   }
 
   return (

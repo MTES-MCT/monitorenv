@@ -1,5 +1,5 @@
 import { AMPLayersList } from './MyAMPLayersList'
-import { toggleMyAmps } from '../../../domain/shared_slices/LayerSidebar'
+import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
@@ -13,7 +13,7 @@ export function AmpLayers() {
   const myAmpsIsOpen = useAppSelector(state => state.layerSidebar.myAmpsIsOpen)
 
   const onTitleClicked = () => {
-    dispatch(toggleMyAmps())
+    dispatch(layerSidebarActions.toggleMyAmps())
     if (myAmpsIsOpen) {
       dispatch(closeMetadataPanel())
     }

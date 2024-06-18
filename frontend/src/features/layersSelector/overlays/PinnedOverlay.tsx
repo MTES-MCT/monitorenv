@@ -16,9 +16,11 @@ export function PinnedOverlay({
   items: OverlayItem<RegulatoryOrAMPLayerType, AMPProperties | RegulatoryLayerCompactProperties>[]
 }) {
   const dispatch = useAppDispatch()
-  const handleClick = () => {
+
+  const close = () => {
     dispatch(closeLayerOverlay())
   }
+
   // component should not be called if items.length < 2
   if (items.length < 2) {
     return null
@@ -28,7 +30,7 @@ export function PinnedOverlay({
     <Card>
       <Header>
         {items.length} zones superposées sur ce point{' '}
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={handleClick} size={Size.SMALL} />
+        <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={close} size={Size.SMALL} />
       </Header>
       <OverlayContent items={items} />
     </Card>

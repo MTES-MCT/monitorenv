@@ -32,7 +32,7 @@ export function MeasurementOverlay({
       overlayRef.current = ref
       if (ref) {
         olOverlayObjectRef.current = new Overlay({
-          className: `ol-overlay-container ol-selectable`,
+          className: `ol-overlay-container ol-selectable measurement-overlay`,
           element: ref,
           offset: [0, -7],
           position: coordinates,
