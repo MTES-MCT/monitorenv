@@ -1,5 +1,0 @@
-services:
-  db:
-    volumes:
-      - "/home/monitorenv/data:/opt/data"
-      - "/home/monitorenv/infra/db:/opt/db"

@@ -39,7 +39,7 @@ ARG VERSION
 ARG ENV_PROFILE
 
 COPY frontend/ /tmp/frontend/
-COPY infra/ /tmp/infra/
+COPY infra/docker/app/env.sh /tmp/infra/docker/app/env.sh
 WORKDIR /tmp/frontend
 
 # Files are expected to be in /tmp/frontend/build
@@ -85,7 +85,6 @@ ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
 
 # Copy files for the back
 COPY --from=buildBack /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
-COPY infra/configurations/backend /home/monitorenv/configurations/
 
 USER monitorenv
 
@@ -96,7 +95,7 @@ COPY --from=buildFront /tmp/frontend/build /home/monitorenv/public/
 # Copy import-meta-env
 COPY --from=buildFront /tmp/frontend/import-meta-env /home/monitorenv/
 COPY --from=buildFront /tmp/infra/docker/app/env.sh /home/monitorenv/
-COPY --from=buildFront /tmp/frontend/.env.example /home/monitorenv/
+COPY --from=buildFront /tmp/frontend/.env.frontend.example /home/monitorenv/
 
 # Add logs folder to be mounted as volume
 RUN mkdir /home/monitorenv/logs
@@ -125,4 +124,4 @@ USER monitorenv
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
-CMD exec java -Dspring.config.additional-location="/home/monitorenv/configurations/" -jar "monitorenv-${VERSION}.jar"
+CMD exec java -jar "monitorenv-${VERSION}.jar"
