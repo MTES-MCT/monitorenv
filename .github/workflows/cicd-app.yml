@@ -238,6 +238,10 @@ jobs:
           record: true
           wait-on: "http://localhost:8880"
           working-directory: ./frontend
+      
+      - name: Display Docker container logs for debugging
+        if: failure()
+        run: docker logs monitorenv_backend
 
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
