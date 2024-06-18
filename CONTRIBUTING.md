@@ -154,7 +154,7 @@ Environment variables are injected in the frontend on runtime.
 `.env.frontend.example` filters the environment variables that are injected in the frontend.
 
 The same system is used to generate a `.env` file for the backend in development mode.
-Command `make dev-init-backend-env` generates a `.env` file which is exported for each make command.
+Command `make dev-init-infra-env` generates a `.env` file which is exported for each make command.
 
 #### Backend
 

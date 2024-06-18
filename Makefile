@@ -10,9 +10,9 @@ endif
 # DEV commands
 
 # Frontend
-.PHONY: dev-install dev-run-front dev-init-backend-env 
-dev-init-backend-env:
-	./frontend/node_modules/.bin/import-meta-env-prepare -u -x ./.env.backend.example -p ./.env.dev.defaults
+.PHONY: dev-install dev-run-front dev-init-infra-env 
+dev-init-infra-env:
+	./frontend/node_modules/.bin/import-meta-env-prepare -u -x ./.env.infra.example -p ./.env.dev.defaults
 
 dev-install:
 	cd frontend && npm install
@@ -129,13 +129,13 @@ update-python-dependencies:
 
 
 # CI commands - app
-.PHONY: docker-tag-app docker-push-app test-run-infra-for-frontend test-init-backend-env
+.PHONY: docker-tag-app docker-push-app test-run-infra-for-frontend test-init-infra-env
 docker-tag-app:
 	docker tag monitorenv-app:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 docker-push-app:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
-test-init-backend-env:
-	npm i @import-meta-env/prepare@0.1.13 && npx import-meta-env-prepare -u -x ./.env.backend.example -p ./.env.test.defaults
+test-init-infra-env:
+	npm i @import-meta-env/prepare@0.1.13 && npx import-meta-env-prepare -u -x ./.env.infra.example -p ./.env.test.defaults
 test-run-infra-for-frontend:
 	export MONITORENV_VERSION=$(VERSION) && docker compose --profile=test up -d
 test: test-back
