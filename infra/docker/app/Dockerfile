@@ -95,7 +95,7 @@ COPY --from=buildFront /tmp/frontend/build /home/monitorenv/public/
 # Copy import-meta-env
 COPY --from=buildFront /tmp/frontend/import-meta-env /home/monitorenv/
 COPY --from=buildFront /tmp/infra/docker/app/env.sh /home/monitorenv/
-COPY --from=buildFront /tmp/frontend/.env.example /home/monitorenv/
+COPY --from=buildFront /tmp/frontend/.env.frontend.example /home/monitorenv/
 
 # Add logs folder to be mounted as volume
 RUN mkdir /home/monitorenv/logs
