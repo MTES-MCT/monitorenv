@@ -121,6 +121,8 @@ RUN chmod +x /home/monitorenv/import-meta-env
 RUN chown monitorenv /home/monitorenv/public/index.html
 RUN chmod +rwx /home/monitorenv/public/index.html
 
+RUN apk add --upgrade --no-cache ca-certificates && update-ca-certificates
+
 USER monitorenv
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
