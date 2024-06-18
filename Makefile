@@ -37,7 +37,7 @@ test-front:
 dev-run-back-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back
 
 dev-run-back:
-	cd backend && ./gradlew bootRun
+	cd backend && ./gradlew bootRun --args='logging.root.level=DEBUG'
 
 dev-run-keycloak:
 	docker compose up -d keycloak
