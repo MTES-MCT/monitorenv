@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlPlans
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.controlPlans
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanTagEntity
 

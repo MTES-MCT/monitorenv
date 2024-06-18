@@ -1,8 +1,8 @@
-import { monitorenvPrivateApi } from './api'
+import { monitorenvPublicApi } from './api'
 
 import type { ControlPlans } from '../domain/entities/controlPlan'
 
-export const controlPlansAPI = monitorenvPrivateApi.injectEndpoints({
+export const controlPlansAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: build => ({
     getControlPlans: build.query<ControlPlans, void>({
       keepUnusedDataFor: 28800, // 8 hours
