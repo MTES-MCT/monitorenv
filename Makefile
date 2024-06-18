@@ -164,12 +164,11 @@ else
 endif
 
 # RUN commands
-.PHONY: restart-app stop-app
+.PHONY: restart-app
 restart-app:
-	docker compose up -d --build app db geoserver --pull always
+	docker compose up -d --build --profile=production --pull always 
 
 # ALIASES
-
 .PHONY: dev lint-back
 
 dev: dev-run-back
