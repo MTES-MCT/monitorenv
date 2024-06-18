@@ -99,7 +99,7 @@ services:
 
   keycloak:
     container_name: monitorenv_keycloak
-    profiles: ["dev", "test"]
+    profiles: ["dev"]
     image: quay.io/keycloak/keycloak:latest
     environment:
       - KEYCLOAK_ADMIN=admin
