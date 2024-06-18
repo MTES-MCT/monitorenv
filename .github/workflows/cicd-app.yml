@@ -206,7 +206,9 @@ jobs:
           image: monitorenv-app:${{ env.VERSION }}
 
       - name: Run docker images
-        run: make run-infra-for-frontend-tests
+        run: |
+          make test-init-backend-env
+          make test-run-infra-for-frontend
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
