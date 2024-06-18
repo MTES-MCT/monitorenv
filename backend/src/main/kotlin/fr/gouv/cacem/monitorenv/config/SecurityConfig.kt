@@ -52,6 +52,7 @@ class SecurityConfig(
                         "/error",
                         "/api/**",
                         "/version",
+                        "/actuator/**",
                         // TODO: secure SSE endpoints
                         "/bff/reportings/sse/**",
                     ).permitAll()
