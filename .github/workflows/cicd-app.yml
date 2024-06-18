@@ -10,6 +10,7 @@ on:
       - "frontend/**"
       - "Makefile"
       - ".env*"
+      - "docker-compose.yml"
   schedule:
     - cron: "38 11 */3 * *"
 
