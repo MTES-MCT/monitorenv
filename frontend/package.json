@@ -11,7 +11,7 @@
     "build": "vite build",
     "build:dev": "ENV_PROFILE=dev npm run build",
     "build:prod": "ENV_PROFILE=prod npm run build",
-    "dev": "import-meta-env-prepare -x .env.example -p ../.env.dev.defaults && vite --port 3000",
+    "dev": "import-meta-env-prepare -x .env.frontend.example -p ../.env.dev.defaults && vite --port 3000",
     "prepare": "cd .. && ./frontend/node_modules/.bin/husky ./frontend/config/husky",
     "start": "vite preview --port 3000",
     "test:e2e": "cypress run --browser firefox --config-file ./config/cypress.config.ts --e2e",
