@@ -166,7 +166,7 @@ endif
 # RUN commands
 .PHONY: restart-app stop-app
 restart-app:
-	docker compose up -d --build app --pull always
+	docker compose up -d --build app db geoserver --pull always
 
 # ALIASES
 

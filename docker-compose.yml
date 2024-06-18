@@ -40,7 +40,6 @@ services:
       - backend_network
     depends_on:
       - db
-      - geoserver
     restart: always
     logging:
       driver: "json-file"
