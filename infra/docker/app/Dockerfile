@@ -124,4 +124,4 @@ USER monitorenv
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
-CMD exec java -Dspring.config.additional-location="/home/monitorenv/configurations/" -jar "monitorenv-${VERSION}.jar"
+CMD exec java -jar "monitorenv-${VERSION}.jar"
