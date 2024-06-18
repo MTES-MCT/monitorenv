@@ -24,55 +24,34 @@ export const layerSidebarSlice = createSlice({
       return { ...initialState }
     },
     toggleAdministrativeZones(state) {
-      if (state.administrativeZonesIsOpen) {
-        state.administrativeZonesIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = true
-        state.areRegFiltersOpen = false
-        state.baselayerIsOpen = false
-        state.myAmpsIsOpen = false
-        state.myRegulatoryZonesIsOpen = false
+      return {
+        ...initialState,
+        administrativeZonesIsOpen: !state.administrativeZonesIsOpen
       }
     },
     toggleBaseLayer(state) {
-      if (state.baselayerIsOpen) {
-        state.baselayerIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = false
-        state.areRegFiltersOpen = false
-        state.baselayerIsOpen = true
-        state.myAmpsIsOpen = false
-        state.myRegulatoryZonesIsOpen = false
+      return {
+        ...initialState,
+        baselayerIsOpen: !state.baselayerIsOpen
       }
     },
     toggleMyAmps(state) {
-      if (state.myAmpsIsOpen) {
-        state.myAmpsIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = false
-        state.areRegFiltersOpen = false
-        state.baselayerIsOpen = false
-        state.myAmpsIsOpen = true
-        state.myRegulatoryZonesIsOpen = false
+      return {
+        ...initialState,
+        myAmpsIsOpen: !state.myAmpsIsOpen
       }
     },
     toggleMyRegulatoryZones(state) {
-      if (state.myRegulatoryZonesIsOpen) {
-        state.myRegulatoryZonesIsOpen = false
-      } else {
-        state.administrativeZonesIsOpen = false
-        state.areRegFiltersOpen = false
-        state.baselayerIsOpen = false
-        state.myAmpsIsOpen = false
-        state.myRegulatoryZonesIsOpen = true
+      return {
+        ...initialState,
+        myRegulatoryZonesIsOpen: !state.myRegulatoryZonesIsOpen
       }
     },
     toggleRegFilters(state) {
-      state.areRegFiltersOpen = !state.areRegFiltersOpen
-      state.administrativeZonesIsOpen = false
-      state.baselayerIsOpen = false
-      state.myAmpsIsOpen = false
-      state.myRegulatoryZonesIsOpen = false
+      return {
+        ...initialState,
+        areRegFiltersOpen: !state.areRegFiltersOpen
+      }
     }
   }
 })

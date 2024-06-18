@@ -25,6 +25,10 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
     skip: !selectedMissionIdOnMap
   })
 
+  const listener = useAppSelector(state => state.draw.listener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
   const hasNoMissionDuplication = useMemo(() => {
     if (!activeMissionId && !!selectedMissionIdOnMap) {
       return true
@@ -33,7 +37,10 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
     return !!activeMissionId && activeMissionId !== selectedMissionIdOnMap
   }, [activeMissionId, selectedMissionIdOnMap])
 
-  const displaySelectedMission = displayMissionSelectedLayer && hasNoMissionDuplication
+  const displaySelectedMission = useMemo(
+    () => displayMissionSelectedLayer && hasNoMissionDuplication && !listener && !isMissionAttachmentInProgress,
+    [displayMissionSelectedLayer, hasNoMissionDuplication, listener, isMissionAttachmentInProgress]
+  )
 
   const selectedMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const selectedMissionVectorLayerRef = useRef(
