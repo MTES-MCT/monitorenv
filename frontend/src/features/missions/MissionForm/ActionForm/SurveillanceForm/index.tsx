@@ -62,7 +62,7 @@ export function SurveillanceForm({ currentActionId, remove, setCurrentActionId }
   const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const [actionsFields] = useField<EnvAction[]>('envActions')
-  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionId))
+  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === currentActionId)
   const currentAction = envActions[envActionIndex]
 
   const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()

@@ -13,7 +13,7 @@ export function NoteForm({ currentActionId, remove, setCurrentActionId }) {
     setFieldValue,
     values: { envActions }
   } = useFormikContext<Mission<EnvActionNote>>()
-  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionId))
+  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === currentActionId)
   const currentAction = envActions[envActionIndex]
 
   const handleRemoveAction = () => {

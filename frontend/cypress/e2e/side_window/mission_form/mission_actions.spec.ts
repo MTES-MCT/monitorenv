@@ -565,6 +565,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Nom du navire', 'BALTIK')
       cy.fill('IMO', 'IMO123')
       cy.fill('Nom du capitaine', 'John Doe')
+      cy.clickOutside()
 
       cy.getDataCy('mission-0').first().click({ force: true })
       cy.getDataCy('mission-1').first().click({ force: true })

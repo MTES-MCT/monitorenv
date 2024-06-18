@@ -62,7 +62,7 @@ export function ControlForm({
 }: {
   currentActionId: string
   removeControlAction: () => void
-  setCurrentActionId: (string) => void
+  setCurrentActionId: (actionId: string | undefined) => void
 }) {
   const { newWindowContainerRef } = useNewWindow()
   const {
@@ -74,7 +74,7 @@ export function ControlForm({
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
 
-  const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionId))
+  const envActionIndex = envActions.findIndex(envAction => envAction.id === currentActionId)
   const currentAction = envActions[envActionIndex]
   const actionDate =
     envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
