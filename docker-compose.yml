@@ -1,6 +1,6 @@
 services:
   app:
-    profiles: ["production"]
+    profiles: ["production", "test"]
     image: $MONITORENV_IMAGE:$MONITORENV_VERSION
     container_name: monitorenv_backend
     user: "monitorenv:${MONITORENV_LOGS_AND_BACKUPS_GID}"
@@ -73,6 +73,7 @@ services:
 
   geoserver:
     container_name: monitorenv_geoserver
+    profiles: ["dev"]
     image: kartoza/geoserver:2.20.2
     environment:
       - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
@@ -93,7 +94,7 @@ services:
 
   keycloak:
     container_name: monitorenv_keycloak
-    profiles: ["dev"]
+    profiles: ["dev", "test"]
     image: quay.io/keycloak/keycloak:latest
     environment:
       - KEYCLOAK_ADMIN=admin
