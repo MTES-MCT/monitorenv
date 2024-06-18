@@ -1,5 +1,6 @@
 # Env variables
 .env
+.env.local
 github_token.txt
 
 # Notebooks

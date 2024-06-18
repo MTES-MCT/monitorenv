@@ -1,0 +1,172 @@
+services:
+  app:
+    profiles: ["production"]
+    image: $MONITORENV_IMAGE:$MONITORENV_VERSION
+    container_name: monitorenv_backend
+    user: "monitorenv:${MONITORENV_LOGS_AND_BACKUPS_GID}"
+    environment:
+      - ENV_DB_URL=jdbc:postgresql://db:5432/$POSTGRES_DB?user=$POSTGRES_USER&password=$POSTGRES_PASSWORD
+      - FRONTEND_GEOSERVER_NAMESPACE=${FRONTEND_GEOSERVER_NAMESPACE}
+      - FRONTEND_GEOSERVER_REMOTE_URL=${FRONTEND_GEOSERVER_REMOTE_URL}
+      - FRONTEND_GOOGLEMAPS_API_KEY=${FRONTEND_GOOGLEMAPS_API_KEY}
+      - FRONTEND_MAPBOX_KEY=${FRONTEND_MAPBOX_KEY}
+      - FRONTEND_MONITORENV_VERSION=${MONITORENV_VERSION}
+      - FRONTEND_SENTRY_DSN=${SENTRY_DSN}
+      - FRONTEND_SENTRY_ENV=${ENVIRONMENT}
+      - FRONTEND_SENTRY_TRACING_ORIGIN=${FRONTEND_SENTRY_TRACING_ORIGIN}
+      - FRONTEND_SHOM_KEY=${FRONTEND_SHOM_KEY}
+      - FRONTEND_MISSION_FORM_AUTO_UPDATE=${FRONTEND_MISSION_FORM_AUTO_UPDATE}
+      - FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED=${FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED}
+      - FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED=${FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED}
+      - FRONTEND_REPORTING_FORM_AUTO_UPDATE=${FRONTEND_REPORTING_FORM_AUTO_UPDATE}
+      - FRONTEND_OIDC_AUTHORITY=${MONITORENV_OIDC_AUTHORITY}
+      - FRONTEND_OIDC_CLIENT_ID=$MONITORENV_OIDC_CLIENT_ID
+      - FRONTEND_OIDC_ENABLED=$MONITORENV_OIDC_ENABLED
+      - FRONTEND_OIDC_REDIRECT_URI=$FRONTEND_OIDC_REDIRECT_URI
+      - MONITORENV_OIDC_CACHE_IN_MINUTES=${MONITORENV_OIDC_CACHE_IN_MINUTES}
+      - MONITORENV_OIDC_ENABLED=$MONITORENV_OIDC_ENABLED
+      - MONITORENV_OIDC_ISSUER_URI=${MONITORENV_OIDC_AUTHORITY}
+      - MONITORENV_URL=${MONITORENV_URL}
+      - MONITORFISH_API_KEY=${MONITORFISH_API_KEY}
+      - SENTRY_DSN=${SENTRY_DSN}
+    ports:
+      - ${BACKEND_HTTP_PORT}:8880
+      - 8000:8000
+      - 5000:5000
+      - 5001:5001
+    volumes:
+      - "${MONITORENV_LOGS_FOLDER}:/home/monitorenv/logs"
+    networks:
+      - backend_network
+    depends_on:
+      - db
+      - geoserver
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024m"
+
+  db:
+    image: ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2
+    container_name: monitorenv_database
+    user: ":${MONITORENV_LOGS_AND_BACKUPS_GID}"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - "${MONITORENV_BACKUPS_FOLDER}:/opt/monitorenv_backups"
+      # TODO: this was in docker-compose.override.yml
+      - "${MONITORENV_DATA_FOLDER}:/opt/data"
+    ports:
+      - ${POSTGRES_PORT}:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+    networks:
+      - backend_network
+    restart: always
+
+  geoserver:
+    container_name: monitorenv_geoserver
+    image: kartoza/geoserver:2.20.2
+    environment:
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+    ports:
+      - ${GEOSERVER_PORT}:8080
+    volumes:
+      - geoserver-data:/opt/geoserver/data_dir
+      - geoserver-settings:/settings
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:8080/geoserver/index.html || exit 1"]
+      interval: 1m30s
+      timeout: 1s
+      retries: 30
+    networks:
+      - backend_network
+    restart: always
+
+  keycloak:
+    container_name: monitorenv_keycloak
+    profiles: ["dev"]
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - "8085:8080"
+    volumes:
+      - ./infra/configurations/keycloack:/opt/keycloak/data/import
+    command:
+      - start-dev
+      - --import-realm
+
+  # TODO: check if flyway is needed
+  flyway:
+    profiles: ["dev", "test"]
+    image: flyway/flyway
+    command: migrate -password=postgres -schemas=public -user=postgres -url=jdbc:postgresql://db:5432/monitorenvdb
+    volumes:
+      - ./backend/src/main/resources/db/:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+
+  mock-geoserver:
+    profiles: ["test"]
+    image: rodolpheche/wiremock
+    ports:
+      - 8081:8080
+    volumes:
+      - ./frontend/cypress/mappings/geoserver:/home/wiremock/mappings
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail http://localhost:8080/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=monitorfish:regulations&outputFormat=application/json&CQL_FILTER=topic=%27Ouest%20Cotentin%20Bivalves%27%20AND%20zone=%27Praires%20Ouest%20cotentin%27 || exit 1 ",
+        ]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+
+  mock-monitorfish:
+    profiles: ["dev", "test"]
+    image: rodolpheche/wiremock
+    ports:
+      - 8082:8080
+    volumes:
+      - ./frontend/cypress/mappings/monitorfish:/home/wiremock/mappings
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/api/v1/mission_actions?missionId=34 || exit 1 "]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+
+  mock-rapportnav:
+    profiles: ["dev", "test"]
+    image: rodolpheche/wiremock
+    ports:
+      - 8083:8080
+    volumes:
+      - ./frontend/cypress/mappings/rapportnav:/home/wiremock/mappings
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/api/v1/missions/34 || exit 1 "]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+
+networks:
+  backend_network:
+
+volumes:
+  db-data:
+    driver: local
+  geoserver-data:
+    driver: local
+  geoserver-settings:
+    driver: local

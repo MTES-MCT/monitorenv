@@ -1,8 +1,8 @@
 BACKEND_CONFIGURATION_FOLDER=$(shell pwd)/infra/configurations/backend/
 HOST_MIGRATIONS_FOLDER=$(shell pwd)/backend/src/main/resources/db/migration
 
-ifneq (,$(wildcard ./infra/.env))
-		include ./infra/.env
+ifneq (,$(wildcard ./.env))
+		include ./.env
 		export
 endif
 
@@ -10,7 +10,10 @@ endif
 # DEV commands
 
 # Frontend
-.PHONY: dev-install dev-run-front
+.PHONY: dev-install dev-run-front dev-init-backend-env 
+dev-init-backend-env:
+	./frontend/node_modules/.bin/import-meta-env-prepare -u -x ./.env.backend.example -p ./.env.dev.defaults
+
 dev-install:
 	cd frontend && npm install
 
@@ -29,34 +32,33 @@ test-front:
 	cd frontend && npm run test:unit
 
 # Backend
-.PHONY: dev-check-config dev-run-back-with-infra dev-run-back  dev-run-keycloak dev-run-infra dev-erase-db dev-clean-target-env
-dev-check-config:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.dev.yml config
+.PHONY: dev-run-back-with-infra dev-run-back  dev-run-keycloak dev-run-infra dev-erase-db dev-clean-build-env
 
-dev-run-back-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-target-env dev-run-back
+dev-run-back-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back
 
 dev-run-back-debug-with-infra: dev-erase-db dev-run-infra dev-clean-target-env dev-run-back-debug
 
 
 dev-run-back:
-	cd backend && ./gradlew bootRun --args='--spring.profiles.active=dev --spring.config.additional-location=$(BACKEND_CONFIGURATION_FOLDER)'
+	cd backend && ./gradlew bootRun
 
 dev-run-back-debug:
 	cd backend && ./gradlew bootRun --debug-jvm --args='--spring.profiles.active=dev --spring.config.additional-location=$(BACKEND_CONFIGURATION_FOLDER)'
 dev-run-keycloak:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d keycloak
+	docker compose up -d keycloak
 
 dev-run-infra:
 	@echo "Preparing database"
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d db geoserver monitorfish rapportnav
+	docker compose up -d db
 	@echo "Waiting for TimescaleDB to be ready to accept connections"
-	@while [ -z "$$(docker logs $(PROJECT_NAME)-db-1 2>&1 | grep -o "database system is ready to accept connections")" ]; \
+	@while [ -z "$$(docker logs monitorenv_database 2>&1 | grep -o "database system is ready to accept connections")" ]; \
 	do \
 			echo waiting...; \
 			sleep 5; \
 	done
 
 	@echo "Database Ready for connections!"
+	docker compose up -d geoserver mock-monitorfish mock-rapportnav
 
 dev-dump-db:
 	sh ./infra/scripts/backup_dev_db.sh
@@ -65,16 +67,10 @@ dev-restore-db:
 	sh ./infra/scripts/restore_dev_db.sh
 
 dev-erase-db:
-	docker compose \
-		--project-name $(PROJECT_NAME) \
-		--project-directory ./infra/docker \
-		--env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml \
-		-f ./infra/docker/docker-compose.dev.yml \
-		down --remove-orphans -v
+	docker compose down --remove-orphans -v
 
-dev-clean-target-env:
-	rm -rf $(shell pwd)/backend/target
+dev-clean-build-env:
+	rm -rf $(shell pwd)/backend/build
 
 .PHONY: clean lint-back test check-clean-archi
 check-clean-archi:
@@ -86,7 +82,7 @@ lint-back:
 		-e "Package name must not contain underscore" \
 		-e "Wildcard import"
 
-clean: dev-erase-db dev-clean-target-env
+clean: dev-erase-db dev-clean-build-env
 
 test: test-back
 	cd frontend && CI=true npm run test:unit
@@ -110,46 +106,6 @@ load-sig-data:
 	set +a
 	echo ${PROJECT_NAME}
 	./infra/init/postgis_insert_layers.sh
-
-prod-load-sig-data:
-	set -a
-	. ./infra/.env
-	set +a
-	echo ${PROJECT_NAME}
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml \
-		-f ./infra/docker/docker-compose.prod.yml \
-		-f ./infra/docker/docker-compose.override.yml \
-		up -d db
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml \
-		-f ./infra/docker/docker-compose.prod.yml \
-		-f ./infra/docker/docker-compose.override.yml \
-		exec db \
-		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/data/integration.sql
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml \
-		-f ./infra/docker/docker-compose.prod.yml \
-		-f ./infra/docker/docker-compose.override.yml \
-		exec db \
-		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/data/control_resources_admin_and_units_data.sql
-
-prod-add-metabase-user:
-	set -a
-	. ./infra/.env
-	set +a
-	echo ${PROJECT_NAME}
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml \
-		-f ./infra/docker/docker-compose.prod.yml \
-		-f ./infra/docker/docker-compose.override.yml \
-		up -d db
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml \
-		-f ./infra/docker/docker-compose.prod.yml \
-		-f ./infra/docker/docker-compose.override.yml \
-		exec db \
-		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/db/db_users_metabase.sql
 
 init-geoserver:
 	set -a
@@ -196,7 +152,7 @@ docker-push-pipeline:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
 
 # ENV setup
-.PHONY: init-environment check-config
+.PHONY: init-environment
 init-environment:
 ifeq (,$(wildcard ./infra/.env))
 	@echo "Pas de fichier '.env'. Création d'un nouveau fichier."
@@ -205,26 +161,11 @@ ifeq (,$(wildcard ./infra/.env))
 else
 	@echo "Un fichier .env existe déjà. Editez ou supprimez le fichier existant."
 endif
-check-config:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
 
 # RUN commands
 .PHONY: restart-app stop-app
 restart-app:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d --build app --pull always
-stop-app:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml stop
-
-# MAINTENANCE
-.PHONY: remove-unused-docker-images logs-app logs-geoserver logs-db
-remove-unused-docker-images:
-	docker image prune -a
-logs-backend:
-	docker container logs -f monitorenv_backend
-logs-geoserver:
-	docker container logs -f monitorenv_geoserver
-logs-db:
-	docker container logs -f monitorenv_database
+	docker compose up -d --build app --pull always
 
 # ALIASES
 

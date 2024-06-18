@@ -36,9 +36,7 @@
 ```sh
 git clone https://github.com/MTES-MCT/monitorenv.git
 cd monitorenv
-cp infra/.env.example infra/.env
-cp frontend/.env.example frontend/.env
-cd frontend && npm i
+make dev-install
 ```
 
 ### Local Development
@@ -52,7 +50,7 @@ make dev-run-back-with-infra
 In a second CLI tab, for the Frontend:
 
 ```sh
-cd frontend && npm run dev
+make dev-run-front
 ```
 
 ## Getting Started: Data Pipeline
@@ -110,7 +108,7 @@ __TODO__
 - PostgreSQL
 - Geoserver
 - Frontend:
-  - React (Create React App)
+  - React (Vite)
   - OpenLayers
   - Rsuite
 - Data pipeline:
@@ -130,12 +128,11 @@ __TODO__
 
 #### Configuration
 
-Create a `./infra/.env` file based on `./infra/.env.template`
-Optionally modify `./infra/configurations/backend/application-dev.properties`
+Optionally create and modify `./.env.local`
 
 ##### Sentry
 
-SENTRY_DSN is an environment variable used by Sentry to identify the application. It is used by both the frontend and backend. It is defined in the `./infra/.env` file and injected into the frontend application via the `./public/env.js` file.
+SENTRY_DSN is an environment variable used by Sentry to identify the application. It is used by both the frontend and backend. It is defined in the `.env` file and injected into the frontend application via the `./public/env.js` file.
 
 If `SENTRY_DSN` is set, the backend logs will automatically be sent.
 
@@ -151,13 +148,16 @@ Before pushing a commit, check the linting with `npm run test:lint`
 
 ##### Environment Variables
 
-React CRA allows the introduction of environment variables at build time.
-To allow the use of environment variables at the application's runtime, and to avoid compiling the frontend application for each environment, the variables are injected into the application via the static `public/env.js` file loaded by the client. This file is updated with the environment variables via an `env.sh` script.
-In development, the environment variables are injected via CRA. The `src/env.js` file manages the import of variables for the entire application, regardless of the environment (development or production).
+Variable injection is done with `import-meta-env`.
+
+Environment variables are injected in the frontend on runtime.
+`.env.frontend.example` filters the environment variables that are injected in the frontend.
+
+The same system is used to generate a `.env` file for the backend in development mode.
+Command `make dev-init-backend-env` generates a `.env` file which is exported for each make command.
 
 #### Backend
 
-Check the configuration: `make dev-check-config`
 Start the backend:
 `make dev-run-back-with-infra`:
 
@@ -171,5 +171,3 @@ A Swagger interface is available at the URL: <http://localhost:8880/swagger-ui.h
 It may be necessary to load context data for frontend development and configure Geoserver to distribute this data.
 
 To restart the backend without recreating the database and geoserver containers, run the command `make dev-run-back`
-
-
