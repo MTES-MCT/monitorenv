@@ -84,9 +84,6 @@ lint-back:
 
 clean: dev-erase-db dev-clean-build-env
 
-test: test-back
-	cd frontend && CI=true npm run test:unit
-
 .PHONY: docker-build-app
 docker-build-app:
 	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) \
@@ -132,13 +129,17 @@ update-python-dependencies:
 
 
 # CI commands - app
-.PHONY: docker-tag-app docker-push-app run-infra-for-frontend-tests
+.PHONY: docker-tag-app docker-push-app test-run-infra-for-frontend test-init-backend-env
 docker-tag-app:
 	docker tag monitorenv-app:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 docker-push-app:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
-run-infra-for-frontend-tests:
-	export MONITORENV_VERSION=$(VERSION) && docker compose -f ./infra/docker/docker-compose.test.yml up -d
+test-init-backend-env:
+	./frontend/node_modules/.bin/import-meta-env-prepare -u -x ./.env.backend.example -p ./.env.dev.defaults
+test-run-infra-for-frontend:
+	export MONITORENV_VERSION=$(VERSION) && docker compose --profile=test up -d
+test: test-back
+	cd frontend && CI=true npm run test:unit
 
 # CI commands - pipeline
 .PHONY: docker-build-pipeline docker-test-pipeline docker-tag-pipeline docker-push-pipeline
