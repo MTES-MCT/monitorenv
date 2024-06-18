@@ -41,6 +41,12 @@ services:
     depends_on:
       - db
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     logging:
       driver: "json-file"
       options:
@@ -108,7 +114,7 @@ services:
 
   # TODO: check if flyway is needed
   flyway:
-    profiles: ["dev","test"]
+    profiles: ["dev"]
     image: flyway/flyway
     command: migrate -password=postgres -schemas=public -user=postgres -url=jdbc:postgresql://db:5432/monitorenvdb
     volumes:
