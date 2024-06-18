@@ -135,7 +135,7 @@ docker-tag-app:
 docker-push-app:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 test-init-backend-env:
-	npx github:runtime-env/import-meta-env/packages/prepare -u -x ./.env.backend.example -p ./.env.test.defaults
+	npm i @import-meta-env/prepare@0.1.13 && npx import-meta-env-prepare -u -x ./.env.backend.example -p ./.env.test.defaults
 test-run-infra-for-frontend:
 	export MONITORENV_VERSION=$(VERSION) && docker compose --profile=test up -d
 test: test-back
