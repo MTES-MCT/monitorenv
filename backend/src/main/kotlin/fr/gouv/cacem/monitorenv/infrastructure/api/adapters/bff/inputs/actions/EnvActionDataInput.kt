@@ -31,7 +31,6 @@ data class EnvActionDataInput(
     val facade: String? = null,
     val geom: Geometry? = null,
     val openBy: String? = null,
-    val observationsByUnit: String? = null,
 
     // EnvActionControl Properties
     val actionNumberOfControls: Int? = null,
