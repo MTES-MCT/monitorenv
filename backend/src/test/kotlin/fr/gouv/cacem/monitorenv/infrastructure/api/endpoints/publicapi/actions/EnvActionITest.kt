@@ -87,7 +87,6 @@ class EnvActionITest {
                     equalTo(patchedEnvAction.observationsByUnit),
                 ),
             )
-
     }
 
     // TODO: Uncomment when MapperConfiguration DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES is set

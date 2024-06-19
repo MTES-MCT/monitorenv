@@ -73,7 +73,6 @@ class ControllersExceptionHandler {
         }
     }
 
-
     // -------------------------------------------------------------------------
     // Legacy exceptions
 

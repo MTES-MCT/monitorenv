@@ -149,5 +149,4 @@ class MergeEnvActionEntityUTest {
         // Then
         assertThat(mergedEnvAction).isEqualTo(envAction)
     }
-
 }
