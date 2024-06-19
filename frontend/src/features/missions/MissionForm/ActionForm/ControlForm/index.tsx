@@ -223,7 +223,7 @@ export function ControlForm({
           vesselSize: undefined,
           vesselType: undefined
         }
-        const updatedInfractions = reporting.targetDetails.map(target => {
+        const updatedInfractions = (reporting.targetDetails ?? []).map(target => {
           switch (reporting.targetType) {
             case ReportingTargetTypeEnum.VEHICLE:
               return {

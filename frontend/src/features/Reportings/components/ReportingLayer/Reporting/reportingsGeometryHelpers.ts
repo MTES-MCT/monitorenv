@@ -3,13 +3,10 @@ import { GeoJSON } from 'ol/format'
 
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 
-import type { ReportingDetailed } from '../../../../../domain/entities/reporting'
+import type { Reporting } from '../../../../../domain/entities/reporting'
 import type { AtLeast } from '../../../../../types'
 
-export const getReportingZoneFeature = (
-  reporting: ReportingDetailed | AtLeast<ReportingDetailed, 'id'>,
-  layername: string
-) => {
+export const getReportingZoneFeature = (reporting: Reporting | AtLeast<Reporting, 'id'>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(reporting.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -51,7 +48,7 @@ export const getReportingZoneFeature = (
   return feature
 }
 
-export const getEditingReportingZoneFeature = (reporting: AtLeast<ReportingDetailed, 'id'>, layername: string) => {
+export const getEditingReportingZoneFeature = (reporting: AtLeast<Reporting, 'id'>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(reporting.geom, {
     dataProjection: WSG84_PROJECTION,

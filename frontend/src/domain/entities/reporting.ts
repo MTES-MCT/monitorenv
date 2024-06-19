@@ -4,21 +4,54 @@ import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { ActionSource, ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
+import type { VehicleTypeEnum } from './vehicleType'
 import type { VesselTypeEnum } from './vesselType'
 
 export type Reporting = {
   actionTaken: string | undefined
-  attachedEnvActionId: string
+  attachedEnvActionId?: string
   attachedMission: Mission | undefined
   attachedToMissionAtUtc: string | undefined
-  controlStatus: ControlStatusEnum
+  controlStatus: ControlStatusEnum | undefined
+  controlUnitId: number | undefined
+  createdAt: string | undefined
+  description: string | undefined
+  detachedFromMissionAtUtc: string | undefined
+  displayedSource?: string
+  geom: Record<string, any>[] | undefined
+  hasNoUnitAvailable: boolean | undefined
+  id: number | string
+  isArchived: boolean
+  isControlRequired: boolean | undefined
+  isInfractionProven: boolean
+  missionId: number | undefined
+  openBy: string | undefined
+  reportType?: ReportingTypeEnum
+  reportingId: number | undefined
+  semaphoreId: number | undefined
+  sourceName: string | undefined
+  sourceType: ReportingSourceEnum
+  subThemeIds: number[] | undefined
+  targetDetails?: TargetDetails[]
+  targetType: ReportingTargetTypeEnum | undefined
+  themeId: number | undefined
+  updatedAtUtc: string | undefined
+  validityTime: number
+  vehicleType: VehicleTypeEnum | undefined
+  withVHFAnswer: boolean | undefined
+}
+
+export type ReportingData = {
+  actionTaken: string | undefined
+  attachedEnvActionId: string | undefined
+  attachedToMissionAtUtc: string | undefined
   controlUnitId: number | undefined
   createdAt: string | undefined
   description: string | undefined
   detachedFromMissionAtUtc: string | undefined
   geom: Record<string, any>[] | undefined
   hasNoUnitAvailable: boolean | undefined
-  id: number | string
+  id: number | undefined
   isArchived: boolean
   isControlRequired: boolean | undefined
   isInfractionProven: boolean
@@ -35,12 +68,8 @@ export type Reporting = {
   themeId: number
   updatedAtUtc: string | undefined
   validityTime: number
-  vehicleType: string | undefined
+  vehicleType: VehicleTypeEnum | undefined
   withVHFAnswer: boolean | undefined
-}
-
-export type ReportingDetailed = Reporting & {
-  displayedSource: string
 }
 
 export type DetachedReporting = {
@@ -90,7 +119,7 @@ export type TargetDetails = {
   vesselType?: VesselTypeEnum
 }
 
-export type ReportingForTimeline = Partial<ReportingDetailed> & {
+export type ReportingForTimeline = Partial<Reporting> & {
   actionSource: ActionSource
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string

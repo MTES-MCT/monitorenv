@@ -34,6 +34,8 @@ export const saveMission =
     } = getState()
     const selectedMissions = getState().missionForms.missions
 
+    await dispatch(missionFormsActions.setIsListeningToEvents(false))
+
     const envActions = [...values.envActions]
     const sortedActions = envActions
       .sort((a, b) => a.id.localeCompare(b.id))
@@ -42,8 +44,6 @@ export const saveMission =
     const valuesToSave = omit({ ...values, envActions: sortedActions }, ...MISSION_VALUES_TO_EXCLUDE)
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
-    await dispatch(missionFormsActions.setIsListeningToEvents(false))
-
     const newOrNextMissionData = {
       ...valuesToSave,
       id: missionIsNewMission ? undefined : Number(values.id)
