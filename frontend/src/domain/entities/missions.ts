@@ -245,7 +245,25 @@ export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' |
   id: string
 }
 // Mission for API
-export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings'>
+export type MissionData = {
+  attachedReportingIds?: number[] | undefined
+  completedBy?: string | undefined
+  controlUnits: LegacyControlUnit[] | Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
+  endDateTimeUtc?: string | undefined
+  envActions: EnvAction[] | NewEnvAction[]
+  facade: SeaFrontEnum
+  geom?: GeoJSON.MultiPolygon
+  hasMissionOrder?: boolean
+  id: number | undefined
+  isGeometryComputedFromControls: boolean
+  isUnderJdp?: boolean | undefined
+  missionSource: MissionSourceEnum
+  missionTypes: MissionTypeEnum[]
+  observationsCacem?: string
+  observationsCnsp?: string
+  openBy: string
+  startDateTimeUtc: string
+}
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote

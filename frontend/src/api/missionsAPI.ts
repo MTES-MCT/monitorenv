@@ -118,12 +118,18 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           .join('&')
     }),
     updateMission: builder.mutation<Mission, MissionData>({
-      invalidatesTags: (_, __, { attachedReportingIds = [], detachedReportingIds = [], id }) => [
-        { id, type: 'Missions' },
+      invalidatesTags: missionResponse => [
+        { id: missionResponse?.id, type: 'Missions' },
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },
-        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const })),
-        ...detachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
+        ...(missionResponse?.attachedReportingIds ?? []).map(reportingId => ({
+          id: reportingId,
+          type: 'Reportings' as const
+        })),
+        ...(missionResponse?.detachedReportingIds ?? []).map(reportingId => ({
+          id: reportingId,
+          type: 'Reportings' as const
+        }))
       ],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
