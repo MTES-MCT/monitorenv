@@ -26,6 +26,7 @@ data class EnvActionControlEntity(
     override val isSeafarersControl: Boolean? = null,
     override val missionId: Int? = null,
     override val openBy: String? = null,
+    override var observationsByUnit: String? = null,
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
@@ -36,4 +37,5 @@ data class EnvActionControlEntity(
         id = id,
         actionType = ActionTypeEnum.CONTROL,
         missionId = missionId,
+        observationsByUnit = observationsByUnit,
     )

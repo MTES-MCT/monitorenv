@@ -17,10 +17,12 @@ data class EnvActionSurveillanceEntity(
     override val department: String? = null,
     override val missionId: Int? = null,
     override val openBy: String? = null,
+    override var observationsByUnit: String? = null,
     val observations: String? = null,
 ) :
     EnvActionEntity(
         id = id,
         actionType = ActionTypeEnum.SURVEILLANCE,
         missionId = missionId,
+        observationsByUnit = observationsByUnit,
     )

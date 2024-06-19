@@ -21,15 +21,18 @@ class MergeEnvActionEntity {
             envActionEntity.actionStartDateTimeUtc,
             patchableEnvActionEntity.actionStartDateTimeUtc,
         )
+        val patchedObservationsByUnit = getValueFromOptional(
+            envActionEntity.observationsByUnit,
+            patchableEnvActionEntity.observationsByUnit,
+        )
         envActionEntity.actionEndDateTimeUtc = patchedActionEndDateTime
         envActionEntity.actionStartDateTimeUtc = patchedActionStartDateTime
+        envActionEntity.observationsByUnit = patchedObservationsByUnit
         return envActionEntity
     }
 
-    private fun <T> getValueFromOptional(
-        existingValue: T?,
-        optional: Optional<T>?,
-    ): T? {
+
+    private fun <T> getValueFromOptional(existingValue: T?, optional: Optional<T>?): T? {
         return when {
             optional == null -> existingValue
             optional.isPresent -> optional.get()
