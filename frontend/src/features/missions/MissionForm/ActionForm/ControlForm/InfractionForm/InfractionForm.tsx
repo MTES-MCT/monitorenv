@@ -1,13 +1,13 @@
 import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { formalNoticeLabels, infractionTypeLabels, type EnvActionControl, type Mission } from 'domain/entities/missions'
+import { TargetTypeEnum } from 'domain/entities/targetType'
+import { useField, useFormikContext, type FormikErrors } from 'formik'
 import styled from 'styled-components'
 
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
-import { infractionTypeLabels, formalNoticeLabels } from '../../../../../../domain/entities/missions'
-import { TargetTypeEnum } from '../../../../../../domain/entities/targetType'
 
 import type { MouseEventHandler } from 'react'
 
@@ -29,6 +29,9 @@ export function InfractionForm({
   const infractionPath = `envActions[${envActionIndex}].infractions[${currentInfractionIndex}]`
 
   const [actionTargetField] = useField<string>(`envActions.${envActionIndex}.actionTargetType`)
+
+  const { errors } = useFormikContext<Mission>()
+  const isInvalid = isInfractionFormInvalid(errors)
 
   return (
     <FormWrapper data-cy="infraction-form">
@@ -78,12 +81,19 @@ export function InfractionForm({
         <Button accent={Accent.TERTIARY} onClick={removeInfraction}>
           Supprimer l&apos;infraction
         </Button>
-        <Button data-cy="infraction-form-validate" onClick={validateInfraction}>
+        <Button data-cy="infraction-form-validate" disabled={isInvalid} onClick={validateInfraction}>
           Valider l&apos;infraction
         </Button>
       </ButtonContainer>
     </FormWrapper>
   )
+
+  function isInfractionFormInvalid(errorsForm: FormikErrors<Mission>) {
+    const envActionErrors = (!!errorsForm.envActions &&
+      errorsForm.envActions[envActionIndex]) as FormikErrors<EnvActionControl>
+
+    return envActionErrors && !!envActionErrors.infractions
+  }
 }
 
 const FormWrapper = styled.div`
