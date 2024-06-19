@@ -64,7 +64,7 @@ class ControllersExceptionHandler {
     }
 
     private fun extractFieldFromErrorMessage(errorMessage: String): String {
-        val pattern = Pattern.compile(".*\\[\"(.*?)\"].*")
+        val pattern = Pattern.compile("\"(.*?)\"")
         val matcher = pattern.matcher(errorMessage)
         return if (matcher.matches()) {
             matcher.group(1)

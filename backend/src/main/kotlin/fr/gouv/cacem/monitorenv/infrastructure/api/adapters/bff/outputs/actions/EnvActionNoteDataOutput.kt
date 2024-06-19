@@ -9,6 +9,7 @@ data class EnvActionNoteDataOutput(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.NOTE,
+    override val observationsByUnit: String? = null,
     val observations: String? = null,
 ) :
     EnvActionDataOutput(
@@ -22,6 +23,7 @@ data class EnvActionNoteDataOutput(
                 id = envActionNoteEntity.id,
                 actionStartDateTimeUtc = envActionNoteEntity.actionStartDateTimeUtc,
                 observations = envActionNoteEntity.observations,
+                observationsByUnit = envActionNoteEntity.observationsByUnit,
             )
     }
 }

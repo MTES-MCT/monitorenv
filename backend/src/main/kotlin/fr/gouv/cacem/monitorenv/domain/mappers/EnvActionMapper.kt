@@ -100,6 +100,7 @@ object EnvActionMapper {
                                 id = id,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
                                 missionId = missionId,
+                                observationsByUnit = observationsByUnit,
                             )
                 }
             } else {
