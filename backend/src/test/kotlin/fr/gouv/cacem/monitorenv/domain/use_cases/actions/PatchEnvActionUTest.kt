@@ -28,8 +28,9 @@ class PatchEnvActionUTest {
         val id = UUID.randomUUID()
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
+        val observationsByUnit = "observationsByUnit"
 
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
         val envActionFromDatabase = anEnvAction(objectMapper, id, ZonedDateTime.now(), ZonedDateTime.now().plusDays(2))
         val envActionPatched = anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow)
 
@@ -52,7 +53,7 @@ class PatchEnvActionUTest {
     fun `execute() should throw BackendUsageException with message when the entity does not exist`() {
         // Given
         val id = UUID.randomUUID()
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
 
         given(envActionRepository.findById(id)).willReturn(null)
 

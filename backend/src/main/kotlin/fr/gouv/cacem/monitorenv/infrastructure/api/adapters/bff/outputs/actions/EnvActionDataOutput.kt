@@ -7,12 +7,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurve
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 abstract class EnvActionDataOutput(
     open val id: UUID,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val actionType: ActionTypeEnum,
+    open val observationsByUnit: String? = null,
 ) {
     companion object {
         fun fromEnvActionEntity(

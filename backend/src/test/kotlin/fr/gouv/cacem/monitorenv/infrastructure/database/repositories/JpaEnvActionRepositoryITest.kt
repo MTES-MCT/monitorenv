@@ -47,8 +47,9 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
         val id = UUID.fromString("16eeb9e8-f30c-430e-b36b-32b4673f81ce")
         val today = ZonedDateTime.now(ZoneOffset.UTC)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
+        val observationsByUnit = "observationsByUnit"
 
-        val anEnvAction = anEnvAction(objectMapper, id, today, tomorrow)
+        val anEnvAction = anEnvAction(objectMapper, id, today, tomorrow, observationsByUnit)
 
         // When
         val envActionEntity = jpaEnvActionRepository.save(anEnvAction)
