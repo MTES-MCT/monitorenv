@@ -291,11 +291,7 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   reportingIds: number[]
 }
 
-export type ControlOrSurveillance =
-  | EnvActionControl
-  | EnvActionSurveillance
-  | NewEnvActionControl
-  | EnvActionSurveillance
+export type ControlOrSurveillance = EnvActionControl | EnvActionSurveillance
 
 export type EnvActionNote = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE

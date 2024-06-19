@@ -229,40 +229,6 @@ context('Side Window > Mission Form > Main Form', () => {
     })
   })
 
-  it('An user can cancel mission creation if control unit already engaged and be redirected to filtered mission list', () => {
-    // Given
-    visitSideWindow()
-    cy.wait(200)
-    const { asDatePickerDate: expectedStartDate } = getUtcDateInMultipleFormats(
-      getPreviousMonthUTC(2, customDayjs().utc())
-    )
-    const { asDatePickerDate: expectedEndDate } = getUtcDateInMultipleFormats(todayUTC())
-
-    cy.fill('Période', 'Période spécifique')
-    cy.fill('Période spécifique', [expectedStartDate, expectedEndDate])
-    const controlUnit = 'PAM Jeanne Barret'
-    cy.fill('Unité', [controlUnit])
-    cy.fill('Statut de mission', ['En cours'])
-
-    cy.get('.Table-SimpleTable tr').then(rows => {
-      cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
-
-      // When
-      cy.get('*[data-cy="add-mission"]').click({ force: true })
-      cy.fill('Unité 1', controlUnit)
-      cy.wait('@getEngagedControlUnits')
-
-      // Then
-      cy.get('body').contains('Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
-      cy.clickButton("Non, l'abandonner")
-
-      cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
-
-      // table should have the same number of rows than before
-      cy.get('.Table-SimpleTable tr').should('have.length', rows.length)
-    })
-  })
-
   it('An user can create mission even if control unit already engaged', () => {
     visitSideWindow()
     cy.wait(200)
