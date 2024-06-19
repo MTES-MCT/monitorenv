@@ -6,7 +6,7 @@ import java.util.*
 data class EnvActionNoteProperties(
     val observations: String? = null,
 
-    ) {
+) {
     fun toEnvActionNoteEntity(
         id: UUID,
         actionStartDateTimeUtc: ZonedDateTime?,
