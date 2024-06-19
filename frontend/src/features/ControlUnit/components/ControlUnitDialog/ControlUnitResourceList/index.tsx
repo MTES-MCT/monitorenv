@@ -1,6 +1,7 @@
 // import styled from 'styled-components'
 
 import { Accent, Button, ControlUnit, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { omit } from 'lodash'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -109,12 +110,22 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
           : controlUnitResourceFormValues.name
       }
 
+      const controlUnitValuesToExclude = ['controlUnit', 'station']
+
       if (isNewControlUnitResourceFormOpen) {
         await createControlUnitResource(
-          controlledControlUnitResourceFormValues as ControlUnit.NewControlUnitResourceData
+          omit(
+            controlledControlUnitResourceFormValues,
+            controlUnitValuesToExclude
+          ) as ControlUnit.NewControlUnitResourceData
         )
       } else {
-        await updateControlUnitResource(controlledControlUnitResourceFormValues as ControlUnit.ControlUnitResourceData)
+        await updateControlUnitResource(
+          omit(
+            controlledControlUnitResourceFormValues,
+            controlUnitValuesToExclude
+          ) as ControlUnit.ControlUnitResourceData
+        )
       }
 
       closeForm()

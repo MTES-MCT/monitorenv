@@ -5,7 +5,7 @@ import type { Station } from '../../../../domain/entities/station'
 
 export function getStationDataFromStationFormValues(baseFormValues: StationFormValues): Station.StationData {
   return {
-    ...omit(['coordinates'], baseFormValues),
+    ...omit(['coordinates', 'controlUnitResourceIds', 'controlUnitResources'], baseFormValues),
     latitude: baseFormValues.coordinates![0],
     longitude: baseFormValues.coordinates![1]
   } as Station.StationData
