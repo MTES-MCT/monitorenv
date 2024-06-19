@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.actions
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.PatchEnvAction
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.PatchableEnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.PatchableEnvActionDataInput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.PatchMapping

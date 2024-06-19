@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntit
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class EnvActionControlEntity(
     override val id: UUID,
@@ -25,8 +25,8 @@ data class EnvActionControlEntity(
     override val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     override val isSeafarersControl: Boolean? = null,
     override val missionId: Int? = null,
-    override val openBy: String? = null,
     override var observationsByUnit: String? = null,
+    override val openBy: String? = null,
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),

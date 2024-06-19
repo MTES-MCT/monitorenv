@@ -23,7 +23,13 @@ class MergeEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
@@ -39,7 +45,13 @@ class MergeEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
@@ -57,7 +69,13 @@ class MergeEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
@@ -73,7 +91,13 @@ class MergeEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)

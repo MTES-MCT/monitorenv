@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
 import java.time.ZonedDateTime
