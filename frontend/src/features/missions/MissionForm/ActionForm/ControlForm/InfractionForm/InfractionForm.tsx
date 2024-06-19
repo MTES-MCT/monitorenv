@@ -5,6 +5,7 @@ import { useField, useFormikContext, type FormikErrors } from 'formik'
 import styled from 'styled-components'
 
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
+import { InfractionFormHeaderIndividual } from './InfractionFormHeaderIndividual'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
@@ -49,6 +50,10 @@ export function InfractionForm({
 
       {actionTargetField.value === TargetTypeEnum.COMPANY && (
         <InfractionFormHeaderCompany infractionPath={infractionPath} />
+      )}
+
+      {actionTargetField.value === TargetTypeEnum.INDIVIDUAL && (
+        <InfractionFormHeaderIndividual infractionPath={infractionPath} />
       )}
 
       <FormikMultiRadio
