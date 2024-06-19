@@ -24,6 +24,7 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
   const [envActionsField, , envActionsHelper] = useField<EnvAction[]>('envActions')
   const envActionIndex = (envActionsField.value ?? []).findIndex(envAction => envAction.id === currentActionId)
   const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${envActionIndex}.actionType`)
+  const [actionIdField] = useField<EnvAction['id']>(`envActions.${envActionIndex}.id`)
 
   const removeAction = useCallback(() => {
     const actionsToUpdate = [...(envActionsField.value || [])]
@@ -58,6 +59,7 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
         return (
           <FormWrapper>
             <ControlForm
+              key={actionIdField.value}
               currentActionId={currentActionId}
               removeControlAction={removeAction}
               setCurrentActionId={setCurrentActionId}
@@ -68,6 +70,7 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
         return (
           <FormWrapper>
             <SurveillanceForm
+              key={actionIdField.value}
               currentActionId={currentActionId}
               remove={removeAction}
               setCurrentActionId={setCurrentActionId}
@@ -77,7 +80,12 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
       case ActionTypeEnum.NOTE:
         return (
           <FormWrapper>
-            <NoteForm currentActionId={currentActionId} remove={removeAction} setCurrentActionId={setCurrentActionId} />
+            <NoteForm
+              key={actionIdField.value}
+              currentActionId={currentActionId}
+              remove={removeAction}
+              setCurrentActionId={setCurrentActionId}
+            />
           </FormWrapper>
         )
 

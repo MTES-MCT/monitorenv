@@ -308,6 +308,7 @@ export function SurveillanceForm({ currentActionId, remove, setCurrentActionId }
               isLight
               isRequired
               label="Ouvert par"
+              maxLength={3}
               name={`envActions[${envActionIndex}].openBy`}
             />
             <FormikTextInput

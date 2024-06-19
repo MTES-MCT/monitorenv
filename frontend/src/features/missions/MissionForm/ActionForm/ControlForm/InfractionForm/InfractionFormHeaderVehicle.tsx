@@ -13,11 +13,19 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) 
   return (
     <FormGroup>
       {vehicleTypeField?.value !== VehicleTypeEnum.VESSEL && (
-        <FormikTextInput
-          data-cy="infraction-form-registrationNumber"
-          label="Immatriculation"
-          name={`${infractionPath}.registrationNumber`}
-        />
+        <>
+          <FormikTextInput
+            data-cy="infraction-form-registrationNumber"
+            label="Immatriculation"
+            name={`${infractionPath}.registrationNumber`}
+          />
+
+          <FormikTextInput
+            data-cy="infraction-form-controlledPersonIdentity"
+            label="Identité de la personne contrôlée"
+            name={`${infractionPath}.controlledPersonIdentity`}
+          />
+        </>
       )}
 
       {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (

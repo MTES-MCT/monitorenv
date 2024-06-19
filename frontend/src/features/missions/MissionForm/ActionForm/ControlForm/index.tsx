@@ -438,6 +438,7 @@ export function ControlForm({
               isLight
               isRequired
               label="Ouvert par"
+              maxLength={3}
               name={`envActions[${envActionIndex}].openBy`}
             />
             <FormikTextInput

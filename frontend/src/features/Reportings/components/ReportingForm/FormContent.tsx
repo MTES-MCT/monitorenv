@@ -358,7 +358,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
 
         <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />
 
-        <StyledFormikTextInput isErrorMessageHidden isRequired label="Saisi par" name="openBy" />
+        <StyledFormikTextInput isErrorMessageHidden isRequired label="Saisi par" maxLength={3} name="openBy" />
 
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />

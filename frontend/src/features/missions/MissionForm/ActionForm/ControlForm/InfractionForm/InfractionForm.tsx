@@ -1,4 +1,4 @@
-import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { formalNoticeLabels, infractionTypeLabels, type EnvActionControl, type Mission } from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
@@ -31,6 +31,14 @@ export function InfractionForm({
   const [actionTargetField] = useField<string>(`envActions.${envActionIndex}.actionTargetType`)
 
   const { errors } = useFormikContext<Mission>()
+
+  function isInfractionFormInvalid(errorsForm: FormikErrors<Mission>) {
+    const envActionErrors = (!!errorsForm.envActions &&
+      errorsForm.envActions[envActionIndex]) as FormikErrors<EnvActionControl>
+
+    return envActionErrors && !!envActionErrors.infractions
+  }
+
   const isInvalid = isInfractionFormInvalid(errors)
 
   return (
@@ -43,13 +51,6 @@ export function InfractionForm({
         <InfractionFormHeaderCompany infractionPath={infractionPath} />
       )}
 
-      {actionTargetField.value !== TargetTypeEnum.VEHICLE && (
-        <FormikTextInput
-          data-cy="infraction-form-controlledPersonIdentity"
-          label="Identité de la personne contrôlée"
-          name={`${infractionPath}.controlledPersonIdentity`}
-        />
-      )}
       <FormikMultiRadio
         isErrorMessageHidden
         isInline
@@ -87,13 +88,6 @@ export function InfractionForm({
       </ButtonContainer>
     </FormWrapper>
   )
-
-  function isInfractionFormInvalid(errorsForm: FormikErrors<Mission>) {
-    const envActionErrors = (!!errorsForm.envActions &&
-      errorsForm.envActions[envActionIndex]) as FormikErrors<EnvActionControl>
-
-    return envActionErrors && !!envActionErrors.infractions
-  }
 }
 
 const FormWrapper = styled.div`
