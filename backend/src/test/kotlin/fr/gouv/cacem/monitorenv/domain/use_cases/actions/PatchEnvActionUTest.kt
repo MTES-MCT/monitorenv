@@ -32,7 +32,10 @@ class PatchEnvActionUTest {
         val patchedObservationsByUnit = "patched observations"
         val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
         val envActionFromDatabase = anEnvAction(
-            objectMapper, id, ZonedDateTime.now(), ZonedDateTime.now().plusDays(2),
+            objectMapper,
+            id,
+            ZonedDateTime.now(),
+            ZonedDateTime.now().plusDays(2),
             observationsByUnit,
         )
         val envActionPatched =
