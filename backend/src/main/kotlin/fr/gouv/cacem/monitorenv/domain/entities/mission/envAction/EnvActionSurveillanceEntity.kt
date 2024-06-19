@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class EnvActionSurveillanceEntity(
     override val id: UUID,
@@ -16,8 +16,8 @@ data class EnvActionSurveillanceEntity(
     override val facade: String? = null,
     override val department: String? = null,
     override val missionId: Int? = null,
-    override val openBy: String? = null,
     override var observationsByUnit: String? = null,
+    override val openBy: String? = null,
     val observations: String? = null,
 ) :
     EnvActionEntity(

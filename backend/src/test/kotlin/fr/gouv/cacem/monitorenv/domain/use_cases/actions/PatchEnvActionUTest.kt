@@ -28,11 +28,15 @@ class PatchEnvActionUTest {
         val id = UUID.randomUUID()
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
-        val observationsByUnit = "observationsByUnit"
-
+        val observationsByUnit = "observations"
+        val patchedObservationsByUnit = "patched observations"
         val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
-        val envActionFromDatabase = anEnvAction(objectMapper, id, ZonedDateTime.now(), ZonedDateTime.now().plusDays(2))
-        val envActionPatched = anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow)
+        val envActionFromDatabase = anEnvAction(
+            objectMapper, id, ZonedDateTime.now(), ZonedDateTime.now().plusDays(2),
+            observationsByUnit,
+        )
+        val envActionPatched =
+            anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow, patchedObservationsByUnit)
 
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)
         given(mergeEnvActionEntity.execute(envActionFromDatabase, patchableEnvActionEntity)).willReturn(
@@ -46,6 +50,7 @@ class PatchEnvActionUTest {
         // Then
         assertThat(savedEnvAction.actionStartDateTimeUtc).isEqualTo(envActionPatched.actionStartDateTimeUtc)
         assertThat(savedEnvAction.actionEndDateTimeUtc).isEqualTo(envActionPatched.actionEndDateTimeUtc)
+        assertThat(savedEnvAction.observationsByUnit).isEqualTo(envActionPatched.observationsByUnit)
         verify(envActionRepository).save(envActionPatched)
     }
 

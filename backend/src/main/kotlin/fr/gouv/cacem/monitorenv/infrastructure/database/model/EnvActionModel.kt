@@ -79,8 +79,8 @@ class EnvActionModel(
     @Column(name = "is_safety_equipment_and_standards_compliance_control")
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
-    @Column(name = "open_by") val openBy: String? = null,
     @Column(name = "observations_by_unit") val observationsByUnit: String? = null,
+    @Column(name = "open_by") val openBy: String? = null,
     @OneToMany(
         fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",
@@ -160,8 +160,8 @@ class EnvActionModel(
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
             missionId = mission.id,
-            openBy = openBy,
             observationsByUnit = observationsByUnit,
+            openBy = openBy,
             value = value,
         )
     }

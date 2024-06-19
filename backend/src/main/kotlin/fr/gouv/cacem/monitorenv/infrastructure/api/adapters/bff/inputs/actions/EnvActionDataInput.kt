@@ -12,8 +12,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlPlanDataInput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 data class EnvActionDataInput(
     val id: UUID,
@@ -32,6 +31,7 @@ data class EnvActionDataInput(
     val facade: String? = null,
     val geom: Geometry? = null,
     val openBy: String? = null,
+    val observationsByUnit: String? = null,
 
     // EnvActionControl Properties
     val actionNumberOfControls: Int? = null,
