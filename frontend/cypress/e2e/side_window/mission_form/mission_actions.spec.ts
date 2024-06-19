@@ -545,7 +545,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('Should display MMSI > IMO > Immatriculation and identity > vessel type when adding an infraction', () => {
+  it('Should display target type if there are no identity informations when adding an infraction', () => {
     createPendingMission().then(({ body }) => {
       const mission = body
 
@@ -616,7 +616,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Type de véhicule', 'Autre véhicule marin')
       cy.getDataCy('infraction-0-identification').contains('ABC123')
 
-      // clean
+      // delete created mission
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
     })

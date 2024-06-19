@@ -191,11 +191,6 @@ const ButtonsWrapper = styled.div`
   justify-content: space-between;
 `
 
-// const VehicleType = styled.span`
-//   font-weight: 500;
-//   color: ${p => p.theme.color.gunMetal};
-// `
-
 const Identification = styled.span`
   font-weight: 500;
   color: ${p => p.theme.color.gunMetal};
