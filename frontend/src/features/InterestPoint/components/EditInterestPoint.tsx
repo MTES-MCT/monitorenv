@@ -12,7 +12,11 @@ import {
   Textarea,
   getCoordinates
 } from '@mtes-mct/monitor-ui'
+import { WSG84_PROJECTION } from 'domain/entities/map/constants'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
+import { setFitToExtent } from 'domain/shared_slices/Map'
+import { boundingExtent } from 'ol/extent'
+import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -21,6 +25,8 @@ import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
 import { updateCoordinatesAction } from '../useCases/updateCoordinates'
 import { updateNameAction } from '../useCases/updateName'
 import { updateObservationsAction } from '../useCases/updateObservations'
+
+import type { Coordinate } from 'ol/coordinate'
 
 type EditInterestPointProps = {
   cancel: () => void
@@ -91,9 +97,17 @@ export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
     },
     [dispatch]
   )
+
+  function zoomIn() {
+    const formattedCoordinates = [coordinates[1], coordinates[0]] as Coordinate
+    const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+    dispatch(setFitToExtent(extent))
+  }
+
   const save = () => {
     dispatch(saveInterestPointFeature())
     dispatch(saveInterestPoint())
+    zoomIn()
     close()
   }
 
