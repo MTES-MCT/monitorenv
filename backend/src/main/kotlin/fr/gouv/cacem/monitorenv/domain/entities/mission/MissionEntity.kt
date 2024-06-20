@@ -11,6 +11,7 @@ data class MissionEntity(
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val openBy: String? = null,
     val completedBy: String? = null,
+    var observationsByUnit: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
     val facade: String? = null,

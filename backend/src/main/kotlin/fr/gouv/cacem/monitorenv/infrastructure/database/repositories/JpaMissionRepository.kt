@@ -14,6 +14,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -126,12 +127,16 @@ class JpaMissionRepository(
 
     @Transactional
     override fun findFullMissionById(missionId: Int): MissionDTO {
+        // FIXME(20/06/2024): faire .get() peut lancer NoSuchElementException ne devrait pas arriver,
+        //  changer avec findByIdOrNull qui est plus approprié pour Kotlin
         return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
     }
 
     @Transactional
-    override fun findById(missionId: Int): MissionEntity {
-        return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
+    override fun findById(missionId: Int): MissionEntity? {
+        // FIXME(20/06/2024): faire .get() peut lancer NoSuchElementException ne devrait pas arriver,
+        //  changer avec findByIdOrNull qui est plus approprié pour Kotlin
+        return dbMissionRepository.findByIdOrNull(missionId)?.toMissionEntity(mapper)
     }
 
     @Transactional
