@@ -1,8 +1,11 @@
+import { REPORTING_VALUES_TO_EXCLUDE_FOR_API } from '@features/Reportings/constants'
+import { omit } from 'lodash'
+
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setToast } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
-import type { Reporting } from '../../entities/reporting'
+import type { ReportingData } from '../../entities/reporting'
 
 export const archiveReportingFromTable = (id: number) => async (dispatch, getState) => {
   const {
@@ -17,9 +20,12 @@ export const archiveReportingFromTable = (id: number) => async (dispatch, getSta
       reportingToArchive = reporting
     }
 
-    const response = await dispatch(
-      reportingsAPI.endpoints.updateReporting.initiate({ ...(reportingToArchive as Reporting), isArchived: true })
-    )
+    const valuesToUpdate = {
+      ...omit(reportingToArchive, ...REPORTING_VALUES_TO_EXCLUDE_FOR_API),
+      isArchived: true
+    } as ReportingData
+
+    const response = await dispatch(reportingsAPI.endpoints.updateReporting.initiate(valuesToUpdate))
     if ('error' in response) {
       throw Error("Erreur à l'archivage du signalement")
     } else {

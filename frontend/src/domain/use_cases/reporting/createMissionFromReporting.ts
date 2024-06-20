@@ -1,3 +1,4 @@
+import { REPORTING_VALUES_TO_EXCLUDE_FOR_API } from '@features/Reportings/constants'
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
@@ -15,8 +16,8 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
     reportingFormVisibility: { context: reportingContext }
   } = getState().global
 
-  const valuesToSave = omit(values, ['attachedMission'])
-  const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
+  const valuesToSave = omit(values, ...REPORTING_VALUES_TO_EXCLUDE_FOR_API)
+  const newOrNextReportingData = isNewReporting(values.id) ? { ...valuesToSave, id: undefined } : valuesToSave
   const endpoint = reportingsAPI.endpoints.createReporting
 
   try {

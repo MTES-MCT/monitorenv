@@ -1,3 +1,4 @@
+import { REPORTING_VALUES_TO_EXCLUDE_FOR_API } from '@features/Reportings/constants'
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
@@ -10,19 +11,10 @@ import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../ma
 
 import type { Reporting, ReportingData } from '../../entities/reporting'
 
-const REPORTING_VALUES_TO_EXCLUDE = [
-  'attachedMission',
-  'semaphore',
-  'controlUnit',
-  'displayedSource',
-  'seaFront',
-  'controlStatus'
-]
-
 export const saveReporting =
   (values: Reporting, reportingContext: ReportingContext, quitAfterSave = false) =>
   async dispatch => {
-    const valuesToSave = omit(values, ...REPORTING_VALUES_TO_EXCLUDE)
+    const valuesToSave = omit(values, ...REPORTING_VALUES_TO_EXCLUDE_FOR_API)
 
     const reportingIsNew = isNewReporting(values.id)
     const reportingId = reportingIsNew ? undefined : Number(values.id)
