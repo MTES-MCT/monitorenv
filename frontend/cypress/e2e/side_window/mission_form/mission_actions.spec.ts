@@ -622,7 +622,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('Should keep pending action when switching tabs', () => {
+  it('Should keep pending action and pending infraction form when switching tabs', () => {
     createPendingMission().then(({ body }) => {
       const mission = body
 
@@ -646,7 +646,6 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       cy.getDataCy('mission-0').first().click({ force: true })
       cy.getDataCy('mission-1').first().click({ force: true })
-      cy.clickButton('Editer')
       cy.get('input[name="envActions[0].infractions[0].mmsi"]').should('have.value', '123456789')
       cy.get('input[name="envActions[0].infractions[0].vesselName"]').should('have.value', 'BALTIK')
       cy.get('input[name="envActions[0].infractions[0].imo"]').should('have.value', 'IMO123')
