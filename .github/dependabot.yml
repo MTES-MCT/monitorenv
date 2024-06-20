@@ -69,6 +69,8 @@ updates:
     commit-message:
       prefix: "[Tech] "
     labels: ["tech. enhancement", "dependencies"]
+    ignore:
+      - dependency-name: "rsuite"
     groups:
       non-major-dependencies:
         applies-to: version-updates
