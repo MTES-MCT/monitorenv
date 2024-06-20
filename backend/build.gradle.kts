@@ -52,7 +52,7 @@ dependencies {
     api("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     api("org.n52.jackson:jackson-datatype-jts:1.2.10")
     api("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    api("org.flywaydb:flyway-core:9.22.0")
+    api("org.flywaydb:flyway-core:10.15.0")
     api("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
     api("org.springframework.boot:spring-boot-configuration-processor:3.2.5")
