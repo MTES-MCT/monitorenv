@@ -13,7 +13,7 @@ interface IMissionRepository {
 
     fun findFullMissionById(missionId: Int): MissionDTO
 
-    fun findById(missionId: Int): MissionEntity
+    fun findById(missionId: Int): MissionEntity?
 
     fun findAllFullMissions(
         controlUnitIds: List<Int>? = null,
