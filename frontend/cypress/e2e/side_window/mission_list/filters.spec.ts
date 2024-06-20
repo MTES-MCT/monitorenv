@@ -1,9 +1,10 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
+
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
 context('Side Window > Mission List > Filter Bar', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.visit(`/side_window`).wait(1000)
   })
 
@@ -12,31 +13,25 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions for the current day', () => {
+    const currentDay = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentDay}`).as('getMissionsForCurrentDay')
     cy.fill('Période', 'Aujourd’hui')
-    cy.wait('@getMissions')
+    cy.wait('@getMissionsForCurrentDay')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
   })
 
   it('Should filter missions for the current month', () => {
+    const currentMonth = encodeURIComponent(customDayjs().utc().startOf('day').subtract(30, 'day').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentMonth}`).as('getMissionsForCurrentMonth')
     cy.fill('Période', 'Un mois')
-    cy.wait('@getMissions')
+    cy.wait('@getMissionsForCurrentMonth')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
   })
 
-  it('Should filter missions for the custom date range', () => {
-    const expectedStartDate = getUtcDateInMultipleFormats('2023-05-01T00:00:00.000Z')
-    const expectedEndDate = getUtcDateInMultipleFormats('2023-05-31T23:59:59.000Z')
-
-    cy.fill('Période', 'Période spécifique')
-    cy.fill('Période spécifique', [expectedStartDate.asDatePickerDate, expectedEndDate.asDatePickerDate])
-    cy.wait('@getMissions')
-  })
-
   it('Should filter missions by completion status', () => {
     cy.fill('Etat des données', ['Complétées'])
-    cy.wait('@getMissions')
 
     cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Données complétées')
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -123,8 +118,12 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by types', () => {
+    const date = encodeURIComponent(customDayjs().utc().startOf('day').subtract(7, 'day').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&missionTypes=SEA`).as('getMissionsByType')
+
     cy.fill('Type de mission', ['Mer'])
 
+    cy.wait('@getMissionsByType')
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
       if (index === 0) {
@@ -136,6 +135,9 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by sea fronts', () => {
+    const date = encodeURIComponent(customDayjs().utc().startOf('day').subtract(7, 'day').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&seaFronts=MED`).as('getMissionsBySeaFront')
+
     cy.fill('Façade', ['MED'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -146,9 +148,15 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'MED')
     })
+    cy.wait('@getMissionsBySeaFront')
   })
 
   it('Should filter missions by status', () => {
+    const date = encodeURIComponent(customDayjs().utc().startOf('day').subtract(7, 'day').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&missionStatus=PENDING`).as(
+      'getMissionsByStatus'
+    )
+
     cy.fill('Statut de mission', ['En cours'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -159,6 +167,7 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'En cours')
     })
+    cy.wait('@getMissionsByStatus')
   })
 
   it('Should filter missions by themes', () => {
@@ -178,13 +187,18 @@ context('Side Window > Mission List > Filter Bar', () => {
   it('Should themes filter depends on date filter', () => {
     cy.fill('Période', 'Période spécifique')
 
+    const expectedStartDate = getUtcDateInMultipleFormats('2024-01-01T00:00:00.000Z')
+    const expectedEndDate = getUtcDateInMultipleFormats('2024-03-03T23:59:59.000Z')
+
+    cy.intercept(
+      'GET',
+      `/bff/v1/missions?&startedAfterDateTime=${expectedStartDate.asEncodedStringUtcDate}&startedBeforeDateTime=${expectedEndDate.asEncodedStringUtcDate}`
+    ).as('getMissionsByPeriod')
+
     // for year 2024
-    cy.fill('Période spécifique', [
-      [2024, 1, 1],
-      [2024, 3, 3]
-    ])
+    cy.fill('Période spécifique', [expectedStartDate.asDatePickerDate, expectedEndDate.asDatePickerDate])
     cy.wait(500)
-    cy.wait('@getMissions')
+    cy.wait('@getMissionsByPeriod')
 
     cy.get('*[data-cy="mission-theme-filter"]').click()
     cy.get('#theme-listbox > div').should('have.length', 18)
@@ -192,12 +206,17 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.wait(200)
 
     // on two years
-    cy.fill('Période spécifique', [
-      [2023, 1, 1],
-      [2024, 3, 3]
-    ])
+    const secondExpectedStartDate = getUtcDateInMultipleFormats('2023-01-01T00:00:00.000Z')
+    const secondExpectedEndDate = getUtcDateInMultipleFormats('2024-03-03T23:59:59.000Z')
+
+    cy.intercept(
+      'GET',
+      `/bff/v1/missions?&startedAfterDateTime=${secondExpectedStartDate.asEncodedStringUtcDate}&startedBeforeDateTime=${secondExpectedEndDate.asEncodedStringUtcDate}`
+    ).as('getMissionsBySecondPeriod')
+
+    cy.fill('Période spécifique', [secondExpectedStartDate.asDatePickerDate, secondExpectedEndDate.asDatePickerDate])
     cy.wait(500)
-    cy.wait('@getMissions')
+    cy.wait('@getMissionsBySecondPeriod')
 
     cy.get('*[data-cy="mission-theme-filter"]').click()
     cy.get('#theme-listbox > div').should('have.length', 34)
@@ -205,7 +224,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
   it('Should filter missions with env actions', () => {
     cy.fill('Missions avec actions CACEM', true)
-    cy.wait('@getMissions')
 
     cy.getDataCy('edit-mission-53').should('exist')
     cy.getDataCy('edit-mission-38').should('exist')

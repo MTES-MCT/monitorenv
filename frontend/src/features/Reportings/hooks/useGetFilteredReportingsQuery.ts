@@ -55,21 +55,21 @@ export const useGetFilteredReportingsQuery = () => {
     const startedBeforeDate = startedBefore ?? undefined
     switch (periodFilter) {
       case ReportingDateRangeEnum.DAY:
-        startedAfterDate = customDayjs.utc().subtract(24, 'hour').toISOString()
+        startedAfterDate = customDayjs().utc().subtract(24, 'hour').toISOString()
 
         break
 
       case ReportingDateRangeEnum.WEEK:
-        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+        startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString()
 
         break
 
       case ReportingDateRangeEnum.MONTH:
-        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
+        startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(30, 'day').toISOString()
 
         break
       case ReportingDateRangeEnum.YEAR:
-        startedAfterDate = customDayjs.utc().startOf('year').toISOString()
+        startedAfterDate = customDayjs().utc().startOf('year').toISOString()
 
         break
 
