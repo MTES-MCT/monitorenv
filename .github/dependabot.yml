@@ -5,6 +5,7 @@ updates:
     assignees:
       - "claire2212"
       - "ivangabriele"
+      - "maximeperraultdev"
       - "thoomasbro"
     schedule:
       interval: "monthly"
@@ -16,12 +17,22 @@ updates:
     directory: "/backend"
     assignees:
       - "louptheron"
+      - "maximeperraultdev"
       - "thoomasbro"
     schedule:
       interval: "monthly"
     commit-message:
       prefix: "[Tech] "
     labels: ["tech. enhancement", "dependencies"]
+    groups:
+      non-major-dependencies:
+        applies-to: version-updates
+        dependency-type: production
+        update-types: ['minor', 'patch']
+      non-major-dev-dependencies:
+        applies-to: version-updates
+        dependency-type: development
+        update-types: ['minor', 'patch']
 
   - package-ecosystem: "pip"
     directory: "/datascience"
@@ -36,15 +47,34 @@ updates:
     # TODO Re-enable once Env is migrated to Poetry-only.
     # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#open-pull-requests-limit
     open-pull-requests-limit: 0
+    groups:
+      non-major-dependencies:
+        applies-to: version-updates
+        dependency-type: production
+        update-types: ['minor', 'patch']
+      non-major-dev-dependencies:
+        applies-to: version-updates
+        dependency-type: development
+        update-types: ['minor', 'patch']
 
   - package-ecosystem: "npm"
     directory: "/frontend"
     assignees:
       - "claire2212"
       - "ivangabriele"
+      - "maximeperraultdev"
       - "thoomasbro"
     schedule:
       interval: "monthly"
     commit-message:
       prefix: "[Tech] "
     labels: ["tech. enhancement", "dependencies"]
+    groups:
+      non-major-dependencies:
+        applies-to: version-updates
+        dependency-type: production
+        update-types: ['minor', 'patch']
+      non-major-dev-dependencies:
+        applies-to: version-updates
+        dependency-type: development
+        update-types: ['minor', 'patch']
