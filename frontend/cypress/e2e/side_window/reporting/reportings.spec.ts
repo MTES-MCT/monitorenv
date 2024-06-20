@@ -7,7 +7,7 @@ context('Reportings', () => {
       }
     })
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
-    cy.clickButton('signalements')
+    cy.clickButton('Signalements')
     cy.wait('@getReportings')
   })
 

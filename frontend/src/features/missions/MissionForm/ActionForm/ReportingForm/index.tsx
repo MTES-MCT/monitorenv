@@ -24,10 +24,10 @@ const EMPTY_VALUE = '--'
 
 export function ReportingForm({
   reportingActionIndex,
-  setCurrentActionIndex
+  setCurrentActionId: setCurrentActionIndex
 }: {
   reportingActionIndex: number
-  setCurrentActionIndex: (string) => void
+  setCurrentActionId: (string) => void
 }) {
   const dispatch = useAppDispatch()
   const { subThemes, themes } = useGetControlPlans()
@@ -169,7 +169,7 @@ export function ReportingForm({
             />
             <span>Le signalement nécessite un contrôle</span>
           </StyledToggle>
-          <TextInput label="Saisi par" name="openBy" plaintext value={reporting.openBy || EMPTY_VALUE} />
+          <TextInput label="Saisi par" maxLength={3} name="openBy" plaintext value={reporting.openBy || EMPTY_VALUE} />
         </AdditionnalInformationsContainer>
       </div>
     </>

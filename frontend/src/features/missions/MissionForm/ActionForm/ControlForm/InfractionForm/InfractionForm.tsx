@@ -1,13 +1,14 @@
-import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { formalNoticeLabels, infractionTypeLabels, type EnvActionControl, type Mission } from 'domain/entities/missions'
+import { TargetTypeEnum } from 'domain/entities/targetType'
+import { useField, useFormikContext, type FormikErrors } from 'formik'
 import styled from 'styled-components'
 
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
+import { InfractionFormHeaderIndividual } from './InfractionFormHeaderIndividual'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
-import { infractionTypeLabels, formalNoticeLabels } from '../../../../../../domain/entities/missions'
-import { TargetTypeEnum } from '../../../../../../domain/entities/targetType'
 
 import type { MouseEventHandler } from 'react'
 
@@ -30,6 +31,17 @@ export function InfractionForm({
 
   const [actionTargetField] = useField<string>(`envActions.${envActionIndex}.actionTargetType`)
 
+  const { errors } = useFormikContext<Mission>()
+
+  function isInfractionFormInvalid(errorsForm: FormikErrors<Mission>) {
+    const envActionErrors = (!!errorsForm.envActions &&
+      errorsForm.envActions[envActionIndex]) as FormikErrors<EnvActionControl>
+
+    return envActionErrors && !!envActionErrors.infractions
+  }
+
+  const isInvalid = isInfractionFormInvalid(errors)
+
   return (
     <FormWrapper data-cy="infraction-form">
       {actionTargetField.value === TargetTypeEnum.VEHICLE && (
@@ -40,11 +52,9 @@ export function InfractionForm({
         <InfractionFormHeaderCompany infractionPath={infractionPath} />
       )}
 
-      <FormikTextInput
-        data-cy="infraction-form-controlledPersonIdentity"
-        label="Identité de la personne contrôlée"
-        name={`${infractionPath}.controlledPersonIdentity`}
-      />
+      {actionTargetField.value === TargetTypeEnum.INDIVIDUAL && (
+        <InfractionFormHeaderIndividual infractionPath={infractionPath} />
+      )}
 
       <FormikMultiRadio
         isErrorMessageHidden
@@ -77,7 +87,7 @@ export function InfractionForm({
         <Button accent={Accent.TERTIARY} onClick={removeInfraction}>
           Supprimer l&apos;infraction
         </Button>
-        <Button data-cy="infraction-form-validate" onClick={validateInfraction}>
+        <Button data-cy="infraction-form-validate" disabled={isInvalid} onClick={validateInfraction}>
           Valider l&apos;infraction
         </Button>
       </ButtonContainer>

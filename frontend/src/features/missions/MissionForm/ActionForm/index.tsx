@@ -11,18 +11,18 @@ import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/miss
 import type { Reporting } from '../../../../domain/entities/reporting'
 
 type ActionFormProps = {
-  currentActionIndex: string | undefined
-  setCurrentActionIndex: (index: number | undefined) => void
+  currentActionId: string | undefined
+  setCurrentActionId: (actionId: string | undefined) => void
 }
-export function ActionForm({ currentActionIndex, setCurrentActionIndex }: ActionFormProps) {
+export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
   const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
-    reporting => String(reporting.id) === currentActionIndex
+    reporting => String(reporting.id) === currentActionId
   )
   const [reportingField] = useField<Reporting>(`attachedReportings.${reportingActionIndex}`)
 
   const [envActionsField, , envActionsHelper] = useField<EnvAction[]>('envActions')
-  const envActionIndex = (envActionsField.value ?? []).findIndex(envAction => envAction.id === currentActionIndex)
+  const envActionIndex = (envActionsField.value ?? []).findIndex(envAction => envAction.id === currentActionId)
   const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${envActionIndex}.actionType`)
   const [actionIdField] = useField<EnvAction['id']>(`envActions.${envActionIndex}.id`)
 
@@ -31,10 +31,10 @@ export function ActionForm({ currentActionIndex, setCurrentActionIndex }: Action
     actionsToUpdate.splice(envActionIndex, 1)
     envActionsHelper.setValue(actionsToUpdate)
 
-    setCurrentActionIndex(undefined)
-  }, [envActionIndex, envActionsField, envActionsHelper, setCurrentActionIndex])
+    setCurrentActionId(undefined)
+  }, [envActionIndex, envActionsField, envActionsHelper, setCurrentActionId])
 
-  if (currentActionIndex === undefined) {
+  if (currentActionId === undefined) {
     return (
       <FormWrapper>
         <NoSelectedAction>Ajouter ou sélectionner une action</NoSelectedAction>
@@ -47,7 +47,7 @@ export function ActionForm({ currentActionIndex, setCurrentActionIndex }: Action
         <ReportingForm
           key={reportingField.value.id}
           reportingActionIndex={reportingActionIndex}
-          setCurrentActionIndex={setCurrentActionIndex}
+          setCurrentActionId={setCurrentActionId}
         />
       </ReportingFormWrapper>
     )
@@ -60,9 +60,9 @@ export function ActionForm({ currentActionIndex, setCurrentActionIndex }: Action
           <FormWrapper>
             <ControlForm
               key={actionIdField.value}
-              currentActionIndex={currentActionIndex}
+              currentActionId={currentActionId}
               removeControlAction={removeAction}
-              setCurrentActionIndex={setCurrentActionIndex}
+              setCurrentActionId={setCurrentActionId}
             />
           </FormWrapper>
         )
@@ -71,9 +71,9 @@ export function ActionForm({ currentActionIndex, setCurrentActionIndex }: Action
           <FormWrapper>
             <SurveillanceForm
               key={actionIdField.value}
-              currentActionIndex={currentActionIndex}
+              currentActionId={currentActionId}
               remove={removeAction}
-              setCurrentActionIndex={setCurrentActionIndex}
+              setCurrentActionId={setCurrentActionId}
             />
           </FormWrapper>
         )
@@ -82,9 +82,9 @@ export function ActionForm({ currentActionIndex, setCurrentActionIndex }: Action
           <FormWrapper>
             <NoteForm
               key={actionIdField.value}
-              currentActionIndex={currentActionIndex}
+              currentActionId={currentActionId}
               remove={removeAction}
-              setCurrentActionIndex={setCurrentActionIndex}
+              setCurrentActionId={setCurrentActionId}
             />
           </FormWrapper>
         )

@@ -1,17 +1,16 @@
 import { Accent, Button, Icon, IconButton, Tag } from '@mtes-mct/monitor-ui'
-import { vesselTypeLabel, type VesselTypeEnum } from 'domain/entities/vesselType'
-import { useField } from 'formik'
-import styled, { css } from 'styled-components'
-
 import {
   FormalNoticeEnum,
   InfractionTypeEnum,
   infractionTypeLabels,
   type EnvActionControl,
   type Infraction
-} from '../../../../../domain/entities/missions'
-import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
-import { vehicleTypeLabels, VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
+} from 'domain/entities/missions'
+import { TargetTypeEnum, TargetTypeLabels } from 'domain/entities/targetType'
+import { VehicleTypeEnum, vehicleTypeLabels } from 'domain/entities/vehicleType'
+import { useField } from 'formik'
+import styled, { css } from 'styled-components'
+
 import { StyledDeleteIconButton } from '../style'
 
 export function InfractionCard({
@@ -28,15 +27,93 @@ export function InfractionCard({
     `envActions.${envActionIndex}.actionTargetType`
   )
   const [vehicleTypeField] = useField<VehicleTypeEnum>(`envActions.${envActionIndex}.vehicleType`)
-  const [vesselType] = useField<VesselTypeEnum>(`${infractionPath}.vesselType`)
+  const [mmsi] = useField<Infraction['mmsi']>(`${infractionPath}.mmsi`)
+  const [imo] = useField<Infraction['imo']>(`${infractionPath}.imo`)
   const [registrationNumber] = useField<Infraction['registrationNumber']>(`${infractionPath}.registrationNumber`)
+  const [companyName] = useField<Infraction['companyName']>(`${infractionPath}.companyName`)
+
   const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(
     `${infractionPath}.controlledPersonIdentity`
   )
-  const [companyName] = useField<Infraction['companyName']>(`${infractionPath}.companyName`)
   const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
   const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
   const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
+
+  const displayIdentification = () => {
+    const identification: string[] = []
+
+    const addDefaultVehicleIdentification = () => {
+      identification.push(TargetTypeLabels[targetTypeField.value])
+      identification.push(vehicleTypeLabels[vehicleTypeField.value].label)
+    }
+
+    const addVehicleIdentification = () => {
+      if (registrationNumber.value) {
+        identification.push(registrationNumber.value)
+      } else {
+        addDefaultVehicleIdentification()
+      }
+    }
+
+    const addVesselIdentification = () => {
+      if (mmsi.value) {
+        identification.push(mmsi.value)
+      } else if (imo.value) {
+        identification.push(imo.value)
+      } else if (registrationNumber.value) {
+        identification.push(registrationNumber.value)
+      } else if (controlledPersonIdentity.value) {
+        identification.push(controlledPersonIdentity.value)
+      } else {
+        addDefaultVehicleIdentification()
+      }
+    }
+
+    switch (targetTypeField.value) {
+      case TargetTypeEnum.VEHICLE:
+        switch (vehicleTypeField.value) {
+          case VehicleTypeEnum.OTHER_SEA:
+          case VehicleTypeEnum.VEHICLE_AIR:
+          case VehicleTypeEnum.VEHICLE_LAND:
+            addVehicleIdentification()
+            break
+          case VehicleTypeEnum.VESSEL:
+            addVesselIdentification()
+            break
+          default:
+            identification.push(TargetTypeLabels[targetTypeField.value])
+            identification.push('Type non renseigné')
+            break
+        }
+        break
+
+      case TargetTypeEnum.COMPANY:
+        if (companyName.value) {
+          identification.push(companyName.value)
+        }
+        if (controlledPersonIdentity.value) {
+          identification.push(controlledPersonIdentity.value)
+        }
+        if (!companyName.value && !controlledPersonIdentity.value) {
+          identification.push(TargetTypeLabels[targetTypeField.value])
+        }
+        break
+
+      case TargetTypeEnum.INDIVIDUAL:
+        if (controlledPersonIdentity.value) {
+          identification.push(controlledPersonIdentity.value)
+        } else {
+          identification.push(TargetTypeLabels[targetTypeField.value])
+        }
+        break
+
+      default:
+        identification.push('Cible non renseignée')
+        break
+    }
+
+    return identification.join(' - ')
+  }
 
   let libelleInfractionType
   switch (infractionType?.value) {
@@ -57,23 +134,9 @@ export function InfractionCard({
   return (
     <Wrapper $hasError={!!meta.error}>
       <Summary>
-        {targetTypeField.value === TargetTypeEnum.VEHICLE && (
-          <VehicleType>
-            {/* TODO Fix the type here: `label` is a `string` but can be undefined? */}
-            {vehicleTypeLabels[vehicleTypeField?.value]?.label ?? 'Non Renseigné'}
-            {vehicleTypeField?.value === VehicleTypeEnum.VESSEL
-              ? ` – ${vesselTypeLabel[vesselType?.value] ?? 'Type non défini'}`
-              : ''}
-            &nbsp;&ndash;&nbsp;
-          </VehicleType>
-        )}
-        {targetTypeField.value === TargetTypeEnum.VEHICLE ? (
-          <Identification>{registrationNumber?.value ?? ' sans immatriculation'}</Identification>
-        ) : (
-          <Identification>
-            {companyName?.value ?? controlledPersonIdentity?.value ?? TargetTypeLabels[targetTypeField.value]}
-          </Identification>
-        )}
+        <Identification data-cy={`infraction-${currentInfractionIndex}-identification`}>
+          {displayIdentification()}
+        </Identification>
         <SummaryDetails>
           <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
           {formalNotice?.value === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
@@ -126,11 +189,6 @@ const ButtonsWrapper = styled.div`
   gap: 8px;
   align-items: center;
   justify-content: space-between;
-`
-
-const VehicleType = styled.span`
-  font-weight: 500;
-  color: ${p => p.theme.color.gunMetal};
 `
 
 const Identification = styled.span`

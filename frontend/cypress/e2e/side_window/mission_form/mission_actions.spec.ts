@@ -544,4 +544,117 @@ context('Side Window > Mission Form > Mission actions', () => {
       })
     })
   })
+
+  it('Should display target type if there are no identity informations when adding an infraction', () => {
+    createPendingMission().then(({ body }) => {
+      const mission = body
+
+      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
+
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Nb total de contrôles', 1)
+      cy.fill('Type de cible', 'Personne morale')
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+      // Fill mandatory fields
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Mise en demeure', 'Oui')
+      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.clickButton("Valider l'infraction")
+
+      // cases without identification
+      cy.getDataCy('infraction-0-identification').contains('Personne morale')
+
+      cy.fill('Type de cible', 'Personne physique')
+      cy.getDataCy('infraction-0-identification').contains('Personne physique')
+
+      cy.fill('Type de cible', 'Véhicule')
+      cy.getDataCy('infraction-0-identification').contains('Véhicule - Type non renseigné')
+
+      cy.fill('Type de véhicule', 'Navire')
+      cy.getDataCy('infraction-0-identification').contains('Véhicule - Navire')
+
+      // cases with identification
+      // Company
+      cy.fill('Type de cible', 'Personne morale')
+      cy.clickButton('Editer')
+      cy.fill('Identité de la personne contrôlée', 'John Doe')
+      cy.clickButton("Valider l'infraction")
+      cy.getDataCy('infraction-0-identification').contains('John Doe')
+
+      cy.clickButton('Editer')
+      cy.fill('Nom de la personne morale', 'World company')
+      cy.clickButton("Valider l'infraction")
+      cy.getDataCy('infraction-0-identification').contains('World company - John Doe')
+
+      // Individual
+      cy.fill('Type de cible', 'Personne physique')
+      cy.getDataCy('infraction-0-identification').contains('John Doe')
+
+      // Vehicle
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+
+      cy.clickButton('Editer')
+      cy.fill('Immatriculation', 'ABC123')
+      cy.clickButton("Valider l'infraction")
+      cy.getDataCy('infraction-0-identification').contains('ABC123')
+
+      cy.clickButton('Editer')
+      cy.fill('IMO', 'IMO123')
+      cy.clickButton("Valider l'infraction")
+      cy.getDataCy('infraction-0-identification').contains('IMO123')
+
+      cy.clickButton('Editer')
+      cy.fill('MMSI', '123456789')
+      cy.clickButton("Valider l'infraction")
+      cy.getDataCy('infraction-0-identification').contains('123456789')
+
+      cy.fill('Type de véhicule', 'Autre véhicule marin')
+      cy.getDataCy('infraction-0-identification').contains('ABC123')
+
+      // delete created mission
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
+    })
+  })
+
+  it('Should keep pending action when switching tabs', () => {
+    createPendingMission().then(({ body }) => {
+      const mission = body
+
+      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
+
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Nb total de contrôles', 1)
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('MMSI', '123456789')
+      cy.fill('Nom du navire', 'BALTIK')
+      cy.fill('IMO', 'IMO123')
+      cy.fill('Nom du capitaine', 'John Doe')
+      cy.clickOutside()
+
+      cy.getDataCy('mission-0').first().click({ force: true })
+      cy.getDataCy('mission-1').first().click({ force: true })
+      cy.clickButton('Editer')
+      cy.get('input[name="envActions[0].infractions[0].mmsi"]').should('have.value', '123456789')
+      cy.get('input[name="envActions[0].infractions[0].vesselName"]').should('have.value', 'BALTIK')
+      cy.get('input[name="envActions[0].infractions[0].imo"]').should('have.value', 'IMO123')
+      cy.get('input[name="envActions[0].infractions[0].controlledPersonIdentity"]').should('have.value', 'John Doe')
+
+      // delete created mission
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
+    })
+  })
 })

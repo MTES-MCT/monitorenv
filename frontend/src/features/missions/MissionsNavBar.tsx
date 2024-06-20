@@ -65,29 +65,22 @@ export function MissionsNavBar() {
   }
 
   return (
-    <div style={{ width: '100%' }}>
-      <StyledResponsiveNav
-        activeKey={currentPath}
-        appearance="tabs"
-        data-cy="missions-nav"
-        moreProps={{ placement: 'bottomEnd' }}
-        moreText={<IconButton accent={Accent.TERTIARY} Icon={Icon.More} />}
-        onItemRemove={removeTab}
-        onSelect={selectTab}
-        removable
-      >
-        {tabs.map((item, index) => (
-          <ResponsiveNav.Item
-            key={item.nextPath}
-            data-cy={`mission-${index}`}
-            eventKey={item.nextPath}
-            icon={item.icon}
-          >
-            {item.label}
-          </ResponsiveNav.Item>
-        ))}
-      </StyledResponsiveNav>
-    </div>
+    <StyledResponsiveNav
+      activeKey={currentPath}
+      appearance="tabs"
+      data-cy="missions-nav"
+      moreProps={{ placement: 'bottomEnd' }}
+      moreText={<IconButton accent={Accent.TERTIARY} Icon={Icon.More} />}
+      onItemRemove={removeTab}
+      onSelect={selectTab}
+      removable
+    >
+      {tabs.map((item, index) => (
+        <ResponsiveNav.Item key={item.nextPath} data-cy={`mission-${index}`} eventKey={item.nextPath} icon={item.icon}>
+          {item.label}
+        </ResponsiveNav.Item>
+      ))}
+    </StyledResponsiveNav>
   )
 }
 
@@ -95,6 +88,7 @@ const StyledResponsiveNav = styled(ResponsiveNav)`
   display: flex;
   box-shadow: 0px 3px 4px #7077854d;
   height: 48px;
+  width: 100%;
 
   > .rs-nav-item {
     width: 360px;

@@ -93,7 +93,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                 {row?.getVisibleCells().map(cell => (
                   <SimpleTable.Td
                     key={cell.id}
-                    $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
+                    $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
                     style={{
                       maxWidth: cell.column.getSize(),
                       minWidth: cell.column.getSize(),

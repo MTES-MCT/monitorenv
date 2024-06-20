@@ -10,7 +10,7 @@ const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 export function createMissionWithAttachedReportingAndAttachedAction() {
   cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
 
-  cy.clickButton('signalements')
+  cy.clickButton('Signalements')
   cy.wait('@getReportings')
   cy.wait(1000)
 
@@ -56,7 +56,7 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
     // Attach the reporting to a mission
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
-    cy.clickButton('missions')
+    cy.clickButton('Missions et contrôles')
     cy.clickButton('Ajouter une nouvelle mission')
 
     const endDate = getFutureDate(7, 'day')

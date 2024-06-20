@@ -1,13 +1,13 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { missionFormsActions } from '../slice'
 import { getIsMissionFormValid } from '../utils'
 
-import type { Mission } from '../../../../domain/entities/missions'
+import type { Mission } from 'domain/entities/missions'
 
 export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const dispatch = useAppDispatch()
@@ -19,6 +19,9 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
+  const activeActionId = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.activeActionId : undefined
+  )
 
   const dispatchFormUpdate = useDebouncedCallback(async (newValues: Mission) => {
     if (!newValues || newValues.id !== activeMissionId) {
@@ -27,7 +30,9 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
 
     const isFormDirty = isMissionFormDirty()
 
-    dispatch(missionFormsActions.setMission({ engagedControlUnit, isFormDirty, missionForm: newValues }))
+    dispatch(
+      missionFormsActions.setMission({ activeActionId, engagedControlUnit, isFormDirty, missionForm: newValues })
+    )
   }, 350)
 
   /**

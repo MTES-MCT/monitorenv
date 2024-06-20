@@ -5,7 +5,7 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
 
-export const switchTab = path => async (dispatch, getState) => {
+export const switchTab = (path: string) => async (dispatch, getState) => {
   const { missions } = getState().missionForms
 
   const routeParams = getMissionPageRoute(path)

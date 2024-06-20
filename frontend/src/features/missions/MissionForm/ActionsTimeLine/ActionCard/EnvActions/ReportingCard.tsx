@@ -20,10 +20,10 @@ import { Accented, ControlContainer, ReportingDate, SummaryContent, SummaryConte
 
 export function ReportingCard({
   action,
-  setCurrentActionIndex
+  setCurrentActionId
 }: {
   action: ReportingForTimeline
-  setCurrentActionIndex: (string) => void
+  setCurrentActionId: (actionId: string) => void
 }) {
   const { themes } = useGetControlPlans()
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
@@ -103,7 +103,7 @@ export function ReportingCard({
     })
 
     setFieldValue('envActions', [newControl, ...(values?.envActions ?? [])])
-    setCurrentActionIndex(newControl.id)
+    setCurrentActionId(newControl.id)
     const reportingToUpdateIndex = values?.attachedReportings
       ? values?.attachedReportings?.findIndex(reporting => Number(reporting.id) === Number(action.id))
       : -1

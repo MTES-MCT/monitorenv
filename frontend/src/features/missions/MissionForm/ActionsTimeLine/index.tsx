@@ -19,7 +19,7 @@ import { FormTitle, Separator } from '../style'
 import type { DetachedReporting, Reporting } from '../../../../domain/entities/reporting'
 import type { FishMissionAction } from '../../fishActions.types'
 
-export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
+export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
   const actionTimelineRef = useRef<HTMLDivElement>(null)
   const actionTimelineHeight = Number(actionTimelineRef.current?.clientHeight) - 40 || undefined
   const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
@@ -71,11 +71,11 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
       })
     })
     setFieldValue('envActions', [newSurveillance, ...(envActions || [])])
-    setCurrentActionIndex(newSurveillance.id)
+    setCurrentActionId(newSurveillance.id)
   }, [
     envActions,
     isFirstSurveillanceAction,
-    setCurrentActionIndex,
+    setCurrentActionId,
     setFieldValue,
     values?.endDateTimeUtc,
     values?.startDateTimeUtc
@@ -84,20 +84,20 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
   const handleAddControlAction = useCallback(() => {
     const newControl = actionFactory({ actionType: ActionTypeEnum.CONTROL })
     setFieldValue('envActions', [newControl, ...(envActions || [])])
-    setCurrentActionIndex(newControl.id)
-  }, [envActions, setCurrentActionIndex, setFieldValue])
+    setCurrentActionId(newControl.id)
+  }, [envActions, setCurrentActionId, setFieldValue])
 
   const handleAddNoteAction = useCallback(() => {
     const newNote = actionFactory({ actionType: ActionTypeEnum.NOTE })
     setFieldValue('envActions', [newNote, ...(envActions || [])])
-    setCurrentActionIndex(newNote.id)
-  }, [envActions, setCurrentActionIndex, setFieldValue])
+    setCurrentActionId(newNote.id)
+  }, [envActions, setCurrentActionId, setFieldValue])
 
   const handleSelectAction = useCallback(
     id => {
-      setCurrentActionIndex(actions && Object.keys(actions).find(key => key === String(id)))
+      setCurrentActionId(actions && Object.keys(actions).find(key => key === String(id)))
     },
-    [actions, setCurrentActionIndex]
+    [actions, setCurrentActionId]
   )
 
   const handleRemoveAction = useCallback(
@@ -112,9 +112,9 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
         actionsToUpdate.splice(actionToDeleteIndex, 1)
         setFieldValue('envActions', actionsToUpdate)
       }
-      setCurrentActionIndex(undefined)
+      setCurrentActionId(undefined)
     },
-    [envActions, setCurrentActionIndex, setFieldValue]
+    [envActions, setCurrentActionId, setFieldValue]
   )
 
   const handleDuplicateAction = useCallback(
@@ -124,11 +124,10 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
       if (envAction) {
         const duplicatedAction = actionFactory(envAction)
         setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
-
-        setCurrentActionIndex(0)
+        setCurrentActionId(undefined)
       }
     },
-    [envActions, setFieldValue, setCurrentActionIndex]
+    [envActions, setFieldValue, setCurrentActionId]
   )
 
   return (
@@ -161,7 +160,7 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
         <VerticalLine $height={actionTimelineHeight} />
         {sortedActions ? (
           <>
-            {sortedActions.map((action, index) => {
+            {sortedActions.map(action => {
               const envActionsIndex = envActions?.findIndex(a => a.id === action.id)
               const envActionsErrors =
                 errors?.envActions &&
@@ -171,15 +170,14 @@ export function ActionsTimeLine({ currentActionIndex, setCurrentActionIndex }) {
 
               return (
                 <ActionCard
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
+                  key={action.id}
                   action={action}
                   duplicateAction={() => handleDuplicateAction(action.id)}
                   hasError={!!envActionsErrors}
                   removeAction={() => handleRemoveAction(action.id)}
                   selectAction={() => handleSelectAction(action.id)}
-                  selected={String(action.id) === String(currentActionIndex)}
-                  setCurrentActionIndex={setCurrentActionIndex}
+                  selected={String(action.id) === currentActionId}
+                  setCurrentActionId={setCurrentActionId}
                 />
               )
             })}

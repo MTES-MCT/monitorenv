@@ -28,7 +28,7 @@ export function SideWindowLauncher() {
   }, [forceUpdate])
 
   const onChangeFocus = useCallback(
-    isFocused => {
+    (isFocused: boolean) => {
       const nextStatus = isFocused ? SideWindowStatus.VISIBLE : SideWindowStatus.HIDDEN
       dispatch(sideWindowActions.onChangeStatus(nextStatus))
     },
@@ -36,12 +36,12 @@ export function SideWindowLauncher() {
   )
 
   const hasAtLeastOneMissionFormDirty = useMemo(
-    () => !!Object.values(missions).find(mission => mission.isFormDirty),
+    () => Object.values(missions).some(mission => mission.isFormDirty),
     [missions]
   )
 
   const hasAtLeastOneReportingFormDirty = useMemo(
-    () => !!reportingsOpenOnSideWindow.find(reporting => reporting.isFormDirty),
+    () => reportingsOpenOnSideWindow.some(reporting => reporting.isFormDirty),
     [reportingsOpenOnSideWindow]
   )
 
