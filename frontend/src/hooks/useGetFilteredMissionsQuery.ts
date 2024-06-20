@@ -38,12 +38,12 @@ export const useGetFilteredMissionsQuery = () => {
         break
 
       case DateRangeEnum.WEEK:
-        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+        startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString()
 
         break
 
       case DateRangeEnum.MONTH:
-        startedAfterDate = customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
+        startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(30, 'day').toISOString()
 
         break
 
