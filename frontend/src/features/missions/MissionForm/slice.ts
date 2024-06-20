@@ -5,7 +5,7 @@ import type { Mission, NewMission } from '../../../domain/entities/missions'
 import type { AtLeast } from '../../../types'
 
 export type MissionInStateType = {
-  activeActionId?: string | undefined
+  activeAction?: SelectedActionType
   displayCreatedMissionBanner?: boolean
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   isFormDirty: boolean
@@ -14,6 +14,11 @@ export type MissionInStateType = {
 
 type SelectedMissionType = {
   [key: string]: MissionInStateType
+}
+
+type SelectedActionType = {
+  activeInfractionId?: string | undefined
+  id?: string | undefined
 }
 
 type MissionFormsState = {
@@ -52,10 +57,25 @@ const missionFormsSlice = createSlice({
       if (state.activeMissionId) {
         const activeMission = state.missions[state.activeMissionId]
         if (activeMission) {
-          activeMission.activeActionId = action.payload
+          activeMission.activeAction = {
+            id: action.payload
+          }
         }
       }
     },
+
+    setActiveInfractionId(state, action: PayloadAction<string | undefined>) {
+      if (state.activeMissionId) {
+        const activeMission = state.missions[state.activeMissionId]
+        if (activeMission) {
+          activeMission.activeAction = {
+            ...activeMission.activeAction,
+            activeInfractionId: action.payload
+          }
+        }
+      }
+    },
+
     setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload
     },

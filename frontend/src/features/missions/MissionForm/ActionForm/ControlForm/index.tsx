@@ -1,23 +1,23 @@
 import { actionFactory } from '@features/missions/Missions.helpers'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
-  customDayjs,
-  FormikNumberInput,
-  FormikTextarea,
-  MultiRadio,
-  getOptionsFromLabelledEnum,
-  type OptionValueType,
+  Accent,
+  Button,
   DatePicker,
   FieldError,
-  Accent,
+  FormikNumberInput,
+  FormikTextInput,
+  FormikTextarea,
   Icon,
+  MultiRadio,
   Size,
   THEME,
   Toggle,
+  customDayjs,
+  getOptionsFromLabelledEnum,
   pluralize,
-  Button,
-  FormikTextInput,
-  useNewWindow
+  useNewWindow,
+  type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, type FormikErrors } from 'formik'
 import _ from 'lodash'
@@ -29,10 +29,10 @@ import { MultiPointPicker } from './MultiPointPicker'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domain/entities/controlPlan'
 import {
-  type Mission,
-  type EnvActionControl,
   ActionTypeEnum,
-  CompletionStatus
+  CompletionStatus,
+  type EnvActionControl,
+  type Mission
 } from '../../../../../domain/entities/missions'
 import { ReportingTargetTypeEnum, TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
@@ -44,25 +44,23 @@ import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActions
 import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
 import {
+  ActionFormBody,
   ActionThemes,
   ActionTitle,
-  ActionFormBody,
   Header,
   HeaderButtons,
+  StyledAuthorContainer,
   StyledDeleteIconButton,
-  TitleWithIcon,
-  StyledAuthorContainer
+  TitleWithIcon
 } from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
 export function ControlForm({
   currentActionId,
-  removeControlAction,
-  setCurrentActionId
+  removeControlAction
 }: {
   currentActionId: string
   removeControlAction: () => void
-  setCurrentActionId: (actionId: string | undefined) => void
 }) {
   const { newWindowContainerRef } = useNewWindow()
   const {
@@ -170,7 +168,6 @@ export function ControlForm({
   }
 
   const handleRemoveAction = () => {
-    setCurrentActionId(undefined)
     removeControlAction()
   }
 

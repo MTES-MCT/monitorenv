@@ -12,9 +12,8 @@ import type { Reporting } from '../../../../domain/entities/reporting'
 
 type ActionFormProps = {
   currentActionId: string | undefined
-  setCurrentActionId: (actionId: string | undefined) => void
 }
-export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormProps) {
+export function ActionForm({ currentActionId }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
   const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
     reporting => String(reporting.id) === currentActionId
@@ -30,9 +29,7 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
     const actionsToUpdate = [...(envActionsField.value || [])]
     actionsToUpdate.splice(envActionIndex, 1)
     envActionsHelper.setValue(actionsToUpdate)
-
-    setCurrentActionId(undefined)
-  }, [envActionIndex, envActionsField, envActionsHelper, setCurrentActionId])
+  }, [envActionIndex, envActionsField, envActionsHelper])
 
   if (currentActionId === undefined) {
     return (
@@ -44,11 +41,7 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
   if (reportingActionIndex !== -1) {
     return (
       <ReportingFormWrapper>
-        <ReportingForm
-          key={reportingField.value.id}
-          reportingActionIndex={reportingActionIndex}
-          setCurrentActionId={setCurrentActionId}
-        />
+        <ReportingForm key={reportingField.value.id} reportingActionIndex={reportingActionIndex} />
       </ReportingFormWrapper>
     )
   }
@@ -62,30 +55,19 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
               key={actionIdField.value}
               currentActionId={currentActionId}
               removeControlAction={removeAction}
-              setCurrentActionId={setCurrentActionId}
             />
           </FormWrapper>
         )
       case ActionTypeEnum.SURVEILLANCE:
         return (
           <FormWrapper>
-            <SurveillanceForm
-              key={actionIdField.value}
-              currentActionId={currentActionId}
-              remove={removeAction}
-              setCurrentActionId={setCurrentActionId}
-            />
+            <SurveillanceForm key={actionIdField.value} currentActionId={currentActionId} remove={removeAction} />
           </FormWrapper>
         )
       case ActionTypeEnum.NOTE:
         return (
           <FormWrapper>
-            <NoteForm
-              key={actionIdField.value}
-              currentActionId={currentActionId}
-              remove={removeAction}
-              setCurrentActionId={setCurrentActionId}
-            />
+            <NoteForm key={actionIdField.value} currentActionId={currentActionId} remove={removeAction} />
           </FormWrapper>
         )
 

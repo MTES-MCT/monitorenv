@@ -118,7 +118,7 @@ export function MissionForm({
     }
   }, [attachedReportingIds, values?.attachedReportingIds?.length, setFieldValue, attachedReportings])
 
-  const handleSetCurrentActionId = (actionId: string | undefined) => {
+  const handleSetCurrentActionId = (actionId: string) => {
     dispatch(missionFormsActions.setActiveActionId(actionId))
   }
 
@@ -267,7 +267,7 @@ export function MissionForm({
           <ActionsTimeLine currentActionId={activeActionId} setCurrentActionId={handleSetCurrentActionId} />
         </SecondColumn>
         <ThirdColumn>
-          <ActionForm currentActionId={activeActionId} setCurrentActionId={handleSetCurrentActionId} />
+          <ActionForm currentActionId={activeActionId} />
         </ThirdColumn>
       </Wrapper>
 

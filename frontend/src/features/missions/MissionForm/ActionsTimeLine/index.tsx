@@ -95,7 +95,7 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
 
   const handleSelectAction = useCallback(
     id => {
-      setCurrentActionId(actions && Object.keys(actions).find(key => key === String(id)))
+      setCurrentActionId(actions && Object.keys(actions).find(key => key === id))
     },
     [actions, setCurrentActionId]
   )
@@ -112,9 +112,8 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
         actionsToUpdate.splice(actionToDeleteIndex, 1)
         setFieldValue('envActions', actionsToUpdate)
       }
-      setCurrentActionId(undefined)
     },
-    [envActions, setCurrentActionId, setFieldValue]
+    [envActions, setFieldValue]
   )
 
   const handleDuplicateAction = useCallback(
