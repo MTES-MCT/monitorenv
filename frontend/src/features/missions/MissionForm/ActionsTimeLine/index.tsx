@@ -95,13 +95,14 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
 
   const handleSelectAction = useCallback(
     id => {
-      setCurrentActionId(actions && Object.keys(actions).find(key => key === id))
+      setCurrentActionId(id)
     },
-    [actions, setCurrentActionId]
+    [setCurrentActionId]
   )
 
   const handleRemoveAction = useCallback(
-    id => {
+    (id, event) => {
+      event.stopPropagation()
       if (!envActions) {
         return
       }
@@ -111,9 +112,11 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
         const actionsToUpdate = [...(envActions || [])]
         actionsToUpdate.splice(actionToDeleteIndex, 1)
         setFieldValue('envActions', actionsToUpdate)
+
+        setCurrentActionId(undefined)
       }
     },
-    [envActions, setFieldValue]
+    [envActions, setCurrentActionId, setFieldValue]
   )
 
   const handleDuplicateAction = useCallback(
@@ -173,7 +176,7 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
                   action={action}
                   duplicateAction={() => handleDuplicateAction(action.id)}
                   hasError={!!envActionsErrors}
-                  removeAction={() => handleRemoveAction(action.id)}
+                  removeAction={event => handleRemoveAction(action.id, event)}
                   selectAction={() => handleSelectAction(action.id)}
                   selected={String(action.id) === currentActionId}
                   setCurrentActionId={setCurrentActionId}

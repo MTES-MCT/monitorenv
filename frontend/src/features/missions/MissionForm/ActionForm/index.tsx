@@ -12,8 +12,9 @@ import type { Reporting } from '../../../../domain/entities/reporting'
 
 type ActionFormProps = {
   currentActionId: string | undefined
+  setCurrentActionId: (actionId: string | undefined) => void
 }
-export function ActionForm({ currentActionId }: ActionFormProps) {
+export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
   const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
     reporting => String(reporting.id) === currentActionId
@@ -29,7 +30,9 @@ export function ActionForm({ currentActionId }: ActionFormProps) {
     const actionsToUpdate = [...(envActionsField.value || [])]
     actionsToUpdate.splice(envActionIndex, 1)
     envActionsHelper.setValue(actionsToUpdate)
-  }, [envActionIndex, envActionsField, envActionsHelper])
+
+    setCurrentActionId(undefined)
+  }, [envActionIndex, envActionsField.value, envActionsHelper, setCurrentActionId])
 
   if (currentActionId === undefined) {
     return (
