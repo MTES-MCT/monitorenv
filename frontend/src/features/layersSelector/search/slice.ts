@@ -5,9 +5,7 @@ type LayerSearchState = {
   filteredAmpTypes: string[]
   filteredRegulatoryThemes: string[]
   globalSearchText: string
-  isAmpSearchResultsExpanded: boolean
   isAmpSearchResultsVisible: boolean
-  isRegulatorySearchResultsExpanded: boolean
   isRegulatorySearchResultsVisible: boolean
   regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
@@ -18,9 +16,7 @@ const initialState: LayerSearchState = {
   filteredAmpTypes: [],
   filteredRegulatoryThemes: [],
   globalSearchText: '',
-  isAmpSearchResultsExpanded: false,
   isAmpSearchResultsVisible: true,
-  isRegulatorySearchResultsExpanded: false,
   isRegulatorySearchResultsVisible: true,
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined,
@@ -54,17 +50,10 @@ const layerSearchSlice = createSlice({
       state.globalSearchText = action.payload
     },
 
-    setIsAmpSearchResultsExpanded(state, action: PayloadAction<boolean>) {
-      state.isAmpSearchResultsExpanded = action.payload
-    },
-
     setIsAmpSearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isAmpSearchResultsVisible = action.payload
     },
 
-    setIsRegulatorySearchResultsExpanded(state, action: PayloadAction<boolean>) {
-      state.isRegulatorySearchResultsExpanded = action.payload
-    },
     setIsRegulatorySearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isRegulatorySearchResultsVisible = action.payload
     },
@@ -86,9 +75,7 @@ export const {
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
   setGlobalSearchText,
-  setIsAmpSearchResultsExpanded,
   setIsAmpSearchResultsVisible,
-  setIsRegulatorySearchResultsExpanded,
   setIsRegulatorySearchResultsVisible,
   setRegulatoryLayersSearchResult,
   setSearchExtent,
