@@ -1,3 +1,4 @@
+import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
@@ -9,6 +10,7 @@ import { RegulatoryMetadata } from './metadataPanel/regulatoryMetadata'
 import { closeMetadataPanel } from './metadataPanel/slice'
 import { AmpLayers } from './myAmps'
 import { RegulatoryLayers } from './myRegulatoryLayers'
+import { MyVigilanceAreas } from './myVigilanceAreas'
 import { LayerSearch } from './search'
 import { useGetAMPsQuery } from '../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../api/regulatoryLayersAPI'
@@ -21,6 +23,7 @@ export function LayersSidebar() {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
+  const isVigilanceAreaFormOpen = useAppSelector(state => state.vigilanceArea.isFormOpen)
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
 
@@ -54,12 +57,17 @@ export function LayersSidebar() {
         <Layers>
           <RegulatoryLayers />
           <AmpLayers />
+          <MyVigilanceAreas />
           <AdministrativeLayers />
           <BaseLayerList />
         </Layers>
-        <MetadataPanelShifter isLayersSidebarVisible={isLayersSidebarVisible} metadataPanelIsOpen={metadataPanelIsOpen}>
+        <MetadataPanelShifter
+          isLayersSidebarVisible={isLayersSidebarVisible}
+          metadataPanelIsOpen={metadataPanelIsOpen || isVigilanceAreaFormOpen}
+        >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
+          {isVigilanceAreaFormOpen && <VigilanceAreaForm isOpen={isVigilanceAreaFormOpen} />}
         </MetadataPanelShifter>
       </Sidebar>
       {(regulatoryAreas.isLoading || amps.isLoading) && (
