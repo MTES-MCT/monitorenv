@@ -99,7 +99,7 @@ export function ReportingCard({
   const targetName = useMemo(() => {
     if (targetDetails.length > 1) {
       if (vehicleType) {
-        return `${targetDetails.length} ${vehicleTypeLabels[vehicleType].label}s`
+        return `${targetDetails.length} ${vehicleTypeLabels[vehicleType].label.toLowerCase()}s`
       }
 
       return `${targetDetails.length} ${ReportingTargetTypeLabels[targetType]}s`

@@ -1,4 +1,4 @@
-import { useGetReportingsQuery } from '@api/reportingsAPI'
+import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
@@ -20,7 +20,6 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const isSemaphoreHighlighted = useAppSelector(state => state.semaphoresSlice.isSemaphoreHighlighted)
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
-
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
@@ -31,7 +30,7 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
   )
 
   const { data: semaphores } = useGetSemaphoresQuery()
-  const { data: reportings } = useGetReportingsQuery()
+  const { reportings } = useGetFilteredReportingsQuery()
 
   const semaphore = useMemo(() => {
     const semaphoresList = semaphores?.entities
