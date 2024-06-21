@@ -14,7 +14,7 @@ import {
   WSG84_PROJECTION
 } from '../../../domain/entities/map/constants'
 import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
-import { VisibilityState } from '../../../domain/shared_slices/Global'
+import { setDisplayedItems, VisibilityState } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
@@ -26,7 +26,6 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
-import { SideWindowStatus } from '../../SideWindow/slice'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -35,14 +34,16 @@ const titlePlaceholder = {
   MISSION_ZONE: 'une zone de mission',
   REPORTING_POINT: 'un point de signalement',
   REPORTING_ZONE: 'une zone de signalement',
-  SURVEILLANCE_ZONE: 'une zone de surveillance'
+  SURVEILLANCE_ZONE: 'une zone de surveillance',
+  VIGILANCE_ZONE: 'une zone de vigilance'
 }
 const validateButtonPlaceholder = {
   CONTROL_POINT: 'le point de contrôle',
   MISSION_ZONE: 'la zone de mission',
   REPORTING_POINT: 'le point',
   REPORTING_ZONE: 'la zone',
-  SURVEILLANCE_ZONE: 'la zone de surveillance'
+  SURVEILLANCE_ZONE: 'la zone de surveillance',
+  VIGILANCE_ZONE: 'la zone de vigilance'
 }
 
 export function DrawModal() {
@@ -114,12 +115,12 @@ export function DrawModal() {
   // Close DrawModal when closing reporting form
   useEffect(() => {
     if (
-      sideWindow.status === SideWindowStatus.CLOSED &&
-      global.reportingFormVisibility.visibility === VisibilityState.NONE
+      global.reportingFormVisibility.visibility === VisibilityState.NONE &&
+      listener === InteractionListener.REPORTING_ZONE
     ) {
       dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     }
-  }, [dispatch, global.reportingFormVisibility, sideWindow.status])
+  }, [dispatch, global.reportingFormVisibility, listener, sideWindow.status])
 
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
@@ -131,6 +132,9 @@ export function DrawModal() {
     // and the geometry has been set in the form concerned
     setTimeout(() => {
       dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+      if (listener === InteractionListener.VIGILANCE_ZONE) {
+        dispatch(setDisplayedItems({ isLayersSidebarVisible: true }))
+      }
     }, 300)
   }
 
@@ -146,6 +150,10 @@ export function DrawModal() {
 
   const handleValidate = () => {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+
+    if (listener === InteractionListener.VIGILANCE_ZONE) {
+      dispatch(setDisplayedItems({ isLayersSidebarVisible: true }))
+    }
   }
 
   const handleSelectCoordinates = useCallback(
@@ -172,6 +180,15 @@ export function DrawModal() {
     },
     [dispatch]
   )
+
+  const hasCustomTools = useMemo(
+    () =>
+      listener === InteractionListener.MISSION_ZONE ||
+      listener === InteractionListener.REPORTING_ZONE ||
+      listener === InteractionListener.SURVEILLANCE_ZONE ||
+      listener === InteractionListener.VIGILANCE_ZONE,
+    [listener]
+  )
   if (!listener) {
     return null
   }
@@ -179,9 +196,7 @@ export function DrawModal() {
   return (
     <MapInteraction
       customTools={
-        (listener === InteractionListener.MISSION_ZONE ||
-          listener === InteractionListener.REPORTING_ZONE ||
-          listener === InteractionListener.SURVEILLANCE_ZONE) && (
+        hasCustomTools && (
           <IconGroup>
             <IconButton
               className={interactionType === InteractionType.POLYGON ? '_active' : undefined}

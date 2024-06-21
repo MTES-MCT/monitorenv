@@ -1,4 +1,5 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
 import {
   Accent,
   Button,
@@ -9,11 +10,13 @@ import {
   THEME,
   WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
+import { OLGeometryType } from 'domain/entities/map/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useField } from 'formik'
+import { isEqual } from 'lodash'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -22,8 +25,8 @@ import type { Coordinate } from 'ol/coordinate'
 
 export function ZonePicker({ addLabel, deleteZone, handleAddZone, label, listener, name }) {
   const dispatch = useAppDispatch()
-
-  const [field, meta] = useField(name)
+  const { geometry } = useListenForDrawedGeometry(listener)
+  const [field, meta, helpers] = useField(name)
   const { value } = field
 
   const currentListerner = useAppSelector(state => state.draw.listener)
@@ -46,6 +49,12 @@ export function ZonePicker({ addLabel, deleteZone, handleAddZone, label, listene
     const extent = transformExtent(boundingExtent(firstRing), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
     dispatch(setFitToExtent(extent))
   }
+
+  useEffect(() => {
+    if (geometry?.type === OLGeometryType.MULTIPOLYGON && !isEqual(geometry, value)) {
+      helpers.setValue(geometry)
+    }
+  }, [geometry, helpers, value])
 
   return (
     <Field>

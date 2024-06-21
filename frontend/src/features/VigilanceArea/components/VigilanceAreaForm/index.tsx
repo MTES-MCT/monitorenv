@@ -1,26 +1,13 @@
-import { ZonePicker } from '@features/commonComponents/ZonePicker'
-import {
-  FormikDatePicker,
-  FormikDateRangePicker,
-  FormikMultiRadio,
-  FormikNumberInput,
-  FormikSelect,
-  FormikTextarea,
-  FormikTextInput,
-  Select
-} from '@mtes-mct/monitor-ui'
-import { InteractionListener } from 'domain/entities/map/constants'
 import { Formik } from 'formik'
+import { noop } from 'lodash'
 import styled from 'styled-components'
 
-import { Links } from './Links'
+import { Form } from './Form'
+import { VigilanceAreaSchema } from './Schema'
+import { getVigilanceAreaInitialValues } from './utils'
 
 export function VigilanceAreaForm({ isOpen }) {
-  const submit = () => {}
-
-  const deleteZone = () => {}
-
-  const addZone = () => {}
+  const initialValues = getVigilanceAreaInitialValues()
 
   return (
     <Wrapper $isOpen={isOpen}>
@@ -29,61 +16,8 @@ export function VigilanceAreaForm({ isOpen }) {
         <Title>Création d&apos;une zone de vigilance</Title>
       </Header>
 
-      <Formik initialValues={{}} onSubmit={submit}>
-        <FormContainer>
-          <FormikTextInput label="Nom de la zone de vigilance" name="name" placeholder="Nom de la zone" />
-          <FormikDateRangePicker isCompact label="Période de validité" name="period" />
-          <FormikSelect
-            label="Récurrence"
-            name="frequency"
-            options={[
-              { label: 'Aucune', value: 'NONE' },
-              { label: 'Toutes les semaines', value: 'ALL_WEEKS' },
-              { label: 'Toutes les mois', value: 'ALL_MONTHS' },
-              { label: 'Toutes les ans', value: 'ALL_YEARS' },
-              { label: 'Personnaliser', value: 'CUSTOM' }
-            ]}
-          />
-          <Select
-            label="Fin récurrence"
-            name="endingCondition"
-            options={[
-              { label: 'Jamais', value: 'NEVER' },
-              { label: 'Après .... X fois', value: 'END_DATE' },
-              { label: 'Le ...', value: 'OCCURENCES_NUMBER' }
-            ]}
-          />
-          <FormikNumberInput isLabelHidden label="Nombre de fois" name="endingOccurrencesNumber" />
-          <FormikDatePicker isLabelHidden label="Date de fin de récurrence" name="endOccurenceDate" />
-          <FormikSelect
-            label="Thématique"
-            name="themes"
-            options={[
-              { label: 'Zone de protection', value: 'zone_de_protection' },
-              { label: 'Zone de surveillance', value: 'zone_de_surveillance' }
-            ]}
-            placeholder="Sélectionner un/des thématique(s)"
-          />
-          <FormikMultiRadio
-            isInline
-            label="Visibilité"
-            name="visibility"
-            options={[
-              { label: 'Publique', value: 'PUBLIC' },
-              { label: 'Interne CACEM', value: 'INTERN' }
-            ]}
-          />
-          <FormikTextarea label="Commentaire" name="comments" placeholder="Description de la zone de vigilance" />
-          <ZonePicker
-            addLabel="Définir un tracé pour la zone de vigilance"
-            deleteZone={deleteZone}
-            handleAddZone={addZone}
-            label="Localisation"
-            listener={InteractionListener.VIGILANCE_ZONE}
-            name="geom"
-          />
-          <Links />
-        </FormContainer>
+      <Formik initialValues={initialValues} onSubmit={noop} validationSchema={VigilanceAreaSchema}>
+        <Form />
       </Formik>
     </Wrapper>
   )
@@ -97,7 +31,7 @@ const Wrapper = styled.div<{ $isOpen: boolean }>`
   opacity: ${p => (p.$isOpen ? 1 : 0)};
   padding: 0;
   transition: all 0.5s;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 65px);
 `
 
 const Header = styled.header`
@@ -118,12 +52,4 @@ const Square = styled.div`
   display: inline-block;
   margin-right: 10px;
   flex-shrink: 0;
-`
-const FormContainer = styled.div`
-  background-color: ${p => p.theme.color.white};
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-  overflow-y: auto;
 `
