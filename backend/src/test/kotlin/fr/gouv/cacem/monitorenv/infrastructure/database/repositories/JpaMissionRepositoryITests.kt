@@ -679,7 +679,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
 
         val nextMission =
-            mission.copy(
+            mission?.copy(
                 controlUnits =
                 mission.controlUnits.plus(
                     LegacyControlUnitEntity(
@@ -697,7 +697,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 ),
             )
 
-        val updatedMission = jpaMissionRepository.save(nextMission)
+        val updatedMission = jpaMissionRepository.save(nextMission!!)
 
         assertThat(updatedMission.mission.createdAtUtc).isNull()
         assertThat(updatedMission.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
@@ -975,7 +975,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save Should update subThemes of envActions`() {
         val mission = jpaMissionRepository.findById(34)
         val envAction =
-            mission.envActions?.find {
+            mission?.envActions?.find {
                 it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
             }
         assertThat(envAction?.controlPlans?.size).isEqualTo(1)
@@ -995,13 +995,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 ),
             )
         val nextMission =
-            mission.copy(
+            mission?.copy(
                 envActions =
                 mission.envActions?.map {
                     if (it.id ==
                         UUID.fromString(
-                                "b8007c8a-5135-4bc3-816f-c69c7b75d807",
-                            ) && it is EnvActionControlEntity
+                            "b8007c8a-5135-4bc3-816f-c69c7b75d807",
+                        ) && it is EnvActionControlEntity
                     ) {
                         it.copy(controlPlans = nextControlPlans)
                     } else {
@@ -1009,7 +1009,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     }
                 },
             )
-        val updatedMission = jpaMissionRepository.save(nextMission)
+        val updatedMission = jpaMissionRepository.save(nextMission!!)
         val updatedControlPlan =
             updatedMission.mission.envActions
                 ?.find { it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807") }
