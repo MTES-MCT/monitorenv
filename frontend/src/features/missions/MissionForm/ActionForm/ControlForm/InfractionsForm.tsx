@@ -1,3 +1,5 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -5,38 +7,58 @@ import styled from 'styled-components'
 import { InfractionCard } from './InfractionCard'
 import { InfractionForm } from './InfractionForm/InfractionForm'
 import { infractionFactory } from '../../../Missions.helpers'
+import { missionFormsActions } from '../../slice'
 
 import type { Infraction } from '../../../../../domain/entities/missions'
 
 export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, remove }) {
+  const dispatch = useAppDispatch()
+
   const infractions: Array<Infraction> = form?.values.envActions[envActionIndex]?.infractions ?? []
-  const [currentInfractionIndex, setCurrentInfractionIndex] = useState<number | undefined>(undefined)
+
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+
+  const selectedMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
+  )
+
+  const activeInfractionId = selectedMission?.activeAction?.activeInfractionId
+
+  const infractionIndex = infractions.findIndex(infraction => infraction.id === activeInfractionId)
+
+  const [currentInfractionIndex, setCurrentInfractionIndex] = useState<number | undefined>(infractionIndex)
 
   const handleAddInfraction = () => {
     const numberOfInfractions = infractions?.length || 0
-    push(infractionFactory())
+    const newInfraction = infractionFactory()
+    push(newInfraction)
     setCurrentInfractionIndex(numberOfInfractions)
+    dispatch(missionFormsActions.setActiveInfractionId(newInfraction.id))
   }
 
   const handleValidate = () => {
     setCurrentInfractionIndex(undefined)
+    dispatch(missionFormsActions.setActiveInfractionId(undefined))
   }
 
-  const handleEditInfraction = index => () => {
+  const handleEditInfraction = (index, id: string) => () => {
     setCurrentInfractionIndex(index)
+    dispatch(missionFormsActions.setActiveInfractionId(id))
   }
 
   const handleRemoveInfraction = index => () => {
     setCurrentInfractionIndex(undefined)
+    dispatch(missionFormsActions.setActiveInfractionId(undefined))
     remove(index)
   }
 
-  const handleDuplicateInfraction = index => () => {
+  const handleDuplicateInfraction = (index, id: string) => () => {
     const numberOfInfractions = infractions.length || 0
     const selectedInfraction = infractions[index]
 
     push(infractionFactory(selectedInfraction))
     setCurrentInfractionIndex(numberOfInfractions)
+    dispatch(missionFormsActions.setActiveInfractionId(id))
   }
 
   return (
@@ -50,10 +72,10 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
 
       {form?.values.envActions?.length > 0 && infractions.length > 0 ? (
         <InfractionsWrapper>
-          {infractions.map((infraction, index) =>
+          {infractions.map(({ id }, index) =>
             currentInfractionIndex !== undefined && index === currentInfractionIndex ? (
               <InfractionForm
-                key={infraction.id}
+                key={id}
                 currentInfractionIndex={currentInfractionIndex}
                 envActionIndex={envActionIndex}
                 removeInfraction={handleRemoveInfraction(index)}
@@ -61,13 +83,13 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
               />
             ) : (
               <InfractionCard
-                key={infraction.id}
+                key={id}
                 canAddInfraction={canAddInfraction}
                 currentInfractionIndex={index}
-                duplicateInfraction={handleDuplicateInfraction(index)}
+                duplicateInfraction={handleDuplicateInfraction(index, id)}
                 envActionIndex={envActionIndex}
                 removeInfraction={handleRemoveInfraction(index)}
-                setCurrentInfractionIndex={handleEditInfraction(index)}
+                setCurrentInfractionIndex={handleEditInfraction(index, id)}
               />
             )
           )}

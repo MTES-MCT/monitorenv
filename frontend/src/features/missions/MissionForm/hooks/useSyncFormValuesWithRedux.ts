@@ -19,9 +19,6 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const engagedControlUnit = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
   )
-  const activeActionId = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.activeActionId : undefined
-  )
 
   const dispatchFormUpdate = useDebouncedCallback(async (newValues: Mission) => {
     if (!newValues || newValues.id !== activeMissionId) {
@@ -31,7 +28,11 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
     const isFormDirty = isMissionFormDirty()
 
     dispatch(
-      missionFormsActions.setMission({ activeActionId, engagedControlUnit, isFormDirty, missionForm: newValues })
+      missionFormsActions.setMission({
+        engagedControlUnit,
+        isFormDirty,
+        missionForm: newValues
+      })
     )
   }, 350)
 

@@ -7,7 +7,7 @@ import { Header, HeaderButtons, StyledDeleteIconButton, TitleWithIcon } from './
 import { type EnvAction, type EnvActionNote, type Mission } from '../../../../domain/entities/missions'
 import { FormTitle, Separator } from '../style'
 
-export function NoteForm({ currentActionId, remove, setCurrentActionId }) {
+export function NoteForm({ currentActionId, remove }) {
   const [actionsFields] = useField<EnvAction[]>('envActions')
   const {
     setFieldValue,
@@ -17,7 +17,6 @@ export function NoteForm({ currentActionId, remove, setCurrentActionId }) {
   const currentAction = envActions[envActionIndex]
 
   const handleRemoveAction = () => {
-    setCurrentActionId(undefined)
     remove(currentActionId)
   }
 

@@ -17,8 +17,9 @@ type ActionFormProps = {
 export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
   const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
-    reporting => String(reporting.id) === currentActionId
+    reporting => reporting.id === currentActionId
   )
+
   const [reportingField] = useField<Reporting>(`attachedReportings.${reportingActionIndex}`)
 
   const [envActionsField, , envActionsHelper] = useField<EnvAction[]>('envActions')
@@ -32,7 +33,7 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
     envActionsHelper.setValue(actionsToUpdate)
 
     setCurrentActionId(undefined)
-  }, [envActionIndex, envActionsField, envActionsHelper, setCurrentActionId])
+  }, [envActionIndex, envActionsField.value, envActionsHelper, setCurrentActionId])
 
   if (currentActionId === undefined) {
     return (
@@ -62,30 +63,19 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
               key={actionIdField.value}
               currentActionId={currentActionId}
               removeControlAction={removeAction}
-              setCurrentActionId={setCurrentActionId}
             />
           </FormWrapper>
         )
       case ActionTypeEnum.SURVEILLANCE:
         return (
           <FormWrapper>
-            <SurveillanceForm
-              key={actionIdField.value}
-              currentActionId={currentActionId}
-              remove={removeAction}
-              setCurrentActionId={setCurrentActionId}
-            />
+            <SurveillanceForm key={actionIdField.value} currentActionId={currentActionId} remove={removeAction} />
           </FormWrapper>
         )
       case ActionTypeEnum.NOTE:
         return (
           <FormWrapper>
-            <NoteForm
-              key={actionIdField.value}
-              currentActionId={currentActionId}
-              remove={removeAction}
-              setCurrentActionId={setCurrentActionId}
-            />
+            <NoteForm key={actionIdField.value} currentActionId={currentActionId} remove={removeAction} />
           </FormWrapper>
         )
 

@@ -5,29 +5,33 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
 
-export const switchTab = (path: string) => async (dispatch, getState) => {
-  const { missions } = getState().missionForms
+import type { HomeAppThunk } from '@store/index'
 
-  const routeParams = getMissionPageRoute(path)
-  const id = getIdTyped(routeParams?.params.id)
+export const switchTab =
+  (path: string): HomeAppThunk =>
+  async (dispatch, getState) => {
+    const { missions } = getState().missionForms
 
-  // if we want to switch to mission list
-  if (!id) {
-    await dispatch(sideWindowActions.setCurrentPath(path))
-    await dispatch(missionActions.resetSelectedMissionIdOnMap())
-    await dispatch(missionFormsActions.resetActiveMissionId())
+    const routeParams = getMissionPageRoute(path)
+    const id = getIdTyped(routeParams?.params.id)
 
-    return
+    // if we want to switch to mission list
+    if (!id) {
+      dispatch(sideWindowActions.setCurrentPath(path))
+      dispatch(missionActions.resetSelectedMissionIdOnMap())
+      dispatch(missionFormsActions.resetActiveMissionId())
+
+      return
+    }
+
+    dispatch(missionFormsActions.setActiveMissionId(id))
+    dispatch(missionActions.setSelectedMissionIdOnMap(id))
+
+    dispatch(sideWindowActions.setCurrentPath(path))
+
+    // since we are switching to another mission, we need to update the attached reportings store
+    // because it's the form who listen to this store
+    dispatch(
+      attachReportingToMissionSliceActions.setAttachedReportings(missions[id]?.missionForm?.attachedReportings || [])
+    )
   }
-
-  await dispatch(missionFormsActions.setActiveMissionId(id))
-  await dispatch(missionActions.setSelectedMissionIdOnMap(id))
-
-  // since we are switching to another mission, we need to update the attached reportings store
-  // because it's the form who listen to this store
-  await dispatch(
-    attachReportingToMissionSliceActions.setAttachedReportings(missions[id]?.missionForm?.attachedReportings || [])
-  )
-
-  await dispatch(sideWindowActions.setCurrentPath(path))
-}

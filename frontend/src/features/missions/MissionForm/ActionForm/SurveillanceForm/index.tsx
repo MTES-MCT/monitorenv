@@ -50,7 +50,7 @@ import {
 } from '../style'
 import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
-export function SurveillanceForm({ currentActionId, remove, setCurrentActionId }) {
+export function SurveillanceForm({ currentActionId, remove }) {
   const { newWindowContainerRef } = useNewWindow()
 
   const {
@@ -146,7 +146,6 @@ export function SurveillanceForm({ currentActionId, remove, setCurrentActionId }
   )
 
   const handleRemoveAction = () => {
-    setCurrentActionId(undefined)
     remove(envActionIndex)
   }
 

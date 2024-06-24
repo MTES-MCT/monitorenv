@@ -24,10 +24,10 @@ const EMPTY_VALUE = '--'
 
 export function ReportingForm({
   reportingActionIndex,
-  setCurrentActionId: setCurrentActionIndex
+  setCurrentActionId
 }: {
   reportingActionIndex: number
-  setCurrentActionId: (string) => void
+  setCurrentActionId: (actionId: string | undefined) => void
 }) {
   const dispatch = useAppDispatch()
   const { subThemes, themes } = useGetControlPlans()
@@ -77,8 +77,7 @@ export function ReportingForm({
     })
     setFieldValue('envActions', envActionsToUpdate)
     setFieldValue('detachedReportingIds', [...(values.detachedReportingIds ?? []), reporting.id])
-
-    setCurrentActionIndex(undefined)
+    setCurrentActionId(undefined)
   }
 
   return (

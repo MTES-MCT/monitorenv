@@ -18,13 +18,9 @@ export function MissionFormWrapper() {
   const selectedMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
   )
-  const engagedControlUnit = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
-  )
+  const engagedControlUnit = selectedMission?.engagedControlUnit
 
-  const activeActionId = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.activeActionId : undefined
-  )
+  const activeAction = selectedMission?.activeAction
 
   const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
 
@@ -74,7 +70,7 @@ export function MissionFormWrapper() {
       >
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm
-            activeActionId={activeActionId}
+            activeActionId={activeAction?.id}
             engagedControlUnit={selectedMission?.engagedControlUnit ?? undefined}
             id={activeMissionId}
             isNewMission={missionIsNewMission}
