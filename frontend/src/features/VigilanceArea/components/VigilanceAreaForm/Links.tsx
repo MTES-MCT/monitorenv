@@ -1,29 +1,60 @@
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { Accent, Button, Icon, IconButton, Label, Size, TextInput } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { useState } from 'react'
 import styled from 'styled-components'
 
 export function Links() {
-  const [field] = useField('links')
-  const [isAddingLink, setIsAddingLink] = useState(false)
+  const { setFieldValue } = useFormikContext<VigilanceArea.VigilanceArea>()
+  const [field] = useField<Array<VigilanceArea.Link>>('links')
+  const [isCreatingLink, setIsCreatingLink] = useState<number | undefined>(undefined)
+  const [creatingLink, setCreatingLink] = useState<VigilanceArea.Link | undefined>(undefined)
 
-  /*   const testLinks = [
-    {
-      linkText: 'Google',
-      linkUrl: 'https://www.google.com'
-    },
-    {
-      linkText: 'Facebook',
-
-      linkUrl: 'https://www.facebook.com'
-    }
-  ] */
   const addLink = () => {
-    setIsAddingLink(true)
+    setCreatingLink({
+      linkText: undefined,
+      linkUrl: undefined
+    })
+    // for a new link, we set the index to -1
+    setIsCreatingLink(-1)
+  }
+
+  const setCurrentLink = (nextValue: string | undefined, currentField: string) => {
+    setCreatingLink({ ...creatingLink, [currentField]: nextValue })
+  }
+
+  const validateLink = () => {
+    if (creatingLink?.linkText && creatingLink?.linkUrl && isCreatingLink !== undefined) {
+      if (isCreatingLink === -1) {
+        setFieldValue('links', [...(field.value ?? []), creatingLink])
+        setIsCreatingLink(undefined)
+        setCreatingLink(undefined)
+
+        return
+      }
+
+      const updatedLinks = [...field.value]
+      updatedLinks.splice(isCreatingLink, 1, creatingLink)
+      setFieldValue('links', [...updatedLinks])
+      setIsCreatingLink(undefined)
+      setCreatingLink(undefined)
+    }
   }
 
   const cancelAddLink = () => {
-    setIsAddingLink(false)
+    setIsCreatingLink(undefined)
+    setCreatingLink(undefined)
+  }
+
+  const editLink = (link: VigilanceArea.Link, index: number) => {
+    setIsCreatingLink(index)
+    setCreatingLink(link)
+  }
+
+  const deleteLink = (index: number) => {
+    const updatedLinks = [...field.value]
+    updatedLinks.splice(index, 1)
+    setFieldValue('links', [...updatedLinks])
   }
 
   return (
@@ -40,26 +71,40 @@ export function Links() {
           Ajouter un lien utile
         </Button>
       </div>
-      {isAddingLink && (
+      {creatingLink && (
         <CreateLinkContainer>
-          <TextInput isLight label="Texte à afficher" name="linkText" />
-          <TextInput isLight label="Url du lien" name="linkUrl" />
+          <TextInput
+            isLight
+            label="Texte à afficher"
+            name="addLinkText"
+            onChange={nextValue => setCurrentLink(nextValue, 'linkText')}
+            value={creatingLink?.linkText}
+          />
+          <TextInput
+            isLight
+            label="Url du lien"
+            name="addLinkUrl"
+            onChange={nextValue => setCurrentLink(nextValue, 'linkUrl')}
+            value={creatingLink?.linkUrl}
+          />
           <ButtonsContainer>
             <Button accent={Accent.SECONDARY} onClick={cancelAddLink} size={Size.SMALL}>
               Annuler
             </Button>
-            <Button size={Size.SMALL}>Valider</Button>
+            <Button disabled={!creatingLink.linkText || !creatingLink.linkUrl} onClick={validateLink} size={Size.SMALL}>
+              Valider
+            </Button>
           </ButtonsContainer>
         </CreateLinkContainer>
       )}
 
-      {field.value?.map(link => (
-        <LinkContainer key={link.linkUrl}>
+      {(field.value ?? []).map((link, index) => (
+        <LinkContainer key={`${link.linkUrl}${link.linkText}`}>
           <StyledLink href={link.linkUrl} rel="noreferrer" target="_blank">
             {link.linkText}
           </StyledLink>
-          <IconButton accent={Accent.SECONDARY} Icon={Icon.Delete} />
-          <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} />
+          <IconButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={() => deleteLink(index)} />
+          <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={() => editLink(link, index)} />
         </LinkContainer>
       ))}
     </LinksContainer>
