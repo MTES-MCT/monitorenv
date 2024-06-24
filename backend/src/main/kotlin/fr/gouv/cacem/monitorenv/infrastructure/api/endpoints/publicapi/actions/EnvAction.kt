@@ -19,7 +19,10 @@ class EnvAction(
     private val patchEnvAction: PatchEnvAction,
 ) {
     @PatchMapping("/actions/{id}")
-    @Operation(summary = "patch an existing action", description = "action")
+    @Operation(
+        summary = "patch an existing action",
+        description = "Retrieve the action with given id and patch it with input data",
+    )
     fun patch(
         @PathVariable id: UUID,
         @RequestBody partialEnvActionDataInput: PatchableEnvActionDataInput,
