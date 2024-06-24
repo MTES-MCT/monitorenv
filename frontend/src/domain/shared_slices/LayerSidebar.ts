@@ -1,8 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 type LayerSidebarSliceState = {
   administrativeZonesIsOpen: boolean
+  areAmpsResultsOpen: boolean
   areRegFiltersOpen: boolean
+  areRegulatoryResultsOpen: boolean
   baselayerIsOpen: boolean
   myAmpsIsOpen: boolean
   myRegulatoryZonesIsOpen: boolean
@@ -10,7 +12,9 @@ type LayerSidebarSliceState = {
 
 const initialState: LayerSidebarSliceState = {
   administrativeZonesIsOpen: false,
+  areAmpsResultsOpen: false,
   areRegFiltersOpen: false,
+  areRegulatoryResultsOpen: false,
   baselayerIsOpen: false,
   myAmpsIsOpen: false,
   myRegulatoryZonesIsOpen: false
@@ -27,6 +31,12 @@ export const layerSidebarSlice = createSlice({
       return {
         ...initialState,
         administrativeZonesIsOpen: !state.administrativeZonesIsOpen
+      }
+    },
+    toggleAmpResults(state, action: PayloadAction<boolean | undefined>) {
+      return {
+        ...initialState,
+        areAmpsResultsOpen: action?.payload ?? !state.areAmpsResultsOpen
       }
     },
     toggleBaseLayer(state) {
@@ -51,6 +61,12 @@ export const layerSidebarSlice = createSlice({
       return {
         ...initialState,
         areRegFiltersOpen: !state.areRegFiltersOpen
+      }
+    },
+    toggleRegulatoryResults(state, action: PayloadAction<boolean | undefined>) {
+      return {
+        ...initialState,
+        areRegulatoryResultsOpen: action?.payload ?? !state.areRegulatoryResultsOpen
       }
     }
   }

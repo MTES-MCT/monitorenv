@@ -19,7 +19,8 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedReporting: selectedReportingIdOnMap && data?.entities[selectedReportingIdOnMap]
-    })
+    }),
+    skip: !selectedReportingIdOnMap
   })
 
   const hasNoReportingConflict = useMemo(() => {

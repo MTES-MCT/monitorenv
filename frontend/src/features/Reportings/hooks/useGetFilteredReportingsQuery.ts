@@ -55,7 +55,8 @@ export const useGetFilteredReportingsQuery = () => {
     const startedBeforeDate = startedBefore ?? undefined
     switch (periodFilter) {
       case ReportingDateRangeEnum.DAY:
-        startedAfterDate = customDayjs().utc().subtract(24, 'hour').toISOString()
+        // to prevent refeteching every second we don't send seconds in query
+        startedAfterDate = `${customDayjs().utc().subtract(24, 'hour').format('YYYY-MM-DDTHH:mm')}:00.000Z`
 
         break
 

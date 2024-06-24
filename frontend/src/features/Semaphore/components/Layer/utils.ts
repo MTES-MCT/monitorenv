@@ -7,7 +7,7 @@ import type { Feature } from 'ol'
 
 export function getReportingsBySemaphoreId(reportings) {
   return reduce(
-    reportings?.entities,
+    reportings,
     (reportingsBySemaphore, reporting) => {
       const reports = cloneDeep(reportingsBySemaphore)
       if (reporting && reporting.semaphoreId) {

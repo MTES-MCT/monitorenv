@@ -1,4 +1,4 @@
-import { useGetReportingsQuery } from '@api/reportingsAPI'
+import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -32,7 +32,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   const { data: semaphores } = useGetSemaphoresQuery()
 
-  const { data: reportings } = useGetReportingsQuery()
+  const { reportings } = useGetFilteredReportingsQuery()
 
   const semaphoresPoint = useMemo(() => getSemaphoresPoint(semaphores, reportings), [semaphores, reportings])
 

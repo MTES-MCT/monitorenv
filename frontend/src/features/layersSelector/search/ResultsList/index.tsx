@@ -1,5 +1,6 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { Checkbox } from '@mtes-mct/monitor-ui'
+import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
 import styled from 'styled-components'
 
@@ -9,12 +10,7 @@ import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import {
-  setIsAmpSearchResultsExpanded,
-  setIsAmpSearchResultsVisible,
-  setIsRegulatorySearchResultsExpanded,
-  setIsRegulatorySearchResultsVisible
-} from '../slice'
+import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from '../slice'
 
 type ResultListProps = {
   searchedText: string
@@ -24,11 +20,11 @@ export function ResultList({ searchedText }: ResultListProps) {
   const dispatch = useAppDispatch()
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
-  const isAmpSearchResultsExpanded = useAppSelector(state => state.layerSearch.isAmpSearchResultsExpanded)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
-  const isRegulatorySearchResultsExpanded = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsExpanded)
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
+  const areRegulatoryResultsOpen = useAppSelector(state => state.layerSidebar.areRegulatoryResultsOpen)
+  const areAmpsResultsOpen = useAppSelector(state => state.layerSidebar.areAmpsResultsOpen)
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: amps } = useGetAMPsQuery()
@@ -44,27 +40,30 @@ export function ResultList({ searchedText }: ResultListProps) {
       dispatch(setIsRegulatorySearchResultsVisible(true))
     }
     dispatch(closeMetadataPanel())
-    dispatch(setIsRegulatorySearchResultsExpanded(!isRegulatorySearchResultsExpanded))
-    dispatch(setIsAmpSearchResultsExpanded(false))
+    dispatch(layerSidebarActions.toggleRegulatoryResults())
   }
   const toggleAMPs = () => {
     if (!isAmpSearchResultsVisible) {
       dispatch(setIsAmpSearchResultsVisible(true))
     }
     dispatch(closeMetadataPanel())
-    dispatch(setIsRegulatorySearchResultsExpanded(false))
-    dispatch(setIsAmpSearchResultsExpanded(!isAmpSearchResultsExpanded))
+    dispatch(layerSidebarActions.toggleAmpResults())
   }
 
-  const toggleAMPVisibility = () => {
+  const toggleAMPVisibility = (isChecked: boolean | undefined) => {
+    if (!isChecked) {
+      dispatch(layerSidebarActions.toggleAmpResults(false))
+    }
     dispatch(closeMetadataPanel())
-    dispatch(setIsAmpSearchResultsExpanded(false))
-    dispatch(setIsAmpSearchResultsVisible(!isAmpSearchResultsVisible))
+    dispatch(setIsAmpSearchResultsVisible(!!isChecked))
   }
-  const toggleRegulatoryVisibility = () => {
+
+  const toggleRegulatoryVisibility = (isChecked: boolean | undefined) => {
+    if (!isChecked) {
+      dispatch(layerSidebarActions.toggleRegulatoryResults(false))
+    }
     dispatch(closeMetadataPanel())
-    dispatch(setIsRegulatorySearchResultsExpanded(false))
-    dispatch(setIsRegulatorySearchResultsVisible(!isRegulatorySearchResultsVisible))
+    dispatch(setIsRegulatorySearchResultsVisible(!!isChecked))
   }
 
   return (
@@ -83,7 +82,7 @@ export function ResultList({ searchedText }: ResultListProps) {
               <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
             </Title>
           </Header>
-          <SubList $isExpanded={isRegulatorySearchResultsExpanded}>
+          <SubList $isExpanded={areRegulatoryResultsOpen}>
             {Object.entries(regulatoryLayersByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
               <RegulatoryLayerGroup
                 key={layerGroupName}
@@ -108,7 +107,7 @@ export function ResultList({ searchedText }: ResultListProps) {
               ZONES AMP &nbsp;<NumberOfResults> ({ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
             </Title>
           </HeaderAMP>
-          <SubListAMP $isExpanded={isAmpSearchResultsExpanded} data-cy="amp-result-list">
+          <SubListAMP $isExpanded={areAmpsResultsOpen} data-cy="amp-result-list">
             {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
               <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
             ))}
