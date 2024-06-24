@@ -21,8 +21,8 @@ export namespace VigilanceArea {
   }
 
   export interface Link {
-    linkText: string
-    linkUrl: string
+    linkText?: string
+    linkUrl?: string
   }
   export enum Frequency {
     NONE = 'NONE',
