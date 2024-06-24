@@ -50,20 +50,20 @@ export function ResultList({ searchedText }: ResultListProps) {
     dispatch(layerSidebarActions.toggleAmpResults())
   }
 
-  const toggleAMPVisibility = isChecked => {
+  const toggleAMPVisibility = (isChecked: boolean | undefined) => {
     if (!isChecked) {
       dispatch(layerSidebarActions.toggleAmpResults(false))
     }
     dispatch(closeMetadataPanel())
-    dispatch(setIsAmpSearchResultsVisible(isChecked))
+    dispatch(setIsAmpSearchResultsVisible(!!isChecked))
   }
 
-  const toggleRegulatoryVisibility = isChecked => {
+  const toggleRegulatoryVisibility = (isChecked: boolean | undefined) => {
     if (!isChecked) {
       dispatch(layerSidebarActions.toggleRegulatoryResults(false))
     }
     dispatch(closeMetadataPanel())
-    dispatch(setIsRegulatorySearchResultsVisible(isChecked))
+    dispatch(setIsRegulatorySearchResultsVisible(!!isChecked))
   }
 
   return (
