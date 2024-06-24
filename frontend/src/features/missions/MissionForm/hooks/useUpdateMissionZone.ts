@@ -80,14 +80,20 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
       // for control action we need to compute a circle for mission zone
       if (firstActionWithDate.actionType === ActionTypeEnum.CONTROL) {
         const { coordinates } = firstActionWithDate.geom
-        if (coordinates.length === 0) {
-          return
+        if (coordinates.length > 0) {
+          const circleZone = computeCircleZone(coordinates[0])
+
+          if (isEqual(values.geom, circleZone)) {
+            return
+          }
+          setFieldValue('geom', circleZone)
         }
-        const circleZone = computeCircleZone(coordinates[0])
-        setFieldValue('geom', circleZone)
       }
 
       if (firstActionWithDate.actionType === ActionTypeEnum.SURVEILLANCE) {
+        if (isEqual(values.geom, firstActionWithDate.geom)) {
+          return
+        }
         setFieldValue('geom', firstActionWithDate.geom)
       }
 
