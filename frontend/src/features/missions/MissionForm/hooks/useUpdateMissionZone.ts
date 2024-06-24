@@ -37,7 +37,16 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
   )
 
   const firstAction = filteredEnvActions[0]
-  const firstActionWithDate = firstAction?.actionStartDateTimeUtc ? firstAction : undefined
+  const firstActionWithDate = useMemo(() => {
+    if (firstAction?.actionType === ActionTypeEnum.SURVEILLANCE) {
+      return firstAction?.actionStartDateTimeUtc ? firstAction : undefined
+    }
+    if (firstAction?.actionType === ActionTypeEnum.CONTROL) {
+      return firstAction?.actionEndDateTimeUtc ? firstAction : undefined
+    }
+
+    return undefined
+  }, [firstAction])
 
   const listener = useAppSelector(state => state.draw.listener)
   const { setFieldValue, values } = useFormikContext<Mission>()
