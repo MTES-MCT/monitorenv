@@ -18,7 +18,6 @@ class MergeMissionEntity {
         return missionEntity
     }
 
-
     private fun <T> getValueFromOptional(existingValue: T?, optional: Optional<T>?): T? {
         return when {
             optional == null -> existingValue
