@@ -18,6 +18,7 @@ class EnvActionFixture {
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,
             observationsByUnit: String? = null,
+            missionId: Int? = 1,
         ): EnvActionEntity {
             return EnvActionMapper.getEnvActionEntityFromJSON(
                 mapper,
@@ -37,7 +38,7 @@ class EnvActionFixture {
                 isSeafarersControl = false,
                 observationsByUnit = observationsByUnit,
                 openBy = "Jane Doe",
-                missionId = 1,
+                missionId = missionId,
                 value = "{}",
             )
         }

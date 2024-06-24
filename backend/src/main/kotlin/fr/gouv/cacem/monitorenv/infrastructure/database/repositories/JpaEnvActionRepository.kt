@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
@@ -34,6 +36,9 @@ class JpaEnvActionRepository(
                 ),
             ).toActionEntity(objectMapper)
         }
-        throw RuntimeException("Trying to save an envAction without mission")
+        throw BackendUsageException(
+            BackendUsageErrorCode.ENTITY_NOT_FOUND,
+            "Trying to save an envAction without mission",
+        )
     }
 }
