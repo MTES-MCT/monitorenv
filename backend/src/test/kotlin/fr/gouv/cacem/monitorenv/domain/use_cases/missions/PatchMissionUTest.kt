@@ -16,7 +16,7 @@ import java.util.Optional
 import kotlin.random.Random
 
 class PatchMissionUTest {
-    
+
     private val missionRepository: IMissionRepository = mock()
     private val mergeMissionEntity: MergeMissionEntity = mock()
     private val patchMission: PatchMission = PatchMission(missionRepository, mergeMissionEntity)

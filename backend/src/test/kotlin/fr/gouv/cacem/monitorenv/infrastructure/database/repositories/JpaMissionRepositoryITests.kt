@@ -1000,8 +1000,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 mission.envActions?.map {
                     if (it.id ==
                         UUID.fromString(
-                            "b8007c8a-5135-4bc3-816f-c69c7b75d807",
-                        ) && it is EnvActionControlEntity
+                                "b8007c8a-5135-4bc3-816f-c69c7b75d807",
+                            ) && it is EnvActionControlEntity
                     ) {
                         it.copy(controlPlans = nextControlPlans)
                     } else {
