@@ -116,7 +116,7 @@ const missionFormsSlice = createSlice({
       }
       const mission = state.missions[id]
       if (mission) {
-        state.missions[id] = action.payload
+        state.missions[id] = { ...mission, ...action.payload }
       } else {
         state.missions = { ...state.missions, [id]: action.payload }
       }

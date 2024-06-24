@@ -22,7 +22,13 @@ import { FormTitle } from '../../style'
 
 const EMPTY_VALUE = '--'
 
-export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: number }) {
+export function ReportingForm({
+  reportingActionIndex,
+  setCurrentActionId
+}: {
+  reportingActionIndex: number
+  setCurrentActionId: (actionId: string | undefined) => void
+}) {
   const dispatch = useAppDispatch()
   const { subThemes, themes } = useGetControlPlans()
 
@@ -71,6 +77,7 @@ export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: 
     })
     setFieldValue('envActions', envActionsToUpdate)
     setFieldValue('detachedReportingIds', [...(values.detachedReportingIds ?? []), reporting.id])
+    setCurrentActionId(undefined)
   }
 
   return (

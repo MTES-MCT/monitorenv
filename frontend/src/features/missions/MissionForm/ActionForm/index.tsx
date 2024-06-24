@@ -17,8 +17,9 @@ type ActionFormProps = {
 export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
   const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
-    reporting => String(reporting.id) === currentActionId
+    reporting => reporting.id === currentActionId
   )
+
   const [reportingField] = useField<Reporting>(`attachedReportings.${reportingActionIndex}`)
 
   const [envActionsField, , envActionsHelper] = useField<EnvAction[]>('envActions')
@@ -44,7 +45,11 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
   if (reportingActionIndex !== -1) {
     return (
       <ReportingFormWrapper>
-        <ReportingForm key={reportingField.value.id} reportingActionIndex={reportingActionIndex} />
+        <ReportingForm
+          key={reportingField.value.id}
+          reportingActionIndex={reportingActionIndex}
+          setCurrentActionId={setCurrentActionId}
+        />
       </ReportingFormWrapper>
     )
   }

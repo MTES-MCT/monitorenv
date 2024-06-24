@@ -178,7 +178,7 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
                   hasError={!!envActionsErrors}
                   removeAction={event => handleRemoveAction(action.id, event)}
                   selectAction={() => handleSelectAction(action.id)}
-                  selected={String(action.id) === currentActionId}
+                  selected={action.id === currentActionId}
                   setCurrentActionId={setCurrentActionId}
                 />
               )
