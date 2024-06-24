@@ -31,6 +31,8 @@ export function InfractionCard({
   const [imo] = useField<Infraction['imo']>(`${infractionPath}.imo`)
   const [registrationNumber] = useField<Infraction['registrationNumber']>(`${infractionPath}.registrationNumber`)
   const [companyName] = useField<Infraction['companyName']>(`${infractionPath}.companyName`)
+  const [vesselName] = useField<Infraction['vesselName']>(`${infractionPath}.vesselName`)
+  const [vesselSize] = useField<Infraction['vesselSize']>(`${infractionPath}.vesselSize`)
 
   const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(
     `${infractionPath}.controlledPersonIdentity`
@@ -56,6 +58,9 @@ export function InfractionCard({
     }
 
     const addVesselIdentification = () => {
+      if (vesselName.value) {
+        identification.push(vesselName.value)
+      }
       if (mmsi.value) {
         identification.push(mmsi.value)
       } else if (imo.value) {
@@ -66,6 +71,9 @@ export function InfractionCard({
         identification.push(controlledPersonIdentity.value)
       } else {
         addDefaultVehicleIdentification()
+      }
+      if (vesselSize.value) {
+        identification.push(String(vesselSize.value))
       }
     }
 

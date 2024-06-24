@@ -613,6 +613,12 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.clickButton("Valider l'infraction")
       cy.getDataCy('infraction-0-identification').contains('123456789')
 
+      cy.clickButton('Editer')
+      cy.fill('Nom du navire', 'Le hollandais volant')
+      cy.fill('Taille', 16)
+      cy.clickButton("Valider l'infraction")
+      cy.getDataCy('infraction-0-identification').contains('Le hollandais volant - 123456789 - 16')
+
       cy.fill('Type de véhicule', 'Autre véhicule marin')
       cy.getDataCy('infraction-0-identification').contains('ABC123')
 
