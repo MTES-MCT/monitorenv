@@ -23,7 +23,6 @@ import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useMissionAndActionsCompletion } from './hooks/useMissionAndActionsCompletion'
-import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
@@ -99,7 +98,6 @@ export function MissionForm({
 
   const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty ?? false, [id, selectedMissions])
 
-  useSyncFormValuesWithRedux(isAutoSaveEnabled)
   const { missionCompletionFrontStatus } = useMissionAndActionsCompletion()
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
@@ -179,6 +177,14 @@ export function MissionForm({
   }
 
   const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave) => {
+    dispatch(
+      missionFormsActions.setMission({
+        engagedControlUnit,
+        isFormDirty,
+        missionForm: nextValues
+      })
+    )
+
     if (!isAutoSaveEnabled || engagedControlUnit || !isMissionFormValid) {
       return
     }
@@ -188,7 +194,7 @@ export function MissionForm({
     }
 
     dispatch(saveMission(nextValues, false, false))
-  }, 300)
+  }, 150)
 
   useEffect(() => {
     if (isNewMission && !engagedControlUnit && previousEngagedControlUnit !== engagedControlUnit) {
