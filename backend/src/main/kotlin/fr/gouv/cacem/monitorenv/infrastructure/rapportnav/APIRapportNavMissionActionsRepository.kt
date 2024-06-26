@@ -6,10 +6,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMis
 import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
+import java.net.http.HttpTimeoutException
 
 @Repository
 class APIRapportNavMissionActionsRepository(
@@ -23,24 +26,29 @@ class APIRapportNavMissionActionsRepository(
             "${rapportnavProperties.url}/api/v1/missions/$missionId"
 
         return runBlocking {
-            try {
-                val rapportNavMissionActions =
-                    apiClient
-                        .httpClient
-                        .get(missionActionsUrl)
-                        .body<RapportNavMissionActionEntity>()
-                logger.info(
-                    "Fetched is mission has actions and the result is : $rapportNavMissionActions",
-                )
+            withTimeout(3000L) {
+                try {
+                    val rapportNavMissionActions =
+                        apiClient
+                            .httpClient
+                            .get(missionActionsUrl)
+                            .body<RapportNavMissionActionEntity>()
+                    logger.info(
+                        "Fetched is mission has actions and the result is : $rapportNavMissionActions",
+                    )
 
-                return@runBlocking rapportNavMissionActions
-            } catch (e: Exception) {
-                logger.error(
-                    "Could not fetch mission actions from rapportNav at $missionActionsUrl",
-                    e,
-                )
+                    return@withTimeout rapportNavMissionActions
+                } catch (e: CancellationException) {
+                    logger.error("Timeout while fetching rapportNav $missionActionsUrl", e)
+                    throw HttpTimeoutException(e.message)
+                } catch (e: Exception) {
+                    logger.error(
+                        "Could not fetch mission actions from rapportNav at $missionActionsUrl",
+                        e,
+                    )
 
-                throw NoSuchElementException()
+                    throw NoSuchElementException("Could not fetch mission actions from rapportNav at $missionActionsUrl")
+                }
             }
         }
     }

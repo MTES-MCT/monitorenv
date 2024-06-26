@@ -7,7 +7,10 @@ import io.ktor.http.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.net.http.HttpTimeoutException
 
 class APIRapportNavActionsRepositoryITests {
 
@@ -64,6 +67,39 @@ class APIRapportNavActionsRepositoryITests {
             val missionActions = APIRapportNavMissionActionsRepository(apiClient, rapportnavProperties)
                 .findRapportNavMissionActionsById(1)
             Assertions.assertThat(missionActions.containsActionsAddedByUnit).isFalse()
+        }
+    }
+
+    @Test
+    fun `findRapportNavMissionActionsById should throw CancellationException after X ms when rapportNav doesnt answer`() {
+        runBlocking {
+            val mockEngine = MockEngine { _ ->
+                Thread.sleep(5000)
+                respond(
+                    content = ByteReadChannel(
+                        """
+                            {
+                                "id": 1,
+                                "containsActionsAddedByUnit": false
+                            }
+                        """,
+                    ),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+            val apiClient = ApiClient(mockEngine)
+            val rapportnavProperties = RapportnavProperties()
+            rapportnavProperties.url = "http://test"
+
+            // When
+            val httpTimeoutException = assertThrows<HttpTimeoutException> {
+                APIRapportNavMissionActionsRepository(apiClient, rapportnavProperties).findRapportNavMissionActionsById(
+                    1,
+                )
+            }
+            assertThat(httpTimeoutException.message).isEqualTo("Timed out waiting for 3000 ms")
+
         }
     }
 }
