@@ -26,7 +26,7 @@ class APIRapportNavMissionActionsRepository(
             "${rapportnavProperties.url}/api/v1/missions/$missionId"
 
         return runBlocking {
-            withTimeout(3000L) {
+            withTimeout(rapportnavProperties.timeout) {
                 try {
                     val rapportNavMissionActions =
                         apiClient
@@ -47,7 +47,9 @@ class APIRapportNavMissionActionsRepository(
                         e,
                     )
 
-                    throw NoSuchElementException("Could not fetch mission actions from rapportNav at $missionActionsUrl")
+                    throw NoSuchElementException(
+                        "Could not fetch mission actions from rapportNav at $missionActionsUrl",
+                    )
                 }
             }
         }

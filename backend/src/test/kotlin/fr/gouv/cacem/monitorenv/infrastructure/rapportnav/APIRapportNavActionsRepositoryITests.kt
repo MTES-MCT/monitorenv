@@ -71,7 +71,7 @@ class APIRapportNavActionsRepositoryITests {
     }
 
     @Test
-    fun `findRapportNavMissionActionsById should throw CancellationException after X ms when rapportNav doesnt answer`() {
+    fun `findRapportNavMissionActionsById should throw HttpTimeoutException after X ms when rapportNav doesnt answer`() {
         runBlocking {
             val mockEngine = MockEngine { _ ->
                 Thread.sleep(5000)
@@ -91,6 +91,7 @@ class APIRapportNavActionsRepositoryITests {
             val apiClient = ApiClient(mockEngine)
             val rapportnavProperties = RapportnavProperties()
             rapportnavProperties.url = "http://test"
+            rapportnavProperties.timeout = 3000
 
             // When
             val httpTimeoutException = assertThrows<HttpTimeoutException> {
@@ -99,7 +100,6 @@ class APIRapportNavActionsRepositoryITests {
                 )
             }
             assertThat(httpTimeoutException.message).isEqualTo("Timed out waiting for 3000 ms")
-
         }
     }
 }
