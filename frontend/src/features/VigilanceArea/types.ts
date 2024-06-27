@@ -5,6 +5,7 @@ export namespace VigilanceArea {
   export interface VigilanceArea {
     comments: string
     createdBy: string
+    endDatePeriod: string
     endingCondition: EndingCondition
     endingOccurenceDate?: string
     endingOccurrencesNumber?: number
@@ -14,8 +15,8 @@ export namespace VigilanceArea {
     isDraft: boolean
     links: Array<Link>
     name: string
-    period: [string, string]
     source: string
+    startDatePeriod: string
     themes: Array<string>
     visibility: Visibility
   }

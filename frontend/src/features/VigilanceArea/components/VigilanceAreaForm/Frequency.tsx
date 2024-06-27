@@ -13,6 +13,7 @@ export function Frequency() {
     <>
       <FormikSelect
         isErrorMessageHidden
+        isRequired
         label="Récurrence"
         name="frequency"
         options={frequencyOptions}
@@ -23,6 +24,7 @@ export function Frequency() {
         <FrequencyContainer>
           <FormikSelect
             isErrorMessageHidden
+            isRequired
             label="Fin récurrence"
             name="endingCondition"
             options={endingConditionOptions}
@@ -32,6 +34,7 @@ export function Frequency() {
             <FormikNumberInput
               isErrorMessageHidden
               isLabelHidden
+              isRequired
               label="Nombre de fois"
               name="endingOccurrencesNumber"
               style={{ width: '115px' }}
@@ -41,8 +44,9 @@ export function Frequency() {
             <FormikDatePicker
               isErrorMessageHidden
               isLabelHidden
+              isRequired
               label="Date de fin de récurrence"
-              name="endOccurenceDate"
+              name="endingOccurenceDate"
               style={{ width: '115px' }}
             />
           )}

@@ -10,7 +10,7 @@ import {
   THEME,
   WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
-import { OLGeometryType } from 'domain/entities/map/constants'
+import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useField } from 'formik'
 import { isEqual } from 'lodash'
@@ -23,7 +23,24 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 
 import type { Coordinate } from 'ol/coordinate'
 
-export function ZonePicker({ addLabel, deleteZone, handleAddZone, label, listener, name }) {
+type ZonePickerProps = {
+  addLabel: string
+  deleteZone: (index: number) => void
+  handleAddZone: () => void
+  isRequired?: boolean
+  label: string
+  listener: InteractionListener
+  name: string
+}
+export function ZonePicker({
+  addLabel,
+  deleteZone,
+  handleAddZone,
+  isRequired,
+  label,
+  listener,
+  name
+}: ZonePickerProps) {
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(listener)
   const [field, meta, helpers] = useField(name)
@@ -58,7 +75,7 @@ export function ZonePicker({ addLabel, deleteZone, handleAddZone, label, listene
 
   return (
     <Field>
-      <Label>{label}</Label>
+      <Label $isRequired={isRequired}>{label}</Label>
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}

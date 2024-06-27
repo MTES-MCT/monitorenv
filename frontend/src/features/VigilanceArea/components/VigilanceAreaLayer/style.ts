@@ -1,3 +1,4 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { Fill, Stroke, Style } from 'ol/style'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -9,16 +10,17 @@ const getStyle = (color: string, metadataIsShowed: boolean | undefined) =>
       color: getColorWithAlpha(color, 0.7)
     }),
     stroke: new Stroke({
-      color: getColorWithAlpha('#A98A0F', 1), // TODO: eplace with the color in Monitor-ui when it is created
+      color: getColorWithAlpha(THEME.color.chineseRed, 1),
+      lineDash: [4, 4],
       width: metadataIsShowed ? 3 : 1
     })
   })
 
-export const getAMPColorWithAlpha = (type: string | null = '', name: string | null = '') =>
-  getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`, Layers.AMP.code), 0.6)
+export const getVigilanceAreaColorWithAlpha = (type: string | null = '', comments: string | null = '') =>
+  getColorWithAlpha(stringToColorInGroup(`${type}`, `${comments}`, Layers.VIGILANCE_AREA.code), 0.6)
 
-export const getAMPLayerStyle = feature => {
-  const colorWithAlpha = getAMPColorWithAlpha(feature.get('designation'), feature.get('name'))
+export const getVigilanceAreaLayerStyle = feature => {
+  const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('designation'), feature.get('comments'))
 
   const style = getStyle(colorWithAlpha, feature.get('metadataIsShowed'))
 
