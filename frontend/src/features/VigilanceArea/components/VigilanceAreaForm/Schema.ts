@@ -15,6 +15,7 @@ export const DraftSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.object
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
       .nullable(),
+    endDatePeriod: Yup.string().nullable(),
     endingCondition: Yup.mixed().nullable(),
     endingOccurenceDate: Yup.string().nullable(),
     endingOccurrencesNumber: Yup.number().nullable(),
@@ -22,8 +23,8 @@ export const DraftSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.object
     geom: Yup.array().nullable(),
     links: Yup.array().nullable(),
     name: Yup.string().nullable(),
-    period: Yup.array().nullable(),
     source: Yup.string().nullable(),
+    startDatePeriod: Yup.string().nullable(),
     themes: Yup.array().nullable(),
     visibility: Yup.mixed().nullable()
   })
@@ -36,7 +37,14 @@ export const PublishedSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.ob
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
       .required(),
-    endingCondition: Yup.mixed().oneOf(Object.values(VigilanceArea.EndingCondition)).required(),
+    endDatePeriod: Yup.string().required(),
+    endingCondition: Yup.string().when('frequency', (endingCondition, schema) => {
+      if (endingCondition !== VigilanceArea.Frequency.NONE) {
+        return schema.mixed().oneOf(Object.values(VigilanceArea.EndingCondition)).required()
+      }
+
+      return schema.nullable()
+    }),
     endingOccurenceDate: Yup.string().when('endingCondition', (endingCondition, schema) => {
       if (endingCondition === VigilanceArea.EndingCondition.END_DATE) {
         return schema.nullable().required('Requis')
@@ -54,7 +62,7 @@ export const PublishedSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.ob
     frequency: Yup.mixed().oneOf(Object.values(VigilanceArea.Frequency)).required(),
     geom: Yup.array().of(ZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
     name: Yup.string().required(),
-    period: Yup.array().ensure().defined().min(1),
+    startDatePeriod: Yup.string().required(),
     themes: Yup.array().ensure().defined().min(1),
     visibility: Yup.mixed().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })

@@ -1,16 +1,19 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { ZonePicker } from '@features/commonComponents/ZonePicker'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
   CustomSearch,
-  FormikDateRangePicker,
+  DateRangePicker,
   FormikMultiRadio,
   FormikMultiSelect,
   FormikTextarea,
   FormikTextInput,
   getOptionsFromLabelledEnum,
+  type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
@@ -18,7 +21,8 @@ import { InteractionListener } from 'domain/entities/map/constants'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
 import { useFormikContext } from 'formik'
-import { useMemo } from 'react'
+import { isEmpty } from 'lodash'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Footer } from './Footer'
@@ -27,7 +31,9 @@ import { Links } from './Links'
 
 export function Form() {
   const dispatch = useAppDispatch()
-  const { setFieldValue, validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
+  const { dirty, setFieldValue, validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
@@ -40,38 +46,90 @@ export function Form() {
   )
 
   const publish = () => {
-    setFieldValue('isDraft', false)
-    validateForm({ ...values, isDraft: false }).then(() => {})
+    validateForm({ ...values, isDraft: false }).then(errors => {
+      if (isEmpty(errors)) {
+        dispatch(saveVigilanceArea({ ...values, isDraft: false }))
+      }
+    })
   }
 
   const cancel = () => {
+    if (dirty) {
+      setIsDialogOpen(true)
+
+      return
+    }
     dispatch(vigilanceAreaActions.closeForm())
   }
 
-  const save = () => {}
+  const onCancelEditModal = () => {
+    setIsDialogOpen(false)
+  }
+
+  const onConfirmEditModal = () => {
+    dispatch(vigilanceAreaActions.closeForm())
+    setIsDialogOpen(false)
+  }
+
+  const save = () => {
+    dispatch(saveVigilanceArea(values))
+  }
 
   const deleteVigilanceArea = () => {}
 
-  const deleteZone = () => {}
+  const deleteZone = index => {
+    const coordinates = [...values.geom.coordinates]
+    const nextCoordinates = coordinates.splice(index, 1)
+
+    setFieldValue('geom', { ...values.geom, coordinates: nextCoordinates })
+  }
 
   const addZone = () => {
     dispatch(drawPolygon(values.geom, InteractionListener.VIGILANCE_ZONE))
     dispatch(setDisplayedItems({ isLayersSidebarVisible: false }))
   }
 
+  const setPeriod = (period: DateAsStringRange | undefined) => {
+    if (!period) {
+      return
+    }
+    setFieldValue('startDatePeriod', period[0])
+    setFieldValue('endDatePeriod', period[1])
+  }
+
   return (
     <FormContainer>
+      <CancelEditDialog
+        onCancel={onCancelEditModal}
+        onConfirm={onConfirmEditModal}
+        open={isDialogOpen}
+        subText="Voulez-vous enregistrer les modifications avant de quitter ?"
+        text="Vous êtes en train d'abandonner l'édition de la zone de vigilance"
+        title="Enregistrer les modifications"
+      />
+
       <StyledForm>
         <FormikTextInput
           isErrorMessageHidden
+          isRequired
           label="Nom de la zone de vigilance"
           name="name"
           placeholder="Nom de la zone"
         />
-        <FormikDateRangePicker isCompact isErrorMessageHidden label="Période de validité" name="period" />
+        <DateRangePicker
+          isCompact
+          isErrorMessageHidden
+          isRequired
+          isStringDate
+          label="Période de validité"
+          name="period"
+          onChange={setPeriod}
+        />
         <Frequency />
         <FormikMultiSelect
           customSearch={regulatoryThemesCustomSearch}
+          isErrorMessageHidden
+          isRequired
           label="Thématiques"
           name="themes"
           options={regulatoryThemes || []}
@@ -80,12 +138,14 @@ export function Form() {
         <FormikMultiRadio
           isErrorMessageHidden
           isInline
+          isRequired
           label="Visibilité"
           name="visibility"
           options={visibilityOptions}
         />
         <FormikTextarea
           isErrorMessageHidden
+          isRequired
           label="Commentaire"
           name="comments"
           placeholder="Description de la zone de vigilance"
@@ -94,6 +154,7 @@ export function Form() {
           addLabel="Définir un tracé pour la zone de vigilance"
           deleteZone={deleteZone}
           handleAddZone={addZone}
+          isRequired
           label="Localisation"
           listener={InteractionListener.VIGILANCE_ZONE}
           name="geom"
@@ -101,7 +162,7 @@ export function Form() {
         <Links />
         <Separator />
         <InternText>Interne CACEM</InternText>
-        <StyledTrigramInput isErrorMessageHidden label="Créé par" name="createdBy" />
+        <StyledTrigramInput isErrorMessageHidden isRequired label="Créé par" name="createdBy" />
         <FormikTextarea
           label="Source de l'information"
           name="source"

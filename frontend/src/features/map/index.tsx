@@ -1,5 +1,6 @@
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
+import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
@@ -142,6 +143,10 @@ export function Map() {
       <SelectedMissionToAttachLayer />
       {/* @ts-ignore */}
       <MissionToAttachOverlays />
+
+      {/* VIGILANCE AREA */}
+      {/* @ts-ignore */}
+      <VigilanceAreasLayer />
     </BaseMap>
   )
 }

@@ -25,7 +25,24 @@ const regulatoryColorsGreens = [
   THEME.color.indigoDye
 ]
 
+// TODO 27/06/2024 move this in Monitor-ui
 const ampColors = [
+  '#A98A0F',
+  '#BAAB68',
+  '#B9B94D',
+  '#C8C732',
+  '#DBE33E',
+  '#C5A730',
+  '#DBB934',
+  '#E1C55E',
+  '#F0CB38',
+  '#F1E243',
+  '#F0FE58',
+  '#F2F58E',
+  '#FFFEC2'
+]
+
+const vigilanceAreaColors = [
   THEME.color.chineseRed,
   THEME.color.brownSugar,
   THEME.color.rust,
@@ -40,6 +57,7 @@ const ampColors = [
   THEME.color.paleDogwood,
   THEME.color.seashell
 ]
+
 /**
  * Get a color from palette from string
  * https://gist.github.com/0x263b/2bdd90886c2036a1ad5bcf06d6e6fb37
@@ -60,7 +78,15 @@ function stringToArrayItem(str: string, arr) {
 }
 
 export function stringToColorInGroup(group: string, name: string, layerType?: string) {
-  const colors = layerType === Layers.AMP.code ? [ampColors] : [regulatoryColorsBlues, regulatoryColorsGreens]
+  let colors = [regulatoryColorsBlues, regulatoryColorsGreens]
+
+  if (layerType === Layers.AMP.code) {
+    colors = [ampColors]
+  }
+
+  if (layerType === Layers.VIGILANCE_AREA.code) {
+    colors = [vigilanceAreaColors]
+  }
   const colorSet = stringToArrayItem(group, colors)
 
   return stringToArrayItem(name, colorSet)
