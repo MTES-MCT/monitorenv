@@ -34,7 +34,7 @@ export const saveVigilanceArea =
             withAutomaticClosing: true
           })
         )
-        dispatch(vigilanceAreaActions.closeForm())
+        dispatch(vigilanceAreaActions.setFormTypeOpen())
       }
     } catch (error) {
       dispatch(

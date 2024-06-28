@@ -1,29 +1,37 @@
+import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Formik } from 'formik'
 import { noop } from 'lodash'
 import styled from 'styled-components'
 
+import { DrawVigilanceArea } from './DrawVigilanceArea'
 import { Form } from './Form'
 import { VigilanceAreaSchema } from './Schema'
 import { getVigilanceAreaInitialValues } from './utils'
 
 export function VigilanceAreaForm({ isOpen }) {
+  const formTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
+
   const initialValues = getVigilanceAreaInitialValues()
 
   return (
-    <Wrapper $isOpen={isOpen}>
+    <Wrapper $isMainFormOpen={formTypeOpen === VigilanceAreaFormTypeOpen.FORM} $isOpen={isOpen}>
       <Header>
         <Square />
         <Title>Création d&apos;une zone de vigilance</Title>
       </Header>
 
       <Formik initialValues={initialValues} onSubmit={noop} validationSchema={VigilanceAreaSchema}>
-        <Form />
+        <>
+          {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea />}
+          {formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
+        </>
       </Formik>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ $isOpen: boolean }>`
+const Wrapper = styled.div<{ $isMainFormOpen: boolean; $isOpen: boolean }>`
   border-radius: 2px;
   width: 400px;
   display: block;
@@ -31,14 +39,14 @@ const Wrapper = styled.div<{ $isOpen: boolean }>`
   opacity: ${p => (p.$isOpen ? 1 : 0)};
   padding: 0;
   transition: all 0.5s;
-  height: calc(100vh - 65px);
+  height: ${p => (p.$isMainFormOpen ? 'calc(100vh - 65px)' : 'auto')};
 `
 
 const Header = styled.header`
   align-items: center;
   background-color: ${p => p.theme.color.blueGray25};
   display: flex;
-  padding: 11px 16px;
+  padding: 9px 16px 10px 16px;
 `
 const Title = styled.span`
   font-size: 15px;
