@@ -20,7 +20,7 @@ export const getVigilanceAreaZoneFeature = (vigilanceArea: VigilanceArea.Vigilan
     createdBy: vigilanceArea.createdBy,
     endDatePeriod: vigilanceArea.endDatePeriod,
     endingCondition: vigilanceArea.endingCondition,
-    endingOccurenceDate: vigilanceArea.endingOccurenceDate,
+    endingOccurrenceDate: vigilanceArea.endingOccurrenceDate,
     endingOccurrencesNumber: vigilanceArea.endingOccurrencesNumber,
     frequency: vigilanceArea.frequency,
     geom: vigilanceArea.geom,

@@ -1,7 +1,7 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { ZonePicker } from '@features/commonComponents/ZonePicker'
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -18,8 +18,6 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
-import { setDisplayedItems } from 'domain/shared_slices/Global'
-import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -31,6 +29,7 @@ import { Links } from './Links'
 
 export function Form() {
   const dispatch = useAppDispatch()
+
   const { dirty, setFieldValue, validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -59,7 +58,7 @@ export function Form() {
 
       return
     }
-    dispatch(vigilanceAreaActions.closeForm())
+    dispatch(vigilanceAreaActions.setFormTypeOpen())
   }
 
   const onCancelEditModal = () => {
@@ -67,7 +66,7 @@ export function Form() {
   }
 
   const onConfirmEditModal = () => {
-    dispatch(vigilanceAreaActions.closeForm())
+    dispatch(vigilanceAreaActions.setFormTypeOpen())
     setIsDialogOpen(false)
   }
 
@@ -79,14 +78,13 @@ export function Form() {
 
   const deleteZone = index => {
     const coordinates = [...values.geom.coordinates]
-    const nextCoordinates = coordinates.splice(index, 1)
-
-    setFieldValue('geom', { ...values.geom, coordinates: nextCoordinates })
+    coordinates.splice(index, 1)
+    setFieldValue('geom', { ...values.geom, coordinates })
   }
 
   const addZone = () => {
-    dispatch(drawPolygon(values.geom, InteractionListener.VIGILANCE_ZONE))
-    dispatch(setDisplayedItems({ isLayersSidebarVisible: false }))
+    dispatch(vigilanceAreaActions.setGeometry(values.geom))
+    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.DRAW))
   }
 
   const setPeriod = (period: DateAsStringRange | undefined) => {

@@ -1,6 +1,7 @@
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
+import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
 
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
@@ -147,6 +148,8 @@ export function Map() {
       {/* VIGILANCE AREA */}
       {/* @ts-ignore */}
       <VigilanceAreasLayer />
+      {/* @ts-ignore */}
+      <DrawVigilanceAreaLayer />
     </BaseMap>
   )
 }

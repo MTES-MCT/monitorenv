@@ -14,7 +14,7 @@ import {
   WSG84_PROJECTION
 } from '../../../domain/entities/map/constants'
 import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
-import { setDisplayedItems, VisibilityState } from '../../../domain/shared_slices/Global'
+import { VisibilityState } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
@@ -34,16 +34,14 @@ const titlePlaceholder = {
   MISSION_ZONE: 'une zone de mission',
   REPORTING_POINT: 'un point de signalement',
   REPORTING_ZONE: 'une zone de signalement',
-  SURVEILLANCE_ZONE: 'une zone de surveillance',
-  VIGILANCE_ZONE: 'une zone de vigilance'
+  SURVEILLANCE_ZONE: 'une zone de surveillance'
 }
 const validateButtonPlaceholder = {
   CONTROL_POINT: 'le point de contrôle',
   MISSION_ZONE: 'la zone de mission',
   REPORTING_POINT: 'le point',
   REPORTING_ZONE: 'la zone',
-  SURVEILLANCE_ZONE: 'la zone de surveillance',
-  VIGILANCE_ZONE: 'la zone de vigilance'
+  SURVEILLANCE_ZONE: 'la zone de surveillance'
 }
 
 export function DrawModal() {
@@ -132,9 +130,6 @@ export function DrawModal() {
     // and the geometry has been set in the form concerned
     setTimeout(() => {
       dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-      if (listener === InteractionListener.VIGILANCE_ZONE) {
-        dispatch(setDisplayedItems({ isLayersSidebarVisible: true }))
-      }
     }, 300)
   }
 
@@ -150,10 +145,6 @@ export function DrawModal() {
 
   const handleValidate = () => {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-
-    if (listener === InteractionListener.VIGILANCE_ZONE) {
-      dispatch(setDisplayedItems({ isLayersSidebarVisible: true }))
-    }
   }
 
   const handleSelectCoordinates = useCallback(
@@ -185,8 +176,7 @@ export function DrawModal() {
     () =>
       listener === InteractionListener.MISSION_ZONE ||
       listener === InteractionListener.REPORTING_ZONE ||
-      listener === InteractionListener.SURVEILLANCE_ZONE ||
-      listener === InteractionListener.VIGILANCE_ZONE,
+      listener === InteractionListener.SURVEILLANCE_ZONE,
     [listener]
   )
   if (!listener) {

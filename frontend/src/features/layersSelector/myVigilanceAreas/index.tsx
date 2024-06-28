@@ -1,5 +1,5 @@
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
@@ -23,7 +23,7 @@ export function MyVigilanceAreas() {
   }
 
   const createVigilanceArea = () => {
-    dispatch(vigilanceAreaActions.openForm())
+    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
   }
 
   return (

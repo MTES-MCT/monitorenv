@@ -7,7 +7,7 @@ export namespace VigilanceArea {
     createdBy: string
     endDatePeriod: string
     endingCondition: EndingCondition
-    endingOccurenceDate?: string
+    endingOccurrenceDate?: string
     endingOccurrencesNumber?: number
     frequency: Frequency
     geom: GeoJSON.MultiPolygon
@@ -29,16 +29,16 @@ export namespace VigilanceArea {
     NONE = 'NONE',
     ALL_WEEKS = 'ALL_WEEKS',
     ALL_MONTHS = 'ALL_MONTHS',
-    ALL_YEARS = 'ALL_YEARS',
-    CUSTOM = 'CUSTOM'
+    ALL_YEARS = 'ALL_YEARS'
+    // CUSTOM = 'CUSTOM'
   }
 
   export enum FrequencyLabel {
     NONE = 'Aucune',
     ALL_WEEKS = 'Toutes les semaines',
     ALL_MONTHS = 'Tous les mois',
-    ALL_YEARS = 'Tous les ans',
-    CUSTOM = 'Personnaliser'
+    ALL_YEARS = 'Tous les ans'
+    //  CUSTOM = 'Personnaliser'
   }
 
   export enum EndingCondition {

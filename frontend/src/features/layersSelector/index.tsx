@@ -23,7 +23,7 @@ export function LayersSidebar() {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
-  const isVigilanceAreaFormOpen = useAppSelector(state => state.vigilanceArea.isFormOpen)
+  const isVigilanceAreaFormOpen = !!useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
 
@@ -63,12 +63,18 @@ export function LayersSidebar() {
         </Layers>
         <MetadataPanelShifter
           isLayersSidebarVisible={isLayersSidebarVisible}
+          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
           metadataPanelIsOpen={metadataPanelIsOpen || isVigilanceAreaFormOpen}
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
-          {isVigilanceAreaFormOpen && <VigilanceAreaForm isOpen={isVigilanceAreaFormOpen} />}
         </MetadataPanelShifter>
+        <VigilanceAreaPanelShifter
+          isLayersSidebarVisible={isLayersSidebarVisible}
+          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
+        >
+          {isVigilanceAreaFormOpen && <VigilanceAreaForm isOpen={isVigilanceAreaFormOpen} />}
+        </VigilanceAreaPanelShifter>
       </Sidebar>
       {(regulatoryAreas.isLoading || amps.isLoading) && (
         <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
@@ -86,12 +92,17 @@ export function LayersSidebar() {
 
 const MetadataPanelShifter = styled.div<{
   isLayersSidebarVisible: boolean
+  isVigilanceAreaFormOpen: boolean
   metadataPanelIsOpen: boolean
 }>`
   position: absolute;
   margin-left: ${p => {
     if (p.metadataPanelIsOpen) {
       if (p.isLayersSidebarVisible) {
+        if (p.isVigilanceAreaFormOpen) {
+          return '757'
+        }
+
         return '355'
       }
 
@@ -103,6 +114,30 @@ const MetadataPanelShifter = styled.div<{
   margin-top: 45px;
   top: 0px;
   opacity: ${props => (props.metadataPanelIsOpen ? 1 : 0)};
+  background: ${p => p.theme.color.gainsboro};
+  z-index: -1;
+  transition: 0.5s all;
+`
+
+const VigilanceAreaPanelShifter = styled.div<{
+  isLayersSidebarVisible: boolean
+  isVigilanceAreaFormOpen: boolean
+}>`
+  position: absolute;
+  margin-left: ${p => {
+    if (p.isVigilanceAreaFormOpen) {
+      if (p.isLayersSidebarVisible) {
+        return '355'
+      }
+
+      return '410'
+    }
+
+    return '-455'
+  }}px;
+  margin-top: 45px;
+  top: 0px;
+  opacity: ${props => (props.isVigilanceAreaFormOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   z-index: -1;
   transition: 0.5s all;

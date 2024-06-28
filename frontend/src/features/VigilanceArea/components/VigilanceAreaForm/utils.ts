@@ -4,7 +4,7 @@ export function getVigilanceAreaInitialValues() {
     createdBy: undefined,
     endDatePeriod: undefined,
     endingCondition: undefined,
-    endingOccurenceDate: undefined,
+    endingOccurrenceDate: undefined,
     endingOccurrencesNumber: undefined,
     frequency: undefined,
     geom: undefined,

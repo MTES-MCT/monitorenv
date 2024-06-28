@@ -17,7 +17,7 @@ export const DraftSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.object
       .nullable(),
     endDatePeriod: Yup.string().nullable(),
     endingCondition: Yup.mixed().nullable(),
-    endingOccurenceDate: Yup.string().nullable(),
+    endingOccurrenceDate: Yup.string().nullable(),
     endingOccurrencesNumber: Yup.number().nullable(),
     frequency: Yup.mixed().nullable(),
     geom: Yup.array().nullable(),
@@ -45,7 +45,7 @@ export const PublishedSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.ob
 
       return schema.nullable()
     }),
-    endingOccurenceDate: Yup.string().when('endingCondition', (endingCondition, schema) => {
+    endingOccurrenceDate: Yup.string().when('endingCondition', (endingCondition, schema) => {
       if (endingCondition === VigilanceArea.EndingCondition.END_DATE) {
         return schema.nullable().required('Requis')
       }
