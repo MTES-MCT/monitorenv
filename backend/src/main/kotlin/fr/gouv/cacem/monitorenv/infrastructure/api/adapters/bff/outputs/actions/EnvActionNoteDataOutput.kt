@@ -3,13 +3,12 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class EnvActionNoteDataOutput(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.NOTE,
-    override val observationsByUnit: String? = null,
     val observations: String? = null,
 ) :
     EnvActionDataOutput(
@@ -23,7 +22,6 @@ data class EnvActionNoteDataOutput(
                 id = envActionNoteEntity.id,
                 actionStartDateTimeUtc = envActionNoteEntity.actionStartDateTimeUtc,
                 observations = envActionNoteEntity.observations,
-                observationsByUnit = envActionNoteEntity.observationsByUnit,
             )
     }
 }

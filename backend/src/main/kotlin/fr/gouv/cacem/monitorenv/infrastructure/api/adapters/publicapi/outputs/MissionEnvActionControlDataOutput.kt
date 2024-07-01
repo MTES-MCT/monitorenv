@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class MissionEnvActionControlDataOutput(
     override val id: UUID,
@@ -28,6 +28,7 @@ data class MissionEnvActionControlDataOutput(
     val isComplianceWithWaterRegulationsControl: Boolean? = null,
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     val isSeafarersControl: Boolean? = null,
+    override val observationsByUnit: String? = null,
     val observations: String? = null,
     val openBy: String? = null,
     val vehicleType: VehicleTypeEnum? = null,
@@ -65,6 +66,7 @@ data class MissionEnvActionControlDataOutput(
                 envActionControlEntity
                     .isSafetyEquipmentAndStandardsComplianceControl,
                 isSeafarersControl = envActionControlEntity.isSeafarersControl,
+                observationsByUnit = envActionControlEntity.observationsByUnit,
                 observations = envActionControlEntity.observations,
                 openBy = envActionControlEntity.openBy,
                 vehicleType = envActionControlEntity.vehicleType,

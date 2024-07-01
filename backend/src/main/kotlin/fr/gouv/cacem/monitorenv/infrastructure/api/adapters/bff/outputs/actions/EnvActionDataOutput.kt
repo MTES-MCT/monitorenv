@@ -13,7 +13,6 @@ abstract class EnvActionDataOutput(
     open val id: UUID,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val actionType: ActionTypeEnum,
-    open val observationsByUnit: String? = null,
 ) {
     companion object {
         fun fromEnvActionEntity(
