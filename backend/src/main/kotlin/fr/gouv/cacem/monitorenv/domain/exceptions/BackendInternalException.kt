@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory
  */
 open class BackendInternalException(
     final override val message: String,
-    val originalException: Exception? = null,
+    originalException: Exception? = null,
 ) : Throwable(message) {
     private val logger: Logger = LoggerFactory.getLogger(BackendInternalException::class.java)
 

@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
@@ -6,11 +6,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionEnvActionControlPlanDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
-data class MissionEnvActionControlDataOutput(
+data class EnvActionControlDataOutput(
     override val id: UUID,
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val actionNumberOfControls: Int? = null,
@@ -33,7 +34,7 @@ data class MissionEnvActionControlDataOutput(
     val reportingIds: List<Int>,
     val vehicleType: VehicleTypeEnum? = null,
 ) :
-    MissionEnvActionDataOutput(
+    EnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionType = ActionTypeEnum.CONTROL,
@@ -44,7 +45,7 @@ data class MissionEnvActionControlDataOutput(
             envActionControlEntity: EnvActionControlEntity,
             reportingIds: List<Int>,
         ) =
-            MissionEnvActionControlDataOutput(
+            EnvActionControlDataOutput(
                 id = envActionControlEntity.id,
                 actionNumberOfControls = envActionControlEntity.actionNumberOfControls,
                 actionStartDateTimeUtc = envActionControlEntity.actionStartDateTimeUtc,
@@ -56,8 +57,7 @@ data class MissionEnvActionControlDataOutput(
                 envActionControlEntity.controlPlans?.let { plans ->
                     if (plans.isNotEmpty()) {
                         plans.map {
-                            MissionEnvActionControlPlanDataOutput
-                                .fromEnvActionControlPlanEntity(it)
+                            MissionEnvActionControlPlanDataOutput.fromEnvActionControlPlanEntity(it)
                         }
                     } else {
                         // If the array is empty, return a list containing the

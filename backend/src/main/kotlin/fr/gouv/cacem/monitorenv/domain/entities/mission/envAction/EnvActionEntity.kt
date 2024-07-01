@@ -22,8 +22,8 @@ import java.util.UUID
 abstract class EnvActionEntity(
     open val id: UUID,
     open val actionType: ActionTypeEnum,
-    open val actionEndDateTimeUtc: ZonedDateTime? = null,
-    open val actionStartDateTimeUtc: ZonedDateTime? = null,
+    open var actionEndDateTimeUtc: ZonedDateTime? = null,
+    open var actionStartDateTimeUtc: ZonedDateTime? = null,
     open val completedBy: String? = null,
     open val completion: ActionCompletionEnum? = null,
     open val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
@@ -34,5 +34,6 @@ abstract class EnvActionEntity(
     open val isComplianceWithWaterRegulationsControl: Boolean? = null,
     open val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     open val isSeafarersControl: Boolean? = null,
+    open val missionId: Int? = null,
     open val openBy: String? = null,
 )

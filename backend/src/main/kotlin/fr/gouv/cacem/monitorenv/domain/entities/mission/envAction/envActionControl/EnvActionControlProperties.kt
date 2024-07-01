@@ -29,6 +29,7 @@ data class EnvActionControlProperties(
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
+        missionId: Int?,
         openBy: String?,
     ) =
         EnvActionControlEntity(
@@ -50,6 +51,7 @@ data class EnvActionControlProperties(
             isSafetyEquipmentAndStandardsComplianceControl =
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
+            missionId = missionId,
             observations = observations,
             openBy = openBy,
             vehicleType = vehicleType,

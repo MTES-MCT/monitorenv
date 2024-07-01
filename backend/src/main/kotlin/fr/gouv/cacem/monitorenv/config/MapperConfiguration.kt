@@ -21,6 +21,8 @@ class MapperConfiguration {
         mapper.registerModule(JavaTimeModule())
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         mapper.propertyNamingStrategy = PropertyNamingStrategies.LOWER_CAMEL_CASE
+        // TODO(15/06/2024): Activate this property when all front end API object are iso backend
+//        mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
         return mapper
     }

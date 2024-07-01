@@ -21,4 +21,4 @@ open class BackendUsageException(
     val code: BackendUsageErrorCode,
     final override val message: String? = null,
     val data: Any? = null,
-) : Throwable(code.name)
+) : RuntimeException(code.name)

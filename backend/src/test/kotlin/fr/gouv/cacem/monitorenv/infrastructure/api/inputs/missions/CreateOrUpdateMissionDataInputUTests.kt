@@ -6,26 +6,21 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionDataInput
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.Optional
 import java.util.UUID
 
-@ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionDataInputUTests {
-    @MockBean private lateinit var missionEnvActionDataInput: MissionEnvActionDataInput
 
     @Test
     fun `getEnvActionsAttachedToReportings should return reportingIds pairs`() {
         // given
         val envActionControl =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.CONTROL,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
@@ -43,7 +38,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 reportingIds = Optional.of(listOf(1)),
             )
         val envActionSurveillance =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.SURVEILLANCE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
@@ -57,13 +52,13 @@ class CreateOrUpdateMissionDataInputUTests {
                 reportingIds = Optional.of(listOf(2, 3)),
             )
         val envActionNote =
-            MissionEnvActionDataInput(
+            EnvActionDataInput(
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
-                reportingIds = Optional.empty(),
+                reportingIds = Optional.of(listOf()),
             )
         val missionDataInput =
             CreateOrUpdateMissionDataInput(

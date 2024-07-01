@@ -39,11 +39,14 @@ import java.util.UUID
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
-    @Autowired private val customQueryCountListener: CustomQueryCountListener? = null
+    @Autowired
+    private val customQueryCountListener: CustomQueryCountListener? = null
 
-    @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
+    @Autowired
+    private lateinit var jpaMissionRepository: JpaMissionRepository
 
-    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    @Autowired
+    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
@@ -751,7 +754,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    @Transactional
     fun `save should throw an exception When the unit id is not found`() {
         // Given
         val newMission =
@@ -785,6 +787,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `save Should update mission`() {
+        val id = 10
         // Given
         val infraction =
             InfractionEntity(
@@ -813,17 +816,20 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(infraction),
+                missionId = id,
             )
         val surveillanceAction =
             EnvActionSurveillanceEntity(
                 id = UUID.fromString("325a8c12-7c13-465d-9b42-6aee473d8d3b"),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "This is a surveillance action",
+                missionId = id,
             )
         val noteAction =
             EnvActionNoteEntity(
                 id = UUID.fromString("10cca413-f7e2-4a68-9c14-eea08bde0c29"),
                 observations = "This is a note",
+                missionId = id,
             )
 
         // list is sorted by id
@@ -831,7 +837,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         val missionToUpdate =
             MissionEntity(
-                id = 10,
+                id = id,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 openBy = "John Smith",
                 completedBy = "Carol Tim",
@@ -852,7 +858,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionDTO(
                 mission =
                 MissionEntity(
-                    id = 10,
+                    id = id,
                     missionTypes = listOf(MissionTypeEnum.LAND),
                     openBy = "John Smith",
                     completedBy = "Carol Tim",
@@ -874,7 +880,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         // When
         jpaMissionRepository.save(missionToUpdate)
-        val updatedMission = jpaMissionRepository.findFullMissionById(10)
+        val updatedMission = jpaMissionRepository.findFullMissionById(id)
         assertThat(
             updatedMission.copy(
                 mission =
@@ -890,6 +896,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `save Should update mission with associated envActions`() {
+        val id = 10
         // Given
         val envAction =
             EnvActionControlEntity(
@@ -902,13 +909,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         themeId = 1,
                     ),
                 ),
+                missionId = id,
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 actionNumberOfControls = 4,
             )
         val missionToUpdate =
             MissionEntity(
-                id = 10,
+                id = id,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 facade = "NAMO",
                 geom = polygon,
@@ -927,7 +935,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             MissionDTO(
                 mission =
                 MissionEntity(
-                    id = 10,
+                    id = id,
                     missionTypes = listOf(MissionTypeEnum.LAND),
                     facade = "NAMO",
                     geom = polygon,
@@ -949,7 +957,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         // When
         jpaMissionRepository.save(missionToUpdate)
-        val updatedMission = jpaMissionRepository.findFullMissionById(10)
+        val updatedMission = jpaMissionRepository.findFullMissionById(id)
         assertThat(
             updatedMission.copy(
                 mission =

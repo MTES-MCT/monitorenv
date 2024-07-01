@@ -12,8 +12,8 @@ import java.util.UUID
 
 data class EnvActionControlEntity(
     override val id: UUID,
-    override val actionEndDateTimeUtc: ZonedDateTime? = null,
-    override val actionStartDateTimeUtc: ZonedDateTime? = null,
+    override var actionEndDateTimeUtc: ZonedDateTime? = null,
+    override var actionStartDateTimeUtc: ZonedDateTime? = null,
     override val completedBy: String? = null,
     override val completion: ActionCompletionEnum? = null,
     override val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
@@ -24,6 +24,7 @@ data class EnvActionControlEntity(
     override val isComplianceWithWaterRegulationsControl: Boolean? = null,
     override val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     override val isSeafarersControl: Boolean? = null,
+    override val missionId: Int? = null,
     override val openBy: String? = null,
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
@@ -34,4 +35,5 @@ data class EnvActionControlEntity(
     EnvActionEntity(
         id = id,
         actionType = ActionTypeEnum.CONTROL,
+        missionId = missionId,
     )
