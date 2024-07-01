@@ -24,6 +24,7 @@ export function LayersSidebar() {
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
   const isVigilanceAreaFormOpen = !!useAppSelector(state => state.vigilanceArea.formTypeOpen)
+  const isVigilanceAreaPanelOpen = !!useAppSelector(state => state.vigilanceArea.formTypeOpen === 'READ_FORM')
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
 
@@ -63,7 +64,7 @@ export function LayersSidebar() {
         </Layers>
         <MetadataPanelShifter
           isLayersSidebarVisible={isLayersSidebarVisible}
-          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
+          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen || isVigilanceAreaPanelOpen}
           metadataPanelIsOpen={metadataPanelIsOpen || isVigilanceAreaFormOpen}
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
@@ -71,9 +72,10 @@ export function LayersSidebar() {
         </MetadataPanelShifter>
         <VigilanceAreaPanelShifter
           isLayersSidebarVisible={isLayersSidebarVisible}
-          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
+          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen || isVigilanceAreaPanelOpen}
         >
           {isVigilanceAreaFormOpen && <VigilanceAreaForm isOpen={isVigilanceAreaFormOpen} />}
+          {/*          {isVigilanceAreaPanelOpen && <VigilanceAreaPanel />} */}
         </VigilanceAreaPanelShifter>
       </Sidebar>
       {(regulatoryAreas.isLoading || amps.isLoading) && (

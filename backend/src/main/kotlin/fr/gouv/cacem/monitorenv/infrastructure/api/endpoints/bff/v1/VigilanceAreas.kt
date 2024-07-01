@@ -1,13 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreaDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController("VigilanceAreas")
@@ -16,7 +18,8 @@ import org.springframework.web.bind.annotation.*
 class VigilanceAreas(
     private val getVigilanceAreas: GetVigilanceAreas,
     private val createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea,
-    private val getVigilanceAreaById: GetVigilanceArea,
+    private val getVigilanceAreaById: GetVigilanceAreaById,
+    private val deleteVigilanceArea: DeleteVigilanceArea,
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new vigilance area")
@@ -61,5 +64,16 @@ class VigilanceAreas(
         val updatedVigilanceArea = createOrUpdateVigilanceArea.execute(vigilanceAreaEntity)
 
         return VigilanceAreaDataOutput.fromVigilanceArea(vigilanceArea = updatedVigilanceArea)
+    }
+
+    @DeleteMapping(value = ["/{id}"])
+    @Operation(summary = "Delete a vigilance area")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun delete(
+        @PathParam("Id")
+        @PathVariable(name = "id")
+        id: Int,
+    ) {
+        deleteVigilanceArea.execute(id = id)
     }
 }

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS public.vigilance_areas (
   ending_occurrence_number INT,
   frequency vigilance_area_frequency,
   geom geometry(Geometry, 4326),
+  is_deleted boolean NOT NULL DEFAULT FALSE,
   is_draft boolean NOT NULL DEFAULT TRUE,
   links jsonb,
   name text,

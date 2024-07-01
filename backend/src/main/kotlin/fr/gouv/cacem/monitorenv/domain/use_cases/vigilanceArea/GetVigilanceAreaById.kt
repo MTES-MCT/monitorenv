@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 @UseCase
-class GetVigilanceArea(private val vigilanceAreaRepository: IVigilanceAreaRepository) {
+class GetVigilanceAreaById(private val vigilanceAreaRepository: IVigilanceAreaRepository) {
     fun execute(vigilanceAreaId: Int): VigilanceAreaEntity {
         return vigilanceAreaRepository.findById(vigilanceAreaId)
     }

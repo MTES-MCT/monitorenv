@@ -30,7 +30,6 @@ export namespace VigilanceArea {
     ALL_WEEKS = 'ALL_WEEKS',
     ALL_MONTHS = 'ALL_MONTHS',
     ALL_YEARS = 'ALL_YEARS'
-    // CUSTOM = 'CUSTOM'
   }
 
   export enum FrequencyLabel {
@@ -38,7 +37,6 @@ export namespace VigilanceArea {
     ALL_WEEKS = 'Toutes les semaines',
     ALL_MONTHS = 'Tous les mois',
     ALL_YEARS = 'Tous les ans'
-    //  CUSTOM = 'Personnaliser'
   }
 
   export enum EndingCondition {

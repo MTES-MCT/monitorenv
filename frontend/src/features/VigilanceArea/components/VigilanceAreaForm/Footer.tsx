@@ -2,18 +2,19 @@ import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 type VigilanceAreaFormFooterProps = {
+  isDraft: boolean
   onCancel: () => void
   onDelete: () => void
   onPublish: () => void
   onSave: () => void
 }
 
-export function Footer({ onCancel, onDelete, onPublish, onSave }: VigilanceAreaFormFooterProps) {
+export function Footer({ isDraft, onCancel, onDelete, onPublish, onSave }: VigilanceAreaFormFooterProps) {
   return (
     <FooterContainer>
-      <Button accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete} size={Size.SMALL}>
+      <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete} size={Size.SMALL}>
         Supprimer
-      </Button>
+      </DeleteButton>
       <LeftButtons>
         <Button accent={Accent.SECONDARY} onClick={onCancel} size={Size.SMALL}>
           Annuler
@@ -21,8 +22,8 @@ export function Footer({ onCancel, onDelete, onPublish, onSave }: VigilanceAreaF
         <Button accent={Accent.SECONDARY} onClick={onSave} size={Size.SMALL}>
           Enregistrer
         </Button>
-        <Button onClick={onPublish} size={Size.SMALL}>
-          Publier
+        <Button disabled={!isDraft} onClick={onPublish} size={Size.SMALL}>
+          {isDraft ? 'Publier' : 'Publiée'}
         </Button>
       </LeftButtons>
     </FooterContainer>
@@ -36,7 +37,11 @@ const FooterContainer = styled.footer`
   padding: 12px 8px;
   height: 48px;
 `
-
+const DeleteButton = styled(Button)`
+  > span {
+    color: ${p => p.theme.color.maximumRed};
+  }
+`
 const LeftButtons = styled.div`
   display: flex;
   gap: 8px;

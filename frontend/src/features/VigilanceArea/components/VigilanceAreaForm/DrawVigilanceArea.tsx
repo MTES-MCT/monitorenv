@@ -61,7 +61,7 @@ export function DrawVigilanceArea() {
 
   const handleValidate = () => {
     setFieldValue('geom', geometry)
-    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
+    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.EDIT_FORM))
   }
 
   return (

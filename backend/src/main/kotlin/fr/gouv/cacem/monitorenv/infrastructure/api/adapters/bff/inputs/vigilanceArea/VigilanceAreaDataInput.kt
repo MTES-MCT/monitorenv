@@ -33,6 +33,7 @@ data class VigilanceAreaDataInput(
             endingOccurrencesNumber = this.endingOccurrencesNumber,
             frequency = this.frequency,
             geom = this.geom,
+            isDeleted = false,
             isDraft = this.isDraft,
             links = this.links,
             name = this.name,

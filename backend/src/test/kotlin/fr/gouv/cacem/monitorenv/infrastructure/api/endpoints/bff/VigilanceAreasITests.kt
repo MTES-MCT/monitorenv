@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.VigilanceAreas
@@ -34,7 +34,7 @@ class VigilanceAreasITests {
     private lateinit var getAllVigilanceAreas: GetVigilanceAreas
 
     @MockBean
-    private lateinit var getVigilanceAreaById: GetVigilanceArea
+    private lateinit var getVigilanceAreaById: GetVigilanceAreaById
 
     @MockBean
     private lateinit var createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea
@@ -50,6 +50,7 @@ class VigilanceAreasITests {
         val vigilanceArea = VigilanceAreaEntity(
             id = 1,
             name = "Vigilance Area 1",
+            isDeleted = false,
             isDraft = true,
         )
         given(getAllVigilanceAreas.execute()).willReturn(listOf(vigilanceArea))
@@ -73,6 +74,7 @@ class VigilanceAreasITests {
         val vigilanceArea = VigilanceAreaEntity(
             id = 21,
             name = "Vigilance Area 1",
+            isDeleted = false,
             isDraft = true,
         )
         given(getVigilanceAreaById.execute(21)).willReturn(vigilanceArea)
@@ -96,6 +98,7 @@ class VigilanceAreasITests {
         val vigilanceArea = VigilanceAreaEntity(
             id = 1,
             name = "Vigilance Area 1",
+            isDeleted = false,
             isDraft = true,
         )
         val vigilanceAreaDataInput = VigilanceAreaDataInput(

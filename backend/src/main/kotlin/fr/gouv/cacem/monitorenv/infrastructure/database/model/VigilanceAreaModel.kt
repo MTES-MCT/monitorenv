@@ -38,6 +38,7 @@ data class VigilanceAreaModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
+    @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "is_draft") val isDraft: Boolean,
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
@@ -63,6 +64,7 @@ data class VigilanceAreaModel(
                 frequency = vigilanceArea.frequency,
                 endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
                 geom = vigilanceArea.geom,
+                isDeleted = vigilanceArea.isDeleted,
                 isDraft = vigilanceArea.isDraft,
                 links = vigilanceArea.links,
                 name = vigilanceArea.name,
@@ -84,6 +86,7 @@ data class VigilanceAreaModel(
             frequency = frequency,
             endDatePeriod = endDatePeriod?.atZone(UTC),
             geom = geom,
+            isDeleted = isDeleted,
             isDraft = isDraft,
             links = links,
             name = name,
