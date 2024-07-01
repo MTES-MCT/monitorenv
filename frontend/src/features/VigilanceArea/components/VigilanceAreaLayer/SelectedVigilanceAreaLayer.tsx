@@ -6,16 +6,17 @@ import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
-import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
+import { getFormattedGeomForFeature, getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function SelectedVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
+export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
-  const isLayerVisible = !!selectedVigilanceAreaId
+  const geom = useAppSelector(state => state.vigilanceArea.geometry)
+  const isLayerVisible = !!selectedVigilanceAreaId || !!geom
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
@@ -27,13 +28,16 @@ export function SelectedVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   })
 
   const vigilanceAreasFeature = useMemo(() => {
-    if (!selectedVigilanceArea) {
-      return undefined
+    if (geom) {
+      return getFormattedGeomForFeature(geom)
     }
 
-    return getVigilanceAreaZoneFeature(selectedVigilanceArea, Layers.VIGILANCE_AREA.code)
-  }, [selectedVigilanceArea])
+    if (selectedVigilanceArea) {
+      return getVigilanceAreaZoneFeature(selectedVigilanceArea, Layers.VIGILANCE_AREA.code)
+    }
 
+    return undefined
+  }, [selectedVigilanceArea, geom])
   const vectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,

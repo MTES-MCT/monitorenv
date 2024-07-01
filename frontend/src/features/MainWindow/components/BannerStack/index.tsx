@@ -23,7 +23,7 @@ export function BannerStack() {
   }
 
   return (
-    <Wrapper>
+    <Wrapper data-cy="banner-stack">
       {bannerStackItems.map(({ id, props }) => (
         <Item key={`banner-${id}`} bannerProps={props} bannerStackId={id} onCloseOrAutoclose={remove} />
       ))}

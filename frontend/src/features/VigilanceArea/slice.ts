@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
 
+import type { VigilanceArea } from './types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export enum VigilanceAreaFormTypeOpen {
@@ -18,18 +19,23 @@ type VigilanceAreaSliceState = {
   interactionType: InteractionType
   isGeometryValid: boolean
   selectedVigilanceAreaId: number | undefined
+  vigilanceAreaForm: Partial<VigilanceArea.VigilanceArea> | undefined
 }
 const INITIAL_STATE: VigilanceAreaSliceState = {
   formTypeOpen: undefined,
   geometry: undefined,
   interactionType: InteractionType.POLYGON,
   isGeometryValid: false,
-  selectedVigilanceAreaId: undefined
+  selectedVigilanceAreaId: undefined,
+  vigilanceAreaForm: undefined
 }
 export const vigilanceAreaSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'vigilanceArea',
   reducers: {
+    resetState() {
+      return INITIAL_STATE
+    },
     setFormTypeOpen(state, action: PayloadAction<VigilanceAreaFormTypeOpen | undefined>) {
       state.formTypeOpen = action.payload
     },
@@ -49,6 +55,9 @@ export const vigilanceAreaSlice = createSlice({
       } else {
         state.selectedVigilanceAreaId = undefined
       }
+    },
+    setVigilanceAreaForm(state, action: PayloadAction<Partial<VigilanceArea.VigilanceArea> | undefined>) {
+      state.vigilanceAreaForm = action.payload
     }
   }
 })

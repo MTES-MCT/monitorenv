@@ -5,6 +5,7 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     createVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
+      invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }],
       query: vigilanceArea => ({
         body: vigilanceArea,
         method: 'PUT',
@@ -27,6 +28,7 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
       query: () => `/v1/vigilance_areas`
     }),
     updateVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
+      invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',

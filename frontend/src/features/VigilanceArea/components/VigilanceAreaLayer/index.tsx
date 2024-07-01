@@ -1,6 +1,7 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
@@ -18,6 +19,7 @@ import type { Geometry } from 'ol/geom'
 
 export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
+  const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const isLayerVisible = true
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
@@ -28,10 +30,17 @@ export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps
       return []
     }
 
-    return vigilanceAreas
-      .filter(vigilanceArea => vigilanceArea?.geom && vigilanceArea?.geom?.coordinates.length > 0)
+    const test = vigilanceAreas
+      .filter(
+        vigilanceArea =>
+          vigilanceArea?.geom &&
+          vigilanceArea?.geom?.coordinates.length > 0 &&
+          selectedVigilanceAreaId !== vigilanceArea.id
+      )
       .map(vigilanceArea => getVigilanceAreaZoneFeature(vigilanceArea, Layers.VIGILANCE_AREA.code))
-  }, [vigilanceAreas])
+
+    return test
+  }, [vigilanceAreas, selectedVigilanceAreaId])
 
   const vectorLayerRef = useRef(
     new VectorLayer({

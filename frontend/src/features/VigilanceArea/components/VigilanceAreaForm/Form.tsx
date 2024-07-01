@@ -61,7 +61,7 @@ export function Form() {
 
       return
     }
-    dispatch(vigilanceAreaActions.setFormTypeOpen())
+    dispatch(vigilanceAreaActions.resetState())
   }
 
   const onCancelEditModal = () => {
@@ -69,7 +69,7 @@ export function Form() {
   }
 
   const onConfirmEditModal = () => {
-    dispatch(vigilanceAreaActions.setFormTypeOpen())
+    dispatch(vigilanceAreaActions.resetState())
     setIsDialogOpen(false)
   }
 
