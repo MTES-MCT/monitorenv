@@ -100,11 +100,21 @@ export function Links() {
 
       {(field.value ?? []).map((link, index) => (
         <LinkContainer key={`${link.linkUrl}${link.linkText}`}>
-          <StyledLink href={link.linkUrl} rel="noreferrer" target="_blank">
+          <StyledLink data-cy={`vigilance-area-link-${index}`} href={link.linkUrl} rel="noreferrer" target="_blank">
             {link.linkText}
           </StyledLink>
-          <IconButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={() => deleteLink(index)} />
-          <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={() => editLink(link, index)} />
+          <IconButton
+            accent={Accent.SECONDARY}
+            aria-label="delete-vigilance-area-link"
+            Icon={Icon.Delete}
+            onClick={() => deleteLink(index)}
+          />
+          <IconButton
+            accent={Accent.SECONDARY}
+            aria-label="edit-vigilance-area-link"
+            Icon={Icon.Edit}
+            onClick={() => editLink(link, index)}
+          />
         </LinkContainer>
       ))}
     </LinksContainer>
@@ -132,7 +142,10 @@ const LinkContainer = styled.div`
 const StyledLink = styled.a`
   background-color: ${p => p.theme.color.gainsboro};
   flex: 1;
+  overflow: hidden;
   padding: 6px 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 const ButtonsContainer = styled.div`
   display: flex;

@@ -81,16 +81,16 @@ export function Form() {
     })
   }
 
-  const onConfirmDeleteModal = () => {
-    dispatch(deleteVigilanceArea(values.id))
-  }
-
   const onDelete = () => {
     setIsDeleteModalOpen(true)
   }
 
   const cancelDeleteModal = () => {
     setIsDeleteModalOpen(false)
+  }
+
+  const onConfirmDeleteModal = () => {
+    dispatch(deleteVigilanceArea(values.id))
   }
 
   const deleteZone = index => {
