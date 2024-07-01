@@ -1,14 +1,15 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions.interactors
+package fr.gouv.cacem.monitorenv.domain.mappers
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.util.Optional
+import java.util.*
 
-class MergeMissionEntityUTest {
+class PatchMissionEntityUTest {
 
-    private val mergeMissionEntity: MergeMissionEntity = MergeMissionEntity()
+    private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
 
     @Test
     fun `execute() should return mission with observationsByUnit modified if its present`() {
@@ -18,7 +19,7 @@ class MergeMissionEntityUTest {
         val patchableMissionEntity = PatchableMissionEntity(observationsByUnit = Optional.of(observationsByUnit))
 
         // When
-        val mergedMissionEntity = mergeMissionEntity.execute(missionEntity, patchableMissionEntity)
+        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
         assertThat(mergedMissionEntity.observationsByUnit).isEqualTo(observationsByUnit)
@@ -31,7 +32,7 @@ class MergeMissionEntityUTest {
         val patchableMissionEntity = PatchableMissionEntity(observationsByUnit = Optional.empty())
 
         // When
-        val mergedMissionEntity = mergeMissionEntity.execute(missionEntity, patchableMissionEntity)
+        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
         assertThat(mergedMissionEntity.observationsByUnit).isNull()
@@ -44,7 +45,7 @@ class MergeMissionEntityUTest {
         val patchableMissionEntity = PatchableMissionEntity(observationsByUnit = null)
 
         // When
-        val mergedMissionEntity = mergeMissionEntity.execute(missionEntity, patchableMissionEntity)
+        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
         assertThat(mergedMissionEntity).isEqualTo(missionEntity)

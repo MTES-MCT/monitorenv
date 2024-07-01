@@ -2,24 +2,25 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
+import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.interactors.MergeMissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
-import java.util.Optional
+import java.util.*
 import kotlin.random.Random
 
 class PatchMissionUTest {
 
     private val missionRepository: IMissionRepository = mock()
-    private val mergeMissionEntity: MergeMissionEntity = mock()
-    private val patchMission: PatchMission = PatchMission(missionRepository, mergeMissionEntity)
+    private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = mock()
+    private val patchMission: PatchMission = PatchMission(missionRepository, patchEntity)
 
     @Test
     fun `execute() should return the patched entity`() {
@@ -32,7 +33,7 @@ class PatchMissionUTest {
         val missionPatched = aMissionEntity(observationsByUnit = patchedObservationsByUnit)
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
-        given(mergeMissionEntity.execute(missionFromDatabase, patchableMission)).willReturn(
+        given(patchEntity.execute(missionFromDatabase, patchableMission)).willReturn(
             missionPatched,
         )
         given(missionRepository.save(missionPatched)).willReturn(MissionDTO(missionPatched))

@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission
 
+import fr.gouv.cacem.monitorenv.domain.entities.Patchable
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import org.locationtech.jts.geom.MultiPolygon
@@ -11,6 +12,7 @@ data class MissionEntity(
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val openBy: String? = null,
     val completedBy: String? = null,
+    @Patchable
     var observationsByUnit: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
