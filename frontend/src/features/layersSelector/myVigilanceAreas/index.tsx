@@ -32,7 +32,7 @@ export function MyVigilanceAreas() {
       <LayerSelector.Wrapper
         $hasPinnedLayers={savedVigilanceAreas.length > 0}
         $isExpanded={areMyVigilanceAreasOpen}
-        data-cy="my-regulatory-layers"
+        data-cy="my-vigilance-areas-layers"
         onClick={onTitleClicked}
       >
         <LayerSelector.Pin />

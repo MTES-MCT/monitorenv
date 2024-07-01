@@ -33,7 +33,7 @@ export function VigilanceAreaForm({ isOpen }) {
   )
 
   const close = () => {
-    dispatch(vigilanceAreaActions.setFormTypeOpen())
+    dispatch(vigilanceAreaActions.resetState())
   }
 
   return (

@@ -35,7 +35,7 @@ export const saveVigilanceArea =
           )
         }
 
-        dispatch(vigilanceAreaActions.setFormTypeOpen())
+        dispatch(vigilanceAreaActions.resetState())
       }
     } catch (error) {
       dispatch(

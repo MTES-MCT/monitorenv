@@ -628,12 +628,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('Should keep pending action and pending infraction form when switching tabs', () => {
-    createPendingMission().then(({ body }) => {
-      const mission = body
-
-      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
-
+  it('Should keep pending action when switching tabs', () => {
+    createPendingMission().then(() => {
       // Add a control
       cy.clickButton('Ajouter')
       cy.clickButton('Ajouter des contrôles')

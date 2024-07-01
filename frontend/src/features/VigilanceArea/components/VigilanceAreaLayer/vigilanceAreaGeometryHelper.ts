@@ -1,4 +1,5 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
 
@@ -33,6 +34,21 @@ export const getVigilanceAreaZoneFeature = (vigilanceArea: VigilanceArea.Vigilan
     themes: vigilanceArea.themes,
     visibility: vigilanceArea.visibility
   })
+
+  return feature
+}
+
+export const getFormattedGeomForFeature = geom => {
+  const geoJSON = new GeoJSON()
+  const geometry = geoJSON.readGeometry(geom, {
+    dataProjection: WSG84_PROJECTION,
+    featureProjection: OPENLAYERS_PROJECTION
+  })
+
+  const feature = new Feature({
+    geometry
+  })
+  feature.setId(`${Layers.VIGILANCE_AREA.code}:0`)
 
   return feature
 }

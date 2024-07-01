@@ -23,7 +23,7 @@ export const deleteVigilanceArea =
             withAutomaticClosing: true
           })
         )
-        dispatch(vigilanceAreaActions.setFormTypeOpen())
+        dispatch(vigilanceAreaActions.resetState())
       }
     } catch (error) {
       dispatch(

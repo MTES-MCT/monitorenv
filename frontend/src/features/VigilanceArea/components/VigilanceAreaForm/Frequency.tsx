@@ -42,6 +42,7 @@ export function Frequency() {
       {values.frequency && values.frequency !== VigilanceArea.Frequency.NONE && (
         <FrequencyContainer>
           <Select
+            data-cy="vigilance-area-ending-condition"
             isErrorMessageHidden
             isRequired
             label="Fin récurrence"
