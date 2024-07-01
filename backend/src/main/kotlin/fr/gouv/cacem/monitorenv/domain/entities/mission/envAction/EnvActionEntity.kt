@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -36,4 +36,5 @@ abstract class EnvActionEntity(
     open val isSeafarersControl: Boolean? = null,
     open val missionId: Int? = null,
     open val openBy: String? = null,
+    open var observationsByUnit: String? = null,
 )

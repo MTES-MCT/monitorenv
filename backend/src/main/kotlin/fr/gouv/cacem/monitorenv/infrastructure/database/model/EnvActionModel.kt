@@ -79,6 +79,7 @@ class EnvActionModel(
     @Column(name = "is_safety_equipment_and_standards_compliance_control")
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
+    @Column(name = "observations_by_unit") val observationsByUnit: String? = null,
     @Column(name = "open_by") val openBy: String? = null,
     @OneToMany(
         fetch = FetchType.LAZY,
@@ -159,6 +160,7 @@ class EnvActionModel(
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
             missionId = mission.id,
+            observationsByUnit = observationsByUnit,
             openBy = openBy,
             value = value,
         )
@@ -190,6 +192,7 @@ class EnvActionModel(
                     action.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = action.isSeafarersControl,
                     openBy = action.openBy,
+                    observationsByUnit = action.observationsByUnit,
                     mission = mission,
                     geom = action.geom,
                     value = EnvActionMapper.envActionEntityToJSON(mapper, action),

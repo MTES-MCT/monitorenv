@@ -19,11 +19,17 @@ class MergeEnvActionEntityUTest {
         // Given
         val today = ZonedDateTime.now(ZoneOffset.UTC)
 
-        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.of(today), null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.of(today), null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
@@ -35,13 +41,17 @@ class MergeEnvActionEntityUTest {
     @Test
     fun `execute() should return envAction with actionStartDateTimeUtc null if its empty`() {
         // Given
-        val today = ZonedDateTime.now(ZoneOffset.UTC)
-
-        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.empty(), null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.empty(), null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
@@ -55,11 +65,17 @@ class MergeEnvActionEntityUTest {
         // Given
         val today = ZonedDateTime.now(ZoneOffset.UTC)
 
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.of(today))
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.of(today), null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
@@ -71,13 +87,17 @@ class MergeEnvActionEntityUTest {
     @Test
     fun `execute() should return envAction with actionEndDateTimeUtc null if its empty`() {
         // Given
-        val today = ZonedDateTime.now(ZoneOffset.UTC)
-
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.empty())
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.empty(), null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "observations",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
@@ -87,13 +107,65 @@ class MergeEnvActionEntityUTest {
     }
 
     @Test
-    fun `execute() should return envAction with old values if its null`() {
+    fun `execute() should return envAction with observationsByUnit modified if its present`() {
         // Given
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null)
+        val observationsByUnit = "observationsByUnit"
+
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, Optional.of(observationsByUnit))
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(objectMapper, id, startTime = yesterday, endTime = tomorrow)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "oldValue",
+        )
+
+        // When
+        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+
+        // Then
+        assertThat(mergedEnvAction.observationsByUnit).isEqualTo(observationsByUnit)
+    }
+
+    @Test
+    fun `execute() should return envAction with observationsByUnit null if its empty`() {
+        // Given
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, Optional.empty())
+        val id = UUID.randomUUID()
+        val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
+        val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "oldValue",
+        )
+
+        // When
+        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+
+        // Then
+        assertThat(mergedEnvAction.observationsByUnit).isNull()
+    }
+
+    @Test
+    fun `execute() should return envAction with old values if its null`() {
+        // Given
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
+        val id = UUID.randomUUID()
+        val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
+        val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
+        val envAction = EnvActionFixture.anEnvAction(
+            objectMapper,
+            id,
+            startTime = yesterday,
+            endTime = tomorrow,
+            observationsByUnit = "oldValue",
+        )
 
         // When
         val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)

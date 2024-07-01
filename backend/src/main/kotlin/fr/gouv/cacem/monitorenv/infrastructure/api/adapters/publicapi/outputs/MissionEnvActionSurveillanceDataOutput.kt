@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class MissionEnvActionSurveillanceDataOutput(
     override val id: UUID,
@@ -18,6 +18,7 @@ data class MissionEnvActionSurveillanceDataOutput(
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
+    override val observationsByUnit: String? = null,
     val observations: String? = null,
     val openBy: String? = null,
 ) :
@@ -25,6 +26,7 @@ data class MissionEnvActionSurveillanceDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionType = ActionTypeEnum.SURVEILLANCE,
+        observationsByUnit = observationsByUnit,
     ) {
     companion object {
         fun fromEnvActionSurveillanceEntity(
@@ -44,6 +46,7 @@ data class MissionEnvActionSurveillanceDataOutput(
                 department = envActionSurveillanceEntity.department,
                 facade = envActionSurveillanceEntity.facade,
                 geom = envActionSurveillanceEntity.geom,
+                observationsByUnit = envActionSurveillanceEntity.observationsByUnit,
                 observations = envActionSurveillanceEntity.observations,
                 openBy = envActionSurveillanceEntity.openBy,
             )

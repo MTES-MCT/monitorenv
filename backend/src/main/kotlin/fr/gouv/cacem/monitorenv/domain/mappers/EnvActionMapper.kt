@@ -38,6 +38,7 @@ object EnvActionMapper {
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
         missionId: Int?,
+        observationsByUnit: String?,
         openBy: String?,
         value: String?,
     ): EnvActionEntity {
@@ -60,6 +61,7 @@ object EnvActionMapper {
                                 facade = facade,
                                 geom = geom,
                                 missionId = missionId,
+                                observationsByUnit = observationsByUnit,
                                 openBy = openBy,
                             )
 
@@ -85,6 +87,7 @@ object EnvActionMapper {
                                 isSafetyEquipmentAndStandardsComplianceControl,
                                 isSeafarersControl = isSeafarersControl,
                                 missionId = missionId,
+                                observationsByUnit = observationsByUnit,
                                 openBy = openBy,
                             )
 
@@ -97,6 +100,7 @@ object EnvActionMapper {
                                 id = id,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
                                 missionId = missionId,
+                                observationsByUnit = observationsByUnit,
                             )
                 }
             } else {

@@ -19,6 +19,7 @@ data class EnvActionSurveillanceProperties(
         facade: String?,
         missionId: Int?,
         geom: Geometry?,
+        observationsByUnit: String?,
         openBy: String?,
     ) =
         EnvActionSurveillanceEntity(
@@ -33,6 +34,7 @@ data class EnvActionSurveillanceProperties(
             geom = geom,
             missionId = missionId,
             observations = observations,
+            observationsByUnit = observationsByUnit,
             openBy = openBy,
         )
 

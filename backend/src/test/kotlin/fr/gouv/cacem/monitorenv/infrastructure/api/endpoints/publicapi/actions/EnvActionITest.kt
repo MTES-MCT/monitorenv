@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.PatchEnvAction
@@ -23,7 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [EnvAction::class])
@@ -44,13 +46,20 @@ class EnvActionITest {
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val today = ZonedDateTime.now(ZoneOffset.UTC)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
+        val observationsByUnits = "observationsByUnits"
         val partialEnvActionAsJson = """
             { "actionEndDateTimeUtc": "$tomorrow",
-              "actionStartDateTimeUtc": "$today" }
+              "actionStartDateTimeUtc": "$today",
+              "observationsByUnit": "$observationsByUnits"}
         """.trimIndent()
-        val patchedEnvAction = anEnvAction(objectMapper, id, yesterday, today)
+        val patchedEnvAction = anEnvAction(objectMapper, id, yesterday, today, observationsByUnits)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(
+            actionStartDateTimeUtc = Optional.of(today),
+            actionEndDateTimeUtc = Optional.of(tomorrow),
+            Optional.of(observationsByUnits),
+        )
 
-        given(patchEnvAction.execute(eq(id), any())).willReturn(patchedEnvAction)
+        given(patchEnvAction.execute(id, patchableEnvActionEntity)).willReturn(patchedEnvAction)
 
         // When
         mockMvc.perform(
@@ -70,6 +79,12 @@ class EnvActionITest {
                 jsonPath(
                     "$.actionStartDateTimeUtc",
                     equalTo(patchedEnvAction.actionStartDateTimeUtc?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
+                ),
+            )
+            .andExpect(
+                jsonPath(
+                    "$.observationsByUnit",
+                    equalTo(patchedEnvAction.observationsByUnit),
                 ),
             )
     }

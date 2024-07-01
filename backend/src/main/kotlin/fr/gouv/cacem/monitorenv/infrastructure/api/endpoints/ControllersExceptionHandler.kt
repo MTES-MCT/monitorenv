@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendI
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendRequestErrorDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendUsageErrorDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,6 +21,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.util.regex.Pattern
 
 @RestControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
@@ -47,6 +49,28 @@ class ControllersExceptionHandler {
     @ExceptionHandler(BackendUsageException::class)
     fun handleBackendUsageException(e: BackendUsageException): BackendUsageErrorDataOutput {
         return BackendUsageErrorDataOutput(code = e.code, data = e.data, message = null)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadable(e: HttpMessageNotReadableException): BackendRequestErrorDataOutput {
+        val errorMessage = e.message ?: "Unknown error occurred"
+        val field = extractFieldFromErrorMessage(errorMessage)
+        return BackendRequestErrorDataOutput(
+            code = BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+            data = null,
+            message = "Error: Invalid value in field '$field'",
+        )
+    }
+
+    private fun extractFieldFromErrorMessage(errorMessage: String): String {
+        val pattern = Pattern.compile("\"(.*?)\"")
+        val matcher = pattern.matcher(errorMessage)
+        return if (matcher.matches()) {
+            matcher.group(1)
+        } else {
+            "Unknown field"
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -78,15 +102,6 @@ class ControllersExceptionHandler {
         logger.error(e.message, e)
 
         return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
-    }
-
-    // TODO Migrate to new error handling logic.
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleNoParameter(e: HttpMessageNotReadableException): ApiError {
-        logger.error(e.message, e)
-
-        return ApiError(e)
     }
 
     // TODO Migrate to new error handling logic.
