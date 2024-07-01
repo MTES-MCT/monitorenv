@@ -1,8 +1,10 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
+import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { ZonePicker } from '@features/commonComponents/ZonePicker'
 import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
@@ -33,6 +35,7 @@ export function Form() {
   const { dirty, setFieldValue, validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
@@ -71,10 +74,24 @@ export function Form() {
   }
 
   const save = () => {
-    dispatch(saveVigilanceArea(values))
+    validateForm({ ...values }).then(errors => {
+      if (isEmpty(errors)) {
+        dispatch(saveVigilanceArea(values))
+      }
+    })
   }
 
-  const deleteVigilanceArea = () => {}
+  const onConfirmDeleteModal = () => {
+    dispatch(deleteVigilanceArea(values.id))
+  }
+
+  const onDelete = () => {
+    setIsDeleteModalOpen(true)
+  }
+
+  const cancelDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+  }
 
   const deleteZone = index => {
     const coordinates = [...values.geom.coordinates]
@@ -105,7 +122,15 @@ export function Form() {
         text="Vous êtes en train d'abandonner l'édition de la zone de vigilance"
         title="Enregistrer les modifications"
       />
-
+      <DeleteModal
+        context="vigilance-area"
+        isAbsolute={false}
+        onCancel={cancelDeleteModal}
+        onConfirm={onConfirmDeleteModal}
+        open={isDeleteModalOpen}
+        subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
+        title="Supprimer la zone de vigilance&nbsp;?"
+      />
       <StyledForm>
         <FormikTextInput
           isErrorMessageHidden
@@ -167,7 +192,7 @@ export function Form() {
           placeholder="Description de la source de l'information"
         />
       </StyledForm>
-      <Footer onCancel={cancel} onDelete={deleteVigilanceArea} onPublish={publish} onSave={save} />
+      <Footer isDraft={values.isDraft} onCancel={cancel} onDelete={onDelete} onPublish={publish} onSave={save} />
     </FormContainer>
   )
 }

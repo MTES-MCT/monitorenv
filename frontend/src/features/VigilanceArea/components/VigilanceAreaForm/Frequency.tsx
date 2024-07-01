@@ -1,34 +1,55 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { FormikDatePicker, FormikNumberInput, FormikSelect, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikNumberInput, getOptionsFromLabelledEnum, Select } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 export function Frequency() {
-  const { values } = useFormikContext<VigilanceArea.VigilanceArea>()
+  const { setFieldValue, values } = useFormikContext<VigilanceArea.VigilanceArea>()
   const frequencyOptions = getOptionsFromLabelledEnum(VigilanceArea.FrequencyLabel)
 
   const endingConditionOptions = getOptionsFromLabelledEnum(VigilanceArea.EndingConditionLabel)
 
+  const updateFrequency = nextFrequency => {
+    setFieldValue('frequency', nextFrequency)
+    if (nextFrequency === VigilanceArea.Frequency.NONE) {
+      setFieldValue('endingCondition', undefined)
+      setFieldValue('endingOccurrenceDate', undefined)
+      setFieldValue('endingOccurrencesNumber', undefined)
+    }
+  }
+
+  const updateEndingCondition = nextEndingCondition => {
+    setFieldValue('endingCondition', nextEndingCondition)
+    if (nextEndingCondition === VigilanceArea.EndingCondition.NEVER) {
+      setFieldValue('endingOccurrenceDate', undefined)
+      setFieldValue('endingOccurrencesNumber', undefined)
+    }
+  }
+
   return (
     <>
-      <FormikSelect
+      <Select
         isErrorMessageHidden
         isRequired
         label="Récurrence"
         name="frequency"
+        onChange={updateFrequency}
         options={frequencyOptions}
         style={{ width: '180px' }}
+        value={values.frequency}
       />
 
       {values.frequency && values.frequency !== VigilanceArea.Frequency.NONE && (
         <FrequencyContainer>
-          <FormikSelect
+          <Select
             isErrorMessageHidden
             isRequired
             label="Fin récurrence"
             name="endingCondition"
+            onChange={updateEndingCondition}
             options={endingConditionOptions}
             style={{ width: '180px' }}
+            value={values.endingCondition}
           />
           {values.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && (
             <FormikNumberInput

@@ -23,7 +23,8 @@ export function MyVigilanceAreas() {
   }
 
   const createVigilanceArea = () => {
-    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
+    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.EDIT_FORM))
+    dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId())
   }
 
   return (

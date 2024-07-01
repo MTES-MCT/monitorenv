@@ -27,4 +27,9 @@ class JpaVigilanceAreaRepository(
     override fun findAll(): List<VigilanceAreaEntity> {
         return dbVigilanceAreaRepository.findAll().map { it.toVigilanceAreaEntity() }
     }
+
+    @Transactional
+    override fun delete(reportingId: Int) {
+        dbVigilanceAreaRepository.delete(reportingId)
+    }
 }

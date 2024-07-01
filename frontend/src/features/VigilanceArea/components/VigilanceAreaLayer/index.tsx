@@ -1,13 +1,15 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Layers } from 'domain/entities/layers/constants'
+import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
-import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeomatryHelper'
+import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -67,8 +69,9 @@ export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps
   useEffect(() => {
     const feature = convertToFeature(mapClickEvent?.feature)
     if (feature && feature.getId()?.toString()?.includes(Layers.VIGILANCE_AREA.code)) {
-      //  const { id } = feature.getProperties()
-      // TODO  27/07/2024 open vigilanceAreaMetadataModal
+      const { id } = feature.getProperties()
+      dispatch(setDisplayedItems({ isLayersSidebarVisible: true }))
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
     }
   }, [dispatch, mapClickEvent])
 

@@ -6,7 +6,8 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export enum VigilanceAreaFormTypeOpen {
   DRAW = 'DRAW',
-  FORM = 'FORM',
+  EDIT_FORM = 'FORM',
+  READ_FORM = 'READ_FORM',
   SELECT_AMP = 'SELECT_AMP',
   SELECT_REGULATORY = 'SELECT_REGULATORY'
 }
@@ -16,13 +17,14 @@ type VigilanceAreaSliceState = {
   geometry: GeoJSON.Geometry | undefined
   interactionType: InteractionType
   isGeometryValid: boolean
+  selectedVigilanceAreaId: number | undefined
 }
 const INITIAL_STATE: VigilanceAreaSliceState = {
   formTypeOpen: undefined,
   geometry: undefined,
   interactionType: InteractionType.POLYGON,
-
-  isGeometryValid: false
+  isGeometryValid: false,
+  selectedVigilanceAreaId: undefined
 }
 export const vigilanceAreaSlice = createSlice({
   initialState: INITIAL_STATE,
@@ -37,6 +39,16 @@ export const vigilanceAreaSlice = createSlice({
     },
     setInteractionType(state, action: PayloadAction<InteractionType>) {
       state.interactionType = action.payload
+    },
+    setSelectedVigilanceAreaId(state, action: PayloadAction<number | undefined>) {
+      const vigilanceAreaId = action.payload
+
+      if (vigilanceAreaId) {
+        state.selectedVigilanceAreaId = action.payload
+        state.formTypeOpen = VigilanceAreaFormTypeOpen.READ_FORM
+      } else {
+        state.selectedVigilanceAreaId = undefined
+      }
     }
   }
 })

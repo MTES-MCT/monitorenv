@@ -16,11 +16,11 @@ const getStyle = (color: string, metadataIsShowed: boolean | undefined) =>
     })
   })
 
-export const getVigilanceAreaColorWithAlpha = (type: string | null = '', comments: string | null = '') =>
-  getColorWithAlpha(stringToColorInGroup(`${type}`, `${comments}`, Layers.VIGILANCE_AREA.code), 0.6)
+export const getVigilanceAreaColorWithAlpha = (name: string | null = '', comments: string | null = '') =>
+  getColorWithAlpha(stringToColorInGroup(`${name}`, `${comments}`, Layers.VIGILANCE_AREA.code), 0.6)
 
 export const getVigilanceAreaLayerStyle = feature => {
-  const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('designation'), feature.get('comments'))
+  const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('name'), feature.get('comments'))
 
   const style = getStyle(colorWithAlpha, feature.get('metadataIsShowed'))
 
