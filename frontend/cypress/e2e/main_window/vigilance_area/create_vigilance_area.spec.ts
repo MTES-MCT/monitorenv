@@ -3,6 +3,9 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { getFutureDate } from '../../utils/getFutureDate'
 
+const startDate = getFutureDate(7, 'day')
+const endDate = getFutureDate(31, 'day')
+
 describe('Create Vigilance Area', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
@@ -16,11 +19,10 @@ describe('Create Vigilance Area', () => {
     cy.getDataCy('my-vigilance-areas-layers').click()
     cy.clickButton('Créer une zone de vigilance')
   })
-  it('should successfully create a vigilance area', () => {
+  it('Should successfully create a vigilance area', () => {
     // Fill in the form fields
     cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance')
-    const startDate = getFutureDate(7, 'day')
-    const endDate = getFutureDate(31, 'day')
+
     cy.fill('Période de validité', [startDate, endDate])
 
     cy.getDataCy('vigilance-area-ending-condition').should('not.exist')
@@ -90,6 +92,33 @@ describe('Create Vigilance Area', () => {
       cy.clickButton('Confirmer la suppression')
       cy.getDataCy('banner-stack').should('be.visible')
       cy.getDataCy('banner-stack').contains('La zone de vigilance a bien été supprimée')
+    })
+
+    it('Must be able to manage frequency and display appropriate fields', () => {
+      cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance')
+      cy.fill('Période de validité', [startDate, endDate])
+
+      cy.getDataCy('vigilance-area-ending-condition').should('not.exist')
+      cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
+      cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
+      cy.fill('Récurrence', 'Aucune')
+      cy.getDataCy('vigilance-area-ending-condition').should('not.exist')
+      cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
+      cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
+
+      cy.fill('Récurrence', 'Toutes les semaines')
+      cy.getDataCy('vigilance-area-ending-condition').should('be.visible')
+      cy.fill('Fin récurrence', 'Jamais')
+      cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
+      cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
+
+      cy.fill('Fin récurrence', 'Le…')
+      cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
+      cy.getDataCy('vigilance-area-ending-occurence-date').should('be.visible')
+
+      cy.fill('Fin récurrence', 'Après… x fois')
+      cy.getDataCy('vigilance-area-ending-occurence-number').should('be.visible')
+      cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
     })
   })
 })

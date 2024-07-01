@@ -54,6 +54,7 @@ export function Frequency() {
           />
           {values.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && (
             <FormikNumberInput
+              data-cy="vigilance-area-ending-occurence-number"
               isErrorMessageHidden
               isLabelHidden
               isRequired
@@ -64,6 +65,7 @@ export function Frequency() {
           )}
           {values.endingCondition === VigilanceArea.EndingCondition.END_DATE && (
             <FormikDatePicker
+              data-cy="vigilance-area-ending-occurence-date"
               isErrorMessageHidden
               isLabelHidden
               isRequired

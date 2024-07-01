@@ -1,13 +1,17 @@
+import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, Icon, Size } from '@mtes-mct/monitor-ui'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: VigilanceArea.VigilanceArea | undefined }) {
   const dispatch = useAppDispatch()
   const isVigilanceAreaPanelOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen === 'READ_FORM')
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const formattedStartPeriod = vigilanceArea?.startDatePeriod
     ? customDayjs(vigilanceArea?.startDatePeriod).format('DD/MM/YYYY')
@@ -19,7 +23,21 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
     return null
   }
 
-  const onDelete = () => {}
+  const onConfirmDeleteModal = () => {
+    if (!vigilanceArea?.id) {
+      return
+    }
+
+    dispatch(deleteVigilanceArea(vigilanceArea.id))
+  }
+
+  const onDelete = () => {
+    setIsDeleteModalOpen(true)
+  }
+
+  const cancelDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+  }
 
   const edit = () => {
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.EDIT_FORM))
@@ -29,6 +47,20 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
   // what's happen if form is not valid ?
   const publish = () => {}
 
+  const frequencyText = () => {
+    switch (vigilanceArea?.frequency) {
+      case VigilanceArea.Frequency.ALL_YEARS:
+        return 'Se répète tous les ans'
+      case VigilanceArea.Frequency.ALL_MONTHS:
+        return 'Se répète tous les mois'
+      case VigilanceArea.Frequency.ALL_WEEKS:
+        return 'Se répète toutes les semaines'
+      case VigilanceArea.Frequency.NONE:
+      default:
+        return ''
+    }
+  }
+
   if (!vigilanceArea) {
     return null
   }
@@ -36,6 +68,15 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
   return (
     <>
       <Body>
+        <DeleteModal
+          context="vigilance-area"
+          isAbsolute={false}
+          onCancel={cancelDeleteModal}
+          onConfirm={onConfirmDeleteModal}
+          open={isDeleteModalOpen}
+          subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
+          title="Supprimer la zone de vigilance&nbsp;?"
+        />
         <SubPart>
           <InlineItem>
             <InlineItemLabel $isInline>Période</InlineItemLabel>
@@ -43,7 +84,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
               <InlineItemValue>
                 {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : ''}
               </InlineItemValue>
-              <InlineItemValue>{vigilanceArea?.frequency ? `Se répète tous les ans` : ''}</InlineItemValue>
+              <InlineItemValue>{frequencyText()}</InlineItemValue>
             </DateItem>
           </InlineItem>
           <InlineItem>

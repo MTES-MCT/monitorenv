@@ -32,6 +32,8 @@ export function VigilanceAreaForm({ isOpen }) {
     [initialValues]
   )
 
+  const title = selectedVigilanceAreaId ? vigilanceArea?.name : "Création d'une zone de vigilance"
+
   const close = () => {
     dispatch(vigilanceAreaActions.resetState())
   }
@@ -41,7 +43,9 @@ export function VigilanceAreaForm({ isOpen }) {
       <Header $isEditing={!!selectedVigilanceAreaId}>
         <TitleContainer>
           <Square $color={squareColor} />
-          <Title>{selectedVigilanceAreaId ? vigilanceArea?.name : "Création d'une zone de vigilance"}</Title>
+          <Title data-cy="vigilance-area-title" title={title}>
+            {title}
+          </Title>
         </TitleContainer>
         {isReadOnlyMode && (
           <SubHeaderContainer>
