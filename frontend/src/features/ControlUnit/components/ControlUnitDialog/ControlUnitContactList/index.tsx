@@ -1,6 +1,6 @@
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
-import { Accent, Button, type ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
+import { Accent, Button, ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -127,6 +127,10 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     noEmailSubscriptionContactWarningBannerIdRef.current = undefined
   }
 
+  const controlUnitDisplayName =
+    (editedControlUnitContact.name && ControlUnit.ControlUnitContactPredefinedName[editedControlUnitContact.name]) ??
+    editedControlUnitContact.name
+
   /**
    * @returns ID of the banner that was added to the main window.
    */
@@ -188,7 +192,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       {isDeletionConfirmationModalOpen && editedControlUnitContact && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer le contact "${editedControlUnitContact.name}" ?`}
+          message={`Êtes-vous sûr de vouloir supprimer le contact "${controlUnitDisplayName}" ?`}
           onCancel={closeDialogsAndModals}
           onConfirm={confirmDeletion}
           title="Suppression du contact"

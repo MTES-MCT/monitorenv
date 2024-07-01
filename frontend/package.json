@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@mtes-mct/monitor-ui": "18.0.4",
+    "@mtes-mct/monitor-ui__root": "18.1.0",
     "@reduxjs/toolkit": "1.9.7",
     "@rsuite/responsive-nav": "5.0.2",
     "@sentry/browser": "7.73.0",
