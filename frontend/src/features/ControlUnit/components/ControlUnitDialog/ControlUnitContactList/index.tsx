@@ -83,6 +83,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
   }
 
   const submit = async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
+    let updatedControlUnitFormValues = controlUnitContactFormValues
     const hadAnEmailSubscriptionContact = controlUnit.controlUnitContacts.some(
       controlUnitContact => controlUnitContact.isEmailSubscriptionContact
     )
@@ -93,6 +94,11 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           controlUnitContact.id !== controlUnitContactFormValues.id && controlUnitContact.isEmailSubscriptionContact
       )
 
+    // FIXME(01/07/2024) : workaround for PATCH method
+    if (!controlUnitContactFormValues.phone) {
+      updatedControlUnitFormValues = { ...updatedControlUnitFormValues, phone: '' }
+    }
+
     // There can only be one email subscription contact per control unit,
     // meaning that if the user is trying to unsubscribe the current email subscription contact,
     // we need to warn them that the control unit will no longer receive any email
@@ -102,7 +108,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       hideNoEmailSubscriptionContactWarningBannerIfAny()
     }
 
-    dispatch(createOrUpdateControlUnitContact(controlUnitContactFormValues))
+    dispatch(createOrUpdateControlUnitContact(updatedControlUnitFormValues))
 
     closeForm()
   }

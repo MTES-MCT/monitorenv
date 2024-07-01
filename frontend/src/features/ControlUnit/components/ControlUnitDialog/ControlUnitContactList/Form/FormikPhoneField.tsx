@@ -1,5 +1,4 @@
-import { Icon } from '@mtes-mct/monitor-ui'
-import { FormikPhoneInput } from '@mtes-mct/monitor-ui__root'
+import { FormikPhoneInput, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
 import { FieldWithButton } from './FieldWithButton'
