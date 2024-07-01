@@ -1,17 +1,18 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.actions.interactors
+package fr.gouv.cacem.monitorenv.domain.mappers
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
-class MergeEnvActionEntityUTest {
-    private val mergeEnvActionEntity = MergeEnvActionEntity()
+class PatchEnvActionEntityUTest {
+
+    private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
     private val objectMapper = MapperConfiguration().objectMapper()
 
     @Test
@@ -32,7 +33,7 @@ class MergeEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
         assertThat(mergedEnvAction.actionStartDateTimeUtc).isEqualTo(today)
@@ -54,7 +55,7 @@ class MergeEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
         assertThat(mergedEnvAction.actionStartDateTimeUtc).isNull()
@@ -78,7 +79,7 @@ class MergeEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
         assertThat(mergedEnvAction.actionEndDateTimeUtc).isEqualTo(today)
@@ -100,7 +101,7 @@ class MergeEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
         assertThat(mergedEnvAction.actionEndDateTimeUtc).isNull()
@@ -124,7 +125,7 @@ class MergeEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
         assertThat(mergedEnvAction.observationsByUnit).isEqualTo(observationsByUnit)
@@ -146,7 +147,7 @@ class MergeEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
         assertThat(mergedEnvAction.observationsByUnit).isNull()
@@ -168,7 +169,7 @@ class MergeEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = mergeEnvActionEntity.execute(envAction, patchableEnvActionEntity)
+        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
         assertThat(mergedEnvAction).isEqualTo(envAction)

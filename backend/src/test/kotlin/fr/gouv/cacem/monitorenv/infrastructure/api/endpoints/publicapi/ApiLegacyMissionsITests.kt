@@ -9,13 +9,18 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.BypassActionCheckAndDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.LegacyMissions
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.SSEMission
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2.NewMissions
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
@@ -32,38 +37,51 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.request
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [LegacyMissions::class, SSEMission::class, NewMissions::class])
+@WebMvcTest(value = [LegacyMissions::class, SSEMission::class])
 class ApiLegacyMissionsITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var createOrUpdateMission: CreateOrUpdateMission
+    @MockBean
+    private lateinit var createOrUpdateMission: CreateOrUpdateMission
 
-    @MockBean private lateinit var getMissions: GetMissions
+    @MockBean
+    private lateinit var getMissions: GetMissions
 
-    @MockBean private lateinit var getMissionById: GetMissionById
-
-    @MockBean private lateinit var deleteMission: DeleteMission
+    @MockBean
+    private lateinit var getMissionById: GetMissionById
 
     @MockBean
     private lateinit var bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission
 
-    @MockBean private lateinit var canDeleteMission: CanDeleteMission
+    @MockBean
+    private lateinit var canDeleteMission: CanDeleteMission
 
-    @MockBean private lateinit var getMissionsByIds: GetMissionsByIds
+    @MockBean
+    private lateinit var getMissionsByIds: GetMissionsByIds
 
-    @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+    @MockBean
+    private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-    @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
-    @Autowired private lateinit var sseMissionController: SSEMission
+    @Autowired
+    private lateinit var sseMissionController: SSEMission
 
     @Test
     fun `Should create a new mission`() {
@@ -292,12 +310,6 @@ class ApiLegacyMissionsITests {
     }
 
     @Test
-    fun `Should delete mission with api v2`() {
-        mockMvc.perform(delete("/api/v2/missions/20?source=MONITORFISH")).andExpect(status().isOk)
-        Mockito.verify(deleteMission).execute(20, MissionSourceEnum.MONITORFISH)
-    }
-
-    @Test
     fun `canDelete() should check if a mission can be deleted`() {
         val missionId = 42
         val source = MissionSourceEnum.MONITORFISH
@@ -410,8 +422,45 @@ class ApiLegacyMissionsITests {
 
         assertThat(missionUpdateEvent).contains("event:MISSION_UPDATE")
         assertThat(missionUpdateEvent)
-            .contains(
-                "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"completedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false,\"hasRapportNavActions\":null}",
+            .containsIgnoringWhitespaces(
+                """
+            {
+              "id": 132,
+              "missionTypes": [
+                "SEA"
+              ],
+              "controlUnits": [],
+              "openBy": null,
+              "completedBy": null,
+              "observationsByUnit": null,
+              "observationsCacem": null,
+              "observationsCnsp": null,
+              "facade": "Outre-Mer",
+              "geom": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [-4.54877817, 48.30555988],
+                      [-4.54997332, 48.30597601],
+                      [-4.54998501, 48.30718823],
+                      [-4.5487929, 48.30677461],
+                      [-4.54877817, 48.30555988]
+                    ]
+                  ]
+                ]
+              },
+              "startDateTimeUtc": "2022-01-15T04:50:09Z",
+              "endDateTimeUtc": "2022-01-23T20:29:03Z",
+              "createdAtUtc": null,
+              "updatedAtUtc": null,
+              "envActions": [],
+              "missionSource": "MONITORFISH",
+              "hasMissionOrder": false,
+              "isUnderJdp": false,
+              "isGeometryComputedFromControls": false,
+              "hasRapportNavActions": null
+            }""",
             )
     }
 }

@@ -1,90 +1,80 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.actions
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.use_cases.actions.PatchEnvAction
-import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.PatchMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.Optional
-import java.util.UUID
+import kotlin.random.Random
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [EnvAction::class])
-class EnvActionITest {
+@WebMvcTest(value = [NewMissions::class])
+class NewMissionsITest {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var patchEnvAction: PatchEnvAction
+    private lateinit var patchMission: PatchMission
 
-    private val objectMapper = MapperConfiguration().objectMapper()
+    @MockBean
+    private lateinit var deleteMission: DeleteMission
+
+    @Test
+    fun `Should delete mission with api v2`() {
+        mockMvc.perform(delete("/api/v2/missions/20?source=MONITORFISH")).andExpect(status().isOk)
+        Mockito.verify(deleteMission).execute(20, MissionSourceEnum.MONITORFISH)
+    }
 
     @Test
     fun `patch() should call the usecase to patch the data then return the updated resources`() {
         // Given
-        val id = UUID.randomUUID()
-        val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
-        val today = ZonedDateTime.now(ZoneOffset.UTC)
-        val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
+        val id = Random.nextInt()
         val observationsByUnit = "observationsByUnits"
-        val partialEnvActionAsJson = """
-            { "actionEndDateTimeUtc": "$tomorrow",
-              "actionStartDateTimeUtc": "$today",
-              "observationsByUnit": "$observationsByUnit"}
+        val partialMissionAsJson = """
+            { "observationsByUnit": "$observationsByUnit"}
         """.trimIndent()
-        val patchedEnvAction = anEnvAction(objectMapper, id, yesterday, today, observationsByUnit)
-        val patchableEnvActionEntity = PatchableEnvActionEntity(
-            actionStartDateTimeUtc = Optional.of(today),
-            actionEndDateTimeUtc = Optional.of(tomorrow),
+        val patchedMission = aMissionEntity(observationsByUnit = "patchedObservations")
+        val patchableMissionEntity = PatchableMissionEntity(
             Optional.of(observationsByUnit),
         )
 
-        given(patchEnvAction.execute(id, patchableEnvActionEntity)).willReturn(patchedEnvAction)
+        given(patchMission.execute(id, patchableMissionEntity)).willReturn(MissionDTO(patchedMission))
 
         // When
         mockMvc.perform(
-            patch("/api/v1/actions/$id")
-                .content(partialEnvActionAsJson)
+            patch("/api/v2/missions/$id")
+                .content(partialMissionAsJson)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(
-                jsonPath(
-                    "$.actionEndDateTimeUtc",
-                    equalTo(patchedEnvAction.actionEndDateTimeUtc?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
-                ),
-            )
-            .andExpect(
-                jsonPath(
-                    "$.actionStartDateTimeUtc",
-                    equalTo(patchedEnvAction.actionStartDateTimeUtc?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
-                ),
-            )
+            .andExpect(status().isOk)
             .andExpect(
                 jsonPath(
                     "$.observationsByUnit",
-                    equalTo(patchedEnvAction.observationsByUnit),
+                    equalTo(patchedMission.observationsByUnit),
                 ),
             )
     }
@@ -93,14 +83,14 @@ class EnvActionITest {
 //    @Test
 //    fun `patch() should return 400 when the input contains an unknown property`() {
 //        // Given
-//        val id = UUID.randomUUID()
-//        val partialEnvActionAsJson = """
+//        val id = Random.nextInt()
+//        val partialMissionAsJson = """
 //            { "unknownProperty": null }
 //        """.trimIndent()
 //
 //        // When
 //        mockMvc.perform(
-//            patch("/api/v1/actions/$id")
+//            patch("/api/v2/missions/$id")
 //                .content(partialEnvActionAsJson)
 //                .contentType(MediaType.APPLICATION_JSON),
 //        )
@@ -111,32 +101,32 @@ class EnvActionITest {
     @Test
     fun `patch() should return 400 when the input contains an incorrect type`() {
         // Given
-        val id = UUID.randomUUID()
-        val partialEnvActionAsJson = """
-            { "actionStartDateTimeUtc": "incorrect type" }
+        val id = Random.nextInt()
+        val partialMissionAsJson = """
+            { "observationsByUnit": undefined }
         """.trimIndent()
 
         // When
         mockMvc.perform(
-            patch("/api/v1/actions/$id")
-                .content(partialEnvActionAsJson)
+            patch("/api/v2/missions/$id")
+                .content(partialMissionAsJson)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(status().isBadRequest())
     }
 
     @Test
     fun `patch() should return 400 when the use case throw BackendUsageException`() {
         // Given
-        val unknownId = UUID.randomUUID()
-        val partialEnvActionAsJson = """
+        val unknownId = Random.nextInt()
+        val partialMissionAsJson = """
             {}
         """.trimIndent()
 
         val message = "envAction $unknownId not found"
         given(
-            patchEnvAction.execute(
+            patchMission.execute(
                 eq(unknownId),
                 any(),
             ),
@@ -144,11 +134,11 @@ class EnvActionITest {
 
         // When
         mockMvc.perform(
-            patch("/api/v1/actions/$unknownId")
-                .content(partialEnvActionAsJson)
+            patch("/api/v2/missions/$unknownId")
+                .content(partialMissionAsJson)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(status().isBadRequest())
     }
 }

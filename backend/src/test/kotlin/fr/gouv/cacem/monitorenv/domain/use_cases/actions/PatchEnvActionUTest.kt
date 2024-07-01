@@ -3,23 +3,24 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.actions
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
+import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
-import fr.gouv.cacem.monitorenv.domain.use_cases.actions.interactors.MergeEnvActionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 class PatchEnvActionUTest {
 
     private val envActionRepository: IEnvActionRepository = mock()
-    private val mergeEnvActionEntity: MergeEnvActionEntity = mock()
-    private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, mergeEnvActionEntity)
+    private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = mock()
+    private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, patchEntity)
     private val objectMapper: ObjectMapper = ObjectMapper()
 
     @Test
@@ -42,7 +43,7 @@ class PatchEnvActionUTest {
             anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow, patchedObservationsByUnit)
 
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)
-        given(mergeEnvActionEntity.execute(envActionFromDatabase, patchableEnvActionEntity)).willReturn(
+        given(patchEntity.execute(envActionFromDatabase, patchableEnvActionEntity)).willReturn(
             envActionPatched,
         )
         given(envActionRepository.save(envActionPatched)).willReturn(envActionPatched)

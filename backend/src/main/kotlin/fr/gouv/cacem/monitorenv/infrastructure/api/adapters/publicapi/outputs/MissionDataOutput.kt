@@ -15,6 +15,7 @@ data class MissionDataOutput(
     val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
     val openBy: String? = null,
     val completedBy: String? = null,
+    val observationsByUnit: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
     val facade: String? = null,
@@ -60,6 +61,7 @@ data class MissionDataOutput(
                 isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
             )
         }
+
         fun fromMissionDTO(missionDto: MissionDTO): MissionDataOutput {
             requireNotNull(missionDto.mission.id) { "a mission must have an id" }
 
@@ -69,6 +71,7 @@ data class MissionDataOutput(
                 controlUnits = missionDto.mission.controlUnits,
                 openBy = missionDto.mission.openBy,
                 completedBy = missionDto.mission.completedBy,
+                observationsByUnit = missionDto.mission.observationsByUnit,
                 observationsCacem = missionDto.mission.observationsCacem,
                 observationsCnsp = missionDto.mission.observationsCnsp,
                 facade = missionDto.mission.facade,

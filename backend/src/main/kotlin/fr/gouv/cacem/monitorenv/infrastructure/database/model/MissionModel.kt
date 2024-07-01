@@ -228,6 +228,7 @@ class MissionModel(
     @Column(name = "mission_types", columnDefinition = "text[]")
     @Enumerated(EnumType.STRING)
     val missionTypes: List<MissionTypeEnum>,
+    @Column(name = "observations_by_unit") val observationsByUnit: String? = null,
     @Column(name = "observations_cacem") val observationsCacem: String? = null,
     @Column(name = "observations_cnsp") val observationsCnsp: String? = null,
     @Column(name = "open_by") val openBy: String? = null,
@@ -267,6 +268,7 @@ class MissionModel(
             isUnderJdp = isUnderJdp,
             missionSource = missionSource,
             missionTypes = missionTypes,
+            observationsByUnit = observationsByUnit,
             observationsCacem = observationsCacem,
             observationsCnsp = observationsCnsp,
             openBy = openBy,
@@ -361,6 +363,7 @@ class MissionModel(
                     isUnderJdp = mission.isUnderJdp,
                     missionSource = mission.missionSource,
                     missionTypes = mission.missionTypes,
+                    observationsByUnit = mission.observationsByUnit,
                     observationsCacem = mission.observationsCacem,
                     observationsCnsp = mission.observationsCnsp,
                     openBy = mission.openBy,

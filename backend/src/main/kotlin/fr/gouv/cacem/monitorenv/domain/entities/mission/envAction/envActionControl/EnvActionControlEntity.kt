@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl
 
+import fr.gouv.cacem.monitorenv.domain.entities.Patchable
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
@@ -12,7 +13,9 @@ import java.util.*
 
 data class EnvActionControlEntity(
     override val id: UUID,
+    @Patchable
     override var actionEndDateTimeUtc: ZonedDateTime? = null,
+    @Patchable
     override var actionStartDateTimeUtc: ZonedDateTime? = null,
     override val completedBy: String? = null,
     override val completion: ActionCompletionEnum? = null,
@@ -25,6 +28,7 @@ data class EnvActionControlEntity(
     override val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     override val isSeafarersControl: Boolean? = null,
     override val missionId: Int? = null,
+    @Patchable
     override var observationsByUnit: String? = null,
     override val openBy: String? = null,
     val actionNumberOfControls: Int? = null,
