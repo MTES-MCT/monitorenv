@@ -60,7 +60,9 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
 
         val fishActions = listOf(aMonitorFishAction(missionId))
         given(monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)).willReturn(fishActions)
-        given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willThrow(RuntimeException::class.java)
+        given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willThrow(
+            RuntimeException::class.java,
+        )
 
         // When
         val fullMission = getMissionWithFishAndRapportNavActions.execute(missionId)
@@ -80,7 +82,9 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         val missionFromDatabase = MissionDTO(mission = MissionFixture.aMissionEntity())
         given(getFullMission.execute(missionId)).willReturn(missionFromDatabase)
 
-        given(monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)).willThrow(RuntimeException::class.java)
+        given(monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)).willThrow(
+            RuntimeException::class.java,
+        )
 
         // When
         val fullMission = getMissionWithFishAndRapportNavActions.execute(missionId)

@@ -35,16 +35,16 @@ class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
                 .groupBy { it.first.id }
                 .map {
                         entry:
-                        Map.Entry<
-                            Int,
-                            List<
-                                Pair<
-                                    LegacyControlUnitEntity,
-                                    MissionSourceEnum,
+                            Map.Entry<
+                                Int,
+                                List<
+                                    Pair<
+                                        LegacyControlUnitEntity,
+                                        MissionSourceEnum,
+                                        >,
                                     >,
                                 >,
-                            >,
-
+                        
 
                     ->
                     // As we grouped by controlUnit, all control units in

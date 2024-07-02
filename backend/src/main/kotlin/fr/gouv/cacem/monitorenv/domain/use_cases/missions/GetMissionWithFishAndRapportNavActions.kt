@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase

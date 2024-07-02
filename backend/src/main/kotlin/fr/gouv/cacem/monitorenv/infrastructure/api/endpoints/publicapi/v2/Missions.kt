@@ -53,7 +53,7 @@ class Missions(
     }
 
     @GetMapping("/{missionId}")
-    @Operation(summary = "Get mission by Id")
+    @Operation(summary = "Get mission by Id and retrieve action from source")
     fun get(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
