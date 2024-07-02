@@ -25,6 +25,7 @@ from src.pipeline.flows import (
     historic_control_units,
     historic_controls,
     infractions,
+    marpol,
     refresh_materialized_view,
     regulations,
     remove_broken_missions_resources_links,
@@ -87,6 +88,7 @@ flows_to_register = [
     historic_controls.flow,
     historic_control_units.flow,
     infractions.flow,
+    marpol.flow,
     refresh_materialized_view.flow,
     regulations.flow,
     remove_broken_missions_resources_links.flow,
@@ -114,7 +116,6 @@ for flow in flows_to_register:
 
     if flow.name in (
         "Control objectives",
-        "Control resources, bases and contacts",
     ):
         host_config = {
             "mounts": [
