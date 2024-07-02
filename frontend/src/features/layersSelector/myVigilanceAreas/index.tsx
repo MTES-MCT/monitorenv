@@ -13,10 +13,8 @@ export function MyVigilanceAreas() {
 
   const areMyVigilanceAreasOpen = useAppSelector(state => state.layerSidebar.areMyVigilanceAreasOpen)
 
-  const savedVigilanceAreas = [
-    { id: 1, name: 'Zone 1' },
-    { id: 2, name: 'Zone 2' }
-  ] // just to have some data
+  // TODO: Replace this with the actual data
+  const savedVigilanceAreas = []
 
   const onTitleClicked = () => {
     dispatch(layerSidebarActions.toggleMyVigilanceAreas())
