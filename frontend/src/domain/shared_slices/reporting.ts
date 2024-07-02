@@ -2,13 +2,12 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import { ReportingContext } from './Global'
 
-import type { AtLeast } from '../../types'
-import type { Reporting, ReportingDetailed } from '../entities/reporting'
+import type { Reporting } from '../entities/reporting'
 
 export type ReportingType = {
   context: ReportingContext
   isFormDirty: boolean
-  reporting: AtLeast<ReportingDetailed, 'id'>
+  reporting: Reporting
 }
 
 export type SelectedReportingType = {
@@ -118,7 +117,7 @@ const reportingSlice = createSlice({
         }
       }
     },
-    setReportingState(state, action: PayloadAction<AtLeast<Reporting, 'id'>>) {
+    setReportingState(state, action: PayloadAction<Reporting>) {
       const { id } = action.payload
       if (!id) {
         return
@@ -135,7 +134,7 @@ const reportingSlice = createSlice({
     setSelectedReportingIdOnMap(state, action: PayloadAction<number | undefined>) {
       state.selectedReportingIdOnMap = action.payload
     },
-    updateUnactiveReporting(state, action: PayloadAction<AtLeast<Partial<Reporting>, 'id'>>) {
+    updateUnactiveReporting(state, action: PayloadAction<Partial<Reporting>>) {
       const { id } = action.payload
 
       // If the reporting is active, hence the form is open, the form will be updated from Formik (see FormikSyncMissionFields.ts)

@@ -17,7 +17,7 @@ export function AttachedMissionCard({
   controlStatus
 }: {
   attachedMission: Mission | undefined
-  controlStatus: ControlStatusEnum
+  controlStatus: ControlStatusEnum | undefined
 }) {
   const dispatch = useAppDispatch()
   if (!attachedMission) {

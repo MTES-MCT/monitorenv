@@ -1,3 +1,4 @@
+import { REPORTING_VALUES_TO_EXCLUDE_FOR_API } from '@features/Reportings/constants'
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
@@ -8,14 +9,20 @@ import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState
 import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
-import type { Reporting } from '../../entities/reporting'
+import type { Reporting, ReportingData } from '../../entities/reporting'
 
 export const saveReporting =
-  (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext, quitAfterSave = false) =>
+  (values: Reporting, reportingContext: ReportingContext, quitAfterSave = false) =>
   async dispatch => {
-    const valuesToSave = omit(values, ['attachedMission'])
+    const valuesToSave = omit(values, ...REPORTING_VALUES_TO_EXCLUDE_FOR_API)
+
     const reportingIsNew = isNewReporting(values.id)
-    const newOrNextReportingData = reportingIsNew ? { ...valuesToSave, id: undefined } : valuesToSave
+    const reportingId = reportingIsNew ? undefined : Number(values.id)
+    const newOrNextReportingData = {
+      ...valuesToSave,
+      id: reportingId
+    } as ReportingData
+
     const endpoint = isNewReporting(values.id)
       ? reportingsAPI.endpoints.createReporting
       : reportingsAPI.endpoints.updateReporting

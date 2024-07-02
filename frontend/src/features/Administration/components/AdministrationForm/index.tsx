@@ -1,6 +1,7 @@
 import { Accent, Button, DataTable, FormikCheckbox, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
+import { omit } from 'lodash'
 import { useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
@@ -39,7 +40,10 @@ export function AdministrationForm() {
 
   const submit = useCallback(
     async (administrationFormValues: AdministrationFormValues) => {
-      const administrationData = administrationFormValues as Administration.NewAdministrationData
+      const administrationData = omit(administrationFormValues, [
+        'controlUnitIds',
+        'controlUnits'
+      ]) as Administration.NewAdministrationData
 
       if (isNew) {
         await dispatch(administrationsAPI.endpoints.createAdministration.initiate(administrationData))

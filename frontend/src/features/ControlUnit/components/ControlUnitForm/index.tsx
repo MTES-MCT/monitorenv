@@ -10,6 +10,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
+import { omit } from 'lodash'
 import { sortBy } from 'lodash/fp'
 import { useCallback, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router'
@@ -78,7 +79,14 @@ export function ControlUnitForm() {
 
   const submit = useCallback(
     async (controlUnitFormValues: ControlUnitFormValues) => {
-      const controlUnitData = controlUnitFormValues as ControlUnit.NewControlUnitData
+      const controlUnitData = omit(controlUnitFormValues, [
+        'administration',
+        'controlUnitContactIds',
+        'controlUnitContacts',
+        'controlUnitResourceIds',
+        'controlUnitResources',
+        'departmentArea'
+      ]) as ControlUnit.NewControlUnitData
 
       if (isNew) {
         await dispatch(controlUnitsAPI.endpoints.createControlUnit.initiate(controlUnitData))

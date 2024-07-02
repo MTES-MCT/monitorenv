@@ -11,14 +11,14 @@ import styled, { css } from 'styled-components'
 import { Columns } from './Columns'
 import { GroupActions } from './GroupActions'
 
-import type { ReportingDetailed } from 'domain/entities/reporting'
+import type { Reporting } from 'domain/entities/reporting'
 
 export function ReportingsTable({
   isLoading,
   reportings
 }: {
   isLoading: boolean
-  reportings: (ReportingDetailed | undefined)[]
+  reportings: (Reporting | undefined)[]
 }) {
   const location = useLocation()
 

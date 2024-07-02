@@ -22,7 +22,6 @@ import {
 import {
   type DetachedReporting,
   type Reporting,
-  type ReportingDetailed,
   type ReportingForTimeline,
   type DetachedReportingForTimeline
 } from '../../domain/entities/reporting'
@@ -99,7 +98,7 @@ export const actionFactory = ({
 export const missionFactory = (
   mission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>,
   isNewMission: boolean,
-  attachedReporting?: ReportingDetailed | undefined
+  attachedReporting?: Reporting | undefined
 ): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)

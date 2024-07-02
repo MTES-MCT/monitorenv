@@ -5,16 +5,36 @@ import { ReportingSourceEnum, type Reporting, type TargetDetails } from '../../d
 import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../domain/entities/targetType'
 import { VehicleTypeEnum, vehicleTypeLabels } from '../../domain/entities/vehicleType'
 
-import type { AtLeast } from '../../types'
-
-export function getReportingInitialValues(reporting: AtLeast<Reporting, 'id'> | Reporting): AtLeast<Reporting, 'id'> {
+export function getReportingInitialValues(reporting: Partial<Reporting>) {
   return {
+    actionTaken: undefined,
+    attachedMission: undefined,
+    attachedToMissionAtUtc: undefined,
+    controlStatus: undefined,
+    controlUnitId: undefined,
+    createdAt: undefined,
+    description: undefined,
+    detachedFromMissionAtUtc: undefined,
     geom: undefined,
+    hasNoUnitAvailable: undefined,
+    isArchived: false,
+    isControlRequired: undefined,
     isInfractionProven: true,
+    missionId: undefined,
+    openBy: undefined,
+    reportingId: undefined,
+    semaphoreId: undefined,
+    sourceName: undefined,
     sourceType: ReportingSourceEnum.SEMAPHORE,
+    subThemeIds: undefined,
+    targetType: undefined,
+    themeId: undefined,
+    updatedAtUtc: undefined,
     validityTime: 24,
+    vehicleType: undefined,
+    withVHFAnswer: undefined,
     ...reporting
-  }
+  } as Reporting
 }
 
 export function isNewReporting(id: string | number | undefined) {

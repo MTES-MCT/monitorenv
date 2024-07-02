@@ -2,7 +2,7 @@ import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
 
 import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
-import type { DetachedReportingForTimeline, ReportingDetailed, ReportingForTimeline } from './reporting'
+import type { DetachedReportingForTimeline, Reporting, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
 import type { VesselTypeEnum } from './vesselType'
 import type { FishMissionAction } from '@features/missions/fishActions.types'
@@ -215,7 +215,7 @@ export enum ActionSource {
 // Mission from API
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
-  attachedReportings: ReportingDetailed[]
+  attachedReportings: Reporting[]
   completedBy: string
   controlUnits: LegacyControlUnit[]
   createdAtUtc?: string | undefined
@@ -245,7 +245,25 @@ export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' |
   id: string
 }
 // Mission for API
-export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings'>
+export type MissionData = {
+  attachedReportingIds?: number[] | undefined
+  completedBy?: string | undefined
+  controlUnits: LegacyControlUnit[] | Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
+  endDateTimeUtc?: string | undefined
+  envActions: EnvAction[] | NewEnvAction[]
+  facade: SeaFrontEnum
+  geom?: GeoJSON.MultiPolygon
+  hasMissionOrder?: boolean
+  id: number | undefined
+  isGeometryComputedFromControls: boolean
+  isUnderJdp?: boolean | undefined
+  missionSource: MissionSourceEnum
+  missionTypes: MissionTypeEnum[]
+  observationsCacem?: string
+  observationsCnsp?: string
+  openBy: string
+  startDateTimeUtc: string
+}
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote

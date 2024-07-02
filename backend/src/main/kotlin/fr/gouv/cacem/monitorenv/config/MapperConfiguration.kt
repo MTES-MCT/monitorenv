@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -22,7 +23,7 @@ class MapperConfiguration {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         mapper.propertyNamingStrategy = PropertyNamingStrategies.LOWER_CAMEL_CASE
         // TODO(15/06/2024): Activate this property when all front end API object are iso backend
-//        mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
         return mapper
     }

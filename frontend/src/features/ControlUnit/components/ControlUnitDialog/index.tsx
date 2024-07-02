@@ -1,5 +1,6 @@
-import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
+import { Accent, Button, ControlUnit, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
+import { omit } from 'lodash'
 import { noop } from 'lodash/fp'
 import { useCallback } from 'react'
 import styled from 'styled-components'
@@ -40,6 +41,23 @@ export function ControlUnitDialog() {
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
   }, [dispatch])
 
+  const update = useCallback(
+    async nextControlUnit => {
+      const valuesToSave = omit(nextControlUnit, [
+        'administration',
+        'coordinates',
+        'controlUnitResourceIds',
+        'controlUnitResources',
+        'controlUnitContactIds',
+        'controlUnitContacts',
+        'departmentArea'
+      ]) as ControlUnit.ControlUnitData
+
+      await updateControlUnit(valuesToSave)
+    },
+    [updateControlUnit]
+  )
+
   if (!controlUnit) {
     return (
       <MapMenuDialog.Container>
@@ -64,9 +82,9 @@ export function ControlUnitDialog() {
           <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={openNewMission}>
             Créer une mission avec cette unité
           </Button>
-          <ControlUnitContactList controlUnit={controlUnit} onSubmit={updateControlUnit} />
+          <ControlUnitContactList controlUnit={controlUnit} onSubmit={update} />
           <ControlUnitResourceList controlUnit={controlUnit} />
-          <AreaNote controlUnit={controlUnit} onSubmit={updateControlUnit} />
+          <AreaNote controlUnit={controlUnit} onSubmit={update} />
         </StyledMapMenuDialogBody>
       </Formik>
     </Wrapper>
