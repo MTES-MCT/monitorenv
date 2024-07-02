@@ -60,4 +60,9 @@ export namespace VigilanceArea {
     PUBLIC = 'Publique',
     PRIVATE = 'Interne CACEM'
   }
+
+  export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
+    layerId: number
+    metadataIsShowed: boolean
+  }
 }

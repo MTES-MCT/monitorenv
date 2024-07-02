@@ -1,7 +1,8 @@
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Size } from '@mtes-mct/monitor-ui'
-import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from 'domain/entities/layers/constants'
+import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import styled from 'styled-components'
 
@@ -13,16 +14,24 @@ import {
 } from '../metadataPanel/slice'
 import { LayerLegend } from '../utils/LayerLegend.style'
 
+import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { OverlayItem } from 'domain/types/map'
 
 type OverlayContentProps = {
-  items: OverlayItem<RegulatoryOrAMPLayerType, AMPProperties | RegulatoryLayerCompactProperties>[] | undefined
+  items:
+    | OverlayItem<
+        RegulatoryOrAMPOrViglanceAreaLayerType,
+        AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties
+      >[]
+    | undefined
 }
 
 export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
+
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
+  const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
 
   const handleClick = (type, id) => () => {
     if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
@@ -31,16 +40,24 @@ export function OverlayContent({ items }: OverlayContentProps) {
     if (type === MonitorEnvLayers.REGULATORY_ENV || type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW) {
       dispatch(openRegulatoryMetadataPanel(id))
     }
+    if (type === MonitorEnvLayers.VIGILANCE_AREA) {
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
+    }
   }
 
   return (
     <Layerlist>
       {items?.map(item => {
+        if (!item.properties) {
+          return null
+        }
         const groupName = getGroupName(item.properties, item.layerType)
         const name = getName(item.properties, item.layerType)
         const legendType = getLegendType(item.properties, item.layerType)
         const legendKey = getLegendKey(item.properties, item.layerType)
-        const isSelected = item.properties.id === layerId && !!layerType && item.layerType.includes(layerType)
+        const isSelected =
+          (item.properties.id === layerId && !!layerType && item.layerType.includes(layerType)) ||
+          selectedVigilanceAreaId === item.properties.id
 
         return (
           <LayerItem

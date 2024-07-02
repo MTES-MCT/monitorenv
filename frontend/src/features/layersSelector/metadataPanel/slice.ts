@@ -1,7 +1,10 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { includes } from 'lodash'
 
-import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from '../../../domain/entities/layers/constants'
+import {
+  MonitorEnvLayers,
+  type RegulatoryOrAMPOrViglanceAreaLayerType
+} from '../../../domain/entities/layers/constants'
 
 import type { HomeRootState } from '@store/index'
 import type { AMPProperties } from 'domain/entities/AMPs'
@@ -12,9 +15,16 @@ import type { Coordinate } from 'ol/coordinate'
 type MetadataPanelSliceState = {
   layerOverlayCoordinates: Coordinate | undefined
   layerOverlayIsOpen: boolean
-  layerOverlayItems: OverlayItem<RegulatoryOrAMPLayerType, AMPProperties | RegulatoryLayerCompactProperties>[]
+  layerOverlayItems: OverlayItem<
+    RegulatoryOrAMPOrViglanceAreaLayerType,
+    AMPProperties | RegulatoryLayerCompactProperties
+  >[]
   metadataLayerId: number | undefined
-  metadataLayerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP | undefined
+  metadataLayerType:
+    | MonitorEnvLayers.REGULATORY_ENV
+    | MonitorEnvLayers.AMP
+    | MonitorEnvLayers.VIGILANCE_AREA
+    | undefined
   metadataPanelIsOpen: boolean
 }
 

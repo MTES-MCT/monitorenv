@@ -266,12 +266,12 @@ export const SelectableLayers0To7 = [
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
   [MonitorEnvLayers.STATIONS],
-  [MonitorEnvLayers.VIGILANCE_AREA],
   [
     MonitorEnvLayers.AMP,
     MonitorEnvLayers.AMP_PREVIEW,
     MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
-    MonitorEnvLayers.REGULATORY_ENV
+    MonitorEnvLayers.REGULATORY_ENV,
+    MonitorEnvLayers.VIGILANCE_AREA
   ]
 ]
 
@@ -282,12 +282,12 @@ export const SelectableLayers7To26 = [
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
   [MonitorEnvLayers.STATIONS],
-  [MonitorEnvLayers.VIGILANCE_AREA],
   [
     MonitorEnvLayers.AMP,
     MonitorEnvLayers.AMP_PREVIEW,
     MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
-    MonitorEnvLayers.REGULATORY_ENV
+    MonitorEnvLayers.REGULATORY_ENV,
+    MonitorEnvLayers.VIGILANCE_AREA
   ]
 ]
 
@@ -315,24 +315,26 @@ export const HoverableLayers7To26 = [
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
   [MonitorEnvLayers.STATIONS],
-  [MonitorEnvLayers.VIGILANCE_AREA],
   [
     MonitorEnvLayers.AMP,
     MonitorEnvLayers.AMP_PREVIEW,
     MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
-    MonitorEnvLayers.REGULATORY_ENV
+    MonitorEnvLayers.REGULATORY_ENV,
+    MonitorEnvLayers.VIGILANCE_AREA
   ]
 ]
 
-export type RegulatoryOrAMPLayerType =
+export type RegulatoryOrAMPOrViglanceAreaLayerType =
   | MonitorEnvLayers.AMP
   | MonitorEnvLayers.AMP_PREVIEW
   | MonitorEnvLayers.REGULATORY_ENV
   | MonitorEnvLayers.REGULATORY_ENV_PREVIEW
+  | MonitorEnvLayers.VIGILANCE_AREA
 
-export const RegulatoryOrAMPLayerTypeAsList = [
+export const RegulatoryOrAMPOrViglanceAreaLayerTypeAsList = [
   MonitorEnvLayers.AMP,
   MonitorEnvLayers.AMP_PREVIEW,
   MonitorEnvLayers.REGULATORY_ENV,
-  MonitorEnvLayers.REGULATORY_ENV_PREVIEW
+  MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
+  MonitorEnvLayers.VIGILANCE_AREA
 ]
