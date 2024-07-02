@@ -1,4 +1,4 @@
-import { FormikTextInput, Icon } from '@mtes-mct/monitor-ui'
+import { FormikPhoneInput, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
 import { FieldWithButton } from './FieldWithButton'
@@ -14,7 +14,12 @@ export function FormikPhoneField() {
 
   return (
     <FieldWithButton $hasError={!!errors.phone}>
-      <FormikTextInput isLight label="Numéro de téléphone" name="phone" type="tel" />
+      <FormikPhoneInput
+        $isLight
+        label="Numéro de téléphone"
+        name="phone"
+        placeholder="01 23 45 67 89 ou 00 594 123 456 789"
+      />
 
       {values.isSmsSubscriptionContact ? (
         <FieldWithButton.IconButtonOn

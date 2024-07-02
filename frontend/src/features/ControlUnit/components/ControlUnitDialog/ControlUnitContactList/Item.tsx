@@ -13,6 +13,20 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
     onEdit(controlUnitContact.id)
   }, [controlUnitContact.id, onEdit])
 
+  function formatPhoneNumber(phoneNumber: string) {
+    if (phoneNumber.startsWith('00')) {
+      return `00 ${phoneNumber
+        .slice(2)
+        .match(/.{1,3}/g)
+        ?.join(' ')}`
+    }
+    if (phoneNumber.startsWith('0')) {
+      return phoneNumber.match(/.{1,2}/g)?.join(' ')
+    }
+
+    return phoneNumber.match(/.{1,3}/g)?.join(' ')
+  }
+
   return (
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
       <Left>
@@ -20,7 +34,7 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
           <Name>
             {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
           </Name>
-          <Phone>{controlUnitContact.phone}</Phone>
+          {controlUnitContact.phone && <Phone>{formatPhoneNumber(controlUnitContact.phone)}</Phone>}
           {controlUnitContact.isSmsSubscriptionContact && (
             <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
           )}

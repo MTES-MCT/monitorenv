@@ -18,6 +18,13 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
     cy.contains('Veuillez choisir un nom.').should('be.visible')
     cy.contains('Veuillez entrer un téléphone ou un email.').should('be.visible')
 
+    cy.fill('Numéro de téléphone', '1111111111111')
+    cy.clickButton('Ajouter')
+
+    cy.contains(
+      "Le numéro saisi n'est pas valide. Si c'est un numéro satellitaire ou d'outre-mer, ajouter 00 avant les premiers chiffres."
+    )
+
     cy.clickButton('Annuler')
 
     cy.get('p').contains('Ajouter un contact').should('not.exist')
@@ -58,6 +65,8 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
       cy.get('p').contains('Ajouter un contact').should('not.exist')
       cy.contains('Adjoint').should('be.visible')
+      cy.contains('01 23 45 67 89').should('be.visible')
+      cy.contains('foo@example.org').should('be.visible')
 
       // -------------------------------------------------------------------------
       // Update
@@ -69,7 +78,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
         .clickButton('Éditer ce contact')
 
       cy.fill('Nom du contact', 'Passerelle')
-      cy.fill('Numéro de téléphone', '9876543210')
+      cy.fill('Numéro de téléphone', '0198765432')
       cy.fill('Adresse mail', 'bar@example.org')
 
       cy.clickButton('Enregistrer les modifications')
@@ -85,7 +94,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
           isEmailSubscriptionContact: true,
           isSmsSubscriptionContact: true,
           name: 'BRIDGE',
-          phone: '9876543210'
+          phone: '0198765432'
         })
       })
 
