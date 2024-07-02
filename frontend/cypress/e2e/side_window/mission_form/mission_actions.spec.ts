@@ -350,6 +350,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
+    cy.wait(250)
     cy.getDataCy('action-missing-fields-text').contains('7 champs nécessaires aux statistiques à compléter')
 
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
