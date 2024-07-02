@@ -1,7 +1,11 @@
+import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { MonitorEnvLayers, type RegulatoryOrAMPLayerType } from '../../../domain/entities/layers/constants'
+import {
+  MonitorEnvLayers,
+  type RegulatoryOrAMPOrViglanceAreaLayerType
+} from '../../../domain/entities/layers/constants'
 import { getAMPColorWithAlpha } from '../../map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
@@ -11,7 +15,7 @@ export function LayerLegend({
   size = Size.SMALL,
   type
 }: {
-  layerType: RegulatoryOrAMPLayerType
+  layerType: RegulatoryOrAMPOrViglanceAreaLayerType
   legendKey?: string | null
   size?: Size
   type?: string | null
@@ -23,6 +27,8 @@ export function LayerLegend({
     case MonitorEnvLayers.REGULATORY_ENV:
     case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
       return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey)} />
+    case MonitorEnvLayers.VIGILANCE_AREA:
+      return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey)} />
     default:
       return <Rectangle $size={size} />
   }

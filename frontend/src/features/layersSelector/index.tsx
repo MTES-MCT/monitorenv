@@ -54,7 +54,7 @@ export function LayersSidebar() {
       />
       <Sidebar
         isLayersSidebarVisible={isLayersSidebarVisible}
-        isVisible={displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)}
+        isVisible={(displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)) || isVigilanceAreaFormOpen}
       >
         <LayerSearch />
         <Layers>
