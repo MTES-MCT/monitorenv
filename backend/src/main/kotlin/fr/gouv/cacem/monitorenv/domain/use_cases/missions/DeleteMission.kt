@@ -46,7 +46,6 @@ class DeleteMission(
                 )
             }
 
-
             if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
                 val envActionIdsToDetach = mutableListOf<UUID>()
                 missionToDelete.attachedReportingIds.forEach {

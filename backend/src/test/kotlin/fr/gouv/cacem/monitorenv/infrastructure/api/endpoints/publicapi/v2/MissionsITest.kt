@@ -163,7 +163,7 @@ class MissionsITest {
 
         // When
         mockMvc.perform(
-            get("/api/v2/missions/$id/${source}")
+            get("/api/v2/missions/$id").param("source", source.name)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
@@ -189,7 +189,7 @@ class MissionsITest {
 
         // When
         mockMvc.perform(
-            get("/api/v2/missions/$id/${source}")
+            get("/api/v2/missions/$id").param("source", source.name)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then

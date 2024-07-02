@@ -123,15 +123,11 @@ class JpaMissionRepository(
 
     @Transactional
     override fun findFullMissionById(missionId: Int): MissionDTO? {
-        // FIXME(20/06/2024): faire .get() peut lancer NoSuchElementException ne devrait pas arriver,
-        //  changer avec findByIdOrNull qui est plus approprié pour Kotlin
         return dbMissionRepository.findByIdOrNull(missionId)?.toMissionDTO(mapper)
     }
 
     @Transactional
     override fun findById(missionId: Int): MissionEntity? {
-        // FIXME(20/06/2024): faire .get() peut lancer NoSuchElementException ne devrait pas arriver,
-        //  changer avec findByIdOrNull qui est plus approprié pour Kotlin
         return dbMissionRepository.findByIdOrNull(missionId)?.toMissionEntity(mapper)
     }
 

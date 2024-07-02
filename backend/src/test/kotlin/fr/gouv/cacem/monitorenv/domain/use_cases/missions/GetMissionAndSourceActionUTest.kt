@@ -3,10 +3,10 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
+import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.aMonitorFishAction
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
-import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.APIFishMissionActionsRepository
-import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.APIRapportNavMissionActionsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -17,9 +17,9 @@ class GetMissionAndSourceActionUTest {
 
     private val getMission: GetMission = mock()
 
-    private val apiFishMissionActionsRepository: APIFishMissionActionsRepository = mock()
+    private val apiFishMissionActionsRepository: IMonitorFishMissionActionsRepository = mock()
 
-    private val apiRapportNavMissionActionsRepository: APIRapportNavMissionActionsRepository = mock()
+    private val apiRapportNavMissionActionsRepository: IRapportNavMissionActionsRepository = mock()
 
     private val getMissionAndSourceAction: GetMissionAndSourceAction =
         GetMissionAndSourceAction(getMission, apiFishMissionActionsRepository, apiRapportNavMissionActionsRepository)

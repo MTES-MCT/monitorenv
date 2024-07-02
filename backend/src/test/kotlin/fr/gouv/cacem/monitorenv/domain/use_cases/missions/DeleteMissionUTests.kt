@@ -33,7 +33,6 @@ class DeleteMissionUTests {
     private val deleteMission: DeleteMission =
         DeleteMission(getFullMission, missionRepository, reportingRepository, canDeleteMission)
 
-
     @Test
     fun `execute Should detach reporting attached to mission and action attached to reporting`() {
         val missionId = 100
@@ -49,7 +48,6 @@ class DeleteMissionUTests {
                 isInfractionProven = true,
             )
         val missionToDelete = aMissionEntity()
-
 
         val expectedUpdatedReporting =
             ReportingEntity(

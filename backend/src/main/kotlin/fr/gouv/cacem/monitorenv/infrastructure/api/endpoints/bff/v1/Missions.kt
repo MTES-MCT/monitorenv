@@ -23,7 +23,7 @@ import java.time.ZonedDateTime
 @Tag(description = "API Missions", name = "BFF.Missions")
 class Missions(
     private val createOrUpdateMissionWithActionsAndAttachedReporting:
-    CreateOrUpdateMissionWithActionsAndAttachedReporting,
+        CreateOrUpdateMissionWithActionsAndAttachedReporting,
     private val getFullMissions: GetFullMissions,
     private val getMissionWithFishAndRapportNavActions: GetMissionWithFishAndRapportNavActions,
     private val deleteMission: DeleteMission,
