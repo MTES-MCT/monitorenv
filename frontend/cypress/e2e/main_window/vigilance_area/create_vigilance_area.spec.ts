@@ -81,9 +81,7 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.isDraft).equal(true)
 
       cy.getDataCy('banner-stack').should('be.visible')
-      cy.getDataCy('banner-stack').contains(
-        'La zone de vigilance a bien été publiée et est maintenant visible par tous'
-      )
+      cy.getDataCy('banner-stack').contains('La zone de vigilance a bien été créée')
 
       cy.wait(250)
       cy.get('#root').click(500, 650)

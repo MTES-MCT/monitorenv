@@ -129,7 +129,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         <SubPart>
           <InlineItemLabel>Liens utiles</InlineItemLabel>
           <InlineItemValue>
-            {vigilanceArea?.links.length > 0
+            {vigilanceArea?.links && vigilanceArea?.links.length > 0
               ? vigilanceArea?.links.map(link => (
                   <LinkContainer key={`${link.linkText}-${link.linkUrl}`}>
                     <LinkText>{link.linkText}</LinkText>
