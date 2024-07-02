@@ -37,6 +37,7 @@ services:
       - FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED=true
       - FRONTEND_REPORTING_FORM_AUTO_UPDATE=true
       - FRONTEND_MISSION_FORM_AUTO_UPDATE=true
+      - FRONTEND_VIGILANCE_AREA_ENABLED=true
       - FRONTEND_MONITORENV_VERSION=${MONITORENV_VERSION}
       - FRONTEND_GOOGLEMAPS_API_KEY=${FRONTEND_GOOGLEMAPS_API_KEY}
       - FRONTEND_MAPBOX_KEY=${FRONTEND_MAPBOX_KEY}
@@ -93,7 +94,7 @@ services:
     volumes:
       - ../../frontend/cypress/mappings/rapportnav:/home/wiremock/mappings
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail http://localhost:8080/api/v1/missions/34 || exit 1 " ]
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/api/v1/missions/34 || exit 1 "]
       interval: 1s
       timeout: 1s
       retries: 30
