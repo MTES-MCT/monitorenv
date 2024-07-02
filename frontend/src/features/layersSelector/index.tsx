@@ -19,12 +19,14 @@ import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
+// TODO: Remove this when the feature flag is removed
+const IS_VIGILANCE_AREA_ENBALED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENBALED === 'true'
+
 export function LayersSidebar() {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
   const isVigilanceAreaFormOpen = !!useAppSelector(state => state.vigilanceArea.formTypeOpen)
-  const isVigilanceAreaPanelOpen = !!useAppSelector(state => state.vigilanceArea.formTypeOpen === 'READ_FORM')
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
 
@@ -58,25 +60,28 @@ export function LayersSidebar() {
         <Layers>
           <RegulatoryLayers />
           <AmpLayers />
-          <MyVigilanceAreas />
+          {IS_VIGILANCE_AREA_ENBALED && <MyVigilanceAreas />}
           <AdministrativeLayers />
           <BaseLayerList />
         </Layers>
+
         <MetadataPanelShifter
           isLayersSidebarVisible={isLayersSidebarVisible}
-          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen || isVigilanceAreaPanelOpen}
+          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
           metadataPanelIsOpen={metadataPanelIsOpen || isVigilanceAreaFormOpen}
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
         </MetadataPanelShifter>
-        <VigilanceAreaPanelShifter
-          isLayersSidebarVisible={isLayersSidebarVisible}
-          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen || isVigilanceAreaPanelOpen}
-        >
-          {isVigilanceAreaFormOpen && <VigilanceAreaForm isOpen={isVigilanceAreaFormOpen} />}
-          {/*          {isVigilanceAreaPanelOpen && <VigilanceAreaPanel />} */}
-        </VigilanceAreaPanelShifter>
+
+        {IS_VIGILANCE_AREA_ENBALED && (
+          <VigilanceAreaPanelShifter
+            isLayersSidebarVisible={isLayersSidebarVisible}
+            isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
+          >
+            {isVigilanceAreaFormOpen && <VigilanceAreaForm isOpen={isVigilanceAreaFormOpen} />}
+          </VigilanceAreaPanelShifter>
+        )}
       </Sidebar>
       {(regulatoryAreas.isLoading || amps.isLoading) && (
         <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
