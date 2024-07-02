@@ -22,7 +22,7 @@ export const CONTROL_UNIT_CONTACT_FORM_SCHEMA = object().shape(
       })
       .test(
         'is-valid-phone-number',
-        'Le numéro de téléphone doit être français ou international',
+        "Le numéro saisi n'est pas valide. Si c'est un numéro satellitaire ou d'outre-mer, ajouter 00 avant les premiers chiffres.",
         value =>
           string().matches(frenchPhoneRegex).isValidSync(value) ||
           string().matches(internationalPhoneRegex).isValidSync(value)
