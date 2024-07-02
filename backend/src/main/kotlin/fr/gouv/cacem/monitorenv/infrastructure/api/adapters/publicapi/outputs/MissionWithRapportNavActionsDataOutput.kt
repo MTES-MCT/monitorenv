@@ -5,10 +5,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
-data class MissionDataOutput(
+data class MissionWithRapportNavActionsDataOutput(
     override val id: Int,
     override val missionTypes: List<MissionTypeEnum>,
     override val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
@@ -28,12 +29,13 @@ data class MissionDataOutput(
     override val hasMissionOrder: Boolean,
     override val isUnderJdp: Boolean,
     override val isGeometryComputedFromControls: Boolean,
+    val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
 ) : MissionOutput {
     companion object {
-        fun fromMissionEntity(mission: MissionEntity): MissionDataOutput {
+        fun fromMissionEntity(mission: MissionEntity): MissionWithRapportNavActionsDataOutput {
             requireNotNull(mission.id) { "a mission must have an id" }
 
-            return MissionDataOutput(
+            return MissionWithRapportNavActionsDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
                 controlUnits = mission.controlUnits,
@@ -60,10 +62,10 @@ data class MissionDataOutput(
             )
         }
 
-        fun fromMissionDTO(missionDto: MissionDTO): MissionDataOutput {
+        fun fromMissionDTO(missionDto: MissionDTO): MissionWithRapportNavActionsDataOutput {
             requireNotNull(missionDto.mission.id) { "a mission must have an id" }
 
-            return MissionDataOutput(
+            return MissionWithRapportNavActionsDataOutput(
                 id = missionDto.mission.id,
                 missionTypes = missionDto.mission.missionTypes,
                 controlUnits = missionDto.mission.controlUnits,
@@ -88,6 +90,11 @@ data class MissionDataOutput(
                 hasMissionOrder = missionDto.mission.hasMissionOrder,
                 isUnderJdp = missionDto.mission.isUnderJdp,
                 isGeometryComputedFromControls = missionDto.mission.isGeometryComputedFromControls,
+                hasRapportNavActions = missionDto.hasRapportNavActions?.let {
+                    RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(
+                        it,
+                    )
+                },
             )
         }
     }
