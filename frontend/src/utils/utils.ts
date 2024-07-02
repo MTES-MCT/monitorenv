@@ -25,21 +25,20 @@ const regulatoryColorsGreens = [
   THEME.color.indigoDye
 ]
 
-// TODO 27/06/2024 move this in Monitor-ui
 const ampColors = [
-  '#A98A0F',
-  '#BAAB68',
-  '#B9B94D',
-  '#C8C732',
-  '#DBE33E',
-  '#C5A730',
-  '#DBB934',
-  '#E1C55E',
-  '#F0CB38',
-  '#F1E243',
-  '#F0FE58',
-  '#F2F58E',
-  '#FFFEC2'
+  THEME.color.darkGoldenrod,
+  THEME.color.ecru,
+  THEME.color.citron,
+  THEME.color.citrine,
+  THEME.color.pear,
+  THEME.color.goldMetallic,
+  THEME.color.oldGold,
+  THEME.color.arylideYellow,
+  THEME.color.jonquil,
+  THEME.color.maize,
+  THEME.color.lemonLime,
+  THEME.color.mindaro,
+  THEME.color.cream
 ]
 
 const vigilanceAreaColors = [

@@ -33,7 +33,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     }
 
     if (selectedVigilanceArea) {
-      return getVigilanceAreaZoneFeature(selectedVigilanceArea, Layers.VIGILANCE_AREA.code)
+      return getVigilanceAreaZoneFeature(selectedVigilanceArea, Layers.VIGILANCE_AREA.code, true)
     }
 
     return undefined

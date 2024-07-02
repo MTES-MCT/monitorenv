@@ -1,3 +1,4 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { Fill, Stroke, Style } from 'ol/style'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -9,7 +10,7 @@ const getStyle = (color: string, metadataIsShowed: boolean | undefined) =>
       color: getColorWithAlpha(color, 0.7)
     }),
     stroke: new Stroke({
-      color: getColorWithAlpha('#A98A0F', 1), // TODO: eplace with the color in Monitor-ui when it is created
+      color: getColorWithAlpha(THEME.color.darkGoldenrod, 1),
       width: metadataIsShowed ? 3 : 1
     })
   })

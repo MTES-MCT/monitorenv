@@ -20,7 +20,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 // TODO: Remove this when the feature flag is removed
-const IS_VIGILANCE_AREA_ENBALED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENBALED === 'true'
+const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENBALED === 'true'
 
 export function LayersSidebar() {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
@@ -60,7 +60,7 @@ export function LayersSidebar() {
         <Layers>
           <RegulatoryLayers />
           <AmpLayers />
-          {IS_VIGILANCE_AREA_ENBALED && <MyVigilanceAreas />}
+          {IS_VIGILANCE_AREA_ENABLED && <MyVigilanceAreas />}
           <AdministrativeLayers />
           <BaseLayerList />
         </Layers>
@@ -74,7 +74,7 @@ export function LayersSidebar() {
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
         </MetadataPanelShifter>
 
-        {IS_VIGILANCE_AREA_ENBALED && (
+        {IS_VIGILANCE_AREA_ENABLED && (
           <VigilanceAreaPanelShifter
             isLayersSidebarVisible={isLayersSidebarVisible}
             isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
