@@ -13,7 +13,7 @@ export function MyVigilanceAreas() {
 
   const areMyVigilanceAreasOpen = useAppSelector(state => state.layerSidebar.areMyVigilanceAreasOpen)
 
-  // TODO: Replace this with the actual data
+  // TODO: Replace this when we have the real data
   const savedVigilanceAreas = []
 
   const onTitleClicked = () => {

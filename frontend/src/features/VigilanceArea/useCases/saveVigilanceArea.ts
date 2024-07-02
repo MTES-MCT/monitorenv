@@ -8,7 +8,7 @@ import { VigilanceArea } from '../types'
 import type { HomeAppThunk } from '@store/index'
 
 export const saveVigilanceArea =
-  (values: VigilanceArea.VigilanceArea): HomeAppThunk =>
+  (values: VigilanceArea.VigilanceArea, isPublished?: boolean): HomeAppThunk =>
   async dispatch => {
     const isNewVigilanceArea = !values.id
     const vigilanceAreaEnpoint = isNewVigilanceArea
@@ -21,11 +21,27 @@ export const saveVigilanceArea =
         const vigilanceAreaResponse = response.data as VigilanceArea.VigilanceArea
         const isVigilanceAreaPublic = vigilanceAreaResponse.visibility === VigilanceArea.Visibility.PUBLIC
 
-        if (isNewVigilanceArea) {
+        dispatch(vigilanceAreaActions.resetState())
+
+        if (isNewVigilanceArea && !isPublished) {
+          dispatch(
+            addMainWindowBanner({
+              children: 'La zone de vigilance a bien été créée',
+              isClosable: true,
+              isFixed: true,
+              level: Level.SUCCESS,
+              withAutomaticClosing: true
+            })
+          )
+
+          return
+        }
+
+        if (isPublished) {
           dispatch(
             addMainWindowBanner({
               children: `La zone de vigilance a bien été publiée et est maintenant visible par ${
-                isVigilanceAreaPublic ? 'tous' : 'par le CACEM'
+                isVigilanceAreaPublic ? 'tous' : 'le CACEM'
               }.`,
               isClosable: true,
               isFixed: true,
@@ -34,8 +50,6 @@ export const saveVigilanceArea =
             })
           )
         }
-
-        dispatch(vigilanceAreaActions.resetState())
       }
     } catch (error) {
       dispatch(

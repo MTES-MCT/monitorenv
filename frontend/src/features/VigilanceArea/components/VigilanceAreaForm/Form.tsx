@@ -50,7 +50,7 @@ export function Form() {
   const publish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
       if (isEmpty(errors)) {
-        dispatch(saveVigilanceArea({ ...values, isDraft: false }))
+        dispatch(saveVigilanceArea({ ...values, isDraft: false }, true))
       }
     })
   }
@@ -140,6 +140,12 @@ export function Form() {
           placeholder="Nom de la zone"
         />
         <DateRangePicker
+          defaultValue={
+            values?.startDatePeriod && values?.endDatePeriod
+              ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
+              : undefined
+          }
+          hasSingleCalendar
           isCompact
           isErrorMessageHidden
           isRequired

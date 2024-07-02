@@ -5,7 +5,11 @@ import { GeoJSON } from 'ol/format'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
-export const getVigilanceAreaZoneFeature = (vigilanceArea: VigilanceArea.VigilanceArea, layername: string) => {
+export const getVigilanceAreaZoneFeature = (
+  vigilanceArea: VigilanceArea.VigilanceArea,
+  layername: string,
+  metadataIsShowed?: boolean
+) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(vigilanceArea.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -28,6 +32,7 @@ export const getVigilanceAreaZoneFeature = (vigilanceArea: VigilanceArea.Vigilan
     id: vigilanceArea.id,
     isDraft: vigilanceArea.isDraft,
     links: vigilanceArea.links,
+    metadataIsShowed,
     name: vigilanceArea.name,
     source: vigilanceArea.source,
     startDatePeriod: vigilanceArea.startDatePeriod,

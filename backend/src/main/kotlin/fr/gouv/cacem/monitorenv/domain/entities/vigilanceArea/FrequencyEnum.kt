@@ -5,5 +5,4 @@ enum class FrequencyEnum {
     ALL_WEEKS,
     ALL_MONTHS,
     ALL_YEARS,
-    CUSTOM,
 }

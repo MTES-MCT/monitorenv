@@ -1,7 +1,7 @@
 -- Add vigilance_areas table
 
 CREATE TYPE vigilance_area_ending_condition AS ENUM ('NEVER', 'END_DATE','OCCURENCES_NUMBER');
-CREATE TYPE vigilance_area_frequency AS ENUM ('NONE','ALL_WEEKS', 'ALL_MONTHS','ALL_YEARS','CUSTOM');
+CREATE TYPE vigilance_area_frequency AS ENUM ('NONE','ALL_WEEKS', 'ALL_MONTHS','ALL_YEARS');
 CREATE TYPE vigilance_area_visibility AS ENUM ('PUBLIC', 'PRIVATE');
 
 CREATE TABLE IF NOT EXISTS public.vigilance_areas (

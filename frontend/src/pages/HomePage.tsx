@@ -30,7 +30,7 @@ import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 // TODO: Remove this when the feature flag is removed
-const IS_VIGILANCE_AREA_ENBALED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENBALED === 'true'
+const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENBALED === 'true'
 
 export function HomePage() {
   const dispatch = useAppDispatch()
@@ -94,7 +94,7 @@ export function HomePage() {
         <Healthcheck />
         <BannerStack />
 
-        <Map isVigilanceAreaEnabled={IS_VIGILANCE_AREA_ENBALED} />
+        <Map isVigilanceAreaEnabled={IS_VIGILANCE_AREA_ENABLED} />
         <LayersSidebar />
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
