@@ -2,27 +2,24 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionAndSourceAction
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.PatchMission
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.PatchableMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionWithFishAndRapportNavActionsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController("PublicApiV2Missions")
 @RequestMapping("/api/v2/missions")
 @Tag(description = "API Missions", name = "Public.Missions")
-class NewMissions(
+class Missions(
     private val deleteMission: DeleteMission,
     private val patchMission: PatchMission,
+    private val getMissionAndSourceAction: GetMissionAndSourceAction,
 ) {
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
@@ -53,5 +50,20 @@ class NewMissions(
                 patchableMissionDataInput.toPatchableMissionEntity(),
             ),
         )
+    }
+
+    @GetMapping("/{missionId}")
+    @Operation(summary = "Get mission by Id")
+    fun get(
+        @PathParam("Mission id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
+        @PathParam("other mission ressources to get")
+        @RequestParam(name = "source", required = false)
+        source: MissionSourceEnum?,
+    ): MissionWithFishAndRapportNavActionsDataOutput {
+        val mission = getMissionAndSourceAction.execute(missionId = missionId, source = source)
+
+        return MissionWithFishAndRapportNavActionsDataOutput.fromMissionDTO(mission)
     }
 }

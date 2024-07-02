@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionWithRapportNavActionsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -23,7 +24,7 @@ import java.time.ZonedDateTime
 class LegacyMissions(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val getMissions: GetMissions,
-    private val getMissionById: GetMissionById,
+    private val getMissionWithRapportNavActions: GetMissionWithRapportNavActions,
     private val bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
@@ -102,15 +103,15 @@ class LegacyMissions(
     }
 
     @GetMapping("/{missionId}")
-    @Operation(summary = "Get mission by Id")
+    @Operation(summary = "Get mission with rapportNav actions by Id")
     fun get(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
         missionId: Int,
-    ): MissionDataOutput {
-        val mission = getMissionById.execute(missionId = missionId)
+    ): MissionWithRapportNavActionsDataOutput {
+        val mission = getMissionWithRapportNavActions.execute(missionId = missionId)
 
-        return MissionDataOutput.fromMissionDTO(mission)
+        return MissionWithRapportNavActionsDataOutput.fromMissionDTO(mission)
     }
 
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])

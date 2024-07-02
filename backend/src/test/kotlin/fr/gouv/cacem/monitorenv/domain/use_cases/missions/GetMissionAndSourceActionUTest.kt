@@ -1,0 +1,87 @@
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions
+
+import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.aMonitorFishAction
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
+import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.APIFishMissionActionsRepository
+import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.APIRapportNavMissionActionsRepository
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verifyNoInteractions
+import kotlin.random.Random
+
+class GetMissionAndSourceActionUTest {
+
+    private val getMission: GetMission = mock()
+
+    private val apiFishMissionActionsRepository: APIFishMissionActionsRepository = mock()
+
+    private val apiRapportNavMissionActionsRepository: APIRapportNavMissionActionsRepository = mock()
+
+    private val getMissionAndSourceAction: GetMissionAndSourceAction =
+        GetMissionAndSourceAction(getMission, apiFishMissionActionsRepository, apiRapportNavMissionActionsRepository)
+
+    @Test
+    fun `execute should return only the mission if source is not MONITORFISH or RAPPORTNAV`() {
+        // Given
+        val missionId = Random.nextInt()
+        val source = null
+        val missionFromDatabase = aMissionEntity()
+        given(getMission.execute(missionId)).willReturn(missionFromDatabase)
+
+        // When & Then
+        val mission = getMissionAndSourceAction.execute(missionId, source)
+
+        // Then
+        verifyNoInteractions(apiFishMissionActionsRepository)
+        verifyNoInteractions(apiRapportNavMissionActionsRepository)
+        assertThat(mission.mission).isEqualTo(missionFromDatabase)
+        assertThat(mission.fishActions).isEmpty()
+        assertThat(mission.hasRapportNavActions).isNull()
+    }
+
+    @Test
+    fun `execute should return mission with rapportNav action information when source is RAPPORTNAV `() {
+        // Given
+        val missionId = Random.nextInt()
+        val source = MissionSourceEnum.RAPPORT_NAV
+
+        val missionFromDatabase = aMissionEntity()
+        given(getMission.execute(missionId)).willReturn(missionFromDatabase)
+        given(apiRapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willReturn(
+            RapportNavMissionActionEntity(1, true),
+        )
+
+        // When
+        val mission = getMissionAndSourceAction.execute(missionId, source)
+
+        // Then
+        verifyNoInteractions(apiFishMissionActionsRepository)
+        assertThat(mission.hasRapportNavActions?.containsActionsAddedByUnit).isTrue()
+        assertThat(mission.mission).isEqualTo(missionFromDatabase)
+    }
+
+    @Test
+    fun `execute should return mission with fish action when source is MONITORFISH `() {
+        // Given
+        val missionId = Random.nextInt()
+        val source = MissionSourceEnum.MONITORFISH
+
+        val missionFromDatabase = aMissionEntity()
+        given(getMission.execute(missionId)).willReturn(missionFromDatabase)
+        val fishActions = listOf(aMonitorFishAction(missionId))
+
+        given(apiFishMissionActionsRepository.findFishMissionActionsById(missionId)).willReturn(fishActions)
+
+        // When
+        val mission = getMissionAndSourceAction.execute(missionId, source)
+
+        // Then
+        verifyNoInteractions(apiRapportNavMissionActionsRepository)
+        assertThat(mission.fishActions).isEqualTo(fishActions)
+        assertThat(mission.mission).isEqualTo(missionFromDatabase)
+    }
+}

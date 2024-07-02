@@ -23,9 +23,9 @@ import java.time.ZonedDateTime
 @Tag(description = "API Missions", name = "BFF.Missions")
 class Missions(
     private val createOrUpdateMissionWithActionsAndAttachedReporting:
-        CreateOrUpdateMissionWithActionsAndAttachedReporting,
+    CreateOrUpdateMissionWithActionsAndAttachedReporting,
     private val getFullMissions: GetFullMissions,
-    private val getFullMissionById: GetFullMissionById,
+    private val getMissionWithFishAndRapportNavActions: GetMissionWithFishAndRapportNavActions,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val canDeleteMission: CanDeleteMission,
@@ -79,7 +79,7 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
     ): ResponseEntity<MissionDataOutput> {
-        val (fishActionsApiResponds, mission) = getFullMissionById.execute(missionId = missionId)
+        val (fishActionsApiResponds, mission) = getMissionWithFishAndRapportNavActions.execute(missionId = missionId)
 
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
 

@@ -47,29 +47,5 @@ abstract class EnvActionDataOutput(
                     )
             }
         }
-
-        fun fromEnvActionEntity(
-            envActionEntity: EnvActionEntity,
-        ): EnvActionDataOutput {
-            return when (envActionEntity.actionType) {
-                ActionTypeEnum.CONTROL ->
-                    EnvActionControlDataOutput.fromEnvActionControlEntity(
-                        envActionControlEntity = envActionEntity as EnvActionControlEntity,
-                        listOf(),
-                    )
-
-                ActionTypeEnum.SURVEILLANCE ->
-                    EnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
-                        envActionSurveillanceEntity =
-                        envActionEntity as EnvActionSurveillanceEntity,
-                        listOf(),
-                    )
-
-                ActionTypeEnum.NOTE ->
-                    EnvActionNoteDataOutput.fromEnvActionNoteEntity(
-                        envActionEntity as EnvActionNoteEntity,
-                    )
-            }
-        }
     }
 }

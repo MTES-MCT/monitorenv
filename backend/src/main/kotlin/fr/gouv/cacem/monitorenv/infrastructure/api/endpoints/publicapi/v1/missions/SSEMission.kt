@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionWithRapportNavActionsDataOutput
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -61,7 +61,7 @@ class SSEMission {
         logger.info("SSE: Sending update of mission $missionId to ${sseStore.size} listener(s).")
         val sseEmittersToRemove = sseStore.map { sseEmitter ->
             try {
-                val data = MissionDataOutput.fromMissionEntity(event.mission)
+                val data = MissionWithRapportNavActionsDataOutput.fromMissionEntity(event.mission)
                 val sseEvent = event()
                     .name(MISSION_UPDATE_EVENT_NAME)
                     .data(data)

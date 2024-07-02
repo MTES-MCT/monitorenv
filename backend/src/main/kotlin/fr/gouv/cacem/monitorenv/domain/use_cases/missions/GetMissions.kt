@@ -25,7 +25,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         startedAfterDateTime: ZonedDateTime? = null,
         startedBeforeDateTime: ZonedDateTime? = null,
     ): List<MissionEntity> {
-        var missions: List<MissionEntity> =
+        val missions: List<MissionEntity> =
             missionRepository.findAll(
                 controlUnitIds = controlUnitIds,
                 missionSources = missionSources

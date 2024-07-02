@@ -1,12 +1,9 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
@@ -14,7 +11,6 @@ import java.time.ZonedDateTime
 @UseCase
 class GetFullMissions(
     private val missionRepository: IMissionRepository,
-    private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetFullMissions::class.java)
     fun execute(

@@ -16,7 +16,8 @@ import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class GetEngagedControlUnitsUTests {
-    @MockBean private lateinit var getFullMissions: GetFullMissions
+    @MockBean
+    private lateinit var getFullMissions: GetFullMissions
 
     @Test
     fun `execute() should return engaged control units`() {

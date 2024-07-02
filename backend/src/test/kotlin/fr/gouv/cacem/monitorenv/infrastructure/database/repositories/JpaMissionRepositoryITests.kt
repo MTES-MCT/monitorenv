@@ -34,7 +34,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
@@ -401,7 +401,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val mission = jpaMissionRepository.findFullMissionById(10)
 
         assertThat(
-            mission.copy(
+            mission?.copy(
                 mission =
                 mission.mission.copy(
                     createdAtUtc = null,
@@ -420,7 +420,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findById Should return specified mission and associated env actions and associated envActionReportingIds`() {
         // When
         val missionDTO = jpaMissionRepository.findFullMissionById(34)
-        assertThat(missionDTO.mission.id).isEqualTo(34)
+        assertThat(missionDTO).isNotNull()
+        assertThat(missionDTO!!.mission.id).isEqualTo(34)
         assertThat(missionDTO.mission.envActions).hasSize(2)
         assertThat(
             missionDTO.envActionsAttachedToReportingIds?.get(0)?.first,
@@ -885,7 +886,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         jpaMissionRepository.save(missionToUpdate)
         val updatedMission = jpaMissionRepository.findFullMissionById(id)
         assertThat(
-            updatedMission.copy(
+            updatedMission?.copy(
                 mission =
                 updatedMission.mission.copy(
                     createdAtUtc = null,
@@ -962,7 +963,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         jpaMissionRepository.save(missionToUpdate)
         val updatedMission = jpaMissionRepository.findFullMissionById(id)
         assertThat(
-            updatedMission.copy(
+            updatedMission?.copy(
                 mission =
                 updatedMission.mission.copy(
                     createdAtUtc = null,
@@ -1003,8 +1004,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 mission.envActions?.map {
                     if (it.id ==
                         UUID.fromString(
-                                "b8007c8a-5135-4bc3-816f-c69c7b75d807",
-                            ) && it is EnvActionControlEntity
+                            "b8007c8a-5135-4bc3-816f-c69c7b75d807",
+                        ) && it is EnvActionControlEntity
                     ) {
                         it.copy(controlPlans = nextControlPlans)
                     } else {

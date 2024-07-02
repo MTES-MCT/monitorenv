@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
@@ -14,6 +12,7 @@ import java.util.*
 
 @UseCase
 class DeleteMission(
+    private val getFullMission: GetFullMission,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
     private val canDeleteMission: CanDeleteMission,
@@ -26,51 +25,53 @@ class DeleteMission(
 
         logger.info("Delete mission $missionId")
 
-        if (!canDeleteMission.execute(missionId, source).canDelete) {
-            val actionSources =
-                if (source == MissionSourceEnum.MONITORFISH) {
-                    MissionSourceEnum.MONITORENV
-                } else {
-                    MissionSourceEnum.MONITORFISH
-                }
+        getFullMission.execute(missionId).let { missionToDelete ->
 
-            val errorSources =
-                object {
-                    var sources = listOf(actionSources)
-                }
+            if (!canDeleteMission.execute(missionId, source).canDelete) {
+                val actionSources =
+                    if (source == MissionSourceEnum.MONITORFISH) {
+                        MissionSourceEnum.MONITORENV
+                    } else {
+                        MissionSourceEnum.MONITORFISH
+                    }
 
-            throw BackendUsageException(
-                code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
-                data = errorSources,
-            )
-        }
+                val errorSources =
+                    object {
+                        var sources = listOf(actionSources)
+                    }
 
-        val missionToDelete = missionRepository.findFullMissionById(missionId)
-
-        if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
-            val envActionIdsToDetach = mutableListOf<UUID>()
-            missionToDelete.attachedReportingIds.forEach {
-                val reporting = reportingRepository.findById(it)
-
-                // detach action attached to reporting
-                if (reporting.reporting.attachedEnvActionId != null) {
-                    envActionIdsToDetach.add(reporting.reporting.attachedEnvActionId)
-                }
-
-                // detach mission to reporting
-                val detachedReporting =
-                    reporting.reporting.copy(
-                        detachedFromMissionAtUtc = ZonedDateTime.now(),
-                        attachedEnvActionId = null,
-                    )
-                reportingRepository.save(detachedReporting)
+                throw BackendUsageException(
+                    code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
+                    data = errorSources,
+                )
             }
-            reportingRepository.detachDanglingEnvActions(
-                missionId,
-                envActionIdsToDetach,
-            )
-        }
 
-        return missionRepository.delete(missionId)
+
+            if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
+                val envActionIdsToDetach = mutableListOf<UUID>()
+                missionToDelete.attachedReportingIds.forEach {
+                    val reporting = reportingRepository.findById(it)
+
+                    // detach action attached to reporting
+                    if (reporting.reporting.attachedEnvActionId != null) {
+                        envActionIdsToDetach.add(reporting.reporting.attachedEnvActionId)
+                    }
+
+                    // detach mission to reporting
+                    val detachedReporting =
+                        reporting.reporting.copy(
+                            detachedFromMissionAtUtc = ZonedDateTime.now(),
+                            attachedEnvActionId = null,
+                        )
+                    reportingRepository.save(detachedReporting)
+                }
+                reportingRepository.detachDanglingEnvActions(
+                    missionId,
+                    envActionIdsToDetach,
+                )
+            }
+
+            return missionRepository.delete(missionId)
+        }
     }
 }

@@ -1,14 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
-data class MissionDataOutput(
+data class MissionWithFishAndRapportNavActionsDataOutput(
     override val id: Int,
     override val missionTypes: List<MissionTypeEnum>,
     override val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
@@ -28,42 +29,15 @@ data class MissionDataOutput(
     override val hasMissionOrder: Boolean,
     override val isUnderJdp: Boolean,
     override val isGeometryComputedFromControls: Boolean,
+    val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
+    val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
 ) : MissionOutput {
     companion object {
-        fun fromMissionEntity(mission: MissionEntity): MissionDataOutput {
-            requireNotNull(mission.id) { "a mission must have an id" }
 
-            return MissionDataOutput(
-                id = mission.id,
-                missionTypes = mission.missionTypes,
-                controlUnits = mission.controlUnits,
-                openBy = mission.openBy,
-                completedBy = mission.completedBy,
-                observationsCacem = mission.observationsCacem,
-                observationsCnsp = mission.observationsCnsp,
-                facade = mission.facade,
-                geom = mission.geom,
-                startDateTimeUtc = mission.startDateTimeUtc,
-                endDateTimeUtc = mission.endDateTimeUtc,
-                createdAtUtc = mission.createdAtUtc,
-                updatedAtUtc = mission.updatedAtUtc,
-                envActions =
-                mission.envActions?.map {
-                    MissionEnvActionDataOutput.fromEnvActionEntity(
-                        envActionEntity = it,
-                    )
-                },
-                missionSource = mission.missionSource,
-                hasMissionOrder = mission.hasMissionOrder,
-                isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
-            )
-        }
-
-        fun fromMissionDTO(missionDto: MissionDTO): MissionDataOutput {
+        fun fromMissionDTO(missionDto: MissionDTO): MissionWithFishAndRapportNavActionsDataOutput {
             requireNotNull(missionDto.mission.id) { "a mission must have an id" }
 
-            return MissionDataOutput(
+            return MissionWithFishAndRapportNavActionsDataOutput(
                 id = missionDto.mission.id,
                 missionTypes = missionDto.mission.missionTypes,
                 controlUnits = missionDto.mission.controlUnits,
@@ -88,6 +62,16 @@ data class MissionDataOutput(
                 hasMissionOrder = missionDto.mission.hasMissionOrder,
                 isUnderJdp = missionDto.mission.isUnderJdp,
                 isGeometryComputedFromControls = missionDto.mission.isGeometryComputedFromControls,
+                fishActions = missionDto.fishActions?.map {
+                    MonitorFishMissionActionDataOutput.fromMonitorFishMissionActionEntity(
+                        it,
+                    )
+                },
+                hasRapportNavActions = missionDto.hasRapportNavActions?.let {
+                    RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(
+                        it,
+                    )
+                },
             )
         }
     }
