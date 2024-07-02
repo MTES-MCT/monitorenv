@@ -30,7 +30,7 @@ import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 // TODO: Remove this when the feature flag is removed
-const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENBALED === 'true'
+const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENABLED === 'true'
 
 export function HomePage() {
   const dispatch = useAppDispatch()
