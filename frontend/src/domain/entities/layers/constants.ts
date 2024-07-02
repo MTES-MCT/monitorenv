@@ -50,7 +50,8 @@ export enum MonitorEnvLayers {
   TERRITORIAL_SEAS = 'TERRITORIAL_SEAS',
   THREE_MILES = 'THREE_MILES',
   TRANSVERSAL_SEA_LIMIT_AREAS = 'TRANSVERSAL_SEA_LIMIT_AREAS',
-  TWELVE_MILES = 'TWELVE_MILES'
+  TWELVE_MILES = 'TWELVE_MILES',
+  VIGILANCE_AREA = 'VIGILANCE_AREA'
 }
 
 /**
@@ -233,6 +234,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.STATIONS]: {
     code: MonitorEnvLayers.STATIONS,
     zIndex: 1600
+  },
+  [MonitorEnvLayers.VIGILANCE_AREA]: {
+    code: MonitorEnvLayers.VIGILANCE_AREA,
+    zIndex: 1600
   }
 }
 
@@ -261,6 +266,7 @@ export const SelectableLayers0To7 = [
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
   [MonitorEnvLayers.STATIONS],
+  [MonitorEnvLayers.VIGILANCE_AREA],
   [
     MonitorEnvLayers.AMP,
     MonitorEnvLayers.AMP_PREVIEW,
@@ -276,6 +282,7 @@ export const SelectableLayers7To26 = [
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
   [MonitorEnvLayers.STATIONS],
+  [MonitorEnvLayers.VIGILANCE_AREA],
   [
     MonitorEnvLayers.AMP,
     MonitorEnvLayers.AMP_PREVIEW,
@@ -296,7 +303,8 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
-  [MonitorEnvLayers.STATIONS]
+  [MonitorEnvLayers.STATIONS],
+  [MonitorEnvLayers.VIGILANCE_AREA]
 ]
 
 export const HoverableLayers7To26 = [
@@ -307,6 +315,7 @@ export const HoverableLayers7To26 = [
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
   [MonitorEnvLayers.STATIONS],
+  [MonitorEnvLayers.VIGILANCE_AREA],
   [
     MonitorEnvLayers.AMP,
     MonitorEnvLayers.AMP_PREVIEW,

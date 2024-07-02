@@ -1,5 +1,8 @@
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
+import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
+import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
+import { SelectedVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/SelectedVigilanceAreaLayer'
 
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
@@ -43,7 +46,7 @@ import { StationOverlay } from '../Station/components/StationOverlay'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
-export function Map() {
+export function Map({ isVigilanceAreaEnabled }) {
   return (
     <BaseMap
     // BaseMap forwards map & mapClickEvent as props to children
@@ -142,6 +145,14 @@ export function Map() {
       <SelectedMissionToAttachLayer />
       {/* @ts-ignore */}
       <MissionToAttachOverlays />
+
+      {/* VIGILANCE AREA */}
+      {/* @ts-ignore */}
+      {isVigilanceAreaEnabled && <VigilanceAreasLayer />}
+      {/* @ts-ignore */}
+      {isVigilanceAreaEnabled && <DrawVigilanceAreaLayer />}
+      {/* @ts-ignore */}
+      {isVigilanceAreaEnabled && <SelectedVigilanceAreaLayer />}
     </BaseMap>
   )
 }
