@@ -228,6 +228,5 @@ class CreateOrUpdateControlUnitContactUTests {
         assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(backendUsageException.message).isEqualTo("Invalid phone number")
         assertThat(backendUsageException.data).isEqualTo(newControlUnitContact.phone)
-
     }
 }
