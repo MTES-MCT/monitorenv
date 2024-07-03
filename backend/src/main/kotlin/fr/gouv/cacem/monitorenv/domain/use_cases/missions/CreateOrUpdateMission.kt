@@ -4,19 +4,19 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.event.EventPublisher
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import org.slf4j.LoggerFactory
-import org.springframework.context.ApplicationEventPublisher
 
 @UseCase
 class CreateOrUpdateMission(
     private val facadeRepository: IFacadeAreasRepository,
     private val missionRepository: IMissionRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
-    private val eventPublisher: ApplicationEventPublisher,
+    private val eventPublisher: EventPublisher<UpdateMissionEvent>,
 ) {
     private val logger = LoggerFactory.getLogger(CreateOrUpdateMission::class.java)
 
@@ -46,7 +46,7 @@ class CreateOrUpdateMission(
         }
 
         logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
-        eventPublisher.publishEvent(
+        eventPublisher.publish(
             UpdateMissionEvent(savedMission.mission),
         )
 

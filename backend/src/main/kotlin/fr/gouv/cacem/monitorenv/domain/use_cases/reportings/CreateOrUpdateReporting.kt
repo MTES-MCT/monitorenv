@@ -2,20 +2,20 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.event.EventPublisher
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.ApplicationEventPublisher
 
 @UseCase
 class CreateOrUpdateReporting(
     private val reportingRepository: IReportingRepository,
     private val facadeRepository: IFacadeAreasRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
-    private val eventPublisher: ApplicationEventPublisher,
+    private val eventPublisher: EventPublisher<UpdateReportingEvent>,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
@@ -61,7 +61,7 @@ class CreateOrUpdateReporting(
             )
 
         logger.info("Sending CREATE/UPDATE event for reporting id ${savedReporting.reporting.id}.")
-        eventPublisher.publishEvent(
+        eventPublisher.publish(
             UpdateReportingEvent(savedReporting),
         )
 

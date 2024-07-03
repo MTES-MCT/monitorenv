@@ -11,16 +11,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.event.EventPublisher
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
-import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -30,25 +27,31 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateReportingUTests {
-    @MockBean private lateinit var reportingRepository: IReportingRepository
+    @MockBean
+    private lateinit var reportingRepository: IReportingRepository
 
-    @MockBean private lateinit var controlUnitRepository: IControlUnitRepository
+    @MockBean
+    private lateinit var controlUnitRepository: IControlUnitRepository
 
-    @MockBean private lateinit var semaphoreRepository: ISemaphoreRepository
+    @MockBean
+    private lateinit var semaphoreRepository: ISemaphoreRepository
 
-    @MockBean private lateinit var facadeRepository: IFacadeAreasRepository
+    @MockBean
+    private lateinit var facadeRepository: IFacadeAreasRepository
 
-    @MockBean private lateinit var missionRepository: IMissionRepository
+    @MockBean
+    private lateinit var missionRepository: IMissionRepository
 
-    @MockBean private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
+    @MockBean
+    private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
 
-    @MockBean private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @MockBean
+    private lateinit var eventPublisher: EventPublisher<UpdateReportingEvent>
 
     @Test
     fun `Should throw an exception when input is null`() {
@@ -59,7 +62,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
-                    eventPublisher = applicationEventPublisher,
+                    eventPublisher = eventPublisher,
                 )
                     .execute(null)
             }
@@ -221,7 +224,7 @@ class CreateOrUpdateReportingUTests {
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
-                eventPublisher = applicationEventPublisher,
+                eventPublisher = eventPublisher,
             )
                 .execute(reportingWithSemaphore)
 
@@ -236,7 +239,7 @@ class CreateOrUpdateReportingUTests {
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
-                eventPublisher = applicationEventPublisher,
+                eventPublisher = eventPublisher,
             )
                 .execute(reportingWithControlUnit)
 
@@ -284,7 +287,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
-                    eventPublisher = applicationEventPublisher,
+                    eventPublisher = eventPublisher,
                 )
                     .execute(reporting)
             }
@@ -334,7 +337,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
-                    eventPublisher = applicationEventPublisher,
+                    eventPublisher = eventPublisher,
                 )
                     .execute(reporting)
             }
@@ -428,7 +431,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
-                    eventPublisher = applicationEventPublisher,
+                    eventPublisher = eventPublisher,
                 )
                     .execute(reportingWithControlUnitId)
             }
@@ -445,7 +448,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
-                    eventPublisher = applicationEventPublisher,
+                    eventPublisher = eventPublisher,
                 )
                     .execute(reportingWithSemaphoreId)
             }
@@ -462,7 +465,7 @@ class CreateOrUpdateReportingUTests {
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
-                    eventPublisher = applicationEventPublisher,
+                    eventPublisher = eventPublisher,
                 )
                     .execute(reportingWithoutSourceName)
             }
@@ -549,7 +552,7 @@ class CreateOrUpdateReportingUTests {
                 reportingRepository = reportingRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
-                eventPublisher = applicationEventPublisher,
+                eventPublisher = eventPublisher,
             )
                 .execute(reportingWithNewAttachedMission)
         }

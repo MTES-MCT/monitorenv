@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
+import fr.gouv.cacem.monitorenv.config.Scheduled
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
 
 @UseCase
 class ArchiveOutdatedReportings(

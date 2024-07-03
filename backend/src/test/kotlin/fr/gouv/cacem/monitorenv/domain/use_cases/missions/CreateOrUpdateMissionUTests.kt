@@ -9,10 +9,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.event.EventPublisher
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,20 +23,23 @@ import org.locationtech.jts.geom.MultiPoint
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionUTests {
-    @MockBean private lateinit var missionRepository: IMissionRepository
+    @MockBean
+    private lateinit var missionRepository: IMissionRepository
 
-    @MockBean private lateinit var facadeAreasRepository: IFacadeAreasRepository
+    @MockBean
+    private lateinit var facadeAreasRepository: IFacadeAreasRepository
 
-    @MockBean private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
+    @MockBean
+    private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
 
-    @MockBean private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @MockBean
+    private lateinit var eventPublisher: EventPublisher<UpdateMissionEvent>
 
     @Test
     fun `execute Should throw an exception when input mission is null`() {
@@ -44,7 +49,7 @@ class CreateOrUpdateMissionUTests {
                 CreateOrUpdateMission(
                     missionRepository = missionRepository,
                     facadeRepository = facadeAreasRepository,
-                    eventPublisher = applicationEventPublisher,
+                    eventPublisher = eventPublisher,
                     postgisFunctionRepository = postgisFunctionRepository,
                 )
                     .execute(null)
@@ -138,7 +143,7 @@ class CreateOrUpdateMissionUTests {
             CreateOrUpdateMission(
                 missionRepository = missionRepository,
                 facadeRepository = facadeAreasRepository,
-                eventPublisher = applicationEventPublisher,
+                eventPublisher = eventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(
@@ -207,7 +212,7 @@ class CreateOrUpdateMissionUTests {
             CreateOrUpdateMission(
                 missionRepository = missionRepository,
                 facadeRepository = facadeAreasRepository,
-                eventPublisher = applicationEventPublisher,
+                eventPublisher = eventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
             )
                 .execute(
