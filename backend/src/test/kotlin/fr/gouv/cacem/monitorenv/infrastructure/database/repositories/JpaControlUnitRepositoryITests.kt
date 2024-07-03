@@ -67,7 +67,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             isEmailSubscriptionContact = true,
                             isSmsSubscriptionContact = false,
                             name = "Contact 1",
-                            phone = "06 01 xx xx xx",
+                            phone = "0601xxxxxx",
                         ),
                         ControlUnitContactEntity(
                             id = 2,
@@ -76,7 +76,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = true,
                             name = "Contact 2",
-                            phone = "06 02 xx xx xx",
+                            phone = "0602xxxxxx",
                         ),
                     ),
                     controlUnitResources =
@@ -312,7 +312,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             isEmailSubscriptionContact = true,
                             isSmsSubscriptionContact = false,
                             name = "Contact 1",
-                            phone = "06 01 xx xx xx",
+                            phone = "0601xxxxxx",
                         ),
                         ControlUnitContactEntity(
                             id = 2,
@@ -321,7 +321,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = true,
                             name = "Contact 2",
-                            phone = "06 02 xx xx xx",
+                            phone = "0602xxxxxx",
                         ),
                     ),
                     controlUnitResources =

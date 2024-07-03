@@ -38,7 +38,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     isEmailSubscriptionContact = true,
                     isSmsSubscriptionContact = false,
                     name = "Contact 1",
-                    phone = "06 01 xx xx xx",
+                    phone = "0601xxxxxx",
                 ),
             ),
         )
@@ -90,7 +90,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     isEmailSubscriptionContact = true,
                     isSmsSubscriptionContact = false,
                     name = "Contact 1",
-                    phone = "06 01 xx xx xx",
+                    phone = "0601xxxxxx",
                 ),
             ),
         )

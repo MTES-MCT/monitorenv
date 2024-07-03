@@ -4,11 +4,14 @@ import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -93,9 +96,8 @@ class CreateOrUpdateControlUnitContactUTests {
             isEmailSubscriptionContact = false,
             isSmsSubscriptionContact = false,
         )
-        val secondRepositoryOutputMock = secondRepositoryInputExpectation
         given(controlUnitContactRepository.save(secondRepositoryInputExpectation)).willReturn(
-            secondRepositoryOutputMock,
+            secondRepositoryInputExpectation,
         )
 
         // When
@@ -103,7 +105,7 @@ class CreateOrUpdateControlUnitContactUTests {
             .execute(updatedControlUnitContact)
 
         // Then
-        assertThat(result).isEqualTo(secondRepositoryOutputMock)
+        assertThat(result).isEqualTo(secondRepositoryInputExpectation)
 
         BDDMockito.verify(controlUnitContactRepository).save(secondRepositoryInputExpectation)
     }
@@ -182,31 +184,50 @@ class CreateOrUpdateControlUnitContactUTests {
         val secondRepositoryExpectedInput = firstRepositoryOutputMock.controlUnitContacts[1].copy(
             isEmailSubscriptionContact = false,
         )
-        val secondRepositoryOutputMock = secondRepositoryExpectedInput
         given(controlUnitContactRepository.save(secondRepositoryExpectedInput))
-            .willReturn(secondRepositoryOutputMock)
+            .willReturn(secondRepositoryExpectedInput)
 
         val thirdRepositoryExpectedInput = firstRepositoryOutputMock.controlUnitContacts[2].copy(
             isEmailSubscriptionContact = false,
         )
-        val thirdRepositoryOutputMock = thirdRepositoryExpectedInput
         given(controlUnitContactRepository.save(thirdRepositoryExpectedInput))
-            .willReturn(thirdRepositoryOutputMock)
+            .willReturn(thirdRepositoryExpectedInput)
 
-        val fourthRepositoryOutputMock = updatedControlUnitContact
         given(controlUnitContactRepository.save(updatedControlUnitContact))
-            .willReturn(fourthRepositoryOutputMock)
+            .willReturn(updatedControlUnitContact)
 
         // When
         val result = CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
             .execute(updatedControlUnitContact)
 
         // Then
-        assertThat(result).isEqualTo(fourthRepositoryOutputMock)
+        assertThat(result).isEqualTo(updatedControlUnitContact)
 
         BDDMockito.verify(controlUnitRepository).findById(updatedControlUnitContact.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(secondRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(thirdRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(updatedControlUnitContact)
+    }
+
+    @Test
+    fun `execute should throw BackendUsageException when phone is invalid`() {
+        // Given
+        val newControlUnitContact = ControlUnitContactEntity(
+            controlUnitId = 2,
+            email = "bob@example.org",
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = true,
+            name = "Contact Name",
+            phone = "phone number",
+        )
+        // When & Then
+        val backendUsageException = assertThrows<BackendUsageException> {
+            CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+                .execute(newControlUnitContact)
+        }
+        assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
+        assertThat(backendUsageException.message).isEqualTo("Invalid phone number")
+        assertThat(backendUsageException.data).isEqualTo(newControlUnitContact.phone)
+
     }
 }
