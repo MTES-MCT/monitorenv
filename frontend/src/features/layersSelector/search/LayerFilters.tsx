@@ -1,3 +1,5 @@
+import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { type Option, Accent, CheckPicker, CustomSearch, SingleTag } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -21,6 +23,9 @@ export function LayerFilters({
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes
 }: LayerFiltersProps) {
+  const vigilanceAreaFormTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
+  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+
   const handleSetFilteredAmpTypes = filteredAmps => {
     setFilteredAmpTypes(filteredAmps)
   }
@@ -74,25 +79,31 @@ export function LayerFilters({
           ))}
       </TagWrapper>
 
-      <CheckPicker
-        customSearch={AMPCustomSearch}
-        isLabelHidden
-        label="Type d'AMP"
-        name="ampTypes"
-        onChange={handleSetFilteredAmpTypes}
-        options={ampTypes}
-        placeholder="Type d'AMP"
-        renderValue={() => filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>}
-        value={filteredAmpTypes}
-      />
-      <TagWrapper>
-        {filteredAmpTypes?.length > 0 &&
-          filteredAmpTypes?.map(type => (
-            <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
-              {type}
-            </SingleTag>
-          ))}
-      </TagWrapper>
+      {!isLinkingRegulatoryToVigilanceArea && (
+        <>
+          <CheckPicker
+            customSearch={AMPCustomSearch}
+            isLabelHidden
+            label="Type d'AMP"
+            name="ampTypes"
+            onChange={handleSetFilteredAmpTypes}
+            options={ampTypes}
+            placeholder="Type d'AMP"
+            renderValue={() =>
+              filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>
+            }
+            value={filteredAmpTypes}
+          />
+          <TagWrapper>
+            {filteredAmpTypes?.length > 0 &&
+              filteredAmpTypes?.map(type => (
+                <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
+                  {type}
+                </SingleTag>
+              ))}
+          </TagWrapper>
+        </>
+      )}
 
       {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>

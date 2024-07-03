@@ -1,3 +1,4 @@
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -23,11 +24,18 @@ import {
 import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
-export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
+type RegulatoryLayerProps = {
+  isLinkingRegulatoryToVigilanceArea: boolean
+  layerId: number
+  searchedText: string
+}
+
+export function RegulatoryLayer({ isLinkingRegulatoryToVigilanceArea, layerId, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
 
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
@@ -68,6 +76,11 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
     dispatch(setFitToExtent(extent))
   }
 
+  const addZoneToVigilanceArea = e => {
+    e.stopPropagation()
+    dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([layerId]))
+  }
+
   useEffect(() => {
     if (layerId === regulatoryMetadataLayerId && ref?.current) {
       ref.current.scrollIntoView(false)
@@ -96,14 +109,25 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
         {!layer?.entity_name && 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
-        <IconButton
-          accent={Accent.TERTIARY}
-          aria-label="Sélectionner la zone"
-          color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
-          data-cy="regulatory-zone-check"
-          Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
-          onClick={handleSelectZone}
-        />
+        {isLinkingRegulatoryToVigilanceArea ? (
+          <IconButton
+            accent={Accent.TERTIARY}
+            aria-label="Ajouter la zone à la zone de vigilance"
+            data-cy="regulatory-zone-check"
+            disabled={regulatoryAreasLinkedToVigilanceAreaForm?.includes(layerId)}
+            Icon={Icon.Plus}
+            onClick={addZoneToVigilanceArea}
+          />
+        ) : (
+          <IconButton
+            accent={Accent.TERTIARY}
+            aria-label="Sélectionner la zone"
+            color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
+            data-cy="regulatory-zone-check"
+            Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
+            onClick={handleSelectZone}
+          />
+        )}
       </LayerSelector.IconGroup>
     </LayerSelector.Layer>
   )

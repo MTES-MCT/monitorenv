@@ -1,4 +1,5 @@
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
+import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
@@ -29,12 +30,14 @@ export function LayersSidebar() {
 
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+  const vigilanceAreaFormTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const secondVigilanceAreaPanelOpen = !!(
     selectedVigilanceAreaId &&
     editingVigilanceAreaId &&
     selectedVigilanceAreaId !== editingVigilanceAreaId
   )
   const mainVigilanceAreaFormOpen = !!(selectedVigilanceAreaId || (selectedVigilanceAreaId && editingVigilanceAreaId))
+  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
 
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
@@ -70,10 +73,14 @@ export function LayersSidebar() {
         <LayerSearch />
         <Layers>
           <RegulatoryLayers />
-          <AmpLayers />
-          {IS_VIGILANCE_AREA_ENABLED && <MyVigilanceAreas />}
-          <AdministrativeLayers />
-          <BaseLayerList />
+          {!isLinkingRegulatoryToVigilanceArea && (
+            <>
+              <AmpLayers />
+              {IS_VIGILANCE_AREA_ENABLED && <MyVigilanceAreas />}
+              <AdministrativeLayers />
+              <BaseLayerList />
+            </>
+          )}
         </Layers>
 
         <MetadataPanelShifter
@@ -83,7 +90,7 @@ export function LayersSidebar() {
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
-          {secondVigilanceAreaPanelOpen && (
+          {IS_VIGILANCE_AREA_ENABLED && secondVigilanceAreaPanelOpen && (
             <VigilanceAreaForm
               key={selectedVigilanceAreaId}
               isOpen={secondVigilanceAreaPanelOpen}

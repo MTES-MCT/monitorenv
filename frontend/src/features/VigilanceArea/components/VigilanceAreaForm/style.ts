@@ -43,3 +43,13 @@ export const SubFormBody = styled.div`
   gap: 16px;
   padding: 8px 16px;
 `
+export const ValidateButton = styled(Button)`
+  align-self: flex-end;
+  background: ${p => p.theme.color.mediumSeaGreen};
+  border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
+  color: ${p => p.theme.color.white};
+  &:hover {
+    background: ${p => p.theme.color.mediumSeaGreen};
+    border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
+  }
+`

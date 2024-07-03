@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS public.vigilance_areas (
   is_deleted boolean NOT NULL DEFAULT FALSE,
   is_draft boolean NOT NULL DEFAULT TRUE,
   links jsonb,
+  linked_regulatory_areas INT[],
   name text,
   source text,
   start_date_period TIMESTAMP,

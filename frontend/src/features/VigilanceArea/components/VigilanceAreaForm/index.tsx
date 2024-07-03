@@ -9,7 +9,7 @@ import { noop } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { SelectRegulatories } from './AddRegulatories/SelectRegulatories'
+import { SelectRegulatories } from './AddRegulatoryAreas/SelectRegulatories'
 import { DrawVigilanceArea } from './DrawVigilanceArea'
 import { Form } from './Form'
 import { VigilanceAreaSchema } from './Schema'

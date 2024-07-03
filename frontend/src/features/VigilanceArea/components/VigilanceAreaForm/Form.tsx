@@ -26,7 +26,7 @@ import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { AddRegulatories } from './AddRegulatories'
+import { AddRegulatoryAreas } from './AddRegulatoryAreas'
 import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
@@ -189,9 +189,8 @@ export function Form() {
           listener={InteractionListener.VIGILANCE_ZONE}
           name="geom"
         />
-        <AddRegulatories />
+        <AddRegulatoryAreas />
         <Links />
-        <Separator />
         <InternText>Interne CACEM</InternText>
         <StyledTrigramInput isErrorMessageHidden isRequired label="Créé par" name="createdBy" />
         <FormikTextarea
@@ -219,10 +218,6 @@ const StyledForm = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-`
-
-const Separator = styled.div`
-  border-top: 1px solid ${p => p.theme.color.maximumRed};
 `
 const InternText = styled.span`
   color: ${p => p.theme.color.maximumRed};

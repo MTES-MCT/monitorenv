@@ -63,6 +63,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       if (feature) {
         const layerId = feature.get('id')
         dispatch(closeMetadataPanel())
+
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
       }
     }
@@ -73,7 +74,10 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       const items = getClickedItems(mapClickEvent)
       dispatch(setLayerOverlayItems(items))
     }
-  }, [dispatch, mapClickEvent, editingVigilanceAreaId])
+
+    // we don't want to listen editingVigilanceAreaId changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, mapClickEvent])
 
   return null
 }

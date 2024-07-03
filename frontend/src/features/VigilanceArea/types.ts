@@ -13,6 +13,7 @@ export namespace VigilanceArea {
     geom: GeoJSON.MultiPolygon
     id: number
     isDraft: boolean
+    linkedRegulatoryAreas: Array<number>
     links: Array<Link>
     name: string
     source: string

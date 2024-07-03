@@ -1,4 +1,5 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { Checkbox } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
@@ -25,6 +26,9 @@ export function ResultList({ searchedText }: ResultListProps) {
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const areRegulatoryResultsOpen = useAppSelector(state => state.layerSidebar.areRegulatoryResultsOpen)
   const areAmpsResultsOpen = useAppSelector(state => state.layerSidebar.areAmpsResultsOpen)
+
+  const vigilanceAreaFormTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
+  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: amps } = useGetAMPsQuery()
@@ -94,7 +98,7 @@ export function ResultList({ searchedText }: ResultListProps) {
           </SubList>
         </>
       )}
-      {ampsSearchResult && (
+      {ampsSearchResult && !isLinkingRegulatoryToVigilanceArea && (
         <>
           <HeaderAMP>
             <StyledCheckbox

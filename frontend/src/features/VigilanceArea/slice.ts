@@ -17,16 +17,18 @@ type VigilanceAreaSliceState = {
   interactionType: InteractionType
   isCancelModalOpen: boolean
   isGeometryValid: boolean
+  regulatoryAreasToAdd: Array<number> | undefined
   selectedVigilanceAreaId: number | undefined
   vigilanceAreaIdToCancel: number | undefined
 }
 const INITIAL_STATE: VigilanceAreaSliceState = {
   editingVigilanceAreaId: undefined,
-  formTypeOpen: undefined,
+  formTypeOpen: VigilanceAreaFormTypeOpen.FORM,
   geometry: undefined,
   interactionType: InteractionType.POLYGON,
   isCancelModalOpen: false,
   isGeometryValid: false,
+  regulatoryAreasToAdd: undefined,
   selectedVigilanceAreaId: undefined,
   vigilanceAreaIdToCancel: undefined
 }
@@ -34,6 +36,13 @@ export const vigilanceAreaSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'vigilanceArea',
   reducers: {
+    addRegulatoryAreasToVigilanceArea(state, action: PayloadAction<Array<number>>) {
+      if (state.regulatoryAreasToAdd) {
+        state.regulatoryAreasToAdd = [...state.regulatoryAreasToAdd, ...action.payload]
+      } else {
+        state.regulatoryAreasToAdd = action.payload
+      }
+    },
     closeCancelModal(state) {
       state.isCancelModalOpen = false
     },
@@ -59,6 +68,11 @@ export const vigilanceAreaSlice = createSlice({
       state.formTypeOpen = VigilanceAreaFormTypeOpen.FORM
       state.isGeometryValid = false
       state.geometry = undefined
+    },
+    deleteRegulatoryAreasFromVigilanceArea(state, action: PayloadAction<number>) {
+      if (state.regulatoryAreasToAdd) {
+        state.regulatoryAreasToAdd = state.regulatoryAreasToAdd.filter(id => id !== action.payload)
+      }
     },
     openCancelModal(state, action: PayloadAction<number>) {
       state.isCancelModalOpen = true

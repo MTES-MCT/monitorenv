@@ -2,14 +2,14 @@ import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/Vigil
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Button, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import { InteractionType, OLGeometryType } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { GeoJSON } from 'ol/format'
 import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle } from './style'
+import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButton } from './style'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -107,16 +107,6 @@ const IconGroup = styled.div`
   gap: 16px;
 `
 
-const ValidateButton = styled(Button)`
-  align-self: flex-end;
-  background: ${p => p.theme.color.mediumSeaGreen};
-  border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
-  color: ${p => p.theme.color.white};
-  &:hover {
-    background: ${p => p.theme.color.mediumSeaGreen};
-    border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
-  }
-`
 const ButtonRow = styled.div`
   display: flex;
   justify-content: space-between;
