@@ -62,7 +62,7 @@ class CreateOrUpdateControlUnitContact(
         val frenchPhoneRegex = Regex("^0[1-9]\\d{8}$")
         val internationalPhoneRegex = Regex("^00\\d{6,15}$")
         controlUnitContact.phone?.let {
-            if (!(frenchPhoneRegex.matches(it) || internationalPhoneRegex.matches(it))) {
+            if (it.isNotBlank() && !(frenchPhoneRegex.matches(it) || internationalPhoneRegex.matches(it))) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
                     "Invalid phone number",

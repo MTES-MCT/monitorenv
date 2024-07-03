@@ -98,6 +98,9 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     if (!controlUnitContactFormValues.phone) {
       updatedControlUnitFormValues = { ...updatedControlUnitFormValues, phone: '' }
     }
+    if (!controlUnitContactFormValues.email) {
+      updatedControlUnitFormValues = { ...updatedControlUnitFormValues, email: '' }
+    }
 
     // There can only be one email subscription contact per control unit,
     // meaning that if the user is trying to unsubscribe the current email subscription contact,
