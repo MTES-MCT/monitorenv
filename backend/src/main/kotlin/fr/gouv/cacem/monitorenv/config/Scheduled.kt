@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.config
 
 import org.springframework.scheduling.annotation.Scheduled
 
-
 @Scheduled
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
