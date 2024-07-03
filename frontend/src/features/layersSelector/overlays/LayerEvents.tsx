@@ -6,6 +6,7 @@ import {
 } from '@features/map/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { convertToFeature } from 'domain/types/map'
 import { useEffect } from 'react'
 
@@ -22,6 +23,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
   useEffect(() => {
     const clickedAmpFeatures = getClickedAmpFeatures(mapClickEvent)
@@ -42,7 +44,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       if (feature) {
         const layerId = feature.get('id')
         dispatch(openAMPMetadataPanel(layerId))
-        // TODO 02/07/2024 : close vigilance area panel ?
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
     }
 
@@ -51,7 +53,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       if (feature) {
         const layerId = feature.get('id')
         dispatch(openRegulatoryMetadataPanel(layerId))
-        // TODO 02/07/2024 : close vigilance area panel ?
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
     }
 
@@ -60,6 +62,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       const feature = convertToFeature(clickedVigilanceAreaFeatures[0])
       if (feature) {
         const layerId = feature.get('id')
+        dispatch(closeMetadataPanel())
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
       }
     }
@@ -70,7 +73,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       const items = getClickedItems(mapClickEvent)
       dispatch(setLayerOverlayItems(items))
     }
-  }, [dispatch, mapClickEvent])
+  }, [dispatch, mapClickEvent, editingVigilanceAreaId])
 
   return null
 }

@@ -7,6 +7,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CustomSearch,
   DateRangePicker,
@@ -25,6 +26,7 @@ import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { AddRegulatories } from './AddRegulatories'
 import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
@@ -32,9 +34,9 @@ import { Links } from './Links'
 export function Form() {
   const dispatch = useAppDispatch()
 
+  const isCancelModalOpen = useAppSelector(state => state.vigilanceArea.isCancelModalOpen)
   const { dirty, setFieldValue, validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
@@ -57,7 +59,7 @@ export function Form() {
 
   const cancel = () => {
     if (dirty) {
-      setIsDialogOpen(true)
+      dispatch(vigilanceAreaActions.openCancelModal(values.id))
 
       return
     }
@@ -65,12 +67,11 @@ export function Form() {
   }
 
   const onCancelEditModal = () => {
-    setIsDialogOpen(false)
+    dispatch(vigilanceAreaActions.closeCancelModal())
   }
 
   const onConfirmEditModal = () => {
-    dispatch(vigilanceAreaActions.resetState())
-    setIsDialogOpen(false)
+    dispatch(vigilanceAreaActions.closeMainForm())
   }
 
   const save = () => {
@@ -117,9 +118,9 @@ export function Form() {
       <CancelEditDialog
         onCancel={onCancelEditModal}
         onConfirm={onConfirmEditModal}
-        open={isDialogOpen}
+        open={isCancelModalOpen}
         subText="Voulez-vous enregistrer les modifications avant de quitter ?"
-        text="Vous êtes en train d'abandonner l'édition de la zone de vigilance"
+        text={`Vous êtes en train d'abandonner l'édition de la zone de vigilance: ${values.name}`}
         title="Enregistrer les modifications"
       />
       <DeleteModal
@@ -188,6 +189,7 @@ export function Form() {
           listener={InteractionListener.VIGILANCE_ZONE}
           name="geom"
         />
+        <AddRegulatories />
         <Links />
         <Separator />
         <InternText>Interne CACEM</InternText>

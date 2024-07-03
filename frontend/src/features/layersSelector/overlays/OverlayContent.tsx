@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import { getGroupName, getLegendKey, getLegendType, getName, getTitle } from '../../../domain/entities/layers/utils'
 import {
+  closeMetadataPanel,
   getDisplayedMetadataLayerIdAndType,
   openAMPMetadataPanel,
   openRegulatoryMetadataPanel
@@ -32,16 +33,20 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
   const handleClick = (type, id) => () => {
     if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
       dispatch(openAMPMetadataPanel(id))
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
     }
     if (type === MonitorEnvLayers.REGULATORY_ENV || type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW) {
       dispatch(openRegulatoryMetadataPanel(id))
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
     }
     if (type === MonitorEnvLayers.VIGILANCE_AREA) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
+      dispatch(closeMetadataPanel())
     }
   }
 

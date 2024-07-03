@@ -9,6 +9,8 @@ import { GeoJSON } from 'ol/format'
 import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
+import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle } from './style'
+
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
 export function DrawVigilanceArea() {
@@ -61,16 +63,16 @@ export function DrawVigilanceArea() {
 
   const handleValidate = () => {
     setFieldValue('geom', geometry)
-    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.EDIT_FORM))
+    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
   }
 
   return (
     <>
-      <Header>
-        <Title>Ajout de tracés en cours...</Title>
-      </Header>
-      <Body>
-        <HelpText>Dessinez ou sélectionnez un ou plusieurs tracés sur la carte</HelpText>
+      <SubFormHeader>
+        <SubFormTitle>Ajout de tracés en cours...</SubFormTitle>
+      </SubFormHeader>
+      <SubFormBody>
+        <SubFormHelpText>Dessinez ou sélectionnez un ou plusieurs tracés sur la carte</SubFormHelpText>
         <ButtonRow>
           <IconGroup>
             <IconButton
@@ -94,7 +96,7 @@ export function DrawVigilanceArea() {
         <ValidateButton disabled={!isGeometryValid} onClick={handleValidate}>
           Valider les tracés
         </ValidateButton>
-      </Body>
+      </SubFormBody>
     </>
   )
 }
@@ -103,25 +105,6 @@ const IconGroup = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
-`
-const Header = styled.header`
-  align-items: center;
-  background: ${p => p.theme.color.charcoal};
-  display: flex;
-  justify-content: space-between;
-  padding: 9px 16px 10px 16px;
-`
-
-const Title = styled.h1`
-  color: ${p => p.theme.color.white};
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 22px;
-`
-
-const HelpText = styled.span`
-  font-style: italic;
-  color: ${p => p.theme.color.gunMetal};
 `
 
 const ValidateButton = styled(Button)`
@@ -137,11 +120,4 @@ const ValidateButton = styled(Button)`
 const ButtonRow = styled.div`
   display: flex;
   justify-content: space-between;
-`
-const Body = styled.div`
-  background-color: ${p => p.theme.color.white};
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 8px 16px;
 `

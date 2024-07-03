@@ -9,6 +9,7 @@ import { noop } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { SelectRegulatories } from './AddRegulatories/SelectRegulatories'
 import { DrawVigilanceArea } from './DrawVigilanceArea'
 import { Form } from './Form'
 import { VigilanceAreaSchema } from './Schema'
@@ -16,38 +17,50 @@ import { getVigilanceAreaInitialValues } from './utils'
 import { VigilanceAreaPanel } from './VigilanceAreaPanel'
 import { getVigilanceAreaColorWithAlpha } from '../VigilanceAreaLayer/style'
 
-export function VigilanceAreaForm({ isOpen }) {
+type VigilanceAreaFormProps = {
+  isOpen: boolean
+  isReadOnly?: boolean
+  vigilanceAreaId: number
+}
+export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId }: VigilanceAreaFormProps) {
   const dispatch = useAppDispatch()
   const formTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
-  const isReadOnlyMode = formTypeOpen === VigilanceAreaFormTypeOpen.READ_FORM
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
-  const { data: vigilanceArea } = useGetVigilanceAreaQuery(selectedVigilanceAreaId ?? skipToken)
+  const isPanelOpen = !!(selectedVigilanceAreaId && !editingVigilanceAreaId) || isReadOnly
+  const isFormOpen = !!(selectedVigilanceAreaId && editingVigilanceAreaId) && !isReadOnly
+
+  const isNewVigilanceArea = !!(vigilanceAreaId === -1)
+
+  const { data: vigilanceArea } = useGetVigilanceAreaQuery(!isNewVigilanceArea ? vigilanceAreaId : skipToken)
 
   const initialValues =
-    vigilanceArea && selectedVigilanceAreaId === vigilanceArea.id ? vigilanceArea : getVigilanceAreaInitialValues()
+    vigilanceArea && vigilanceAreaId === vigilanceArea.id ? vigilanceArea : getVigilanceAreaInitialValues()
 
   const squareColor = useMemo(
     () => getVigilanceAreaColorWithAlpha(initialValues?.name, initialValues?.comments),
     [initialValues]
   )
 
-  const title = selectedVigilanceAreaId ? vigilanceArea?.name : "Création d'une zone de vigilance"
+  const title = !isNewVigilanceArea ? vigilanceArea?.name : "Création d'une zone de vigilance"
 
   const close = () => {
-    dispatch(vigilanceAreaActions.resetState())
+    if (vigilanceAreaId === selectedVigilanceAreaId) {
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+    }
   }
 
   return (
-    <Wrapper $isMainFormOpen={formTypeOpen === VigilanceAreaFormTypeOpen.EDIT_FORM} $isOpen={isOpen}>
-      <Header $isEditing={!!selectedVigilanceAreaId}>
+    <Wrapper $isMainFormOpen={isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM} $isOpen={isOpen}>
+      <Header $isEditing={!!vigilanceAreaId}>
         <TitleContainer>
           <Square $color={squareColor} />
           <Title data-cy="vigilance-area-title" title={title}>
             {title}
           </Title>
         </TitleContainer>
-        {isReadOnlyMode && (
+        {isPanelOpen && (
           <SubHeaderContainer>
             {vigilanceArea?.isDraft && (
               <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
@@ -61,9 +74,12 @@ export function VigilanceAreaForm({ isOpen }) {
 
       <Formik enableReinitialize initialValues={initialValues} onSubmit={noop} validationSchema={VigilanceAreaSchema}>
         <>
+          {isPanelOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM && (
+            <VigilanceAreaPanel vigilanceArea={vigilanceArea} />
+          )}
+          {isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
           {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea />}
-          {formTypeOpen === VigilanceAreaFormTypeOpen.EDIT_FORM && <Form />}
-          {formTypeOpen === VigilanceAreaFormTypeOpen.READ_FORM && <VigilanceAreaPanel vigilanceArea={vigilanceArea} />}
+          {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && <SelectRegulatories />}
         </>
       </Formik>
     </Wrapper>
