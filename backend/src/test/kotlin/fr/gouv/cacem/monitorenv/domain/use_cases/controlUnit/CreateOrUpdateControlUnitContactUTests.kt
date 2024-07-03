@@ -11,8 +11,11 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.BDDMockito
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -209,8 +212,9 @@ class CreateOrUpdateControlUnitContactUTests {
         BDDMockito.verify(controlUnitContactRepository).save(updatedControlUnitContact)
     }
 
-    @Test
-    fun `execute should throw BackendUsageException when phone is invalid`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["invalide phone number", "111 222 333 444 555"])
+    fun `execute should throw BackendUsageException when phone is invalid`(phone: String) {
         // Given
         val newControlUnitContact = ControlUnitContactEntity(
             controlUnitId = 2,
@@ -218,7 +222,7 @@ class CreateOrUpdateControlUnitContactUTests {
             isEmailSubscriptionContact = true,
             isSmsSubscriptionContact = true,
             name = "Contact Name",
-            phone = "phone number",
+            phone = phone,
         )
         // When & Then
         val backendUsageException = assertThrows<BackendUsageException> {
@@ -228,5 +232,23 @@ class CreateOrUpdateControlUnitContactUTests {
         assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(backendUsageException.message).isEqualTo("Invalid phone number")
         assertThat(backendUsageException.data).isEqualTo(newControlUnitContact.phone)
+    }
+
+    @Test
+    fun `execute should not throw BackendUsageException when phone is empty`() {
+        // Given
+        val newControlUnitContact = ControlUnitContactEntity(
+            controlUnitId = 2,
+            email = "bob@example.org",
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = true,
+            name = "Contact Name",
+            phone = "",
+        )
+        // When & Then
+        assertDoesNotThrow {
+            CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+                .execute(newControlUnitContact)
+        }
     }
 }
