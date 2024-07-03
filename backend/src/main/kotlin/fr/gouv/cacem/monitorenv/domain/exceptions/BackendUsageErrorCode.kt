@@ -32,4 +32,7 @@ enum class BackendUsageErrorCode {
 
     /** Thrown when attempting to find an entity that has does not exist. */
     ENTITY_NOT_FOUND,
+
+    /** Thrown when an entity contain an unvalid property. */
+    UNVALID_PROPERTY,
 }

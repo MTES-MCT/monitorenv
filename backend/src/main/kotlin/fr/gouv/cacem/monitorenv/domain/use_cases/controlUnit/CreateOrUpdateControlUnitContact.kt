@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 
@@ -12,6 +14,7 @@ class CreateOrUpdateControlUnitContact(
 ) {
     fun execute(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
         val validControlUnitContact = validateSubscriptions(controlUnitContact)
+        validatePhone(validControlUnitContact)
 
         val createdOrUpdatedControlUnitContact = controlUnitContactRepository.save(validControlUnitContact)
 
@@ -53,5 +56,19 @@ class CreateOrUpdateControlUnitContact(
                 controlUnitContact.isSmsSubscriptionContact
             },
         )
+    }
+
+    private fun validatePhone(controlUnitContact: ControlUnitContactEntity) {
+        val frenchPhoneRegex = Regex("^0[1-9]\\d{8}$")
+        val internationalPhoneRegex = Regex("^00\\d{6,15}$")
+        controlUnitContact.phone?.let {
+            if (!(frenchPhoneRegex.matches(it) || internationalPhoneRegex.matches(it))) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "Invalid phone number",
+                    it,
+                )
+            }
+        }
     }
 }

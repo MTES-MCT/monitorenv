@@ -1,6 +1,6 @@
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
-import { Accent, Button, type ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
+import { Accent, Button, ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -83,6 +83,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
   }
 
   const submit = async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
+    let updatedControlUnitFormValues = controlUnitContactFormValues
     const hadAnEmailSubscriptionContact = controlUnit.controlUnitContacts.some(
       controlUnitContact => controlUnitContact.isEmailSubscriptionContact
     )
@@ -93,6 +94,11 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           controlUnitContact.id !== controlUnitContactFormValues.id && controlUnitContact.isEmailSubscriptionContact
       )
 
+    // FIXME(01/07/2024) : workaround for PATCH method
+    if (!controlUnitContactFormValues.phone) {
+      updatedControlUnitFormValues = { ...updatedControlUnitFormValues, phone: '' }
+    }
+
     // There can only be one email subscription contact per control unit,
     // meaning that if the user is trying to unsubscribe the current email subscription contact,
     // we need to warn them that the control unit will no longer receive any email
@@ -102,7 +108,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       hideNoEmailSubscriptionContactWarningBannerIfAny()
     }
 
-    dispatch(createOrUpdateControlUnitContact(controlUnitContactFormValues))
+    dispatch(createOrUpdateControlUnitContact(updatedControlUnitFormValues))
 
     closeForm()
   }
@@ -126,6 +132,10 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
 
     noEmailSubscriptionContactWarningBannerIdRef.current = undefined
   }
+
+  const controlUnitDisplayName =
+    (editedControlUnitContact.name && ControlUnit.ControlUnitContactPredefinedName[editedControlUnitContact.name]) ??
+    editedControlUnitContact.name
 
   /**
    * @returns ID of the banner that was added to the main window.
@@ -188,7 +198,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       {isDeletionConfirmationModalOpen && editedControlUnitContact && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer le contact "${editedControlUnitContact.name}" ?`}
+          message={`Êtes-vous sûr de vouloir supprimer le contact "${controlUnitDisplayName}" ?`}
           onCancel={closeDialogsAndModals}
           onConfirm={confirmDeletion}
           title="Suppression du contact"
