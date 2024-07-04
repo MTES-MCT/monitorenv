@@ -27,7 +27,7 @@ export function Login() {
     return <Navigate to="/" />
   }
 
-  if (auth?.isAuthenticated && isSuccess && user?.isSuperUser) {
+  if (auth?.isAuthenticated && isSuccess && !user?.isSuperUser) {
     return <Navigate to="/ext" />
   }
 
@@ -57,7 +57,6 @@ export function Login() {
     <Wrapper>
       {auth.isLoading && (
         <>
-          Chargement...
           <LoadingSpinnerWall isVesselShowed />
         </>
       )}
