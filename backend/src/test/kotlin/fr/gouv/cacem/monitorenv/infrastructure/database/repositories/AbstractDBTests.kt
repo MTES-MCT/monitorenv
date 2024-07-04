@@ -19,19 +19,22 @@ import java.time.temporal.ChronoUnit
 
 @Testcontainers
 @TestPropertySource("classpath:/application.properties")
-@SpringBootTest(classes = [MonitorEnvApplication::class], properties = ["monitorenv.scheduling.enabled=false"])
+@SpringBootTest(
+    classes = [MonitorEnvApplication::class],
+    properties = ["monitorenv.scheduling.enabled=false"],
+)
 abstract class AbstractDBTests {
 
-    @MockBean
-    private lateinit var jwtDecoder: JwtDecoder
+    @MockBean private lateinit var jwtDecoder: JwtDecoder
 
-    @MockBean
-    private lateinit var customAuthenticationEntryPoint: CustomAuthenticationEntryPoint
+    @MockBean private lateinit var customAuthenticationEntryPoint: CustomAuthenticationEntryPoint
 
     companion object {
         @JvmStatic
         val container: GenericContainer<Nothing> =
-            GenericContainer<Nothing>("ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2")
+            GenericContainer<Nothing>(
+                "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2",
+            )
                 .apply {
                     withExposedPorts(5432)
                     withEnv("POSTGRES_DB", "testdb")
@@ -55,10 +58,15 @@ abstract class AbstractDBTests {
             container.followOutput(toStringConsumer, OutputFrame.OutputType.STDOUT)
             println(toStringConsumer.toUtf8String())
 
-            return "jdbc:postgresql://" + container.host + ":" + container.getMappedPort(
-                PostgreSQLContainer.POSTGRESQL_PORT,
-            )
-                .toString() + "/testdb?user=postgres&password=postgres"
+            return "jdbc:postgresql://" +
+                container.host +
+                ":" +
+                container
+                    .getMappedPort(
+                        PostgreSQLContainer.POSTGRESQL_PORT,
+                    )
+                    .toString() +
+                "/testdb?user=postgres&password=postgres"
         }
     }
 }
