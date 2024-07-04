@@ -60,7 +60,7 @@ class VigilanceAreasITests {
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     private val vigilanceArea1 = VigilanceAreaEntity(
-        id= 1,
+        id = 1,
         name = "Vigilance Area 1",
         isDeleted = false,
         isDraft = false,
@@ -78,11 +78,12 @@ class VigilanceAreasITests {
         themes = null,
         visibility = VisibilityEnum.PRIVATE,
     )
+
     @Test
     fun `Should get all vigilance areas`() {
         // Given
         val vigilanceArea2 = VigilanceAreaEntity(
-            id= 2,
+            id = 2,
             name = "Vigilance Area 2",
             isDeleted = false,
             isDraft = true,
@@ -115,7 +116,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0].endingOccurrencesNumber", equalTo(2)))
             .andExpect(jsonPath("$[0].frequency", equalTo("ALL_WEEKS")))
             .andExpect(jsonPath("$[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
-            .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))            .andExpect(jsonPath("$[0].links").doesNotExist())
+            .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon"))).andExpect(
+                jsonPath("$[0].links").doesNotExist(),
+            )
             .andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").doesNotExist())
@@ -130,7 +133,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].endingOccurrencesNumber").doesNotExist())
             .andExpect(jsonPath("$[1].frequency", equalTo("ALL_WEEKS")))
             .andExpect(jsonPath("$[1].endDatePeriod", equalTo("2024-12-31T23:59:59Z")))
-            .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon")))            .andExpect(jsonPath("$[0].links").doesNotExist())
+            .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon"))).andExpect(
+                jsonPath("$[0].links").doesNotExist(),
+            )
             .andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
             .andExpect(jsonPath("$[1].themes").doesNotExist())
@@ -142,7 +147,7 @@ class VigilanceAreasITests {
         // Given
         given(getVigilanceAreaById.execute(1)).willReturn(vigilanceArea1)
         // When
-        mockMvc.perform(get("/bff/v1/vigilance_areas/21"))
+        mockMvc.perform(get("/bff/v1/vigilance_areas/1"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(1)))
@@ -155,7 +160,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.endingOccurrencesNumber", equalTo(2)))
             .andExpect(jsonPath("$.frequency", equalTo("ALL_WEEKS")))
             .andExpect(jsonPath("$.endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
-            .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))            .andExpect(jsonPath("$[0].links").doesNotExist())
+            .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon"))).andExpect(
+                jsonPath("$[0].links").doesNotExist(),
+            )
             .andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
@@ -166,7 +173,7 @@ class VigilanceAreasITests {
     fun `Should create a new vigilance area`() {
         // Given
         val vigilanceAreaDataInput = VigilanceAreaDataInput(
-            id= 1,
+            id = 1,
             name = "Vigilance Area 1",
             isDraft = false,
             comments = "Commentaires sur la zone de vigilance",
@@ -202,7 +209,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.endingOccurrencesNumber", equalTo(2)))
             .andExpect(jsonPath("$.frequency", equalTo("ALL_WEEKS")))
             .andExpect(jsonPath("$.endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
-            .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))            .andExpect(jsonPath("$[0].links").doesNotExist())
+            .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon"))).andExpect(
+                jsonPath("$[0].links").doesNotExist(),
+            )
             .andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
@@ -213,7 +222,7 @@ class VigilanceAreasITests {
     fun `Should update a vigilance area`() {
         // Given
         val vigilanceAreaDataInput = VigilanceAreaDataInput(
-            id= 1,
+            id = 1,
             name = "Vigilance Area 1",
             isDraft = false,
             comments = "Commentaires sur la zone de vigilance",
@@ -249,7 +258,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.endingOccurrencesNumber", equalTo(2)))
             .andExpect(jsonPath("$.frequency", equalTo("ALL_WEEKS")))
             .andExpect(jsonPath("$.endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
-            .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))            .andExpect(jsonPath("$[0].links").doesNotExist())
+            .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon"))).andExpect(
+                jsonPath("$[0].links").doesNotExist(),
+            )
             .andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())

@@ -14,7 +14,10 @@ class CreateOrUpdateVigilanceAreaUTests {
     @MockBean
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
 
-    private val createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea = CreateOrUpdateVigilanceArea(vigilanceAreaRepository)
+    private val createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea = CreateOrUpdateVigilanceArea(
+        vigilanceAreaRepository,
+    )
+
     @Test
     fun `execute should return save() result`() {
         val newVigilanceArea = VigilanceAreaEntity(
