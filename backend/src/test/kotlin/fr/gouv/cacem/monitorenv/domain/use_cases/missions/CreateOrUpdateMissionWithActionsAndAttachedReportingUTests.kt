@@ -6,7 +6,9 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
@@ -28,15 +30,20 @@ import java.util.*
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
-    @MockBean private lateinit var createOrUpdateMission: CreateOrUpdateMission
+    @MockBean
+    private lateinit var createOrUpdateMission: CreateOrUpdateMission
 
-    @MockBean private lateinit var createOrUpdateEnvActions: CreateOrUpdateEnvActions
+    @MockBean
+    private lateinit var createOrUpdateEnvActions: CreateOrUpdateEnvActions
 
-    @MockBean private lateinit var missionRepository: IMissionRepository
+    @MockBean
+    private lateinit var missionRepository: IMissionRepository
 
-    @MockBean private lateinit var reportingRepository: IReportingRepository
+    @MockBean
+    private lateinit var reportingRepository: IReportingRepository
 
-    @MockBean private lateinit var getFullMissionById: GetFullMissionById
+    @MockBean
+    private lateinit var getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions
 
     @Test
     fun `should attach mission to specified reportings`() {
@@ -88,14 +95,14 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
-        given(getFullMissionById.execute(100)).willReturn(Pair(true, expectedCreatedMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(true, expectedCreatedMission))
         // When
         val (_, createdMissionDTO) =
             CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getFullMissionById = getFullMissionById,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,
@@ -139,7 +146,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getFullMissionById = getFullMissionById,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,
@@ -208,7 +215,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
-        given(getFullMissionById.execute(100)).willReturn(Pair(true, expectedCreatedMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(true, expectedCreatedMission))
 
         // When
         val (_, createdMissionDTO) =
@@ -216,7 +223,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getFullMissionById = getFullMissionById,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,
@@ -297,7 +304,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
-        given(getFullMissionById.execute(100)).willReturn(Pair(false, expectedCreatedMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(false, expectedCreatedMission))
 
         // When
         val (fishResponds, createdMissionDTO) =
@@ -305,7 +312,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getFullMissionById = getFullMissionById,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,

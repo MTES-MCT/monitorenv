@@ -7,11 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -126,16 +122,12 @@ class JpaMissionRepository(
     }
 
     @Transactional
-    override fun findFullMissionById(missionId: Int): MissionDTO {
-        // FIXME(20/06/2024): faire .get() peut lancer NoSuchElementException ne devrait pas arriver,
-        //  changer avec findByIdOrNull qui est plus approprié pour Kotlin
-        return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
+    override fun findFullMissionById(missionId: Int): MissionDTO? {
+        return dbMissionRepository.findByIdOrNull(missionId)?.toMissionDTO(mapper)
     }
 
     @Transactional
     override fun findById(missionId: Int): MissionEntity? {
-        // FIXME(20/06/2024): faire .get() peut lancer NoSuchElementException ne devrait pas arriver,
-        //  changer avec findByIdOrNull qui est plus approprié pour Kotlin
         return dbMissionRepository.findByIdOrNull(missionId)?.toMissionEntity(mapper)
     }
 

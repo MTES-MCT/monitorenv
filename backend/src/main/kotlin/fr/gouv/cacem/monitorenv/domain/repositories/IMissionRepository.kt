@@ -11,7 +11,7 @@ interface IMissionRepository {
 
     fun delete(missionId: Int)
 
-    fun findFullMissionById(missionId: Int): MissionDTO
+    fun findFullMissionById(missionId: Int): MissionDTO?
 
     fun findById(missionId: Int): MissionEntity?
 

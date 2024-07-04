@@ -9,36 +9,34 @@ import java.time.ZonedDateTime
 
 @UseCase
 class BypassActionCheckAndDeleteMission(
+    private val getFullMission: GetFullMission,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 ) {
-    @Throws(IllegalArgumentException::class)
-    fun execute(missionId: Int?) {
-        require(missionId != null) { "No mission to delete" }
+    fun execute(missionId: Int) {
+        val missionToDelete = getFullMission.execute(missionId)
+        missionToDelete.attachedReportingIds?.let { attachedReportingIds ->
+            if (attachedReportingIds.isNotEmpty()) {
+                missionToDelete.attachedReportingIds.forEach {
+                    val reporting = reportingRepository.findById(it)
 
-        val missionToDelete = missionRepository.findFullMissionById(missionId)
+                    // detach action attached to reporting
+                    if (reporting.reporting.attachedEnvActionId != null) {
+                        reportingRepository.detachDanglingEnvActions(
+                            missionId,
+                            listOf(reporting.reporting.attachedEnvActionId),
+                        )
+                    }
 
-        if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
-            missionToDelete.attachedReportingIds.forEach {
-                val reporting = reportingRepository.findById(it)
-
-                // detach action attached to reporting
-                if (reporting.reporting.attachedEnvActionId != null) {
-                    reportingRepository.detachDanglingEnvActions(
-                        missionId,
-                        listOf(reporting.reporting.attachedEnvActionId),
+                    // detach mission to reporting
+                    val detachedReporting = reporting.reporting.copy(
+                        detachedFromMissionAtUtc = ZonedDateTime.now(),
+                        attachedEnvActionId = null,
                     )
+                    reportingRepository.save(detachedReporting)
                 }
-
-                // detach mission to reporting
-                val detachedReporting = reporting.reporting.copy(
-                    detachedFromMissionAtUtc = ZonedDateTime.now(),
-                    attachedEnvActionId = null,
-                )
-                reportingRepository.save(detachedReporting)
             }
+            return missionRepository.delete(missionId)
         }
-
-        return missionRepository.delete(missionId)
     }
 }

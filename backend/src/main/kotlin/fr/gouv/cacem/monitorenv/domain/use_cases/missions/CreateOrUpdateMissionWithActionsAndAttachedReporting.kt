@@ -9,14 +9,14 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.slf4j.LoggerFactory
-import java.util.UUID
+import java.util.*
 
 @UseCase
 class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
     private val reportingRepository: IReportingRepository,
-    private val getFullMissionById: GetFullMissionById,
+    private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions,
 ) {
     private val logger =
         LoggerFactory.getLogger(
@@ -65,7 +65,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
             reportingRepository.attachEnvActionsToReportings(it.first, it.second)
         }
 
-        return getFullMissionById.execute(savedMission.id)
+        return getFullMissionWithFishAndRapportNavActions.execute(savedMission.id)
     }
 
     private fun getListOfEnvActionIds(

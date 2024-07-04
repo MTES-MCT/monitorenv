@@ -7,9 +7,12 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
+import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.aMonitorFishAction
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionAndSourceAction
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.PatchMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
@@ -22,16 +25,15 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.Optional
+import java.util.*
 import kotlin.random.Random
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [NewMissions::class])
-class NewMissionsITest {
+@WebMvcTest(value = [Missions::class])
+class MissionsITest {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -41,6 +43,9 @@ class NewMissionsITest {
 
     @MockBean
     private lateinit var deleteMission: DeleteMission
+
+    @MockBean
+    private lateinit var getMissionAndSourceAction: GetMissionAndSourceAction
 
     @Test
     fun `Should delete mission with api v2`() {
@@ -140,5 +145,80 @@ class NewMissionsITest {
         )
             // Then
             .andExpect(status().isBadRequest())
+    }
+
+    @Test
+    fun `get should return ok with the expected mission and rapportNav actions when source is RAPPORT_NAV`() {
+        // Given
+        val id = Random.nextInt()
+        val source = MissionSourceEnum.RAPPORT_NAV
+
+        val mission = aMissionEntity()
+        given(getMissionAndSourceAction.execute(id, source)).willReturn(
+            MissionDTO(
+                mission,
+                hasRapportNavActions = RapportNavMissionActionEntity(1, true),
+            ),
+        )
+
+        // When
+        mockMvc.perform(
+            get("/api/v2/missions/$id").param("source", source.name)
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(jsonPath("$.id").value(mission.id))
+            .andExpect(jsonPath("$.hasRapportNavActions").isNotEmpty())
+            .andExpect(jsonPath("$.fishActions").isEmpty())
+            .andExpect(status().isOk())
+    }
+
+    @Test
+    fun `get should return ok with the expected mission and fish actions when source is MONITOR_FISH`() {
+        // Given
+        val id = Random.nextInt()
+        val source = MissionSourceEnum.MONITORFISH
+
+        val mission = aMissionEntity()
+        given(getMissionAndSourceAction.execute(id, source)).willReturn(
+            MissionDTO(
+                mission,
+                fishActions = listOf(aMonitorFishAction(id)),
+            ),
+        )
+
+        // When
+        mockMvc.perform(
+            get("/api/v2/missions/$id").param("source", source.name)
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(jsonPath("$.id").value(mission.id))
+            .andExpect(jsonPath("$.hasRapportNavActions").isEmpty())
+            .andExpect(jsonPath("$.fishActions").isNotEmpty())
+            .andExpect(status().isOk())
+    }
+
+    @Test
+    fun `get should return ok with the expected mission without source informations when source is not set`() {
+        // Given
+        val id = Random.nextInt()
+
+        val mission = aMissionEntity()
+        given(getMissionAndSourceAction.execute(id, null)).willReturn(
+            MissionDTO(
+                mission,
+            ),
+        )
+        // When
+        mockMvc.perform(
+            get("/api/v2/missions/$id")
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(jsonPath("$.id").value(mission.id))
+            .andExpect(jsonPath("$.hasRapportNavActions").isEmpty())
+            .andExpect(jsonPath("$.fishActions").isEmpty())
+            .andExpect(status().isOk())
     }
 }

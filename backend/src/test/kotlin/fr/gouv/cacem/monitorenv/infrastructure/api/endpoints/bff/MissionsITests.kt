@@ -22,12 +22,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionById
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
@@ -47,15 +42,12 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(Missions::class)])
@@ -72,7 +64,7 @@ class MissionsITests {
     private lateinit var getFullMissions: GetFullMissions
 
     @MockBean
-    private lateinit var getFullMissionById: GetFullMissionById
+    private lateinit var getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions
 
     @MockBean
     private lateinit var deleteMission: DeleteMission
@@ -174,14 +166,19 @@ class MissionsITests {
                 ),
             )
         // we test only if the route is called with the right arg
-        given(getFullMissionById.execute(requestedId)).willReturn(Pair(false, expectedFirstMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(
+            Pair(
+                false,
+                expectedFirstMission,
+            ),
+        )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
             // Then
             .andExpect(status().isPartialContent)
             .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
-        verify(getFullMissionById).execute(requestedId)
+        verify(getFullMissionWithFishAndRapportNavActions).execute(requestedId)
     }
 
     @Test
@@ -609,7 +606,12 @@ class MissionsITests {
             )
 
         // we test only if the route is called with the right arg
-        given(getFullMissionById.execute(requestedId)).willReturn(Pair(true, expectedFirstMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(
+            Pair(
+                true,
+                expectedFirstMission,
+            ),
+        )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
@@ -763,7 +765,7 @@ class MissionsITests {
                 ),
             )
 
-        verify(getFullMissionById).execute(requestedId)
+        verify(getFullMissionWithFishAndRapportNavActions).execute(requestedId)
     }
 
     @Test

@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
@@ -14,6 +12,7 @@ import java.util.*
 
 @UseCase
 class DeleteMission(
+    private val getFullMission: GetFullMission,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
     private val canDeleteMission: CanDeleteMission,
@@ -25,6 +24,8 @@ class DeleteMission(
         require(missionId != null) { "No mission to delete" }
 
         logger.info("Delete mission $missionId")
+
+        val missionToDelete = getFullMission.execute(missionId)
 
         if (!canDeleteMission.execute(missionId, source).canDelete) {
             val actionSources =
@@ -44,8 +45,6 @@ class DeleteMission(
                 data = errorSources,
             )
         }
-
-        val missionToDelete = missionRepository.findFullMissionById(missionId)
 
         if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
             val envActionIdsToDetach = mutableListOf<UUID>()
