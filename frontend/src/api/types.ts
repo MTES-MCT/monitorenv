@@ -26,3 +26,9 @@ export interface CustomRTKErrorResponse {
   data: BackendApiErrorResponse
   status: number | 'FETCH_ERROR' | 'PARSING_ERROR' | 'TIMEOUT_ERROR' | 'CUSTOM_ERROR'
 }
+
+export interface Meta {
+  response?: {
+    headers: Headers
+  }
+}
