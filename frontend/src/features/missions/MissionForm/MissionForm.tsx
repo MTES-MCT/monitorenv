@@ -1,12 +1,12 @@
 import {
   Banner,
+  type ControlUnit,
+  customDayjs,
   FormikEffect,
   Icon,
   Level,
   THEME,
-  customDayjs,
-  usePrevious,
-  type ControlUnit
+  usePrevious
 } from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { useFormikContext } from 'formik'
@@ -23,6 +23,7 @@ import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useMissionAndActionsCompletion } from './hooks/useMissionAndActionsCompletion'
+import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
@@ -31,8 +32,8 @@ import { getIsMissionFormValid, isMissionAutoSaveEnabled, shouldSaveMission } fr
 import { missionsAPI } from '../../../api/missionsAPI'
 import {
   FrontCompletionStatus,
-  MissionSourceEnum,
   type Mission,
+  MissionSourceEnum,
   type NewMission
 } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
@@ -98,6 +99,7 @@ export function MissionForm({
 
   const isFormDirty = useMemo(() => selectedMissions[id]?.isFormDirty ?? false, [id, selectedMissions])
 
+  useSyncFormValuesWithRedux(isAutoSaveEnabled)
   const { missionCompletionFrontStatus } = useMissionAndActionsCompletion()
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
@@ -177,14 +179,6 @@ export function MissionForm({
   }
 
   const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave) => {
-    dispatch(
-      missionFormsActions.setMission({
-        engagedControlUnit,
-        isFormDirty,
-        missionForm: nextValues
-      })
-    )
-
     if (!isAutoSaveEnabled || engagedControlUnit || !isMissionFormValid) {
       return
     }
@@ -194,7 +188,7 @@ export function MissionForm({
     }
 
     dispatch(saveMission(nextValues, false, false))
-  }, 150)
+  }, 300)
 
   useEffect(() => {
     if (isNewMission && !engagedControlUnit && previousEngagedControlUnit !== engagedControlUnit) {
