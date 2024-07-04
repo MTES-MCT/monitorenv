@@ -8,6 +8,7 @@ import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
 import { BackOfficePage } from '@pages/BackOfficePage'
 import { HomePage } from '@pages/HomePage'
 import { Login } from '@pages/Login'
+import { Register } from '@pages/Register'
 import { homeStore } from '@store/index'
 import { isBrowserSupported } from '@utils/isBrowserSupported'
 import { isCypress } from '@utils/isCypress'
@@ -47,6 +48,8 @@ export function App() {
                   <Routes>
                     <Route element={<Login />} path="/login" />
 
+                    <Route element={<Register />} path="/register" />
+
                     <Route
                       element={
                         <RequireAuth>
@@ -63,6 +66,15 @@ export function App() {
                         </RequireAuth>
                       }
                       path="/side_window"
+                    />
+
+                    <Route
+                      element={
+                        <RequireAuth>
+                          <HomePage />
+                        </RequireAuth>
+                      }
+                      path="/ext"
                     />
 
                     <Route

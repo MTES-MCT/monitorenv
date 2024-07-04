@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils
+package fr.gouv.cacem.monitorenv.infrastructure.api.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
