@@ -8,24 +8,22 @@ export function RequireAuth({ children, redirect = false, requireSuperUser = fal
   const auth = useAuth()
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, { skip: !auth?.isAuthenticated })
 
+  const handleRedirect = (path, shouldRedirect) => {
+    if (shouldRedirect) {
+      return <Navigate replace to={path} />
+    }
+
+    return null
+  }
+
   if (!oidcConfig.IS_OIDC_ENABLED) {
     return children
   }
-
   if (!auth.isAuthenticated) {
-    if (redirect) {
-      return <Navigate replace to="/login" />
-    }
-
-    return null
+    return handleRedirect('/login', redirect)
   }
-
   if (requireSuperUser && !user?.isSuperUser) {
-    if (redirect) {
-      return <Navigate replace to="/register" />
-    }
-
-    return null
+    return handleRedirect('/register', redirect)
   }
 
   return children
