@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.MonitorEnvApplication
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.log.CustomAuthenticationEntryPoint
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -18,7 +19,7 @@ import java.time.temporal.ChronoUnit
 
 @Testcontainers
 @TestPropertySource("classpath:/application.properties")
-@SpringBootTest
+@SpringBootTest(classes = [MonitorEnvApplication::class], properties = ["monitorenv.scheduling.enabled=false"])
 abstract class AbstractDBTests {
 
     @MockBean
