@@ -10,11 +10,7 @@ import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 export function Login() {
   const oidcConfig = getOIDCConfig()
   const auth = useAuth()
-  const {
-    data: user,
-    isError,
-    isSuccess
-  } = useGetCurrentUserAuthorizationQuery(undefined, { skip: !auth?.isAuthenticated })
+  const { data: user, isSuccess } = useGetCurrentUserAuthorizationQuery(undefined, { skip: !auth?.isAuthenticated })
 
   const logout = () => {
     auth.removeUser()
@@ -45,19 +41,6 @@ export function Login() {
       break
   }
 
-  if (auth.isLoading) {
-    return (
-      <Wrapper>
-        Chargement...
-        <LoadingSpinnerWall isVesselShowed />
-      </Wrapper>
-    )
-  }
-
-  if (auth.error || isError) {
-    return <div>Oops... {auth?.error?.message}</div>
-  }
-
   if (auth.isAuthenticated) {
     return (
       <Wrapper>
@@ -70,7 +53,14 @@ export function Login() {
 
   return (
     <Wrapper>
-      <Button onClick={() => auth.signinRedirect()}>Se connecter</Button>
+      {auth.isLoading && (
+        <>
+          Chargement...
+          <LoadingSpinnerWall isVesselShowed />
+        </>
+      )}
+      {auth.error && <div>Oops... {auth.error?.message}</div>}
+      {!auth.isLoading && <Button onClick={() => auth.signinRedirect()}>Se connecter</Button>}
       <ToastContainer />
     </Wrapper>
   )

@@ -3,6 +3,7 @@ import { ButtonWrapper } from '@features/MainWindow/components/RightMenu/ButtonW
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
+import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { globalActions } from 'domain/shared_slices/Global'
 import { useAuth } from 'react-oidc-context'
 import styled from 'styled-components'
@@ -14,12 +15,18 @@ export function Account() {
   const isAccountVisible = useAppSelector(state => state.global.isAccountDialogVisible)
   const auth = useAuth()
 
+  const oidcConfig = getOIDCConfig()
+
   const logout = () => {
     auth.signoutRedirect()
   }
   const toggle = () => {
     dispatch(globalActions.hideSideButtons())
     dispatch(globalActions.setDisplayedItems({ isAccountDialogVisible: !isAccountVisible }))
+  }
+
+  if (!oidcConfig.IS_OIDC_ENABLED) {
+    return null
   }
 
   return (
