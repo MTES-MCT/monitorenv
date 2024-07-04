@@ -23,7 +23,7 @@ import java.time.ZonedDateTime
 @Tag(description = "API Missions", name = "BFF.Missions")
 class Missions(
     private val createOrUpdateMissionWithActionsAndAttachedReporting:
-    CreateOrUpdateMissionWithActionsAndAttachedReporting,
+        CreateOrUpdateMissionWithActionsAndAttachedReporting,
     private val getFullMissions: GetFullMissions,
     private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions,
     private val deleteMission: DeleteMission,
@@ -79,7 +79,9 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
     ): ResponseEntity<MissionDataOutput> {
-        val (fishActionsApiResponds, mission) = getFullMissionWithFishAndRapportNavActions.execute(missionId = missionId)
+        val (fishActionsApiResponds, mission) = getFullMissionWithFishAndRapportNavActions.execute(
+            missionId = missionId,
+        )
 
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
 
