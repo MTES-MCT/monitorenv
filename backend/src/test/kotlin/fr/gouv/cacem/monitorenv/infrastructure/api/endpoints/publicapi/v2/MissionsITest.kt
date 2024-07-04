@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
@@ -35,17 +34,13 @@ import kotlin.random.Random
 @WebMvcTest(value = [Missions::class])
 class MissionsITest {
 
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var patchMission: PatchMission
+    @MockBean private lateinit var patchMission: PatchMission
 
-    @MockBean
-    private lateinit var deleteMission: DeleteMission
+    @MockBean private lateinit var deleteMission: DeleteMission
 
-    @MockBean
-    private lateinit var getMissionAndSourceAction: GetMissionAndSourceAction
+    @MockBean private lateinit var getMissionAndSourceAction: GetMissionAndSourceAction
 
     @Test
     fun `Should delete mission with api v2`() {
@@ -58,15 +53,18 @@ class MissionsITest {
         // Given
         val id = Random.nextInt()
         val observationsByUnit = "observationsByUnits"
-        val partialMissionAsJson = """
+        val partialMissionAsJson =
+            """
             { "observationsByUnit": "$observationsByUnit"}
-        """.trimIndent()
+            """.trimIndent()
         val patchedMission = aMissionEntity(observationsByUnit = "patchedObservations")
-        val patchableMissionEntity = PatchableMissionEntity(
-            Optional.of(observationsByUnit),
-        )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                Optional.of(observationsByUnit),
+            )
 
-        given(patchMission.execute(id, patchableMissionEntity)).willReturn(MissionDTO(patchedMission))
+        given(patchMission.execute(id, patchableMissionEntity))
+            .willReturn(MissionDTO(patchedMission))
 
         // When
         mockMvc.perform(
@@ -84,32 +82,34 @@ class MissionsITest {
             )
     }
 
-    // TODO: Uncomment when MapperConfiguration DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES is set
-//    @Test
-//    fun `patch() should return 400 when the input contains an unknown property`() {
-//        // Given
-//        val id = Random.nextInt()
-//        val partialMissionAsJson = """
-//            { "unknownProperty": null }
-//        """.trimIndent()
-//
-//        // When
-//        mockMvc.perform(
-//            patch("/api/v2/missions/$id")
-//                .content(partialEnvActionAsJson)
-//                .contentType(MediaType.APPLICATION_JSON),
-//        )
-//            // Then
-//            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-//    }
+    // TODO: Uncomment when MapperConfiguration DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES is
+    // set
+    //    @Test
+    //    fun `patch() should return 400 when the input contains an unknown property`() {
+    //        // Given
+    //        val id = Random.nextInt()
+    //        val partialMissionAsJson = """
+    //            { "unknownProperty": null }
+    //        """.trimIndent()
+    //
+    //        // When
+    //        mockMvc.perform(
+    //            patch("/api/v2/missions/$id")
+    //                .content(partialEnvActionAsJson)
+    //                .contentType(MediaType.APPLICATION_JSON),
+    //        )
+    //            // Then
+    //            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+    //    }
 
     @Test
     fun `patch() should return 400 when the input contains an incorrect type`() {
         // Given
         val id = Random.nextInt()
-        val partialMissionAsJson = """
+        val partialMissionAsJson =
+            """
             { "observationsByUnit": undefined }
-        """.trimIndent()
+            """.trimIndent()
 
         // When
         mockMvc.perform(
@@ -135,7 +135,8 @@ class MissionsITest {
                 eq(unknownId),
                 any(),
             ),
-        ).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, message))
+        )
+            .willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, message))
 
         // When
         mockMvc.perform(
@@ -154,16 +155,18 @@ class MissionsITest {
         val source = MissionSourceEnum.RAPPORT_NAV
 
         val mission = aMissionEntity()
-        given(getMissionAndSourceAction.execute(id, source)).willReturn(
-            MissionDTO(
-                mission,
-                hasRapportNavActions = RapportNavMissionActionEntity(1, true),
-            ),
-        )
+        given(getMissionAndSourceAction.execute(id, source))
+            .willReturn(
+                MissionDTO(
+                    mission,
+                    hasRapportNavActions = RapportNavMissionActionEntity(1, true),
+                ),
+            )
 
         // When
         mockMvc.perform(
-            get("/api/v2/missions/$id").param("source", source.name)
+            get("/api/v2/missions/$id")
+                .param("source", source.name)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
@@ -180,16 +183,18 @@ class MissionsITest {
         val source = MissionSourceEnum.MONITORFISH
 
         val mission = aMissionEntity()
-        given(getMissionAndSourceAction.execute(id, source)).willReturn(
-            MissionDTO(
-                mission,
-                fishActions = listOf(aMonitorFishAction(id)),
-            ),
-        )
+        given(getMissionAndSourceAction.execute(id, source))
+            .willReturn(
+                MissionDTO(
+                    mission,
+                    fishActions = listOf(aMonitorFishAction(id)),
+                ),
+            )
 
         // When
         mockMvc.perform(
-            get("/api/v2/missions/$id").param("source", source.name)
+            get("/api/v2/missions/$id")
+                .param("source", source.name)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
@@ -205,15 +210,15 @@ class MissionsITest {
         val id = Random.nextInt()
 
         val mission = aMissionEntity()
-        given(getMissionAndSourceAction.execute(id, null)).willReturn(
-            MissionDTO(
-                mission,
-            ),
-        )
+        given(getMissionAndSourceAction.execute(id, null))
+            .willReturn(
+                MissionDTO(
+                    mission,
+                ),
+            )
         // When
         mockMvc.perform(
-            get("/api/v2/missions/$id")
-                .contentType(MediaType.APPLICATION_JSON),
+            get("/api/v2/missions/$id").contentType(MediaType.APPLICATION_JSON),
         )
             // Then
             .andExpect(jsonPath("$.id").value(mission.id))

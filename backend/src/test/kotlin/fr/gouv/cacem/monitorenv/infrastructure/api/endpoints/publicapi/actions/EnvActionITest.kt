@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -13,6 +13,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixtu
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
@@ -27,7 +28,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Optional
 import java.util.UUID
 
-@Import(WebSecurityConfig::class, MapperConfiguration::class)
+@Import(SentryConfig::class, MapperConfiguration::class)
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [EnvAction::class])
 class EnvActionITest {
 
