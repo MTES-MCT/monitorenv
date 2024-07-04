@@ -103,7 +103,7 @@ const MetadataPanelShifter = styled.div<{
   metadataPanelIsOpen: boolean
 }>`
   position: absolute;
-  margin-left: ${p => {
+  left: ${p => {
     if (p.metadataPanelIsOpen) {
       if (p.isLayersSidebarVisible) {
         if (p.isVigilanceAreaFormOpen) {
@@ -118,8 +118,7 @@ const MetadataPanelShifter = styled.div<{
 
     return '-455'
   }}px;
-  margin-top: 45px;
-  top: 0px;
+  top: 45px;
   opacity: ${props => (props.metadataPanelIsOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   z-index: -1;
@@ -131,7 +130,7 @@ const VigilanceAreaPanelShifter = styled.div<{
   isVigilanceAreaFormOpen: boolean
 }>`
   position: absolute;
-  margin-left: ${p => {
+  left: ${p => {
     if (p.isVigilanceAreaFormOpen) {
       if (p.isLayersSidebarVisible) {
         return '355'
@@ -142,8 +141,7 @@ const VigilanceAreaPanelShifter = styled.div<{
 
     return '-455'
   }}px;
-  margin-top: 45px;
-  top: 0px;
+  top: 45px;
   opacity: ${props => (props.isVigilanceAreaFormOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   z-index: -1;
@@ -151,7 +149,7 @@ const VigilanceAreaPanelShifter = styled.div<{
 `
 
 const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean }>`
-  margin-left: ${props => (props.isLayersSidebarVisible ? 0 : '-455px')};
+  left: ${props => (props.isLayersSidebarVisible ? 0 : '-455px')};
   opacity: ${props => (props.isVisible ? 1 : 0)};
   top: 10px;
   left: 57px;

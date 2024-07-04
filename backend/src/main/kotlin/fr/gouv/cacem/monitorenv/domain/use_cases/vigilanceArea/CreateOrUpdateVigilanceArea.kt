@@ -7,7 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 class CreateOrUpdateVigilanceArea(
     private val vigilanceAreaRepository: IVigilanceAreaRepository,
 ) {
-    @Throws(IllegalArgumentException::class)
     fun execute(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity {
         return vigilanceAreaRepository.save(vigilanceArea)
     }

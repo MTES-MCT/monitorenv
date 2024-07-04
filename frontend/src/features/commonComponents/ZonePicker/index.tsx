@@ -89,8 +89,7 @@ export function ZonePicker({
 
       <>
         {polygons.map((polygonCoordinates, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <Row key={`zone-${index}`}>
+          <Row key={`zone-${polygonCoordinates[0][0]}`}>
             <ZoneWrapper>
               Polygone dessiné {index + 1}
               {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}

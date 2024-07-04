@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntit
 
 interface IVigilanceAreaRepository {
     fun findAll(): List<VigilanceAreaEntity>
-    fun findById(vigilanceAreaId: Int): VigilanceAreaEntity
+    fun findById(id: Int): VigilanceAreaEntity?
     fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity
-    fun delete(reportingId: Int)
+    fun delete(id: Int)
 }

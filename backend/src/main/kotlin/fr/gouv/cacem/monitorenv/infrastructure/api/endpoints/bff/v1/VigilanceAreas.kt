@@ -46,10 +46,10 @@ class VigilanceAreas(
         @PathParam("Vigilance Area Id")
         @PathVariable(name = "vigilanceAreaId")
         vigilanceAreaId: Int,
-    ): VigilanceAreaDataOutput {
+    ): VigilanceAreaDataOutput? {
         val vigilanceArea = getVigilanceAreaById.execute(vigilanceAreaId = vigilanceAreaId)
 
-        return VigilanceAreaDataOutput.fromVigilanceArea(vigilanceArea)
+        return vigilanceArea?.let { VigilanceAreaDataOutput.fromVigilanceArea(it) }
     }
 
     @PutMapping(value = ["/{vigilanceAreaId}"], consumes = ["application/json"])

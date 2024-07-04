@@ -31,21 +31,21 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         // When
         val vigilanceArea = jpaVigilanceAreaRepository.findById(expectedVigilanceAreaId)
         // Then
-        assertThat(vigilanceArea.id).isEqualTo(expectedVigilanceAreaId)
-        assertThat(vigilanceArea.comments).isEqualTo("Commentaire sur la zone de vigilance")
-        assertThat(vigilanceArea.createdBy).isEqualTo("ABC")
-        assertThat(vigilanceArea.endDatePeriod).isEqualTo(ZonedDateTime.parse("2024-12-16T23:59:59Z"))
-        assertThat(vigilanceArea.endingCondition).isEqualTo(EndingConditionEnum.NEVER)
-        assertThat(vigilanceArea.geom).isNotNull()
-        assertThat(vigilanceArea.isDeleted).isFalse()
-        assertThat(vigilanceArea.isDraft).isFalse()
-        assertThat(vigilanceArea.links?.get(0)?.linkText).isEqualTo("lien vers arrêté réfectoral")
-        assertThat(vigilanceArea.links?.get(0)?.linkUrl).isEqualTo("www.google.fr")
-        assertThat(vigilanceArea.source).isEqualTo("Unité BSN Ste Maxime")
-        assertThat(vigilanceArea.name).isEqualTo("Zone de vigilance 1")
-        assertThat(vigilanceArea.startDatePeriod).isEqualTo(ZonedDateTime.parse("2024-12-10T00:00:00Z"))
-        assertThat(vigilanceArea.themes).isEqualTo(listOf("Dragage", "Extraction granulats"))
-        assertThat(vigilanceArea.visibility).isEqualTo(VisibilityEnum.PUBLIC)
+        assertThat(vigilanceArea?.id).isEqualTo(expectedVigilanceAreaId)
+        assertThat(vigilanceArea?.comments).isEqualTo("Commentaire sur la zone de vigilance")
+        assertThat(vigilanceArea?.createdBy).isEqualTo("ABC")
+        assertThat(vigilanceArea?.endDatePeriod).isEqualTo(ZonedDateTime.parse("2024-12-16T23:59:59Z"))
+        assertThat(vigilanceArea?.endingCondition).isEqualTo(EndingConditionEnum.NEVER)
+        assertThat(vigilanceArea?.geom).isNotNull()
+        assertThat(vigilanceArea?.isDeleted).isFalse()
+        assertThat(vigilanceArea?.isDraft).isFalse()
+        assertThat(vigilanceArea?.links?.get(0)?.linkText).isEqualTo("lien vers arrêté réfectoral")
+        assertThat(vigilanceArea?.links?.get(0)?.linkUrl).isEqualTo("www.google.fr")
+        assertThat(vigilanceArea?.source).isEqualTo("Unité BSN Ste Maxime")
+        assertThat(vigilanceArea?.name).isEqualTo("Zone de vigilance 1")
+        assertThat(vigilanceArea?.startDatePeriod).isEqualTo(ZonedDateTime.parse("2024-12-10T00:00:00Z"))
+        assertThat(vigilanceArea?.themes).isEqualTo(listOf("Dragage", "Extraction granulats"))
+        assertThat(vigilanceArea?.visibility).isEqualTo(VisibilityEnum.PUBLIC)
     }
 
     @Test
@@ -97,7 +97,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
     fun `save should update vigilance area`() {
         // Given
         val vigilanceArea = jpaVigilanceAreaRepository.findById(5)
-        val updatedVigilanceArea = vigilanceArea.copy(
+        val updatedVigilanceArea = vigilanceArea!!.copy(
             name = "Zone de vigilance mise à jour",
             isDraft = false,
         )
@@ -137,6 +137,6 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
 
         // Then
         val deletedVigilanceArea = jpaVigilanceAreaRepository.findById(vigilanceAreaId)
-        assertThat(deletedVigilanceArea.isDeleted).isTrue()
+        assertThat(deletedVigilanceArea?.isDeleted).isTrue()
     }
 }

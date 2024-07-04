@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory
 class DeleteVigilanceArea(private val vigilanceAreaRepository: IVigilanceAreaRepository) {
     private val logger: Logger = LoggerFactory.getLogger(DeleteVigilanceArea::class.java)
 
-    @Throws(IllegalArgumentException::class)
-    fun execute(id: Int?) {
+    fun execute(id: Int) {
         logger.info("Delete vigilance area: $id")
 
-        require(id != null) { "No vigilance area to delete" }
         vigilanceAreaRepository.delete(id)
     }
 }

@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.repository.findByIdOrNull
 
 @Repository
 class JpaVigilanceAreaRepository(
@@ -13,8 +14,8 @@ class JpaVigilanceAreaRepository(
 ) : IVigilanceAreaRepository {
 
     @Transactional
-    override fun findById(vigilanceAreaId: Int): VigilanceAreaEntity {
-        return dbVigilanceAreaRepository.findById(vigilanceAreaId).get().toVigilanceAreaEntity()
+    override fun findById(id: Int): VigilanceAreaEntity? {
+        return dbVigilanceAreaRepository.findByIdOrNull(id)?.toVigilanceAreaEntity()
     }
 
     @Transactional
@@ -29,7 +30,7 @@ class JpaVigilanceAreaRepository(
     }
 
     @Transactional
-    override fun delete(reportingId: Int) {
-        dbVigilanceAreaRepository.delete(reportingId)
+    override fun delete(id: Int) {
+        dbVigilanceAreaRepository.delete(id)
     }
 }

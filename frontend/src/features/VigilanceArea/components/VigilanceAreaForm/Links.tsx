@@ -7,7 +7,7 @@ import styled from 'styled-components'
 export function Links() {
   const { setFieldValue } = useFormikContext<VigilanceArea.VigilanceArea>()
   const [field] = useField<Array<VigilanceArea.Link>>('links')
-  const [isCreatingLink, setIsCreatingLink] = useState<number | undefined>(undefined)
+  const [creatingOrEditingLinkId, setCreatingOrEditingLinkId] = useState<number | undefined>(undefined)
   const [creatingLink, setCreatingLink] = useState<VigilanceArea.Link | undefined>(undefined)
 
   const addLink = () => {
@@ -16,7 +16,7 @@ export function Links() {
       linkUrl: undefined
     })
     // for a new link, we set the index to -1
-    setIsCreatingLink(-1)
+    setCreatingOrEditingLinkId(-1)
   }
 
   const setCurrentLink = (nextValue: string | undefined, currentField: string) => {
@@ -24,30 +24,30 @@ export function Links() {
   }
 
   const validateLink = () => {
-    if (creatingLink?.linkText && creatingLink?.linkUrl && isCreatingLink !== undefined) {
-      if (isCreatingLink === -1) {
+    if (creatingLink?.linkText && creatingLink?.linkUrl && creatingOrEditingLinkId !== undefined) {
+      if (creatingOrEditingLinkId === -1) {
         setFieldValue('links', [...(field.value ?? []), creatingLink])
-        setIsCreatingLink(undefined)
+        setCreatingOrEditingLinkId(undefined)
         setCreatingLink(undefined)
 
         return
       }
 
       const updatedLinks = [...field.value]
-      updatedLinks.splice(isCreatingLink, 1, creatingLink)
+      updatedLinks.splice(creatingOrEditingLinkId, 1, creatingLink)
       setFieldValue('links', [...updatedLinks])
-      setIsCreatingLink(undefined)
+      setCreatingOrEditingLinkId(undefined)
       setCreatingLink(undefined)
     }
   }
 
   const cancelAddLink = () => {
-    setIsCreatingLink(undefined)
+    setCreatingOrEditingLinkId(undefined)
     setCreatingLink(undefined)
   }
 
   const editLink = (link: VigilanceArea.Link, index: number) => {
-    setIsCreatingLink(index)
+    setCreatingOrEditingLinkId(index)
     setCreatingLink(link)
   }
 

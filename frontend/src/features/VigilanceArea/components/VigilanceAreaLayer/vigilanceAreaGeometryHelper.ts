@@ -21,23 +21,8 @@ export const getVigilanceAreaZoneFeature = (
   })
   feature.setId(`${layername}:${vigilanceArea.id}`)
   feature.setProperties({
-    comments: vigilanceArea.comments,
-    createdBy: vigilanceArea.createdBy,
-    endDatePeriod: vigilanceArea.endDatePeriod,
-    endingCondition: vigilanceArea.endingCondition,
-    endingOccurrenceDate: vigilanceArea.endingOccurrenceDate,
-    endingOccurrencesNumber: vigilanceArea.endingOccurrencesNumber,
-    frequency: vigilanceArea.frequency,
-    geom: vigilanceArea.geom,
-    id: vigilanceArea.id,
-    isDraft: vigilanceArea.isDraft,
-    links: vigilanceArea.links,
-    metadataIsShowed,
-    name: vigilanceArea.name,
-    source: vigilanceArea.source,
-    startDatePeriod: vigilanceArea.startDatePeriod,
-    themes: vigilanceArea.themes,
-    visibility: vigilanceArea.visibility
+    ...vigilanceArea,
+    metadataIsShowed
   })
 
   return feature

@@ -30,7 +30,7 @@ export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps
       return []
     }
 
-    const test = vigilanceAreas
+    return vigilanceAreas
       .filter(
         vigilanceArea =>
           vigilanceArea?.geom &&
@@ -38,8 +38,6 @@ export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps
           selectedVigilanceAreaId !== vigilanceArea.id
       )
       .map(vigilanceArea => getVigilanceAreaZoneFeature(vigilanceArea, Layers.VIGILANCE_AREA.code))
-
-    return test
   }, [vigilanceAreas, selectedVigilanceAreaId])
 
   const vectorLayerRef = useRef(
