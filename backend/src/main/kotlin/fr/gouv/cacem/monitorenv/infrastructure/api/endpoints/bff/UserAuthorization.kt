@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/bff/authorization")
+@RequestMapping("/bff/")
 @Tag(name = "APIs for authorization")
 class UserAuthorization(
     private val getAuthorizedUser: GetAuthorizedUser,
@@ -27,7 +27,7 @@ class UserAuthorization(
      *     (it passes the filter `UserAuthorizationCheckFilter` - the endpoint is not super-user protected)
      *   - return an 200 with `isSuperUser=false` if the user authorization is not found
      */
-    @GetMapping("current")
+    @GetMapping("v1/authorization/current")
     @Operation(summary = "Get current logged user authorization")
     fun getCurrentUserAuthorization(
         request: HttpServletRequest,

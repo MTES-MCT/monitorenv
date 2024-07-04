@@ -38,6 +38,7 @@ type GlobalOverlayCoordinates = {
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 type GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
+  displayAccountButton: boolean
   displayMissionMenuButton: boolean
   displayDrawModal: boolean
   displayLayersSidebar: boolean
@@ -59,6 +60,8 @@ type GlobalStateType = {
   displayReportingToAttachLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
+
+  isAccountDialogVisible: boolean
 
   isControlUnitDialogVisible: boolean
   isControlUnitListDialogVisible: boolean
@@ -89,6 +92,7 @@ type GlobalStateType = {
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
+  displayAccountButton: true,
   displayMissionMenuButton: true,
   displayDrawModal: false,
   displayLayersSidebar: true,
@@ -113,6 +117,8 @@ const initialState: GlobalStateType = {
   isLayersSidebarVisible: false,
 
   // TODO Use `MainWindowDialog` or `MainWindowConfirmationModal`.
+  isAccountDialogVisible: false,
+
   isControlUnitDialogVisible: false,
   isControlUnitListDialogVisible: false,
 
@@ -148,6 +154,7 @@ const globalSlice = createSlice({
   reducers: {
     // TODO Rename to `hideAllDialogs`.
     hideSideButtons(state) {
+      state.isAccountDialogVisible = false
       state.isControlUnitDialogVisible = false
       state.isControlUnitListDialogVisible = false
       state.isSearchReportingsVisible = false

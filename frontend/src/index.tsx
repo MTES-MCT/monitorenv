@@ -1,8 +1,10 @@
 import { BrowserTracing } from '@sentry/browser'
 import { init } from '@sentry/react'
 import { measureScrollbarWidth } from '@utils/styleHelpers'
+import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { isEmpty } from 'lodash'
 import { createRoot } from 'react-dom/client'
+import { AuthProvider } from 'react-oidc-context'
 
 import { App } from './App'
 
@@ -38,4 +40,15 @@ if (!container) {
 }
 const root = createRoot(container)
 
-root.render(<App />)
+const { IS_OIDC_ENABLED, oidcConfig } = getOIDCConfig()
+
+if (IS_OIDC_ENABLED) {
+  root.render(
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <AuthProvider {...oidcConfig}>
+      <App />
+    </AuthProvider>
+  )
+} else {
+  root.render(<App />)
+}

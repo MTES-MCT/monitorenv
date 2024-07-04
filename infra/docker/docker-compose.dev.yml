@@ -26,3 +26,16 @@ services:
       interval: 1s
       timeout: 1s
       retries: 30
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - "8085:8080"
+    volumes:
+      - ../configurations/keycloack:/opt/keycloak/data/import
+    command:
+      - start-dev
+      - --import-realm

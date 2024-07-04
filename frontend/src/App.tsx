@@ -5,6 +5,8 @@ import { SideWindow } from '@features/SideWindow'
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
 import { BackOfficePage } from '@pages/BackOfficePage'
 import { HomePage } from '@pages/HomePage'
+import { LandingPage } from '@pages/LandingPage'
+import { PrivateRoute } from '@pages/PrivateRoute'
 import { homeStore } from '@store/index'
 import { isBrowserSupported } from '@utils/isBrowserSupported'
 import { isCypress } from '@utils/isCypress'
@@ -42,11 +44,13 @@ export function App() {
               <ReportingEventProvider>
                 <Router>
                   <Routes>
-                    <Route element={<BackOfficePage />} path="/backoffice/*" />
+                    <Route element={<LandingPage />} path="/login" />
 
-                    <Route element={<SideWindow />} path="/side_window" />
+                    <PrivateRoute element={<BackOfficePage />} path="/backoffice/*" />
 
-                    <Route element={<HomePage />} path="/" />
+                    <PrivateRoute element={<SideWindow />} path="/side_window" />
+
+                    <PrivateRoute element={<HomePage />} path="/" />
                   </Routes>
                 </Router>
               </ReportingEventProvider>
