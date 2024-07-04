@@ -9,26 +9,27 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
-class GetFullMissionWithRapportNavActionsUTests {
+class GetMissionWithRapportNavActionsUTests {
 
-    private val getFullMission: GetFullMission = mock()
+    private val getMission: GetMission = mock()
 
     private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository = mock()
 
     private val getMissionWithRapportNavActions: GetMissionWithRapportNavActions =
-        GetMissionWithRapportNavActions(getFullMission, rapportNavMissionActionsRepository)
+        GetMissionWithRapportNavActions(getMission, rapportNavMissionActionsRepository)
 
     @Test
     fun `execute should return mission with rapportNavActions`() {
         val missionId = 10
 
-        val mission = MissionDTO(mission = aMissionEntity())
+        val missionEntity = aMissionEntity()
+        val mission = MissionDTO(mission = missionEntity)
         val rapportNavActions = RapportNavMissionActionEntity(
             id = 1,
             containsActionsAddedByUnit = true,
         )
 
-        given(getFullMission.execute(missionId)).willReturn(mission)
+        given(getMission.execute(missionId)).willReturn(missionEntity)
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willReturn(
             rapportNavActions,
         )
@@ -42,9 +43,10 @@ class GetFullMissionWithRapportNavActionsUTests {
     fun `execute should return mission with hasRapportNavActions null on exception`() {
         val missionId = 10
 
-        val mission = MissionDTO(mission = aMissionEntity())
+        val missionEntity = aMissionEntity()
+        val mission = MissionDTO(mission = missionEntity)
 
-        given(getFullMission.execute(missionId)).willReturn(mission)
+        given(getMission.execute(missionId)).willReturn(missionEntity)
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willThrow(
             RuntimeException::class.java,
         )
@@ -57,14 +59,15 @@ class GetFullMissionWithRapportNavActionsUTests {
     @Test
     fun `execute should return mission with hasRapportNavActions false when no actions are found`() {
         val missionId = 10
-        val mission = MissionDTO(mission = aMissionEntity())
+        val missionEntity = aMissionEntity()
+        val mission = MissionDTO(mission = missionEntity)
 
         val rapportNavActions = RapportNavMissionActionEntity(
             id = 1,
             containsActionsAddedByUnit = false,
         )
 
-        given(getFullMission.execute(missionId)).willReturn(mission)
+        given(getMission.execute(missionId)).willReturn(missionEntity)
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willReturn(
             rapportNavActions,
         )

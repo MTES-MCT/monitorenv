@@ -6,18 +6,18 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 
 @UseCase
 class GetMissionWithRapportNavActions(
-    private val getFullMission: GetFullMission,
+    private val getMission: GetMission,
     private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository,
 ) {
     fun execute(missionId: Int): MissionDTO {
-        getFullMission.execute(missionId).let {
+        getMission.execute(missionId).let {
             try {
                 val hasRapportNavActions =
                     rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)
 
-                return it.copy(hasRapportNavActions = hasRapportNavActions)
+                return MissionDTO(mission = it, hasRapportNavActions = hasRapportNavActions)
             } catch (e: Exception) {
-                return it.copy(hasRapportNavActions = null)
+                return MissionDTO(mission = it)
             }
         }
     }
