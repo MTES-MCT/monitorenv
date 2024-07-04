@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 
 import { reportingEventListener } from '../sse'
 
-const REPORTING_UPDATES_URL = `/bff/v1/reportings/sse`
+const REPORTING_UPDATES_URL = `/bff/reportings/sse`
 const REPORTING_UPDATE_EVENT = `REPORTING_UPDATE`
 
 export function useListenReportingEventUpdates() {
