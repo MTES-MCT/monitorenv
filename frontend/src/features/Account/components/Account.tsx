@@ -4,18 +4,19 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { globalActions } from 'domain/shared_slices/Global'
-import { useContext } from 'react'
+import { useAuth } from 'react-oidc-context'
 import styled from 'styled-components'
-
-import { UserAccountContext } from '../../../context/UserAccountContext'
 
 const MARGIN_TOP = 388
 
 export function Account() {
   const dispatch = useAppDispatch()
-  const userAccount = useContext(UserAccountContext)
   const isAccountVisible = useAppSelector(state => state.global.isAccountDialogVisible)
+  const auth = useAuth()
 
+  const logout = () => {
+    auth.signoutRedirect()
+  }
   const toggle = () => {
     dispatch(globalActions.hideSideButtons())
     dispatch(globalActions.setDisplayedItems({ isAccountDialogVisible: !isAccountVisible }))
@@ -28,10 +29,12 @@ export function Account() {
           <MapMenuDialog.Header>
             <MapMenuDialog.Title>Déconnexion</MapMenuDialog.Title>
           </MapMenuDialog.Header>
-          <MapMenuDialog.Body>{userAccount.email ?? 'Vous n’êtes pas connecté avec Cerbère'}</MapMenuDialog.Body>
-          {userAccount.email && (
+          <MapMenuDialog.Body>
+            {auth?.user?.profile.email ?? 'Vous n’êtes pas connecté avec Cerbère'}
+          </MapMenuDialog.Body>
+          {auth?.user?.profile.email && (
             <MapMenuDialog.Footer>
-              <Button accent={Accent.SECONDARY} Icon={Icon.Logout} isFullWidth onClick={userAccount.logout}>
+              <Button accent={Accent.SECONDARY} Icon={Icon.Logout} isFullWidth onClick={logout}>
                 Se déconnecter
               </Button>
             </MapMenuDialog.Footer>

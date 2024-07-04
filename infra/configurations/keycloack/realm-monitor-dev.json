@@ -17,13 +17,31 @@
   ],
   "users": [
     {
-      "username": "monitorenvuser",
+      "username": "monitorenv",
+      "email": "another@email.com",
+      "firstName": "Monitor",
+      "lastName": "Env",
       "enabled": true,
       "emailVerified": true,
       "credentials": [
         {
           "type": "password",
-          "value": "password",
+          "value": "monitorenv",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "superuser",
+      "email": "dummy@email.gouv.fr",
+      "firstName": "SuperMonitor",
+      "lastName": "Env",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "monitorenv",
           "temporary": false
         }
       ]

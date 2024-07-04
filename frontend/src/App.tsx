@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AlertUnsupportedBrowser } from '@components/AlertUnsupportedBrowser'
 import { CustomGlobalStyle } from '@components/CustomGlobalStyle'
+import { RequireAuth } from '@components/RequireAuth'
 import { ToastNotification } from '@components/ToastNotification'
 import { SideWindow } from '@features/SideWindow'
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
 import { BackOfficePage } from '@pages/BackOfficePage'
 import { HomePage } from '@pages/HomePage'
-import { LandingPage } from '@pages/LandingPage'
-import { PrivateRoute } from '@pages/PrivateRoute'
+import { Login } from '@pages/Login'
 import { homeStore } from '@store/index'
 import { isBrowserSupported } from '@utils/isBrowserSupported'
 import { isCypress } from '@utils/isCypress'
@@ -44,13 +45,34 @@ export function App() {
               <ReportingEventProvider>
                 <Router>
                   <Routes>
-                    <Route element={<LandingPage />} path="/login" />
+                    <Route element={<Login />} path="/login" />
 
-                    <PrivateRoute element={<BackOfficePage />} path="/backoffice/*" />
+                    <Route
+                      element={
+                        <RequireAuth>
+                          <BackOfficePage />
+                        </RequireAuth>
+                      }
+                      path="/backoffice/*"
+                    />
 
-                    <PrivateRoute element={<SideWindow />} path="/side_window" />
+                    <Route
+                      element={
+                        <RequireAuth>
+                          <SideWindow />
+                        </RequireAuth>
+                      }
+                      path="/side_window"
+                    />
 
-                    <PrivateRoute element={<HomePage />} path="/" />
+                    <Route
+                      element={
+                        <RequireAuth>
+                          <HomePage />
+                        </RequireAuth>
+                      }
+                      path="/"
+                    />
                   </Routes>
                 </Router>
               </ReportingEventProvider>
