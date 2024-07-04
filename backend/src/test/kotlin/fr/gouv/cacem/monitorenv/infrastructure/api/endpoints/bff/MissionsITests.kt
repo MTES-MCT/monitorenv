@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
@@ -42,6 +42,7 @@ import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verify
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
@@ -57,7 +58,8 @@ import java.time.ZonedDateTime
 import java.util.Optional
 import java.util.UUID
 
-@Import(WebSecurityConfig::class, MapperConfiguration::class)
+@Import(SentryConfig::class, MapperConfiguration::class)
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Missions::class)])
 class MissionsITests {
 
