@@ -1,7 +1,13 @@
-import { monitorenvPrivateApi } from './api'
+import { FrontendApiError } from '@libs/FrontendApiError'
 
-import type { Meta } from './types'
+import { monitorenvPrivateApi } from './api'
+import { ApiErrorCode, type Meta } from './types'
+
 import type { UserAuthorization, UserAuthorizationData } from 'domain/entities/authorization/types'
+
+const ERROR_AUTHENTICATION_REQUIRED = 'Authentification requise'
+const ERROR_TOKEN_EXPIRED = "Jeton d'authentification expiré"
+const ERROR_AUTHENTICATION_FAILED = "Erreur d'authentification"
 
 export const authorizationAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
@@ -9,40 +15,45 @@ export const authorizationAPI = monitorenvPrivateApi.injectEndpoints({
       keepUnusedDataFor: 0,
       query: () => '/v1/authorization/current',
       transformErrorResponse: (_, meta: Meta) => {
-        const authenticateResponse = meta.response?.headers.get('WWW-Authenticate')
-
-        /**
-         * We need to reload the app if the WWW-Authenticate header contains:
-         * - "authentication is required" : The access_token is missing from the request header.
-         *              The user just logged in but the request did not include the access_token just saved in LocalStorage,
-         *              there is a race condition.
-         * - "expired": The access_token sent to the backend is expired.
-         *              The user just re-logged in, but the request did include the previous access_token found in LocalStorage,
-         *              there is a race condition.
-         */
-        if (authenticateResponse?.includes('authentication is required') || authenticateResponse?.includes('expired')) {
-          return {
-            isLogged: false,
-            isSuperUser: false,
-            mustReload: true
-          }
+        const authenticateResponse = meta?.response?.headers.get('WWW-Authenticate')
+        if (authenticateResponse?.includes('authentication is required')) {
+          throw new FrontendApiError(ERROR_AUTHENTICATION_REQUIRED, {
+            data: {
+              code: ApiErrorCode.AUTHENTICATION_REQUIRED,
+              data: { isSuperUser: false },
+              type: ApiErrorCode.AUTHENTICATION_REQUIRED
+            },
+            status: 403
+          })
+        }
+        if (authenticateResponse?.includes('expired')) {
+          throw new FrontendApiError(ERROR_TOKEN_EXPIRED, {
+            data: {
+              code: ApiErrorCode.AUTHENTICATION_REQUIRED,
+              data: { isSuperUser: false },
+              type: ApiErrorCode.AUTHENTICATION_REQUIRED
+            },
+            status: 403
+          })
         }
 
-        return {
-          isLogged: false,
-          isSuperUser: false,
-          mustReload: false
-        }
+        throw new FrontendApiError(ERROR_AUTHENTICATION_FAILED, {
+          data: {
+            code: ApiErrorCode.AUTHENTICATION_REQUIRED,
+            data: { isSuperUser: false },
+            type: ApiErrorCode.AUTHENTICATION_REQUIRED
+          },
+          status: 403
+        })
       },
       transformResponse: (response: UserAuthorizationData) => ({
-        isLogged: true,
-        isSuperUser: response.isSuperUser,
-        mustReload: false
+        isSuperUser: response.isSuperUser
       })
     })
   })
 })
 
 export const {
-  endpoints: { getCurrentUserAuthorization }
+  endpoints: { getCurrentUserAuthorization },
+  useGetCurrentUserAuthorizationQuery
 } = authorizationAPI
