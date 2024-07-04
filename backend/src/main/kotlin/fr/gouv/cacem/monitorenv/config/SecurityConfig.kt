@@ -60,6 +60,9 @@ class SecurityConfig(
                         "/error",
                         "/api/**",
                         "/version",
+                        // TODO: secure SSE endpoints
+                        "/bff/v1/reportings/sse/**",
+                        "/api/v1/missions/sse/**",
                     ).permitAll()
                         .anyRequest()
                         .authenticated()
