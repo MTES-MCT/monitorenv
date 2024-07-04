@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.Ticker
+import fr.gouv.cacem.monitorenv.config.OIDCProperties
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.cache.caffeine.CaffeineCache
@@ -12,15 +13,17 @@ import java.util.concurrent.TimeUnit
 
 @EnableCaching
 @Configuration
-class CaffeineConfiguration {
+class CaffeineConfiguration(
+    private val oidcProperties: OIDCProperties,
+) {
 
     val userAuthorization = "user_authorization"
 
     @Bean
     fun cacheManager(ticker: Ticker): CacheManager? {
-        val twoHours = 120
+        val cacheInMinutes = oidcProperties.cacheInMinutes
 
-        val userAuthorizationCache = buildMinutesCache(userAuthorization, ticker, twoHours)
+        val userAuthorizationCache = buildMinutesCache(userAuthorization, ticker, cacheInMinutes)
 
         val manager = SimpleCacheManager()
         manager.setCaches(

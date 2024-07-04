@@ -553,7 +553,7 @@ class ReportingsITests {
         // Then
         val missionUpdateEvent =
             mockedApi
-                .perform(get("/bff/v1/reportings/sse"))
+                .perform(get("/bff/reportings/sse"))
                 .andExpect(status().isOk)
                 .andExpect(MockMvcResultMatchers.request().asyncStarted())
                 .andExpect(
