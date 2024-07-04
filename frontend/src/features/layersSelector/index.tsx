@@ -149,7 +149,7 @@ const VigilanceAreaPanelShifter = styled.div<{
 `
 
 const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean }>`
-  left: ${props => (props.isLayersSidebarVisible ? 0 : '-455px')};
+  margin-left: ${props => (props.isLayersSidebarVisible ? 0 : '-455px')};
   opacity: ${props => (props.isVisible ? 1 : 0)};
   top: 10px;
   left: 57px;
