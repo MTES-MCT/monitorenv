@@ -35,7 +35,7 @@ class SecurityConfig(
 
                     authorize.requestMatchers("/**").permitAll()
                 } else {
-                    logger.warn(
+                    logger.info(
                         """
                         ✅ OIDC Authentication is enabled.
                         """.trimIndent(),
