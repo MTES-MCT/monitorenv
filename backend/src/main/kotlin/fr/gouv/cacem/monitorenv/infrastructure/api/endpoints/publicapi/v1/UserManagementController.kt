@@ -24,7 +24,7 @@ class UserManagementController(
         @RequestBody
         user: AddUserDataInput,
     ) {
-        return saveUser.execute(user.email, user.isSuperUser)
+        return saveUser.execute(user.toUserAuthorization())
     }
 
     @DeleteMapping(value = ["/{email}"])
