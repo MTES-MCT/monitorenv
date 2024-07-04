@@ -64,7 +64,7 @@ class MissionsITests {
     private lateinit var getFullMissions: GetFullMissions
 
     @MockBean
-    private lateinit var getMissionWithFishAndRapportNavActions: GetMissionWithFishAndRapportNavActions
+    private lateinit var getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions
 
     @MockBean
     private lateinit var deleteMission: DeleteMission
@@ -166,14 +166,19 @@ class MissionsITests {
                 ),
             )
         // we test only if the route is called with the right arg
-        given(getMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(Pair(false, expectedFirstMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(
+            Pair(
+                false,
+                expectedFirstMission,
+            ),
+        )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
             // Then
             .andExpect(status().isPartialContent)
             .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
-        verify(getMissionWithFishAndRapportNavActions).execute(requestedId)
+        verify(getFullMissionWithFishAndRapportNavActions).execute(requestedId)
     }
 
     @Test
@@ -601,7 +606,12 @@ class MissionsITests {
             )
 
         // we test only if the route is called with the right arg
-        given(getMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(Pair(true, expectedFirstMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(
+            Pair(
+                true,
+                expectedFirstMission,
+            ),
+        )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
@@ -755,7 +765,7 @@ class MissionsITests {
                 ),
             )
 
-        verify(getMissionWithFishAndRapportNavActions).execute(requestedId)
+        verify(getFullMissionWithFishAndRapportNavActions).execute(requestedId)
     }
 
     @Test

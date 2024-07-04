@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRep
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 
 @UseCase
-class GetMissionWithFishAndRapportNavActions(
+class GetFullMissionWithFishAndRapportNavActions(
     private val getFullMission: GetFullMission,
     private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
     private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository,

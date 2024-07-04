@@ -25,52 +25,51 @@ class DeleteMission(
 
         logger.info("Delete mission $missionId")
 
-        getFullMission.execute(missionId).let { missionToDelete ->
+        val missionToDelete = getFullMission.execute(missionId)
 
-            if (!canDeleteMission.execute(missionId, source).canDelete) {
-                val actionSources =
-                    if (source == MissionSourceEnum.MONITORFISH) {
-                        MissionSourceEnum.MONITORENV
-                    } else {
-                        MissionSourceEnum.MONITORFISH
-                    }
-
-                val errorSources =
-                    object {
-                        var sources = listOf(actionSources)
-                    }
-
-                throw BackendUsageException(
-                    code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
-                    data = errorSources,
-                )
-            }
-
-            if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
-                val envActionIdsToDetach = mutableListOf<UUID>()
-                missionToDelete.attachedReportingIds.forEach {
-                    val reporting = reportingRepository.findById(it)
-
-                    // detach action attached to reporting
-                    if (reporting.reporting.attachedEnvActionId != null) {
-                        envActionIdsToDetach.add(reporting.reporting.attachedEnvActionId)
-                    }
-
-                    // detach mission to reporting
-                    val detachedReporting =
-                        reporting.reporting.copy(
-                            detachedFromMissionAtUtc = ZonedDateTime.now(),
-                            attachedEnvActionId = null,
-                        )
-                    reportingRepository.save(detachedReporting)
+        if (!canDeleteMission.execute(missionId, source).canDelete) {
+            val actionSources =
+                if (source == MissionSourceEnum.MONITORFISH) {
+                    MissionSourceEnum.MONITORENV
+                } else {
+                    MissionSourceEnum.MONITORFISH
                 }
-                reportingRepository.detachDanglingEnvActions(
-                    missionId,
-                    envActionIdsToDetach,
-                )
-            }
 
-            return missionRepository.delete(missionId)
+            val errorSources =
+                object {
+                    var sources = listOf(actionSources)
+                }
+
+            throw BackendUsageException(
+                code = BackendUsageErrorCode.EXISTING_MISSION_ACTION,
+                data = errorSources,
+            )
         }
+
+        if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
+            val envActionIdsToDetach = mutableListOf<UUID>()
+            missionToDelete.attachedReportingIds.forEach {
+                val reporting = reportingRepository.findById(it)
+
+                // detach action attached to reporting
+                if (reporting.reporting.attachedEnvActionId != null) {
+                    envActionIdsToDetach.add(reporting.reporting.attachedEnvActionId)
+                }
+
+                // detach mission to reporting
+                val detachedReporting =
+                    reporting.reporting.copy(
+                        detachedFromMissionAtUtc = ZonedDateTime.now(),
+                        attachedEnvActionId = null,
+                    )
+                reportingRepository.save(detachedReporting)
+            }
+            reportingRepository.detachDanglingEnvActions(
+                missionId,
+                envActionIdsToDetach,
+            )
+        }
+
+        return missionRepository.delete(missionId)
     }
 }

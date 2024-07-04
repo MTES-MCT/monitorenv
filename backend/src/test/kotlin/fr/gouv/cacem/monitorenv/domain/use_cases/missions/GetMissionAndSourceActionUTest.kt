@@ -44,10 +44,10 @@ class GetMissionAndSourceActionUTest {
     }
 
     @Test
-    fun `execute should return mission with rapportNav action information when source is RAPPORTNAV `() {
+    fun `execute should return mission with rapportNav action information when source is MONITORFISH `() {
         // Given
         val missionId = Random.nextInt()
-        val source = MissionSourceEnum.RAPPORT_NAV
+        val source = MissionSourceEnum.MONITORFISH
 
         val missionFromDatabase = aMissionEntity()
         given(getMission.execute(missionId)).willReturn(missionFromDatabase)
@@ -65,10 +65,10 @@ class GetMissionAndSourceActionUTest {
     }
 
     @Test
-    fun `execute should return mission with fish action when source is MONITORFISH `() {
+    fun `execute should return mission with fish action when source is RAPPORTNAV `() {
         // Given
         val missionId = Random.nextInt()
-        val source = MissionSourceEnum.MONITORFISH
+        val source = MissionSourceEnum.RAPPORT_NAV
 
         val missionFromDatabase = aMissionEntity()
         given(getMission.execute(missionId)).willReturn(missionFromDatabase)

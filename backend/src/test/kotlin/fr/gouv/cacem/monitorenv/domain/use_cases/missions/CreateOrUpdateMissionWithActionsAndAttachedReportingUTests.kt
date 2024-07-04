@@ -43,7 +43,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     private lateinit var reportingRepository: IReportingRepository
 
     @MockBean
-    private lateinit var getMissionWithFishAndRapportNavActions: GetMissionWithFishAndRapportNavActions
+    private lateinit var getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions
 
     @Test
     fun `should attach mission to specified reportings`() {
@@ -95,14 +95,14 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
-        given(getMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(true, expectedCreatedMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(true, expectedCreatedMission))
         // When
         val (_, createdMissionDTO) =
             CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getMissionWithFishAndRapportNavActions = getMissionWithFishAndRapportNavActions,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,
@@ -146,7 +146,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getMissionWithFishAndRapportNavActions = getMissionWithFishAndRapportNavActions,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,
@@ -215,7 +215,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
-        given(getMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(true, expectedCreatedMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(true, expectedCreatedMission))
 
         // When
         val (_, createdMissionDTO) =
@@ -223,7 +223,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getMissionWithFishAndRapportNavActions = getMissionWithFishAndRapportNavActions,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,
@@ -304,7 +304,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
-        given(getMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(false, expectedCreatedMission))
+        given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(false, expectedCreatedMission))
 
         // When
         val (fishResponds, createdMissionDTO) =
@@ -312,7 +312,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateMission = createOrUpdateMission,
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
-                getMissionWithFishAndRapportNavActions = getMissionWithFishAndRapportNavActions,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
             )
                 .execute(
                     mission = missionToCreate,

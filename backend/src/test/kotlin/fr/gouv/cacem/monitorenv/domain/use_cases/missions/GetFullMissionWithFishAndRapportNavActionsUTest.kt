@@ -19,8 +19,8 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
 
     private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository = mock()
 
-    private val getMissionWithFishAndRapportNavActions: GetMissionWithFishAndRapportNavActions =
-        GetMissionWithFishAndRapportNavActions(
+    private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions =
+        GetFullMissionWithFishAndRapportNavActions(
             getFullMission,
             monitorFishMissionActionsRepository,
             rapportNavMissionActionsRepository,
@@ -41,7 +41,7 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         )
 
         // When
-        val fullMission = getMissionWithFishAndRapportNavActions.execute(missionId)
+        val fullMission = getFullMissionWithFishAndRapportNavActions.execute(missionId)
 
         // Then
         assertThat(fullMission.first).isTrue()
@@ -65,7 +65,7 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         )
 
         // When
-        val fullMission = getMissionWithFishAndRapportNavActions.execute(missionId)
+        val fullMission = getFullMissionWithFishAndRapportNavActions.execute(missionId)
 
         // Then
         assertThat(fullMission.first).isFalse()
@@ -87,7 +87,7 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         )
 
         // When
-        val fullMission = getMissionWithFishAndRapportNavActions.execute(missionId)
+        val fullMission = getFullMissionWithFishAndRapportNavActions.execute(missionId)
 
         // Then
         assertThat(fullMission.first).isFalse()
