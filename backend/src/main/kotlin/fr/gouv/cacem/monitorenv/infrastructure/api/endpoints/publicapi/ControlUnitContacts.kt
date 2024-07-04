@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.Cre
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInputV2
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitContactDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitContactDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils.validateId
+import fr.gouv.cacem.monitorenv.infrastructure.api.utils.validateId
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
