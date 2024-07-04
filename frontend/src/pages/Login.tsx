@@ -1,5 +1,6 @@
 import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
 import { Button } from '@mtes-mct/monitor-ui'
+import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { useAuth } from 'react-oidc-context'
 import { Navigate } from 'react-router'
 import { ToastContainer } from 'react-toastify'
@@ -7,20 +8,28 @@ import styled from 'styled-components'
 import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 
 export function Login() {
-  const hasInsufficientRights = false
-
+  const oidcConfig = getOIDCConfig()
   const auth = useAuth()
-  const data = useGetCurrentUserAuthorizationQuery(undefined, { skip: !auth.isAuthenticated })
+  const {
+    data: user,
+    isError,
+    isSuccess
+  } = useGetCurrentUserAuthorizationQuery(undefined, { skip: !auth?.isAuthenticated })
 
   const logout = () => {
     auth.removeUser()
     auth.signoutRedirect()
   }
 
-  if (auth?.isAuthenticated && data && data.data?.isSuperUser) {
+  if (!oidcConfig.IS_OIDC_ENABLED) {
+    return <div>OIDC is disabled</div>
+  }
+
+  if (auth?.isAuthenticated && isSuccess && user?.isSuperUser) {
     return <Navigate to="/" />
   }
-  if (auth?.isAuthenticated && data && data.data?.isSuperUser === false) {
+
+  if (auth?.isAuthenticated && isSuccess && user?.isSuperUser) {
     return <Navigate to="/ext" />
   }
 
@@ -39,14 +48,14 @@ export function Login() {
   if (auth.isLoading) {
     return (
       <Wrapper>
-        Loading...
+        Chargement...
         <LoadingSpinnerWall isVesselShowed />
       </Wrapper>
     )
   }
 
-  if (auth.error) {
-    return <div>Oops... {auth.error.message}</div>
+  if (auth.error || isError) {
+    return <div>Oops... {auth?.error?.message}</div>
   }
 
   if (auth.isAuthenticated) {
@@ -61,13 +70,6 @@ export function Login() {
 
   return (
     <Wrapper>
-      {hasInsufficientRights && (
-        <>
-          Merci de contacter{' '}
-          <a href="mailto:monitor@beta.gouv.fr?subject=Création de compte MonitorEnv">monitor@beta.gouv.fr</a> pour
-          accéder à MonitorEnv avec Cerbère.
-        </>
-      )}
       <Button onClick={() => auth.signinRedirect()}>Se connecter</Button>
       <ToastContainer />
     </Wrapper>

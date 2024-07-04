@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.inputs.missions
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
