@@ -1,4 +1,4 @@
-import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { useAuth } from 'react-oidc-context'
 import { Navigate } from 'react-router-dom'
@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom'
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
   const oidcConfig = getOIDCConfig()
   const auth = useAuth()
-  const { data: user } = useGetCurrentUserAuthorizationQuery(undefined, { skip: !auth?.isAuthenticated })
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, { skip: !auth?.isAuthenticated })
 
   if (!oidcConfig.IS_OIDC_ENABLED) {
     return children
