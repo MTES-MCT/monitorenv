@@ -29,11 +29,11 @@ test-front:
 	cd frontend && npm run test:unit
 
 # Backend
-.PHONY: dev-check-config dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env
+.PHONY: dev-check-config dev-run-back-with-infra dev-run-back  dev-run-keycloak dev-run-infra dev-erase-db dev-clean-target-env
 dev-check-config:
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.dev.yml config
 
-dev-run-back-with-infra: dev-erase-db dev-run-infra dev-clean-target-env dev-run-back
+dev-run-back-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-target-env dev-run-back
 
 dev-run-back-debug-with-infra: dev-erase-db dev-run-infra dev-clean-target-env dev-run-back-debug
 
@@ -43,6 +43,8 @@ dev-run-back:
 
 dev-run-back-debug:
 	cd backend && ./gradlew bootRun --debug-jvm --args='--spring.profiles.active=dev --spring.config.additional-location=$(BACKEND_CONFIGURATION_FOLDER)'
+dev-run-keycloak:
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d keycloak
 
 dev-run-infra:
 	@echo "Preparing database"
