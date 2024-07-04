@@ -35,7 +35,11 @@ class CaffeineConfiguration(
         return manager
     }
 
-    private fun buildMinutesCache(name: String, ticker: Ticker, minutesToExpire: Int): CaffeineCache {
+    private fun buildMinutesCache(
+        name: String,
+        ticker: Ticker,
+        minutesToExpire: Int,
+    ): CaffeineCache {
         return CaffeineCache(
             name,
             Caffeine.newBuilder()
@@ -46,7 +50,11 @@ class CaffeineConfiguration(
         )
     }
 
-    private fun buildSecondsCache(name: String, ticker: Ticker, secondsToExpire: Int): CaffeineCache {
+    private fun buildSecondsCache(
+        name: String,
+        ticker: Ticker,
+        secondsToExpire: Int,
+    ): CaffeineCache {
         return CaffeineCache(
             name,
             Caffeine.newBuilder()

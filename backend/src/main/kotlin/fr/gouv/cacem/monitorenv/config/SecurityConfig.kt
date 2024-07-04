@@ -23,17 +23,16 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
-            .csrf { it.disable() }
-            .authorizeHttpRequests { authorize ->
-                if (oidcProperties.enabled == true) {
-                    logger.info(
-                        """
+        http.csrf { it.disable() }.authorizeHttpRequests { authorize ->
+            if (oidcProperties.enabled == true) {
+                logger.info(
+                    """
                         ✅ OIDC Authentication is enabled.
-                        """.trimIndent(),
-                    )
+                    """.trimIndent(),
+                )
 
-                    authorize.requestMatchers(
+                authorize
+                    .requestMatchers(
                         "/",
                         "/index.html",
                         "/*.js",
@@ -55,19 +54,20 @@ class SecurityConfig(
                         "/actuator/**",
                         // TODO: secure SSE endpoints
                         "/bff/reportings/sse/**",
-                    ).permitAll()
-                        .anyRequest()
-                        .authenticated()
-                } else {
-                    logger.warn(
-                        """
-                        ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
-                        """.trimIndent(),
                     )
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            } else {
+                logger.warn(
+                    """
+                        ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
+                    """.trimIndent(),
+                )
 
-                    authorize.requestMatchers("/**").permitAll()
-                }
+                authorize.requestMatchers("/**").permitAll()
             }
+        }
 
         if (oidcProperties.enabled == true) {
             http.oauth2ResourceServer { oauth2ResourceServer ->
@@ -82,11 +82,12 @@ class SecurityConfig(
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration().apply {
-            allowedOrigins = listOf("*")
-            allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
-        }
+        val configuration =
+            CorsConfiguration().apply {
+                allowedOrigins = listOf("*")
+                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
+                allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
+            }
 
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)

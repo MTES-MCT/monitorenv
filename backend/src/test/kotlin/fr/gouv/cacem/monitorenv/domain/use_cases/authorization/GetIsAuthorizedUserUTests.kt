@@ -13,20 +13,22 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 class GetIsAuthorizedUserUTests {
 
-    @MockBean
-    private lateinit var userAuthorizationRepository: JpaUserAuthorizationRepository
+    @MockBean private lateinit var userAuthorizationRepository: JpaUserAuthorizationRepository
 
     @Test
     fun `execute Should return true When the user is found and super-user When the path is super-user protected`() {
-        given(userAuthorizationRepository.findByHashedEmail(any())).willReturn(
-            UserAuthorization("58GE5S8VXE871FGGd2", true),
-        )
+        given(userAuthorizationRepository.findByHashedEmail(any()))
+            .willReturn(
+                UserAuthorization("58GE5S8VXE871FGGd2", true),
+            )
 
         // When
-        val isAuthorized = GetIsAuthorizedUser(userAuthorizationRepository).execute(
-            "test",
-            true,
-        )
+        val isAuthorized =
+            GetIsAuthorizedUser(userAuthorizationRepository)
+                .execute(
+                    "test",
+                    true,
+                )
 
         // Then
         assertThat(isAuthorized).isTrue
@@ -34,15 +36,18 @@ class GetIsAuthorizedUserUTests {
 
     @Test
     fun `execute Should return false When the user is found but not super-user When the path is super-user protected`() {
-        given(userAuthorizationRepository.findByHashedEmail(any())).willReturn(
-            UserAuthorization("58GE5S8VXE871FGGd2", false),
-        )
+        given(userAuthorizationRepository.findByHashedEmail(any()))
+            .willReturn(
+                UserAuthorization("58GE5S8VXE871FGGd2", false),
+            )
 
         // When
-        val isAuthorized = GetIsAuthorizedUser(userAuthorizationRepository).execute(
-            "test",
-            true,
-        )
+        val isAuthorized =
+            GetIsAuthorizedUser(userAuthorizationRepository)
+                .execute(
+                    "test",
+                    true,
+                )
 
         // Then
         assertThat(isAuthorized).isFalse
@@ -51,10 +56,12 @@ class GetIsAuthorizedUserUTests {
     @Test
     fun `execute Should return true When the path is not super-user protected`() {
         // When
-        val isAuthorized = GetIsAuthorizedUser(userAuthorizationRepository).execute(
-            "test",
-            false,
-        )
+        val isAuthorized =
+            GetIsAuthorizedUser(userAuthorizationRepository)
+                .execute(
+                    "test",
+                    false,
+                )
 
         // Then
         assertThat(isAuthorized).isTrue
@@ -65,10 +72,12 @@ class GetIsAuthorizedUserUTests {
         given(userAuthorizationRepository.findByHashedEmail(any())).willReturn(null)
 
         // When
-        val isAuthorized = GetIsAuthorizedUser(userAuthorizationRepository).execute(
-            "test",
-            true,
-        )
+        val isAuthorized =
+            GetIsAuthorizedUser(userAuthorizationRepository)
+                .execute(
+                    "test",
+                    true,
+                )
 
         // Then
         assertThat(isAuthorized).isFalse

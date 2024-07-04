@@ -23,9 +23,11 @@ class UserAuthorization(
 
     /**
      * This controller will
-     *   - return 200 with the UserAuthorization object if the user authorization is found
+     * - return 200 with the UserAuthorization object if the user authorization is found
+     * ```
      *     (it passes the filter `UserAuthorizationCheckFilter` - the endpoint is not super-user protected)
-     *   - return an 200 with `isSuperUser=false` if the user authorization is not found
+     * ```
+     * - return an 200 with `isSuperUser=false` if the user authorization is not found
      */
     @GetMapping("v1/authorization/current")
     @Operation(summary = "Get current logged user authorization")
