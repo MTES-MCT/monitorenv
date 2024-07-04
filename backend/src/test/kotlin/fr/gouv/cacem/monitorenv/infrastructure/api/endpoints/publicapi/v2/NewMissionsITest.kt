@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
@@ -17,6 +17,7 @@ import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
@@ -29,7 +30,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.Optional
 import kotlin.random.Random
 
-@Import(WebSecurityConfig::class, MapperConfiguration::class)
+@Import(SentryConfig::class, MapperConfiguration::class)
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [NewMissions::class])
 class NewMissionsITest {
 
