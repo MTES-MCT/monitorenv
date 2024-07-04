@@ -42,6 +42,8 @@ tasks.named("compileKotlin", org.jetbrains.kotlin.gradle.tasks.KotlinCompilation
 
 dependencies {
     api("org.springframework.boot:spring-boot-starter-web:3.3.1")
+    api("org.springframework.security:spring-security-oauth2-resource-server:6.1.5")
+    api("org.springframework.security:spring-security-oauth2-jose:6.1.5")
     api("org.hibernate.validator:hibernate-validator:8.0.1.Final")
     api("jakarta.validation:jakarta.validation-api:3.1.0")
     api("org.springframework.boot:spring-boot-starter-actuator:3.3.1")
