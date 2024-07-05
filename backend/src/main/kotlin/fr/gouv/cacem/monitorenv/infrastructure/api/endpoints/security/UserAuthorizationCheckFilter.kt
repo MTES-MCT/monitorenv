@@ -15,8 +15,8 @@ import kotlinx.coroutines.runBlocking
 import org.springframework.web.filter.OncePerRequestFilter
 
 /**
- * This filter only check user authorization. The JWT issuer public key signature is checked in
- * SecurityConfig.kt
+ * This filter only check user authorization.
+ * The JWT issuer public key signature is checked in SecurityConfig.kt
  */
 class UserAuthorizationCheckFilter(
     private val oidcProperties: OIDCProperties,
@@ -30,12 +30,10 @@ class UserAuthorizationCheckFilter(
     private val CURRENT_USER_AUTHORIZATION_CONTROLLER_PATH = "/bff/v1/authorization/current"
 
     private val BEARER_HEADER_TYPE = "Bearer"
-    private val MALFORMED_BEARER_MESSAGE =
-        "Malformed authorization header, header type should be 'Bearer'"
+    private val MALFORMED_BEARER_MESSAGE = "Malformed authorization header, header type should be 'Bearer'"
     private val MISSING_OIDC_ENDPOINT_MESSAGE = "Missing OIDC user info endpoint"
     private val MISSING_OIDC_ISSUER_ENDPOINT_MESSAGE = "Missing issuer URI endpoint"
-    private val COULD_NOT_FETCH_USER_INFO_MESSAGE =
-        "Could not fetch user info at ${oidcProperties.issuerUri + oidcProperties.userinfoEndpoint}"
+    private val COULD_NOT_FETCH_USER_INFO_MESSAGE = "Could not fetch user info at ${oidcProperties.issuerUri + oidcProperties.userinfoEndpoint}"
     private val INSUFFICIENT_AUTHORIZATION_MESSAGE = "Insufficient authorization"
 
     override fun doFilterInternal(
@@ -71,10 +69,7 @@ class UserAuthorizationCheckFilter(
 
         if (oidcProperties.issuerUri == null) {
             logger.warn(MISSING_OIDC_ISSUER_ENDPOINT_MESSAGE)
-            response.sendError(
-                HttpServletResponse.SC_UNAUTHORIZED,
-                MISSING_OIDC_ISSUER_ENDPOINT_MESSAGE,
-            )
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, MISSING_OIDC_ISSUER_ENDPOINT_MESSAGE)
 
             return@runBlocking
         }

@@ -1,4 +1,5 @@
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
@@ -28,6 +29,9 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
     () => displaySemaphoresLayer && !hasMapInteraction && !!selectedSemaphoreId,
     [displaySemaphoresLayer, hasMapInteraction, selectedSemaphoreId]
   )
+
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, {})
+  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
   const { data: semaphores } = useGetSemaphoresQuery()
   const { reportings } = useGetFilteredReportingsQuery()
@@ -68,7 +72,7 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: selectedSemaphoreVectorSourceRef.current,
-      style: getSelectedSemaphoreStyle,
+      style: feature => getSelectedSemaphoreStyle(feature, isSuperUser),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.SEMAPHORES.zIndex

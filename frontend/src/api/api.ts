@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { setAuthorizationHeader } from './utils/setAuthorizationHeaders'
 import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
-import { sha256 } from '../utils/sha256'
 
 import type { BackendApiErrorResponse } from './types'
 
@@ -18,26 +17,6 @@ export const geoserverApi = createApi({
 // =============================================================================
 // Monitorenv Private API
 
-const AUTHORIZATION_HEADER = 'authorization'
-const CORRELATION_HEADER = 'X-Correlation-Id'
-
-const setAuthorizationHeader = async headers => {
-  const user = getOIDCUser()
-  const token = user?.access_token
-
-  // If we have a token set in state, we pass it.
-  if (token) {
-    headers.set(AUTHORIZATION_HEADER, `Bearer ${token}`)
-
-    if (crypto?.subtle) {
-      const hashedToken = await sha256(token)
-
-      headers.set(CORRELATION_HEADER, hashedToken)
-    }
-  }
-
-  return headers
-}
 // We'll need that later on for authentication.
 const monitorenvPrivateApiQuery = fetchBaseQuery({
   baseUrl: '/bff',

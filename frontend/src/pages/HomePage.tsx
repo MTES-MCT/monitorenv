@@ -103,7 +103,7 @@ export function HomePage() {
         <BannerStack />
 
         <Map isSuperUser={isSuperUser} isVigilanceAreaEnabled={IS_VIGILANCE_AREA_ENABLED} />
-        <LayersSidebar />
+        <LayersSidebar isSuperUser={isSuperUser ?? false} />
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         <AttachMissionToReportingModal />

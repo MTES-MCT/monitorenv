@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 export const useGetCurrentUserAuthorizationQueryOverride = (_, options) => {
   const oidcConfig = getOIDCConfig()
   const location = useLocation()
-  const response = useGetCurrentUserAuthorizationQuery(undefined, options)
+  const response = useGetCurrentUserAuthorizationQuery(undefined, { ...options, skip: !oidcConfig.IS_OIDC_ENABLED })
 
   if (!oidcConfig.IS_OIDC_ENABLED) {
     if (location.pathname === '/ext') {
