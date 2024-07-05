@@ -1,4 +1,5 @@
 import { type Option } from '@mtes-mct/monitor-ui'
+import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
 import { useMemo } from 'react'
@@ -91,20 +92,7 @@ export function LayerSearch() {
     [amps]
   )
 
-  const regulatoryThemes = useMemo(
-    () =>
-      _.chain(regulatoryLayers?.entities)
-        .filter(l => !!l?.thematique)
-        .map(l => l?.thematique.split(','))
-        .flatMap(l => l)
-        .filter(l => !!l)
-        .map(l => l?.trim())
-        .uniq()
-        .map(l => ({ label: l, value: l }))
-        .sortBy('label')
-        .value() as Option<string>[],
-    [regulatoryLayers]
-  )
+  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers), [regulatoryLayers])
 
   const allowResetResults = !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult)
 

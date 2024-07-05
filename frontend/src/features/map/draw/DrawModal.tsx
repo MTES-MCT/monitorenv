@@ -26,7 +26,6 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
-import { SideWindowStatus } from '../../SideWindow/slice'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -114,12 +113,12 @@ export function DrawModal() {
   // Close DrawModal when closing reporting form
   useEffect(() => {
     if (
-      sideWindow.status === SideWindowStatus.CLOSED &&
-      global.reportingFormVisibility.visibility === VisibilityState.NONE
+      global.reportingFormVisibility.visibility === VisibilityState.NONE &&
+      listener === InteractionListener.REPORTING_ZONE
     ) {
       dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     }
-  }, [dispatch, global.reportingFormVisibility, sideWindow.status])
+  }, [dispatch, global.reportingFormVisibility, listener, sideWindow.status])
 
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
@@ -172,6 +171,14 @@ export function DrawModal() {
     },
     [dispatch]
   )
+
+  const hasCustomTools = useMemo(
+    () =>
+      listener === InteractionListener.MISSION_ZONE ||
+      listener === InteractionListener.REPORTING_ZONE ||
+      listener === InteractionListener.SURVEILLANCE_ZONE,
+    [listener]
+  )
   if (!listener) {
     return null
   }
@@ -179,9 +186,7 @@ export function DrawModal() {
   return (
     <MapInteraction
       customTools={
-        (listener === InteractionListener.MISSION_ZONE ||
-          listener === InteractionListener.REPORTING_ZONE ||
-          listener === InteractionListener.SURVEILLANCE_ZONE) && (
+        hasCustomTools && (
           <IconGroup>
             <IconButton
               className={interactionType === InteractionType.POLYGON ? '_active' : undefined}
