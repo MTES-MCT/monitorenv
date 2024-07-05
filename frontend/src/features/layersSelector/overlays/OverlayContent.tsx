@@ -1,7 +1,7 @@
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Size } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import styled from 'styled-components'
@@ -34,6 +34,9 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+  const vigilanceAreaFormType = useAppSelector(state => state.vigilanceArea.formTypeOpen)
+  const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
+  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormType === VigilanceAreaFormTypeOpen.ADD_REGULATORY
 
   const handleClick = (type, id) => () => {
     if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
@@ -50,6 +53,11 @@ export function OverlayContent({ items }: OverlayContentProps) {
     }
   }
 
+  const adRegulatoryToVigilanceArea = (e, id) => {
+    e.stopPropagation()
+    dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([id]))
+  }
+
   return (
     <Layerlist>
       {items?.map(item => {
@@ -63,6 +71,9 @@ export function OverlayContent({ items }: OverlayContentProps) {
         const isSelected =
           (item.properties.id === layerId && !!layerType && item.layerType.includes(layerType)) ||
           selectedVigilanceAreaId === item.properties.id
+        const isRegulatory =
+          item.layerType === MonitorEnvLayers.REGULATORY_ENV ||
+          item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW
 
         return (
           <LayerItem
@@ -73,6 +84,15 @@ export function OverlayContent({ items }: OverlayContentProps) {
             <LayerLegend layerType={item.layerType} legendKey={legendKey} size={Size.NORMAL} type={legendType} />
             <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
             <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || 'AUCUN NOM'}</Name>
+            {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
+              <IconButton
+                accent={Accent.TERTIARY}
+                disabled={regulatoryAreasToAdd?.includes(item.properties.id)}
+                Icon={Icon.Plus}
+                onClick={e => adRegulatoryToVigilanceArea(e, item.properties.id)}
+                size={Size.SMALL}
+              />
+            )}
           </LayerItem>
         )
       })}

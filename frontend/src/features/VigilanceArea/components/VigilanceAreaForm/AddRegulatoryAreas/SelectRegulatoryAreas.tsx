@@ -1,25 +1,36 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 
-import { RegulatoryArea } from './RegulatoryArea'
+import { RegulatoryAreas } from './RegulatoryAreas'
 import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButton } from '../style'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
-export function SelectRegulatories() {
+export function SelectRegulatoryAreas() {
   const dispatch = useAppDispatch()
   const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const { setFieldValue } = useFormikContext<VigilanceArea.VigilanceArea>()
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryAreas = regulatoryAreasToAdd?.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
-
   const handleValidate = () => {
     setFieldValue('linkedRegulatoryAreas', regulatoryAreasToAdd)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
+    dispatch(
+      setDisplayedItems({
+        displayInterestPointLayer: true,
+        displayMissionEditingLayer: true,
+        displayMissionSelectedLayer: true,
+        displayMissionsLayer: true,
+        displayMissionToAttachLayer: true,
+        displayReportingEditingLayer: true,
+        displayReportingSelectedLayer: true,
+        displayReportingsLayer: true,
+        displayReportingToAttachLayer: true,
+        displaySemaphoresLayer: true
+      })
+    )
   }
 
   const deleteRegulatoryArea = id => {
@@ -40,15 +51,10 @@ export function SelectRegulatories() {
           la carte.
         </SubFormHelpText>
         <div>
-          {regulatoryAreas &&
-            regulatoryAreas.length > 0 &&
-            regulatoryAreas.map(regulatoryArea => (
-              <RegulatoryArea
-                key={regulatoryArea?.id}
-                deleteRegulatoryArea={() => deleteRegulatoryArea(regulatoryArea?.id)}
-                regulatoryArea={regulatoryArea}
-              />
-            ))}
+          <RegulatoryAreas
+            deleteRegulatoryArea={id => deleteRegulatoryArea(id)}
+            linkedRegulatoryAreas={regulatoryAreasToAdd}
+          />
         </div>
         <ValidateButton onClick={handleValidate}>Valider la sélection</ValidateButton>
       </SubFormBody>

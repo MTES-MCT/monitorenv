@@ -9,7 +9,7 @@ import { noop } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { SelectRegulatories } from './AddRegulatoryAreas/SelectRegulatories'
+import { SelectRegulatoryAreas } from './AddRegulatoryAreas/SelectRegulatoryAreas'
 import { DrawVigilanceArea } from './DrawVigilanceArea'
 import { Form } from './Form'
 import { VigilanceAreaSchema } from './Schema'
@@ -74,12 +74,14 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
 
       <Formik enableReinitialize initialValues={initialValues} onSubmit={noop} validationSchema={VigilanceAreaSchema}>
         <>
-          {isPanelOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM && (
-            <VigilanceAreaPanel vigilanceArea={vigilanceArea} />
+          {isPanelOpen && <VigilanceAreaPanel vigilanceArea={vigilanceArea} />}
+          {isFormOpen && (
+            <>
+              {formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
+              {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea />}
+              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && <SelectRegulatoryAreas />}
+            </>
           )}
-          {isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
-          {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea />}
-          {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && <SelectRegulatories />}
         </>
       </Formik>
     </Wrapper>

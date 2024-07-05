@@ -17,6 +17,7 @@ type VigilanceAreaSliceState = {
   interactionType: InteractionType
   isCancelModalOpen: boolean
   isGeometryValid: boolean
+  layerRegulatoryAreaIds: Array<number> | undefined
   regulatoryAreasToAdd: Array<number> | undefined
   selectedVigilanceAreaId: number | undefined
   vigilanceAreaIdToCancel: number | undefined
@@ -28,6 +29,7 @@ const INITIAL_STATE: VigilanceAreaSliceState = {
   interactionType: InteractionType.POLYGON,
   isCancelModalOpen: false,
   isGeometryValid: false,
+  layerRegulatoryAreaIds: undefined,
   regulatoryAreasToAdd: undefined,
   selectedVigilanceAreaId: undefined,
   vigilanceAreaIdToCancel: undefined
@@ -36,9 +38,17 @@ export const vigilanceAreaSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'vigilanceArea',
   reducers: {
+    addLayerRegulatoryAreaIds(state, action: PayloadAction<number>) {
+      if (state.layerRegulatoryAreaIds) {
+        state.layerRegulatoryAreaIds = [...state.layerRegulatoryAreaIds, action.payload]
+      } else {
+        state.layerRegulatoryAreaIds = [action.payload]
+      }
+    },
     addRegulatoryAreasToVigilanceArea(state, action: PayloadAction<Array<number>>) {
       if (state.regulatoryAreasToAdd) {
-        state.regulatoryAreasToAdd = [...state.regulatoryAreasToAdd, ...action.payload]
+        const newRegulatoryAreasToAdd = action.payload.filter(id => !state.regulatoryAreasToAdd?.includes(id))
+        state.regulatoryAreasToAdd = [...state.regulatoryAreasToAdd, ...newRegulatoryAreasToAdd]
       } else {
         state.regulatoryAreasToAdd = action.payload
       }
@@ -77,6 +87,11 @@ export const vigilanceAreaSlice = createSlice({
     openCancelModal(state, action: PayloadAction<number>) {
       state.isCancelModalOpen = true
       state.vigilanceAreaIdToCancel = action.payload
+    },
+    removeLayerRegulatoryAreaIds(state, action: PayloadAction<number>) {
+      if (state.layerRegulatoryAreaIds) {
+        state.layerRegulatoryAreaIds = state.layerRegulatoryAreaIds.filter(id => id !== action.payload)
+      }
     },
     resetState() {
       return INITIAL_STATE

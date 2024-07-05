@@ -1,4 +1,3 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -6,20 +5,18 @@ import { Accent, Button, Icon, Label } from '@mtes-mct/monitor-ui'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 
-import { RegulatoryArea } from './RegulatoryArea'
+import { RegulatoryAreas } from './RegulatoryAreas'
 
 export function AddRegulatoryAreas() {
   const {
     setFieldValue,
     values: { linkedRegulatoryAreas }
   } = useFormikContext<VigilanceArea.VigilanceArea>()
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-
-  const regulatoryAreas = linkedRegulatoryAreas?.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
 
   const dispatch = useAppDispatch()
   const addRegulatory = () => {
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.ADD_REGULATORY))
+    dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(linkedRegulatoryAreas))
     dispatch(
       setDisplayedItems({
         displayInterestPointLayer: false,
@@ -57,15 +54,11 @@ export function AddRegulatoryAreas() {
       >
         Ajouter une réglementation en lien
       </Button>
-      {regulatoryAreas &&
-        regulatoryAreas.length > 0 &&
-        regulatoryAreas.map(regulatoryArea => (
-          <RegulatoryArea
-            key={regulatoryArea?.id}
-            deleteRegulatoryArea={() => deleteRegulatoryArea(regulatoryArea?.id)}
-            regulatoryArea={regulatoryArea}
-          />
-        ))}
+
+      <RegulatoryAreas
+        deleteRegulatoryArea={id => deleteRegulatoryArea(id)}
+        linkedRegulatoryAreas={linkedRegulatoryAreas}
+      />
     </div>
   )
 }
