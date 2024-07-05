@@ -23,7 +23,7 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 // TODO: Remove this when the feature flag is removed
 const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENABLED === 'true'
 
-export function LayersSidebar() {
+export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
@@ -99,7 +99,7 @@ export function LayersSidebar() {
           )}
         </MetadataPanelShifter>
 
-        {IS_VIGILANCE_AREA_ENABLED && (
+        {IS_VIGILANCE_AREA_ENABLED && isSuperUser && (
           <VigilanceAreaPanelShifter
             isLayersSidebarVisible={isLayersSidebarVisible}
             isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}

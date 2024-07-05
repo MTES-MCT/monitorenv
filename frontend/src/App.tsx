@@ -78,15 +78,6 @@ export function App() {
 
                     <Route
                       element={
-                        <RequireAuth redirect requireSuperUser>
-                          <HomePage />
-                        </RequireAuth>
-                      }
-                      path="/ext"
-                    />
-
-                    <Route
-                      element={
                         <RequireAuth>
                           <HomePage />
                         </RequireAuth>

@@ -1,4 +1,5 @@
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -36,12 +37,15 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   const semaphoresPoint = useMemo(() => getSemaphoresPoint(semaphores, reportings), [semaphores, reportings])
 
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, {})
+  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+
   const semaphoreVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const semaphoreVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
       source: semaphoreVectorSourceRef.current,
-      style: getSemaphoreStyle,
+      style: feature => getSemaphoreStyle(feature, isSuperUser),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.SEMAPHORES.zIndex
