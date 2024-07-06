@@ -1,5 +1,5 @@
 attrs==23.2.0 ; python_full_version == "3.10.12"
-certifi==2024.2.2 ; python_full_version == "3.10.12"
+certifi==2024.7.4 ; python_full_version == "3.10.12"
 charset-normalizer==3.3.2 ; python_full_version == "3.10.12"
 click-plugins==1.1.1 ; python_full_version == "3.10.12"
 click==8.1.7 ; python_full_version == "3.10.12"
