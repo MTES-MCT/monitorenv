@@ -342,6 +342,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('surveillance-completed-by').type('ABC', { force: true })
+    cy.wait(250)
 
     // All fields are filled
     cy.getDataCy('action-all-fields-are-filled-text').should('exist')
