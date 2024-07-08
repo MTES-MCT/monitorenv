@@ -22,6 +22,9 @@ export const saveVigilanceArea =
         const isVigilanceAreaPublic = vigilanceAreaResponse.visibility === VigilanceArea.Visibility.PUBLIC
 
         dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(undefined))
+        if (isNewVigilanceArea) {
+          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(vigilanceAreaResponse.id))
+        }
 
         if (isNewVigilanceArea && !isPublished) {
           dispatch(

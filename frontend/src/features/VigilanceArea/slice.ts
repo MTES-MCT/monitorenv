@@ -1,7 +1,8 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
 
+import type { HomeRootState } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export enum VigilanceAreaFormTypeOpen {
@@ -125,3 +126,8 @@ export const vigilanceAreaSlice = createSlice({
 
 export const vigilanceAreaActions = vigilanceAreaSlice.actions
 export const vigilanceAreaReducer = vigilanceAreaSlice.reducer
+
+export const isLinkingRegulatoryToVigilanceArea = createSelector(
+  (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
+  formTypeOpen => formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+)

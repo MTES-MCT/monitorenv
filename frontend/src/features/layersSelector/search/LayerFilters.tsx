@@ -1,4 +1,3 @@
-import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { type Option, Accent, CheckPicker, CustomSearch, SingleTag } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
@@ -23,8 +22,7 @@ export function LayerFilters({
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes
 }: LayerFiltersProps) {
-  const vigilanceAreaFormTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
-  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
 
   const handleSetFilteredAmpTypes = filteredAmps => {
     setFilteredAmpTypes(filteredAmps)

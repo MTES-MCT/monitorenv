@@ -46,13 +46,12 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
   const title = !isNewVigilanceArea ? vigilanceArea?.name : "Création d'une zone de vigilance"
   const close = () => {
     if (editingVigilanceAreaId) {
-      dispatch(vigilanceAreaActions.resetState())
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
 
       return
     }
-    if (vigilanceAreaId === selectedVigilanceAreaId) {
-      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
-    }
+
+    dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(undefined))
   }
 
   useEffect(() => {

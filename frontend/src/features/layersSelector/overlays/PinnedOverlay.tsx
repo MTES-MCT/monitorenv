@@ -1,4 +1,5 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -17,19 +18,22 @@ export function PinnedOverlay({
 }) {
   const dispatch = useAppDispatch()
 
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
+
   const close = () => {
     dispatch(closeLayerOverlay())
   }
 
   // component should not be called if items.length < 2
-  if (items.length < 2) {
+  // or if user is linking a regulatory area to a vigilance area
+  if (items.length < 2 && !isLinkingRegulatoryToVigilanceArea) {
     return null
   }
 
   return (
     <Card>
       <Header>
-        {items.length} zones superposées sur ce point{' '}
+        {items?.length > 1 ? <>{items.length} zones superposées sur ce point </> : 'Zone sélectionnée'}
         <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={close} size={Size.SMALL} />
       </Header>
       <OverlayContent items={items} />

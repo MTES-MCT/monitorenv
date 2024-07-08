@@ -1,4 +1,4 @@
-import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
@@ -34,9 +34,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
-  const vigilanceAreaFormType = useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormType === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
 
   const handleClick = (type, id) => () => {
     if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {

@@ -1,5 +1,4 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
-import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { Feature } from 'ol'
 import GeoJSON from 'ol/format/GeoJSON'
 import { fromExtent } from 'ol/geom/Polygon'
@@ -26,8 +25,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
-  const vigilanceAreaFormTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
-  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
 
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)

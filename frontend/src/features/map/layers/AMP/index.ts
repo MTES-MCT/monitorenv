@@ -1,5 +1,4 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
-import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
@@ -22,9 +21,9 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const showedAmpMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
-  const vigilanceAreaFormTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
-  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
   const isLayerVisible = !isLinkingRegulatoryToVigilanceArea
+
   const { data: ampLayers } = useGetAMPsQuery()
 
   const vectorSourceRef = useRef(new VectorSource())

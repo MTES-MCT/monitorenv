@@ -131,7 +131,9 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         </SubPart>
         <SubPart>
           <InlineItemLabel>Commentaire sur la zone</InlineItemLabel>
-          <InlineItemValue title={vigilanceArea?.comments}>{vigilanceArea?.comments ?? EMPTY_VALUE}</InlineItemValue>
+          <InlineItemValue $maxLine={4} title={vigilanceArea?.comments}>
+            {vigilanceArea?.comments ?? EMPTY_VALUE}
+          </InlineItemValue>
         </SubPart>
         <SubPart>
           <InlineItemLabel>Réglementations en lien</InlineItemLabel>
@@ -155,12 +157,14 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         <SubPart>
           <InternText>Section interne CACEM</InternText>
           <InlineItem>
-            <InlineItemLabel $isInline>Crée le</InlineItemLabel>
+            <InlineItemLabel>Crée le</InlineItemLabel>
             <InlineItemValue>{vigilanceArea?.createdBy ?? EMPTY_VALUE}</InlineItemValue>
           </InlineItem>
           <InlineItem>
-            <InlineItemLabel $isInline>Source</InlineItemLabel>
-            <InlineItemValue>{vigilanceArea?.source ?? EMPTY_VALUE}</InlineItemValue>
+            <InlineItemLabel>Source</InlineItemLabel>
+            <InlineItemValue $maxLine={2} title={vigilanceArea?.source ?? ''}>
+              {vigilanceArea?.source ?? EMPTY_VALUE}
+            </InlineItemValue>
           </InlineItem>
         </SubPart>
       </Body>
@@ -208,7 +212,7 @@ const InlineItemValue = styled.span<{ $maxLine?: number }>`
   color: ${p => p.theme.color.gunMetal};
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: ${p => p.$maxLine ?? '4'};
+  -webkit-line-clamp: ${p => p.$maxLine ?? '1'};
   overflow: hidden;
 `
 
@@ -226,6 +230,7 @@ const LinkContainer = styled.div`
 
 const LinkText = styled.span`
   color: ${p => p.theme.color.gunMetal};
+  font-weight: 500;
 `
 
 const LinkUrl = styled.a`

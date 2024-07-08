@@ -29,6 +29,7 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
 
   const regulatoryAreaId = regulatoryArea?.id
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const regulatoryAreaIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.regulatoryAreaIdsToBeDisplayed)
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
 
@@ -91,6 +92,7 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
       dispatch(closeMetadataPanel())
     } else {
       dispatch(openRegulatoryMetadataPanel(id))
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
     }
   }
 
@@ -146,6 +148,7 @@ const RegulatoryAreaContainer = styled.div<{ $isReadOnly: boolean }>`
   gap: 4px;
   justify-content: space-between;
   padding: 8px;
+  cursor: pointer;
 
   ${p =>
     p.$isReadOnly &&

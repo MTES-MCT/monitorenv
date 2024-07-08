@@ -108,7 +108,7 @@ export function DrawVigilanceArea() {
               Valider les tracés
             </ValidateButton>
           </ValidateButtonRow>
-          {!isGeometryValid && <StyledFieldError>Le tracé n&apos;est pas valide</StyledFieldError>}
+          {!isGeometryValid && <FieldError>Le tracé n&apos;est pas valide</FieldError>}
         </ValidateButtonContainer>
       </SubFormBody>
     </>
@@ -135,4 +135,3 @@ const ValidateButtonRow = styled.div`
   display: flex;
   gap: 8px;
 `
-const StyledFieldError = styled(FieldError)``

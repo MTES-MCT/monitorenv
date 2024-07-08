@@ -8,7 +8,9 @@ import type { HomeAppThunk } from '@store/index'
 
 export const deleteVigilanceArea =
   (id: number): HomeAppThunk =>
-  async dispatch => {
+  async (dispatch, getState) => {
+    const { editingVigilanceAreaId, selectedVigilanceAreaId } = getState().vigilanceArea
+
     const vigilanceAreaEnpoint = vigilanceAreasAPI.endpoints.deleteVigilanceArea
     try {
       const response = await dispatch(vigilanceAreaEnpoint.initiate(id))
@@ -23,7 +25,22 @@ export const deleteVigilanceArea =
             withAutomaticClosing: true
           })
         )
-        dispatch(vigilanceAreaActions.resetState())
+
+        if (selectedVigilanceAreaId === editingVigilanceAreaId) {
+          dispatch(vigilanceAreaActions.resetState())
+
+          return
+        }
+
+        if (id === editingVigilanceAreaId) {
+          dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(undefined))
+
+          return
+        }
+
+        if (id === selectedVigilanceAreaId) {
+          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+        }
       }
     } catch (error) {
       dispatch(

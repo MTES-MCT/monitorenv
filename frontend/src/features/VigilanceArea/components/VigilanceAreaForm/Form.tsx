@@ -35,7 +35,13 @@ export function Form() {
   const dispatch = useAppDispatch()
 
   const isCancelModalOpen = useAppSelector(state => state.vigilanceArea.isCancelModalOpen)
-  const { dirty, setFieldValue, validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
+  const {
+    dirty,
+    errors: formErrors,
+    setFieldValue,
+    validateForm,
+    values
+  } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
@@ -63,7 +69,7 @@ export function Form() {
 
       return
     }
-    dispatch(vigilanceAreaActions.resetState())
+    dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(undefined))
   }
 
   const onCancelEditModal = () => {
@@ -148,6 +154,7 @@ export function Form() {
               ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
               : undefined
           }
+          error={formErrors.startDatePeriod || formErrors.endDatePeriod}
           hasSingleCalendar
           isCompact
           isErrorMessageHidden
@@ -193,6 +200,7 @@ export function Form() {
         />
         <AddRegulatoryAreas />
         <Links />
+        <Separator />
         <InternText>Interne CACEM</InternText>
         <StyledTrigramInput isErrorMessageHidden isRequired label="Créé par" name="createdBy" />
         <FormikTextarea
@@ -224,7 +232,9 @@ const StyledForm = styled.div`
 const InternText = styled.span`
   color: ${p => p.theme.color.maximumRed};
 `
-
+const Separator = styled.div`
+  border-top: 1px solid ${p => p.theme.color.maximumRed};
+`
 const StyledTrigramInput = styled(FormikTextInput)`
   width: 126px;
 `

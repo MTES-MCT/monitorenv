@@ -34,7 +34,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
       if (regulatorylayer) {
         const feature = getRegulatoryFeature({
-          code: Layers.REGULATORY_LINKED_TO_VIGILANCE_AREA.code,
+          code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
           layer: regulatorylayer
         })
 

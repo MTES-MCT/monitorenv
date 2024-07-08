@@ -50,7 +50,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       if (regulatorylayer && isRegulatoryAreaShouldBeDisplayed) {
         const feature = getRegulatoryFeature({
-          code: Layers.REGULATORY_LINKED_TO_VIGILANCE_AREA.code,
+          code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
           layer: regulatorylayer
         })
 

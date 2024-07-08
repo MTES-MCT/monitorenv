@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 export function Frequency() {
-  const { setFieldValue, values } = useFormikContext<VigilanceArea.VigilanceArea>()
+  const { errors, setFieldValue, values } = useFormikContext<VigilanceArea.VigilanceArea>()
   const frequencyOptions = getOptionsFromLabelledEnum(VigilanceArea.FrequencyLabel)
 
   const endingConditionOptions = getOptionsFromLabelledEnum(VigilanceArea.EndingConditionLabel)
@@ -29,6 +29,7 @@ export function Frequency() {
   return (
     <>
       <Select
+        error={errors.frequency}
         isErrorMessageHidden
         isRequired
         label="Récurrence"

@@ -1,4 +1,4 @@
-import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
@@ -44,9 +44,8 @@ export function ResultListLayerGroup({
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
   const forceZonesAreOpen = _.includes(layerIds, layerIdToDisplay)
 
-  const vigilanceAreaFormTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const isLinkingRegulatoryToVigilanceArea = vigilanceAreaFormTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
   const isLayerGroupDisabled = difference(layerIds, regulatoryAreasLinkedToVigilanceAreaForm ?? []).length === 0
 
   const handleCheckAllZones = e => {

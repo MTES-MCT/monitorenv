@@ -24,6 +24,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
 
   useEffect(() => {
     const clickedAmpFeatures = getClickedAmpFeatures(mapClickEvent)
@@ -36,6 +37,14 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
 
     if (numberOfClickedFeatures === 0) {
       dispatch(closeLayerOverlay())
+    }
+    if (isLinkingRegulatoryToVigilanceArea && mapClickEvent.coordinates) {
+      dispatch(closeMetadataPanel())
+      dispatch(openLayerOverlay(mapClickEvent.coordinates))
+      const items = getClickedItems(mapClickEvent)
+      dispatch(setLayerOverlayItems(items))
+
+      return
     }
 
     if (numberOfClickedFeatures === 1) {
