@@ -29,9 +29,11 @@ import { Reportings } from '../features/Reportings'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
+// TODO: Remove this when the feature flag is removed
+const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENABLED === 'true'
+
 export function HomePage() {
   const dispatch = useAppDispatch()
-
   const displayDrawModal = useAppSelector(state => state.global.displayDrawModal)
   const displayInterestPoint = useAppSelector(state => state.global.displayInterestPoint)
   const displayLocateOnMap = useAppSelector(state => state.global.displayLocateOnMap)
@@ -92,7 +94,7 @@ export function HomePage() {
         <Healthcheck />
         <BannerStack />
 
-        <Map />
+        <Map isVigilanceAreaEnabled={IS_VIGILANCE_AREA_ENABLED} />
         <LayersSidebar />
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
