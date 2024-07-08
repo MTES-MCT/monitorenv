@@ -102,6 +102,7 @@ class JpaMissionRepository(
         seaFronts: List<String>?,
         startedAfter: Instant,
         startedBefore: Instant?,
+        searchQuery: String?,
     ): List<MissionEntity> {
         val pageable =
             if (pageNumber != null && pageSize != null) {
@@ -122,7 +123,7 @@ class JpaMissionRepository(
                 seaFronts = seaFronts?.toTypedArray(),
                 startedAfter = startedAfter,
                 startedBefore = startedBefore,
-                searchQuery = "",
+                searchQuery = searchQuery ?: "",
             )
 
         return missions.map { it.toMissionEntity(mapper) }

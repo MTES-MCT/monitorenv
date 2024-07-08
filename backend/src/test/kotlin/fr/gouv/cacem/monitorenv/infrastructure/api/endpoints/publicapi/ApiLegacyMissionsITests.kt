@@ -9,7 +9,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.BypassActionCheckAndDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionWithRapportNavActions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
@@ -31,9 +37,14 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.request
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
@@ -164,6 +175,7 @@ class ApiLegacyMissionsITests {
                 controlUnitIds = any(),
                 pageNumber = any(),
                 pageSize = any(),
+                searchQuery = any(),
             ),
         )
             .willReturn(listOf(expectedFirstMission))

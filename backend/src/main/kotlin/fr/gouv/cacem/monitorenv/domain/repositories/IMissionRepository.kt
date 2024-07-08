@@ -38,6 +38,7 @@ interface IMissionRepository {
         seaFronts: List<String>?,
         startedAfter: Instant,
         startedBefore: Instant?,
+        searchQuery: String?,
     ): List<MissionEntity>
 
     fun findByIds(ids: List<Int>): List<MissionEntity>
