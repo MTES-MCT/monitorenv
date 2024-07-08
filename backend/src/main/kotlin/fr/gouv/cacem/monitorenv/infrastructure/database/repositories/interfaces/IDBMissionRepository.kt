@@ -83,8 +83,14 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
             AND ((:searchQuery) = ''
                 OR (
                    EXISTS (
-                        SELECT 1 FROM env_actions e WHERE e.mission_id = m.id
-                        AND to_tsvector('mydict', e.value) @@ plainto_tsquery('mydict', (:searchQuery || ':*'))
+                        SELECT 1 FROM env_actions e, LATERAL jsonb_array_elements(e.value->'infractions') AS infractions WHERE e.mission_id = m.id
+                        AND to_tsvector('mydict',
+                            COALESCE(infractions->>'imo', '') || ' ' ||
+                            COALESCE(infractions->>'mmsi', '') || ' ' ||
+                            COALESCE(infractions->>'registrationNumber', '') || ' ' ||
+                            COALESCE(infractions->>'vesselName', '') || ' ' ||
+                            COALESCE(infractions->>'controlledPersonIdentity', ''))
+                         @@ plainto_tsquery('mydict', (:searchQuery || ':*'))
                         )
                     )
                 )
