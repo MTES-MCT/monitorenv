@@ -71,7 +71,11 @@ export function MyLayerZone({
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
       <LayerLegend layerType={layerType} legendKey={name} type={type} />
-      <LayerSelector.Name onClick={handleClickOnLayerName} title={displayedName}>
+      <LayerSelector.Name
+        data-cy={`my-regulatory-${displayedName}`}
+        onClick={handleClickOnLayerName}
+        title={displayedName}
+      >
         {displayedName}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>

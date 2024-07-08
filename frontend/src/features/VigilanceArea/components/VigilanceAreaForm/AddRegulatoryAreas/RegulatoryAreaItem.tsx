@@ -122,11 +122,17 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
             color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
             Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
-            title="Sélectionner la zone"
+            title="Ajouter la zone à Mes zones réglementaires"
           />
         </ButtonsContainer>
       ) : (
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onDeleteRegulatoryArea} size={Size.SMALL} />
+        <IconButton
+          accent={Accent.TERTIARY}
+          Icon={Icon.Close}
+          onClick={onDeleteRegulatoryArea}
+          size={Size.SMALL}
+          title={`vigilance-area-delete-regulatory-area-${regulatoryAreaId}`}
+        />
       )}
     </RegulatoryAreaContainer>
   )
