@@ -21,6 +21,7 @@ class GetFullMissions(
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,
+        searchQuery: String?,
     ): List<MissionDTO> {
         val missions =
             missionRepository.findAllFullMissions(
@@ -37,6 +38,7 @@ class GetFullMissions(
                 seaFronts = seaFronts,
                 pageSize = pageSize,
                 pageNumber = pageNumber,
+                searchQuery = searchQuery,
             )
 
         logger.info("Found ${missions.size} mission(s)")

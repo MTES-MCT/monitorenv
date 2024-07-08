@@ -23,7 +23,7 @@ import java.time.ZonedDateTime
 @Tag(description = "API Missions", name = "BFF.Missions")
 class Missions(
     private val createOrUpdateMissionWithActionsAndAttachedReporting:
-        CreateOrUpdateMissionWithActionsAndAttachedReporting,
+    CreateOrUpdateMissionWithActionsAndAttachedReporting,
     private val getFullMissions: GetFullMissions,
     private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions,
     private val deleteMission: DeleteMission,
@@ -114,6 +114,8 @@ class Missions(
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
+        @RequestParam(name = "searchQuery", required = false)
+        searchQuery: String?,
     ): List<MissionsDataOutput> {
         val missions =
             getFullMissions.execute(
@@ -124,6 +126,7 @@ class Missions(
                 pageNumber = pageNumber,
                 pageSize = pageSize,
                 seaFronts = seaFronts,
+                searchQuery = searchQuery,
             )
         return missions.map { MissionsDataOutput.fromMissionDTO(it) }
     }

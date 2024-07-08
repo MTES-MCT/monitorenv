@@ -14,6 +14,7 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredMissionsQuery = () => {
   const {
+    searchQuery,
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
@@ -65,6 +66,7 @@ export const useGetFilteredMissionsQuery = () => {
       missionStatus: selectedStatuses,
       missionTypes: selectedMissionTypes,
       seaFronts: selectedSeaFronts,
+      searchQuery,
       startedAfterDateTime: datesForApi.startedAfterDate,
       startedBeforeDateTime: datesForApi.startedBeforeDate,
       withEnvActions: selectedWithEnvActions
