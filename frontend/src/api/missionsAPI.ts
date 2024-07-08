@@ -41,7 +41,7 @@ const getMissionTypesFilter = missionTypes =>
 const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 const getSearchQuery = searchQuery =>
-  searchQuery && searchQuery?.length > 0 && `searchFilter=${encodeURIComponent(searchQuery)}`
+  searchQuery && searchQuery?.length > 0 && `searchQuery=${encodeURIComponent(searchQuery)}`
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({

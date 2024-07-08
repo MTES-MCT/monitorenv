@@ -230,4 +230,15 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('edit-mission-22').should('not.exist')
     cy.getDataCy('edit-mission-43').should('not.exist')
   })
+
+  it('Should filter missions by search query', () => {
+    cy.fill('Rechercher un contrôle sur une cible', 'BALTIK')
+
+    cy.get('.Table-SimpleTable tr').should('have.length', 2)
+    cy.getDataCy('edit-mission-34').click({ force: true })
+
+    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('infraction-0-identification').should('contain', 'BALTIK')
+    cy.getDataCy('quit-edit-mission').click()
+  })
 })
