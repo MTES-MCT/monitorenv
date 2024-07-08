@@ -15,6 +15,10 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
 
   function formatPhoneNumber(phoneNumber: string) {
     if (phoneNumber.startsWith('00')) {
+      if (phoneNumber.length === 12) {
+        phoneNumber.match(/.{1,2}/g)?.join(' ')
+      }
+
       return `00 ${phoneNumber
         .slice(2)
         .match(/.{1,3}/g)
