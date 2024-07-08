@@ -1,3 +1,4 @@
+import { closeLayerOverlay } from '@features/layersSelector/metadataPanel/slice'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -17,6 +18,7 @@ export function SelectRegulatoryAreas() {
   const handleValidate = () => {
     setFieldValue('linkedRegulatoryAreas', regulatoryAreasToAdd)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
+    dispatch(closeLayerOverlay())
     dispatch(
       setDisplayedItems({
         displayInterestPointLayer: true,

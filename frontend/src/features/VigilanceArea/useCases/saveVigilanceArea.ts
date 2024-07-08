@@ -21,7 +21,7 @@ export const saveVigilanceArea =
         const vigilanceAreaResponse = response.data as VigilanceArea.VigilanceArea
         const isVigilanceAreaPublic = vigilanceAreaResponse.visibility === VigilanceArea.Visibility.PUBLIC
 
-        dispatch(vigilanceAreaActions.resetState())
+        dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(undefined))
 
         if (isNewVigilanceArea && !isPublished) {
           dispatch(
@@ -43,6 +43,7 @@ export const saveVigilanceArea =
               children: `La zone de vigilance a bien été publiée et est maintenant visible par ${
                 isVigilanceAreaPublic ? 'tous' : 'le CACEM'
               }.`,
+              closingDelay: 10000,
               isClosable: true,
               isFixed: true,
               level: Level.SUCCESS,
@@ -55,6 +56,7 @@ export const saveVigilanceArea =
       dispatch(
         addMainWindowBanner({
           children: `Une erreur est survenue lors de la création/sauvegarde de la zone de vigilance.`,
+          closingDelay: 10000,
           isClosable: true,
           isFixed: true,
           level: Level.ERROR,

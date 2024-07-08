@@ -69,6 +69,7 @@ export function Frequency() {
               isErrorMessageHidden
               isLabelHidden
               isRequired
+              isStringDate
               label="Date de fin de récurrence"
               name="endingOccurrenceDate"
               style={{ width: '115px' }}

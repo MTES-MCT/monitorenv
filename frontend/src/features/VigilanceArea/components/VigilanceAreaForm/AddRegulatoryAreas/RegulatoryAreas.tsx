@@ -21,6 +21,7 @@ export function RegulatoryAreas({
         regulatoryAreas.length > 0 &&
         regulatoryAreas.map(regulatoryArea => (
           <RegulatoryAreaItem
+            key={regulatoryArea?.id}
             deleteRegulatoryArea={deleteRegulatoryArea}
             isReadOnly={isReadOnly}
             regulatoryArea={regulatoryArea}

@@ -1,13 +1,11 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
-import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
-import { getArea } from 'ol/sphere'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
+import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 
@@ -69,14 +67,7 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
         const features = showedRegulatoryLayerIds.reduce((feats: Feature[], regulatorylayerId) => {
           const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
           if (regulatorylayer) {
-            const { geom, ...regulatoryLayerProperties } = regulatorylayer
-            const feature = new GeoJSON({
-              featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(geom)
-            feature.setId(`${Layers.REGULATORY_ENV.code}:${regulatorylayer.id}`)
-            const geometry = feature.getGeometry()
-            const area = geometry && getArea(geometry)
-            feature.setProperties({ area, ...regulatoryLayerProperties })
+            const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV.code, layer: regulatorylayer })
 
             feats.push(feature)
           }

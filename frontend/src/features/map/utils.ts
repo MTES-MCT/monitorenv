@@ -6,6 +6,7 @@ import {
   type RegulatoryOrAMPOrViglanceAreaLayerType,
   RegulatoryOrAMPOrViglanceAreaLayerTypeAsList
 } from 'domain/entities/layers/constants'
+import { uniqBy } from 'lodash'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
@@ -43,6 +44,7 @@ export const getOverlayItemsFromFeatures = (features: SerializedFeature<Record<s
 
     if (RegulatoryOrAMPOrViglanceAreaLayerTypeAsList.includes(type as MonitorEnvLayers)) {
       const { properties } = feature
+
       acc.push({
         layerType: type as RegulatoryOrAMPOrViglanceAreaLayerType,
         properties: properties as
@@ -73,5 +75,5 @@ export const getHighestPriorityFeatures = (features: FeatureLike[], priorityOrde
     )
   )
 
-  return highestPriorityFeatures
+  return uniqBy(highestPriorityFeatures, feature => String(feature.getId()).split(':')[1])
 }

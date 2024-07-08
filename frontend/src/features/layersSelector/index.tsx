@@ -139,14 +139,14 @@ const MetadataPanelShifter = styled.div<{
     if (p.metadataPanelIsOpen) {
       if (p.isLayersSidebarVisible) {
         if (p.isVigilanceAreaFormOpen) {
-          return '757'
+          return '773'
         }
 
         return '355'
       }
 
       if (p.isVigilanceAreaFormOpen) {
-        return '812'
+        return '828'
       }
 
       return '410'

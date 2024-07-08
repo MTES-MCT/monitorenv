@@ -6,7 +6,7 @@ import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { SelectRegulatoryAreas } from './AddRegulatoryAreas/SelectRegulatoryAreas'
@@ -44,12 +44,25 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
   )
 
   const title = !isNewVigilanceArea ? vigilanceArea?.name : "Création d'une zone de vigilance"
-
   const close = () => {
+    if (editingVigilanceAreaId) {
+      dispatch(vigilanceAreaActions.resetState())
+
+      return
+    }
     if (vigilanceAreaId === selectedVigilanceAreaId) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
     }
   }
+
+  useEffect(() => {
+    if (editingVigilanceAreaId && vigilanceArea && vigilanceArea.id === editingVigilanceAreaId) {
+      dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(vigilanceArea?.linkedRegulatoryAreas ?? []))
+      dispatch(vigilanceAreaActions.setGeometry(vigilanceArea?.geom))
+    }
+    // we just want to listen when editingVigilanceAreaId changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingVigilanceAreaId])
 
   return (
     <Wrapper $isMainFormOpen={isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM} $isOpen={isOpen}>
@@ -90,7 +103,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
 
 const Wrapper = styled.div<{ $isMainFormOpen: boolean; $isOpen: boolean }>`
   border-radius: 2px;
-  width: 400px;
+  width: 416px;
   display: block;
   color: ${p => p.theme.color.charcoal};
   opacity: ${p => (p.$isOpen ? 1 : 0)};

@@ -1,15 +1,13 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { Feature } from 'ol'
-import GeoJSON from 'ol/format/GeoJSON'
 import { fromExtent } from 'ol/geom/Polygon'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
-import { getArea } from 'ol/sphere'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
+import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 import { dottedLayerStyle } from '../styles/dottedLayer.style'
@@ -69,18 +67,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
           const layer = regulatoryLayers?.entities[id]
 
           if (layer && layer.geom) {
-            const feature = new GeoJSON({
-              featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(layer.geom)
-            const geometry = feature.getGeometry()
-            const area = geometry && getArea(geometry)
-            feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${layer.id}`)
-
-            feature.setProperties({
-              area,
-              layerId: layer.id,
-              ...layer
-            })
+            const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
 
             regulatorylayers.push(feature)
           }

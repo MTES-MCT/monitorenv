@@ -16,7 +16,6 @@ export function AddRegulatoryAreas() {
   const dispatch = useAppDispatch()
   const addRegulatory = () => {
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.ADD_REGULATORY))
-    dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(linkedRegulatoryAreas))
     dispatch(
       setDisplayedItems({
         displayInterestPointLayer: false,

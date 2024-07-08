@@ -26,7 +26,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
   }
 
   if (layerType === MonitorEnvLayers.VIGILANCE_AREA) {
-    return (layer as VigilanceArea.VigilanceAreaProperties)?.source
+    return (layer as VigilanceArea.VigilanceAreaProperties)?.themes?.join(', ')
   }
 
   return (layer as RegulatoryLayerCompactProperties).entity_name

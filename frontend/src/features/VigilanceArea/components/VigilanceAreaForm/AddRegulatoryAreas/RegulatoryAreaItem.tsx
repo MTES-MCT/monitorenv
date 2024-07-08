@@ -29,37 +29,60 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
 
   const regulatoryAreaId = regulatoryArea?.id
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
-  const layerRegulatoryAreaIds = useAppSelector(state => state.vigilanceArea.layerRegulatoryAreaIds)
+  const regulatoryAreaIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.regulatoryAreaIdsToBeDisplayed)
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
+
   const metadataIsShown = useAppSelector(state =>
     regulatoryAreaId ? getMetadataIsOpenForRegulatoryLayerId(state, regulatoryAreaId) : undefined
   )
 
-  const onDeleteRegulatoryArea = (id: number | undefined) => {
-    if (!deleteRegulatoryArea || !id) {
+  const isZoneSelected = regulatoryAreaId ? selectedRegulatoryLayerIds.includes(regulatoryAreaId) : false
+  const isLayerVisible = regulatoryAreaId ? regulatoryAreaIdsToBeDisplayed?.includes(regulatoryAreaId) : false
+  const pinnedRegulatoryZoneIsShowed = regulatoryAreaId ? showedRegulatoryLayerIds.includes(regulatoryAreaId) : false
+
+  const onDeleteRegulatoryArea = e => {
+    e.stopPropagation()
+    if (!deleteRegulatoryArea || !regulatoryAreaId) {
       return
     }
-    deleteRegulatoryArea(id)
+    deleteRegulatoryArea(regulatoryAreaId)
   }
 
-  const handleSelectZone = (e, id, isZoneSelected) => {
+  const handleSelectZone = e => {
     e.stopPropagation()
+    if (!regulatoryAreaId) {
+      return
+    }
     if (isZoneSelected) {
-      dispatch(removeRegulatoryZonesFromMyLayers([id]))
+      dispatch(removeRegulatoryZonesFromMyLayers([regulatoryAreaId]))
     } else {
-      dispatch(addRegulatoryZonesToMyLayers([id]))
+      dispatch(addRegulatoryZonesToMyLayers([regulatoryAreaId]))
     }
   }
 
-  const displayRegulatoryArea = (e, id, pinnedRegulatoryZoneIsShowed) => {
+  const displayRegulatoryArea = e => {
     e.stopPropagation()
-    const isLayerVisible = id ? layerRegulatoryAreaIds?.includes(id) : false
+
+    if (!regulatoryAreaId) {
+      return
+    }
+
+    if (!selectedRegulatoryLayerIds.includes(regulatoryAreaId)) {
+      if (isLayerVisible) {
+        dispatch(vigilanceAreaActions.removeRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
+      } else {
+        dispatch(vigilanceAreaActions.addRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
+      }
+
+      return
+    }
+
     if (isLayerVisible || pinnedRegulatoryZoneIsShowed) {
-      dispatch(vigilanceAreaActions.removeLayerRegulatoryAreaIds(id))
-      dispatch(hideRegulatoryLayer(id))
+      dispatch(vigilanceAreaActions.removeRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
+      dispatch(hideRegulatoryLayer(regulatoryAreaId))
     } else {
-      dispatch(vigilanceAreaActions.addLayerRegulatoryAreaIds(id))
-      dispatch(showRegulatoryLayer(id))
+      dispatch(vigilanceAreaActions.addRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
+      dispatch(showRegulatoryLayer(regulatoryAreaId))
     }
   }
 
@@ -71,14 +94,10 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
     }
   }
 
-  const isZoneSelected = regulatoryAreaId ? selectedRegulatoryLayerIds.includes(regulatoryAreaId) : false
-  const isLayerVisible = regulatoryAreaId ? layerRegulatoryAreaIds?.includes(regulatoryAreaId) : false
-  const pinnedRegulatoryZoneIsShowed = regulatoryAreaId ? showedRegulatoryLayerIds.includes(regulatoryAreaId) : false
-
   return (
     <RegulatoryAreaContainer
-      key={regulatoryAreaId}
       $isReadOnly={isReadOnly}
+      data-cy="regulatory-area-item"
       onClick={() => toggleRegulatoryZoneMetadata(regulatoryAreaId)}
     >
       <RegulatoryAreaName>
@@ -95,24 +114,19 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
             accent={Accent.TERTIARY}
             color={isLayerVisible || pinnedRegulatoryZoneIsShowed ? THEME.color.charcoal : THEME.color.lightGray}
             Icon={Icon.Display}
-            onClick={e => displayRegulatoryArea(e, regulatoryAreaId, pinnedRegulatoryZoneIsShowed)}
+            onClick={displayRegulatoryArea}
             title={isLayerVisible ? 'Cacher la zone' : 'Afficher la zone'}
           />
           <StyledIconButton
             accent={Accent.TERTIARY}
             color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
             Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
-            onClick={e => handleSelectZone(e, regulatoryAreaId, isZoneSelected)}
+            onClick={handleSelectZone}
             title="Sélectionner la zone"
           />
         </ButtonsContainer>
       ) : (
-        <IconButton
-          accent={Accent.TERTIARY}
-          Icon={Icon.Close}
-          onClick={() => onDeleteRegulatoryArea(regulatoryAreaId)}
-          size={Size.SMALL}
-        />
+        <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onDeleteRegulatoryArea} size={Size.SMALL} />
       )}
     </RegulatoryAreaContainer>
   )

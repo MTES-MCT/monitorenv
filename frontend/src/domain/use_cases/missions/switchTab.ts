@@ -32,6 +32,6 @@ export const switchTab =
     // since we are switching to another mission, we need to update the attached reportings store
     // because it's the form who listen to this store
     dispatch(
-      attachReportingToMissionSliceActions.setAttachedReportings(missions[id]?.missionForm?.attachedReportings || [])
+      attachReportingToMissionSliceActions.setAttachedReportings(missions[id]?.missionForm?.attachedReportings ?? [])
     )
   }

@@ -38,33 +38,35 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       dispatch(closeLayerOverlay())
     }
 
-    if (numberOfClickedFeatures === 1 && clickedAmpFeatures && clickedAmpFeatures.length === 1) {
-      dispatch(closeLayerOverlay())
-      const feature = convertToFeature(clickedAmpFeatures[0])
-      if (feature) {
-        const layerId = feature.get('id')
-        dispatch(openAMPMetadataPanel(layerId))
-        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+    if (numberOfClickedFeatures === 1) {
+      if (clickedAmpFeatures && clickedAmpFeatures.length === 1) {
+        dispatch(closeLayerOverlay())
+        const feature = convertToFeature(clickedAmpFeatures[0])
+        if (feature) {
+          const layerId = feature.get('id')
+          dispatch(openAMPMetadataPanel(layerId))
+          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+        }
       }
-    }
 
-    if (numberOfClickedFeatures === 1 && clickedRegulatoryFeatures && clickedRegulatoryFeatures.length === 1) {
-      const feature = convertToFeature(clickedRegulatoryFeatures[0])
-      if (feature) {
-        const layerId = feature.get('id')
-        dispatch(openRegulatoryMetadataPanel(layerId))
-        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      if (clickedRegulatoryFeatures && clickedRegulatoryFeatures.length === 1) {
+        const feature = convertToFeature(clickedRegulatoryFeatures[0])
+        if (feature) {
+          const layerId = feature.get('id')
+          dispatch(openRegulatoryMetadataPanel(layerId))
+          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+        }
       }
-    }
 
-    if (numberOfClickedFeatures === 1 && clickedVigilanceAreaFeatures && clickedVigilanceAreaFeatures.length === 1) {
-      dispatch(closeLayerOverlay())
-      const feature = convertToFeature(clickedVigilanceAreaFeatures[0])
-      if (feature) {
-        const layerId = feature.get('id')
-        dispatch(closeMetadataPanel())
+      if (clickedVigilanceAreaFeatures && clickedVigilanceAreaFeatures.length === 1) {
+        dispatch(closeLayerOverlay())
+        const feature = convertToFeature(clickedVigilanceAreaFeatures[0])
+        if (feature) {
+          const layerId = feature.get('id')
+          dispatch(closeMetadataPanel())
 
-        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
+          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
+        }
       }
     }
 

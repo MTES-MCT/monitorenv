@@ -28,7 +28,7 @@ export const getVigilanceAreaZoneFeature = (
   return feature
 }
 
-export const getFormattedGeomForFeature = geom => {
+export const getFormattedGeomForFeature = (geom, vigilanceArea) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(geom, {
     dataProjection: WSG84_PROJECTION,
@@ -38,7 +38,12 @@ export const getFormattedGeomForFeature = geom => {
   const feature = new Feature({
     geometry
   })
-  feature.setId(`${Layers.VIGILANCE_AREA.code}:0`)
+  const id = vigilanceArea?.id || 0
+  feature.setId(`${Layers.VIGILANCE_AREA.code}:${id}`)
+  feature.setProperties({
+    ...vigilanceArea,
+    metadataIsShowed: true
+  })
 
   return feature
 }

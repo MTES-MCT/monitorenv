@@ -64,33 +64,30 @@ export function OverlayContent({ items }: OverlayContentProps) {
         if (!item.properties) {
           return null
         }
+        const { id } = item.properties
         const groupName = getGroupName(item.properties, item.layerType)
         const name = getName(item.properties, item.layerType)
         const legendType = getLegendType(item.properties, item.layerType)
         const legendKey = getLegendKey(item.properties, item.layerType)
         const isSelected =
-          (item.properties.id === layerId && !!layerType && item.layerType.includes(layerType)) ||
-          selectedVigilanceAreaId === item.properties.id
+          (id === layerId && !!layerType && item.layerType.includes(layerType)) || selectedVigilanceAreaId === id
         const isRegulatory =
           item.layerType === MonitorEnvLayers.REGULATORY_ENV ||
           item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW
 
         return (
-          <LayerItem
-            key={item.properties.id}
-            $isSelected={isSelected}
-            onClick={handleClick(item.layerType, item.properties.id)}
-          >
+          <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
             <LayerLegend layerType={item.layerType} legendKey={legendKey} size={Size.NORMAL} type={legendType} />
             <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
-            <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || 'AUCUN NOM'}</Name>
+            <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || ''}</Name>
             {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
               <IconButton
                 accent={Accent.TERTIARY}
-                disabled={regulatoryAreasToAdd?.includes(item.properties.id)}
+                disabled={regulatoryAreasToAdd?.includes(id)}
                 Icon={Icon.Plus}
-                onClick={e => adRegulatoryToVigilanceArea(e, item.properties.id)}
+                onClick={e => adRegulatoryToVigilanceArea(e, id)}
                 size={Size.SMALL}
+                title={`Ajouter la zone réglementaire ${name}`}
               />
             )}
           </LayerItem>

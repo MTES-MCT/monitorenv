@@ -15,6 +15,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
     layerOverlayIsOpen: state.layersMetadata.layerOverlayIsOpen,
     layerOverlayItems: state.layersMetadata.layerOverlayItems
   }))
+
   const hoveredItems = getHoveredItems(currentFeatureListOver)
   const hasMapListerner = useHasMapInteraction()
 

@@ -118,7 +118,9 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
           </InlineItem>
           <InlineItem>
             <InlineItemLabel $isInline>Thématique</InlineItemLabel>
-            <InlineItemValue>{vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}</InlineItemValue>
+            <InlineItemValue $maxLine={2} title={vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : ''}>
+              {vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}
+            </InlineItemValue>
           </InlineItem>
           <InlineItem>
             <InlineItemLabel $isInline>Visibilité</InlineItemLabel>
@@ -129,7 +131,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         </SubPart>
         <SubPart>
           <InlineItemLabel>Commentaire sur la zone</InlineItemLabel>
-          <InlineItemValue>{vigilanceArea?.comments ?? EMPTY_VALUE}</InlineItemValue>
+          <InlineItemValue title={vigilanceArea?.comments}>{vigilanceArea?.comments ?? EMPTY_VALUE}</InlineItemValue>
         </SubPart>
         <SubPart>
           <InlineItemLabel>Réglementations en lien</InlineItemLabel>
@@ -170,7 +172,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
           <Button accent={Accent.SECONDARY} onClick={edit} size={Size.SMALL}>
             Editer
           </Button>
-          <Button disabled={!isFormValidForPublish} onClick={publish} size={Size.SMALL}>
+          <Button disabled={!isFormValidForPublish || !vigilanceArea?.isDraft} onClick={publish} size={Size.SMALL}>
             {vigilanceArea?.isDraft ? 'Publier' : 'Publiée'}
           </Button>
         </FooterRightButtons>
@@ -185,6 +187,7 @@ const Body = styled.div`
 const SubPart = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 4px;
   padding: 16px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
@@ -196,16 +199,17 @@ const InlineItem = styled.div`
 `
 
 const InlineItemLabel = styled.span<{ $isInline?: boolean }>`
-  width: ${p => (p.$isInline ? '80px' : 'auto')};
+  width: ${p => (p.$isInline ? '76px' : 'auto')};
   color: ${p => p.theme.color.slateGray};
   margin-bottom: 4px;
 `
 
-const InlineItemValue = styled.span`
+const InlineItemValue = styled.span<{ $maxLine?: number }>`
   color: ${p => p.theme.color.gunMetal};
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: ${p => p.$maxLine ?? '4'};
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `
 
 const DateItem = styled.div`
@@ -215,6 +219,9 @@ const DateItem = styled.div`
 const LinkContainer = styled.div`
   display: flex;
   flex-direction: column;
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
 `
 
 const LinkText = styled.span`

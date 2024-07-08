@@ -41,7 +41,7 @@ export const SubFormBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 8px 16px;
+  padding: 8px 16px 16px 16px;
 `
 export const ValidateButton = styled(Button)`
   align-self: flex-end;

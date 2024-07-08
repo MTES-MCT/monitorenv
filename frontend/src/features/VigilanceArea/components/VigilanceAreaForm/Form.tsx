@@ -98,10 +98,12 @@ export function Form() {
     const coordinates = [...values.geom.coordinates]
     coordinates.splice(index, 1)
     setFieldValue('geom', { ...values.geom, coordinates })
+    dispatch(vigilanceAreaActions.setGeometry({ ...values.geom, coordinates }))
   }
 
   const addZone = () => {
     dispatch(vigilanceAreaActions.setGeometry(values.geom))
+    dispatch(vigilanceAreaActions.setInitialGeometry(values.geom))
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.DRAW))
   }
 

@@ -59,6 +59,7 @@ export function getGeoJSONFromFeature<P>(feature: Feature<Geometry> | FeatureLik
 export const getGeoJSONFromFeatureList = (features: (Feature<Geometry> | FeatureLike | undefined)[]) =>
   features.reduce((acc, feature) => {
     const geoJSONFeature = getGeoJSONFromFeature(feature)
+
     if (geoJSONFeature) {
       acc.push(geoJSONFeature)
     }
