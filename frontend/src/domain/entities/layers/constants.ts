@@ -335,11 +335,13 @@ export type RegulatoryOrAMPOrViglanceAreaLayerType =
   | MonitorEnvLayers.REGULATORY_ENV
   | MonitorEnvLayers.REGULATORY_ENV_PREVIEW
   | MonitorEnvLayers.VIGILANCE_AREA
+  | MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
 
 export const RegulatoryOrAMPOrViglanceAreaLayerTypeAsList = [
   MonitorEnvLayers.AMP,
   MonitorEnvLayers.AMP_PREVIEW,
   MonitorEnvLayers.REGULATORY_ENV,
   MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
-  MonitorEnvLayers.VIGILANCE_AREA
+  MonitorEnvLayers.VIGILANCE_AREA,
+  MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
 ]

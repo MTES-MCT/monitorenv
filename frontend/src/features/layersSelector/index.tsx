@@ -1,4 +1,5 @@
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
+import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
@@ -35,7 +36,7 @@ export function LayersSidebar() {
     selectedVigilanceAreaId !== editingVigilanceAreaId
   )
   const mainVigilanceAreaFormOpen = !!(selectedVigilanceAreaId || (selectedVigilanceAreaId && editingVigilanceAreaId))
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()

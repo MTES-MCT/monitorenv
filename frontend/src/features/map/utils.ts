@@ -19,8 +19,9 @@ export const getClickedRegulatoryFeatures = (mapClickEvent: MapClickEvent) =>
     const featureId = String(feature.id)
 
     return (
-      featureId &&
-      (featureId.includes(Layers.REGULATORY_ENV_PREVIEW.code) || featureId.includes(Layers.REGULATORY_ENV.code))
+      (featureId &&
+        (featureId.includes(Layers.REGULATORY_ENV_PREVIEW.code) || featureId.includes(Layers.REGULATORY_ENV.code))) ||
+      featureId.includes(Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code)
     )
   })
 
@@ -33,9 +34,9 @@ export const getClickedAmpFeatures = (mapClickEvent: MapClickEvent) =>
 
 export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =>
   mapClickEvent.featureList?.filter(feature => {
-    const featureId = String(feature.id)
+    const featureId = String(feature.id).split(':')[0]
 
-    return featureId && featureId.includes(Layers.VIGILANCE_AREA.code)
+    return featureId === Layers.VIGILANCE_AREA.code
   })
 
 export const getOverlayItemsFromFeatures = (features: SerializedFeature<Record<string, any>>[] | undefined) =>

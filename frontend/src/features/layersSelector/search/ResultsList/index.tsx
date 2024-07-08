@@ -1,4 +1,5 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Checkbox } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
@@ -26,7 +27,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const areRegulatoryResultsOpen = useAppSelector(state => state.layerSidebar.areRegulatoryResultsOpen)
   const areAmpsResultsOpen = useAppSelector(state => state.layerSidebar.areAmpsResultsOpen)
 
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: amps } = useGetAMPsQuery()

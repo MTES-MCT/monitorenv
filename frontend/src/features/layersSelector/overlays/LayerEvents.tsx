@@ -4,7 +4,7 @@ import {
   getClickedRegulatoryFeatures,
   getClickedVigilanceAreasFeatures
 } from '@features/map/utils'
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { convertToFeature } from 'domain/types/map'
@@ -24,12 +24,13 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   useEffect(() => {
     const clickedAmpFeatures = getClickedAmpFeatures(mapClickEvent)
     const clickedRegulatoryFeatures = getClickedRegulatoryFeatures(mapClickEvent)
     const clickedVigilanceAreaFeatures = getClickedVigilanceAreasFeatures(mapClickEvent)
+
     const numberOfClickedFeatures =
       (clickedAmpFeatures?.length ?? 0) +
       (clickedRegulatoryFeatures?.length ?? 0) +
@@ -38,6 +39,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
     if (numberOfClickedFeatures === 0) {
       dispatch(closeLayerOverlay())
     }
+
     if (isLinkingRegulatoryToVigilanceArea && mapClickEvent.coordinates) {
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
@@ -54,8 +56,12 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
         if (feature) {
           const layerId = feature.get('id')
           dispatch(openAMPMetadataPanel(layerId))
-          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+          if (editingVigilanceAreaId) {
+            dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+          }
         }
+
+        return
       }
 
       if (clickedRegulatoryFeatures && clickedRegulatoryFeatures.length === 1) {
@@ -63,8 +69,12 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
         if (feature) {
           const layerId = feature.get('id')
           dispatch(openRegulatoryMetadataPanel(layerId))
-          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+          if (editingVigilanceAreaId) {
+            dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+          }
         }
+
+        return
       }
 
       if (clickedVigilanceAreaFeatures && clickedVigilanceAreaFeatures.length === 1) {
@@ -77,6 +87,8 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
           dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
         }
       }
+
+      return
     }
 
     if (numberOfClickedFeatures > 1 && mapClickEvent.coordinates) {
@@ -84,6 +96,10 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
       const items = getClickedItems(mapClickEvent)
       dispatch(setLayerOverlayItems(items))
+
+      if (editingVigilanceAreaId) {
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      }
     }
 
     // we don't want to listen editingVigilanceAreaId changes

@@ -1,3 +1,4 @@
+import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { type Option, Accent, CheckPicker, CustomSearch, SingleTag } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
@@ -22,7 +23,7 @@ export function LayerFilters({
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes
 }: LayerFiltersProps) {
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   const handleSetFilteredAmpTypes = filteredAmps => {
     setFilteredAmpTypes(filteredAmps)

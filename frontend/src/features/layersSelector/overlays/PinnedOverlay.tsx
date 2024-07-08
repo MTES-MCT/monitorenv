@@ -1,3 +1,4 @@
+import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
@@ -18,7 +19,7 @@ export function PinnedOverlay({
 }) {
   const dispatch = useAppDispatch()
 
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   const close = () => {
     dispatch(closeLayerOverlay())

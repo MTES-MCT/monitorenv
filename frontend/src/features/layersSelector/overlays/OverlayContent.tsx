@@ -1,4 +1,4 @@
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
@@ -35,16 +35,24 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => isLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   const handleClick = (type, id) => () => {
     if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
       dispatch(openAMPMetadataPanel(id))
-      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      if (editingVigilanceAreaId) {
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      }
     }
-    if (type === MonitorEnvLayers.REGULATORY_ENV || type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW) {
+    if (
+      type === MonitorEnvLayers.REGULATORY_ENV ||
+      type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW ||
+      type === MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
+    ) {
       dispatch(openRegulatoryMetadataPanel(id))
-      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      if (editingVigilanceAreaId) {
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      }
     }
     if (type === MonitorEnvLayers.VIGILANCE_AREA) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))

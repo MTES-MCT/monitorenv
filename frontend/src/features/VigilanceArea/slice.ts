@@ -127,7 +127,7 @@ export const vigilanceAreaSlice = createSlice({
 export const vigilanceAreaActions = vigilanceAreaSlice.actions
 export const vigilanceAreaReducer = vigilanceAreaSlice.reducer
 
-export const isLinkingRegulatoryToVigilanceArea = createSelector(
+export const getIsLinkingRegulatoryToVigilanceArea = createSelector(
   (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
   formTypeOpen => formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
 )

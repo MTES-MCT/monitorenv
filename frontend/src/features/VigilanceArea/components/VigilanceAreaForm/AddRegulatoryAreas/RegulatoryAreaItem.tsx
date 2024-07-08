@@ -92,7 +92,9 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
       dispatch(closeMetadataPanel())
     } else {
       dispatch(openRegulatoryMetadataPanel(id))
-      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      if (editingVigilanceAreaId) {
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      }
     }
   }
 
