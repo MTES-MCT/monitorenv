@@ -24,6 +24,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         seaFronts: List<String>? = null,
         startedAfterDateTime: ZonedDateTime? = null,
         startedBeforeDateTime: ZonedDateTime? = null,
+        searchQuery: String? = null,
     ): List<MissionEntity> {
         val missions: List<MissionEntity> =
             missionRepository.findAll(
@@ -41,6 +42,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
                 startedAfter = startedAfterDateTime?.toInstant()
                     ?: ZonedDateTime.now().minusDays(30).toInstant(),
                 startedBefore = startedBeforeDateTime?.toInstant(),
+                searchQuery = searchQuery,
             )
 
         logger.info("Found ${missions.size} mission(s)")

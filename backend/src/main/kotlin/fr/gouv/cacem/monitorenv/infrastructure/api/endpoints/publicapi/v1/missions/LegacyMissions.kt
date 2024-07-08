@@ -3,7 +3,13 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missi
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.BypassActionCheckAndDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionWithRapportNavActions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionsByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
@@ -14,7 +20,14 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.time.ZonedDateTime
 
@@ -64,6 +77,8 @@ class LegacyMissions(
         @Parameter(description = "Unités de contrôle")
         @RequestParam(name = "controlUnits", required = false)
         controlUnitIds: List<Int>? = null,
+        @RequestParam(name = "searchQuery", required = false)
+        searchQuery: String?,
     ): List<MissionDataOutput> {
         val missions =
             getMissions.execute(
@@ -76,6 +91,7 @@ class LegacyMissions(
                 controlUnitIds = controlUnitIds,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
+                searchQuery = searchQuery,
             )
         return missions.map { MissionDataOutput.fromMissionEntity(it) }
     }
