@@ -7,7 +7,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -44,6 +48,7 @@ class JpaMissionRepository(
         seaFronts: List<String>?,
         startedAfter: Instant,
         startedBefore: Instant?,
+        searchQuery: String?,
     ): List<MissionDTO> {
         val pageable =
             if (pageNumber != null && pageSize != null) {
@@ -52,16 +57,17 @@ class JpaMissionRepository(
                 Pageable.unpaged()
             }
         return dbMissionRepository.findAll(
-            controlUnitIds = controlUnitIds,
-            missionStatuses = (missionStatuses),
+            controlUnitIds = controlUnitIds?.toTypedArray(),
+            missionStatuses = missionStatuses?.toTypedArray(),
             missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
             missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
             missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
-            missionSources = missionSources,
+            missionSources = missionSources?.map { it.name }?.toTypedArray(),
             pageable = pageable,
-            seaFronts = seaFronts,
+            seaFronts = seaFronts?.toTypedArray(),
             startedAfter = startedAfter,
             startedBefore = startedBefore,
+            searchQuery = searchQuery ?: "",
         )
             .map { it.toMissionDTO(mapper) }
     }
@@ -106,16 +112,17 @@ class JpaMissionRepository(
 
         val missions =
             dbMissionRepository.findAll(
-                controlUnitIds = controlUnitIds,
-                missionSources = missionSources,
-                missionStatuses = (missionStatuses),
+                controlUnitIds = controlUnitIds?.toTypedArray(),
+                missionSources = missionSources?.map { it.name }?.toTypedArray(),
+                missionStatuses = missionStatuses?.toTypedArray(),
                 missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
                 missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
                 missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
                 pageable = pageable,
-                seaFronts = seaFronts,
+                seaFronts = seaFronts?.toTypedArray(),
                 startedAfter = startedAfter,
                 startedBefore = startedBefore,
+                searchQuery = "",
             )
 
         return missions.map { it.toMissionEntity(mapper) }

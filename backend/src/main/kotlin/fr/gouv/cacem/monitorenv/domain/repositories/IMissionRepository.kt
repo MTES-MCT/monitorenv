@@ -25,6 +25,7 @@ interface IMissionRepository {
         seaFronts: List<String>?,
         startedAfter: Instant,
         startedBefore: Instant?,
+        searchQuery: String?,
     ): List<MissionDTO>
 
     fun findAll(

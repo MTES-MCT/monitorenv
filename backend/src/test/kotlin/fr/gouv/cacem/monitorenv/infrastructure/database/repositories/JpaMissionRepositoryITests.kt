@@ -34,7 +34,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
@@ -77,6 +77,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -97,6 +98,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -116,6 +118,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         assertThat(missionsList).hasSize(21)
 
@@ -134,6 +137,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         assertThat(nextMissionList).hasSize(20)
     }
@@ -151,6 +155,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         assertThat(missions).hasSize(21)
 
@@ -171,6 +176,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         println(missions)
         assertThat(missions).hasSize(22)
@@ -193,6 +199,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         // Then
         // MissionTypes are hardcoded in query. If you add a new mission type, you need to update
@@ -220,6 +227,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = listOf("MEMN"),
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         // Then
         assertThat(missions).hasSize(9)
@@ -238,6 +246,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = listOf("MEMN", "NAMO"),
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         assertThat(missions).hasSize(27)
     }
@@ -255,6 +264,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionStatuses = listOf("UPCOMING"),
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         assertThat(missions).hasSize(10)
     }
@@ -272,6 +282,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionStatuses = listOf("PENDING"),
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         assertThat(missions).hasSize(14)
     }
@@ -289,8 +300,30 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionStatuses = listOf("ENDED"),
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
         assertThat(missions).hasSize(30)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+    }
+
+    @Test
+    @Transactional
+    fun `findAll Should return filtered missions when search query is John Doe`() {
+        // When
+        val missions =
+            jpaMissionRepository.findAllFullMissions(
+                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                missionTypes = null,
+                seaFronts = null,
+                missionStatuses = null,
+                pageNumber = null,
+                pageSize = null,
+                searchQuery = "John doe",
+            )
+        assertThat(missions).hasSize(1)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -309,6 +342,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = 1,
                 pageSize = 10,
+                searchQuery = null,
             )
         assertThat(missions).hasSize(10)
 
@@ -457,6 +491,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
 
         assertThat(existingMissions).hasSize(21)
@@ -582,6 +617,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
+                searchQuery = null,
             )
 
         assertThat(missions).hasSize(22)
@@ -1004,8 +1040,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 mission.envActions?.map {
                     if (it.id ==
                         UUID.fromString(
-                                "b8007c8a-5135-4bc3-816f-c69c7b75d807",
-                            ) && it is EnvActionControlEntity
+                            "b8007c8a-5135-4bc3-816f-c69c7b75d807",
+                        ) && it is EnvActionControlEntity
                     ) {
                         it.copy(controlPlans = nextControlPlans)
                     } else {

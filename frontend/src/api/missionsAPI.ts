@@ -13,6 +13,7 @@ type MissionsFilter = {
   missionStatus?: string[]
   missionTypes?: string[]
   seaFronts?: string[]
+  searchQuery?: string
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
   withEnvActions?: boolean
@@ -39,6 +40,8 @@ const getMissionTypesFilter = missionTypes =>
   missionTypes && missionTypes?.length > 0 && `missionTypes=${encodeURIComponent(missionTypes)}`
 const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
+const getSearchQuery = searchQuery =>
+  searchQuery && searchQuery?.length > 0 && `searchFilter=${encodeURIComponent(searchQuery)}`
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
@@ -112,7 +115,8 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           getMissionSourceFilter(filter?.missionSource),
           getMissionStatusFilter(filter?.missionStatus),
           getMissionTypesFilter(filter?.missionTypes),
-          getSeaFrontsFilter(filter?.seaFronts)
+          getSeaFrontsFilter(filter?.seaFronts),
+          getSearchQuery(filter?.searchQuery)
         ]
           .filter(v => v)
           .join('&')

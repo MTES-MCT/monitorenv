@@ -12,6 +12,7 @@ export enum MissionFiltersEnum {
   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
   COMPLETION_STATUS_FILTER = 'selectedCompletionStatus',
   PERIOD_FILTER = 'selectedPeriod',
+  SEARCH_QUERY_FILTER = 'searchQuery',
   SEA_FRONT_FILTER = 'selectedSeaFronts',
   STARTED_AFTER_FILTER = 'startedAfter',
   STARTED_BEFORE_FILTER = 'startedBefore',
@@ -24,6 +25,7 @@ export enum MissionFiltersEnum {
 
 type MissionFilterValues = {
   hasFilters: boolean
+  searchQuery: string | undefined
   selectedAdministrationNames: string[] | undefined
   selectedCompletionStatus: string[] | undefined
   selectedControlUnitIds: number[] | undefined
@@ -45,6 +47,7 @@ export type MissionFiltersState = {
 
 const INITIAL_STATE: MissionFiltersState = {
   hasFilters: false,
+  searchQuery: undefined,
   selectedAdministrationNames: undefined,
   selectedCompletionStatus: undefined,
   selectedControlUnitIds: undefined,

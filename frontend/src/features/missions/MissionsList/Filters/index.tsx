@@ -1,3 +1,4 @@
+import { MissionSearch } from '@features/missions/MissionsSearch'
 import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
   Select,
@@ -145,6 +146,7 @@ export function MissionsTableFilters() {
   return (
     <>
       <FilterWrapper ref={unitPickerRef}>
+        <MissionSearch />
         <FilterWrapperLine>
           <CheckPicker
             data-cy="select-seaFronts-filter"

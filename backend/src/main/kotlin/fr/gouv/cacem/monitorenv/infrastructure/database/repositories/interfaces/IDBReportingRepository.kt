@@ -128,12 +128,12 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
                         mission_id IS NOT NULL
                         AND detached_from_mission_at_utc IS NULL
                     )
-                ) 
+                )
                 OR (
                     (:isAttachedToMission) = false AND (
                         mission_id IS NULL
                         OR (
-                            mission_id IS NOT NULL AND 
+                            mission_id IS NOT NULL AND
                             detached_from_mission_at_utc IS NOT NULL
                         )
                     )
