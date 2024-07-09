@@ -61,7 +61,7 @@ export function Header({
         <ReportingChevronIcon
           $isExpanded={isExpanded}
           accent={Accent.TERTIARY}
-          data-id={`reporting-collapse-or-expand-button-${reporting?.id}`}
+          data-cy={`reporting-collapse-or-expand-button-${reporting?.id}`}
           Icon={Icon.Chevron}
           onClick={reduceOrCollapseReporting}
         />
