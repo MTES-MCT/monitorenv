@@ -78,7 +78,7 @@ context('Reportings', () => {
     // create another new reporting
     cy.clickButton('Ajouter un nouveau signalement')
     cy.getDataCy('reporting-title').contains('NOUVEAU SIGNALEMENT (2)')
-    cy.getDataCy('"reporting-collapse-or-expand-button-new-1').click()
+    cy.getDataCy('reporting-collapse-or-expand-button-new-1').click()
 
     cy.getDataCy('reporting-title').contains('NOUVEAU SIGNALEMENT (1)')
     cy.getDataCy('add-semaphore-source').contains('Sémaphore de Dieppe')
