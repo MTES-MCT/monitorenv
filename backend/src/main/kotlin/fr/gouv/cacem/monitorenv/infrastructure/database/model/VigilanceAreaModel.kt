@@ -43,6 +43,8 @@ data class VigilanceAreaModel(
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
     val links: List<LinkEntity>? = listOf(),
+    @Column(name = "linked_amps", columnDefinition = "int[]")
+    val linkedAMPs: List<Int>? = listOf(),
     @Column(name = "linked_regulatory_areas", columnDefinition = "int[]")
     val linkedRegulatoryAreas: List<Int>? = listOf(),
     @Column(name = "name") val name: String? = null,
@@ -69,6 +71,7 @@ data class VigilanceAreaModel(
                 isDeleted = vigilanceArea.isDeleted,
                 isDraft = vigilanceArea.isDraft,
                 links = vigilanceArea.links,
+                linkedAMPs = vigilanceArea.linkedAMPs,
                 linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
                 name = vigilanceArea.name,
                 source = vigilanceArea.source,
@@ -92,6 +95,7 @@ data class VigilanceAreaModel(
             isDeleted = isDeleted,
             isDraft = isDraft,
             links = links,
+            linkedAMPs = linkedAMPs,
             linkedRegulatoryAreas = linkedRegulatoryAreas,
             name = name,
             source = source,

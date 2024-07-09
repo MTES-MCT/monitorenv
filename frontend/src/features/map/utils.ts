@@ -29,7 +29,12 @@ export const getClickedAmpFeatures = (mapClickEvent: MapClickEvent) =>
   mapClickEvent.featureList?.filter(feature => {
     const featureId = String(feature.id)
 
-    return featureId && (featureId.includes(Layers.AMP_PREVIEW.code) || featureId.includes(Layers.AMP.code))
+    return (
+      featureId &&
+      (featureId.includes(Layers.AMP_PREVIEW.code) ||
+        featureId.includes(Layers.AMP.code) ||
+        featureId.includes(Layers.AMP_LINKED_TO_VIGILANCE_AREA.code))
+    )
   })
 
 export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =>

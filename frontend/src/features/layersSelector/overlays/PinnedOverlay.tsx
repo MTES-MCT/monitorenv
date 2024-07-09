@@ -1,4 +1,4 @@
-import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
@@ -20,6 +20,7 @@ export function PinnedOverlay({
   const dispatch = useAppDispatch()
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const close = () => {
     dispatch(closeLayerOverlay())
@@ -27,7 +28,7 @@ export function PinnedOverlay({
 
   // component should not be called if items.length < 2
   // or if user is linking a regulatory area to a vigilance area
-  if (items.length < 2 && !isLinkingRegulatoryToVigilanceArea) {
+  if (items.length < 2 && !isLinkingRegulatoryToVigilanceArea && !isLinkingAmpToVigilanceArea) {
     return null
   }
 

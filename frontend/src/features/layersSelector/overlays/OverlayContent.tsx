@@ -1,4 +1,8 @@
-import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingRegulatoryToVigilanceArea,
+  vigilanceAreaActions
+} from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
@@ -34,11 +38,18 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+
   const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+  const AMPToAdd = useAppSelector(state => state.vigilanceArea.AMPToAdd)
+  const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const handleClick = (type, id) => () => {
-    if (type === MonitorEnvLayers.AMP || type === MonitorEnvLayers.AMP_PREVIEW) {
+    if (
+      type === MonitorEnvLayers.AMP ||
+      type === MonitorEnvLayers.AMP_PREVIEW ||
+      type === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
+    ) {
       dispatch(openAMPMetadataPanel(id))
       if (editingVigilanceAreaId) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
@@ -65,6 +76,11 @@ export function OverlayContent({ items }: OverlayContentProps) {
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([id]))
   }
 
+  const addAMPToVigilanceArea = (e, id) => {
+    e.stopPropagation()
+    dispatch(vigilanceAreaActions.addAMPsToVigilanceArea([id]))
+  }
+
   return (
     <Layerlist>
       {items
@@ -81,6 +97,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
             item.layerType === MonitorEnvLayers.REGULATORY_ENV ||
             item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW
 
+          const isAMP = item.layerType === MonitorEnvLayers.AMP || item.layerType === MonitorEnvLayers.AMP_PREVIEW
+
           return (
             <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
               <LayerLegend layerType={item.layerType} legendKey={legendKey} size={Size.NORMAL} type={legendType} />
@@ -94,6 +112,16 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   onClick={e => addRegulatoryToVigilanceArea(e, id)}
                   size={Size.SMALL}
                   title={`Ajouter la zone réglementaire ${name}`}
+                />
+              )}
+              {isLinkingAmpToVigilanceArea && isAMP && (
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  disabled={AMPToAdd?.includes(id)}
+                  Icon={Icon.Plus}
+                  onClick={e => addAMPToVigilanceArea(e, id)}
+                  size={Size.SMALL}
+                  title={`Ajouter l'AMP' ${name}`}
                 />
               )}
             </LayerItem>

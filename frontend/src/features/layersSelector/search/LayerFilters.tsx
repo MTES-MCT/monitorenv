@@ -1,4 +1,4 @@
-import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { type Option, Accent, CheckPicker, CustomSearch, SingleTag } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
@@ -24,6 +24,7 @@ export function LayerFilters({
   setFilteredRegulatoryThemes
 }: LayerFiltersProps) {
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const handleSetFilteredAmpTypes = filteredAmps => {
     setFilteredAmpTypes(filteredAmps)
@@ -49,28 +50,37 @@ export function LayerFilters({
 
   return (
     <FiltersWrapper>
-      <CheckPicker
-        customSearch={regulatoryThemesCustomSearch}
-        isLabelHidden
-        label="Thématique réglementaire"
-        name="regulatoryThemes"
-        onChange={handleSetFilteredRegulatoryThemes}
-        options={regulatoryThemes || []}
-        placeholder="Thématique réglementaire"
-        renderValue={() =>
-          filteredRegulatoryThemes && (
-            <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
-          )
-        }
-        value={filteredRegulatoryThemes}
-      />
-      <TagWrapper>
-        {filteredRegulatoryThemes?.map(theme => (
-          <SingleTag key={theme} accent={Accent.SECONDARY} onDelete={handleDeleteRegulatoryTheme(theme)} title={theme}>
-            {theme}
-          </SingleTag>
-        ))}
-      </TagWrapper>
+      {!isLinkingAmpToVigilanceArea && (
+        <>
+          <CheckPicker
+            customSearch={regulatoryThemesCustomSearch}
+            isLabelHidden
+            label="Thématique réglementaire"
+            name="regulatoryThemes"
+            onChange={handleSetFilteredRegulatoryThemes}
+            options={regulatoryThemes || []}
+            placeholder="Thématique réglementaire"
+            renderValue={() =>
+              filteredRegulatoryThemes && (
+                <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
+              )
+            }
+            value={filteredRegulatoryThemes}
+          />
+          <TagWrapper>
+            {filteredRegulatoryThemes?.map(theme => (
+              <SingleTag
+                key={theme}
+                accent={Accent.SECONDARY}
+                onDelete={handleDeleteRegulatoryTheme(theme)}
+                title={theme}
+              >
+                {theme}
+              </SingleTag>
+            ))}
+          </TagWrapper>
+        </>
+      )}
 
       {!isLinkingRegulatoryToVigilanceArea && (
         <>

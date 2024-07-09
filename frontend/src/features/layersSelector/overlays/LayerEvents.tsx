@@ -4,7 +4,11 @@ import {
   getClickedRegulatoryFeatures,
   getClickedVigilanceAreasFeatures
 } from '@features/map/utils'
-import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingRegulatoryToVigilanceArea,
+  vigilanceAreaActions
+} from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { convertToFeature } from 'domain/types/map'
@@ -25,6 +29,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   useEffect(() => {
     const clickedAmpFeatures = getClickedAmpFeatures(mapClickEvent)
@@ -40,7 +45,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       dispatch(closeLayerOverlay())
     }
 
-    if (isLinkingRegulatoryToVigilanceArea && mapClickEvent.coordinates) {
+    if ((isLinkingRegulatoryToVigilanceArea || isLinkingAmpToVigilanceArea) && mapClickEvent.coordinates) {
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
       const items = getClickedItems(mapClickEvent)

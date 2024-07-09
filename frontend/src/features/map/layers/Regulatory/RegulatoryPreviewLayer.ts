@@ -1,4 +1,5 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
+import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Feature } from 'ol'
 import { fromExtent } from 'ol/geom/Polygon'
 import { Vector } from 'ol/layer'
@@ -22,7 +23,11 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+
+  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
+  const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>
@@ -123,15 +128,10 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (map) {
-      if (isLayersSidebarVisible && isRegulatorySearchResultsVisible) {
-        searchExtentLayerRef.current?.setVisible(true)
-        regulatoryLayerRef.current?.setVisible(true)
-      } else {
-        searchExtentLayerRef.current?.setVisible(false)
-        regulatoryLayerRef.current?.setVisible(false)
-      }
+      searchExtentLayerRef.current?.setVisible(isLayerVisible)
+      regulatoryLayerRef.current?.setVisible(isLayerVisible)
     }
-  }, [map, isLayersSidebarVisible, isRegulatorySearchResultsVisible])
+  }, [map, isLayerVisible])
 
   useEffect(() => {
     if (map) {

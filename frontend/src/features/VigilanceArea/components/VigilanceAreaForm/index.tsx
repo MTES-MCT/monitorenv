@@ -9,6 +9,7 @@ import { noop } from 'lodash'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { SelectAMP } from './AddAMPs/SelectAMPs'
 import { SelectRegulatoryAreas } from './AddRegulatoryAreas/SelectRegulatoryAreas'
 import { DrawVigilanceArea } from './DrawVigilanceArea'
 import { Form } from './Form'
@@ -46,12 +47,16 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
   const title = !isNewVigilanceArea ? vigilanceArea?.name : "Création d'une zone de vigilance"
 
   const close = () => {
+    if (!editingVigilanceAreaId) {
+      dispatch(vigilanceAreaActions.resetState())
+    }
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
   }
 
   useEffect(() => {
     if (editingVigilanceAreaId && vigilanceArea && vigilanceArea.id === editingVigilanceAreaId) {
       dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(vigilanceArea?.linkedRegulatoryAreas ?? []))
+      dispatch(vigilanceAreaActions.addAMPsToVigilanceArea(vigilanceArea?.linkedAMPs ?? []))
       dispatch(vigilanceAreaActions.setGeometry(vigilanceArea?.geom))
     }
     // we just want to listen when editingVigilanceAreaId changes
@@ -87,6 +92,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
               {formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
               {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea />}
               {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && <SelectRegulatoryAreas />}
+              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP && <SelectAMP />}
             </>
           )}
         </>

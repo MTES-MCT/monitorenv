@@ -1,4 +1,8 @@
-import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingRegulatoryToVigilanceArea,
+  vigilanceAreaActions
+} from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
@@ -46,7 +50,13 @@ export function ResultListLayerGroup({
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-  const isLayerGroupDisabled = difference(layerIds, regulatoryAreasLinkedToVigilanceAreaForm ?? []).length === 0
+
+  const AMPLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.AMPToAdd)
+  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+
+  const isLayerGroupDisabled =
+    difference(layerIds, regulatoryAreasLinkedToVigilanceAreaForm ?? []).length === 0 ||
+    difference(layerIds, AMPLinkedToVigilanceAreaForm ?? []).length === 0
 
   const handleCheckAllZones = e => {
     e.stopPropagation()
@@ -66,6 +76,11 @@ export function ResultListLayerGroup({
   }
 
   const addZonesToVigilanceArea = () => {
+    if (isLinkingAMPToVigilanceArea) {
+      dispatch(vigilanceAreaActions.addAMPsToVigilanceArea(layerIds))
+
+      return
+    }
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(layerIds))
   }
 
@@ -82,7 +97,7 @@ export function ResultListLayerGroup({
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
-          {isLinkingRegulatoryToVigilanceArea ? (
+          {isLinkingRegulatoryToVigilanceArea || isLinkingAMPToVigilanceArea ? (
             <IconButton
               accent={Accent.TERTIARY}
               aria-label="Ajouter la/les zone(s) à la zone de vigilance"
@@ -108,6 +123,7 @@ export function ResultListLayerGroup({
           layerIds?.map(layerId => (
             <RegulatoryLayer
               key={layerId}
+              isLinkingAMPToVigilanceArea={isLinkingAMPToVigilanceArea}
               isLinkingRegulatoryToVigilanceArea={isLinkingRegulatoryToVigilanceArea}
               layerId={layerId}
               searchedText={searchedText}
