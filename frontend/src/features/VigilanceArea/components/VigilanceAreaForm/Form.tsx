@@ -154,7 +154,7 @@ export function Form() {
               ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
               : undefined
           }
-          error={formErrors.startDatePeriod || formErrors.endDatePeriod}
+          error={formErrors.startDatePeriod ?? formErrors.endDatePeriod}
           hasSingleCalendar
           isCompact
           isErrorMessageHidden

@@ -60,46 +60,45 @@ export function OverlayContent({ items }: OverlayContentProps) {
     }
   }
 
-  const adRegulatoryToVigilanceArea = (e, id) => {
+  const addRegulatoryToVigilanceArea = (e, id) => {
     e.stopPropagation()
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([id]))
   }
 
   return (
     <Layerlist>
-      {items?.map(item => {
-        if (!item.properties) {
-          return null
-        }
-        const { id } = item.properties
-        const groupName = getGroupName(item.properties, item.layerType)
-        const name = getName(item.properties, item.layerType)
-        const legendType = getLegendType(item.properties, item.layerType)
-        const legendKey = getLegendKey(item.properties, item.layerType)
-        const isSelected =
-          (id === layerId && !!layerType && item.layerType.includes(layerType)) || selectedVigilanceAreaId === id
-        const isRegulatory =
-          item.layerType === MonitorEnvLayers.REGULATORY_ENV ||
-          item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW
+      {items
+        ?.filter(item => item.properties)
+        .map(item => {
+          const { id } = item.properties
+          const groupName = getGroupName(item.properties, item.layerType)
+          const name = getName(item.properties, item.layerType)
+          const legendType = getLegendType(item.properties, item.layerType)
+          const legendKey = getLegendKey(item.properties, item.layerType)
+          const isSelected =
+            (id === layerId && !!layerType && item.layerType.includes(layerType)) || selectedVigilanceAreaId === id
+          const isRegulatory =
+            item.layerType === MonitorEnvLayers.REGULATORY_ENV ||
+            item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW
 
-        return (
-          <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
-            <LayerLegend layerType={item.layerType} legendKey={legendKey} size={Size.NORMAL} type={legendType} />
-            <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
-            <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || ''}</Name>
-            {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
-              <IconButton
-                accent={Accent.TERTIARY}
-                disabled={regulatoryAreasToAdd?.includes(id)}
-                Icon={Icon.Plus}
-                onClick={e => adRegulatoryToVigilanceArea(e, id)}
-                size={Size.SMALL}
-                title={`Ajouter la zone réglementaire ${name}`}
-              />
-            )}
-          </LayerItem>
-        )
-      })}
+          return (
+            <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
+              <LayerLegend layerType={item.layerType} legendKey={legendKey} size={Size.NORMAL} type={legendType} />
+              <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
+              <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || ''}</Name>
+              {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  disabled={regulatoryAreasToAdd?.includes(id)}
+                  Icon={Icon.Plus}
+                  onClick={e => addRegulatoryToVigilanceArea(e, id)}
+                  size={Size.SMALL}
+                  title={`Ajouter la zone réglementaire ${name}`}
+                />
+              )}
+            </LayerItem>
+          )
+        })}
     </Layerlist>
   )
 }

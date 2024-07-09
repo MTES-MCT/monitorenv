@@ -34,7 +34,7 @@ export function PinnedOverlay({
   return (
     <Card>
       <Header>
-        {items?.length > 1 ? <>{items.length} zones superposées sur ce point </> : 'Zone sélectionnée'}
+        {items.length > 1 ? <>{items.length} zones superposées sur ce point </> : 'Zone sélectionnée'}
         <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={close} size={Size.SMALL} />
       </Header>
       <OverlayContent items={items} />

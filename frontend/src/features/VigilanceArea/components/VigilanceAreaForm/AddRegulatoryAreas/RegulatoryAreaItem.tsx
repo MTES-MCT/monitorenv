@@ -37,9 +37,9 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
     regulatoryAreaId ? getMetadataIsOpenForRegulatoryLayerId(state, regulatoryAreaId) : undefined
   )
 
-  const isZoneSelected = regulatoryAreaId ? selectedRegulatoryLayerIds.includes(regulatoryAreaId) : false
-  const isLayerVisible = regulatoryAreaId ? regulatoryAreaIdsToBeDisplayed?.includes(regulatoryAreaId) : false
-  const pinnedRegulatoryZoneIsShowed = regulatoryAreaId ? showedRegulatoryLayerIds.includes(regulatoryAreaId) : false
+  const isZoneSelected = !!(regulatoryAreaId && selectedRegulatoryLayerIds.includes(regulatoryAreaId))
+  const isLayerVisible = !!(regulatoryAreaId && regulatoryAreaIdsToBeDisplayed?.includes(regulatoryAreaId))
+  const pinnedRegulatoryZoneIsShowed = !!(regulatoryAreaId && showedRegulatoryLayerIds.includes(regulatoryAreaId))
 
   const onDeleteRegulatoryArea = e => {
     e.stopPropagation()

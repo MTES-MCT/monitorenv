@@ -65,17 +65,11 @@ export function LayerFilters({
         value={filteredRegulatoryThemes}
       />
       <TagWrapper>
-        {filteredRegulatoryThemes?.length > 0 &&
-          filteredRegulatoryThemes?.map(theme => (
-            <SingleTag
-              key={theme}
-              accent={Accent.SECONDARY}
-              onDelete={handleDeleteRegulatoryTheme(theme)}
-              title={theme}
-            >
-              {theme}
-            </SingleTag>
-          ))}
+        {filteredRegulatoryThemes?.map(theme => (
+          <SingleTag key={theme} accent={Accent.SECONDARY} onDelete={handleDeleteRegulatoryTheme(theme)} title={theme}>
+            {theme}
+          </SingleTag>
+        ))}
       </TagWrapper>
 
       {!isLinkingRegulatoryToVigilanceArea && (
@@ -94,12 +88,11 @@ export function LayerFilters({
             value={filteredAmpTypes}
           />
           <TagWrapper>
-            {filteredAmpTypes?.length > 0 &&
-              filteredAmpTypes?.map(type => (
-                <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
-                  {type}
-                </SingleTag>
-              ))}
+            {filteredAmpTypes?.map(type => (
+              <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
+                {type}
+              </SingleTag>
+            ))}
           </TagWrapper>
         </>
       )}
