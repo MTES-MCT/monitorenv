@@ -78,7 +78,7 @@ export function ButtonsGroupRow({ id }) {
         />
 
         <StyledDropdown
-          accent={Accent.SECONDARY}
+          accent={Accent.TERTIARY}
           data-cy={`more-actions-reporting-${id}`}
           Icon={Icon.More}
           onSelect={archiveOrDelete}

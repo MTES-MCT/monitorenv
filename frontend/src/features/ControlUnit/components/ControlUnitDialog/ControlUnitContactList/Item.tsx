@@ -8,24 +8,29 @@ export type ItemProps = {
   controlUnitContact: ControlUnit.ControlUnitContactData
   onEdit: (controlUnitContactId: number) => Promisable<void>
 }
+
+export function formatPhoneNumber(phoneNumber: string) {
+  if (phoneNumber.startsWith('00')) {
+    if (phoneNumber.length === 12) {
+      return phoneNumber.match(/.{1,2}/g)?.join(' ')
+    }
+
+    return `00 ${phoneNumber
+      .slice(2)
+      .match(/.{1,3}/g)
+      ?.join(' ')}`
+  }
+  if (phoneNumber.startsWith('0')) {
+    return phoneNumber.match(/.{1,2}/g)?.join(' ')
+  }
+
+  return phoneNumber.match(/.{1,3}/g)?.join(' ')
+}
+
 export function Item({ controlUnitContact, onEdit }: ItemProps) {
   const handleEdit = useCallback(() => {
     onEdit(controlUnitContact.id)
   }, [controlUnitContact.id, onEdit])
-
-  function formatPhoneNumber(phoneNumber: string) {
-    if (phoneNumber.startsWith('00')) {
-      return `00 ${phoneNumber
-        .slice(2)
-        .match(/.{1,3}/g)
-        ?.join(' ')}`
-    }
-    if (phoneNumber.startsWith('0')) {
-      return phoneNumber.match(/.{1,2}/g)?.join(' ')
-    }
-
-    return phoneNumber.match(/.{1,3}/g)?.join(' ')
-  }
 
   return (
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
