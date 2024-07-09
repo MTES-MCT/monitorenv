@@ -11,6 +11,7 @@ import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { AMPList } from './AddAMPs/AMPList'
 import { RegulatoryAreas } from './AddRegulatoryAreas/RegulatoryAreas'
 import { PublishedSchema } from './Schema'
 import { DeleteButton, FooterContainer, FooterRightButtons } from './style'
@@ -138,6 +139,10 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         <SubPart>
           <InlineItemLabel>Réglementations en lien</InlineItemLabel>
           <RegulatoryAreas isReadOnly linkedRegulatoryAreas={values?.linkedRegulatoryAreas} />
+        </SubPart>
+        <SubPart>
+          <InlineItemLabel>AMP en lien</InlineItemLabel>
+          <AMPList isReadOnly linkedAMPs={values?.linkedAMPs} />
         </SubPart>
         <SubPart>
           <InlineItemLabel>Liens utiles</InlineItemLabel>

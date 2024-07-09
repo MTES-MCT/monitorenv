@@ -6,12 +6,15 @@ import type { HomeRootState } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export enum VigilanceAreaFormTypeOpen {
+  ADD_AMP = 'ADD_AMP',
   ADD_REGULATORY = 'ADD_REGULATORY',
   DRAW = 'DRAW',
   FORM = 'FORM'
 }
 
 type VigilanceAreaSliceState = {
+  AMPIdsToBeDisplayed: Array<number> | undefined
+  AMPToAdd: Array<number> | undefined
   editingVigilanceAreaId: number | undefined
   formTypeOpen: VigilanceAreaFormTypeOpen | undefined
   geometry: GeoJSON.Geometry | undefined
@@ -25,6 +28,8 @@ type VigilanceAreaSliceState = {
   vigilanceAreaIdToCancel: number | undefined
 }
 const INITIAL_STATE: VigilanceAreaSliceState = {
+  AMPIdsToBeDisplayed: undefined,
+  AMPToAdd: undefined,
   editingVigilanceAreaId: undefined,
   formTypeOpen: VigilanceAreaFormTypeOpen.FORM,
   geometry: undefined,
@@ -41,6 +46,24 @@ export const vigilanceAreaSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'vigilanceArea',
   reducers: {
+    addAMPIdsToBeDisplayed(state, action: PayloadAction<number>) {
+      if (state.AMPIdsToBeDisplayed) {
+        state.AMPIdsToBeDisplayed = [...state.AMPIdsToBeDisplayed, action.payload]
+      } else {
+        state.AMPIdsToBeDisplayed = [action.payload]
+      }
+    },
+    addAMPsToVigilanceArea(state, action: PayloadAction<Array<number>>) {
+      if (action.payload.length === 0) {
+        state.AMPToAdd = action.payload
+      }
+      if (state.AMPToAdd) {
+        const newAMPToAdd = action.payload.filter(id => !state.AMPToAdd?.includes(id))
+        state.AMPToAdd = [...state.AMPToAdd, ...newAMPToAdd]
+      } else {
+        state.AMPToAdd = action.payload
+      }
+    },
     addRegulatoryAreaIdsToBeDisplayed(state, action: PayloadAction<number>) {
       if (state.regulatoryAreaIdsToBeDisplayed) {
         state.regulatoryAreaIdsToBeDisplayed = [...state.regulatoryAreaIdsToBeDisplayed, action.payload]
@@ -85,6 +108,11 @@ export const vigilanceAreaSlice = createSlice({
       state.isGeometryValid = false
       state.geometry = undefined
     },
+    deleteAMPsFromVigilanceArea(state, action: PayloadAction<number>) {
+      if (state.AMPToAdd) {
+        state.AMPToAdd = state.AMPToAdd.filter(id => id !== action.payload)
+      }
+    },
     deleteRegulatoryAreasFromVigilanceArea(state, action: PayloadAction<number>) {
       if (state.regulatoryAreasToAdd) {
         state.regulatoryAreasToAdd = state.regulatoryAreasToAdd.filter(id => id !== action.payload)
@@ -94,9 +122,27 @@ export const vigilanceAreaSlice = createSlice({
       state.isCancelModalOpen = true
       state.vigilanceAreaIdToCancel = action.payload
     },
+    removeAMPIdsToBeDisplayed(state, action: PayloadAction<number>) {
+      if (state.AMPIdsToBeDisplayed) {
+        state.AMPIdsToBeDisplayed = state.AMPIdsToBeDisplayed.filter(id => id !== action.payload)
+      }
+    },
     removeRegulatoryAreaIdsToBeDisplayed(state, action: PayloadAction<number>) {
       if (state.regulatoryAreaIdsToBeDisplayed) {
         state.regulatoryAreaIdsToBeDisplayed = state.regulatoryAreaIdsToBeDisplayed.filter(id => id !== action.payload)
+      }
+    },
+    resetEditingVigilanceAreaState(state) {
+      // if we are creating a new vigilance area, we want to reset the state to the initial state
+      if (state.editingVigilanceAreaId === -1) {
+        return INITIAL_STATE
+      }
+
+      return {
+        ...INITIAL_STATE,
+        AMPIdsToBeDisplayed: state.AMPIdsToBeDisplayed,
+        regulatoryAreaIdsToBeDisplayed: state.regulatoryAreaIdsToBeDisplayed,
+        selectedVigilanceAreaId: state.selectedVigilanceAreaId
       }
     },
     resetState() {
@@ -130,4 +176,9 @@ export const vigilanceAreaReducer = vigilanceAreaSlice.reducer
 export const getIsLinkingRegulatoryToVigilanceArea = createSelector(
   (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
   formTypeOpen => formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY
+)
+
+export const getIsLinkingAMPToVigilanceArea = createSelector(
+  (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
+  formTypeOpen => formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP
 )

@@ -8,12 +8,13 @@ export const getTitle = name => (name ? `${name?.replace(/[_]/g, ' ')}` : '')
 
 type GenericLayerType = AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties
 
+const isAMPLayer = (layerType: RegulatoryOrAMPOrViglanceAreaLayerType) =>
+  layerType === MonitorEnvLayers.AMP ||
+  layerType === MonitorEnvLayers.AMP_PREVIEW ||
+  layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
+
 export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
-  if (
-    layerType === MonitorEnvLayers.AMP ||
-    layerType === MonitorEnvLayers.AMP_PREVIEW ||
-    layerType === MonitorEnvLayers.VIGILANCE_AREA
-  ) {
+  if (isAMPLayer(layerType) || layerType === MonitorEnvLayers.VIGILANCE_AREA) {
     return (layer as AMPProperties | VigilanceArea.VigilanceAreaProperties)?.name
   }
 
@@ -21,35 +22,46 @@ export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMP
 }
 
 export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
-  if (layerType === MonitorEnvLayers.AMP || layerType === MonitorEnvLayers.AMP_PREVIEW) {
-    return (layer as AMPProperties).type
-  }
+  switch (layerType) {
+    case MonitorEnvLayers.AMP:
+    case MonitorEnvLayers.AMP_PREVIEW:
+    case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
+      return (layer as AMPProperties).type
 
-  if (layerType === MonitorEnvLayers.VIGILANCE_AREA) {
-    return (layer as VigilanceArea.VigilanceAreaProperties)?.themes?.join(', ')
-  }
+    case MonitorEnvLayers.VIGILANCE_AREA:
+      return (layer as VigilanceArea.VigilanceAreaProperties)?.themes?.join(', ')
 
-  return (layer as RegulatoryLayerCompactProperties).entity_name
+    default:
+      return (layer as RegulatoryLayerCompactProperties).entity_name
+  }
 }
 
 export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
-  if (layerType === MonitorEnvLayers.AMP || layerType === MonitorEnvLayers.AMP_PREVIEW) {
-    return (layer as AMPProperties).name
-  }
-  if (layerType === MonitorEnvLayers.VIGILANCE_AREA) {
-    return (layer as VigilanceArea.VigilanceAreaProperties).comments
-  }
+  switch (layerType) {
+    case MonitorEnvLayers.AMP:
+    case MonitorEnvLayers.AMP_PREVIEW:
+    case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
+      return (layer as AMPProperties).name
 
-  return (layer as RegulatoryLayerCompactProperties).entity_name
+    case MonitorEnvLayers.VIGILANCE_AREA:
+      return (layer as VigilanceArea.VigilanceAreaProperties).comments
+
+    default:
+      return (layer as RegulatoryLayerCompactProperties).entity_name
+  }
 }
 
 export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
-  if (layerType === MonitorEnvLayers.AMP || layerType === MonitorEnvLayers.AMP_PREVIEW) {
-    return (layer as AMPProperties).type
-  }
-  if (layerType === MonitorEnvLayers.VIGILANCE_AREA) {
-    return (layer as VigilanceArea.VigilanceAreaProperties).name
-  }
+  switch (layerType) {
+    case MonitorEnvLayers.AMP:
+    case MonitorEnvLayers.AMP_PREVIEW:
+    case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
+      return (layer as AMPProperties).type
 
-  return (layer as RegulatoryLayerCompactProperties).thematique
+    case MonitorEnvLayers.VIGILANCE_AREA:
+      return (layer as VigilanceArea.VigilanceAreaProperties).name
+
+    default:
+      return (layer as RegulatoryLayerCompactProperties).thematique
+  }
 }

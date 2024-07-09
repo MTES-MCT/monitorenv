@@ -25,17 +25,24 @@ import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 type RegulatoryLayerProps = {
+  isLinkingAMPToVigilanceArea: boolean
   isLinkingRegulatoryToVigilanceArea: boolean
   layerId: number
   searchedText: string
 }
 
-export function RegulatoryLayer({ isLinkingRegulatoryToVigilanceArea, layerId, searchedText }: RegulatoryLayerProps) {
+export function RegulatoryLayer({
+  isLinkingAMPToVigilanceArea,
+  isLinkingRegulatoryToVigilanceArea,
+  layerId,
+  searchedText
+}: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
+  const AMPsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.AMPToAdd)
 
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
@@ -76,9 +83,14 @@ export function RegulatoryLayer({ isLinkingRegulatoryToVigilanceArea, layerId, s
     dispatch(setFitToExtent(extent))
   }
 
-  const addZoneToVigilanceArea = e => {
+  const addRegulatoryToVigilanceArea = e => {
     e.stopPropagation()
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([layerId]))
+  }
+
+  const addAMPToVigilanceArea = e => {
+    e.stopPropagation()
+    dispatch(vigilanceAreaActions.addAMPsToVigilanceArea([layerId]))
   }
 
   useEffect(() => {
@@ -109,16 +121,27 @@ export function RegulatoryLayer({ isLinkingRegulatoryToVigilanceArea, layerId, s
         {!layer?.entity_name && 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
-        {isLinkingRegulatoryToVigilanceArea ? (
+        {isLinkingRegulatoryToVigilanceArea && (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Ajouter la zone à la zone de vigilance"
-            data-cy="regulatory-zone-check"
+            aria-label="Ajouter la zone réglentaire à la zone de vigilance"
+            data-cy="regulatory-zone-add"
             disabled={regulatoryAreasLinkedToVigilanceAreaForm?.includes(layerId)}
             Icon={Icon.Plus}
-            onClick={addZoneToVigilanceArea}
+            onClick={addRegulatoryToVigilanceArea}
           />
-        ) : (
+        )}
+        {isLinkingAMPToVigilanceArea && (
+          <IconButton
+            accent={Accent.TERTIARY}
+            aria-label="Ajouter la zone AMP à la zone de vigilance"
+            data-cy="amp-zone-add"
+            disabled={AMPsLinkedToVigilanceAreaForm?.includes(layerId)}
+            Icon={Icon.Plus}
+            onClick={addAMPToVigilanceArea}
+          />
+        )}
+        {!isLinkingRegulatoryToVigilanceArea && !isLinkingAMPToVigilanceArea && (
           <IconButton
             accent={Accent.TERTIARY}
             aria-label="Sélectionner la zone"

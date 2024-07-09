@@ -1,15 +1,13 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
-import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
-import { getArea } from 'ol/sphere'
 import { useEffect, useRef } from 'react'
 
+import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
@@ -65,14 +63,7 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
         const features = showedAmpLayerIds.reduce((feats: Feature[], layerId) => {
           const ampLayer = ampLayers.entities[layerId]
           if (ampLayer) {
-            const { geom, ...ampLayerProperties } = ampLayer
-            const feature = new GeoJSON({
-              featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(ampLayer.geom)
-            feature.setId(`${Layers.AMP.code}:${ampLayer.id}`)
-            const geometry = feature.getGeometry()
-            const area = geometry && getArea(geometry)
-            feature.setProperties({ area, ...ampLayerProperties })
+            const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer: ampLayer })
 
             feats.push(feature)
           }

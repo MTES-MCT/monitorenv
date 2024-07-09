@@ -1,4 +1,5 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
+import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
@@ -18,6 +19,9 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
+
+  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLayerVisible = !isLinkingAMPToVigilanceArea
 
   const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
   function getVectorSource() {
@@ -59,6 +63,10 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
       }
     }
   }, [map])
+
+  useEffect(() => {
+    layerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
   useEffect(() => {
     if (map) {

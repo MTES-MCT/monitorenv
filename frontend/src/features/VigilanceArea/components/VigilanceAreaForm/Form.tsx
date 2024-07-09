@@ -26,6 +26,7 @@ import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { AddAMPs } from './AddAMPs'
 import { AddRegulatoryAreas } from './AddRegulatoryAreas'
 import { Footer } from './Footer'
 import { Frequency } from './Frequency'
@@ -69,7 +70,7 @@ export function Form() {
 
       return
     }
-    dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(undefined))
+    dispatch(vigilanceAreaActions.resetEditingVigilanceAreaState())
   }
 
   const onCancelEditModal = () => {
@@ -199,6 +200,7 @@ export function Form() {
           name="geom"
         />
         <AddRegulatoryAreas />
+        <AddAMPs />
         <Links />
         <Separator />
         <InternText>Interne CACEM</InternText>
