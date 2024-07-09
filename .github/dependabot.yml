@@ -6,7 +6,6 @@ updates:
       - "claire2212"
       - "ivangabriele"
       - "maximeperraultdev"
-      - "thoomasbro"
     schedule:
       interval: "monthly"
     commit-message:
@@ -18,7 +17,6 @@ updates:
     assignees:
       - "louptheron"
       - "maximeperraultdev"
-      - "thoomasbro"
     schedule:
       interval: "monthly"
     commit-message:
@@ -63,7 +61,6 @@ updates:
       - "claire2212"
       - "ivangabriele"
       - "maximeperraultdev"
-      - "thoomasbro"
     schedule:
       interval: "monthly"
     commit-message:
