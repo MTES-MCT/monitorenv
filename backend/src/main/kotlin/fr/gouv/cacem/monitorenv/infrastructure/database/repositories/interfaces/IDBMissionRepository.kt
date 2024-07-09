@@ -89,6 +89,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                             COALESCE(infractions->>'mmsi', '') || ' ' ||
                             COALESCE(infractions->>'registrationNumber', '') || ' ' ||
                             COALESCE(infractions->>'vesselName', '') || ' ' ||
+                            COALESCE(infractions->>'companyName', '') || ' ' ||
                             COALESCE(infractions->>'controlledPersonIdentity', ''))
                          @@ plainto_tsquery('mydict', (:searchQuery || ':*'))
                         )
