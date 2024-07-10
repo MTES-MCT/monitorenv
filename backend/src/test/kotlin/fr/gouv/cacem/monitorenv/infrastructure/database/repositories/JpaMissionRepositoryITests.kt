@@ -331,6 +331,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `findAll Should return filtered missions when search query is start with BAL`() {
+        // When
+        val missions =
+            jpaMissionRepository.findAllFullMissions(
+                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                missionTypes = null,
+                seaFronts = null,
+                missionStatuses = null,
+                pageNumber = null,
+                pageSize = null,
+                searchQuery = "BAL",
+            )
+        assertThat(missions).hasSize(1)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+    }
+
+    @Test
+    @Transactional
     fun `findAll with pagenumber and pagesize Should return subset of missions`() {
         // When
         val missions =
