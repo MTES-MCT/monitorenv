@@ -1,10 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
-import { setDisplayedItems } from 'domain/shared_slices/Global'
-import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
@@ -17,9 +13,9 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useAppDispatch()
+export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const isLayerVisible = true
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
@@ -35,10 +31,11 @@ export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps
         vigilanceArea =>
           vigilanceArea?.geom &&
           vigilanceArea?.geom?.coordinates.length > 0 &&
-          selectedVigilanceAreaId !== vigilanceArea.id
+          selectedVigilanceAreaId !== vigilanceArea.id &&
+          editingVigilanceAreaId !== vigilanceArea.id
       )
       .map(vigilanceArea => getVigilanceAreaZoneFeature(vigilanceArea, Layers.VIGILANCE_AREA.code))
-  }, [vigilanceAreas, selectedVigilanceAreaId])
+  }, [vigilanceAreas, selectedVigilanceAreaId, editingVigilanceAreaId])
 
   const vectorLayerRef = useRef(
     new VectorLayer({
@@ -72,15 +69,6 @@ export function VigilanceAreasLayer({ map, mapClickEvent }: BaseMapChildrenProps
   useEffect(() => {
     vectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
-
-  useEffect(() => {
-    const feature = convertToFeature(mapClickEvent?.feature)
-    if (feature && feature.getId()?.toString()?.includes(Layers.VIGILANCE_AREA.code)) {
-      const { id } = feature.getProperties()
-      dispatch(setDisplayedItems({ isLayersSidebarVisible: true }))
-      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
-    }
-  }, [dispatch, mapClickEvent])
 
   return null
 }

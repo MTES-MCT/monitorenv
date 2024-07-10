@@ -2,12 +2,14 @@ import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/Vigil
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Button, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Button, FieldError, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import { InteractionType, OLGeometryType } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { GeoJSON } from 'ol/format'
 import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
+
+import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButton } from './style'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -16,6 +18,7 @@ export function DrawVigilanceArea() {
   const geometry = useAppSelector(state => state.vigilanceArea.geometry)
   const interactionType = useAppSelector(state => state.vigilanceArea.interactionType)
   const isGeometryValid = useAppSelector(state => state.vigilanceArea.isGeometryValid)
+  const initialGeometry = useAppSelector(state => state.vigilanceArea.initialGeometry)
 
   const { setFieldValue } = useFormikContext<VigilanceArea.VigilanceArea>()
 
@@ -61,17 +64,22 @@ export function DrawVigilanceArea() {
 
   const handleValidate = () => {
     setFieldValue('geom', geometry)
-    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.EDIT_FORM))
+    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
+    dispatch(vigilanceAreaActions.setInitialGeometry(undefined))
+  }
+
+  const reinitialize = () => {
+    dispatch(vigilanceAreaActions.setGeometry(initialGeometry))
   }
 
   return (
     <>
-      <Header>
-        <Title>Ajout de tracés en cours...</Title>
-      </Header>
-      <Body>
-        <HelpText>Dessinez ou sélectionnez un ou plusieurs tracés sur la carte</HelpText>
-        <ButtonRow>
+      <SubFormHeader>
+        <SubFormTitle>Ajout de tracés en cours...</SubFormTitle>
+      </SubFormHeader>
+      <SubFormBody>
+        <SubFormHelpText>Dessinez ou sélectionnez un ou plusieurs tracés sur la carte</SubFormHelpText>
+        <DrawButtonRow>
           <IconGroup>
             <IconButton
               className={interactionType === InteractionType.POLYGON ? '_active' : undefined}
@@ -89,59 +97,41 @@ export function DrawVigilanceArea() {
               onClick={handleSelectInteraction(InteractionType.CIRCLE)}
             />
           </IconGroup>
-        </ButtonRow>
+        </DrawButtonRow>
 
-        <ValidateButton disabled={!isGeometryValid} onClick={handleValidate}>
-          Valider les tracés
-        </ValidateButton>
-      </Body>
+        <ValidateButtonContainer>
+          <ValidateButtonRow>
+            <Button accent={Accent.SECONDARY} onClick={reinitialize}>
+              Réinitialiser les tracés
+            </Button>
+            <ValidateButton disabled={!isGeometryValid} onClick={handleValidate}>
+              Valider les tracés
+            </ValidateButton>
+          </ValidateButtonRow>
+          {!isGeometryValid && <FieldError>Le tracé n&apos;est pas valide</FieldError>}
+        </ValidateButtonContainer>
+      </SubFormBody>
     </>
   )
 }
 
 const IconGroup = styled.div`
   display: flex;
-  flex-direction: row;
   gap: 16px;
 `
-const Header = styled.header`
-  align-items: center;
-  background: ${p => p.theme.color.charcoal};
-  display: flex;
-  justify-content: space-between;
-  padding: 9px 16px 10px 16px;
-`
 
-const Title = styled.h1`
-  color: ${p => p.theme.color.white};
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 22px;
-`
-
-const HelpText = styled.span`
-  font-style: italic;
-  color: ${p => p.theme.color.gunMetal};
-`
-
-const ValidateButton = styled(Button)`
-  align-self: flex-end;
-  background: ${p => p.theme.color.mediumSeaGreen};
-  border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
-  color: ${p => p.theme.color.white};
-  &:hover {
-    background: ${p => p.theme.color.mediumSeaGreen};
-    border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
-  }
-`
-const ButtonRow = styled.div`
+const DrawButtonRow = styled.div`
   display: flex;
   justify-content: space-between;
 `
-const Body = styled.div`
-  background-color: ${p => p.theme.color.white};
+const ValidateButtonContainer = styled.div`
+  align-self: end;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 8px 16px;
+`
+
+const ValidateButtonRow = styled.div`
+  align-self: end;
+  display: flex;
+  gap: 8px;
 `

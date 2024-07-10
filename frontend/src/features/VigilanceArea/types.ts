@@ -13,6 +13,7 @@ export namespace VigilanceArea {
     geom: GeoJSON.MultiPolygon
     id: number
     isDraft: boolean
+    linkedRegulatoryAreas: Array<number>
     links: Array<Link>
     name: string
     source: string
@@ -59,5 +60,10 @@ export namespace VigilanceArea {
   export enum VisibilityLabel {
     PUBLIC = 'Publique',
     PRIVATE = 'Interne CACEM'
+  }
+
+  export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
+    layerId: number
+    metadataIsShowed: boolean
   }
 }

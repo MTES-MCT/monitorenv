@@ -3,10 +3,12 @@
 import {
   Layers,
   MonitorEnvLayers,
-  type RegulatoryOrAMPLayerType,
-  RegulatoryOrAMPLayerTypeAsList
+  type RegulatoryOrAMPOrViglanceAreaLayerType,
+  RegulatoryOrAMPOrViglanceAreaLayerTypeAsList
 } from 'domain/entities/layers/constants'
+import { uniqBy } from 'lodash'
 
+import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { MapClickEvent, OverlayItem, SerializedFeature } from 'domain/types/map'
@@ -17,8 +19,9 @@ export const getClickedRegulatoryFeatures = (mapClickEvent: MapClickEvent) =>
     const featureId = String(feature.id)
 
     return (
-      featureId &&
-      (featureId.includes(Layers.REGULATORY_ENV_PREVIEW.code) || featureId.includes(Layers.REGULATORY_ENV.code))
+      (featureId &&
+        (featureId.includes(Layers.REGULATORY_ENV_PREVIEW.code) || featureId.includes(Layers.REGULATORY_ENV.code))) ||
+      featureId.includes(Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code)
     )
   })
 
@@ -28,20 +31,32 @@ export const getClickedAmpFeatures = (mapClickEvent: MapClickEvent) =>
 
     return featureId && (featureId.includes(Layers.AMP_PREVIEW.code) || featureId.includes(Layers.AMP.code))
   })
+
+export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =>
+  mapClickEvent.featureList?.filter(feature => {
+    const featureId = String(feature.id).split(':')[0]
+
+    return featureId === Layers.VIGILANCE_AREA.code
+  })
+
 export const getOverlayItemsFromFeatures = (features: SerializedFeature<Record<string, any>>[] | undefined) =>
   features?.reduce((acc, feature) => {
     const type = String(feature.id).split(':')[0]
 
-    if (RegulatoryOrAMPLayerTypeAsList.includes(type as MonitorEnvLayers)) {
-      const { geometry, ...properties } = feature.properties
+    if (RegulatoryOrAMPOrViglanceAreaLayerTypeAsList.includes(type as MonitorEnvLayers)) {
+      const { properties } = feature
+
       acc.push({
-        layerType: type as RegulatoryOrAMPLayerType,
-        properties: properties as AMPProperties | RegulatoryLayerCompactProperties
+        layerType: type as RegulatoryOrAMPOrViglanceAreaLayerType,
+        properties: properties as
+          | AMPProperties
+          | RegulatoryLayerCompactProperties
+          | VigilanceArea.VigilanceAreaProperties
       })
     }
 
     return acc
-  }, [] as OverlayItem<RegulatoryOrAMPLayerType, AMPProperties | RegulatoryLayerCompactProperties>[])
+  }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties>[])
 
 export const getClickedItems = (mapClickEvent: MapClickEvent) => getOverlayItemsFromFeatures(mapClickEvent?.featureList)
 
@@ -61,5 +76,5 @@ export const getHighestPriorityFeatures = (features: FeatureLike[], priorityOrde
     )
   )
 
-  return highestPriorityFeatures
+  return uniqBy(highestPriorityFeatures, feature => String(feature.getId()).split(':')[1])
 }

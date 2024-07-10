@@ -1,4 +1,5 @@
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
+import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
@@ -26,7 +27,17 @@ export function LayersSidebar() {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
-  const isVigilanceAreaFormOpen = !!useAppSelector(state => state.vigilanceArea.formTypeOpen)
+
+  const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+  const secondVigilanceAreaPanelOpen = !!(
+    selectedVigilanceAreaId &&
+    editingVigilanceAreaId &&
+    selectedVigilanceAreaId !== editingVigilanceAreaId
+  )
+  const mainVigilanceAreaFormOpen = !!(selectedVigilanceAreaId || (selectedVigilanceAreaId && editingVigilanceAreaId))
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
 
@@ -54,32 +65,52 @@ export function LayersSidebar() {
       />
       <Sidebar
         isLayersSidebarVisible={isLayersSidebarVisible}
-        isVisible={displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)}
+        isVisible={
+          (displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)) || mainVigilanceAreaFormOpen
+        }
       >
         <LayerSearch />
         <Layers>
           <RegulatoryLayers />
-          <AmpLayers />
-          {IS_VIGILANCE_AREA_ENABLED && <MyVigilanceAreas />}
-          <AdministrativeLayers />
-          <BaseLayerList />
+          {!isLinkingRegulatoryToVigilanceArea && (
+            <>
+              <AmpLayers />
+              {IS_VIGILANCE_AREA_ENABLED && <MyVigilanceAreas />}
+              <AdministrativeLayers />
+              <BaseLayerList />
+            </>
+          )}
         </Layers>
 
         <MetadataPanelShifter
           isLayersSidebarVisible={isLayersSidebarVisible}
-          isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
-          metadataPanelIsOpen={metadataPanelIsOpen || isVigilanceAreaFormOpen}
+          isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+          metadataPanelIsOpen={metadataPanelIsOpen || !!selectedVigilanceAreaId}
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
+          {IS_VIGILANCE_AREA_ENABLED && secondVigilanceAreaPanelOpen && (
+            <VigilanceAreaForm
+              key={selectedVigilanceAreaId}
+              isOpen={secondVigilanceAreaPanelOpen}
+              isReadOnly
+              vigilanceAreaId={selectedVigilanceAreaId}
+            />
+          )}
         </MetadataPanelShifter>
 
         {IS_VIGILANCE_AREA_ENABLED && (
           <VigilanceAreaPanelShifter
             isLayersSidebarVisible={isLayersSidebarVisible}
-            isVigilanceAreaFormOpen={isVigilanceAreaFormOpen}
+            isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
           >
-            {isVigilanceAreaFormOpen && <VigilanceAreaForm isOpen={isVigilanceAreaFormOpen} />}
+            {mainVigilanceAreaFormOpen && (
+              <VigilanceAreaForm
+                key={editingVigilanceAreaId}
+                isOpen={mainVigilanceAreaFormOpen}
+                vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
+              />
+            )}
           </VigilanceAreaPanelShifter>
         )}
       </Sidebar>
@@ -107,10 +138,14 @@ const MetadataPanelShifter = styled.div<{
     if (p.metadataPanelIsOpen) {
       if (p.isLayersSidebarVisible) {
         if (p.isVigilanceAreaFormOpen) {
-          return '757'
+          return '773'
         }
 
         return '355'
+      }
+
+      if (p.isVigilanceAreaFormOpen) {
+        return '828'
       }
 
       return '410'

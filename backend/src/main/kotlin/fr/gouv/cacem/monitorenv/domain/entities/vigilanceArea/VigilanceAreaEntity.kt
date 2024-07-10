@@ -16,6 +16,7 @@ data class VigilanceAreaEntity(
     val isDeleted: Boolean,
     val isDraft: Boolean,
     val links: List<LinkEntity>? = null,
+    val linkedRegulatoryAreas: List<Int>? = null,
     val name: String? = null,
     val source: String? = null,
     val startDatePeriod: ZonedDateTime? = null,

@@ -9,46 +9,30 @@ import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
-import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
+import { getFormattedGeomForFeature, getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
-  const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
+export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
-  const regulatoryAreaIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.regulatoryAreaIdsToBeDisplayed)
-  const showedPinnedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
+  const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
+  const vigilanceAreaGeom = useAppSelector(state => state.vigilanceArea.geometry)
 
-  const { vigilanceArea } = useGetVigilanceAreasQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      vigilanceArea: data?.find(area => area.id === selectedVigilanceAreaId)
-    }),
-    skip: !selectedVigilanceAreaId
-  })
-
-  const isLayerVisible = !!selectedVigilanceAreaId && selectedVigilanceAreaId !== editingVigilanceAreaId
-  const isRegulatoryLayerVisible =
-    !!(regulatoryAreaIdsToBeDisplayed && regulatoryAreaIdsToBeDisplayed?.length > 0) &&
-    !!selectedVigilanceAreaId &&
-    isLayerVisible
+  const isRegulatoryLayerVisible = !!editingVigilanceAreaId
+  const isLayerVisible = !!editingVigilanceAreaId
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-
   const regulatoryAreasFeatures = useMemo(() => {
-    if (!regulatoryLayers || !vigilanceArea?.linkedRegulatoryAreas) {
+    if (!regulatoryLayers || (regulatoryAreasToAdd && regulatoryAreasToAdd.length === 0)) {
       return []
     }
 
-    return vigilanceArea?.linkedRegulatoryAreas.reduce((feats: Feature[], regulatorylayerId) => {
+    return regulatoryAreasToAdd?.reduce((feats: Feature[], regulatorylayerId) => {
       const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
-      const isRegulatoryAreaShouldBeDisplayed =
-        regulatoryAreaIdsToBeDisplayed?.includes(regulatorylayerId) &&
-        !showedPinnedRegulatoryLayerIds.includes(regulatorylayerId)
-
-      if (regulatorylayer && isRegulatoryAreaShouldBeDisplayed) {
+      if (regulatorylayer) {
         const feature = getRegulatoryFeature({
           code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
           layer: regulatorylayer
@@ -59,29 +43,28 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       return feats
     }, [])
-  }, [
-    regulatoryLayers,
-    vigilanceArea?.linkedRegulatoryAreas,
-    regulatoryAreaIdsToBeDisplayed,
-    showedPinnedRegulatoryLayerIds
-  ])
+  }, [regulatoryLayers, regulatoryAreasToAdd])
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
   const { selectedVigilanceArea } = useGetVigilanceAreasQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      selectedVigilanceArea: data?.find(area => area.id === selectedVigilanceAreaId)
+      selectedVigilanceArea: data?.find(area => area.id === editingVigilanceAreaId)
     }),
-    skip: !selectedVigilanceAreaId
+    skip: !editingVigilanceAreaId
   })
 
   const vigilanceAreasFeature = useMemo(() => {
+    if (vigilanceAreaGeom) {
+      return getFormattedGeomForFeature(vigilanceAreaGeom, selectedVigilanceArea)
+    }
+
     if (selectedVigilanceArea) {
       return getVigilanceAreaZoneFeature(selectedVigilanceArea, Layers.VIGILANCE_AREA.code, true)
     }
 
     return undefined
-  }, [selectedVigilanceArea])
+  }, [selectedVigilanceArea, vigilanceAreaGeom])
 
   const vectorLayerRef = useRef(
     new VectorLayer({

@@ -7,6 +7,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CustomSearch,
   DateRangePicker,
@@ -25,6 +26,7 @@ import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { AddRegulatoryAreas } from './AddRegulatoryAreas'
 import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
@@ -32,9 +34,15 @@ import { Links } from './Links'
 export function Form() {
   const dispatch = useAppDispatch()
 
-  const { dirty, setFieldValue, validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
+  const isCancelModalOpen = useAppSelector(state => state.vigilanceArea.isCancelModalOpen)
+  const {
+    dirty,
+    errors: formErrors,
+    setFieldValue,
+    validateForm,
+    values
+  } = useFormikContext<VigilanceArea.VigilanceArea>()
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
@@ -57,20 +65,19 @@ export function Form() {
 
   const cancel = () => {
     if (dirty) {
-      setIsDialogOpen(true)
+      dispatch(vigilanceAreaActions.openCancelModal(values.id))
 
       return
     }
-    dispatch(vigilanceAreaActions.resetState())
+    dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(undefined))
   }
 
   const onCancelEditModal = () => {
-    setIsDialogOpen(false)
+    dispatch(vigilanceAreaActions.closeCancelModal())
   }
 
   const onConfirmEditModal = () => {
-    dispatch(vigilanceAreaActions.resetState())
-    setIsDialogOpen(false)
+    dispatch(vigilanceAreaActions.closeMainForm())
   }
 
   const save = () => {
@@ -97,10 +104,12 @@ export function Form() {
     const coordinates = [...values.geom.coordinates]
     coordinates.splice(index, 1)
     setFieldValue('geom', { ...values.geom, coordinates })
+    dispatch(vigilanceAreaActions.setGeometry({ ...values.geom, coordinates }))
   }
 
   const addZone = () => {
     dispatch(vigilanceAreaActions.setGeometry(values.geom))
+    dispatch(vigilanceAreaActions.setInitialGeometry(values.geom))
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.DRAW))
   }
 
@@ -117,9 +126,9 @@ export function Form() {
       <CancelEditDialog
         onCancel={onCancelEditModal}
         onConfirm={onConfirmEditModal}
-        open={isDialogOpen}
+        open={isCancelModalOpen}
         subText="Voulez-vous enregistrer les modifications avant de quitter ?"
-        text="Vous êtes en train d'abandonner l'édition de la zone de vigilance"
+        text={`Vous êtes en train d'abandonner l'édition de la zone de vigilance: ${values.name}`}
         title="Enregistrer les modifications"
       />
       <DeleteModal
@@ -145,6 +154,7 @@ export function Form() {
               ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
               : undefined
           }
+          error={formErrors.startDatePeriod ?? formErrors.endDatePeriod}
           hasSingleCalendar
           isCompact
           isErrorMessageHidden
@@ -188,6 +198,7 @@ export function Form() {
           listener={InteractionListener.VIGILANCE_ZONE}
           name="geom"
         />
+        <AddRegulatoryAreas />
         <Links />
         <Separator />
         <InternText>Interne CACEM</InternText>
@@ -218,14 +229,12 @@ const StyledForm = styled.div`
   display: flex;
   flex-direction: column;
 `
-
-const Separator = styled.div`
-  border-top: 1px solid ${p => p.theme.color.maximumRed};
-`
 const InternText = styled.span`
   color: ${p => p.theme.color.maximumRed};
 `
-
+const Separator = styled.div`
+  border-top: 1px solid ${p => p.theme.color.maximumRed};
+`
 const StyledTrigramInput = styled(FormikTextInput)`
   width: 126px;
 `

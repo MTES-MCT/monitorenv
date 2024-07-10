@@ -1,5 +1,5 @@
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
-import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
@@ -11,16 +11,21 @@ import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { RegulatoryAreas } from './AddRegulatoryAreas/RegulatoryAreas'
 import { PublishedSchema } from './Schema'
+import { DeleteButton, FooterContainer, FooterRightButtons } from './style'
 
 const EMPTY_VALUE = '--'
 
 export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: VigilanceArea.VigilanceArea | undefined }) {
   const dispatch = useAppDispatch()
-  const isVigilanceAreaPanelOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen === 'READ_FORM')
+  const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const { validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
+
   const isFormValidForPublish = useMemo(() => {
     try {
       PublishedSchema.validateSync(values, { abortEarly: false })
@@ -37,9 +42,6 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
   const formattedEndPeriod = vigilanceArea?.endDatePeriod
     ? customDayjs(vigilanceArea?.endDatePeriod).format('DD/MM/YYYY')
     : undefined
-  if (!isVigilanceAreaPanelOpen) {
-    return null
-  }
 
   const onConfirmDeleteModal = () => {
     if (!vigilanceArea?.id) {
@@ -58,11 +60,14 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
   }
 
   const edit = () => {
-    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.EDIT_FORM))
+    if (!editingVigilanceAreaId) {
+      dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(selectedVigilanceAreaId))
+
+      return
+    }
+    dispatch(vigilanceAreaActions.openCancelModal(values.id))
   }
 
-  // TODO 01/07/2024 implement publish
-  // what's happen if form is not valid ?
   const publish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
       if (isEmpty(errors)) {
@@ -113,7 +118,9 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
           </InlineItem>
           <InlineItem>
             <InlineItemLabel $isInline>Thématique</InlineItemLabel>
-            <InlineItemValue>{vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}</InlineItemValue>
+            <InlineItemValue $maxLine={2} title={vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : ''}>
+              {vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}
+            </InlineItemValue>
           </InlineItem>
           <InlineItem>
             <InlineItemLabel $isInline>Visibilité</InlineItemLabel>
@@ -124,7 +131,13 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         </SubPart>
         <SubPart>
           <InlineItemLabel>Commentaire sur la zone</InlineItemLabel>
-          <InlineItemValue>{vigilanceArea?.comments ?? EMPTY_VALUE}</InlineItemValue>
+          <InlineItemValue $maxLine={4} title={vigilanceArea?.comments}>
+            {vigilanceArea?.comments ?? EMPTY_VALUE}
+          </InlineItemValue>
+        </SubPart>
+        <SubPart>
+          <InlineItemLabel>Réglementations en lien</InlineItemLabel>
+          <RegulatoryAreas isReadOnly linkedRegulatoryAreas={values?.linkedRegulatoryAreas} />
         </SubPart>
         <SubPart>
           <InlineItemLabel>Liens utiles</InlineItemLabel>
@@ -144,12 +157,14 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         <SubPart>
           <InternText>Section interne CACEM</InternText>
           <InlineItem>
-            <InlineItemLabel $isInline>Crée le</InlineItemLabel>
+            <InlineItemLabel>Crée le</InlineItemLabel>
             <InlineItemValue>{vigilanceArea?.createdBy ?? EMPTY_VALUE}</InlineItemValue>
           </InlineItem>
           <InlineItem>
-            <InlineItemLabel $isInline>Source</InlineItemLabel>
-            <InlineItemValue>{vigilanceArea?.source ?? EMPTY_VALUE}</InlineItemValue>
+            <InlineItemLabel>Source</InlineItemLabel>
+            <InlineItemValue $maxLine={2} title={vigilanceArea?.source ?? ''}>
+              {vigilanceArea?.source ?? EMPTY_VALUE}
+            </InlineItemValue>
           </InlineItem>
         </SubPart>
       </Body>
@@ -157,14 +172,14 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete} size={Size.SMALL}>
           Supprimer
         </DeleteButton>
-        <LeftButtons>
+        <FooterRightButtons>
           <Button accent={Accent.SECONDARY} onClick={edit} size={Size.SMALL}>
             Editer
           </Button>
-          <Button disabled={!isFormValidForPublish} onClick={publish} size={Size.SMALL}>
+          <Button disabled={!isFormValidForPublish || !vigilanceArea?.isDraft} onClick={publish} size={Size.SMALL}>
             {vigilanceArea?.isDraft ? 'Publier' : 'Publiée'}
           </Button>
-        </LeftButtons>
+        </FooterRightButtons>
       </FooterContainer>
     </>
   )
@@ -176,6 +191,7 @@ const Body = styled.div`
 const SubPart = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 4px;
   padding: 16px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
@@ -187,16 +203,17 @@ const InlineItem = styled.div`
 `
 
 const InlineItemLabel = styled.span<{ $isInline?: boolean }>`
-  width: ${p => (p.$isInline ? '80px' : 'auto')};
+  width: ${p => (p.$isInline ? '76px' : 'auto')};
   color: ${p => p.theme.color.slateGray};
   margin-bottom: 4px;
 `
 
-const InlineItemValue = styled.span`
+const InlineItemValue = styled.span<{ $maxLine?: number }>`
   color: ${p => p.theme.color.gunMetal};
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: ${p => p.$maxLine ?? '1'};
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `
 
 const DateItem = styled.div`
@@ -206,10 +223,14 @@ const DateItem = styled.div`
 const LinkContainer = styled.div`
   display: flex;
   flex-direction: column;
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
 `
 
 const LinkText = styled.span`
   color: ${p => p.theme.color.gunMetal};
+  font-weight: 500;
 `
 
 const LinkUrl = styled.a`
@@ -218,21 +239,4 @@ const LinkUrl = styled.a`
 const InternText = styled.span`
   color: ${p => p.theme.color.maximumRed};
   margin-bottom: 8px;
-`
-
-const FooterContainer = styled.footer`
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 8px;
-  height: 48px;
-`
-const DeleteButton = styled(Button)`
-  > span {
-    color: ${p => p.theme.color.maximumRed};
-  }
-`
-const LeftButtons = styled.div`
-  display: flex;
-  gap: 8px;
 `

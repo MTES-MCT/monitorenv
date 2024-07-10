@@ -43,6 +43,8 @@ data class VigilanceAreaModel(
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
     val links: List<LinkEntity>? = listOf(),
+    @Column(name = "linked_regulatory_areas", columnDefinition = "int[]")
+    val linkedRegulatoryAreas: List<Int>? = listOf(),
     @Column(name = "name") val name: String? = null,
     @Column(name = "start_date_period") val startDatePeriod: Instant? = null,
     @Column(name = "source") val source: String? = null,
@@ -67,6 +69,7 @@ data class VigilanceAreaModel(
                 isDeleted = vigilanceArea.isDeleted,
                 isDraft = vigilanceArea.isDraft,
                 links = vigilanceArea.links,
+                linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
                 name = vigilanceArea.name,
                 source = vigilanceArea.source,
                 startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
@@ -89,6 +92,7 @@ data class VigilanceAreaModel(
             isDeleted = isDeleted,
             isDraft = isDraft,
             links = links,
+            linkedRegulatoryAreas = linkedRegulatoryAreas,
             name = name,
             source = source,
             startDatePeriod = startDatePeriod?.atZone(UTC),
