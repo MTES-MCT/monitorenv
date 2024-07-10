@@ -10,7 +10,7 @@ endif
 # DEV commands
 
 # Frontend
-.PHONY: dev-install dev-run-front dev-init-infra-env 
+.PHONY: dev-install dev-run-front dev-init-infra-env
 dev-init-infra-env:
 	./frontend/node_modules/.bin/import-meta-env-prepare -u -x ./.env.infra.example -p ./.env.dev.defaults
 
@@ -36,7 +36,9 @@ test-front:
 
 dev-run-back-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back
 
-dev-run-back-debug-with-infra: dev-erase-db dev-run-infra dev-clean-target-env dev-run-back-debug
+dev-run-back-debug-with-infra: dev-erase-db dev-run-infra dev-clean-build-env dev-run-back-debug
+
+dev-run-back-with-infra-unsecured: dev-erase-db dev-run-infra dev-clean-build-env dev-run-back-unsecured
 
 
 dev-run-back:
@@ -44,6 +46,10 @@ dev-run-back:
 
 dev-run-back-debug:
 	cd backend && ./gradlew bootRun --debug-jvm --args='logging.root.level=DEBUG'
+
+dev-run-back-unsecured:
+	cd backend && ./gradlew bootRun --args='monitorenv.oidc.enabled=false'
+
 dev-run-keycloak:
 	docker compose up -d keycloak
 
@@ -106,7 +112,7 @@ load-sig-data:
 
 init-geoserver:
 	set -a
-	. ./infra/.env
+	. .env
 	set +a
 	echo ${PROJECT_NAME}
 	./infra/init/geoserver_init_layers.sh
@@ -166,7 +172,7 @@ endif
 # RUN commands
 .PHONY: restart-app
 restart-app:
-	docker compose up -d --build --profile=production --pull always 
+	docker compose up -d --build --profile=production --pull always
 
 # ALIASES
 .PHONY: dev lint-back

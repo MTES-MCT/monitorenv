@@ -36,6 +36,7 @@
 ```sh
 git clone https://github.com/MTES-MCT/monitorenv.git
 cd monitorenv
+make dev-init-infra-env
 make dev-install
 ```
 
@@ -133,7 +134,8 @@ Optionally create and modify `./.env.local`
 
 ##### Sentry
 
-SENTRY_DSN is an environment variable used by Sentry to identify the application. It is used by both the frontend and backend. It is defined in the `.env` file and injected into the frontend application via the `./public/env.js` file.
+SENTRY_DSN is an environment variable used by Sentry to identify the application. It is used by both the frontend and
+backend. It is defined in the `.env` file and injected into the frontend application via the `./public/env.js` file.
 
 If `SENTRY_DSN` is set, the backend logs will automatically be sent.
 
