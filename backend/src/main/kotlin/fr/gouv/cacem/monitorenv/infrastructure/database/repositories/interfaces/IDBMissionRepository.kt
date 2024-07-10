@@ -91,7 +91,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                             COALESCE(infractions->>'vesselName', '') || ' ' ||
                             COALESCE(infractions->>'companyName', '') || ' ' ||
                             COALESCE(infractions->>'controlledPersonIdentity', ''))
-                         @@ plainto_tsquery('mydict', (:searchQuery || ':*'))
+                         @@ to_tsquery('mydict', (:searchQuery || ':*'))
                         )
                     )
                 )

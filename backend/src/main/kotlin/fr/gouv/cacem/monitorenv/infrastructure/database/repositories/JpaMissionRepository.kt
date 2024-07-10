@@ -67,7 +67,7 @@ class JpaMissionRepository(
             seaFronts = seaFronts?.toTypedArray(),
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            searchQuery = searchQuery ?: "",
+            searchQuery = searchQuery?.replace(" ", "&") ?: "",
         )
             .map { it.toMissionDTO(mapper) }
     }
@@ -123,7 +123,7 @@ class JpaMissionRepository(
                 seaFronts = seaFronts?.toTypedArray(),
                 startedAfter = startedAfter,
                 startedBefore = startedBefore,
-                searchQuery = searchQuery ?: "",
+                searchQuery = searchQuery?.replace(" ", "&") ?: "",
             )
 
         return missions.map { it.toMissionEntity(mapper) }
