@@ -39,7 +39,7 @@ export function SelectAMP() {
     if (!id) {
       return
     }
-    dispatch(vigilanceAreaActions.deleteRegulatoryAreasFromVigilanceArea(id))
+    dispatch(vigilanceAreaActions.deleteAMPsFromVigilanceArea(id))
   }
 
   return (

@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 
 type MyLayerZoneProps = {
   bbox: number[]
+  dataCy: string
   displayedName: string
   hasMetadata: boolean
   hideLayer: () => void
@@ -27,6 +28,7 @@ type MyLayerZoneProps = {
 
 export function MyLayerZone({
   bbox,
+  dataCy,
   displayedName,
   hasMetadata,
   hideLayer,
@@ -71,11 +73,7 @@ export function MyLayerZone({
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
       <LayerLegend layerType={layerType} legendKey={name} type={type} />
-      <LayerSelector.Name
-        data-cy={`my-regulatory-${displayedName}`}
-        onClick={handleClickOnLayerName}
-        title={displayedName}
-      >
+      <LayerSelector.Name data-cy={`${dataCy}-${displayedName}`} onClick={handleClickOnLayerName} title={displayedName}>
         {displayedName}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>

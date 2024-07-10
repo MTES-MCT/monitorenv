@@ -121,7 +121,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   Icon={Icon.Plus}
                   onClick={e => addAMPToVigilanceArea(e, id)}
                   size={Size.SMALL}
-                  title={`Ajouter l'AMP' ${name}`}
+                  title={`Ajouter l'AMP ${name}`}
                 />
               )}
             </LayerItem>

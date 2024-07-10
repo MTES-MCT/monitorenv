@@ -34,7 +34,7 @@ export function AddAMPs() {
   }
 
   const deleteAMP = id => {
-    dispatch(vigilanceAreaActions.deleteRegulatoryAreasFromVigilanceArea(id))
+    dispatch(vigilanceAreaActions.deleteAMPsFromVigilanceArea(id))
     setFieldValue(
       'linkedAMPs',
       linkedAMPs.filter(ampId => ampId !== id)

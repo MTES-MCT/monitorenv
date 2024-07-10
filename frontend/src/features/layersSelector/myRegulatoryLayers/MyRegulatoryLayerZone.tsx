@@ -41,6 +41,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
   return (
     <MyLayerZone
       bbox={regulatoryZone.bbox}
+      dataCy="my-regulatory-zone"
       displayedName={displayedName}
       hasMetadata={!!regulatoryZone?.entity_name}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}
