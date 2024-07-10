@@ -161,10 +161,10 @@ docker-push-pipeline:
 # ENV setup
 .PHONY: init-environment
 init-environment:
-ifeq (,$(wildcard ./infra/.env))
+ifeq (,$(wildcard .env))
 	@echo "Pas de fichier '.env'. Création d'un nouveau fichier."
 	@echo "source ~/monitorenv/infra/init/init_env.sh" >> ~/.bashrc
-	@cp infra/.env.template infra/.env
+	@cp .env.infra.example .env
 else
 	@echo "Un fichier .env existe déjà. Editez ou supprimez le fichier existant."
 endif
@@ -172,7 +172,7 @@ endif
 # RUN commands
 .PHONY: restart-app
 restart-app:
-	docker compose up -d --build --profile=production --pull always
+	docker compose --profile production up -d --build --pull always
 
 # ALIASES
 .PHONY: dev lint-back

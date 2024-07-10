@@ -36,8 +36,8 @@
 ```sh
 git clone https://github.com/MTES-MCT/monitorenv.git
 cd monitorenv
-make dev-init-infra-env
 make dev-install
+make dev-init-infra-env
 ```
 
 ### Local Development
