@@ -13,6 +13,7 @@ import { isBrowserSupported } from '@utils/isBrowserSupported'
 import { isCypress } from '@utils/isCypress'
 import { MissionEventProvider } from 'context/mission/MissionEventContext'
 import { ReportingEventProvider } from 'context/reporting/ReportingEventContext'
+import { paths } from 'paths'
 import { Provider as ReduxProvider } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
@@ -45,9 +46,9 @@ export function App() {
               <ReportingEventProvider>
                 <Router>
                   <Routes>
-                    <Route element={<Login />} path="/login" />
+                    <Route element={<Login />} path={paths.login} />
 
-                    <Route element={<Register />} path="/register" />
+                    <Route element={<Register />} path={paths.register} />
 
                     <Route
                       element={
@@ -55,7 +56,7 @@ export function App() {
                           <BackOfficePage />
                         </RequireAuth>
                       }
-                      path="/backoffice/*"
+                      path={`${paths.backoffice}/*`}
                     />
 
                     <Route
@@ -64,7 +65,7 @@ export function App() {
                           <SideWindow />
                         </RequireAuth>
                       }
-                      path="/side_window"
+                      path={paths.sidewindow}
                     />
 
                     <Route
@@ -73,7 +74,7 @@ export function App() {
                           <HomePage />
                         </RequireAuth>
                       }
-                      path="/ext"
+                      path={paths.ext}
                     />
 
                     <Route
@@ -82,7 +83,7 @@ export function App() {
                           <HomePage />
                         </RequireAuth>
                       }
-                      path="/"
+                      path={paths.home}
                     />
                   </Routes>
                 </Router>

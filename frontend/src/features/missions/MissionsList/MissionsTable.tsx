@@ -1,7 +1,10 @@
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { isLegacyFirefox } from '@utils/isLegacyFirefox'
+import { paths } from 'paths'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router'
 import styled from 'styled-components'
 
 import { Columns } from './Columns'
@@ -11,13 +14,20 @@ import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import type { Mission } from '../../../domain/entities/missions'
 
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
+  const { pathname } = useLocation()
+
+  const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -25 : 0
+
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
 
   const columns = useMemo(
-    () => (isLoading ? Columns.map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns),
-    [isLoading]
+    () =>
+      isLoading
+        ? Columns(legacyFirefoxOffset).map(column => ({ ...column, cell: StyledSkeletonRow }))
+        : Columns(legacyFirefoxOffset),
+    [isLoading, legacyFirefoxOffset]
   )
 
   const table = useReactTable({

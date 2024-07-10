@@ -11,14 +11,14 @@ import { sortCompletion, sortNumberOfControls, sortStatus } from '../utils'
 
 import type { Row } from '@tanstack/react-table'
 
-export const Columns = [
+export const Columns = (legacyFirefoxOffset: number = 0) => [
   {
     accessorFn: row => row.startDateTimeUtc,
     cell: info => getDateCell(info.getValue()),
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
-    size: 153
+    size: 153 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.endDateTimeUtc,
@@ -26,7 +26,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
-    size: 153
+    size: 153 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.facade,
@@ -34,7 +34,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 110
+    size: 110 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.missionTypes,
@@ -42,7 +42,7 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
-    size: 136
+    size: 136 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.controlUnits,
@@ -50,7 +50,7 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
-    size: 300
+    size: 300 + legacyFirefoxOffset
   },
 
   {
@@ -59,14 +59,14 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 444
+    size: 444 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.envActions,
     cell: info => getNumberOfControlsCell(info.getValue()),
     header: () => 'Ctr.',
     id: 'envActions',
-    size: 75,
+    size: 75 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => sortNumberOfControls(rowA, rowB, columnId)
   },
   {
@@ -74,7 +74,7 @@ export const Columns = [
     cell: ({ row }) => <CellStatus row={row} />,
     header: () => 'Statut',
     id: 'status',
-    size: 121,
+    size: 121 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
   },
   {
@@ -82,7 +82,7 @@ export const Columns = [
     cell: ({ row }) => <CellCompletionStatus row={row} />,
     header: () => 'État données',
     id: 'completion',
-    size: 144,
+    size: 144 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {
@@ -91,7 +91,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 56
+    size: 56 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.id,
@@ -99,6 +99,6 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'edit',
-    size: 62
+    size: 62 + legacyFirefoxOffset
   }
 ]

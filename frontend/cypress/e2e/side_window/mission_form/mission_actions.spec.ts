@@ -362,8 +362,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
 
-    cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
-    cy.getDataCy('control-completed-by').scrollIntoView().type('ABC')
+    cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
+    cy.getDataCy('control-completed-by').scrollIntoView().type('ABC', { force: true })
     cy.getDataCy('action-missing-fields-text').contains('4 champs nécessaires aux statistiques à compléter')
 
     cy.wait(250)
