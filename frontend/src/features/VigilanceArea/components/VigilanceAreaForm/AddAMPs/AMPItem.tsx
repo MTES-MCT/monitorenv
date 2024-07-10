@@ -92,7 +92,7 @@ export function AMPItem({ amp, deleteAMP, isReadOnly }: AMPItemProps) {
   }
 
   return (
-    <AMPContainer $isReadOnly={isReadOnly} data-cy="ramp-item" onClick={() => toggleRegulatoryZoneMetadata(AMPId)}>
+    <AMPContainer $isReadOnly={isReadOnly} data-cy="amp-item" onClick={() => toggleRegulatoryZoneMetadata(AMPId)}>
       <AMPName>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={amp?.name ?? 'aucun'} type={amp?.type ?? 'aucun'} />
         <span title={amp?.name}>{amp?.name}</span>

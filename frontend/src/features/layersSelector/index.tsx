@@ -75,7 +75,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
           {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}
           {!isLinkingRegulatoryToVigilanceArea && !isLinkingAmpToVigilanceArea && (
             <>
-              {IS_VIGILANCE_AREA_ENABLED && <MyVigilanceAreas />}
+              {IS_VIGILANCE_AREA_ENABLED && isSuperUser && <MyVigilanceAreas />}
               <AdministrativeLayers />
               <BaseLayerList />
             </>

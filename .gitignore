@@ -50,3 +50,6 @@ backend/.gradle
 
 # Ignore Gradle build output directory
 backend/build
+
+#Logs
+backend/logs/*
