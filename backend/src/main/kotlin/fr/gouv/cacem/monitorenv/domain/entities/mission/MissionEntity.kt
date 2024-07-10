@@ -18,7 +18,9 @@ data class MissionEntity(
     val observationsCnsp: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
+    @Patchable
     val startDateTimeUtc: ZonedDateTime,
+    @Patchable
     val endDateTimeUtc: ZonedDateTime? = null,
     val createdAtUtc: ZonedDateTime? = null,
     val updatedAtUtc: ZonedDateTime? = null,
