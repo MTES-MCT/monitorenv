@@ -1,5 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission
 
+import java.time.ZonedDateTime
 import java.util.Optional
 
-data class PatchableMissionEntity(val observationsByUnit: Optional<String>?)
+data class PatchableMissionEntity(
+    val observationsByUnit: Optional<String>?,
+    val startDateTimeUtc: Optional<ZonedDateTime>?,
+    val endDateTimeUtc: Optional<ZonedDateTime>?,
+)
