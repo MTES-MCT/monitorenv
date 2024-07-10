@@ -4,6 +4,8 @@ import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Icon, THEME, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { isLegacyFirefox } from '@utils/isLegacyFirefox'
+import { paths } from 'paths'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import styled, { css } from 'styled-components'
@@ -20,7 +22,9 @@ export function ReportingsTable({
   isLoading: boolean
   reportings: (ReportingDetailed | undefined)[]
 }) {
-  const location = useLocation()
+  const { pathname } = useLocation()
+
+  const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
 
   const openReportings = useAppSelector(state => state.reporting.reportings)
   const { themes } = useGetControlPlans()
@@ -30,8 +34,11 @@ export function ReportingsTable({
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
 
   const columns = useMemo(
-    () => (isLoading ? Columns(themes).map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns(themes)),
-    [isLoading, themes]
+    () =>
+      isLoading
+        ? Columns(themes, legacyFirefoxOffset).map(column => ({ ...column, cell: StyledSkeletonRow }))
+        : Columns(themes, legacyFirefoxOffset),
+    [isLoading, legacyFirefoxOffset, themes]
   )
 
   const table = useReactTable({
@@ -82,7 +89,7 @@ export function ReportingsTable({
         totalReportings={reportings?.length || 0}
       />
       <StyledReportingsContainer ref={tableContainerRef}>
-        <StyledTable $isSideWindowOpenInTab={location.pathname === '/side_window'} $withRowCheckbox>
+        <StyledTable $isSideWindowOpenInTab={pathname === paths.sidewindow} $withRowCheckbox>
           <TableWithSelectableRows.Head>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
@@ -130,6 +137,12 @@ export function ReportingsTable({
                       key={cell.id}
                       $hasRightBorder={!!(cell.column.id === 'geom')}
                       $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
+                      $isLegacyFirefox={!!legacyFirefoxOffset}
+                      style={{
+                        maxWidth: cell.column.getSize(),
+                        minWidth: cell.column.getSize(),
+                        width: cell.column.getSize()
+                      }}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </StyledTd>
@@ -203,7 +216,14 @@ const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInT
     `}
 `
 
-const StyledTd = styled(TableWithSelectableRows.Td)`
+const StyledTd = styled(TableWithSelectableRows.Td)<{ $isLegacyFirefox: boolean }>`
+  ${p =>
+    p.$isLegacyFirefox &&
+    `&:first-child {
+      padding-left: 18px !important;
+    }
+    `}
+
   &:nth-child(11) {
     padding: 4px 0px 4px 16px;
   }

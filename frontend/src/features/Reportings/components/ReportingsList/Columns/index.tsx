@@ -15,7 +15,7 @@ import { getReportType } from '../Cells/getReportType'
 
 import type { Row } from '@tanstack/react-table'
 
-export const Columns = themes => [
+export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
   {
     accessorFn: row => row.reportingId,
     cell: ({ row }) => (
@@ -43,7 +43,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'reportingId',
-    size: 100
+    size: 100 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.createdAt,
@@ -51,7 +51,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Date (UTC)',
     id: 'createdAt',
-    size: 136
+    size: 136 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.validityTime,
@@ -59,7 +59,7 @@ export const Columns = themes => [
     enableSorting: false, // TODO see how we can sort on timeLeft and not validityTime
     header: () => 'Fin dans',
     id: 'validityTime',
-    size: 87
+    size: 87 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.displayedSource,
@@ -71,7 +71,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    size: 208
+    size: 208 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.reportType,
@@ -79,7 +79,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Type',
     id: 'reportType',
-    size: 150
+    size: 150 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.targetDetails,
@@ -93,7 +93,7 @@ export const Columns = themes => [
     ),
     header: () => 'Cible',
     id: 'targetDetails',
-    size: 190,
+    size: 190 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortTargetDetails(rowA.original, rowB.original)
   },
   {
@@ -102,7 +102,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Thématique',
     id: 'themeId',
-    size: 265,
+    size: 265 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       const themeA: string = themes[rowA.original[columnId]]?.theme ?? ''
       const themeB: string = themes[rowB.original[columnId]]?.theme ?? ''
@@ -116,7 +116,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 104
+    size: 104 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.status,
@@ -124,7 +124,7 @@ export const Columns = themes => [
     enableSorting: true,
     header: () => 'Statut',
     id: 'isArchived',
-    size: 104,
+    size: 104 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       if (rowA.original[columnId] > rowB.original[columnId]) {
         return -1
@@ -147,7 +147,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 104
+    size: 104 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,
@@ -162,7 +162,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 98
+    size: 98 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,
@@ -170,7 +170,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 58
+    size: 58 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.id,
@@ -178,7 +178,7 @@ export const Columns = themes => [
     enableSorting: false,
     header: () => '',
     id: 'id',
-    size: 110
+    size: 110 + legacyFirefoxOffset
   }
 ]
 
