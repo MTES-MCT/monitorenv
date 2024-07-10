@@ -84,7 +84,7 @@ services:
   geoserver:
     container_name: monitorenv_geoserver
     profiles: ["dev", "production"]
-    image: kartoza/geoserver:2.20.2
+    image: kartoza/geoserver:2.18.0
     environment:
       - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
       - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
