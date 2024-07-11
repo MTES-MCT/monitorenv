@@ -10,7 +10,7 @@ export function createPendingMission() {
   cy.fill('Date de fin (UTC)', endDate)
 
   cy.get('[name="missionTypes0"]').click({ force: true })
-  cy.fill('Unité 1', 'BN Toulon')
+  cy.fill('Unité 1', 'A636 Maïto')
 
   return cy.waitForLastRequest(
     '@createMission',
