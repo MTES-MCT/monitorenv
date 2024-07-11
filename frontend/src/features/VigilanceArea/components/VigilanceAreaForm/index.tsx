@@ -56,7 +56,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
   useEffect(() => {
     if (editingVigilanceAreaId && vigilanceArea && vigilanceArea.id === editingVigilanceAreaId) {
       dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(vigilanceArea?.linkedRegulatoryAreas ?? []))
-      dispatch(vigilanceAreaActions.addAMPsToVigilanceArea(vigilanceArea?.linkedAMPs ?? []))
+      dispatch(vigilanceAreaActions.addAMPsToVigilanceArea(vigilanceArea?.linkedAMPs))
       dispatch(vigilanceAreaActions.setGeometry(vigilanceArea?.geom))
     }
     // we just want to listen when editingVigilanceAreaId changes

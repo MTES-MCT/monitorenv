@@ -51,12 +51,12 @@ export function ResultListLayerGroup({
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
-  const AMPLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.AMPToAdd)
+  const AMPLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const isLayerGroupDisabled =
-    difference(layerIds, regulatoryAreasLinkedToVigilanceAreaForm ?? []).length === 0 ||
-    difference(layerIds, AMPLinkedToVigilanceAreaForm ?? []).length === 0
+    difference(layerIds, regulatoryAreasLinkedToVigilanceAreaForm).length === 0 ||
+    difference(layerIds, AMPLinkedToVigilanceAreaForm).length === 0
 
   const handleCheckAllZones = e => {
     e.stopPropagation()

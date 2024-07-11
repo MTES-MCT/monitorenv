@@ -9,7 +9,6 @@ import { RegulatoryAreas } from './RegulatoryAreas'
 
 export function AddRegulatoryAreas() {
   const {
-    setFieldValue,
     values: { linkedRegulatoryAreas }
   } = useFormikContext<VigilanceArea.VigilanceArea>()
 
@@ -33,14 +32,6 @@ export function AddRegulatoryAreas() {
     )
   }
 
-  const deleteRegulatoryArea = id => {
-    dispatch(vigilanceAreaActions.deleteRegulatoryAreasFromVigilanceArea(id))
-    setFieldValue(
-      'linkedRegulatoryAreas',
-      linkedRegulatoryAreas.filter(regulatoryArea => regulatoryArea !== id)
-    )
-  }
-
   return (
     <div>
       <Label>Réglementations en lien avec la zone de vigilance</Label>
@@ -54,10 +45,7 @@ export function AddRegulatoryAreas() {
         Ajouter une réglementation en lien
       </Button>
 
-      <RegulatoryAreas
-        deleteRegulatoryArea={id => deleteRegulatoryArea(id)}
-        linkedRegulatoryAreas={linkedRegulatoryAreas}
-      />
+      <RegulatoryAreas linkedRegulatoryAreas={linkedRegulatoryAreas} />
     </div>
   )
 }

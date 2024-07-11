@@ -10,73 +10,85 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { addAmpZonesToMyLayers, hideAmpLayer, removeAmpZonesFromMyLayers, showAmpLayer } from 'domain/shared_slices/Amp'
+import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
+import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMP } from 'domain/entities/AMPs'
 
 type AMPItemProps = {
   amp: AMP | undefined
-  deleteAMP?: (id: number) => void
   isReadOnly: boolean
 }
-export function AMPItem({ amp, deleteAMP, isReadOnly }: AMPItemProps) {
+
+export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
   const dispatch = useAppDispatch()
 
-  const AMPId = amp?.id
+  const {
+    setFieldValue,
+    values: { linkedAMPs }
+  } = useFormikContext<VigilanceArea.VigilanceArea>()
+
+  const ampId = amp?.id
   const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
-  const AMPIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.AMPIdsToBeDisplayed)
+  const ampIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.ampIdsToBeDisplayed)
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
 
-  const metadataIsShown = useAppSelector(state => (AMPId ? getMetadataIsOpenForAMPLayerId(state, AMPId) : undefined))
+  const metadataIsShown = useAppSelector(state => (ampId ? getMetadataIsOpenForAMPLayerId(state, ampId) : undefined))
 
-  const isZoneSelected = !!(AMPId && selectedAmpLayerIds.includes(AMPId))
-  const isLayerVisible = !!(AMPId && AMPIdsToBeDisplayed?.includes(AMPId))
-  const pinnedAMPIsShowed = !!(AMPId && showedAmpLayerIds.includes(AMPId))
+  const isZoneSelected = !!(ampId && selectedAmpLayerIds.includes(ampId))
+  const isLayerVisible = !!(ampId && ampIdsToBeDisplayed?.includes(ampId))
+  const pinnedAMPIsShowed = !!(ampId && showedAmpLayerIds.includes(ampId))
 
-  const onDeleteAMP = e => {
+  const deleteAMP = e => {
     e.stopPropagation()
-    if (!deleteAMP || !AMPId) {
+
+    if (!ampId) {
       return
     }
-    deleteAMP(AMPId)
+    dispatch(vigilanceAreaActions.deleteAMPsFromVigilanceArea(ampId))
+    setFieldValue(
+      'linkedAMPs',
+      linkedAMPs.filter(id => id !== ampId)
+    )
   }
 
   const addToMyAMP = e => {
     e.stopPropagation()
-    if (!AMPId) {
+    if (!ampId) {
       return
     }
     if (isZoneSelected) {
-      dispatch(removeAmpZonesFromMyLayers([AMPId]))
+      dispatch(removeAmpZonesFromMyLayers([ampId]))
     } else {
-      dispatch(addAmpZonesToMyLayers([AMPId]))
+      dispatch(addAmpZonesToMyLayers([ampId]))
     }
   }
 
   const displayAMP = e => {
     e.stopPropagation()
 
-    if (!AMPId) {
+    if (!ampId) {
       return
     }
 
-    if (!selectedAmpLayerIds.includes(AMPId)) {
+    if (!selectedAmpLayerIds.includes(ampId)) {
       if (isLayerVisible) {
-        dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(AMPId))
+        dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(ampId))
       } else {
-        dispatch(vigilanceAreaActions.addAMPIdsToBeDisplayed(AMPId))
+        dispatch(vigilanceAreaActions.addAMPIdsToBeDisplayed(ampId))
       }
 
       return
     }
 
     if (isLayerVisible || pinnedAMPIsShowed) {
-      dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(AMPId))
-      dispatch(hideAmpLayer(AMPId))
+      dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(ampId))
+      dispatch(hideAmpLayer(ampId))
     } else {
-      dispatch(vigilanceAreaActions.addAMPIdsToBeDisplayed(AMPId))
-      dispatch(showAmpLayer(AMPId))
+      dispatch(vigilanceAreaActions.addAMPIdsToBeDisplayed(ampId))
+      dispatch(showAmpLayer(ampId))
     }
   }
 
@@ -92,7 +104,7 @@ export function AMPItem({ amp, deleteAMP, isReadOnly }: AMPItemProps) {
   }
 
   return (
-    <AMPContainer $isReadOnly={isReadOnly} data-cy="amp-item" onClick={() => toggleRegulatoryZoneMetadata(AMPId)}>
+    <AMPContainer $isReadOnly={isReadOnly} data-cy="amp-item" onClick={() => toggleRegulatoryZoneMetadata(ampId)}>
       <AMPName>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={amp?.name ?? 'aucun'} type={amp?.type ?? 'aucun'} />
         <span title={amp?.name}>{amp?.name}</span>
@@ -118,9 +130,9 @@ export function AMPItem({ amp, deleteAMP, isReadOnly }: AMPItemProps) {
         <IconButton
           accent={Accent.TERTIARY}
           Icon={Icon.Close}
-          onClick={onDeleteAMP}
+          onClick={deleteAMP}
           size={Size.SMALL}
-          title={`vigilance-area-delete-amp-${AMPId}`}
+          title={`vigilance-area-delete-amp-${ampId}`}
         />
       )}
     </AMPContainer>

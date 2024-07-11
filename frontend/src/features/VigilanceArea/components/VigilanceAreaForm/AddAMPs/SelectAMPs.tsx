@@ -12,11 +12,11 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 export function SelectAMP() {
   const dispatch = useAppDispatch()
-  const AMPToAdd = useAppSelector(state => state.vigilanceArea.AMPToAdd)
+  const ampToAdd = useAppSelector(state => state.vigilanceArea.ampToAdd)
   const { setFieldValue } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const handleValidate = () => {
-    setFieldValue('linkedAMPs', AMPToAdd)
+    setFieldValue('linkedAMPs', ampToAdd)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
     dispatch(closeLayerOverlay())
     dispatch(
@@ -35,13 +35,6 @@ export function SelectAMP() {
     )
   }
 
-  const deleteAMP = id => {
-    if (!id) {
-      return
-    }
-    dispatch(vigilanceAreaActions.deleteAMPsFromVigilanceArea(id))
-  }
-
   return (
     <>
       <SubFormHeader>
@@ -52,7 +45,7 @@ export function SelectAMP() {
           Ajoutez des AMPs en lien depuis le panneau de gauche (+) ou sélectionnez directement les tracés sur la carte.
         </SubFormHelpText>
         <div>
-          <AMPList deleteAMP={id => deleteAMP(id)} linkedAMPs={AMPToAdd} />
+          <AMPList linkedAMPs={ampToAdd} />
         </div>
         <ValidateButton onClick={handleValidate}>Valider la sélection</ValidateButton>
       </SubFormBody>

@@ -9,7 +9,6 @@ import { AMPList } from './AMPList'
 
 export function AddAMPs() {
   const {
-    setFieldValue,
     values: { linkedAMPs }
   } = useFormikContext<VigilanceArea.VigilanceArea>()
 
@@ -33,14 +32,6 @@ export function AddAMPs() {
     )
   }
 
-  const deleteAMP = id => {
-    dispatch(vigilanceAreaActions.deleteAMPsFromVigilanceArea(id))
-    setFieldValue(
-      'linkedAMPs',
-      linkedAMPs.filter(ampId => ampId !== id)
-    )
-  }
-
   return (
     <div>
       <Label>AMP en lien avec la zone de vigilance</Label>
@@ -54,7 +45,7 @@ export function AddAMPs() {
         Ajouter une AMP en lien
       </Button>
 
-      <AMPList deleteAMP={id => deleteAMP(id)} linkedAMPs={linkedAMPs} />
+      <AMPList linkedAMPs={linkedAMPs} />
     </div>
   )
 }

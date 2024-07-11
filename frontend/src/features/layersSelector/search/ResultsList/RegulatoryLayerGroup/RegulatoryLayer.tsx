@@ -42,7 +42,7 @@ export function RegulatoryLayer({
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const AMPsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.AMPToAdd)
+  const AMPsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
@@ -124,9 +124,9 @@ export function RegulatoryLayer({
         {isLinkingRegulatoryToVigilanceArea && (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Ajouter la zone réglentaire à la zone de vigilance"
+            aria-label="Ajouter la zone réglementaire à la zone de vigilance"
             data-cy="regulatory-zone-add"
-            disabled={regulatoryAreasLinkedToVigilanceAreaForm?.includes(layerId)}
+            disabled={regulatoryAreasLinkedToVigilanceAreaForm.includes(layerId)}
             Icon={Icon.Plus}
             onClick={addRegulatoryToVigilanceArea}
           />
@@ -136,7 +136,7 @@ export function RegulatoryLayer({
             accent={Accent.TERTIARY}
             aria-label="Ajouter la zone AMP à la zone de vigilance"
             data-cy="amp-zone-add"
-            disabled={AMPsLinkedToVigilanceAreaForm?.includes(layerId)}
+            disabled={AMPsLinkedToVigilanceAreaForm.includes(layerId)}
             Icon={Icon.Plus}
             onClick={addAMPToVigilanceArea}
           />

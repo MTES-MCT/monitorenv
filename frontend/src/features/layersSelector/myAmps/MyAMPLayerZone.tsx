@@ -29,7 +29,6 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
   return (
     <MyLayerZone
       bbox={amp.bbox}
-      dataCy="my-amp-zone"
       displayedName={displayedName}
       hasMetadata={!!amp.name}
       hideLayer={() => dispatch(hideAmpLayer(amp.id))}

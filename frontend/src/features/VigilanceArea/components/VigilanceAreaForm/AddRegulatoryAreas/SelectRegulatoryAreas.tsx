@@ -35,13 +35,6 @@ export function SelectRegulatoryAreas() {
     )
   }
 
-  const deleteRegulatoryArea = id => {
-    if (!id) {
-      return
-    }
-    dispatch(vigilanceAreaActions.deleteRegulatoryAreasFromVigilanceArea(id))
-  }
-
   return (
     <>
       <SubFormHeader>
@@ -53,10 +46,7 @@ export function SelectRegulatoryAreas() {
           la carte.
         </SubFormHelpText>
         <div>
-          <RegulatoryAreas
-            deleteRegulatoryArea={id => deleteRegulatoryArea(id)}
-            linkedRegulatoryAreas={regulatoryAreasToAdd}
-          />
+          <RegulatoryAreas linkedRegulatoryAreas={regulatoryAreasToAdd} />
         </div>
         <ValidateButton onClick={handleValidate}>Valider la sélection</ValidateButton>
       </SubFormBody>

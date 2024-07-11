@@ -13,8 +13,8 @@ export enum VigilanceAreaFormTypeOpen {
 }
 
 type VigilanceAreaSliceState = {
-  AMPIdsToBeDisplayed: Array<number> | undefined
-  AMPToAdd: Array<number> | undefined
+  ampIdsToBeDisplayed: Array<number> | undefined
+  ampToAdd: Array<number>
   editingVigilanceAreaId: number | undefined
   formTypeOpen: VigilanceAreaFormTypeOpen | undefined
   geometry: GeoJSON.Geometry | undefined
@@ -23,13 +23,13 @@ type VigilanceAreaSliceState = {
   isCancelModalOpen: boolean
   isGeometryValid: boolean
   regulatoryAreaIdsToBeDisplayed: Array<number> | undefined
-  regulatoryAreasToAdd: Array<number> | undefined
+  regulatoryAreasToAdd: Array<number>
   selectedVigilanceAreaId: number | undefined
   vigilanceAreaIdToCancel: number | undefined
 }
 const INITIAL_STATE: VigilanceAreaSliceState = {
-  AMPIdsToBeDisplayed: undefined,
-  AMPToAdd: undefined,
+  ampIdsToBeDisplayed: undefined,
+  ampToAdd: [],
   editingVigilanceAreaId: undefined,
   formTypeOpen: VigilanceAreaFormTypeOpen.FORM,
   geometry: undefined,
@@ -38,7 +38,7 @@ const INITIAL_STATE: VigilanceAreaSliceState = {
   isCancelModalOpen: false,
   isGeometryValid: false,
   regulatoryAreaIdsToBeDisplayed: undefined,
-  regulatoryAreasToAdd: undefined,
+  regulatoryAreasToAdd: [],
   selectedVigilanceAreaId: undefined,
   vigilanceAreaIdToCancel: undefined
 }
@@ -47,22 +47,27 @@ export const vigilanceAreaSlice = createSlice({
   name: 'vigilanceArea',
   reducers: {
     addAMPIdsToBeDisplayed(state, action: PayloadAction<number>) {
-      if (state.AMPIdsToBeDisplayed) {
-        state.AMPIdsToBeDisplayed = [...state.AMPIdsToBeDisplayed, action.payload]
+      if (state.ampIdsToBeDisplayed) {
+        state.ampIdsToBeDisplayed = [...state.ampIdsToBeDisplayed, action.payload]
       } else {
-        state.AMPIdsToBeDisplayed = [action.payload]
+        state.ampIdsToBeDisplayed = [action.payload]
       }
     },
     addAMPsToVigilanceArea(state, action: PayloadAction<Array<number>>) {
       if (action.payload.length === 0) {
-        state.AMPToAdd = action.payload
+        state.ampToAdd = []
+
+        return
       }
-      if (state.AMPToAdd) {
-        const newAMPToAdd = action.payload.filter(id => !state.AMPToAdd?.includes(id))
-        state.AMPToAdd = [...state.AMPToAdd, ...newAMPToAdd]
-      } else {
-        state.AMPToAdd = action.payload
+
+      if (state.ampToAdd.length === 0) {
+        state.ampToAdd = action.payload
+
+        return
       }
+
+      const newAMPToAdd = action.payload.filter(id => !state.ampToAdd?.includes(id))
+      state.ampToAdd = [...state.ampToAdd, ...newAMPToAdd]
     },
     addRegulatoryAreaIdsToBeDisplayed(state, action: PayloadAction<number>) {
       if (state.regulatoryAreaIdsToBeDisplayed) {
@@ -73,14 +78,19 @@ export const vigilanceAreaSlice = createSlice({
     },
     addRegulatoryAreasToVigilanceArea(state, action: PayloadAction<Array<number>>) {
       if (action.payload.length === 0) {
-        state.regulatoryAreasToAdd = action.payload
+        state.regulatoryAreasToAdd = []
+
+        return
       }
-      if (state.regulatoryAreasToAdd) {
-        const newRegulatoryAreasToAdd = action.payload.filter(id => !state.regulatoryAreasToAdd?.includes(id))
-        state.regulatoryAreasToAdd = [...state.regulatoryAreasToAdd, ...newRegulatoryAreasToAdd]
-      } else {
+
+      if (state.regulatoryAreasToAdd.length === 0) {
         state.regulatoryAreasToAdd = action.payload
+
+        return
       }
+
+      const newRegulatoryAreasToAdd = action.payload.filter(id => !state.regulatoryAreasToAdd?.includes(id))
+      state.regulatoryAreasToAdd = [...state.regulatoryAreasToAdd, ...newRegulatoryAreasToAdd]
     },
     closeCancelModal(state) {
       state.isCancelModalOpen = false
@@ -109,22 +119,18 @@ export const vigilanceAreaSlice = createSlice({
       state.geometry = undefined
     },
     deleteAMPsFromVigilanceArea(state, action: PayloadAction<number>) {
-      if (state.AMPToAdd) {
-        state.AMPToAdd = state.AMPToAdd.filter(id => id !== action.payload)
-      }
+      state.ampToAdd = state.ampToAdd.filter(id => id !== action.payload)
     },
     deleteRegulatoryAreasFromVigilanceArea(state, action: PayloadAction<number>) {
-      if (state.regulatoryAreasToAdd) {
-        state.regulatoryAreasToAdd = state.regulatoryAreasToAdd.filter(id => id !== action.payload)
-      }
+      state.regulatoryAreasToAdd = state.regulatoryAreasToAdd.filter(id => id !== action.payload)
     },
     openCancelModal(state, action: PayloadAction<number>) {
       state.isCancelModalOpen = true
       state.vigilanceAreaIdToCancel = action.payload
     },
     removeAMPIdsToBeDisplayed(state, action: PayloadAction<number>) {
-      if (state.AMPIdsToBeDisplayed) {
-        state.AMPIdsToBeDisplayed = state.AMPIdsToBeDisplayed.filter(id => id !== action.payload)
+      if (state.ampIdsToBeDisplayed) {
+        state.ampIdsToBeDisplayed = state.ampIdsToBeDisplayed.filter(id => id !== action.payload)
       }
     },
     removeRegulatoryAreaIdsToBeDisplayed(state, action: PayloadAction<number>) {
@@ -140,7 +146,7 @@ export const vigilanceAreaSlice = createSlice({
 
       return {
         ...INITIAL_STATE,
-        AMPIdsToBeDisplayed: state.AMPIdsToBeDisplayed,
+        ampIdsToBeDisplayed: state.ampIdsToBeDisplayed,
         regulatoryAreaIdsToBeDisplayed: state.regulatoryAreaIdsToBeDisplayed,
         selectedVigilanceAreaId: state.selectedVigilanceAreaId
       }
