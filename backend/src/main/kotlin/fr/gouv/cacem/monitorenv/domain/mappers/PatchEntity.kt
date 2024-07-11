@@ -23,7 +23,7 @@ class PatchEntity<T : Any, S : Any> {
                 val finalValue = if (sourceValue is Optional<*>) {
                     getValueFromOptional(existingValue, sourceValue)
                 } else {
-                    sourceValue
+                    sourceValue ?: existingValue
                 }
 
                 targetProp.setter.call(target, finalValue)

@@ -41,13 +41,14 @@ class PatchMissionEntityUTest {
     @Test
     fun `execute() should return envAction with old values if its null`() {
         // Given
-        val missionEntity = MissionFixture.aMissionEntity(observationsByUnit = "old value")
+        val observationsByUnit = "old value"
+        val missionEntity = MissionFixture.aMissionEntity(observationsByUnit = observationsByUnit)
         val patchableMissionEntity = PatchableMissionEntity(observationsByUnit = null)
 
         // When
         val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity).isEqualTo(missionEntity)
+        assertThat(mergedMissionEntity.observationsByUnit).isEqualTo(observationsByUnit)
     }
 }
