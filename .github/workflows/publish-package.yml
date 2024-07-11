@@ -1,3 +1,4 @@
+
 name: Publish monitor public API to GitHub Packages
 on:
   workflow_dispatch:
@@ -7,7 +8,7 @@ on:
       default: 'v1.0.0'
 jobs:
   publish:
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -20,7 +21,7 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v3
       - name: Replace the version number
-        run: sed -i -e "s/VERSION_TO_CHANGE/${{ github.event.inputs.version }}/g" backend/build.gradle.kts
+        run: sed -i -e "s/VERSION_TO_CHANGE/${{ github.event.inputs.version }}/g" backend/build.gradle.kts 
       - name: Publish package
         uses: gradle/gradle-build-action@v3
         with:

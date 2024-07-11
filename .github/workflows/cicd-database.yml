@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build database image
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: write
