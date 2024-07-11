@@ -41,7 +41,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
   const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-  const AMPToAdd = useAppSelector(state => state.vigilanceArea.AMPToAdd)
+  const ampToAdd = useAppSelector(state => state.vigilanceArea.ampToAdd)
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const handleClick = (type, id) => () => {
@@ -107,7 +107,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
               {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
                 <IconButton
                   accent={Accent.TERTIARY}
-                  disabled={regulatoryAreasToAdd?.includes(id)}
+                  disabled={regulatoryAreasToAdd.includes(id)}
                   Icon={Icon.Plus}
                   onClick={e => addRegulatoryToVigilanceArea(e, id)}
                   size={Size.SMALL}
@@ -117,7 +117,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
               {isLinkingAmpToVigilanceArea && isAMP && (
                 <IconButton
                   accent={Accent.TERTIARY}
-                  disabled={AMPToAdd?.includes(id)}
+                  disabled={ampToAdd.includes(id)}
                   Icon={Icon.Plus}
                   onClick={e => addAMPToVigilanceArea(e, id)}
                   size={Size.SMALL}

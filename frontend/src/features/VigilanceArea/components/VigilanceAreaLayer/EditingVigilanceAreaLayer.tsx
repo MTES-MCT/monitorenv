@@ -22,6 +22,7 @@ import type { Geometry } from 'ol/geom'
 export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
+  const ampToAdd = useAppSelector(state => state.vigilanceArea.ampToAdd)
   const vigilanceAreaGeom = useAppSelector(state => state.vigilanceArea.geometry)
 
   const isLayerVisible = !!editingVigilanceAreaId
@@ -63,7 +64,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   // Regulatory Areas Layers
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const regulatoryAreasFeatures = useMemo(() => {
-    if (!regulatoryLayers || (regulatoryAreasToAdd && regulatoryAreasToAdd.length === 0)) {
+    if (!regulatoryLayers || regulatoryAreasToAdd.length === 0) {
       return []
     }
 
@@ -99,11 +100,11 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   // AMP Layer
   const { data: AMPLayers } = useGetAMPsQuery()
   const AMPFeatures = useMemo(() => {
-    if (!AMPLayers || !editingVigilanceArea?.linkedAMPs) {
+    if (!AMPLayers || ampToAdd.length === 0) {
       return []
     }
 
-    return editingVigilanceArea?.linkedAMPs.reduce((feats: Feature[], AMPLayerId) => {
+    return ampToAdd.reduce((feats: Feature[], AMPLayerId) => {
       const AMPlayer = AMPLayers.entities[AMPLayerId]
 
       if (AMPlayer) {
@@ -117,7 +118,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       return feats
     }, [])
-  }, [AMPLayers, editingVigilanceArea?.linkedAMPs])
+  }, [AMPLayers, ampToAdd])
 
   const AMPVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const AMPVectorLayerRef = useRef(

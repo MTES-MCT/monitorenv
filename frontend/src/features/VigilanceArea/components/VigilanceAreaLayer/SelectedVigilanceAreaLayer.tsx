@@ -26,7 +26,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const regulatoryAreaIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.regulatoryAreaIdsToBeDisplayed)
   const showedPinnedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
 
-  const AMPIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.AMPIdsToBeDisplayed)
+  const ampIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.ampIdsToBeDisplayed)
   const showedPinnedAMPLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
 
   const { selectedVigilanceArea } = useGetVigilanceAreasQuery(undefined, {
@@ -42,7 +42,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     !!selectedVigilanceAreaId &&
     isLayerVisible
   const isAMPLayerVisible =
-    !!(AMPIdsToBeDisplayed && AMPIdsToBeDisplayed?.length > 0) && !!selectedVigilanceAreaId && isLayerVisible
+    !!(ampIdsToBeDisplayed && ampIdsToBeDisplayed?.length > 0) && !!selectedVigilanceAreaId && isLayerVisible
 
   // Vigilance Area
 
@@ -72,7 +72,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
   const regulatoryAreasFeatures = useMemo(() => {
-    if (!regulatoryLayers || !selectedVigilanceArea?.linkedRegulatoryAreas) {
+    if (!regulatoryLayers || selectedVigilanceArea?.linkedRegulatoryAreas.length === 0) {
       return []
     }
 
@@ -117,14 +117,14 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   // AMP Layer
   const { data: AMPLayers } = useGetAMPsQuery()
   const AMPFeatures = useMemo(() => {
-    if (!AMPLayers || !selectedVigilanceArea?.linkedAMPs) {
+    if (!AMPLayers || selectedVigilanceArea?.linkedAMPs.length === 0) {
       return []
     }
 
     return selectedVigilanceArea?.linkedAMPs.reduce((feats: Feature[], AMPLayerId) => {
       const AMPlayer = AMPLayers.entities[AMPLayerId]
       const isAMPShouldBeDisplayed =
-        AMPIdsToBeDisplayed?.includes(AMPLayerId) && !showedPinnedAMPLayerIds.includes(AMPLayerId)
+        ampIdsToBeDisplayed?.includes(AMPLayerId) && !showedPinnedAMPLayerIds.includes(AMPLayerId)
 
       if (AMPlayer && isAMPShouldBeDisplayed) {
         const feature = getAMPFeature({
@@ -137,7 +137,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       return feats
     }, [])
-  }, [AMPLayers, selectedVigilanceArea?.linkedAMPs, AMPIdsToBeDisplayed, showedPinnedAMPLayerIds])
+  }, [AMPLayers, selectedVigilanceArea?.linkedAMPs, ampIdsToBeDisplayed, showedPinnedAMPLayerIds])
 
   const AMPVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const AMPVectorLayerRef = useRef(

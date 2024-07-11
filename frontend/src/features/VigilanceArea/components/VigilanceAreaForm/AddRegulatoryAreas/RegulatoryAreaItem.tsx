@@ -15,17 +15,23 @@ import {
   removeRegulatoryZonesFromMyLayers,
   showRegulatoryLayer
 } from 'domain/shared_slices/Regulatory'
+import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
+import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
 type RegulatoryAreaItemProps = {
-  deleteRegulatoryArea?: (id: number) => void
   isReadOnly: boolean
   regulatoryArea: RegulatoryLayerCompact | undefined
 }
-export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulatoryArea }: RegulatoryAreaItemProps) {
+export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAreaItemProps) {
   const dispatch = useAppDispatch()
+
+  const {
+    setFieldValue,
+    values: { linkedRegulatoryAreas }
+  } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const regulatoryAreaId = regulatoryArea?.id
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
@@ -43,10 +49,14 @@ export function RegulatoryAreaItem({ deleteRegulatoryArea, isReadOnly, regulator
 
   const onDeleteRegulatoryArea = e => {
     e.stopPropagation()
-    if (!deleteRegulatoryArea || !regulatoryAreaId) {
+    if (!regulatoryAreaId) {
       return
     }
-    deleteRegulatoryArea(regulatoryAreaId)
+    dispatch(vigilanceAreaActions.deleteRegulatoryAreasFromVigilanceArea(regulatoryAreaId))
+    setFieldValue(
+      'linkedRegulatoryAreas',
+      linkedRegulatoryAreas.filter(linkedregulatoryArea => linkedregulatoryArea !== regulatoryAreaId)
+    )
   }
 
   const handleSelectZone = e => {
