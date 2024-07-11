@@ -160,18 +160,21 @@ class PatchEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
+        val observationsByUnit = "oldValue"
         val envAction = EnvActionFixture.anEnvAction(
             objectMapper,
             id,
             startTime = yesterday,
             endTime = tomorrow,
-            observationsByUnit = "oldValue",
+            observationsByUnit = observationsByUnit,
         )
 
         // When
         val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction).isEqualTo(envAction)
+        assertThat(mergedEnvAction.observationsByUnit).isEqualTo(observationsByUnit)
+        assertThat(mergedEnvAction.actionStartDateTimeUtc).isEqualTo(yesterday)
+        assertThat(mergedEnvAction.actionEndDateTimeUtc).isEqualTo(tomorrow)
     }
 }
