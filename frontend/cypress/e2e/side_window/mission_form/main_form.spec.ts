@@ -332,12 +332,12 @@ context('Side Window > Mission Form > Main Form', () => {
                 completedBy: 'LTH',
                 controlUnits: [
                   {
-                    administration: 'Gendarmerie Nationale',
+                    administration: 'Marine Nationale',
                     // Changed field
                     contact: 'contact',
-                    id: 10020,
+                    id: 10023,
                     isArchived: false,
-                    name: 'BN Toulon',
+                    name: 'A636 Maïto',
                     resources: []
                   }
                 ],
@@ -373,11 +373,11 @@ context('Side Window > Mission Form > Main Form', () => {
           body: {
             controlUnits: [
               {
-                administration: 'Gendarmerie Nationale',
+                administration: 'Marine Nationale',
                 contact: 'contact',
-                id: 10020,
+                id: 10023,
                 isArchived: false,
-                name: 'BN Toulon',
+                name: 'A636 Maïto',
                 resources: []
               }
             ],
