@@ -17,7 +17,7 @@ on:
 jobs:
   version:
     name: Set application version and env profile
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     outputs:
       ENV_PROFILE: ${{ steps.env_profile.outputs.ENV_PROFILE }}
       VERSION: ${{ steps.version.outputs.VERSION }}
@@ -59,7 +59,7 @@ jobs:
   unit_test_backend:
     name: Run backend unit tests
     needs: version
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     env:
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
@@ -84,7 +84,7 @@ jobs:
   unit_test_frontend:
     name: Run frontend unit tests
     needs: version
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     env:
       PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
@@ -121,7 +121,7 @@ jobs:
   build:
     name: Build and package
     needs: version
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     env:
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
@@ -177,7 +177,7 @@ jobs:
   e2e_test:
     name: Run E2E tests
     needs: [ version, build ]
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
@@ -247,7 +247,7 @@ jobs:
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
     needs: [ version, build ]
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     if: false
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -296,7 +296,7 @@ jobs:
   generate_and_upload_source_maps:
     name: Generate and upload source maps to Sentry
     needs: [ version, build, unit_test_backend, unit_test_frontend, e2e_test ]
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     env:
       VERSION: ${{ needs.version.outputs.VERSION }}
       SENTRY_URL: ${{ secrets.SENTRY_URL }}
@@ -338,7 +338,7 @@ jobs:
     name: Push to registry
     needs: [ version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps ]
     # needs: [version, e2e_test, e2e_multi_windows_test, unit_test_frontend, e2e_test]
-    runs-on: [ ubuntu-22.04, self-hosted ]
+    runs-on: [ self-hosted ]
     if: startsWith(github.ref, 'refs/heads/dependabot') == false
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
