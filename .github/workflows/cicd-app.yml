@@ -17,7 +17,7 @@ on:
 jobs:
   version:
     name: Set application version and env profile
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-22.04
     outputs:
       ENV_PROFILE: ${{ steps.env_profile.outputs.ENV_PROFILE }}
       VERSION: ${{ steps.version.outputs.VERSION }}
@@ -59,7 +59,7 @@ jobs:
   unit_test_backend:
     name: Run backend unit tests
     needs: version
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-22.04
     env:
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
@@ -84,7 +84,7 @@ jobs:
   unit_test_frontend:
     name: Run frontend unit tests
     needs: version
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-22.04
     env:
       PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
@@ -121,7 +121,7 @@ jobs:
   build:
     name: Build and package
     needs: version
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-22.04
     env:
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
@@ -176,8 +176,8 @@ jobs:
 
   e2e_test:
     name: Run E2E tests
-    needs: [ version, build ]
-    runs-on: [ self-hosted ]
+    needs: [version, build]
+    runs-on: ubuntu-22.04
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
@@ -185,7 +185,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+        containers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
@@ -239,15 +239,15 @@ jobs:
           record: true
           wait-on: "http://localhost:8880"
           working-directory: ./frontend
-
+      
       - name: Display Docker container logs for debugging
         if: failure()
         run: docker logs monitorenv_backend
 
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
-    needs: [ version, build ]
-    runs-on: [ self-hosted ]
+    needs: [version, build]
+    runs-on: ubuntu-22.04
     if: false
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -295,8 +295,8 @@ jobs:
 
   generate_and_upload_source_maps:
     name: Generate and upload source maps to Sentry
-    needs: [ version, build, unit_test_backend, unit_test_frontend, e2e_test ]
-    runs-on: [ self-hosted ]
+    needs: [version, build, unit_test_backend, unit_test_frontend, e2e_test]
+    runs-on: ubuntu-22.04
     env:
       VERSION: ${{ needs.version.outputs.VERSION }}
       SENTRY_URL: ${{ secrets.SENTRY_URL }}
@@ -336,9 +336,9 @@ jobs:
 
   push_to_registry:
     name: Push to registry
-    needs: [ version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps ]
+    needs: [version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps]
     # needs: [version, e2e_test, e2e_multi_windows_test, unit_test_frontend, e2e_test]
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-22.04
     if: startsWith(github.ref, 'refs/heads/dependabot') == false
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
