@@ -79,7 +79,7 @@ export function App() {
 
                     <Route
                       element={
-                        <RequireAuth>
+                        <RequireAuth redirect>
                           <HomePage />
                         </RequireAuth>
                       }
