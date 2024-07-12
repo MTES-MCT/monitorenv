@@ -2,6 +2,7 @@ import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { ZonePicker } from '@features/commonComponents/ZonePicker'
+import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
@@ -67,7 +68,7 @@ export function Form() {
 
   const cancel = () => {
     if (dirty) {
-      dispatch(vigilanceAreaActions.openCancelModal(values.id ?? -1))
+      dispatch(vigilanceAreaActions.openCancelModal(values.id ?? NEW_VIGILANCE_AREA_ID))
 
       return
     }
