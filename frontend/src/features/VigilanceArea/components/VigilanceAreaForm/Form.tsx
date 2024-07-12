@@ -5,6 +5,7 @@ import { ZonePicker } from '@features/commonComponents/ZonePicker'
 import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
+import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -66,7 +67,7 @@ export function Form() {
 
   const cancel = () => {
     if (dirty) {
-      dispatch(vigilanceAreaActions.openCancelModal(values.id))
+      dispatch(vigilanceAreaActions.openCancelModal(values.id ?? -1))
 
       return
     }
@@ -112,6 +113,7 @@ export function Form() {
     dispatch(vigilanceAreaActions.setGeometry(values.geom))
     dispatch(vigilanceAreaActions.setInitialGeometry(values.geom))
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.DRAW))
+    dispatch(displayOrHideOtherLayers({ display: false }))
   }
 
   const setPeriod = (period: DateAsStringRange | undefined) => {

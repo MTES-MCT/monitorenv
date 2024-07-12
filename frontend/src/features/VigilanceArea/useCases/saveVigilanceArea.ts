@@ -30,6 +30,7 @@ export const saveVigilanceArea =
           dispatch(
             addMainWindowBanner({
               children: 'La zone de vigilance a bien été créée',
+              closingDelay: 10000,
               isClosable: true,
               isFixed: true,
               level: Level.SUCCESS,

@@ -26,7 +26,6 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const interactionType = useAppSelector(state => state.vigilanceArea.interactionType)
   const formTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const isDrawFormOpen = formTypeOpen === VigilanceAreaFormTypeOpen.DRAW
-  const listener = useAppSelector(state => state.draw.listener)
 
   const feature = useMemo(() => {
     if (!geometry) {
@@ -73,9 +72,9 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
           style: [dottedLayerStyle, editStyle],
           updateWhileAnimating: true,
           updateWhileInteracting: true,
-          zIndex: Layers.DRAW.zIndex
+          zIndex: Layers.DRAW_VIGILANCE_AREA.zIndex
         })
-        vectorLayerRef.current.name = Layers.DRAW.code
+        vectorLayerRef.current.name = Layers.DRAW_VIGILANCE_AREA.code
       }
 
       return vectorLayerRef.current
@@ -158,7 +157,7 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
         getDrawVectorSource().clear(true)
       }
     }
-  }, [map, dispatch, getDrawVectorSource, listener, getVectorSource, isDrawFormOpen, interactionType])
+  }, [map, dispatch, getDrawVectorSource, getVectorSource, isDrawFormOpen, interactionType])
 
   return null
 }

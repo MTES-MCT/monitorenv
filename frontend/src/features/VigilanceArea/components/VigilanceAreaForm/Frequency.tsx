@@ -65,15 +65,15 @@ export function Frequency() {
             />
           )}
           {values.endingCondition === VigilanceArea.EndingCondition.END_DATE && (
-            <FormikDatePicker
+            <StyledFormikDatePicker
               data-cy="vigilance-area-ending-occurence-date"
               isErrorMessageHidden
               isLabelHidden
               isRequired
+              isRightAligned
               isStringDate
               label="Date de fin de récurrence"
               name="endingOccurrenceDate"
-              style={{ width: '115px' }}
             />
           )}
         </FrequencyContainer>
@@ -87,4 +87,14 @@ const FrequencyContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
+`
+
+const StyledFormikDatePicker = styled(FormikDatePicker)`
+  > .Element-Fieldset__InnerBox {
+    > .Field-DatePicker__CalendarPicker {
+      > .rs-picker-popup {
+        left: -130px !important;
+      }
+    }
+  }
 `

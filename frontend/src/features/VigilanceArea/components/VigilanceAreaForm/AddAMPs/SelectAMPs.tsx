@@ -1,8 +1,8 @@
 import { closeLayerOverlay } from '@features/layersSelector/metadataPanel/slice'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 
 import { AMPList } from './AMPList'
@@ -19,20 +19,7 @@ export function SelectAMP() {
     setFieldValue('linkedAMPs', ampToAdd)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
     dispatch(closeLayerOverlay())
-    dispatch(
-      setDisplayedItems({
-        displayInterestPointLayer: true,
-        displayMissionEditingLayer: true,
-        displayMissionSelectedLayer: true,
-        displayMissionsLayer: true,
-        displayMissionToAttachLayer: true,
-        displayReportingEditingLayer: true,
-        displayReportingSelectedLayer: true,
-        displayReportingsLayer: true,
-        displayReportingToAttachLayer: true,
-        displaySemaphoresLayer: true
-      })
-    )
+    dispatch(displayOrHideOtherLayers({ display: true }))
   }
 
   return (

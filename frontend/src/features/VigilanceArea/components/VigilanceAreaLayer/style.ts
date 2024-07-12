@@ -4,14 +4,14 @@ import { Fill, Stroke, Style } from 'ol/style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
-const getStyle = (color: string, metadataIsShowed: boolean | undefined) =>
+const getStyle = (color: string, isSelected: boolean | undefined) =>
   new Style({
     fill: new Fill({
       color: getColorWithAlpha(color, 0.7)
     }),
     stroke: new Stroke({
       color: getColorWithAlpha(THEME.color.rufous, 1),
-      width: metadataIsShowed ? 3 : 1
+      width: isSelected ? 3 : 1
     })
   })
 
@@ -21,7 +21,7 @@ export const getVigilanceAreaColorWithAlpha = (name: string | null = '', comment
 export const getVigilanceAreaLayerStyle = feature => {
   const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('name'), feature.get('comments'))
 
-  const style = getStyle(colorWithAlpha, feature.get('metadataIsShowed'))
+  const style = getStyle(colorWithAlpha, feature.get('isSelected'))
 
   return style
 }
