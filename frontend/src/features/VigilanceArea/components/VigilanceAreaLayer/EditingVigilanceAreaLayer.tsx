@@ -5,6 +5,7 @@ import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
@@ -32,7 +33,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     selectFromResult: ({ data }) => ({
       editingVigilanceArea: data?.find(area => area.id === editingVigilanceAreaId)
     }),
-    skip: !editingVigilanceAreaId || editingVigilanceAreaId === -1
+    skip: !editingVigilanceAreaId || editingVigilanceAreaId === NEW_VIGILANCE_AREA_ID
   })
 
   const vigilanceAreasFeature = useMemo(() => {

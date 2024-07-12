@@ -1,4 +1,5 @@
 import { useGetVigilanceAreaQuery } from '@api/vigilanceAreasAPI'
+import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -33,7 +34,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
   const isPanelOpen = !!(selectedVigilanceAreaId && !editingVigilanceAreaId) || isReadOnly
   const isFormOpen = !!(selectedVigilanceAreaId && editingVigilanceAreaId) && !isReadOnly
 
-  const isNewVigilanceArea = !!(vigilanceAreaId === -1)
+  const isNewVigilanceArea = !!(vigilanceAreaId === NEW_VIGILANCE_AREA_ID)
 
   const { data: vigilanceArea } = useGetVigilanceAreaQuery(!isNewVigilanceArea ? vigilanceAreaId : skipToken)
 

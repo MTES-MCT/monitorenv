@@ -2,6 +2,8 @@ import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolki
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
 
+import { NEW_VIGILANCE_AREA_ID } from './constants'
+
 import type { HomeRootState } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -112,8 +114,8 @@ export const vigilanceAreaSlice = createSlice({
       state.isCancelModalOpen = false
     },
     createVigilanceArea(state) {
-      state.selectedVigilanceAreaId = -1
-      state.editingVigilanceAreaId = -1
+      state.selectedVigilanceAreaId = NEW_VIGILANCE_AREA_ID
+      state.editingVigilanceAreaId = NEW_VIGILANCE_AREA_ID
       state.formTypeOpen = VigilanceAreaFormTypeOpen.FORM
       state.isGeometryValid = false
       state.geometry = undefined
@@ -140,7 +142,7 @@ export const vigilanceAreaSlice = createSlice({
     },
     resetEditingVigilanceAreaState(state) {
       // if we are creating a new vigilance area, we want to reset the state to the initial state
-      if (state.editingVigilanceAreaId === -1) {
+      if (state.editingVigilanceAreaId === NEW_VIGILANCE_AREA_ID) {
         return INITIAL_STATE
       }
 
