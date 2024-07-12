@@ -23,7 +23,9 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf { it.disable() }.authorizeHttpRequests { authorize ->
+        http.csrf { it.disable() }
+            .cors { it.configurationSource(corsConfigurationSource()) }
+            .authorizeHttpRequests { authorize ->
             if (oidcProperties.enabled == true) {
                 logger.info(
                     """
