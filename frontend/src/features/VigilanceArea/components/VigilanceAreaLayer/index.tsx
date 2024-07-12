@@ -16,7 +16,7 @@ import type { Geometry } from 'ol/geom'
 export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
-  const isLayerVisible = true
+  const isLayerVisible = useAppSelector(state => state.global.displayVigilanceAreaLayer)
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()

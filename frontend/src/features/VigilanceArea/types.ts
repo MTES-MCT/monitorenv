@@ -64,7 +64,7 @@ export namespace VigilanceArea {
   }
 
   export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
+    isSelected: boolean
     layerId: number
-    metadataIsShowed: boolean
   }
 }

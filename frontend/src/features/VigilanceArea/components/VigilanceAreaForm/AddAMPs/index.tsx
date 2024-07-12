@@ -1,8 +1,8 @@
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label } from '@mtes-mct/monitor-ui'
-import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 
 import { AMPList } from './AMPList'
@@ -15,21 +15,7 @@ export function AddAMPs() {
   const dispatch = useAppDispatch()
   const addAMP = () => {
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.ADD_AMP))
-    dispatch(
-      setDisplayedItems({
-        displayInterestPointLayer: false,
-        displayMissionEditingLayer: false,
-        displayMissionSelectedLayer: false,
-        displayMissionsLayer: false,
-        displayMissionToAttachLayer: false,
-        displayReportingEditingLayer: false,
-        displayReportingSelectedLayer: false,
-        displayReportingsLayer: false,
-        displayReportingToAttachLayer: false,
-        displaySemaphoresLayer: false,
-        displayStationLayer: false
-      })
-    )
+    dispatch(displayOrHideOtherLayers({ display: false }))
   }
 
   return (

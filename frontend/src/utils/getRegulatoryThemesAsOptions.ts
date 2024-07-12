@@ -7,7 +7,7 @@ export function getRegulatoryThemesAsOptions(regulatoryThemes) {
     .filter(l => !!l?.thematique)
     .map(l => l?.thematique.split(','))
     .flatMap(l => l)
-    .filter(l => !!l)
+    .filter(l => !!l && l.trim().length > 0)
     .map(l => l?.trim())
     .uniq()
     .map(l => ({ label: l, value: l }))

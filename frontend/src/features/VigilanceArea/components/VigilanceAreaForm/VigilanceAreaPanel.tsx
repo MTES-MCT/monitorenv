@@ -114,7 +114,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
               <InlineItemValue>
                 {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
               </InlineItemValue>
-              <InlineItemValue>{frequencyText()}</InlineItemValue>
+              <StyledInlineItemValue>{frequencyText()}</StyledInlineItemValue>
             </DateItem>
           </InlineItem>
           <InlineItem>
@@ -219,6 +219,10 @@ const InlineItemValue = styled.span<{ $maxLine?: number }>`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: ${p => p.$maxLine ?? '1'};
   overflow: hidden;
+`
+
+const StyledInlineItemValue = styled(InlineItemValue)`
+  margin-bottom: 4px;
 `
 
 const DateItem = styled.div`

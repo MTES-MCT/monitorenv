@@ -1,5 +1,6 @@
 import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, FieldError, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -66,9 +67,20 @@ export function DrawVigilanceArea() {
     setFieldValue('geom', geometry)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
     dispatch(vigilanceAreaActions.setInitialGeometry(undefined))
+    dispatch(displayOrHideOtherLayers({ display: true }))
   }
 
   const reinitialize = () => {
+    if (!initialGeometry) {
+      dispatch(
+        vigilanceAreaActions.setGeometry({
+          coordinates: [],
+          type: 'MultiPolygon'
+        })
+      )
+
+      return
+    }
     dispatch(vigilanceAreaActions.setGeometry(initialGeometry))
   }
 

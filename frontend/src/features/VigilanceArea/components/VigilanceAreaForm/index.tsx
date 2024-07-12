@@ -25,6 +25,7 @@ type VigilanceAreaFormProps = {
 }
 export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId }: VigilanceAreaFormProps) {
   const dispatch = useAppDispatch()
+
   const formTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)

@@ -84,7 +84,13 @@ export function OverlayContent({ items }: OverlayContentProps) {
   return (
     <Layerlist>
       {items
-        ?.filter(item => item.properties)
+        ?.filter(item => {
+          if (isLinkingAmpToVigilanceArea || isLinkingRegulatoryToVigilanceArea) {
+            return item.layerType !== MonitorEnvLayers.VIGILANCE_AREA
+          }
+
+          return item.properties
+        })
         .map(item => {
           const { id } = item.properties
           const groupName = getGroupName(item.properties, item.layerType)

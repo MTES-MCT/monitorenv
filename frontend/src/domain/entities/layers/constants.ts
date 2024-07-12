@@ -26,6 +26,7 @@ export enum MonitorEnvLayers {
   BASE_LAYER = 'BASE_LAYER',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
+  DRAW_VIGILANCE_AREA = 'DRAW_VIGILANCE_AREA',
   EEZ = 'EEZ',
   FACADES = 'FACADES',
   FAO = 'FAO',
@@ -231,6 +232,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.DRAW]: {
     code: 'draw_layer',
+    zIndex: 1500
+  },
+  [MonitorEnvLayers.DRAW_VIGILANCE_AREA]: {
+    code: 'draw_vigilance_area_layer',
     zIndex: 1500
   },
   [MonitorEnvLayers.STATIONS]: {

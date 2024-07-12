@@ -32,7 +32,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     selectFromResult: ({ data }) => ({
       editingVigilanceArea: data?.find(area => area.id === editingVigilanceAreaId)
     }),
-    skip: !editingVigilanceAreaId
+    skip: !editingVigilanceAreaId || editingVigilanceAreaId === -1
   })
 
   const vigilanceAreasFeature = useMemo(() => {
