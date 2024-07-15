@@ -105,20 +105,24 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       return []
     }
 
-    return ampToAdd.reduce((feats: Feature[], AMPLayerId) => {
-      const AMPlayer = AMPLayers.entities[AMPLayerId]
+    return ampToAdd.reduce(
+      (feats: Feature[], AMPLayerId) => {
+        const AMPlayer = AMPLayers.entities[AMPLayerId]
 
-      if (AMPlayer) {
-        const feature = getAMPFeature({
-          code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
-          layer: AMPlayer
-        })
+        if (AMPlayer) {
+          const feature = getAMPFeature({
+            code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
+            layer: AMPlayer
+          })
 
-        feats.push(feature)
-      }
+          feats.push(feature)
+        }
 
-      return feats
-    }, [])
+        return feats
+      },
+
+      []
+    )
   }, [AMPLayers, ampToAdd])
 
   const AMPVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>

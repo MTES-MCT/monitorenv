@@ -30,17 +30,16 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
   } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const ampId = amp?.id
-  const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
+  const ampIdsSavedInMyAmp = useAppSelector(state => state.amp.selectedAmpLayerIds)
+  const ampIdsSavedInMyAmpAndVisible = useAppSelector(state => state.amp.showedAmpLayerIds)
+
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const ampIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.ampIdsToBeDisplayed)
-  const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
 
   const metadataIsShown = useAppSelector(state => (ampId ? getMetadataIsOpenForAMPLayerId(state, ampId) : undefined))
-
-  const isZoneSelected = !!(ampId && selectedAmpLayerIds.includes(ampId))
-  const isLayerVisible = !!(ampId && ampIdsToBeDisplayed?.includes(ampId))
-  const pinnedAMPIsShowed = !!(ampId && showedAmpLayerIds.includes(ampId))
-
+  const isZoneSavedInMyAmp = !!(ampId && ampIdsSavedInMyAmp.includes(ampId))
+  const isZoneVisible = !!(ampId && ampIdsToBeDisplayed?.includes(ampId))
+  const pinnedAMPIsShowed = !!(ampId && ampIdsSavedInMyAmpAndVisible.includes(ampId))
   const deleteAMP = e => {
     e.stopPropagation()
 
@@ -59,7 +58,7 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
     if (!ampId) {
       return
     }
-    if (isZoneSelected) {
+    if (isZoneSavedInMyAmp) {
       dispatch(removeAmpZonesFromMyLayers([ampId]))
     } else {
       dispatch(addAmpZonesToMyLayers([ampId]))
@@ -73,8 +72,9 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
       return
     }
 
-    if (!selectedAmpLayerIds.includes(ampId)) {
-      if (isLayerVisible) {
+    // if AMP not in "My AMP" list
+    if (!ampIdsSavedInMyAmp.includes(ampId)) {
+      if (isZoneVisible) {
         dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(ampId))
       } else {
         dispatch(vigilanceAreaActions.addAMPIdsToBeDisplayed(ampId))
@@ -82,8 +82,7 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
 
       return
     }
-
-    if (isLayerVisible || pinnedAMPIsShowed) {
+    if (isZoneVisible || pinnedAMPIsShowed) {
       dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(ampId))
       dispatch(hideAmpLayer(ampId))
     } else {
@@ -92,11 +91,15 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
     }
   }
 
-  const toggleRegulatoryZoneMetadata = id => {
+  const toggleAmpZoneMetadata = () => {
+    if (!ampId) {
+      return
+    }
+
     if (metadataIsShown) {
       dispatch(closeMetadataPanel())
     } else {
-      dispatch(openAMPMetadataPanel(id))
+      dispatch(openAMPMetadataPanel(ampId))
       if (editingVigilanceAreaId) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
@@ -104,7 +107,7 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
   }
 
   return (
-    <AMPContainer $isReadOnly={isReadOnly} data-cy="amp-item" onClick={() => toggleRegulatoryZoneMetadata(ampId)}>
+    <AMPContainer $isReadOnly={isReadOnly} data-cy="amp-item" onClick={toggleAmpZoneMetadata}>
       <AMPName>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={amp?.name ?? 'aucun'} type={amp?.type ?? 'aucun'} />
         <span title={amp?.name}>{amp?.name}</span>
@@ -113,15 +116,15 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
         <ButtonsContainer>
           <StyledIconButton
             accent={Accent.TERTIARY}
-            color={isLayerVisible || pinnedAMPIsShowed ? THEME.color.charcoal : THEME.color.lightGray}
+            color={isZoneVisible || pinnedAMPIsShowed ? THEME.color.charcoal : THEME.color.lightGray}
             Icon={Icon.Display}
             onClick={displayAMP}
-            title={isLayerVisible ? 'Cacher la zone' : 'Afficher la zone'}
+            title={isZoneVisible ? 'Cacher la zone' : 'Afficher la zone'}
           />
           <StyledIconButton
             accent={Accent.TERTIARY}
-            color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
-            Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
+            color={isZoneSavedInMyAmp ? THEME.color.blueGray : THEME.color.gunMetal}
+            Icon={isZoneSavedInMyAmp ? Icon.PinFilled : Icon.Pin}
             onClick={addToMyAMP}
             title="Ajouter la zone à Mes AMP"
           />

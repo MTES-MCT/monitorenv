@@ -101,9 +101,13 @@ export function OverlayContent({ items }: OverlayContentProps) {
             (id === layerId && !!layerType && item.layerType.includes(layerType)) || selectedVigilanceAreaId === id
           const isRegulatory =
             item.layerType === MonitorEnvLayers.REGULATORY_ENV ||
-            item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW
+            item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW ||
+            item.layerType === MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
 
-          const isAMP = item.layerType === MonitorEnvLayers.AMP || item.layerType === MonitorEnvLayers.AMP_PREVIEW
+          const isAMP =
+            item.layerType === MonitorEnvLayers.AMP ||
+            item.layerType === MonitorEnvLayers.AMP_PREVIEW ||
+            item.layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
 
           return (
             <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
