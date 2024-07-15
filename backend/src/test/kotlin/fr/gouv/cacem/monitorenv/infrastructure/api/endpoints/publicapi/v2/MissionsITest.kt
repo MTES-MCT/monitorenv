@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.ZonedDateTime
 import java.util.*
 import kotlin.random.Random
 
@@ -55,23 +56,36 @@ class MissionsITest {
     fun `patch() should call the usecase to patch the data then return the updated resources`() {
         // Given
         val id = Random.nextInt()
-        val observationsByUnit = "observationsByUnits"
+
+        // patched fields
+        val observationsByUnit = "patchedObservations"
+        val startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-11T07:00:00Z")
+        val endDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-22T07:00:00Z")
+
         val partialMissionAsJson =
             """
-            { "observationsByUnit": "$observationsByUnit"}
+            { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc" }
             """.trimIndent()
-        val patchedMission = aMissionEntity(observationsByUnit = "patchedObservations")
-        val patchableMissionEntity =
-            PatchableMissionEntity(
-                Optional.of(observationsByUnit),
-            )
+
+        val patchedMission = aMissionEntity(
+            id = id,
+            observationsByUnit = observationsByUnit,
+            startDateTimeUtc = startDateTimeUtc,
+            endDateTimeUtc = endDateTimeUtc
+        )
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = Optional.of(observationsByUnit),
+            startDateTimeUtc = Optional.of(startDateTimeUtc),
+            endDateTimeUtc = Optional.of(endDateTimeUtc),
+        )
 
         given(patchMission.execute(id, patchableMissionEntity))
-            .willReturn(MissionDTO(patchedMission))
+            .willReturn(MissionDTO(mission = patchedMission))
 
         // When
         mockMvc.perform(
             patch("/api/v2/missions/$id")
+                .characterEncoding("utf-8")
                 .content(partialMissionAsJson)
                 .contentType(MediaType.APPLICATION_JSON),
         )
