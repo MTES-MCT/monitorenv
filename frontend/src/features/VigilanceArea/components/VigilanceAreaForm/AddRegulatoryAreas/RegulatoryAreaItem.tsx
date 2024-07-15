@@ -34,10 +34,12 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
   } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const regulatoryAreaId = regulatoryArea?.id
+
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
+
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const regulatoryAreaIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.regulatoryAreaIdsToBeDisplayed)
-  const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
 
   const metadataIsShown = useAppSelector(state =>
     regulatoryAreaId ? getMetadataIsOpenForRegulatoryLayerId(state, regulatoryAreaId) : undefined
@@ -47,7 +49,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
   const isLayerVisible = !!(regulatoryAreaId && regulatoryAreaIdsToBeDisplayed?.includes(regulatoryAreaId))
   const pinnedRegulatoryZoneIsShowed = !!(regulatoryAreaId && showedRegulatoryLayerIds.includes(regulatoryAreaId))
 
-  const onDeleteRegulatoryArea = e => {
+  const deleteRegulatoryArea = e => {
     e.stopPropagation()
     if (!regulatoryAreaId) {
       return
@@ -143,7 +145,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
         <IconButton
           accent={Accent.TERTIARY}
           Icon={Icon.Close}
-          onClick={onDeleteRegulatoryArea}
+          onClick={deleteRegulatoryArea}
           size={Size.SMALL}
           title={`vigilance-area-delete-regulatory-area-${regulatoryAreaId}`}
         />
