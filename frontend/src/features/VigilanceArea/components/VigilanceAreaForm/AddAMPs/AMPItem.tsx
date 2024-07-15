@@ -72,8 +72,7 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
       return
     }
 
-    // if AMP not in "My AMP" list
-    if (!ampIdsSavedInMyAmp.includes(ampId)) {
+    if (!isZoneSavedInMyAmp) {
       if (isZoneVisible) {
         dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(ampId))
       } else {
