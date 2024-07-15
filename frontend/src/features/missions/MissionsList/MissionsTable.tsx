@@ -130,6 +130,9 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
 const StyledMissionsContainer = styled.div`
   overflow: auto;
+  width: fit-content;
+  // scroll width (~15px) + 4px
+  padding-right: 19px;
 `
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;

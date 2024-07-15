@@ -232,7 +232,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by search query', () => {
-    cy.fill('Rechercher un contrôle sur une cible', 'BALTIK')
+    cy.fill('Rechercher dans un contrôle (navire, personne morale ou physique)', 'BALTIK')
 
     cy.get('.Table-SimpleTable tr').should('have.length', 2)
     cy.getDataCy('edit-mission-34').click({ force: true })
