@@ -38,13 +38,13 @@ export function MissionSearch() {
       isLabelHidden
       isLight
       isSearchInput
-      label="Rechercher un contrôle sur une cible"
+      label="Rechercher dans un contrôle (navire, personne morale ou physique)"
       name="mission-search"
       onChange={value => {
         setSearchText(value)
         debouncedHandleChange(value)
       }}
-      placeholder="Rechercher un contrôle sur une cible"
+      placeholder="Rechercher dans un contrôle (navire, personne morale ou physique)"
       size={Size.LARGE}
       value={searchText}
     />

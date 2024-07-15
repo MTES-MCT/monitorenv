@@ -163,6 +163,9 @@ export function ReportingsTable({
 
 const StyledReportingsContainer = styled.div`
   overflow: auto;
+  width: fit-content;
+  // scroll width (~15px) + 4px
+  padding-right: 19px;
 `
 
 /*
