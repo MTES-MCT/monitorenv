@@ -28,7 +28,11 @@ class PatchMissionUTest {
         val id = Random.nextInt()
         val observationsByUnit = Optional.of("observations")
         val patchedObservationsByUnit = "patched observations"
-        val patchableMission = PatchableMissionEntity(observationsByUnit = observationsByUnit)
+        val patchableMission = PatchableMissionEntity(
+            observationsByUnit = observationsByUnit,
+            startDateTimeUtc = null,
+            endDateTimeUtc = null
+        )
         val missionFromDatabase = aMissionEntity()
         val missionPatched = aMissionEntity(observationsByUnit = patchedObservationsByUnit)
 
@@ -50,7 +54,11 @@ class PatchMissionUTest {
     fun `execute() should throw BackendUsageException with message when the entity does not exist`() {
         // Given
         val id = Random.nextInt()
-        val patchableMission = PatchableMissionEntity(observationsByUnit = null)
+        val patchableMission = PatchableMissionEntity(
+            observationsByUnit = null,
+            startDateTimeUtc = null,
+            endDateTimeUtc = null
+        )
 
         given(missionRepository.findById(id)).willReturn(null)
 
