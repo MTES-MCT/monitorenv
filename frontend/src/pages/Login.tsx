@@ -1,6 +1,7 @@
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Button } from '@mtes-mct/monitor-ui'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
+import { paths } from 'paths'
 import { useAuth } from 'react-oidc-context'
 import { Navigate } from 'react-router'
 import { ToastContainer } from 'react-toastify'
@@ -24,11 +25,11 @@ export function Login() {
   }
 
   if (auth?.isAuthenticated && isSuccess && user?.isSuperUser) {
-    return <Navigate to="/" />
+    return <Navigate to={paths.home} />
   }
 
   if (auth?.isAuthenticated && isSuccess && !user?.isSuperUser) {
-    return <Navigate to="/ext" />
+    return <Navigate to={paths.ext} />
   }
 
   if (!auth) {
