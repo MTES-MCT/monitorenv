@@ -74,7 +74,7 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity()
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.empty(),
-            startDateTimeUtc = Optional.of(startDateTimeUtc),
+            startDateTimeUtc = startDateTimeUtc,
             endDateTimeUtc = Optional.of(endDateTimeUtc)
         )
 
@@ -84,6 +84,24 @@ class PatchMissionEntityUTest {
         // Then
         assertThat(mergedMissionEntity.startDateTimeUtc).isEqualTo(startDateTimeUtc)
         assertThat(mergedMissionEntity.endDateTimeUtc).isEqualTo(endDateTimeUtc)
+    }
+
+    @Test
+    fun `execute() should return the original datetime if given as null`() {
+        // Given
+        val missionEntity = MissionFixture.aMissionEntity()
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = Optional.empty(),
+            startDateTimeUtc = null,
+            endDateTimeUtc = null
+        )
+
+        // When
+        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(mergedMissionEntity.startDateTimeUtc).isEqualTo(missionEntity.startDateTimeUtc)
+        assertThat(mergedMissionEntity.endDateTimeUtc).isEqualTo(missionEntity.endDateTimeUtc)
     }
 
     @Test
