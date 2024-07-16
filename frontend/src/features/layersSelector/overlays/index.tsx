@@ -1,5 +1,5 @@
 import { getHoveredItems } from '@features/map/utils'
-import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { getIsLinkingZonesToVigilanceArea, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppSelector, useShallowEqualSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { createPortal } from 'react-dom'
@@ -17,11 +17,13 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
     layerOverlayItems: state.layersMetadata.layerOverlayItems
   }))
 
-  const hoveredItems = getHoveredItems(currentFeatureListOver)
   const hasMapListerner = useHasMapInteraction()
   const isDrawingVigilanceArea = useAppSelector(
     state => state.vigilanceArea.formTypeOpen === VigilanceAreaFormTypeOpen.DRAW
   )
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
+
+  const hoveredItems = getHoveredItems(currentFeatureListOver, isLinkingZonesToVigilanceArea)
 
   const isHoveredOverlayVisible =
     !layerOverlayIsOpen &&

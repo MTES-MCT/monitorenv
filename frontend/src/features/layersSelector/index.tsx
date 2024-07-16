@@ -1,5 +1,9 @@
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
-import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingRegulatoryToVigilanceArea,
+  getIsLinkingZonesToVigilanceArea
+} from '@features/VigilanceArea/slice'
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
@@ -38,6 +42,8 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   const mainVigilanceAreaFormOpen = !!(selectedVigilanceAreaId || (selectedVigilanceAreaId && editingVigilanceAreaId))
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
+
   const regulatoryAreas = useGetRegulatoryLayersQuery()
   const amps = useGetAMPsQuery()
 
@@ -73,7 +79,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
         <Layers>
           {!isLinkingRegulatoryToVigilanceArea && <AmpLayers />}
           {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}
-          {!isLinkingRegulatoryToVigilanceArea && !isLinkingAmpToVigilanceArea && (
+          {!isLinkingZonesToVigilanceArea && (
             <>
               {IS_VIGILANCE_AREA_ENABLED && isSuperUser && <MyVigilanceAreas />}
               <AdministrativeLayers />

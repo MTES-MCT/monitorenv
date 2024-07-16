@@ -44,11 +44,17 @@ export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =
     return featureId === Layers.VIGILANCE_AREA.code
   })
 
-export const getOverlayItemsFromFeatures = (features: SerializedFeature<Record<string, any>>[] | undefined) =>
+export const getOverlayItemsFromFeatures = (
+  features: SerializedFeature<Record<string, any>>[] | undefined,
+  isLinkingZonesToVigilanceArea: boolean
+) =>
   features?.reduce((acc, feature) => {
     const type = String(feature.id).split(':')[0]
 
-    if (RegulatoryOrAMPOrViglanceAreaLayerTypeAsList.includes(type as MonitorEnvLayers)) {
+    if (
+      RegulatoryOrAMPOrViglanceAreaLayerTypeAsList.includes(type as MonitorEnvLayers) &&
+      ((isLinkingZonesToVigilanceArea && type !== MonitorEnvLayers.VIGILANCE_AREA) || !isLinkingZonesToVigilanceArea)
+    ) {
       const { properties } = feature
 
       acc.push({
@@ -63,10 +69,13 @@ export const getOverlayItemsFromFeatures = (features: SerializedFeature<Record<s
     return acc
   }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties>[])
 
-export const getClickedItems = (mapClickEvent: MapClickEvent) => getOverlayItemsFromFeatures(mapClickEvent?.featureList)
+export const getClickedItems = (mapClickEvent: MapClickEvent, isLinkingZonesToVigilanceArea: boolean) =>
+  getOverlayItemsFromFeatures(mapClickEvent?.featureList, isLinkingZonesToVigilanceArea)
 
-export const getHoveredItems = (features: SerializedFeature<Record<string, any>>[] | undefined) =>
-  getOverlayItemsFromFeatures(features)
+export const getHoveredItems = (
+  features: SerializedFeature<Record<string, any>>[] | undefined,
+  isLinkingZonesToVigilanceArea: boolean
+) => getOverlayItemsFromFeatures(features, isLinkingZonesToVigilanceArea)
 
 export const getHighestPriorityFeatures = (features: FeatureLike[], priorityOrderTypes: Array<MonitorEnvLayers[]>) => {
   const highestPriorityFeatureTypes = priorityOrderTypes.find(layerTypes =>
