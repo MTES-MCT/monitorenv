@@ -37,7 +37,7 @@ const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENABLE
 export function HomePage() {
   const dispatch = useAppDispatch()
 
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, {})
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
 
   const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
