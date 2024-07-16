@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom'
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
   const oidcConfig = getOIDCConfig()
   const auth = useAuth()
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, { skip: !auth?.isAuthenticated })
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride({ skip: !auth?.isAuthenticated })
 
   const handleRedirect = (path, shouldRedirect) => {
     if (shouldRedirect) {

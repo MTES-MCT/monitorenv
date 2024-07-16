@@ -37,7 +37,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   const semaphoresPoint = useMemo(() => getSemaphoresPoint(semaphores, reportings), [semaphores, reportings])
 
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride(undefined, {})
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
   const semaphoreVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>

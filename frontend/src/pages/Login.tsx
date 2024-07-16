@@ -10,7 +10,7 @@ import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 export function Login() {
   const oidcConfig = getOIDCConfig()
   const auth = useAuth()
-  const { data: user, isSuccess } = useGetCurrentUserAuthorizationQueryOverride(undefined, {
+  const { data: user, isSuccess } = useGetCurrentUserAuthorizationQueryOverride({
     skip: !auth?.isAuthenticated
   })
 
@@ -27,7 +27,7 @@ export function Login() {
     return <Navigate to="/" />
   }
 
-  if (auth?.isAuthenticated && isSuccess && user?.isSuperUser) {
+  if (auth?.isAuthenticated && isSuccess && !user?.isSuperUser) {
     return <Navigate to="/ext" />
   }
 

@@ -2,10 +2,10 @@ import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { useLocation } from 'react-router-dom'
 
-export const useGetCurrentUserAuthorizationQueryOverride = (_, options) => {
+export const useGetCurrentUserAuthorizationQueryOverride = (options = {}) => {
   const oidcConfig = getOIDCConfig()
   const location = useLocation()
-  const response = useGetCurrentUserAuthorizationQuery(undefined, { ...options, skip: !oidcConfig.IS_OIDC_ENABLED })
+  const response = useGetCurrentUserAuthorizationQuery(undefined, { skip: !oidcConfig.IS_OIDC_ENABLED, ...options })
 
   if (!oidcConfig.IS_OIDC_ENABLED) {
     if (location.pathname === '/ext') {
