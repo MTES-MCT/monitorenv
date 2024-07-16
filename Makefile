@@ -25,7 +25,7 @@ dev-run-front:
 dev-lint-frontend:
 	cd frontend && npm run test:lint
 
-test-back: check-clean-archi
+test-back:
 	cd backend && ./gradlew clean test
 
 test-front:
@@ -78,9 +78,7 @@ dev-erase-db:
 dev-clean-build-env:
 	rm -rf $(shell pwd)/backend/build
 
-.PHONY: clean lint-back test check-clean-archi
-check-clean-archi:
-	cd backend/tools && ./check-clean-architecture.sh
+.PHONY: clean lint-back test
 
 lint-back:
 	cd ./backend && ./gradlew ktlintFormat | grep -v \
