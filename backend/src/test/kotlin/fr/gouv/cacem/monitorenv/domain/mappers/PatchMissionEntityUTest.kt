@@ -24,10 +24,10 @@ class PatchMissionEntityUTest {
         )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.observationsByUnit).isEqualTo(observationsByUnit)
+        assertThat(missionEntity.observationsByUnit).isEqualTo(observationsByUnit)
     }
 
     @Test
@@ -41,10 +41,10 @@ class PatchMissionEntityUTest {
         )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.observationsByUnit).isNull()
+        assertThat(missionEntity.observationsByUnit).isNull()
     }
 
     @Test
@@ -59,10 +59,10 @@ class PatchMissionEntityUTest {
         )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.observationsByUnit).isEqualTo(observationsByUnit)
+        assertThat(missionEntity.observationsByUnit).isEqualTo(observationsByUnit)
     }
 
 
@@ -79,17 +79,22 @@ class PatchMissionEntityUTest {
         )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.startDateTimeUtc).isEqualTo(startDateTimeUtc)
-        assertThat(mergedMissionEntity.endDateTimeUtc).isEqualTo(endDateTimeUtc)
+        assertThat(missionEntity.startDateTimeUtc).isEqualTo(startDateTimeUtc)
+        assertThat(missionEntity.endDateTimeUtc).isEqualTo(endDateTimeUtc)
     }
 
     @Test
     fun `execute() should return the original datetime if given as null`() {
         // Given
-        val missionEntity = MissionFixture.aMissionEntity()
+        val startDateTimeUtc = ZonedDateTime.parse("2024-04-11T07:00:00Z")
+        val endDateTimeUtc = ZonedDateTime.parse("2024-04-22T07:00:00Z")
+        val missionEntity = MissionFixture.aMissionEntity(
+            startDateTimeUtc = startDateTimeUtc,
+            endDateTimeUtc =  endDateTimeUtc
+        )
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.empty(),
             startDateTimeUtc = null,
@@ -97,11 +102,11 @@ class PatchMissionEntityUTest {
         )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.startDateTimeUtc).isEqualTo(missionEntity.startDateTimeUtc)
-        assertThat(mergedMissionEntity.endDateTimeUtc).isEqualTo(missionEntity.endDateTimeUtc)
+        assertThat(missionEntity.startDateTimeUtc).isEqualTo(startDateTimeUtc)
+        assertThat(missionEntity.endDateTimeUtc).isEqualTo(endDateTimeUtc)
     }
 
     @Test
@@ -115,9 +120,9 @@ class PatchMissionEntityUTest {
         )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.endDateTimeUtc).isNull()
+        assertThat(missionEntity.endDateTimeUtc).isNull()
     }
 }

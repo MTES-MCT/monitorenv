@@ -17,7 +17,8 @@ class PatchEnvAction(
 
     fun execute(id: UUID, patchableEnvActionEntity: PatchableEnvActionEntity): EnvActionEntity {
         envActionRepository.findById(id)?.let {
-            return envActionRepository.save(patchEnvAction.execute(it, patchableEnvActionEntity))
+            patchEnvAction.execute(it, patchableEnvActionEntity)
+            return envActionRepository.save(it)
         }
         throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, "envAction $id not found")
     }

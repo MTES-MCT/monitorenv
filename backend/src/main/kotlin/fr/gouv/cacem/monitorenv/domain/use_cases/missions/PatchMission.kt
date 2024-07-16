@@ -17,7 +17,8 @@ class PatchMission(
 
     fun execute(id: Int, patchableMissionEntity: PatchableMissionEntity): MissionDTO {
         missionRepository.findById(id)?.let {
-            return missionRepository.save(patchEntity.execute(it, patchableMissionEntity))
+            patchEntity.execute(it, patchableMissionEntity)
+            return missionRepository.save(it)
         }
         throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, "mission $id not found")
     }
