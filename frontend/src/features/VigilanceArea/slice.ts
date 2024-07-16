@@ -190,3 +190,9 @@ export const getIsLinkingAMPToVigilanceArea = createSelector(
   (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
   formTypeOpen => formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP
 )
+
+export const getIsLinkingZonesToVigilanceArea = createSelector(
+  (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
+  formTypeOpen =>
+    formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY || formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP
+)
