@@ -19,7 +19,7 @@ import java.util.*
 class PatchEnvActionUTest {
 
     private val envActionRepository: IEnvActionRepository = mock()
-    private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = mock()
+    private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
     private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, patchEntity)
     private val objectMapper: ObjectMapper = ObjectMapper()
 
@@ -31,7 +31,11 @@ class PatchEnvActionUTest {
         val tomorrow = ZonedDateTime.now().plusDays(1)
         val observationsByUnit = "observations"
         val patchedObservationsByUnit = "patched observations"
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(
+            Optional.of(today),
+            Optional.of(tomorrow),
+            Optional.of(patchedObservationsByUnit)
+        )
         val envActionFromDatabase = anEnvAction(
             objectMapper,
             id,
@@ -43,9 +47,7 @@ class PatchEnvActionUTest {
             anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow, patchedObservationsByUnit)
 
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)
-        given(patchEntity.execute(envActionFromDatabase, patchableEnvActionEntity)).willReturn(
-            envActionPatched,
-        )
+        patchEntity.execute(envActionFromDatabase, patchableEnvActionEntity)
         given(envActionRepository.save(envActionPatched)).willReturn(envActionPatched)
 
         // When

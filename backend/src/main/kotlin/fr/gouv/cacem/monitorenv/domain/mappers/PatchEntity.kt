@@ -10,7 +10,18 @@ import kotlin.reflect.full.memberProperties
 @UseCase
 class PatchEntity<T : Any, S : Any> {
 
-    fun execute(target: T, source: S): T {
+    /**
+     * Patches the target entity with values from the source entity.
+     *
+     * This function updates the target entity with values from the source entity for properties
+     * annotated with @Patchable. If a property in the source entity is null, the existing value
+     * in the target entity is retained. If a property in the source entity is an Optional, it
+     * is handled accordingly.
+     *
+     * @param target The target entity to be patched.
+     * @param source The source entity providing the patch values.
+     */
+    fun execute(target: T, source: S) {
         val sourceProperties = source::class.memberProperties
         val targetProperties = target::class.memberProperties
 
@@ -29,8 +40,6 @@ class PatchEntity<T : Any, S : Any> {
                 targetProp.setter.call(target, finalValue)
             }
         }
-
-        return target
     }
 
     private fun getValueFromOptional(existingValue: Any?, optional: Optional<*>?): Any? {
