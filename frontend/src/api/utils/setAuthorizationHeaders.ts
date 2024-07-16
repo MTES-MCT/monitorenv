@@ -14,7 +14,7 @@ export const setAuthorizationHeader = async headers => {
   if (IS_OIDC_ENABLED && token) {
     headers.set(AUTHORIZATION_HEADER, `Bearer ${token}`)
 
-    if (crypto?.subtle) {
+    if (window.location.protocol === 'https:' && crypto?.subtle) {
       const hashedToken = await sha256(token)
 
       headers.set(CORRELATION_HEADER, hashedToken)
