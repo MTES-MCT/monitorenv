@@ -9,6 +9,9 @@ interface ImportMetaEnv {
   readonly FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED: string
   readonly FRONTEND_MISSION_FORM_AUTO_UPDATE: string
   readonly FRONTEND_MONITORENV_VERSION: string
+  readonly FRONTEND_OIDC_AUTHORITY: string
+  readonly FRONTEND_OIDC_CLIENT_ID: string
+  readonly FRONTEND_OIDC_ENABLED: string
   readonly FRONTEND_OIDC_REDIRECT_URI: string
   readonly FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED: string
   readonly FRONTEND_REPORTING_FORM_AUTO_UPDATE: string
@@ -16,9 +19,6 @@ interface ImportMetaEnv {
   readonly FRONTEND_SENTRY_ENV: string
   readonly FRONTEND_SENTRY_TRACING_ORIGIN: string
   readonly FRONTEND_SHOM_KEY: string
-  readonly MONITORENV_OIDC_CLIENT_ID: string
-  readonly MONITORENV_OIDC_ENABLED: string
-  readonly MONITORENV_OIDC_ISSUER_URI: string
 }
 
 interface ImportMeta {

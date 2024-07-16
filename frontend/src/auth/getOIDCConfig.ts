@@ -4,10 +4,10 @@ import { WebStorageStateStore } from 'oidc-client-ts'
 const IS_CYPRESS = isCypress()
 
 export function getOIDCConfig() {
-  const IS_OIDC_ENABLED = import.meta.env.MONITORENV_OIDC_ENABLED === 'true'
+  const IS_OIDC_ENABLED = import.meta.env.FRONTEND_OIDC_ENABLED === 'true'
   const OIDC_REDIRECT_URI = import.meta.env.FRONTEND_OIDC_REDIRECT_URI
-  const OIDC_AUTHORITY = import.meta.env.MONITORENV_OIDC_ISSUER_URI
-  const OIDC_CLIENT_ID = import.meta.env.MONITORENV_OIDC_CLIENT_ID
+  const OIDC_AUTHORITY = import.meta.env.FRONTEND_OIDC_AUTHORITY
+  const OIDC_CLIENT_ID = import.meta.env.FRONTEND_OIDC_CLIENT_ID
 
   if (IS_OIDC_ENABLED && (!OIDC_REDIRECT_URI || !OIDC_AUTHORITY || !OIDC_CLIENT_ID)) {
     throw new Error('Cannot setup Cerbère authentication.')
