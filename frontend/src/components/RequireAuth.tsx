@@ -1,5 +1,6 @@
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
+import { paths } from 'paths'
 import { useAuth } from 'react-oidc-context'
 import { Navigate } from 'react-router-dom'
 
@@ -20,10 +21,10 @@ export function RequireAuth({ children, redirect = false, requireSuperUser = fal
     return children
   }
   if (!auth.isAuthenticated) {
-    return handleRedirect('/login', redirect)
+    return handleRedirect(paths.login, redirect)
   }
   if (requireSuperUser && !user?.isSuperUser) {
-    return handleRedirect('/register', redirect)
+    return handleRedirect(paths.register, redirect)
   }
 
   return children

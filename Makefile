@@ -36,7 +36,7 @@ test-front:
 
 dev-run-back-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back
 
-dev-run-back-debug-with-infra: dev-erase-db dev-run-infra dev-clean-build-env dev-run-back-debug
+dev-run-back-debug-with-infra: dev-erase-db dev-run-keycloak dev-run-infra dev-clean-build-env dev-run-back-debug
 
 dev-run-back-with-infra-unsecured: dev-erase-db dev-run-infra dev-clean-build-env dev-run-back-unsecured
 
