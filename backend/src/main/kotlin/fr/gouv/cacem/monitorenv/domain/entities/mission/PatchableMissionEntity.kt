@@ -5,6 +5,6 @@ import java.util.Optional
 
 data class PatchableMissionEntity(
     val observationsByUnit: Optional<String>?,
-    val startDateTimeUtc: Optional<ZonedDateTime>?,
+    val startDateTimeUtc: ZonedDateTime?,
     val endDateTimeUtc: Optional<ZonedDateTime>?,
 )
