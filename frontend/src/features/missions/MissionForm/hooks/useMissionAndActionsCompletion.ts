@@ -1,4 +1,5 @@
 import { getMissionCompletionFrontStatus, hasAtLeastOnUncompletedEnvAction } from '@features/missions/utils'
+import { useAppSelector } from '@hooks/useAppSelector'
 import {
   ActionTypeEnum,
   CompletionStatus,
@@ -11,9 +12,12 @@ import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 
 import { CompletionEnvActionSchema } from '../Schemas'
+import { getNumberOfInfractionTarget, getNumberOfControls } from '../slice'
 
 export function useMissionAndActionsCompletion() {
   const { errors, values } = useFormikContext<Mission>()
+  const numberOfInfractionTarget = useAppSelector(state => getNumberOfInfractionTarget(state.missionForms))
+  const numberOfControls = useAppSelector(state => getNumberOfControls(state.missionForms))
   const missionStatus = getMissionStatus(values)
   const hasAtLeastOnUncompletedAction = useMemo(
     () => hasAtLeastOnUncompletedEnvAction(values.envActions),
@@ -42,7 +46,9 @@ export function useMissionAndActionsCompletion() {
 
     return constrolOrSuveillanceActions.reduce((actionsMissingFieldsCollection, action) => {
       try {
-        CompletionEnvActionSchema.validateSync(action, { abortEarly: false })
+        CompletionEnvActionSchema(numberOfControls - numberOfInfractionTarget).validateSync(action, {
+          abortEarly: false
+        })
 
         return {
           ...actionsMissingFieldsCollection,
@@ -57,7 +63,7 @@ export function useMissionAndActionsCompletion() {
         }
       }
     }, {})
-  }, [values.envActions])
+  }, [numberOfControls, numberOfInfractionTarget, values.envActions])
 
   return {
     actionsMissingFields: getActionsCompletion,

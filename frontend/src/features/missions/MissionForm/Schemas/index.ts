@@ -48,75 +48,80 @@ const EnvActionNoteSchema: Yup.SchemaOf<EnvActionNote> = Yup.object()
   })
   .required()
 
-const NewEnvActionSchema = Yup.lazy((value, context) => {
-  if (value.actionType === ActionTypeEnum.CONTROL) {
-    return getNewEnvActionControlSchema(context)
-  }
-  if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
-    return getNewEnvActionSurveillanceSchema(context)
-  }
-  if (value.actionType === ActionTypeEnum.NOTE) {
-    return EnvActionNoteSchema
-  }
+const NewEnvActionSchema = (nbTargetMax: number) =>
+  Yup.lazy((value, context) => {
+    if (value.actionType === ActionTypeEnum.CONTROL) {
+      return getNewEnvActionControlSchema(context, nbTargetMax)
+    }
+    if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
+      return getNewEnvActionSurveillanceSchema(context)
+    }
+    if (value.actionType === ActionTypeEnum.NOTE) {
+      return EnvActionNoteSchema
+    }
 
-  return Yup.object().required()
-})
-
-export const CompletionEnvActionSchema = Yup.lazy((value, context) => {
-  if (value.actionType === ActionTypeEnum.CONTROL) {
-    return getCompletionEnvActionControlSchema(context)
-  }
-  if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
-    return getCompletionEnvActionSurveillanceSchema(context)
-  }
-  if (value.actionType === ActionTypeEnum.NOTE) {
-    return EnvActionNoteSchema
-  }
-
-  return Yup.object().required()
-})
-
-export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
-  .shape({
-    completedBy: Yup.string()
-      .min(3, 'Minimum 3 lettres pour le trigramme')
-      .max(3, 'Maximum 3 lettres pour le trigramme')
-      .nullable(),
-    controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
-    endDateTimeUtc: Yup.date()
-      .nullable()
-      .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début')
-      // TODO [Missions] Delete when deploying the auto-save feature
-      .required(HIDDEN_ERROR),
-    // cast as any to avoid type error
-    // FIXME : see issue https://github.com/jquense/yup/issues/1190
-    // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
-    envActions: Yup.array()
-      .of(NewEnvActionSchema as any)
-      .nullable(),
-    geom: Yup.object().nullable(),
-    missionTypes: MissionTypesSchema,
-    openBy: Yup.string()
-      .min(3, 'Minimum 3 lettres pour le trigramme')
-      .max(3, 'Maximum 3 lettres pour le trigramme')
-      .nullable(),
-    startDateTimeUtc: Yup.date().required(HIDDEN_ERROR)
+    return Yup.object().required()
   })
-  .required()
 
-const CompletionMissionSchema = NewMissionSchema.shape({
-  controlUnits: Yup.array().of(CompletionControlUnitSchema).ensure().defined().min(1),
-  envActions: Yup.array()
-    .of(CompletionEnvActionSchema as any)
-    .nullable()
-})
+export const CompletionEnvActionSchema = (nbTargetMax: number) =>
+  Yup.lazy((value, context) => {
+    if (value.actionType === ActionTypeEnum.CONTROL) {
+      return getCompletionEnvActionControlSchema(context, nbTargetMax)
+    }
+    if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
+      return getCompletionEnvActionSurveillanceSchema(context)
+    }
+    if (value.actionType === ActionTypeEnum.NOTE) {
+      return EnvActionNoteSchema
+    }
 
-export const MissionSchema = Yup.lazy(value => {
-  const isMissionEnded = getIsMissionEnded(value.endDateTimeUtc)
+    return Yup.object().required()
+  })
 
-  if (isMissionEnded) {
-    return CompletionMissionSchema
-  }
+export const NewMissionSchema = (nbTargetMax: number): Yup.SchemaOf<NewMission> =>
+  Yup.object()
+    .shape({
+      completedBy: Yup.string()
+        .min(3, 'Minimum 3 lettres pour le trigramme')
+        .max(3, 'Maximum 3 lettres pour le trigramme')
+        .nullable(),
+      controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
+      endDateTimeUtc: Yup.date()
+        .nullable()
+        .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début')
+        // TODO [Missions] Delete when deploying the auto-save feature
+        .required(HIDDEN_ERROR),
+      // cast as any to avoid type error
+      // FIXME : see issue https://github.com/jquense/yup/issues/1190
+      // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
+      envActions: Yup.array()
+        .of(NewEnvActionSchema(nbTargetMax) as any)
+        .nullable(),
+      geom: Yup.object().nullable(),
+      missionTypes: MissionTypesSchema,
+      openBy: Yup.string()
+        .min(3, 'Minimum 3 lettres pour le trigramme')
+        .max(3, 'Maximum 3 lettres pour le trigramme')
+        .nullable(),
+      startDateTimeUtc: Yup.date().required(HIDDEN_ERROR)
+    })
+    .required()
 
-  return NewMissionSchema
-})
+const CompletionMissionSchema = (nbTargetMax: number) =>
+  NewMissionSchema(nbTargetMax).shape({
+    controlUnits: Yup.array().of(CompletionControlUnitSchema).ensure().defined().min(1),
+    envActions: Yup.array()
+      .of(CompletionEnvActionSchema as any)
+      .nullable()
+  })
+
+export const MissionSchema = (nbTargetMax: number) =>
+  Yup.lazy(value => {
+    const isMissionEnded = getIsMissionEnded(value.endDateTimeUtc)
+
+    if (isMissionEnded) {
+      return CompletionMissionSchema(nbTargetMax)
+    }
+
+    return NewMissionSchema(nbTargetMax)
+  })

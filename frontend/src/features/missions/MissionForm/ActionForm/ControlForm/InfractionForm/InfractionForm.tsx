@@ -1,11 +1,5 @@
 import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea } from '@mtes-mct/monitor-ui'
-import {
-  administrativeResponseOptions,
-  type EnvActionControl,
-  formalNoticeLabels,
-  infractionTypeLabels,
-  type Mission
-} from 'domain/entities/missions'
+import { formalNoticeLabels, infractionTypeLabels, type EnvActionControl, type Mission } from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
 import { type FormikErrors, useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
@@ -99,6 +93,8 @@ export function InfractionForm({
 
       <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
 
+      <NbTargetInput isRequired label="Nb de cibles avec cette infraction" name={`${infractionPath}.nbTarget`} />
+
       <ButtonContainer>
         <Button accent={Accent.TERTIARY} onClick={removeInfraction}>
           Supprimer l&apos;infraction
@@ -132,4 +128,8 @@ const ButtonContainer = styled.div`
   display: flex;
   gap: 16px;
   justify-content: flex-end;
+`
+
+const NbTargetInput = styled(FormikNumberInput)`
+  width: 48.5%;
 `

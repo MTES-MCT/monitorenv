@@ -2,11 +2,7 @@
 
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.argThat
-import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -27,7 +23,7 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 class CreateOrPatchEnvActionsUTests {
@@ -163,7 +159,6 @@ class CreateOrPatchEnvActionsUTests {
                 )
 
         // Then
-        // verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == polygon })
         verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == point })
         verify(departmentRepository, times(1)).findDepartmentFromGeometry(argThat { this == polygon })
         verify(departmentRepository, times(1)).findDepartmentFromGeometry(argThat { this == point })

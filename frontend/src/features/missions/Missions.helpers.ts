@@ -35,6 +35,7 @@ import type { AtLeast } from '../../types'
 export const infractionFactory = (infraction?: Partial<Infraction>): NewInfraction => ({
   id: uuidv4(),
   natinf: [],
+  nbTarget: 1,
   observations: '',
   toProcess: false,
   ...infraction
