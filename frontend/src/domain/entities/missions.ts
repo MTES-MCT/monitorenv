@@ -319,6 +319,7 @@ export type NewInfraction = {
   infractionType?: InfractionTypeEnum
   mmsi?: string | null
   natinf?: string[]
+  nbTarget: number
   observations?: string | null
   registrationNumber?: string | null
   relevantCourt?: string | null

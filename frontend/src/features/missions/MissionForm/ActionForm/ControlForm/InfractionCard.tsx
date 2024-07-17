@@ -40,27 +40,43 @@ export function InfractionCard({
   const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
   const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
   const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
+  const [nbTarget] = useField<Infraction['nbTarget']>(`${infractionPath}.nbTarget`)
 
   const displayIdentification = () => {
-    const identification: string[] = []
+    const defaultIdentification = () => {
+      if (!targetTypeField.value) {
+        return 'Cible non renseignée'
+      }
+      const targetType = TargetTypeLabels[targetTypeField.value].toLowerCase()
+      if (nbTarget.value > 1) {
+        return `${nbTarget.value}
+          ${targetType
+            .split(' ')
+            .map((word: string) => `${word}s`)
+            .join(' ')}`
+      }
+
+      return `${nbTarget.value} ${targetType}`
+    }
+    const identification: string[] = [defaultIdentification()]
+
+    const addToIdentification = (identity: string | Number | null | undefined) => {
+      if (identity) {
+        identification.push(String(identity))
+      }
+    }
 
     const addDefaultVehicleIdentification = () => {
-      identification.push(TargetTypeLabels[targetTypeField.value])
       identification.push(vehicleTypeLabels[vehicleTypeField.value].label)
     }
 
     const addVehicleIdentification = () => {
-      if (registrationNumber.value) {
-        identification.push(registrationNumber.value)
-      } else {
-        addDefaultVehicleIdentification()
-      }
+      addToIdentification(registrationNumber.value)
     }
 
     const addVesselIdentification = () => {
-      if (vesselName.value) {
-        identification.push(vesselName.value)
-      }
+      addToIdentification(vesselName.value)
+
       if (mmsi.value) {
         identification.push(mmsi.value)
       } else if (imo.value) {
@@ -72,9 +88,7 @@ export function InfractionCard({
       } else {
         addDefaultVehicleIdentification()
       }
-      if (vesselSize.value) {
-        identification.push(String(vesselSize.value))
-      }
+      addToIdentification(vesselSize.value)
     }
 
     switch (targetTypeField.value) {
@@ -89,34 +103,20 @@ export function InfractionCard({
             addVesselIdentification()
             break
           default:
-            identification.push(TargetTypeLabels[targetTypeField.value])
-            identification.push('Type non renseigné')
             break
         }
         break
 
       case TargetTypeEnum.COMPANY:
-        if (companyName.value) {
-          identification.push(companyName.value)
-        }
-        if (controlledPersonIdentity.value) {
-          identification.push(controlledPersonIdentity.value)
-        }
-        if (!companyName.value && !controlledPersonIdentity.value) {
-          identification.push(TargetTypeLabels[targetTypeField.value])
-        }
+        addToIdentification(companyName.value)
+        addToIdentification(controlledPersonIdentity.value)
         break
 
       case TargetTypeEnum.INDIVIDUAL:
-        if (controlledPersonIdentity.value) {
-          identification.push(controlledPersonIdentity.value)
-        } else {
-          identification.push(TargetTypeLabels[targetTypeField.value])
-        }
+        addToIdentification(controlledPersonIdentity.value)
         break
 
       default:
-        identification.push('Cible non renseignée')
         break
     }
 

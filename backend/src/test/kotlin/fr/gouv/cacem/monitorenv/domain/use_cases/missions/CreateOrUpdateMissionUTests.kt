@@ -13,7 +13,6 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,32 +27,17 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionUTests {
-    @MockBean private lateinit var missionRepository: IMissionRepository
+    @MockBean
+    private lateinit var missionRepository: IMissionRepository
 
-    @MockBean private lateinit var facadeAreasRepository: IFacadeAreasRepository
+    @MockBean
+    private lateinit var facadeAreasRepository: IFacadeAreasRepository
 
-    @MockBean private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
+    @MockBean
+    private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
 
-    @MockBean private lateinit var applicationEventPublisher: ApplicationEventPublisher
-
-    @Test
-    fun `execute Should throw an exception when input mission is null`() {
-        // When
-        val throwable =
-            Assertions.catchThrowable {
-                CreateOrUpdateMission(
-                    missionRepository = missionRepository,
-                    facadeRepository = facadeAreasRepository,
-                    eventPublisher = applicationEventPublisher,
-                    postgisFunctionRepository = postgisFunctionRepository,
-                )
-                    .execute(null)
-            }
-
-        // Then
-        assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
-        assertThat(throwable.message).contains("No mission to create or update")
-    }
+    @MockBean
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @Test
     fun `should return the mission to update with computed facade`() {

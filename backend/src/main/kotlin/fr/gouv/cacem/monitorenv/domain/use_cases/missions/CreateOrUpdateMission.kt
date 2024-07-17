@@ -20,9 +20,8 @@ class CreateOrUpdateMission(
 
     @Throws(IllegalArgumentException::class)
     fun execute(
-        mission: MissionEntity?,
+        mission: MissionEntity,
     ): MissionEntity {
-        require(mission != null) { "No mission to create or update" }
         val normalizedMission = mission.geom?.let { nonNullGeom ->
             mission.copy(geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom))
         } ?: mission

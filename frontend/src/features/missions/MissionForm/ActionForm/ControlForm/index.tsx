@@ -1,4 +1,5 @@
 import { actionFactory } from '@features/missions/Missions.helpers'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
@@ -41,6 +42,7 @@ import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSel
 import { getFormattedReportingId } from '../../../../Reportings/utils'
 import { HIDDEN_ERROR } from '../../constants'
 import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
+import { getNumberOfInfractionTarget } from '../../slice'
 import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
 import {
@@ -90,12 +92,12 @@ export function ControlForm({
     | FormikErrors<EnvActionControl>
     | undefined
 
+  const numberOfInfractionTarget = useAppSelector(state => getNumberOfInfractionTarget(state.missionForms))
+
   const canAddInfraction =
-    actionNumberOfControls &&
-    actionNumberOfControls > 0 &&
     ((actionTargetType === TargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
       (actionTargetType !== undefined && actionTargetType !== TargetTypeEnum.VEHICLE)) &&
-    actionNumberOfControls > (envActions[envActionIndex]?.infractions?.length ?? 0)
+    (actionNumberOfControls ?? 0) > numberOfInfractionTarget
 
   const reportingAsOptions = useMemo(
     () =>
