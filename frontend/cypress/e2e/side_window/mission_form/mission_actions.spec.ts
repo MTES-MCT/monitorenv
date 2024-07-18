@@ -39,8 +39,8 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       expect(duplicatedInfraction.controlledPersonIdentity).equal('John Doe')
       expect(duplicatedInfraction.formalNotice).equal('PENDING')
-      expect(duplicatedInfraction.administrativeSanction).equal('PENDING')
-      expect(duplicatedInfraction.legalSanction).equal('WITH_REPORT')
+      expect(duplicatedInfraction.administrativeResponse).equal('PENDING')
+      expect(duplicatedInfraction.infractionType).equal('WITH_REPORT')
       expect(duplicatedInfraction.natinf.length).equal(2)
       expect(duplicatedInfraction.observations).equal("Pas d'observations")
       expect(duplicatedInfraction.registrationNumber).equal('BALTIK')
@@ -78,13 +78,13 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true }) // id 11
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
 
-    /*  
+    /*
     TODO: fix this command in monitor-ui
     cy.fill(
       'Sous-thématiques de contrôle',
       ["Destruction, capture, arrachage d'espèces protégées", 'Détention des espèces protégées'], // id 117 and 120
       { delay: 250 }
-    ) 
+    )
     cy.fill('Précisions sur la thématique', ['Habitat', 'Oiseaux'], { delay: 250 }) // id 15 and 11
     */
     cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
@@ -511,8 +511,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Immatriculation', 'ABC123')
       cy.fill('Taille', 45)
       cy.fill('Type de navire', 'Commerce')
-      cy.fill('Sanction judiciaire', 'Avec PV')
-      cy.fill('Sanction administrative', 'Sanction')
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
 
@@ -529,8 +529,8 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(requestInfraction.registrationNumber).equal('ABC123')
         expect(requestInfraction.vesselSize).equal(45)
         expect(requestInfraction.vesselType).equal('COMMERCIAL')
-        expect(requestInfraction.legalSanction).equal('WITH_REPORT')
-        expect(requestInfraction.administrativeSanction).equal('SANCTION')
+        expect(requestInfraction.infractionType).equal('WITH_REPORT')
+        expect(requestInfraction.administrativeResponse).equal('SANCTION')
         expect(requestInfraction.formalNotice).equal('YES')
         expect(requestInfraction.natinf).to.deep.equal(['1508'])
 
@@ -544,8 +544,8 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(responseInfraction.registrationNumber).equal('ABC123')
         expect(responseInfraction.vesselSize).equal(45)
         expect(responseInfraction.vesselType).equal('COMMERCIAL')
-        expect(requestInfraction.legalSanction).equal('WITH_REPORT')
-        expect(requestInfraction.administrativeSanction).equal('SANCTION')
+        expect(requestInfraction.infractionType).equal('WITH_REPORT')
+        expect(requestInfraction.administrativeResponse).equal('SANCTION')
         expect(requestInfraction.formalNotice).equal('YES')
         expect(requestInfraction.natinf).to.deep.equal(['1508'])
 
@@ -574,8 +574,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Type de cible', 'Personne morale')
       cy.clickButton('+ Ajouter un contrôle avec infraction')
       // Fill mandatory fields
-      cy.fill('Sanction judiciaire', 'Avec PV')
-      cy.fill('Sanction administrative', 'Sanction')
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
       cy.clickButton("Valider l'infraction")
