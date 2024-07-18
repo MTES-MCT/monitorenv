@@ -1,7 +1,12 @@
 import { VesselTypeEnum } from 'domain/entities/vesselType'
 import * as Yup from 'yup'
 
-import { FormalNoticeEnum, InfractionTypeEnum, type Infraction } from '../../../../domain/entities/missions'
+import {
+  FormalNoticeEnum,
+  LegalSanctionEnum,
+  type AdministrativeSanctionType,
+  type Infraction
+} from '../../../../domain/entities/missions'
 
 Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
   Yup.mixed().test({
@@ -16,17 +21,18 @@ Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
 )
 
 export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
+  administrativeSanction: Yup.mixed<AdministrativeSanctionType>().required(),
   companyName: Yup.string().optional().nullable(),
   controlledPersonIdentity: Yup.string().nullable(),
   formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required(),
   id: Yup.string().required(),
   imo: Yup.string().nullable(),
-  infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required(),
+  legalSanction: Yup.mixed().oneOf(Object.values(LegalSanctionEnum)).required(),
   mmsi: Yup.string().nullable(),
   natinf: Yup.array()
     .of(Yup.string().ensure())
-    .when('infractionType', {
-      is: InfractionTypeEnum.WAITING,
+    .when('legalSanction', {
+      is: LegalSanctionEnum.WAITING,
       otherwise: schema => schema.compact().min(1),
       then: schema => schema.compact().min(0)
     })
@@ -43,6 +49,7 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
 })
 
 export const CompletionInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
+  administrativeSanction: Yup.mixed<AdministrativeSanctionType>().oneOf(['SANCTION', 'REGULARIZATION']).required(),
   formalNotice: Yup.mixed().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
-  infractionType: Yup.mixed().oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT]).required()
+  legalSanction: Yup.mixed().oneOf([LegalSanctionEnum.WITH_REPORT, LegalSanctionEnum.WITHOUT_REPORT]).required()
 })

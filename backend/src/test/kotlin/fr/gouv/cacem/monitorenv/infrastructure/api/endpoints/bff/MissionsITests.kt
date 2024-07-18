@@ -16,18 +16,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.LegalSanctionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
@@ -48,15 +43,12 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -455,8 +447,8 @@ class MissionsITests {
             )
             .andExpect(
                 jsonPath(
-                    "$[0].envActions[0].infractions[0].infractionType",
-                    equalTo(InfractionTypeEnum.WAITING.toString()),
+                    "$[0].envActions[0].infractions[0].legalSanction",
+                    equalTo(LegalSanctionEnum.WAITING.toString()),
                 ),
             )
             .andExpect(
@@ -746,8 +738,8 @@ class MissionsITests {
             )
             .andExpect(
                 jsonPath(
-                    "$.envActions[0].infractions[0].infractionType",
-                    equalTo(InfractionTypeEnum.WAITING.toString()),
+                    "$.envActions[0].infractions[0].legalSanction",
+                    equalTo(LegalSanctionEnum.WAITING.toString()),
                 ),
             )
             .andExpect(

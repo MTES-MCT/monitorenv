@@ -3,6 +3,8 @@
 import { createPendingMission } from '../../utils/createPendingMission'
 import { getFutureDate } from '../../utils/getFutureDate'
 
+import type { Infraction } from 'domain/entities/missions'
+
 context('Side Window > Mission Form > Mission actions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -37,7 +39,8 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       expect(duplicatedInfraction.controlledPersonIdentity).equal('John Doe')
       expect(duplicatedInfraction.formalNotice).equal('PENDING')
-      expect(duplicatedInfraction.infractionType).equal('WITH_REPORT')
+      expect(duplicatedInfraction.administrativeSanction).equal('PENDING')
+      expect(duplicatedInfraction.legalSanction).equal('WITH_REPORT')
       expect(duplicatedInfraction.natinf.length).equal(2)
       expect(duplicatedInfraction.observations).equal("Pas d'observations")
       expect(duplicatedInfraction.registrationNumber).equal('BALTIK')
@@ -508,7 +511,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Immatriculation', 'ABC123')
       cy.fill('Taille', 45)
       cy.fill('Type de navire', 'Commerce')
-      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Sanction judiciaire', 'Avec PV')
+      cy.fill('Sanction administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
 
@@ -517,7 +521,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       cy.wait('@updateMission').then(({ request, response }) => {
         // check request
-        const requestInfraction = request.body.envActions[0].infractions[0]
+        const requestInfraction: Infraction = request.body.envActions[0].infractions[0]
         expect(requestInfraction.mmsi).equal('123456789')
         expect(requestInfraction.vesselName).equal('BALTIK')
         expect(requestInfraction.imo).equal('IMO123')
@@ -525,6 +529,10 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(requestInfraction.registrationNumber).equal('ABC123')
         expect(requestInfraction.vesselSize).equal(45)
         expect(requestInfraction.vesselType).equal('COMMERCIAL')
+        expect(requestInfraction.legalSanction).equal('WITH_REPORT')
+        expect(requestInfraction.administrativeSanction).equal('SANCTION')
+        expect(requestInfraction.formalNotice).equal('YES')
+        expect(requestInfraction.natinf).to.deep.equal(['1508'])
 
         // check response
         const responseInfraction = response?.body.envActions[0].infractions[0]
@@ -536,6 +544,10 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(responseInfraction.registrationNumber).equal('ABC123')
         expect(responseInfraction.vesselSize).equal(45)
         expect(responseInfraction.vesselType).equal('COMMERCIAL')
+        expect(requestInfraction.legalSanction).equal('WITH_REPORT')
+        expect(requestInfraction.administrativeSanction).equal('SANCTION')
+        expect(requestInfraction.formalNotice).equal('YES')
+        expect(requestInfraction.natinf).to.deep.equal(['1508'])
 
         // clean
         cy.wait(250)
@@ -562,7 +574,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Type de cible', 'Personne morale')
       cy.clickButton('+ Ajouter un contrôle avec infraction')
       // Fill mandatory fields
-      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Sanction judiciaire', 'Avec PV')
+      cy.fill('Sanction administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
       cy.clickButton("Valider l'infraction")

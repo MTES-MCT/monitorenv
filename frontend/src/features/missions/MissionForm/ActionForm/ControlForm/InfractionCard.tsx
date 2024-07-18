@@ -1,8 +1,8 @@
 import { Accent, Button, Icon, IconButton, Tag } from '@mtes-mct/monitor-ui'
 import {
   FormalNoticeEnum,
-  InfractionTypeEnum,
-  infractionTypeLabels,
+  LegalSanctionEnum,
+  legalSanctionLabels,
   type EnvActionControl,
   type Infraction
 } from 'domain/entities/missions'
@@ -37,7 +37,7 @@ export function InfractionCard({
   const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(
     `${infractionPath}.controlledPersonIdentity`
   )
-  const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
+  const [legalSanction] = useField<LegalSanctionEnum>(`${infractionPath}.legalSanction`)
   const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
   const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
 
@@ -123,20 +123,20 @@ export function InfractionCard({
     return identification.join(' - ')
   }
 
-  let libelleInfractionType
-  switch (infractionType?.value) {
+  let libelleLegalSanction
+  switch (legalSanction?.value) {
     case undefined:
-      libelleInfractionType = 'PV : -'
+      libelleLegalSanction = 'PV : -'
       break
-    case infractionTypeLabels.WITHOUT_REPORT.code:
-      libelleInfractionType = infractionTypeLabels.WITHOUT_REPORT.libelle
+    case legalSanctionLabels.WITHOUT_REPORT.code:
+      libelleLegalSanction = legalSanctionLabels.WITHOUT_REPORT.libelle
       break
-    case infractionTypeLabels.WITH_REPORT.code:
-      libelleInfractionType = infractionTypeLabels.WITH_REPORT.libelle
+    case legalSanctionLabels.WITH_REPORT.code:
+      libelleLegalSanction = legalSanctionLabels.WITH_REPORT.libelle
       break
-    case infractionTypeLabels.WAITING.code:
+    case legalSanctionLabels.WAITING.code:
     default:
-      libelleInfractionType = infractionTypeLabels.WAITING.libelle
+      libelleLegalSanction = legalSanctionLabels.WAITING.libelle
   }
 
   return (
@@ -146,7 +146,7 @@ export function InfractionCard({
           {displayIdentification()}
         </Identification>
         <SummaryDetails>
-          <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
+          <Info accent={Accent.PRIMARY}>{libelleLegalSanction}</Info>
           {formalNotice?.value === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
           <Info accent={Accent.PRIMARY}>
             {natinf.value?.length ?? '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}

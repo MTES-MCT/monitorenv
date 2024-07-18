@@ -13,7 +13,7 @@ class MissionFixture {
             id: Int? = Random.nextInt(),
             startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc: ZonedDateTime? = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            observationsByUnit: String? = null
+            observationsByUnit: String? = null,
         ): MissionEntity {
             return MissionEntity(
                 id = id,

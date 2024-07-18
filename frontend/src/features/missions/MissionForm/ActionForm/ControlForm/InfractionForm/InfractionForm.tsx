@@ -1,5 +1,11 @@
 import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea } from '@mtes-mct/monitor-ui'
-import { formalNoticeLabels, infractionTypeLabels, type EnvActionControl, type Mission } from 'domain/entities/missions'
+import {
+  administrativeSanctionsOptions,
+  formalNoticeLabels,
+  legalSanctionLabels,
+  type EnvActionControl,
+  type Mission
+} from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
 import styled from 'styled-components'
@@ -12,7 +18,7 @@ import { RelevantCourtSelector } from './RelevantCourtSelector'
 
 import type { MouseEventHandler } from 'react'
 
-const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
+const legalSanctionOptions = Object.values(legalSanctionLabels).map(o => ({ label: o.libelle, value: o.code }))
 const formalNoticeOptions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
 type InfractionFormProps = {
@@ -60,9 +66,18 @@ export function InfractionForm({
         isErrorMessageHidden
         isInline
         isRequired
-        label="Type d'infraction"
-        name={`${infractionPath}.infractionType`}
-        options={infractionTypeOptions}
+        label="Sanction judiciaire"
+        name={`${infractionPath}.legalSanction`}
+        options={legalSanctionOptions}
+      />
+
+      <FormikMultiRadio
+        isErrorMessageHidden
+        isInline
+        isRequired
+        label="Sanction administrative"
+        name={`${infractionPath}.administrativeSanction`}
+        options={administrativeSanctionsOptions}
       />
 
       <FormikMultiRadio

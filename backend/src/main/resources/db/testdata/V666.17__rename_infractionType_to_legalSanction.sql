@@ -3,7 +3,7 @@ BEGIN;
 -- Étape 1: Vérifier que "items" contient un tableau et extraire les objets du tableau
 WITH decomposed AS (SELECT id,
                            jsonb_array_elements(value -> 'infractions') AS obj,
-                           value - 'infractions'                        AS data_without_items
+                           value - 'infractions'                        AS value_without_infractions
                     FROM env_actions
                     WHERE jsonb_typeof(value -> 'infractions') = 'array'),
 
@@ -11,15 +11,15 @@ WITH decomposed AS (SELECT id,
      updated AS (SELECT id,
                         obj ||
                         jsonb_build_object('legalSanction', obj -> 'infractionType') - 'infractionType' AS updated_obj,
-                        data_without_items
+                        value_without_infractions
                  FROM decomposed),
 
 -- Étape 3: Recomposer les objets modifiés en un nouveau tableau
      recomposed AS (SELECT id,
                            jsonb_agg(updated_obj) AS new_items,
-                           data_without_items
+                           value_without_infractions
                     FROM updated
-                    GROUP BY id, data_without_items),
+                    GROUP BY id, value_without_infractions),
 
 -- Étape 4: Inclure les lignes avec des tableaux vides
      original_with_empty AS (SELECT id,
@@ -30,7 +30,7 @@ WITH decomposed AS (SELECT id,
 
 -- Étape 5: Mettre à jour la table avec les nouveaux objets
      final_update AS (SELECT recomposed.id,
-                             data_without_items || jsonb_build_object('infractions', new_items) AS new_data
+                             value_without_infractions || jsonb_build_object('infractions', new_items) AS new_data
                       FROM recomposed
                       UNION ALL
                       SELECT original_with_empty.id,

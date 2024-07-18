@@ -34,7 +34,7 @@ class PatchEnvActionUTest {
         val patchableEnvActionEntity = PatchableEnvActionEntity(
             Optional.of(today),
             Optional.of(tomorrow),
-            Optional.of(patchedObservationsByUnit)
+            Optional.of(patchedObservationsByUnit),
         )
         val envActionFromDatabase = anEnvAction(
             objectMapper,

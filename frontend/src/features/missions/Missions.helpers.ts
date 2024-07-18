@@ -7,7 +7,7 @@ import {
   MissionSourceEnum,
   type Mission,
   type NewMission,
-  InfractionTypeEnum,
+  LegalSanctionEnum,
   type EnvAction,
   type EnvActionSurveillance,
   type EnvActionForTimeline,
@@ -166,15 +166,15 @@ export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<LegacyControl
   ...resourceUnit
 })
 
-export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
+export const getControlInfractionsTags = (actionNumberOfControls: number, infractions: Infraction[]) => {
   const totalInfractions = infractions?.length || 0
   const ras = (actionNumberOfControls || 0) - totalInfractions
   const infractionsWithReport =
-    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITH_REPORT)?.length || 0
+    infractions?.filter(inf => inf.legalSanction === LegalSanctionEnum.WITH_REPORT)?.length || 0
   const infractionsWithoutReport =
-    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITHOUT_REPORT)?.length || 0
+    infractions?.filter(inf => inf.legalSanction === LegalSanctionEnum.WITHOUT_REPORT)?.length || 0
   const infractionsWithWaitingReport =
-    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WAITING)?.length || 0
+    infractions?.filter(inf => inf.legalSanction === LegalSanctionEnum.WAITING)?.length || 0
   const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
   return { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras, totalInfractions }
