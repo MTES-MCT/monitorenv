@@ -1,6 +1,6 @@
 import {
   getIsLinkingAMPToVigilanceArea,
-  getIsLinkingRegulatoryToVigilanceArea,
+  getIsLinkingZonesToVigilanceArea,
   vigilanceAreaActions
 } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -49,10 +49,10 @@ export function ResultListLayerGroup({
   const forceZonesAreOpen = _.includes(layerIds, layerIdToDisplay)
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-
   const AMPLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
+
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const isLayerGroupDisabled =
     difference(layerIds, regulatoryAreasLinkedToVigilanceAreaForm).length === 0 ||
@@ -97,7 +97,7 @@ export function ResultListLayerGroup({
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
-          {isLinkingRegulatoryToVigilanceArea || isLinkingAMPToVigilanceArea ? (
+          {isLinkingZonesToVigilanceArea ? (
             <IconButton
               accent={Accent.TERTIARY}
               aria-label="Ajouter la/les zone(s) à la zone de vigilance"
@@ -120,15 +120,7 @@ export function ResultListLayerGroup({
       </LayerSelector.GroupWrapper>
       <LayerSelector.SubGroup isOpen={forceZonesAreOpen || zonesAreOpen} length={layerIds?.length}>
         {layerType === MonitorEnvLayers.REGULATORY_ENV &&
-          layerIds?.map(layerId => (
-            <RegulatoryLayer
-              key={layerId}
-              isLinkingAMPToVigilanceArea={isLinkingAMPToVigilanceArea}
-              isLinkingRegulatoryToVigilanceArea={isLinkingRegulatoryToVigilanceArea}
-              layerId={layerId}
-              searchedText={searchedText}
-            />
-          ))}
+          layerIds?.map(layerId => <RegulatoryLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
         {layerType === MonitorEnvLayers.AMP &&
           layerIds?.map(layerId => <AMPLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
       </LayerSelector.SubGroup>

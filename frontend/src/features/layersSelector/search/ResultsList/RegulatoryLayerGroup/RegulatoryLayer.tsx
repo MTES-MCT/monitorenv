@@ -1,4 +1,9 @@
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingRegulatoryToVigilanceArea,
+  getIsLinkingZonesToVigilanceArea,
+  vigilanceAreaActions
+} from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -25,24 +30,21 @@ import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 type RegulatoryLayerProps = {
-  isLinkingAMPToVigilanceArea: boolean
-  isLinkingRegulatoryToVigilanceArea: boolean
   layerId: number
   searchedText: string
 }
 
-export function RegulatoryLayer({
-  isLinkingAMPToVigilanceArea,
-  isLinkingRegulatoryToVigilanceArea,
-  layerId,
-  searchedText
-}: RegulatoryLayerProps) {
+export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const AMPsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
+
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
@@ -141,7 +143,7 @@ export function RegulatoryLayer({
             onClick={addAMPToVigilanceArea}
           />
         )}
-        {!isLinkingRegulatoryToVigilanceArea && !isLinkingAMPToVigilanceArea && (
+        {!isLinkingZonesToVigilanceArea && (
           <IconButton
             accent={Accent.TERTIARY}
             aria-label="Sélectionner la zone"

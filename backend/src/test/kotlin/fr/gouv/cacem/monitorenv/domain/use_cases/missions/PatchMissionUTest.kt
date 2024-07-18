@@ -13,29 +13,38 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
+import java.time.ZonedDateTime
 import java.util.*
 import kotlin.random.Random
 
 class PatchMissionUTest {
 
     private val missionRepository: IMissionRepository = mock()
-    private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = mock()
+    private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
     private val patchMission: PatchMission = PatchMission(missionRepository, patchEntity)
 
     @Test
     fun `execute() should return the patched entity`() {
         // Given
         val id = Random.nextInt()
-        val observationsByUnit = Optional.of("observations")
+        val today = ZonedDateTime.now()
+        val tomorrow = ZonedDateTime.now().plusDays(1)
         val patchedObservationsByUnit = "patched observations"
-        val patchableMission = PatchableMissionEntity(observationsByUnit = observationsByUnit)
-        val missionFromDatabase = aMissionEntity()
-        val missionPatched = aMissionEntity(observationsByUnit = patchedObservationsByUnit)
+        val patchableMission = PatchableMissionEntity(
+            observationsByUnit = Optional.of(patchedObservationsByUnit),
+            startDateTimeUtc = today,
+            endDateTimeUtc = Optional.of(tomorrow)
+        )
+        val missionFromDatabase = aMissionEntity(id = id)
+        val missionPatched = aMissionEntity(
+            id = id,
+            observationsByUnit = patchedObservationsByUnit,
+            startDateTimeUtc = today,
+            endDateTimeUtc = tomorrow
+        )
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
-        given(patchEntity.execute(missionFromDatabase, patchableMission)).willReturn(
-            missionPatched,
-        )
+        patchEntity.execute(missionFromDatabase, patchableMission)
         given(missionRepository.save(missionPatched)).willReturn(MissionDTO(missionPatched))
 
         // When
@@ -43,6 +52,8 @@ class PatchMissionUTest {
 
         // Then
         assertThat(savedMission.mission.observationsByUnit).isEqualTo(missionPatched.observationsByUnit)
+        assertThat(savedMission.mission.startDateTimeUtc).isEqualTo(missionPatched.startDateTimeUtc)
+        assertThat(savedMission.mission.endDateTimeUtc).isEqualTo(missionPatched.endDateTimeUtc)
         verify(missionRepository).save(missionPatched)
     }
 
@@ -50,7 +61,11 @@ class PatchMissionUTest {
     fun `execute() should throw BackendUsageException with message when the entity does not exist`() {
         // Given
         val id = Random.nextInt()
-        val patchableMission = PatchableMissionEntity(observationsByUnit = null)
+        val patchableMission = PatchableMissionEntity(
+            observationsByUnit = null,
+            startDateTimeUtc = null,
+            endDateTimeUtc = null
+        )
 
         given(missionRepository.findById(id)).willReturn(null)
 

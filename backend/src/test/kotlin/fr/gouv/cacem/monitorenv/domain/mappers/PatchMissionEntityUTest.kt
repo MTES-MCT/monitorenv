@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.time.ZonedDateTime
 import java.util.*
 
 class PatchMissionEntityUTest {
@@ -16,26 +17,34 @@ class PatchMissionEntityUTest {
         // Given
         val observationsByUnit = "observationsByUnit"
         val missionEntity = MissionFixture.aMissionEntity()
-        val patchableMissionEntity = PatchableMissionEntity(observationsByUnit = Optional.of(observationsByUnit))
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = Optional.of(observationsByUnit),
+            startDateTimeUtc = null,
+            endDateTimeUtc = null
+        )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.observationsByUnit).isEqualTo(observationsByUnit)
+        assertThat(missionEntity.observationsByUnit).isEqualTo(observationsByUnit)
     }
 
     @Test
     fun `execute() should return mission with observationsByUnit null if its empty`() {
         // Given
         val missionEntity = MissionFixture.aMissionEntity()
-        val patchableMissionEntity = PatchableMissionEntity(observationsByUnit = Optional.empty())
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = Optional.empty(),
+            startDateTimeUtc = null,
+            endDateTimeUtc = null
+        )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.observationsByUnit).isNull()
+        assertThat(missionEntity.observationsByUnit).isNull()
     }
 
     @Test
@@ -43,12 +52,77 @@ class PatchMissionEntityUTest {
         // Given
         val observationsByUnit = "old value"
         val missionEntity = MissionFixture.aMissionEntity(observationsByUnit = observationsByUnit)
-        val patchableMissionEntity = PatchableMissionEntity(observationsByUnit = null)
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = null,
+            startDateTimeUtc = null,
+            endDateTimeUtc = Optional.empty(),
+        )
 
         // When
-        val mergedMissionEntity = patchEntity.execute(missionEntity, patchableMissionEntity)
+        patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(mergedMissionEntity.observationsByUnit).isEqualTo(observationsByUnit)
+        assertThat(missionEntity.observationsByUnit).isEqualTo(observationsByUnit)
+    }
+
+
+    @Test
+    fun `execute() should return mission with start+endDateTimes modified if its present`() {
+        // Given
+        val startDateTimeUtc = ZonedDateTime.parse("2024-04-11T07:00:00Z")
+        val endDateTimeUtc = ZonedDateTime.parse("2024-04-22T07:00:00Z")
+        val missionEntity = MissionFixture.aMissionEntity()
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = Optional.empty(),
+            startDateTimeUtc = startDateTimeUtc,
+            endDateTimeUtc = Optional.of(endDateTimeUtc)
+        )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.startDateTimeUtc).isEqualTo(startDateTimeUtc)
+        assertThat(missionEntity.endDateTimeUtc).isEqualTo(endDateTimeUtc)
+    }
+
+    @Test
+    fun `execute() should return the original datetime if given as null`() {
+        // Given
+        val startDateTimeUtc = ZonedDateTime.parse("2024-04-11T07:00:00Z")
+        val endDateTimeUtc = ZonedDateTime.parse("2024-04-22T07:00:00Z")
+        val missionEntity = MissionFixture.aMissionEntity(
+            startDateTimeUtc = startDateTimeUtc,
+            endDateTimeUtc =  endDateTimeUtc
+        )
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = Optional.empty(),
+            startDateTimeUtc = null,
+            endDateTimeUtc = null
+        )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.startDateTimeUtc).isEqualTo(startDateTimeUtc)
+        assertThat(missionEntity.endDateTimeUtc).isEqualTo(endDateTimeUtc)
+    }
+
+    @Test
+    fun `execute() should return mission with endDateTimes null if its empty`() {
+        // Given
+        val missionEntity = MissionFixture.aMissionEntity()
+        val patchableMissionEntity = PatchableMissionEntity(
+            observationsByUnit = Optional.empty(),
+            startDateTimeUtc = null,
+            endDateTimeUtc = Optional.empty()
+        )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.endDateTimeUtc).isNull()
     }
 }

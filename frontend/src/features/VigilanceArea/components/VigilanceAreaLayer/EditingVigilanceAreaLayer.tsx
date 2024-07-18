@@ -99,20 +99,20 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
 
   // AMP Layer
-  const { data: AMPLayers } = useGetAMPsQuery()
-  const AMPFeatures = useMemo(() => {
-    if (!AMPLayers || ampToAdd.length === 0) {
+  const { data: ampLayers } = useGetAMPsQuery()
+  const ampFeatures = useMemo(() => {
+    if (!ampLayers || ampToAdd.length === 0) {
       return []
     }
 
     return ampToAdd.reduce(
       (feats: Feature[], AMPLayerId) => {
-        const AMPlayer = AMPLayers.entities[AMPLayerId]
+        const ampLayer = ampLayers.entities[AMPLayerId]
 
-        if (AMPlayer) {
+        if (ampLayer) {
           const feature = getAMPFeature({
             code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
-            layer: AMPlayer
+            layer: ampLayer
           })
 
           feats.push(feature)
@@ -123,25 +123,25 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       []
     )
-  }, [AMPLayers, ampToAdd])
+  }, [ampLayers, ampToAdd])
 
-  const AMPVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
-  const AMPVectorLayerRef = useRef(
+  const ampVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const ampVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
-      source: AMPVectorSourceRef.current,
+      source: ampVectorSourceRef.current,
       style: getAMPLayerStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.AMP_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(AMPVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_LINKED_TO_VIGILANCE_AREA.code
+  ;(ampVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_LINKED_TO_VIGILANCE_AREA.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
     map.getLayers().push(regulatoryAreasVectorLayerRef.current)
-    map.getLayers().push(AMPVectorLayerRef.current)
+    map.getLayers().push(ampVectorLayerRef.current)
 
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,28 +149,29 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       map.removeLayer(regulatoryAreasVectorLayerRef.current)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(AMPVectorLayerRef.current)
+      map.removeLayer(ampVectorLayerRef.current)
     }
   }, [map])
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
     regulatoryAreasVectorSourceRef.current?.clear(true)
+    ampVectorSourceRef.current?.clear(true)
     if (vigilanceAreasFeature) {
       vectorSourceRef.current?.addFeature(vigilanceAreasFeature)
     }
     if (regulatoryAreasFeatures) {
       regulatoryAreasVectorSourceRef.current?.addFeatures(regulatoryAreasFeatures)
     }
-    if (AMPFeatures) {
-      AMPVectorSourceRef.current?.addFeatures(AMPFeatures)
+    if (ampFeatures) {
+      ampVectorSourceRef.current?.addFeatures(ampFeatures)
     }
-  }, [vigilanceAreasFeature, regulatoryAreasFeatures, AMPFeatures])
+  }, [vigilanceAreasFeature, regulatoryAreasFeatures, ampFeatures])
 
   useEffect(() => {
     vectorLayerRef.current?.setVisible(isLayerVisible)
     regulatoryAreasVectorLayerRef.current?.setVisible(isLayerVisible)
-    AMPVectorLayerRef.current?.setVisible(isLayerVisible)
+    ampVectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
 
   return null

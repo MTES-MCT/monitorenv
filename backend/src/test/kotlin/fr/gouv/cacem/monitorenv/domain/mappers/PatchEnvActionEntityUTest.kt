@@ -33,10 +33,10 @@ class PatchEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
+        patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction.actionStartDateTimeUtc).isEqualTo(today)
+        assertThat(envAction.actionStartDateTimeUtc).isEqualTo(today)
     }
 
     @Test
@@ -55,10 +55,10 @@ class PatchEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
+        patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction.actionStartDateTimeUtc).isNull()
+        assertThat(envAction.actionStartDateTimeUtc).isNull()
     }
 
     @Test
@@ -79,10 +79,10 @@ class PatchEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
+        patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction.actionEndDateTimeUtc).isEqualTo(today)
+        assertThat(envAction.actionEndDateTimeUtc).isEqualTo(today)
     }
 
     @Test
@@ -101,10 +101,10 @@ class PatchEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
+        patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction.actionEndDateTimeUtc).isNull()
+        assertThat(envAction.actionEndDateTimeUtc).isNull()
     }
 
     @Test
@@ -125,10 +125,10 @@ class PatchEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
+        patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction.observationsByUnit).isEqualTo(observationsByUnit)
+        assertThat(envAction.observationsByUnit).isEqualTo(observationsByUnit)
     }
 
     @Test
@@ -147,10 +147,10 @@ class PatchEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
+        patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction.observationsByUnit).isNull()
+        assertThat(envAction.observationsByUnit).isNull()
     }
 
     @Test
@@ -170,11 +170,11 @@ class PatchEnvActionEntityUTest {
         )
 
         // When
-        val mergedEnvAction = patchEntity.execute(envAction, patchableEnvActionEntity)
+        patchEntity.execute(envAction, patchableEnvActionEntity)
 
         // Then
-        assertThat(mergedEnvAction.observationsByUnit).isEqualTo(observationsByUnit)
-        assertThat(mergedEnvAction.actionStartDateTimeUtc).isEqualTo(yesterday)
-        assertThat(mergedEnvAction.actionEndDateTimeUtc).isEqualTo(tomorrow)
+        assertThat(envAction.observationsByUnit).isEqualTo(observationsByUnit)
+        assertThat(envAction.actionStartDateTimeUtc).isEqualTo(yesterday)
+        assertThat(envAction.actionEndDateTimeUtc).isEqualTo(tomorrow)
     }
 }

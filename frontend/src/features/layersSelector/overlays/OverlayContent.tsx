@@ -1,6 +1,7 @@
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
+  getIsLinkingZonesToVigilanceArea,
   vigilanceAreaActions
 } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -40,9 +41,10 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
   const regulatoryAreasToAdd = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const ampToAdd = useAppSelector(state => state.vigilanceArea.ampToAdd)
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const handleClick = (type, id) => () => {
     if (
@@ -85,7 +87,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
     <Layerlist>
       {items
         ?.filter(item => {
-          if (isLinkingAmpToVigilanceArea || isLinkingRegulatoryToVigilanceArea) {
+          if (isLinkingZonesToVigilanceArea) {
             return item.layerType !== MonitorEnvLayers.VIGILANCE_AREA
           }
 

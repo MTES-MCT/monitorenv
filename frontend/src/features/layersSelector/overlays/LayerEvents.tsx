@@ -4,11 +4,7 @@ import {
   getClickedRegulatoryFeatures,
   getClickedVigilanceAreasFeatures
 } from '@features/map/utils'
-import {
-  getIsLinkingAMPToVigilanceArea,
-  getIsLinkingRegulatoryToVigilanceArea,
-  vigilanceAreaActions
-} from '@features/VigilanceArea/slice'
+import { getIsLinkingZonesToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { convertToFeature } from 'domain/types/map'
@@ -28,8 +24,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-  const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   useEffect(() => {
     const clickedAmpFeatures = getClickedAmpFeatures(mapClickEvent)
@@ -45,10 +40,10 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
       dispatch(closeLayerOverlay())
     }
 
-    if ((isLinkingRegulatoryToVigilanceArea || isLinkingAmpToVigilanceArea) && mapClickEvent.coordinates) {
+    if (isLinkingZonesToVigilanceArea && mapClickEvent.coordinates) {
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
-      const items = getClickedItems(mapClickEvent)
+      const items = getClickedItems(mapClickEvent, isLinkingZonesToVigilanceArea)
       dispatch(setLayerOverlayItems(items))
 
       return
@@ -99,7 +94,7 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
     if (numberOfClickedFeatures > 1 && mapClickEvent.coordinates) {
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
-      const items = getClickedItems(mapClickEvent)
+      const items = getClickedItems(mapClickEvent, isLinkingZonesToVigilanceArea)
       dispatch(setLayerOverlayItems(items))
 
       if (editingVigilanceAreaId) {

@@ -110,15 +110,24 @@ export const vigilanceAreaSlice = createSlice({
       }
 
       state.editingVigilanceAreaId = state.vigilanceAreaIdToCancel
+      state.selectedVigilanceAreaId = state.vigilanceAreaIdToCancel
       state.vigilanceAreaIdToCancel = undefined
       state.isCancelModalOpen = false
     },
     createVigilanceArea(state) {
-      state.selectedVigilanceAreaId = NEW_VIGILANCE_AREA_ID
-      state.editingVigilanceAreaId = NEW_VIGILANCE_AREA_ID
-      state.formTypeOpen = VigilanceAreaFormTypeOpen.FORM
-      state.isGeometryValid = false
-      state.geometry = undefined
+      if (!state.editingVigilanceAreaId) {
+        return {
+          ...INITIAL_STATE,
+          editingVigilanceAreaId: NEW_VIGILANCE_AREA_ID,
+          selectedVigilanceAreaId: NEW_VIGILANCE_AREA_ID
+        }
+      }
+
+      return {
+        ...state,
+        isCancelModalOpen: true,
+        vigilanceAreaIdToCancel: NEW_VIGILANCE_AREA_ID
+      }
     },
     deleteAMPsFromVigilanceArea(state, action: PayloadAction<number>) {
       state.ampToAdd = state.ampToAdd.filter(id => id !== action.payload)
@@ -189,4 +198,10 @@ export const getIsLinkingRegulatoryToVigilanceArea = createSelector(
 export const getIsLinkingAMPToVigilanceArea = createSelector(
   (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
   formTypeOpen => formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP
+)
+
+export const getIsLinkingZonesToVigilanceArea = createSelector(
+  (state: HomeRootState) => state.vigilanceArea.formTypeOpen,
+  formTypeOpen =>
+    formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY || formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP
 )

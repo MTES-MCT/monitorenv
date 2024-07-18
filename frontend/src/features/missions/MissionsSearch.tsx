@@ -38,13 +38,13 @@ export function MissionSearch() {
       isLabelHidden
       isLight
       isSearchInput
-      label="Rechercher dans un contrôle (navire, personne morale ou physique)"
+      label="Rechercher dans un contrôle (navire, personne...)"
       name="mission-search"
       onChange={value => {
         setSearchText(value)
         debouncedHandleChange(value)
       }}
-      placeholder="Rechercher dans un contrôle (navire, personne morale ou physique)"
+      placeholder="Rechercher dans un contrôle (navire, personne...)"
       size={Size.LARGE}
       value={searchText}
     />
@@ -53,5 +53,5 @@ export function MissionSearch() {
 
 const StyledSearch = styled(TextInput)`
   border: 1px solid ${p => p.theme.color.lightGray};
-  width: 280px;
+  width: 400px;
 `
