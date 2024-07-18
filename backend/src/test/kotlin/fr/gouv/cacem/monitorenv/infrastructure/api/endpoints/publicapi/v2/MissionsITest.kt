@@ -71,7 +71,7 @@ class MissionsITest {
             id = id,
             observationsByUnit = observationsByUnit,
             startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = endDateTimeUtc
+            endDateTimeUtc = endDateTimeUtc,
         )
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.of(observationsByUnit),

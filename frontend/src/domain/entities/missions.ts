@@ -79,12 +79,12 @@ export enum MissionTypeLabel {
   SEA = 'Mer'
 }
 
-export enum InfractionTypeEnum {
+export enum LegalSanctionEnum {
   WAITING = 'WAITING',
   WITHOUT_REPORT = 'WITHOUT_REPORT',
   WITH_REPORT = 'WITH_REPORT'
 }
-export const infractionTypeLabels = {
+export const legalSanctionLabels = {
   WITH_REPORT: {
     code: 'WITH_REPORT',
     libelle: 'Avec PV'
@@ -120,6 +120,13 @@ export const formalNoticeLabels = {
     libelle: 'En attente'
   }
 }
+export type AdministrativeSanctionType = 'SANCTION' | 'REGULARIZATION' | 'PENDING'
+
+export const administrativeSanctionsOptions: { label: string; value: AdministrativeSanctionType }[] = [
+  { label: 'Sanction', value: 'SANCTION' },
+  { label: 'Régularisation', value: 'REGULARIZATION' },
+  { label: 'En attente', value: 'PENDING' }
+]
 
 export const hasMissionOrderLabels = {
   YES: {
@@ -299,12 +306,13 @@ export type EnvActionNote = EnvActionCommonProperties & {
 }
 
 export type NewInfraction = {
+  administrativeSanction?: AdministrativeSanctionType
   companyName?: string | null
   controlledPersonIdentity?: string | null
   formalNotice?: FormalNoticeEnum
   id: string
   imo?: string | null
-  infractionType?: InfractionTypeEnum
+  legalSanction?: LegalSanctionEnum
   mmsi?: string | null
   natinf?: string[]
   observations?: string | null
@@ -316,8 +324,9 @@ export type NewInfraction = {
   vesselType?: VesselTypeEnum | null
 }
 export type Infraction = NewInfraction & {
+  administrativeSanction: AdministrativeSanctionType
   formalNotice: FormalNoticeEnum
-  infractionType: InfractionTypeEnum
+  legalSanction: LegalSanctionEnum
 }
 
 export type EnvActionForTimeline = EnvAction & {

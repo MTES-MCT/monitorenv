@@ -33,14 +33,14 @@ class PatchMissionUTest {
         val patchableMission = PatchableMissionEntity(
             observationsByUnit = Optional.of(patchedObservationsByUnit),
             startDateTimeUtc = today,
-            endDateTimeUtc = Optional.of(tomorrow)
+            endDateTimeUtc = Optional.of(tomorrow),
         )
         val missionFromDatabase = aMissionEntity(id = id)
         val missionPatched = aMissionEntity(
             id = id,
             observationsByUnit = patchedObservationsByUnit,
             startDateTimeUtc = today,
-            endDateTimeUtc = tomorrow
+            endDateTimeUtc = tomorrow,
         )
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
@@ -64,7 +64,7 @@ class PatchMissionUTest {
         val patchableMission = PatchableMissionEntity(
             observationsByUnit = null,
             startDateTimeUtc = null,
-            endDateTimeUtc = null
+            endDateTimeUtc = null,
         )
 
         given(missionRepository.findById(id)).willReturn(null)

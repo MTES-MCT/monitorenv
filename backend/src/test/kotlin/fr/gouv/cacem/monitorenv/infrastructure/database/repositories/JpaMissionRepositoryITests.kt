@@ -15,9 +15,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeSanctionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.LegalSanctionEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -34,7 +35,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
@@ -853,12 +854,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val infraction =
             InfractionEntity(
                 id = "a4d8cd64-ee6e-4dba-ae5d-f6a41395b52a",
+                administrativeSanction = AdministrativeSanctionEnum.SANCTION,
                 natinf = listOf("53432"),
                 observations = "This is an infraction",
                 registrationNumber = "REGISTRATION NUM",
                 companyName = "ACME inc.",
                 relevantCourt = "MARITIME_COURT",
-                infractionType = InfractionTypeEnum.WITHOUT_REPORT,
+                legalSanction = LegalSanctionEnum.WITHOUT_REPORT,
                 formalNotice = FormalNoticeEnum.NO,
                 toProcess = false,
                 controlledPersonIdentity = "Dick Hoover",

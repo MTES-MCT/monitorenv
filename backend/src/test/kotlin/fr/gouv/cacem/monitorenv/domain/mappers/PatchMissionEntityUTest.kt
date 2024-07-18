@@ -20,7 +20,7 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.of(observationsByUnit),
             startDateTimeUtc = null,
-            endDateTimeUtc = null
+            endDateTimeUtc = null,
         )
 
         // When
@@ -37,7 +37,7 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.empty(),
             startDateTimeUtc = null,
-            endDateTimeUtc = null
+            endDateTimeUtc = null,
         )
 
         // When
@@ -65,7 +65,6 @@ class PatchMissionEntityUTest {
         assertThat(missionEntity.observationsByUnit).isEqualTo(observationsByUnit)
     }
 
-
     @Test
     fun `execute() should return mission with start+endDateTimes modified if its present`() {
         // Given
@@ -75,7 +74,7 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.empty(),
             startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = Optional.of(endDateTimeUtc)
+            endDateTimeUtc = Optional.of(endDateTimeUtc),
         )
 
         // When
@@ -93,12 +92,12 @@ class PatchMissionEntityUTest {
         val endDateTimeUtc = ZonedDateTime.parse("2024-04-22T07:00:00Z")
         val missionEntity = MissionFixture.aMissionEntity(
             startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc =  endDateTimeUtc
+            endDateTimeUtc = endDateTimeUtc,
         )
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.empty(),
             startDateTimeUtc = null,
-            endDateTimeUtc = null
+            endDateTimeUtc = null,
         )
 
         // When
@@ -116,7 +115,7 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity = PatchableMissionEntity(
             observationsByUnit = Optional.empty(),
             startDateTimeUtc = null,
-            endDateTimeUtc = Optional.empty()
+            endDateTimeUtc = Optional.empty(),
         )
 
         // When
