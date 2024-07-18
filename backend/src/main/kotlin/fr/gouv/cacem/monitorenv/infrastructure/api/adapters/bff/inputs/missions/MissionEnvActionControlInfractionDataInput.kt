@@ -1,19 +1,19 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeSanctionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.LegalSanctionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
 
 data class MissionEnvActionControlInfractionDataInput(
     val id: String,
-    val administrativeSanction: AdministrativeSanctionEnum,
+    val administrativeResponse: AdministrativeResponseEnum,
     val companyName: String? = null,
     val controlledPersonIdentity: String? = null,
     val formalNotice: FormalNoticeEnum,
     val imo: String? = null,
-    val legalSanction: LegalSanctionEnum,
+    val infractionType: InfractionTypeEnum,
     val mmsi: String? = null,
     val natinf: List<String>? = listOf(),
     val observations: String? = null,
@@ -27,12 +27,12 @@ data class MissionEnvActionControlInfractionDataInput(
     fun toInfractionEntity() =
         InfractionEntity(
             id = id,
-            administrativeSanction = administrativeSanction,
+            administrativeResponse = administrativeResponse,
             companyName = companyName,
             controlledPersonIdentity = controlledPersonIdentity,
             formalNotice = formalNotice,
             imo = imo,
-            legalSanction = legalSanction,
+            infractionType = infractionType,
             mmsi = mmsi,
             natinf = natinf,
             observations = observations,

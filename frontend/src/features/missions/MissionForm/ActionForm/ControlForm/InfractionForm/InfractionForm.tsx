@@ -1,13 +1,13 @@
 import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea } from '@mtes-mct/monitor-ui'
 import {
-  administrativeSanctionsOptions,
-  formalNoticeLabels,
-  legalSanctionLabels,
+  administrativeResponseOptions,
   type EnvActionControl,
+  formalNoticeLabels,
+  infractionTypeLabels,
   type Mission
 } from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
-import { useField, useFormikContext, type FormikErrors } from 'formik'
+import { type FormikErrors, useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
@@ -18,7 +18,7 @@ import { RelevantCourtSelector } from './RelevantCourtSelector'
 
 import type { MouseEventHandler } from 'react'
 
-const legalSanctionOptions = Object.values(legalSanctionLabels).map(o => ({ label: o.libelle, value: o.code }))
+const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 const formalNoticeOptions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
 type InfractionFormProps = {
@@ -27,6 +27,7 @@ type InfractionFormProps = {
   removeInfraction: MouseEventHandler
   validateInfraction: MouseEventHandler
 }
+
 export function InfractionForm({
   currentInfractionIndex,
   envActionIndex,
@@ -66,18 +67,18 @@ export function InfractionForm({
         isErrorMessageHidden
         isInline
         isRequired
-        label="Sanction judiciaire"
-        name={`${infractionPath}.legalSanction`}
-        options={legalSanctionOptions}
+        label="Type d'infraction"
+        name={`${infractionPath}.infractionType`}
+        options={infractionTypeOptions}
       />
 
       <FormikMultiRadio
         isErrorMessageHidden
         isInline
         isRequired
-        label="Sanction administrative"
-        name={`${infractionPath}.administrativeSanction`}
-        options={administrativeSanctionsOptions}
+        label="Réponse administrative"
+        name={`${infractionPath}.administrativeResponse`}
+        options={administrativeResponseOptions}
       />
 
       <FormikMultiRadio
@@ -122,6 +123,7 @@ const FormColumnWithCheckbox = styled.div`
   align-items: end;
   display: flex;
   gap: 16px;
+
   > .Field-Checkbox {
     padding-bottom: 12px;
   }

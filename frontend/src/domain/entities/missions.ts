@@ -1,4 +1,4 @@
-import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 
 import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
@@ -18,6 +18,7 @@ export enum ActionTypeEnum {
   REPORTING = 'REPORTING',
   SURVEILLANCE = 'SURVEILLANCE'
 }
+
 export const actionTypeLabels = {
   CONTROL: {
     code: 'CONTROL',
@@ -38,6 +39,7 @@ export enum MissionTypeEnum {
   LAND = 'LAND',
   SEA = 'SEA'
 }
+
 export const missionTypeEnum = {
   SEA: {
     code: 'SEA',
@@ -79,12 +81,13 @@ export enum MissionTypeLabel {
   SEA = 'Mer'
 }
 
-export enum LegalSanctionEnum {
+export enum InfractionTypeEnum {
   WAITING = 'WAITING',
   WITHOUT_REPORT = 'WITHOUT_REPORT',
   WITH_REPORT = 'WITH_REPORT'
 }
-export const legalSanctionLabels = {
+
+export const infractionTypeLabels = {
   WITH_REPORT: {
     code: 'WITH_REPORT',
     libelle: 'Avec PV'
@@ -105,6 +108,7 @@ export enum FormalNoticeEnum {
   PENDING = 'PENDING',
   YES = 'YES'
 }
+
 export const formalNoticeLabels = {
   YES: {
     code: 'YES',
@@ -120,9 +124,9 @@ export const formalNoticeLabels = {
     libelle: 'En attente'
   }
 }
-export type AdministrativeSanctionType = 'SANCTION' | 'REGULARIZATION' | 'PENDING'
+export type AdministrativeResponseType = 'SANCTION' | 'REGULARIZATION' | 'PENDING'
 
-export const administrativeSanctionsOptions: { label: string; value: AdministrativeSanctionType }[] = [
+export const administrativeResponseOptions: { label: string; value: AdministrativeResponseType }[] = [
   { label: 'Sanction', value: 'SANCTION' },
   { label: 'Régularisation', value: 'REGULARIZATION' },
   { label: 'En attente', value: 'PENDING' }
@@ -306,13 +310,13 @@ export type EnvActionNote = EnvActionCommonProperties & {
 }
 
 export type NewInfraction = {
-  administrativeSanction?: AdministrativeSanctionType
+  administrativeResponse?: AdministrativeResponseType
   companyName?: string | null
   controlledPersonIdentity?: string | null
   formalNotice?: FormalNoticeEnum
   id: string
   imo?: string | null
-  legalSanction?: LegalSanctionEnum
+  infractionType?: InfractionTypeEnum
   mmsi?: string | null
   natinf?: string[]
   observations?: string | null
@@ -324,9 +328,9 @@ export type NewInfraction = {
   vesselType?: VesselTypeEnum | null
 }
 export type Infraction = NewInfraction & {
-  administrativeSanction: AdministrativeSanctionType
+  administrativeResponse: AdministrativeResponseType
   formalNotice: FormalNoticeEnum
-  legalSanction: LegalSanctionEnum
+  infractionType: InfractionTypeEnum
 }
 
 export type EnvActionForTimeline = EnvAction & {

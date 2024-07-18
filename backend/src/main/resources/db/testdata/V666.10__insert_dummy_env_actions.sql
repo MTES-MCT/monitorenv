@@ -48,7 +48,7 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
                    "observations": "RAS",
                    "relevantCourt": "LOCAL_COURT",
                    "infractionType": "WITH_REPORT",
-                   "administrativeSanction": "REGULARIZATION",
+                   "administrativeResponse": "REGULARIZATION",
                    "registrationNumber": null,
                    "controlledPersonIdentity": null
                }
@@ -103,7 +103,7 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
                    "observations": "RAS",
                    "relevantCourt": "PRE",
                    "infractionType": "WAITING",
-                   "administrativeSanction": "PENDING",
+                   "administrativeResponse": "PENDING",
                    "registrationNumber": null,
                    "controlledPersonIdentity": "M DURAND"
                }
@@ -168,7 +168,7 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
                    "observations": "Pas d''observations",
                    "relevantCourt": "LOCAL_COURT",
                    "infractionType": "WITH_REPORT",
-                   "administrativeSanction": "PENDING",
+                   "administrativeResponse": "PENDING",
                    "registrationNumber": "BALTIK",
                    "controlledPersonIdentity": "John Doe"
                }

@@ -16,7 +16,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.LegalSanctionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
@@ -447,8 +447,8 @@ class MissionsITests {
             )
             .andExpect(
                 jsonPath(
-                    "$[0].envActions[0].infractions[0].legalSanction",
-                    equalTo(LegalSanctionEnum.WAITING.toString()),
+                    "$[0].envActions[0].infractions[0].infractionType",
+                    equalTo(InfractionTypeEnum.WAITING.toString()),
                 ),
             )
             .andExpect(
@@ -738,8 +738,8 @@ class MissionsITests {
             )
             .andExpect(
                 jsonPath(
-                    "$.envActions[0].infractions[0].legalSanction",
-                    equalTo(LegalSanctionEnum.WAITING.toString()),
+                    "$.envActions[0].infractions[0].infractionType",
+                    equalTo(InfractionTypeEnum.WAITING.toString()),
                 ),
             )
             .andExpect(

@@ -99,8 +99,8 @@ context('Side Window > Mission Form > Delete Mission', () => {
       cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')
 
       cy.clickButton('Editer')
-      cy.fill('Sanction judiciaire', 'Avec PV')
-      cy.fill('Sanction administrative', 'Sanction')
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
 

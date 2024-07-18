@@ -1,10 +1,10 @@
 import { Accent, Button, Icon, IconButton, Tag } from '@mtes-mct/monitor-ui'
 import {
-  FormalNoticeEnum,
-  LegalSanctionEnum,
-  legalSanctionLabels,
   type EnvActionControl,
-  type Infraction
+  FormalNoticeEnum,
+  type Infraction,
+  InfractionTypeEnum,
+  infractionTypeLabels
 } from 'domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from 'domain/entities/targetType'
 import { VehicleTypeEnum, vehicleTypeLabels } from 'domain/entities/vehicleType'
@@ -37,7 +37,7 @@ export function InfractionCard({
   const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(
     `${infractionPath}.controlledPersonIdentity`
   )
-  const [legalSanction] = useField<LegalSanctionEnum>(`${infractionPath}.legalSanction`)
+  const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
   const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
   const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
 
@@ -123,20 +123,20 @@ export function InfractionCard({
     return identification.join(' - ')
   }
 
-  let libelleLegalSanction
-  switch (legalSanction?.value) {
+  let libelleInfractionType
+  switch (infractionType?.value) {
     case undefined:
-      libelleLegalSanction = 'PV : -'
+      libelleInfractionType = 'PV : -'
       break
-    case legalSanctionLabels.WITHOUT_REPORT.code:
-      libelleLegalSanction = legalSanctionLabels.WITHOUT_REPORT.libelle
+    case infractionTypeLabels.WITHOUT_REPORT.code:
+      libelleInfractionType = infractionTypeLabels.WITHOUT_REPORT.libelle
       break
-    case legalSanctionLabels.WITH_REPORT.code:
-      libelleLegalSanction = legalSanctionLabels.WITH_REPORT.libelle
+    case infractionTypeLabels.WITH_REPORT.code:
+      libelleInfractionType = infractionTypeLabels.WITH_REPORT.libelle
       break
-    case legalSanctionLabels.WAITING.code:
+    case infractionTypeLabels.WAITING.code:
     default:
-      libelleLegalSanction = legalSanctionLabels.WAITING.libelle
+      libelleInfractionType = infractionTypeLabels.WAITING.libelle
   }
 
   return (
@@ -146,7 +146,7 @@ export function InfractionCard({
           {displayIdentification()}
         </Identification>
         <SummaryDetails>
-          <Info accent={Accent.PRIMARY}>{libelleLegalSanction}</Info>
+          <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
           {formalNotice?.value === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
           <Info accent={Accent.PRIMARY}>
             {natinf.value?.length ?? '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}

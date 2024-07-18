@@ -1,30 +1,30 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import {
-  ActionTypeEnum,
-  type NewEnvAction,
-  FormalNoticeEnum,
-  MissionSourceEnum,
-  type Mission,
-  type NewMission,
-  LegalSanctionEnum,
-  type EnvAction,
-  type EnvActionSurveillance,
-  type EnvActionForTimeline,
-  type NewInfraction,
-  type Infraction,
-  type NewEnvActionControl,
-  type EnvActionNote,
   ActionSource,
+  type ActionsTypeForTimeLine,
+  ActionTypeEnum,
   CompletionStatus,
-  type ActionsTypeForTimeLine
+  type EnvAction,
+  type EnvActionForTimeline,
+  type EnvActionNote,
+  type EnvActionSurveillance,
+  FormalNoticeEnum,
+  type Infraction,
+  InfractionTypeEnum,
+  type Mission,
+  MissionSourceEnum,
+  type NewEnvAction,
+  type NewEnvActionControl,
+  type NewInfraction,
+  type NewMission
 } from '../../domain/entities/missions'
 import {
   type DetachedReporting,
+  type DetachedReportingForTimeline,
   type Reporting,
   type ReportingDetailed,
-  type ReportingForTimeline,
-  type DetachedReportingForTimeline
+  type ReportingForTimeline
 } from '../../domain/entities/reporting'
 import { getFormattedReportingId } from '../Reportings/utils'
 
@@ -170,11 +170,11 @@ export const getControlInfractionsTags = (actionNumberOfControls: number, infrac
   const totalInfractions = infractions?.length || 0
   const ras = (actionNumberOfControls || 0) - totalInfractions
   const infractionsWithReport =
-    infractions?.filter(inf => inf.legalSanction === LegalSanctionEnum.WITH_REPORT)?.length || 0
+    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITH_REPORT)?.length || 0
   const infractionsWithoutReport =
-    infractions?.filter(inf => inf.legalSanction === LegalSanctionEnum.WITHOUT_REPORT)?.length || 0
+    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITHOUT_REPORT)?.length || 0
   const infractionsWithWaitingReport =
-    infractions?.filter(inf => inf.legalSanction === LegalSanctionEnum.WAITING)?.length || 0
+    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WAITING)?.length || 0
   const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
   return { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras, totalInfractions }
