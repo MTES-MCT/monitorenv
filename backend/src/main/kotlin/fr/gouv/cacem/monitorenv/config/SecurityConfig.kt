@@ -9,9 +9,6 @@ import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsConfigurationSource
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -24,52 +21,52 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
-            .cors { it.configurationSource(corsConfigurationSource()) }
+            .cors { it.disable() }
             .authorizeHttpRequests { authorize ->
-            if (oidcProperties.enabled == true) {
-                logger.info(
-                    """
+                if (oidcProperties.enabled == true) {
+                    logger.info(
+                        """
                         ✅ OIDC Authentication is enabled.
                     """.trimIndent(),
-                )
-
-                authorize
-                    .requestMatchers(
-                        "/",
-                        "/index.html",
-                        "/*.js",
-                        "/*.png",
-                        "/*.svg",
-                        "/static/**",
-                        "/assets/**",
-                        "/map-icons/**",
-                        "/flags/**",
-                        "/robots.txt",
-                        "/favicon-32.ico",
-                        "/asset-manifest.json",
-                        "/swagger-ui/**",
-                        "v3/**",
-                        // Used to redirect to the frontend SPA, see Spa.kt
-                        "/error",
-                        "/api/**",
-                        "/version",
-                        "/actuator/**",
-                        // TODO: secure SSE endpoints
-                        "/bff/reportings/sse/**",
                     )
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
-            } else {
-                logger.warn(
-                    """
+
+                    authorize
+                        .requestMatchers(
+                            "/",
+                            "/index.html",
+                            "/*.js",
+                            "/*.png",
+                            "/*.svg",
+                            "/static/**",
+                            "/assets/**",
+                            "/map-icons/**",
+                            "/flags/**",
+                            "/robots.txt",
+                            "/favicon-32.ico",
+                            "/asset-manifest.json",
+                            "/swagger-ui/**",
+                            "v3/**",
+                            // Used to redirect to the frontend SPA, see Spa.kt
+                            "/error",
+                            "/api/**",
+                            "/version",
+                            "/actuator/**",
+                            // TODO: secure SSE endpoints
+                            "/bff/reportings/sse/**",
+                        )
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
+                } else {
+                    logger.warn(
+                        """
                         ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
                     """.trimIndent(),
-                )
+                    )
 
-                authorize.requestMatchers("/**").permitAll()
+                    authorize.requestMatchers("/**").permitAll()
+                }
             }
-        }
 
         if (oidcProperties.enabled == true) {
             http.oauth2ResourceServer { oauth2ResourceServer ->
@@ -80,20 +77,5 @@ class SecurityConfig(
         }
 
         return http.build()
-    }
-
-    @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration =
-            CorsConfiguration().apply {
-                allowedOrigins = listOf("*")
-                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
-                allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
-            }
-
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", configuration)
-
-        return source
     }
 }
