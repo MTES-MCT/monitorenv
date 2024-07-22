@@ -4,12 +4,11 @@ import { filter } from 'lodash'
 import { useMemo } from 'react'
 
 import { useGetReportingsQuery } from '../../../api/reportingsAPI'
+import { TWO_MINUTES } from '../../../constants'
 import { sourceFilterFunction } from '../../../domain/use_cases/reporting/filters/sourceFilterFunction'
 import { subThemesFilterFunction } from '../../../domain/use_cases/reporting/filters/subThemesFilterFunction'
 import { themeFilterFunction } from '../../../domain/use_cases/reporting/filters/themeFilterFunction'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-
-const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredReportingsQuery = () => {
   const {
