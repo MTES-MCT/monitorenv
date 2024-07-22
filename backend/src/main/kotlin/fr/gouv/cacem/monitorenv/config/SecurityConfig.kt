@@ -26,50 +26,50 @@ class SecurityConfig(
         http.csrf { it.disable() }
             .cors { it.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests { authorize ->
-            if (oidcProperties.enabled == true) {
-                logger.info(
-                    """
+                if (oidcProperties.enabled == true) {
+                    logger.info(
+                        """
                         ✅ OIDC Authentication is enabled.
                     """.trimIndent(),
-                )
-
-                authorize
-                    .requestMatchers(
-                        "/",
-                        "/index.html",
-                        "/*.js",
-                        "/*.png",
-                        "/*.svg",
-                        "/static/**",
-                        "/assets/**",
-                        "/map-icons/**",
-                        "/flags/**",
-                        "/robots.txt",
-                        "/favicon-32.ico",
-                        "/asset-manifest.json",
-                        "/swagger-ui/**",
-                        "v3/**",
-                        // Used to redirect to the frontend SPA, see Spa.kt
-                        "/error",
-                        "/api/**",
-                        "/version",
-                        "/actuator/**",
-                        // TODO: secure SSE endpoints
-                        "/bff/reportings/sse/**",
                     )
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
-            } else {
-                logger.warn(
-                    """
+
+                    authorize
+                        .requestMatchers(
+                            "/",
+                            "/index.html",
+                            "/*.js",
+                            "/*.png",
+                            "/*.svg",
+                            "/static/**",
+                            "/assets/**",
+                            "/map-icons/**",
+                            "/flags/**",
+                            "/robots.txt",
+                            "/favicon-32.ico",
+                            "/asset-manifest.json",
+                            "/swagger-ui/**",
+                            "v3/**",
+                            // Used to redirect to the frontend SPA, see Spa.kt
+                            "/error",
+                            "/api/**",
+                            "/version",
+                            "/actuator/**",
+                            // TODO: secure SSE endpoints
+                            "/bff/reportings/sse/**",
+                        )
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
+                } else {
+                    logger.warn(
+                        """
                         ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
                     """.trimIndent(),
-                )
+                    )
 
-                authorize.requestMatchers("/**").permitAll()
+                    authorize.requestMatchers("/**").permitAll()
+                }
             }
-        }
 
         if (oidcProperties.enabled == true) {
             http.oauth2ResourceServer { oauth2ResourceServer ->
@@ -87,7 +87,7 @@ class SecurityConfig(
         val configuration =
             CorsConfiguration().apply {
                 allowedOrigins = listOf("*")
-                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
+                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
             }
 
