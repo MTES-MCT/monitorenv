@@ -5,7 +5,7 @@ VALUES (1, 'Commentaire sur la zone de vigilance', 'ABC', '2024-12-16 23:59:59.0
 
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility,linked_amps, linked_regulatory_areas)
-VALUES (2, 'Des dauphins partout', 'DEF', '2024-03-01 23:59:59.00000', 'END_DATE', '2030-03-01 23:59:59.00000', NULL, 'ALL_WEEKS', '0106000020E610000001000000010300000001000000050000009E64CAC84F5DFDBF447087DF4CDA4840FAA68553DF2CFDBFE8B528CA7AD84840B2FDB77AA327FCBF30AA4C29CDD64840D9ADABB07A86FBBFE4090ED908D748409E64CAC84F5DFDBF447087DF4CDA4840', false, NULL, 'Zone de vigilance 2', 'Unité PAM Themis', '2024-02-15 00:00:00.00000', '{"AMP","Mixte"}', 'PRIVATE', '{}', '{}');
+VALUES (2, 'Des dauphins partout', 'DEF', '2024-03-01 23:59:59.00000', 'END_DATE', '2030-03-01 23:59:59.00000', NULL, 'ALL_WEEKS', '0106000020E610000001000000010300000001000000050000009E64CAC84F5DFDBF447087DF4CDA4840FAA68553DF2CFDBFE8B528CA7AD84840B2FDB77AA327FCBF30AA4C29CDD64840D9ADABB07A86FBBFE4090ED908D748409E64CAC84F5DFDBF447087DF4CDA4840', false, NULL, 'Zone de vigilance 2', 'Unité PAM Themis', '2024-02-15 00:00:00.00000', '{"AMP","Mixte"}', 'PRIVATE', '{}', '{"625", "425"}');
 
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility,linked_amps, linked_regulatory_areas)
@@ -27,7 +27,7 @@ VALUES (6, NULL, 'DEF', '2024-04-04 23:59:59.00000', 'NEVER', NULL, NULL, 'ALL_Y
 
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility, linked_amps, linked_regulatory_areas)
-VALUES (7, 'comments', 'GHI', '2024-03-31 23:59:59.00000', 'OCCURENCES_NUMBER', NULL, 6, 'ALL_WEEKS', '0106000020E6100000010000000103000000010000000500000057F77C6FBF2D15C038E1B84BCD2E48403A42C339BDB014C038E1B84BCD2E48403A42C339BDB014C010F24763BA37484057F77C6FBF2D15C010F24763BA37484057F77C6FBF2D15C038E1B84BCD2E4840', true, NULL, 'Zone de vigilance 7', 'Sémaphore de Fécamp', '2024-03-01 00:00:00.00000', NULL, NULL, '{}', '{"625", "425"}');
+VALUES (7, 'comments', 'GHI', '2024-03-31 23:59:59.00000', 'OCCURENCES_NUMBER', NULL, 6, 'ALL_WEEKS', '0106000020E6100000010000000103000000010000000500000057F77C6FBF2D15C038E1B84BCD2E48403A42C339BDB014C038E1B84BCD2E48403A42C339BDB014C010F24763BA37484057F77C6FBF2D15C010F24763BA37484057F77C6FBF2D15C038E1B84BCD2E4840', true, NULL, 'Zone de vigilance 7', 'Sémaphore de Fécamp', '2024-03-01 00:00:00.00000', NULL, NULL, '{}', '{}');
 
 /* Period on two years */
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,

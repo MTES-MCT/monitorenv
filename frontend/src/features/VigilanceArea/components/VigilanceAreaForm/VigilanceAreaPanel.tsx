@@ -136,41 +136,48 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
             {vigilanceArea?.comments ?? EMPTY_VALUE}
           </InlineItemValue>
         </SubPart>
-        <SubPart>
-          <InlineItemLabel>Réglementations en lien</InlineItemLabel>
-          <RegulatoryAreas isReadOnly linkedRegulatoryAreas={values?.linkedRegulatoryAreas} />
-        </SubPart>
-        <SubPart>
-          <InlineItemLabel>AMP en lien</InlineItemLabel>
-          <AMPList isReadOnly linkedAMPs={values?.linkedAMPs} />
-        </SubPart>
-        <SubPart>
-          <InlineItemLabel>Liens utiles</InlineItemLabel>
-          <InlineItemValue>
-            {vigilanceArea?.links && vigilanceArea?.links.length > 0
-              ? vigilanceArea?.links.map(link => (
-                  <LinkContainer key={`${link.linkText}-${link.linkUrl}`}>
-                    <LinkText>{link.linkText}</LinkText>
-                    <LinkUrl href={link.linkUrl} rel="external" target="_blank">
-                      {link.linkUrl}
-                    </LinkUrl>
-                  </LinkContainer>
-                ))
-              : EMPTY_VALUE}
-          </InlineItemValue>
-        </SubPart>
+        {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (
+          <SubPart>
+            <InlineItemLabel>Réglementations en lien</InlineItemLabel>
+            <RegulatoryAreas isReadOnly linkedRegulatoryAreas={values?.linkedRegulatoryAreas} />
+          </SubPart>
+        )}
+        {values?.linkedAMPs && values?.linkedAMPs.length > 0 && (
+          <SubPart>
+            <InlineItemLabel>AMP en lien</InlineItemLabel>
+            <AMPList isReadOnly linkedAMPs={values?.linkedAMPs} />
+          </SubPart>
+        )}
+
+        {vigilanceArea?.links && vigilanceArea?.links.length > 0 && (
+          <SubPart>
+            <InlineItemLabel>Liens utiles</InlineItemLabel>
+            <InlineItemValue>
+              {vigilanceArea?.links.map(link => (
+                <LinkContainer key={`${link.linkText}-${link.linkUrl}`}>
+                  <LinkText>{link.linkText}</LinkText>
+                  <LinkUrl href={link.linkUrl} rel="external" target="_blank">
+                    {link.linkUrl}
+                  </LinkUrl>
+                </LinkContainer>
+              ))}
+            </InlineItemValue>
+          </SubPart>
+        )}
         <SubPart>
           <InternText>Section interne CACEM</InternText>
           <InlineItem>
             <InlineItemLabel>Crée le</InlineItemLabel>
             <InlineItemValue>{vigilanceArea?.createdBy ?? EMPTY_VALUE}</InlineItemValue>
           </InlineItem>
-          <InlineItem>
-            <InlineItemLabel>Source</InlineItemLabel>
-            <InlineItemValue $maxLine={2} title={vigilanceArea?.source ?? ''}>
-              {vigilanceArea?.source ?? EMPTY_VALUE}
-            </InlineItemValue>
-          </InlineItem>
+          {vigilanceArea?.source && (
+            <InlineItem>
+              <InlineItemLabel>Source</InlineItemLabel>
+              <InlineItemValue $maxLine={2} title={vigilanceArea?.source}>
+                {vigilanceArea?.source}
+              </InlineItemValue>
+            </InlineItem>
+          )}
         </SubPart>
       </Body>
       <FooterContainer>
