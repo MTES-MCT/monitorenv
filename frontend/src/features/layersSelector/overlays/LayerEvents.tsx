@@ -83,8 +83,9 @@ export function LayerEvents({ mapClickEvent }: BaseMapChildrenProps) {
         if (feature) {
           const layerId = feature.get('id')
           dispatch(closeMetadataPanel())
-
-          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
+          if (layerId) {
+            dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
+          }
         }
       }
 

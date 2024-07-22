@@ -37,59 +37,40 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     }).readFeature(geometry)
   }, [geometry])
 
-  const vectorSourceRef = useRef() as MutableRefObject<VectorSource<Feature<Geometry>>>
-  const getVectorSource = useCallback((): VectorSource<Feature<Geometry>> => {
-    if (vectorSourceRef.current === undefined) {
-      vectorSourceRef.current = new VectorSource({
-        format: new GeoJSON({
-          dataProjection: WSG84_PROJECTION,
-          featureProjection: OPENLAYERS_PROJECTION
-        })
+  const vectorSourceRef = useRef(
+    new VectorSource({
+      format: new GeoJSON({
+        dataProjection: WSG84_PROJECTION,
+        featureProjection: OPENLAYERS_PROJECTION
       })
-    }
+    })
+  ) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
-    return vectorSourceRef.current
-  }, [])
+  const drawVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
 
-  const drawVectorSourceRef = useRef() as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const vectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: vectorSourceRef.current,
+      style: [dottedLayerStyle, editStyle],
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.DRAW_VIGILANCE_AREA.zIndex
+    })
+  ) as React.MutableRefObject<VectorLayerWithName>
 
-  const getDrawVectorSource = useCallback((): VectorSource<Feature<Geometry>> => {
-    if (drawVectorSourceRef.current === undefined) {
-      drawVectorSourceRef.current = new VectorSource()
-    }
-
-    return drawVectorSourceRef.current
-  }, [])
-
-  const vectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.DRAW_VIGILANCE_AREA.code
 
   useEffect(() => {
-    function getVectorLayer() {
-      if (vectorLayerRef.current === undefined) {
-        vectorLayerRef.current = new VectorLayer({
-          renderBuffer: 7,
-          source: getVectorSource(),
-          style: [dottedLayerStyle, editStyle],
-          updateWhileAnimating: true,
-          updateWhileInteracting: true,
-          zIndex: Layers.DRAW_VIGILANCE_AREA.zIndex
-        })
-        vectorLayerRef.current.name = Layers.DRAW_VIGILANCE_AREA.code
-      }
-
-      return vectorLayerRef.current
-    }
-
-    if (map) {
-      map.getLayers().push(getVectorLayer())
-    }
+    map.getLayers().push(vectorLayerRef.current)
 
     return () => {
       if (map) {
-        map.removeLayer(getVectorLayer())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(vectorLayerRef.current)
       }
     }
-  }, [map, getVectorSource])
+  }, [map])
 
   const setGeometryOnModifyEnd = useCallback(
     event => {
@@ -108,11 +89,11 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     }
 
     resetModifyInteractions(map)
-    getVectorSource().clear(true)
-    getDrawVectorSource().clear(true)
-    getVectorSource().addFeature(feature)
+    vectorSourceRef.current.clear(true)
+    drawVectorSourceRef.current.clear(true)
+    vectorSourceRef.current.addFeature(feature)
     const modify = new Modify({
-      source: getVectorSource()
+      source: vectorSourceRef.current
     })
     map?.addInteraction(modify)
 
@@ -124,7 +105,7 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
         modify.un('modifyend', setGeometryOnModifyEnd)
       }
     }
-  }, [getVectorSource, getDrawVectorSource, map, feature, isDrawFormOpen, setGeometryOnModifyEnd])
+  }, [map, feature, isDrawFormOpen, setGeometryOnModifyEnd])
 
   useEffect(() => {
     if (!map || !isDrawFormOpen) {
@@ -136,7 +117,7 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
     const draw = new Draw({
       geometryFunction,
-      source: getDrawVectorSource(),
+      source: drawVectorSourceRef.current,
       stopClick: true,
       style: drawStyle,
       type: geometryType
@@ -147,17 +128,19 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     draw.on('drawend', event => {
       dispatch(addFeatureToDrawedFeature(event.feature))
       event.stopPropagation()
-      getDrawVectorSource().clear(true)
+      drawVectorSourceRef.current.clear(true)
     })
 
     return () => {
       if (map) {
         map.removeInteraction(draw)
-        getVectorSource().clear(true)
-        getDrawVectorSource().clear(true)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        vectorSourceRef.current.clear(true)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        drawVectorSourceRef.current.clear(true)
       }
     }
-  }, [map, dispatch, getDrawVectorSource, getVectorSource, isDrawFormOpen, interactionType])
+  }, [map, dispatch, isDrawFormOpen, interactionType])
 
   return null
 }
