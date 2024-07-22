@@ -183,6 +183,18 @@ export const vigilanceAreaSlice = createSlice({
     },
     setSelectedVigilanceAreaId(state, action: PayloadAction<number | undefined>) {
       state.selectedVigilanceAreaId = action.payload
+    },
+    updateEditingVigilanceArea(
+      state,
+      action: PayloadAction<{
+        ampToAdd: Array<number>
+        geometry: GeoJSON.Geometry | undefined
+        regulatoryAreasToAdd: Array<number>
+      }>
+    ) {
+      state.ampToAdd = action.payload.ampToAdd
+      state.geometry = action.payload.geometry
+      state.regulatoryAreasToAdd = action.payload.regulatoryAreasToAdd
     }
   }
 })

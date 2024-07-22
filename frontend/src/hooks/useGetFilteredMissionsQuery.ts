@@ -6,11 +6,10 @@ import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
 import { useGetMissionsQuery } from '../api/missionsAPI'
+import { TWO_MINUTES } from '../constants'
 import { isMissionPartOfSelectedAdministrationNames } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedAdministrationNames'
 import { isMissionPartOfSelectedControlPlans } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedControlPlans'
 import { isMissionPartOfSelectedControlUnitIds } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedControlUnitIds'
-
-const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredMissionsQuery = () => {
   const {

@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
+import { TWO_MINUTES } from '../../../../constants'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -19,7 +20,7 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const isLayerVisible = useAppSelector(state => state.global.displayVigilanceAreaLayer)
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
 
-  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { pollingInterval: TWO_MINUTES })
 
   const vigilanceAreasFeatures = useMemo(() => {
     if (!vigilanceAreas || vigilanceAreas?.length === 0) {

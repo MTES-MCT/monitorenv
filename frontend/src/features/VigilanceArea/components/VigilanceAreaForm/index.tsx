@@ -57,14 +57,22 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
 
   useEffect(() => {
     if (editingVigilanceAreaId && vigilanceArea && vigilanceArea.id === editingVigilanceAreaId) {
-      dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(vigilanceArea?.linkedRegulatoryAreas))
-      dispatch(vigilanceAreaActions.addAMPsToVigilanceArea(vigilanceArea?.linkedAMPs))
-      dispatch(vigilanceAreaActions.setGeometry(vigilanceArea?.geom))
+      dispatch(
+        vigilanceAreaActions.updateEditingVigilanceArea({
+          ampToAdd: vigilanceArea.linkedAMPs,
+          geometry: vigilanceArea.geom,
+          regulatoryAreasToAdd: vigilanceArea.linkedRegulatoryAreas
+        })
+      )
     }
     if (editingVigilanceAreaId === NEW_VIGILANCE_AREA_ID) {
-      dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([]))
-      dispatch(vigilanceAreaActions.addAMPsToVigilanceArea([]))
-      dispatch(vigilanceAreaActions.setGeometry(undefined))
+      dispatch(
+        vigilanceAreaActions.updateEditingVigilanceArea({
+          ampToAdd: [],
+          geometry: undefined,
+          regulatoryAreasToAdd: []
+        })
+      )
     }
     // we just want to listen when editingVigilanceAreaId changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
