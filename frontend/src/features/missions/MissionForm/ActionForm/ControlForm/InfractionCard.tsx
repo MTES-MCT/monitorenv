@@ -103,6 +103,7 @@ export function InfractionCard({
             addVesselIdentification()
             break
           default:
+            addToIdentification('Type non renseigné')
             break
         }
         break
