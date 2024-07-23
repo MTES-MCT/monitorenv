@@ -31,7 +31,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   // Vigilance Area
   const { editingVigilanceArea } = useGetVigilanceAreasQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      editingVigilanceArea: data?.find(area => area.id === editingVigilanceAreaId)
+      editingVigilanceArea: editingVigilanceAreaId ? data?.entities[editingVigilanceAreaId] : undefined
     }),
     skip: !editingVigilanceAreaId || editingVigilanceAreaId === NEW_VIGILANCE_AREA_ID
   })

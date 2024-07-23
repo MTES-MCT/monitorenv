@@ -67,4 +67,6 @@ export namespace VigilanceArea {
     isSelected: boolean
     layerId: number
   }
+
+  export type VigilanceAreaLayer = VigilanceArea.VigilanceArea & { bbox: number[] }
 }

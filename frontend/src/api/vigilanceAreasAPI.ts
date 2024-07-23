@@ -1,6 +1,14 @@
+import { createEntityAdapter, type EntityState } from '@reduxjs/toolkit'
+import { boundingExtent } from 'ol/extent'
+
 import { monitorenvPrivateApi } from './api'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
+import type { Coordinate } from 'ol/coordinate'
+
+const VigilanceAreaLayersAdapter = createEntityAdapter<VigilanceArea.VigilanceAreaLayer>()
+
+const vigilanceAreaLayersInitialState = VigilanceAreaLayersAdapter.getInitialState()
 
 export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
@@ -23,9 +31,23 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
       providesTags: (_, __, id) => [{ id, type: 'VigilanceAreas' }],
       query: id => `/v1/vigilance_areas/${id}`
     }),
-    getVigilanceAreas: build.query<Array<VigilanceArea.VigilanceArea>, void>({
+    getVigilanceAreas: build.query<EntityState<VigilanceArea.VigilanceAreaLayer>, void>({
       providesTags: () => [{ id: 'LIST', type: 'VigilanceAreas' } as const],
-      query: () => `/v1/vigilance_areas`
+      query: () => `/v1/vigilance_areas`,
+      transformResponse: (response: VigilanceArea.VigilanceAreaLayer[]) =>
+        VigilanceAreaLayersAdapter.setAll(
+          vigilanceAreaLayersInitialState,
+          response.map(vigilanceAreaLayer => {
+            const bbox = vigilanceAreaLayer.geom?.coordinates
+              ? boundingExtent(vigilanceAreaLayer.geom?.coordinates?.flat().flat() as Coordinate[])
+              : []
+
+            return {
+              ...vigilanceAreaLayer,
+              bbox
+            }
+          })
+        )
     }),
     updateVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
       invalidatesTags: (_, __, { id }) => [

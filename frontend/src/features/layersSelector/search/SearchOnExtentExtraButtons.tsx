@@ -1,3 +1,4 @@
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
@@ -10,10 +11,12 @@ import {
   setAMPsSearchResult,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
+  setFilteredVigilanceAreaThemes,
   setGlobalSearchText,
   setRegulatoryLayersSearchResult,
   setSearchExtent,
-  setShouldFilterSearchOnMapExtent
+  setShouldFilterSearchOnMapExtent,
+  setVigilanceAreasSearchResult
 } from './slice'
 import { closeLayerOverlay, closeMetadataPanel } from '../metadataPanel/slice'
 
@@ -33,6 +36,8 @@ export function SearchOnExtentExtraButtons({
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
   const [shouldReloadSearchOnExtent, setShouldReloadSearchOnExtent] = useState<boolean>(false)
 
@@ -64,14 +69,17 @@ export function SearchOnExtentExtraButtons({
   const handleResetSearch = () => {
     dispatch(setRegulatoryLayersSearchResult([]))
     dispatch(setAMPsSearchResult([]))
+    dispatch(setVigilanceAreasSearchResult([]))
     setShouldReloadSearchOnExtent(false)
     dispatch(setShouldFilterSearchOnMapExtent(false))
     dispatch(setGlobalSearchText(''))
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setFilteredAmpTypes([]))
+    dispatch(setFilteredVigilanceAreaThemes([]))
     dispatch(resetSearchExtent())
     dispatch(closeMetadataPanel())
     dispatch(closeLayerOverlay())
+    dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
   }
 
   const toggleFilterSearchOnMapExtent = () => {

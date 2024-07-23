@@ -9,6 +9,7 @@ type LayerSidebarSliceState = {
   baselayerIsOpen: boolean
   myAmpsIsOpen: boolean
   myRegulatoryZonesIsOpen: boolean
+  myVigilanceAreasIsOpen: boolean
 }
 
 const initialState: LayerSidebarSliceState = {
@@ -19,7 +20,8 @@ const initialState: LayerSidebarSliceState = {
   areRegulatoryResultsOpen: false,
   baselayerIsOpen: false,
   myAmpsIsOpen: false,
-  myRegulatoryZonesIsOpen: false
+  myRegulatoryZonesIsOpen: false,
+  myVigilanceAreasIsOpen: false
 }
 
 export const layerSidebarSlice = createSlice({
@@ -62,7 +64,7 @@ export const layerSidebarSlice = createSlice({
     toggleMyVigilanceAreas(state) {
       return {
         ...initialState,
-        areMyVigilanceAreasOpen: !state.areMyVigilanceAreasOpen
+        myVigilanceAreasIsOpen: !state.myVigilanceAreasIsOpen
       }
     },
     toggleRegFilters(state) {
@@ -75,6 +77,12 @@ export const layerSidebarSlice = createSlice({
       return {
         ...initialState,
         areRegulatoryResultsOpen: action?.payload ?? !state.areRegulatoryResultsOpen
+      }
+    },
+    toggleVigilanceAreaResults(state, action: PayloadAction<boolean | undefined>) {
+      return {
+        ...initialState,
+        areMyVigilanceAreasOpen: action?.payload ?? !state.areMyVigilanceAreasOpen
       }
     }
   }

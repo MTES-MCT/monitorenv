@@ -2,16 +2,21 @@ import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice
 import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Checkbox } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import _ from 'lodash'
+import { groupBy } from 'lodash'
 import styled from 'styled-components'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
+import { VigilanceAreaLayer } from './VigilanceAreaLayer'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from '../slice'
+import {
+  setIsAmpSearchResultsVisible,
+  setIsRegulatorySearchResultsVisible,
+  setIsVigilanceAreaSearchResultsVisible
+} from '../slice'
 
 type ResultListProps = {
   searchedText: string
@@ -22,10 +27,17 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
+  const areAmpsResultsOpen = useAppSelector(state => state.layerSidebar.areAmpsResultsOpen)
+
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const areRegulatoryResultsOpen = useAppSelector(state => state.layerSidebar.areRegulatoryResultsOpen)
-  const areAmpsResultsOpen = useAppSelector(state => state.layerSidebar.areAmpsResultsOpen)
+
+  const isVigilanceAreaSearchResultsVisible = useAppSelector(
+    state => state.layerSearch.isVigilanceAreaSearchResultsVisible
+  )
+  const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
+  const areMyVigilanceAreasOpen = useAppSelector(state => state.layerSidebar.areMyVigilanceAreasOpen)
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
@@ -33,12 +45,13 @@ export function ResultList({ searchedText }: ResultListProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: amps } = useGetAMPsQuery()
 
-  const ampResulstsByAMPName = _.groupBy(ampsSearchResult, a => amps?.entities[a]?.name)
+  const ampResulstsByAMPName = groupBy(ampsSearchResult, a => amps?.entities[a]?.name)
 
-  const regulatoryLayersByLayerName = _.groupBy(
+  const regulatoryLayersByLayerName = groupBy(
     regulatoryLayersSearchResult,
     r => regulatoryLayers?.entities[r]?.layer_name
   )
+
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
       dispatch(setIsRegulatorySearchResultsVisible(true))
@@ -52,6 +65,14 @@ export function ResultList({ searchedText }: ResultListProps) {
     }
     dispatch(closeMetadataPanel())
     dispatch(layerSidebarActions.toggleAmpResults())
+  }
+
+  const toggleVigilanceAreas = () => {
+    if (!isVigilanceAreaSearchResultsVisible) {
+      dispatch(setIsVigilanceAreaSearchResultsVisible(true))
+    }
+    dispatch(closeMetadataPanel())
+    dispatch(layerSidebarActions.toggleVigilanceAreaResults())
   }
 
   const toggleAMPVisibility = (isChecked: boolean | undefined) => {
@@ -68,6 +89,14 @@ export function ResultList({ searchedText }: ResultListProps) {
     }
     dispatch(closeMetadataPanel())
     dispatch(setIsRegulatorySearchResultsVisible(!!isChecked))
+  }
+
+  const toggleVigilanceAreaVisibility = (isChecked: boolean | undefined) => {
+    if (!isChecked) {
+      dispatch(layerSidebarActions.toggleVigilanceAreaResults(false))
+    }
+    dispatch(closeMetadataPanel())
+    dispatch(setIsVigilanceAreaSearchResultsVisible(!!isChecked))
   }
 
   return (
@@ -116,6 +145,27 @@ export function ResultList({ searchedText }: ResultListProps) {
               <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
             ))}
           </SubListAMP>
+        </>
+      )}
+      {vigilanceAreaSearchResult && !isLinkingRegulatoryToVigilanceArea && (
+        <>
+          <Header>
+            <StyledCheckbox
+              checked={isVigilanceAreaSearchResultsVisible}
+              label=""
+              name="isVigilanceAreaSearchResultsVisible"
+              onChange={toggleVigilanceAreaVisibility}
+            />
+            <Title data-cy="vigilance-area-results-list-button" onClick={toggleVigilanceAreas}>
+              ZONES DE VIGILANCE &nbsp;
+              <NumberOfResults> ({vigilanceAreaSearchResult?.length || '0'} résultats)</NumberOfResults>
+            </Title>
+          </Header>
+          <SubList $isExpanded={areMyVigilanceAreasOpen} data-cy="vigilance-area-result-list">
+            {vigilanceAreaSearchResult.map(id => (
+              <VigilanceAreaLayer key={id} layerId={id} searchedText={searchedText} />
+            ))}
+          </SubList>
         </>
       )}
     </List>

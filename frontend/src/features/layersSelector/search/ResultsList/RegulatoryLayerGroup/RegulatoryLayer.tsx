@@ -40,7 +40,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const AMPsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
+  const ampsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
@@ -92,7 +92,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
 
   const addAMPToVigilanceArea = e => {
     e.stopPropagation()
-    dispatch(vigilanceAreaActions.addAMPsToVigilanceArea([layerId]))
+    dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([layerId]))
   }
 
   useEffect(() => {
@@ -138,7 +138,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
             accent={Accent.TERTIARY}
             aria-label="Ajouter la zone AMP à la zone de vigilance"
             data-cy="amp-zone-add"
-            disabled={AMPsLinkedToVigilanceAreaForm.includes(layerId)}
+            disabled={ampsLinkedToVigilanceAreaForm.includes(layerId)}
             Icon={Icon.Plus}
             onClick={addAMPToVigilanceArea}
           />

@@ -1,3 +1,4 @@
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { type Option } from '@mtes-mct/monitor-ui'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
@@ -20,16 +21,22 @@ export function LayerSearch() {
   const dispatch = useAppDispatch()
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery()
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
+  const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
+
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
+
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const filteredVigilanceAreasThemes = useAppSelector(state => state.layerSearch.filteredVigilanceAreasThemes)
+
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
 
-  const debouncedSearchLayers = useSearchLayers({ amps, regulatoryLayers })
+  const debouncedSearchLayers = useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
 
   const handleSearchInputChange = searchedText => {
     dispatch(setGlobalSearchText(searchedText))
@@ -38,7 +45,8 @@ export function LayerSearch() {
       extent: searchExtent,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaThemes: filteredVigilanceAreasThemes
     })
   }
 
@@ -49,7 +57,8 @@ export function LayerSearch() {
       extent: searchExtent,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaThemes: filteredVigilanceAreasThemes
     })
   }
 
@@ -60,7 +69,8 @@ export function LayerSearch() {
       extent: searchExtent,
       regulatoryThemes: filteredThemes,
       searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaThemes: filteredVigilanceAreasThemes
     })
   }
 
@@ -72,7 +82,8 @@ export function LayerSearch() {
       extent: searchExtent,
       regulatoryThemes: [],
       searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaThemes: []
     })
   }
 
@@ -94,7 +105,8 @@ export function LayerSearch() {
 
   const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers), [regulatoryLayers])
 
-  const allowResetResults = !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult)
+  const allowResetResults =
+    !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult) || !_.isEmpty(vigilanceAreaSearchResult)
 
   return (
     <>

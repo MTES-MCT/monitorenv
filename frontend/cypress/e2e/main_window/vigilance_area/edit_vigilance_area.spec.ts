@@ -79,7 +79,7 @@ describe('Edit Vigilance Area', () => {
       cy.clickButton('Ajouter la zone à Mes zones réglementaires')
       // check if the regulatory area is added
       cy.getDataCy('my-regulatory-group').contains('RNN Iroise').click({ force: true })
-      cy.getDataCy("vigilance-area-my-zone-Partie marine (plus basses eaux) RNN d'Iroise").should('exist')
+      cy.getDataCy("my-zone-Partie marine (plus basses eaux) RNN d'Iroise").should('exist')
 
       // Reset data
       cy.clickButton('Editer')
@@ -129,7 +129,7 @@ describe('Edit Vigilance Area', () => {
       cy.clickButton('Ajouter la zone à Mes AMP').first()
       // check if the AMP is added
       cy.getDataCy('amp-layer-topic').contains('marais de Brouage-Oléron').click({ force: true })
-      cy.getDataCy('vigilance-area-my-zone-Natura 2000').should('exist')
+      cy.getDataCy('my-zone-Natura 2000').should('exist')
 
       // Reset data
       cy.clickButton('Editer')

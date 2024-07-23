@@ -6,15 +6,14 @@ import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
 
+import { MyVigilanceAreaLayerZone } from './MyVigilanceAreaLayerZone'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function MyVigilanceAreas() {
   const dispatch = useAppDispatch()
 
-  const areMyVigilanceAreasOpen = useAppSelector(state => state.layerSidebar.areMyVigilanceAreasOpen)
-
-  // TODO: Replace this when we have the real data
-  const savedVigilanceAreas = []
+  const myVigilanceAreasIsOpen = useAppSelector(state => state.layerSidebar.myVigilanceAreasIsOpen)
+  const myVigilanceAreaIds = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIds)
 
   const onTitleClicked = () => {
     dispatch(layerSidebarActions.toggleMyVigilanceAreas())
@@ -27,18 +26,18 @@ export function MyVigilanceAreas() {
   return (
     <>
       <LayerSelector.Wrapper
-        $hasPinnedLayers={savedVigilanceAreas.length > 0}
-        $isExpanded={areMyVigilanceAreasOpen}
+        $hasPinnedLayers={myVigilanceAreaIds.length > 0}
+        $isExpanded={myVigilanceAreasIsOpen}
         data-cy="my-vigilance-areas-layers"
         onClick={onTitleClicked}
       >
         <LayerSelector.Pin />
         <LayerSelector.Title>Mes zones de vigilance</LayerSelector.Title>
-        <ChevronIcon $isOpen={areMyVigilanceAreasOpen} $right />
+        <ChevronIcon $isOpen={myVigilanceAreasIsOpen} $right />
       </LayerSelector.Wrapper>
-      {areMyVigilanceAreasOpen && (
+      {myVigilanceAreasIsOpen && (
         <>
-          <ButtonContainer>
+          <ButtonContainer $withPaddingBottom={myVigilanceAreaIds.length > 0}>
             <Button
               accent={Accent.SECONDARY}
               Icon={Icon.Plus}
@@ -51,8 +50,10 @@ export function MyVigilanceAreas() {
           </ButtonContainer>
 
           <LayerSelector.LayerList>
-            {savedVigilanceAreas.length === 0 && (
+            {myVigilanceAreaIds.length === 0 ? (
               <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
+            ) : (
+              myVigilanceAreaIds.map(id => <MyVigilanceAreaLayerZone key={id} layerId={id} />)
             )}
           </LayerSelector.LayerList>
         </>
@@ -61,8 +62,7 @@ export function MyVigilanceAreas() {
   )
 }
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.div<{ $withPaddingBottom: boolean }>`
   background-color: ${p => p.theme.color.white};
-  border-bottom: 1px solid ${p => p.theme.color.lightGray};
-  padding: 8px 16px;
+  padding: 8px 16px ${p => (p.$withPaddingBottom ? ' 16px' : '0px')} 16px;
 `

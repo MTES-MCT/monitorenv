@@ -167,7 +167,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         <SubPart>
           <InternText>Section interne CACEM</InternText>
           <InlineItem>
-            <InlineItemLabel>Crée le</InlineItemLabel>
+            <InlineItemLabel>Créé par</InlineItemLabel>
             <InlineItemValue>{vigilanceArea?.createdBy ?? EMPTY_VALUE}</InlineItemValue>
           </InlineItem>
           {vigilanceArea?.source && (

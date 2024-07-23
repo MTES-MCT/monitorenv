@@ -3,6 +3,7 @@ import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
 import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/EditingVigilanceAreaLayer'
+import { PreviewVigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/PreviewVigilanceAreasLayer'
 import { SelectedVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/SelectedVigilanceAreaLayer'
 
 import { BaseMap } from './BaseMap'
@@ -199,6 +200,8 @@ export function Map({ isSuperUser, isVigilanceAreaEnabled }) {
       {/* VIGILANCE AREA */}
       {/* @ts-ignore */}
       {isVigilanceAreaEnabled && <VigilanceAreasLayer />}
+      {/* @ts-ignore */}
+      {isVigilanceAreaEnabled && <PreviewVigilanceAreasLayer />}
       {/* @ts-ignore */}
       {isVigilanceAreaEnabled && <DrawVigilanceAreaLayer />}
       {/* @ts-ignore */}

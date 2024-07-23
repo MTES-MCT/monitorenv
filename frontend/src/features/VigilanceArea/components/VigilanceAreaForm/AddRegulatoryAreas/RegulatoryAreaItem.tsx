@@ -82,7 +82,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
 
     if (!selectedRegulatoryLayerIds.includes(regulatoryAreaId)) {
       if (isLayerVisible) {
-        dispatch(vigilanceAreaActions.removeRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
+        dispatch(vigilanceAreaActions.deleteRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
       } else {
         dispatch(vigilanceAreaActions.addRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
       }
@@ -91,7 +91,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
     }
 
     if (isLayerVisible || pinnedRegulatoryZoneIsShowed) {
-      dispatch(vigilanceAreaActions.removeRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
+      dispatch(vigilanceAreaActions.deleteRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
       dispatch(hideRegulatoryLayer(regulatoryAreaId))
     } else {
       dispatch(vigilanceAreaActions.addRegulatoryAreaIdsToBeDisplayed(regulatoryAreaId))
