@@ -665,6 +665,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('Réponse administrative', 'Régularisation')
       cy.fill('Nb de cibles avec cette infraction', 2)
       cy.clickButton("Valider l'infraction")
 
