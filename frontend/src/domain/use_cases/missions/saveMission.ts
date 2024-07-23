@@ -13,8 +13,20 @@ import { setToast } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
+import type { MissionData, Mission, NewMission } from 'domain/entities/missions'
+
+const MISSION_VALUES_TO_EXCLUDE = [
+  'attachedReportings',
+  'createdAtUtc',
+  'detachedReportings',
+  'detachedReportingIds',
+  'fishActions',
+  'hasRapportNavActions',
+  'updatedAtUtc'
+]
+
 export const saveMission =
-  (values, reopen = false, quitAfterSave = false) =>
+  (values: Mission | NewMission, reopen = false, quitAfterSave = false) =>
   async (dispatch, getState) => {
     const {
       reporting: { reportings },
@@ -22,18 +34,21 @@ export const saveMission =
     } = getState()
     const selectedMissions = getState().missionForms.missions
 
-    const envActions = [...values.envActions]
-    const sortedActions = envActions.sort((a, b) => a.id - b.id)
-    const valuesToSave = omit({ ...values, envActions: sortedActions }, [
-      'attachedReportings',
-      'detachedReportings',
-      'fishActions'
-    ])
-    const routeParams = getMissionPageRoute(currentPath)
-    const missionIsNewMission = isNewMission(routeParams?.params?.id)
     await dispatch(missionFormsActions.setIsListeningToEvents(false))
 
-    const newOrNextMissionData = missionIsNewMission ? { ...valuesToSave, id: undefined } : valuesToSave
+    const envActions = [...values.envActions]
+    const sortedActions = envActions
+      .sort((a, b) => a.id.localeCompare(b.id))
+      .map(action => omit(action, 'durationMatchesMission'))
+
+    const valuesToSave = omit({ ...values, envActions: sortedActions }, ...MISSION_VALUES_TO_EXCLUDE)
+    const routeParams = getMissionPageRoute(currentPath)
+    const missionIsNewMission = isNewMission(routeParams?.params?.id)
+    const newOrNextMissionData = {
+      ...valuesToSave,
+      id: missionIsNewMission ? undefined : Number(values.id)
+    } as MissionData
+
     const upsertMission = missionIsNewMission
       ? missionsAPI.endpoints.createMission
       : missionsAPI.endpoints.updateMission
@@ -51,7 +66,7 @@ export const saveMission =
                 isFormDirty: false,
                 missionForm: missionUpdated
               },
-              previousId: values.id
+              previousId: String(values.id)
             })
           )
 

@@ -7,7 +7,7 @@ export function StatusActionTag({
   controlStatus = ControlStatusEnum.CONTROL_TO_BE_DONE
 }: {
   backgroundColor?: string
-  controlStatus: ControlStatusEnum
+  controlStatus?: ControlStatusEnum
 }) {
   return (
     <Tag

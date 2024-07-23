@@ -79,7 +79,7 @@ export function MissionForm({
   const { getMissionEventById } = useMissionEventContext()
   const missionEvent = getMissionEventById(id)
 
-  const { dirty, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
+  const { dirty, setFieldValue, values } = useFormikContext<Mission | NewMission>()
 
   const previousEngagedControlUnit = usePrevious(engagedControlUnit)
 

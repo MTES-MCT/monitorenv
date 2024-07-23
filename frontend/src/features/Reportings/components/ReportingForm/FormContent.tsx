@@ -34,7 +34,6 @@ import {
   type Reporting,
   ReportingTypeEnum,
   ReportingTypeLabels,
-  type ReportingDetailed,
   INDIVIDUAL_ANCHORING_THEME_ID,
   InfractionProvenLabels
 } from 'domain/entities/reporting'
@@ -70,8 +69,6 @@ import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
 import { isReportingAutoSaveEnabled, shouldSaveReporting } from './utils'
 
-import type { AtLeast } from '../../../../types'
-
 const WITH_VHF_ANSWER_OPTIONS = [
   { label: 'Oui', value: true },
   { label: 'Non', value: false }
@@ -79,7 +76,7 @@ const WITH_VHF_ANSWER_OPTIONS = [
 
 type FormContentProps = {
   reducedReportingsOnContext: number
-  selectedReporting: AtLeast<ReportingDetailed, 'id'> | undefined
+  selectedReporting: Reporting | undefined
 }
 
 export function FormContent({ reducedReportingsOnContext, selectedReporting }: FormContentProps) {
@@ -96,7 +93,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
-  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Reporting>>()
+  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<Reporting>()
   const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)

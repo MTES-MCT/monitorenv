@@ -1,6 +1,6 @@
-import type { ReportingDetailed } from '../../../entities/reporting'
+import type { Reporting } from '../../../entities/reporting'
 
-export function subThemesFilterFunction(reporting: ReportingDetailed, subThemesFilter: number[] | undefined) {
+export function subThemesFilterFunction(reporting: Reporting, subThemesFilter: number[] | undefined) {
   if (!subThemesFilter || subThemesFilter.length === 0) {
     return true
   }
