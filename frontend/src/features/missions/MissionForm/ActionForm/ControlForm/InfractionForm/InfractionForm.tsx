@@ -4,7 +4,9 @@ import {
   FormikCheckbox,
   FormikMultiRadio,
   FormikNumberInput,
-  FormikTextarea
+  FormikTextarea,
+  Icon,
+  THEME
 } from '@mtes-mct/monitor-ui'
 import {
   administrativeResponseOptions,
@@ -15,7 +17,7 @@ import {
 } from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
-import { type MouseEventHandler } from 'react'
+import { useState, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
@@ -40,6 +42,10 @@ export function InfractionForm({
   removeInfraction,
   validateInfraction
 }: InfractionFormProps) {
+  const [isVisibleTooltip, setIsVisibleTooltip] = useState<boolean>(false)
+
+  const showTooltip = () => setIsVisibleTooltip(true)
+  const hideTooltip = () => setIsVisibleTooltip(false)
   const { errors } = useFormikContext<Mission<EnvActionControl>>()
   const infractionPath = `envActions[${envActionIndex}].infractions[${currentInfractionIndex}]`
 
@@ -111,13 +117,32 @@ export function InfractionForm({
 
       <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
 
-      <NbTargetInput
-        data-cy="infraction-form-nbTarget"
-        isRequired
-        label="Nb de cibles avec cette infraction"
-        min={1}
-        name={`${infractionPath}.nbTarget`}
-      />
+      <NbTargetWrapper>
+        <NbTargetInput
+          data-cy="infraction-form-nbTarget"
+          isRequired
+          label="Nb de cibles avec cette infraction"
+          min={1}
+          name={`${infractionPath}.nbTarget`}
+        />
+        <IconAndMessageWrapper>
+          <StyledIconAttention
+            aria-describedby="nbTargetTooltip"
+            color={THEME.color.slateGray}
+            onBlur={hideTooltip}
+            onFocus={showTooltip}
+            onMouseLeave={hideTooltip}
+            onMouseOver={showTooltip}
+            tabIndex={0}
+          />
+          {isVisibleTooltip && (
+            <StyledTooltip id="nbTargetTooltip" role="tooltip">
+              Ne déclarez plusieurs cibles dans une infraction que dans le cas où les unités n&apos;ont pas transmis de
+              données permettant de les identifier (nom, immatriculation…)
+            </StyledTooltip>
+          )}
+        </IconAndMessageWrapper>
+      </NbTargetWrapper>
 
       <ButtonContainer>
         <Button accent={Accent.TERTIARY} onClick={removeInfraction}>
@@ -153,7 +178,26 @@ const ButtonContainer = styled.div`
   gap: 16px;
   justify-content: flex-end;
 `
-
+const NbTargetWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+`
+const IconAndMessageWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  width: 48.5%;
+`
+const StyledTooltip = styled.p`
+  background: ${p => p.theme.color.cultured};
+  border: ${p => p.theme.color.lightGray} 1px solid;
+  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
+  font-size: 13px;
+  padding: 8px;
+`
 const NbTargetInput = styled(FormikNumberInput)`
   width: 48.5%;
+`
+const StyledIconAttention = styled(Icon.AttentionFilled)`
+  margin-top: 26px;
+  cursor: pointer;
 `
