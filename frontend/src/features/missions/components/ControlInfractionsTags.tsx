@@ -3,8 +3,15 @@ import { Accent, Tag, TagGroup } from '@mtes-mct/monitor-ui'
 import { getControlInfractionsTags } from '../Missions.helpers'
 
 export function ControlInfractionsTags({ actionNumberOfControls, infractions }) {
-  const { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras } =
-    getControlInfractionsTags(actionNumberOfControls, infractions)
+  const {
+    infractionsWithoutReport,
+    infractionsWithReport,
+    infractionsWithWaitingReport,
+    med,
+    ras,
+    regulAdmin,
+    sanctionAdmin
+  } = getControlInfractionsTags(actionNumberOfControls, infractions)
 
   return (
     <TagGroup>
@@ -15,6 +22,8 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
         <Tag accent={Accent.PRIMARY}>{infractionsWithWaitingReport} PV EN ATTENTE</Tag>
       )}
       {med > 0 && <Tag accent={Accent.PRIMARY}>{med} MED</Tag>}
+      {sanctionAdmin > 0 && <Tag accent={Accent.PRIMARY}>{sanctionAdmin} SANCT.ADMIN</Tag>}
+      {regulAdmin > 0 && <Tag accent={Accent.PRIMARY}>{regulAdmin} RÉGUL.ADMIN</Tag>}
     </TagGroup>
   )
 }
