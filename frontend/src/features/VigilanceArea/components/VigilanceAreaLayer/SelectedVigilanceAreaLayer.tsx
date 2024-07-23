@@ -25,7 +25,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
   const { selectedVigilanceArea } = useGetVigilanceAreasQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      selectedVigilanceArea: data?.find(area => area.id === selectedVigilanceAreaId)
+      selectedVigilanceArea: selectedVigilanceAreaId ? data?.entities[selectedVigilanceAreaId] : undefined
     }),
     skip: !selectedVigilanceAreaId
   })

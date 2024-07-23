@@ -46,7 +46,7 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
     if (!ampId) {
       return
     }
-    dispatch(vigilanceAreaActions.deleteAMPsFromVigilanceArea(ampId))
+    dispatch(vigilanceAreaActions.deleteAmpFromVigilanceArea(ampId))
     setFieldValue(
       'linkedAMPs',
       linkedAMPs.filter(id => id !== ampId)
@@ -74,18 +74,18 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
 
     if (!isZoneSavedInMyAmp) {
       if (isZoneVisible) {
-        dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(ampId))
+        dispatch(vigilanceAreaActions.deleteAmpIdsToBeDisplayed(ampId))
       } else {
-        dispatch(vigilanceAreaActions.addAMPIdsToBeDisplayed(ampId))
+        dispatch(vigilanceAreaActions.addAmpIdsToBeDisplayed(ampId))
       }
 
       return
     }
     if (isZoneVisible || pinnedAMPIsShowed) {
-      dispatch(vigilanceAreaActions.removeAMPIdsToBeDisplayed(ampId))
+      dispatch(vigilanceAreaActions.deleteAmpIdsToBeDisplayed(ampId))
       dispatch(hideAmpLayer(ampId))
     } else {
-      dispatch(vigilanceAreaActions.addAMPIdsToBeDisplayed(ampId))
+      dispatch(vigilanceAreaActions.addAmpIdsToBeDisplayed(ampId))
       dispatch(showAmpLayer(ampId))
     }
   }

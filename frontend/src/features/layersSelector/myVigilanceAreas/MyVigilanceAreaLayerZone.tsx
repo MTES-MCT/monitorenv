@@ -1,0 +1,117 @@
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { transformExtent } from 'ol/proj'
+import Projection from 'ol/proj/Projection'
+import styled from 'styled-components'
+
+import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { LayerLegend } from '../utils/LayerLegend.style'
+import { LayerSelector } from '../utils/LayerSelector.style'
+
+export function MyVigilanceAreaLayerZone({ layerId }: { layerId: number }) {
+  const dispatch = useAppDispatch()
+
+  const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+  const myVigilanceAreaIdsDisplayed = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIdsDisplayed)
+
+  const layerZoneIsShowed = myVigilanceAreaIdsDisplayed.includes(layerId)
+  const metadataIsShown = layerId === selectedVigilanceAreaId
+
+  const { layer } = useGetVigilanceAreasQuery(undefined, {
+    selectFromResult: result => ({
+      layer: layerId ? result?.data?.entities[layerId] : undefined
+    })
+  })
+
+  const zoomToLayerExtent = () => {
+    if (!layerZoneIsShowed) {
+      dispatch(vigilanceAreaActions.addIdToMyVigilanceAreaIdsToBeDisplayed([layerId]))
+    }
+
+    if ((layer?.bbox ?? []).length === 0) {
+      return
+    }
+
+    const extent = transformExtent(
+      layer?.bbox ?? [],
+      new Projection({ code: WSG84_PROJECTION }),
+      new Projection({ code: OPENLAYERS_PROJECTION })
+    )
+    dispatch(setFitToExtent(extent))
+  }
+
+  const toggleLayerDisplay = () => {
+    if (layerZoneIsShowed) {
+      dispatch(vigilanceAreaActions.deleteIdToMyVigilanceAreaIdsToBeDisplayed(layerId))
+    } else {
+      zoomToLayerExtent()
+    }
+  }
+
+  const toggleZoneMetadata = () => {
+    if (metadataIsShown) {
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+    } else {
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
+    }
+  }
+
+  const removeZone = () => {
+    dispatch(vigilanceAreaActions.deleteIdToMyVigilanceAreaIds(layerId))
+  }
+
+  return (
+    <LayerSelector.Layer $metadataIsShown={metadataIsShown} $withBorderBottom>
+      <LayerLegend
+        layerType={MonitorEnvLayers.VIGILANCE_AREA}
+        legendKey={layer?.comments ?? 'aucun nom'}
+        type={layer?.name ?? 'aucun nom'}
+      />
+      <LayerSelector.Name
+        data-cy={`my-vigilance-area-zone-${layer?.name}`}
+        onClick={zoomToLayerExtent}
+        title={layer?.name}
+      >
+        {layer?.name}
+      </LayerSelector.Name>
+      <LayerSelector.IconGroup>
+        <IconButton
+          accent={Accent.TERTIARY}
+          color={metadataIsShown ? THEME.color.charcoal : THEME.color.lightGray}
+          Icon={Icon.Summary}
+          iconSize={20}
+          onClick={toggleZoneMetadata}
+          size={Size.SMALL}
+          title={metadataIsShown ? 'Fermer la zone de vigilance' : 'Afficher la zone de vigilance'}
+        />
+
+        <IconButton
+          accent={Accent.TERTIARY}
+          color={layerZoneIsShowed ? THEME.color.charcoal : THEME.color.lightGray}
+          Icon={Icon.Display}
+          onClick={toggleLayerDisplay}
+          title={layerZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
+        />
+
+        <PaddedIconButton
+          accent={Accent.TERTIARY}
+          color={THEME.color.slateGray}
+          Icon={Icon.Close}
+          onClick={removeZone}
+          size={Size.SMALL}
+          title="Supprimer la zone de ma sélection"
+        />
+      </LayerSelector.IconGroup>
+    </LayerSelector.Layer>
+  )
+}
+
+const PaddedIconButton = styled(IconButton)`
+  margin-right: 8px;
+`

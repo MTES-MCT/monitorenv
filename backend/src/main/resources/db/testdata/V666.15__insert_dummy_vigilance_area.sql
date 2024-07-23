@@ -13,13 +13,13 @@ VALUES (3, 'comments', 'GHI', '2024-07-14 23:59:59.00000', 'OCCURENCES_NUMBER', 
 
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility, linked_amps, linked_regulatory_areas)
-VALUES (4, 'comments', 'JKL', '2024-11-24 23:59:59.00000', 'END_DATE', '2025-12-31 23:59:59.00000', NULL,'ALL_MONTHS', '0106000020E6100000010000000103000000010000000B000000C1530E9390B809C09CCB8AE08ED247405138845383AE09C0D81EAD51ADD347408D43A734D2B309C0A0F87963B8D44740EF71916193BF09C0D461DE5673D547403F9EF361F0B809C0686F442B00D647408F77DBF258AB09C0B41BA857BED547403907773443A209C038D1EC9120D54740203FE7F454AB09C0E034792DECD447401AB051C7C0A009C0888761251DD347404075E4CAF1AF09C0C80268E341D24740C1530E9390B809C09CCB8AE08ED24740', false, NULL, 'Zone de vigilance 4', 'CACEM', '2024-11-20 00:00:00.00000', '{"AMP","PN"}', 'PRIVATE', '{}', '{}');
+VALUES (4, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et mattis est. Integer sed scelerisque nulla, eget placerat felis. Maecenas dui dui, bibendum volutpat nisl sit amet, porttitor suscipit tellus', 'JKL', '2024-11-24 23:59:59.00000', 'END_DATE', '2025-12-31 23:59:59.00000', NULL,'ALL_MONTHS', '0106000020E6100000010000000103000000010000000B000000C1530E9390B809C09CCB8AE08ED247405138845383AE09C0D81EAD51ADD347408D43A734D2B309C0A0F87963B8D44740EF71916193BF09C0D461DE5673D547403F9EF361F0B809C0686F442B00D647408F77DBF258AB09C0B41BA857BED547403907773443A209C038D1EC9120D54740203FE7F454AB09C0E034792DECD447401AB051C7C0A009C0888761251DD347404075E4CAF1AF09C0C80268E341D24740C1530E9390B809C09CCB8AE08ED24740', false, NULL, 'Zone de vigilance 4', 'CACEM', '2024-11-20 00:00:00.00000', '{"AMP","PN"}', 'PRIVATE', '{}', '{}');
 
 
 /* DRAFT VIGILANCE AREAS */
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility, linked_amps, linked_regulatory_areas)
-VALUES (5, 'comments', 'ABC', '2024-05-26 23:59:59.00000', NULL, NULL, NULL, 'NONE', NULL, true, NULL, 'Zone de vigilance 5', NULL, '2024-05-25 00:00:00.00000', '{"AMP","PN"}', 'PRIVATE', '{}', '{}');
+VALUES (5, 'Proin maximus luctus urna, sit amet pellentesque diam porta ac. Praesent nisi urna, volutpat vitae consectetur et, aliquet non nisi. Sed molestie metus nec bibendum dignissim. In hac habitasse platea dictumst. Donec eu egestas nulla.', 'ABC', '2024-05-26 23:59:59.00000', NULL, NULL, NULL, 'NONE', NULL, true, NULL, 'Zone de vigilance 5', NULL, '2024-05-25 00:00:00.00000', '{"AMP","PN"}', 'PRIVATE', '{}', '{}');
 
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility, linked_amps, linked_regulatory_areas)
@@ -27,12 +27,12 @@ VALUES (6, NULL, 'DEF', '2024-04-04 23:59:59.00000', 'NEVER', NULL, NULL, 'ALL_Y
 
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility, linked_amps, linked_regulatory_areas)
-VALUES (7, 'comments', 'GHI', '2024-03-31 23:59:59.00000', 'OCCURENCES_NUMBER', NULL, 6, 'ALL_WEEKS', '0106000020E6100000010000000103000000010000000500000057F77C6FBF2D15C038E1B84BCD2E48403A42C339BDB014C038E1B84BCD2E48403A42C339BDB014C010F24763BA37484057F77C6FBF2D15C010F24763BA37484057F77C6FBF2D15C038E1B84BCD2E4840', true, NULL, 'Zone de vigilance 7', 'Sémaphore de Fécamp', '2024-03-01 00:00:00.00000', NULL, NULL, '{}', '{}');
+VALUES (7, 'Proin lobortis, sem quis malesuada mollis, dui orci condimentum nisl, vestibulum porttitor urna nisi non risus.', 'GHI', '2024-03-31 23:59:59.00000', 'OCCURENCES_NUMBER', NULL, 6, 'ALL_WEEKS', '0106000020E6100000010000000103000000010000000500000057F77C6FBF2D15C038E1B84BCD2E48403A42C339BDB014C038E1B84BCD2E48403A42C339BDB014C010F24763BA37484057F77C6FBF2D15C010F24763BA37484057F77C6FBF2D15C038E1B84BCD2E4840', true, NULL, 'Zone de vigilance 7', 'Sémaphore de Fécamp', '2024-03-01 00:00:00.00000', NULL, NULL, '{}', '{}');
 
 /* Period on two years */
 INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition, ending_occurrence_date, ending_occurrence_number, frequency, geom, is_draft, links, name,source,
 start_date_period, themes, visibility, linked_amps, linked_regulatory_areas)
-VALUES (8, 'comments', 'JKL', '2024-01-15 23:59:59.00000', 'END_DATE', '2099-12-31 23:59:59.00000', NULL, 'ALL_MONTHS',NULL , true, NULL, 'Zone de vigilance 8', NULL, '2023-12-15 00:00:00.00000', '{"Extraction granulats","Dragage"}', 'PRIVATE', '{}', '{}');
+VALUES (8, 'Phasellus ac elit eget ex blandit varius.', 'JKL', '2024-01-15 23:59:59.00000', 'END_DATE', '2099-12-31 23:59:59.00000', NULL, 'ALL_MONTHS',NULL , true, NULL, 'Zone de vigilance 8', NULL, '2023-12-15 00:00:00.00000', '{"Extraction granulats","Dragage"}', 'PRIVATE', '{}', '{}');
 
 
 SELECT pg_catalog.setval('public.vigilance_areas_id_seq', 10, true);

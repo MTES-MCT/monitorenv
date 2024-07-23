@@ -19,15 +19,15 @@ import { LayerSelector } from '../../utils/LayerSelector.style'
 
 type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
-  groupExtent: number[]
+  groupExtent?: number[]
   groupName: string
   layerIdToDisplay: number | undefined
   layerIds: number[]
-  layerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP
+  layerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP | MonitorEnvLayers.VIGILANCE_AREA
   removeLayers: (layerIds: number[]) => void
   searchedText: string
   selectedLayerIds: number[]
-  totalNumberOfZones: number
+  totalNumberOfZones?: number
 }
 export function ResultListLayerGroup({
   addLayers,
@@ -70,14 +70,14 @@ export function ResultListLayerGroup({
   const clickOnGroupZones = () => {
     setZonesAreOpen(!zonesAreOpen)
 
-    if (!zonesAreOpen) {
+    if (!zonesAreOpen && groupExtent) {
       dispatch(setFitToExtent(groupExtent))
     }
   }
 
   const addZonesToVigilanceArea = () => {
     if (isLinkingAMPToVigilanceArea) {
-      dispatch(vigilanceAreaActions.addAMPsToVigilanceArea(layerIds))
+      dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea(layerIds))
 
       return
     }

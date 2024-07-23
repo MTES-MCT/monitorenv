@@ -71,11 +71,7 @@ export function MyLayerZone({
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
       <LayerLegend layerType={layerType} legendKey={name} type={type} />
-      <LayerSelector.Name
-        data-cy={`vigilance-area-my-zone-${displayedName}`}
-        onClick={handleClickOnLayerName}
-        title={displayedName}
-      >
+      <LayerSelector.Name data-cy={`my-zone-${displayedName}`} onClick={handleClickOnLayerName} title={displayedName}>
         {displayedName}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>

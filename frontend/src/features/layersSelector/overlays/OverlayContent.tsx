@@ -80,7 +80,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
   const addAMPToVigilanceArea = (e, id) => {
     e.stopPropagation()
-    dispatch(vigilanceAreaActions.addAMPsToVigilanceArea([id]))
+    dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([id]))
   }
 
   return (

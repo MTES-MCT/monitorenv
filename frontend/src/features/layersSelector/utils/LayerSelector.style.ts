@@ -10,7 +10,7 @@ const IconGroup = styled.span`
   flex: 0;
 `
 
-const Layer = styled.span<{ $metadataIsShown?: boolean }>`
+const Layer = styled.span<{ $metadataIsShown?: boolean; $withBorderBottom?: boolean }>`
   user-select: none;
   display: flex;
   text-align: left;
@@ -20,6 +20,7 @@ const Layer = styled.span<{ $metadataIsShown?: boolean }>`
   color: ${p => p.theme.color.gunMetal};
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   align-items: center;
+  border-bottom: ${p => (p.$withBorderBottom ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
 
   :hover {
     background: ${p => p.theme.color.blueYonder25};
@@ -123,7 +124,7 @@ const LayerList = styled.ul`
 
 const NoLayerSelected = styled.div`
   color: ${p => p.theme.color.slateGray};
-  padding: 8px;
+  padding: 16px 8px 16px;
   text-align: center;
 `
 

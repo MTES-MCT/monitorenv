@@ -1,5 +1,5 @@
 import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
-import { vigilanceAreaReducer } from '@features/VigilanceArea/slice'
+import { vigilanceAreaPersistedReducer } from '@features/VigilanceArea/slice'
 
 import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
@@ -63,5 +63,5 @@ export const homeReducers = {
   sideWindow: sideWindowReducer,
   station: stationReducer,
   stationTable: stationTablePersistedReducer,
-  vigilanceArea: vigilanceAreaReducer
+  vigilanceArea: vigilanceAreaPersistedReducer
 }

@@ -4,23 +4,29 @@ type LayerSearchState = {
   ampsSearchResult: number[] | undefined
   filteredAmpTypes: string[]
   filteredRegulatoryThemes: string[]
+  filteredVigilanceAreasThemes: string[]
   globalSearchText: string
   isAmpSearchResultsVisible: boolean
   isRegulatorySearchResultsVisible: boolean
+  isVigilanceAreaSearchResultsVisible: boolean
   regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
   shouldFilterSearchOnMapExtent: boolean
+  vigilanceAreaSearchResult: number[] | undefined
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
   filteredAmpTypes: [],
   filteredRegulatoryThemes: [],
+  filteredVigilanceAreasThemes: [],
   globalSearchText: '',
   isAmpSearchResultsVisible: true,
   isRegulatorySearchResultsVisible: true,
+  isVigilanceAreaSearchResultsVisible: true,
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined,
-  shouldFilterSearchOnMapExtent: false
+  shouldFilterSearchOnMapExtent: false,
+  vigilanceAreaSearchResult: undefined
 }
 
 const layerSearchSlice = createSlice({
@@ -46,6 +52,11 @@ const layerSearchSlice = createSlice({
     setFilteredRegulatoryThemes(state, action: PayloadAction<string[]>) {
       state.filteredRegulatoryThemes = action.payload
     },
+
+    setFilteredVigilanceAreaThemes(state, action: PayloadAction<string[]>) {
+      state.filteredVigilanceAreasThemes = action.payload
+    },
+
     setGlobalSearchText(state, action: PayloadAction<string>) {
       state.globalSearchText = action.payload
     },
@@ -57,14 +68,24 @@ const layerSearchSlice = createSlice({
     setIsRegulatorySearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isRegulatorySearchResultsVisible = action.payload
     },
+    setIsVigilanceAreaSearchResultsVisible(state, action: PayloadAction<boolean>) {
+      state.isVigilanceAreaSearchResultsVisible = action.payload
+    },
+
     setRegulatoryLayersSearchResult(state, action) {
       state.regulatoryLayersSearchResult = action.payload
     },
+
     setSearchExtent(state, action) {
       state.searchExtent = action.payload
     },
+
     setShouldFilterSearchOnMapExtent(state, action: PayloadAction<boolean>) {
       state.shouldFilterSearchOnMapExtent = action.payload
+    },
+
+    setVigilanceAreasSearchResult(state, action) {
+      state.vigilanceAreaSearchResult = action.payload
     }
   }
 })
@@ -74,12 +95,15 @@ export const {
   setAMPsSearchResult,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
+  setFilteredVigilanceAreaThemes,
   setGlobalSearchText,
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
+  setIsVigilanceAreaSearchResultsVisible,
   setRegulatoryLayersSearchResult,
   setSearchExtent,
-  setShouldFilterSearchOnMapExtent
+  setShouldFilterSearchOnMapExtent,
+  setVigilanceAreasSearchResult
 } = layerSearchSlice.actions
 
 export const layerSearchSliceReducer = layerSearchSlice.reducer
