@@ -176,8 +176,19 @@ export const getControlInfractionsTags = (actionNumberOfControls: number, infrac
   const infractionsWithWaitingReport =
     infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WAITING)?.length || 0
   const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
+  const sanctionAdmin = infractions?.filter(inf => inf.administrativeResponse === 'SANCTION')?.length || 0
+  const regulAdmin = infractions?.filter(inf => inf.administrativeResponse === 'REGULARIZATION')?.length || 0
 
-  return { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras, totalInfractions }
+  return {
+    infractionsWithoutReport,
+    infractionsWithReport,
+    infractionsWithWaitingReport,
+    med,
+    ras,
+    regulAdmin,
+    sanctionAdmin,
+    totalInfractions
+  }
 }
 
 export type ActionsForTimeLine = Record<string, ActionsTypeForTimeLine>
