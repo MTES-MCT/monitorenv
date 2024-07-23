@@ -13,12 +13,8 @@ export function MissionSearch() {
   const [searchText, setSearchText] = useState(searchQuery)
 
   const onQuery = useCallback(
-    value => {
-      if (value && value.length > 2) {
-        dispatch(updateFilters({ key: MissionFiltersEnum.SEARCH_QUERY_FILTER, value }))
-      } else {
-        dispatch(updateFilters({ key: MissionFiltersEnum.SEARCH_QUERY_FILTER, value: undefined }))
-      }
+    (value: string | undefined) => {
+      dispatch(updateFilters({ key: MissionFiltersEnum.SEARCH_QUERY_FILTER, value }))
     },
     [dispatch]
   )

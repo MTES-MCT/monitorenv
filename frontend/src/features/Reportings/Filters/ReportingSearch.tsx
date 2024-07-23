@@ -14,14 +14,8 @@ export function ReportingSearch() {
   const [searchText, setSearchText] = useState(searchQueryFilter)
 
   const onQuery = useCallback(
-    value => {
-      if (value && value.length > 2) {
-        dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value }))
-      } else {
-        dispatch(
-          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value: undefined })
-        )
-      }
+    (value: string | undefined) => {
+      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SEARCH_QUERY_FILTER, value }))
     },
     [dispatch]
   )
