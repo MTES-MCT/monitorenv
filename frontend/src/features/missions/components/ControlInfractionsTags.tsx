@@ -22,8 +22,8 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
         <Tag accent={Accent.PRIMARY}>{infractionsWithWaitingReport} PV EN ATTENTE</Tag>
       )}
       {med > 0 && <Tag accent={Accent.PRIMARY}>{med} MED</Tag>}
-      {sanctionAdmin > 0 && <Tag accent={Accent.PRIMARY}>{sanctionAdmin} SANCT.ADMIN</Tag>}
-      {regulAdmin > 0 && <Tag accent={Accent.PRIMARY}>{regulAdmin} RÉGUL.ADMIN</Tag>}
+      {sanctionAdmin > 0 && <Tag accent={Accent.PRIMARY}>{sanctionAdmin} SANCT. ADMIN</Tag>}
+      {regulAdmin > 0 && <Tag accent={Accent.PRIMARY}>{regulAdmin} RÉGUL. ADMIN</Tag>}
     </TagGroup>
   )
 }
