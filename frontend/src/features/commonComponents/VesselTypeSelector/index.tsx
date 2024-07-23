@@ -4,11 +4,12 @@ import { vesselTypeLabel } from 'domain/entities/vesselType'
 import type { CSSProperties } from 'styled-components'
 
 type VesselTypeSelectorProps = {
+  disabled?: boolean
   isLight?: boolean
   name: string
   style?: CSSProperties
 }
-export function VesselTypeSelector({ isLight = false, name, style }: VesselTypeSelectorProps) {
+export function VesselTypeSelector({ disabled = false, isLight = false, name, style }: VesselTypeSelectorProps) {
   const vesselTypeFieldList = getOptionsFromLabelledEnum(vesselTypeLabel)
 
   return (
@@ -16,7 +17,9 @@ export function VesselTypeSelector({ isLight = false, name, style }: VesselTypeS
       block
       cleanable={false}
       data-cy="vessel-type-selector"
+      disabled={disabled}
       isLight={isLight}
+      isUndefinedWhenDisabled
       label="Type de navire"
       name={name}
       options={vesselTypeFieldList}

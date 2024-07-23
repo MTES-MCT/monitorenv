@@ -48,6 +48,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       expect(duplicatedInfraction.toProcess).equal(false)
       expect(duplicatedInfraction.vesselSize).equal(45)
       expect(duplicatedInfraction.vesselType).equal('COMMERCIAL')
+      expect(duplicatedInfraction.nbTarget).equal(1)
       expect(duplicatedInfraction.id).not.equal('b8007c8a-5135-4bc3-816f-c69c7b75d807')
     })
   })
@@ -499,7 +500,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.clickButton('Ajouter des contrôles')
       cy.wait(500)
 
-      cy.fill('Nb total de contrôles', 1)
+      cy.fill('Nb total de contrôles', 2)
       cy.fill('Type de cible', 'Véhicule')
       cy.fill('Type de véhicule', 'Navire')
 
@@ -515,6 +516,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('Nb de cibles avec cette infraction', 1)
 
       cy.getDataCy('control-open-by').type('ABC')
       cy.wait(250)
@@ -533,6 +535,7 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(requestInfraction.administrativeResponse).equal('SANCTION')
         expect(requestInfraction.formalNotice).equal('YES')
         expect(requestInfraction.natinf).to.deep.equal(['1508'])
+        expect(requestInfraction.nbTarget).equal(1)
 
         // check response
         const responseInfraction = response?.body.envActions[0].infractions[0]
@@ -548,6 +551,7 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(requestInfraction.administrativeResponse).equal('SANCTION')
         expect(requestInfraction.formalNotice).equal('YES')
         expect(requestInfraction.natinf).to.deep.equal(['1508'])
+        expect(requestInfraction.nbTarget).equal(1)
 
         // clean
         cy.wait(250)
@@ -581,16 +585,16 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.clickButton("Valider l'infraction")
 
       // cases without identification
-      cy.getDataCy('infraction-0-identification').contains('Personne morale')
+      cy.getDataCy('infraction-0-identification').contains('1 personne morale')
 
       cy.fill('Type de cible', 'Personne physique')
-      cy.getDataCy('infraction-0-identification').contains('Personne physique')
+      cy.getDataCy('infraction-0-identification').contains('1 personne physique')
 
       cy.fill('Type de cible', 'Véhicule')
-      cy.getDataCy('infraction-0-identification').contains('Véhicule - Type non renseigné')
+      cy.getDataCy('infraction-0-identification').contains('1 véhicule - Type non renseigné')
 
       cy.fill('Type de véhicule', 'Navire')
-      cy.getDataCy('infraction-0-identification').contains('Véhicule - Navire')
+      cy.getDataCy('infraction-0-identification').contains('1 véhicule - Navire')
 
       // cases with identification
       // Company
@@ -636,6 +640,42 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       cy.fill('Type de véhicule', 'Autre véhicule marin')
       cy.getDataCy('infraction-0-identification').contains('ABC123')
+
+      // delete created mission
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
+    })
+  })
+
+  it('Should display number of infraction target and target type', () => {
+    createPendingMission().then(({ body }) => {
+      const mission = body
+
+      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
+
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Nb total de contrôles', 10)
+      cy.fill('Type de cible', 'Personne morale')
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+      // Fill mandatory fields
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Mise en demeure', 'Oui')
+      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('Nb de cibles avec cette infraction', 2)
+      cy.clickButton("Valider l'infraction")
+
+      // cases without identification
+      cy.getDataCy('infraction-0-identification').contains('2 personnes morales')
+
+      cy.fill('Type de cible', 'Personne physique')
+      cy.getDataCy('infraction-0-identification').contains('2 personnes physiques')
+
+      cy.fill('Type de cible', 'Véhicule')
+      cy.getDataCy('infraction-0-identification').contains('2 véhicules')
 
       // delete created mission
       cy.clickButton('Supprimer la mission')

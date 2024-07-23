@@ -194,6 +194,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
         cy.getDataCy('infraction-form-controlledPersonIdentity').should('have.value', 'Capitaine Crochet')
         cy.getDataCy('infraction-form-vesselName').should('have.value', 'Le Bateau 2000')
         cy.getDataCy('infraction-form-vessel-size').should('have.value', 13)
+        cy.getDataCy('infraction-form-nbTarget').should('have.value', 1)
         cy.fill("Type d'infraction", 'Avec PV')
         cy.fill('Réponse administrative', 'Sanction')
         cy.fill('Mise en demeure', 'En attente')
@@ -238,6 +239,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
               .contains('Sanction')
             cy.get('.Field-MultiRadio').contains('Mise en demeure').get('[aria-checked="true"]').contains('En attente')
             cy.get('[name="infraction-natinf"]').should('have.value', 1508)
+            cy.getDataCy('infraction-form-nbTarget').should('have.value', 1)
           }
         )
       })

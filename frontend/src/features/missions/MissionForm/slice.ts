@@ -1,14 +1,7 @@
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type {
-  EnvActionControl,
-  EnvActionNote,
-  EnvActionSurveillance,
-  Mission,
-  NewEnvAction,
-  NewMission
-} from '../../../domain/entities/missions'
+import type { Infraction, Mission, NewInfraction, NewMission } from '../../../domain/entities/missions'
 import type { AtLeast } from '../../../types'
 
 export type MissionInStateType = {
@@ -166,36 +159,20 @@ export const getNumberOfInfractionTarget = createSelector(
       const actions = state.missions[state.activeMissionId]?.missionForm?.envActions
 
       if (activeActionId && actions) {
-        return actions.find(action => action.id === activeActionId)
+        const selectedAction = actions.find(action => action.id === activeActionId)
+        if (selectedAction && 'infractions' in selectedAction) {
+          return selectedAction.infractions
+        }
       }
     }
 
     return undefined
   },
 
-  (selectedAction: (EnvActionControl | EnvActionSurveillance | EnvActionNote) | NewEnvAction | undefined) =>
-    (selectedAction &&
-      'infractions' in selectedAction &&
-      selectedAction.infractions.reduce((sumNbTarget, infraction) => sumNbTarget + infraction.nbTarget, 0)) ||
+  (selectedInfraction: Infraction[] | NewInfraction[] | undefined) =>
+    (selectedInfraction &&
+      selectedInfraction.reduce((sumNbTarget, infraction) => sumNbTarget + infraction.nbTarget, 0)) ||
     0
-)
-
-export const getNumberOfControls = createSelector(
-  (state: MissionFormsState) => {
-    if (state.activeMissionId) {
-      const activeActionId = state.missions[state.activeMissionId]?.activeAction?.id
-      const actions = state.missions[state.activeMissionId]?.missionForm?.envActions
-
-      if (activeActionId && actions) {
-        return actions.find(action => action.id === activeActionId)
-      }
-    }
-
-    return undefined
-  },
-
-  (selectedAction: (EnvActionControl | EnvActionSurveillance | EnvActionNote) | NewEnvAction | undefined) =>
-    (selectedAction && 'actionNumberOfControls' in selectedAction && selectedAction.actionNumberOfControls) || 0
 )
 
 export const missionFormsActions = missionFormsSlice.actions

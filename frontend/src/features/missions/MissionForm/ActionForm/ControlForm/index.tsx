@@ -95,9 +95,9 @@ export function ControlForm({
   const numberOfInfractionTarget = useAppSelector(state => getNumberOfInfractionTarget(state.missionForms))
 
   const canAddInfraction =
+    (actionNumberOfControls ?? 0) > numberOfInfractionTarget &&
     ((actionTargetType === TargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
-      (actionTargetType !== undefined && actionTargetType !== TargetTypeEnum.VEHICLE)) &&
-    (actionNumberOfControls ?? 0) > numberOfInfractionTarget
+      (actionTargetType !== undefined && actionTargetType !== TargetTypeEnum.VEHICLE))
 
   const reportingAsOptions = useMemo(
     () =>
