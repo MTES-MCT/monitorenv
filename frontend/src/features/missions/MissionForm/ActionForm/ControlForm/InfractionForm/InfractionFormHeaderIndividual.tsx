@@ -1,9 +1,15 @@
 import { FormikTextInput } from '@mtes-mct/monitor-ui'
 
-export function InfractionFormHeaderIndividual({ infractionPath }) {
+type InfractionHeaderType = {
+  infractionPath: string
+  isDisabled: boolean
+}
+export function InfractionFormHeaderIndividual({ infractionPath, isDisabled }: InfractionHeaderType) {
   return (
     <FormikTextInput
       data-cy="infraction-form-controlledPersonIdentity"
+      disabled={isDisabled}
+      isUndefinedWhenDisabled
       label="Identité de la personne contrôlée"
       name={`${infractionPath}.controlledPersonIdentity`}
     />

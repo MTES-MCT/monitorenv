@@ -6,7 +6,6 @@ import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
-import { getNumberOfControls, getNumberOfInfractionTarget } from './slice'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isNewMission } from '../../../utils/isNewMission'
 import { missionFactory } from '../Missions.helpers'
@@ -14,9 +13,6 @@ import { missionFactory } from '../Missions.helpers'
 import type { Mission as MissionType, NewMission } from '../../../domain/entities/missions'
 
 export function MissionFormWrapper() {
-  const numberOfInfractionTarget = useAppSelector(state => getNumberOfInfractionTarget(state.missionForms))
-  const numberOfControls = useAppSelector(state => getNumberOfControls(state.missionForms))
-
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
 
   const selectedMission = useAppSelector(state =>
@@ -70,7 +66,7 @@ export function MissionFormWrapper() {
         initialValues={missionValues}
         onSubmit={noop}
         validateOnMount
-        validationSchema={MissionSchema(numberOfControls - numberOfInfractionTarget)}
+        validationSchema={MissionSchema}
       >
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm

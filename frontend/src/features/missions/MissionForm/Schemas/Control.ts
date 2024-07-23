@@ -16,7 +16,7 @@ const ControlPointSchema = Yup.object().test({
   test: val => val && !_.isEmpty(val?.coordinates)
 })
 
-export const getNewEnvActionControlSchema = (ctx: any, nbTargetMax: number): Yup.SchemaOf<EnvActionControl> =>
+export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
   Yup.object()
     .shape({
       actionStartDateTimeUtc: Yup.string()
@@ -47,7 +47,7 @@ export const getNewEnvActionControlSchema = (ctx: any, nbTargetMax: number): Yup
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
       completedBy: Yup.string().nullable(),
       id: Yup.string().required(),
-      infractions: Yup.array().of(NewInfractionSchema(nbTargetMax)).ensure().required(),
+      infractions: Yup.array().of(NewInfractionSchema).ensure().required(),
       openBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
@@ -57,7 +57,7 @@ export const getNewEnvActionControlSchema = (ctx: any, nbTargetMax: number): Yup
     .nullable()
     .required()
 
-export const getCompletionEnvActionControlSchema = (ctx: any, nbTargetMax: number): Yup.SchemaOf<EnvActionControl> =>
+export const getCompletionEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
   Yup.object()
     .shape({
       actionNumberOfControls: Yup.number().required('Requis'),
@@ -98,7 +98,7 @@ export const getCompletionEnvActionControlSchema = (ctx: any, nbTargetMax: numbe
         ? Yup.object().nullable()
         : Yup.array().of(ControlPointSchema).ensure().min(1, 'Point de contrôle requis'),
       id: Yup.string().required(),
-      infractions: Yup.array().of(CompletionInfractionSchema(nbTargetMax)).ensure().required(),
+      infractions: Yup.array().of(CompletionInfractionSchema).ensure().required(),
       openBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
