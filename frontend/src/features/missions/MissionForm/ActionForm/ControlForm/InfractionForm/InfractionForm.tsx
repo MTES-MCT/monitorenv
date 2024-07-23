@@ -1,5 +1,18 @@
-import { Accent, Button, FormikCheckbox, FormikMultiRadio, FormikTextarea } from '@mtes-mct/monitor-ui'
-import { formalNoticeLabels, infractionTypeLabels, type EnvActionControl, type Mission } from 'domain/entities/missions'
+import {
+  Accent,
+  Button,
+  FormikCheckbox,
+  FormikMultiRadio,
+  FormikNumberInput,
+  FormikTextarea
+} from '@mtes-mct/monitor-ui'
+import {
+  administrativeResponseOptions,
+  formalNoticeLabels,
+  infractionTypeLabels,
+  type EnvActionControl,
+  type Mission
+} from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
 import { type MouseEventHandler } from 'react'
