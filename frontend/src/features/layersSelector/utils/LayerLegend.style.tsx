@@ -30,6 +30,7 @@ export function LayerLegend({
     case MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA:
       return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey)} />
     case MonitorEnvLayers.VIGILANCE_AREA:
+    case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
       return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey)} />
     default:
       return <Rectangle $size={size} />

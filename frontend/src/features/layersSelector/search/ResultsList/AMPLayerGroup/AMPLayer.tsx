@@ -4,6 +4,7 @@ import {
   getMetadataIsOpenForAMPLayerId,
   openAMPMetadataPanel
 } from '@features/layersSelector/metadataPanel/slice'
+import { getIsLinkingAMPToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -25,6 +26,8 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   const ref = createRef<HTMLSpanElement>()
 
   const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
+  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const ampsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
   const { layer } = useGetAMPsQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -65,6 +68,11 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
     dispatch(setFitToExtent(extent))
   }
 
+  const addAMPToVigilanceArea = e => {
+    e.stopPropagation()
+    dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([layerId]))
+  }
+
   useEffect(() => {
     if (ampMetadataLayerId === layerId && ref?.current) {
       ref.current.scrollIntoView(false)
@@ -84,14 +92,25 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
         {!layer?.type && 'AUCUN TYPE'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
-        <IconButton
-          accent={Accent.TERTIARY}
-          aria-label="Sélectionner la zone"
-          color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
-          data-cy="amp-zone-check"
-          Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
-          onClick={handleSelectZone}
-        />
+        {isLinkingAMPToVigilanceArea ? (
+          <IconButton
+            accent={Accent.TERTIARY}
+            aria-label="Ajouter la zone AMP à la zone de vigilance"
+            data-cy="amp-zone-add"
+            disabled={ampsLinkedToVigilanceAreaForm.includes(layerId)}
+            Icon={Icon.Plus}
+            onClick={addAMPToVigilanceArea}
+          />
+        ) : (
+          <IconButton
+            accent={Accent.TERTIARY}
+            aria-label="Sélectionner la zone"
+            color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
+            data-cy="amp-zone-check"
+            Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
+            onClick={handleSelectZone}
+          />
+        )}
       </LayerSelector.IconGroup>
     </LayerSelector.Layer>
   )

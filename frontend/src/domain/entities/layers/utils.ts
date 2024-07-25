@@ -14,7 +14,11 @@ const isAMPLayer = (layerType: RegulatoryOrAMPOrViglanceAreaLayerType) =>
   layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
 
 export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
-  if (isAMPLayer(layerType) || layerType === MonitorEnvLayers.VIGILANCE_AREA) {
+  if (
+    isAMPLayer(layerType) ||
+    layerType === MonitorEnvLayers.VIGILANCE_AREA ||
+    layerType === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW
+  ) {
     return (layer as AMPProperties | VigilanceArea.VigilanceAreaProperties)?.name
   }
 
@@ -29,6 +33,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
       return (layer as AMPProperties).type
 
     case MonitorEnvLayers.VIGILANCE_AREA:
+    case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
       return (layer as VigilanceArea.VigilanceAreaProperties)?.themes?.join(', ')
 
     default:
@@ -44,6 +49,7 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
       return (layer as AMPProperties).name
 
     case MonitorEnvLayers.VIGILANCE_AREA:
+    case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
       return (layer as VigilanceArea.VigilanceAreaProperties).comments
 
     default:
@@ -59,6 +65,7 @@ export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAM
       return (layer as AMPProperties).type
 
     case MonitorEnvLayers.VIGILANCE_AREA:
+    case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
       return (layer as VigilanceArea.VigilanceAreaProperties).name
 
     default:

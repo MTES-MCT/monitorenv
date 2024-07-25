@@ -1,9 +1,4 @@
-import {
-  getIsLinkingAMPToVigilanceArea,
-  getIsLinkingRegulatoryToVigilanceArea,
-  getIsLinkingZonesToVigilanceArea,
-  vigilanceAreaActions
-} from '@features/VigilanceArea/slice'
+import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -39,12 +34,9 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   const ref = createRef<HTMLSpanElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
-  const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const ampsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
+  const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
-  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
@@ -90,11 +82,6 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([layerId]))
   }
 
-  const addAMPToVigilanceArea = e => {
-    e.stopPropagation()
-    dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([layerId]))
-  }
-
   useEffect(() => {
     if (layerId === regulatoryMetadataLayerId && ref?.current) {
       ref.current.scrollIntoView(false)
@@ -123,7 +110,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
         {!layer?.entity_name && 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
-        {isLinkingRegulatoryToVigilanceArea && (
+        {isLinkingRegulatoryToVigilanceArea ? (
           <IconButton
             accent={Accent.TERTIARY}
             aria-label="Ajouter la zone réglementaire à la zone de vigilance"
@@ -132,18 +119,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
             Icon={Icon.Plus}
             onClick={addRegulatoryToVigilanceArea}
           />
-        )}
-        {isLinkingAMPToVigilanceArea && (
-          <IconButton
-            accent={Accent.TERTIARY}
-            aria-label="Ajouter la zone AMP à la zone de vigilance"
-            data-cy="amp-zone-add"
-            disabled={ampsLinkedToVigilanceAreaForm.includes(layerId)}
-            Icon={Icon.Plus}
-            onClick={addAMPToVigilanceArea}
-          />
-        )}
-        {!isLinkingZonesToVigilanceArea && (
+        ) : (
           <IconButton
             accent={Accent.TERTIARY}
             aria-label="Sélectionner la zone"
