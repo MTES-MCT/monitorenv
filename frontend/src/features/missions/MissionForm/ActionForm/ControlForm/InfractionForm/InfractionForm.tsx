@@ -181,11 +181,13 @@ const ButtonContainer = styled.div`
 const NbTargetWrapper = styled.div`
   display: flex;
   gap: 8px;
+  align-items: end;
 `
 const IconAndMessageWrapper = styled.div`
   display: flex;
-  gap: 8px;
-  width: 48.5%;
+  width: 50%;
+  position: relative;
+  margin-bottom: 6px;
 `
 const StyledTooltip = styled.p`
   background: ${p => p.theme.color.cultured};
@@ -193,11 +195,14 @@ const StyledTooltip = styled.p`
   box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
   font-size: 13px;
   padding: 8px;
+
+  position: absolute;
+  left: 29px;
+  top: -20px;
 `
 const NbTargetInput = styled(FormikNumberInput)`
   width: 48.5%;
 `
 const StyledIconAttention = styled(Icon.AttentionFilled)`
-  margin-top: 26px;
   cursor: pointer;
 `
