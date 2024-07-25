@@ -201,7 +201,7 @@ const SubList = styled.ul<{ $isExpanded: boolean }>`
   padding: 0;
   margin: 0;
   display: ${({ $isExpanded }) => ($isExpanded ? 'block' : 'none')};
-  max-height: calc(50vh - 72px);
+  max-height: calc(50vh - 110px);
   overflow-y: auto;
   background: ${p => p.theme.color.white};
 `
