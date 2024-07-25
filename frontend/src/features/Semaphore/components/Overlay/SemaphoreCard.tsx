@@ -14,7 +14,12 @@ import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { OverlayTriggerType } from 'rsuite/esm/internals/Overlay/OverlayTrigger'
 
-const PHONE_TOOLTIP_STATE = {
+type TooltypeType = Record<
+  'click' | 'hover',
+  { className: 'greenTooltip' | 'blueTooltip'; text: string; trigger: OverlayTriggerType }
+>
+
+const PHONE_TOOLTIP_STATE: TooltypeType = {
   click: {
     className: 'greenTooltip',
     text: 'Numéro copié',
@@ -27,7 +32,7 @@ const PHONE_TOOLTIP_STATE = {
   }
 }
 
-const MAIL_TOOLTIP_STATE = {
+const MAIL_TOOLTIP_STATE: TooltypeType = {
   click: {
     className: 'greenTooltip',
     text: 'Mail copié',
@@ -39,7 +44,7 @@ const MAIL_TOOLTIP_STATE = {
     trigger: 'hover'
   }
 }
-const hoverTooltip = (text, className) => <StyledTooltip className={className}>{text}</StyledTooltip>
+const hoverTooltip = (text: string, className: string) => <StyledTooltip className={className}>{text}</StyledTooltip>
 
 type SemaphoreCardProps = {
   feature: any
@@ -107,7 +112,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
                 onClick={onCopyPhone}
                 placement="left"
                 speaker={hoverTooltip(tooltipPhoneState.text, tooltipPhoneState.className)}
-                trigger={tooltipPhoneState.trigger as OverlayTriggerType}
+                trigger={tooltipPhoneState.trigger}
               >
                 <span>
                   <StyledCopyButton
@@ -128,7 +133,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
                 onClick={onCopyMail}
                 placement="left"
                 speaker={hoverTooltip(tooltipMailState.text, tooltipMailState.className)}
-                trigger={tooltipMailState.trigger as OverlayTriggerType}
+                trigger={tooltipMailState.trigger}
               >
                 <span>
                   <StyledCopyButton
