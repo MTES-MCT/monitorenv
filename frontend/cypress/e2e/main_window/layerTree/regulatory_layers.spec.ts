@@ -17,7 +17,7 @@ context('LayerTree > Regulatory Layers', () => {
 
     cy.log('search a regulation by name')
     cy.fill('Rechercher une zone', 'querlin') // "querlin" contains a typo to test fuzzy search ("querlen" in source)
-    cy.getDataCy('regulatory-layers-result-title').contains('2 résultat').click()
+    cy.getDataCy('regulatory-layers-result-title').contains('2 résultats').click()
 
     cy.log("zoom on the regulation's zone and show metadata")
     cy.getDataCy('result-group').contains('ZMEL Cale Querlen').click()
