@@ -2,11 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -14,12 +14,7 @@ import java.util.UUID
 data class AttachedReportingDataOutput(
     val id: Int,
     val reportingId: Long? = null,
-    val sourceType: SourceTypeEnum? = null,
-    val semaphoreId: Int? = null,
-    val semaphore: SemaphoreDataOutput? = null,
-    val controlUnitId: Int? = null,
-    val controlUnit: ControlUnitDataOutput? = null,
-    val sourceName: String? = null,
+    val reportingSources: List<ReportingSourceDataOutput>,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
@@ -50,26 +45,7 @@ data class AttachedReportingDataOutput(
             return AttachedReportingDataOutput(
                 id = dto.reporting.id,
                 reportingId = dto.reporting.reportingId,
-                sourceType = dto.reporting.sourceType,
-                semaphoreId = dto.reporting.semaphoreId,
-                semaphore =
-                if (dto.semaphore != null) {
-                    SemaphoreDataOutput.fromSemaphoreEntity(
-                        dto.semaphore,
-                    )
-                } else {
-                    null
-                },
-                controlUnitId = dto.reporting.controlUnitId,
-                controlUnit =
-                if (dto.controlUnit != null) {
-                    ControlUnitDataOutput.fromFullControlUnit(
-                        dto.controlUnit,
-                    )
-                } else {
-                    null
-                },
-                sourceName = dto.reporting.sourceName,
+                reportingSources = dto.reportingSources.map { fromReportingSourceDTO(it) },
                 targetType = dto.reporting.targetType,
                 vehicleType = dto.reporting.vehicleType,
                 targetDetails = dto.reporting.targetDetails,

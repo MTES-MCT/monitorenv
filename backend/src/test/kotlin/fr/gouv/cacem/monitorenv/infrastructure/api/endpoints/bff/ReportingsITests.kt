@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.ReportingFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.ArchiveReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
@@ -18,8 +19,10 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.SSEReporting
 import org.assertj.core.api.Assertions
@@ -50,25 +53,35 @@ import java.time.ZonedDateTime
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [Reportings::class, SSEReporting::class])
 class ReportingsITests {
-    @Autowired private lateinit var mockedApi: MockMvc
+    @Autowired
+    private lateinit var mockedApi: MockMvc
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-    @MockBean private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
+    @MockBean
+    private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
 
-    @MockBean private lateinit var getReportings: GetReportings
+    @MockBean
+    private lateinit var getReportings: GetReportings
 
-    @MockBean private lateinit var getReportingById: GetReportingById
+    @MockBean
+    private lateinit var getReportingById: GetReportingById
 
-    @MockBean private lateinit var deleteReporting: DeleteReporting
+    @MockBean
+    private lateinit var deleteReporting: DeleteReporting
 
-    @MockBean private lateinit var deleteReportings: DeleteReportings
+    @MockBean
+    private lateinit var deleteReportings: DeleteReportings
 
-    @MockBean private lateinit var archiveReportings: ArchiveReportings
+    @MockBean
+    private lateinit var archiveReportings: ArchiveReportings
 
-    @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
-    @Autowired private lateinit var sseReporting: SSEReporting
+    @Autowired
+    private lateinit var sseReporting: SSEReporting
 
     @Test
     fun `Should create a new Reporting`() {
@@ -83,8 +96,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
-                    semaphoreId = 1,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -111,23 +123,37 @@ class ReportingsITests {
                     withVHFAnswer = null,
                     isInfractionProven = true,
                 ),
-                semaphore =
-                SemaphoreEntity(
-                    id = 1,
-                    name = "name",
-                    geom =
-                    WKTReader()
-                        .read(
-                            "POINT (-61.0 14.0)",
-                        ) as
-                        Point,
+                reportingSources = listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        semaphore = SemaphoreEntity(
+                            id = 1,
+                            name = "name",
+                            geom =
+                            WKTReader()
+                                .read(
+                                    "POINT (-61.0 14.0)",
+                                ) as
+                                Point,
+
+                        ),
+                        controlUnit = null,
+                    ),
                 ),
             )
 
         val request =
             CreateOrUpdateReportingDataInput(
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+                reportingSources = listOf(
+                    ReportingSourceDataInput(
+                        id = null,
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 1,
+                        reportingId = null,
+                        controlUnitId = null,
+                        sourceName = null,
+                    ),
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -203,8 +229,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
-                    semaphoreId = 1,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -230,16 +255,22 @@ class ReportingsITests {
                     ),
                     isInfractionProven = true,
                 ),
-                semaphore =
-                SemaphoreEntity(
-                    id = 1,
-                    name = "name",
-                    geom =
-                    WKTReader()
-                        .read(
-                            "POINT (-61.0 14.0)",
-                        ) as
-                        Point,
+                reportingSources = listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        semaphore = SemaphoreEntity(
+                            id = 1,
+                            name = "name",
+                            geom =
+                            WKTReader()
+                                .read(
+                                    "POINT (-61.0 14.0)",
+                                ) as
+                                Point,
+
+                        ),
+                        controlUnit = null,
+                    ),
                 ),
             )
 
@@ -290,7 +321,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -312,6 +343,7 @@ class ReportingsITests {
                     openBy = "CDA",
                     isInfractionProven = true,
                 ),
+                reportingSources = listOf(),
             )
 
         given(
@@ -351,8 +383,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
-                    semaphoreId = 1,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -378,23 +409,13 @@ class ReportingsITests {
                     ),
                     isInfractionProven = true,
                 ),
-                semaphore =
-                SemaphoreEntity(
-                    id = 1,
-                    name = "name",
-                    geom =
-                    WKTReader()
-                        .read(
-                            "POINT (-61.0 14.0)",
-                        ) as
-                        Point,
-                ),
+                reportingSources = listOf(),
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(
                 CreateOrUpdateReportingDataInput(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -511,8 +532,7 @@ class ReportingsITests {
                     reporting =
                     ReportingEntity(
                         id = 1,
-                        sourceType = SourceTypeEnum.SEMAPHORE,
-                        semaphoreId = 1,
+                        reportingSources = listOf(),
                         geom = polygon,
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
@@ -534,6 +554,8 @@ class ReportingsITests {
                         ),
                         isInfractionProven = true,
                     ),
+                    reportingSources = listOf(),
+
                 ),
             )
 

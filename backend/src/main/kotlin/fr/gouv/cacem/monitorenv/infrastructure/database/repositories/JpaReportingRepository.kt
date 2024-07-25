@@ -12,11 +12,9 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -31,10 +29,8 @@ import java.util.UUID
 class JpaReportingRepository(
     private val dbReportingRepository: IDBReportingRepository,
     private val dbMissionRepository: IDBMissionRepository,
-    private val dbSemaphoreRepository: IDBSemaphoreRepository,
     private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
-    private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
@@ -77,7 +73,9 @@ class JpaReportingRepository(
         val targetTypesAsStringArray = targetTypes?.map { it.name }
         val pageable = if (pageNumber != null && pageSize != null) {
             PageRequest.of(pageNumber, pageSize)
-        } else { Pageable.unpaged() }
+        } else {
+            Pageable.unpaged()
+        }
         return dbReportingRepository.findAll(
             pageable,
             reportingType = convertToString(reportingTypeAsStringArray),
@@ -106,22 +104,6 @@ class JpaReportingRepository(
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(reporting: ReportingEntity): ReportingDTO {
         return try {
-            val semaphoreReference =
-                if (reporting.semaphoreId != null) {
-                    dbSemaphoreRepository.getReferenceById(
-                        reporting.semaphoreId,
-                    )
-                } else {
-                    null
-                }
-            val controlUnitReference =
-                if (reporting.controlUnitId != null) {
-                    dbControlUnitRepository.getReferenceById(
-                        reporting.controlUnitId,
-                    )
-                } else {
-                    null
-                }
             val missionReference =
                 if (reporting.missionId != null) {
                     dbMissionRepository.getReferenceById(
@@ -163,8 +145,6 @@ class JpaReportingRepository(
                     dbReportingRepository.save(
                         ReportingModel.fromReportingEntity(
                             reporting = reporting,
-                            semaphoreReference = semaphoreReference,
-                            controlUnitReference = controlUnitReference,
                             missionReference = missionReference,
                             envActionReference = envActionReference,
                             controlPlanThemeReference = controlPlanThemeReference,
@@ -174,8 +154,6 @@ class JpaReportingRepository(
                 reportingModel =
                     ReportingModel.fromReportingEntity(
                         reporting = reporting,
-                        semaphoreReference = semaphoreReference,
-                        controlUnitReference = controlUnitReference,
                         missionReference = missionReference,
                         envActionReference = envActionReference,
                         controlPlanThemeReference = controlPlanThemeReference,

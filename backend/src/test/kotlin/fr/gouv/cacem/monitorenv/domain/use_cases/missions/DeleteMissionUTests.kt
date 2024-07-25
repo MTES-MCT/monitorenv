@@ -13,12 +13,11 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.ReportingFixture.Companion.aReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.time.ZonedDateTime
-import java.util.*
 
 class DeleteMissionUTests {
 
@@ -36,29 +35,10 @@ class DeleteMissionUTests {
     @Test
     fun `execute Should detach reporting attached to mission and action attached to reporting`() {
         val missionId = 100
-        val reporting =
-            ReportingEntity(
-                id = 1,
-                attachedEnvActionId =
-                UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
-                detachedFromMissionAtUtc = null,
-                isArchived = false,
-                createdAt = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                isInfractionProven = true,
-            )
+        val reporting = aReporting()
         val missionToDelete = aMissionEntity()
 
-        val expectedUpdatedReporting =
-            ReportingEntity(
-                id = 1,
-                attachedEnvActionId = null,
-                createdAt = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                detachedFromMissionAtUtc = ZonedDateTime.now(),
-                isArchived = false,
-                isDeleted = false,
-                isInfractionProven = true,
-            )
+        val expectedUpdatedReporting = aReporting()
         given(canDeleteMission.execute(missionId, MissionSourceEnum.MONITORFISH))
             .willReturn(CanDeleteMissionResponse(true, listOf()))
         given(getFullMission.execute(missionId))
@@ -68,10 +48,15 @@ class DeleteMissionUTests {
                     attachedReportingIds = listOf(1),
                 ),
             )
-        given(reportingRepository.findById(1)).willReturn(ReportingDTO(reporting = reporting))
+        given(reportingRepository.findById(1)).willReturn(
+            ReportingDTO(
+                reporting = reporting,
+                reportingSources = listOf(),
+            ),
+        )
         given(reportingRepository.save(expectedUpdatedReporting))
             .willReturn(
-                ReportingDTO(reporting = expectedUpdatedReporting),
+                ReportingDTO(reporting = expectedUpdatedReporting, reportingSources = listOf()),
             )
 
         deleteMission.execute(missionId, MissionSourceEnum.MONITORFISH)

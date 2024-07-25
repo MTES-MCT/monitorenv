@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingsDataOutput
 import io.swagger.v3.oas.annotations.Operation

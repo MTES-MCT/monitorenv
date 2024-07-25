@@ -6,25 +6,29 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingSourceRepository
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.mockito.Mockito.mock
 
-@ExtendWith(SpringExtension::class)
 class DeleteControlUnitUTests {
-    @MockBean
-    private lateinit var controlUnitRepository: IControlUnitRepository
+    private var controlUnitRepository: IControlUnitRepository = mock()
 
-    @MockBean
-    private lateinit var canDeleteControlUnit: CanDeleteControlUnit
+    private var canDeleteControlUnit: CanDeleteControlUnit = mock()
 
-    @MockBean
-    private lateinit var missionRepository: IMissionRepository
+    private var missionRepository: IMissionRepository = mock()
 
-    @MockBean
-    private lateinit var reportingRepository: IReportingRepository
+    private var reportingRepository: IReportingRepository = mock()
+
+    private var reportingsSourceRepository: IReportingSourceRepository = mock()
+
+    private val deleteControlUnit: DeleteControlUnit = DeleteControlUnit(
+        controlUnitRepository,
+        canDeleteControlUnit,
+        missionRepository,
+        reportingRepository,
+        reportingsSourceRepository,
+    )
 
     @Test
     fun `execute should delete control unit when canDeleteControlUnit returns true`() {
@@ -32,12 +36,7 @@ class DeleteControlUnitUTests {
 
         given(canDeleteControlUnit.execute(controlUnitId)).willReturn(true)
 
-        DeleteControlUnit(
-            controlUnitRepository,
-            canDeleteControlUnit,
-            missionRepository,
-            reportingRepository,
-        ).execute(controlUnitId)
+        deleteControlUnit.execute(controlUnitId)
 
         verify(controlUnitRepository).deleteById(controlUnitId)
     }
@@ -49,12 +48,7 @@ class DeleteControlUnitUTests {
         given(canDeleteControlUnit.execute(controlUnitId)).willReturn(false)
 
         assertThatThrownBy {
-            DeleteControlUnit(
-                controlUnitRepository,
-                canDeleteControlUnit,
-                missionRepository,
-                reportingRepository,
-            ).execute(controlUnitId)
+            deleteControlUnit.execute(controlUnitId)
         }
             .isInstanceOf(CouldNotDeleteException::class.java)
     }
