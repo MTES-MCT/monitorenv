@@ -1,6 +1,6 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
-import { Checkbox } from '@mtes-mct/monitor-ui'
+import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
 import styled from 'styled-components'
@@ -112,7 +112,10 @@ export function ResultList({ searchedText }: ResultListProps) {
             />
             <Title data-cy="regulatory-layers-result-title" onClick={toggleRegulatory}>
               ZONES RÉGLEMENTAIRES &nbsp;
-              <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
+              <NumberOfResults>
+                ({regulatoryLayersSearchResult?.length || '0'}{' '}
+                {pluralize('résultat', regulatoryLayersSearchResult?.length)})
+              </NumberOfResults>
             </Title>
           </Header>
           <SubList $isExpanded={areRegulatoryResultsOpen}>
@@ -137,7 +140,11 @@ export function ResultList({ searchedText }: ResultListProps) {
               onChange={toggleAMPVisibility}
             />
             <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
-              ZONES AMP &nbsp;<NumberOfResults> ({ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
+              ZONES AMP &nbsp;
+              <NumberOfResults>
+                {' '}
+                ({ampsSearchResult?.length || '0'} {pluralize('résultat', ampsSearchResult?.length)})
+              </NumberOfResults>
             </Title>
           </HeaderAMP>
           <SubListAMP $isExpanded={areAmpsResultsOpen} data-cy="amp-result-list">
@@ -156,9 +163,12 @@ export function ResultList({ searchedText }: ResultListProps) {
               name="isVigilanceAreaSearchResultsVisible"
               onChange={toggleVigilanceAreaVisibility}
             />
-            <Title data-cy="vigilance-area-results-list-button" onClick={toggleVigilanceAreas}>
+            <Title data-cy="vigilance-area-results-list" onClick={toggleVigilanceAreas}>
               ZONES DE VIGILANCE &nbsp;
-              <NumberOfResults> ({vigilanceAreaSearchResult?.length || '0'} résultats)</NumberOfResults>
+              <NumberOfResults>
+                {' '}
+                ({vigilanceAreaSearchResult?.length || '0'} {pluralize('résultat', vigilanceAreaSearchResult?.length)})
+              </NumberOfResults>
             </Title>
           </Header>
           <SubList $isExpanded={areMyVigilanceAreasOpen} data-cy="vigilance-area-result-list">

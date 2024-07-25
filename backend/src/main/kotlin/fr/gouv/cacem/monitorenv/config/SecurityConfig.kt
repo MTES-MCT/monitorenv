@@ -30,7 +30,7 @@ class SecurityConfig(
                     logger.info(
                         """
                         ✅ OIDC Authentication is enabled.
-                    """.trimIndent(),
+                        """.trimIndent(),
                     )
 
                     authorize
@@ -64,7 +64,7 @@ class SecurityConfig(
                     logger.warn(
                         """
                         ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
-                    """.trimIndent(),
+                        """.trimIndent(),
                     )
 
                     authorize.requestMatchers("/**").permitAll()

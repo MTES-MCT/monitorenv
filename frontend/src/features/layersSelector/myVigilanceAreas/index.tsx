@@ -49,7 +49,7 @@ export function MyVigilanceAreas() {
             </Button>
           </ButtonContainer>
 
-          <LayerSelector.LayerList>
+          <LayerSelector.LayerList data-cy="my-vigilance-area-zones-list">
             {myVigilanceAreaIds.length === 0 ? (
               <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
             ) : (
