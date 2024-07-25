@@ -114,8 +114,8 @@ describe('Edit Vigilance Area', () => {
     cy.wait(250)
     cy.get('#root').click(970, 840)
     cy.clickButton("Ajouter l'AMP Natura 2000")
-    cy.get('#root').click(760, 400)
-    cy.clickButton("Ajouter l'AMP Natura 2000").first()
+    cy.get('#root').click(720, 400)
+    cy.clickButton("Ajouter l'AMP Natura 2000").wait(250).first()
     cy.getDataCy('amp-item').should('have.length', 2)
 
     cy.clickButton('Valider la sélection')
