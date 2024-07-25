@@ -1,5 +1,9 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
-import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingRegulatoryToVigilanceArea,
+  getIsLinkingZonesToVigilanceArea
+} from '@features/VigilanceArea/slice'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
@@ -41,6 +45,7 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: amps } = useGetAMPsQuery()
@@ -154,7 +159,7 @@ export function ResultList({ searchedText }: ResultListProps) {
           </SubListAMP>
         </>
       )}
-      {vigilanceAreaSearchResult && !isLinkingRegulatoryToVigilanceArea && (
+      {vigilanceAreaSearchResult && !isLinkingZonesToVigilanceArea && (
         <>
           <Header>
             <StyledCheckbox

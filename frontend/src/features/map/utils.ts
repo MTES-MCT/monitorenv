@@ -41,7 +41,7 @@ export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =
   mapClickEvent.featureList?.filter(feature => {
     const featureId = String(feature.id).split(':')[0]
 
-    return featureId === Layers.VIGILANCE_AREA.code
+    return featureId === Layers.VIGILANCE_AREA.code || featureId === Layers.VIGILANCE_AREA_PREVIEW.code
   })
 
 export const getOverlayItemsFromFeatures = (
@@ -53,7 +53,10 @@ export const getOverlayItemsFromFeatures = (
 
     if (
       RegulatoryOrAMPOrViglanceAreaLayerTypeAsList.includes(type as MonitorEnvLayers) &&
-      ((isLinkingZonesToVigilanceArea && type !== MonitorEnvLayers.VIGILANCE_AREA) || !isLinkingZonesToVigilanceArea)
+      ((isLinkingZonesToVigilanceArea &&
+        type !== MonitorEnvLayers.VIGILANCE_AREA &&
+        type !== MonitorEnvLayers.VIGILANCE_AREA_PREVIEW) ||
+        !isLinkingZonesToVigilanceArea)
     ) {
       const { properties } = feature
 

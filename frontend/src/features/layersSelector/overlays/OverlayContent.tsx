@@ -67,7 +67,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
     }
-    if (type === MonitorEnvLayers.VIGILANCE_AREA) {
+    if (type === MonitorEnvLayers.VIGILANCE_AREA || type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
       dispatch(closeMetadataPanel())
     }
@@ -88,7 +88,10 @@ export function OverlayContent({ items }: OverlayContentProps) {
       {items
         ?.filter(item => {
           if (isLinkingZonesToVigilanceArea) {
-            return item.layerType !== MonitorEnvLayers.VIGILANCE_AREA
+            return (
+              item.layerType !== MonitorEnvLayers.VIGILANCE_AREA &&
+              item.layerType !== MonitorEnvLayers.VIGILANCE_AREA_PREVIEW
+            )
           }
 
           return item.properties

@@ -42,10 +42,10 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
       style: getVigilanceAreaLayerStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
-      zIndex: Layers.VIGILANCE_AREA.zIndex
+      zIndex: Layers.VIGILANCE_AREA_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA_PREVIEW.code
 
   const seachExtentVectorSourceRef = useRef(new VectorSource())
   const searchExtentLayerRef = useRef(
@@ -65,7 +65,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
           const layer = vigilanceAreas.entities[id]
 
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
+            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA_PREVIEW.code)
 
             amplayers.push(feature)
           }

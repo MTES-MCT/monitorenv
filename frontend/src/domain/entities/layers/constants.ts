@@ -54,7 +54,8 @@ export enum MonitorEnvLayers {
   THREE_MILES = 'THREE_MILES',
   TRANSVERSAL_SEA_LIMIT_AREAS = 'TRANSVERSAL_SEA_LIMIT_AREAS',
   TWELVE_MILES = 'TWELVE_MILES',
-  VIGILANCE_AREA = 'VIGILANCE_AREA'
+  VIGILANCE_AREA = 'VIGILANCE_AREA',
+  VIGILANCE_AREA_PREVIEW = 'VIGILANCE_AREA_PREVIEW'
 }
 
 /**
@@ -246,6 +247,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.VIGILANCE_AREA,
     zIndex: 1600
   },
+  [MonitorEnvLayers.VIGILANCE_AREA_PREVIEW]: {
+    code: MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
+    zIndex: 1600
+  },
   [MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA]: {
     code: MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     zIndex: 1600
@@ -287,6 +292,7 @@ export const SelectableLayers0To7 = [
     MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
     MonitorEnvLayers.REGULATORY_ENV,
     MonitorEnvLayers.VIGILANCE_AREA,
+    MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ]
@@ -305,6 +311,7 @@ export const SelectableLayers7To26 = [
     MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
     MonitorEnvLayers.REGULATORY_ENV,
     MonitorEnvLayers.VIGILANCE_AREA,
+    MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ]
@@ -342,6 +349,7 @@ export const HoverableLayers7To26 = [
     MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
     MonitorEnvLayers.REGULATORY_ENV,
     MonitorEnvLayers.VIGILANCE_AREA,
+    MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ]
@@ -353,6 +361,7 @@ export type RegulatoryOrAMPOrViglanceAreaLayerType =
   | MonitorEnvLayers.REGULATORY_ENV
   | MonitorEnvLayers.REGULATORY_ENV_PREVIEW
   | MonitorEnvLayers.VIGILANCE_AREA
+  | MonitorEnvLayers.VIGILANCE_AREA_PREVIEW
   | MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
   | MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
 
@@ -362,6 +371,7 @@ export const RegulatoryOrAMPOrViglanceAreaLayerTypeAsList = [
   MonitorEnvLayers.REGULATORY_ENV,
   MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
   MonitorEnvLayers.VIGILANCE_AREA,
+  MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
   MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
   MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
 ]
