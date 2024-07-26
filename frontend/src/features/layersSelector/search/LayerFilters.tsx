@@ -1,7 +1,7 @@
 import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { type Option, Accent, CheckPicker, CustomSearch, SingleTag } from '@mtes-mct/monitor-ui'
-import { useMemo } from 'react'
+import { type Option, Accent, CheckPicker, CustomSearch, Icon, SingleTag, THEME } from '@mtes-mct/monitor-ui'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 type LayerFiltersProps = {
@@ -14,6 +14,10 @@ type LayerFiltersProps = {
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
 }
 
+enum TooltipTypeVisible {
+  AMP_THEMES = 'AMP_THEMES',
+  REGULATORY_THEMES = 'REGULATORY_THEMES'
+}
 export function LayerFilters({
   ampTypes,
   filteredAmpTypes,
@@ -25,6 +29,11 @@ export function LayerFilters({
 }: LayerFiltersProps) {
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+
+  const [visibleTooltipType, setVisibleTooltipType] = useState<TooltipTypeVisible | undefined>(undefined)
+
+  const showTooltip = type => setVisibleTooltipType(type)
+  const hideTooltip = () => setVisibleTooltipType(undefined)
 
   const handleSetFilteredAmpTypes = filteredAmps => {
     setFilteredAmpTypes(filteredAmps)
@@ -52,21 +61,41 @@ export function LayerFilters({
     <FiltersWrapper>
       {!isLinkingAmpToVigilanceArea && (
         <>
-          <CheckPicker
-            customSearch={regulatoryThemesCustomSearch}
-            isLabelHidden
-            label="Thématique réglementaire"
-            name="regulatoryThemes"
-            onChange={handleSetFilteredRegulatoryThemes}
-            options={regulatoryThemes || []}
-            placeholder="Thématique réglementaire"
-            renderValue={() =>
-              filteredRegulatoryThemes && (
-                <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
-              )
-            }
-            value={filteredRegulatoryThemes}
-          />
+          <CheckPickerContainer>
+            <StyledCheckPicker
+              customSearch={regulatoryThemesCustomSearch}
+              isLabelHidden
+              isTransparent
+              label="Thématique réglementaire"
+              name="regulatoryThemes"
+              onChange={handleSetFilteredRegulatoryThemes}
+              options={regulatoryThemes || []}
+              placeholder="Thématique réglementaire"
+              renderValue={() =>
+                filteredRegulatoryThemes && (
+                  <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
+                )
+              }
+              value={filteredRegulatoryThemes}
+            />
+            <IconAndMessageWrapper>
+              <StyledIconAttention
+                aria-describedby="regulatoryThemesTooltip"
+                color={THEME.color.slateGray}
+                onBlur={() => hideTooltip()}
+                onFocus={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
+                onMouseLeave={() => hideTooltip()}
+                onMouseOver={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
+                tabIndex={0}
+              />
+              {visibleTooltipType === TooltipTypeVisible.REGULATORY_THEMES && (
+                <StyledTooltip id="regulatoryThemesTooltip" role="tooltip">
+                  Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de
+                  vigilance.
+                </StyledTooltip>
+              )}
+            </IconAndMessageWrapper>
+          </CheckPickerContainer>
           <TagWrapper>
             {filteredRegulatoryThemes?.map(theme => (
               <SingleTag
@@ -84,19 +113,39 @@ export function LayerFilters({
 
       {!isLinkingRegulatoryToVigilanceArea && (
         <>
-          <CheckPicker
-            customSearch={AMPCustomSearch}
-            isLabelHidden
-            label="Type d'AMP"
-            name="ampTypes"
-            onChange={handleSetFilteredAmpTypes}
-            options={ampTypes}
-            placeholder="Type d'AMP"
-            renderValue={() =>
-              filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>
-            }
-            value={filteredAmpTypes}
-          />
+          {' '}
+          <CheckPickerContainer>
+            <StyledCheckPicker
+              customSearch={AMPCustomSearch}
+              isLabelHidden
+              isTransparent
+              label="Type d'AMP"
+              name="ampTypes"
+              onChange={handleSetFilteredAmpTypes}
+              options={ampTypes}
+              placeholder="Type d'AMP"
+              renderValue={() =>
+                filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>
+              }
+              value={filteredAmpTypes}
+            />
+            <IconAndMessageWrapper>
+              <StyledIconAttention
+                aria-describedby="ampThemesTooltip"
+                color={THEME.color.slateGray}
+                onBlur={() => hideTooltip()}
+                onFocus={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
+                onMouseLeave={() => hideTooltip()}
+                onMouseOver={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
+                tabIndex={0}
+              />
+              {visibleTooltipType === TooltipTypeVisible.AMP_THEMES && (
+                <StyledTooltip id="ampThemesTooltip" role="tooltip">
+                  Ce champ est utilisé comme critère de recherche uniquement pour les AMP.
+                </StyledTooltip>
+              )}
+            </IconAndMessageWrapper>
+          </CheckPickerContainer>
           <TagWrapper>
             {filteredAmpTypes?.map(type => (
               <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
@@ -140,4 +189,30 @@ const OptionValue = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+const StyledCheckPicker = styled(CheckPicker)`
+  flex: 1;
+`
+const CheckPickerContainer = styled.div`
+  align-items: end;
+  display: flex;
+  gap: 8px;
+`
+const IconAndMessageWrapper = styled.div`
+  position: relative;
+`
+
+const StyledTooltip = styled.p`
+  background: ${p => p.theme.color.cultured};
+  border: ${p => p.theme.color.lightGray} 1px solid;
+  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
+  font-size: 11px;
+  padding: 4px 8px;
+  position: absolute;
+  left: 29px;
+  top: -13px;
+  width: 310px;
+`
+const StyledIconAttention = styled(Icon.Info)`
+  cursor: pointer;
 `
