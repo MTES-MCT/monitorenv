@@ -89,7 +89,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
           textToHighlight={layer?.type ?? ''}
         />
-        {!layer?.type && 'AUCUN TYPE'}
+        {layer?.type ?? 'AUCUN TYPE'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
         {isLinkingAMPToVigilanceArea ? (

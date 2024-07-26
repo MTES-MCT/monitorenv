@@ -19,7 +19,7 @@ import { LayerSelector } from '../../utils/LayerSelector.style'
 
 type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
-  groupExtent?: number[]
+  groupExtent: number[]
   groupName: string
   layerIdToDisplay: number | undefined
   layerIds: number[]
@@ -27,7 +27,7 @@ type ResultListLayerGroupProps = {
   removeLayers: (layerIds: number[]) => void
   searchedText: string
   selectedLayerIds: number[]
-  totalNumberOfZones?: number
+  totalNumberOfZones: number
 }
 export function ResultListLayerGroup({
   addLayers,
@@ -70,7 +70,7 @@ export function ResultListLayerGroup({
   const clickOnGroupZones = () => {
     setZonesAreOpen(!zonesAreOpen)
 
-    if (!zonesAreOpen && groupExtent) {
+    if (!zonesAreOpen) {
       dispatch(setFitToExtent(groupExtent))
     }
   }

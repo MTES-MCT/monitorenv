@@ -43,9 +43,9 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
 
       if (vigilanceAreas?.entities) {
         const features = myVigilanceAreaIdsDisplayed.reduce((feats: Feature[], layerId) => {
-          const ampLayer = vigilanceAreas.entities[layerId]
-          if (ampLayer && ampLayer?.geom && ampLayer?.geom?.coordinates.length > 0) {
-            const feature = getVigilanceAreaZoneFeature(ampLayer, Layers.VIGILANCE_AREA.code)
+          const layer = vigilanceAreas.entities[layerId]
+          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
 
             feats.push(feature)
           }

@@ -40,7 +40,7 @@ export function VigilanceAreaLayer({ layerId, searchedText }: RegulatoryLayerPro
     if (isZoneSelected) {
       dispatch(vigilanceAreaActions.deleteIdToMyVigilanceAreaIds(layerId))
     } else {
-      dispatch(vigilanceAreaActions.addIdToMyVigilanceAreaIds([layerId]))
+      dispatch(vigilanceAreaActions.addIdsToMyVigilanceAreaIds([layerId]))
     }
   }
 
@@ -90,7 +90,7 @@ export function VigilanceAreaLayer({ layerId, searchedText }: RegulatoryLayerPro
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
           textToHighlight={layer?.name ?? ''}
         />
-        {!layer?.name && 'AUCUN NOM'}
+        {layer?.name ?? 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton
