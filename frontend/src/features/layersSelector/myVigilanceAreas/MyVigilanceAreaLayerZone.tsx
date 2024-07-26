@@ -31,7 +31,7 @@ export function MyVigilanceAreaLayerZone({ layerId }: { layerId: number }) {
 
   const zoomToLayerExtent = () => {
     if (!layerZoneIsShowed) {
-      dispatch(vigilanceAreaActions.addIdToMyVigilanceAreaIdsToBeDisplayed([layerId]))
+      dispatch(vigilanceAreaActions.addIdsToMyVigilanceAreaIdsToBeDisplayed([layerId]))
     }
 
     if ((layer?.bbox ?? []).length === 0) {
@@ -99,7 +99,7 @@ export function MyVigilanceAreaLayerZone({ layerId }: { layerId: number }) {
           title={layerZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
         />
 
-        <PaddedIconButton
+        <StyledIconButton
           accent={Accent.TERTIARY}
           color={THEME.color.slateGray}
           Icon={Icon.Close}
@@ -112,6 +112,6 @@ export function MyVigilanceAreaLayerZone({ layerId }: { layerId: number }) {
   )
 }
 
-const PaddedIconButton = styled(IconButton)`
+const StyledIconButton = styled(IconButton)`
   margin-right: 8px;
 `

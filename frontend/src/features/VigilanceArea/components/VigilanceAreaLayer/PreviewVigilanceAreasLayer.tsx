@@ -113,13 +113,6 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     }
   }, [map, searchExtent])
 
-  /*   useEffect(() => {
-    vectorSourceRef.current?.clear(true)
-    if (vigilanceAreasFeatures) {
-      vectorSourceRef.current?.addFeatures(vigilanceAreasFeatures)
-    }
-  }, [vigilanceAreasFeatures]) */
-
   useEffect(() => {
     vectorLayerRef.current?.setVisible(isLayerVisible)
     searchExtentLayerRef.current?.setVisible(isLayerVisible)

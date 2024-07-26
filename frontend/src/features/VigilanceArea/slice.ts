@@ -83,11 +83,11 @@ export const vigilanceAreaSlice = createSlice({
       const newAMPToAdd = action.payload.filter(id => !state.ampToAdd?.includes(id))
       state.ampToAdd = [...state.ampToAdd, ...newAMPToAdd]
     },
-    addIdToMyVigilanceAreaIds(state, action: PayloadAction<Array<number>>) {
+    addIdsToMyVigilanceAreaIds(state, action: PayloadAction<Array<number>>) {
       state.myVigilanceAreaIds = [...state.myVigilanceAreaIds, ...action.payload]
       state.myVigilanceAreaIdsDisplayed = [...state.myVigilanceAreaIdsDisplayed, ...action.payload]
     },
-    addIdToMyVigilanceAreaIdsToBeDisplayed(state, action: PayloadAction<Array<number>>) {
+    addIdsToMyVigilanceAreaIdsToBeDisplayed(state, action: PayloadAction<Array<number>>) {
       state.myVigilanceAreaIdsDisplayed = [...state.myVigilanceAreaIdsDisplayed, ...action.payload]
     },
 
