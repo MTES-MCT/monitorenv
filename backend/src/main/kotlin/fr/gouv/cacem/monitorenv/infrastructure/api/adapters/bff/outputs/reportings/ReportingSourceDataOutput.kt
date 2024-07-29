@@ -2,16 +2,16 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reporti
 
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.SemaphoreDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import java.util.UUID
 
 data class ReportingSourceDataOutput(
     val id: UUID?,
     val reportingId: Int?,
     val sourceType: SourceTypeEnum,
-    val semaphore: SemaphoreDataOutput?,
-    val controlUnit: ControlUnitDataOutput?,
+    val semaphoreId: Int?,
+    val controlUnitId: Int?,
+//    val semaphore: SemaphoreDataOutput?,
+//    val controlUnit: ControlUnitDataOutput?,
     val sourceName: String?,
     val displayedSource: String,
 ) {
@@ -23,8 +23,10 @@ data class ReportingSourceDataOutput(
                 id = reportingSourceDTO.reportingSource.id,
                 reportingId = reportingSourceDTO.reportingSource.reportingId,
                 sourceType = reportingSourceDTO.reportingSource.sourceType,
-                semaphore = reportingSourceDTO.semaphore?.let { SemaphoreDataOutput.fromSemaphoreEntity(it) },
-                controlUnit = reportingSourceDTO.controlUnit?.let { ControlUnitDataOutput.fromFullControlUnit(it) },
+                controlUnitId = reportingSourceDTO.controlUnit?.controlUnit?.id,
+                semaphoreId = reportingSourceDTO.semaphore?.id,
+//                semaphore = reportingSourceDTO.semaphore?.let { SemaphoreDataOutput.fromSemaphoreEntity(it) },
+//                controlUnit = reportingSourceDTO.controlUnit?.let { ControlUnitDataOutput.fromFullControlUnit(it) },
                 sourceName = reportingSourceDTO.reportingSource.sourceName,
                 displayedSource =
                 when (reportingSourceDTO.reportingSource.sourceType) {

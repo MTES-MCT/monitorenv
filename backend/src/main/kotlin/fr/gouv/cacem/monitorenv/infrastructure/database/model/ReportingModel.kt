@@ -59,6 +59,7 @@ class ReportingModel(
     )
     val reportingId: Long? = null,
     @OneToMany(
+        mappedBy = "reporting",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         fetch = FetchType.EAGER,
@@ -66,7 +67,7 @@ class ReportingModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
-    val reportingSources: List<ReportingSourceModel> = listOf(),
+    val reportingSources: MutableList<ReportingSourceModel> = mutableListOf(),
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)

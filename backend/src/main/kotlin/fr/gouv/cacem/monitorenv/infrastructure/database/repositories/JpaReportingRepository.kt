@@ -9,12 +9,16 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingSourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -32,6 +36,9 @@ class JpaReportingRepository(
     private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
+    private val dbControlUnitRepository: IDBControlUnitRepository,
+    private val dbSemaphoreRepository: IDBSemaphoreRepository,
+    private val dbReportingSourceRepository: IDBReportingSourceRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
 
@@ -50,6 +57,7 @@ class JpaReportingRepository(
         dbReportingRepository.detachDanglingEnvActions(missionId, envActionIds)
     }
 
+    // FIXME (25/07/2024) : passer par le findByIdOrNull et refacto
     override fun findById(reportingId: Int): ReportingDTO {
         return dbReportingRepository.findById(reportingId).get().toReportingDTO(mapper)
     }
@@ -160,12 +168,35 @@ class JpaReportingRepository(
                     )
             }
 
+            val reportingsSourceModels = reporting.reportingSources.map {
+                val controlUnitReference = if (it.controlUnitId != null) {
+                    dbControlUnitRepository.getReferenceById(it.controlUnitId)
+                } else {
+                    null
+                }
+                val semaphoreReference = if (it.semaphoreId != null) {
+                    dbSemaphoreRepository.getReferenceById(it.semaphoreId)
+                } else {
+                    null
+                }
+                return@map ReportingSourceModel.fromReportingSourceEntity(
+                    reportingSource = it,
+                    controlUnit = controlUnitReference,
+                    semaphore = semaphoreReference,
+                    reporting = reportingModel,
+                )
+            }
+
+            dbReportingSourceRepository.saveAll(reportingsSourceModels)
+
             // set controlPlanSubThemes and save again (and flush)
-            controlPlanSubThemesReferenceList?.forEach { it ->
+            controlPlanSubThemesReferenceList?.forEach {
                 reportingModel.controlPlanSubThemes?.add(
                     ReportingsControlPlanSubThemeModel.fromModels(reportingModel, it),
                 )
             }
+
+            reportingModel.reportingSources.addAll(reportingsSourceModels)
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(

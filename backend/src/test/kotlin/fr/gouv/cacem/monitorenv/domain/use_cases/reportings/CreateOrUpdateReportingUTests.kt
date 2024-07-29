@@ -16,10 +16,10 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.ReportingFixture.Companion.aReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.ReportingFixture.Companion.aReportingSourceControlUnit
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.ReportingFixture.Companion.aReportingSourceSemaphore
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceSemaphore
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -30,6 +30,7 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateReportingUTests {
@@ -53,25 +54,6 @@ class CreateOrUpdateReportingUTests {
 
     @MockBean
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
-
-    @Test
-    fun `Should throw an exception when input is null`() {
-        // When
-        val throwable =
-            Assertions.catchThrowable {
-                CreateOrUpdateReporting(
-                    reportingRepository = reportingRepository,
-                    facadeRepository = facadeRepository,
-                    postgisFunctionRepository = postgisFunctionRepository,
-                    eventPublisher = applicationEventPublisher,
-                )
-                    .execute(null)
-            }
-
-        // Then
-        assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
-        assertThat(throwable.message).contains("No reporting to create or update")
-    }
 
     @Test
     fun `should return new or updated reporting`() {
@@ -325,10 +307,11 @@ class CreateOrUpdateReportingUTests {
 
     @Test
     fun `execute should throw ReportingAlreadyAttachedException when try to attach reporting that has already be attached`() {
-        val reportingWithNewAttachedMission = aReporting(missionId = 1)
+        val reportingWithNewAttachedMission =
+            aReporting(id = 1, missionId = 1, attachedToMissionAtUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"))
 
         given(reportingRepository.findById(reportingWithNewAttachedMission.id!!))
-            .willReturn(ReportingDTO(reporting = aReporting(missionId = 2), reportingSources = listOf()))
+            .willReturn(ReportingDTO(reporting = aReporting(id = 2, missionId = 2), reportingSources = listOf()))
 
         // Then
         assertThatThrownBy {

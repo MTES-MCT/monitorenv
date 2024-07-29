@@ -20,8 +20,7 @@ class CreateOrUpdateReporting(
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
     @Throws(IllegalArgumentException::class)
-    fun execute(reporting: ReportingEntity?): ReportingDTO {
-        require(reporting != null) { "No reporting to create or update" }
+    fun execute(reporting: ReportingEntity): ReportingDTO {
         logger.info("Create or update reporting: $reporting.id")
         reporting.validate()
 

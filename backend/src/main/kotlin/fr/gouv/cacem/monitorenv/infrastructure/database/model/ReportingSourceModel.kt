@@ -9,9 +9,12 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.JdbcType
@@ -23,6 +26,7 @@ import java.util.UUID
 class ReportingSourceModel(
     @Id
     @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID?,
     @Column(name = "source_type", columnDefinition = "reportings_source_type")
     @Enumerated(EnumType.STRING)
@@ -32,11 +36,11 @@ class ReportingSourceModel(
     @JoinColumn(name = "reportings_id", nullable = false)
     @JsonBackReference
     val reporting: ReportingModel,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semaphore_id")
     @JsonBackReference
     val semaphore: SemaphoreModel? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id")
     @JsonBackReference
     val controlUnit: ControlUnitModel? = null,
@@ -77,7 +81,7 @@ class ReportingSourceModel(
             reporting: ReportingModel,
         ) =
             ReportingSourceModel(
-                id = reportingSource.id ?: UUID.randomUUID(),
+                id = reportingSource.id,
                 sourceType = reportingSource.sourceType,
                 semaphore = semaphore,
                 controlUnit = controlUnit,

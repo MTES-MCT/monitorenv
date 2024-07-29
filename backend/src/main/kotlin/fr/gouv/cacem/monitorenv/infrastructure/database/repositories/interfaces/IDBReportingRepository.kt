@@ -99,56 +99,56 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-        SELECT *
-        FROM reportings
-        WHERE is_deleted IS FALSE
-            AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
-            AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
-            AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
-            AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
-            AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
+        SELECT r.*
+        FROM reportings r
+        WHERE r.is_deleted IS FALSE
+            AND r.created_at >= CAST(:startedAfter AS timestamp)
+            AND (CAST(:startedBefore AS timestamp) IS NULL OR r.created_at <= CAST(:startedBefore AS timestamp))
+            AND ((:seaFronts) = '{}' OR CAST(r.sea_front AS text) = ANY(CAST(:seaFronts as text[])))
+            AND ((:sourcesType) = '{}' OR EXISTS (SELECT 1 FROM reportings_source rs WHERE rs.reportings_id = r.id AND CAST(rs.source_type as text) = ANY((:sourcesType)::text[])))
+            AND ((:reportingType) = '{}' OR CAST(r.report_type AS text) = ANY(CAST(:reportingType as text[])))
             AND ((:status) = '{}'
                 OR (
                     'ARCHIVED' = ANY(CAST(:status as text[])) AND (
-                        is_archived = true
-                        OR (created_at + make_interval(hours => validity_time)) < NOW()
+                        r.is_archived = true
+                        OR (r.created_at + make_interval(hours => r.validity_time)) < NOW()
                     )
                 )
                 OR (
                     'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
-                        is_archived = false
-                        AND (created_at + make_interval(hours => validity_time)) >= NOW()
+                        r.is_archived = false
+                        AND (r.created_at + make_interval(hours => r.validity_time)) >= NOW()
                     )
                 )
             )
-            AND ((:targetTypes) = '{}' OR CAST(target_type AS text) = ANY(CAST(:targetTypes as text[])))
+            AND ((:targetTypes) = '{}' OR CAST(r.target_type AS text) = ANY(CAST(:targetTypes as text[])))
             AND ((:isAttachedToMission) IS NULL
                 OR (
                     (:isAttachedToMission) = true AND (
-                        mission_id IS NOT NULL
-                        AND detached_from_mission_at_utc IS NULL
+                        r.mission_id IS NOT NULL
+                        AND r.detached_from_mission_at_utc IS NULL
                     )
                 )
                 OR (
                     (:isAttachedToMission) = false AND (
-                        mission_id IS NULL
+                        r.mission_id IS NULL
                         OR (
-                            mission_id IS NOT NULL AND
-                            detached_from_mission_at_utc IS NOT NULL
+                            r.mission_id IS NOT NULL AND
+                            r.detached_from_mission_at_utc IS NOT NULL
                         )
                     )
                 )
             )
             AND ((:searchQuery) = ''
                 OR (
-                    to_tsvector('mydict', target_details) @@ to_tsquery('mydict', (:searchQuery || ':*'))
+                    to_tsvector('mydict', r.target_details) @@ to_tsquery('mydict', (:searchQuery || ':*'))
                     )
                 OR (
-                    unaccent(CAST(description as text))
+                    unaccent(CAST(r.description as text))
                     ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
                 )
             )
-            ORDER BY reporting_id DESC
+            ORDER BY r.reporting_id DESC
     """,
         nativeQuery = true,
     )
@@ -168,9 +168,10 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-        SELECT *
-        FROM reportings
-        WHERE control_unit_id = :controlUnitId
+        SELECT r.*
+        FROM reportings r
+        INNER JOIN reportings_source rs ON r.id = rs.reportings_id
+        WHERE rs.control_unit_id = :controlUnitId
         """,
         nativeQuery = true,
     )

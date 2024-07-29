@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures
+package fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
@@ -17,6 +17,7 @@ class ReportingFixture {
             id: Int? = null,
             reportingSources: List<ReportingSourceEntity> = listOf(),
             missionId: Int? = null,
+            attachedToMissionAtUtc: ZonedDateTime? = null,
         ): ReportingEntity {
             val wktReader = WKTReader()
 
@@ -46,27 +47,28 @@ class ReportingFixture {
                 openBy = "CDA",
                 isInfractionProven = true,
                 missionId = missionId,
+                attachedToMissionAtUtc = attachedToMissionAtUtc,
             )
         }
 
-        fun aReportingSourceSemaphore(reportingId: Int? = null): ReportingSourceEntity {
+        fun aReportingSourceSemaphore(reportingId: Int? = null, semaphoreId: Int = 1): ReportingSourceEntity {
             return ReportingSourceEntity(
                 id = null,
                 reportingId = reportingId,
                 sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+                semaphoreId = semaphoreId,
                 controlUnitId = null,
                 sourceName = null,
             )
         }
 
-        fun aReportingSourceControlUnit(reportingId: Int? = null): ReportingSourceEntity {
+        fun aReportingSourceControlUnit(reportingId: Int? = null, controlUnitId: Int = 1): ReportingSourceEntity {
             return ReportingSourceEntity(
                 id = null,
                 reportingId = reportingId,
                 sourceType = SourceTypeEnum.CONTROL_UNIT,
                 semaphoreId = null,
-                controlUnitId = 1,
+                controlUnitId = controlUnitId,
                 sourceName = null,
             )
         }
