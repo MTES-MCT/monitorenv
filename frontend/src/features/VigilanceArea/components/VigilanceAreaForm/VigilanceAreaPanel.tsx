@@ -41,7 +41,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
     ? customDayjs(vigilanceArea?.startDatePeriod).format('DD/MM/YYYY')
     : undefined
   const formattedEndPeriod = vigilanceArea?.endDatePeriod
-    ? customDayjs(vigilanceArea?.endDatePeriod).format('DD/MM/YYYY')
+    ? customDayjs(vigilanceArea?.endDatePeriod).subtract(1, 'day').format('DD/MM/YYYY')
     : undefined
 
   const onConfirmDeleteModal = () => {

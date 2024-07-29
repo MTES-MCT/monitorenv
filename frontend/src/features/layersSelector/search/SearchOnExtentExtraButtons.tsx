@@ -11,7 +11,6 @@ import {
   setAMPsSearchResult,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
-  setFilteredVigilanceAreaThemes,
   setGlobalSearchText,
   setRegulatoryLayersSearchResult,
   setSearchExtent,
@@ -75,7 +74,6 @@ export function SearchOnExtentExtraButtons({
     dispatch(setGlobalSearchText(''))
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setFilteredAmpTypes([]))
-    dispatch(setFilteredVigilanceAreaThemes([]))
     dispatch(resetSearchExtent())
     dispatch(closeMetadataPanel())
     dispatch(closeLayerOverlay())

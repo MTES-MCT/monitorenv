@@ -1,6 +1,10 @@
-import { getIsLinkingAMPToVigilanceArea, getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingRegulatoryToVigilanceArea,
+  getIsLinkingZonesToVigilanceArea
+} from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { type Option, Accent, CheckPicker, CustomSearch, Icon, SingleTag, THEME } from '@mtes-mct/monitor-ui'
+import { type Option, Accent, CheckPicker, CustomSearch, Icon, Select, SingleTag, THEME } from '@mtes-mct/monitor-ui'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -8,46 +12,57 @@ type LayerFiltersProps = {
   ampTypes: Option<string>[]
   filteredAmpTypes: string[]
   filteredRegulatoryThemes: string[]
+  filteredVigilanceAreaPeriod: string | undefined
   handleResetFilters: () => void
   regulatoryThemes: Option<string>[]
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
+  setFilteredVigilanceAreaPeriod: (filteredVigilanceAreaPeriod: string | undefined) => void
+  vigilanceAreaPeriodOptions: Option<string>[]
 }
 
 enum TooltipTypeVisible {
   AMP_THEMES = 'AMP_THEMES',
-  REGULATORY_THEMES = 'REGULATORY_THEMES'
+  REGULATORY_THEMES = 'REGULATORY_THEMES',
+  VIGILANCE_AREA_PERIOD = 'VIGILANCE_AREA_PERIOD'
 }
 export function LayerFilters({
   ampTypes,
   filteredAmpTypes,
   filteredRegulatoryThemes,
+  filteredVigilanceAreaPeriod,
   handleResetFilters,
   regulatoryThemes,
   setFilteredAmpTypes,
-  setFilteredRegulatoryThemes
+  setFilteredRegulatoryThemes,
+  setFilteredVigilanceAreaPeriod,
+  vigilanceAreaPeriodOptions
 }: LayerFiltersProps) {
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const [visibleTooltipType, setVisibleTooltipType] = useState<TooltipTypeVisible | undefined>(undefined)
 
   const showTooltip = type => setVisibleTooltipType(type)
   const hideTooltip = () => setVisibleTooltipType(undefined)
 
-  const handleSetFilteredAmpTypes = filteredAmps => {
-    setFilteredAmpTypes(filteredAmps)
+  const handleSetFilteredAmpTypes = nextAmpThemes => {
+    setFilteredAmpTypes(nextAmpThemes)
+  }
+  const handleDeleteAmpType = ampThemeToDelete => () => {
+    setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
-  const handleDeleteAmpType = v => () => {
-    setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== v))
+  const handleSetFilteredRegulatoryThemes = nextRegulatoryThemes => {
+    setFilteredRegulatoryThemes(nextRegulatoryThemes)
   }
-  const handleSetFilteredRegulatoryThemes = v => {
-    setFilteredRegulatoryThemes(v)
+  const handleDeleteRegulatoryTheme = regulatoryThemeToDelete => () => {
+    setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete))
   }
 
-  const handleDeleteRegulatoryTheme = v => () => {
-    setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== v))
+  const handleSetFilteredVigilancePeriod = nextVigilanceAreaPeriod => {
+    setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod)
   }
 
   const regulatoryThemesCustomSearch = useMemo(
@@ -60,103 +75,129 @@ export function LayerFilters({
   return (
     <FiltersWrapper>
       {!isLinkingAmpToVigilanceArea && (
-        <>
-          <CheckPickerContainer>
-            <StyledCheckPicker
-              customSearch={regulatoryThemesCustomSearch}
-              isLabelHidden
-              isTransparent
-              label="Thématique réglementaire"
-              name="regulatoryThemes"
-              onChange={handleSetFilteredRegulatoryThemes}
-              options={regulatoryThemes || []}
-              placeholder="Thématique réglementaire"
-              renderValue={() =>
-                filteredRegulatoryThemes && (
-                  <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
-                )
-              }
-              value={filteredRegulatoryThemes}
+        <SelectContainer>
+          <StyledCheckPicker
+            customSearch={regulatoryThemesCustomSearch}
+            isLabelHidden
+            isTransparent
+            label="Thématique réglementaire"
+            name="regulatoryThemes"
+            onChange={handleSetFilteredRegulatoryThemes}
+            options={regulatoryThemes || []}
+            placeholder="Thématique réglementaire"
+            renderValue={() =>
+              filteredRegulatoryThemes && (
+                <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
+              )
+            }
+            value={filteredRegulatoryThemes}
+          />
+          <IconAndMessageWrapper>
+            <StyledIconAttention
+              aria-describedby="regulatoryThemesTooltip"
+              color={THEME.color.slateGray}
+              onBlur={() => hideTooltip()}
+              onFocus={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
+              onMouseLeave={() => hideTooltip()}
+              onMouseOver={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
+              tabIndex={0}
             />
-            <IconAndMessageWrapper>
-              <StyledIconAttention
-                aria-describedby="regulatoryThemesTooltip"
-                color={THEME.color.slateGray}
-                onBlur={() => hideTooltip()}
-                onFocus={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
-                onMouseLeave={() => hideTooltip()}
-                onMouseOver={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
-                tabIndex={0}
-              />
-              {visibleTooltipType === TooltipTypeVisible.REGULATORY_THEMES && (
-                <StyledTooltip id="regulatoryThemesTooltip" role="tooltip">
-                  Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de
-                  vigilance.
-                </StyledTooltip>
-              )}
-            </IconAndMessageWrapper>
-          </CheckPickerContainer>
-          <TagWrapper>
-            {filteredRegulatoryThemes?.map(theme => (
-              <SingleTag
-                key={theme}
-                accent={Accent.SECONDARY}
-                onDelete={handleDeleteRegulatoryTheme(theme)}
-                title={theme}
-              >
-                {theme}
-              </SingleTag>
-            ))}
-          </TagWrapper>
-        </>
+            {visibleTooltipType === TooltipTypeVisible.REGULATORY_THEMES && (
+              <StyledTooltip id="regulatoryThemesTooltip" role="tooltip">
+                Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
+              </StyledTooltip>
+            )}
+          </IconAndMessageWrapper>
+        </SelectContainer>
       )}
 
       {!isLinkingRegulatoryToVigilanceArea && (
-        <>
-          {' '}
-          <CheckPickerContainer>
-            <StyledCheckPicker
-              customSearch={AMPCustomSearch}
-              isLabelHidden
-              isTransparent
-              label="Type d'AMP"
-              name="ampTypes"
-              onChange={handleSetFilteredAmpTypes}
-              options={ampTypes}
-              placeholder="Type d'AMP"
-              renderValue={() =>
-                filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>
-              }
-              value={filteredAmpTypes}
+        <SelectContainer>
+          <StyledCheckPicker
+            customSearch={AMPCustomSearch}
+            isLabelHidden
+            isTransparent
+            label="Type d'AMP"
+            name="ampTypes"
+            onChange={handleSetFilteredAmpTypes}
+            options={ampTypes}
+            placeholder="Type d'AMP"
+            renderValue={() =>
+              filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>
+            }
+            value={filteredAmpTypes}
+          />
+          <IconAndMessageWrapper>
+            <StyledIconAttention
+              aria-describedby="ampThemesTooltip"
+              color={THEME.color.slateGray}
+              onBlur={() => hideTooltip()}
+              onFocus={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
+              onMouseLeave={() => hideTooltip()}
+              onMouseOver={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
+              tabIndex={0}
             />
-            <IconAndMessageWrapper>
-              <StyledIconAttention
-                aria-describedby="ampThemesTooltip"
-                color={THEME.color.slateGray}
-                onBlur={() => hideTooltip()}
-                onFocus={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
-                onMouseLeave={() => hideTooltip()}
-                onMouseOver={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
-                tabIndex={0}
-              />
-              {visibleTooltipType === TooltipTypeVisible.AMP_THEMES && (
-                <StyledTooltip id="ampThemesTooltip" role="tooltip">
-                  Ce champ est utilisé comme critère de recherche uniquement pour les AMP.
-                </StyledTooltip>
-              )}
-            </IconAndMessageWrapper>
-          </CheckPickerContainer>
-          <TagWrapper>
-            {filteredAmpTypes?.map(type => (
-              <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
-                {type}
-              </SingleTag>
-            ))}
-          </TagWrapper>
-        </>
+            {visibleTooltipType === TooltipTypeVisible.AMP_THEMES && (
+              <StyledTooltip id="ampThemesTooltip" role="tooltip">
+                Ce champ est utilisé comme critère de recherche uniquement pour les AMP.
+              </StyledTooltip>
+            )}
+          </IconAndMessageWrapper>
+        </SelectContainer>
       )}
 
-      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0) && (
+      {!isLinkingZonesToVigilanceArea && (
+        <SelectContainer>
+          <StyledSelect
+            isLabelHidden
+            isTransparent
+            label="Période de vigilance"
+            name="periodOfVigilanceArea"
+            onChange={handleSetFilteredVigilancePeriod}
+            options={vigilanceAreaPeriodOptions}
+            placeholder="Période de vigilance"
+            value={filteredVigilanceAreaPeriod}
+          />
+          <IconAndMessageWrapper>
+            <StyledIconAttention
+              aria-describedby="vigilanceAreaPeriodTooltip"
+              color={THEME.color.slateGray}
+              onBlur={() => hideTooltip()}
+              onFocus={() => showTooltip(TooltipTypeVisible.VIGILANCE_AREA_PERIOD)}
+              onMouseLeave={() => hideTooltip()}
+              onMouseOver={() => showTooltip(TooltipTypeVisible.VIGILANCE_AREA_PERIOD)}
+              tabIndex={0}
+            />
+            {visibleTooltipType === TooltipTypeVisible.VIGILANCE_AREA_PERIOD && (
+              <StyledTooltip id="vigilanceAreaPeriodTooltip" role="tooltip">
+                Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.
+              </StyledTooltip>
+            )}
+          </IconAndMessageWrapper>
+        </SelectContainer>
+      )}
+
+      {(filteredRegulatoryThemes || filteredAmpTypes) && (
+        <TagWrapper>
+          {filteredRegulatoryThemes?.map(theme => (
+            <SingleTag
+              key={theme}
+              accent={Accent.SECONDARY}
+              onDelete={handleDeleteRegulatoryTheme(theme)}
+              title={theme}
+            >
+              {theme}
+            </SingleTag>
+          ))}
+
+          {filteredAmpTypes?.map(type => (
+            <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
+              {type}
+            </SingleTag>
+          ))}
+        </TagWrapper>
+      )}
+      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0 || !!filteredVigilanceAreaPeriod) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
       )}
     </FiltersWrapper>
@@ -165,9 +206,12 @@ export function LayerFilters({
 
 const FiltersWrapper = styled.div`
   background-color: ${p => p.theme.color.white};
+  border-top: 2px solid ${p => p.theme.color.lightGray};
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 16px;
   text-align: left;
-  border-top: 2px solid ${p => p.theme.color.lightGray};
 `
 const TagWrapper = styled.div`
   margin-top: 8px;
@@ -193,7 +237,10 @@ const OptionValue = styled.span`
 const StyledCheckPicker = styled(CheckPicker)`
   flex: 1;
 `
-const CheckPickerContainer = styled.div`
+const StyledSelect = styled(Select)`
+  flex: 1;
+`
+const SelectContainer = styled.div`
   align-items: end;
   display: flex;
   gap: 8px;

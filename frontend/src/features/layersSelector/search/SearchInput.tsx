@@ -5,12 +5,14 @@ export function SearchInput({
   displayRegFilters,
   filteredAmpTypes,
   filteredRegulatoryThemes,
+  filteredVigilanceAreaPeriod,
   globalSearchText,
   placeholder,
   setGlobalSearchText,
   toggleRegFilters
 }) {
-  const numberOfFilters = (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0)
+  const numberOfFilters =
+    (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0) + (filteredVigilanceAreaPeriod ? 1 : 0)
 
   return (
     <SearchHeader>

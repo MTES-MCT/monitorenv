@@ -6,6 +6,7 @@ import java.time.ZonedDateTime
 data class VigilanceAreaEntity(
     val id: Int? = null,
     val comments: String? = null,
+    val computedEndDate: ZonedDateTime? = null,
     val createdBy: String? = null,
     val endDatePeriod: ZonedDateTime? = null,
     val endingCondition: EndingConditionEnum? = null,

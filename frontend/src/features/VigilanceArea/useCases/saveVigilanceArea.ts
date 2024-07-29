@@ -1,6 +1,6 @@
 import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
-import { Level } from '@mtes-mct/monitor-ui'
+import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 
 import { vigilanceAreaActions } from '../slice'
 import { VigilanceArea } from '../types'
@@ -14,8 +14,12 @@ export const saveVigilanceArea =
     const vigilanceAreaEnpoint = isNewVigilanceArea
       ? vigilanceAreasAPI.endpoints.createVigilanceArea
       : vigilanceAreasAPI.endpoints.updateVigilanceArea
+
+    const realEndDate = calculateRealEndDate(values)
+    const computedEndDate = realEndDate ? realEndDate.toISOString() : undefined
+
     try {
-      const response = await dispatch(vigilanceAreaEnpoint.initiate(values))
+      const response = await dispatch(vigilanceAreaEnpoint.initiate({ ...values, computedEndDate }))
 
       if ('data' in response) {
         const vigilanceAreaResponse = response.data as VigilanceArea.VigilanceArea
@@ -69,3 +73,39 @@ export const saveVigilanceArea =
       )
     }
   }
+
+const calculateRealEndDate = area => {
+  let currentOccurrence = customDayjs(area.startDatePeriod)
+  const endDate = area.endDatePeriod ? customDayjs(area.endDatePeriod) : undefined
+
+  if (area.frequency === VigilanceArea.Frequency.NONE) {
+    return undefined
+  }
+
+  if (area.endingCondition === VigilanceArea.EndingCondition.END_DATE && area.endingOccurrenceDate) {
+    const endingDate = customDayjs(area.endingOccurrenceDate)
+
+    return endingDate.isAfter(endDate) ? endingDate : endDate
+  }
+
+  if (area.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && area.endingOccurrencesNumber) {
+    switch (area.frequency) {
+      case VigilanceArea.Frequency.ALL_WEEKS:
+        currentOccurrence = currentOccurrence.add(area.endingOccurrencesNumber * 7, 'days')
+        break
+      case VigilanceArea.Frequency.ALL_MONTHS:
+        currentOccurrence = currentOccurrence.add(area.endingOccurrencesNumber, 'month')
+        break
+      case VigilanceArea.Frequency.ALL_YEARS:
+        currentOccurrence = currentOccurrence.add(area.endingOccurrencesNumber, 'year')
+        break
+      case VigilanceArea.Frequency.NONE:
+      default:
+        return false // No recurrence
+    }
+
+    return currentOccurrence.isAfter(endDate) ? currentOccurrence : endDate
+  }
+
+  return endDate
+}

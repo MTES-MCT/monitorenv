@@ -4,7 +4,7 @@ type LayerSearchState = {
   ampsSearchResult: number[] | undefined
   filteredAmpTypes: string[]
   filteredRegulatoryThemes: string[]
-  filteredVigilanceAreasThemes: string[]
+  filteredVigilanceAreaPeriod: string | undefined
   globalSearchText: string
   isAmpSearchResultsVisible: boolean
   isRegulatorySearchResultsVisible: boolean
@@ -18,7 +18,7 @@ const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
   filteredAmpTypes: [],
   filteredRegulatoryThemes: [],
-  filteredVigilanceAreasThemes: [],
+  filteredVigilanceAreaPeriod: undefined,
   globalSearchText: '',
   isAmpSearchResultsVisible: true,
   isRegulatorySearchResultsVisible: true,
@@ -53,8 +53,8 @@ const layerSearchSlice = createSlice({
       state.filteredRegulatoryThemes = action.payload
     },
 
-    setFilteredVigilanceAreaThemes(state, action: PayloadAction<string[]>) {
-      state.filteredVigilanceAreasThemes = action.payload
+    setFilteredVigilanceAreaPeriod(state, action: PayloadAction<string | undefined>) {
+      state.filteredVigilanceAreaPeriod = action.payload
     },
 
     setGlobalSearchText(state, action: PayloadAction<string>) {
@@ -84,7 +84,7 @@ const layerSearchSlice = createSlice({
       state.shouldFilterSearchOnMapExtent = action.payload
     },
 
-    setVigilanceAreasSearchResult(state, action) {
+    setVigilanceAreasSearchResult(state, action: PayloadAction<Array<number>>) {
       state.vigilanceAreaSearchResult = action.payload
     }
   }
@@ -95,7 +95,7 @@ export const {
   setAMPsSearchResult,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
-  setFilteredVigilanceAreaThemes,
+  setFilteredVigilanceAreaPeriod,
   setGlobalSearchText,
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
