@@ -23,7 +23,6 @@ class JpaReportingSourceRepository(
 
     @Transactional
     override fun save(reportingSourceEntity: ReportingSourceEntity): ReportingSourceDTO {
-
         val semaphore = if (reportingSourceEntity.semaphoreId != null) {
             dbSemaphoreRepository.getReferenceById(reportingSourceEntity.semaphoreId)
         } else {

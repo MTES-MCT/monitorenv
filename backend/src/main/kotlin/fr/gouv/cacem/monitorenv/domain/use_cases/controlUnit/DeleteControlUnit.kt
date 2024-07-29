@@ -26,7 +26,7 @@ class DeleteControlUnit(
         val deletedReportings = reportingRepository.findByControlUnitId(controlUnitId).filter { it.isDeleted }
 
         deletedMissions.forEach { deletedMission ->
-            //TODO: use saveAll
+            // TODO: use saveAll
             missionRepository.save(
                 deletedMission.copy(
                     controlUnits =
@@ -39,7 +39,7 @@ class DeleteControlUnit(
 
         deletedReportings.forEach { deletedReporting ->
             deletedReporting.reportingSources.forEach {
-                //TODO: use saveAll
+                // TODO: use saveAll
                 reportingSourceRepository.save(it.copy(controlUnitId = null))
             }
         }
