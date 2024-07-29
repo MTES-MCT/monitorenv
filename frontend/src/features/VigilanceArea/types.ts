@@ -4,6 +4,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 export namespace VigilanceArea {
   export interface VigilanceArea {
     comments: string
+    computedEndDate?: string
     createdBy: string
     endDatePeriod: string
     endingCondition: EndingCondition
@@ -61,6 +62,22 @@ export namespace VigilanceArea {
   export enum VisibilityLabel {
     PUBLIC = 'Publique',
     PRIVATE = 'Interne CACEM'
+  }
+
+  export enum VigilanceAreaFilterPeriod {
+    AT_THE_MOMENT = 'AT_THE_MOMENT',
+    NEXT_THREE_MONTHS = 'NEXT_THREE_MONTHS',
+    CURRENT_QUARTER = 'CURRENT_QUARTER',
+    CURRENT_YEAR = 'CURRENT_YEAR',
+    SPECIFIC_PERIOD = 'SPECIFIC_PERIOD'
+  }
+
+  export enum VigilanceAreaFilterPeriodLabel {
+    AT_THE_MOMENT = 'En ce moment',
+    NEXT_THREE_MONTHS = 'Les trois prochains mois',
+    CURRENT_QUARTER = 'Ce trimestre',
+    CURRENT_YEAR = 'Cette année',
+    SPECIFIC_PERIOD = 'Période spécifique'
   }
 
   export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
