@@ -11,6 +11,7 @@ import {
   setAMPsSearchResult,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
+  setFilteredVigilanceAreaPeriod,
   setGlobalSearchText,
   setRegulatoryLayersSearchResult,
   setSearchExtent,
@@ -35,6 +36,7 @@ export function SearchOnExtentExtraButtons({
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
 
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
@@ -58,7 +60,8 @@ export function SearchOnExtentExtraButtons({
         extent: currentMapExtentTracker,
         regulatoryThemes: filteredRegulatoryThemes,
         searchedText: globalSearchText,
-        shouldSearchByExtent: shouldFilterSearchOnMapExtent
+        shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+        vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
       })
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
@@ -74,6 +77,7 @@ export function SearchOnExtentExtraButtons({
     dispatch(setGlobalSearchText(''))
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setFilteredAmpTypes([]))
+    dispatch(setFilteredVigilanceAreaPeriod(undefined))
     dispatch(resetSearchExtent())
     dispatch(closeMetadataPanel())
     dispatch(closeLayerOverlay())
@@ -95,7 +99,8 @@ export function SearchOnExtentExtraButtons({
       extent: currentMapExtentTracker,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
-      shouldSearchByExtent: !shouldFilterSearchOnMapExtent
+      shouldSearchByExtent: !shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
     })
   }
 

@@ -16,7 +16,7 @@ export const saveVigilanceArea =
       : vigilanceAreasAPI.endpoints.updateVigilanceArea
 
     const realEndDate = calculateRealEndDate(values)
-    const computedEndDate = realEndDate ? realEndDate.toISOString() : undefined
+    const computedEndDate = realEndDate ?? undefined
 
     try {
       const response = await dispatch(vigilanceAreaEnpoint.initiate({ ...values, computedEndDate }))
@@ -74,10 +74,11 @@ export const saveVigilanceArea =
     }
   }
 
-const calculateRealEndDate = area => {
+const calculateRealEndDate = (area): string | undefined => {
   let currentOccurrence = customDayjs(area.startDatePeriod)
   const endDate = area.endDatePeriod ? customDayjs(area.endDatePeriod) : undefined
-
+  const vigilanceAreaDurationInDays =
+    area.startDatePeriod && area.endDatePeriod ? customDayjs(area.endDatePeriod).diff(area.startDatePeriod, 'days') : 0
   if (area.frequency === VigilanceArea.Frequency.NONE) {
     return undefined
   }
@@ -85,27 +86,31 @@ const calculateRealEndDate = area => {
   if (area.endingCondition === VigilanceArea.EndingCondition.END_DATE && area.endingOccurrenceDate) {
     const endingDate = customDayjs(area.endingOccurrenceDate)
 
-    return endingDate.isAfter(endDate) ? endingDate : endDate
+    return endingDate.isAfter(endDate) ? endingDate.toISOString() : endDate?.toISOString()
   }
 
   if (area.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && area.endingOccurrencesNumber) {
-    switch (area.frequency) {
-      case VigilanceArea.Frequency.ALL_WEEKS:
-        currentOccurrence = currentOccurrence.add(area.endingOccurrencesNumber * 7, 'days')
-        break
-      case VigilanceArea.Frequency.ALL_MONTHS:
-        currentOccurrence = currentOccurrence.add(area.endingOccurrencesNumber, 'month')
-        break
-      case VigilanceArea.Frequency.ALL_YEARS:
-        currentOccurrence = currentOccurrence.add(area.endingOccurrencesNumber, 'year')
-        break
-      case VigilanceArea.Frequency.NONE:
-      default:
-        return false // No recurrence
+    for (let i = 1; i < area.endingOccurrencesNumber; i += 1) {
+      switch (area.frequency) {
+        case VigilanceArea.Frequency.ALL_WEEKS:
+          currentOccurrence = currentOccurrence.add(7, 'days')
+          break
+        case VigilanceArea.Frequency.ALL_MONTHS:
+          currentOccurrence = currentOccurrence.add(1, 'month')
+          break
+        case VigilanceArea.Frequency.ALL_YEARS:
+          currentOccurrence = currentOccurrence.add(1, 'year')
+          break
+        case VigilanceArea.Frequency.NONE:
+        default:
+          return undefined // No recurrence
+      }
     }
 
-    return currentOccurrence.isAfter(endDate) ? currentOccurrence : endDate
+    return currentOccurrence.add(vigilanceAreaDurationInDays, 'days').isAfter(endDate)
+      ? `${currentOccurrence.add(vigilanceAreaDurationInDays, 'days').format('YYYY-MM-DD')}T23:59:59.999Z`
+      : endDate?.toISOString()
   }
 
-  return endDate
+  return endDate?.toISOString()
 }
