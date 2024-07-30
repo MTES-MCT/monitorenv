@@ -52,7 +52,7 @@ export function LayerSearch() {
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriod: filteredVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
     })
   }
 
@@ -64,7 +64,7 @@ export function LayerSearch() {
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriod: filteredVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
     })
   }
 
@@ -76,7 +76,7 @@ export function LayerSearch() {
       regulatoryThemes: filteredThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriod: filteredVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
     })
   }
 
@@ -88,7 +88,7 @@ export function LayerSearch() {
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriod: nextVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: nextVigilanceAreaPeriod
     })
   }
 
@@ -102,7 +102,7 @@ export function LayerSearch() {
       regulatoryThemes: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriod: undefined
+      vigilanceAreaPeriodFilter: undefined
     })
   }
 
