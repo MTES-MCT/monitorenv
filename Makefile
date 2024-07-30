@@ -102,7 +102,7 @@ docker-build-app:
 		--build-arg SENTRY_PROJECT=$(SENTRY_PROJECT)
 
 # INIT commands
-.PHONY: load-sig-data init-geoserver local
+.PHONY: load-sig-data init-geoserver
 load-sig-data:
 	./infra/init/postgis_insert_layers.sh
 
