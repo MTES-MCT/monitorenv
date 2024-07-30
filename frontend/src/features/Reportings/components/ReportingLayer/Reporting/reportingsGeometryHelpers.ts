@@ -22,30 +22,7 @@ export const getReportingZoneFeature = (
 
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
-    actionTaken: reporting.actionTaken,
-    attachedEnvActionId: reporting.attachedEnvActionId,
-    attachedMission: reporting.attachedMission,
-    attachedToMissionAtUtc: reporting.attachedToMissionAtUtc,
-    controlStatus: reporting.controlStatus,
-    controlUnitId: reporting.controlUnitId,
-    createdAt: reporting.createdAt,
-    description: reporting.description,
-    detachedFromMissionAtUtc: reporting.detachedFromMissionAtUtc,
-    displayedSource: reporting.displayedSource,
-    geom: reporting.geom,
-    id: reporting.id,
-    isArchived: reporting.isArchived,
-    missionId: reporting.missionId,
-    reportingId: reporting.reportingId,
-    reportType: reporting.reportType,
-    semaphoreId: reporting.semaphoreId,
-    sourceName: reporting.sourceName,
-    subThemeIds: reporting.subThemeIds,
-    targetDetails: reporting.targetDetails,
-    targetType: reporting.targetType,
-    themeId: reporting.themeId,
-    validityTime: reporting.validityTime,
-    vehicleType: reporting.vehicleType
+    ...reporting
   })
 
   return feature
@@ -63,29 +40,7 @@ export const getEditingReportingZoneFeature = (reporting: AtLeast<ReportingDetai
   })
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
-    actionTaken: reporting.actionTaken,
-    attachedEnvActionId: reporting.attachedEnvActionId,
-    attachedMission: reporting.attachedMission,
-    attachedToMissionAtUtc: reporting.attachedToMissionAtUtc,
-    controlStatus: reporting.controlStatus,
-    controlUnitId: reporting.controlUnitId,
-    createdAt: reporting.createdAt,
-    description: reporting.description,
-    detachedFromMissionAtUtc: reporting.detachedFromMissionAtUtc,
-    geom: reporting.geom,
-    id: reporting.id,
-    isArchived: reporting.isArchived,
-    missionId: reporting.missionId,
-    reportingId: reporting.reportingId,
-    reportType: reporting.reportType,
-    semaphoreId: reporting.semaphoreId,
-    sourceName: reporting.sourceName,
-    subThemeIds: reporting.subThemeIds,
-    targetDetails: reporting.targetDetails,
-    targetType: reporting.targetType,
-    themeId: reporting.themeId,
-    validityTime: reporting.validityTime,
-    vehicleType: reporting.vehicleType
+    ...reporting
   })
 
   return feature

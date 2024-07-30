@@ -8,6 +8,7 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
 import type { Reporting } from '../../../domain/entities/reporting'
+import type { AtLeast } from 'types'
 
 export const useSyncFormValuesWithRedux = (isAutoSaveEnabled: boolean) => {
   const { dirty, validateForm, values } = useFormikContext<Reporting>()
@@ -19,7 +20,7 @@ export const useSyncFormValuesWithRedux = (isAutoSaveEnabled: boolean) => {
   const dispatch = useAppDispatch()
 
   const dispatchFormUpdate = useDebouncedCallback(
-    async newValues => {
+    async (newValues: AtLeast<Reporting, 'id'>) => {
       if (!newValues || newValues.id !== activeReportingId) {
         return
       }

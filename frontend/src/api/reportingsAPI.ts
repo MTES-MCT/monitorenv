@@ -102,5 +102,7 @@ export const {
 export const reportingsBySemaphoreId = (state: any, semaphoreId: number) => {
   const reportings = ReportingAdapter.getSelectors().selectAll(state)
 
-  return reportings.filter(reporting => reporting.semaphoreId === semaphoreId)
+  return reportings.filter(reporting =>
+    reporting.reportingSources.some(reportingSource => reportingSource.semaphoreId === semaphoreId)
+  )
 }

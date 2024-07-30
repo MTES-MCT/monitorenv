@@ -7,7 +7,13 @@ export function sourceFilterFunction(reporting: ReportingDetailed, sourceFilter:
   }
 
   return (
-    (!!reporting.controlUnitId && sourceFilter.some(source => source.id === reporting.controlUnitId)) ||
-    (!!reporting.semaphoreId && sourceFilter.some(source => source.id === reporting.semaphoreId))
+    reporting.reportingSources.some(
+      reportingSource =>
+        !!reportingSource.controlUnitId && sourceFilter.map(source => source.id).includes(reportingSource.controlUnitId)
+    ) ||
+    reporting.reportingSources.some(
+      reportingSource =>
+        !!reportingSource.semaphoreId && sourceFilter.map(source => source.id).includes(reportingSource.semaphoreId)
+    )
   )
 }

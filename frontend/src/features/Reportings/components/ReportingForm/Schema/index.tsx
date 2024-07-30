@@ -1,4 +1,4 @@
-import { ReportingSourceEnum, type Reporting } from 'domain/entities/reporting'
+import { ReportingSourceEnum, type Reporting, type ReportingSource } from 'domain/entities/reporting'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import _ from 'lodash'
 import * as Yup from 'yup'
@@ -7,8 +7,7 @@ const ReportingZoneSchema = Yup.object().test({
   message: 'Veuillez définir la localisation du signalement',
   test: val => val && !_.isEmpty(val?.coordinates)
 })
-
-export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
+const ReportingSourceSchema: Yup.SchemaOf<ReportingSource> = Yup.object()
   .shape({
     controlUnitId: Yup.number().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.NumberSchema) => {
       if (sourceType === ReportingSourceEnum.CONTROL_UNIT) {
@@ -17,21 +16,6 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
 
       return schema.nullable()
     }),
-    createdAt: Yup.date().nullable().required('Veuillez définir la date de signalement'),
-    description: Yup.string().when('targetType', (targetType: ReportingTargetTypeEnum, schema: Yup.StringSchema) => {
-      if (targetType === ReportingTargetTypeEnum.OTHER) {
-        return schema.required('Veuillez renseigner des informations sur la cible')
-      }
-
-      return schema.nullable()
-    }),
-    geom: ReportingZoneSchema,
-    openBy: Yup.string()
-      .min(3, 'Minimum 3 lettres pour le trigramme')
-      .max(3, 'Maximum 3 lettres pour le trigramme')
-      .nullable()
-      .required('Requis'),
-    reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),
     semaphoreId: Yup.number().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.NumberSchema) => {
       if (sourceType === ReportingSourceEnum.SEMAPHORE) {
         return schema.nullable().required('Veuillez définir une source au signalement')
@@ -46,7 +30,31 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
 
       return schema.nullable()
     }),
-    sourceType: Yup.string().nullable().required('Veuillez définir une source au signalement'),
+    sourceType: Yup.string()
+      .oneOf(Object.values(ReportingSourceEnum))
+      .nullable()
+      .required('Veuillez définir une source au signalement')
+  })
+  .required()
+
+export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
+  .shape({
+    createdAt: Yup.date().nullable().required('Veuillez définir la date de signalement'),
+    description: Yup.string().when('targetType', (targetType: ReportingTargetTypeEnum, schema: Yup.StringSchema) => {
+      if (targetType === ReportingTargetTypeEnum.OTHER) {
+        return schema.required('Veuillez renseigner des informations sur la cible')
+      }
+
+      return schema.nullable()
+    }),
+    geom: ReportingZoneSchema,
+    openBy: Yup.string()
+      .min(3, 'Minimum 3 lettres pour le trigramme')
+      .max(3, 'Maximum 3 lettres pour le trigramme')
+      .nullable()
+      .required('Requis'),
+    reportingSource: Yup.array().of(ReportingSourceSchema).ensure().required(),
+    reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),
     subThemeIds: Yup.array()
       .of(Yup.number().required())
       .ensure()

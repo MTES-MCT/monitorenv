@@ -12,7 +12,6 @@ export type Reporting = {
   attachedMission: Mission | undefined
   attachedToMissionAtUtc: string | undefined
   controlStatus: ControlStatusEnum
-  controlUnitId: number | undefined
   createdAt: string | undefined
   description: string | undefined
   detachedFromMissionAtUtc: string | undefined
@@ -26,9 +25,7 @@ export type Reporting = {
   openBy: string
   reportType: ReportingTypeEnum
   reportingId: number | undefined
-  semaphoreId: number | undefined
-  sourceName: string | undefined
-  sourceType: ReportingSourceEnum
+  reportingSources: ReportingSource[]
   subThemeIds: number[]
   targetDetails: TargetDetails[]
   targetType: ReportingTargetTypeEnum
@@ -37,6 +34,15 @@ export type Reporting = {
   validityTime: number
   vehicleType: string | undefined
   withVHFAnswer: boolean | undefined
+}
+
+export type ReportingSource = {
+  controlUnitId?: number
+  id?: string
+  reportingId?: number
+  semaphoreId?: number
+  sourceName?: string
+  sourceType: ReportingSourceEnum
 }
 
 export type ReportingDetailed = Reporting & {

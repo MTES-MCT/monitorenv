@@ -1,20 +1,29 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '@api/semaphoresAPI'
+import { Separator } from '@features/Reportings/style'
+import { createNewReportingSource } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
   Accent,
+  Button,
   CustomSearch,
   FormikSelect,
   FormikTextInput,
+  getOptionsFromLabelledEnum,
   Icon,
   IconButton,
   MultiRadio,
   OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION,
-  getOptionsFromLabelledEnum
+  THEME,
+  WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
-import { type Reporting, ReportingSourceEnum, ReportingSourceLabels } from 'domain/entities/reporting'
+import {
+  ReportingSourceEnum,
+  ReportingSourceLabels,
+  type Reporting,
+  type ReportingSource
+} from 'domain/entities/reporting'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { setZoomToCenter } from 'domain/shared_slices/Map'
 import { setIsSemaphoreHighlighted, setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
@@ -26,13 +35,20 @@ import styled from 'styled-components'
 
 import type { Point } from 'ol/geom'
 
-export function Source() {
+type SourceProps = {
+  index: number
+  push: (reportingSource: ReportingSource) => void
+  remove: (index: number) => void
+}
+export function Source({ index, push, remove }: SourceProps) {
   const dispatch = useAppDispatch()
   const { data: semaphores } = useGetSemaphoresQuery()
   const { data: units } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const { setFieldValue, values } = useFormikContext<Reporting>()
+
+  const reportingSource = values.reportingSources[index]
 
   // Semaphores
   const semaphoresOptions = useMemo(
@@ -79,26 +95,20 @@ export function Source() {
   )
 
   const changeSourceType = (sourceType: string | undefined) => {
-    setFieldValue('sourceType', sourceType)
+    setFieldValue(`reportingSources[${index}].sourceType`, sourceType)
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {
-      setFieldValue('controlUnitId', undefined)
-      setFieldValue('sourceName', undefined)
+      setFieldValue(`reportingSources[${index}].controlUnitId`, undefined)
+      setFieldValue(`reportingSources[${index}].sourceName`, undefined)
     } else if (sourceType === ReportingSourceEnum.CONTROL_UNIT) {
-      setFieldValue('sourceName', undefined)
-      setFieldValue('semaphoreId', undefined)
+      setFieldValue(`reportingSources[${index}].sourceName`, undefined)
+      setFieldValue(`reportingSources[${index}].semaphoreId`, undefined)
     } else {
-      setFieldValue('controlUnitId', undefined)
-      setFieldValue('semaphoreId', undefined)
+      setFieldValue(`reportingSources[${index}].controlUnitId`, undefined)
+      setFieldValue(`reportingSources[${index}].semaphoreId`, undefined)
     }
   }
 
-  const zoomToSemaphore = () => {
-    const { semaphoreId } = values
-
-    if (!semaphoreId) {
-      return
-    }
-
+  const zoomToSemaphore = (semaphoreId: number) => {
     dispatch(
       setDisplayedItems({
         displaySemaphoresLayer: true
@@ -125,52 +135,79 @@ export function Source() {
   }
 
   return (
-    <>
-      <MultiRadio
-        data-cy="reporting-source-selector"
-        isErrorMessageHidden
-        isInline
-        isRequired
-        label="Source"
-        name="sourceType"
-        onChange={changeSourceType}
-        options={sourceOptions}
-        value={values.sourceType}
-      />
-
-      {values?.sourceType === ReportingSourceEnum.SEMAPHORE && (
-        <SemaphoreWrapper>
-          <FormikSelect
-            customSearch={customSearchSemaphore}
-            data-cy="add-semaphore-source"
-            isErrorMessageHidden
+    reportingSource && (
+      <>
+        {index !== 0 && <Separator />}
+        <div>
+          <MultiRadio
+            data-cy="reporting-source-selector"
+            isInline
             isRequired
-            label="Nom du Sémaphore"
-            name="semaphoreId"
-            options={semaphoresOptions || []}
+            label={`Source (${index + 1})`}
+            name={`reportingSources[${index}].sourceType`}
+            onChange={changeSourceType}
+            options={sourceOptions}
+            // type error if I use styledComponent to style it
+            style={{ float: 'left' }}
+            value={reportingSource.sourceType}
+          />
+          {index !== 0 && (
+            <DeleteButton
+              accent={Accent.SECONDARY}
+              aria-label="Supprimer cette source"
+              color={THEME.color.maximumRed}
+              Icon={Icon.Delete}
+              onClick={() => remove(index)}
+            />
+          )}
+        </div>
+
+        {reportingSource.sourceType === ReportingSourceEnum.SEMAPHORE && (
+          <SemaphoreWrapper>
+            <FormikSelect
+              customSearch={customSearchSemaphore}
+              data-cy="add-semaphore-source"
+              isRequired
+              label="Nom du Sémaphore"
+              name={`reportingSources[${index}].semaphoreId`}
+              options={semaphoresOptions || []}
+              searchable
+            />
+            {reportingSource.semaphoreId && (
+              <IconButton
+                accent={Accent.TERTIARY}
+                Icon={Icon.FocusZones}
+                onClick={() => zoomToSemaphore(reportingSource.semaphoreId!)}
+              />
+            )}
+          </SemaphoreWrapper>
+        )}
+        {reportingSource?.sourceType === ReportingSourceEnum.CONTROL_UNIT && (
+          <FormikSelect
+            customSearch={customSearchControlUnits}
+            isRequired
+            label="Nom de l'unité"
+            name={`reportingSources[${index}].controlUnitId`}
+            options={controlUnitsOptions || []}
             searchable
           />
-          {values?.semaphoreId && (
-            <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={zoomToSemaphore} />
-          )}
-        </SemaphoreWrapper>
-      )}
-      {values?.sourceType === ReportingSourceEnum.CONTROL_UNIT && (
-        <FormikSelect
-          customSearch={customSearchControlUnits}
-          isErrorMessageHidden
-          isRequired
-          label="Nom de l'unité"
-          name="controlUnitId"
-          options={controlUnitsOptions || []}
-          searchable
-        />
-      )}
+        )}
 
-      {values?.sourceType === ReportingSourceEnum.OTHER && (
-        <FormikTextInput isErrorMessageHidden isRequired label="Nom, société ..." name="sourceName" />
-      )}
-    </>
+        {reportingSource?.sourceType === ReportingSourceEnum.OTHER && (
+          <FormikTextInput isRequired label="Nom, société ..." name={`reportingSources[${index}].sourceName`} />
+        )}
+        {index === values.reportingSources.length - 1 && (
+          <Button
+            accent={Accent.SECONDARY}
+            Icon={Icon.Plus}
+            isFullWidth
+            onClick={() => push(createNewReportingSource())}
+          >
+            Ajouter une source
+          </Button>
+        )}
+      </>
+    )
   )
 }
 
@@ -183,4 +220,8 @@ const SemaphoreWrapper = styled.div`
   > button {
     align-self: self-end;
   }
+`
+
+const DeleteButton = styled(IconButton)`
+  margin-left: auto;
 `

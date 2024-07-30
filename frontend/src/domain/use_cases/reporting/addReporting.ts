@@ -5,9 +5,10 @@ import { setReportingFormVisibility, ReportingContext, VisibilityState } from '.
 import { reportingActions } from '../../shared_slices/reporting'
 
 import type { Reporting } from '../../entities/reporting'
+import type { HomeAppThunk } from '@store/index'
 
 export const addReporting =
-  (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined) =>
+  (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined): HomeAppThunk =>
   async (dispatch, getState) => {
     const { reportings } = getState().reporting
 
@@ -29,8 +30,8 @@ export const addReporting =
       })
     )
 
-    await dispatch(reportingActions.setReporting(newReporting))
-    await dispatch(reportingActions.setActiveReportingId(id))
+    dispatch(reportingActions.setReporting(newReporting))
+    dispatch(reportingActions.setActiveReportingId(id))
 
-    await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
+    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
   }

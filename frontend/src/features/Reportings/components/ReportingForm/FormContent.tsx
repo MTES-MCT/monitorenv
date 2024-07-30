@@ -5,16 +5,16 @@ import { mainWindowActions } from '@features/MainWindow/slice'
 import { useSyncFormValuesWithRedux } from '@features/Reportings/hooks/useSyncFormValuesWithRedux'
 import { attachMissionToReportingSliceActions } from '@features/Reportings/slice'
 import {
+  ReportTypeMultiRadio,
+  SaveBanner,
   Separator,
   StyledForm,
   StyledFormContainer,
-  StyledThemeContainer,
-  StyledToggle,
   StyledFormikTextInput,
-  ReportTypeMultiRadio,
-  SaveBanner,
+  StyledInfractionProven,
   StyledItalic,
-  StyledInfractionProven
+  StyledThemeContainer,
+  StyledToggle
 } from '@features/Reportings/style'
 import { isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -32,17 +32,16 @@ import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedSt
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import {
   type Reporting,
-  ReportingTypeEnum,
-  ReportingTypeLabels,
-  type ReportingDetailed,
   INDIVIDUAL_ANCHORING_THEME_ID,
-  InfractionProvenLabels
+  InfractionProvenLabels,
+  ReportingTypeEnum,
+  ReportingTypeLabels
 } from 'domain/entities/reporting'
 import {
-  setReportingFormVisibility,
+  hideSideButtons,
   ReportingContext,
-  VisibilityState,
-  hideSideButtons
+  setReportingFormVisibility,
+  VisibilityState
 } from 'domain/shared_slices/Global'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import {
@@ -52,7 +51,7 @@ import {
 import { deleteReporting } from 'domain/use_cases/reporting/deleteReporting'
 import { reduceOrCollapseReportingForm } from 'domain/use_cases/reporting/reduceOrCollapseReportingForm'
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
-import { useField, useFormikContext } from 'formik'
+import { FieldArray, useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
@@ -68,6 +67,7 @@ import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelec
 import { Validity } from './FormComponents/Validity'
 import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
+import { ReportingSchema } from './Schema'
 import { isReportingAutoSaveEnabled, shouldSaveReporting } from './utils'
 
 import type { AtLeast } from '../../../../types'
@@ -79,7 +79,7 @@ const WITH_VHF_ANSWER_OPTIONS = [
 
 type FormContentProps = {
   reducedReportingsOnContext: number
-  selectedReporting: AtLeast<ReportingDetailed, 'id'> | undefined
+  selectedReporting: AtLeast<Reporting, 'id'> | undefined
 }
 
 export function FormContent({ reducedReportingsOnContext, selectedReporting }: FormContentProps) {
@@ -96,7 +96,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
-  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Reporting>>()
+  const { errors, setFieldValue, setValues, values } = useFormikContext<AtLeast<Reporting, 'id'>>()
   const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
@@ -178,7 +178,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   }
 
   const saveAndQuit = () => {
-    if (isEmpty(errors)) {
+    if (isReportingFormValid(values)) {
       dispatch(saveReporting(values, reportingContext, true))
 
       return
@@ -203,6 +203,16 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     }
   }
 
+  const isReportingFormValid = (reporting: Partial<Reporting>) => {
+    try {
+      ReportingSchema.validateSync(reporting)
+
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
   const cancelDeleteReporting = () => {
     setIsDeletModalOpen(false)
   }
@@ -223,8 +233,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
       setScrollPosition(0)
     }
 
-    const formErrors = await validateForm()
-    const isValid = isEmpty(formErrors)
+    const isValid = isReportingFormValid(values)
 
     if (!isAutoSaveEnabled || !isValid) {
       return
@@ -319,7 +328,17 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
       </SaveBanner>
       <StyledForm ref={scrollRef} $totalReducedReportings={reducedReportingsOnContext} onScroll={onScroll}>
-        <Source />
+        <FieldArray
+          name="reportingSources"
+          render={({ push, remove }) => (
+            <>
+              {selectedReporting.reportingSources?.map(({ id }, index) => (
+                <Source key={id} index={index} push={push} remove={remove} />
+              ))}
+            </>
+          )}
+          validateOnChange={false}
+        />
         <Target />
         <Position />
         <FormikTextarea label="Description du signalement" name="description" />

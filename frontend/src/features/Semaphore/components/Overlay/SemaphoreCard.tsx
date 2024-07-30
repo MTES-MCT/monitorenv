@@ -82,7 +82,11 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
   }
 
   const createSemaphoreReporting = () => {
-    dispatch(addReporting(ReportingContext.MAP, { semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
+    dispatch(
+      addReporting(ReportingContext.MAP, {
+        reportingSources: [{ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }]
+      })
+    )
   }
 
   if (!displaySemaphoresLayer || hasMapInteraction) {
