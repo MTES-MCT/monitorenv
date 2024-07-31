@@ -124,12 +124,13 @@ export const formalNoticeLabels = {
     libelle: 'En attente'
   }
 }
-export type AdministrativeResponseType = 'SANCTION' | 'REGULARIZATION' | 'PENDING'
+export type AdministrativeResponseType = 'SANCTION' | 'REGULARIZATION' | 'PENDING' | 'NONE'
 
 export const administrativeResponseOptions: { label: string; value: AdministrativeResponseType }[] = [
   { label: 'Sanction', value: 'SANCTION' },
   { label: 'Régularisation', value: 'REGULARIZATION' },
-  { label: 'En attente', value: 'PENDING' }
+  { label: 'En attente', value: 'PENDING' },
+  { label: 'Aucune', value: 'NONE' }
 ]
 
 export const hasMissionOrderLabels = {

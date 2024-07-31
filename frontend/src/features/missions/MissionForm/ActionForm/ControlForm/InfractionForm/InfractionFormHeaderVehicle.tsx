@@ -40,7 +40,12 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
       {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
         <>
           <StyledVesselForm>
-            <FormikTextInput label="MMSI" name={`${infractionPath}.mmsi`} />
+            <FormikTextInput
+              disabled={isDisabled}
+              isUndefinedWhenDisabled
+              label="MMSI"
+              name={`${infractionPath}.mmsi`}
+            />
             <FormikTextInput
               data-cy="infraction-form-vesselName"
               disabled={isDisabled}
@@ -50,7 +55,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
             />
           </StyledVesselForm>
           <StyledVesselForm>
-            <FormikTextInput label="IMO" name={`${infractionPath}.imo`} />
+            <FormikTextInput disabled={isDisabled} isUndefinedWhenDisabled label="IMO" name={`${infractionPath}.imo`} />
             <FormikTextInput
               data-cy="infraction-form-controlledPersonIdentity"
               disabled={isDisabled}

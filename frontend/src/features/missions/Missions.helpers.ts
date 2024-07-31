@@ -33,6 +33,7 @@ import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 import type { AtLeast } from '../../types'
 
 export const infractionFactory = (infraction?: Partial<Infraction>): NewInfraction => ({
+  administrativeResponse: 'NONE',
   id: uuidv4(),
   natinf: [],
   nbTarget: 1,
@@ -168,17 +169,31 @@ export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<LegacyControl
 })
 
 export const getControlInfractionsTags = (actionNumberOfControls: number, infractions: Infraction[]) => {
-  const totalInfractions = infractions?.length || 0
+  const totalInfractions = infractions?.reduce((acc, infraction) => acc + infraction.nbTarget, 0)
   const ras = (actionNumberOfControls || 0) - totalInfractions
-  const infractionsWithReport =
-    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITH_REPORT)?.length || 0
-  const infractionsWithoutReport =
-    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITHOUT_REPORT)?.length || 0
-  const infractionsWithWaitingReport =
-    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WAITING)?.length || 0
-  const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
-  const sanctionAdmin = infractions?.filter(inf => inf.administrativeResponse === 'SANCTION')?.length || 0
-  const regulAdmin = infractions?.filter(inf => inf.administrativeResponse === 'REGULARIZATION')?.length || 0
+
+  const infractionsWithReport = infractions
+    ?.filter(inf => inf.infractionType === InfractionTypeEnum.WITH_REPORT)
+    .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
+
+  const infractionsWithoutReport = infractions
+    ?.filter(inf => inf.infractionType === InfractionTypeEnum.WITHOUT_REPORT)
+    .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
+
+  const infractionsWithWaitingReport = infractions
+    ?.filter(inf => inf.infractionType === InfractionTypeEnum.WAITING)
+    .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
+
+  const med = infractions
+    ?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)
+    .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
+
+  const sanctionAdmin = infractions
+    ?.filter(inf => inf.administrativeResponse === 'SANCTION')
+    .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
+  const regulAdmin = infractions
+    ?.filter(inf => inf.administrativeResponse === 'REGULARIZATION')
+    .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
 
   return {
     infractionsWithoutReport,
