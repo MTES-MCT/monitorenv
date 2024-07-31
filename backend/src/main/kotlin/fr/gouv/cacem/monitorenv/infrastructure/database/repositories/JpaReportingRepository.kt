@@ -186,8 +186,7 @@ class JpaReportingRepository(
                     reporting = reportingModel,
                 )
             }
-
-            dbReportingSourceRepository.saveAll(reportingsSourceModels)
+            reportingModel.reportingSources.addAll(reportingsSourceModels)
 
             // set controlPlanSubThemes and save again (and flush)
             controlPlanSubThemesReferenceList?.forEach {
@@ -196,7 +195,6 @@ class JpaReportingRepository(
                 )
             }
 
-            reportingModel.reportingSources.addAll(reportingsSourceModels)
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(

@@ -7,7 +7,7 @@ const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 export function createReporting() {
   cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
   // When
-  cy.fill('Source', 'Autre')
+  cy.fill('Source (1)', 'Autre')
   cy.fill('Nom, société ...', 'Source du signalement')
   cy.getDataCy('reporting-target-type').click({ force: true })
 

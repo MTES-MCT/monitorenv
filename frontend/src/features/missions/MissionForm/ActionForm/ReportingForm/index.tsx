@@ -6,7 +6,11 @@ import { Location } from './Location'
 import { TargetDetails } from './TargetDetails'
 import { Validity } from './Validity'
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../../domain/entities/missions'
-import { ReportingSourceLabels, ReportingTypeLabels } from '../../../../../domain/entities/reporting'
+import {
+  ReportingSourceEnum,
+  ReportingSourceLabels,
+  ReportingTypeLabels
+} from '../../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
@@ -44,15 +48,16 @@ export function ReportingForm({
   const subThemesAsString =
     reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') ?? EMPTY_VALUE
 
-  const sourceTypeText = (() =>
-    // if (reporting.sourceType === ReportingSourceEnum.SEMAPHORE) {
-    //   return 'Nom du sémpahore'
-    // }
-    // if (reporting.sourceType === ReportingSourceEnum.CONTROL_UNIT) {
-    //   return "Nom de l'unité"
-    // }
+  const sourceTypeText = (sourceType: ReportingSourceEnum) => {
+    if (sourceType === ReportingSourceEnum.SEMAPHORE) {
+      return 'Nom du sémpahore'
+    }
+    if (sourceType === ReportingSourceEnum.CONTROL_UNIT) {
+      return "Nom de l'unité"
+    }
 
-    'Nom, société ...')()
+    return 'Nom, société ...'
+  }
 
   const unattachReporting = () => {
     const reportings = [...attachedReportings]
@@ -100,7 +105,12 @@ export function ReportingForm({
               value={reportingSource.sourceType}
             />
 
-            <TextInput label={sourceTypeText} name="source" plaintext value={reporting.displayedSource} />
+            <TextInput
+              label={sourceTypeText(reportingSource.sourceType)}
+              name="source"
+              plaintext
+              value={reporting.displayedSource}
+            />
           </SourceContainer>
         ))}
 

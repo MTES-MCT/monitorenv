@@ -32,8 +32,10 @@ import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedSt
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import {
   type Reporting,
+  type ReportingSource,
   INDIVIDUAL_ANCHORING_THEME_ID,
   InfractionProvenLabels,
+  ReportingSourceEnum,
   ReportingTypeEnum,
   ReportingTypeLabels
 } from 'domain/entities/reporting'
@@ -67,7 +69,6 @@ import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelec
 import { Validity } from './FormComponents/Validity'
 import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
-import { ReportingSchema } from './Schema'
 import { isReportingAutoSaveEnabled, shouldSaveReporting } from './utils'
 
 import type { AtLeast } from '../../../../types'
@@ -96,7 +97,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
-  const { errors, setFieldValue, setValues, values } = useFormikContext<AtLeast<Reporting, 'id'>>()
+  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<AtLeast<Reporting, 'id'>>()
   const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
@@ -178,7 +179,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   }
 
   const saveAndQuit = () => {
-    if (isReportingFormValid(values)) {
+    if (isEmpty(errors)) {
       dispatch(saveReporting(values, reportingContext, true))
 
       return
@@ -203,16 +204,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     }
   }
 
-  const isReportingFormValid = (reporting: Partial<Reporting>) => {
-    try {
-      ReportingSchema.validateSync(reporting)
-
-      return true
-    } catch (error) {
-      return false
-    }
-  }
-
   const cancelDeleteReporting = () => {
     setIsDeletModalOpen(false)
   }
@@ -233,7 +224,8 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
       setScrollPosition(0)
     }
 
-    const isValid = isReportingFormValid(values)
+    const formErrors = await validateForm()
+    const isValid = isEmpty(formErrors)
 
     if (!isAutoSaveEnabled || !isValid) {
       return
@@ -291,6 +283,21 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     return null
   }
 
+  const sourceKey = (reportingSource: ReportingSource) => {
+    switch (reportingSource.sourceType) {
+      case ReportingSourceEnum.CONTROL_UNIT:
+        return reportingSource.sourceType + reportingSource.controlUnitId
+
+      case ReportingSourceEnum.SEMAPHORE:
+        return reportingSource.sourceType + reportingSource.semaphoreId
+
+      case ReportingSourceEnum.OTHER:
+        return reportingSource.sourceType + reportingSource.sourceName
+      default:
+        return undefined
+    }
+  }
+
   return (
     <StyledFormContainer>
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues)} />
@@ -332,8 +339,8 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           name="reportingSources"
           render={({ push, remove }) => (
             <>
-              {selectedReporting.reportingSources?.map(({ id }, index) => (
-                <Source key={id} index={index} push={push} remove={remove} />
+              {selectedReporting.reportingSources?.map((reportingSource, index) => (
+                <Source key={sourceKey(reportingSource)} index={index} push={push} remove={remove} />
               ))}
             </>
           )}

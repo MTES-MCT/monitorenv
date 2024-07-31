@@ -140,7 +140,7 @@ export function Source({ index, push, remove }: SourceProps) {
         {index !== 0 && <Separator />}
         <div>
           <MultiRadio
-            data-cy="reporting-source-selector"
+            data-cy={`reporting-source-selector-${index}`}
             isInline
             isRequired
             label={`Source (${index + 1})`}
@@ -182,7 +182,7 @@ export function Source({ index, push, remove }: SourceProps) {
             )}
           </SemaphoreWrapper>
         )}
-        {reportingSource?.sourceType === ReportingSourceEnum.CONTROL_UNIT && (
+        {reportingSource.sourceType === ReportingSourceEnum.CONTROL_UNIT && (
           <FormikSelect
             customSearch={customSearchControlUnits}
             isRequired
@@ -193,7 +193,7 @@ export function Source({ index, push, remove }: SourceProps) {
           />
         )}
 
-        {reportingSource?.sourceType === ReportingSourceEnum.OTHER && (
+        {reportingSource.sourceType === ReportingSourceEnum.OTHER && (
           <FormikTextInput isRequired label="Nom, société ..." name={`reportingSources[${index}].sourceName`} />
         )}
         {index === values.reportingSources.length - 1 && (

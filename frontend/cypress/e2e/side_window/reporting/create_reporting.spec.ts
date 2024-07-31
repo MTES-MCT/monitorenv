@@ -63,9 +63,17 @@ context('Reportings', () => {
       assert.deepInclude(interception.request.body, {
         createdAt: `${asApiDateTime}:00.000Z`,
         openBy: 'XYZ',
+        reportingSources: [
+          {
+            controlUnitId: null,
+            id: null,
+            reportingId: null,
+            semaphoreId: 35,
+            sourceName: null,
+            sourceType: 'SEMAPHORE'
+          }
+        ],
         reportType: 'OBSERVATION',
-        semaphoreId: 35,
-        sourceType: 'SEMAPHORE',
         subThemeIds: [108],
         targetDetails: [],
         targetType: 'COMPANY',
