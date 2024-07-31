@@ -3,12 +3,12 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { ReportingContext } from './Global'
 
 import type { AtLeast } from '../../types'
-import type { Reporting, ReportingDetailed } from '../entities/reporting'
+import type { Reporting } from '../entities/reporting'
 
 export type ReportingType = {
   context: ReportingContext
   isFormDirty: boolean
-  reporting: AtLeast<ReportingDetailed, 'id'>
+  reporting: AtLeast<Reporting, 'id'>
 }
 
 export type SelectedReportingType = {

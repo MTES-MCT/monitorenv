@@ -38,15 +38,12 @@ export type Reporting = {
 
 export type ReportingSource = {
   controlUnitId?: number
+  displayedSource?: string
   id?: string
   reportingId?: number
   semaphoreId?: number
   sourceName?: string
   sourceType: ReportingSourceEnum
-}
-
-export type ReportingDetailed = Reporting & {
-  displayedSource: string
 }
 
 export type DetachedReporting = {
@@ -96,7 +93,7 @@ export type TargetDetails = {
   vesselType?: VesselTypeEnum
 }
 
-export type ReportingForTimeline = Partial<ReportingDetailed> & {
+export type ReportingForTimeline = Partial<Reporting> & {
   actionSource: ActionSource
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string

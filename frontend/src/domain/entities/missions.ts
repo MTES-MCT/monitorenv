@@ -2,7 +2,7 @@ import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 
 import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
-import type { DetachedReportingForTimeline, ReportingDetailed, ReportingForTimeline } from './reporting'
+import type { DetachedReportingForTimeline, Reporting, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
 import type { VesselTypeEnum } from './vesselType'
 import type { FishMissionAction } from '@features/missions/fishActions.types'
@@ -226,7 +226,7 @@ export enum ActionSource {
 // Mission from API
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
-  attachedReportings: ReportingDetailed[]
+  attachedReportings: Reporting[]
   completedBy: string
   controlUnits: LegacyControlUnit[]
   createdAtUtc?: string | undefined

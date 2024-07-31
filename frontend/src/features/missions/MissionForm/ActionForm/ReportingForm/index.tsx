@@ -109,7 +109,7 @@ export function ReportingForm({
               label={sourceTypeText(reportingSource.sourceType)}
               name="source"
               plaintext
-              value={reporting.displayedSource}
+              value={reportingSource.displayedSource}
             />
           </SourceContainer>
         ))}

@@ -10,8 +10,6 @@ data class ReportingSourceDataOutput(
     val sourceType: SourceTypeEnum,
     val semaphoreId: Int?,
     val controlUnitId: Int?,
-//    val semaphore: SemaphoreDataOutput?,
-//    val controlUnit: ControlUnitDataOutput?,
     val sourceName: String?,
     val displayedSource: String,
 ) {
@@ -25,8 +23,6 @@ data class ReportingSourceDataOutput(
                 sourceType = reportingSourceDTO.reportingSource.sourceType,
                 controlUnitId = reportingSourceDTO.controlUnit?.controlUnit?.id,
                 semaphoreId = reportingSourceDTO.semaphore?.id,
-//                semaphore = reportingSourceDTO.semaphore?.let { SemaphoreDataOutput.fromSemaphoreEntity(it) },
-//                controlUnit = reportingSourceDTO.controlUnit?.let { ControlUnitDataOutput.fromFullControlUnit(it) },
                 sourceName = reportingSourceDTO.reportingSource.sourceName,
                 displayedSource =
                 when (reportingSourceDTO.reportingSource.sourceType) {

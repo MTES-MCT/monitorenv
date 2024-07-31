@@ -3,7 +3,7 @@ import { type EntityState, createEntityAdapter } from '@reduxjs/toolkit'
 import { monitorenvPrivateApi } from './api'
 import { getQueryString } from '../utils/getQueryStringFormatted'
 
-import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
+import type { Reporting } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
   isAttachedToMission?: boolean | undefined
@@ -17,7 +17,7 @@ type ReportingsFilter = {
   targetTypes?: string[]
 }
 
-const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
+const ReportingAdapter = createEntityAdapter<Reporting>()
 const initialState = ReportingAdapter.getInitialState()
 
 export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
@@ -67,13 +67,13 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       providesTags: (_, __, id) => [{ id, type: 'Reportings' }],
       query: id => `/v1/reportings/${id}`
     }),
-    getReportings: build.query<EntityState<ReportingDetailed>, ReportingsFilter | void>({
+    getReportings: build.query<EntityState<Reporting>, ReportingsFilter | void>({
       providesTags: result =>
         result?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
       query: filters => getQueryString('/v1/reportings', filters),
-      transformResponse: (response: ReportingDetailed[]) => ReportingAdapter.setAll(initialState, response)
+      transformResponse: (response: Reporting[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
       invalidatesTags: (_, __, { id, missionId }) => [

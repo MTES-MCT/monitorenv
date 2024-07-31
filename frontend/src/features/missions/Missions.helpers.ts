@@ -23,7 +23,6 @@ import {
   type DetachedReporting,
   type DetachedReportingForTimeline,
   type Reporting,
-  type ReportingDetailed,
   type ReportingForTimeline
 } from '../../domain/entities/reporting'
 import { getFormattedReportingId } from '../Reportings/utils'
@@ -100,7 +99,7 @@ export const actionFactory = ({
 export const missionFactory = (
   mission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>,
   isNewMission: boolean,
-  attachedReporting?: ReportingDetailed | undefined
+  attachedReporting?: Reporting | undefined
 ): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)

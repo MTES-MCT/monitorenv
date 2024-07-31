@@ -4,7 +4,7 @@ import { isEqual, omit } from 'lodash'
 
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 
-import type { Reporting, ReportingDetailed } from 'domain/entities/reporting'
+import type { Reporting } from 'domain/entities/reporting'
 import type { AtLeast } from 'types'
 
 /* Is auto-save enabled.
@@ -26,7 +26,7 @@ export const isReportingAutoUpdateEnabled = () =>
  * should a Formik `onChange` event trigger `saveReporting`.
  */
 export function shouldSaveReporting(
-  previousValues: AtLeast<ReportingDetailed, 'id'> | undefined,
+  previousValues: AtLeast<Reporting, 'id'> | undefined,
   reportingEvent: Reporting | undefined,
   nextValues: Reporting
 ): boolean {

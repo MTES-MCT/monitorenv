@@ -1,30 +1,33 @@
 import { Layers } from 'domain/entities/layers/constants'
-import { cloneDeep, reduce } from 'lodash'
+import { reduce } from 'lodash'
 
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 
+import type { EntityState } from '@reduxjs/toolkit'
+import type { Reporting } from 'domain/entities/reporting'
+import type { Semaphore } from 'domain/entities/semaphore'
 import type { Feature } from 'ol'
 
-export function getReportingsBySemaphoreId(reportings) {
-  return reduce(
-    reportings,
-    (reportingsBySemaphore, reporting) => {
-      const reports = cloneDeep(reportingsBySemaphore)
-      if (reporting && reporting.semaphoreId) {
-        if (!reports[reporting.semaphoreId]) {
-          reports[reporting.semaphoreId] = [reporting]
-        } else {
-          reports[reporting.semaphoreId].push(reporting)
+export function getReportingsBySemaphoreId(reportings: (Reporting | undefined)[]) {
+  return reportings.reduce((reportingsBySemaphore, reporting) => {
+    const newReportingsBySemaphore = reportingsBySemaphore
+    reporting?.reportingSources.forEach(({ semaphoreId }) => {
+      if (semaphoreId) {
+        if (!newReportingsBySemaphore[semaphoreId]) {
+          newReportingsBySemaphore[semaphoreId] = []
         }
+        newReportingsBySemaphore[semaphoreId].push(reporting)
       }
+    })
 
-      return reports
-    },
-    {} as Record<string, any>
-  )
+    return newReportingsBySemaphore
+  }, {} as Record<string, Reporting[]>)
 }
 
-export function getSemaphoresPoint(semaphores, reportings) {
+export function getSemaphoresPoint(
+  semaphores: EntityState<Semaphore> | undefined,
+  reportings: (Reporting | undefined)[]
+) {
   const reportingsBySemaphoreId = getReportingsBySemaphoreId(reportings)
 
   return reduce(

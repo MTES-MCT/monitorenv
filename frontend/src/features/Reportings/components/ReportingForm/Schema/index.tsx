@@ -7,33 +7,34 @@ const ReportingZoneSchema = Yup.object().test({
   message: 'Veuillez définir la localisation du signalement',
   test: val => val && !_.isEmpty(val?.coordinates)
 })
-const ReportingSourceSchema: Yup.SchemaOf<Omit<ReportingSource, 'id' | 'reportingId'>> = Yup.object().shape({
-  controlUnitId: Yup.number().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.NumberSchema) => {
-    if (sourceType === ReportingSourceEnum.CONTROL_UNIT) {
-      return schema.nullable().required('Veuillez définir une source au signalement')
-    }
+const ReportingSourceSchema: Yup.SchemaOf<Omit<ReportingSource, 'id' | 'reportingId' | 'displayedSource'>> =
+  Yup.object().shape({
+    controlUnitId: Yup.number().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.NumberSchema) => {
+      if (sourceType === ReportingSourceEnum.CONTROL_UNIT) {
+        return schema.nullable().required('Veuillez définir une source au signalement')
+      }
 
-    return schema.nullable()
-  }),
-  semaphoreId: Yup.number().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.NumberSchema) => {
-    if (sourceType === ReportingSourceEnum.SEMAPHORE) {
-      return schema.nullable().required('Veuillez définir une source au signalement')
-    }
+      return schema.nullable()
+    }),
+    semaphoreId: Yup.number().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.NumberSchema) => {
+      if (sourceType === ReportingSourceEnum.SEMAPHORE) {
+        return schema.nullable().required('Veuillez définir une source au signalement')
+      }
 
-    return schema.nullable()
-  }),
-  sourceName: Yup.string().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.StringSchema) => {
-    if (sourceType === ReportingSourceEnum.OTHER) {
-      return schema.nullable().required('Veuillez définir une source au signalement')
-    }
+      return schema.nullable()
+    }),
+    sourceName: Yup.string().when('sourceType', (sourceType: ReportingSourceEnum, schema: Yup.StringSchema) => {
+      if (sourceType === ReportingSourceEnum.OTHER) {
+        return schema.nullable().required('Veuillez définir une source au signalement')
+      }
 
-    return schema.nullable()
-  }),
-  sourceType: Yup.mixed()
-    .oneOf(Object.values(ReportingSourceEnum))
-    .nullable()
-    .required('Veuillez définir une source au signalement')
-})
+      return schema.nullable()
+    }),
+    sourceType: Yup.mixed()
+      .oneOf(Object.values(ReportingSourceEnum))
+      .nullable()
+      .required('Veuillez définir une source au signalement')
+  })
 
 export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
   .shape({

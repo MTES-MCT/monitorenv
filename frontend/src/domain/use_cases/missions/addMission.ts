@@ -10,14 +10,14 @@ import { isNewMission } from '../../../utils/isNewMission'
 import { sideWindowPaths } from '../../entities/sideWindow'
 
 import type { HomeAppThunk } from '../../../store'
-import type { ReportingDetailed } from '../../entities/reporting'
+import type { Reporting } from 'domain/entities/reporting'
 
 export const addMission =
   ({
     attachedReporting,
     initialControlUnit
   }: Partial<{
-    attachedReporting: ReportingDetailed
+    attachedReporting: Reporting
     initialControlUnit: ControlUnit.ControlUnit
   }> = {}): HomeAppThunk =>
   async (dispatch, getState) => {
