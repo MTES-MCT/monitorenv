@@ -84,6 +84,9 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
 })
 
 export const CompletionInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
+  administrativeResponse: Yup.mixed<AdministrativeResponseType>()
+    .oneOf(['SANCTION', 'REGULARIZATION', 'NONE'])
+    .required(),
   formalNotice: Yup.mixed().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
   infractionType: Yup.mixed().oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT]).required()
 })

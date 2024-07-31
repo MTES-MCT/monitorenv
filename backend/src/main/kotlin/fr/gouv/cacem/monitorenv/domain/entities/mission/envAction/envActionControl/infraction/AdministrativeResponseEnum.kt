@@ -4,4 +4,5 @@ enum class AdministrativeResponseEnum {
     SANCTION,
     REGULARIZATION,
     PENDING,
+    NONE,
 }
