@@ -16,7 +16,7 @@ const getStyle = (color: string, isSelected: boolean | undefined) =>
   })
 
 export const getVigilanceAreaColorWithAlpha = (name: string | null = '', comments: string | null = '') =>
-  getColorWithAlpha(stringToColorInGroup(`${name}`, `${comments}`, Layers.VIGILANCE_AREA.code), 0.6)
+  getColorWithAlpha(stringToColorInGroup(`${name}`, `${comments}`, Layers.VIGILANCE_AREA.code), 0.5)
 
 export const getVigilanceAreaLayerStyle = feature => {
   const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('name'), feature.get('comments'))

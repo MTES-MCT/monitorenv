@@ -16,6 +16,7 @@ import {
   setRegulatoryLayersSearchResult,
   setSearchExtent,
   setShouldFilterSearchOnMapExtent,
+  setVigilanceAreaSpecificPeriodFilter,
   setVigilanceAreasSearchResult
 } from './slice'
 import { closeLayerOverlay, closeMetadataPanel } from '../metadataPanel/slice'
@@ -78,6 +79,7 @@ export function SearchOnExtentExtraButtons({
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setFilteredAmpTypes([]))
     dispatch(setFilteredVigilanceAreaPeriod(undefined))
+    dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
     dispatch(resetSearchExtent())
     dispatch(closeMetadataPanel())
     dispatch(closeLayerOverlay())

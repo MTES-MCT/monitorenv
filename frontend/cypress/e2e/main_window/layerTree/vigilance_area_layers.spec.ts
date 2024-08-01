@@ -77,7 +77,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('my-vigilance-area-zones-list').contains('Aucune zone sélectionnée')
   })
 
-  /*   it('A vigilance area Should be searched per period', () => {
+  it('A vigilance area should be searched per period', () => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
 
@@ -89,12 +89,34 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.clickButton('Arbre des couches')
     cy.clickButton('Filtrer par type de zones')
 
-    // Filter "At the moment"
-    cy.fill('Période de vigilance', 'En ce moment')
-    cy.getDataCy('vigilance-area-results-list').contains('1 résultat').click()
+    // Filter "Next three months"
+    cy.fill('Période de vigilance', 'Les trois prochains mois')
+    cy.getDataCy('vigilance-area-results-list').contains('4 résultats').click()
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 9')
 
-    // Filter "At the moment"
-    cy.fill('Période de vigilance', 'Les trois prochain mois')
-  }) */
+    // Filter "Next three months"
+    cy.clickButton('Filtrer par type de zones')
+    cy.fill('Période de vigilance', 'Ce trimestre')
+    cy.getDataCy('vigilance-area-results-list').contains('4 résultats').click()
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 9')
+
+    // Filter "Next three months"
+    cy.clickButton('Filtrer par type de zones')
+    cy.fill('Période de vigilance', 'Cette année')
+    cy.getDataCy('vigilance-area-results-list').contains('8 résultats').click()
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 4')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 5')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 6')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 7')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 9')
+  })
 })
