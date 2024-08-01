@@ -79,6 +79,7 @@ export function VigilanceAreaLayer({ layerId, searchedText }: RegulatoryLayerPro
       onClick={toggleZoneMetadata}
     >
       <LayerLegend
+        isArchived={layer?.isArchived}
         layerType={MonitorEnvLayers.VIGILANCE_AREA}
         legendKey={layer?.comments ?? 'aucun'}
         type={layer?.name ?? 'aucun'}

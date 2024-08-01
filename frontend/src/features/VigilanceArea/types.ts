@@ -13,6 +13,7 @@ export namespace VigilanceArea {
     frequency: Frequency | undefined
     geom: GeoJSON.MultiPolygon | undefined
     id: number | undefined
+    isArchived: boolean
     isDraft: boolean
     linkedAMPs: Array<number>
     linkedRegulatoryAreas: Array<number>

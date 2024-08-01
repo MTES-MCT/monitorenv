@@ -14,7 +14,7 @@ import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButt
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
-export function DrawVigilanceArea() {
+export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
   const dispatch = useAppDispatch()
   const geometry = useAppSelector(state => state.vigilanceArea.geometry)
   const interactionType = useAppSelector(state => state.vigilanceArea.interactionType)
@@ -88,6 +88,7 @@ export function DrawVigilanceArea() {
     <>
       <SubFormHeader>
         <SubFormTitle>Ajout de tracés en cours...</SubFormTitle>
+        <IconButton Icon={Icon.Close} onClick={onCancel} />
       </SubFormHeader>
       <SubFormBody>
         <SubFormHelpText>Dessinez ou sélectionnez un ou plusieurs tracés sur la carte</SubFormHelpText>

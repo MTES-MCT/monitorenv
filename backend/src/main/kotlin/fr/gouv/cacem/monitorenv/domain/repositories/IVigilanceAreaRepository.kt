@@ -7,4 +7,5 @@ interface IVigilanceAreaRepository {
     fun findById(id: Int): VigilanceAreaEntity?
     fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity
     fun delete(id: Int)
+    fun archiveOutdatedVigilanceAreas(): Int
 }

@@ -15,6 +15,7 @@ import { AMPList } from './AddAMPs/AMPList'
 import { RegulatoryAreas } from './AddRegulatoryAreas/RegulatoryAreas'
 import { PublishedSchema } from './Schema'
 import { DeleteButton, FooterContainer, FooterRightButtons } from './style'
+import { TextWithLineBreaks } from '../../../../components/TextWithLIneBreaks'
 
 const EMPTY_VALUE = '--'
 
@@ -135,8 +136,9 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         </SubPart>
         <SubPart>
           <InlineItemLabel>Commentaire sur la zone</InlineItemLabel>
-          <InlineItemValue $maxLine={4} title={vigilanceArea?.comments}>
-            {vigilanceArea?.comments ?? EMPTY_VALUE}
+
+          <InlineItemValue $maxLine={8} title={vigilanceArea?.comments}>
+            <TextWithLineBreaks text={vigilanceArea?.comments} />
           </InlineItemValue>
         </SubPart>
         {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (
@@ -176,6 +178,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
           {vigilanceArea?.source && (
             <InlineItem>
               <InlineItemLabel>Source</InlineItemLabel>
+
               <InlineItemValue $maxLine={2} title={vigilanceArea?.source}>
                 {vigilanceArea?.source}
               </InlineItemValue>

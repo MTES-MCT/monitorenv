@@ -12,18 +12,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 class GetVigilanceAreaByIdUTests {
 
-    @MockBean
-    private lateinit var vigilanceAreaRepository: IVigilanceAreaRepository
+    @MockBean private lateinit var vigilanceAreaRepository: IVigilanceAreaRepository
 
     @Test
     fun `execute should return vigilance area entity`() {
         val vigilanceAreaId = 10
-        val expectedEntity = VigilanceAreaEntity(
-            id = vigilanceAreaId,
-            comments = "Test Area",
-            isDeleted = false,
-            isDraft = true,
-        )
+        val expectedEntity =
+            VigilanceAreaEntity(
+                id = vigilanceAreaId,
+                comments = "Test Area",
+                isArchived = false,
+                isDeleted = false,
+                isDraft = true,
+            )
 
         given(vigilanceAreaRepository.findById(vigilanceAreaId)).willReturn(expectedEntity)
 

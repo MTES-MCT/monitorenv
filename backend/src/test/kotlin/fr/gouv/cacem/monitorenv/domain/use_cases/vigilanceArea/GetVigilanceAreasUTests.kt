@@ -11,25 +11,27 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetVigilanceAreasUTests {
-    @MockBean
-    private lateinit var vigilanceAreaRepository: IVigilanceAreaRepository
+    @MockBean private lateinit var vigilanceAreaRepository: IVigilanceAreaRepository
 
     @Test
     fun `execute should return all vigilance areas`() {
-        val vigilancesAreas = listOf(
-            VigilanceAreaEntity(
-                id = 1,
-                comments = "Comments",
-                isDeleted = false,
-                isDraft = true,
-            ),
-            VigilanceAreaEntity(
-                id = 2,
-                comments = "Test Area",
-                isDeleted = false,
-                isDraft = true,
-            ),
-        )
+        val vigilancesAreas =
+            listOf(
+                VigilanceAreaEntity(
+                    id = 1,
+                    comments = "Comments",
+                    isArchived = false,
+                    isDeleted = false,
+                    isDraft = true,
+                ),
+                VigilanceAreaEntity(
+                    id = 2,
+                    comments = "Test Area",
+                    isArchived = false,
+                    isDeleted = false,
+                    isDraft = true,
+                ),
+            )
 
         given(vigilanceAreaRepository.findAll()).willReturn(vigilancesAreas)
 
