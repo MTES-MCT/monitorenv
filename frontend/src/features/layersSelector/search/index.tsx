@@ -1,6 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
+import { getOptionsFromLabelledEnum, type DateAsStringRange, type Option } from '@mtes-mct/monitor-ui'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
@@ -16,7 +16,8 @@ import {
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
   setFilteredVigilanceAreaPeriod,
-  setGlobalSearchText
+  setGlobalSearchText,
+  setVigilanceAreaSpecificPeriodFilter
 } from './slice'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../../api/regulatoryLayersAPI'
@@ -38,11 +39,16 @@ export function LayerSearch() {
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
+  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
 
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
 
-  const debouncedSearchLayers = useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
+  const debouncedSearchLayers = useSearchLayers({
+    amps,
+    regulatoryLayers,
+    vigilanceAreaLayers
+  })
 
   const handleSearchInputChange = searchedText => {
     dispatch(setGlobalSearchText(searchedText))
@@ -52,7 +58,8 @@ export function LayerSearch() {
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
     })
   }
 
@@ -64,7 +71,8 @@ export function LayerSearch() {
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
     })
   }
 
@@ -76,19 +84,31 @@ export function LayerSearch() {
       regulatoryThemes: filteredThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
     })
   }
 
   const handleSetFilteredVigilanceAreaPeriod = nextVigilanceAreaPeriod => {
     dispatch(setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod))
+
+    if (nextVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) {
+      dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
+    }
+
+    const nextVigilanceAreaSpecificPeriodFilter =
+      nextVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
+        ? vigilanceAreaSpecificPeriodFilter
+        : undefined
+
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: nextVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: nextVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter: nextVigilanceAreaSpecificPeriodFilter
     })
   }
 
@@ -96,13 +116,28 @@ export function LayerSearch() {
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setFilteredAmpTypes([]))
     dispatch(setFilteredVigilanceAreaPeriod(undefined))
+    dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
     debouncedSearchLayers({
       ampTypes: [],
       extent: searchExtent,
       regulatoryThemes: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: undefined
+      vigilanceAreaPeriodFilter: undefined,
+      vigilanceAreaSpecificPeriodFilter: undefined
+    })
+  }
+
+  const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
+    dispatch(setVigilanceAreaSpecificPeriodFilter(dateRange))
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter: dateRange
     })
   }
 
@@ -153,6 +188,7 @@ export function LayerSearch() {
             setFilteredAmpTypes={handleSetFilteredAmpTypes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
             setFilteredVigilanceAreaPeriod={handleSetFilteredVigilanceAreaPeriod}
+            updateDateRangeFilter={updateDateRangeFilter}
             vigilanceAreaPeriodOptions={vigilanceAreaPeriodOptions}
           />
         )}

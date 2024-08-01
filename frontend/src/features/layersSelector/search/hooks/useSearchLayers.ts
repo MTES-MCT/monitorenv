@@ -1,20 +1,19 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import Fuse, { type Expression } from 'fuse.js'
-import _ from 'lodash'
+import { debounce } from 'lodash'
 import { useMemo } from 'react'
 
 import { getFilterVigilanceAreasPerPeriod } from '../../utils/getFilteredVigilanceAreasPerPeriod'
 import { setAMPsSearchResult, setRegulatoryLayersSearchResult, setVigilanceAreasSearchResult } from '../slice'
 
-import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMP } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
 export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers }) {
   const dispatch = useAppDispatch()
-
   const debouncedSearchLayers = useMemo(() => {
     const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
       ignoreLocation: true,
@@ -48,7 +47,8 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
       regulatoryThemes,
       searchedText,
       shouldSearchByExtent,
-      vigilanceAreaPeriodFilter
+      vigilanceAreaPeriodFilter,
+      vigilanceAreaSpecificPeriodFilter
     }: {
       ampTypes: string[]
       extent: number[] | undefined
@@ -56,6 +56,7 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
       searchedText: string
       shouldSearchByExtent: boolean
       vigilanceAreaPeriodFilter: string | undefined
+      vigilanceAreaSpecificPeriodFilter: string[] | undefined
     }) => {
       const shouldSearchByText = searchedText?.length > 2
       const shouldSeachTroughAMPTypes = ampTypes?.length > 0
@@ -65,7 +66,8 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
       if (vigilanceAreaPeriodFilter) {
         const filteredVigilanceAreas = getFilterVigilanceAreasPerPeriod(
           vigilanceAreaLayers?.entities,
-          vigilanceAreaPeriodFilter
+          vigilanceAreaPeriodFilter,
+          vigilanceAreaSpecificPeriodFilter
         )
         vigilanceAreasPerPeriod = filteredVigilanceAreas.map(({ id }) => id)
       }
@@ -180,7 +182,7 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
         } else {
           searchedVigilanceArea = vigilanceAreaPeriodFilter
             ? vigilanceAreasPerPeriod
-            : Object.values(vigilanceAreaLayers?.entities)
+            : Object.values(vigilanceAreaLayers?.entities ?? {})
           vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
         const searchedVigilanceAreasInExtent = getIntersectingLayerIds<VigilanceArea.VigilanceAreaLayer>(
@@ -198,7 +200,7 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
 
     return args => {
       dispatch(closeMetadataPanel())
-      _.debounce(searchFunction, 300, { trailing: true })(args)
+      debounce(searchFunction, 300, { trailing: true })(args)
     }
   }, [dispatch, regulatoryLayers, amps, vigilanceAreaLayers])
 

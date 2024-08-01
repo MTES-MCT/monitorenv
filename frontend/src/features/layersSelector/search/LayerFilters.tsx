@@ -3,8 +3,20 @@ import {
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { type Option, Accent, CheckPicker, CustomSearch, Icon, Select, SingleTag, THEME } from '@mtes-mct/monitor-ui'
+import {
+  type DateAsStringRange,
+  type Option,
+  Accent,
+  CheckPicker,
+  CustomSearch,
+  DateRangePicker,
+  Icon,
+  Select,
+  SingleTag,
+  THEME
+} from '@mtes-mct/monitor-ui'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -18,6 +30,7 @@ type LayerFiltersProps = {
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
   setFilteredVigilanceAreaPeriod: (filteredVigilanceAreaPeriod: string | undefined) => void
+  updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
   vigilanceAreaPeriodOptions: Option<string>[]
 }
 
@@ -36,13 +49,16 @@ export function LayerFilters({
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
   setFilteredVigilanceAreaPeriod,
+  updateDateRangeFilter,
   vigilanceAreaPeriodOptions
 }: LayerFiltersProps) {
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
+  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
 
   const [visibleTooltipType, setVisibleTooltipType] = useState<TooltipTypeVisible | undefined>(undefined)
+  const [isSpecificPeriodFilterSelected, setIsSpecificPeriodFilterSelected] = useState(false)
 
   const showTooltip = type => setVisibleTooltipType(type)
   const hideTooltip = () => setVisibleTooltipType(undefined)
@@ -63,6 +79,10 @@ export function LayerFilters({
 
   const handleSetFilteredVigilancePeriod = nextVigilanceAreaPeriod => {
     setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod)
+
+    setIsSpecificPeriodFilterSelected(
+      nextVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
+    )
   }
 
   const regulatoryThemesCustomSearch = useMemo(
@@ -175,6 +195,20 @@ export function LayerFilters({
             )}
           </IconAndMessageWrapper>
         </SelectContainer>
+      )}
+      {isSpecificPeriodFilterSelected && (
+        <DateRangePicker
+          key="dateRange"
+          data-cy="datepicker-missionStartedAfter"
+          defaultValue={
+            vigilanceAreaSpecificPeriodFilter ? (vigilanceAreaSpecificPeriodFilter as DateAsStringRange) : undefined
+          }
+          isLabelHidden
+          isStringDate
+          label="Période spécifique"
+          name="dateRange"
+          onChange={updateDateRangeFilter}
+        />
       )}
 
       {(filteredRegulatoryThemes || filteredAmpTypes) && (

@@ -74,24 +74,33 @@ export const saveVigilanceArea =
     }
   }
 
-const calculateRealEndDate = (area): string | undefined => {
-  let currentOccurrence = customDayjs(area.startDatePeriod)
-  const endDate = area.endDatePeriod ? customDayjs(area.endDatePeriod) : undefined
+const calculateRealEndDate = (vigilanceArea): string | undefined => {
+  let currentOccurrence = customDayjs(vigilanceArea.startDatePeriod)
+  const endDate = vigilanceArea.endDatePeriod ? customDayjs(vigilanceArea.endDatePeriod) : undefined
   const vigilanceAreaDurationInDays =
-    area.startDatePeriod && area.endDatePeriod ? customDayjs(area.endDatePeriod).diff(area.startDatePeriod, 'days') : 0
-  if (area.frequency === VigilanceArea.Frequency.NONE) {
+    vigilanceArea.startDatePeriod && vigilanceArea.endDatePeriod
+      ? customDayjs(vigilanceArea.endDatePeriod).diff(vigilanceArea.startDatePeriod, 'days')
+      : 0
+  if (vigilanceArea.frequency === VigilanceArea.Frequency.NONE) {
+    return vigilanceArea.endDatePeriod
+  }
+
+  if (vigilanceArea.endingCondition === VigilanceArea.EndingCondition.NEVER) {
     return undefined
   }
 
-  if (area.endingCondition === VigilanceArea.EndingCondition.END_DATE && area.endingOccurrenceDate) {
-    const endingDate = customDayjs(area.endingOccurrenceDate)
+  if (vigilanceArea.endingCondition === VigilanceArea.EndingCondition.END_DATE && vigilanceArea.endingOccurrenceDate) {
+    const endingDate = customDayjs(vigilanceArea.endingOccurrenceDate)
 
     return endingDate.isAfter(endDate) ? endingDate.toISOString() : endDate?.toISOString()
   }
 
-  if (area.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && area.endingOccurrencesNumber) {
-    for (let i = 1; i < area.endingOccurrencesNumber; i += 1) {
-      switch (area.frequency) {
+  if (
+    vigilanceArea.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER &&
+    vigilanceArea.endingOccurrencesNumber
+  ) {
+    for (let i = 1; i < vigilanceArea.endingOccurrencesNumber; i += 1) {
+      switch (vigilanceArea.frequency) {
         case VigilanceArea.Frequency.ALL_WEEKS:
           currentOccurrence = currentOccurrence.add(7, 'days')
           break

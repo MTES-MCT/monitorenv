@@ -1,34 +1,45 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import isBetween from 'dayjs/plugin/isBetween'
+
+customDayjs.extend(isBetween)
 
 function isWithinPeriod(date, startDate, endDate) {
   return (date.isAfter(startDate) && date.isBefore(endDate)) || date.isSame(startDate) || date.isSame(endDate)
 }
 
-export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, period) => {
+export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, vigilanceAreaSpecificPeriodFilter) => {
   const now = customDayjs()
+
   let startDateFilter
   let endDateFilter
 
-  switch (period) {
-    case VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT:
-      startDateFilter = now.startOf('day')
-      endDateFilter = now.endOf('day')
-      break
-    case VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER:
-      startDateFilter = now.startOf('quarter')
-      endDateFilter = now.endOf('quarter')
-      break
-    case VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_YEAR:
-      startDateFilter = now.startOf('year')
-      endDateFilter = now.endOf('year')
-      break
-    case VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS:
-      startDateFilter = now.startOf('day')
-      endDateFilter = now.add(3, 'months').endOf('day')
-      break
-    default:
-      throw new Error('Invalid period')
+  if (vigilanceAreaSpecificPeriodFilter) {
+    startDateFilter = customDayjs(vigilanceAreaSpecificPeriodFilter[0])
+    endDateFilter = customDayjs(vigilanceAreaSpecificPeriodFilter[1])
+  } else {
+    switch (periodFilter) {
+      case VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT:
+        startDateFilter = now.startOf('day')
+        endDateFilter = now.endOf('day')
+        break
+      case VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER:
+        startDateFilter = now.startOf('quarter')
+        endDateFilter = now.endOf('quarter')
+        break
+      case VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_YEAR:
+        startDateFilter = now.startOf('year')
+        endDateFilter = now.endOf('year')
+        break
+      case VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS:
+        startDateFilter = now.startOf('day')
+        endDateFilter = now.add(3, 'months').endOf('day')
+        break
+      case VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD:
+        break
+      default:
+        throw new Error('Invalid period')
+    }
   }
 
   return Object.values(vigilanceAreas as Array<VigilanceArea.VigilanceArea>).filter(vigilanceArea => {
@@ -47,7 +58,13 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, period) => {
       )
     }
 
-    if (startDateFilter.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate)) {
+    if (
+      startDate &&
+      endDate &&
+      startDateFilter &&
+      endDateFilter &&
+      (startDateFilter.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
+    ) {
       return true
     }
 
