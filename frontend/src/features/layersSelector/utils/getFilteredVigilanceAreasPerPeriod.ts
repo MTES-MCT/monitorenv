@@ -15,25 +15,25 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
   let endDateFilter
 
   if (vigilanceAreaSpecificPeriodFilter) {
-    startDateFilter = customDayjs(vigilanceAreaSpecificPeriodFilter[0])
-    endDateFilter = customDayjs(vigilanceAreaSpecificPeriodFilter[1])
+    startDateFilter = customDayjs(vigilanceAreaSpecificPeriodFilter[0]).utc()
+    endDateFilter = customDayjs(vigilanceAreaSpecificPeriodFilter[1]).utc()
   } else {
     switch (periodFilter) {
       case VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT:
-        startDateFilter = now.startOf('day')
-        endDateFilter = now.endOf('day')
+        startDateFilter = now.utc().startOf('day')
+        endDateFilter = now.utc().endOf('day')
         break
       case VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER:
-        startDateFilter = now.startOf('quarter')
-        endDateFilter = now.endOf('quarter')
+        startDateFilter = now.utc().startOf('quarter')
+        endDateFilter = now.utc().endOf('quarter')
         break
       case VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_YEAR:
-        startDateFilter = now.startOf('year')
-        endDateFilter = now.endOf('year')
+        startDateFilter = now.utc().startOf('year')
+        endDateFilter = now.utc().endOf('year')
         break
       case VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS:
-        startDateFilter = now.startOf('day')
-        endDateFilter = now.add(3, 'months').endOf('day')
+        startDateFilter = now.utc().startOf('day')
+        endDateFilter = now.utc().add(3, 'months').endOf('day')
         break
       case VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD:
         break
@@ -47,8 +47,9 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
       return false
     }
 
-    const startDate = customDayjs(vigilanceArea.startDatePeriod)
-    const endDate = customDayjs(vigilanceArea.endDatePeriod)
+    const startDate = customDayjs(vigilanceArea.startDatePeriod).utc()
+    const endDate = customDayjs(vigilanceArea.endDatePeriod).utc()
+
     // in case there is no end of recurrence (because no recurrence) we set a default end date to the end of the period filter
     const computedEndDate = vigilanceArea.computedEndDate ? customDayjs(vigilanceArea.computedEndDate) : endDateFilter
     if (vigilanceArea.frequency === VigilanceArea.Frequency.NONE) {
