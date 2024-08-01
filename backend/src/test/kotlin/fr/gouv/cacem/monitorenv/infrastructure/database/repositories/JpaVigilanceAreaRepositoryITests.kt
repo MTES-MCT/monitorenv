@@ -19,7 +19,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         // When
         val vigilanceAreas = jpaVigilanceAreaRepository.findAll()
         // Then
-        assertThat(vigilanceAreas.size).isEqualTo(8)
+        assertThat(vigilanceAreas.size).isEqualTo(9)
     }
 
     @Test
@@ -33,9 +33,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(vigilanceArea?.id).isEqualTo(expectedVigilanceAreaId)
         assertThat(vigilanceArea?.comments).isEqualTo("Commentaire sur la zone de vigilance")
         assertThat(vigilanceArea?.createdBy).isEqualTo("ABC")
-        assertThat(vigilanceArea?.endDatePeriod)
-            .isEqualTo(ZonedDateTime.parse("2024-12-16T23:59:59Z"))
-        assertThat(vigilanceArea?.endingCondition).isEqualTo(EndingConditionEnum.NEVER)
+        assertThat(vigilanceArea?.endingCondition).isEqualTo(null)
         assertThat(vigilanceArea?.geom).isNotNull()
         assertThat(vigilanceArea?.isDeleted).isFalse()
         assertThat(vigilanceArea?.isDraft).isFalse()
@@ -43,8 +41,6 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(vigilanceArea?.links?.get(0)?.linkUrl).isEqualTo("www.google.fr")
         assertThat(vigilanceArea?.source).isEqualTo("Unité BSN Ste Maxime")
         assertThat(vigilanceArea?.name).isEqualTo("Zone de vigilance 1")
-        assertThat(vigilanceArea?.startDatePeriod)
-            .isEqualTo(ZonedDateTime.parse("2024-12-10T00:00:00Z"))
         assertThat(vigilanceArea?.themes).isEqualTo(listOf("Dragage", "Extraction granulats"))
         assertThat(vigilanceArea?.visibility).isEqualTo(VisibilityEnum.PUBLIC)
     }
@@ -117,18 +113,13 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
             .isEqualTo(
                 "Proin maximus luctus urna, sit amet pellentesque diam porta ac. Praesent nisi urna, volutpat vitae consectetur et, aliquet non nisi. Sed molestie metus nec bibendum dignissim. In hac habitasse platea dictumst. Donec eu egestas nulla.",
             )
-        assertThat(savedVigilanceArea.endDatePeriod)
-            .isEqualTo(ZonedDateTime.parse("2024-05-26T23:59:59Z"))
         assertThat(savedVigilanceArea.frequency).isEqualTo(FrequencyEnum.NONE)
         assertThat(savedVigilanceArea.endingCondition).isNull()
-        assertThat(savedVigilanceArea.geom).isNull()
         assertThat(savedVigilanceArea.isDeleted).isFalse()
         assertThat(savedVigilanceArea.isDraft).isFalse()
         assertThat(savedVigilanceArea.links).isNull()
         assertThat(savedVigilanceArea.source).isNull()
         assertThat(savedVigilanceArea.name).isEqualTo("Zone de vigilance mise à jour")
-        assertThat(savedVigilanceArea.startDatePeriod)
-            .isEqualTo(ZonedDateTime.parse("2024-05-25T00:00:00Z"))
         assertThat(savedVigilanceArea.themes).isEqualTo(listOf("AMP", "PN"))
         assertThat(savedVigilanceArea.visibility).isEqualTo(VisibilityEnum.PRIVATE)
     }
