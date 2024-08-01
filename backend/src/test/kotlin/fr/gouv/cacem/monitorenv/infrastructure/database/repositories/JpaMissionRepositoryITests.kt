@@ -35,7 +35,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
