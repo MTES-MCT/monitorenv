@@ -3,23 +3,23 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace VigilanceArea {
   export interface VigilanceArea {
-    comments: string
+    comments: string | undefined
     computedEndDate?: string
-    createdBy: string
-    endDatePeriod: string
-    endingCondition: EndingCondition
-    endingOccurrenceDate?: string
-    endingOccurrencesNumber?: number
-    frequency: Frequency
-    geom: GeoJSON.MultiPolygon
-    id: number
+    createdBy: string | undefined
+    endDatePeriod: string | undefined
+    endingCondition: EndingCondition | undefined
+    endingOccurrenceDate?: string | undefined
+    endingOccurrencesNumber?: number | undefined
+    frequency: Frequency | undefined
+    geom: GeoJSON.MultiPolygon | undefined
+    id: number | undefined
     isDraft: boolean
     linkedAMPs: Array<number>
     linkedRegulatoryAreas: Array<number>
     links: Array<Link>
     name: string
-    source: string
-    startDatePeriod: string
+    source: string | undefined
+    startDatePeriod: string | undefined
     themes: Array<string>
     visibility: Visibility
   }
@@ -81,6 +81,7 @@ export namespace VigilanceArea {
   }
 
   export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
+    id: number
     isSelected: boolean
     layerId: number
   }

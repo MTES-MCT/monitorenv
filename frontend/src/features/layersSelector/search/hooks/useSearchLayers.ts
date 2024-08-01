@@ -72,7 +72,9 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
           vigilanceAreaSpecificPeriodFilter
         )
 
-        vigilanceAreaIdsPerPeriod = vigilanceAreasPerPeriod.map(({ id }) => id)
+        vigilanceAreaIdsPerPeriod = vigilanceAreasPerPeriod
+          .filter(vigilanceArea => !!vigilanceArea.id)
+          .map(({ id }) => id) as number[]
       }
 
       if (shouldSearchByText || shouldSeachTroughAMPTypes || shouldSearchByExtent) {
@@ -177,10 +179,9 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
             $and: filterExpression
           })
 
-          searchedVigilanceArea =
-            vigilanceAreasPerPeriod.length > 0 && vigilanceAreaPeriodFilter
-              ? resultSearchVigilanceAreas.filter(({ item }) => vigilanceAreaIdsPerPeriod.includes(item.id))
-              : resultSearchVigilanceAreas
+          searchedVigilanceArea = vigilanceAreaPeriodFilter
+            ? resultSearchVigilanceAreas.filter(({ item }) => item.id && vigilanceAreaIdsPerPeriod.includes(item.id))
+            : resultSearchVigilanceAreas
           vigilanceAreaSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
           searchedVigilanceArea = vigilanceAreaPeriodFilter

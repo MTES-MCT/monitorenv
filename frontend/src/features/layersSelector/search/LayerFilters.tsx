@@ -29,7 +29,9 @@ type LayerFiltersProps = {
   regulatoryThemes: Option<string>[]
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
-  setFilteredVigilanceAreaPeriod: (filteredVigilanceAreaPeriod: string | undefined) => void
+  setFilteredVigilanceAreaPeriod: (
+    filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
+  ) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
   vigilanceAreaPeriodOptions: Option<string>[]
 }

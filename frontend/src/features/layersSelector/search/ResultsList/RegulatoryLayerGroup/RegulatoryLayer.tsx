@@ -107,7 +107,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
           textToHighlight={layer?.entity_name ?? ''}
         />
-        {layer?.entity_name ?? 'AUCUN NOM'}
+        {!layer?.entity_name && 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
         {isLinkingRegulatoryToVigilanceArea ? (

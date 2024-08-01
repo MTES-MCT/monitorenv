@@ -66,6 +66,9 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
 
       return
     }
+    if (!values.id) {
+      return
+    }
     dispatch(vigilanceAreaActions.openCancelModal(values.id))
   }
 
