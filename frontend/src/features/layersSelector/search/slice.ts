@@ -13,6 +13,7 @@ type LayerSearchState = {
   searchExtent: number[] | undefined
   shouldFilterSearchOnMapExtent: boolean
   vigilanceAreaSearchResult: number[] | undefined
+  vigilanceAreaSpecificPeriodFilter: string[] | undefined
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
@@ -26,7 +27,8 @@ const initialState: LayerSearchState = {
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined,
   shouldFilterSearchOnMapExtent: false,
-  vigilanceAreaSearchResult: undefined
+  vigilanceAreaSearchResult: undefined,
+  vigilanceAreaSpecificPeriodFilter: undefined
 }
 
 const layerSearchSlice = createSlice({
@@ -84,6 +86,10 @@ const layerSearchSlice = createSlice({
       state.shouldFilterSearchOnMapExtent = action.payload
     },
 
+    setVigilanceAreaSpecificPeriodFilter(state, action: PayloadAction<Array<string> | undefined>) {
+      state.vigilanceAreaSpecificPeriodFilter = action.payload
+    },
+
     setVigilanceAreasSearchResult(state, action: PayloadAction<Array<number>>) {
       state.vigilanceAreaSearchResult = action.payload
     }
@@ -103,6 +109,7 @@ export const {
   setRegulatoryLayersSearchResult,
   setSearchExtent,
   setShouldFilterSearchOnMapExtent,
+  setVigilanceAreaSpecificPeriodFilter,
   setVigilanceAreasSearchResult
 } = layerSearchSlice.actions
 

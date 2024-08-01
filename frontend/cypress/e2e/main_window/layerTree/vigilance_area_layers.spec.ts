@@ -76,4 +76,25 @@ context('LayerTree > Vigilance Area Layers', () => {
     })
     cy.getDataCy('my-vigilance-area-zones-list').contains('Aucune zone sélectionnée')
   })
+
+  /*   it('A vigilance area Should be searched per period', () => {
+    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
+    cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
+
+    cy.visit('/#@-444365.78,6153753.97,7.20')
+    cy.wait(300) // wait for rendering initial zoom
+
+    cy.wait('@getVigilanceAreas').then(({ response }) => expect(response && response.statusCode).equal(200))
+
+    cy.clickButton('Arbre des couches')
+    cy.clickButton('Filtrer par type de zones')
+
+    // Filter "At the moment"
+    cy.fill('Période de vigilance', 'En ce moment')
+    cy.getDataCy('vigilance-area-results-list').contains('1 résultat').click()
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 9')
+
+    // Filter "At the moment"
+    cy.fill('Période de vigilance', 'Les trois prochain mois')
+  }) */
 })
