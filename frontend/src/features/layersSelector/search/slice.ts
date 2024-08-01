@@ -43,7 +43,7 @@ const layerSearchSlice = createSlice({
       state.searchExtent = undefined
     },
 
-    setAMPsSearchResult(state, action) {
+    setAMPsSearchResult(state, action: PayloadAction<Array<number> | undefined>) {
       state.ampsSearchResult = action.payload
     },
 
@@ -74,11 +74,11 @@ const layerSearchSlice = createSlice({
       state.isVigilanceAreaSearchResultsVisible = action.payload
     },
 
-    setRegulatoryLayersSearchResult(state, action) {
+    setRegulatoryLayersSearchResult(state, action: PayloadAction<Array<number> | undefined>) {
       state.regulatoryLayersSearchResult = action.payload
     },
 
-    setSearchExtent(state, action) {
+    setSearchExtent(state, action: PayloadAction<Array<number> | undefined>) {
       state.searchExtent = action.payload
     },
 
