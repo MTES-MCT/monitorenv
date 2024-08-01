@@ -97,7 +97,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 9')
 
-    // Filter "Next three months"
+    // Filter "Current quarter"
     cy.clickButton('Filtrer par type de zones')
     cy.fill('Période de vigilance', 'Ce trimestre')
     cy.getDataCy('vigilance-area-results-list').contains('4 résultats').click()
@@ -106,7 +106,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 9')
 
-    // Filter "Next three months"
+    // Filter "Current year"
     cy.clickButton('Filtrer par type de zones')
     cy.fill('Période de vigilance', 'Cette année')
     cy.getDataCy('vigilance-area-results-list').contains('8 résultats').click()

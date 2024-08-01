@@ -15,7 +15,7 @@ export const saveVigilanceArea =
       ? vigilanceAreasAPI.endpoints.createVigilanceArea
       : vigilanceAreasAPI.endpoints.updateVigilanceArea
 
-    const realEndDate = calculateRealEndDate(values)
+    const realEndDate = computeRealEndDate(values)
     const computedEndDate = realEndDate ?? undefined
 
     try {
@@ -74,16 +74,14 @@ export const saveVigilanceArea =
     }
   }
 
-const calculateRealEndDate = (vigilanceArea): string | undefined => {
+const computeRealEndDate = (vigilanceArea: VigilanceArea.VigilanceArea): string | undefined => {
   let currentOccurrence = customDayjs(vigilanceArea.startDatePeriod)
+
   const endDate = vigilanceArea.endDatePeriod ? customDayjs(vigilanceArea.endDatePeriod) : undefined
   const vigilanceAreaDurationInDays =
     vigilanceArea.startDatePeriod && vigilanceArea.endDatePeriod
       ? customDayjs(vigilanceArea.endDatePeriod).diff(vigilanceArea.startDatePeriod, 'days')
       : 0
-  if (vigilanceArea.frequency === VigilanceArea.Frequency.NONE) {
-    return vigilanceArea.endDatePeriod
-  }
 
   if (vigilanceArea.endingCondition === VigilanceArea.EndingCondition.NEVER) {
     return undefined
@@ -111,6 +109,8 @@ const calculateRealEndDate = (vigilanceArea): string | undefined => {
           currentOccurrence = currentOccurrence.add(1, 'year')
           break
         case VigilanceArea.Frequency.NONE:
+          currentOccurrence = customDayjs(vigilanceArea.endDatePeriod)
+          break
         default:
           return undefined // No recurrence
       }

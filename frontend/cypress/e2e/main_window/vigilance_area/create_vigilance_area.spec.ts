@@ -121,7 +121,7 @@ describe('Create Vigilance Area', () => {
     cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
   })
 
-  it('Should create a vigilance area in porgress and find it with period filter ', () => {
+  it('Should create an ongoing vigilance area and find it with period filter', () => {
     // Fill in the form fields
     cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance')
 

@@ -89,7 +89,9 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredVigilanceAreaPeriod = nextVigilanceAreaPeriod => {
+  const handleSetFilteredVigilanceAreaPeriod = (
+    nextVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
+  ) => {
     dispatch(setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod))
 
     if (nextVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) {

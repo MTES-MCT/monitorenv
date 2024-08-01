@@ -2,9 +2,11 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import isBetween from 'dayjs/plugin/isBetween'
 
+import type { Dayjs } from 'dayjs'
+
 customDayjs.extend(isBetween)
 
-function isWithinPeriod(date, startDate, endDate) {
+function isWithinPeriod(date: Dayjs, startDate: Dayjs, endDate: Dayjs) {
   return (date.isAfter(startDate) && date.isBefore(endDate)) || date.isSame(startDate) || date.isSame(endDate)
 }
 
@@ -60,10 +62,10 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
     }
 
     if (
-      startDate &&
-      endDate &&
-      startDateFilter &&
-      endDateFilter &&
+      !!startDate &&
+      !!endDate &&
+      !!startDateFilter &&
+      !!endDateFilter &&
       (startDateFilter.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
     ) {
       return true
@@ -87,7 +89,7 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
             occurrenceDate = occurrenceDate.add(1, 'year')
             break
           default: // No recurrence
-            return false
+            break
         }
       }
     }
