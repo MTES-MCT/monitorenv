@@ -94,7 +94,13 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
                 Brouillon
               </Tag>
             )}
-            <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={close} size={Size.SMALL} />
+            <IconButton
+              accent={Accent.TERTIARY}
+              Icon={Icon.Close}
+              onClick={close}
+              size={Size.SMALL}
+              title="Fermer la zone de vigilance"
+            />
           </SubHeaderContainer>
         )}
       </Header>

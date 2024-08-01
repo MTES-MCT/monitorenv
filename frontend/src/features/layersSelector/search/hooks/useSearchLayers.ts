@@ -62,14 +62,17 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
       const shouldSeachTroughAMPTypes = ampTypes?.length > 0
       const shouldSearchThroughRegulatoryThemes = regulatoryThemes?.length > 0
 
-      let vigilanceAreasPerPeriod = [] as Array<number>
+      let vigilanceAreasPerPeriod = [] as Array<VigilanceArea.VigilanceArea>
+      let vigilanceAreaIdsPerPeriod = [] as Array<number>
+
       if (vigilanceAreaPeriodFilter) {
-        const filteredVigilanceAreas = getFilterVigilanceAreasPerPeriod(
+        vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
           vigilanceAreaLayers?.entities,
           vigilanceAreaPeriodFilter,
           vigilanceAreaSpecificPeriodFilter
         )
-        vigilanceAreasPerPeriod = filteredVigilanceAreas.map(({ id }) => id)
+
+        vigilanceAreaIdsPerPeriod = vigilanceAreasPerPeriod.map(({ id }) => id)
       }
 
       if (shouldSearchByText || shouldSeachTroughAMPTypes || shouldSearchByExtent) {
@@ -176,7 +179,7 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
 
           searchedVigilanceArea =
             vigilanceAreasPerPeriod.length > 0 && vigilanceAreaPeriodFilter
-              ? resultSearchVigilanceAreas.filter(({ item }) => vigilanceAreasPerPeriod.includes(item.id))
+              ? resultSearchVigilanceAreas.filter(({ item }) => vigilanceAreaIdsPerPeriod.includes(item.id))
               : resultSearchVigilanceAreas
           vigilanceAreaSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
@@ -185,15 +188,17 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
             : Object.values(vigilanceAreaLayers?.entities ?? {})
           vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
+
         const searchedVigilanceAreasInExtent = getIntersectingLayerIds<VigilanceArea.VigilanceAreaLayer>(
           shouldSearchByExtent,
           searchedVigilanceArea,
           extent,
           vigilanceAreaSchema
         )
+
         dispatch(setVigilanceAreasSearchResult(searchedVigilanceAreasInExtent))
       } else {
-        dispatch(setVigilanceAreasSearchResult(vigilanceAreasPerPeriod))
+        dispatch(setVigilanceAreasSearchResult(vigilanceAreaIdsPerPeriod))
         dispatch(setRegulatoryLayersSearchResult([]))
       }
     }

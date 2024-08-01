@@ -58,7 +58,6 @@ export function LayerFilters({
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
 
   const [visibleTooltipType, setVisibleTooltipType] = useState<TooltipTypeVisible | undefined>(undefined)
-  const [isSpecificPeriodFilterSelected, setIsSpecificPeriodFilterSelected] = useState(false)
 
   const showTooltip = type => setVisibleTooltipType(type)
   const hideTooltip = () => setVisibleTooltipType(undefined)
@@ -79,10 +78,6 @@ export function LayerFilters({
 
   const handleSetFilteredVigilancePeriod = nextVigilanceAreaPeriod => {
     setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod)
-
-    setIsSpecificPeriodFilterSelected(
-      nextVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
-    )
   }
 
   const regulatoryThemesCustomSearch = useMemo(
@@ -196,7 +191,7 @@ export function LayerFilters({
           </IconAndMessageWrapper>
         </SelectContainer>
       )}
-      {isSpecificPeriodFilterSelected && (
+      {filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && (
         <DateRangePicker
           key="dateRange"
           data-cy="datepicker-missionStartedAfter"
@@ -211,7 +206,7 @@ export function LayerFilters({
         />
       )}
 
-      {(filteredRegulatoryThemes || filteredAmpTypes) && (
+      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0) && (
         <TagWrapper>
           {filteredRegulatoryThemes?.map(theme => (
             <SingleTag
