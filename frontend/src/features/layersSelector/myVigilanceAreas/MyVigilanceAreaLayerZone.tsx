@@ -13,7 +13,13 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { LayerLegend } from '../utils/LayerLegend.style'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
-export function MyVigilanceAreaLayerZone({ layerId }: { layerId: number }) {
+export function MyVigilanceAreaLayerZone({
+  layerId,
+  pinnedVigilanceArea = false
+}: {
+  layerId: number
+  pinnedVigilanceArea?: boolean
+}) {
   const dispatch = useAppDispatch()
 
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
@@ -75,7 +81,7 @@ export function MyVigilanceAreaLayerZone({ layerId }: { layerId: number }) {
         type={layer?.name ?? 'aucun nom'}
       />
       <LayerSelector.Name
-        data-cy={`my-vigilance-area-zone-${layer?.name}`}
+        data-cy={`vigilance-area-zone-${layer?.name}`}
         onClick={zoomToLayerExtent}
         title={layer?.name}
       >
@@ -99,15 +105,16 @@ export function MyVigilanceAreaLayerZone({ layerId }: { layerId: number }) {
           onClick={toggleLayerDisplay}
           title={layerZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
         />
-
-        <StyledIconButton
-          accent={Accent.TERTIARY}
-          color={THEME.color.slateGray}
-          Icon={Icon.Close}
-          onClick={removeZone}
-          size={Size.SMALL}
-          title="Supprimer la zone de ma sélection"
-        />
+        {pinnedVigilanceArea && (
+          <StyledIconButton
+            accent={Accent.TERTIARY}
+            color={THEME.color.slateGray}
+            Icon={Icon.Close}
+            onClick={removeZone}
+            size={Size.SMALL}
+            title="Supprimer la zone de ma sélection"
+          />
+        )}
       </LayerSelector.IconGroup>
     </LayerSelector.Layer>
   )

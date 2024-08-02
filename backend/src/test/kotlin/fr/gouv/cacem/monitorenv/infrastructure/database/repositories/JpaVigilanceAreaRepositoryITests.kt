@@ -141,4 +141,17 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         val deletedVigilanceArea = jpaVigilanceAreaRepository.findById(vigilanceAreaId)
         assertThat(deletedVigilanceArea?.isDeleted).isTrue()
     }
+
+    @Test
+    @Transactional
+    fun `archive should archive outdated vigilance areas`() {
+        // Given
+        val existingVigilanceArea = jpaVigilanceAreaRepository.findById(5)
+        assertThat(existingVigilanceArea?.isArchived).isEqualTo(false)
+        // When
+        jpaVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
+        // Then
+        val archivedVigilanceArea = jpaVigilanceAreaRepository.findById(5)
+        assertThat(archivedVigilanceArea?.isArchived).isEqualTo(true)
+    }
 }

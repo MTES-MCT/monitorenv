@@ -91,7 +91,12 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
             size={Size.NORMAL}
             type={vigilanceArea?.name ?? 'aucun nom'}
           />
-          <Title $isDraft={vigilanceArea?.isDraft ?? true} data-cy="vigilance-area-title" title={title}>
+          <Title
+            $isDraft={vigilanceArea?.isDraft ?? true}
+            $isNew={isNewVigilanceArea}
+            data-cy="vigilance-area-title"
+            title={title}
+          >
             {title}
           </Title>
         </TitleContainer>
@@ -151,11 +156,17 @@ const Header = styled.header<{ $isEditing: boolean }>`
   justify-content: space-between;
   padding: 9px 16px 10px 16px;
 `
-const Title = styled.span<{ $isDraft: boolean }>`
+const Title = styled.span<{ $isDraft: boolean; $isNew: boolean }>`
   font-size: 15px;
   color: ${p => p.theme.color.gunMetal};
   overflow: hidden;
-  max-width: ${p => (p.$isDraft ? '230px' : '318px')};
+  max-width: ${p => {
+    if (p.$isNew) {
+      return '100%'
+    }
+
+    return p.$isDraft ? '230px' : '318px'
+  }};
   text-overflow: ellipsis;
   white-space: nowrap;
 `

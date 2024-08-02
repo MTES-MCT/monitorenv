@@ -136,9 +136,8 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         </SubPart>
         <SubPart>
           <InlineItemLabel>Commentaire sur la zone</InlineItemLabel>
-
           <InlineItemValue $maxLine={8} title={vigilanceArea?.comments}>
-            <TextWithLineBreaks text={vigilanceArea?.comments} />
+            <TextWithLineBreaks text={vigilanceArea?.comments ?? EMPTY_VALUE} />
           </InlineItemValue>
         </SubPart>
         {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (
@@ -178,7 +177,6 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
           {vigilanceArea?.source && (
             <InlineItem>
               <InlineItemLabel>Source</InlineItemLabel>
-
               <InlineItemValue $maxLine={2} title={vigilanceArea?.source}>
                 {vigilanceArea?.source}
               </InlineItemValue>
