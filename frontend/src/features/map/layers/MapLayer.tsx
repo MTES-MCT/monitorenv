@@ -2,7 +2,6 @@ import TileLayer from 'ol/layer/Tile'
 import { OSM } from 'ol/source'
 import TileWMS from 'ol/source/TileWMS'
 import XYZ from 'ol/source/XYZ'
-import { MapboxVectorLayer } from 'ol-mapbox-style'
 import React, { useEffect, useState } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -16,10 +15,14 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
 
   const [baseLayersObjects] = useState({
     LIGHT: () =>
-      new MapboxVectorLayer({
-        accessToken: import.meta.env.FRONTEND_MAPBOX_KEY,
+      new TileLayer({
         className: Layers.BASE_LAYER.code,
-        styleUrl: 'mapbox://styles/monitorfish/ckrbusml50wgv17nrzy3q374b',
+        source: new XYZ({
+          maxZoom: 19,
+          urls: ['a', 'b', 'c', 'd'].map(
+            subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
+          )
+        }),
         zIndex: 0
       }),
     OSM: () =>
@@ -50,7 +53,6 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
           serverType: 'geoserver',
           // Countries have transparency, so do not fade tiles:
           transition: 0,
-
           url: `https://services.data.shom.fr/${import.meta.env.FRONTEND_SHOM_KEY}/wms/r`
         }),
         zIndex: 0
