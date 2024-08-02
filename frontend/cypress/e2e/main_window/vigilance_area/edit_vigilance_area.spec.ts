@@ -145,7 +145,7 @@ describe('Edit Vigilance Area', () => {
       cy.clickButton('Enregistrer')
     })
   })
-  it('Should edit the vigilance area and no longer see it in the list', () => {
+  it('Should edit the vigilance area and no longer see it in the list of draft vigilance areas', () => {
     cy.visit('/')
     cy.wait(500)
 

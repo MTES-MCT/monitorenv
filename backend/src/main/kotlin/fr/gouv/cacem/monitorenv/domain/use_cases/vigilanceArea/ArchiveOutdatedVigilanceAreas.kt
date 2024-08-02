@@ -12,7 +12,7 @@ class ArchiveOutdatedVigilanceAreas(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(ArchiveOutdatedVigilanceAreas::class.java)
 
-    // At every 5 minutes, after 1 minute of initial delay
+    // At every 6 hours, after 1 minute of initial delay
     @Scheduled(fixedDelay = 21600000, initialDelay = 6000)
     fun execute() {
         logger.info("Archiving vigilance areas")
