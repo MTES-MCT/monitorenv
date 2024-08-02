@@ -8,7 +8,7 @@ describe('filterVigilanceAreas', () => {
   const areas = [
     {
       computedEndDate: `${customDayjs().add(1, 'year').format('YYYY-MM-DD')} 23:59:59.99999`,
-      endDatePeriod: `${customDayjs().format('YYYY-MM-DD')} 23:59:59.99999`, // today + 30 days
+      endDatePeriod: `${customDayjs().format('YYYY-MM-DD')} 23:59:59.99999`,
       endingCondition: VigilanceArea.EndingCondition.END_DATE,
       endingOccurrenceDate: `${customDayjs().add(1, 'year').format('YYYY-MM-DD')} 23:59:59.00000`,
       endingOccurrencesNumber: undefined,
@@ -67,7 +67,6 @@ describe('filterVigilanceAreas', () => {
       VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER,
       undefined
     )
-    console.log('result', result)
     expect(result).toEqual([areas[0], areas[1], areas[2]])
   })
 

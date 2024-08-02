@@ -65,16 +65,16 @@ export function LayerFilters({
   const hideTooltip = () => setVisibleTooltipType(undefined)
 
   const handleSetFilteredAmpTypes = nextAmpThemes => {
-    setFilteredAmpTypes(nextAmpThemes)
+    setFilteredAmpTypes(nextAmpThemes ?? [])
   }
-  const handleDeleteAmpType = ampThemeToDelete => () => {
+  const handleDeleteAmpType = (ampThemeToDelete: string) => () => {
     setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
   const handleSetFilteredRegulatoryThemes = nextRegulatoryThemes => {
-    setFilteredRegulatoryThemes(nextRegulatoryThemes)
+    setFilteredRegulatoryThemes(nextRegulatoryThemes ?? [])
   }
-  const handleDeleteRegulatoryTheme = regulatoryThemeToDelete => () => {
+  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: string) => () => {
     setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete))
   }
 
@@ -83,7 +83,7 @@ export function LayerFilters({
   }
 
   const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemes as Array<Option>, ['label']),
+    () => new CustomSearch(regulatoryThemes as Array<Option<string>>, ['label']),
     [regulatoryThemes]
   )
 
