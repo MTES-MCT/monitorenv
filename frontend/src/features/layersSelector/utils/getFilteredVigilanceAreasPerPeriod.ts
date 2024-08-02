@@ -45,7 +45,7 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
   }
 
   return Object.values(vigilanceAreas as Array<VigilanceArea.VigilanceArea>).filter(vigilanceArea => {
-    if (!vigilanceArea) {
+    if (!vigilanceArea || !vigilanceArea.startDatePeriod || !vigilanceArea.endDatePeriod) {
       return false
     }
 
@@ -62,8 +62,6 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
     }
 
     if (
-      !!startDate &&
-      !!endDate &&
       !!startDateFilter &&
       !!endDateFilter &&
       (startDateFilter.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
