@@ -1,6 +1,6 @@
 from geopandas.testing import assert_geodataframe_equal
 
-from src.pipeline.flows.competence_cross_areas import extract_competence_cross_areas, load_competence_cross_areas
+from src.pipeline.flows.competence_cross_areas import extract_competence_cross_areas, load_competence_cross_areas, flow
 from src.read_query import read_query
 
 
@@ -18,3 +18,7 @@ def test_load_competence_cross_areas(create_cacem_tables):
     )
 
     assert_geodataframe_equal(competence_cross_areas, imported_competence_cross_areas)
+
+def test_flow_competence_cross_areas(create_cacem_tables):
+    state = flow.run()
+    assert state.is_successful()

@@ -28,8 +28,8 @@ def load_competence_cross_areas(competence_cross_areas: gpd.GeoDataFrame):
     )
 
 
-with Flow("Marpol") as flow:
-    marpol = extract_competence_cross_areas()
-    load_competence_cross_areas(marpol)
+with Flow("Competence cross areas") as flow:
+    competence_cross_areas = extract_competence_cross_areas()
+    load_competence_cross_areas(competence_cross_areas)
 
 flow.file_name = Path(__file__).name

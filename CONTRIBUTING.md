@@ -62,13 +62,20 @@ make dev-run-front
 - Docker v25 (with Docker Compose v2)
 - Python v3.10 (with Poetry)
 
+if you have a mac with apple chipset please check the checkbox in docker dashboard
+`Allow the default Docker socket to be used (requires password)` in `settings/advanced`
+
 ### First Setup
 
-- install Peotry
+- install Peotry (follow online documentation, it changes really often)
+- run ```cd datascience``` and ```poetry install```
 
 ### Local Development
 
-**TODO**
+#### Running a test
+
+For example :
+```pytest --pdb tests/ -k test_load_competence_cross_areas -s```
 
 ## Technical Stack
 
