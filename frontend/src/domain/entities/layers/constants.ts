@@ -24,6 +24,7 @@ export enum MonitorEnvLayers {
   AMP_LINKED_TO_VIGILANCE_AREA = 'AMP_LINKED_TO_VIGILANCE_AREA',
   AMP_PREVIEW = 'AMP_PREVIEW',
   BASE_LAYER = 'BASE_LAYER',
+  COMPETENCE_CROSS_AREA = 'COMPETENCE_CROSS_AREA',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
   DRAW_VIGILANCE_AREA = 'DRAW_VIGILANCE_AREA',
@@ -80,6 +81,11 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: 'eez_areas',
     name: 'Zones ZEE',
     subZoneFieldKey: 'union',
+    type: LayerType.ADMINISTRATIVE
+  },
+  [MonitorEnvLayers.COMPETENCE_CROSS_AREA]: {
+    code: 'competence_cross_areas',
+    name: 'Zones de compétences des cross',
     type: LayerType.ADMINISTRATIVE
   },
   [MonitorEnvLayers.FAO]: {
