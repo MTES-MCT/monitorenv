@@ -232,9 +232,7 @@ def render(
             "themes": "Thématique(s) de surveillance",
         }
 
-        surveillances = control_unit_actions.surveillances[
-            columns.keys()
-        ].rename(columns=columns)
+        surveillances = surveillances[columns.keys()].rename(columns=columns)
         surveillances = surveillances.to_html(index=False, border=1)
     else:
         surveillances = "Aucune"
