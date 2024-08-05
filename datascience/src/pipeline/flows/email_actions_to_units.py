@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 from email.message import EmailMessage
-from io import BytesIO
 from pathlib import Path
 from smtplib import (
     SMTPDataError,
@@ -17,17 +16,23 @@ import pandas as pd
 import prefect
 from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
 from prefect import Flow, Parameter, case, flatten, task, unmapped
+from prefect.engine.signals import SKIP
 from prefect.executors import LocalDaskExecutor
+from prefect.tasks.control_flow import merge
 
 from config import (
+    CACEM_ANALYST_EMAIL,
+    CACEM_ANALYST_NAME,
     CACEM_EMAIL_ADDRESS,
     EMAIL_STYLESHEETS_LOCATION,
     EMAIL_TEMPLATES_LOCATION,
+    METABASE_URL,
 )
 from src.pipeline.entities.actions_emailing import (
     ControlUnit,
     ControlUnitActions,
     ControlUnitActionsSentMessage,
+    EnvActionType,
 )
 from src.pipeline.generic_tasks import extract, load
 from src.pipeline.helpers.dates import Period
@@ -66,7 +71,7 @@ def get_actions_period(
 
 
 @task(checkpoint=False)
-def extract_env_actions(period: Period):
+def extract_env_actions(period: Period) -> pd.DataFrame:
     return extract(
         "monitorenv_remote",
         "monitorenv/env_actions_to_email.sql",
@@ -79,21 +84,33 @@ def extract_env_actions(period: Period):
 
 @task(checkpoint=False)
 def get_control_unit_ids(env_action: pd.DataFrame) -> List[int]:
-    # Warning : using `set` and not `.unique()` on `control_unit_id ` in order to return
-    # `int` and not `numpy.int64` values, which are not handled by psycopg2 when passed
-    # as query parameters.
+    # Warning : using `set` and not `.unique()` on `control_unit_id ` in order to
+    # return `int` and not `numpy.int64` values, which are not handled by psycopg2 when
+    # passed as query parameters.
     return sorted(set(env_action.control_unit_id))
 
 
 @task(checkpoint=False)
-def extract_control_units(control_unit_ids: List[str]) -> pd.DataFrame:
+def extract_all_control_units() -> pd.DataFrame:
     return extract(
         "monitorenv_remote",
-        "monitorenv/control_units.sql",
-        params={
-            "control_unit_ids": tuple(control_unit_ids),
-        },
+        "monitorenv/all_control_units.sql",
     )
+
+
+@task(checkpoint=False)
+def extract_control_units(control_unit_ids: List[str]) -> pd.DataFrame:
+
+    if len(control_unit_ids) == 0:
+        raise SKIP("No control units to extract.")
+    else:
+        return extract(
+            "monitorenv_remote",
+            "monitorenv/control_units.sql",
+            params={
+                "control_unit_ids": tuple(control_unit_ids),
+            },
+        )
 
 
 @task(checkpoint=False)
@@ -110,8 +127,13 @@ def to_control_unit_actions(
         ControlUnitActions(
             control_unit=control_unit,
             period=period,
-            env_actions=env_actions[
-                env_actions.control_unit_id == control_unit.control_unit_id
+            controls=env_actions[
+                (env_actions.action_type == EnvActionType.CONTROL.value)
+                & (env_actions.control_unit_id == control_unit.control_unit_id)
+            ].reset_index(drop=True),
+            surveillances=env_actions[
+                (env_actions.action_type == EnvActionType.SURVEILLANCE.value)
+                & (env_actions.control_unit_id == control_unit.control_unit_id)
             ].reset_index(drop=True),
         )
         for control_unit in control_units
@@ -134,12 +156,100 @@ def get_template() -> Template:
 
 
 @task(checkpoint=False)
-def render(actions: ControlUnitActions, template: Template) -> str:
+def render(
+    control_unit_actions: ControlUnitActions, template: Template
+) -> str:
+    def format_themes(themes: dict) -> str:
+
+        formatted_themes = [
+            f"{theme} ({', '.join(subthemes)})"
+            for (theme, subthemes) in themes.items()
+        ]
+
+        return ", ".join(formatted_themes)
+
+    if len(control_unit_actions.controls) > 0:
+
+        controls = control_unit_actions.controls.copy(deep=True)
+
+        controls["number_of_controls"] = controls.number_of_controls.fillna(
+            0
+        ).astype(int)
+        controls["infraction"] = controls.infraction.map(
+            {True: "Oui", False: "Non"}, na_action="ignore"
+        ).fillna("-")
+        controls[
+            "action_start_datetime_utc"
+        ] = controls.action_start_datetime_utc.map(
+            lambda d: d.strftime("%Y-%m-%d %H:%M")
+        )
+        controls["mission_type"] = controls.mission_type.map(
+            {"SEA": "Mer", "LAND": "Terre", "AIR": "Air"}
+        )
+        controls["themes"] = controls.themes.map(format_themes)
+
+        columns = {
+            "action_start_datetime_utc": "Date du contrôle",
+            "mission_type": "Type de mission",
+            "action_facade": "Façade",
+            "action_department": "Département",
+            "infraction": "Infractée relevée",
+            "number_of_controls": "Nombre de contrôles",
+            "themes": "Thématique(s) de contrôle",
+        }
+
+        controls = controls[columns.keys()].rename(columns=columns)
+        controls = controls.to_html(index=False, border=1)
+
+    else:
+        controls = "Aucun"
+
+    if len(control_unit_actions.surveillances) > 0:
+
+        surveillances = control_unit_actions.surveillances.copy(deep=True)
+        surveillances[
+            "action_start_datetime_utc"
+        ] = surveillances.action_start_datetime_utc.map(
+            lambda d: d.strftime("%Y-%m-%d %H:%M")
+        )
+        surveillances[
+            "action_end_datetime_utc"
+        ] = surveillances.action_end_datetime_utc.map(
+            lambda d: d.strftime("%Y-%m-%d %H:%M")
+        )
+        surveillances["mission_type"] = surveillances.mission_type.map(
+            {"SEA": "Mer", "LAND": "Terre", "AIR": "Air"}
+        )
+        surveillances["themes"] = surveillances.themes.map(format_themes)
+
+        columns = {
+            "action_start_datetime_utc": "Début de surveillance",
+            "action_end_datetime_utc": "Fin de surveillance",
+            "mission_type": "Type de mission",
+            "action_facade": "Façade",
+            "action_department": "Département",
+            "surveillance_duration": "Durée (h)",
+            "themes": "Thématique(s) de surveillance",
+        }
+
+        surveillances = control_unit_actions.surveillances[
+            columns.keys()
+        ].rename(columns=columns)
+        surveillances = surveillances.to_html(index=False, border=1)
+    else:
+        surveillances = "Aucune"
 
     html = template.render(
-        control_unit_name=actions.control_unit.control_unit_name,
-        from_date=actions.period.start.strftime("%d/%m/%Y %H:%M UTC"),
-        to_date=actions.period.end.strftime("%d/%m/%Y %H:%M UTC"),
+        control_unit_name=control_unit_actions.control_unit.control_unit_name,
+        controls=controls,
+        surveillances=surveillances,
+        from_date=control_unit_actions.period.start.strftime(
+            "%d/%m/%Y %H:%M UTC"
+        ),
+        to_date=control_unit_actions.period.end.strftime("%d/%m/%Y %H:%M UTC"),
+        metabase_url=METABASE_URL,
+        cacem_analyst_name=CACEM_ANALYST_NAME,
+        cacem_analyst_email=CACEM_ANALYST_EMAIL,
     )
 
     html = css_inline.inline(html)
@@ -151,10 +261,6 @@ def create_email(
     html: str, actions: ControlUnitActions, test_mode: bool
 ) -> EmailMessage:
 
-    buf = BytesIO()
-    actions.env_actions.to_csv(buf, mode="wb", index=False)
-    buf.seek(0)
-
     to = (
         CACEM_EMAIL_ADDRESS
         if test_mode
@@ -165,7 +271,6 @@ def create_email(
         to=to,
         subject="Bilan hebdomadaire contrôle de l'environnement marin",
         html=html,
-        attachments={"env_actions.csv": buf.read()},
         reply_to=CACEM_EMAIL_ADDRESS,
     )
 
@@ -293,7 +398,8 @@ def send_env_actions_email(
                 sending_datetime_utc=now,
                 actions_min_datetime_utc=actions.period.start,
                 actions_max_datetime_utc=actions.period.end,
-                number_of_actions=len(actions.env_actions),
+                number_of_actions=len(actions.controls)
+                + len(actions.surveillances),
                 success=success,
                 error_code=error_code,
                 error_message=error_message,
@@ -325,11 +431,6 @@ def load_emails_sent_to_control_units(
     )
 
 
-@task(checkpoint=False)
-def get_is_control_unit_ids_empty(control_unit_ids: List[int]) -> bool:
-    return len(control_unit_ids) == 0
-
-
 with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
     flow_not_running = check_flow_not_running()
     with case(flow_not_running, True):
@@ -337,6 +438,7 @@ with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
         is_integration = Parameter("is_integration")
         start_days_ago = Parameter("start_days_ago")
         end_days_ago = Parameter("end_days_ago")
+        email_all_units = Parameter("email_all_units")
 
         template = get_template()
         utcnow = get_utcnow()
@@ -347,37 +449,39 @@ with Flow("Email actions to units", executor=LocalDaskExecutor()) as flow:
             end_days_ago=end_days_ago,
         )
         env_actions = extract_env_actions(period=period)
-        control_unit_ids = get_control_unit_ids(env_actions)
 
-        is_control_unit_ids_empty = get_is_control_unit_ids_empty(
-            control_unit_ids
+        with case(email_all_units, True):
+            all_control_units = extract_all_control_units()
+
+        with case(email_all_units, False):
+            control_unit_ids = get_control_unit_ids(env_actions)
+            selected_control_units = extract_control_units(control_unit_ids)
+
+        control_units = merge(
+            all_control_units, selected_control_units, checkpoint=False
         )
-        with case(is_control_unit_ids_empty, False):
-            control_units = extract_control_units(control_unit_ids)
 
-            control_unit_actions = to_control_unit_actions(
-                env_actions, period, control_units
-            )
+        control_unit_actions = to_control_unit_actions(
+            env_actions, period, control_units
+        )
 
-            html = render.map(
-                control_unit_actions, template=unmapped(template)
-            )
+        html = render.map(control_unit_actions, template=unmapped(template))
 
-            message = create_email.map(
-                html=html,
-                actions=control_unit_actions,
-                test_mode=unmapped(test_mode),
-            )
-            message = filter_results(message)
+        message = create_email.map(
+            html=html,
+            actions=control_unit_actions,
+            test_mode=unmapped(test_mode),
+        )
+        message = filter_results(message)
 
-            sent_messages = send_env_actions_email.map(
-                message,
-                control_unit_actions,
-                is_integration=unmapped(is_integration),
-            )
+        sent_messages = send_env_actions_email.map(
+            message,
+            control_unit_actions,
+            is_integration=unmapped(is_integration),
+        )
 
-            sent_messages = flatten(sent_messages)
-            sent_messages = control_unit_actions_list_to_df(sent_messages)
-            load_emails_sent_to_control_units(sent_messages)
+        sent_messages = flatten(sent_messages)
+        sent_messages = control_unit_actions_list_to_df(sent_messages)
+        load_emails_sent_to_control_units(sent_messages)
 
 flow.file_name = Path(__file__).name
