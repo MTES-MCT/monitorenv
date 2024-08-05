@@ -64,7 +64,7 @@ make dev-run-front
 
 ### First Setup
 
-**TODO**
+- install Peotry
 
 ### Local Development
 
