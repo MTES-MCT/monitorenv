@@ -8,6 +8,7 @@ export const administrativeLayers = [
   [Layers.FAO],
   [Layers.AEM],
   [Layers.MARPOL],
+  [Layers.COMPETENCE_CROSS_AREA],
   [Layers.DEPARTMENTS],
   [Layers.FACADES],
   [Layers.LOW_WATER_LINE],

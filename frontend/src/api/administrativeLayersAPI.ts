@@ -15,7 +15,7 @@ export function throwIrretrievableAdministrativeZoneError(e, type) {
  * @param {string} geoserverURL
  * @returns {string} - the zone URL WFS request
  */
-function getAdministrativeZoneURL(type, extent, subZone, geoserverURL) {
+function getAdministrativeZoneURL(type: string, extent: string[] | null, subZone: string | null, geoserverURL: string) {
   if (subZone) {
     const filter = `${subZone.replace(/'/g, "''")}`
 
