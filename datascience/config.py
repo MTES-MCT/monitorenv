@@ -93,6 +93,9 @@ AMP_AREAS_URL = (
 # Prefect Server endpoint
 PREFECT_SERVER_URL = os.getenv("PREFECT_SERVER_URL")
 
+# Metabase
+METABASE_URL = os.getenv("METABASE_URL")
+
 # Historic id ranges
 HISTORIC_CONTROL_UNITS_MAX_ID = 9999
 
@@ -108,3 +111,6 @@ MONITORENV_SENDER_EMAIL_ADDRESS = os.environ.get(
 
 # Recipients
 CACEM_EMAIL_ADDRESS = os.environ.get("CACEM_EMAIL_ADDRESS")
+
+CACEM_ANALYST_NAME = os.getenv("CACEM_ANALYST_NAME")
+CACEM_ANALYST_EMAIL = os.getenv("CACEM_ANALYST_EMAIL")
