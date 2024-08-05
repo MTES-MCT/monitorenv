@@ -193,7 +193,7 @@ def render(
             "mission_type": "Type de mission",
             "action_facade": "Façade",
             "action_department": "Département",
-            "infraction": "Infractée relevée",
+            "infraction": "Infraction relevée",
             "number_of_controls": "Nombre de contrôles",
             "themes": "Thématique(s) de contrôle",
         }
