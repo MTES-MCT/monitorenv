@@ -116,4 +116,9 @@ CACEM_ANALYST_NAME = os.getenv("CACEM_ANALYST_NAME")
 CACEM_ANALYST_EMAIL = os.getenv("CACEM_ANALYST_EMAIL")
 
 # Email actions to control units flow config
-EMAIL_ALL_UNITS = os.getenv("EMAIL_ALL_UNITS")
+EMAIL_ALL_UNITS = os.getenv("EMAIL_ALL_UNITS", "False").lower() in (
+    "true",
+    "t",
+    "yes",
+    "y",
+)
