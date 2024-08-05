@@ -25,5 +25,5 @@ VALUES (1,
         'SRR Antilles-Guyane', NULL, NULL, NULL, NULL, NULL, -1, 0, -1, NULL, NULL);
 
 
-CREATE INDEX sidx_marpol_geom ON prod.competence_cross_areas USING gist (geom);
+CREATE INDEX sidx_competence_cross_areas_geom ON prod.competence_cross_areas USING gist (geom);
 
