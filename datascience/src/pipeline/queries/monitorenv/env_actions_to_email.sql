@@ -1,25 +1,16 @@
 WITH actions_to_export AS (
     SELECT DISTINCT ON (id, control_unit_id)
         id,
-        mission_id,
         action_start_datetime_utc,
         action_end_datetime_utc,
-        mission_start_datetime_utc,
-        mission_end_datetime_utc,
         mission_type,
         action_type,
-        mission_facade,
         control_unit_id,
-        control_unit,
-        administration,
         action_facade,
         action_department,
-        longitude,
-        latitude,
         infraction,
         number_of_controls,
-        surveillance_duration,
-        observations_cacem
+        surveillance_duration
     FROM analytics_actions
     WHERE (
             action_type = 'SURVEILLANCE'
@@ -30,6 +21,22 @@ WITH actions_to_export AS (
             AND action_start_datetime_utc >= :min_datetime_utc
             AND action_start_datetime_utc < :max_datetime_utc
         )
+),
+
+-- Controls may have more than one position so we take the average
+controls_average_positions AS (
+    SELECT
+        id,
+        AVG(latitude) AS latitude,
+        AVG(longitude) AS longitude
+    FROM analytics_actions
+    WHERE
+        action_type = 'CONTROL'
+        AND action_start_datetime_utc >= :min_datetime_utc
+        AND action_start_datetime_utc < :max_datetime_utc
+        AND latitude IS NOT NULL
+        AND longitude IS NOT NULL
+    GROUP BY id
 ),
 
 actions_unique_themes_and_subthemes AS (
@@ -44,19 +51,25 @@ actions_unique_themes_and_subthemes AS (
 action_themes AS (
     SELECT DISTINCT
         id,
-        jsonb_build_object(theme_level_1, jsonb_agg(theme_level_2) OVER (PARTITION BY id, theme_level_1)) AS theme
+        jsonb_build_object(
+            'theme_level_1',
+            theme_level_1,
+            'themes_level_2',
+            jsonb_agg(theme_level_2) OVER (PARTITION BY id, theme_level_1)) AS theme
     FROM actions_unique_themes_and_subthemes
 ),
 
 action_themes_and_subthemes AS (
     SELECT
         id,
-        jsonb_agg(theme) AS themes
+        jsonb_object_agg(theme->>'theme_level_1', theme->'themes_level_2') AS themes
     FROM action_themes
     GROUP BY id
 )
 
-SELECT a.*, t.themes
+SELECT a.*, t.themes, p.longitude, p.latitude
 FROM actions_to_export a
 LEFT JOIN action_themes_and_subthemes t
 ON a.id = t.id
+LEFT JOIN controls_average_positions p
+ON a.id = p.id

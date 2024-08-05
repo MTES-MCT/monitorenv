@@ -15,11 +15,26 @@
         <main>
             <section>
                 <p>Bonjour,</p>
-                <p>Vous trouverez ci-joint les données des <strong>contrôles</strong> et des <strong>surveillances de l'environnement marin</strong> effectués par votre unité
+                <p>Vous trouverez ci-dessous les données des <strong>contrôles</strong> et des <strong>surveillances de l'environnement marin</strong> effectués par votre unité
                 (<strong>{{ control_unit_name }}</strong>) <strong>entre le {{ from_date }} et le {{ to_date }}</strong> que vous avez rapportés au Centre d'Appui au Contrôle de l'Environnement Marin (CACEM).</p>
                 <p>Seuls les contrôles et surveillances dont les données sont complètes sont transmis dans ce bilan hebdomadaire. Si certaines données n'ont pas encore été transmises (par ex. l'établissement d'un PV ou non),
                 il est normal que le contrôle ne figure pas encore dans le rapport.</p>
                 <p>Si des données sont manquantes, incorrectes ou incomplètes, n'hésitez pas à <strong>contacter le CACEM</strong>.</p>
+            </section>
+            <section>
+                <h4>Contrôles</h4>
+                {{ controls }}
+
+                <h4>Surveillances</h4>
+                {{ surveillances }}
+            </section>
+
+            <section>
+                <p>
+                    Pour réaliser vos bilans, ces données sont stockées, mises en forme en tableaux de bord et accessibles en temps réel sur 
+                    l'interface <a href="{{ metabase_url }}">Metabase</a> : pour obtenir vos accès nominatifs, veuillez vous rapprocher de 
+                    {{ cacem_analyst_name }} ({{ cacem_analyst_email }}), analyste de données pour le CACEM et administrateur Metabase.
+                </p>
             </section>
         </main>
         <footer class="no-vertical-margin">
