@@ -141,6 +141,7 @@ export function Source({ index, push, remove }: SourceProps) {
         <div>
           <MultiRadio
             data-cy={`reporting-source-selector-${index}`}
+            isErrorMessageHidden
             isInline
             isRequired
             label={`Source (${index + 1})`}
@@ -167,6 +168,7 @@ export function Source({ index, push, remove }: SourceProps) {
             <FormikSelect
               customSearch={customSearchSemaphore}
               data-cy="add-semaphore-source"
+              isErrorMessageHidden
               isRequired
               label="Nom du Sémaphore"
               name={`reportingSources[${index}].semaphoreId`}
@@ -185,6 +187,7 @@ export function Source({ index, push, remove }: SourceProps) {
         {reportingSource.sourceType === ReportingSourceEnum.CONTROL_UNIT && (
           <FormikSelect
             customSearch={customSearchControlUnits}
+            isErrorMessageHidden
             isRequired
             label="Nom de l'unité"
             name={`reportingSources[${index}].controlUnitId`}
@@ -194,7 +197,12 @@ export function Source({ index, push, remove }: SourceProps) {
         )}
 
         {reportingSource.sourceType === ReportingSourceEnum.OTHER && (
-          <FormikTextInput isRequired label="Nom, société ..." name={`reportingSources[${index}].sourceName`} />
+          <FormikTextInput
+            isErrorMessageHidden
+            isRequired
+            label="Nom, société ..."
+            name={`reportingSources[${index}].sourceName`}
+          />
         )}
         {index === values.reportingSources.length - 1 && (
           <Button
