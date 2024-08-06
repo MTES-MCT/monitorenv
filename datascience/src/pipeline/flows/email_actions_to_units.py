@@ -246,6 +246,7 @@ def render(
         ),
         to_date=control_unit_actions.period.end.strftime("%d/%m/%Y %H:%M UTC"),
         metabase_url=METABASE_URL,
+        cacem_email_address=CACEM_EMAIL_ADDRESS,
         cacem_analyst_name=CACEM_ANALYST_NAME,
         cacem_analyst_email=CACEM_ANALYST_EMAIL,
     )
