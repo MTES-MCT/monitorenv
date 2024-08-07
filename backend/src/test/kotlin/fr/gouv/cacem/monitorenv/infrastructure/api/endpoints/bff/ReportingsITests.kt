@@ -18,8 +18,11 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.SSEReporting
 import org.assertj.core.api.Assertions
@@ -50,25 +53,35 @@ import java.time.ZonedDateTime
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [Reportings::class, SSEReporting::class])
 class ReportingsITests {
-    @Autowired private lateinit var mockedApi: MockMvc
+    @Autowired
+    private lateinit var mockedApi: MockMvc
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-    @MockBean private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
+    @MockBean
+    private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
 
-    @MockBean private lateinit var getReportings: GetReportings
+    @MockBean
+    private lateinit var getReportings: GetReportings
 
-    @MockBean private lateinit var getReportingById: GetReportingById
+    @MockBean
+    private lateinit var getReportingById: GetReportingById
 
-    @MockBean private lateinit var deleteReporting: DeleteReporting
+    @MockBean
+    private lateinit var deleteReporting: DeleteReporting
 
-    @MockBean private lateinit var deleteReportings: DeleteReportings
+    @MockBean
+    private lateinit var deleteReportings: DeleteReportings
 
-    @MockBean private lateinit var archiveReportings: ArchiveReportings
+    @MockBean
+    private lateinit var archiveReportings: ArchiveReportings
 
-    @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
-    @Autowired private lateinit var sseReporting: SSEReporting
+    @Autowired
+    private lateinit var sseReporting: SSEReporting
 
     @Test
     fun `Should create a new Reporting`() {
@@ -83,8 +96,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
-                    semaphoreId = 1,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -111,23 +123,37 @@ class ReportingsITests {
                     withVHFAnswer = null,
                     isInfractionProven = true,
                 ),
-                semaphore =
-                SemaphoreEntity(
-                    id = 1,
-                    name = "name",
-                    geom =
-                    WKTReader()
-                        .read(
-                            "POINT (-61.0 14.0)",
-                        ) as
-                        Point,
+                reportingSources = listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        semaphore = SemaphoreEntity(
+                            id = 1,
+                            name = "name",
+                            geom =
+                            WKTReader()
+                                .read(
+                                    "POINT (-61.0 14.0)",
+                                ) as
+                                Point,
+
+                        ),
+                        controlUnit = null,
+                    ),
                 ),
             )
 
         val request =
             CreateOrUpdateReportingDataInput(
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+                reportingSources = listOf(
+                    ReportingSourceDataInput(
+                        id = null,
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 1,
+                        reportingId = null,
+                        controlUnitId = null,
+                        sourceName = null,
+                    ),
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -169,7 +195,7 @@ class ReportingsITests {
             // Then
             .andExpect(status().isCreated)
             .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.sourceType").value("SEMAPHORE"))
+            .andExpect(jsonPath("$.reportingSources[0].sourceType").value("SEMAPHORE"))
             .andExpect(jsonPath("$.targetType").value("VEHICLE"))
             .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
@@ -203,8 +229,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
-                    semaphoreId = 1,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -230,16 +255,22 @@ class ReportingsITests {
                     ),
                     isInfractionProven = true,
                 ),
-                semaphore =
-                SemaphoreEntity(
-                    id = 1,
-                    name = "name",
-                    geom =
-                    WKTReader()
-                        .read(
-                            "POINT (-61.0 14.0)",
-                        ) as
-                        Point,
+                reportingSources = listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        semaphore = SemaphoreEntity(
+                            id = 1,
+                            name = "name",
+                            geom =
+                            WKTReader()
+                                .read(
+                                    "POINT (-61.0 14.0)",
+                                ) as
+                                Point,
+
+                        ),
+                        controlUnit = null,
+                    ),
                 ),
             )
 
@@ -256,7 +287,7 @@ class ReportingsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.sourceType").value("SEMAPHORE"))
+            .andExpect(jsonPath("$.reportingSources[0].sourceType").value("SEMAPHORE"))
             .andExpect(jsonPath("$.targetType").value("VEHICLE"))
             .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
@@ -290,7 +321,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -312,6 +343,7 @@ class ReportingsITests {
                     openBy = "CDA",
                     isInfractionProven = true,
                 ),
+                reportingSources = listOf(),
             )
 
         given(
@@ -351,8 +383,7 @@ class ReportingsITests {
                 reporting =
                 ReportingEntity(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
-                    semaphoreId = 1,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -378,23 +409,19 @@ class ReportingsITests {
                     ),
                     isInfractionProven = true,
                 ),
-                semaphore =
-                SemaphoreEntity(
-                    id = 1,
-                    name = "name",
-                    geom =
-                    WKTReader()
-                        .read(
-                            "POINT (-61.0 14.0)",
-                        ) as
-                        Point,
+                reportingSources = listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
+                        null,
+                    ),
                 ),
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(
                 CreateOrUpdateReportingDataInput(
                     id = 1,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    reportingSources = listOf(),
                     targetType = TargetTypeEnum.VEHICLE,
                     vehicleType = VehicleTypeEnum.VESSEL,
                     geom = polygon,
@@ -434,7 +461,7 @@ class ReportingsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.sourceType").value("SEMAPHORE"))
+            .andExpect(jsonPath("$.reportingSources[0].sourceType").value("SEMAPHORE"))
             .andExpect(jsonPath("$.targetType").value("VEHICLE"))
             .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
@@ -511,8 +538,7 @@ class ReportingsITests {
                     reporting =
                     ReportingEntity(
                         id = 1,
-                        sourceType = SourceTypeEnum.SEMAPHORE,
-                        semaphoreId = 1,
+                        reportingSources = listOf(ReportingFixture.aReportingSourceSemaphore()),
                         geom = polygon,
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
@@ -534,6 +560,14 @@ class ReportingsITests {
                         ),
                         isInfractionProven = true,
                     ),
+                    reportingSources = listOf(
+                        ReportingSourceDTO(
+                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                            SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
+                            null,
+                        ),
+                    ),
+
                 ),
             )
 
@@ -551,7 +585,7 @@ class ReportingsITests {
             .start()
 
         // Then
-        val missionUpdateEvent =
+        val reportingUpdateEvent =
             mockedApi
                 .perform(get("/bff/reportings/sse"))
                 .andExpect(status().isOk)
@@ -568,10 +602,43 @@ class ReportingsITests {
                 .response
                 .contentAsString
 
-        Assertions.assertThat(missionUpdateEvent).contains("event:REPORTING_UPDATE")
-        Assertions.assertThat(missionUpdateEvent)
-            .contains(
-                "data:{\"id\":1,\"reportingId\":null,\"sourceType\":\"SEMAPHORE\",\"semaphoreId\":1,\"semaphore\":null,\"controlUnitId\":null,\"controlUnit\":null,\"displayedSource\":null,\"sourceName\":null,\"targetType\":null,\"vehicleType\":null,\"targetDetails\":[],\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-61,14],[-61,15],[-60,15],[-60,14],[-61,14]]]]},\"seaFront\":null,\"description\":\"description\",\"reportType\":\"INFRACTION_SUSPICION\",\"themeId\":12,\"subThemeIds\":[64,82],\"actionTaken\":null,\"isControlRequired\":true,\"hasNoUnitAvailable\":true,\"createdAt\":\"2022-01-15T04:50:09Z\",\"validityTime\":10,\"isArchived\":false,\"openBy\":\"CDA\",\"missionId\":null,\"attachedToMissionAtUtc\":null,\"detachedFromMissionAtUtc\":null,\"attachedEnvActionId\":null,\"attachedMission\":null,\"controlStatus\":\"CONTROL_TO_BE_DONE\",\"updatedAtUtc\":\"2022-01-15T14:50:09Z\",\"withVHFAnswer\":null,\"isInfractionProven\":true}\n",
+        Assertions.assertThat(reportingUpdateEvent).contains("event:REPORTING_UPDATE")
+        Assertions.assertThat(reportingUpdateEvent)
+            .containsIgnoringWhitespaces(
+                """
+                {
+                  "id": 1,
+                  "reportingId": null,
+                  "reportingSources" : [{"id": null, "reportingId": null, "sourceType": "SEMAPHORE", "semaphoreId": 1, "controlUnitId": null, "sourceName": null, "displayedSource": ""}],
+                  "targetType": null,
+                  "vehicleType": null,
+                  "targetDetails": [],
+                  "geom": {
+                    "type": "MultiPolygon",
+                    "coordinates": [[[[-61, 14], [-61, 15], [-60, 15], [-60, 14], [-61, 14]]]]
+                  },
+                  "seaFront": null,
+                  "description": "description",
+                  "reportType": "INFRACTION_SUSPICION",
+                  "themeId": 12,
+                  "subThemeIds": [64, 82],
+                  "actionTaken": null,
+                  "isControlRequired": true,
+                  "hasNoUnitAvailable": true,
+                  "createdAt": "2022-01-15T04:50:09Z",
+                  "validityTime": 10,
+                  "isArchived": false,
+                  "openBy": "CDA",
+                  "missionId": null,
+                  "attachedToMissionAtUtc": null,
+                  "detachedFromMissionAtUtc": null,
+                  "attachedEnvActionId": null,
+                  "attachedMission": null,
+                  "controlStatus": "CONTROL_TO_BE_DONE",
+                  "updatedAtUtc": "2022-01-15T14:50:09Z",
+                  "withVHFAnswer": null,
+                  "isInfractionProven": true
+                    }""",
             )
     }
 }

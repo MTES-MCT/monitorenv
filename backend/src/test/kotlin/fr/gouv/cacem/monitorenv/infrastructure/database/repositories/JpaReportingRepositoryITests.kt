@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
@@ -14,10 +15,11 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 class JpaReportingRepositoryITests : AbstractDBTests() {
-    @Autowired private lateinit var jpaReportingRepository: JpaReportingRepository
+    @Autowired
+    private lateinit var jpaReportingRepository: JpaReportingRepository
 
     @Test
     @Transactional
@@ -347,10 +349,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val reportingDTO = jpaReportingRepository.findById(2)
         assertThat(reportingDTO.reporting.id).isEqualTo(2)
         assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300002)
-        assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(23)
-        assertThat(reportingDTO.reporting.controlUnitId).isNull()
-        assertThat(reportingDTO.reporting.sourceName).isNull()
+        assertThat(reportingDTO.reporting.reportingSources[0].sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(reportingDTO.reporting.reportingSources[0].semaphoreId).isEqualTo(23)
+        assertThat(reportingDTO.reporting.reportingSources[0].controlUnitId).isNull()
+        assertThat(reportingDTO.reporting.reportingSources[0].sourceName).isNull()
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
         assertThat(reportingDTO.reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
         assertThat(reportingDTO.reporting.validityTime).isEqualTo(2)
@@ -371,8 +373,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         val newReporting =
             ReportingEntity(
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 21,
+                reportingSources = listOf(
+                    ReportingSourceEntity(
+                        id = UUID.randomUUID(),
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 21,
+                        controlUnitId = null,
+                        sourceName = null,
+                        reportingId = null,
+                    ),
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -399,8 +409,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(reportingDTO.reporting.id).isEqualTo(12)
         assertThat(reportingDTO.reporting.reportingId).isEqualTo(2400001)
-        assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
+        assertThat(reportingDTO.reporting.reportingSources[0].sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(reportingDTO.reporting.reportingSources[0].semaphoreId).isEqualTo(21)
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
         assertThat(reportingDTO.reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
         assertThat(reportingDTO.reporting.geom).isEqualTo(polygon)
@@ -435,8 +445,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val existingReportingDTO = jpaReportingRepository.findById(1)
         val updatedReporting =
             existingReportingDTO.reporting.copy(
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 23,
+                reportingSources = listOf(
+                    ReportingSourceEntity(
+                        id = UUID.randomUUID(),
+                        reportingId = null,
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 23,
+                        controlUnitId = null,
+                        sourceName = null,
+                    ),
+                ),
                 createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 isArchived = false,
                 openBy = "CDA",
@@ -444,8 +462,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val savedReportingDTO = jpaReportingRepository.save(updatedReporting)
         // Then
         assertThat(savedReportingDTO.reporting.id).isEqualTo(1)
-        assertThat(savedReportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(savedReportingDTO.reporting.semaphoreId).isEqualTo(23)
+        assertThat(savedReportingDTO.reporting.reportingSources[0].sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(savedReportingDTO.reporting.reportingSources[0].semaphoreId).isEqualTo(23)
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
         assertThat(numberOfExistingReportingsAfterSave).isEqualTo(11)

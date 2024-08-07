@@ -12,7 +12,6 @@ export type Reporting = {
   attachedMission: Mission | undefined
   attachedToMissionAtUtc: string | undefined
   controlStatus: ControlStatusEnum
-  controlUnitId: number | undefined
   createdAt: string | undefined
   description: string | undefined
   detachedFromMissionAtUtc: string | undefined
@@ -26,9 +25,7 @@ export type Reporting = {
   openBy: string
   reportType: ReportingTypeEnum
   reportingId: number | undefined
-  semaphoreId: number | undefined
-  sourceName: string | undefined
-  sourceType: ReportingSourceEnum
+  reportingSources: ReportingSource[]
   subThemeIds: number[]
   targetDetails: TargetDetails[]
   targetType: ReportingTargetTypeEnum
@@ -39,8 +36,14 @@ export type Reporting = {
   withVHFAnswer: boolean | undefined
 }
 
-export type ReportingDetailed = Reporting & {
-  displayedSource: string
+export type ReportingSource = {
+  controlUnitId?: number
+  displayedSource?: string
+  id?: string
+  reportingId?: number
+  semaphoreId?: number
+  sourceName?: string
+  sourceType: ReportingSourceEnum
 }
 
 export type DetachedReporting = {
@@ -90,7 +93,7 @@ export type TargetDetails = {
   vesselType?: VesselTypeEnum
 }
 
-export type ReportingForTimeline = Partial<ReportingDetailed> & {
+export type ReportingForTimeline = Partial<Reporting> & {
   actionSource: ActionSource
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string

@@ -1,9 +1,8 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import org.locationtech.jts.geom.Geometry
@@ -13,10 +12,7 @@ import java.util.UUID
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
     val reportingId: Long? = null,
-    val sourceType: SourceTypeEnum? = null,
-    val semaphoreId: Int? = null,
-    val controlUnitId: Int? = null,
-    val sourceName: String? = null,
+    val reportingSources: List<ReportingSourceDataInput>,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
@@ -44,10 +40,7 @@ data class CreateOrUpdateReportingDataInput(
         return ReportingEntity(
             id = this.id,
             reportingId = this.reportingId,
-            sourceType = this.sourceType,
-            semaphoreId = this.semaphoreId,
-            controlUnitId = this.controlUnitId,
-            sourceName = this.sourceName,
+            reportingSources = reportingSources.map { it.toReportingSourceEntity() },
             targetType = this.targetType,
             vehicleType = this.vehicleType,
             targetDetails = this.targetDetails,

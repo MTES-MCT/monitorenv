@@ -5,16 +5,16 @@ import { mainWindowActions } from '@features/MainWindow/slice'
 import { useSyncFormValuesWithRedux } from '@features/Reportings/hooks/useSyncFormValuesWithRedux'
 import { attachMissionToReportingSliceActions } from '@features/Reportings/slice'
 import {
+  ReportTypeMultiRadio,
+  SaveBanner,
   Separator,
   StyledForm,
   StyledFormContainer,
-  StyledThemeContainer,
-  StyledToggle,
   StyledFormikTextInput,
-  ReportTypeMultiRadio,
-  SaveBanner,
+  StyledInfractionProven,
   StyledItalic,
-  StyledInfractionProven
+  StyledThemeContainer,
+  StyledToggle
 } from '@features/Reportings/style'
 import { isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -32,17 +32,18 @@ import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedSt
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import {
   type Reporting,
-  ReportingTypeEnum,
-  ReportingTypeLabels,
-  type ReportingDetailed,
+  type ReportingSource,
   INDIVIDUAL_ANCHORING_THEME_ID,
-  InfractionProvenLabels
+  InfractionProvenLabels,
+  ReportingSourceEnum,
+  ReportingTypeEnum,
+  ReportingTypeLabels
 } from 'domain/entities/reporting'
 import {
-  setReportingFormVisibility,
+  hideSideButtons,
   ReportingContext,
-  VisibilityState,
-  hideSideButtons
+  setReportingFormVisibility,
+  VisibilityState
 } from 'domain/shared_slices/Global'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import {
@@ -52,7 +53,7 @@ import {
 import { deleteReporting } from 'domain/use_cases/reporting/deleteReporting'
 import { reduceOrCollapseReportingForm } from 'domain/use_cases/reporting/reduceOrCollapseReportingForm'
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
-import { useField, useFormikContext } from 'formik'
+import { FieldArray, useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
@@ -79,7 +80,7 @@ const WITH_VHF_ANSWER_OPTIONS = [
 
 type FormContentProps = {
   reducedReportingsOnContext: number
-  selectedReporting: AtLeast<ReportingDetailed, 'id'> | undefined
+  selectedReporting: AtLeast<Reporting, 'id'> | undefined
 }
 
 export function FormContent({ reducedReportingsOnContext, selectedReporting }: FormContentProps) {
@@ -96,7 +97,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
-  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Reporting>>()
+  const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<AtLeast<Reporting, 'id'>>()
   const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
@@ -282,6 +283,21 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     return null
   }
 
+  const sourceKey = (reportingSource: ReportingSource) => {
+    switch (reportingSource.sourceType) {
+      case ReportingSourceEnum.CONTROL_UNIT:
+        return reportingSource.sourceType + reportingSource.controlUnitId
+
+      case ReportingSourceEnum.SEMAPHORE:
+        return reportingSource.sourceType + reportingSource.semaphoreId
+
+      case ReportingSourceEnum.OTHER:
+        return reportingSource.sourceType + reportingSource.sourceName
+      default:
+        return undefined
+    }
+  }
+
   return (
     <StyledFormContainer>
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues)} />
@@ -319,7 +335,17 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         <AutoSaveTag isAutoSaveEnabled={isAutoSaveEnabled} />
       </SaveBanner>
       <StyledForm ref={scrollRef} $totalReducedReportings={reducedReportingsOnContext} onScroll={onScroll}>
-        <Source />
+        <FieldArray
+          name="reportingSources"
+          render={({ push, remove }) => (
+            <>
+              {selectedReporting.reportingSources?.map((reportingSource, index) => (
+                <Source key={sourceKey(reportingSource)} index={index} push={push} remove={remove} />
+              ))}
+            </>
+          )}
+          validateOnChange={false}
+        />
         <Target />
         <Position />
         <FormikTextarea label="Description du signalement" name="description" />

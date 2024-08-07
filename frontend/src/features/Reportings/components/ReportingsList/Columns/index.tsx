@@ -62,7 +62,7 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
     size: 87 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.displayedSource,
+    accessorFn: row => row.reportingSources.map(source => source.displayedSource).join(', '),
     cell: info => (
       <Cell id={info.getValue()} title={info.getValue()}>
         {info.getValue()}

@@ -1,13 +1,19 @@
-import type { ReportingDetailed } from '../../../entities/reporting'
 import type { SourceFilterProps } from '../../../shared_slices/ReportingsFilters'
+import type { Reporting } from 'domain/entities/reporting'
 
-export function sourceFilterFunction(reporting: ReportingDetailed, sourceFilter: SourceFilterProps[] | undefined) {
+export function sourceFilterFunction(reporting: Reporting, sourceFilter: SourceFilterProps[] | undefined) {
   if (!sourceFilter || sourceFilter.length === 0) {
     return true
   }
 
   return (
-    (!!reporting.controlUnitId && sourceFilter.some(source => source.id === reporting.controlUnitId)) ||
-    (!!reporting.semaphoreId && sourceFilter.some(source => source.id === reporting.semaphoreId))
+    reporting.reportingSources.some(
+      reportingSource =>
+        !!reportingSource.controlUnitId && sourceFilter.map(source => source.id).includes(reportingSource.controlUnitId)
+    ) ||
+    reporting.reportingSources.some(
+      reportingSource =>
+        !!reportingSource.semaphoreId && sourceFilter.map(source => source.id).includes(reportingSource.semaphoreId)
+    )
   )
 }

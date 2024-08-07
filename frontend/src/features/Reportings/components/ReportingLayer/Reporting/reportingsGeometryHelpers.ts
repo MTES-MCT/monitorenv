@@ -3,13 +3,10 @@ import { GeoJSON } from 'ol/format'
 
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 
-import type { ReportingDetailed } from '../../../../../domain/entities/reporting'
 import type { AtLeast } from '../../../../../types'
+import type { Reporting } from 'domain/entities/reporting'
 
-export const getReportingZoneFeature = (
-  reporting: ReportingDetailed | AtLeast<ReportingDetailed, 'id'>,
-  layername: string
-) => {
+export const getReportingZoneFeature = (reporting: Reporting | AtLeast<Reporting, 'id'>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(reporting.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -22,36 +19,13 @@ export const getReportingZoneFeature = (
 
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
-    actionTaken: reporting.actionTaken,
-    attachedEnvActionId: reporting.attachedEnvActionId,
-    attachedMission: reporting.attachedMission,
-    attachedToMissionAtUtc: reporting.attachedToMissionAtUtc,
-    controlStatus: reporting.controlStatus,
-    controlUnitId: reporting.controlUnitId,
-    createdAt: reporting.createdAt,
-    description: reporting.description,
-    detachedFromMissionAtUtc: reporting.detachedFromMissionAtUtc,
-    displayedSource: reporting.displayedSource,
-    geom: reporting.geom,
-    id: reporting.id,
-    isArchived: reporting.isArchived,
-    missionId: reporting.missionId,
-    reportingId: reporting.reportingId,
-    reportType: reporting.reportType,
-    semaphoreId: reporting.semaphoreId,
-    sourceName: reporting.sourceName,
-    subThemeIds: reporting.subThemeIds,
-    targetDetails: reporting.targetDetails,
-    targetType: reporting.targetType,
-    themeId: reporting.themeId,
-    validityTime: reporting.validityTime,
-    vehicleType: reporting.vehicleType
+    ...reporting
   })
 
   return feature
 }
 
-export const getEditingReportingZoneFeature = (reporting: AtLeast<ReportingDetailed, 'id'>, layername: string) => {
+export const getEditingReportingZoneFeature = (reporting: AtLeast<Reporting, 'id'>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(reporting.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -63,29 +37,7 @@ export const getEditingReportingZoneFeature = (reporting: AtLeast<ReportingDetai
   })
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
-    actionTaken: reporting.actionTaken,
-    attachedEnvActionId: reporting.attachedEnvActionId,
-    attachedMission: reporting.attachedMission,
-    attachedToMissionAtUtc: reporting.attachedToMissionAtUtc,
-    controlStatus: reporting.controlStatus,
-    controlUnitId: reporting.controlUnitId,
-    createdAt: reporting.createdAt,
-    description: reporting.description,
-    detachedFromMissionAtUtc: reporting.detachedFromMissionAtUtc,
-    geom: reporting.geom,
-    id: reporting.id,
-    isArchived: reporting.isArchived,
-    missionId: reporting.missionId,
-    reportingId: reporting.reportingId,
-    reportType: reporting.reportType,
-    semaphoreId: reporting.semaphoreId,
-    sourceName: reporting.sourceName,
-    subThemeIds: reporting.subThemeIds,
-    targetDetails: reporting.targetDetails,
-    targetType: reporting.targetType,
-    themeId: reporting.themeId,
-    validityTime: reporting.validityTime,
-    vehicleType: reporting.vehicleType
+    ...reporting
   })
 
   return feature

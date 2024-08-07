@@ -19,10 +19,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
@@ -43,12 +46,15 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -267,9 +273,7 @@ class MissionsITests {
                         ReportingEntity(
                             id = 1,
                             reportingId = 2300001,
-                            sourceType =
-                            SourceTypeEnum.SEMAPHORE,
-                            semaphoreId = 1,
+                            reportingSources = listOf(),
                             targetType = TargetTypeEnum.VEHICLE,
                             vehicleType =
                             VehicleTypeEnum
@@ -295,19 +299,7 @@ class MissionsITests {
                             openBy = "OpenBy",
                             isInfractionProven = true,
                         ),
-                        semaphore =
-                        SemaphoreEntity(
-                            id = 1,
-                            name = "Semaphore 1",
-                            geom = point,
-                            department = "29",
-                            facade = "Outre-Mer",
-                            administration = "Admin 1",
-                            unit = "Unit 1",
-                            email = "semaphore@",
-                            phoneNumber = "0299999999",
-                            base = "Base 1",
-                        ),
+                        reportingSources = listOf(),
                     ),
                 ),
             )
@@ -563,9 +555,7 @@ class MissionsITests {
                         ReportingEntity(
                             id = 1,
                             reportingId = 2300001,
-                            sourceType =
-                            SourceTypeEnum.SEMAPHORE,
-                            semaphoreId = 1,
+                            reportingSources = listOf(),
                             targetType = TargetTypeEnum.VEHICLE,
                             vehicleType =
                             VehicleTypeEnum
@@ -591,19 +581,7 @@ class MissionsITests {
                             openBy = "OpenBy",
                             isInfractionProven = true,
                         ),
-                        semaphore =
-                        SemaphoreEntity(
-                            id = 1,
-                            name = "Semaphore 1",
-                            geom = point,
-                            department = "29",
-                            facade = "Outre-Mer",
-                            administration = "Admin 1",
-                            unit = "Unit 1",
-                            email = "semaphore@",
-                            phoneNumber = "0299999999",
-                            base = "Base 1",
-                        ),
+                        reportingSources = listOf(),
                     ),
                 ),
             )

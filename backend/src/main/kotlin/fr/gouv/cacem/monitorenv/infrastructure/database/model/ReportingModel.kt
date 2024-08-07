@@ -1,13 +1,13 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
@@ -58,19 +58,16 @@ class ReportingModel(
         insertable = false,
     )
     val reportingId: Long? = null,
-    @Column(name = "source_type", columnDefinition = "reportings_source_type")
-    @Enumerated(EnumType.STRING)
-    @JdbcType(PostgreSQLEnumJdbcType::class)
-    val sourceType: SourceTypeEnum? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "semaphore_id", nullable = true)
-    @JsonBackReference
-    val semaphore: SemaphoreModel? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "control_unit_id", nullable = true)
-    @JsonBackReference
-    val controlUnit: ControlUnitModel? = null,
-    @Column(name = "source_name") val sourceName: String? = null,
+    @OneToMany(
+        mappedBy = "reporting",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.EAGER,
+    )
+    @JsonManagedReference
+    @Fetch(value = FetchMode.SUBSELECT)
+    @OrderBy("id")
+    val reportingSources: MutableList<ReportingSourceModel> = mutableListOf(),
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
@@ -136,10 +133,7 @@ class ReportingModel(
         ReportingEntity(
             id = id,
             reportingId = reportingId,
-            sourceType = sourceType,
-            semaphoreId = semaphore?.id,
-            controlUnitId = controlUnit?.id,
-            sourceName = sourceName,
+            reportingSources = reportingSources.map { it.toReportingSource() },
             targetType = targetType,
             vehicleType = vehicleType,
             targetDetails = targetDetails,
@@ -166,11 +160,11 @@ class ReportingModel(
             isInfractionProven = isInfractionProven,
         )
 
-    fun toReportingDTO(objectMapper: ObjectMapper) =
-        ReportingDTO(
-            reporting = this.toReporting(),
-            controlUnit = controlUnit?.toFullControlUnit(),
-            semaphore = semaphore?.toSemaphore(),
+    fun toReportingDTO(objectMapper: ObjectMapper): ReportingDTO {
+        val reporting = this.toReporting()
+        return ReportingDTO(
+            reporting = reporting,
+            reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             attachedMission =
             if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
             ) {
@@ -189,6 +183,7 @@ class ReportingModel(
                 null
             },
         )
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -203,8 +198,6 @@ class ReportingModel(
     companion object {
         fun fromReportingEntity(
             reporting: ReportingEntity,
-            semaphoreReference: SemaphoreModel?,
-            controlUnitReference: ControlUnitModel?,
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
             controlPlanThemeReference: ControlPlanThemeModel?,
@@ -212,10 +205,6 @@ class ReportingModel(
             ReportingModel(
                 id = reporting.id,
                 reportingId = reporting.reportingId,
-                sourceType = reporting.sourceType,
-                semaphore = semaphoreReference,
-                controlUnit = controlUnitReference,
-                sourceName = reporting.sourceName,
                 targetType = reporting.targetType,
                 vehicleType = reporting.vehicleType,
                 targetDetails = reporting.targetDetails,

@@ -1,7 +1,7 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { ReportingStatusEnum, getReportingStatus, type ReportingDetailed } from 'domain/entities/reporting'
+import { ReportingStatusEnum, getReportingStatus, type Reporting } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { closeReporting } from 'domain/use_cases/reporting/closeReporting'
 
@@ -25,7 +25,7 @@ export function Header({
 }: {
   isExpanded: boolean
   reduceOrCollapseReporting: () => void
-  reporting: AtLeast<ReportingDetailed, 'id'>
+  reporting: AtLeast<Reporting, 'id'>
 }) {
   const dispatch = useAppDispatch()
 

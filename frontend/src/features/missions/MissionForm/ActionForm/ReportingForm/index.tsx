@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, MultiRadio, TextInput, getOptionsFromLabelledEnum, Toggle } from '@mtes-mct/monitor-ui'
+import { Accent, Button, getOptionsFromLabelledEnum, Icon, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
@@ -8,8 +8,8 @@ import { Validity } from './Validity'
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../../domain/entities/missions'
 import {
   ReportingSourceEnum,
-  ReportingTypeLabels,
-  ReportingSourceLabels
+  ReportingSourceLabels,
+  ReportingTypeLabels
 } from '../../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
@@ -48,16 +48,16 @@ export function ReportingForm({
   const subThemesAsString =
     reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') ?? EMPTY_VALUE
 
-  const sourceTypeText = (() => {
-    if (reporting.sourceType === ReportingSourceEnum.SEMAPHORE) {
+  const sourceTypeText = (sourceType: ReportingSourceEnum) => {
+    if (sourceType === ReportingSourceEnum.SEMAPHORE) {
       return 'Nom du sémpahore'
     }
-    if (reporting.sourceType === ReportingSourceEnum.CONTROL_UNIT) {
+    if (sourceType === ReportingSourceEnum.CONTROL_UNIT) {
       return "Nom de l'unité"
     }
 
     return 'Nom, société ...'
-  })()
+  }
 
   const unattachReporting = () => {
     const reportings = [...attachedReportings]
@@ -94,17 +94,26 @@ export function ReportingForm({
         </Button>
       </Header>
       <FirstPartContainer>
-        <SourceContainer>
-          <MultiRadio
-            isInline
-            label="Source"
-            name="sourceType"
-            options={sourceOptions}
-            readOnly
-            value={reporting.sourceType}
-          />
-          <TextInput label={sourceTypeText} name="source" plaintext value={reporting.displayedSource} />
-        </SourceContainer>
+        {reporting.reportingSources?.map((reportingSource, index) => (
+          <SourceContainer key={reportingSource.id}>
+            <MultiRadio
+              isInline
+              label={`Source (${index + 1})`}
+              name="sourceType"
+              options={sourceOptions}
+              readOnly
+              value={reportingSource.sourceType}
+            />
+
+            <TextInput
+              label={sourceTypeText(reportingSource.sourceType)}
+              name="source"
+              plaintext
+              value={reportingSource.displayedSource}
+            />
+          </SourceContainer>
+        ))}
+
         <TargetContainer>
           <TextInput
             label="Type de cible"

@@ -1,3 +1,5 @@
+import { omit } from 'lodash'
+
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { createReporting } from '../../utils/createReporting'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
@@ -27,6 +29,14 @@ context('Reporting', () => {
     cy.get('div').contains('Signalement non créé')
     cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
 
+    cy.clickButton('Ajouter une source')
+    cy.fill('Source (2)', 'Unité')
+    cy.fill("Nom de l'unité", 'BN Toulon')
+
+    cy.clickButton('Ajouter une source')
+    cy.fill('Source (3)', 'Autre')
+    cy.fill('Nom, société ...', 'Capitaine Haddock')
+
     cy.getDataCy('reporting-target-type').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
 
@@ -52,9 +62,33 @@ context('Reporting', () => {
       assert.deepInclude(interception.request.body, {
         createdAt: `${asApiDateTime}:00.000Z`,
         openBy: 'XYZ',
+        reportingSources: [
+          {
+            controlUnitId: null,
+            id: null,
+            reportingId: null,
+            semaphoreId: 35,
+            sourceName: null,
+            sourceType: 'SEMAPHORE'
+          },
+          {
+            controlUnitId: 10020,
+            id: null,
+            reportingId: null,
+            semaphoreId: null,
+            sourceName: null,
+            sourceType: 'CONTROL_UNIT'
+          },
+          {
+            controlUnitId: null,
+            id: null,
+            reportingId: null,
+            semaphoreId: null,
+            sourceName: 'Capitaine Haddock',
+            sourceType: 'OTHER'
+          }
+        ],
         reportType: 'OBSERVATION',
-        semaphoreId: 35,
-        sourceType: 'SEMAPHORE',
         targetDetails: [],
         targetType: 'COMPANY',
         validityTime: 24
@@ -68,7 +102,7 @@ context('Reporting', () => {
     // Given
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
-    cy.intercept('PUT', '/bff/v1/reportings/*').as('createReporting')
+    cy.intercept('PUT', '/bff/v1/reportings/*').as('updateReporting')
 
     // When
     cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
@@ -90,30 +124,32 @@ context('Reporting', () => {
 
     cy.clickButton('Lier à une mission existante')
     cy.get('#root').click(582, 546, { timeout: 10000 })
-    cy.wait(250)
     cy.clickButton('Lier à la mission')
 
     // Then
-    cy.waitForLastRequest(
-      '@createReporting',
-      {
-        body: {
-          missionId: 33,
-          openBy: 'XYZ',
-          reportType: 'INFRACTION_SUSPICION',
-          semaphoreId: 35,
-          sourceType: 'SEMAPHORE',
-          targetDetails: [],
-          targetType: 'COMPANY',
-          validityTime: 24
-        }
-      },
-      5,
-      0,
-      response => {
-        expect(response && response.statusCode).equal(200)
+    cy.wait('@updateReporting').then(interception => {
+      if (!interception.response) {
+        assert.fail('`interception.response` is undefined.')
       }
-    )
+      assert.deepInclude(omit(interception.request.body, 'reportingSources[0].id'), {
+        missionId: 33,
+        openBy: 'XYZ',
+        reportingSources: [
+          {
+            controlUnitId: null,
+            displayedSource: 'Sémaphore de Dieppe',
+            reportingId: 13,
+            semaphoreId: 35,
+            sourceName: null,
+            sourceType: 'SEMAPHORE'
+          }
+        ],
+        reportType: 'INFRACTION_SUSPICION',
+        targetDetails: [],
+        targetType: 'COMPANY',
+        validityTime: 24
+      })
+    })
   })
 
   it('A mission can be detached from a reporting', () => {
@@ -134,11 +170,19 @@ context('Reporting', () => {
       }
       cy.get(interception.request.body.attachedToMissionAtUtc).should('not.be.null')
       cy.get(interception.request.body.detachedToMissionAtUtc).should('not.be.null')
-      assert.deepInclude(interception.request.body, {
+      assert.deepInclude(omit(interception.request.body, 'reportingSources[0].id'), {
         openBy: 'XYZ',
+        reportingSources: [
+          {
+            controlUnitId: null,
+            displayedSource: 'Sémaphore de Dieppe',
+            reportingId: 13,
+            semaphoreId: 35,
+            sourceName: null,
+            sourceType: 'SEMAPHORE'
+          }
+        ],
         reportType: 'INFRACTION_SUSPICION',
-        semaphoreId: 35,
-        sourceType: 'SEMAPHORE',
         targetDetails: [],
         targetType: 'COMPANY',
         validityTime: 24
@@ -193,7 +237,7 @@ context('Reporting', () => {
 
     cy.get('.Element-Legend').contains('Réponse à la VHF').should('not.exist')
 
-    cy.fill('Source', 'Autre')
+    cy.fill('Source (1)', 'Autre')
     cy.fill('Nom, société ...', 'Nom de ma société')
 
     cy.clickButton('Ajouter un point')
@@ -208,6 +252,8 @@ context('Reporting', () => {
 
     cy.fill('Saisi par', 'XYZ')
 
+    cy.wait(500)
+
     cy.wait('@createReporting').then(({ request, response }) => {
       expect(request.body.themeId).equal(100)
       expect(request.body.withVHFAnswer).equal(true)
@@ -216,8 +262,6 @@ context('Reporting', () => {
       expect(response?.body.themeId).equal(100)
       expect(response?.body.withVHFAnswer).equal(true)
     })
-
-    cy.wait(500)
 
     // we update reporting theme and clean `withVHFAnswer` field
     cy.fill('Thématique du signalement', 'Bien culturel maritime')

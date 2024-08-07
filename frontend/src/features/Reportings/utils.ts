@@ -1,17 +1,31 @@
 import { customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 
-import { ReportingSourceEnum, type Reporting, type TargetDetails } from '../../domain/entities/reporting'
-import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../domain/entities/targetType'
+import {
+  ReportingSourceEnum,
+  type Reporting,
+  type ReportingSource,
+  type TargetDetails
+} from '../../domain/entities/reporting'
+import { ReportingTargetTypeEnum, ReportingTargetTypeLabels } from '../../domain/entities/targetType'
 import { VehicleTypeEnum, vehicleTypeLabels } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
+
+export const createNewReportingSource: () => ReportingSource = () => ({
+  controlUnitId: undefined,
+  id: undefined,
+  reportingId: undefined,
+  semaphoreId: undefined,
+  sourceName: undefined,
+  sourceType: ReportingSourceEnum.SEMAPHORE
+})
 
 export function getReportingInitialValues(reporting: AtLeast<Reporting, 'id'> | Reporting): AtLeast<Reporting, 'id'> {
   return {
     geom: undefined,
     isInfractionProven: true,
-    sourceType: ReportingSourceEnum.SEMAPHORE,
+    reportingSources: [createNewReportingSource()],
     validityTime: 24,
     ...reporting
   }

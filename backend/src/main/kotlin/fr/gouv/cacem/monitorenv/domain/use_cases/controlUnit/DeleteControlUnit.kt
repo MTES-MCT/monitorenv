@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingSourceRepository
 
 @UseCase
 class DeleteControlUnit(
@@ -12,6 +13,7 @@ class DeleteControlUnit(
     private val canDeleteControlUnit: CanDeleteControlUnit,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
+    private val reportingSourceRepository: IReportingSourceRepository,
 ) {
     fun execute(controlUnitId: Int) {
         if (!canDeleteControlUnit.execute(controlUnitId)) {
@@ -24,11 +26,11 @@ class DeleteControlUnit(
         val deletedReportings = reportingRepository.findByControlUnitId(controlUnitId).filter { it.isDeleted }
 
         deletedMissions.forEach { deletedMission ->
+            // TODO: use saveAll
             missionRepository.save(
                 deletedMission.copy(
                     controlUnits =
-                    deletedMission.controlUnits.filter {
-                            controlUnit ->
+                    deletedMission.controlUnits.filter { controlUnit ->
                         controlUnit.id != controlUnitId
                     },
                 ),
@@ -36,11 +38,10 @@ class DeleteControlUnit(
         }
 
         deletedReportings.forEach { deletedReporting ->
-            reportingRepository.save(
-                deletedReporting.copy(
-                    controlUnitId = null,
-                ),
-            )
+            deletedReporting.reportingSources.forEach {
+                // TODO: use saveAll
+                reportingSourceRepository.save(it.copy(controlUnitId = null))
+            }
         }
 
         return controlUnitRepository.deleteById(controlUnitId)

@@ -1,3 +1,5 @@
+import type { Reporting } from 'domain/entities/reporting'
+
 context('Reportings', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -29,7 +31,7 @@ context('Reportings', () => {
     cy.getDataCy('duplicate-reporting-5').click({ force: true })
     cy.get('form').should('exist')
 
-    cy.get('.rs-radio').find('label').contains('Autre').click()
+    cy.fill('Source (1)', 'Autre')
     cy.fill('Nom, société ...', 'Reporting dupliqué')
 
     cy.fill('Thématique du signalement', 'Culture marine')
@@ -38,10 +40,11 @@ context('Reportings', () => {
     cy.fill('Saisi par', 'CDA')
 
     cy.wait('@createReporting').then(({ response }) => {
-      expect(response && response.body.sourceName).equal('Reporting dupliqué')
-      expect(response && response.body.description).equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
-      expect(response && response.body.reportType).equal('OBSERVATION')
-      expect(response && response.body.openBy).equal('CDA')
+      const reporting: Reporting = response?.body
+      expect(reporting.reportingSources[0]?.sourceName).equal('Reporting dupliqué')
+      expect(reporting.description).equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+      expect(reporting.reportType).equal('OBSERVATION')
+      expect(reporting.openBy).equal('CDA')
     })
   })
 

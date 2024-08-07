@@ -2,12 +2,16 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
+import java.util.UUID
 
 object TestUtils {
     fun getReportingDTO(id: Int): ReportingDTO {
@@ -17,12 +21,21 @@ object TestUtils {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
 
+        val reportingSourceEntity = ReportingSourceEntity(
+            id = UUID.randomUUID(),
+            reportingId = id,
+            sourceType = SourceTypeEnum.SEMAPHORE,
+            semaphoreId = 1,
+            controlUnitId = null,
+            sourceName = null,
+        )
         return ReportingDTO(
             reporting =
             ReportingEntity(
                 id = id,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+                reportingSources = listOf(
+                    reportingSourceEntity,
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -44,6 +57,17 @@ object TestUtils {
                 openBy = "CDA",
                 isInfractionProven = true,
             ),
+            reportingSources = listOf(
+                ReportingSourceDTO(
+                    reportingSource = reportingSourceEntity,
+                    semaphore = SemaphoreEntity(
+                        id = 1,
+                        geom = polygon.centroid,
+                        name = "Semaphore de tonnerre de Brest",
+                    ),
+                    controlUnit = null,
+                ),
+            ),
         )
     }
 
@@ -53,13 +77,21 @@ object TestUtils {
                 .read(
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
-
+        val reportingSourceEntity = ReportingSourceEntity(
+            id = UUID.randomUUID(),
+            reportingId = id,
+            sourceType = SourceTypeEnum.SEMAPHORE,
+            semaphoreId = 1,
+            controlUnitId = null,
+            sourceName = null,
+        )
         return ReportingDTO(
             reporting =
             ReportingEntity(
                 id = id,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+                reportingSources = listOf(
+                    reportingSourceEntity,
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -86,6 +118,17 @@ object TestUtils {
                 ),
                 detachedFromMissionAtUtc = null,
                 isInfractionProven = true,
+            ),
+            reportingSources = listOf(
+                ReportingSourceDTO(
+                    reportingSource = reportingSourceEntity,
+                    semaphore = SemaphoreEntity(
+                        id = 1,
+                        geom = polygon.centroid,
+                        name = "Semaphore de tonnerre de Brest",
+                    ),
+                    controlUnit = null,
+                ),
             ),
         )
     }

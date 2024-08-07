@@ -26,11 +26,13 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
 import kotlin.random.Random
 
 @Import(SentryConfig::class, MapperConfiguration::class)
@@ -38,13 +40,17 @@ import kotlin.random.Random
 @WebMvcTest(value = [Missions::class])
 class MissionsITest {
 
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var patchMission: PatchMission
+    @MockBean
+    private lateinit var patchMission: PatchMission
 
-    @MockBean private lateinit var deleteMission: DeleteMission
+    @MockBean
+    private lateinit var deleteMission: DeleteMission
 
-    @MockBean private lateinit var getMissionAndSourceAction: GetMissionAndSourceAction
+    @MockBean
+    private lateinit var getMissionAndSourceAction: GetMissionAndSourceAction
 
     @Test
     fun `Should delete mission with api v2`() {

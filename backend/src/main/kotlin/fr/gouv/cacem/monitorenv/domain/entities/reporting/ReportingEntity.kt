@@ -8,10 +8,7 @@ import java.util.UUID
 data class ReportingEntity(
     val id: Int? = null,
     val reportingId: Long? = null,
-    val sourceType: SourceTypeEnum? = null,
-    val semaphoreId: Int? = null,
-    val controlUnitId: Int? = null,
-    val sourceName: String? = null,
+    val reportingSources: List<ReportingSourceEntity>,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
@@ -38,23 +35,6 @@ data class ReportingEntity(
     val isInfractionProven: Boolean,
 ) {
     fun validate() {
-        when (sourceType) {
-            SourceTypeEnum.SEMAPHORE -> {
-                require(semaphoreId != null && controlUnitId == null && sourceName == null) {
-                    "SemaphoreId must be set and controlUnitId and sourceName must be null"
-                }
-            }
-            SourceTypeEnum.CONTROL_UNIT -> {
-                require(controlUnitId != null && semaphoreId == null && sourceName == null) {
-                    "ControlUnitId must be set and semaphoreId and sourceName must be null"
-                }
-            }
-            SourceTypeEnum.OTHER -> {
-                require(sourceName != null && semaphoreId == null && controlUnitId == null) {
-                    "SourceName must be set and semaphoreId and controlUnitId must be null"
-                }
-            }
-            else -> {}
-        }
+        reportingSources.forEach { it.validate() }
     }
 }
