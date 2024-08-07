@@ -2,13 +2,17 @@
 
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
@@ -23,7 +27,7 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 class CreateOrPatchEnvActionsUTests {
@@ -66,6 +70,8 @@ class CreateOrPatchEnvActionsUTests {
                         "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
                     ),
                     geom = polygon,
+                    awareness = null,
+
                 ),
                 EnvActionNoteEntity(
                     id =
@@ -95,6 +101,7 @@ class CreateOrPatchEnvActionsUTests {
                 geom = polygon,
                 facade = "La Face Ade",
                 department = "Quequ'part",
+                awareness = null,
             ),
             EnvActionNoteEntity(
                 id =

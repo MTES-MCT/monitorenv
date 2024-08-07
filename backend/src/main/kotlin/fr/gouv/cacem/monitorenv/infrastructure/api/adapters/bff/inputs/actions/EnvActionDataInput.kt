@@ -5,14 +5,15 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlInfractionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlPlanDataInput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 
 data class EnvActionDataInput(
     val id: UUID,
@@ -31,6 +32,7 @@ data class EnvActionDataInput(
     val facade: String? = null,
     val geom: Geometry? = null,
     val openBy: String? = null,
+    val awareness: AwarenessDataInput?,
 
     // EnvActionControl Properties
     val actionNumberOfControls: Int? = null,
@@ -108,6 +110,7 @@ data class EnvActionDataInput(
                     geom = this.geom,
                     observations = this.observations,
                     openBy = this.openBy,
+                    awareness = awareness?.toAwarenessEntity(),
                 )
 
             ActionTypeEnum.NOTE ->

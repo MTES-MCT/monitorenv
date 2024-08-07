@@ -70,6 +70,11 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
+      awareness: Yup.object().shape({
+        isRisingAwareness: Yup.boolean().nullable(),
+        nbPerson: Yup.number().nullable(),
+        themeId: Yup.number().nullable()
+      }),
       completedBy: Yup.string().nullable(),
       geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()

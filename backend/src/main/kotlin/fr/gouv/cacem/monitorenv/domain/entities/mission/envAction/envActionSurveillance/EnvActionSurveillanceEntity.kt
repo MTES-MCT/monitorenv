@@ -1,10 +1,13 @@
-package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
+package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance
 
 import fr.gouv.cacem.monitorenv.domain.entities.Patchable
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class EnvActionSurveillanceEntity(
     override val id: UUID,
@@ -22,6 +25,7 @@ data class EnvActionSurveillanceEntity(
     @Patchable
     override var observationsByUnit: String? = null,
     override val openBy: String? = null,
+    val awareness: AwarenessEntity?,
     val observations: String? = null,
 ) :
     EnvActionEntity(

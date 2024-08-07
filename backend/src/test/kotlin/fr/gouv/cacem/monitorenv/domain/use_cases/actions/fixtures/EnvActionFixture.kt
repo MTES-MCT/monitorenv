@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntit
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 class EnvActionFixture {
 

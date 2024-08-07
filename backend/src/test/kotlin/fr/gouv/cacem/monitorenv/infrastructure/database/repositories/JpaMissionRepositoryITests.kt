@@ -12,13 +12,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -563,6 +563,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         completion = ActionCompletionEnum.TO_COMPLETE,
                         facade = "Facade 2",
                         department = "Department 2",
+                        awareness = null,
                         geom = polygon,
                     ),
                     EnvActionNoteEntity(
@@ -886,6 +887,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 id = UUID.fromString("325a8c12-7c13-465d-9b42-6aee473d8d3b"),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "This is a surveillance action",
+                awareness = null,
                 missionId = id,
             )
         val noteAction =

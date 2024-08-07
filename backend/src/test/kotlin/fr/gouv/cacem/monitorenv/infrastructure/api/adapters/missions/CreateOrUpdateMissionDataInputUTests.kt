@@ -36,6 +36,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 observations = "Observations",
                 openBy = "DEF",
                 reportingIds = Optional.of(listOf(1)),
+                awareness = null,
             )
         val envActionSurveillance =
             EnvActionDataInput(
@@ -50,6 +51,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 observations = "Observations",
                 openBy = "ABC",
                 reportingIds = Optional.of(listOf(2, 3)),
+                awareness = null,
             )
         val envActionNote =
             EnvActionDataInput(
@@ -59,6 +61,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
                 reportingIds = Optional.of(listOf()),
+                awareness = null,
             )
         val missionDataInput =
             CreateOrUpdateMissionDataInput(

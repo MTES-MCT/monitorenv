@@ -293,6 +293,7 @@ export type EnvActionControl = NewEnvActionControl & {
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
+  awareness?: Awareness
   completedBy: string
   completion: CompletionStatus
   controlPlans: ControlPlansData[]
@@ -301,6 +302,12 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   observations: string | null
   openBy: string
   reportingIds: number[]
+}
+
+export type Awareness = {
+  isRisingAwareness?: boolean
+  nbPerson?: number
+  themeId?: number
 }
 
 export type ControlOrSurveillance = EnvActionControl | EnvActionSurveillance

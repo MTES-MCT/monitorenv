@@ -2,11 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionEnvActionControlPlanDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class EnvActionSurveillanceDataOutput(
     override val id: UUID,
@@ -22,6 +22,7 @@ data class EnvActionSurveillanceDataOutput(
     val observations: String? = null,
     val openBy: String? = null,
     val reportingIds: List<Int>,
+    val awareness: AwarenessDataOuput?,
 ) :
     EnvActionDataOutput(
         id = id,
@@ -63,6 +64,11 @@ data class EnvActionSurveillanceDataOutput(
                 observations = envActionSurveillanceEntity.observations,
                 openBy = envActionSurveillanceEntity.openBy,
                 reportingIds = reportingIds,
+                awareness = envActionSurveillanceEntity.awareness?.let {
+                    AwarenessDataOuput.fromAwarenessEntity(
+                        it,
+                    )
+                },
             )
     }
 }

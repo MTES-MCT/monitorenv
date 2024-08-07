@@ -1,30 +1,32 @@
 import { actionFactory } from '@features/missions/Missions.helpers'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
+import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
+  Accent,
+  Button,
   customDayjs,
+  DatePicker,
   FieldError,
   FormikCheckbox,
   FormikTextarea,
+  FormikTextInput,
+  Icon,
+  Label,
   MultiCheckbox,
   pluralize,
-  type OptionValueType,
-  DatePicker,
-  Accent,
-  Icon,
   Size,
   THEME,
-  Label,
   Toggle,
-  Button,
-  FormikTextInput,
-  useNewWindow
+  useNewWindow,
+  type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { Awareness } from './Awareness'
 import { SurveillanceZonePicker } from './SurveillanceZonePicker'
-import { CONTROL_PLAN_INIT } from '../../../../../domain/entities/controlPlan'
+import { CONTROL_PLAN_INIT, type ControlPlansData } from '../../../../../domain/entities/controlPlan'
 import {
   ActionTypeEnum,
   CompletionStatus,
@@ -39,14 +41,14 @@ import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActions
 import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
 import {
+  ActionFormBody,
   ActionThemes,
   ActionTitle,
-  ActionFormBody,
   Header,
   HeaderButtons,
+  StyledAuthorContainer,
   StyledDeleteIconButton,
-  TitleWithIcon,
-  StyledAuthorContainer
+  TitleWithIcon
 } from '../style'
 import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
@@ -62,7 +64,9 @@ export function SurveillanceForm({ currentActionId, remove }) {
   const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const [actionsFields] = useField<EnvAction[]>('envActions')
+
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === currentActionId)
+
   const currentAction = envActions[envActionIndex]
 
   const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
@@ -85,6 +89,16 @@ export function SurveillanceForm({ currentActionId, remove }) {
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length >= 1)
+
+  const { themesByYearAsOptions } = useGetControlPlansByYear({
+    year: actualYearForThemes
+  })
+
+  const [controlPlans] = useField<ControlPlansData[]>(`envActions[${envActionIndex}].controlPlans`)
+
+  const awarenessOptions = themesByYearAsOptions.filter(({ value }) =>
+    controlPlans.value.map(({ themeId }) => themeId).includes(value)
+  )
 
   const reportingAsOptions = useMemo(
     () =>
@@ -290,6 +304,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
             data-cy="surveillance-duration-matches-mission"
             disabled={surveillances.length > 1}
             inline
+            isLight
             label="Dates et heures de surveillance équivalentes à celles de la mission"
             name={`envActions[${envActionIndex}].durationMatchesMission`}
           />
@@ -297,7 +312,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
         <FlexSelectorWrapper>
           <SurveillanceZonePicker actionIndex={envActionIndex} />
         </FlexSelectorWrapper>
-
+        <Awareness awarenessOptions={awarenessOptions} formPath={`envActions[${envActionIndex}]`} />
         <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
         <div>
           <StyledAuthorContainer>
