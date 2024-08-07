@@ -60,6 +60,7 @@ class VigilanceAreasITests {
         VigilanceAreaEntity(
             id = 1,
             name = "Vigilance Area 1",
+            isArchived = false,
             isDeleted = false,
             isDraft = false,
             comments = "Commentaires sur la zone de vigilance",
@@ -84,6 +85,7 @@ class VigilanceAreasITests {
             VigilanceAreaEntity(
                 id = 2,
                 name = "Vigilance Area 2",
+                isArchived = false,
                 isDeleted = false,
                 isDraft = true,
                 comments = null,
@@ -180,6 +182,7 @@ class VigilanceAreasITests {
             VigilanceAreaDataInput(
                 id = 1,
                 name = "Vigilance Area 1",
+                isArchived = false,
                 isDraft = false,
                 comments = "Commentaires sur la zone de vigilance",
                 createdBy = "ABC",
@@ -231,6 +234,7 @@ class VigilanceAreasITests {
             VigilanceAreaDataInput(
                 id = 1,
                 name = "Vigilance Area 1",
+                isArchived = false,
                 isDraft = false,
                 comments = "Commentaires sur la zone de vigilance",
                 createdBy = "ABC",

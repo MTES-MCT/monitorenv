@@ -8,23 +8,24 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntit
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.mock.mockito.MockBean
 
 class CreateOrUpdateVigilanceAreaUTests {
-    @MockBean
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
 
-    private val createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea = CreateOrUpdateVigilanceArea(
-        vigilanceAreaRepository,
-    )
+    private val createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea =
+        CreateOrUpdateVigilanceArea(
+            vigilanceAreaRepository,
+        )
 
     @Test
     fun `execute should return save() result`() {
-        val newVigilanceArea = VigilanceAreaEntity(
-            comments = "Comments",
-            isDeleted = false,
-            isDraft = true,
-        )
+        val newVigilanceArea =
+            VigilanceAreaEntity(
+                comments = "Comments",
+                isArchived = false,
+                isDeleted = false,
+                isDraft = true,
+            )
 
         val expectedVigilanceArea = newVigilanceArea.copy(id = 0)
 

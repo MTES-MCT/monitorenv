@@ -8,7 +8,9 @@ const ZoneSchema = Yup.object().test({
   test: val => val && !isEmpty(val?.coordinates)
 })
 
-export const DraftSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.object()
+export const DraftSchema: Yup.SchemaOf<
+  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived'>
+> = Yup.object()
   .shape({
     comments: Yup.string().nullable(),
     createdBy: Yup.string()
@@ -20,7 +22,10 @@ export const DraftSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.object
     endingOccurrenceDate: Yup.string().nullable(),
     endingOccurrencesNumber: Yup.number().nullable(),
     frequency: Yup.mixed().nullable(),
-    geom: Yup.array().of(ZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
+    geom: Yup.array().of(ZoneSchema).nullable(),
+    id: Yup.number().nullable(),
+    linkedAMPs: Yup.array().nullable(),
+    linkedRegulatoryAreas: Yup.array().nullable(),
     links: Yup.array().nullable(),
     name: Yup.string().required(),
     source: Yup.string().nullable(),
@@ -30,7 +35,9 @@ export const DraftSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.object
   })
   .required()
 
-export const PublishedSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.object()
+export const PublishedSchema: Yup.SchemaOf<
+  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived'>
+> = Yup.object()
   .shape({
     comments: Yup.string().required(),
     createdBy: Yup.string()
@@ -57,6 +64,10 @@ export const PublishedSchema: Yup.SchemaOf<VigilanceArea.VigilanceArea> = Yup.ob
     }),
     frequency: Yup.mixed().oneOf(Object.values(VigilanceArea.Frequency)).required(),
     geom: Yup.array().of(ZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
+    id: Yup.number().nullable(),
+    linkedAMPs: Yup.array().nullable(),
+    linkedRegulatoryAreas: Yup.array().nullable(),
+    links: Yup.array().nullable(),
     name: Yup.string().required(),
     startDatePeriod: Yup.string().required(),
     themes: Yup.array().ensure().defined().min(1),

@@ -33,4 +33,9 @@ class JpaVigilanceAreaRepository(
     override fun delete(id: Int) {
         dbVigilanceAreaRepository.delete(id)
     }
+
+    @Transactional
+    override fun archiveOutdatedVigilanceAreas(): Int {
+        return dbVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
+    }
 }

@@ -1,3 +1,4 @@
+import { NewInfractionSchema } from '@features/missions/MissionForm/Schemas/Infraction'
 import {
   Accent,
   Button,
@@ -12,11 +13,10 @@ import {
   administrativeResponseOptions,
   formalNoticeLabels,
   infractionTypeLabels,
-  type EnvActionControl,
-  type Mission
+  type Infraction
 } from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
-import { useField, useFormikContext, type FormikErrors } from 'formik'
+import { useField } from 'formik'
 import { useState, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
@@ -46,20 +46,20 @@ export function InfractionForm({
 
   const showTooltip = () => setIsVisibleTooltip(true)
   const hideTooltip = () => setIsVisibleTooltip(false)
-  const { errors } = useFormikContext<Mission<EnvActionControl>>()
   const infractionPath = `envActions[${envActionIndex}].infractions[${currentInfractionIndex}]`
-
+  const [infraction] = useField<Infraction>(infractionPath)
   const [actionTargetField] = useField<string>(`envActions.${envActionIndex}.actionTargetType`)
   const [nbTarget] = useField<number>(`${infractionPath}.nbTarget`)
 
-  function isInfractionFormInvalid(errorsForm: FormikErrors<Mission<EnvActionControl>>) {
-    const envActionErrors = (!!errorsForm.envActions &&
-      errorsForm.envActions[envActionIndex]) as FormikErrors<EnvActionControl>
+  const isValid = () => {
+    try {
+      NewInfractionSchema.validateSync(infraction.value)
 
-    return envActionErrors && !!envActionErrors.infractions
+      return true
+    } catch (error) {
+      return false
+    }
   }
-
-  const isInvalid = isInfractionFormInvalid(errors)
 
   const disableIdentificationFields = nbTarget.value > 1
 
@@ -148,7 +148,7 @@ export function InfractionForm({
         <Button accent={Accent.TERTIARY} onClick={removeInfraction}>
           Supprimer l&apos;infraction
         </Button>
-        <Button data-cy="infraction-form-validate" disabled={isInvalid} onClick={validateInfraction}>
+        <Button data-cy="infraction-form-validate" disabled={!isValid()} onClick={validateInfraction}>
           Valider l&apos;infraction
         </Button>
       </ButtonContainer>

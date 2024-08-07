@@ -1,13 +1,16 @@
 import { useGetVigilanceAreaQuery } from '@api/vigilanceAreasAPI'
+import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { Formik } from 'formik'
 import { noop } from 'lodash'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { SelectAMP } from './AddAMPs/SelectAMPs'
@@ -17,7 +20,6 @@ import { Form } from './Form'
 import { VigilanceAreaSchema } from './Schema'
 import { getVigilanceAreaInitialValues } from './utils'
 import { VigilanceAreaPanel } from './VigilanceAreaPanel'
-import { getVigilanceAreaColorWithAlpha } from '../VigilanceAreaLayer/style'
 
 type VigilanceAreaFormProps = {
   isOpen: boolean
@@ -41,11 +43,6 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
   const initialValues =
     vigilanceArea && vigilanceAreaId === vigilanceArea.id ? vigilanceArea : getVigilanceAreaInitialValues()
 
-  const squareColor = useMemo(
-    () => getVigilanceAreaColorWithAlpha(initialValues?.name, initialValues?.comments),
-    [initialValues]
-  )
-
   const title = !isNewVigilanceArea ? vigilanceArea?.name : "Création d'une zone de vigilance"
 
   const close = () => {
@@ -53,6 +50,11 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
       dispatch(vigilanceAreaActions.resetState())
     }
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+  }
+
+  const onCancelSubForm = () => {
+    dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
+    dispatch(displayOrHideOtherLayers({ display: true }))
   }
 
   useEffect(() => {
@@ -82,8 +84,19 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
     <Wrapper $isMainFormOpen={isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM} $isOpen={isOpen}>
       <Header $isEditing={!!vigilanceAreaId}>
         <TitleContainer>
-          <Square $color={squareColor} />
-          <Title data-cy="vigilance-area-title" title={title}>
+          <LayerLegend
+            isArchived={vigilanceArea?.isArchived}
+            layerType={MonitorEnvLayers.VIGILANCE_AREA}
+            legendKey={vigilanceArea?.comments ?? 'aucun nom'}
+            size={Size.NORMAL}
+            type={vigilanceArea?.name ?? 'aucun nom'}
+          />
+          <Title
+            $isDraft={vigilanceArea?.isDraft ?? true}
+            $isNew={isNewVigilanceArea}
+            data-cy="vigilance-area-title"
+            title={title}
+          >
             {title}
           </Title>
         </TitleContainer>
@@ -94,7 +107,13 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
                 Brouillon
               </Tag>
             )}
-            <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={close} size={Size.SMALL} />
+            <IconButton
+              accent={Accent.TERTIARY}
+              Icon={Icon.Close}
+              onClick={close}
+              size={Size.SMALL}
+              title="Fermer la zone de vigilance"
+            />
           </SubHeaderContainer>
         )}
       </Header>
@@ -105,9 +124,11 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
           {isFormOpen && (
             <>
               {formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
-              {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea />}
-              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && <SelectRegulatoryAreas />}
-              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP && <SelectAMP />}
+              {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea onCancel={onCancelSubForm} />}
+              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && (
+                <SelectRegulatoryAreas onCancel={onCancelSubForm} />
+              )}
+              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP && <SelectAMP onCancel={onCancelSubForm} />}
             </>
           )}
         </>
@@ -135,18 +156,19 @@ const Header = styled.header<{ $isEditing: boolean }>`
   justify-content: space-between;
   padding: 9px 16px 10px 16px;
 `
-const Title = styled.span`
+const Title = styled.span<{ $isDraft: boolean; $isNew: boolean }>`
   font-size: 15px;
   color: ${p => p.theme.color.gunMetal};
-`
-const Square = styled.div<{ $color: string }>`
-  width: 18px;
-  height: 18px;
-  background: ${p => p.$color};
-  border: 1px solid ${p => p.theme.color.slateGray};
-  display: inline-block;
-  margin-right: 10px;
-  flex-shrink: 0;
+  overflow: hidden;
+  max-width: ${p => {
+    if (p.$isNew) {
+      return '100%'
+    }
+
+    return p.$isDraft ? '230px' : '318px'
+  }};
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 const SubHeaderContainer = styled.div`
   align-items: center;

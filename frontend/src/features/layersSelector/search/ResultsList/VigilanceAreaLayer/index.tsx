@@ -79,6 +79,7 @@ export function VigilanceAreaLayer({ layerId, searchedText }: RegulatoryLayerPro
       onClick={toggleZoneMetadata}
     >
       <LayerLegend
+        isArchived={layer?.isArchived}
         layerType={MonitorEnvLayers.VIGILANCE_AREA}
         legendKey={layer?.comments ?? 'aucun'}
         type={layer?.name ?? 'aucun'}
@@ -90,7 +91,6 @@ export function VigilanceAreaLayer({ layerId, searchedText }: RegulatoryLayerPro
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
           textToHighlight={layer?.name ?? ''}
         />
-        {layer?.name ?? 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton

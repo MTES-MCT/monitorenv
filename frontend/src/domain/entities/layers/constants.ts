@@ -33,6 +33,7 @@ export enum MonitorEnvLayers {
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
+  MARPOL = 'MARPOL',
   MEASUREMENT = 'MEASUREMENT',
   MISSIONS = 'MISSIONS',
   MISSION_SELECTED = 'MISSION_SELECTED',
@@ -101,6 +102,12 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     subZoneFieldKey: 'f_division',
     type: LayerType.ADMINISTRATIVE,
     zoneFieldKey: 'f_subarea'
+  },
+  [MonitorEnvLayers.MARPOL]: {
+    code: 'marpol',
+    name: 'Zones MARPOL',
+    subZoneFieldKey: 'zone',
+    type: LayerType.ADMINISTRATIVE
   },
   [MonitorEnvLayers.SALTWATER_LIMIT_AREAS]: {
     code: 'saltwater_limit_areas',
@@ -245,19 +252,19 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.VIGILANCE_AREA]: {
     code: MonitorEnvLayers.VIGILANCE_AREA,
-    zIndex: 1600
+    zIndex: 1400
   },
   [MonitorEnvLayers.VIGILANCE_AREA_PREVIEW]: {
     code: MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
-    zIndex: 1600
+    zIndex: 1400
   },
   [MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA]: {
     code: MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
-    zIndex: 1600
+    zIndex: 1400
   },
   [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA]: {
     code: MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
-    zIndex: 1600
+    zIndex: 1400
   }
 }
 

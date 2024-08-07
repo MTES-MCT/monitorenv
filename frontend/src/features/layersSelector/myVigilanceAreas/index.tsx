@@ -1,3 +1,4 @@
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -11,6 +12,11 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function MyVigilanceAreas() {
   const dispatch = useAppDispatch()
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
+
+  const draftVigilanceAreas = Object.values(vigilanceAreas?.entities ?? {})?.filter(
+    vigilanceArea => vigilanceArea?.isDraft
+  )
 
   const myVigilanceAreasIsOpen = useAppSelector(state => state.layerSidebar.myVigilanceAreasIsOpen)
   const myVigilanceAreaIds = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIds)
@@ -37,7 +43,29 @@ export function MyVigilanceAreas() {
       </LayerSelector.Wrapper>
       {myVigilanceAreasIsOpen && (
         <>
-          <ButtonContainer $withPaddingBottom={myVigilanceAreaIds.length > 0}>
+          <LayerSelector.LayerList data-cy="my-vigilance-area-zones-list">
+            {myVigilanceAreaIds.length === 0 ? (
+              <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
+            ) : (
+              myVigilanceAreaIds.map(id => <MyVigilanceAreaLayerZone key={id} layerId={id} pinnedVigilanceArea />)
+            )}
+          </LayerSelector.LayerList>
+          {draftVigilanceAreas.length > 0 && (
+            <>
+              <DraftVigilanceAreaTitle>Zones non publiées</DraftVigilanceAreaTitle>
+              <LayerSelector.LayerList data-cy="draft-vigilance-area-zones-list">
+                {draftVigilanceAreas?.map(vigilanceArea => {
+                  if (!vigilanceArea?.id) {
+                    return null
+                  }
+
+                  return <MyVigilanceAreaLayerZone key={vigilanceArea?.id} layerId={vigilanceArea?.id} />
+                })}
+              </LayerSelector.LayerList>
+            </>
+          )}
+
+          <ButtonContainer $withPaddingBottom={myVigilanceAreaIds.length > 0 || draftVigilanceAreas.length > 0}>
             <Button
               accent={Accent.SECONDARY}
               Icon={Icon.Plus}
@@ -48,14 +76,6 @@ export function MyVigilanceAreas() {
               Créer une zone de vigilance
             </Button>
           </ButtonContainer>
-
-          <LayerSelector.LayerList data-cy="my-vigilance-area-zones-list">
-            {myVigilanceAreaIds.length === 0 ? (
-              <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
-            ) : (
-              myVigilanceAreaIds.map(id => <MyVigilanceAreaLayerZone key={id} layerId={id} />)
-            )}
-          </LayerSelector.LayerList>
         </>
       )}
     </>
@@ -64,5 +84,13 @@ export function MyVigilanceAreas() {
 
 const ButtonContainer = styled.div<{ $withPaddingBottom: boolean }>`
   background-color: ${p => p.theme.color.white};
-  padding: 8px 16px ${p => (p.$withPaddingBottom ? ' 16px' : '0px')} 16px;
+  padding: 8px 16px 16px 16px;
+`
+
+const DraftVigilanceAreaTitle = styled.div`
+  background-color: ${p => p.theme.color.white};
+  border-top: 2px solid ${p => p.theme.color.lightGray};
+  color: ${p => p.theme.color.charcoal};
+  font-weight: bold;
+  padding: 8px 20px;
 `

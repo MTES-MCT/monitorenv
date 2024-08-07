@@ -22,6 +22,7 @@ data class VigilanceAreaModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @Column(name = "comments") val comments: String? = null,
+    @Column(name = "computed_end_date") val computedEndDate: Instant? = null,
     @Column(name = "created_by") val createdBy: String? = null,
     @Column(name = "end_date_period") val endDatePeriod: Instant? = null,
     @Column(name = "ending_condition", columnDefinition = "vigilance_area_ending_condition")
@@ -38,6 +39,7 @@ data class VigilanceAreaModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
+    @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "is_draft") val isDraft: Boolean,
     @Column(name = "links", columnDefinition = "jsonb")
@@ -61,6 +63,7 @@ data class VigilanceAreaModel(
             return VigilanceAreaModel(
                 id = vigilanceArea.id,
                 comments = vigilanceArea.comments,
+                computedEndDate = vigilanceArea.computedEndDate?.toInstant(),
                 createdBy = vigilanceArea.createdBy,
                 endingCondition = vigilanceArea.endingCondition,
                 endingOccurrenceDate = vigilanceArea.endingOccurrenceDate?.toInstant(),
@@ -68,6 +71,7 @@ data class VigilanceAreaModel(
                 frequency = vigilanceArea.frequency,
                 endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
                 geom = vigilanceArea.geom,
+                isArchived = vigilanceArea.isArchived,
                 isDeleted = vigilanceArea.isDeleted,
                 isDraft = vigilanceArea.isDraft,
                 links = vigilanceArea.links,
@@ -85,6 +89,7 @@ data class VigilanceAreaModel(
         return VigilanceAreaEntity(
             id = id,
             comments = comments,
+            computedEndDate = computedEndDate?.atZone(UTC),
             createdBy = createdBy,
             endingCondition = endingCondition,
             endingOccurrenceDate = endingOccurrenceDate?.atZone(UTC),
@@ -92,6 +97,7 @@ data class VigilanceAreaModel(
             frequency = frequency,
             endDatePeriod = endDatePeriod?.atZone(UTC),
             geom = geom,
+            isArchived = isArchived,
             isDeleted = isDeleted,
             isDraft = isDraft,
             links = links,

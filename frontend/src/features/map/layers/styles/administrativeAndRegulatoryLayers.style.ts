@@ -55,6 +55,20 @@ export const getAdministrativeLayersStyle = (code: String) => {
             text: `${feature.get(Layers.EEZ.subZoneFieldKey) ? feature.get(Layers.EEZ.subZoneFieldKey) : ''}`
           })
         })
+    case Layers.MARPOL.code:
+      return feature =>
+        new Style({
+          stroke: new Stroke({
+            color: darkPeriwinkle,
+            width: 1
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '12px Marianne',
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
+            text: `${feature.get(Layers.MARPOL.subZoneFieldKey) ? feature.get(Layers.MARPOL.subZoneFieldKey) : ''}`
+          })
+        })
     case Layers.THREE_MILES.code:
     case Layers.SIX_MILES.code:
     case Layers.TWELVE_MILES.code:

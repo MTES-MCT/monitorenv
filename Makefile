@@ -1,8 +1,8 @@
 BACKEND_CONFIGURATION_FOLDER=$(shell pwd)/infra/configurations/backend/
 HOST_MIGRATIONS_FOLDER=$(shell pwd)/backend/src/main/resources/db/migration
 
-ifneq (,$(wildcard ./.env))
-		include ./.env
+ifneq (,$(wildcard .env))
+		include .env
 		export
 endif
 
@@ -102,19 +102,11 @@ docker-build-app:
 		--build-arg SENTRY_PROJECT=$(SENTRY_PROJECT)
 
 # INIT commands
-.PHONY: load-sig-data prod-load-sig-data init-geoserver
+.PHONY: load-sig-data init-geoserver
 load-sig-data:
-	set -a
-	. ./infra/.env
-	set +a
-	echo ${PROJECT_NAME}
 	./infra/init/postgis_insert_layers.sh
 
 init-geoserver:
-	set -a
-	. .env
-	set +a
-	echo ${PROJECT_NAME}
 	./infra/init/geoserver_init_layers.sh
 
 .PHONY: register-pipeline-flows
@@ -175,6 +167,6 @@ restart-app:
 	docker compose --profile production up -d --build --pull always
 
 # ALIASES
-.PHONY: dev lint-back
+.PHONY: dev
 
 dev: dev-run-back

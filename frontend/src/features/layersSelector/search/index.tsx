@@ -1,5 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { type Option } from '@mtes-mct/monitor-ui'
+import { VigilanceArea } from '@features/VigilanceArea/types'
+import { getOptionsFromLabelledEnum, type DateAsStringRange, type Option } from '@mtes-mct/monitor-ui'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
@@ -11,7 +12,13 @@ import { LayerFilters } from './LayerFilters'
 import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
 import { SearchOnExtentExtraButtons } from './SearchOnExtentExtraButtons'
-import { setFilteredAmpTypes, setFilteredRegulatoryThemes, setGlobalSearchText } from './slice'
+import {
+  setFilteredAmpTypes,
+  setFilteredRegulatoryThemes,
+  setFilteredVigilanceAreaPeriod,
+  setGlobalSearchText,
+  setVigilanceAreaSpecificPeriodFilter
+} from './slice'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../../api/regulatoryLayersAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
@@ -31,12 +38,17 @@ export function LayerSearch() {
 
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
-  const filteredVigilanceAreasThemes = useAppSelector(state => state.layerSearch.filteredVigilanceAreasThemes)
+  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
+  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
 
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
 
-  const debouncedSearchLayers = useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
+  const debouncedSearchLayers = useSearchLayers({
+    amps,
+    regulatoryLayers,
+    vigilanceAreaLayers
+  })
 
   const handleSearchInputChange = searchedText => {
     dispatch(setGlobalSearchText(searchedText))
@@ -46,7 +58,8 @@ export function LayerSearch() {
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaThemes: filteredVigilanceAreasThemes
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
     })
   }
 
@@ -58,7 +71,8 @@ export function LayerSearch() {
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaThemes: filteredVigilanceAreasThemes
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
     })
   }
 
@@ -70,20 +84,62 @@ export function LayerSearch() {
       regulatoryThemes: filteredThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaThemes: filteredVigilanceAreasThemes
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
+    })
+  }
+
+  const handleSetFilteredVigilanceAreaPeriod = (
+    nextVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
+  ) => {
+    dispatch(setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod))
+
+    if (nextVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) {
+      dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
+    }
+
+    const nextVigilanceAreaSpecificPeriodFilter =
+      nextVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
+        ? vigilanceAreaSpecificPeriodFilter
+        : undefined
+
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: nextVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter: nextVigilanceAreaSpecificPeriodFilter
     })
   }
 
   const handleResetFilters = () => {
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setFilteredAmpTypes([]))
+    dispatch(setFilteredVigilanceAreaPeriod(undefined))
+    dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
     debouncedSearchLayers({
       ampTypes: [],
       extent: searchExtent,
       regulatoryThemes: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaThemes: []
+      vigilanceAreaPeriodFilter: undefined,
+      vigilanceAreaSpecificPeriodFilter: undefined
+    })
+  }
+
+  const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
+    dispatch(setVigilanceAreaSpecificPeriodFilter(dateRange))
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter: dateRange
     })
   }
 
@@ -105,6 +161,8 @@ export function LayerSearch() {
 
   const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers), [regulatoryLayers])
 
+  const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
+
   const allowResetResults =
     !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult) || !_.isEmpty(vigilanceAreaSearchResult)
 
@@ -115,6 +173,7 @@ export function LayerSearch() {
           displayRegFilters={displayRegFilters}
           filteredAmpTypes={filteredAmpTypes}
           filteredRegulatoryThemes={filteredRegulatoryThemes}
+          filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
           globalSearchText={globalSearchText}
           placeholder="Rechercher une zone"
           setGlobalSearchText={handleSearchInputChange}
@@ -125,10 +184,14 @@ export function LayerSearch() {
             ampTypes={ampTypes}
             filteredAmpTypes={filteredAmpTypes}
             filteredRegulatoryThemes={filteredRegulatoryThemes}
+            filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
             handleResetFilters={handleResetFilters}
             regulatoryThemes={regulatoryThemes}
             setFilteredAmpTypes={handleSetFilteredAmpTypes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
+            setFilteredVigilanceAreaPeriod={handleSetFilteredVigilanceAreaPeriod}
+            updateDateRangeFilter={updateDateRangeFilter}
+            vigilanceAreaPeriodOptions={vigilanceAreaPeriodOptions}
           />
         )}
         <ResultList searchedText={globalSearchText} />

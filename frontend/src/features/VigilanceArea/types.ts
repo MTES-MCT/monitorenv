@@ -3,22 +3,24 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace VigilanceArea {
   export interface VigilanceArea {
-    comments: string
-    createdBy: string
-    endDatePeriod: string
-    endingCondition: EndingCondition
-    endingOccurrenceDate?: string
-    endingOccurrencesNumber?: number
-    frequency: Frequency
-    geom: GeoJSON.MultiPolygon
-    id: number
+    comments: string | undefined
+    computedEndDate?: string
+    createdBy: string | undefined
+    endDatePeriod: string | undefined
+    endingCondition: EndingCondition | undefined
+    endingOccurrenceDate?: string | undefined
+    endingOccurrencesNumber?: number | undefined
+    frequency: Frequency | undefined
+    geom: GeoJSON.MultiPolygon | undefined
+    id: number | undefined
+    isArchived: boolean
     isDraft: boolean
     linkedAMPs: Array<number>
     linkedRegulatoryAreas: Array<number>
     links: Array<Link>
     name: string
-    source: string
-    startDatePeriod: string
+    source: string | undefined
+    startDatePeriod: string | undefined
     themes: Array<string>
     visibility: Visibility
   }
@@ -63,7 +65,24 @@ export namespace VigilanceArea {
     PRIVATE = 'Interne CACEM'
   }
 
+  export enum VigilanceAreaFilterPeriod {
+    AT_THE_MOMENT = 'AT_THE_MOMENT',
+    NEXT_THREE_MONTHS = 'NEXT_THREE_MONTHS',
+    CURRENT_QUARTER = 'CURRENT_QUARTER',
+    CURRENT_YEAR = 'CURRENT_YEAR',
+    SPECIFIC_PERIOD = 'SPECIFIC_PERIOD'
+  }
+
+  export enum VigilanceAreaFilterPeriodLabel {
+    AT_THE_MOMENT = 'En ce moment',
+    NEXT_THREE_MONTHS = 'Les trois prochains mois',
+    CURRENT_QUARTER = 'Ce trimestre',
+    CURRENT_YEAR = 'Cette année',
+    SPECIFIC_PERIOD = 'Période spécifique'
+  }
+
   export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
+    id: number
     isSelected: boolean
     layerId: number
   }

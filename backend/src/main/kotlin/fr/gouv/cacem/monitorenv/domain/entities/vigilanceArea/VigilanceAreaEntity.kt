@@ -6,6 +6,7 @@ import java.time.ZonedDateTime
 data class VigilanceAreaEntity(
     val id: Int? = null,
     val comments: String? = null,
+    val computedEndDate: ZonedDateTime? = null,
     val createdBy: String? = null,
     val endDatePeriod: ZonedDateTime? = null,
     val endingCondition: EndingConditionEnum? = null,
@@ -13,6 +14,7 @@ data class VigilanceAreaEntity(
     val endingOccurrencesNumber: Int? = null,
     val frequency: FrequencyEnum? = null,
     val geom: MultiPolygon? = null,
+    val isArchived: Boolean,
     val isDeleted: Boolean,
     val isDraft: Boolean,
     val links: List<LinkEntity>? = null,

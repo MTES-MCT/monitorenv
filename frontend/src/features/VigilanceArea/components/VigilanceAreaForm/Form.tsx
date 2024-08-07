@@ -100,10 +100,17 @@ export function Form() {
   }
 
   const onConfirmDeleteModal = () => {
+    if (!values.id) {
+      return
+    }
+
     dispatch(deleteVigilanceArea(values.id))
   }
 
   const deleteZone = index => {
+    if (!values.geom) {
+      return
+    }
     const coordinates = [...values.geom.coordinates]
     coordinates.splice(index, 1)
     setFieldValue('geom', { ...values.geom, coordinates })
@@ -192,6 +199,7 @@ export function Form() {
           label="Commentaire"
           name="comments"
           placeholder="Description de la zone de vigilance"
+          rows={8}
         />
         <ZonePicker
           addLabel="Définir un tracé pour la zone de vigilance"

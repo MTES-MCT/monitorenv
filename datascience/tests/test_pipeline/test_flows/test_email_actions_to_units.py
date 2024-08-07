@@ -1,6 +1,6 @@
+import dataclasses
 from datetime import datetime
 from email.message import EmailMessage
-from pathlib import Path
 from smtplib import SMTPDataError
 from typing import List
 from unittest.mock import patch
@@ -10,7 +10,11 @@ import pandas as pd
 import pytest
 from jinja2 import Template
 
-from config import CACEM_EMAIL_ADDRESS, MONITORENV_SENDER_EMAIL_ADDRESS
+from config import (
+    CACEM_EMAIL_ADDRESS,
+    MONITORENV_SENDER_EMAIL_ADDRESS,
+    TEST_DATA_LOCATION,
+)
 from src.pipeline.entities.actions_emailing import (
     ControlUnit,
     ControlUnitActions,
@@ -19,6 +23,7 @@ from src.pipeline.entities.actions_emailing import (
 from src.pipeline.flows.email_actions_to_units import (
     control_unit_actions_list_to_df,
     create_email,
+    extract_all_control_units,
     extract_control_units,
     extract_env_actions,
     flow,
@@ -41,17 +46,6 @@ flow.replace(
 
 @pytest.fixture
 def expected_env_actions() -> pd.DataFrame:
-    C1 = (
-        "Difficult ahead let really old around. "
-        "Cover operation seven surface use show. "
-        "Manage beautiful reason account prepare evening sure."
-    )
-
-    C2 = (
-        "Mother including baby same. "
-        "Evidence project air practice minute their. "
-        "Trouble sing suggest maintain like know too."
-    )
 
     return pd.DataFrame(
         {
@@ -62,7 +56,6 @@ def expected_env_actions() -> pd.DataFrame:
                 UUID("dfb9710a-2217-4f98-94dc-283d3b7bbaae"),
                 UUID("dfb9710a-2217-4f98-94dc-283d3b7bbaae"),
             ],
-            "mission_id": [19, 12, 12, 12, 12],
             "action_start_datetime_utc": [
                 datetime(
                     year=2022,
@@ -141,40 +134,6 @@ def expected_env_actions() -> pd.DataFrame:
                     microsecond=719000,
                 ),
             ],
-            "mission_start_datetime_utc": [
-                datetime(
-                    year=2022, month=6, day=21, hour=13, minute=24, second=4
-                ),
-                datetime(
-                    year=2022, month=2, day=24, hour=10, minute=56, second=33
-                ),
-                datetime(
-                    year=2022, month=2, day=24, hour=10, minute=56, second=33
-                ),
-                datetime(
-                    year=2022, month=2, day=24, hour=10, minute=56, second=33
-                ),
-                datetime(
-                    year=2022, month=2, day=24, hour=10, minute=56, second=33
-                ),
-            ],
-            "mission_end_datetime_utc": [
-                datetime(
-                    year=2022, month=7, day=18, hour=2, minute=49, second=8
-                ),
-                datetime(
-                    year=2022, month=5, day=6, hour=19, minute=38, second=29
-                ),
-                datetime(
-                    year=2022, month=5, day=6, hour=19, minute=38, second=29
-                ),
-                datetime(
-                    year=2022, month=5, day=6, hour=19, minute=38, second=29
-                ),
-                datetime(
-                    year=2022, month=5, day=6, hour=19, minute=38, second=29
-                ),
-            ],
             "mission_type": ["SEA", "SEA", "SEA", "SEA", "SEA"],
             "action_type": [
                 "SURVEILLANCE",
@@ -183,22 +142,7 @@ def expected_env_actions() -> pd.DataFrame:
                 "SURVEILLANCE",
                 "SURVEILLANCE",
             ],
-            "mission_facade": ["NAMO", "NAMO", "NAMO", "NAMO", "NAMO"],
             "control_unit_id": [10019, 10018, 10019, 10018, 10019],
-            "control_unit": [
-                "BN Toulon",
-                "P602 Verdon",
-                "BN Toulon",
-                "P602 Verdon",
-                "BN Toulon",
-            ],
-            "administration": [
-                "Gendarmerie Nationale",
-                "Gendarmerie Maritime",
-                "Gendarmerie Nationale",
-                "Gendarmerie Maritime",
-                "Gendarmerie Nationale",
-            ],
             "action_facade": [
                 "Hors façade",
                 "Hors façade",
@@ -213,31 +157,32 @@ def expected_env_actions() -> pd.DataFrame:
                 "Hors département",
                 "Hors département",
             ],
-            "longitude": [None, -3.0564, -2.9822, None, None],
-            "latitude": [None, 48.1177, 48.1236, None, None],
             "infraction": [None, False, False, None, None],
             "number_of_controls": [None, 0.0, 0.0, None, None],
             "surveillance_duration": [174.0, None, None, 3.0, 3.0],
-            "observations_cacem": [C1, C2, C2, C2, C2],
             "themes": [
-                [{"Culture marine": ["Implantation"]}],
-                [{"Aucun thème": ["Aucun sous-thème"]}],
-                [{"Aucun thème": ["Aucun sous-thème"]}],
-                [
-                    {
-                        "Activités et manifestations soumises à évaluation d’incidence Natura 2000": [
-                            "Aucun sous-thème"
-                        ]
-                    }
-                ],
-                [
-                    {
-                        "Activités et manifestations soumises à évaluation d’incidence Natura 2000": [
-                            "Aucun sous-thème"
-                        ]
-                    }
-                ],
+                {
+                    "Culture marine": ["Implantation"],
+                    "Police des espèces protégées et de leurs habitats (faune et flore)": [
+                        "Dérogations concernant les espèces protégées",
+                        "Détention d'espèces protégées",
+                    ],
+                },
+                {"Aucun thème": ["Aucun sous-thème"]},
+                {"Aucun thème": ["Aucun sous-thème"]},
+                {
+                    "Activités et manifestations soumises à évaluation d’incidence Natura 2000": [
+                        "Aucun sous-thème"
+                    ]
+                },
+                {
+                    "Activités et manifestations soumises à évaluation d’incidence Natura 2000": [
+                        "Aucun sous-thème"
+                    ]
+                },
             ],
+            "longitude": [None, -3.0193, -3.0193, None, None],
+            "latitude": [None, 48.12065, 48.12065, None, None],
         }
     )
 
@@ -262,6 +207,21 @@ def expected_control_units() -> pd.DataFrame:
 
 
 @pytest.fixture
+def expected_all_control_units() -> pd.DataFrame:
+    return pd.DataFrame(
+        {
+            "control_unit_id": [10002, 10018, 10019],
+            "control_unit_name": ["DML – DDTM 59", "P602 Verdon", "BN Toulon"],
+            "email_addresses": [
+                ["dml59@surveillance.fr"],
+                ["diffusion.p602@email.fr", "diffusion_bis.p602@email.fr"],
+                ["bn_toulon@email.fr"],
+            ],
+        }
+    )
+
+
+@pytest.fixture
 def sample_control_unit_actions() -> ControlUnitActions:
     return ControlUnitActions(
         control_unit=ControlUnit(
@@ -273,14 +233,84 @@ def sample_control_unit_actions() -> ControlUnitActions:
             start=datetime(2020, 6, 23, 0, 0, 0),
             end=datetime(2020, 5, 6, 18, 45, 6),
         ),
-        env_actions=pd.DataFrame({"some_column": ["some", "data"]}),
+        controls=pd.DataFrame(
+            {
+                "id": [UUID("d8e580fe-8e71-4303-a0c3-a76e1d4e4fc2")],
+                "action_start_datetime_utc": [
+                    datetime(2022, 11, 24, 20, 31, 41, 719000)
+                ],
+                "action_end_datetime_utc": [pd.NaT],
+                "mission_type": ["SEA"],
+                "action_type": ["CONTROL"],
+                "control_unit_id": [10019],
+                "action_facade": ["Hors façade"],
+                "action_department": ["Hors département"],
+                "infraction": [False],
+                "number_of_controls": [0.0],
+                "surveillance_duration": [None],
+                "themes": [{"Aucun thème": ["Aucun sous-thème"]}],
+                "longitude": [-3.0193],
+                "latitude": [48.12065],
+            }
+        ),
+        surveillances=pd.DataFrame(
+            {
+                "id": [
+                    UUID("88713755-3966-4ca4-ae18-10cab6249485"),
+                    UUID("dfb9710a-2217-4f98-94dc-283d3b7bbaae"),
+                ],
+                "action_start_datetime_utc": [
+                    datetime(2022, 11, 28, 13, 59, 20, 176000),
+                    datetime(2022, 11, 20, 20, 31, 41, 719000),
+                ],
+                "action_end_datetime_utc": [
+                    datetime(2022, 12, 5, 19, 59, 20, 176000),
+                    datetime(2022, 11, 20, 23, 31, 41, 719000),
+                ],
+                "mission_type": ["SEA", "SEA"],
+                "action_type": ["SURVEILLANCE", "SURVEILLANCE"],
+                "control_unit_id": [10019, 10019],
+                "action_facade": ["Hors façade", "Hors façade"],
+                "action_department": ["Hors département", "Hors département"],
+                "infraction": [None, None],
+                "number_of_controls": [None, None],
+                "surveillance_duration": [174.0, 3.0],
+                "themes": [
+                    {
+                        "Culture marine": ["Implantation"],
+                        "Police des espèces protégées et de leurs habitats (faune et flore)": [
+                            "Dérogations concernant les espèces protégées",
+                            "Détention d'espèces protégées",
+                        ],
+                    },
+                    {
+                        "Activités et manifestations soumises à évaluation d’incidence Natura 2000": [
+                            "Aucun sous-thème"
+                        ]
+                    },
+                ],
+                "longitude": [None, None],
+                "latitude": [None, None],
+            }
+        ),
     )
 
 
 @pytest.fixture
-def control_unit_actions_sent_messages() -> (
-    List[ControlUnitActionsSentMessage]
-):
+def sample_control_unit_actions_without_actions(
+    sample_control_unit_actions,
+) -> ControlUnitActions:
+    return dataclasses.replace(
+        sample_control_unit_actions,
+        controls=sample_control_unit_actions.controls.head(0),
+        surveillances=sample_control_unit_actions.surveillances.head(0),
+    )
+
+
+@pytest.fixture
+def control_unit_actions_sent_messages() -> List[
+    ControlUnitActionsSentMessage
+]:
 
     return [
         ControlUnitActionsSentMessage(
@@ -361,6 +391,23 @@ def control_unit_actions_sent_messages_df() -> pd.DataFrame:
     )
 
 
+@pytest.fixture
+def expected_email(sample_control_unit_actions) -> EmailMessage:
+
+    email = EmailMessage()
+    email["Subject"] = "Bilan hebdomadaire contrôle de l'environnement marin"
+    email["From"] = MONITORENV_SENDER_EMAIL_ADDRESS
+    email["To"] = ", ".join(
+        sample_control_unit_actions.control_unit.email_addresses
+    )
+    email["Reply-To"] = CACEM_EMAIL_ADDRESS
+    email.set_content(
+        "<html>Bonjour ceci est un email test.</html>\n", subtype="html"
+    )
+
+    return email
+
+
 def test_get_actions_period():
     period = get_actions_period.run(
         utcnow=datetime(2021, 2, 21, 16, 10, 0),
@@ -373,6 +420,7 @@ def test_get_actions_period():
 
 
 def test_extract_env_actions(reset_test_data, expected_env_actions):
+    # Dates with some data
     actions = extract_env_actions.run(
         period=Period(start=datetime(2022, 10, 1), end=datetime(2022, 12, 6))
     )
@@ -386,10 +434,7 @@ def test_extract_env_actions(reset_test_data, expected_env_actions):
     )
     pd.testing.assert_frame_equal(actions, expected_env_actions)
 
-
-def test_extract_env_actions_with_dates_without_controls(
-    reset_test_data, expected_env_actions
-):
+    # Dates without data
     actions = extract_env_actions.run(
         period=Period(start=datetime(2023, 10, 1), end=datetime(2023, 12, 6))
     )
@@ -415,6 +460,15 @@ def test_extract_control_units(
     pd.testing.assert_frame_equal(units, expected_control_units)
 
 
+def test_extract_all_control_units(
+    reset_test_data, expected_all_control_units
+):
+    units = extract_all_control_units.run()
+    units["email_addresses"] = units.email_addresses.map(sorted)
+
+    pd.testing.assert_frame_equal(units, expected_all_control_units)
+
+
 def test_to_control_unit_actions(expected_env_actions, expected_control_units):
 
     period = Period(
@@ -434,15 +488,23 @@ def test_to_control_unit_actions(expected_env_actions, expected_control_units):
     assert control_unit_actions[0].control_unit.control_unit_id == 10018
     assert control_unit_actions[0].period == period
     pd.testing.assert_frame_equal(
-        control_unit_actions[0].env_actions,
-        expected_env_actions.iloc[[1, 3]].reset_index(drop=True),
+        control_unit_actions[0].controls,
+        expected_env_actions.iloc[[1]].reset_index(drop=True),
+    )
+    pd.testing.assert_frame_equal(
+        control_unit_actions[0].surveillances,
+        expected_env_actions.iloc[[3]].reset_index(drop=True),
     )
 
     assert control_unit_actions[1].control_unit.control_unit_id == 10019
     assert control_unit_actions[1].period == period
     pd.testing.assert_frame_equal(
-        control_unit_actions[1].env_actions,
-        expected_env_actions.iloc[[0, 2, 4]].reset_index(drop=True),
+        control_unit_actions[1].controls,
+        expected_env_actions.iloc[[2]].reset_index(drop=True),
+    )
+    pd.testing.assert_frame_equal(
+        control_unit_actions[1].surveillances,
+        expected_env_actions.iloc[[0, 4]].reset_index(drop=True),
     )
 
 
@@ -453,41 +515,45 @@ def test_get_template():
 
 def test_render(sample_control_unit_actions):
     template = get_template.run()
-    html = render.run(actions=sample_control_unit_actions, template=template)
+    html = render.run(
+        control_unit_actions=sample_control_unit_actions, template=template
+    )
 
     # Uncomment to update the expected html file
-    # with open(Path(__file__).parent / "expected_rendered_email.html", "w") as f:
+    # with open(TEST_DATA_LOCATION / "emails/expected_rendered_email.html", "w") as f:
     #     f.write(html)
 
     with open(
-        Path(__file__).parent / "expected_rendered_email.html", "r"
+        TEST_DATA_LOCATION / "emails/expected_rendered_email.html", "r"
     ) as f:
         expected_html = f.read()
 
     assert html == expected_html
 
 
-@pytest.fixture
-def expected_email(sample_control_unit_actions) -> EmailMessage:
-
-    email = EmailMessage()
-    email["Subject"] = "Bilan hebdomadaire contrôle de l'environnement marin"
-    email["From"] = MONITORENV_SENDER_EMAIL_ADDRESS
-    email["To"] = ", ".join(
-        sample_control_unit_actions.control_unit.email_addresses
-    )
-    email["Reply-To"] = CACEM_EMAIL_ADDRESS
-    email.set_content(
-        "<html>Bonjour ceci est un email test.</html>\n", subtype="html"
+def test_render_when_unit_as_no_actions(
+    sample_control_unit_actions_without_actions,
+):
+    template = get_template.run()
+    html = render.run(
+        control_unit_actions=sample_control_unit_actions_without_actions,
+        template=template,
     )
 
-    email.add_attachment(
-        b"some_column\nsome\ndata\n",
-        maintype="text",
-        subtype="csv",
-        filename="env_actions.csv",
-    )
-    return email
+    # Uncomment to update the expected html file
+    # with open(
+    #     TEST_DATA_LOCATION / "emails/expected_rendered_email_without_actions.html", "w"
+    # ) as f:
+    #     f.write(html)
+
+    with open(
+        TEST_DATA_LOCATION
+        / "emails/expected_rendered_email_without_actions.html",
+        "r",
+    ) as f:
+        expected_html = f.read()
+
+    assert html == expected_html
 
 
 @pytest.mark.parametrize("test_mode", [False, True])
@@ -508,22 +574,6 @@ def test_create_email(sample_control_unit_actions, expected_email, test_mode):
     )
     assert email["Reply-To"] == expected_email["Reply-To"]
     assert email.get_content_type() == expected_email.get_content_type()
-
-    expected_attachments = list(expected_email.iter_attachments())
-    attachments = list(email.iter_attachments())
-
-    assert len(attachments) == len(expected_attachments) == 1
-    attachment = attachments[0]
-    expected_attachment = expected_attachments[0]
-    assert (
-        attachment.get_content_disposition()
-        == expected_attachment.get_content_disposition()
-    )
-    assert (
-        attachment.get_content_type() == expected_attachment.get_content_type()
-    )
-    assert attachment.get_filename() == expected_attachment.get_filename()
-    assert attachment.get_content() == expected_attachment.get_content()
 
     body = email.get_body()
     expected_body = expected_email.get_body()
@@ -601,8 +651,8 @@ def test_send_env_actions_email(
             == sample_control_unit_actions.period.end
         )
         assert msg.number_of_actions == len(
-            sample_control_unit_actions.env_actions
-        )
+            sample_control_unit_actions.controls
+        ) + len(sample_control_unit_actions.surveillances)
         assert msg.success == success
         assert msg.error_code == error_code
         assert msg.error_message == error_message
@@ -644,7 +694,12 @@ def test_load_emails_sent_to_control_units(
     )
 
 
-def test_flow_run_blabla(reset_test_data):
+@pytest.mark.parametrize(
+    "email_all_units,expected_number_of_sent_emails", [(True, 4), (False, 3)]
+)
+def test_flow(
+    reset_test_data, email_all_units, expected_number_of_sent_emails
+):
     now = datetime.utcnow()
     d1 = datetime(2022, 10, 1)
     d2 = datetime(2022, 12, 6)
@@ -660,9 +715,10 @@ def test_flow_run_blabla(reset_test_data):
         is_integration=True,
         start_days_ago=start_days_ago,
         end_days_ago=end_days_ago,
+        email_all_units=email_all_units,
     )
     assert state.is_successful()
 
     final_emails = read_query(db="monitorenv_remote", query=query)
     assert len(initial_emails) == 0
-    assert len(final_emails) == 3
+    assert len(final_emails) == expected_number_of_sent_emails

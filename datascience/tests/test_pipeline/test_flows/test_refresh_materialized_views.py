@@ -18,7 +18,7 @@ def test_refresh_analytics_actions(reset_test_data):
         """
         SELECT *
         FROM analytics_actions
-        ORDER BY id, control_unit
+        ORDER BY id, control_unit, theme_level_1, theme_level_2
         """
     )
 
@@ -57,9 +57,9 @@ def test_refresh_analytics_actions(reset_test_data):
 
     actions_after_refresh = read_query("monitorenv_remote", query)
 
-    assert len(initial_actions) == 7
-    assert len(actions_before_refresh) == 7
-    assert len(actions_after_refresh) == 1
+    assert len(initial_actions) == 9
+    assert len(actions_before_refresh) == 9
+    assert len(actions_after_refresh) == 3
 
     pd.testing.assert_frame_equal(initial_actions, actions_before_refresh)
     pd.testing.assert_frame_equal(

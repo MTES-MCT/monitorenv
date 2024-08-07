@@ -5,21 +5,38 @@
         <meta charset="UTF-8">
         <style>
             {% include "splendid.css" %}
+            {% include "email_to_control_units.css" %}
         </style>
     </head>
     <body>
         <header>
-            <h3>Bilan hebdomadaire contrôle de l'environnement marin</h3>
+            <h1>Bilan hebdomadaire contrôle de l'environnement marin</h1>
         </header>
-        <hr>
+        <hr />
         <main>
             <section>
                 <p>Bonjour,</p>
-                <p>Vous trouverez ci-joint les données des <strong>contrôles</strong> et des <strong>surveillances de l'environnement marin</strong> effectués par votre unité
+                <p>Vous trouverez ci-dessous les données des <strong>contrôles</strong> et des <strong>surveillances de l'environnement marin</strong> effectués par votre unité
                 (<strong>{{ control_unit_name }}</strong>) <strong>entre le {{ from_date }} et le {{ to_date }}</strong> que vous avez rapportés au Centre d'Appui au Contrôle de l'Environnement Marin (CACEM).</p>
                 <p>Seuls les contrôles et surveillances dont les données sont complètes sont transmis dans ce bilan hebdomadaire. Si certaines données n'ont pas encore été transmises (par ex. l'établissement d'un PV ou non),
                 il est normal que le contrôle ne figure pas encore dans le rapport.</p>
-                <p>Si des données sont manquantes, incorrectes ou incomplètes, n'hésitez pas à <strong>contacter le CACEM</strong>.</p>
+                <p>Si des données sont manquantes, incorrectes ou incomplètes, ou pour toute remarque concernant ce bilan, n'hésitez pas à <strong>contacter le CACEM : <a href="mailto:{{ cacem_email_address }}">{{ cacem_email_address }}</a></strong>.</p>
+            </section>
+            <hr />
+            <section>
+                <h2>Contrôles</h2>
+                {{ controls }}
+
+                <h2>Surveillances</h2>
+                {{ surveillances }}
+            </section>
+            <hr />
+            <section>
+                <p>
+                    Pour réaliser vos bilans, ces données sont stockées, mises en forme en tableaux de bord et accessibles en temps réel sur 
+                    l'interface <a href="{{ metabase_url }}">Metabase</a> : pour obtenir vos accès nominatifs, veuillez vous rapprocher de 
+                    {{ cacem_analyst_name }} (<a href="mailto:{{ cacem_analyst_email }}">{{ cacem_analyst_email }}</a>), analyste de données pour le CACEM et administrateur Metabase.
+                </p>
             </section>
         </main>
         <footer class="no-vertical-margin">

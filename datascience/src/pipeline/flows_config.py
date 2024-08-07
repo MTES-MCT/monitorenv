@@ -7,6 +7,7 @@ from prefect.storage.local import Local
 
 from config import (
     DOCKER_IMAGE,
+    EMAIL_ALL_UNITS,
     FLOWS_LOCATION,
     IS_INTEGRATION,
     MONITORENV_VERSION,
@@ -47,6 +48,7 @@ email_actions_to_units.flow.schedule = Schedule(
                 "end_days_ago": 1,
                 "test_mode": TEST_MODE,
                 "is_integration": IS_INTEGRATION,
+                "email_all_units": EMAIL_ALL_UNITS,
             },
         ),
     ]
@@ -114,9 +116,7 @@ for flow in flows_to_register:
 for flow in flows_to_register:
     host_config = None
 
-    if flow.name in (
-        "Control objectives",
-    ):
+    if flow.name in ("Control objectives",):
         host_config = {
             "mounts": [
                 Mount(

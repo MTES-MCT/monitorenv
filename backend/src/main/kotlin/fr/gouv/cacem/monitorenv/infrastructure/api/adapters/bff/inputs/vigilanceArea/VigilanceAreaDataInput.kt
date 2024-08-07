@@ -7,6 +7,7 @@ import java.time.ZonedDateTime
 data class VigilanceAreaDataInput(
     val id: Int? = null,
     val comments: String? = null,
+    val computedEndDate: ZonedDateTime? = null,
     val createdBy: String? = null,
     val endDatePeriod: ZonedDateTime? = null,
     val endingCondition: EndingConditionEnum? = null,
@@ -14,6 +15,7 @@ data class VigilanceAreaDataInput(
     val endingOccurrencesNumber: Int? = null,
     val frequency: FrequencyEnum? = null,
     val geom: MultiPolygon? = null,
+    val isArchived: Boolean,
     val isDraft: Boolean,
     val links: List<LinkEntity>? = null,
     val linkedAMPs: List<Int>? = listOf(),
@@ -28,6 +30,7 @@ data class VigilanceAreaDataInput(
         return VigilanceAreaEntity(
             id = this.id,
             comments = this.comments,
+            computedEndDate = this.computedEndDate,
             createdBy = this.createdBy,
             endDatePeriod = this.endDatePeriod,
             endingCondition = this.endingCondition,
@@ -35,6 +38,7 @@ data class VigilanceAreaDataInput(
             endingOccurrencesNumber = this.endingOccurrencesNumber,
             frequency = this.frequency,
             geom = this.geom,
+            isArchived = this.isArchived,
             isDeleted = false,
             isDraft = this.isDraft,
             links = this.links,

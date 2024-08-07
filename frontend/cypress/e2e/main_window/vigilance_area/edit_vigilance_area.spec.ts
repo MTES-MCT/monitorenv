@@ -145,4 +145,15 @@ describe('Edit Vigilance Area', () => {
       cy.clickButton('Enregistrer')
     })
   })
+  it('Should edit the vigilance area and no longer see it in the list of draft vigilance areas', () => {
+    cy.visit('/')
+    cy.wait(500)
+
+    cy.clickButton('Arbre des couches')
+    cy.getDataCy('my-vigilance-areas-layers').click()
+    cy.getDataCy('vigilance-area-zone-Zone de vigilance 5').should('be.visible')
+    cy.clickButton('Afficher la zone de vigilance')
+    cy.clickButton('Publier')
+    cy.getDataCy('vigilance-area-zone-Zone de vigilance 5').should('not.exist')
+  })
 })
