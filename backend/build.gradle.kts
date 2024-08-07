@@ -71,7 +71,7 @@ dependencies {
     implementation("io.ktor:ktor-client-java-jvm:2.3.12")
     implementation("io.ktor:ktor-client-content-negotiation-jvm:2.3.12")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.3.12")
-    implementation("io.sentry:sentry:6.31.0")
+    implementation("io.sentry:sentry:7.13.0")
     implementation("io.sentry:sentry-log4j2:7.13.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     runtimeOnly("org.springframework.boot:spring-boot-devtools:3.3.2")
