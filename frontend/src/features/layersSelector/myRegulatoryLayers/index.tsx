@@ -33,7 +33,7 @@ export function RegulatoryLayers() {
         <LayerSelector.Title>Mes zones réglementaires</LayerSelector.Title>
         <ChevronIcon $isOpen={myRegulatoryZonesIsOpen} $right />
       </LayerSelector.Wrapper>
-      {myRegulatoryZonesIsOpen && <RegulatoryLayersList />}
+      <RegulatoryLayersList />
     </>
   )
 }

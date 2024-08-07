@@ -41,33 +41,40 @@ export function MyVigilanceAreas() {
         <LayerSelector.Title>Mes zones de vigilance</LayerSelector.Title>
         <ChevronIcon $isOpen={myVigilanceAreasIsOpen} $right />
       </LayerSelector.Wrapper>
-      {myVigilanceAreasIsOpen && (
-        <>
-          <LayerSelector.LayerList
-            $maxHeight={draftVigilanceAreas.length > 3 ? 24 : undefined}
-            data-cy="my-vigilance-area-zones-list"
-          >
-            {myVigilanceAreaIds.length === 0 ? (
-              <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
-            ) : (
-              myVigilanceAreaIds.map(id => <MyVigilanceAreaLayerZone key={id} layerId={id} pinnedVigilanceArea />)
-            )}
-          </LayerSelector.LayerList>
-          {draftVigilanceAreas.length > 0 && (
-            <>
-              <DraftVigilanceAreaTitle>Zones non publiées</DraftVigilanceAreaTitle>
-              <LayerSelector.LayerList $maxHeight={24} data-cy="draft-vigilance-area-zones-list">
-                {draftVigilanceAreas?.map(vigilanceArea => {
-                  if (!vigilanceArea?.id) {
-                    return null
-                  }
 
-                  return <MyVigilanceAreaLayerZone key={vigilanceArea?.id} layerId={vigilanceArea?.id} />
-                })}
-              </LayerSelector.LayerList>
-            </>
+      <>
+        <LayerSelector.LayerList
+          $baseLayersLength={myVigilanceAreaIds.length}
+          $maxHeight={draftVigilanceAreas.length > 3 ? 24 : undefined}
+          $showBaseLayers={myVigilanceAreasIsOpen}
+          data-cy="my-vigilance-area-zones-list"
+        >
+          {myVigilanceAreaIds.length === 0 ? (
+            <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
+          ) : (
+            myVigilanceAreaIds.map(id => <MyVigilanceAreaLayerZone key={id} layerId={id} pinnedVigilanceArea />)
           )}
+        </LayerSelector.LayerList>
+        {myVigilanceAreasIsOpen && draftVigilanceAreas.length > 0 && (
+          <>
+            <DraftVigilanceAreaTitle>Zones non publiées</DraftVigilanceAreaTitle>
+            <LayerSelector.LayerList
+              $baseLayersLength={draftVigilanceAreas.length}
+              $showBaseLayers={myVigilanceAreasIsOpen}
+              data-cy="draft-vigilance-area-zones-list"
+            >
+              {draftVigilanceAreas?.map(vigilanceArea => {
+                if (!vigilanceArea?.id) {
+                  return null
+                }
 
+                return <MyVigilanceAreaLayerZone key={vigilanceArea?.id} layerId={vigilanceArea?.id} />
+              })}
+            </LayerSelector.LayerList>
+          </>
+        )}
+
+        {myVigilanceAreasIsOpen && (
           <ButtonContainer $withPaddingBottom={myVigilanceAreaIds.length > 0 || draftVigilanceAreas.length > 0}>
             <Button
               accent={Accent.SECONDARY}
@@ -79,8 +86,8 @@ export function MyVigilanceAreas() {
               Créer une zone de vigilance
             </Button>
           </ButtonContainer>
-        </>
-      )}
+        )}
+      </>
     </>
   )
 }

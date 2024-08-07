@@ -59,13 +59,10 @@ const Wrapper = styled.div<{
   top: 10px;
   transition: right 0.5s ease-out;
   width: 365px;
-
-  > div {
-    flex-grow: 1;
-  }
 `
 const StyledSearch = styled(Search)`
   box-shadow: 0px 3px 6px ${p => getColorWithAlpha(p.theme.color.slateGray, 0.25)};
+  flex-grow: 1;
 `
 
 // TODO delete padding when Monitor-ui component have good padding

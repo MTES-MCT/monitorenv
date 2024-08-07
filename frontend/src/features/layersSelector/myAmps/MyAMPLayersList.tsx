@@ -11,6 +11,7 @@ import type { AMP } from '../../../domain/entities/AMPs'
 export function AMPLayersList() {
   const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
+  const myAmpsIsOpen = useAppSelector(state => state.layerSidebar.myAmpsIsOpen)
 
   const { currentData: amps, isLoading } = useGetAMPsQuery()
   const selectedAmps = useMemo(
@@ -21,7 +22,7 @@ export function AMPLayersList() {
 
   if (_.isEmpty(selectedAmpLayerIds)) {
     return (
-      <LayerSelector.LayerList>
+      <LayerSelector.LayerList $baseLayersLength={0} $showBaseLayers={myAmpsIsOpen}>
         <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
       </LayerSelector.LayerList>
     )
@@ -29,14 +30,18 @@ export function AMPLayersList() {
 
   if (isLoading) {
     return (
-      <LayerSelector.LayerList>
+      <LayerSelector.LayerList $baseLayersLength={0} $showBaseLayers={myAmpsIsOpen}>
         <LayerSelector.NoLayerSelected>Chargement en cours</LayerSelector.NoLayerSelected>
       </LayerSelector.LayerList>
     )
   }
 
   return (
-    <LayerSelector.LayerList data-cy="my-amp-zones-list">
+    <LayerSelector.LayerList
+      $baseLayersLength={Object.keys(layersByLayersName).length}
+      $showBaseLayers={myAmpsIsOpen}
+      data-cy="my-amp-zones-list"
+    >
       {layersByLayersName &&
         Object.entries(layersByLayersName).map(
           ([layerName, layers]) =>

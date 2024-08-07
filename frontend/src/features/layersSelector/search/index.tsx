@@ -167,7 +167,7 @@ export function LayerSearch() {
     !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult) || !_.isEmpty(vigilanceAreaSearchResult)
 
   return (
-    <>
+    <SearchContainer>
       <Search>
         <SearchInput
           displayRegFilters={displayRegFilters}
@@ -198,10 +198,13 @@ export function LayerSearch() {
       </Search>
 
       <SearchOnExtentExtraButtons allowResetResults={allowResetResults} debouncedSearchLayers={debouncedSearchLayers} />
-    </>
+    </SearchContainer>
   )
 }
 
+const SearchContainer = styled.div`
+  display: flex;
+`
 const Search = styled.div`
   width: 352px;
 `

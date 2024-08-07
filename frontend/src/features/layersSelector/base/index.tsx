@@ -15,6 +15,7 @@ export function BaseLayerList() {
   const dispatch = useAppDispatch()
   const baselayerIsOpen = useAppSelector(state => state.layerSidebar.baselayerIsOpen)
   const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
+
   const onSectionTitleClicked = () => {
     dispatch(layerSidebarActions.toggleBaseLayer())
   }
@@ -44,32 +45,11 @@ export function BaseLayerList() {
 
 const BaseLayersContainer = styled.div<{ $baseLayersLength: number | undefined; $showBaseLayers: boolean }>`
   background-color: ${p => p.theme.color.white};
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 2px;
   border-radius: 0;
   margin: 0;
-
-  animation: ${p => (p.$showBaseLayers ? 'zones-opening' : 'zones-closing')} 0.5s ease forwards;
-  height: 0;
-  overflow-y: hidden;
-  overflow-x: hidden;
-  @keyframes zones-opening {
-    0% {
-      height: 0;
-    }
-    100% {
-      height: ${p => (p.$baseLayersLength ? `${39 * p.$baseLayersLength}px` : '175px')};
-    }
-  }
-
-  @keyframes zones-closing {
-    0% {
-      height: ${p => (p.$baseLayersLength ? `${39 * p.$baseLayersLength}px` : '175px')};
-    }
-    100% {
-      height: 0;
-    }
-  }
+  height: ${p => (p.$showBaseLayers && p.$baseLayersLength ? 39 * p.$baseLayersLength : 0)}px;
+  overflow: hidden;
+  transition: 0.5s all;
 `
 
 const StyledMultiRadio = styled(MultiRadio)`

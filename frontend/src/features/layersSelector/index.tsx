@@ -57,12 +57,12 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   }
 
   return (
-    <>
+    <Container>
       <SidebarLayersIcon
-        $isActive={isLayersSidebarVisible}
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
         aria-label="Arbre des couches"
+        className={isLayersSidebarVisible ? '_active' : ''}
         data-cy="layers-sidebar"
         Icon={Icon.MapLayers}
         onClick={toggleLayerSidebar}
@@ -130,9 +130,15 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
           </Message>
         </SpinnerWrapper>
       )}
-    </>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+`
 
 const MetadataPanelShifter = styled.div<{
   isLayersSidebarVisible: boolean
@@ -192,8 +198,8 @@ const VigilanceAreaPanelShifter = styled.div<{
 const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean }>`
   margin-left: ${props => (props.isLayersSidebarVisible ? 0 : '-455px')};
   opacity: ${props => (props.isVisible ? 1 : 0)};
-  top: 10px;
-  left: 57px;
+  top: 0px;
+  left: 46px;
   z-index: 1;
   border-radius: 2px;
   position: absolute;
@@ -206,19 +212,14 @@ const Layers = styled.div`
   max-height: calc(100vh - 160px);
 `
 
-const SidebarLayersIcon = styled(IconButton)<{ $isActive: boolean; $isVisible: boolean }>`
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  ${p => (p.$isActive ? `background: ${p.theme.color.blueGray};` : '')}
-  ${p => (p.$isActive ? `border-color: ${p.theme.color.blueGray};` : '')}
+const SidebarLayersIcon = styled(IconButton)<{ $isVisible: boolean }>`
   ${p => (p.$isVisible ? '' : 'display: none;')}
 `
 
 const SpinnerWrapper = styled.div<{ $isLayersSidebarVisible: boolean }>`
   position: absolute;
-  top: 12px;
-  left: ${props => (props.$isLayersSidebarVisible ? '460px' : '65px')};
+  top: 0px;
+  left: ${props => (props.$isLayersSidebarVisible ? '460px' : '56px')};
   display: flex;
   padding: 4px;
 `
