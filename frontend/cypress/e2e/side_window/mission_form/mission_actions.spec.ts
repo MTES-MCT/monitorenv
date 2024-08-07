@@ -3,7 +3,7 @@
 import { createPendingMission } from '../../utils/createPendingMission'
 import { getFutureDate } from '../../utils/getFutureDate'
 
-import type { EnvActionControl, Infraction } from 'domain/entities/missions'
+import type { EnvActionControl, EnvActionSurveillance, Infraction } from 'domain/entities/missions'
 
 context('Side Window > Mission Form > Mission actions', () => {
   beforeEach(() => {
@@ -18,17 +18,17 @@ context('Side Window > Mission Form > Mission actions', () => {
 
   it('An infraction Should be duplicated', () => {
     // Given
-    cy.get('*[data-cy="edit-mission-34"]').scrollIntoView().click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(1).click()
-    cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
-    cy.get('*[data-cy="infraction-form"]').should('not.exist')
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
+    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('control-form-number-controls').type('{backspace}2')
+    cy.getDataCy('infraction-form').should('not.exist')
 
     // When
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('*[data-cy="duplicate-infraction"]').click({ force: true })
-    cy.get('*[data-cy="infraction-form-registrationNumber"]').should('have.value', 'BALTIK')
-    cy.get('*[data-cy="infraction-form-validate"]').click({ force: true })
-    cy.get('*[data-cy="duplicate-infraction"]').eq(1).should('be.disabled')
+    cy.getDataCy('duplicate-infraction').click({ force: true })
+    cy.getDataCy('infraction-form-registrationNumber').should('have.value', 'BALTIK')
+    cy.getDataCy('infraction-form-validate').click({ force: true })
+    cy.getDataCy('duplicate-infraction').eq(1).should('be.disabled')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
@@ -57,29 +57,29 @@ context('Side Window > Mission Form > Mission actions', () => {
 
   it('Allow only one theme and multiple subthemes in control actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission-34"]').scrollIntoView().click({ force: true })
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('*[data-cy="action-card"]').eq(1).click()
-    cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
-    cy.get('*[data-cy="envaction-theme-selector"]').contains('Mouillage individuel') // id 100
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage avec AOT individuelle') // id 102
-    cy.get('*[data-cy="envaction-tags-selector"]').should('not.exist')
+    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('envaction-theme-element').should('have.length', 1)
+    cy.getDataCy('envaction-theme-selector').contains('Mouillage individuel') // id 100
+    cy.getDataCy('envaction-theme-element').contains('Mouillage avec AOT individuelle') // id 102
+    cy.getDataCy('envaction-tags-selector').should('not.exist')
 
     // When
     cy.fill('Thématique de contrôle', 'Espèce protégée') // id 103
     cy.wait(250)
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]')
+    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element')
       .contains("Destruction, capture, arrachage d'espèces protégées")
       .click({ force: true }) // id 117
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention des espèces protégées').click({ force: true }) // id 120
+    cy.getDataCy('envaction-theme-element').contains('Détention des espèces protégées').click({ force: true }) // id 120
 
     cy.wait(250)
-    cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
-    cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true }) // id 15
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true }) // id 11
-    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
+    cy.getDataCy('envaction-tags-selector').should('exist')
+    cy.getDataCy('envaction-tags-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Habitat').click({ force: true }) // id 15
+    cy.getDataCy('envaction-theme-element').contains('Oiseaux').click({ force: true }) // id 11
+    cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
 
     /*
     TODO: fix this command in monitor-ui
@@ -90,7 +90,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     )
     cy.fill('Précisions sur la thématique', ['Habitat', 'Oiseaux'], { delay: 250 }) // id 15 and 11
     */
-    cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
+    cy.getDataCy('envaction-add-theme').should('not.exist')
     cy.wait(500)
 
     // Then
@@ -128,14 +128,14 @@ context('Side Window > Mission Form > Mission actions', () => {
 
   it('Save observations in control Actions', () => {
     cy.wait(250)
-    cy.get('*[data-cy="edit-mission-34"]').scrollIntoView().click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(1).click()
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
+    cy.getDataCy('action-card').eq(1).click()
 
     cy.getDataCy('control-form-observations').contains('RAS')
 
     // When
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.getDataCy('control-form-observations').type('{backspace}{backspace}Une observation importante.', {
+    cy.getDataCy('control-form-observations').type('{backspace}{backspace}{backspace}Une observation importante.', {
       delay: 200,
       force: true
     })
@@ -149,7 +149,7 @@ context('Side Window > Mission Form > Mission actions', () => {
           envActions: [
             {
               id: 'b8007c8a-5135-4bc3-816f-c69c7b75d807',
-              observations: 'RUne observation importante.'
+              observations: 'Une observation importante.'
             }
           ]
         }
@@ -158,75 +158,126 @@ context('Side Window > Mission Form > Mission actions', () => {
       0,
       response => {
         const { observations } = response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
-        expect(observations).equal('RUne observation importante.')
+        expect(observations).equal('Une observation importante.')
 
         expect(response && response.statusCode).equal(200)
         expect(
           response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')?.observations
-        ).equal('RUne observation importante.')
+        ).equal('Une observation importante.')
       }
     )
   })
 
-  it('Allow multiple themes and multiple subthemes in surveillance actions', () => {
+  it('should allowed multiple themes and multiple subthemes in surveillance actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission-34"]').scrollIntoView().click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(0).click()
-    cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 2)
-    cy.get('*[data-cy="envaction-theme-selector"]').eq(0).contains('Espèce protégée et leur habitat (faune et flore)') // id 103
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage') // id 117
-    cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat') // id 15
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux') // id 11
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
+    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('envaction-theme-element').should('have.length', 2)
+    cy.getDataCy('envaction-theme-selector').eq(0).contains('Espèce protégée et leur habitat (faune et flore)') // id 103
+    cy.getDataCy('envaction-theme-element').contains('Destruction, capture, arrachage') // id 117
+    cy.getDataCy('envaction-tags-selector').should('exist')
+    cy.getDataCy('envaction-theme-element').contains('Habitat') // id 15
+    cy.getDataCy('envaction-theme-element').contains('Oiseaux') // id 11
 
     // When
-    cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click({ force: true }) // id 105
+    cy.getDataCy('envaction-theme-selector').eq(0).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(0).contains('Épave').click({ force: true }) // id 105
 
-    cy.get('*[data-cy="envaction-add-theme"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-selector"]').eq(2).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click({ force: true }) // id 102
+    cy.getDataCy('envaction-add-theme').click({ force: true })
+    cy.getDataCy('envaction-theme-selector').eq(2).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(2).contains('Rejet').click({ force: true }) // id 102
 
-    cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
+    cy.getDataCy('envaction-subtheme-selector').eq(2).click({ force: true })
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains("Rejet d'hydrocarbure").click({ force: true }) // id 74
+    cy.getDataCy('envaction-theme-element').eq(2).contains("Rejet d'hydrocarbure").click({ force: true }) // id 74
 
-    cy.get('*[data-cy="envaction-tags-selector"]').should('have.length', 0)
+    cy.getDataCy('envaction-tags-selector').should('have.length', 0)
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
 
-      const { controlPlans } =
+      const { controlPlans }: EnvActionSurveillance =
         response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
       expect(controlPlans.length).equal(3)
 
-      expect(controlPlans[0].themeId).equal(100)
-      expect(controlPlans[0].subThemeIds.length).equal(2)
-      expect(controlPlans[0].subThemeIds[0]).equal(100)
-      expect(controlPlans[0].subThemeIds[1]).equal(102)
-      expect(controlPlans[0].tagIds.length).equal(0)
+      expect(controlPlans[0]?.themeId).equal(100)
+      expect(controlPlans[0]?.subThemeIds.length).equal(2)
+      expect(controlPlans[0]?.subThemeIds[0]).equal(100)
+      expect(controlPlans[0]?.subThemeIds[1]).equal(102)
+      expect(controlPlans[0]?.tagIds.length).equal(0)
       0
-      expect(controlPlans[1].themeId).equal(105)
-      expect(controlPlans[1].subThemeIds.length).equal(0)
-      expect(controlPlans[1].tagIds.length).equal(0)
+      expect(controlPlans[1]?.themeId).equal(105)
+      expect(controlPlans[1]?.subThemeIds.length).equal(0)
+      expect(controlPlans[1]?.tagIds.length).equal(0)
 
-      expect(controlPlans[2].themeId).equal(102)
-      expect(controlPlans[2].subThemeIds.length).equal(1)
-      expect(controlPlans[2].subThemeIds[0]).equal(110)
-      expect(controlPlans[2].tagIds.length).equal(0)
+      expect(controlPlans[2]?.themeId).equal(102)
+      expect(controlPlans[2]?.subThemeIds.length).equal(1)
+      expect(controlPlans[2]?.subThemeIds[0]).equal(110)
+      expect(controlPlans[2]?.tagIds.length).equal(0)
     })
+  })
+
+  it('should retrieve all themes into awareness select field in surveillance actions', () => {
+    // Given
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
+    cy.getDataCy('action-card').eq(0).click()
+
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
+
+    cy.getDataCy('envaction-theme-selector').eq(0).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(0).contains('Épave').click({ force: true }) // id 105
+
+    cy.getDataCy('envaction-theme-selector').eq(1).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(1).contains('Rejet').click({ force: true }) // id 102
+
+    cy.getDataCy('envaction-add-theme').click({ force: true })
+    cy.getDataCy('envaction-subtheme-selector').eq(2).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(2).contains('Pêche à pied').click({ force: true }) // id 18
+
+    cy.fill('La surveillance a donné lieu à des actions de sensibilisation', true)
+
+    cy.getDataCy('surveillance-awareness-select')
+      .click({ force: true })
+      .get('[id="envActions[1].awareness.themeId-listbox"]')
+      .find('[role="option"]')
+      .then(options => {
+        const actual = [...options].map(option => option.textContent)
+        expect(actual).to.deep.eq(['Épave', 'Pêche à pied', 'Rejet'])
+      })
+
+    cy.get('div[role="option"]').contains('Épave').click()
+    cy.fill('Nb de personnes sensibilisées', 5)
+
+    // Then
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {}
+      },
+      5,
+      0,
+      response => {
+        expect(response && response.statusCode).equal(200)
+
+        const { awareness }: EnvActionSurveillance =
+          response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+        expect(awareness?.isRisingAwareness).equal(true)
+        expect(awareness?.nbPerson).equal(5)
+        expect(awareness?.themeId).equal(105)
+      }
+    )
   })
 
   it(`Should be able to delete action with linked reporting`, () => {
     // Given
-    cy.get('*[data-cy="edit-mission-34"]').scrollIntoView().click({ force: true })
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
     cy.wait(500)
-    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.getDataCy('action-card').eq(0).click()
 
     cy.wait(500)
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('*[data-cy="actioncard-delete-button-b8007c8a-5135-4bc3-816f-c69c7b75d807"]').click()
+    cy.getDataCy('actioncard-delete-button-b8007c8a-5135-4bc3-816f-c69c7b75d807').click()
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
@@ -285,7 +336,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.fill('Unité 1', 'Brigade fluviale de Rouen')
     cy.wait(250)
-    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+    cy.getDataCy('control-unit-contact').type('Contact 012345')
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
     cy.wait(250)
 
@@ -337,15 +388,12 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.getDataCy('action-missing-fields-text').contains('3 champs nécessaires aux statistiques à compléter')
 
-    cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click({ force: true }) // id 105
-    cy.get('*[data-cy="envaction-subtheme-selector"]').eq(0).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]')
-      .eq(0)
-      .contains("Découverte d'une épave maritime")
-      .click({ force: true }) // id 128
-    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
-    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
+    cy.getDataCy('envaction-theme-selector').eq(0).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(0).contains('Épave').click({ force: true }) // id 105
+    cy.getDataCy('envaction-subtheme-selector').eq(0).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(0).contains("Découverte d'une épave maritime").click({ force: true }) // id 128
+    cy.getDataCy('envaction-theme-element').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
+    cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('surveillance-completed-by').type('ABC', { force: true })
     cy.wait(250)
@@ -362,11 +410,11 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
-    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
-    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft', { force: true })
+    cy.getDataCy('envaction-theme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
+    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Pêche embarquée').click({ force: true }) // id 173
+    cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
 
     cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
     cy.getDataCy('control-completed-by').scrollIntoView().type('ABC', { force: true })
@@ -386,12 +434,12 @@ context('Side Window > Mission Form > Mission actions', () => {
       expect(controlPlans.subThemeIds[0]).equal(173)
 
       // surveillance
-      const surveillance = envActions.find(a => a.actionType === 'SURVEILLANCE')
+      const surveillance: EnvActionSurveillance = envActions.find(a => a.actionType === 'SURVEILLANCE')
       const surveillanceControlPlans = surveillance.controlPlans[0]
-      expect(surveillanceControlPlans.themeId).equal(105)
-      expect(surveillanceControlPlans.subThemeIds.length).equal(2)
-      expect(surveillanceControlPlans.subThemeIds[0]).equal(128)
-      expect(surveillanceControlPlans.subThemeIds[1]).equal(131)
+      expect(surveillanceControlPlans?.themeId).equal(105)
+      expect(surveillanceControlPlans?.subThemeIds.length).equal(2)
+      expect(surveillanceControlPlans?.subThemeIds[0]).equal(128)
+      expect(surveillanceControlPlans?.subThemeIds[1]).equal(131)
 
       const id = response && response.body.id
       // update mission date to 2023
@@ -403,32 +451,32 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       // check if themes in control has been reset
       cy.wait(250)
-      cy.get('*[data-cy="action-card"]').eq(0).click()
+      cy.getDataCy('action-card').eq(0).click()
       cy.getDataCy('action-missing-fields-text').contains('6 champs nécessaires aux statistiques à compléter')
 
       // check if themes in surveillance has been reset
       cy.wait(250)
-      cy.get('*[data-cy="action-card"]').eq(1).click()
+      cy.getDataCy('action-card').eq(1).click()
       cy.getDataCy('action-missing-fields-text').contains('2 champs nécessaires aux statistiques à compléter')
 
       // delete created mission
       cy.clickButton('Supprimer la mission')
       cy.wait(400)
-      cy.get('*[name="delete-mission-modal-confirm"]').click()
+      cy.get('*[name="delete-mission-modal-confirm').click()
     })
   })
 
   it('Save other control actions', () => {
-    cy.get('*[data-cy="edit-mission-41"]').scrollIntoView().click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.getDataCy('edit-mission-41').scrollIntoView().click({ force: true })
+    cy.getDataCy('action-card').eq(0).click()
 
     cy.intercept('PUT', '/bff/v1/missions/41').as('updateMission')
 
     // verify if fields are checked
-    cy.get('*[name="envActions[0].isAdministrativeControl"]').scrollIntoView().should('be.checked')
-    cy.get('*[name="envActions[0].isComplianceWithWaterRegulationsControl"]').should('be.checked')
-    cy.get('*[name="envActions[0].isSafetyEquipmentAndStandardsComplianceControl"]').should('be.checked')
-    cy.get('*[name="envActions[0].isSeafarersControl"]').should('be.checked')
+    cy.get('*[name="envActions[0].isAdministrativeControl').scrollIntoView().should('be.checked')
+    cy.get('*[name="envActions[0].isComplianceWithWaterRegulationsControl').should('be.checked')
+    cy.get('*[name="envActions[0].isSafetyEquipmentAndStandardsComplianceControl').should('be.checked')
+    cy.get('*[name="envActions[0].isSeafarersControl').should('be.checked')
 
     // uncheck all fields
     cy.fill('Contrôle administratif', false)
@@ -456,7 +504,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       response => {
         expect(response && response.statusCode).equal(200)
 
-        const controlActionResponse = response?.body.envActions[0]
+        const controlActionResponse: EnvActionControl = response?.body.envActions[0]
         expect(controlActionResponse.isAdministrativeControl).equal(false)
         expect(controlActionResponse.isComplianceWithWaterRegulationsControl).equal(false)
         expect(controlActionResponse.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
@@ -464,8 +512,8 @@ context('Side Window > Mission Form > Mission actions', () => {
         cy.log('controlActionResponse', controlActionResponse)
 
         cy.clickButton('Fermer')
-        cy.get('*[data-cy="edit-mission-41"]').scrollIntoView().click({ force: true })
-        cy.get('*[data-cy="action-card"]').eq(0).click()
+        cy.getDataCy('edit-mission-41').scrollIntoView().click({ force: true })
+        cy.getDataCy('action-card').eq(0).click()
         cy.fill('Contrôle administratif', true)
         cy.wait(200)
         cy.fill('Respect du code de la navigation sur le plan d’eau', true)
@@ -478,7 +526,7 @@ context('Side Window > Mission Form > Mission actions', () => {
   })
 
   it('Should display CNSP actions', () => {
-    cy.get('*[data-cy="edit-mission-53"]').scrollIntoView().click({ force: true })
+    cy.getDataCy('edit-mission-53').scrollIntoView().click({ force: true })
     cy.getDataCy('cnsp-action-text').should('have.length', 5)
   })
 
