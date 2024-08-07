@@ -53,8 +53,6 @@ const ZonesList = styled.ul<{ showZones: boolean; zonesLength: number }>`
   height: ${p => (p.showZones && p.zonesLength ? 37 * p.zonesLength : 0)}px;
   background: ${p => p.theme.color.white};
   transition: 0.5s all;
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 2px;
   overflow-y: auto;
 `
 

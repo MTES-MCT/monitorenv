@@ -110,7 +110,7 @@ const SubGroup = styled.div<{ isOpen: boolean; length: number }>`
   border-bottom: ${p => (p.isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
 `
 
-const LayerList = styled.ul<{ $maxHeight?: number }>`
+const LayerList = styled.ul<{ $baseLayersLength: number; $maxHeight?: number; $showBaseLayers: boolean }>`
   margin: 0;
   background: ${p => p.theme.color.white};
   border-radius: 0;
@@ -119,6 +119,7 @@ const LayerList = styled.ul<{ $maxHeight?: number }>`
   overflow-y: auto;
   overflow-x: hidden;
   color: ${p => p.theme.color.slateGray};
+  height: ${p => (p.$showBaseLayers && p.$baseLayersLength ? 36 * p.$baseLayersLength : 0)}px;
   transition: 0.5s all;
 `
 
@@ -147,10 +148,6 @@ const Wrapper = styled.div<{ $hasPinnedLayers?: boolean; $isExpanded: boolean }>
   text-align: left;
   user-select: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-  border-bottom-left-radius: ${props => (props.$isExpanded ? '0' : '2px')};
-  border-bottom-right-radius: ${props => (props.$isExpanded ? '0' : '2px')};
   background: ${p => p.theme.color.charcoal};
 
   ${props => props.$hasPinnedLayers && `.Element-IconBox:first-of-type svg { color: ${props.theme.color.blueGray}; }`}

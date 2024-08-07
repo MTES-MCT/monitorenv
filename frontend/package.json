@@ -25,14 +25,14 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "18.8.0",
+    "@mtes-mct/monitor-ui": "18.10.0",
     "@reduxjs/toolkit": "2.0.0",
     "@rsuite/responsive-nav": "5.0.2",
     "@sentry/browser": "7.73.0",
     "@sentry/react": "7.73.0",
     "@sentry/tracing": "7.114.0",
     "@svgr/webpack": "8.1.0",
-    "@tanstack/react-table": "8.19.3",
+    "@tanstack/react-table": "8.20.1",
     "@tanstack/react-virtual": "beta",
     "classnames": "2.5.1",
     "dayjs": "1.11.12",

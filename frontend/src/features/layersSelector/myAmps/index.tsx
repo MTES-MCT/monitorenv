@@ -31,7 +31,7 @@ export function AmpLayers() {
         <LayerSelector.Title>Mes AMP</LayerSelector.Title>
         <ChevronIcon $isOpen={myAmpsIsOpen} $right />
       </LayerSelector.Wrapper>
-      {myAmpsIsOpen && <AMPLayersList />}
+      <AMPLayersList />
     </>
   )
 }

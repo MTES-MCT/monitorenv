@@ -7,10 +7,15 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function RegulatoryLayersList() {
   const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryLayers(state))
+  const myRegulatoryZonesIsOpen = useAppSelector(state => state.layerSidebar.myRegulatoryZonesIsOpen)
 
   if (_.isEmpty(selectedRegulatoryLayers)) {
     return (
-      <LayerSelector.LayerList data-cy="my-regulatory-layers-list">
+      <LayerSelector.LayerList
+        $baseLayersLength={0}
+        $showBaseLayers={myRegulatoryZonesIsOpen}
+        data-cy="my-regulatory-layers-list"
+      >
         <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
       </LayerSelector.LayerList>
     )
@@ -19,7 +24,11 @@ export function RegulatoryLayersList() {
   const layersByLayersName = _.groupBy(selectedRegulatoryLayers, r => r?.layer_name)
 
   return (
-    <LayerSelector.LayerList data-cy="my-regulatory-layers-list">
+    <LayerSelector.LayerList
+      $baseLayersLength={Object.keys(layersByLayersName).length}
+      $showBaseLayers={myRegulatoryZonesIsOpen}
+      data-cy="my-regulatory-layers-list"
+    >
       {layersByLayersName &&
         Object.entries(layersByLayersName).map(
           ([layerName, layers]) =>
