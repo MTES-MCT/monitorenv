@@ -44,6 +44,8 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
         <AwarenessWrapper>
           <NbPerson isLight label="Nb de personnes sensibilisées" name={`${formPath}.awareness.nbPerson`} />
           <AwarenessTheme
+            key={awarenessOptions.length}
+            data-cy="surveillance-awareness-select"
             disabled={awarenessOptions.length === 1}
             isErrorMessageHidden
             isLight
@@ -62,8 +64,8 @@ const AwarenessWrapper = styled.div`
   gap: 16px;
 `
 const NbPerson = styled(FormikNumberInput)`
-  flex-grow: 0.4;
+  width: 40%;
 `
 const AwarenessTheme = styled(FormikSelect)`
-  flex-grow: 1.6;
+  width: 60%;
 `
