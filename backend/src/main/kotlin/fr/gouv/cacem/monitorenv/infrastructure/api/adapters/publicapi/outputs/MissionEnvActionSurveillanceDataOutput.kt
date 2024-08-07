@@ -2,10 +2,10 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class MissionEnvActionSurveillanceDataOutput(
     override val id: UUID,

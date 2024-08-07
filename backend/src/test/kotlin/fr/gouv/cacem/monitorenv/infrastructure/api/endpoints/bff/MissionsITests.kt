@@ -26,6 +26,13 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
+import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
@@ -776,6 +783,7 @@ class MissionsITests {
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
+                awareness = null,
                 actionNumberOfControls = 4,
                 reportingIds = Optional.of(listOf(1)),
             )

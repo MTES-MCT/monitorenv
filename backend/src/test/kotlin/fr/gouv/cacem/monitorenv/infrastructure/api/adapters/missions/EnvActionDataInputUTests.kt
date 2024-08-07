@@ -4,9 +4,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -34,12 +34,12 @@ class EnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
+                awareness = null,
                 reportingIds = Optional.of(listOf(1)),
             )
 
         val entity = input.toEnvActionEntity()
 
-        // Perform assertions to verify the correctness of the conversion
         Assertions.assertTrue(entity is EnvActionControlEntity)
     }
 
@@ -57,12 +57,12 @@ class EnvActionDataInputUTests {
                 facade = "TestFacade",
                 observations = "Observations",
                 openBy = "ABC",
+                awareness = null,
                 reportingIds = Optional.of(listOf()),
             )
 
         val entity = input.toEnvActionEntity()
 
-        // Perform assertions to verify the correctness of the conversion
         Assertions.assertTrue(entity is EnvActionSurveillanceEntity)
     }
 
@@ -75,12 +75,12 @@ class EnvActionDataInputUTests {
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
+                awareness = null,
                 reportingIds = Optional.empty(),
             )
 
         val entity = input.toEnvActionEntity()
 
-        // Perform assertions to verify the correctness of the conversion
         Assertions.assertTrue(entity is EnvActionNoteEntity)
     }
 
@@ -93,6 +93,7 @@ class EnvActionDataInputUTests {
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "Observations",
+                awareness = null,
                 reportingIds = Optional.of(listOf(1, 2, 3)),
             )
 
@@ -113,6 +114,7 @@ class EnvActionDataInputUTests {
                 facade = "TestFacade",
                 observations = "Observations",
                 openBy = "ABC",
+                awareness = null,
                 reportingIds = Optional.empty(),
             )
 
@@ -137,6 +139,7 @@ class EnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
+                awareness = null,
                 reportingIds = Optional.empty(),
             )
 
@@ -161,6 +164,7 @@ class EnvActionDataInputUTests {
                 infractions = listOf(),
                 observations = "Observations",
                 openBy = "ABC",
+                awareness = null,
                 reportingIds = Optional.of(listOf(1, 2)),
             )
 

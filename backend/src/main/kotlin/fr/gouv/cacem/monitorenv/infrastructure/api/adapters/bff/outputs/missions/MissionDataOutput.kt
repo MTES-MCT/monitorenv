@@ -5,8 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionControlDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput

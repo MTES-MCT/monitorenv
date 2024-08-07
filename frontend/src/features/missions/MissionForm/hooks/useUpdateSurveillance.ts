@@ -1,13 +1,13 @@
 import { useFormikContext } from 'formik'
 import { useEffect, useMemo } from 'react'
 
-import { ActionTypeEnum, type Mission } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvActionSurveillance, type Mission } from '../../../../domain/entities/missions'
 
 export const useUpdateSurveillance = () => {
   const { setFieldValue, values } = useFormikContext<Mission>()
 
   const surveillanceFormUpdate = useMemo(() => {
-    const updateSurveillance = (surveillances, surveillanceWithDurationMatchIndex) => {
+    const updateSurveillance = (surveillances: EnvActionSurveillance[], surveillanceWithDurationMatchIndex: number) => {
       if (surveillanceWithDurationMatchIndex && surveillanceWithDurationMatchIndex === -1) {
         return
       }

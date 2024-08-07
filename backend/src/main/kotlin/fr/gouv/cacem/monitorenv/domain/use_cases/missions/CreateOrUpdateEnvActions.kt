@@ -5,8 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
@@ -44,6 +44,7 @@ class CreateOrUpdateEnvActions(
                             },
                         )
                     }
+
                     ActionTypeEnum.SURVEILLANCE -> {
                         val surveillance = it as EnvActionSurveillanceEntity
                         val normalizedGeometry = surveillance.geom?.let { nonNullGeom ->
@@ -64,6 +65,7 @@ class CreateOrUpdateEnvActions(
                             },
                         )
                     }
+
                     ActionTypeEnum.NOTE -> {
                         (it as EnvActionNoteEntity).copy()
                     }

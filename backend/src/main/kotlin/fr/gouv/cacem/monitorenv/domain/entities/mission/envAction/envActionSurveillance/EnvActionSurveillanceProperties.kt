@@ -1,12 +1,14 @@
-package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
+package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
 data class EnvActionSurveillanceProperties(
     val observations: String? = null,
+    val awareness: AwarenessEntity? = null,
 ) {
     fun toEnvActionSurveillanceEntity(
         id: UUID,
@@ -26,6 +28,7 @@ data class EnvActionSurveillanceProperties(
             id = id,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionEndDateTimeUtc = actionEndDateTimeUtc,
+            awareness = awareness,
             completedBy = completedBy,
             completion = completion,
             controlPlans = controlPlans,
@@ -42,6 +45,7 @@ data class EnvActionSurveillanceProperties(
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) =
             EnvActionSurveillanceProperties(
                 observations = envAction.observations,
+                awareness = envAction.awareness,
             )
     }
 }
