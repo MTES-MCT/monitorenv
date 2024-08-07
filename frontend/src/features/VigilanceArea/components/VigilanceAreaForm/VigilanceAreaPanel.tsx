@@ -15,7 +15,6 @@ import { AMPList } from './AddAMPs/AMPList'
 import { RegulatoryAreas } from './AddRegulatoryAreas/RegulatoryAreas'
 import { PublishedSchema } from './Schema'
 import { DeleteButton, FooterContainer, FooterRightButtons } from './style'
-import { TextWithLineBreaks } from '../../../../components/TextWithLIneBreaks'
 
 const EMPTY_VALUE = '--'
 
@@ -137,7 +136,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         <SubPart>
           <InlineItemLabel>Commentaire sur la zone</InlineItemLabel>
           <InlineItemValue $maxLine={8} title={vigilanceArea?.comments}>
-            <TextWithLineBreaks text={vigilanceArea?.comments ?? EMPTY_VALUE} />
+            {vigilanceArea?.comments ?? EMPTY_VALUE}
           </InlineItemValue>
         </SubPart>
         {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (
@@ -238,6 +237,7 @@ const InlineItemValue = styled.span<{ $maxLine?: number }>`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: ${p => p.$maxLine ?? '1'};
   overflow: hidden;
+  white-space: pre-wrap;
 `
 
 const StyledInlineItemValue = styled(InlineItemValue)`
