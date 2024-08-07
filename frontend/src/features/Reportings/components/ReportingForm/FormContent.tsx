@@ -241,7 +241,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
       setScrollPosition(scrollTop)
     }
     await dispatch(saveReporting(nextValues, reportingContext))
-  }, 250)
+  }, 245)
 
   useEffect(() => {
     if (!isAutoSaveEnabled) {
