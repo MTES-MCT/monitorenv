@@ -131,6 +131,7 @@ context('Reporting', () => {
       if (!interception.response) {
         assert.fail('`interception.response` is undefined.')
       }
+      const reportingId = interception.request.body.id
       assert.deepInclude(omit(interception.request.body, 'reportingSources[0].id'), {
         missionId: 33,
         openBy: 'XYZ',
@@ -138,7 +139,7 @@ context('Reporting', () => {
           {
             controlUnitId: null,
             displayedSource: 'Sémaphore de Dieppe',
-            reportingId: 13,
+            reportingId,
             semaphoreId: 35,
             sourceName: null,
             sourceType: 'SEMAPHORE'
@@ -170,13 +171,14 @@ context('Reporting', () => {
       }
       cy.get(interception.request.body.attachedToMissionAtUtc).should('not.be.null')
       cy.get(interception.request.body.detachedToMissionAtUtc).should('not.be.null')
+      const reportingId = interception.request.body.id
       assert.deepInclude(omit(interception.request.body, 'reportingSources[0].id'), {
         openBy: 'XYZ',
         reportingSources: [
           {
             controlUnitId: null,
             displayedSource: 'Sémaphore de Dieppe',
-            reportingId: 13,
+            reportingId,
             semaphoreId: 35,
             sourceName: null,
             sourceType: 'SEMAPHORE'
