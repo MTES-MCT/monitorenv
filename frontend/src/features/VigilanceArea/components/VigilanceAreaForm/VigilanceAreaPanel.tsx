@@ -135,7 +135,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         </SubPart>
         <SubPart>
           <InlineItemLabel>Commentaire sur la zone</InlineItemLabel>
-          <InlineItemValue $maxLine={4} title={vigilanceArea?.comments}>
+          <InlineItemValue $maxLine={8} title={vigilanceArea?.comments}>
             {vigilanceArea?.comments ?? EMPTY_VALUE}
           </InlineItemValue>
         </SubPart>
@@ -237,6 +237,7 @@ const InlineItemValue = styled.span<{ $maxLine?: number }>`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: ${p => p.$maxLine ?? '1'};
   overflow: hidden;
+  white-space: pre-wrap;
 `
 
 const StyledInlineItemValue = styled(InlineItemValue)`

@@ -28,4 +28,16 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
         nativeQuery = true,
     )
     override fun findAll(): List<VigilanceAreaModel>
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(
+        value =
+        """
+        UPDATE vigilance_areas
+        SET is_archived = TRUE
+        WHERE computed_end_date IS NOT NULL AND computed_end_date < NOW() AND is_archived IS FALSE
+    """,
+        nativeQuery = true,
+    )
+    fun archiveOutdatedVigilanceAreas(): Int
 }

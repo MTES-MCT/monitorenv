@@ -139,6 +139,8 @@ export const vigilanceAreaSlice = createSlice({
         return {
           ...INITIAL_STATE,
           editingVigilanceAreaId: NEW_VIGILANCE_AREA_ID,
+          myVigilanceAreaIds: state.myVigilanceAreaIds,
+          myVigilanceAreaIdsDisplayed: state.myVigilanceAreaIdsDisplayed,
           selectedVigilanceAreaId: NEW_VIGILANCE_AREA_ID
         }
       }

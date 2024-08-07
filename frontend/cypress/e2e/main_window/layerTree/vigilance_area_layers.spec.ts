@@ -100,7 +100,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     // Filter "Current quarter"
     cy.clickButton('Filtrer par type de zones')
     cy.fill('Période de vigilance', 'Ce trimestre')
-    cy.getDataCy('vigilance-area-results-list').contains('4 résultats').click()
+    cy.getDataCy('vigilance-area-results-list').contains('5 résultats').click()
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')

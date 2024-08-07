@@ -39,6 +39,7 @@ data class VigilanceAreaModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
+    @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "is_draft") val isDraft: Boolean,
     @Column(name = "links", columnDefinition = "jsonb")
@@ -70,6 +71,7 @@ data class VigilanceAreaModel(
                 frequency = vigilanceArea.frequency,
                 endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
                 geom = vigilanceArea.geom,
+                isArchived = vigilanceArea.isArchived,
                 isDeleted = vigilanceArea.isDeleted,
                 isDraft = vigilanceArea.isDraft,
                 links = vigilanceArea.links,
@@ -95,6 +97,7 @@ data class VigilanceAreaModel(
             frequency = frequency,
             endDatePeriod = endDatePeriod?.atZone(UTC),
             geom = geom,
+            isArchived = isArchived,
             isDeleted = isDeleted,
             isDraft = isDraft,
             links = links,

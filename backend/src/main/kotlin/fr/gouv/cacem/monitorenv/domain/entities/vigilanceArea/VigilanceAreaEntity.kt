@@ -14,6 +14,7 @@ data class VigilanceAreaEntity(
     val endingOccurrencesNumber: Int? = null,
     val frequency: FrequencyEnum? = null,
     val geom: MultiPolygon? = null,
+    val isArchived: Boolean,
     val isDeleted: Boolean,
     val isDraft: Boolean,
     val links: List<LinkEntity>? = null,

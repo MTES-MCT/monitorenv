@@ -199,6 +199,7 @@ export function Form() {
           label="Commentaire"
           name="comments"
           placeholder="Description de la zone de vigilance"
+          rows={8}
         />
         <ZonePicker
           addLabel="Définir un tracé pour la zone de vigilance"

@@ -4,6 +4,7 @@ import {
   getIsLinkingZonesToVigilanceArea,
   vigilanceAreaActions
 } from '@features/VigilanceArea/slice'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
@@ -20,7 +21,6 @@ import {
 } from '../metadataPanel/slice'
 import { LayerLegend } from '../utils/LayerLegend.style'
 
-import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { OverlayItem } from 'domain/types/map'
 
@@ -114,9 +114,17 @@ export function OverlayContent({ items }: OverlayContentProps) {
             item.layerType === MonitorEnvLayers.AMP_PREVIEW ||
             item.layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
 
+          const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
+
           return (
             <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
-              <LayerLegend layerType={item.layerType} legendKey={legendKey} size={Size.NORMAL} type={legendType} />
+              <LayerLegend
+                isArchived={isArchived}
+                layerType={item.layerType}
+                legendKey={legendKey}
+                size={Size.NORMAL}
+                type={legendType}
+              />
               <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
               <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || ''}</Name>
               {isLinkingRegulatoryToVigilanceArea && isRegulatory && (

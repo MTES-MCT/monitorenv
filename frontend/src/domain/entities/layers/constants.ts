@@ -252,19 +252,19 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.VIGILANCE_AREA]: {
     code: MonitorEnvLayers.VIGILANCE_AREA,
-    zIndex: 1600
+    zIndex: 1400
   },
   [MonitorEnvLayers.VIGILANCE_AREA_PREVIEW]: {
     code: MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
-    zIndex: 1600
+    zIndex: 1400
   },
   [MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA]: {
     code: MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
-    zIndex: 1600
+    zIndex: 1400
   },
   [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA]: {
     code: MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
-    zIndex: 1600
+    zIndex: 1400
   }
 }
 

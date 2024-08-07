@@ -3,6 +3,7 @@ import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/Vigil
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
 import { AMPList } from './AMPList'
@@ -10,7 +11,7 @@ import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButt
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
-export function SelectAMP() {
+export function SelectAMP({ onCancel }: { onCancel: () => void }) {
   const dispatch = useAppDispatch()
   const ampToAdd = useAppSelector(state => state.vigilanceArea.ampToAdd)
   const { setFieldValue } = useFormikContext<VigilanceArea.VigilanceArea>()
@@ -26,6 +27,7 @@ export function SelectAMP() {
     <>
       <SubFormHeader>
         <SubFormTitle>Ajout d’une AMP en lien en cours…</SubFormTitle>
+        <IconButton Icon={Icon.Close} onClick={onCancel} />
       </SubFormHeader>
       <SubFormBody>
         <SubFormHelpText>
