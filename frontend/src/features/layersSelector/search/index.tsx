@@ -1,5 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { getOptionsFromLabelledEnum, type DateAsStringRange, type Option } from '@mtes-mct/monitor-ui'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
@@ -26,9 +27,13 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 
 export function LayerSearch() {
   const dispatch = useAppDispatch()
+
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser
+
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery()
+  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery(undefined, { skip: !isSuperUser })
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
@@ -186,6 +191,7 @@ export function LayerSearch() {
             filteredRegulatoryThemes={filteredRegulatoryThemes}
             filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
             handleResetFilters={handleResetFilters}
+            isSuperUser={isSuperUser}
             regulatoryThemes={regulatoryThemes}
             setFilteredAmpTypes={handleSetFilteredAmpTypes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}

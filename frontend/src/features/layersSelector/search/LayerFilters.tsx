@@ -26,6 +26,7 @@ type LayerFiltersProps = {
   filteredRegulatoryThemes: string[]
   filteredVigilanceAreaPeriod: string | undefined
   handleResetFilters: () => void
+  isSuperUser: boolean
   regulatoryThemes: Option<string>[]
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
@@ -47,6 +48,7 @@ export function LayerFilters({
   filteredRegulatoryThemes,
   filteredVigilanceAreaPeriod,
   handleResetFilters,
+  isSuperUser,
   regulatoryThemes,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
@@ -163,7 +165,7 @@ export function LayerFilters({
         </SelectContainer>
       )}
 
-      {!isLinkingZonesToVigilanceArea && (
+      {isSuperUser && !isLinkingZonesToVigilanceArea && (
         <SelectContainer>
           <StyledSelect
             isLabelHidden

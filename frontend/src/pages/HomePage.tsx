@@ -31,9 +31,6 @@ import { Reportings } from '../features/Reportings'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
-// TODO: Remove this when the feature flag is removed
-const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENABLED === 'true'
-
 export function HomePage() {
   const dispatch = useAppDispatch()
 
@@ -102,7 +99,7 @@ export function HomePage() {
         <Healthcheck />
         <BannerStack />
 
-        <Map isSuperUser={isSuperUser} isVigilanceAreaEnabled={IS_VIGILANCE_AREA_ENABLED} />
+        <Map isSuperUser={isSuperUser} />
         <LayersSidebar isSuperUser={isSuperUser ?? false} />
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}

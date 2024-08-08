@@ -3,7 +3,7 @@ import { FAKE_MAPBOX_RESPONSE } from '../constants'
 context('MonitorExt', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
-    cy.visit('/ext#@-824534.42,6082993.21,8.70')
+    cy.visit('/ext#@-195375.91,6028315.57,7.57')
     cy.wait(500)
   })
 
@@ -30,5 +30,18 @@ context('MonitorExt', () => {
     cy.get('button[title="Liste des unités de contrôle"]').should('not.exist')
     cy.getDataCy('measurement').should('not.exist')
     cy.getDataCy('interest-point').should('not.exist')
+  })
+
+  it("A user can't see or search vigilance areas", () => {
+    cy.wait(200)
+    cy.clickButton('Arbre des couches')
+    cy.wait(250)
+
+    cy.clickButton('Filtrer par type de zones')
+    cy.get('[label="Période de vigilance"]').should('not.exist')
+
+    cy.clickButton('Définir la zone de recherche et afficher les tracés')
+    cy.getDataCy('vigilance-area-results-list').should('not.exist')
+    cy.getDataCy('my-vigilance-areas-layers').should('not.exist')
   })
 })
