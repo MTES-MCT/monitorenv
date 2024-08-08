@@ -33,12 +33,12 @@ import type { AtLeast } from '../../types'
 
 export const infractionFactory = (infraction?: Partial<Infraction>): NewInfraction => ({
   administrativeResponse: 'NONE',
-  id: uuidv4(),
   natinf: [],
   nbTarget: 1,
   observations: '',
   toProcess: false,
-  ...infraction
+  ...infraction,
+  id: uuidv4()
 })
 
 export const actionFactory = ({
@@ -61,11 +61,11 @@ export const actionFactory = ({
           }
         ],
 
-        id: uuidv4(),
         infractions: [],
         observations: '',
         reportingIds: [],
-        ...action
+        ...action,
+        id: uuidv4()
       } as NewEnvActionControl
     case ActionTypeEnum.NOTE:
       return {
