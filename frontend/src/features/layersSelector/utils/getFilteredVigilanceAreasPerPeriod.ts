@@ -81,7 +81,7 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
         }
         switch (vigilanceArea.frequency) {
           case VigilanceArea.Frequency.ALL_WEEKS:
-            occurrenceDate = occurrenceDate.add(7, 'days')
+            occurrenceDate = occurrenceDate.add(7, 'day')
             break
           case VigilanceArea.Frequency.ALL_MONTHS:
             occurrenceDate = occurrenceDate.add(1, 'month')
