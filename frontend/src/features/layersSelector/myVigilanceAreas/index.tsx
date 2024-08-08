@@ -43,7 +43,10 @@ export function MyVigilanceAreas() {
       </LayerSelector.Wrapper>
       {myVigilanceAreasIsOpen && (
         <>
-          <LayerSelector.LayerList data-cy="my-vigilance-area-zones-list">
+          <LayerSelector.LayerList
+            $maxHeight={draftVigilanceAreas.length > 3 ? 24 : undefined}
+            data-cy="my-vigilance-area-zones-list"
+          >
             {myVigilanceAreaIds.length === 0 ? (
               <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
             ) : (
@@ -53,7 +56,7 @@ export function MyVigilanceAreas() {
           {draftVigilanceAreas.length > 0 && (
             <>
               <DraftVigilanceAreaTitle>Zones non publiées</DraftVigilanceAreaTitle>
-              <LayerSelector.LayerList data-cy="draft-vigilance-area-zones-list">
+              <LayerSelector.LayerList $maxHeight={24} data-cy="draft-vigilance-area-zones-list">
                 {draftVigilanceAreas?.map(vigilanceArea => {
                   if (!vigilanceArea?.id) {
                     return null

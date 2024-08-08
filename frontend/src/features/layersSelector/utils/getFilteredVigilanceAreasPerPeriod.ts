@@ -52,12 +52,15 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
     const startDate = customDayjs(vigilanceArea.startDatePeriod).utc()
     const endDate = customDayjs(vigilanceArea.endDatePeriod).utc()
 
-    // in case there is no end of recurrence (because no recurrence) we set a default end date to the end of the period filter
+    // in case there is no end of recurrence (because endingCondition is NEVER) we set a default end date to the end of the period filter
     const computedEndDate = vigilanceArea.computedEndDate ? customDayjs(vigilanceArea.computedEndDate) : endDateFilter
+
     if (vigilanceArea.frequency === VigilanceArea.Frequency.NONE) {
       return (
         isWithinPeriod(startDate, startDateFilter, endDateFilter) ||
-        isWithinPeriod(endDate, startDateFilter, endDateFilter)
+        isWithinPeriod(endDate, startDateFilter, endDateFilter) ||
+        startDateFilter.isBetween(startDate, endDate) ||
+        endDateFilter.isBetween(startDate, endDate)
       )
     }
 
@@ -72,7 +75,7 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
     if (vigilanceArea.frequency) {
       let occurrenceDate = startDate
 
-      while (occurrenceDate.isBefore(computedEndDate) || occurrenceDate.isSame(computedEndDate)) {
+      while (occurrenceDate.isBefore(computedEndDate, 'day') || occurrenceDate.isSame(computedEndDate, 'day')) {
         if (isWithinPeriod(occurrenceDate, startDateFilter, endDateFilter)) {
           return true
         }
