@@ -60,6 +60,7 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
             if (!actionNumberOfControls) {
               return false
             }
+
             const unselectedInfractionNumber = infractions
               .filter(infraction => infraction.id !== currentInfractionId)
               .reduce((sumNbTarget, infraction) => sumNbTarget + infraction.nbTarget, 0)

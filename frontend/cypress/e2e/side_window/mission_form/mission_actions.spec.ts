@@ -3,7 +3,7 @@
 import { createPendingMission } from '../../utils/createPendingMission'
 import { getFutureDate } from '../../utils/getFutureDate'
 
-import type { Infraction } from 'domain/entities/missions'
+import type { EnvActionControl, Infraction } from 'domain/entities/missions'
 
 context('Side Window > Mission Form > Mission actions', () => {
   beforeEach(() => {
@@ -33,23 +33,25 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
-      const { infractions } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
+      const { infractions }: EnvActionControl = request.body.envActions.find(
+        a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807'
+      )
       expect(infractions.length).equal(2)
       const duplicatedInfraction = infractions[1]
 
-      expect(duplicatedInfraction.controlledPersonIdentity).equal('John Doe')
-      expect(duplicatedInfraction.formalNotice).equal('PENDING')
-      expect(duplicatedInfraction.administrativeResponse).equal('PENDING')
-      expect(duplicatedInfraction.infractionType).equal('WITH_REPORT')
-      expect(duplicatedInfraction.natinf.length).equal(2)
-      expect(duplicatedInfraction.observations).equal("Pas d'observations")
-      expect(duplicatedInfraction.registrationNumber).equal('BALTIK')
-      expect(duplicatedInfraction.relevantCourt).equal('LOCAL_COURT')
-      expect(duplicatedInfraction.toProcess).equal(false)
-      expect(duplicatedInfraction.vesselSize).equal(45)
-      expect(duplicatedInfraction.vesselType).equal('COMMERCIAL')
-      expect(duplicatedInfraction.nbTarget).equal(1)
-      expect(duplicatedInfraction.id).not.equal('b8007c8a-5135-4bc3-816f-c69c7b75d807')
+      expect(duplicatedInfraction?.controlledPersonIdentity).equal('John Doe')
+      expect(duplicatedInfraction?.formalNotice).equal('PENDING')
+      expect(duplicatedInfraction?.administrativeResponse).equal('PENDING')
+      expect(duplicatedInfraction?.infractionType).equal('WITH_REPORT')
+      expect(duplicatedInfraction?.natinf?.length).equal(2)
+      expect(duplicatedInfraction?.observations).equal("Pas d'observations")
+      expect(duplicatedInfraction?.registrationNumber).equal('BALTIK')
+      expect(duplicatedInfraction?.relevantCourt).equal('LOCAL_COURT')
+      expect(duplicatedInfraction?.toProcess).equal(false)
+      expect(duplicatedInfraction?.vesselSize).equal(45)
+      expect(duplicatedInfraction?.vesselType).equal('COMMERCIAL')
+      expect(duplicatedInfraction?.nbTarget).equal(1)
+      expect(duplicatedInfraction?.id).not.equal(infractions[0]?.id)
     })
   })
 
