@@ -13,7 +13,7 @@ describe('Create Vigilance Area', () => {
     cy.clickButton('Créer une zone de vigilance')
   })
 
-  it('Should delete a vigilance area delete vigilance area saved in "My vigilance areas"', () => {
+  it('Should delete a vigilance area saved in "My vigilance areas"', () => {
     // Fill in the form fields
     cy.fill('Nom de la zone de vigilance', 'Ma zone de vigilance à supprimer')
 
