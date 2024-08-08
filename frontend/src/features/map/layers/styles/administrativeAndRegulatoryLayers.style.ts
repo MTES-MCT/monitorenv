@@ -128,6 +128,23 @@ export const getAdministrativeLayersStyle = (code: String) => {
             width: 2
           })
         })
+    case Layers.COMPETENCE_CROSS_AREA.code:
+      return feature =>
+        new Style({
+          fill: new Fill({
+            color: getColorWithAlpha(darkPeriwinkle, 0.25)
+          }),
+          stroke: new Stroke({
+            color: getColorWithAlpha(blueMarine, 0.6),
+            width: 2
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '12px Marianne',
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
+            text: `${feature.get(Layers.COMPETENCE_CROSS_AREA.zoneFieldKey) ?? ''}`
+          })
+        })
     default:
       return () =>
         new Style({

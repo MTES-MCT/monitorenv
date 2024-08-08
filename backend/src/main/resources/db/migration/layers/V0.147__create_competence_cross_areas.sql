@@ -2,10 +2,10 @@ CREATE TABLE public.competence_cross_areas
 (
     id            integer NOT NULL,
     geom          geometry(LineStringZ, 4326),
-    name          character varying,
-    description   character varying,
+    "name"        character varying,
+    "description" character varying,
     "timestamp"   timestamp without time zone,
-    begin         timestamp without time zone,
+    "begin"       timestamp without time zone,
     "end"         timestamp without time zone,
     altitude_mode character varying,
     tessellate    integer,
