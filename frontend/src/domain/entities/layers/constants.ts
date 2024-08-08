@@ -86,7 +86,8 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.COMPETENCE_CROSS_AREA]: {
     code: 'competence_cross_areas',
     name: 'Zones de compétences des CROSS',
-    type: LayerType.ADMINISTRATIVE
+    type: LayerType.ADMINISTRATIVE,
+    zoneFieldKey: 'name'
   },
   [MonitorEnvLayers.FAO]: {
     code: 'fao_areas',
