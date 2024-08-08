@@ -24,9 +24,6 @@ import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
-// TODO: Remove this when the feature flag is removed
-const IS_VIGILANCE_AREA_ENABLED = import.meta.env.FRONTEND_VIGILANCE_AREA_ENABLED === 'true'
-
 export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
@@ -81,7 +78,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
           {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}
           {!isLinkingZonesToVigilanceArea && (
             <>
-              {IS_VIGILANCE_AREA_ENABLED && isSuperUser && <MyVigilanceAreas />}
+              {isSuperUser && <MyVigilanceAreas />}
               <AdministrativeLayers />
               <BaseLayerList />
             </>
@@ -95,7 +92,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
-          {IS_VIGILANCE_AREA_ENABLED && secondVigilanceAreaPanelOpen && (
+          {isSuperUser && secondVigilanceAreaPanelOpen && (
             <VigilanceAreaForm
               key={selectedVigilanceAreaId}
               isOpen={secondVigilanceAreaPanelOpen}
@@ -105,7 +102,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
           )}
         </MetadataPanelShifter>
 
-        {IS_VIGILANCE_AREA_ENABLED && isSuperUser && (
+        {isSuperUser && (
           <VigilanceAreaPanelShifter
             isLayersSidebarVisible={isLayersSidebarVisible}
             isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}

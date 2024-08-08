@@ -48,7 +48,7 @@ import { StationOverlay } from '../Station/components/StationOverlay'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
-export function Map({ isSuperUser, isVigilanceAreaEnabled }) {
+export function Map({ isSuperUser }) {
   if (!isSuperUser) {
     return (
       <BaseMap
@@ -199,15 +199,15 @@ export function Map({ isSuperUser, isVigilanceAreaEnabled }) {
 
       {/* VIGILANCE AREA */}
       {/* @ts-ignore */}
-      {isVigilanceAreaEnabled && <VigilanceAreasLayer />}
+      <VigilanceAreasLayer />
       {/* @ts-ignore */}
-      {isVigilanceAreaEnabled && <PreviewVigilanceAreasLayer />}
+      <PreviewVigilanceAreasLayer />
       {/* @ts-ignore */}
-      {isVigilanceAreaEnabled && <DrawVigilanceAreaLayer />}
+      <DrawVigilanceAreaLayer />
       {/* @ts-ignore */}
-      {isVigilanceAreaEnabled && <SelectedVigilanceAreaLayer />}
+      <SelectedVigilanceAreaLayer />
       {/* @ts-ignore */}
-      {isVigilanceAreaEnabled && <EditingVigilanceAreaLayer />}
+      <EditingVigilanceAreaLayer />
     </BaseMap>
   )
 }
