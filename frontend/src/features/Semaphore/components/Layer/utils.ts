@@ -25,7 +25,7 @@ export function getReportingsBySemaphoreId(reportings: (Reporting | undefined)[]
 }
 
 export function getSemaphoresPoint(
-  semaphores: EntityState<Semaphore> | undefined,
+  semaphores: EntityState<Semaphore, number> | undefined,
   reportings: (Reporting | undefined)[]
 ) {
   const reportingsBySemaphoreId = getReportingsBySemaphoreId(reportings)

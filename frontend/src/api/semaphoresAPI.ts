@@ -9,7 +9,7 @@ const initialState = SemaphoreAdapter.getInitialState()
 
 export const semaphoresAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
-    getSemaphores: build.query<EntityState<Semaphore>, void>({
+    getSemaphores: build.query<EntityState<Semaphore, number>, void>({
       query: () => '/v1/semaphores',
       transformResponse: (response: Semaphore[]) => SemaphoreAdapter.setAll(initialState, response)
     })

@@ -12,7 +12,7 @@ export namespace VigilanceArea {
     endingOccurrencesNumber?: number | undefined
     frequency: Frequency | undefined
     geom: GeoJSON.MultiPolygon | undefined
-    id: number | undefined
+    id: number
     isArchived: boolean
     isDraft: boolean
     linkedAMPs: Array<number>
