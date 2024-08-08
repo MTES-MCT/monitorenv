@@ -90,7 +90,7 @@
     "@types/react-router-dom": "5.3.3",
     "@types/styled-components": "5.1.25",
     "@typescript-eslint/eslint-plugin": "5.62.0",
-    "@typescript-eslint/parser": "5.59.11",
+    "@typescript-eslint/parser": "5.62.0",
     "@vitejs/plugin-react": "4.3.1",
     "babel-eslint": "10.1.0",
     "codecov": "3.8.3",
