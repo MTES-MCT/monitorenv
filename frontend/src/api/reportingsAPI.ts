@@ -67,7 +67,7 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       providesTags: (_, __, id) => [{ id, type: 'Reportings' }],
       query: id => `/v1/reportings/${id}`
     }),
-    getReportings: build.query<EntityState<Reporting>, ReportingsFilter | void>({
+    getReportings: build.query<EntityState<Reporting, number | string>, ReportingsFilter | void>({
       providesTags: result =>
         result?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]

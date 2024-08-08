@@ -8,7 +8,7 @@ import {
   FormikTextInput,
   getOptionsFromIdAndName
 } from '@mtes-mct/monitor-ui'
-import { skipToken } from '@reduxjs/toolkit/dist/query'
+import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
 import { sortBy } from 'lodash/fp'
 import { useCallback, useMemo } from 'react'

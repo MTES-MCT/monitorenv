@@ -6,7 +6,7 @@ import {
   FormikCoordinatesInput,
   FormikTextInput
 } from '@mtes-mct/monitor-ui'
-import { skipToken } from '@reduxjs/toolkit/dist/query'
+import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
 import { useCallback, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router'

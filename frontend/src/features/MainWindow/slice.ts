@@ -8,7 +8,7 @@ export const bannerStackAdapter = createEntityAdapter({
 })
 
 interface MainWindowState {
-  bannerStack: EntityState<BannerStackItem>
+  bannerStack: EntityState<BannerStackItem, number>
   hasFullHeightRightDialogOpen: boolean
   isRightMenuOpened: boolean
 }

@@ -1,4 +1,4 @@
-import { type AnyAction, type ThunkAction, configureStore, combineReducers, isPlain } from '@reduxjs/toolkit'
+import { type Action, type ThunkAction, configureStore, combineReducers, isPlain } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 
@@ -25,5 +25,5 @@ export { homeStore }
 
 // https://react-redux.js.org/using-react-redux/usage-with-typescript#define-root-state-and-dispatch-types
 export type HomeAppDispatch = typeof homeStore.dispatch
-export type HomeAppThunk<ReturnType = void> = ThunkAction<ReturnType, HomeRootState, undefined, AnyAction>
+export type HomeAppThunk<ReturnType = void> = ThunkAction<ReturnType, HomeRootState, undefined, Action>
 export type HomeRootState = ReturnType<typeof homeStore.getState>

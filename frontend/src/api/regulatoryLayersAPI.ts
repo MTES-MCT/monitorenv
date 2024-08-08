@@ -36,7 +36,7 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getRegulatoryLayers: builder.query<EntityState<RegulatoryLayerCompact>, void>({
+    getRegulatoryLayers: builder.query<EntityState<RegulatoryLayerCompact, number>, void>({
       query: () => `/v1/regulatory`,
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_LAYERS_ERROR_MESSAGE, response),
       transformResponse: (response: RegulatoryLayerCompactFromAPI[]) =>
@@ -65,7 +65,7 @@ export const getSelectedRegulatoryLayers = createSelector(
     return (
       selectedRegulatoryLayerIds
         .map(id => regulatoryLayers?.data?.entities[id])
-        .filter((l): l is RegulatoryLayerCompact => !!l) ?? emptyArray
+        .filter((layer): layer is RegulatoryLayerCompact => !!layer) ?? emptyArray
     )
   }
 )

@@ -29,7 +29,7 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getAMPs: builder.query<EntityState<AMP>, void>({
+    getAMPs: builder.query<EntityState<AMP, number>, void>({
       query: () => `/v1/amps`,
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
       transformResponse: (response: AMPFromAPI[]) =>
