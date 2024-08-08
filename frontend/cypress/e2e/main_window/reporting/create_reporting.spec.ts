@@ -18,7 +18,7 @@ context('Reporting', () => {
     cy.wait(500)
   })
 
-  it.only('A reporting can be created', () => {
+  it('A reporting can be created', () => {
     // Given
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
