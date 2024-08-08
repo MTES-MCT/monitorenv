@@ -4,7 +4,7 @@ import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFor
 describe('Create Vigilance Area', () => {
   beforeEach(() => {
     cy.viewport(1580, 1024)
-    cy.visit('/')
+    cy.visit('/#@-1049081.65,5909154.00,6.00')
     cy.wait(500)
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas').as('createVigilanceArea')
@@ -32,13 +32,12 @@ describe('Create Vigilance Area', () => {
       cy.getDataCy('vigilance-area-result-zone').contains('Ma zone de vigilance à supprimer')
       cy.clickButton('Sélectionner la zone')
 
-      cy.clickButton('Effacer les résultats de la recherche')
-
       cy.wait(250)
-      cy.getDataCy('my-vigilance-areas-layers').click()
+      cy.getDataCy('my-vigilance-areas-layers').click({ force: true })
+      cy.clickButton('Effacer les résultats de la recherche')
       cy.clickButton('Afficher la zone de vigilance')
 
-      cy.get('span[title="Ma zone de vigilance à supprimer"]').click()
+      cy.get('span[title="Ma zone de vigilance à supprimer"]')
       cy.clickButton('Supprimer')
       cy.clickButton('Confirmer la suppression')
     })
