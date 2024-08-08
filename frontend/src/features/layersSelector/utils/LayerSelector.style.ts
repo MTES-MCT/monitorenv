@@ -110,12 +110,12 @@ const SubGroup = styled.div<{ isOpen: boolean; length: number }>`
   border-bottom: ${p => (p.isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
 `
 
-const LayerList = styled.ul`
+const LayerList = styled.ul<{ $maxHeight?: number }>`
   margin: 0;
   background: ${p => p.theme.color.white};
   border-radius: 0;
   padding: 0;
-  max-height: 50vh;
+  max-height: ${p => p.$maxHeight ?? 50}vh;
   overflow-y: auto;
   overflow-x: hidden;
   color: ${p => p.theme.color.slateGray};

@@ -164,4 +164,28 @@ describe('Create Vigilance Area', () => {
       cy.clickButton('Confirmer la suppression')
     })
   })
+
+  it('Should create an ongoing vigilance area without frequency and find it with period filter', () => {
+    // Fill in the form fields
+    cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance sans récurrence')
+
+    const { asDatePickerDateTime } = getUtcDateInMultipleFormats()
+    const vigilanceAreaEndDate = getFutureDate(5, 'day')
+    cy.fill('Période de validité', [asDatePickerDateTime, vigilanceAreaEndDate])
+    cy.fill('Récurrence', 'Aucune')
+
+    // Submit the form
+    cy.clickButton('Enregistrer')
+    cy.wait('@createVigilanceArea').then(() => {
+      cy.clickButton('Fermer la zone de vigilance')
+      cy.clickButton('Filtrer par type de zones')
+      cy.fill('Période de vigilance', 'En ce moment')
+      cy.getDataCy('vigilance-area-results-list').contains('1 résultat').click()
+      cy.getDataCy('vigilance-area-result-zone').contains('Nouvelle zone de vigilance sans récurrence')
+
+      cy.get('span[title="Nouvelle zone de vigilance sans récurrence"]').click()
+      cy.clickButton('Supprimer')
+      cy.clickButton('Confirmer la suppression')
+    })
+  })
 })
