@@ -11,7 +11,7 @@ def test_load_competence_cross_areas(create_cacem_tables):
     load_competence_cross_areas.run(competence_cross_areas)
     imported_competence_cross_areas = read_query(
         db="monitorenv_remote",
-        query="SELECT * FROM competence_cross_areas",
+        query="SELECT id, geom, name, description, \"timestamp\", \"begin\", \"end\", altitude_mode, tessellate, extrude, visibility, draw_order, icon FROM competence_cross_areas",
         backend="geopandas",
         geom_col="geom",
         crs=4326,
