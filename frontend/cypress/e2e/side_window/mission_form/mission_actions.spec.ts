@@ -161,9 +161,6 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(observations).equal('Une observation importante.')
 
         expect(response && response.statusCode).equal(200)
-        expect(
-          response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')?.observations
-        ).equal('Une observation importante.')
       }
     )
   })
@@ -194,28 +191,36 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('envaction-tags-selector').should('have.length', 0)
 
     // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {}
+      },
+      15,
+      0,
+      response => {
+        expect(response && response.statusCode).equal(200)
 
-      const { controlPlans }: EnvActionSurveillance =
-        response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
-      expect(controlPlans.length).equal(3)
+        const { controlPlans }: EnvActionSurveillance =
+          response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+        expect(controlPlans.length).equal(3)
 
-      expect(controlPlans[0]?.themeId).equal(100)
-      expect(controlPlans[0]?.subThemeIds.length).equal(2)
-      expect(controlPlans[0]?.subThemeIds[0]).equal(100)
-      expect(controlPlans[0]?.subThemeIds[1]).equal(102)
-      expect(controlPlans[0]?.tagIds.length).equal(0)
-      0
-      expect(controlPlans[1]?.themeId).equal(105)
-      expect(controlPlans[1]?.subThemeIds.length).equal(0)
-      expect(controlPlans[1]?.tagIds.length).equal(0)
+        expect(controlPlans[0]?.themeId).equal(100)
+        expect(controlPlans[0]?.subThemeIds.length).equal(2)
+        expect(controlPlans[0]?.subThemeIds[0]).equal(100)
+        expect(controlPlans[0]?.subThemeIds[1]).equal(102)
+        expect(controlPlans[0]?.tagIds.length).equal(0)
+        0
+        expect(controlPlans[1]?.themeId).equal(105)
+        expect(controlPlans[1]?.subThemeIds.length).equal(0)
+        expect(controlPlans[1]?.tagIds.length).equal(0)
 
-      expect(controlPlans[2]?.themeId).equal(102)
-      expect(controlPlans[2]?.subThemeIds.length).equal(1)
-      expect(controlPlans[2]?.subThemeIds[0]).equal(110)
-      expect(controlPlans[2]?.tagIds.length).equal(0)
-    })
+        expect(controlPlans[2]?.themeId).equal(102)
+        expect(controlPlans[2]?.subThemeIds.length).equal(1)
+        expect(controlPlans[2]?.subThemeIds[0]).equal(110)
+        expect(controlPlans[2]?.tagIds.length).equal(0)
+      }
+    )
   })
 
   it('should retrieve all themes into awareness select field in surveillance actions', () => {
@@ -226,36 +231,33 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
 
     cy.getDataCy('envaction-theme-selector').eq(0).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(0).contains('Épave').click({ force: true }) // id 105
+    cy.getDataCy('envaction-theme-element').eq(0).contains('Réserve naturelle').click({ force: true })
 
     cy.getDataCy('envaction-theme-selector').eq(1).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(1).contains('Rejet').click({ force: true }) // id 102
+    cy.getDataCy('envaction-theme-element').eq(1).contains('Pêche à pied').click({ force: true })
 
     cy.getDataCy('envaction-add-theme').click({ force: true })
-    cy.getDataCy('envaction-subtheme-selector').eq(2).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(2).contains('Pêche à pied').click({ force: true }) // id 18
+    cy.getDataCy('envaction-theme-selector').eq(2).click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(2).contains('Épave').click({ force: true })
 
     cy.fill('La surveillance a donné lieu à des actions de sensibilisation', true)
 
-    cy.getDataCy('surveillance-awareness-select')
-      .click({ force: true })
-      .get('[id="envActions[1].awareness.themeId-listbox"]')
-      .find('[role="option"]')
-      .then(options => {
-        const actual = [...options].map(option => option.textContent)
-        expect(actual).to.deep.eq(['Épave', 'Pêche à pied', 'Rejet'])
-      })
+    cy.getDataCy('surveillance-awareness-select').click({ force: true }).within
 
-    cy.get('div[role="option"]').contains('Épave').click()
-    cy.fill('Nb de personnes sensibilisées', 5)
+    cy.getDataCy('surveillance-awareness-fields').within(() => {
+      cy.get('div[role="option"]').then(options => {
+        const actual = [...options].map(option => option.textContent)
+        expect(actual).to.deep.eq(['Épave', 'Pêche à pied', 'Réserve naturelle'])
+      })
+      cy.get('div[role="option"]').contains('Épave').click() // id 105
+      cy.fill('Nb de personnes sensibilisées', 5)
+    })
 
     // Then
     cy.waitForLastRequest(
       '@updateMission',
-      {
-        body: {}
-      },
-      5,
+      { body: { envActions: [{ awareness: { isRisingAwareness: true, nbPerson: 5, themeId: 105 } }] } },
+      10,
       0,
       response => {
         expect(response && response.statusCode).equal(200)

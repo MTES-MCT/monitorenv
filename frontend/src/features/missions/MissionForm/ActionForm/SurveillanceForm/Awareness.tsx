@@ -14,18 +14,18 @@ type AwarenessProps = {
 export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
   const { setFieldValue } = useFormikContext<Mission<EnvActionSurveillance>>()
 
-  const [isRisingAwareness] = useField(`${formPath}.awareness.isRisingAwareness`)
+  const [{ value: isRisingAwareness }] = useField(`${formPath}.awareness.isRisingAwareness`)
 
   const [controlPlans] = useField<ControlPlansData[]>(`${formPath}.controlPlans`)
 
   useEffect(() => {
-    if (controlPlans.value.length === 1 && isRisingAwareness.value) {
+    if (controlPlans.value.length === 1 && isRisingAwareness) {
       setFieldValue(`${formPath}.awareness.themeId`, controlPlans.value[0]?.themeId)
     }
-    if (!isRisingAwareness.value) {
+    if (!isRisingAwareness) {
       setFieldValue(`${formPath}.awareness`, undefined)
     }
-  }, [controlPlans.value, formPath, isRisingAwareness.value, setFieldValue])
+  }, [controlPlans.value, formPath, isRisingAwareness, setFieldValue])
 
   return (
     <>
@@ -40,8 +40,8 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
         />
       </div>
 
-      {isRisingAwareness.value && (
-        <AwarenessWrapper>
+      {isRisingAwareness && (
+        <AwarenessWrapper data-cy="surveillance-awareness-fields">
           <NbPerson isLight label="Nb de personnes sensibilisées" name={`${formPath}.awareness.nbPerson`} />
           <AwarenessTheme
             key={awarenessOptions.length}
