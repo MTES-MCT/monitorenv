@@ -21,12 +21,12 @@ context('Side Window > Mission Form > Main Form', () => {
     visitSideWindow()
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.wait(400)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+    cy.getDataCy('Missions-numberOfDisplayedMissions').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
     })
 
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.getDataCy('add-mission').click()
     cy.getDataCy('mission-status-tag-pending').should('exist')
     cy.getDataCy('completion-mission-status-tag-to-completed').should('exist')
 
@@ -51,8 +51,8 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.fill('Unité 1', 'Cross Etel')
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.getDataCy('add-control-administration').contains('DIRM / DM')
+    cy.getDataCy('add-control-unit').contains('Cross Etel')
 
     // Then
     cy.waitForLastRequest(
@@ -87,12 +87,12 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait('@getMissions')
     cy.wait(400) // a first render with 0 missions is likely to happen
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+    cy.getDataCy('Missions-numberOfDisplayedMissions').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
     })
 
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.getDataCy('add-mission').click()
 
     cy.get('form').submit()
     cy.wait(100)
@@ -114,8 +114,8 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.fill('Unité 1', 'Cross Etel')
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.getDataCy('add-control-administration').contains('DIRM / DM')
+    cy.getDataCy('add-control-unit').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
 
@@ -148,7 +148,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
       cy.wait('@getMissions')
       cy.wait(500)
-      cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+      cy.getDataCy('Missions-numberOfDisplayedMissions').then($el => {
         const numberOfMissions = parseInt($el.text(), 10)
         cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
           expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) + 1)
@@ -186,13 +186,13 @@ context('Side Window > Mission Form > Main Form', () => {
     visitSideWindow()
     cy.wait(200)
 
-    cy.get('*[data-cy="select-period-filter"]').click()
+    cy.getDataCy('select-period-filter').click()
     cy.get('div[data-key="MONTH"]').click()
 
-    cy.get('*[data-cy="edit-mission-50"]').scrollIntoView().click({ force: true })
+    cy.getDataCy('edit-mission-50').scrollIntoView().click({ force: true })
 
     // Then
-    cy.get('*[data-cy="delete-mission"]').should('be.disabled')
+    cy.getDataCy('delete-mission').should('be.disabled')
   })
 
   it('An user can cancel mission creation if control unit already engaged and be redirected to filtered mission list', () => {
@@ -214,7 +214,7 @@ context('Side Window > Mission Form > Main Form', () => {
       cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
       // When
-      cy.get('*[data-cy="add-mission"]').click({ force: true })
+      cy.getDataCy('add-mission').click({ force: true })
       cy.fill('Unité 1', controlUnit)
       cy.wait('@getEngagedControlUnits')
 
@@ -234,7 +234,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.wait(200)
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.getDataCy('add-mission').click()
 
     const startDate = getUtcDateInMultipleFormats().asDatePickerDateTime
     const endDate = getFutureDate(7, 'day')
@@ -298,7 +298,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
     // When
-    cy.get('*[data-cy="edit-mission-43"]').scrollIntoView().click({ force: true })
+    cy.getDataCy('edit-mission-43').scrollIntoView().click({ force: true })
 
     // Then
     cy.get('body').should('not.contain', 'Une autre mission, ouverte par le CACEM, est en cours avec cette unité.')
@@ -416,7 +416,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', '/bff/v1/missions/30').as('getMission')
 
-    cy.get('*[data-cy="edit-mission-30"]').scrollIntoView().click({ force: true }).wait(500)
+    cy.getDataCy('edit-mission-30').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
@@ -468,7 +468,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait(500)
 
-    cy.get('*[data-cy="edit-mission-30"]').scrollIntoView().click({ force: true }).wait(500)
+    cy.getDataCy('edit-mission-30').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
@@ -492,7 +492,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', '/bff/v1/missions/40').as('getMission')
 
-    cy.get('*[data-cy="edit-mission-40"]').scrollIntoView().click({ force: true }).wait(500)
+    cy.getDataCy('edit-mission-40').scrollIntoView().click({ force: true }).wait(500)
 
     cy.wait('@getMission')
 
@@ -510,7 +510,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
   it('Should display text in timeline if data has been added to the mission by the control unit in RapportNav. ', () => {
     visitSideWindow()
-    cy.get('*[data-cy="edit-mission-53"]').scrollIntoView().click({ force: true }).wait(500)
+    cy.getDataCy('edit-mission-53').scrollIntoView().click({ force: true }).wait(500)
     cy.getDataCy('rapportNav-actions-text').should('be.visible')
   })
 })

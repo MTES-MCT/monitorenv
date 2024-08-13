@@ -17,7 +17,7 @@ context('Side Window > Mission Form > Mission dates', () => {
   it('A mission should be created with surveillances and valid dates', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.getDataCy('add-mission').click()
 
     // When
     const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
@@ -29,8 +29,8 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.fill('Unité 1', 'Cross Etel', { delay: 100 })
     cy.wait(250)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.getDataCy('add-control-administration').contains('DIRM / DM')
+    cy.getDataCy('add-control-unit').contains('Cross Etel')
 
     cy.wait(500)
 
@@ -38,14 +38,14 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
     cy.getDataCy('surveillance-open-by').type('ABC')
-    cy.get('*[data-cy="envaction-theme-selector"]').click()
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction').click({ force: true })
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
+    cy.getDataCy('envaction-theme-selector').click()
+    cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
+    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Destruction').click({ force: true })
+    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
 
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
-    cy.get('*[data-cy="surveillance-start-date-time"]')
+    cy.getDataCy('surveillance-start-date-time')
       .find('[aria-label="Jour"]')
       .invoke('val')
       .then(surveillanceStartDay => {
@@ -54,7 +54,7 @@ context('Side Window > Mission Form > Mission dates', () => {
           .invoke('val')
           .should('eq', surveillanceStartDay)
       })
-    cy.get('*[data-cy="surveillance-start-date-time"]')
+    cy.getDataCy('surveillance-start-date-time')
       .find('[aria-label="Mois"]')
       .invoke('val')
       .then(surveillanceStartMonth => {
@@ -63,7 +63,7 @@ context('Side Window > Mission Form > Mission dates', () => {
           .invoke('val')
           .should('eq', surveillanceStartMonth)
       })
-    cy.get('*[data-cy="surveillance-start-date-time"]')
+    cy.getDataCy('surveillance-start-date-time')
       .find('[aria-label="Année"]')
       .invoke('val')
       .then(surveillanceStartYear => {
@@ -72,7 +72,7 @@ context('Side Window > Mission Form > Mission dates', () => {
           .invoke('val')
           .should('eq', surveillanceStartYear)
       })
-    cy.get('*[data-cy="surveillance-start-date-time"]')
+    cy.getDataCy('surveillance-start-date-time')
       .find('[aria-label="Heure"]')
       .invoke('val')
       .then(surveillanceStartHour => {
@@ -81,7 +81,7 @@ context('Side Window > Mission Form > Mission dates', () => {
           .invoke('val')
           .should('eq', surveillanceStartHour)
       })
-    cy.get('*[data-cy="surveillance-start-date-time"]')
+    cy.getDataCy('surveillance-start-date-time')
       .find('[aria-label="Minute"]')
       .invoke('val')
       .then(surveillanceStartMinute => {
@@ -96,13 +96,13 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter une surveillance')
 
     cy.getDataCy('surveillance-open-by').type('ABC')
-    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage individuel').click()
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Autre').click({ force: true })
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Drone').click({ force: true })
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
+    cy.getDataCy('envaction-theme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Mouillage individuel').click()
+    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Autre').click({ force: true })
+    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
+    cy.getDataCy('envaction-theme-element').contains('Drone').click({ force: true })
+    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
 
     cy.getDataCy('action-card').eq(0).click()
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
@@ -175,7 +175,7 @@ context('Side Window > Mission Form > Mission dates', () => {
   it('A mission should be created with same surveillance and mission dates', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.getDataCy('add-mission').click()
 
     // When
     const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
@@ -189,8 +189,8 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.fill('Unité 1', 'DF 25 Libecciu', { delay: 100 })
     cy.clickOutside()
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('Douane')
-    cy.get('*[data-cy="add-control-unit"]').contains('DF 25 Libecciu')
+    cy.getDataCy('add-control-administration').contains('Douane')
+    cy.getDataCy('add-control-unit').contains('DF 25 Libecciu')
     cy.wait(200)
 
     cy.intercept('PUT', `/bff/v1/missions/*`).as('updateMission')
@@ -230,7 +230,7 @@ context('Side Window > Mission Form > Mission dates', () => {
   it('A mission should be created with valid dates for control action', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.getDataCy('add-mission').click()
 
     // When
     const endDate = getFutureDate(7, 'day')
@@ -241,8 +241,8 @@ context('Side Window > Mission Form > Mission dates', () => {
 
     cy.fill('Unité 1', 'DF 61 Port-de-Bouc', { delay: 100 })
     cy.wait(200)
-    cy.get('*[data-cy="add-control-administration"]').contains('Douane')
-    cy.get('*[data-cy="add-control-unit"]').contains('DF 61 Port-de-Bouc')
+    cy.getDataCy('add-control-administration').contains('Douane')
+    cy.getDataCy('add-control-unit').contains('DF 61 Port-de-Bouc')
 
     cy.wait(250)
 
@@ -251,14 +251,14 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter des contrôles')
 
     cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
-    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
-    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
+    cy.getDataCy('envaction-theme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
+    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
+    cy.getDataCy('envaction-theme-element').contains('Détention').click({ force: true })
+    cy.getDataCy('envaction-theme-element').click('topLeft')
+    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
 
-    cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
+    cy.getDataCy('control-form-number-controls').type('{backspace}2')
     cy.fill('Type de cible', 'Personne morale')
 
     const dateBeforeStartDateMissionInString = getUtcDateInMultipleFormats()

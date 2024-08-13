@@ -107,7 +107,7 @@ context('Reporting', () => {
     // When
     cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
 
-    cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
+    cy.getDataCy('reporting-target-type').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
 
     cy.clickButton('Ajouter un point')

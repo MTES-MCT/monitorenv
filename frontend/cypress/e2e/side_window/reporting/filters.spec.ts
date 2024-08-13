@@ -202,10 +202,10 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    cy.get('*[data-cy="reporting-theme-filter"]').click()
+    cy.getDataCy('reporting-theme-filter').click()
     cy.get('#themes-listbox > div').should('have.length', 18)
 
-    cy.get('*[data-cy="reporting-sub-theme-filter"]').click()
+    cy.getDataCy('reporting-sub-theme-filter').click()
     cy.get('#subThemes-listbox > div').should('have.length', 78)
 
     cy.wait(200)

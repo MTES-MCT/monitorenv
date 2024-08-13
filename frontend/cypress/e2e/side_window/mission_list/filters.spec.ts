@@ -200,7 +200,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.wait(500)
     cy.wait('@getMissionsByPeriod')
 
-    cy.get('*[data-cy="mission-theme-filter"]').click()
+    cy.getDataCy('mission-theme-filter').click()
     cy.get('#theme-listbox > div').should('have.length', 18)
 
     cy.wait(200)
@@ -218,7 +218,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.wait(500)
     cy.wait('@getMissionsBySecondPeriod')
 
-    cy.get('*[data-cy="mission-theme-filter"]').click()
+    cy.getDataCy('mission-theme-filter').click()
     cy.get('#theme-listbox > div').should('have.length', 34)
   })
 

@@ -43,8 +43,8 @@ context('Mission', () => {
 
     // we want to check whether the second mission has been saved correctly
     cy.get('[data-cy="mission-2"]').first().forceClick().wait(250)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.getDataCy('add-control-administration').contains('DIRM / DM')
+    cy.getDataCy('add-control-unit').contains('Cross Etel')
   })
 
   it('Missions should be created and saved in store When auto-save is enabled', () => {
@@ -83,7 +83,7 @@ context('Mission', () => {
 
     // we want to check whether the second mission has been saved correctly
     cy.get('[data-cy="mission-2"]').first().forceClick().wait(250)
-    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
-    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.getDataCy('add-control-administration').contains('DIRM / DM')
+    cy.getDataCy('add-control-unit').contains('Cross Etel')
   })
 })

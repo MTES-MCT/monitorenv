@@ -15,7 +15,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.wait('@getMissions')
     cy.wait(600) // a first render with 0 missions is likely to happen
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+    cy.getDataCy('Missions-numberOfDisplayedMissions').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
     })
@@ -30,7 +30,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
       statusCode: 200
     }).as('deleteMission')
 
-    cy.get('*[data-cy="delete-mission"]').click()
+    cy.getDataCy('delete-mission').click()
 
     cy.wait('@canDeleteMission').then(({ response }) => {
       cy.log('response', JSON.stringify(response))
@@ -59,7 +59,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
 
   it('A mission should not be deleted if actions have been created in MonitorFish or RapportNav', () => {
     visitSideWindow()
-    cy.get('*[data-cy="edit-mission-34"]').scrollIntoView().click({ force: true })
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
 
     cy.intercept(
       { method: 'GET', url: '/bff/v1/missions/34/can_delete?source=MONITORENV' },
