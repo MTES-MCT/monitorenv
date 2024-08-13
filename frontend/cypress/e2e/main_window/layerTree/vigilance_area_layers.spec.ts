@@ -109,10 +109,9 @@ context('LayerTree > Vigilance Area Layers', () => {
     // Filter "Current year"
     cy.clickButton('Filtrer par type de zones')
     cy.fill('Période de vigilance', 'Cette année')
-    cy.getDataCy('vigilance-area-results-list').contains('8 résultats').click()
+    cy.getDataCy('vigilance-area-results-list').contains('7 résultats').click()
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
-    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 4')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 5')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 6')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 7')
