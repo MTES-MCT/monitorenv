@@ -114,6 +114,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 4')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 5')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 6')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 7')
