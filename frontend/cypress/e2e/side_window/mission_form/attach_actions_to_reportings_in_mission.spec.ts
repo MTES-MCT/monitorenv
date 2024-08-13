@@ -188,8 +188,8 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
         cy.clickButton('Editer')
         cy.getDataCy('infraction-form').should('be.visible')
 
-        cy.get('*[data-cy="envaction-theme-selector"]').contains('Rejet')
-        cy.get('*[data-cy="envaction-theme-element"]').contains('Carénage sauvage')
+        cy.getDataCy('envaction-theme-selector').contains('Rejet')
+        cy.getDataCy('envaction-theme-element').contains('Carénage sauvage')
         cy.getDataCy('infraction-form-registrationNumber').should('have.value', '123456789')
         cy.getDataCy('infraction-form-controlledPersonIdentity').should('have.value', 'Capitaine Crochet')
         cy.getDataCy('infraction-form-vesselName').should('have.value', 'Le Bateau 2000')
@@ -228,8 +228,8 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
             const formattedReportingId = getFormattedReportingId(firstReporting.reportingId)
             cy.fill('Signalements', formattedReportingId)
 
-            cy.get('*[data-cy="envaction-theme-selector"]').contains('Culture marine')
-            cy.get('*[data-cy="envaction-theme-element"]').contains('Remise en état après occupation du DPM')
+            cy.getDataCy('envaction-theme-selector').contains('Culture marine')
+            cy.getDataCy('envaction-theme-element').contains('Remise en état après occupation du DPM')
             cy.getDataCy('infraction-form-registrationNumber').should('have.value', '987654321')
             cy.getDataCy('infraction-form-vesselName').should('have.value', 'The Boat')
             cy.get('.Field-MultiRadio').contains("Type d'infraction").get('[aria-checked="true"]').contains('Avec PV')
