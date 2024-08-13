@@ -46,8 +46,16 @@ export const actionFactory = ({
   id,
   ...action
 }: Partial<EnvAction> & { actionType: ActionTypeEnum }): NewEnvAction => {
+  let actionToDuplicate = action
   switch (actionType) {
     case ActionTypeEnum.CONTROL:
+      if ('infractions' in actionToDuplicate) {
+        actionToDuplicate = {
+          ...actionToDuplicate,
+          infractions: actionToDuplicate.infractions?.map(infraction => infractionFactory(infraction))
+        }
+      }
+
       return {
         actionNumberOfControls: undefined,
         actionTargetType: undefined,
@@ -64,16 +72,16 @@ export const actionFactory = ({
         infractions: [],
         observations: '',
         reportingIds: [],
-        ...action,
+        ...actionToDuplicate,
         id: uuidv4()
       } as NewEnvActionControl
     case ActionTypeEnum.NOTE:
       return {
         actionStartDateTimeUtc: new Date().toISOString(),
         actionType: ActionTypeEnum.NOTE,
-        id: uuidv4(),
         observations: '',
-        ...action
+        ...actionToDuplicate,
+        id: uuidv4()
       } as EnvActionNote
     case ActionTypeEnum.SURVEILLANCE:
     default:
@@ -89,10 +97,10 @@ export const actionFactory = ({
         ],
 
         durationMatchesMission: true,
-        id: uuidv4(),
         observations: '',
         reportingIds: [],
-        ...action
+        ...actionToDuplicate,
+        id: uuidv4()
       } as EnvActionSurveillance
   }
 }
