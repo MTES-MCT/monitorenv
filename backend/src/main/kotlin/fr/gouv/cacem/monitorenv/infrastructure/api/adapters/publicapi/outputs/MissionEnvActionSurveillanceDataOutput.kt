@@ -9,7 +9,7 @@ import java.util.*
 
 data class MissionEnvActionSurveillanceDataOutput(
     override val id: UUID,
-    val actionEndDateTimeUtc: ZonedDateTime? = null,
+    override val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.SURVEILLANCE,
     val completedBy: String? = null,
@@ -25,6 +25,7 @@ data class MissionEnvActionSurveillanceDataOutput(
     MissionEnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionEndDateTimeUtc = actionEndDateTimeUtc,
         actionType = ActionTypeEnum.SURVEILLANCE,
         observationsByUnit = observationsByUnit,
     ) {

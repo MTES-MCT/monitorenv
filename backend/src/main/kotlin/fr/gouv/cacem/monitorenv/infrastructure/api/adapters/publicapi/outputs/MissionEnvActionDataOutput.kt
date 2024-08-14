@@ -11,6 +11,7 @@ import java.util.*
 abstract class MissionEnvActionDataOutput(
     open val id: UUID,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
+    open val actionEndDateTimeUtc: ZonedDateTime? = null,
     open val actionType: ActionTypeEnum,
     open val observationsByUnit: String? = null,
 ) {

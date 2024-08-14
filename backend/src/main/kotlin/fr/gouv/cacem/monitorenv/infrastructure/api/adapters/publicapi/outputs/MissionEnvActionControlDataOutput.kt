@@ -12,7 +12,7 @@ import java.util.*
 
 data class MissionEnvActionControlDataOutput(
     override val id: UUID,
-    val actionEndDateTimeUtc: ZonedDateTime? = null,
+    override val actionEndDateTimeUtc: ZonedDateTime? = null,
     val actionNumberOfControls: Int? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
@@ -36,6 +36,7 @@ data class MissionEnvActionControlDataOutput(
     MissionEnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionEndDateTimeUtc = actionEndDateTimeUtc,
         actionType = ActionTypeEnum.CONTROL,
     ) {
     companion object {
