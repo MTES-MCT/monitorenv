@@ -1,4 +1,8 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
+
 import { goToMainWindowAndOpenControlUnit } from './utils'
+
+import type { Mission } from 'domain/entities/missions'
 
 context('Main Window > Control Unit Dialog > Contact List', () => {
   it('Should show all contacts by default', () => {
@@ -123,6 +127,49 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
       cy.wait('@deleteControlUnitContact')
 
       cy.contains('Passerelle').should('not.exist')
+    })
+  })
+
+  it('Should open the mission list of the unit within last 6 months period', () => {
+    goToMainWindowAndOpenControlUnit(10018)
+
+    cy.clickButton("Voir les missions de l'unité")
+
+    cy.visit(`/side_window`).wait(1000)
+
+    const sixMonthsAgo = customDayjs().subtract(6, 'month').format('DD/MM/YYYY').split('/')
+    const today = customDayjs().utc().format('DD/MM/YYYY').split('/')
+    cy.contains('Unité DREAL Pays-de-La-Loire').should('be.visible')
+    cy.get('[id="missionDateRangeStartDay"]').should('have.value', sixMonthsAgo[0])
+    cy.get('[id="missionDateRangeStartMonth"]').should('have.value', sixMonthsAgo[1])
+    cy.get('[id="missionDateRangeStartYear"]').should('have.value', sixMonthsAgo[2])
+
+    cy.get('[id="missionDateRangeEndDay"]').should('have.value', today[0])
+    cy.get('[id="missionDateRangeEndMonth"]').should('have.value', today[1])
+    cy.get('[id="missionDateRangeEndYear"]').should('have.value', today[2])
+
+    cy.contains('Unité DREAL Pays-de-La-Loire').should('be.visible')
+
+    cy.getDataCy('reinitialize-filters').scrollIntoView().click()
+  })
+
+  it('Should open the current mission of the unit', () => {
+    goToMainWindowAndOpenControlUnit(10018)
+
+    cy.intercept('GET', `/bff/v1/missions/29`).as('getMission')
+    cy.clickButton('Ouvrir la mission en cours')
+
+    // We check only the mission being called from bff instead of asserting ui because sidewindow isnt in the dom
+    cy.wait('@getMission').then(({ response }) => {
+      if (!response) {
+        assert.fail('response is undefined')
+      }
+      const mission: Mission = response.body
+      assert.equal(response.statusCode, 200)
+      assert.equal(
+        mission.controlUnits.some(controlUnit => controlUnit.id === 10018),
+        true
+      )
     })
   })
 
