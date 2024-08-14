@@ -8,9 +8,9 @@ describe('Edit Vigilance Area', () => {
   })
   it('Should successfully update a vigilance area', () => {
     cy.visit('/#@-192242.97,5819420.73,9.93')
-    cy.wait(500)
+    cy.wait(1000)
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.wait(700)
+    cy.wait(1000)
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/6').as('editVigilanceArea')
     cy.get('#root').click(850, 350)
@@ -44,9 +44,9 @@ describe('Edit Vigilance Area', () => {
 
   it('Should successfully add regulatory area to a vigilance area and consult them', () => {
     cy.visit('/#@-668012.81,6169323.28,8.44')
-    cy.wait(500)
+    cy.wait(1000)
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.wait(700)
+    cy.wait(1000)
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/7').as('editVigilanceArea')
     cy.get('#root').click(970, 500)
@@ -96,9 +96,9 @@ describe('Edit Vigilance Area', () => {
 
   it('Should successfully add AMP to a vigilance area and consult them', () => {
     cy.visit('/#@-181811.71,5844094.04,9.31')
-    cy.wait(500)
+    cy.wait(1000)
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.wait(700)
+    cy.wait(1000)
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/1').as('editVigilanceArea')
     cy.get('#root').click(800, 630)
