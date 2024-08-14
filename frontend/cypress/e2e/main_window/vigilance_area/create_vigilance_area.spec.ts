@@ -156,7 +156,7 @@ describe('Create Vigilance Area', () => {
       cy.clickButton('Fermer la zone de vigilance')
       cy.clickButton('Filtrer par type de zones')
       cy.fill('Période de vigilance', 'En ce moment')
-      cy.getDataCy('vigilance-area-results-list').contains('1 résultat').click()
+      cy.getDataCy('vigilance-area-results-list').contains('2 résultats').click()
       cy.getDataCy('vigilance-area-result-zone').contains('Nouvelle zone de vigilance')
 
       cy.get('span[title="Nouvelle zone de vigilance"]').click()
@@ -180,7 +180,7 @@ describe('Create Vigilance Area', () => {
       cy.clickButton('Fermer la zone de vigilance')
       cy.clickButton('Filtrer par type de zones')
       cy.fill('Période de vigilance', 'En ce moment')
-      cy.getDataCy('vigilance-area-results-list').contains('1 résultat').click()
+      cy.getDataCy('vigilance-area-results-list').contains('2 résultats').click()
       cy.getDataCy('vigilance-area-result-zone').contains('Nouvelle zone de vigilance sans récurrence')
 
       cy.get('span[title="Nouvelle zone de vigilance sans récurrence"]').click()
