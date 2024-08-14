@@ -44,7 +44,7 @@ class CreateOrUpdateMissionUTests {
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @Test
-    fun `should return the mission to update with computed facade`() {
+    fun `should return the mission to update with computed facade and observationsByUnit`() {
         // Given
         val wktReader = WKTReader()
 
@@ -114,12 +114,29 @@ class CreateOrUpdateMissionUTests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                observationsByUnit = "observations",
             )
 
         given(postgisFunctionRepository.normalizeMultipolygon(polygon)).willReturn(polygon)
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
-        given(missionRepository.findById(100)).willReturn(missionToUpdate.copy(envActions = existingEnvActions))
-        given(missionRepository.save(anyOrNull()))
+        val storedMission = missionToUpdate.copy(
+            facade = "La Face Ade",
+            envActions = existingEnvActions,
+            observationsByUnit = "observations",
+        )
+        given(missionRepository.findById(100)).willReturn(storedMission)
+        given(
+            missionRepository.save(
+                argThat {
+                    this ==
+                        missionToUpdate.copy(
+                            facade = "La Face Ade",
+                            envActions = existingEnvActions,
+                            observationsByUnit = "observations",
+                        )
+                },
+            ),
+        )
             .willReturn(MissionDTO(mission = expectedCreatedMission))
 
         // When
@@ -145,6 +162,7 @@ class CreateOrUpdateMissionUTests {
                         missionToUpdate.copy(
                             facade = "La Face Ade",
                             envActions = existingEnvActions,
+                            observationsByUnit = "observations",
                         )
                 },
             )

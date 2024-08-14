@@ -34,6 +34,7 @@ class CreateOrUpdateMission(
         val missionToSave =
             normalizedMission.copy(
                 facade = facade,
+                observationsByUnit = storedMission?.observationsByUnit,
                 envActions = storedMission?.envActions,
             )
         val savedMission = missionRepository.save(missionToSave)
