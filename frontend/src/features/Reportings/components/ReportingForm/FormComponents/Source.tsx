@@ -224,7 +224,6 @@ const SemaphoreWrapper = styled.div`
   display: flex;
   gap: 8px;
   align-items: end;
-  flex: 3;
 
   > ${StyledFormikSelect} {
     flex-grow: 1;
