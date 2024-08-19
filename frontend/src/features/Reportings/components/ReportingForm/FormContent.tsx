@@ -55,7 +55,6 @@ import { FieldArray, useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { v4 as uuidv4 } from 'uuid'
 
 import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
@@ -324,7 +323,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           render={({ push, remove }) => (
             <>
               {selectedReporting.reportingSources?.map((reportingSource, index) => (
-                <Source key={reportingSource.id ?? uuidv4()} index={index} push={push} remove={remove} />
+                <Source key={reportingSource.id ?? index} index={index} push={push} remove={remove} />
               ))}
             </>
           )}
