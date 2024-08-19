@@ -10,16 +10,9 @@ $$
         today := date_trunc('day', CURRENT_DATE);
 
 -- 1. Date dans l'année courante, mais pas dans le trimestre actuel ni dans les trois premiers mois de l'année
-        date_within_year_not_in_quarter_nor_3_months :=
-            (CASE
-                 WHEN EXTRACT(MONTH FROM CURRENT_DATE) <= 3
-                     THEN date_trunc('year', CURRENT_DATE) + INTERVAL '9 month' -- Pour éviter Q1 et les 3 premiers mois
-                 WHEN EXTRACT(MONTH FROM CURRENT_DATE) <= 6
-                     THEN date_trunc('year', CURRENT_DATE) + INTERVAL '6 month' -- Pour éviter Q2 et les 3 premiers mois
-                 WHEN EXTRACT(MONTH FROM CURRENT_DATE) <= 9
-                     THEN date_trunc('year', CURRENT_DATE) + INTERVAL '3 month' -- Pour éviter Q3 et les 3 premiers mois
-                 ELSE date_trunc('year', CURRENT_DATE) -- Pour éviter Q4
-                END) + INTERVAL '1 day';
+        date_within_year_not_in_quarter_nor_3_months := make_date(
+            EXTRACT(year FROM CURRENT_DATE)::INTEGER,
+            (EXTRACT(month FROM CURRENT_DATE) + 6 - 1)::INTEGER % 12 + 1, 1);
 
 -- 2. Date dans le trimestre actuel de l'année courante
         date_within_quarter := date_trunc('quarter', CURRENT_DATE);
