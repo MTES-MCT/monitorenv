@@ -165,7 +165,7 @@ export function Source({ index, push, remove }: SourceProps) {
 
         {reportingSource.sourceType === ReportingSourceEnum.SEMAPHORE && (
           <SemaphoreWrapper>
-            <FormikSelect
+            <StyledFormikSelect
               customSearch={customSearchSemaphore}
               data-cy="add-semaphore-source"
               isErrorMessageHidden
@@ -219,14 +219,15 @@ export function Source({ index, push, remove }: SourceProps) {
   )
 }
 
+const StyledFormikSelect = styled(FormikSelect)``
 const SemaphoreWrapper = styled.div`
   display: flex;
   gap: 8px;
-  > div {
-    flex: 1;
-  }
-  > button {
-    align-self: self-end;
+  align-items: end;
+  flex: 3;
+
+  > ${StyledFormikSelect} {
+    flex-grow: 1;
   }
 `
 

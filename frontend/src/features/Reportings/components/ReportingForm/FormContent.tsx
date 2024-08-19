@@ -32,10 +32,8 @@ import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedSt
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import {
   type Reporting,
-  type ReportingSource,
   INDIVIDUAL_ANCHORING_THEME_ID,
   InfractionProvenLabels,
-  ReportingSourceEnum,
   ReportingTypeEnum,
   ReportingTypeLabels
 } from 'domain/entities/reporting'
@@ -57,6 +55,7 @@ import { FieldArray, useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
+import { v4 as uuidv4 } from 'uuid'
 
 import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
@@ -283,21 +282,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     return null
   }
 
-  const sourceKey = (reportingSource: ReportingSource) => {
-    switch (reportingSource.sourceType) {
-      case ReportingSourceEnum.CONTROL_UNIT:
-        return reportingSource.sourceType + reportingSource.controlUnitId
-
-      case ReportingSourceEnum.SEMAPHORE:
-        return reportingSource.sourceType + reportingSource.semaphoreId
-
-      case ReportingSourceEnum.OTHER:
-        return reportingSource.sourceType + reportingSource.sourceName
-      default:
-        return undefined
-    }
-  }
-
   return (
     <StyledFormContainer>
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues)} />
@@ -340,7 +324,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           render={({ push, remove }) => (
             <>
               {selectedReporting.reportingSources?.map((reportingSource, index) => (
-                <Source key={sourceKey(reportingSource)} index={index} push={push} remove={remove} />
+                <Source key={reportingSource.id ?? uuidv4()} index={index} push={push} remove={remove} />
               ))}
             </>
           )}

@@ -147,7 +147,7 @@ export function SearchOnExtentExtraButtons({
 const SearchOnExtentButton = styled(IconButton)`
   position: absolute;
   top: 0;
-  left: 355px;
+  left: 4px;
 `
 
 const ReloadSearch = styled(Button)<{ $active: boolean }>`
