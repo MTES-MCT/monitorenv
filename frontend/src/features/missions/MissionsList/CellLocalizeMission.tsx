@@ -28,6 +28,7 @@ export function CellLocalizeMission({ geom }: { geom: any }) {
 
 const StyledIconButton = styled(IconButton)`
   display: inherit;
+  margin: auto;
 `
 const StyledEmptyContainer = styled.div`
   height: 32px;
