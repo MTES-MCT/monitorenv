@@ -3,7 +3,7 @@ import { sideWindowActions } from '@features/SideWindow/slice'
 import { Accent, Button, customDayjs, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { MissionFiltersEnum, updateFilters } from 'domain/shared_slices/MissionFilters'
+import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { editMissionInLocalStore } from 'domain/use_cases/missions/editMissionInLocalStore'
 import { Formik } from 'formik'
 import { noop } from 'lodash/fp'
@@ -64,6 +64,7 @@ export function ControlUnitDialog() {
 
   const openFilteredMissions = (controlUnitId: number) => {
     const sixMonthsAgo = customDayjs().subtract(6, 'month').toISOString()
+    dispatch(resetMissionFilters())
     dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: [controlUnitId] }))
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: DateRangeEnum.CUSTOM }))
     dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: sixMonthsAgo }))
