@@ -19,17 +19,21 @@ $$
                         LOOP
                             item := infractions -> i;
 
-                            -- Si l'id est déjà présent dans id_count, on génère un nouveau UUID
-                            IF id_count ? (item ->> 'id') THEN
-                                new_uuid := uuid_generate_v4();
-                                item := jsonb_set(item, '{id}', to_jsonb(new_uuid)::jsonb, true);
+                            -- Vérifier si l'id n'est pas null
+                            IF item ? 'id' AND item ->> 'id' IS NOT NULL THEN
+
+                                -- Si l'id est déjà présent dans id_count, on génère un nouveau UUID
+                                IF id_count ? (item ->> 'id') THEN
+                                    new_uuid := uuid_generate_v4();
+                                    item := jsonb_set(item, '{id}', to_jsonb(new_uuid)::jsonb, true);
+                                END IF;
+
+                                -- Ajouter l'id actuel à id_count
+                                id_count := id_count || jsonb_build_object(item ->> 'id', true);
+
+                                -- Modifier l'id dans les infractions
+                                infractions := jsonb_set(infractions, ('{' || i || '}')::text[], item, true);
                             END IF;
-
-                            -- Ajouter l'id actuel à id_count
-                            id_count := id_count || jsonb_build_object(item ->> 'id', true);
-
-                            -- Modifier l'id dans les infractions
-                            infractions := jsonb_set(infractions, ('{' || i || '}')::text[], item, true);
                         END LOOP;
 
                     UPDATE env_actions
