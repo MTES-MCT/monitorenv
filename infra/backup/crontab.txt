@@ -1,1 +1,1 @@
-19 18 * * * bash -l -c 'source $HOME/.monitorenv; $MONITORENV_GIT_FOLDER/infra/backup/pg_backup_rotated.sh > $MONITORENV_BACKUPS_FOLDER/cron.log 2>&1'
+19 18 * * * bash -l -c 'export $(grep -v '^#' $HOME/.env | xargs); $MONITORENV_GIT_FOLDER/infra/backup/pg_backup_rotated.sh > $MONITORENV_BACKUPS_FOLDER/cron.log 2>&1'
