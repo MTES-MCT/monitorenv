@@ -220,7 +220,7 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     zIndex: 2000
   },
   [MonitorEnvLayers.HOVERED_MISSION]: {
-    code: MonitorEnvLayers.MISSIONS,
+    code: MonitorEnvLayers.HOVERED_MISSION,
     zIndex: 1800
   },
   [MonitorEnvLayers.REPORTINGS]: {

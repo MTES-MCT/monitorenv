@@ -13,7 +13,7 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
+export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const displayMissionSelectedLayer = useAppSelector(state => state.global.displayMissionSelectedLayer)
@@ -105,12 +105,20 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
     selectedMissionVectorSourceRef.current?.clear(true)
     selectedMissionActionsVectorSourceRef.current?.clear(true)
     if (selectedMission) {
-      selectedMissionVectorSourceRef.current?.addFeature(
-        getMissionZoneFeature(selectedMission, Layers.MISSION_SELECTED.code)
-      )
+      // Avoids stacking zones
+      const hasAlreadyAMissionFeature =
+        typeof currentFeatureOver?.id === 'string' &&
+        (currentFeatureOver.id.includes(`${Layers.MISSIONS.code}:${selectedMission.id}`) ||
+          currentFeatureOver.id.includes(`${Layers.MISSION_TO_ATTACH_ON_REPORTING.code}:${selectedMission.id}`))
+
+      if (!hasAlreadyAMissionFeature) {
+        selectedMissionVectorSourceRef.current?.addFeature(
+          getMissionZoneFeature(selectedMission, Layers.MISSION_SELECTED.code)
+        )
+      }
       selectedMissionActionsVectorSourceRef.current?.addFeatures(getActionsFeatures(selectedMission))
     }
-  }, [selectedMission])
+  }, [currentFeatureOver, selectedMission])
 
   return null
 }

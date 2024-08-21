@@ -11,7 +11,7 @@ import { getMissionZoneFeature } from '../../../../map/layers/Missions/missionGe
 import type { VectorLayerWithName } from '../../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 
-export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
+export function SelectedMissionToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
@@ -59,11 +59,18 @@ export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     selectedAttachedMissionVectorSourceRef.current?.clear(true)
     if (attachedMission) {
-      selectedAttachedMissionVectorSourceRef.current?.addFeature(
-        getMissionZoneFeature(attachedMission, Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code)
-      )
+      // Avoids stacking zones
+      const hasAlreadyAMissionFeature =
+        typeof currentFeatureOver?.id === 'string' &&
+        (currentFeatureOver.id.includes(`${Layers.MISSIONS.code}:${attachedMission.id}`) ||
+          currentFeatureOver.id.includes(`${Layers.MISSION_TO_ATTACH_ON_REPORTING.code}:${attachedMission.id}`))
+      if (!hasAlreadyAMissionFeature) {
+        selectedAttachedMissionVectorSourceRef.current?.addFeature(
+          getMissionZoneFeature(attachedMission, Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code)
+        )
+      }
     }
-  }, [attachedMission])
+  }, [attachedMission, currentFeatureOver])
 
   return null
 }
