@@ -11,7 +11,7 @@ import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import type { VectorLayerWithName } from '../../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 
-export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
+export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
@@ -96,10 +96,16 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     editingReportingVectorSourceRef.current?.clear(true)
     if (editingReporting) {
-      const reportingFeature = getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)
-      editingReportingVectorSourceRef.current?.addFeature(reportingFeature)
+      // Avoids stacking zones
+      const hasAlreadyAReportingFeature =
+        typeof currentFeatureOver?.id === 'string' &&
+        currentFeatureOver.id.includes(`${Layers.REPORTINGS.code}:${editingReporting.id}`)
+      if (!hasAlreadyAReportingFeature) {
+        const reportingFeature = getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)
+        editingReportingVectorSourceRef.current?.addFeature(reportingFeature)
+      }
     }
-  }, [editingReporting])
+  }, [editingReporting, currentFeatureOver])
 
   return null
 }
