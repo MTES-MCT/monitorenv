@@ -62,7 +62,8 @@ const selectedReportingStyleFactory = (color, fillColor) => [
       color,
       lineCap: 'square',
       lineDash: [2, 8],
-      width: 5
+      // TODO (21/08/2024) : Vérifier l'épaisseur du trait avec Adeline
+      width: 4
     })
   }),
   new Style({
@@ -152,10 +153,8 @@ export const selectedReportingStyleFn = feature => {
       return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.25))
     }
 
-    return selectedReportingStyleFactory(
-      THEME.color.mediumSeaGreen,
-      getColorWithAlpha(THEME.color.mediumSeaGreen, 0.25)
-    )
+    // TODO (21/08/2024) : Vérifier l'opacité du fond avec Adeline
+    return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.mediumSeaGreen, 0.2))
   }
 
   switch (status) {
