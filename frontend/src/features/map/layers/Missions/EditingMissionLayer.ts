@@ -6,6 +6,7 @@ import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelp
 import { selectedMissionStyle } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { hasAlreadyFeature } from '../utils'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
@@ -102,13 +103,12 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
     editingMissionVectorSourceRef.current?.clear(true)
     editingMissionActionsVectorSourceRef.current?.clear(true)
     if (editingMission) {
-      // Avoids stacking zones
-      const hasAlreadyAMissionFeature =
-        typeof currentFeatureOver?.id === 'string' &&
-        (currentFeatureOver.id.includes(`${Layers.MISSIONS.code}:${editingMission.id}`) ||
-          currentFeatureOver.id.includes(`${Layers.MISSION_TO_ATTACH_ON_REPORTING.code}:${editingMission.id}`))
-
-      if (!hasAlreadyAMissionFeature) {
+      if (
+        !hasAlreadyFeature(currentFeatureOver, [
+          `${Layers.MISSIONS.code}:${editingMission.id}`,
+          `${Layers.MISSION_TO_ATTACH_ON_REPORTING.code}:${editingMission.id}`
+        ])
+      ) {
         editingMissionVectorSourceRef.current?.addFeature(
           getMissionZoneFeature(editingMission, Layers.MISSION_SELECTED.code)
         )

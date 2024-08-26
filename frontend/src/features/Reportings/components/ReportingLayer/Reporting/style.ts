@@ -154,7 +154,10 @@ export const selectedReportingStyleFn = feature => {
     }
 
     // TODO (21/08/2024) : Vérifier l'opacité du fond avec Adeline
-    return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.mediumSeaGreen, 0.2))
+    return selectedReportingStyleFactory(
+      THEME.color.mediumSeaGreen,
+      getColorWithAlpha(THEME.color.mediumSeaGreen, 0.25)
+    )
   }
 
   switch (status) {

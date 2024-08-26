@@ -1,3 +1,4 @@
+import { hasAlreadyFeature } from '@features/map/layers/utils'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
@@ -73,11 +74,7 @@ export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChild
   useEffect(() => {
     selectedReportingVectorSourceRef.current?.clear(true)
     if (selectedReporting) {
-      // Avoids stacking zones
-      const hasAlreadyAReportingFeature =
-        typeof currentFeatureOver?.id === 'string' &&
-        currentFeatureOver.id.includes(`${Layers.REPORTINGS.code}:${selectedReporting.id}`)
-      if (!hasAlreadyAReportingFeature) {
+      if (!hasAlreadyFeature(currentFeatureOver, [`${Layers.REPORTINGS.code}:${selectedReporting.id}`])) {
         selectedReportingVectorSourceRef.current?.addFeature(
           getReportingZoneFeature(selectedReporting, Layers.REPORTING_SELECTED.code)
         )
