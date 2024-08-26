@@ -1,4 +1,5 @@
 import { selectedMissionStyle } from '@features/map/layers/Missions/missions.style'
+import { hasAlreadyFeature } from '@features/map/layers/utils'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
@@ -59,12 +60,12 @@ export function SelectedMissionToAttachLayer({ currentFeatureOver, map }: BaseMa
   useEffect(() => {
     selectedAttachedMissionVectorSourceRef.current?.clear(true)
     if (attachedMission) {
-      // Avoids stacking zones
-      const hasAlreadyAMissionFeature =
-        typeof currentFeatureOver?.id === 'string' &&
-        (currentFeatureOver.id.includes(`${Layers.MISSIONS.code}:${attachedMission.id}`) ||
-          currentFeatureOver.id.includes(`${Layers.MISSION_TO_ATTACH_ON_REPORTING.code}:${attachedMission.id}`))
-      if (!hasAlreadyAMissionFeature) {
+      if (
+        !hasAlreadyFeature(currentFeatureOver, [
+          `${Layers.MISSIONS.code}:${attachedMission.id}`,
+          `${Layers.MISSION_TO_ATTACH_ON_REPORTING.code}:${attachedMission.id}`
+        ])
+      ) {
         selectedAttachedMissionVectorSourceRef.current?.addFeature(
           getMissionZoneFeature(attachedMission, Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code)
         )
