@@ -7,6 +7,7 @@ import {
   type Option,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
+import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -27,7 +28,6 @@ import {
 
 export function TableReportingsFiltersWithRef(
   {
-    isCustomPeriodVisible,
     optionsList,
     resetFilters,
     updateCheckboxFilter,
@@ -93,6 +93,8 @@ export function TableReportingsFiltersWithRef(
       }),
     [subThemesOptions]
   )
+
+  const isCustomPeriodVisible = periodFilter === ReportingDateRangeEnum.CUSTOM
 
   return (
     <>
