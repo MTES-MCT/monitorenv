@@ -54,6 +54,7 @@ import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { FieldArray, useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { AttachMission } from './AttachMission'
@@ -321,11 +322,11 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         <FieldArray
           name="reportingSources"
           render={({ push, remove }) => (
-            <>
+            <SourceWrapper>
               {selectedReporting.reportingSources?.map((reportingSource, index) => (
                 <Source key={reportingSource.id ?? index} index={index} push={push} remove={remove} />
               ))}
-            </>
+            </SourceWrapper>
           )}
           validateOnChange={false}
         />
@@ -408,3 +409,9 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     </StyledFormContainer>
   )
 }
+
+const SourceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`

@@ -137,7 +137,7 @@ export function Source({ index, push, remove }: SourceProps) {
   return (
     reportingSource && (
       <>
-        {index !== 0 && <Separator />}
+        {index !== 0 && <SourceSeparator />}
         <div>
           <MultiRadio
             data-cy={`reporting-source-selector-${index}`}
@@ -205,19 +205,24 @@ export function Source({ index, push, remove }: SourceProps) {
           />
         )}
         {index === values.reportingSources.length - 1 && (
-          <Button
+          <AddSourceButton
             accent={Accent.SECONDARY}
             Icon={Icon.Plus}
             isFullWidth
             onClick={() => push(createNewReportingSource())}
           >
             Ajouter une source
-          </Button>
+          </AddSourceButton>
         )}
       </>
     )
   )
 }
+
+const SourceSeparator = styled(Separator)`
+  margin: 0;
+  border: 1px solid ${p => p.theme.color.lightGray};
+`
 
 const StyledFormikSelect = styled(FormikSelect)``
 const SemaphoreWrapper = styled.div`
@@ -228,6 +233,10 @@ const SemaphoreWrapper = styled.div`
   > ${StyledFormikSelect} {
     flex-grow: 1;
   }
+`
+
+const AddSourceButton = styled(Button)`
+  margin-top: -8px;
 `
 
 const DeleteButton = styled(IconButton)`
