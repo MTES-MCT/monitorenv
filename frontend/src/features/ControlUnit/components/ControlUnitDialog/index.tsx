@@ -107,10 +107,9 @@ export function ControlUnitDialog() {
                 Ouvrir la mission en cours
               </Button>
             )}
-            {/* TODO: Mettre la bonne icone dans monitor-ui et ici */}
             <Button
               accent={Accent.SECONDARY}
-              Icon={Icon.List}
+              Icon={Icon.ListLines}
               isFullWidth
               onClick={() => openFilteredMissions(controlUnit.id)}
             >
