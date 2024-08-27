@@ -1,27 +1,27 @@
 import { MissionSearch } from '@features/missions/MissionsSearch'
 import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
-  Select,
-  customDayjs,
-  DateRangePicker,
-  type DateAsStringRange,
-  getOptionsFromIdAndName,
-  CheckPicker,
-  getOptionsFromLabelledEnum,
-  CustomSearch,
-  Icon,
   Checkbox,
+  CheckPicker,
+  customDayjs,
+  CustomSearch,
+  type DateAsStringRange,
+  DateRangePicker,
+  getOptionsFromIdAndName,
+  getOptionsFromLabelledEnum,
+  Icon,
+  Select,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
-import { type MutableRefObject, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
-import { DateRangeEnum, DATE_RANGE_LABEL } from '../../../../domain/entities/dateRange'
-import { MissionTypeLabel, MissionStatusLabel, FrontCompletionStatusLabel } from '../../../../domain/entities/missions'
+import { DATE_RANGE_LABEL, DateRangeEnum } from '../../../../domain/entities/dateRange'
+import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from '../../../../domain/entities/missions'
 import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -47,7 +47,6 @@ export function MissionsTableFilters() {
     startedAfter,
     startedBefore
   } = useAppSelector(state => state.missionFilters)
-  const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(selectedPeriod === DateRangeEnum.CUSTOM)
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
@@ -106,7 +105,6 @@ export function MissionsTableFilters() {
 
   const onUpdatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
-    setIsCustomPeriodVisible(nextDateRange === DateRangeEnum.CUSTOM)
   }
 
   const onUpdateAdministrationFilter = (nextSelectedAdministrationIds: string[] | undefined) => {
@@ -136,7 +134,6 @@ export function MissionsTableFilters() {
   }
 
   const onResetFilters = () => {
-    setIsCustomPeriodVisible(false)
     dispatch(resetMissionFilters())
   }
   if (isLoading) {
@@ -284,7 +281,7 @@ export function MissionsTableFilters() {
         </FilterWrapperLine>
       </FilterWrapper>
       <StyledTagsContainer>
-        {isCustomPeriodVisible && (
+        {selectedPeriod === DateRangeEnum.CUSTOM && (
           <StyledCustomPeriodContainer>
             <DateRangePicker
               key="dateRange"

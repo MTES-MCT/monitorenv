@@ -1,14 +1,14 @@
 import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
-import { type MutableRefObject, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useMemo, useRef } from 'react'
 
 import { MapReportingsFilters } from './Map'
 import { TableReportingsFilters } from './Table'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
-import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
+import { ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
   ReportingSourceEnum,
   ReportingSourceLabels,
@@ -17,7 +17,7 @@ import {
 } from '../../../domain/entities/reporting'
 import { seaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingTargetTypeLabels } from '../../../domain/entities/targetType'
-import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
+import { reportingsFiltersActions, ReportingsFiltersEnum } from '../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../hooks/useGetControlPlans'
@@ -28,11 +28,10 @@ export enum ReportingFilterContext {
 }
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
-  const { periodFilter, sourceTypeFilter, startedAfter, startedBefore, subThemesFilter } = useAppSelector(
+  const { sourceTypeFilter, startedAfter, startedBefore, subThemesFilter } = useAppSelector(
     state => state.reportingFilters
   )
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
-  const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -135,7 +134,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
 
   const updatePeriodFilter = period => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
-    setIsCustomPeriodVisible(period === ReportingDateRangeEnum.CUSTOM)
   }
 
   const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
@@ -195,14 +193,12 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     }
   }
   const resetFilters = () => {
-    setIsCustomPeriodVisible(false)
     dispatch(reportingsFiltersActions.resetReportingsFilters())
   }
 
   return context === ReportingFilterContext.TABLE ? (
     <TableReportingsFilters
       ref={wrapperRef}
-      isCustomPeriodVisible={isCustomPeriodVisible}
       optionsList={optionsList}
       resetFilters={resetFilters}
       updateCheckboxFilter={updateCheckboxFilter}
@@ -215,7 +211,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   ) : (
     <MapReportingsFilters
       ref={wrapperRef}
-      isCustomPeriodVisible={isCustomPeriodVisible}
       optionsList={optionsList}
       updateCheckboxFilter={updateCheckboxFilter}
       updateDateRangeFilter={updateDateRangeFilter}
