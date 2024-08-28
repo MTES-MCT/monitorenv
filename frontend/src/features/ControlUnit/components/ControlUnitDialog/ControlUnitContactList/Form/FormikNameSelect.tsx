@@ -69,7 +69,7 @@ export function FormikNameSelect() {
 }
 
 const Wrapper = styled.div`
-  align-items: flex-start;
+  align-items: end;
   display: flex;
   margin-bottom: 16px;
 
