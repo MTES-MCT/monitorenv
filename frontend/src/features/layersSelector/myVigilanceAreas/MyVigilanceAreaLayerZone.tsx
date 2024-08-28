@@ -88,7 +88,8 @@ export function MyVigilanceAreaLayerZone({
         {layer?.name}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
-        <IconButton
+        <StyledSummaryButton
+          $withMargin={pinnedVigilanceArea}
           accent={Accent.TERTIARY}
           color={metadataIsShown ? THEME.color.charcoal : THEME.color.lightGray}
           Icon={Icon.Summary}
@@ -98,7 +99,8 @@ export function MyVigilanceAreaLayerZone({
           title={metadataIsShown ? 'Fermer la zone de vigilance' : 'Afficher la zone de vigilance'}
         />
 
-        <IconButton
+        <StyledDisplayButton
+          $withMargin={pinnedVigilanceArea}
           accent={Accent.TERTIARY}
           color={layerZoneIsShowed ? THEME.color.charcoal : THEME.color.lightGray}
           Icon={Icon.Display}
@@ -106,7 +108,7 @@ export function MyVigilanceAreaLayerZone({
           title={layerZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
         />
         {pinnedVigilanceArea && (
-          <StyledIconButton
+          <StyledRemoveButton
             accent={Accent.TERTIARY}
             color={THEME.color.slateGray}
             Icon={Icon.Close}
@@ -120,6 +122,13 @@ export function MyVigilanceAreaLayerZone({
   )
 }
 
-const StyledIconButton = styled(IconButton)`
+const StyledRemoveButton = styled(IconButton)`
   margin-right: 8px;
+`
+
+const StyledDisplayButton = styled(IconButton)<{ $withMargin: boolean }>`
+  ${p => !p.$withMargin && `margin-right: 4px;`}
+`
+const StyledSummaryButton = styled(IconButton)<{ $withMargin: boolean }>`
+  ${p => !p.$withMargin && `margin-right: -3px;`}
 `

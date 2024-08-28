@@ -94,7 +94,7 @@ export function MyVigilanceAreas() {
 
 const ButtonContainer = styled.div<{ $withPaddingBottom: boolean }>`
   background-color: ${p => p.theme.color.white};
-  padding: 8px 16px 16px 16px;
+  padding: 8px 16px 8px 16px;
 `
 
 const DraftVigilanceAreaTitle = styled.div`

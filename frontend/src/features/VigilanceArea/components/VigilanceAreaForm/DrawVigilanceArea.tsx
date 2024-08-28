@@ -3,7 +3,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, FieldError, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Button, FieldError, Icon, IconButton, OPENLAYERS_PROJECTION, THEME } from '@mtes-mct/monitor-ui'
 import { InteractionType, OLGeometryType } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { GeoJSON } from 'ol/format'
@@ -88,7 +88,7 @@ export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
     <>
       <SubFormHeader>
         <SubFormTitle>Ajout de tracés en cours...</SubFormTitle>
-        <IconButton Icon={Icon.Close} onClick={onCancel} />
+        <IconButton accent={Accent.TERTIARY} color={THEME.color.white} Icon={Icon.Close} onClick={onCancel} />
       </SubFormHeader>
       <SubFormBody>
         <SubFormHelpText>Dessinez ou sélectionnez un ou plusieurs tracés sur la carte</SubFormHelpText>

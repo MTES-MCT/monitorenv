@@ -3,7 +3,7 @@ import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/Vigil
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
 import { RegulatoryAreas } from './RegulatoryAreas'
@@ -27,7 +27,7 @@ export function SelectRegulatoryAreas({ onCancel }: { onCancel: () => void }) {
     <>
       <SubFormHeader>
         <SubFormTitle>Ajout d’une réglementation en lien en cours…</SubFormTitle>
-        <IconButton Icon={Icon.Close} onClick={onCancel} />
+        <IconButton accent={Accent.TERTIARY} color={THEME.color.white} Icon={Icon.Close} onClick={onCancel} />
       </SubFormHeader>
       <SubFormBody>
         <SubFormHelpText>
