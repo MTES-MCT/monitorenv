@@ -25,7 +25,7 @@ import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOption
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { AddAMPs } from './AddAMPs'
@@ -33,10 +33,11 @@ import { AddRegulatoryAreas } from './AddRegulatoryAreas'
 import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
+import { PhotoUploader, type ImageProps } from './PhotoUploader'
 
 export function Form() {
   const dispatch = useAppDispatch()
-
+  const uploaderRef = useRef<HTMLInputElement | null>(null)
   const isCancelModalOpen = useAppSelector(state => state.vigilanceArea.isCancelModalOpen)
   const {
     dirty,
@@ -47,6 +48,7 @@ export function Form() {
   } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [imagesList, setImagesList] = useState<ImageProps[]>([])
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
@@ -86,6 +88,9 @@ export function Form() {
   const save = () => {
     validateForm({ ...values }).then(errors => {
       if (isEmpty(errors)) {
+        /*  if (imagesList.length > 0) {
+          console.log('imagesList', imagesList)
+        } */
         dispatch(saveVigilanceArea(values))
       }
     })
@@ -212,6 +217,7 @@ export function Form() {
         />
         <AddRegulatoryAreas />
         <AddAMPs />
+        <PhotoUploader ref={uploaderRef} imagesList={imagesList} setImages={setImagesList} />
         <Links />
         <Separator />
         <InternText>Interne CACEM</InternText>
