@@ -140,6 +140,7 @@ const Center = styled.a`
 const Row = styled.div`
   align-items: center;
   display: flex;
+  gap: 4px;
   margin: 4px 0 0;
   width: 100%;
 
