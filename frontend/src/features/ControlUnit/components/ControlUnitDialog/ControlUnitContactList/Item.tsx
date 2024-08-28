@@ -36,7 +36,9 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
       <Left>
         <p>
-          <Name>
+          <Name
+            title={ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
+          >
             {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
           </Name>
           {controlUnitContact.phone && <Phone>{formatPhoneNumber(controlUnitContact.phone)}</Phone>}
@@ -73,8 +75,7 @@ const Wrapper = styled.div`
 
 const Left = styled.div`
   flex-grow: 1;
-  padding: 8px 16px 12px;
-
+  padding: 8px 0px 12px 16px;
   > p {
     align-items: center;
     display: flex;
@@ -94,6 +95,10 @@ const Right = styled.div`
 const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
+  overflow: hidden;
+  max-width: 70%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const Phone = styled.span`
