@@ -32,20 +32,27 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
     onEdit(controlUnitContact.id)
   }, [controlUnitContact.id, onEdit])
 
+  const hasLongName = !!(
+    (ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name]?.length ||
+      controlUnitContact.name?.length) >= 30
+  )
+
   return (
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
       <Left>
-        <p>
+        <NameAndContactContainer $isColumn={hasLongName}>
           <Name
             title={ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
           >
             {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
           </Name>
-          {controlUnitContact.phone && <Phone>{formatPhoneNumber(controlUnitContact.phone)}</Phone>}
+          {controlUnitContact.phone && (
+            <Phone $withLongName={!hasLongName}>{formatPhoneNumber(controlUnitContact.phone)}</Phone>
+          )}
           {controlUnitContact.isSmsSubscriptionContact && (
             <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
           )}
-        </p>
+        </NameAndContactContainer>
         <p>
           <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
             {controlUnitContact.email}
@@ -75,7 +82,7 @@ const Wrapper = styled.div`
 
 const Left = styled.div`
   flex-grow: 1;
-  padding: 8px 0px 12px 16px;
+  padding: 8px 8px 12px 16px;
   > p {
     align-items: center;
     display: flex;
@@ -89,18 +96,19 @@ const Left = styled.div`
 `
 
 const Right = styled.div`
-  padding: 0 1px;
+  padding: 3px;
+`
+const NameAndContactContainer = styled.p<{ $isColumn: boolean }>`
+  display: flex !important;
+  flex-direction: ${p => (p.$isColumn ? 'column' : 'row')};
+  align-items: start !important;
 `
 
 const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
-  overflow: hidden;
-  max-width: 70%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `
 
-const Phone = styled.span`
-  margin-left: 16px;
+const Phone = styled.span<{ $withLongName: boolean }>`
+  ${p => (p.$withLongName ? 'margin-left: 16px;' : 'margin-top: 8px;')}
 `
