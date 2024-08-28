@@ -210,7 +210,7 @@ const StyledCheckbox = styled(Checkbox)`
 `
 
 const HeaderAMP = styled(Header)`
-  background: ${p => p.theme.color.chineseRed}1A;
+  background: ${p => p.theme.color.gainsboro};
 `
 const NumberOfResults = styled.span`
   color: ${p => p.theme.color.slateGray};
@@ -225,7 +225,7 @@ const SubList = styled.ul<{ $isExpanded: boolean }>`
   background: ${p => p.theme.color.white};
 `
 const SubListAMP = styled(SubList)`
-  background: ${p => p.theme.color.chineseRed}1A;
+  background: ${p => p.theme.color.gainsboro};
 `
 const List = styled.div`
   background: ${p => p.theme.color.white};
