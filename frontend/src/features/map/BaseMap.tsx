@@ -168,7 +168,6 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           className: 'zoom'
         })
       ]),
-      keyboardEventTarget: document,
       layers: [],
       target: mapElement.current,
       view: new View({

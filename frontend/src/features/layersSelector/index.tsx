@@ -165,7 +165,6 @@ const MetadataPanelShifter = styled.div<{
   top: 45px;
   opacity: ${props => (props.metadataPanelIsOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
-  z-index: -1;
   transition: 0.5s all;
 `
 
@@ -188,7 +187,6 @@ const VigilanceAreaPanelShifter = styled.div<{
   top: 45px;
   opacity: ${props => (props.isVigilanceAreaFormOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
-  z-index: -1;
   transition: 0.5s all;
 `
 
