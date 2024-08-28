@@ -62,7 +62,6 @@ const selectedReportingStyleFactory = (color, fillColor) => [
       color,
       lineCap: 'square',
       lineDash: [2, 8],
-      // TODO (21/08/2024) : Vérifier l'épaisseur du trait avec Adeline
       width: 4
     })
   }),
@@ -150,21 +149,17 @@ export const selectedReportingStyleFn = feature => {
 
   if (feature.get('missionId') && !feature.get('detachedFromMissionAtUtc')) {
     if (status === ReportingStatusEnum.ARCHIVED) {
-      return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.25))
+      return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.2))
     }
 
-    // TODO (21/08/2024) : Vérifier l'opacité du fond avec Adeline
-    return selectedReportingStyleFactory(
-      THEME.color.mediumSeaGreen,
-      getColorWithAlpha(THEME.color.mediumSeaGreen, 0.25)
-    )
+    return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.mediumSeaGreen, 0.2))
   }
 
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
-      return selectedReportingStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.blueGray, 0.25))
+      return selectedReportingStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.blueGray, 0.2))
     case ReportingStatusEnum.INFRACTION_SUSPICION:
-      return selectedReportingStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.maximumRed, 0.25))
+      return selectedReportingStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.maximumRed, 0.2))
 
     case ReportingStatusEnum.ARCHIVED:
       if (feature.get('reportType') === ReportingTypeEnum.OBSERVATION) {
@@ -175,7 +170,7 @@ export const selectedReportingStyleFn = feature => {
 
     case ReportingStatusEnum.IN_PROGRESS:
     default:
-      return selectedReportingStyleFactory(THEME.color.slateGray, getColorWithAlpha(THEME.color.slateGray, 0.25))
+      return selectedReportingStyleFactory(THEME.color.slateGray, getColorWithAlpha(THEME.color.slateGray, 0.2))
   }
 }
 

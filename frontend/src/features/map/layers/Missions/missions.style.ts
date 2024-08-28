@@ -126,8 +126,7 @@ export const selectedMissionControlStyle = [
   // Control zone or point
   new Style({
     fill: new Fill({
-      // TODO (21/08/2024) : Vérifier l'opacité du fond avec Adeline
-      color: 'rgba(86, 151, 210, .35)' // Blue Gray
+      color: 'rgba(86, 151, 210, .2)' // Blue Gray
     }),
     geometry: feature => {
       // if mission zone is computed we want to display a "control zone"
@@ -175,7 +174,7 @@ export const selectedMissionSurveillanceStyle = [
   // Surveillance zone
   new Style({
     fill: new Fill({
-      color: 'rgba(86, 151, 210, .35)' // Blue Gray
+      color: 'rgba(86, 151, 210, .2)' // Blue Gray
     }),
     stroke: new Stroke({
       color: THEME.color.charcoal,
@@ -188,14 +187,12 @@ export const selectedMissionSurveillanceStyle = [
 export const selectedMissionZoneStyle = [
   new Style({
     fill: new Fill({
-      // TODO (21/08/2024) : Vérifier l'opacité du fond avec Adeline
       color: 'rgba(86, 151, 210, .2)' // Blue Gray
     }),
     stroke: new Stroke({
       color: THEME.color.charcoal,
       lineCap: 'square',
       lineDash: [2, 8],
-      // TODO (21/08/2024) : Vérifier l'épaisseur du trait avec Adeline
       width: 4
     })
   }),
