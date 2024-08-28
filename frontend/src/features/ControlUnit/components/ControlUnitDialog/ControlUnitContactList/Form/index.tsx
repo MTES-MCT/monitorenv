@@ -99,5 +99,5 @@ const ActionBar = styled.div`
 // TODO Check padding in monitor-ui.
 const DeleteButton = styled(IconButton)`
   border-color: ${p => p.theme.color.maximumRed};
-  padding: 0 4px;
+  padding: 4px;
 `
