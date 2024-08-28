@@ -2,9 +2,11 @@ import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindow
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label, Level, Size } from '@mtes-mct/monitor-ui'
 import Compressor from 'compressorjs'
-import { forwardRef } from 'react'
+import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
+
+import { ImageViewer } from './ImageViewer'
 
 enum Orientation {
   LANDSCAPE = 'landscape',
@@ -39,6 +41,8 @@ const getBase64 = async (file: Blob) =>
 export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderProps, ref) {
   const dispatch = useAppDispatch()
 
+  const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
+
   const handleFileChange = e => {
     const { current } = ref
     e.preventDefault()
@@ -48,6 +52,10 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
   const uploadImageDisplay = async () => {
     const { current } = ref
     if (!current) {
+      return
+    }
+
+    if ([...current.files].length + imagesList.length > 5) {
       return
     }
 
@@ -113,6 +121,9 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
 
     setImages(newFileList)
   }
+  const openImageViewer = (currentIndex: number) => {
+    setImageViewerCurrentIndex(currentIndex)
+  }
 
   return (
     <div>
@@ -121,6 +132,7 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
       <input ref={ref} accept="image/*" hidden id="file" multiple onChange={uploadImageDisplay} type="file" />
       <Button
         accent={Accent.SECONDARY}
+        disabled={imagesList.length >= 5}
         Icon={Icon.Plus}
         isFullWidth
         onClick={handleFileChange}
@@ -128,15 +140,18 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
       >
         Ajouter une image
       </Button>
+      {imagesList.length >= 5 && <LimitText>Vous avez atteint le nombre maximum d&apos;images</LimitText>}
       <PreviewList>
         {imagesList &&
-          imagesList.map(image => (
+          imagesList.map((image, index) => (
             <PreviewContainer key={Math.random()}>
               <img
                 alt="vigilance_area"
-                height="90px"
+                aria-hidden="true"
+                height="82px"
+                onClick={() => openImageViewer(index)}
                 src={image?.image}
-                width={image?.orientation === Orientation.LANDSCAPE ? '135px' : '60px'}
+                width={image?.orientation === Orientation.LANDSCAPE ? '122px' : '57px'}
               />
               <StyledButton
                 accent={Accent.SECONDARY}
@@ -147,6 +162,13 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
             </PreviewContainer>
           ))}
       </PreviewList>
+      {imageViewerCurrentIndex >= 0 && (
+        <ImageViewer
+          currentIndex={imageViewerCurrentIndex}
+          images={imagesList.map(image => image.image)}
+          onClose={() => setImageViewerCurrentIndex(-1)}
+        />
+      )}
     </div>
   )
 }
@@ -159,7 +181,7 @@ const PreviewContainer = styled.div`
 const PreviewList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   margin-top: 10px;
 `
 const StyledButton = styled(Button)`
@@ -171,4 +193,10 @@ const StyledButton = styled(Button)`
   > span {
     margin-right: 0px !important;
   }
+`
+const LimitText = styled.p`
+  color: ${p => p.theme.color.maximumRed};
+  font-style: italic;
+  margin-bottom: 4px;
+  margin-top: 4px;
 `
