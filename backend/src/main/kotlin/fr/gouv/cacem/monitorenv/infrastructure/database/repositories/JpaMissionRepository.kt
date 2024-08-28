@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
@@ -57,19 +58,18 @@ class JpaMissionRepository(
                 Pageable.unpaged()
             }
         return dbMissionRepository.findAll(
-            controlUnitIds = controlUnitIds?.toTypedArray(),
-            missionStatuses = missionStatuses?.toTypedArray(),
+            controlUnitIds = controlUnitIds,
+            missionSources = missionSources,
+            missionStatuses = missionStatuses,
             missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
             missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
             missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
-            missionSources = missionSources?.map { it.name }?.toTypedArray(),
             pageable = pageable,
-            seaFronts = seaFronts?.toTypedArray(),
+            seaFronts = seaFronts,
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            searchQuery = searchQuery?.replace(" ", "&") ?: "",
         )
-            .map { it.toMissionDTO(mapper) }
+            .map { it.toMissionDTO(mapper) }.filter { findBySearchQuery(it.mission, searchQuery) }
     }
 
     @Transactional
@@ -113,20 +113,40 @@ class JpaMissionRepository(
 
         val missions =
             dbMissionRepository.findAll(
-                controlUnitIds = controlUnitIds?.toTypedArray(),
-                missionSources = missionSources?.map { it.name }?.toTypedArray(),
-                missionStatuses = missionStatuses?.toTypedArray(),
+                controlUnitIds = controlUnitIds,
+                missionStatuses = missionStatuses,
+                missionSources = missionSources,
                 missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
                 missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
                 missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
                 pageable = pageable,
-                seaFronts = seaFronts?.toTypedArray(),
+                seaFronts = seaFronts,
                 startedAfter = startedAfter,
                 startedBefore = startedBefore,
-                searchQuery = searchQuery?.replace(" ", "&") ?: "",
             )
 
-        return missions.map { it.toMissionEntity(mapper) }
+        return missions.map { it.toMissionEntity(mapper) }.filter { findBySearchQuery(it, searchQuery) }
+    }
+
+    fun findBySearchQuery(mission: MissionEntity, searchQuery: String?): Boolean {
+        if (searchQuery.isNullOrBlank()) {
+            return true
+        }
+
+        return mission.envActions?.any { action ->
+            (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
+                listOf(
+                    infraction.imo,
+                    infraction.mmsi,
+                    infraction.registrationNumber,
+                    infraction.vesselName,
+                    infraction.companyName,
+                    infraction.controlledPersonIdentity,
+                ).any { field ->
+                    field?.contains(searchQuery, ignoreCase = true) == true
+                }
+            } ?: false
+        } ?: false
     }
 
     @Transactional
