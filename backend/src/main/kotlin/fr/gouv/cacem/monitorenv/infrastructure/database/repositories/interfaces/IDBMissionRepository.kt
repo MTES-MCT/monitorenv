@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.domain.Pageable
@@ -22,96 +23,77 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     )
     fun delete(id: Int)
 
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         """
-        SELECT m.*
-        FROM missions m
+        SELECT mission
+        FROM MissionModel mission
         WHERE
-            deleted = false
+            mission.isDeleted = false
             AND
-            ((:controlUnitIds)::integer[] IS NULL
-                OR EXISTS (SELECT 1 FROM missions_control_units mcu WHERE mcu.mission_id = m.id AND mcu.control_unit_id = ANY(:controlUnitIds) ))
+            (:controlUnitIds IS NULL OR EXISTS (SELECT c FROM mission.controlUnits c WHERE c.unit.id IN :controlUnitIds))
             AND
-            ((:missionTypeAIR IS FALSE AND :missionTypeLAND IS FALSE AND :missionTypeSEA IS FALSE)
+            ((:missionTypeAIR = FALSE AND :missionTypeLAND = FALSE AND :missionTypeSEA = FALSE)
                 OR (
-                (:missionTypeAIR IS TRUE AND mission_types::text like '%AIR%')
+                (:missionTypeAIR = TRUE AND (CAST(mission.missionTypes as String) like '%AIR%'))
                 OR
-                (:missionTypeLAND IS TRUE AND mission_types::text like '%LAND%')
+                (:missionTypeLAND = TRUE AND (CAST(mission.missionTypes as String) like '%LAND%'))
                 OR
-                (:missionTypeSEA IS TRUE AND mission_types::text like '%SEA%')
+                (:missionTypeSEA = TRUE AND (CAST(mission.missionTypes as String) like '%SEA%'))
             ))
             AND
              (
-                (start_datetime_utc >= CAST(:startedAfter AS timestamp)
+                (mission.startDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
                     AND (
-                        CAST(:startedBefore AS timestamp) IS NULL
-                        OR start_datetime_utc <= CAST(:startedBefore AS timestamp)
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.startDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
                     )
                 )
                 OR (
-                    end_datetime_utc >= CAST(:startedAfter AS timestamp)
+                    mission.endDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
                     AND (
-                        CAST(:startedBefore AS timestamp) IS NULL
-                        OR end_datetime_utc <= CAST(:startedBefore AS timestamp)
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.endDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
                     )
                 )
             )
-            AND ((:seaFronts)::text[] IS NULL OR facade = ANY((:seaFronts)::text[]))
+            AND (:seaFronts IS NULL OR mission.facade IN :seaFronts)
             AND (
-                (:missionStatuses)::text[] IS NULL
+                :missionStatuses IS NULL
                 OR (
-                    'UPCOMING' = ANY((:missionStatuses)::text[]) AND (
-                    start_datetime_utc >= CAST(now() AS timestamp)
+                    'UPCOMING' IN :missionStatuses AND (
+                    mission.startDateTimeUtc >= CAST(now() AS timestamp)
                     ))
                 OR (
-                    'PENDING' = ANY((:missionStatuses)::text[]) AND (
-                    (end_datetime_utc IS NULL OR end_datetime_utc >= CAST(now() AS timestamp))
-                    AND (start_datetime_utc <= CAST(now() AS timestamp))
+                    'PENDING' IN :missionStatuses AND (
+                    (mission.endDateTimeUtc IS NULL OR mission.endDateTimeUtc >= CAST(now() AS timestamp))
+                    AND (mission.startDateTimeUtc <= CAST(now() AS timestamp))
                     )
                 )
                 OR (
-                    'ENDED' = ANY((:missionStatuses)::text[]) AND (
-                    end_datetime_utc < CAST(now() AS timestamp)
+                    'ENDED' IN :missionStatuses AND (
+                    mission.endDateTimeUtc < CAST(now() AS timestamp)
                     )
                 )
-
             )
-            AND ((:missionSources)::mission_source_type[] IS NULL
-                OR mission_source = ANY((:missionSources)::mission_source_type[])
+            AND (:missionSources IS NULL
+                OR mission.missionSource IN (:missionSources)
             )
-
-            AND ((:searchQuery) = ''
-                OR (
-                   EXISTS (
-                        SELECT 1 FROM env_actions e, LATERAL jsonb_array_elements(e.value->'infractions') AS infractions WHERE e.mission_id = m.id
-                        AND to_tsvector('mydict',
-                            COALESCE(infractions->>'imo', '') || ' ' ||
-                            COALESCE(infractions->>'mmsi', '') || ' ' ||
-                            COALESCE(infractions->>'registrationNumber', '') || ' ' ||
-                            COALESCE(infractions->>'vesselName', '') || ' ' ||
-                            COALESCE(infractions->>'companyName', '') || ' ' ||
-                            COALESCE(infractions->>'controlledPersonIdentity', ''))
-                         @@ to_tsquery('mydict', (:searchQuery || ':*'))
-                        )
-                    )
-                )
-
-        ORDER BY start_datetime_utc DESC
+        ORDER BY mission.startDateTimeUtc DESC
         """,
-        nativeQuery = true,
     )
     fun findAll(
-        controlUnitIds: Array<Int>? = null,
-        missionStatuses: Array<String>? = null,
-        missionSources: Array<String>? = null,
+        controlUnitIds: List<Int>? = emptyList(),
+        missionStatuses: List<String>? = emptyList(),
+        missionSources: List<MissionSourceEnum>? = emptyList(),
         missionTypeAIR: Boolean,
         missionTypeLAND: Boolean,
         missionTypeSEA: Boolean,
         pageable: Pageable,
-        seaFronts: Array<String>? = null,
+        seaFronts: List<String>? = emptyList(),
         startedAfter: Instant,
         startedBefore: Instant?,
-        searchQuery: String,
+//        searchQuery: String,
     ): List<MissionModel>
 
     @Query(
