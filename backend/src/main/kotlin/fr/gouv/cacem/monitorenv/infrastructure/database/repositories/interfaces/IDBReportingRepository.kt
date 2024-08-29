@@ -162,6 +162,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         isAttachedToMission: Boolean?,
     ): List<ReportingModel>
 
+    @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value =
         """
