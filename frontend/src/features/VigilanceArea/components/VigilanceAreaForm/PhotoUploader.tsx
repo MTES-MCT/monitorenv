@@ -8,6 +8,10 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { ImageViewer } from './ImageViewer'
 
+const IMAGES_INFORMATIONS_TEXT = '5 photos maximum'
+const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
+const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
+
 enum Orientation {
   LANDSCAPE = 'landscape',
   PORTAIT = 'portrait'
@@ -42,11 +46,13 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
   const dispatch = useAppDispatch()
 
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
+  const [imagesText, setImagesText] = useState<string>(IMAGES_INFORMATIONS_TEXT)
 
   const handleFileChange = e => {
     const { current } = ref
     e.preventDefault()
     current?.click()
+    setImagesText(IMAGES_INFORMATIONS_TEXT)
   }
 
   const uploadImageDisplay = async () => {
@@ -56,6 +62,8 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
     }
 
     if ([...current.files].length + imagesList.length > 5) {
+      setImagesText(IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR)
+
       return
     }
 
@@ -98,6 +106,10 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
         })
       )
 
+      if (tempImageList.length + imagesList.length === 5) {
+        setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
+      }
+
       setImages([...imagesList, ...tempImageList])
     } catch (error) {
       dispatch(
@@ -120,6 +132,10 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
     const newFileList = [...imagesList].filter(file => file?.id !== idToRemove)
 
     setImages(newFileList)
+
+    if (imagesList.length === 5) {
+      setImagesText(IMAGES_INFORMATIONS_TEXT)
+    }
   }
   const openImageViewer = (currentIndex: number) => {
     setImageViewerCurrentIndex(currentIndex)
@@ -140,7 +156,7 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
       >
         Ajouter une image
       </Button>
-      {imagesList.length >= 5 && <LimitText>Vous avez atteint le nombre maximum d&apos;images</LimitText>}
+      <Text $hasError={imagesText !== IMAGES_INFORMATIONS_TEXT}>{imagesText}</Text>
       <PreviewList>
         {imagesList &&
           imagesList.map((image, index) => (
@@ -194,8 +210,8 @@ const StyledButton = styled(Button)`
     margin-right: 0px !important;
   }
 `
-const LimitText = styled.p`
-  color: ${p => p.theme.color.maximumRed};
+const Text = styled.p<{ $hasError: boolean }>`
+  color: ${p => (p.$hasError ? p.theme.color.maximumRed : p.theme.color.slateGray)};
   font-style: italic;
   margin-bottom: 4px;
   margin-top: 4px;
