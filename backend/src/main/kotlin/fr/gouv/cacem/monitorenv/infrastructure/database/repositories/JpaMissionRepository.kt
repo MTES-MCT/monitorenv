@@ -13,6 +13,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -143,10 +144,15 @@ class JpaMissionRepository(
                     infraction.companyName,
                     infraction.controlledPersonIdentity,
                 ).any { field ->
-                    field?.contains(searchQuery, ignoreCase = true) == true
+                    !field.isNullOrBlank() && normalizeField(field)
+                        .contains(normalizeField(searchQuery), ignoreCase = true)
                 }
             } ?: false
         } ?: false
+    }
+
+    private fun normalizeField(input: String): String {
+        return StringUtils.stripAccents(input.replace(" ", ""))
     }
 
     @Transactional

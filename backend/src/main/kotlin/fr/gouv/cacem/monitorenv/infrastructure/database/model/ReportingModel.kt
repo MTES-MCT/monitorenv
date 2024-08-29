@@ -23,12 +23,16 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.NamedAttributeNode
+import jakarta.persistence.NamedEntityGraph
+import jakarta.persistence.NamedSubgraph
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Formula
 import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
@@ -43,6 +47,56 @@ import java.time.Instant
 import java.time.ZoneOffset.UTC
 
 @Entity
+@NamedEntityGraph(
+    name = "ReportingModel.fullLoad",
+    attributeNodes =
+    [
+        NamedAttributeNode("reportingSources", subgraph = "subgraph.reportingSources"),
+        NamedAttributeNode(
+            "controlPlanSubThemes",
+            subgraph = "subgraph.controlPlanSubThemes",
+        ),
+        NamedAttributeNode(
+            "controlPlanTheme",
+        ),
+        NamedAttributeNode(
+            "mission",
+        ),
+        NamedAttributeNode(
+            "attachedEnvAction",
+        ),
+    ],
+    subgraphs =
+    [
+        NamedSubgraph(
+            name = "subgraph.reportingSources",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlUnit",
+                ),
+                NamedAttributeNode(
+                    "semaphore",
+                ),
+                NamedAttributeNode(
+                    "controlUnit",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanSubThemes",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanSubTheme",
+                ),
+                NamedAttributeNode(
+                    "reporting",
+                ),
+            ],
+        ),
+    ],
+)
 @Table(name = "reportings")
 class ReportingModel(
     @Id
@@ -89,7 +143,7 @@ class ReportingModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val reportType: ReportingTypeEnum? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     val controlPlanTheme: ControlPlanThemeModel? = null,
     @OneToMany(
@@ -109,7 +163,7 @@ class ReportingModel(
     @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "open_by") val openBy: String? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     val mission: MissionModel? = null,
@@ -117,7 +171,7 @@ class ReportingModel(
     @Column(name = "detached_from_mission_at_utc")
     val detachedFromMissionAtUtc: Instant? = null,
     @JdbcType(UUIDJdbcType::class)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
         name = "attached_env_action_id",
         columnDefinition = "uuid",
@@ -127,6 +181,8 @@ class ReportingModel(
     @Column(name = "updated_at_utc") @UpdateTimestamp val updatedAtUtc: Instant? = null,
     @Column(name = "with_vhf_answer") val withVHFAnswer: Boolean? = null,
     @Column(name = "is_infraction_proven") val isInfractionProven: Boolean,
+    @Formula("created_at + INTERVAL '1 hour' * validity_time")
+    val validityEndTime: Instant? = null,
 ) {
 
     fun toReporting() =
