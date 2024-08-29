@@ -61,6 +61,7 @@ import java.time.ZoneOffset.UTC
         ),
         NamedAttributeNode(
             "mission",
+            subgraph = "subgraph.mission",
         ),
         NamedAttributeNode(
             "attachedEnvAction",
@@ -78,8 +79,21 @@ import java.time.ZoneOffset.UTC
                 NamedAttributeNode(
                     "semaphore",
                 ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.mission",
+            attributeNodes =
+            [
                 NamedAttributeNode(
-                    "controlUnit",
+                    "envActions",
+                    subgraph = "subgraph.envActions",
+                ),
+                NamedAttributeNode(
+                    "controlUnits",
+                ),
+                NamedAttributeNode(
+                    "controlResources",
                 ),
             ],
         ),
@@ -90,9 +104,49 @@ import java.time.ZoneOffset.UTC
                 NamedAttributeNode(
                     "controlPlanSubTheme",
                 ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.envActions",
+            attributeNodes =
+            [
+                NamedAttributeNode("controlPlanThemes"),
                 NamedAttributeNode(
-                    "reporting",
+                    "controlPlanSubThemes",
+                    subgraph =
+                    "subgraph.linkedControlPlanSubThemes",
                 ),
+                NamedAttributeNode(
+                    "controlPlanTags",
+                    subgraph = "subgraph.linkedControlPlanTags",
+                ),
+                NamedAttributeNode("attachedReporting"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanSubThemes",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanSubTheme",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanTags",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanTag",
+                    subgraph = "subgraph.controlPlanTags",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanTags",
+            attributeNodes =
+            [
+                NamedAttributeNode("controlPlanTheme"),
             ],
         ),
     ],
