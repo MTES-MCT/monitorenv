@@ -15,7 +15,6 @@ export function VesselTypeSelector({ disabled = false, isLight = false, name, st
   return (
     <FormikSelect
       block
-      cleanable={false}
       data-cy="vessel-type-selector"
       disabled={disabled}
       isLight={isLight}
