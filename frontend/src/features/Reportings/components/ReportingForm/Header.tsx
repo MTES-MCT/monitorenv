@@ -1,6 +1,6 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { ReportingStatusEnum, getReportingStatus, type Reporting } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { closeReporting } from 'domain/use_cases/reporting/closeReporting'
@@ -61,12 +61,14 @@ export function Header({
         <ReportingChevronIcon
           $isExpanded={isExpanded}
           accent={Accent.TERTIARY}
+          color={THEME.color.white}
           data-cy={`reporting-collapse-or-expand-button-${reporting?.id}`}
           Icon={Icon.Chevron}
           onClick={reduceOrCollapseReporting}
         />
         <IconButton
           accent={Accent.TERTIARY}
+          color={THEME.color.white}
           Icon={Icon.Close}
           onClick={() => dispatch(closeReporting(reporting.id, reportingContext))}
         />
