@@ -355,4 +355,45 @@ context('Reporting', () => {
       )
     })
   })
+
+  it('Should display message when target identification fields not completed and theme is "Mouillage Individuel"', () => {
+    cy.clickButton('Chercher des signalements')
+    cy.clickButton('Ajouter un signalement')
+    createReporting().then(({ response: createdResponse }) => {
+      const reporting = createdResponse?.body
+      cy.intercept('PUT', `/bff/v1/reportings/${reporting.id}`).as('updateReporting')
+
+      // update theme to "Mouillage Individuel"
+      cy.fill('Thématique du signalement', 'Mouillage individuel')
+
+      // Fill in the vessel informations
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Véhicule aérien')
+      cy.getDataCy('reporting-target-info-message').should('not.exist')
+
+      cy.fill('Type de véhicule', 'Navire')
+      cy.getDataCy('reporting-target-info-message').should('exist')
+
+      cy.fill('MMSI', '123456789')
+      cy.fill('Nom du navire', 'BALTIK')
+      cy.fill('Taille', 45)
+      cy.fill('Type de navire', 'Commerce')
+      cy.getDataCy('reporting-target-info-message').should('not.exist')
+
+      cy.clickButton('Ajouter une cible')
+      cy.getDataCy('reporting-target-info-message').should('exist')
+
+      cy.get('input[name="targetDetails.1.imo"]').type('123456789', { force: true })
+      cy.get('input[id="targetDetails.1.size"]').type('12', { force: true })
+      cy.get('input[name="targetDetails.1.vesselName"]').type('BALTIK', { force: true })
+      cy.get('div[id="targetDetails.1.vesselType"]').click({ force: true })
+      cy.get('div[id="targetDetails.1.vesselType-opt-MOTOR"]').click({ force: true })
+      cy.getDataCy('reporting-target-info-message').should('not.exist')
+
+      // clean
+      cy.wait(250)
+      cy.clickButton('Supprimer le signalement')
+      cy.clickButton('Confirmer la suppression')
+    })
+  })
 })
