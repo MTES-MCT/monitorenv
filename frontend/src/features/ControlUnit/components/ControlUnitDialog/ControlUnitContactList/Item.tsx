@@ -107,6 +107,7 @@ const NameAndContactContainer = styled.p<{ $isColumn: boolean }>`
 const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
+  overflow-wrap: anywhere;
 `
 
 const Phone = styled.span<{ $withLongName: boolean }>`

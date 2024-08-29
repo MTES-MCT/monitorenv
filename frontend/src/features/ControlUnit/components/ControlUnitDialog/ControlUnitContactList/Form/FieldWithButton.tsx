@@ -5,7 +5,7 @@ import styled from 'styled-components'
 const BareFieldWithIconButton = styled.div<{
   $hasError: boolean
 }>`
-  align-items: end;
+  align-items: ${p => (p.$hasError ? 'center' : 'end')};
   display: flex;
 
   > *:first-child {
