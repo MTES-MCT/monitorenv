@@ -1,5 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
+import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
@@ -8,18 +10,30 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.UUID
 
+@Import(DataSourceProxyBeanPostProcessor::class)
 class JpaReportingRepositoryITests : AbstractDBTests() {
+
+    @Autowired
+    private lateinit var customQueryCountListener: CustomQueryCountListener
+
     @Autowired
     private lateinit var jpaReportingRepository: JpaReportingRepository
+
+    @BeforeEach
+    fun setUp() {
+        customQueryCountListener.resetQueryCount() // Reset the count before each test
+    }
 
     @Test
     @Transactional
@@ -218,6 +232,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 isAttachedToMission = null,
                 searchQuery = null,
             )
+        val queryCount = customQueryCountListener.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
         assertThat(reportings.size).isEqualTo(11)
     }
 
@@ -239,6 +255,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 searchQuery = null,
             )
         assertThat(reportings.size).isEqualTo(4)
+        val queryCount = customQueryCountListener.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -258,6 +276,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 searchQuery = null,
             )
         assertThat(reportings.size).isEqualTo(6)
+        val queryCount = customQueryCountListener.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test
@@ -277,6 +297,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 searchQuery = "gerant",
             )
         assertThat(reportings.size).isEqualTo(2)
+        val queryCount = customQueryCountListener.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
     }
 
     @Test

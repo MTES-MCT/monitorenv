@@ -40,15 +40,6 @@ export const useGetFilteredReportingsQuery = () => {
     return undefined
   }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
 
-  // to search differents words the back needs "&" between words
-  const formattedQuerySearch = useMemo(() => {
-    if (searchQueryFilter) {
-      return searchQueryFilter.trim().replace(' ', '&')
-    }
-
-    return undefined
-  }, [searchQueryFilter])
-
   const datesForApi = useMemo(() => {
     let startedAfterDate = startedAfter ?? undefined
     const startedBeforeDate = startedBefore ?? undefined
@@ -90,7 +81,7 @@ export const useGetFilteredReportingsQuery = () => {
       isAttachedToMission: isAttachedOrNotToMissionFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
-      searchQuery: formattedQuerySearch,
+      searchQuery: searchQueryFilter,
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: datesForApi.startedAfterDate,
       startedBeforeDateTime: datesForApi.startedBeforeDate,

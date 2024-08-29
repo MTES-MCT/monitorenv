@@ -1,7 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -96,84 +100,76 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>)
 
+    @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
-        value =
         """
-        SELECT r.*
-        FROM reportings r
-        WHERE r.is_deleted IS FALSE
-            AND r.created_at >= CAST(:startedAfter AS timestamp)
-            AND (CAST(:startedBefore AS timestamp) IS NULL OR r.created_at <= CAST(:startedBefore AS timestamp))
-            AND ((:seaFronts) = '{}' OR CAST(r.sea_front AS text) = ANY(CAST(:seaFronts as text[])))
-            AND ((:sourcesType) = '{}' OR EXISTS (SELECT 1 FROM reportings_source rs WHERE rs.reportings_id = r.id AND CAST(rs.source_type as text) = ANY((:sourcesType)::text[])))
-            AND ((:reportingType) = '{}' OR CAST(r.report_type AS text) = ANY(CAST(:reportingType as text[])))
-            AND ((:status) = '{}'
+        SELECT DISTINCT  r
+        FROM ReportingModel r
+        WHERE r.isDeleted IS FALSE
+            AND r.createdAt >= CAST(CAST(:startedAfter as text) AS timestamp)
+            AND (CAST(CAST(:startedBefore as text) AS timestamp) IS NULL OR r.createdAt <= CAST(CAST(:startedBefore as text) AS timestamp))
+            AND (:seaFronts IS NULL OR r.seaFront IN (:seaFronts))
+            AND (:sourcesType IS NULL OR EXISTS (
+                SELECT 1
+                FROM ReportingSourceModel rs
+                WHERE rs.reporting.id = r.id
+                AND rs.sourceType IN (:sourcesType)
+            ))
+            AND (:reportingType IS NULL OR r.reportType IN (:reportingType))
+            AND (:status IS NULL
                 OR (
-                    'ARCHIVED' = ANY(CAST(:status as text[])) AND (
-                        r.is_archived = true
-                        OR (r.created_at + make_interval(hours => r.validity_time)) < NOW()
+                    'ARCHIVED' IN (:status) AND
+                        (r.isArchived = true
+                        OR r.validityEndTime < CURRENT_TIMESTAMP)
                     )
-                )
                 OR (
-                    'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
-                        r.is_archived = false
-                        AND (r.created_at + make_interval(hours => r.validity_time)) >= NOW()
+                    'IN_PROGRESS' IN :status AND (
+                        r.isArchived = false
+                        AND r.validityEndTime >= CURRENT_TIMESTAMP
                     )
                 )
             )
-            AND ((:targetTypes) = '{}' OR CAST(r.target_type AS text) = ANY(CAST(:targetTypes as text[])))
-            AND ((:isAttachedToMission) IS NULL
+            AND (:targetTypes IS NULL OR r.targetType IN (:targetTypes))
+            AND (:isAttachedToMission IS NULL
                 OR (
-                    (:isAttachedToMission) = true AND (
-                        r.mission_id IS NOT NULL
-                        AND r.detached_from_mission_at_utc IS NULL
+                    :isAttachedToMission = true AND (
+                        r.mission.id IS NOT NULL
+                        AND r.detachedFromMissionAtUtc IS NULL
                     )
                 )
                 OR (
-                    (:isAttachedToMission) = false AND (
-                        r.mission_id IS NULL
+                    :isAttachedToMission = false AND (
+                        r.mission.id IS NULL
                         OR (
-                            r.mission_id IS NOT NULL AND
-                            r.detached_from_mission_at_utc IS NOT NULL
+                            r.mission.id IS NOT NULL
+                            AND r.detachedFromMissionAtUtc IS NOT NULL
                         )
                     )
                 )
             )
-            AND ((:searchQuery) = ''
-                OR (
-                    to_tsvector('mydict', r.target_details) @@ to_tsquery('mydict', (:searchQuery || ':*'))
-                    )
-                OR (
-                    unaccent(CAST(r.description as text))
-                    ILIKE unaccent(CAST('%'|| CAST((:searchQuery) as text) || '%' as text))
-                )
-            )
-            ORDER BY r.reporting_id DESC
+        ORDER BY r.reportingId DESC
     """,
-        nativeQuery = true,
     )
     fun findAll(
         pageable: Pageable,
-        reportingType: String?,
-        seaFronts: String?,
-        sourcesType: String?,
+        reportingType: List<ReportingTypeEnum>? = emptyList(),
+        seaFronts: List<String>? = emptyList(),
+        sourcesType: List<SourceTypeEnum>? = emptyList(),
         startedAfter: Instant,
         startedBefore: Instant?,
-        status: String?,
-        targetTypes: String?,
+        status: List<String>? = emptyList(),
+        targetTypes: List<TargetTypeEnum>? = emptyList(),
         isAttachedToMission: Boolean?,
-        searchQuery: String,
     ): List<ReportingModel>
 
     @Query(
         value =
         """
-        SELECT r.*
-        FROM reportings r
-        INNER JOIN reportings_source rs ON r.id = rs.reportings_id
-        WHERE rs.control_unit_id = :controlUnitId
+        SELECT r
+        FROM ReportingModel r
+        INNER JOIN ReportingSourceModel rs ON r.id = rs.reporting.id
+        WHERE rs.controlUnit.id = :controlUnitId
         """,
-        nativeQuery = true,
     )
     fun findByControlUnitId(
         controlUnitId: Int,
@@ -182,11 +178,10 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-        SELECT *
-        FROM reportings
-        WHERE mission_id = :missionId
+        SELECT r
+        FROM ReportingModel r
+        WHERE r.mission.id = :missionId
         """,
-        nativeQuery = true,
     )
     fun findByMissionId(
         missionId: Int,

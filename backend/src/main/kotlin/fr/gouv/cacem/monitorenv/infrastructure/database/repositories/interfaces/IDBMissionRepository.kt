@@ -96,16 +96,16 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
 //        searchQuery: String,
     ): List<MissionModel>
 
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value = """
-        SELECT *
-        FROM missions
+        SELECT mm
+        FROM MissionModel mm
         WHERE
-            deleted IS FALSE AND
-            id IN :ids
-        ORDER BY start_datetime_utc DESC
+            mm.isDeleted = false AND
+            mm.id IN :ids
+        ORDER BY mm.startDateTimeUtc DESC
         """,
-        nativeQuery = true,
     )
     fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 

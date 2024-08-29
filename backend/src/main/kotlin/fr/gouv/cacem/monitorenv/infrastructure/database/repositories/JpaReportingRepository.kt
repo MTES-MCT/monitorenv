@@ -17,8 +17,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingSourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
+import org.apache.commons.lang3.StringUtils
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -38,7 +38,6 @@ class JpaReportingRepository(
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
-    private val dbReportingSourceRepository: IDBReportingSourceRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
 
@@ -76,9 +75,6 @@ class JpaReportingRepository(
         isAttachedToMission: Boolean?,
         searchQuery: String?,
     ): List<ReportingDTO> {
-        val sourcesTypeAsStringArray = sourcesType?.map { it.name }
-        val reportingTypeAsStringArray = reportingType?.map { it.name }
-        val targetTypesAsStringArray = targetTypes?.map { it.name }
         val pageable = if (pageNumber != null && pageSize != null) {
             PageRequest.of(pageNumber, pageSize)
         } else {
@@ -86,18 +82,43 @@ class JpaReportingRepository(
         }
         return dbReportingRepository.findAll(
             pageable,
-            reportingType = convertToString(reportingTypeAsStringArray),
-            seaFronts = convertToString(seaFronts),
-            sourcesType = convertToString(sourcesTypeAsStringArray),
+            reportingType = reportingType,
+            seaFronts = seaFronts,
+            sourcesType = sourcesType,
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            status = convertToString(status),
-            targetTypes = convertToString(targetTypesAsStringArray),
+            status = status,
+            targetTypes = targetTypes,
             isAttachedToMission = isAttachedToMission,
-            searchQuery = searchQuery ?: "",
         )
-            .map { it.toReportingDTO(mapper) }
+            .map { it.toReportingDTO(mapper) }.filter { findBySearchQuery(it.reporting, searchQuery) }
     }
+
+    private fun findBySearchQuery(reporting: ReportingEntity, searchQuery: String?): Boolean {
+        if (searchQuery.isNullOrBlank()) {
+            return true
+        }
+
+        return reporting.targetDetails?.any { targetDetail ->
+            listOf(
+                targetDetail.imo,
+                targetDetail.mmsi,
+                targetDetail.externalReferenceNumber,
+                targetDetail.vesselName,
+                targetDetail.operatorName,
+                targetDetail.size.toString(),
+                targetDetail.vesselType?.name,
+            ).any { field ->
+                !field.isNullOrBlank() && normalizeField(field)
+                    .contains(normalizeField(searchQuery), ignoreCase = true)
+            }
+        } ?: false
+    }
+
+    private fun normalizeField(input: String): String {
+        return StringUtils.stripAccents(input.replace(" ", ""))
+    }
+
 
     @Transactional
     override fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity> {
@@ -228,9 +249,5 @@ class JpaReportingRepository(
     @Transactional
     override fun deleteReportings(ids: List<Int>) {
         dbReportingRepository.deleteReportings(ids)
-    }
-
-    private fun convertToString(array: List<String>?): String {
-        return array?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: "{}"
     }
 }
