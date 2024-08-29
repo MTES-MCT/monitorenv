@@ -119,7 +119,6 @@ class JpaReportingRepository(
         return StringUtils.stripAccents(input.replace(" ", ""))
     }
 
-
     @Transactional
     override fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity> {
         return dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting() }
