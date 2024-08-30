@@ -30,7 +30,7 @@ export function ThemeSelector({ isLight = true, label, name }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
 
-  const showVesselMessage = useMemo(() => {
+  const isVesselInformationRequested = useMemo(() => {
     if (values.themeId !== INDIVIDUAL_ANCHORING_THEME_ID || values.vehicleType !== VehicleTypeEnum.VESSEL) {
       return false
     }
@@ -66,7 +66,7 @@ export function ThemeSelector({ isLight = true, label, name }) {
           value={currentThemeField.value}
         />
       )}
-      {showVesselMessage && (
+      {isVesselInformationRequested && (
         <Message data-cy="reporting-target-info-message">
           <MessageTitle>Informations du navire</MessageTitle>
           <MessageText>
