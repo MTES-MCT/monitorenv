@@ -2,16 +2,16 @@ import { Select } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const StyledStatusFilter = styled.div<{ $withBottomMargin?: boolean }>`
+  align-items: end;
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
   gap: 16px;
   margin-bottom: ${p => (p.$withBottomMargin ? '8px' : '0px')};
 `
 export const Separator = styled.div`
-  width: 2px;
-  height: 50%;
   border-right: ${p => `1px solid ${p.theme.color.slateGray}`};
+  height: 50%;
+  width: 2px;
 `
 export const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,
@@ -21,13 +21,14 @@ export const StyledSelect = styled(Select)`
 `
 
 export const StyledTagsContainer = styled.div<{ $withTopMargin: boolean }>`
-  margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
+  align-items: end;
   display: flex;
   flex-direction: row;
-  max-width: 100%;
   flex-wrap: wrap;
   gap: 16px;
-  align-items: end;
+  margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
+  max-width: 100%;
+  padding-right: 37px;
 `
 export const StyledCustomPeriodContainer = styled.div`
   display: flex;
@@ -35,8 +36,8 @@ export const StyledCustomPeriodContainer = styled.div`
   gap: 5px;
 `
 export const StyledCutomPeriodLabel = styled.div`
-  font-size: 13px;
   color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
 `
 
 export const OptionValue = styled.span`
