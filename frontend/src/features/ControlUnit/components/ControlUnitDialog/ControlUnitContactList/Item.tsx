@@ -34,21 +34,19 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
 
   const hasLongName = !!(
     (ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name]?.length ||
-      controlUnitContact.name?.length) >= 30
+      controlUnitContact.name?.length) >= 33
   )
 
   return (
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
-      <Left>
-        <NameAndContactContainer $isColumn={hasLongName}>
+      <Left $hasLongName={hasLongName}>
+        <NameAndContactContainer $hasLongName={hasLongName}>
           <Name
             title={ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
           >
             {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
           </Name>
-          {controlUnitContact.phone && (
-            <Phone $withLongName={!hasLongName}>{formatPhoneNumber(controlUnitContact.phone)}</Phone>
-          )}
+          {controlUnitContact.phone && <span>{formatPhoneNumber(controlUnitContact.phone)}</span>}
           {controlUnitContact.isSmsSubscriptionContact && (
             <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
           )}
@@ -74,33 +72,34 @@ const Wrapper = styled.div`
   color: ${p => p.theme.color.slateGray};
   display: flex;
   margin-top: 8px;
+  gap: 16px;
+  padding: 8px 8px 12px 12px;
 
   > p:not(:first-child) {
     margin: 8px 0 0;
   }
 `
 
-const Left = styled.div`
+const Left = styled.div<{ $hasLongName: boolean }>`
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
-  padding: 8px 8px 12px 16px;
   > p {
     align-items: center;
     display: flex;
     line-height: 18px;
-
-    > .Element-IconBox {
-      margin-left: 8px;
-      margin-bottom: -1px;
-    }
+    gap: ${p => (p.$hasLongName ? '8px' : '16px')};
   }
 `
 
 const Right = styled.div`
-  padding: 3px;
+  > .Element-IconButton {
+    padding: 0px;
+  }
 `
-const NameAndContactContainer = styled.p<{ $isColumn: boolean }>`
+const NameAndContactContainer = styled.p<{ $hasLongName: boolean }>`
   display: flex !important;
-  flex-direction: ${p => (p.$isColumn ? 'column' : 'row')};
+  flex-direction: ${p => (p.$hasLongName ? 'column' : 'row')};
   align-items: start !important;
 `
 
@@ -108,8 +107,4 @@ const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
   overflow-wrap: anywhere;
-`
-
-const Phone = styled.span<{ $withLongName: boolean }>`
-  ${p => (p.$withLongName ? 'margin-left: 16px;' : 'margin-top: 8px;')}
 `
