@@ -105,6 +105,10 @@ export function MissionsTableFilters() {
 
   const onUpdatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
+
+    // these filters are only uses when user selects a date range
+    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: undefined }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
   }
 
   const onUpdateAdministrationFilter = (nextSelectedAdministrationIds: string[] | undefined) => {

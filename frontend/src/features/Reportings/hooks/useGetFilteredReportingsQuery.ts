@@ -81,6 +81,9 @@ export const useGetFilteredReportingsQuery = () => {
     return { startedAfterDate, startedBeforeDate }
   }, [startedAfter, startedBefore, periodFilter])
 
+  const hasCustomPeriodWithoutDates =
+    periodFilter === ReportingDateRangeEnum.CUSTOM && (!startedAfter || !startedBefore)
+
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
@@ -94,7 +97,7 @@ export const useGetFilteredReportingsQuery = () => {
       status: statusFilter,
       targetTypes: targetTypeFilter
     },
-    { pollingInterval: TWO_MINUTES }
+    { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates }
   )
 
   const reportings = useMemo(() => {

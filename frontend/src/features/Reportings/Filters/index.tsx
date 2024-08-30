@@ -134,6 +134,14 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
 
   const updatePeriodFilter = period => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
+
+    // these filters are only uses when user selects a date range
+    dispatch(
+      reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_AFTER_FILTER, value: undefined })
+    )
+    dispatch(
+      reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+    )
   }
 
   const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
