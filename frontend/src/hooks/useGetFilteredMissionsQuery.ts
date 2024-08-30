@@ -55,6 +55,8 @@ export const useGetFilteredMissionsQuery = () => {
     return { startedAfterDate, startedBeforeDate }
   }, [startedAfter, startedBefore, selectedPeriod])
 
+  const hasCustomPeriodWithoutDates = selectedPeriod === DateRangeEnum.CUSTOM && (!startedAfter || !startedBefore)
+
   const {
     data: missions,
     isError,
@@ -70,7 +72,7 @@ export const useGetFilteredMissionsQuery = () => {
       startedBeforeDateTime: datesForApi.startedBeforeDate,
       withEnvActions: selectedWithEnvActions
     },
-    { pollingInterval: TWO_MINUTES }
+    { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates }
   )
 
   const filteredMissions = useMemo(() => {
