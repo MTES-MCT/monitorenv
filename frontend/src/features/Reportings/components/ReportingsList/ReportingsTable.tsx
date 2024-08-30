@@ -194,7 +194,6 @@ const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInT
                 > label {
                   .rs-checkbox-wrapper {
                     top: -8px;
-                    left: -21px;
                   }
                 }
               }
@@ -224,7 +223,7 @@ const StyledTd = styled(TableWithSelectableRows.Td)<{ $isLegacyFirefox: boolean 
   ${p =>
     p.$isLegacyFirefox &&
     `&:first-child {
-      padding-left: 18px !important;
+      padding-left: 16px !important;
     }
     `}
 
