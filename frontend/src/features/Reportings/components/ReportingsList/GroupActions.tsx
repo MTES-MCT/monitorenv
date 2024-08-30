@@ -47,7 +47,7 @@ const StyledGroupActionContainer = styled.div`
   margin-bottom: 8px;
   margin-top: 40px;
   align-items: end;
-  padding-right: 13px;
+  padding-right: 37px;
 `
 const StyledButtonsContainer = styled.div`
   display: flex;
