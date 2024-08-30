@@ -1,4 +1,4 @@
-import { Size, TextInput, usePrevious } from '@mtes-mct/monitor-ui'
+import { TextInput, usePrevious } from '@mtes-mct/monitor-ui'
 import { debounce } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -42,7 +42,6 @@ export function ReportingSearch() {
         debouncedHandleChange(value)
       }}
       placeholder="Rechercher une cible"
-      size={Size.LARGE}
       value={searchText}
     />
   )

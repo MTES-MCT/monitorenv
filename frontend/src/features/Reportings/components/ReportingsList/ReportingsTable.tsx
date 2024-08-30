@@ -188,6 +188,7 @@ const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInT
       > thead {
         > tr {
           > th:first-child {
+            padding-left: 14px;
             > .rs-checkbox {
               > .rs-checkbox-checker {
                 > label {
@@ -232,8 +233,5 @@ const StyledTd = styled(TableWithSelectableRows.Td)<{ $isLegacyFirefox: boolean 
   }
   &:nth-child(12) {
     padding: 4px;
-  }
-  &:nth-child(13) {
-    padding: 4px 0px;
   }
 `

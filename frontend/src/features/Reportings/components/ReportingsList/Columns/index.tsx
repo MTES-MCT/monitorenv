@@ -35,7 +35,7 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
     ),
 
     id: 'select',
-    size: 52
+    size: 43 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.reportingId,
@@ -147,7 +147,7 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
     enableSorting: false,
     header: () => '',
     id: 'missionId',
-    size: 104 + legacyFirefoxOffset
+    size: 106 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,
@@ -162,7 +162,7 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
     enableSorting: false,
     header: () => '',
     id: 'actionStatus',
-    size: 98 + legacyFirefoxOffset
+    size: 102 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,

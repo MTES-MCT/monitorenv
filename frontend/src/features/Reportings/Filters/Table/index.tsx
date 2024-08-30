@@ -1,12 +1,5 @@
-import {
-  CheckPicker,
-  DateRangePicker,
-  Checkbox,
-  Icon,
-  CustomSearch,
-  type Option,
-  useNewWindow
-} from '@mtes-mct/monitor-ui'
+import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
+import { CheckPicker, DateRangePicker, Checkbox, CustomSearch, type Option, useNewWindow } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
@@ -145,6 +138,7 @@ export function TableReportingsFiltersWithRef(
             cleanable={false}
             data-cy="select-period-filter"
             isLabelHidden
+            isTransparent
             label="Période"
             name="Période"
             onChange={updatePeriodFilter}
@@ -157,6 +151,7 @@ export function TableReportingsFiltersWithRef(
           <CheckPicker
             data-cy="select-source-type-filter"
             isLabelHidden
+            isTransparent
             label="Type de source"
             name="sourceType"
             onChange={value => updateSourceTypeFilter(value)}
@@ -172,6 +167,7 @@ export function TableReportingsFiltersWithRef(
             customSearch={sourceCustomSearch}
             data-cy="select-source-filter"
             isLabelHidden
+            isTransparent
             label="Source"
             menuStyle={{ maxWidth: '200%' }}
             name="source"
@@ -188,6 +184,7 @@ export function TableReportingsFiltersWithRef(
           <StyledSelect
             data-cy="select-type-filter"
             isLabelHidden
+            isTransparent
             label="Type de signalement"
             name="Type"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TYPE_FILTER)}
@@ -198,6 +195,7 @@ export function TableReportingsFiltersWithRef(
           />
           <CheckPicker
             isLabelHidden
+            isTransparent
             label="Type de cible"
             menuStyle={{ maxWidth: '200%' }}
             name="targetType"
@@ -215,6 +213,7 @@ export function TableReportingsFiltersWithRef(
             customSearch={themeCustomSearch}
             data-cy="reporting-theme-filter"
             isLabelHidden
+            isTransparent
             label="Thématiques"
             menuStyle={{ maxWidth: '200%' }}
             name="themes"
@@ -231,6 +230,7 @@ export function TableReportingsFiltersWithRef(
             customSearch={subThemeCustomSearch}
             data-cy="reporting-sub-theme-filter"
             isLabelHidden
+            isTransparent
             label="Sous-thématiques"
             menuStyle={{ maxWidth: '200%' }}
             name="subThemes"
@@ -245,6 +245,7 @@ export function TableReportingsFiltersWithRef(
           />
           <CheckPicker
             isLabelHidden
+            isTransparent
             label="Façade"
             name="seaFront"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
@@ -279,12 +280,7 @@ export function TableReportingsFiltersWithRef(
 
         <FilterTags />
 
-        {hasFilters && (
-          <ResetFiltersButton data-cy="reinitialize-filters" onClick={resetFilters}>
-            <Icon.Reset size={14} />
-            <span>Réinitialiser les filtres</span>
-          </ResetFiltersButton>
-        )}
+        {hasFilters && <ReinitializeFiltersButton data-cy="reinitialize-filters" onClick={resetFilters} />}
       </StyledTagsContainer>
     </>
   )
@@ -296,6 +292,7 @@ const FilterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-right: 12px;
 `
 const StyledFiltersFirstLine = styled.div`
   display: flex;
@@ -306,16 +303,4 @@ const StyledFiltersSecondLine = styled.div`
   display: flex;
   gap: 10px;
 `
-const ResetFiltersButton = styled.div`
-  align-items: end;
-  cursor: pointer;
-  display: flex;
-  gap: 4px;
-  margin-bottom: 8px;
-  text-decoration: underline;
-  > span {
-    font-size: 13px;
-  }
-`
-
 const tagPickerStyle = { width: 200 }
