@@ -156,7 +156,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   }
 
   const updateCheckboxFilter = (isChecked, value, key, filter) => {
-    const updatedFilter = [...filter] || []
+    const updatedFilter = [...filter]
 
     if (!isChecked && updatedFilter.includes(String(value))) {
       const newFilter = updatedFilter.filter(status => status !== String(value))

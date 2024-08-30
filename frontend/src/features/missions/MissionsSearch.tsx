@@ -1,6 +1,6 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Size, TextInput, usePrevious } from '@mtes-mct/monitor-ui'
+import { TextInput, usePrevious } from '@mtes-mct/monitor-ui'
 import { MissionFiltersEnum, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { debounce } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
@@ -41,7 +41,6 @@ export function MissionSearch() {
         debouncedHandleChange(value)
       }}
       placeholder="Rechercher dans un contrôle (navire, personne...)"
-      size={Size.LARGE}
       value={searchText}
     />
   )

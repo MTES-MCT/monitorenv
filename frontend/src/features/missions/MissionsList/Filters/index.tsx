@@ -1,3 +1,4 @@
+import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { MissionSearch } from '@features/missions/MissionsSearch'
 import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
@@ -9,7 +10,6 @@ import {
   DateRangePicker,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
-  Icon,
   Select,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
@@ -280,7 +280,7 @@ export function MissionsTableFilters() {
           />
         </FilterWrapperLine>
       </FilterWrapper>
-      <StyledTagsContainer>
+      <StyledTagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM || hasFilters}>
         {selectedPeriod === DateRangeEnum.CUSTOM && (
           <StyledCustomPeriodContainer>
             <DateRangePicker
@@ -299,12 +299,7 @@ export function MissionsTableFilters() {
         )}
         <FilterTags />
 
-        {hasFilters && (
-          <ResetFiltersButton data-cy="reinitialize-filters" onClick={onResetFilters}>
-            <Icon.Reset size={14} />
-            Réinitialiser les filtres
-          </ResetFiltersButton>
-        )}
+        {hasFilters && <ReinitializeFiltersButton data-cy="reinitialize-filters" onClick={onResetFilters} />}
       </StyledTagsContainer>
     </>
   )
@@ -323,17 +318,6 @@ const FilterWrapperLine = styled.div`
   gap: 10px;
 `
 
-const ResetFiltersButton = styled.div`
-  text-decoration: underline;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  padding-top: 10px;
-  svg {
-    margin-right: 5px;
-  }
-`
-
 const tagPickerStyle = { width: 200 }
 
 const StyledSelect = styled(Select)`
@@ -343,13 +327,16 @@ const StyledSelect = styled(Select)`
   }
 `
 
-const StyledTagsContainer = styled.div`
-  align-items: baseline;
+export const StyledTagsContainer = styled.div<{ $withTopMargin: boolean }>`
+  margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
   display: flex;
   flex-direction: row;
+  max-width: 100%;
+  flex-wrap: wrap;
   gap: 16px;
-  margin-top: 16px;
+  align-items: end;
 `
+
 const StyledCustomPeriodContainer = styled.div`
   display: flex;
   flex-direction: column;
