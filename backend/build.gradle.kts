@@ -57,7 +57,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:10.17.0")
     implementation("org.flywaydb:flyway-database-postgresql:10.17.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.20")
     implementation("org.springframework.boot:spring-boot-configuration-processor:3.3.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
