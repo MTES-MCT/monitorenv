@@ -303,7 +303,7 @@ export function MissionsTableFilters() {
         )}
         <FilterTags />
 
-        {hasFilters && <ReinitializeFiltersButton data-cy="reinitialize-filters" onClick={onResetFilters} />}
+        {hasFilters && <ReinitializeFiltersButton onClick={onResetFilters} />}
       </StyledTagsContainer>
     </>
   )

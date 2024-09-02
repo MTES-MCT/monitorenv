@@ -62,6 +62,7 @@ const INITIAL_STATE: MissionFiltersState = {
 }
 
 const persistConfig = {
+  blacklist: ['searchQuery'],
   key: 'missionFilters',
   storage
 }

@@ -70,6 +70,7 @@ const initialState: ReportingsFiltersSliceType = {
 }
 
 const persistConfig = {
+  blacklist: ['searchQueryFilter'],
   key: 'reportingFilters',
   storage
 }

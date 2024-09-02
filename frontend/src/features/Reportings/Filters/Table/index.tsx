@@ -280,7 +280,7 @@ export function TableReportingsFiltersWithRef(
 
         <FilterTags />
 
-        {hasFilters && <ReinitializeFiltersButton data-cy="reinitialize-filters" onClick={resetFilters} />}
+        {hasFilters && <ReinitializeFiltersButton onClick={resetFilters} />}
       </StyledTagsContainer>
     </>
   )
