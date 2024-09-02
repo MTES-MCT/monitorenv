@@ -64,7 +64,6 @@ object EnvActionMapper {
                                 observationsByUnit = observationsByUnit,
                                 openBy = openBy,
                             )
-
                     ActionTypeEnum.CONTROL ->
                         mapper.readValue(
                             value,
@@ -90,7 +89,6 @@ object EnvActionMapper {
                                 observationsByUnit = observationsByUnit,
                                 openBy = openBy,
                             )
-
                     ActionTypeEnum.NOTE ->
                         mapper.readValue(
                             value,
@@ -99,6 +97,7 @@ object EnvActionMapper {
                             .toEnvActionNoteEntity(
                                 id = id,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                completion = completion,
                                 missionId = missionId,
                                 observationsByUnit = observationsByUnit,
                             )
@@ -120,14 +119,12 @@ object EnvActionMapper {
                             envAction as EnvActionSurveillanceEntity,
                         ),
                     )
-
                 ActionTypeEnum.CONTROL ->
                     mapper.writeValueAsString(
                         EnvActionControlProperties.fromEnvActionControlEntity(
                             envAction as EnvActionControlEntity,
                         ),
                     )
-
                 ActionTypeEnum.NOTE ->
                     mapper.writeValueAsString(
                         EnvActionNoteProperties.fromEnvActionNoteEntity(
