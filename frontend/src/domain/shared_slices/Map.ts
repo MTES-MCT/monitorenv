@@ -11,6 +11,7 @@ type MapSliceStateType = {
   currentMapExtentTracker?: number[]
   distanceUnit: DistanceUnit
   fitToExtent?: Extent
+  isLayerListSelected: boolean
   selectedBaseLayer: string
   zoomToCenter?: Coordinate
 }
@@ -19,6 +20,7 @@ const initialState: MapSliceStateType = {
   currentMapExtentTracker: undefined,
   distanceUnit: DistanceUnit.NAUTICAL,
   fitToExtent: undefined,
+  isLayerListSelected: false,
   selectedBaseLayer: BaseLayer.LIGHT,
   zoomToCenter: undefined
 }
@@ -69,7 +71,9 @@ const mapSlice = createSlice({
     setFitToExtent(state, action: PayloadAction<Extent>) {
       state.fitToExtent = action.payload
     },
-
+    setIsLayerListSelected(state, action) {
+      state.isLayerListSelected = action.payload
+    },
     setZoomToCenter(state, action) {
       state.zoomToCenter = action.payload
     }

@@ -71,7 +71,7 @@ export function InterestPointOverlay({
     setIsMounted(true)
   }, [])
 
-  const moveInterestPointWithThrottle = useCallback(
+  const moveLineWithThrottle = useCallback(
     (target, delay) => {
       if (isThrottled.current) {
         return
@@ -99,7 +99,13 @@ export function InterestPointOverlay({
     [map, moveLine, uuid]
   )
 
-  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, isMounted)
+  useMoveOverlayWhenDragging({
+    currentOffset,
+    map,
+    moveLineWithThrottle,
+    overlay: overlayRef.current,
+    showed: isMounted
+  })
   const previousCoordinates = usePrevious(coordinates)
 
   useEffect(() => {

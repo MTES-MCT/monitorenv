@@ -2,13 +2,15 @@ import { getIsLinkingZonesToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
+import { Layers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
+import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { mapActions } from 'domain/shared_slices/Map'
 import styled from 'styled-components'
 
 import { OverlayContent } from './OverlayContent'
 import { closeLayerOverlay } from '../metadataPanel/slice'
 
 import type { AMPProperties } from 'domain/entities/AMPs'
-import type { RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { OverlayItem } from 'domain/types/map'
 
@@ -23,6 +25,8 @@ export function PinnedOverlay({
 
   const close = () => {
     dispatch(closeLayerOverlay())
+    dispatch(removeOverlayCoordinatesByName(Layers.LAYER_LIST_ICON.code))
+    dispatch(mapActions.setIsLayerListSelected(false))
   }
 
   // component should not be called if items.length < 2

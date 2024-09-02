@@ -33,6 +33,7 @@ export enum MonitorEnvLayers {
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
+  LAYER_LIST_ICON = 'LAYER_LIST_ICON',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
   MARPOL = 'MARPOL',
   MEASUREMENT = 'MEASUREMENT',
@@ -272,6 +273,9 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA]: {
     code: MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
     zIndex: 1400
+  },
+  [MonitorEnvLayers.LAYER_LIST_ICON]: {
+    code: MonitorEnvLayers.LAYER_LIST_ICON
   }
 }
 
