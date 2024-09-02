@@ -226,6 +226,28 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     vectorLayer.current.setVisible(displayInterestPointLayer)
   }, [displayInterestPointLayer])
 
+  function isFeatureIsALine(feature: FeatureLike) {
+    return feature?.getId()?.toString()?.includes('line')
+  }
+
+  function addLineToFeature(coordinates: Coordinate, nextCoordinates: Coordinate, featureId: string) {
+    const interestPointLineFeature = InterestPointLine.getFeature(coordinates, nextCoordinates, featureId)
+
+    vectorSourceRef.current.addFeature(interestPointLineFeature)
+  }
+
+  function updateLineFromExistingFeature(featureId: string, uuid: string | number, nextCoordinates: Coordinate) {
+    const existingLabelLineFeature = vectorSourceRef.current.getFeatureById(featureId)
+    const interestPointFeature = vectorSourceRef.current.getFeatureById(uuid)
+
+    if (existingLabelLineFeature) {
+      const geometry = interestPointFeature?.getGeometry()
+      if (geometry) {
+        existingLabelLineFeature.setGeometry(new LineString([nextCoordinates, geometry.getFlatCoordinates()]))
+      }
+    }
+  }
+
   return (
     <div>
       {interestPoints
@@ -253,26 +275,4 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       )}
     </div>
   )
-
-  function isFeatureIsALine(feature: FeatureLike) {
-    return feature?.getId()?.toString()?.includes('line')
-  }
-
-  function addLineToFeature(coordinates: Coordinate, nextCoordinates: Coordinate, featureId: string) {
-    const interestPointLineFeature = InterestPointLine.getFeature(coordinates, nextCoordinates, featureId)
-
-    vectorSourceRef.current.addFeature(interestPointLineFeature)
-  }
-
-  function updateLineFromExistingFeature(featureId: string, uuid: string | number, nextCoordinates: Coordinate) {
-    const existingLabelLineFeature = vectorSourceRef.current.getFeatureById(featureId)
-    const interestPointFeature = vectorSourceRef.current.getFeatureById(uuid)
-
-    if (existingLabelLineFeature) {
-      const geometry = interestPointFeature?.getGeometry()
-      if (geometry) {
-        existingLabelLineFeature.setGeometry(new LineString([nextCoordinates, geometry.getFlatCoordinates()]))
-      }
-    }
-  }
 }

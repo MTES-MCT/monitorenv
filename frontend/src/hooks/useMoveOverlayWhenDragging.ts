@@ -2,16 +2,26 @@ import Hammer from 'hammerjs'
 import { unByKey } from 'ol/Observable'
 import { useEffect } from 'react'
 
+import type { Overlay } from 'ol'
+import type OpenLayerMap from 'ol/Map'
+
 const X = 0
 const Y = 1
 
-// TODO Type these parameters.
-export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLineWithThrottle, showed) => {
+type Props = {
+  currentOffset: { current: number[] }
+  map: OpenLayerMap
+  moveLineWithThrottle: (target: Overlay, delay: number) => void
+  overlay: Overlay | null
+  showed: boolean
+}
+
+export const useMoveOverlayWhenDragging = ({ currentOffset, map, moveLineWithThrottle, overlay, showed }: Props) => {
   useEffect(() => {
-    let eventKey
+    let eventKey: any
 
     if (map && overlay) {
-      eventKey = overlay.on('change:offset', ({ target }) => {
+      eventKey = overlay.on('change:offset', ({ target }: any) => {
         moveLineWithThrottle(target, 50)
       })
     }

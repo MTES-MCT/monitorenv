@@ -106,7 +106,7 @@ export function OverlayPositionOnCentroid({
     }
   }, [map, olOverlayRef, featureIsShowed])
 
-  const moveCardWithThrottle = useCallback(
+  const moveLineWithThrottle = useCallback(
     (target, delay) => {
       if (isThrottled.current && !currentCoordinates.current) {
         return
@@ -159,7 +159,13 @@ export function OverlayPositionOnCentroid({
     }
   }, [dispatch, feature, containerRef, olOverlayRef, map, margins])
 
-  useMoveOverlayWhenDragging(olOverlayRef.current, map, currentOffset, moveCardWithThrottle, isMounted)
+  useMoveOverlayWhenDragging({
+    currentOffset,
+    map,
+    moveLineWithThrottle,
+    overlay: olOverlayRef.current,
+    showed: isMounted
+  })
 
   return (
     <OverlayComponent ref={attachContentToOverlay} $overlayTopLeftMargin={overlayTopLeftMargin} $zIndex={zIndex}>
