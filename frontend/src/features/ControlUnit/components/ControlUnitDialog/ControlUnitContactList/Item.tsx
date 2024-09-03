@@ -84,27 +84,24 @@ const Left = styled.div<{ $hasLongName: boolean }>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  > p {
-    align-items: center;
-    display: flex;
-    line-height: 18px;
-    gap: ${p => (p.$hasLongName ? '8px' : '16px')};
-  }
+  flex-wrap: wrap;
 `
 
 const Right = styled.div`
-  > .Element-IconButton {
+  .Element-IconButton {
     padding: 0px;
   }
 `
 const NameAndContactContainer = styled.p<{ $hasLongName: boolean }>`
-  display: flex !important;
-  flex-direction: ${p => (p.$hasLongName ? 'column' : 'row')};
-  align-items: start !important;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 16px;
+  column-gap: 8px;
 `
 
 const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
   overflow-wrap: anywhere;
+  max-width: 450px;
 `
