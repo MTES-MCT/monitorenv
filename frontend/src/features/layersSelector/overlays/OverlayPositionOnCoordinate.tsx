@@ -1,3 +1,4 @@
+import { useMoveOverlayWhenDragging } from '@hooks/useMoveOverlayWhenDragging'
 import Overlay from 'ol/Overlay'
 import { useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
@@ -18,6 +19,7 @@ export function OverlayPositionOnCoordinates({
 }: OverlayPositionOnCoordinatesProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const olOverlayRef = useRef<Overlay | null>(null)
+  const currentOffset = useRef(coordinates ?? [0, 0])
 
   const attachContentToOverlay = useCallback(
     (ref: HTMLDivElement) => {
@@ -25,7 +27,8 @@ export function OverlayPositionOnCoordinates({
       if (ref) {
         olOverlayRef.current = new Overlay({
           className: `ol-overlay-container ol-selectable layer-overlay`,
-          element: ref
+          element: ref,
+          offset: currentOffset.current
         })
       } else {
         olOverlayRef.current = null
@@ -56,6 +59,8 @@ export function OverlayPositionOnCoordinates({
       }
     }
   }, [layerOverlayIsOpen, coordinates])
+
+  useMoveOverlayWhenDragging(olOverlayRef.current, map, currentOffset, () => {}, true)
 
   return <Container ref={attachContentToOverlay}>{layerOverlayIsOpen && children}</Container>
 }

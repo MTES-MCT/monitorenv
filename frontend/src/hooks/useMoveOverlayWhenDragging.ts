@@ -1,12 +1,21 @@
 import Hammer from 'hammerjs'
 import { unByKey } from 'ol/Observable'
-import { useEffect } from 'react'
+import { useEffect, type MutableRefObject } from 'react'
+
+import type { Overlay } from 'ol'
+import type { Coordinate } from 'ol/coordinate'
+import type OpenLayerMap from 'ol/Map'
 
 const X = 0
 const Y = 1
 
-// TODO Type these parameters.
-export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLineWithThrottle, showed) => {
+export const useMoveOverlayWhenDragging = (
+  overlay: Overlay | null,
+  map: OpenLayerMap,
+  currentOffset: MutableRefObject<Coordinate>,
+  moveLineWithThrottle,
+  showed: boolean
+) => {
   useEffect(() => {
     let eventKey
 
