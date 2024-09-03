@@ -1,12 +1,12 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.3.2"
+    id("org.springframework.boot") version "3.3.3"
     id("org.jetbrains.kotlin.plugin.spring") version "1.9.23"
     kotlin("jvm") version "1.9.10"
-    id("org.jetbrains.kotlin.plugin.allopen") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.0.20"
     kotlin("plugin.noarg") version "1.9.10"
-    kotlin("plugin.jpa") version "2.0.0"
+    kotlin("plugin.jpa") version "2.0.20"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     kotlin("plugin.serialization") version "2.0.20"
 }
@@ -41,49 +41,49 @@ tasks.named("compileKotlin", org.jetbrains.kotlin.gradle.tasks.KotlinCompilation
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web:3.3.2")
-    implementation("org.springframework.security:spring-security-oauth2-resource-server:6.3.1")
-    implementation("org.springframework.security:spring-security-oauth2-jose:6.3.1")
+    implementation("org.springframework.boot:spring-boot-starter-web:3.3.3")
+    implementation("org.springframework.security:spring-security-oauth2-resource-server:6.3.3")
+    implementation("org.springframework.security:spring-security-oauth2-jose:6.3.3")
     implementation("org.hibernate.validator:hibernate-validator:8.0.1.Final")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0")
-    implementation("org.springframework.boot:spring-boot-starter-actuator:3.3.2")
-    implementation("org.springframework.boot:spring-boot-starter-json:3.3.2")
-    implementation("org.springframework.boot:spring-boot-starter-security:3.3.2")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.2")
-    implementation("org.hibernate.orm:hibernate-spatial:6.5.2.Final")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:3.3.3")
+    implementation("org.springframework.boot:spring-boot-starter-json:3.3.3")
+    implementation("org.springframework.boot:spring-boot-starter-security:3.3.3")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.3")
+    implementation("org.hibernate.orm:hibernate-spatial:6.6.0.Final")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
     implementation("org.n52.jackson:jackson-datatype-jts:1.2.10")
     implementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    implementation("org.flywaydb:flyway-core:10.17.0")
-    implementation("org.flywaydb:flyway-database-postgresql:10.17.0")
+    implementation("org.flywaydb:flyway-core:10.17.3")
+    implementation("org.flywaydb:flyway-database-postgresql:10.17.3")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.20")
-    implementation("org.springframework.boot:spring-boot-configuration-processor:3.3.2")
+    implementation("org.springframework.boot:spring-boot-configuration-processor:3.3.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-    implementation("org.http4k:http4k-client-apache:5.26.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
+    implementation("org.http4k:http4k-client-apache:5.29.0.0")
     implementation("com.google.code.gson:gson:2.11.0")
-    implementation("org.springframework.boot:spring-boot-starter-cache:3.3.2")
+    implementation("org.springframework.boot:spring-boot-starter-cache:3.3.3")
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
     implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.8.2")
-    implementation("org.springframework.boot:spring-boot-starter-log4j2:3.3.2")
+    implementation("org.springframework.boot:spring-boot-starter-log4j2:3.3.3")
     implementation("io.ktor:ktor-client-core-jvm:2.3.12")
     implementation("io.ktor:ktor-client-java-jvm:2.3.12")
     implementation("io.ktor:ktor-client-content-negotiation-jvm:2.3.12")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.3.12")
-    implementation("io.sentry:sentry:7.13.0")
-    implementation("io.sentry:sentry-log4j2:7.13.0")
+    implementation("io.sentry:sentry:7.14.0")
+    implementation("io.sentry:sentry-log4j2:7.14.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-    runtimeOnly("org.springframework.boot:spring-boot-devtools:3.3.2")
-    runtimeOnly("org.postgresql:postgresql:42.7.3")
+    runtimeOnly("org.springframework.boot:spring-boot-devtools:3.3.3")
+    runtimeOnly("org.postgresql:postgresql:42.7.4")
     testImplementation("org.assertj:assertj-core:3.26.3")
-    testImplementation("org.springframework.security:spring-security-test:6.3.1")
+    testImplementation("org.springframework.security:spring-security-test:6.3.3")
     testImplementation("org.testcontainers:testcontainers:1.20.1")
     testImplementation("org.testcontainers:postgresql:1.20.1")
     testImplementation("io.ktor:ktor-client-mock-jvm:2.3.12")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.2")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.3")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.1")
     testImplementation("org.testcontainers:junit-jupiter:1.20.1")
     testImplementation("net.java.dev.jna:jna:5.14.0")
