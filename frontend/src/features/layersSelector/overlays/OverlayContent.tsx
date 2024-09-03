@@ -10,6 +10,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
+import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
 
 import { getGroupName, getLegendKey, getLegendType, getName, getTitle } from '../../../domain/entities/layers/utils'
@@ -53,6 +54,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
       type === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
     ) {
       dispatch(openAMPMetadataPanel(id))
+      dispatch(layerSidebarActions.toggleAmpResults(true))
+
       if (editingVigilanceAreaId) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
@@ -63,6 +66,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
       type === MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
     ) {
       dispatch(openRegulatoryMetadataPanel(id))
+      dispatch(layerSidebarActions.toggleRegulatoryResults(true))
+
       if (editingVigilanceAreaId) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
@@ -70,6 +75,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
     if (type === MonitorEnvLayers.VIGILANCE_AREA || type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
       dispatch(closeMetadataPanel())
+      dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
     }
   }
 

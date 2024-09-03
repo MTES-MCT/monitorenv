@@ -8,8 +8,10 @@ import { getIsLinkingZonesToVigilanceArea, vigilanceAreaActions } from '@feature
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
+import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { mapActions } from 'domain/shared_slices/Map'
 import { convertToFeature } from 'domain/types/map'
+import { closeLayerListPopUp } from 'domain/use_cases/map/closeLayerListPopUp'
 import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
@@ -18,7 +20,6 @@ import { useEffect, useRef } from 'react'
 
 import { layerListIconStyle } from './style'
 import {
-  closeLayerOverlay,
   closeMetadataPanel,
   openAMPMetadataPanel,
   openLayerOverlay,
@@ -99,7 +100,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       (clickedVigilanceAreaFeatures?.length ?? 0)
 
     if (numberOfClickedFeatures === 0) {
-      dispatch(closeLayerOverlay())
+      dispatch(closeLayerListPopUp())
     }
 
     if (isLinkingZonesToVigilanceArea && mapClickEvent.coordinates) {
@@ -113,11 +114,13 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     if (numberOfClickedFeatures === 1) {
       if (clickedAmpFeatures && clickedAmpFeatures.length === 1) {
-        dispatch(closeLayerOverlay())
+        dispatch(closeLayerListPopUp())
         const feature = convertToFeature(clickedAmpFeatures[0])
         if (feature) {
           const layerId = feature.get('id')
           dispatch(openAMPMetadataPanel(layerId))
+          dispatch(layerSidebarActions.toggleAmpResults(true))
+
           if (editingVigilanceAreaId) {
             dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
           }
@@ -127,10 +130,13 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       }
 
       if (clickedRegulatoryFeatures && clickedRegulatoryFeatures.length === 1) {
+        dispatch(closeLayerListPopUp())
         const feature = convertToFeature(clickedRegulatoryFeatures[0])
         if (feature) {
           const layerId = feature.get('id')
           dispatch(openRegulatoryMetadataPanel(layerId))
+          dispatch(layerSidebarActions.toggleRegulatoryResults(true))
+
           if (editingVigilanceAreaId) {
             dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
           }
@@ -140,11 +146,13 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       }
 
       if (clickedVigilanceAreaFeatures && clickedVigilanceAreaFeatures.length === 1) {
-        dispatch(closeLayerOverlay())
+        dispatch(closeLayerListPopUp())
         const feature = convertToFeature(clickedVigilanceAreaFeatures[0])
         if (feature) {
           const layerId = feature.get('id')
           dispatch(closeMetadataPanel())
+          dispatch(layerSidebarActions.toggleAmpResults(true))
+
           if (layerId) {
             dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
           }

@@ -1,4 +1,3 @@
-import { closeLayerOverlay } from '@features/layersSelector/metadataPanel/slice'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -19,7 +18,6 @@ export function SelectAMP({ onCancel }: { onCancel: () => void }) {
   const handleValidate = () => {
     setFieldValue('linkedAMPs', ampToAdd)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
-    dispatch(closeLayerOverlay())
     dispatch(displayOrHideOtherLayers({ display: true }))
   }
 
