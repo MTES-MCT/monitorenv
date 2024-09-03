@@ -103,51 +103,51 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         """
-        SELECT DISTINCT  r
-        FROM ReportingModel r
-        WHERE r.isDeleted IS FALSE
-            AND r.createdAt >= CAST(CAST(:startedAfter as text) AS timestamp)
-            AND (CAST(CAST(:startedBefore as text) AS timestamp) IS NULL OR r.createdAt <= CAST(CAST(:startedBefore as text) AS timestamp))
-            AND (:seaFronts IS NULL OR r.seaFront IN (:seaFronts))
+        SELECT DISTINCT reporting
+        FROM ReportingModel reporting
+        WHERE reporting.isDeleted = false
+            AND reporting.createdAt >= CAST(CAST(:startedAfter as text) AS timestamp)
+            AND (CAST(CAST(:startedBefore as text) AS timestamp) IS NULL OR reporting.createdAt <= CAST(CAST(:startedBefore as text) AS timestamp))
+            AND (:seaFronts IS NULL OR reporting.seaFront IN (:seaFronts))
             AND (:sourcesType IS NULL OR EXISTS (
                 SELECT 1
-                FROM ReportingSourceModel rs
-                WHERE rs.reporting.id = r.id
-                AND rs.sourceType IN (:sourcesType)
+                FROM ReportingSourceModel reportingSource
+                WHERE reportingSource.reporting.id = reporting.id
+                AND reportingSource.sourceType IN (:sourcesType)
             ))
-            AND (:reportingType IS NULL OR r.reportType IN (:reportingType))
+            AND (:reportingType IS NULL OR reporting.reportType IN (:reportingType))
             AND (:status IS NULL
                 OR (
                     'ARCHIVED' IN (:status) AND
-                        (r.isArchived = true
-                        OR r.validityEndTime < CURRENT_TIMESTAMP)
+                        (reporting.isArchived = true
+                        OR reporting.validityEndTime < CURRENT_TIMESTAMP)
                     )
                 OR (
                     'IN_PROGRESS' IN :status AND (
-                        r.isArchived = false
-                        AND r.validityEndTime >= CURRENT_TIMESTAMP
+                        reporting.isArchived = false
+                        AND reporting.validityEndTime >= CURRENT_TIMESTAMP
                     )
                 )
             )
-            AND (:targetTypes IS NULL OR r.targetType IN (:targetTypes))
+            AND (:targetTypes IS NULL OR reporting.targetType IN (:targetTypes))
             AND (:isAttachedToMission IS NULL
                 OR (
                     :isAttachedToMission = true AND (
-                        r.mission.id IS NOT NULL
-                        AND r.detachedFromMissionAtUtc IS NULL
+                        reporting.mission.id IS NOT NULL
+                        AND reporting.detachedFromMissionAtUtc IS NULL
                     )
                 )
                 OR (
                     :isAttachedToMission = false AND (
-                        r.mission.id IS NULL
+                        reporting.mission.id IS NULL
                         OR (
-                            r.mission.id IS NOT NULL
-                            AND r.detachedFromMissionAtUtc IS NOT NULL
+                            reporting.mission.id IS NOT NULL
+                            AND reporting.detachedFromMissionAtUtc IS NOT NULL
                         )
                     )
                 )
             )
-        ORDER BY r.reportingId DESC
+        ORDER BY reporting.reportingId DESC
     """,
     )
     fun findAll(
@@ -166,9 +166,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-        SELECT r
-        FROM ReportingModel r
-        INNER JOIN ReportingSourceModel rs ON r.id = rs.reporting.id
+        SELECT reporting
+        FROM ReportingModel reporting
+        INNER JOIN ReportingSourceModel rs ON reporting.id = rs.reporting.id
         WHERE rs.controlUnit.id = :controlUnitId
         """,
     )
@@ -179,9 +179,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-        SELECT r
-        FROM ReportingModel r
-        WHERE r.mission.id = :missionId
+        SELECT reporting
+        FROM ReportingModel reporting
+        WHERE reporting.mission.id = :missionId
         """,
     )
     fun findByMissionId(
