@@ -93,29 +93,28 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         seaFronts: List<String>? = emptyList(),
         startedAfter: Instant,
         startedBefore: Instant?,
-//        searchQuery: String,
     ): List<MissionModel>
 
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value = """
-        SELECT mm
-        FROM MissionModel mm
+        SELECT mission
+        FROM MissionModel mission
         WHERE
-            mm.isDeleted = false AND
-            mm.id IN :ids
-        ORDER BY mm.startDateTimeUtc DESC
+            mission.isDeleted = false AND
+            mission.id IN :ids
+        ORDER BY mission.startDateTimeUtc DESC
         """,
     )
     fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT mm FROM MissionModel mm JOIN mm.controlUnits mmcu WHERE mmcu.unit.id = :controlUnitId")
+    @Query("SELECT mission FROM MissionModel mission JOIN mission.controlUnits missionControlUnitResources WHERE missionControlUnitResources.unit.id = :controlUnitId")
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
-        "SELECT mm FROM MissionModel mm JOIN mm.controlResources mmcr WHERE mmcr.resource.id = :controlUnitResourceId",
+        "SELECT mission FROM MissionModel mission JOIN mission.controlResources missionControlUnitResources WHERE missionControlUnitResources.resource.id = :controlUnitResourceId",
     )
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionModel>
 }

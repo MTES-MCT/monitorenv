@@ -106,7 +106,6 @@ class JpaReportingRepository(
                 targetDetail.externalReferenceNumber,
                 targetDetail.vesselName,
                 targetDetail.operatorName,
-                targetDetail.size.toString(),
                 targetDetail.vesselType?.name,
             ).any { field ->
                 !field.isNullOrBlank() && normalizeField(field)
