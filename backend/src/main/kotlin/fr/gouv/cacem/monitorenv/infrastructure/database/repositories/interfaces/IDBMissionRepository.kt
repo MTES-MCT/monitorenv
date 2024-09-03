@@ -109,7 +109,9 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT mission FROM MissionModel mission JOIN mission.controlUnits missionControlUnitResources WHERE missionControlUnitResources.unit.id = :controlUnitId")
+    @Query(
+        "SELECT mission FROM MissionModel mission JOIN mission.controlUnits missionControlUnitResources WHERE missionControlUnitResources.unit.id = :controlUnitId",
+    )
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
