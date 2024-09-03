@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+  <g id="Cursor" transform="translate(0.5 0.5)">
+    <rect id="Rectangle_6568" data-name="Rectangle 6568" width="20" height="20" fill="none"/>
+    <g id="Groupe_5248" data-name="Groupe 5248">
+      <g id="Rectangle_6569" data-name="Rectangle 6569" transform="translate(9 9)" fill="#3B4559" stroke="#fff" stroke-width="0.5">
+        <rect width="2" height="2" stroke="none"/>
+        <rect x="-0.25" y="-0.25" width="2.5" height="2.5" fill="none"/>
+      </g>
+      <g id="Rectangle_6570" data-name="Rectangle 6570" transform="translate(9)" fill="#3B4559" stroke="#fff" stroke-width="0.5">
+        <rect width="2" height="7" stroke="none"/>
+        <rect x="-0.25" y="-0.25" width="2.5" height="7.5" fill="none"/>
+      </g>
+      <g id="Rectangle_6571" data-name="Rectangle 6571" transform="translate(9 13)" fill="#3B4559" stroke="#fff" stroke-width="0.5">
+        <rect width="2" height="7" stroke="none"/>
+        <rect x="-0.25" y="-0.25" width="2.5" height="7.5" fill="none"/>
+      </g>
+      <g id="Rectangle_6572" data-name="Rectangle 6572" transform="translate(20 9) rotate(90)" fill="#3B4559" stroke="#fff" stroke-width="0.5">
+        <rect width="2" height="7" stroke="none"/>
+        <rect x="-0.25" y="-0.25" width="2.5" height="7.5" fill="none"/>
+      </g>
+      <g id="Rectangle_6573" data-name="Rectangle 6573" transform="translate(7 9) rotate(90)" fill="#3B4559" stroke="#fff" stroke-width="0.5">
+        <rect width="2" height="7" stroke="none"/>
+        <rect x="-0.25" y="-0.25" width="2.5" height="7.5" fill="none"/>
+      </g>
+    </g>
+  </g>
+</svg>
