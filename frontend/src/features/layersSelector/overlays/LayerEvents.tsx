@@ -41,7 +41,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const vectorLayer = useRef(
     new VectorLayer({
       source: vectorSource.current,
-      style: layerListIconStyle
+      style: (feature, resolution) => layerListIconStyle(feature, resolution)
     })
   )
 

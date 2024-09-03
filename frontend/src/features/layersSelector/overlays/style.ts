@@ -4,9 +4,9 @@ import { getCenter } from 'ol/extent'
 import { LineString } from 'ol/geom'
 import { Icon, Stroke, Style } from 'ol/style'
 
-export const layerListIconStyle = [
+export const layerListIconStyle = (feature, resolution) => [
   new Style({
-    geometry: feature => {
+    geometry: () => {
       const overlayPostion = feature.get('overlayCoordinates')
 
       if (isEmpty(overlayPostion)) {
@@ -27,5 +27,5 @@ export const layerListIconStyle = [
       width: 2
     })
   }),
-  new Style({ image: new Icon({ scale: 0.6, src: 'Close.svg' }) })
+  new Style({ image: new Icon({ scale: 1 / resolution ** (1 / 8) + 0.4, src: 'Cursor_border.svg' }) })
 ]

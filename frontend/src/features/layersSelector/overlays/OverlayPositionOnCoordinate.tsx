@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type OpenLayerMap from 'ol/Map'
 
 const INITIAL_OFFSET_VALUE = [0, 0]
+const X_MARGING = 180
 
 type OverlayPositionOnCoordinatesProps = {
   children: React.ReactNode
@@ -64,7 +65,7 @@ export function OverlayPositionOnCoordinates({
 
           const { width } = target.getElement().getBoundingClientRect()
 
-          const nextXPixelCenter = pixel[0] + offset[0] + width / 2
+          const nextXPixelCenter = pixel[0] + offset[0] + X_MARGING + width / 2
           const nextYPixelCenter = pixel[1] + offset[1]
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
@@ -91,6 +92,10 @@ export function OverlayPositionOnCoordinates({
   }, [map, olOverlayRef])
 
   useEffect(() => {
+    if (olOverlayRef.current) {
+      currentOffset.current = INITIAL_OFFSET_VALUE
+      olOverlayRef.current.setOffset(INITIAL_OFFSET_VALUE)
+    }
     if (containerRef.current) {
       if (layerOverlayIsOpen) {
         containerRef.current.style.display = 'block'
