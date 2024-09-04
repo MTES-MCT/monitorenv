@@ -3,7 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { closeLayerListPopUp } from 'domain/use_cases/map/closeLayerListPopUp'
+import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -83,7 +83,7 @@ export function SearchOnExtentExtraButtons({
     dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
     dispatch(resetSearchExtent())
     dispatch(closeMetadataPanel())
-    dispatch(closeLayerListPopUp())
+    dispatch(closeAreaOverlay())
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
   }
 

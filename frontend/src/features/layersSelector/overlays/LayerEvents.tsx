@@ -11,7 +11,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { mapActions } from 'domain/shared_slices/Map'
 import { convertToFeature } from 'domain/types/map'
-import { closeLayerListPopUp } from 'domain/use_cases/map/closeLayerListPopUp'
+import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
@@ -29,14 +29,14 @@ import {
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
-const FEATURE_ID = 'LayerListIconFeature'
+const FEATURE_ID = 'AreaIconFeature'
 
 export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
-  const isLayerListSelected = useAppSelector(state => state.map.isLayerListSelected)
+  const isAreaSelected = useAppSelector(state => state.map.isAreaSelected)
 
   const vectorSource = useRef(new VectorSource({}))
   const vectorLayer = useRef(
@@ -47,7 +47,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   )
 
   useEffect(() => {
-    if (!isLayerListSelected) {
+    if (!isAreaSelected) {
       const feature = vectorSource.current?.getFeatureById(`${Layers.LAYER_LIST_ICON}:${FEATURE_ID}`)
 
       if (feature) {
@@ -64,9 +64,9 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     vectorSource.current?.addFeature(iconFeature)
 
-    // we just want to listen isLayerListSelected changes
+    // we just want to listen isAreaSelected changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLayerListSelected])
+  }, [isAreaSelected])
 
   useEffect(() => {
     const feature = vectorSource.current?.getFeatureById(`${Layers.LAYER_LIST_ICON}:${FEATURE_ID}`)
@@ -100,7 +100,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       (clickedVigilanceAreaFeatures?.length ?? 0)
 
     if (numberOfClickedFeatures === 0) {
-      dispatch(closeLayerListPopUp())
+      dispatch(closeAreaOverlay())
     }
 
     if (isLinkingZonesToVigilanceArea && mapClickEvent.coordinates) {
@@ -114,7 +114,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     if (numberOfClickedFeatures === 1) {
       if (clickedAmpFeatures && clickedAmpFeatures.length === 1) {
-        dispatch(closeLayerListPopUp())
+        dispatch(closeAreaOverlay())
         const feature = convertToFeature(clickedAmpFeatures[0])
         if (feature) {
           const layerId = feature.get('id')
@@ -130,7 +130,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       }
 
       if (clickedRegulatoryFeatures && clickedRegulatoryFeatures.length === 1) {
-        dispatch(closeLayerListPopUp())
+        dispatch(closeAreaOverlay())
         const feature = convertToFeature(clickedRegulatoryFeatures[0])
         if (feature) {
           const layerId = feature.get('id')
@@ -146,12 +146,12 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       }
 
       if (clickedVigilanceAreaFeatures && clickedVigilanceAreaFeatures.length === 1) {
-        dispatch(closeLayerListPopUp())
+        dispatch(closeAreaOverlay())
         const feature = convertToFeature(clickedVigilanceAreaFeatures[0])
         if (feature) {
           const layerId = feature.get('id')
           dispatch(closeMetadataPanel())
-          dispatch(layerSidebarActions.toggleAmpResults(true))
+          dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
 
           if (layerId) {
             dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
@@ -172,7 +172,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
 
-      dispatch(mapActions.setIsLayerListSelected(true))
+      dispatch(mapActions.setIsAreaSelected(true))
     }
 
     // we don't want to listen editingVigilanceAreaId changes
