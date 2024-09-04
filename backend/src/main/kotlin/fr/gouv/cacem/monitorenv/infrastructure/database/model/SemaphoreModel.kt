@@ -13,35 +13,29 @@ data class SemaphoreModel(
     @Id
     @Column(name = "id")
     val id: Int,
-    @Column(name = "geom")
-    val geom: Point,
-    @Column(name = "nom")
-    val name: String,
-    @Column(name = "dept")
-    val department: String? = null,
-    @Column(name = "facade")
-    val facade: String? = null,
-    @Column(name = "administration")
-    val administration: String? = null,
-    @Column(name = "unite")
-    val unit: String? = null,
-    @Column(name = "email")
-    val email: String? = null,
-    @Column(name = "telephone")
-    val phoneNumber: String? = null,
-    @Column(name = "base")
-    val base: String? = null,
+    @Column(name = "geom") val geom: Point,
+    @Column(name = "nom") val name: String,
+    @Column(name = "dept") val department: String? = null,
+    @Column(name = "facade") val facade: String? = null,
+    @Column(name = "administration") val administration: String? = null,
+    @Column(name = "unite") val unit: String? = null,
+    @Column(name = "email") val email: String? = null,
+    @Column(name = "telephone") val phoneNumber: String? = null,
+    @Column(name = "base") val base: String? = null,
+    @Column(name = "url") val url: String? = null,
 ) {
-    fun toSemaphore() = SemaphoreEntity(
-        id = id,
-        geom = geom,
-        name = name,
-        department = department,
-        facade = facade,
-        administration = administration,
-        unit = unit,
-        email = email,
-        phoneNumber = phoneNumber,
-        base = base,
-    )
+    fun toSemaphore() =
+        SemaphoreEntity(
+            id = id,
+            geom = geom,
+            name = name,
+            department = department,
+            facade = facade,
+            administration = administration,
+            unit = unit,
+            email = email,
+            phoneNumber = phoneNumber,
+            base = base,
+            url = url,
+        )
 }
