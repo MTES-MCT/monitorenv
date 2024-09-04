@@ -58,7 +58,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
   const displaySemaphoresLayer = useAppSelector(state => state.global.displaySemaphoresLayer)
   const hasMapInteraction = useHasMapInteraction()
 
-  const { email, id, name, phoneNumber, unit } = feature.getProperties()
+  const { email, id, name, phoneNumber, unit, url } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
 
   const [tooltipMailState, setTooltipMailState] = useState(MAIL_TOOLTIP_STATE.hover)
@@ -151,6 +151,14 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
               <span>{email}</span>
             </StyledContactLine>
           )}
+          {url && (
+            <UrlContainer>
+              <StyledIcon color={THEME.color.gunMetal} />
+              <UrlLink href={url} target="_blank">
+                Lien vers la fiche Légicem du sémaphore
+              </UrlLink>
+            </UrlContainer>
+          )}
 
           <StyledButton Icon={Icon.Plus} isFullWidth onClick={createSemaphoreReporting}>
             Créer un signalement
@@ -233,4 +241,18 @@ const StyledTooltip = styled(Tooltip)`
 const StyledButton = styled(Button)`
   padding: 4px 12px;
   margin-top: 16px;
+`
+const UrlContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+`
+const StyledIcon = styled(Icon.SortSelectedDown)`
+  rotate: -90deg;
+`
+const UrlLink = styled.a`
+  color: ${p => p.theme.color.gunMetal};
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
 `

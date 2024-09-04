@@ -11,4 +11,5 @@ export type Semaphore = {
   name: string
   phoneNumber: string | undefined | null
   unit: string | undefined | null
+  url: string | undefined | null
 }

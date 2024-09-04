@@ -13,4 +13,5 @@ data class SemaphoreEntity(
     val email: String? = null,
     val phoneNumber: String? = null,
     val base: String? = null,
+    val url: String? = null,
 )

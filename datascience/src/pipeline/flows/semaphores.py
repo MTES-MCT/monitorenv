@@ -36,13 +36,13 @@ def load_semaphores(semaphores: pd.DataFrame):
         table_id_column="id",
         init_ddls=[
             DDL(
-                "ALTER TABLE public.reportings "
+                "ALTER TABLE public.reportings_source "
                 "DROP CONSTRAINT fk_semaphores;"
             )
         ],
         end_ddls=[
             DDL(
-                "ALTER TABLE public.reportings "
+                "ALTER TABLE public.reportings_source "
                 "ADD CONSTRAINT fk_semaphores "
                 "FOREIGN KEY (semaphore_id) REFERENCES public.semaphores (id);"
             )

@@ -14,6 +14,7 @@ data class SemaphoreDataOutput(
     val email: String?,
     val phoneNumber: String?,
     val base: String?,
+    val url: String?,
 ) {
     companion object {
         fun fromSemaphoreEntity(semaphore: SemaphoreEntity) = SemaphoreDataOutput(
@@ -27,6 +28,7 @@ data class SemaphoreDataOutput(
             email = semaphore.email,
             phoneNumber = semaphore.phoneNumber,
             base = semaphore.base,
+            url = semaphore.url,
         )
     }
 }
