@@ -43,7 +43,6 @@ const StyledMissionsContainer = styled.div`
   flex: 1;
   flex-direction: column;
   padding: 40px;
-  width: calc(100vw - 64px);
   overflow: auto;
 `
 
