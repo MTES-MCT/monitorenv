@@ -170,7 +170,7 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 58 + legacyFirefoxOffset
+    size: 65 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.id,
