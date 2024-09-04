@@ -94,6 +94,22 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
     }
   }
 
+  const endingOccurenceText = () => {
+    if (!vigilanceArea?.endingCondition) {
+      return ''
+    }
+
+    if (vigilanceArea?.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER) {
+      return `Fin après ${vigilanceArea?.endingOccurrencesNumber} fois`
+    }
+
+    if (vigilanceArea?.endingCondition === VigilanceArea.EndingCondition.END_DATE) {
+      return `Fin le ${customDayjs(vigilanceArea?.endingOccurrenceDate).utc().format('DD/MM/YYYY')}`
+    }
+
+    return 'Pas de fin de récurrence'
+  }
+
   if (!vigilanceArea) {
     return null
   }
@@ -117,7 +133,8 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
               <InlineItemValue>
                 {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
               </InlineItemValue>
-              <StyledInlineItemValue>{frequencyText()}</StyledInlineItemValue>
+              <InlineItemValue>{frequencyText()}</InlineItemValue>
+              <StyledInlineItemValue>{endingOccurenceText()}</StyledInlineItemValue>
             </DateItem>
           </InlineItem>
           <InlineItem>
