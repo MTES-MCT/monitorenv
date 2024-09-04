@@ -1,5 +1,5 @@
 import { setDisplayedItems } from 'domain/shared_slices/Global'
-import { closeLayerListPopUp } from 'domain/use_cases/map/closeLayerListPopUp'
+import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 
 import type { HomeAppThunk } from '@store/index'
 
@@ -23,5 +23,5 @@ export const displayOrHideOtherLayers =
     )
 
     // close layer list overlay
-    dispatch(closeLayerListPopUp())
+    dispatch(closeAreaOverlay())
   }

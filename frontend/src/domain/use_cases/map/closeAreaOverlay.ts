@@ -5,8 +5,8 @@ import { mapActions } from 'domain/shared_slices/Map'
 
 import type { HomeAppThunk } from '@store/index'
 
-export const closeLayerListPopUp = (): HomeAppThunk => dispatch => {
+export const closeAreaOverlay = (): HomeAppThunk => dispatch => {
   dispatch(closeLayerOverlay())
   dispatch(removeOverlayCoordinatesByName(Layers.LAYER_LIST_ICON.code))
-  dispatch(mapActions.setIsLayerListSelected(false))
+  dispatch(mapActions.setIsAreaSelected(false))
 }

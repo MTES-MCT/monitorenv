@@ -66,7 +66,7 @@ export function VigilanceAreaLayer({ layerId, searchedText }: RegulatoryLayerPro
 
   useEffect(() => {
     if (layerId === selectedVigilanceAreaId && ref?.current) {
-      ref.current.scrollIntoView(false)
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }, [layerId, ref, selectedVigilanceAreaId])
 

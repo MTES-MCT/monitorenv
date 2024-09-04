@@ -3,7 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
 import { type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
-import { closeLayerListPopUp } from 'domain/use_cases/map/closeLayerListPopUp'
+import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import styled from 'styled-components'
 
 import { OverlayContent } from './OverlayContent'
@@ -22,7 +22,7 @@ export function PinnedOverlay({
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const close = () => {
-    dispatch(closeLayerListPopUp())
+    dispatch(closeAreaOverlay())
   }
 
   // component should not be called if items.length < 2

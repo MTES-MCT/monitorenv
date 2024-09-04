@@ -1,4 +1,4 @@
-import { closeLayerListPopUp } from './closeLayerListPopUp'
+import { closeAreaOverlay } from './closeAreaOverlay'
 import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { resetInteraction } from '../../shared_slices/Draw'
@@ -17,14 +17,14 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
       openDrawLayerModal(dispatch, true)
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(false))
-      dispatch(closeLayerListPopUp())
+      dispatch(closeAreaOverlay())
       break
 
     case MapInteractionListenerEnum.ATTACH_MISSION:
       openDrawLayerModal(dispatch, false)
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(true))
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(false))
-      dispatch(closeLayerListPopUp())
+      dispatch(closeAreaOverlay())
       dispatch(resetInteraction())
       break
 
@@ -32,7 +32,7 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
       openDrawLayerModal(dispatch, false)
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(true))
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
-      dispatch(closeLayerListPopUp())
+      dispatch(closeAreaOverlay())
       dispatch(resetInteraction())
       break
 

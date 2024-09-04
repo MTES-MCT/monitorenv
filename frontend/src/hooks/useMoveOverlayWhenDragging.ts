@@ -3,6 +3,7 @@ import { unByKey } from 'ol/Observable'
 import { useEffect } from 'react'
 
 import type { Overlay } from 'ol'
+import type { EventsKey } from 'ol/events'
 import type OpenLayerMap from 'ol/Map'
 
 const X = 0
@@ -18,7 +19,7 @@ type Props = {
 
 export const useMoveOverlayWhenDragging = ({ currentOffset, map, moveLineWithThrottle, overlay, showed }: Props) => {
   useEffect(() => {
-    let eventKey: any
+    let eventKey: EventsKey
 
     if (map && overlay) {
       eventKey = overlay.on('change:offset', ({ target }: any) => {

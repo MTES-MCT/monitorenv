@@ -75,7 +75,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
 
   useEffect(() => {
     if (ampMetadataLayerId === layerId && ref?.current) {
-      ref.current.scrollIntoView(false)
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }, [ampMetadataLayerId, ref, layerId])
 
