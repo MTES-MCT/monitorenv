@@ -292,7 +292,7 @@ const FilterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-right: 37px;
+  padding-right: 2%;
 `
 const StyledFiltersFirstLine = styled.div`
   display: flex;

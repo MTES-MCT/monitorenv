@@ -28,7 +28,7 @@ export const StyledTagsContainer = styled.div<{ $withTopMargin: boolean }>`
   gap: 16px;
   margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
   max-width: 100%;
-  padding-right: 37px;
+  padding-right: 2%;
 `
 export const StyledCustomPeriodContainer = styled.div`
   display: flex;
