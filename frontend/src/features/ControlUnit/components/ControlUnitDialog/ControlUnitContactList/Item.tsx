@@ -51,14 +51,14 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
             <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
           )}
         </NameAndContactContainer>
-        <p>
+        <MailContainer>
           <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
             {controlUnitContact.email}
           </Link>
           {controlUnitContact.isEmailSubscriptionContact && (
             <Icon.Subscription size={14} title="Adresse de diffusion pour les préavis et les rapports de contrôle" />
           )}
-        </p>
+        </MailContainer>
       </Left>
       <Right>
         <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={handleEdit} title="Éditer ce contact" />
@@ -93,10 +93,14 @@ const Right = styled.div`
   }
 `
 const NameAndContactContainer = styled.p<{ $hasLongName: boolean }>`
+  align-items: end;
+  column-gap: 8px;
   display: flex;
   flex-wrap: wrap;
   row-gap: 16px;
-  column-gap: 8px;
+  > span {
+    line-height: initial;
+  }
 `
 
 const Name = styled.span`
@@ -104,4 +108,10 @@ const Name = styled.span`
   font-weight: bold;
   overflow-wrap: anywhere;
   max-width: 450px;
+`
+
+const MailContainer = styled.p`
+  align-items: end;
+  display: flex;
+  gap: 8px;
 `

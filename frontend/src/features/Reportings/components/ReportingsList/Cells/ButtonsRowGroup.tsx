@@ -77,7 +77,7 @@ export function ButtonsGroupRow({ id }) {
           title="Editer"
         />
 
-        <StyledDropdown
+        <Dropdown
           accent={Accent.TERTIARY}
           data-cy={`more-actions-reporting-${id}`}
           Icon={Icon.More}
@@ -97,7 +97,7 @@ export function ButtonsGroupRow({ id }) {
             Icon={Icon.Delete}
             title="Supprimer"
           />
-        </StyledDropdown>
+        </Dropdown>
       </ButtonsGroup>
       <DeleteModal
         cancelButtonText="Annuler"
@@ -125,19 +125,15 @@ export function ButtonsGroupRow({ id }) {
 const ButtonsGroup = styled.div`
   display: flex;
   flex-direction: row;
+  gap: 8px;
   justify-content: space-evenly;
+
+  > div {
+    > .rs-btn {
+      padding-left: 0px !important;
+    }
+  }
   > button {
     padding: 0px;
-  }
-`
-
-// TODO do this in monitor-ui
-const StyledDropdown = styled(Dropdown)`
-  svg.rs-dropdown-item-menu-icon {
-    vertical-align: middle;
-    margin-right: 0px;
-  }
-  .rs-dropdown-item {
-    line-height: 20px;
   }
 `

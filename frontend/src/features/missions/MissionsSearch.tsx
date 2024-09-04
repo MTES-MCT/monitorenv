@@ -48,5 +48,5 @@ export function MissionSearch() {
 
 const StyledSearch = styled(TextInput)`
   border: 1px solid ${p => p.theme.color.lightGray};
-  width: 400px;
+  width: 410px;
 `

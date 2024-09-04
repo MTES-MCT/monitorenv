@@ -1,4 +1,5 @@
 import { SingleTag } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
@@ -17,6 +18,7 @@ import { FrontendError } from '../../../../libs/FrontendError'
 export function FilterTags() {
   const dispatch = useAppDispatch()
   const {
+    hasFilters,
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
@@ -42,6 +44,36 @@ export function FilterTags() {
       | string[]
       | number[]
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues }))
+  }
+
+  const hasTagFilters = useMemo(() => {
+    if (
+      hasFilters &&
+      ((selectedAdministrationNames && selectedAdministrationNames?.length > 0) ||
+        (selectedCompletionStatus && selectedCompletionStatus?.length > 0) ||
+        (selectedControlUnitIds && selectedControlUnitIds?.length > 0) ||
+        (selectedMissionTypes && selectedMissionTypes?.length > 0) ||
+        (selectedSeaFronts && selectedSeaFronts?.length > 0) ||
+        (selectedStatuses && selectedStatuses?.length > 0) ||
+        (selectedThemes && selectedThemes?.length > 0))
+    ) {
+      return true
+    }
+
+    return false
+  }, [
+    hasFilters,
+    selectedAdministrationNames,
+    selectedCompletionStatus,
+    selectedControlUnitIds,
+    selectedMissionTypes,
+    selectedSeaFronts,
+    selectedStatuses,
+    selectedThemes
+  ])
+
+  if (!hasTagFilters) {
+    return null
   }
 
   return (
