@@ -19,7 +19,15 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { RegulatoryLayerCompact } from '../../../domain/entities/regulatory'
 
-export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string; layers: RegulatoryLayerCompact[] }) {
+export function RegulatoryLayerGroup({
+  groupName,
+  layers,
+  setTotalNumberOfZones
+}: {
+  groupName: string
+  layers: RegulatoryLayerCompact[]
+  setTotalNumberOfZones: (totalNumberOfZones: number) => void
+}) {
   const dispatch = useAppDispatch()
   const groupLayerIds = layers.map(l => l.id)
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
@@ -37,6 +45,8 @@ export function RegulatoryLayerGroup({ groupName, layers }: { groupName: string;
     if (!zonesAreOpen && regulatoryZonesAreShowed) {
       fitToGroupExtent()
     }
+
+    setTotalNumberOfZones(zonesAreOpen ? 0 : totalNumberOfZones)
   }
 
   const handleRemoveZone = e => {

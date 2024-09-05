@@ -1,4 +1,4 @@
-import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage'
 
 import { DATE_RANGE_LABEL } from '../entities/dateRange'
 
-export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
+export const TODAY = customDayjs().utc().startOf('day').toISOString()
 
 export enum MissionFiltersEnum {
   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
@@ -52,12 +52,12 @@ const INITIAL_STATE: MissionFiltersState = {
   selectedCompletionStatus: undefined,
   selectedControlUnitIds: undefined,
   selectedMissionTypes: undefined,
-  selectedPeriod: DATE_RANGE_LABEL.WEEK.value,
+  selectedPeriod: DATE_RANGE_LABEL.DAY.value,
   selectedSeaFronts: undefined,
   selectedStatuses: undefined,
   selectedThemes: undefined,
   selectedWithEnvActions: false,
-  startedAfter: SEVEN_DAYS_AGO,
+  startedAfter: TODAY,
   startedBefore: undefined
 }
 

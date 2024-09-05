@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { useState } from 'react'
 
 import { RegulatoryLayerGroup } from './MyRegulatoryLayerGroup'
 import { getSelectedRegulatoryLayers } from '../../../api/regulatoryLayersAPI'
@@ -8,6 +9,8 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 export function RegulatoryLayersList() {
   const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryLayers(state))
   const myRegulatoryZonesIsOpen = useAppSelector(state => state.layerSidebar.myRegulatoryZonesIsOpen)
+
+  const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)
 
   if (_.isEmpty(selectedRegulatoryLayers)) {
     return (
@@ -25,14 +28,21 @@ export function RegulatoryLayersList() {
 
   return (
     <LayerSelector.LayerList
-      $baseLayersLength={Object.keys(layersByLayersName).length}
+      $baseLayersLength={Object.keys(layersByLayersName).length + totalNumberOfZones}
       $showBaseLayers={myRegulatoryZonesIsOpen}
       data-cy="my-regulatory-layers-list"
     >
       {layersByLayersName &&
         Object.entries(layersByLayersName).map(
           ([layerName, layers]) =>
-            !!layers && <RegulatoryLayerGroup key={layerName} groupName={layerName} layers={layers} />
+            !!layers && (
+              <RegulatoryLayerGroup
+                key={layerName}
+                groupName={layerName}
+                layers={layers}
+                setTotalNumberOfZones={setTotalNumberOfZones}
+              />
+            )
         )}
     </LayerSelector.LayerList>
   )
