@@ -12,11 +12,11 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('reinitialize-filters').scrollIntoView().click()
   })
 
-  it('Should filter missions for the current day', () => {
-    const currentDay = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
-    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentDay}`).as('getMissionsForCurrentDay')
-    cy.fill('Période', 'Aujourd’hui')
-    cy.wait('@getMissionsForCurrentDay')
+  it('Should filter missions for the current week', () => {
+    const currentWeek = encodeURIComponent(customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentWeek}`).as('getMissionsForCurrentWeek')
+    cy.fill('Période', 'Une semaine')
+    cy.wait('@getMissionsForCurrentWeek')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
   })
