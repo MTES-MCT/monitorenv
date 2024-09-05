@@ -118,7 +118,8 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by types', () => {
-    const date = encodeURIComponent(customDayjs().utc().startOf('day').subtract(7, 'day').toISOString())
+    const date = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
+
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&missionTypes=SEA`).as('getMissionsByType')
 
     cy.fill('Type de mission', ['Mer'])
@@ -135,7 +136,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by sea fronts', () => {
-    const date = encodeURIComponent(customDayjs().utc().startOf('day').subtract(7, 'day').toISOString())
+    const date = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&seaFronts=MED`).as('getMissionsBySeaFront')
 
     cy.fill('Façade', ['MED'])
@@ -152,7 +153,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by status', () => {
-    const date = encodeURIComponent(customDayjs().utc().startOf('day').subtract(7, 'day').toISOString())
+    const date = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&missionStatus=PENDING`).as(
       'getMissionsByStatus'
     )
