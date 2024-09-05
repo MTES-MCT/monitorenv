@@ -159,7 +159,7 @@ context('Reporting', () => {
     cy.wait(1000)
     cy.get('#root').click(350, 690, { timeout: 10000 })
     cy.wait(1000)
-    cy.clickButton('Editer le signalement')
+    cy.clickButton('Éditer le signalement')
 
     // When
     cy.clickButton('Détacher la mission')
