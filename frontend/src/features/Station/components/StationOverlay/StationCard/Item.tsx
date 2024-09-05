@@ -1,10 +1,11 @@
+import { controlUnitDialogActions } from '@features/ControlUnit/components/ControlUnitDialog/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
+import { globalActions } from 'domain/shared_slices/Global'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import styled from 'styled-components'
 
 import { displayControlUnitResourcesFromControlUnit } from './utils'
-import { globalActions } from '../../../../../domain/shared_slices/Global'
-import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { controlUnitDialogActions } from '../../../../ControlUnit/components/ControlUnitDialog/slice'
 
 type ItemProps = {
   controlUnit: ControlUnit.ControlUnit
@@ -21,6 +22,7 @@ export function Item({ controlUnit, stationId }: ItemProps) {
         isControlUnitListDialogVisible: false
       })
     )
+    dispatch(closeAllOverlays())
   }
 
   return (

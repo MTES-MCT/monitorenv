@@ -1,10 +1,11 @@
+import { convertToFeature, type MapClickEvent } from 'domain/types/map'
 import { getCenter, type Extent } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
-import { setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
+import { setOpenedOverlay, setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
@@ -27,8 +28,8 @@ type OverlayPositionOnCentroidProps = {
   appClassName: string
   children: React.ReactNode
   feature: FeatureLike | null | undefined
-  featureIsShowed?: boolean
   map: OpenLayerMap
+  mapClickEvent: MapClickEvent
   options?: {
     margins?: {
       xLeft: number
@@ -45,12 +46,13 @@ export function OverlayPositionOnCentroid({
   appClassName,
   children,
   feature,
-  featureIsShowed = false,
   map,
+  mapClickEvent,
   options: { margins = defaultMargins } = {},
   zIndex
 }: OverlayPositionOnCentroidProps) {
   const dispatch = useAppDispatch()
+
   const containerRef = useRef<HTMLDivElement | null>(null)
   const olOverlayRef = useRef<Overlay | null>(null)
 
@@ -104,7 +106,7 @@ export function OverlayPositionOnCentroid({
         map.removeOverlay(olOverlayRef.current)
       }
     }
-  }, [map, olOverlayRef, featureIsShowed])
+  }, [map, olOverlayRef])
 
   const moveLineWithThrottle = useCallback(
     (target, delay) => {
@@ -166,6 +168,13 @@ export function OverlayPositionOnCentroid({
     overlay: olOverlayRef.current,
     showed: isMounted
   })
+
+  useEffect(() => {
+    const selectedFeature = convertToFeature(mapClickEvent?.feature)
+    if (selectedFeature) {
+      dispatch(setOpenedOverlay(String(selectedFeature.getId())))
+    }
+  }, [dispatch, mapClickEvent?.feature])
 
   return (
     <OverlayComponent ref={attachContentToOverlay} $overlayTopLeftMargin={overlayTopLeftMargin} $zIndex={zIndex}>

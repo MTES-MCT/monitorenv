@@ -1,3 +1,4 @@
+import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
@@ -20,9 +21,9 @@ const OPTIONS = {
   }
 }
 
-export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedMissionId = useAppSelector(state => state.mission.selectedMissionIdOnMap)
-  const displayMissionsOverlay = useAppSelector(state => state.global.displayMissionsOverlay)
+
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
 
@@ -36,12 +37,14 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
     ?.getSource()
     ?.getFeatureById(`${Layers.MISSIONS.code}:${selectedMissionId}`)
 
+  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(feature?.getId())))
+
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.MISSIONS.code) &&
-    currentfeatureId !== `${Layers.MISSIONS.code}:${selectedMissionId}`
+    currentfeatureId !== `${Layers.HOVERED_MISSION.code}:${selectedMissionId}`
 
   const updateHoveredMargins = (cardHeight: number) => {
     if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
@@ -59,9 +62,9 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-mission-selected"
-        feature={displayMissionsOverlay ? feature : undefined}
-        featureIsShowed
+        feature={isLastSelected ? feature : undefined}
         map={map}
+        mapClickEvent={mapClickEvent}
         options={selectedOptions}
         zIndex={6500}
       >
@@ -69,8 +72,9 @@ export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProp
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-mission-hover"
-        feature={displayMissionsOverlay && displayHoveredFeature ? hoveredFeature : undefined}
+        feature={displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
+        mapClickEvent={mapClickEvent}
         options={hoveredOptions}
         zIndex={6000}
       >

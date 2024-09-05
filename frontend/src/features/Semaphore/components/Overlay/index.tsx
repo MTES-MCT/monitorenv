@@ -1,3 +1,4 @@
+import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 
 import { SemaphoreCard } from './SemaphoreCard'
@@ -28,7 +29,7 @@ type SemaphoreOverlayProps = BaseMapChildrenProps & {
   isSuperUser: boolean
 }
 
-export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map }: SemaphoreOverlayProps) {
+export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map, mapClickEvent }: SemaphoreOverlayProps) {
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
   const displaySemaphoreOverlay = useAppSelector(state => state.global.displaySemaphoreOverlay)
 
@@ -42,6 +43,8 @@ export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map }: Semap
     ?.getSource()
     ?.getFeatureById(`${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`)
 
+  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(selectedFeature?.getId())))
+
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
@@ -53,9 +56,9 @@ export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map }: Semap
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-selected"
-        feature={displaySemaphoreOverlay ? selectedFeature : undefined}
-        featureIsShowed
+        feature={displaySemaphoreOverlay && isLastSelected ? selectedFeature : undefined}
         map={map}
+        mapClickEvent={mapClickEvent}
         options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
         zIndex={3000}
       >
@@ -65,6 +68,7 @@ export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map }: Semap
         appClassName="overlay-semaphore-hover"
         feature={displaySemaphoreOverlay && displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
+        mapClickEvent={mapClickEvent}
         options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
         zIndex={3000}
       >

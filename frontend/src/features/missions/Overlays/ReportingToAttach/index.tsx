@@ -19,7 +19,7 @@ const OPTIONS = {
   }
 }
 
-export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function ReportingToAttachOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const displayReportingToAttachLayer = useAppSelector(state => state.global.displayReportingToAttachLayer)
 
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
@@ -40,6 +40,7 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapCh
       appClassName="overlay-reporting-to-attach-hover"
       feature={displayReportingToAttachLayer && displayHoveredFeature ? hoveredFeature : undefined}
       map={map}
+      mapClickEvent={mapClickEvent}
       options={hoveredOptions}
       zIndex={5000}
     >

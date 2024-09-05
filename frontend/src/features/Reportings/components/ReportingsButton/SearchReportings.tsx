@@ -4,7 +4,8 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { setDisplayedItems, ReportingContext } from 'domain/shared_slices/Global'
+import { ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { addReporting } from 'domain/use_cases/reporting/addReporting'
 import styled from 'styled-components'
 
@@ -23,6 +24,7 @@ export function SearchReportings() {
   const createReporting = () => {
     dispatch(setDisplayedItems({ isSearchReportingsVisible: false }))
     dispatch(addReporting(ReportingContext.MAP))
+    dispatch(closeAllOverlays())
   }
 
   const toggleReportingsWindow = async () => {

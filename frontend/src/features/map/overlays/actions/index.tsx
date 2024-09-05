@@ -8,7 +8,7 @@ import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function ActionOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
@@ -25,6 +25,7 @@ export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps)
       appClassName="overlay-action-hover"
       feature={displayHoveredFeature ? hoveredFeature : undefined}
       map={map}
+      mapClickEvent={mapClickEvent}
       zIndex={5500}
     >
       {displayControlCard && <ControlCard feature={hoveredFeature} />}

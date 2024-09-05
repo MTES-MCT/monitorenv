@@ -1,4 +1,5 @@
 import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useState } from 'react'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
@@ -87,6 +88,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
         reportingSources: [{ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }]
       })
     )
+    dispatch(closeAllOverlays())
   }
 
   if (!displaySemaphoresLayer || hasMapInteraction) {
