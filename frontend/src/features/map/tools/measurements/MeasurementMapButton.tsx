@@ -1,4 +1,5 @@
 import { Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -45,6 +46,7 @@ export function MeasurementMapButton() {
     dispatch(globalActions.hideSideButtons())
     dispatch(setMeasurementTypeToAdd(nextMeasurementTypeToAdd))
     dispatch(globalActions.setIsMapToolVisible(MapToolType.MEASUREMENT))
+    dispatch(closeAllOverlays())
   }
 
   const measurementIcon = useMemo(() => {

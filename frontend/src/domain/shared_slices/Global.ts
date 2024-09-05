@@ -1,7 +1,7 @@
 // TODO This slice should disappear in favor of `features/MainWindow/slice.ts` and "Map" feature should have its own slice.
 // TODO "Map" feature should have its own slice where we would transfer the related `display...` props.
 
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
 import type { Extent } from 'ol/extent'
@@ -51,7 +51,6 @@ type GlobalStateType = {
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: boolean
-  displayMissionsOverlay: boolean
   displayMissionEditingLayer: boolean
   displayMissionsLayer: boolean
   displayMissionSelectedLayer: boolean
@@ -83,13 +82,15 @@ type GlobalStateType = {
 
   isLayersSidebarVisible: boolean
 
-  isMapToolVisible: MapToolType | undefined
+  isMapToolVisible?: MapToolType
 
   healthcheckTextWarning?: string
 
   overlayCoordinates: GlobalOverlayCoordinates
 
-  toast: Toast | undefined
+  toast?: Toast
+
+  openedOverlay?: string
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -107,7 +108,6 @@ const initialState: GlobalStateType = {
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: false,
   displayMissionsLayer: true,
-  displayMissionsOverlay: true,
   displayMissionEditingLayer: true,
   displayMissionSelectedLayer: true,
   displayMissionToAttachLayer: true,
@@ -146,7 +146,9 @@ const initialState: GlobalStateType = {
 
   overlayCoordinates: {},
 
-  toast: undefined
+  toast: undefined,
+
+  openedOverlay: undefined
 }
 /* eslint-enable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 
@@ -154,6 +156,10 @@ const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
+    closeOpenedOverlay(state) {
+      state.openedOverlay = 'NO OVERLAY OPENED'
+    },
+
     // TODO Rename to `hideAllDialogs`.
     hideSideButtons(state) {
       state.isAccountDialogVisible = false
@@ -212,6 +218,10 @@ const globalSlice = createSlice({
     setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
       state.isMapToolVisible = action.payload
     },
+    setOpenedOverlay(state, action: PayloadAction<string>) {
+      const featureId = action.payload
+      state.openedOverlay = featureId
+    },
     setOverlayCoordinatesByName(state, action: PayloadAction<OverlayCoordinates>) {
       const overlayNameToUpdate = action.payload.name
       if (!overlayNameToUpdate) {
@@ -237,6 +247,7 @@ const globalSlice = createSlice({
 })
 
 export const {
+  closeOpenedOverlay,
   hideSideButtons,
   removeAllOverlayCoordinates,
   removeOverlayCoordinatesByName,
@@ -245,6 +256,7 @@ export const {
   setDisplayedItems,
   setHealthcheckTextWarning,
   setIsMapToolVisible,
+  setOpenedOverlay,
   setOverlayCoordinatesByName,
   setReportingFormVisibility,
   setToast
@@ -252,3 +264,8 @@ export const {
 
 export const globalActions = globalSlice.actions
 export const globalReducer = globalSlice.reducer
+
+export const isOverlayOpened = createSelector(
+  [(state: GlobalStateType) => state.openedOverlay, (_, featureId: string) => featureId],
+  (lastSelectedOverlayId, featureId) => lastSelectedOverlayId === featureId || !lastSelectedOverlayId
+)

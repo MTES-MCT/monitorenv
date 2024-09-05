@@ -17,7 +17,7 @@ const OPTIONS = {
   }
 }
 
-export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function MissionToAttachOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const displayMissionToAttachLayer = useAppSelector(state => state.global.displayMissionToAttachLayer)
   const feature = convertToFeature(currentFeatureOver)
   const currentfeatureId = feature?.getId()
@@ -29,6 +29,7 @@ export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChil
       appClassName="overlay-mission-to-attach-hover"
       feature={displayMissionToAttachLayer && displayHoveredFeature ? feature : undefined}
       map={map}
+      mapClickEvent={mapClickEvent}
       options={OPTIONS}
       zIndex={6000}
     >

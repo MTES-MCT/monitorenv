@@ -1,3 +1,4 @@
+import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import { useMemo } from 'react'
 
@@ -10,7 +11,7 @@ import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPosition
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
-export function StationOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedBaseFeatureId = useAppSelector(state => state.station.selectedFeatureId)
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const selectedFeature = useMemo(
@@ -21,6 +22,8 @@ export function StationOverlay({ currentFeatureOver, map }: BaseMapChildrenProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedBaseFeatureId]
   )
+  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(selectedFeature?.getId())))
+
   const hoveredFeatureId = hoveredFeature?.getId()?.toString()
   const canDisplayHoveredFeature =
     !!hoveredFeatureId?.startsWith(Layers.STATIONS.code) && hoveredFeatureId !== selectedBaseFeatureId
@@ -28,24 +31,24 @@ export function StationOverlay({ currentFeatureOver, map }: BaseMapChildrenProps
   return (
     <>
       <OverlayPositionOnCentroid
-        appClassName="overlay-station-hover"
-        feature={canDisplayHoveredFeature ? hoveredFeature : undefined}
-        map={map}
-        options={{ margins: OVERLAY_MARGINS }}
-        zIndex={4000}
-      >
-        {canDisplayHoveredFeature && hoveredFeature && <StationCard feature={hoveredFeature} />}
-      </OverlayPositionOnCentroid>
-
-      <OverlayPositionOnCentroid
         appClassName="overlay-station-selected"
-        feature={selectedFeature}
-        featureIsShowed
+        feature={isLastSelected ? selectedFeature : undefined}
         map={map}
+        mapClickEvent={mapClickEvent}
         options={{ margins: OVERLAY_MARGINS }}
         zIndex={4000}
       >
         {selectedFeature && <StationCard feature={selectedFeature} selected />}
+      </OverlayPositionOnCentroid>
+      <OverlayPositionOnCentroid
+        appClassName="overlay-station-hover"
+        feature={canDisplayHoveredFeature ? hoveredFeature : undefined}
+        map={map}
+        mapClickEvent={mapClickEvent}
+        options={{ margins: OVERLAY_MARGINS }}
+        zIndex={4000}
+      >
+        {canDisplayHoveredFeature && hoveredFeature && <StationCard feature={hoveredFeature} />}
       </OverlayPositionOnCentroid>
     </>
   )

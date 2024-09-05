@@ -5,6 +5,7 @@ import { getMissionCompletionStatus } from '@features/missions/utils'
 import { Accent, Button, Icon, IconButton, Size, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -58,6 +59,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
 
   const handleEditMission = useCallback(() => {
     dispatch(editMissionInLocalStore(missionId, 'map'))
+    dispatch(closeAllOverlays())
   }, [dispatch, missionId])
 
   const handleCloseOverlay = useCallback(() => {
@@ -161,7 +163,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
           onClick={handleEditMission}
           size={Size.SMALL}
         >
-          Editer la mission
+          Éditer la mission
         </EditButton>
       )}
     </Wrapper>

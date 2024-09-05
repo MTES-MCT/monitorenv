@@ -1,6 +1,7 @@
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
+import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
@@ -19,7 +20,7 @@ const OPTIONS = {
     yTop: -55
   }
 }
-export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
   const displayReportingsOverlay = useAppSelector(state => state.global.displayReportingsOverlay)
@@ -35,6 +36,8 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     )
     ?.getSource()
     ?.getFeatureById(`${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`)
+
+  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(feature?.getId())))
 
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
@@ -59,9 +62,9 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-selected"
-        feature={displayReportingsOverlay ? feature : undefined}
-        featureIsShowed
+        feature={displayReportingsOverlay && isLastSelected ? feature : undefined}
         map={map}
+        mapClickEvent={mapClickEvent}
         options={selectedOptions}
         zIndex={5000}
       >
@@ -71,6 +74,7 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         appClassName="overlay-reporting-hover"
         feature={displayReportingsOverlay && displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
+        mapClickEvent={mapClickEvent}
         options={hoveredOptions}
         zIndex={5000}
       >

@@ -7,6 +7,7 @@ import {
   startDrawingInterestPoint
 } from '@features/InterestPoint/slice'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
@@ -58,6 +59,7 @@ export function InterestPointMapButton() {
       )
       dispatch(reduceReportingFormOnMap())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
+      dispatch(closeAllOverlays())
     } else {
       close()
     }

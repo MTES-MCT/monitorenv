@@ -62,7 +62,7 @@ export function SearchSemaphores() {
     }
   }
 
-  const selectRegiteredSemaphore = selectedRegisteredSemaphore => {
+  const selectRegisteredSemaphore = selectedRegisteredSemaphore => {
     dispatch(setSelectedSemaphore(selectedRegisteredSemaphore.id))
     zoomOnSemaphore(selectedRegisteredSemaphore.geom)
   }
@@ -110,7 +110,7 @@ export function SearchSemaphores() {
         <StyledRegisteredSemaphoreList>
           <StyledHistoricTitle>Historique de recherche</StyledHistoricTitle>
           {semaphoresResearchHistory.map(semaphore => (
-            <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegiteredSemaphore(semaphore)}>
+            <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegisteredSemaphore(semaphore)}>
               {semaphore.unit ?? semaphore.name}
             </StyledRegisteredSemaphore>
           ))}

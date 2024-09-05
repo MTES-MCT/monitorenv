@@ -17,7 +17,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
     layerOverlayItems: state.layersMetadata.layerOverlayItems
   }))
 
-  const hasMapListerner = useHasMapInteraction()
+  const hasMapListener = useHasMapInteraction()
   const isDrawingVigilanceArea = useAppSelector(
     state => state.vigilanceArea.formTypeOpen === VigilanceAreaFormTypeOpen.DRAW
   )
@@ -27,7 +27,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
 
   const isHoveredOverlayVisible =
     !layerOverlayIsOpen &&
-    !hasMapListerner &&
+    !hasMapListener &&
     hoveredItems &&
     hoveredItems.length > 0 &&
     pixel &&

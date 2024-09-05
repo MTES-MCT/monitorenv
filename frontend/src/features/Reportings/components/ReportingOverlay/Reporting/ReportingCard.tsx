@@ -14,6 +14,7 @@ import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'
 import { ReportingContext, removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
 import { reportingActions } from 'domain/shared_slices/reporting'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { editReportingInLocalStore } from 'domain/use_cases/reporting/editReportingInLocalStore'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
@@ -135,6 +136,7 @@ export function ReportingCard({
 
   const editReporting = () => {
     dispatch(editReportingInLocalStore(id, ReportingContext.MAP))
+    dispatch(closeAllOverlays())
   }
 
   const closeReportingCard = useCallback(() => {
@@ -202,7 +204,7 @@ export function ReportingCard({
       />
       {!isOnlyHoverable && (
         <StyledButton data-cy="map-edit-reporting" Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
-          Editer le signalement
+          Éditer le signalement
         </StyledButton>
       )}
     </Wrapper>

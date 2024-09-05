@@ -1,10 +1,11 @@
 import { Accent, type ControlUnit, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { property, uniqBy } from 'lodash/fp'
 import { createEmpty, extend } from 'ol/extent'
 import { fromLonLat } from 'ol/proj'
 import styled from 'styled-components'
 
-import { displayControlUnitResourcesFromControlUnit, displayBaseNamesFromControlUnit, addBufferToExtent } from './utils'
+import { addBufferToExtent, displayBaseNamesFromControlUnit, displayControlUnitResourcesFromControlUnit } from './utils'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { globalActions } from '../../../../domain/shared_slices/Global'
 import { mapActions } from '../../../../domain/shared_slices/Map'
@@ -70,6 +71,7 @@ export function Item({ controlUnit }: ItemProps) {
       })
     )
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
+    dispatch(closeAllOverlays())
   }
 
   return (
