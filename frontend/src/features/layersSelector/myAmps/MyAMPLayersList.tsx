@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { MyAMPLayerGroup } from './MyAMPLayerGroup'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
@@ -13,12 +13,15 @@ export function AMPLayersList() {
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const myAmpsIsOpen = useAppSelector(state => state.layerSidebar.myAmpsIsOpen)
 
+  const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)
+
   const { currentData: amps, isLoading } = useGetAMPsQuery()
   const selectedAmps = useMemo(
     () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((layer): layer is AMP => !!layer),
     [amps, selectedAmpLayerIds]
   )
   const layersByLayersName = useMemo(() => _.groupBy(selectedAmps, r => r?.name), [selectedAmps])
+  const layersLength = Object.keys(layersByLayersName).length
 
   if (_.isEmpty(selectedAmpLayerIds)) {
     return (
@@ -38,7 +41,7 @@ export function AMPLayersList() {
 
   return (
     <LayerSelector.LayerList
-      $baseLayersLength={Object.keys(layersByLayersName).length}
+      $baseLayersLength={layersLength + totalNumberOfZones}
       $showBaseLayers={myAmpsIsOpen}
       data-cy="my-amp-zones-list"
     >
@@ -50,6 +53,7 @@ export function AMPLayersList() {
                 key={layerName}
                 groupName={layerName}
                 layers={layers}
+                setTotalNumberOfZones={setTotalNumberOfZones}
                 showedAmpLayerIds={showedAmpLayerIds}
               />
             )

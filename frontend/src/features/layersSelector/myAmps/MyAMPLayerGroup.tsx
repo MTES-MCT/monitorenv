@@ -16,10 +16,12 @@ import type { AMP } from '../../../domain/entities/AMPs'
 export function MyAMPLayerGroup({
   groupName,
   layers,
+  setTotalNumberOfZones,
   showedAmpLayerIds
 }: {
   groupName: string
   layers: AMP[]
+  setTotalNumberOfZones: (totalNumberOfZones: number) => void
   showedAmpLayerIds: number[]
 }) {
   const dispatch = useAppDispatch()
@@ -38,6 +40,8 @@ export function MyAMPLayerGroup({
     if (zonesAreOpen) {
       fitToGroupExtent()
     }
+
+    setTotalNumberOfZones(zonesAreOpen ? 0 : totalNumberOfZones)
   }
 
   const handleRemoveZone = e => {
