@@ -70,7 +70,7 @@ export function OverlayPositionOnCoordinates({
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
 
-          dispatch(setOverlayCoordinatesByName({ coordinates: nextCoordinates, name: Layers.LAYER_LIST_ICON.code }))
+          dispatch(setOverlayCoordinatesByName({ coordinates: nextCoordinates, name: Layers.AERA_ICON.code }))
 
           isThrottled.current = false
         }

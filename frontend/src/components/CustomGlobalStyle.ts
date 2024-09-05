@@ -21,12 +21,11 @@ html,
 html {
   overflow-y: hidden;
   overflow-x: hidden;
-
 }
 
 * {
     box-sizing: border-box;
-    
+    scroll-behavior: smooth;
     scrollbar-width: thin; /* Firefox */
     &::-webkit-scrollbar {
       width: 8px;

@@ -20,6 +20,7 @@ type Layer = {
 export enum MonitorEnvLayers {
   ACTIONS = 'ACTIONS',
   AEM = 'AEM',
+  AERA_ICON = 'AERA_ICON',
   AMP = 'AMP',
   AMP_LINKED_TO_VIGILANCE_AREA = 'AMP_LINKED_TO_VIGILANCE_AREA',
   AMP_PREVIEW = 'AMP_PREVIEW',
@@ -33,7 +34,6 @@ export enum MonitorEnvLayers {
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
-  LAYER_LIST_ICON = 'LAYER_LIST_ICON',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
   MARPOL = 'MARPOL',
   MEASUREMENT = 'MEASUREMENT',
@@ -274,8 +274,8 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
     zIndex: 1400
   },
-  [MonitorEnvLayers.LAYER_LIST_ICON]: {
-    code: MonitorEnvLayers.LAYER_LIST_ICON
+  [MonitorEnvLayers.AERA_ICON]: {
+    code: MonitorEnvLayers.AERA_ICON
   }
 }
 

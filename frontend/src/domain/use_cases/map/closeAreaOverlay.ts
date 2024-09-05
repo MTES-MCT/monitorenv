@@ -7,6 +7,6 @@ import type { HomeAppThunk } from '@store/index'
 
 export const closeAreaOverlay = (): HomeAppThunk => dispatch => {
   dispatch(closeLayerOverlay())
-  dispatch(removeOverlayCoordinatesByName(Layers.LAYER_LIST_ICON.code))
+  dispatch(removeOverlayCoordinatesByName(Layers.AERA_ICON.code))
   dispatch(mapActions.setIsAreaSelected(false))
 }

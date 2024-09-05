@@ -48,7 +48,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (!isAreaSelected) {
-      const feature = vectorSource.current?.getFeatureById(`${Layers.LAYER_LIST_ICON}:${FEATURE_ID}`)
+      const feature = vectorSource.current?.getFeatureById(`${Layers.AERA_ICON}:${FEATURE_ID}`)
 
       if (feature) {
         vectorSource.current?.removeFeature(feature)
@@ -60,7 +60,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
     const iconFeature = new Feature({
       geometry: new Point(mapClickEvent.coordinates ?? [0, 0])
     })
-    iconFeature.setId(`${Layers.LAYER_LIST_ICON}:${FEATURE_ID}`)
+    iconFeature.setId(`${Layers.AERA_ICON}:${FEATURE_ID}`)
 
     vectorSource.current?.addFeature(iconFeature)
 
@@ -69,9 +69,9 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [isAreaSelected])
 
   useEffect(() => {
-    const feature = vectorSource.current?.getFeatureById(`${Layers.LAYER_LIST_ICON}:${FEATURE_ID}`)
+    const feature = vectorSource.current?.getFeatureById(`${Layers.AERA_ICON}:${FEATURE_ID}`)
     feature?.setProperties({
-      overlayCoordinates: overlayCoordinates[Layers.LAYER_LIST_ICON.code]
+      overlayCoordinates: overlayCoordinates[Layers.AERA_ICON.code]
     })
   }, [overlayCoordinates])
 
