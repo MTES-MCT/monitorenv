@@ -37,14 +37,14 @@ export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: Base
     ?.getSource()
     ?.getFeatureById(`${Layers.MISSIONS.code}:${selectedMissionId}`)
 
-  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(feature?.getId())))
+  const canOverlayBeOpened = useAppSelector(state => isOverlayOpened(state.global, String(feature?.getId())))
 
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.MISSIONS.code) &&
-    currentfeatureId !== `${Layers.HOVERED_MISSION.code}:${selectedMissionId}`
+    currentfeatureId !== `${Layers.MISSIONS.code}:${selectedMissionId}`
 
   const updateHoveredMargins = (cardHeight: number) => {
     if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
@@ -62,11 +62,11 @@ export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: Base
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-mission-selected"
-        feature={isLastSelected ? feature : undefined}
+        feature={canOverlayBeOpened ? feature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         options={selectedOptions}
-        zIndex={6500}
+        zIndex={10000000}
       >
         <MissionCard feature={feature} selected updateMargins={updateSelectedMargins} />
       </OverlayPositionOnCentroid>

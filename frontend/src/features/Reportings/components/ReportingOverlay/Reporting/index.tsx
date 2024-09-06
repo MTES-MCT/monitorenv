@@ -37,7 +37,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
     ?.getSource()
     ?.getFeatureById(`${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`)
 
-  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(feature?.getId())))
+  const canOverlayBeOpened = useAppSelector(state => isOverlayOpened(state.global, String(feature?.getId())))
 
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
@@ -62,7 +62,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-selected"
-        feature={displayReportingsOverlay && isLastSelected ? feature : undefined}
+        feature={displayReportingsOverlay && canOverlayBeOpened ? feature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         options={selectedOptions}

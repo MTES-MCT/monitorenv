@@ -68,7 +68,6 @@ type GlobalStateType = {
 
   isSearchSemaphoreVisible: boolean
   displaySemaphoresLayer: boolean
-  displaySemaphoreOverlay: boolean
 
   isSearchReportingsVisible: boolean
   reportingFormVisibility: ReportingFormVisibilityProps
@@ -90,7 +89,7 @@ type GlobalStateType = {
 
   toast?: Toast
 
-  openedOverlay?: string
+  openedOverlayId?: string
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -126,7 +125,6 @@ const initialState: GlobalStateType = {
 
   isSearchSemaphoreVisible: false,
   displaySemaphoresLayer: true,
-  displaySemaphoreOverlay: true,
 
   isSearchReportingsVisible: false,
   reportingFormVisibility: {
@@ -148,7 +146,7 @@ const initialState: GlobalStateType = {
 
   toast: undefined,
 
-  openedOverlay: undefined
+  openedOverlayId: undefined
 }
 /* eslint-enable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 
@@ -157,7 +155,7 @@ const globalSlice = createSlice({
   name: 'global',
   reducers: {
     closeOpenedOverlay(state) {
-      state.openedOverlay = 'NO OVERLAY OPENED'
+      state.openedOverlayId = 'NONE'
     },
 
     // TODO Rename to `hideAllDialogs`.
@@ -220,7 +218,7 @@ const globalSlice = createSlice({
     },
     setOpenedOverlay(state, action: PayloadAction<string>) {
       const featureId = action.payload
-      state.openedOverlay = featureId
+      state.openedOverlayId = featureId
     },
     setOverlayCoordinatesByName(state, action: PayloadAction<OverlayCoordinates>) {
       const overlayNameToUpdate = action.payload.name
@@ -266,6 +264,6 @@ export const globalActions = globalSlice.actions
 export const globalReducer = globalSlice.reducer
 
 export const isOverlayOpened = createSelector(
-  [(state: GlobalStateType) => state.openedOverlay, (_, featureId: string) => featureId],
+  [(state: GlobalStateType) => state.openedOverlayId, (_, featureId: string) => featureId],
   (lastSelectedOverlayId, featureId) => lastSelectedOverlayId === featureId || !lastSelectedOverlayId
 )

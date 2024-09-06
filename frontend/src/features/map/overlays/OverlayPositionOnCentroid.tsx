@@ -1,11 +1,12 @@
 import { convertToFeature, type MapClickEvent } from 'domain/types/map'
+import { setOpenedOverlay } from 'domain/use_cases/map/setOpenedOverlay'
 import { getCenter, type Extent } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
-import { setOpenedOverlay, setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
+import { setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
