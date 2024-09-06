@@ -74,7 +74,12 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
     >
       <StyledMapMenuDialogBody>
         {controlUnits.map(controlUnit => (
-          <Item key={controlUnit.id} controlUnit={controlUnit} stationId={featureProperties.station.id} />
+          <Item
+            key={controlUnit.id}
+            controlUnit={controlUnit}
+            onClose={close}
+            stationId={featureProperties.station.id}
+          />
         ))}
       </StyledMapMenuDialogBody>
     </OverlayCard>

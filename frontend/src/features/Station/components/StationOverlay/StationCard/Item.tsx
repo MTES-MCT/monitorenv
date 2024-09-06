@@ -9,9 +9,10 @@ import { displayControlUnitResourcesFromControlUnit } from './utils'
 
 type ItemProps = {
   controlUnit: ControlUnit.ControlUnit
+  onClose: () => void
   stationId: number
 }
-export function Item({ controlUnit, stationId }: ItemProps) {
+export function Item({ controlUnit, onClose, stationId }: ItemProps) {
   const dispatch = useAppDispatch()
 
   const edit = () => {
@@ -23,6 +24,7 @@ export function Item({ controlUnit, stationId }: ItemProps) {
       })
     )
     dispatch(closeAllOverlays())
+    onClose()
   }
 
   return (

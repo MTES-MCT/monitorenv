@@ -66,7 +66,7 @@ export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: Base
         map={map}
         mapClickEvent={mapClickEvent}
         options={selectedOptions}
-        zIndex={10000000}
+        zIndex={6500}
       >
         <MissionCard feature={feature} selected updateMargins={updateSelectedMargins} />
       </OverlayPositionOnCentroid>
