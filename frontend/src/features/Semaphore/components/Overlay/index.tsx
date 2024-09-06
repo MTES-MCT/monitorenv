@@ -31,7 +31,6 @@ type SemaphoreOverlayProps = BaseMapChildrenProps & {
 
 export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map, mapClickEvent }: SemaphoreOverlayProps) {
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
-  const displaySemaphoreOverlay = useAppSelector(state => state.global.displaySemaphoreOverlay)
 
   const selectedFeature = map
     ?.getLayers()
@@ -43,7 +42,7 @@ export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map, mapClic
     ?.getSource()
     ?.getFeatureById(`${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`)
 
-  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(selectedFeature?.getId())))
+  const canOverlayBeOpened = useAppSelector(state => isOverlayOpened(state.global, String(selectedFeature?.getId())))
 
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
@@ -56,7 +55,7 @@ export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map, mapClic
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-selected"
-        feature={displaySemaphoreOverlay && isLastSelected ? selectedFeature : undefined}
+        feature={canOverlayBeOpened ? selectedFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
@@ -66,7 +65,7 @@ export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map, mapClic
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-hover"
-        feature={displaySemaphoreOverlay && displayHoveredFeature ? hoveredFeature : undefined}
+        feature={displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}

@@ -22,7 +22,7 @@ export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseM
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedBaseFeatureId]
   )
-  const isLastSelected = useAppSelector(state => isOverlayOpened(state.global, String(selectedFeature?.getId())))
+  const canOverlayBeOpened = useAppSelector(state => isOverlayOpened(state.global, String(selectedFeature?.getId())))
 
   const hoveredFeatureId = hoveredFeature?.getId()?.toString()
   const canDisplayHoveredFeature =
@@ -32,7 +32,7 @@ export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseM
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-station-selected"
-        feature={isLastSelected ? selectedFeature : undefined}
+        feature={canOverlayBeOpened ? selectedFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         options={{ margins: OVERLAY_MARGINS }}
