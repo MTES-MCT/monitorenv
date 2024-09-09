@@ -1,17 +1,15 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { ReportingSourceEnum } from 'domain/entities/reporting'
+import { removeOverlayStroke, ReportingContext } from 'domain/shared_slices/Global'
+import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
+import { addReporting } from 'domain/use_cases/reporting/addReporting'
 import { useCallback, useState } from 'react'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
-
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
-import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
-import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
-import { addReporting } from '../../../../domain/use_cases/reporting/addReporting'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { OverlayTriggerType } from 'rsuite/esm/internals/Overlay/OverlayTrigger'
 
@@ -66,7 +64,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
 
   const handleCloseOverlay = useCallback(() => {
     dispatch(resetSelectedSemaphore())
-    dispatch(removeOverlayCoordinatesByName(Layers.SEMAPHORES.code))
+    dispatch(removeOverlayStroke())
   }, [dispatch])
 
   // TODO refacto to clean state when one tooltip was click and the other is hover

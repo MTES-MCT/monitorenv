@@ -1,19 +1,17 @@
 import { Bold } from '@components/style'
 import { CompletionStatusTag } from '@features/missions/components/CompletionStatusTag'
 import { MissionStatusTag } from '@features/missions/components/MissionStatusTag'
+import { missionActions } from '@features/missions/slice'
 import { getMissionCompletionStatus } from '@features/missions/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, IconButton, Size, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
-import { Layers } from 'domain/entities/layers/constants'
-import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { humanizeMissionTypes } from '@utils/humanizeMissionTypes'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
+import { editMissionInLocalStore } from 'domain/use_cases/missions/editMissionInLocalStore'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
-
-import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
-import { missionActions } from '../../../missions/slice'
 
 type MissionCardProps = {
   feature: any
@@ -64,7 +62,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
 
   const handleCloseOverlay = useCallback(() => {
     dispatch(missionActions.resetSelectedMissionIdOnMap())
-    dispatch(removeOverlayCoordinatesByName(Layers.MISSIONS.code))
+    dispatch(removeOverlayStroke())
   }, [dispatch])
 
   useEffect(() => {

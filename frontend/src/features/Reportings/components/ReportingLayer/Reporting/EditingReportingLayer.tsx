@@ -1,16 +1,16 @@
 import { hasAlreadyFeature } from '@features/map/layers/utils'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { Layers } from 'domain/entities/layers/constants'
+import { getOverlayCoordinates, VisibilityState } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 
 import { getEditingReportingZoneFeature } from './reportingsGeometryHelpers'
 import { editingReportingStyleFn } from './style'
-import { Layers } from '../../../../../domain/entities/layers/constants'
-import { VisibilityState } from '../../../../../domain/shared_slices/Global'
-import { useAppSelector } from '../../../../../hooks/useAppSelector'
 
-import type { VectorLayerWithName } from '../../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 
 export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
@@ -22,7 +22,6 @@ export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildr
   const editingReporting = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
   )
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const listener = useAppSelector(state => state.draw.listener)
   const isReportingAttachmentInProgress = useAppSelector(
@@ -71,15 +70,14 @@ export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildr
   ) as MutableRefObject<VectorLayerWithName>
   ;(editingReportingVectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_SELECTED.code
 
-  useEffect(() => {
-    const feature = editingReportingVectorSourceRef.current.getFeatureById(
-      `${Layers.REPORTING_SELECTED.code}:${activeReportingId}`
-    )
+  const feature = editingReportingVectorSourceRef.current.getFeatureById(
+    `${Layers.REPORTING_SELECTED.code}:${activeReportingId}`
+  )
+  const overlayCoordinates = useAppSelector(state => getOverlayCoordinates(state.global, String(feature?.getId())))
 
-    feature?.setProperties({
-      overlayCoordinates: overlayCoordinates[Layers.REPORTINGS.code]
-    })
-  }, [overlayCoordinates, activeReportingId])
+  useEffect(() => {
+    feature?.setProperties({ overlayCoordinates })
+  }, [overlayCoordinates, activeReportingId, feature])
 
   useEffect(() => {
     map.getLayers().push(editingReportingVectorLayerRef.current)

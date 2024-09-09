@@ -1,3 +1,4 @@
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
@@ -18,7 +19,7 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const displayMissionSelectedLayer = useAppSelector(state => state.global.displayMissionSelectedLayer)
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
+
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedMission: data?.find(op => op.id === selectedMissionIdOnMap)
@@ -71,13 +72,15 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
 
   ;(selectedMissionActionsVectorLayerRef.current as VectorLayerWithName).name = Layers.ACTIONS.code
 
+  const overlayCoordinates = useAppSelector(state =>
+    getOverlayCoordinates(state.global, `${Layers.MISSIONS.code}:${selectedMissionIdOnMap}`)
+  )
+
   useEffect(() => {
     const feature = selectedMissionVectorSourceRef.current.getFeatureById(
       `${Layers.MISSION_SELECTED.code}:${selectedMissionIdOnMap}`
     )
-    feature?.setProperties({
-      overlayCoordinates: overlayCoordinates[Layers.MISSIONS.code]
-    })
+    feature?.setProperties({ overlayCoordinates })
   }, [overlayCoordinates, selectedMissionIdOnMap])
 
   useEffect(() => {

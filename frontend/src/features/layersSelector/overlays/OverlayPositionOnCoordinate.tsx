@@ -1,7 +1,7 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '@hooks/useMoveOverlayWhenDragging'
 import { Layers } from 'domain/entities/layers/constants'
-import { setOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { setOverlayCoordinates } from 'domain/shared_slices/Global'
 import Overlay from 'ol/Overlay'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -70,7 +70,8 @@ export function OverlayPositionOnCoordinates({
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
 
-          dispatch(setOverlayCoordinatesByName({ coordinates: nextCoordinates, name: Layers.AERA_ICON.code }))
+          const FEATURE_ID = 'AreaIconFeature'
+          dispatch(setOverlayCoordinates({ coordinates: nextCoordinates, name: `${Layers.AERA_ICON}:${FEATURE_ID}` }))
 
           isThrottled.current = false
         }

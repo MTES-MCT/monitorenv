@@ -1,5 +1,12 @@
+import { useGetSemaphoresQuery } from '@api/semaphoresAPI'
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
+import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
+import { Layers } from 'domain/entities/layers/constants'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
+import { setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -7,13 +14,6 @@ import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getSemaphoreStyle } from './style'
 import { getSemaphoresPoint } from './utils'
-import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
-import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -81,7 +81,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.SEMAPHORES.code)) {
         const { id } = feature.getProperties()
         dispatch(setSelectedSemaphore(id))
-        dispatch(removeOverlayCoordinatesByName(Layers.SEMAPHORES.code))
+        dispatch(removeOverlayStroke())
       }
     }
   }, [dispatch, mapClickEvent])

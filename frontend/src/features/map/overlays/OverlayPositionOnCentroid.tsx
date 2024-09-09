@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
-import { setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
+import { setOverlayCoordinates } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
@@ -126,15 +126,12 @@ export function OverlayPositionOnCentroid({
           const nextYPixelCenter = pixel[1] + offset[1] + overlayTopLeftMargin[0]
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
-          const featureContext = String(feature?.getId())?.split(':')[0]
-          if (featureContext) {
-            dispatch(setOverlayCoordinatesByName({ coordinates: nextCoordinates, name: featureContext }))
-          }
+          dispatch(setOverlayCoordinates({ coordinates: nextCoordinates, name: String(feature?.getId()) }))
           isThrottled.current = false
         }
       }, delay)
     },
-    [dispatch, map, overlayTopLeftMargin, feature]
+    [dispatch, feature, map, overlayTopLeftMargin]
   )
 
   useEffect(() => {

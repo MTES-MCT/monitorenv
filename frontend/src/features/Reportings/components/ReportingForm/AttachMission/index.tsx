@@ -3,8 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
-import { Layers } from 'domain/entities/layers/constants'
-import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -29,7 +28,7 @@ export function AttachMission() {
   const reportingEvent = getReportingEventById(values.id)
 
   const attachMission = () => {
-    dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
+    dispatch(removeOverlayStroke())
     dispatch(attachMissionToReportingSliceActions.setInitialAttachedMission(values.attachedMission))
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.ATTACH_MISSION))
   }

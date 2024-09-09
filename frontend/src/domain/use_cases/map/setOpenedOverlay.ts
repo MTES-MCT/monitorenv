@@ -5,6 +5,6 @@ import type { HomeAppDispatch, HomeAppThunk } from '@store/index'
 export const setOpenedOverlay =
   (featureId: string): HomeAppThunk =>
   async (dispatch: HomeAppDispatch) => {
+    // dispatch(globalActions.removeOverlayStroke())
     dispatch(globalActions.setOpenedOverlay(featureId))
-    dispatch(globalActions.removeAllOverlayCoordinates())
   }

@@ -1,20 +1,20 @@
+import { useGetStationsQuery } from '@api/stationsAPI'
+import { stationActions } from '@features/Station/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
+import { FrontendError } from '@libs/FrontendError'
+import { Layers } from 'domain/entities/layers/constants'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
-import { getStationPointFeature, getFeatureStyle } from './utils'
-import { useGetStationsQuery } from '../../../../api/stationsAPI'
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
-import { FrontendError } from '../../../../libs/FrontendError'
-import { stationActions } from '../../slice'
+import { getFeatureStyle, getStationPointFeature } from './utils'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../map/BaseMap'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 
 export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const vectorSourceRef = useRef(new VectorSource())
@@ -67,7 +67,7 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     dispatch(stationActions.selectFeatureId(featureId))
     dispatch(stationActions.hightlightFeatureIds([featureId]))
-    dispatch(removeOverlayCoordinatesByName(Layers.STATIONS.code))
+    dispatch(removeOverlayStroke())
   }, [dispatch, mapClickEvent])
 
   // ---------------------------------------------------------------------------
@@ -83,11 +83,11 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (typeof featureId !== 'string') {
         throw new FrontendError('`featureId` is undefined.')
       }
-
+      const overlayCoordinate = overlayCoordinates.find(({ name }) => name === selectedFeatureId)
       feature.setProperties({
         isHighlighted: highlightedFeatureIds.includes(featureId),
         isSelected: featureId === selectedFeatureId,
-        overlayCoordinates: featureId === selectedFeatureId ? overlayCoordinates[Layers.STATIONS.code] : undefined
+        overlayCoordinates: featureId === selectedFeatureId ? overlayCoordinate : undefined
       })
     })
   }, [highlightedFeatureIds, overlayCoordinates, selectedFeatureId])

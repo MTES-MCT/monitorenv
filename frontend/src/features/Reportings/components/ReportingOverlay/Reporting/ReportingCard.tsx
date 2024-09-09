@@ -8,11 +8,10 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
-import { Layers } from 'domain/entities/layers/constants'
-import { ReportingTypeEnum, ReportingTypeLabels, ControlStatusEnum } from 'domain/entities/reporting'
+import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'
-import { ReportingContext, removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { ReportingContext, removeOverlayStroke } from 'domain/shared_slices/Global'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { editReportingInLocalStore } from 'domain/use_cases/reporting/editReportingInLocalStore'
@@ -141,7 +140,7 @@ export function ReportingCard({
 
   const closeReportingCard = useCallback(() => {
     dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
-    dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
+    dispatch(removeOverlayStroke())
   }, [dispatch])
 
   useEffect(() => {

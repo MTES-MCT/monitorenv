@@ -1,3 +1,9 @@
+import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { Layers } from 'domain/entities/layers/constants'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
+import { reportingActions } from 'domain/shared_slices/reporting'
 import { convertToFeature } from 'domain/types/map'
 import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
@@ -6,15 +12,9 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
-import { Layers } from '../../../../../domain/entities/layers/constants'
-import { removeOverlayCoordinatesByName } from '../../../../../domain/shared_slices/Global'
-import { reportingActions } from '../../../../../domain/shared_slices/reporting'
-import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { useGetFilteredReportingsQuery } from '../../../hooks/useGetFilteredReportingsQuery'
 
-import type { VectorLayerWithName } from '../../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
@@ -152,7 +152,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     if (feature && feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
       const { id } = feature.getProperties()
       dispatch(reportingActions.setSelectedReportingIdOnMap(id))
-      dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
+      dispatch(removeOverlayStroke())
     }
   }, [dispatch, mapClickEvent])
 
