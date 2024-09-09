@@ -1,5 +1,6 @@
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
@@ -21,7 +22,6 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const isSemaphoreHighlighted = useAppSelector(state => state.semaphoresSlice.isSemaphoreHighlighted)
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
   const hasMapInteraction = useHasMapInteraction()
@@ -47,24 +47,6 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
 
   const reportingsBySemaphoreId = getReportingsBySemaphoreId(reportings)
 
-  const semaphorePoint = useMemo(() => {
-    if (!selectedSemaphoreId || !semaphore) {
-      return undefined
-    }
-    const semaphoreFeature = getSemaphoreZoneFeature(semaphore, Layers.SEMAPHORES.code)
-    const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
-
-    semaphoreFeature.setProperties({
-      isHighlighted: semaphoreFeature.getId() === selectedSemaphore && isSemaphoreHighlighted,
-      isSelected: true,
-      overlayCoordinates:
-        semaphoreFeature.getId() === selectedSemaphore ? overlayCoordinates[Layers.SEMAPHORES.code] : undefined,
-      reportingsAttachedToSemaphore: reportingsBySemaphoreId[selectedSemaphoreId]
-    })
-
-    return semaphoreFeature
-  }, [selectedSemaphoreId, semaphore, isSemaphoreHighlighted, overlayCoordinates, reportingsBySemaphoreId])
-
   const selectedSemaphoreVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
     VectorSource<Feature<Geometry>>
   >
@@ -79,6 +61,34 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorLayerWithName>
   ;(selectedSemaphoreVectorLayerRef.current as VectorLayerWithName).name = Layers.SEMAPHORES.code
+
+  const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
+
+  const feature = selectedSemaphoreVectorSourceRef.current.getFeatureById(selectedSemaphore)
+  const overlayCoordinates = useAppSelector(state => getOverlayCoordinates(state.global, String(feature?.getId())))
+
+  const semaphorePoint = useMemo(() => {
+    if (!selectedSemaphoreId || !semaphore) {
+      return undefined
+    }
+    const semaphoreFeature = getSemaphoreZoneFeature(semaphore, Layers.SEMAPHORES.code)
+
+    semaphoreFeature.setProperties({
+      isHighlighted: semaphoreFeature.getId() === selectedSemaphore && isSemaphoreHighlighted,
+      isSelected: true,
+      overlayCoordinates: semaphoreFeature.getId() === selectedSemaphore ? overlayCoordinates : undefined,
+      reportingsAttachedToSemaphore: reportingsBySemaphoreId[selectedSemaphoreId]
+    })
+
+    return semaphoreFeature
+  }, [
+    selectedSemaphoreId,
+    semaphore,
+    selectedSemaphore,
+    isSemaphoreHighlighted,
+    overlayCoordinates,
+    reportingsBySemaphoreId
+  ])
 
   useEffect(() => {
     if (map) {

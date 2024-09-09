@@ -1,4 +1,4 @@
-import { removeOverlayCoordinatesByName } from 'domain/shared_slices/Global'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -132,7 +132,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
         const { missionId } = feature.getProperties()
         dispatch(missionActions.setSelectedMissionIdOnMap(missionId))
-        dispatch(removeOverlayCoordinatesByName(Layers.MISSIONS.code))
+        dispatch(removeOverlayStroke())
       }
     }
   }, [dispatch, mapClickEvent])

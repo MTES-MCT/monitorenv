@@ -1,22 +1,22 @@
+import { useAppSelector } from '@hooks/useAppSelector'
+import { Layers } from 'domain/entities/layers/constants'
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle } from './missions.style'
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { hasAlreadyFeature } from '../utils'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const editingMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
   )
@@ -67,15 +67,14 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
   ) as MutableRefObject<VectorLayerWithName>
   ;(editingMissionActionsVectorLayerRef.current as VectorLayerWithName).name = Layers.ACTIONS.code
 
-  useEffect(() => {
-    const feature = editingMissionVectorSourceRef.current.getFeatureById(
-      `${Layers.MISSION_SELECTED.code}:${activeMissionId}`
-    )
+  const feature = editingMissionVectorSourceRef.current.getFeatureById(
+    `${Layers.MISSION_SELECTED.code}:${activeMissionId}`
+  )
+  const overlayCoordinates = useAppSelector(state => getOverlayCoordinates(state.global, String(feature?.getId())))
 
-    feature?.setProperties({
-      overlayCoordinates: overlayCoordinates[Layers.MISSIONS.code]
-    })
-  }, [overlayCoordinates, activeMissionId])
+  useEffect(() => {
+    feature?.setProperties({ overlayCoordinates })
+  }, [feature, overlayCoordinates])
 
   useEffect(() => {
     if (map) {

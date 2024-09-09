@@ -8,6 +8,7 @@ import { getIsLinkingZonesToVigilanceArea, vigilanceAreaActions } from '@feature
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { mapActions } from 'domain/shared_slices/Map'
 import { convertToFeature } from 'domain/types/map'
@@ -35,7 +36,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
+
   const isAreaSelected = useAppSelector(state => state.map.isAreaSelected)
 
   const vectorSource = useRef(new VectorSource({}))
@@ -45,11 +46,11 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       style: (feature, resolution) => layerListIconStyle(feature, resolution)
     })
   )
+  const feature = vectorSource.current?.getFeatureById(`${Layers.AERA_ICON}:${FEATURE_ID}`)
+  const overlayCoordinates = useAppSelector(state => getOverlayCoordinates(state.global, String(feature?.getId())))
 
   useEffect(() => {
     if (!isAreaSelected) {
-      const feature = vectorSource.current?.getFeatureById(`${Layers.AERA_ICON}:${FEATURE_ID}`)
-
       if (feature) {
         vectorSource.current?.removeFeature(feature)
       }
@@ -69,11 +70,8 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [isAreaSelected])
 
   useEffect(() => {
-    const feature = vectorSource.current?.getFeatureById(`${Layers.AERA_ICON}:${FEATURE_ID}`)
-    feature?.setProperties({
-      overlayCoordinates: overlayCoordinates[Layers.AERA_ICON.code]
-    })
-  }, [overlayCoordinates])
+    feature?.setProperties({ overlayCoordinates })
+  }, [feature, overlayCoordinates])
 
   useEffect(() => {
     if (map) {
@@ -115,9 +113,9 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
     if (numberOfClickedFeatures === 1) {
       if (clickedAmpFeatures && clickedAmpFeatures.length === 1) {
         dispatch(closeAreaOverlay())
-        const feature = convertToFeature(clickedAmpFeatures[0])
-        if (feature) {
-          const layerId = feature.get('id')
+        const currentFeature = convertToFeature(clickedAmpFeatures[0])
+        if (currentFeature) {
+          const layerId = currentFeature.get('id')
           dispatch(openAMPMetadataPanel(layerId))
           dispatch(layerSidebarActions.toggleAmpResults(true))
 
@@ -131,9 +129,9 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
 
       if (clickedRegulatoryFeatures && clickedRegulatoryFeatures.length === 1) {
         dispatch(closeAreaOverlay())
-        const feature = convertToFeature(clickedRegulatoryFeatures[0])
-        if (feature) {
-          const layerId = feature.get('id')
+        const currentFeature = convertToFeature(clickedRegulatoryFeatures[0])
+        if (currentFeature) {
+          const layerId = currentFeature.get('id')
           dispatch(openRegulatoryMetadataPanel(layerId))
           dispatch(layerSidebarActions.toggleRegulatoryResults(true))
 
@@ -147,14 +145,14 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
 
       if (clickedVigilanceAreaFeatures && clickedVigilanceAreaFeatures.length === 1) {
         dispatch(closeAreaOverlay())
-        const feature = convertToFeature(clickedVigilanceAreaFeatures[0])
-        if (feature) {
-          const layerId = feature.get('id')
+        const currentFeature = convertToFeature(clickedVigilanceAreaFeatures[0])
+        if (currentFeature) {
+          const layerId = currentFeature.get('id')
           dispatch(closeMetadataPanel())
           dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
 
           if (layerId) {
-            dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
+            dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(+layerId))
           }
         }
       }

@@ -1,4 +1,5 @@
 import { hasAlreadyFeature } from '@features/map/layers/utils'
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
@@ -16,7 +17,6 @@ export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChild
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const displayReportingSelectedLayer = useAppSelector(state => state.global.displayReportingSelectedLayer)
-  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedReporting: selectedReportingIdOnMap && data?.entities[selectedReportingIdOnMap]
@@ -48,14 +48,15 @@ export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChild
   ) as MutableRefObject<VectorLayerWithName>
   ;(selectedReportingVectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_SELECTED.code
 
+  const overlayCoordinates = useAppSelector(state =>
+    getOverlayCoordinates(state.global, `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`)
+  )
+
   useEffect(() => {
-    const feature = selectedReportingVectorSourceRef.current.getFeatureById(
+    const selectedfeature = selectedReportingVectorSourceRef.current.getFeatureById(
       `${Layers.REPORTING_SELECTED.code}:${selectedReportingIdOnMap}`
     )
-
-    feature?.setProperties({
-      overlayCoordinates: overlayCoordinates[Layers.REPORTINGS.code]
-    })
+    selectedfeature?.setProperties({ overlayCoordinates })
   }, [overlayCoordinates, selectedReportingIdOnMap])
 
   useEffect(() => {

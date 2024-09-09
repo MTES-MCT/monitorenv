@@ -1,6 +1,6 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { removeAllOverlayCoordinates } from 'domain/shared_slices/Global'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { isEmpty } from 'lodash'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
@@ -14,7 +14,7 @@ export function ZoomListener({ map }: BaseMapChildrenProps) {
 
   const debouncedHandleChangeResolution = useDebouncedCallback(() => {
     if (!isEmpty(overlayCoordinates)) {
-      dispatch(removeAllOverlayCoordinates())
+      dispatch(removeOverlayStroke())
     }
   }, 250)
 

@@ -28,11 +28,8 @@ type Toast = {
 }
 
 type OverlayCoordinates = {
-  coordinates: Extent
+  coordinates?: Extent
   name: string
-}
-type GlobalOverlayCoordinates = {
-  [key: string]: OverlayCoordinates
 }
 
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
@@ -85,7 +82,7 @@ type GlobalStateType = {
 
   healthcheckTextWarning?: string
 
-  overlayCoordinates: GlobalOverlayCoordinates
+  overlayCoordinates: OverlayCoordinates[]
 
   toast?: Toast
 
@@ -142,7 +139,7 @@ const initialState: GlobalStateType = {
 
   healthcheckTextWarning: undefined,
 
-  overlayCoordinates: {},
+  overlayCoordinates: [],
 
   toast: undefined,
 
@@ -169,15 +166,8 @@ const globalSlice = createSlice({
       state.isMapToolVisible = undefined
     },
 
-    removeAllOverlayCoordinates(state) {
-      state.overlayCoordinates = {}
-    },
-
-    removeOverlayCoordinatesByName(state, action: PayloadAction<string>) {
-      const overlayToRemove = action.payload
-      if (state.overlayCoordinates) {
-        delete state.overlayCoordinates[overlayToRemove]
-      }
+    removeOverlayStroke(state) {
+      state.overlayCoordinates = []
     },
 
     removeToast(state) {
@@ -220,17 +210,13 @@ const globalSlice = createSlice({
       const featureId = action.payload
       state.openedOverlayId = featureId
     },
-    setOverlayCoordinatesByName(state, action: PayloadAction<OverlayCoordinates>) {
-      const overlayNameToUpdate = action.payload.name
-      if (!overlayNameToUpdate) {
-        return
-      }
-
-      const overlayCoordinatesToUpdate = state.overlayCoordinates[overlayNameToUpdate]
-      if (overlayCoordinatesToUpdate) {
-        state.overlayCoordinates[overlayNameToUpdate] = action.payload
+    setOverlayCoordinates(state, action: PayloadAction<OverlayCoordinates>) {
+      const { name } = action.payload
+      const index = state.overlayCoordinates.findIndex(overlayCoordinate => overlayCoordinate.name === name)
+      if (index === -1) {
+        state.overlayCoordinates = [...state.overlayCoordinates, action.payload]
       } else {
-        state.overlayCoordinates = { ...state.overlayCoordinates, [overlayNameToUpdate]: action.payload }
+        state.overlayCoordinates[index] = action.payload
       }
     },
 
@@ -247,15 +233,14 @@ const globalSlice = createSlice({
 export const {
   closeOpenedOverlay,
   hideSideButtons,
-  removeAllOverlayCoordinates,
-  removeOverlayCoordinatesByName,
+  removeOverlayStroke,
   removeToast,
   resetLayoutToDefault,
   setDisplayedItems,
   setHealthcheckTextWarning,
   setIsMapToolVisible,
   setOpenedOverlay,
-  setOverlayCoordinatesByName,
+  setOverlayCoordinates,
   setReportingFormVisibility,
   setToast
 } = globalSlice.actions
@@ -266,4 +251,9 @@ export const globalReducer = globalSlice.reducer
 export const isOverlayOpened = createSelector(
   [(state: GlobalStateType) => state.openedOverlayId, (_, featureId: string) => featureId],
   (lastSelectedOverlayId, featureId) => lastSelectedOverlayId === featureId || !lastSelectedOverlayId
+)
+
+export const getOverlayCoordinates = createSelector(
+  [(state: GlobalStateType) => state.overlayCoordinates, (_, featureId: string | undefined) => featureId],
+  (overlayCoordinates, featureId) => overlayCoordinates.find(({ name }) => name === featureId)
 )
