@@ -667,7 +667,6 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // When
         val reportings = jpaReportingRepository.findAllByGeometry(polygon)
 
-
         // Then
         assertThat(reportings).hasSize(1)
         assertThat(reportings[0].id).isEqualTo(3)

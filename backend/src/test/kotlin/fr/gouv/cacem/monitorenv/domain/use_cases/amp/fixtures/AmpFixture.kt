@@ -15,6 +15,5 @@ class AmpFixture {
 
             return AMPEntity(id = id, designation = "designation", name = "amp", geom = polygon)
         }
-
     }
 }
