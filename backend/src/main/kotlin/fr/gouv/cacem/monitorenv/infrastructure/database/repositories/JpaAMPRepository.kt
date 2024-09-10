@@ -18,6 +18,7 @@ class JpaAMPRepository(private val dbAMPRepository: IDBAMPRepository) :
     }
 
     override fun findAllByGeometry(geometry: Geometry): List<AMPEntity> {
-        TODO("Not yet implemented")
+        val amps = dbAMPRepository.findAllByGeom(geometry)
+        return amps.map { it.toAMP() }
     }
 }

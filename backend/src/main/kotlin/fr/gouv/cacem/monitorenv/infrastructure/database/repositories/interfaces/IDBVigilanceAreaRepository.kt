@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -40,4 +42,14 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
         nativeQuery = true,
     )
     fun archiveOutdatedVigilanceAreas(): Int
+
+    @Query(
+        value =
+        """
+            SELECT * FROM vigilance_areas
+            WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
+        """,
+        nativeQuery = true,
+    )
+    fun findAllByGeom(geometry: Geometry): List<VigilanceAreaModel>
 }
