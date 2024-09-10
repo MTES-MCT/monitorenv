@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
@@ -30,6 +31,11 @@ class JpaVigilanceAreaRepository(
         return dbVigilanceAreaRepository.findAll().map { it.toVigilanceAreaEntity() }
     }
 
+    override fun findAllByGeometry(geometry: Geometry): List<VigilanceAreaEntity> {
+        val vigilanceAreas = dbVigilanceAreaRepository.findAllByGeom(geometry)
+        return vigilanceAreas.map { it.toVigilanceAreaEntity() }
+    }
+
     @Transactional
     override fun delete(id: Int) {
         dbVigilanceAreaRepository.delete(id)
@@ -40,7 +46,6 @@ class JpaVigilanceAreaRepository(
         return dbVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
     }
 
-    override fun findAllByGeometry(geometry: Geometry): List<VigilanceAreaEntity> {
-        TODO("Not yet implemented")
-    }
+
+
 }
