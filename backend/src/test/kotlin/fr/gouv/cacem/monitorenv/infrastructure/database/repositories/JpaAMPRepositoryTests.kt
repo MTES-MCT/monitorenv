@@ -33,7 +33,6 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
         // When
         val amps = jpaAMPRepository.findAllByGeometry(polygon)
 
-
         // Then
         assertThat(amps).hasSize(1)
         assertThat(amps[0].id).isEqualTo(12)

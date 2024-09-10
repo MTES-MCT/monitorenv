@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 
 class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
-    @Autowired private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
+    @Autowired
+    private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
 
     @Test
     @Transactional
@@ -90,5 +91,27 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     fun `count should return total number of regulatory areas in db`() {
         val numberOfRegulatoryAreas = jpaRegulatoryAreasRepository.count()
         assertThat(numberOfRegulatoryAreas).isEqualTo(13)
+    }
+
+    @Test
+    fun `findAllByGeometry should return all regulatory areas that intersect the geometry `() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString =
+            "MULTIPOLYGON(((-5.09960369 48.32482523, -4.88569684 48.32505046, -4.93672119 48.47387673, -5.12651574 48.45876889, -5.09960369 48.32482523)), \n" +
+                "((-3.57357208 48.97647554, -3.34729792 49.03663561, -3.31147549 48.82323819, -3.46975201 48.81968417, -3.57357208 48.97647554)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        // When
+        // should intersect vigilance area with id:8
+        val regulatoryAreas = jpaRegulatoryAreasRepository.findAllByGeometry(polygon)
+
+        // Then
+        assertThat(regulatoryAreas).hasSize(4)
+        assertThat(regulatoryAreas[0].id).isEqualTo(425)
+        assertThat(regulatoryAreas[1].id).isEqualTo(134)
+        assertThat(regulatoryAreas[2].id).isEqualTo(300)
+        assertThat(regulatoryAreas[3].id).isEqualTo(625)
     }
 }

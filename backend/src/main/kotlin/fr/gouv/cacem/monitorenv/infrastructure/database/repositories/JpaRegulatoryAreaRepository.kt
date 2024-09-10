@@ -23,6 +23,7 @@ class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBReg
     }
 
     override fun findAllByGeometry(geometry: Geometry): List<RegulatoryAreaEntity> {
-        TODO("Not yet implemented")
+        val regulatoryAreas = dbRegulatoryAreaRepository.findAllByGeom(geometry)
+        return regulatoryAreas.map { it.toRegulatoryArea() }
     }
 }

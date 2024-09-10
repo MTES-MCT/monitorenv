@@ -170,7 +170,6 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         // should intersect vigilance area with id:8
         val vigilanceAreas = jpaVigilanceAreaRepository.findAllByGeometry(polygon)
 
-
         // Then
         assertThat(vigilanceAreas).hasSize(1)
         assertThat(vigilanceAreas[0].id).isEqualTo(8)
