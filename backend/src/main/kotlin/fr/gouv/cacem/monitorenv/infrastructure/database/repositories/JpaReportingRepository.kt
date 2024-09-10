@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.AbstractReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
@@ -171,7 +172,7 @@ class JpaReportingRepository(
             if (reporting.id == null) {
                 reportingModel =
                     dbReportingRepository.save(
-                        ReportingModel.fromReportingEntity(
+                        fromReportingEntity(
                             reporting = reporting,
                             missionReference = missionReference,
                             envActionReference = envActionReference,
@@ -180,7 +181,7 @@ class JpaReportingRepository(
                     )
             } else {
                 reportingModel =
-                    ReportingModel.fromReportingEntity(
+                    fromReportingEntity(
                         reporting = reporting,
                         missionReference = missionReference,
                         envActionReference = envActionReference,
