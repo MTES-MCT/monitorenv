@@ -193,11 +193,8 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-        SELECT id, reporting_id, target_type, vehicle_type, target_details, geom, sea_front, description, report_type,
-        theme, sub_themes, action_taken, is_control_required, has_no_unit_available, created_at, validity_time,
-        is_archived, is_deleted, open_by, mission_id, attached_to_mission_at_utc, detached_from_mission_at_utc,
-        attached_env_action_id, control_plan_theme_id, with_vhf_answer, updated_at_utc, is_infraction_proven FROM reportings
-        WHERE ST_INTERSECTS(reportings.geom, :geometry)
+        SELECT * FROM reportings
+        WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
         """,
         nativeQuery = true,
     )
