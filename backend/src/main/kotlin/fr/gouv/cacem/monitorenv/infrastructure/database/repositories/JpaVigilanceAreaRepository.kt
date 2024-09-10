@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
@@ -45,7 +44,4 @@ class JpaVigilanceAreaRepository(
     override fun archiveOutdatedVigilanceAreas(): Int {
         return dbVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
     }
-
-
-
 }
