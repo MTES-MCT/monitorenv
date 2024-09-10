@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntit
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -37,5 +38,9 @@ class JpaVigilanceAreaRepository(
     @Transactional
     override fun archiveOutdatedVigilanceAreas(): Int {
         return dbVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
+    }
+
+    override fun findAllByGeometry(geometry: Geometry): List<VigilanceAreaEntity> {
+        TODO("Not yet implemented")
     }
 }
