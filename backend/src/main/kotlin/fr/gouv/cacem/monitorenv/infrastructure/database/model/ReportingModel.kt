@@ -32,7 +32,6 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.Formula
 import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
@@ -152,7 +151,7 @@ import java.time.ZoneOffset.UTC
     ],
 )
 @Table(name = "reportings")
-class ReportingModel(
+open class ReportingModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -235,8 +234,6 @@ class ReportingModel(
     @Column(name = "updated_at_utc") @UpdateTimestamp val updatedAtUtc: Instant? = null,
     @Column(name = "with_vhf_answer") val withVHFAnswer: Boolean? = null,
     @Column(name = "is_infraction_proven") val isInfractionProven: Boolean,
-    @Formula("created_at + INTERVAL '1 hour' * validity_time")
-    val validityEndTime: Instant? = null,
 ) {
 
     fun toReporting() =

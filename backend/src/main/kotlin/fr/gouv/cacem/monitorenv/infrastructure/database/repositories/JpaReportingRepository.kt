@@ -19,6 +19,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Geometry
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -223,6 +224,11 @@ class JpaReportingRepository(
         } catch (e: DataIntegrityViolationException) {
             throw NotFoundException("Invalid combination of mission and/or envAction", e)
         }
+    }
+
+    override fun findAllByGeometry(geometry: Geometry): List<ReportingEntity> {
+        val reportings = dbReportingRepository.findAllByGeom(geometry = geometry)
+        return reportings.map { it.toReporting() }
     }
 
     @Transactional

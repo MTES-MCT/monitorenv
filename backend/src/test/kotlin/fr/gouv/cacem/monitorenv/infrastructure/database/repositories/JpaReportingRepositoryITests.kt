@@ -654,4 +654,22 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         )
             .isNull()
     }
+
+    @Test
+    fun `findAllByGeometry should return all reportings that intersect the geometry `() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString =
+            "MULTIPOLYGON(((-5.29467558 48.36564013, -5.17259684 48.36564013, -5.17259684 48.4353756, -5.29467558 48.4353756, -5.29467558 48.36564013),( -3.53420346 48.95745721, -3.39475348 49.03980926, -3.35510462 48.90660067, -3.43958402 48.88563259, -3.53420346 48.95745721)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        // When
+        val reportings = jpaReportingRepository.findAllByGeometry(polygon)
+
+
+        // Then
+        assertThat(reportings).hasSize(1)
+        assertThat(reportings[0].id).isEqualTo(3)
+    }
 }

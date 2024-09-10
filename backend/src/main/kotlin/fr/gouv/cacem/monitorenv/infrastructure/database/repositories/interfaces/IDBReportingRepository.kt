@@ -4,6 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModelJpa
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
@@ -104,7 +106,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         """
         SELECT DISTINCT reporting
-        FROM ReportingModel reporting
+        FROM ReportingModelJpa reporting
         WHERE reporting.isDeleted = false
             AND reporting.createdAt >= CAST(CAST(:startedAfter as text) AS timestamp)
             AND (CAST(CAST(:startedBefore as text) AS timestamp) IS NULL OR reporting.createdAt <= CAST(CAST(:startedBefore as text) AS timestamp))
@@ -160,31 +162,44 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         status: List<String>? = emptyList(),
         targetTypes: List<TargetTypeEnum>? = emptyList(),
         isAttachedToMission: Boolean?,
-    ): List<ReportingModel>
+    ): List<ReportingModelJpa>
 
     @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value =
         """
         SELECT reporting
-        FROM ReportingModel reporting
+        FROM ReportingModelJpa reporting
         INNER JOIN ReportingSourceModel rs ON reporting.id = rs.reporting.id
         WHERE rs.controlUnit.id = :controlUnitId
         """,
     )
     fun findByControlUnitId(
         controlUnitId: Int,
-    ): List<ReportingModel>
+    ): List<ReportingModelJpa>
 
     @Query(
         value =
         """
         SELECT reporting
-        FROM ReportingModel reporting
+        FROM ReportingModelJpa reporting
         WHERE reporting.mission.id = :missionId
         """,
     )
     fun findByMissionId(
         missionId: Int,
-    ): List<ReportingModel>
+    ): List<ReportingModelJpa>
+
+    @Query(
+        value =
+        """
+        SELECT id, reporting_id, target_type, vehicle_type, target_details, geom, sea_front, description, report_type,
+        theme, sub_themes, action_taken, is_control_required, has_no_unit_available, created_at, validity_time,
+        is_archived, is_deleted, open_by, mission_id, attached_to_mission_at_utc, detached_from_mission_at_utc,
+        attached_env_action_id, control_plan_theme_id, with_vhf_answer, updated_at_utc, is_infraction_proven FROM reportings
+        WHERE ST_INTERSECTS(reportings.geom, :geometry)
+        """,
+        nativeQuery = true,
+    )
+    fun findAllByGeom(geometry: Geometry): List<ReportingModel>
 }

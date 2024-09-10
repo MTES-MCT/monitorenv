@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import org.locationtech.jts.geom.Geometry
 import java.time.Instant
 import java.util.UUID
 
@@ -46,4 +47,6 @@ interface IReportingRepository {
     fun findById(reportingId: Int): ReportingDTO
 
     fun save(reporting: ReportingEntity): ReportingDTO
+
+    fun findAllByGeometry(geometry: Geometry): List<ReportingEntity>
 }

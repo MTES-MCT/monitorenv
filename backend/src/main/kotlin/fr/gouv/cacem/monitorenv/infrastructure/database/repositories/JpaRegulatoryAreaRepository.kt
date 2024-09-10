@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
+import org.locationtech.jts.geom.Geometry
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -19,5 +20,9 @@ class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBReg
 
     override fun count(): Long {
         return dbRegulatoryAreaRepository.count()
+    }
+
+    override fun findAllByGeometry(geometry: Geometry): List<RegulatoryAreaEntity> {
+        TODO("Not yet implemented")
     }
 }
