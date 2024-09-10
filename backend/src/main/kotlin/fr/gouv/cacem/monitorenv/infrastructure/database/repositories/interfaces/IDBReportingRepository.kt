@@ -3,8 +3,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModelJpa
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModelJpa
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
@@ -193,7 +193,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
         """
-        SELECT * FROM reportings
+        SELECT r.* FROM reportings r
         WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
         """,
         nativeQuery = true,

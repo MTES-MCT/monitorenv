@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.database.model
+package fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
@@ -11,6 +11,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -91,7 +96,7 @@ abstract class AbstractReportingModel(
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     open val controlPlanTheme: ControlPlanThemeModel? = null,
     @OneToMany(
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "reporting",

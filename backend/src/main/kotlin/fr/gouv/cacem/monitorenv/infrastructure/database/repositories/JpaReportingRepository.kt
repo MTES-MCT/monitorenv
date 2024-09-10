@@ -8,10 +8,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.AbstractReportingModel.Companion.fromReportingEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository

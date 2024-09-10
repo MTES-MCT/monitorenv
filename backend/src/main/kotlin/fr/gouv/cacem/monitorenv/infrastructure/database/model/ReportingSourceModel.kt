@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType

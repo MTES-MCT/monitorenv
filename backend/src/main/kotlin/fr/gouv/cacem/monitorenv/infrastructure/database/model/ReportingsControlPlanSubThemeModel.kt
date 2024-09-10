@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
@@ -44,6 +45,7 @@ class ReportingsControlPlanSubThemeModel(
             controlPlanSubTheme = controlPlanSubTheme,
         )
     }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
@@ -67,7 +69,7 @@ data class ReportingsSubThemePk(
         if (other !is ReportingsSubThemePk) return false
 
         return reportingId == other.reportingId &&
-            subthemeId == other.subthemeId
+                subthemeId == other.subthemeId
     }
 
     override fun hashCode(): Int {

@@ -661,7 +661,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val wktReader = WKTReader()
 
         val multipolygonString =
-            "MULTIPOLYGON(((-5.29467558 48.36564013, -5.17259684 48.36564013, -5.17259684 48.4353756, -5.29467558 48.4353756, -5.29467558 48.36564013),( -3.53420346 48.95745721, -3.39475348 49.03980926, -3.35510462 48.90660067, -3.43958402 48.88563259, -3.53420346 48.95745721)))"
+            "MULTIPOLYGON(((-5.29467558 48.36564013, -5.17259684 48.36564013, -5.17259684 48.4353756, -5.29467558 48.4353756, -5.29467558 48.36564013)),((-3.57357208 48.97647554, -3.34729792 49.03663561, -3.31147549 48.82323819, -3.46975201 48.81968417, -3.57357208 48.97647554)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
@@ -671,5 +671,22 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(reportings).hasSize(1)
         assertThat(reportings[0].id).isEqualTo(3)
+    }
+
+    @Test
+    fun `findAllByGeometry should return an empty list when nothing intersect the geometry `() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString =
+            "MULTIPOLYGON(((-5.29467558 48.36564013, -5.17259684 48.36564013, -5.17259684 48.4353756, -5.29467558 48.4353756, -5.29467558 48.36564013),( -3.53420346 48.95745721, -3.39475348 49.03980926, -3.35510462 48.90660067, -3.43958402 48.88563259, -3.53420346 48.95745721)))"
+
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        // When
+        val reportings = jpaReportingRepository.findAllByGeometry(polygon)
+
+        // Then
+        assertThat(reportings).isEmpty()
     }
 }
