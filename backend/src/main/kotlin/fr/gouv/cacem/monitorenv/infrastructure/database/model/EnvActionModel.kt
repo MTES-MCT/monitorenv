@@ -128,16 +128,16 @@ class EnvActionModel(
                     controlPlanSubThemes
                         ?.filter { subTheme ->
                             it.id.themeId ==
-                                    subTheme.controlPlanSubTheme
-                                        ?.controlPlanTheme
-                                        ?.id
+                                subTheme.controlPlanSubTheme
+                                    ?.controlPlanTheme
+                                    ?.id
                         }
                         ?.map { it.id.subthemeId },
                     tagIds =
                     controlPlanTags
                         ?.filter { tag ->
                             it.id.themeId ==
-                                    tag.controlPlanTag?.controlPlanTheme?.id
+                                tag.controlPlanTag?.controlPlanTheme?.id
                         }
                         ?.map { it.id.tagId },
                 )

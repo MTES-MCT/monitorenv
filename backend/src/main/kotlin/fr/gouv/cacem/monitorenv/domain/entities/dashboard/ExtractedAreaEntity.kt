@@ -11,4 +11,4 @@ class ExtractedAreaEntity(
     val regulatoryAreas: List<RegulatoryAreaEntity>,
     val amps: List<AMPEntity>,
     val vigilanceAreas: List<VigilanceAreaEntity>,
-) {}
+)

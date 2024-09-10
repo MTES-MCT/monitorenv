@@ -136,7 +136,7 @@ class ReportingsITests {
                                 ) as
                                 Point,
 
-                            ),
+                        ),
                         controlUnit = null,
                     ),
                 ),
@@ -268,7 +268,7 @@ class ReportingsITests {
                                 ) as
                                 Point,
 
-                            ),
+                        ),
                         controlUnit = null,
                     ),
                 ),
@@ -568,7 +568,7 @@ class ReportingsITests {
                         ),
                     ),
 
-                    ),
+                ),
             )
 
         // When we send an event from another thread

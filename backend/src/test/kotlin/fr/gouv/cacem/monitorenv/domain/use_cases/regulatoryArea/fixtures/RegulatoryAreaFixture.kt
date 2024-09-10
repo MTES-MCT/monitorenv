@@ -8,6 +8,5 @@ class RegulatoryAreaFixture {
         fun aRegulatoryArea(id: Int = 1): RegulatoryAreaEntity {
             return RegulatoryAreaEntity(id = id)
         }
-
     }
 }

@@ -34,7 +34,6 @@ class ExtractAreaUTest {
             vigilanceAreaRepository,
         )
 
-
     @Test
     fun `execute should return an ExtractedAreaEntity that does not intersect a different area`() {
         // Given

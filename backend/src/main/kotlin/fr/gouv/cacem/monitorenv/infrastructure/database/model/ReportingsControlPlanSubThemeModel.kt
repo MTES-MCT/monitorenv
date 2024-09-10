@@ -69,7 +69,7 @@ data class ReportingsSubThemePk(
         if (other !is ReportingsSubThemePk) return false
 
         return reportingId == other.reportingId &&
-                subthemeId == other.subthemeId
+            subthemeId == other.subthemeId
     }
 
     override fun hashCode(): Int {
