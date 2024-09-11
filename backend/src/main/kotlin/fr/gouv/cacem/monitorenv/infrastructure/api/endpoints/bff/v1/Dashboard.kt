@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/dashboard")
-@Tag(name = "BFF.DepartmentAreas")
+@Tag(name = "BFF.Dashboard")
 class Dashboard(private val extractArea: ExtractArea) {
 
     @GetMapping("/extract")

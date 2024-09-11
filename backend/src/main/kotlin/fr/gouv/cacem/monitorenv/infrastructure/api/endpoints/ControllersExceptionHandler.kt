@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendU
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
+import org.locationtech.jts.io.ParseException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
@@ -60,6 +61,16 @@ class ControllersExceptionHandler {
             code = BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
             data = null,
             message = "Error: Invalid value in field '$field'",
+        )
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ParseException::class)
+    fun handleHttpMessageNotReadable(e: ParseException): BackendRequestErrorDataOutput {
+        return BackendRequestErrorDataOutput(
+            code = BackendRequestErrorCode.WRONG_REQUEST_PARAM_PROPERTY_TYPE,
+            data = null,
+            message = "Error: geometry is not valid",
         )
     }
 
