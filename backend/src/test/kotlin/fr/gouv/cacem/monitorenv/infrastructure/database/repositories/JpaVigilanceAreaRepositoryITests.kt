@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
-    @Autowired private lateinit var jpaVigilanceAreaRepository: JpaVigilanceAreaRepository
+    @Autowired
+    private lateinit var jpaVigilanceAreaRepository: JpaVigilanceAreaRepository
 
     @Test
     @Transactional
@@ -167,7 +168,6 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        // should intersect vigilance area with id:8
         val vigilanceAreas = jpaVigilanceAreaRepository.findAllByGeometry(polygon)
 
         // Then

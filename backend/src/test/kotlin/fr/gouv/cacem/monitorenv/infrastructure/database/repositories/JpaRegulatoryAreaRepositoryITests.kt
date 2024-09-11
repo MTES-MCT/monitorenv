@@ -26,15 +26,15 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findById Should return specific RegulatoryArea`() {
         // Given
-        val WKTreader = WKTReader()
+        val wktReader = WKTReader()
         val multipolygonString =
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-        val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
         val searchedRegulatoryArea =
             RegulatoryAreaModel.fromRegulatoryAreaEntity(
                 RegulatoryAreaEntity(
                     id = 17,
-                    geom = Polygon,
+                    geom = polygon,
                     entity_name = "Zone au sud de la cale",
                     url =
                     "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
@@ -104,7 +104,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        // should intersect vigilance area with id:8
         val regulatoryAreas = jpaRegulatoryAreasRepository.findAllByGeometry(polygon)
 
         // Then
