@@ -227,9 +227,10 @@ class JpaReportingRepository(
         }
     }
 
-    override fun findAllByGeometry(geometry: Geometry): List<ReportingEntity> {
+    @Transactional
+    override fun findAllByGeometry(geometry: Geometry): List<ReportingDTO> {
         val reportings = dbReportingRepository.findAllByGeom(geometry = geometry)
-        return reportings.map { it.toReporting() }
+        return reportings.map { it.toReportingDTO(mapper) }
     }
 
     @Transactional

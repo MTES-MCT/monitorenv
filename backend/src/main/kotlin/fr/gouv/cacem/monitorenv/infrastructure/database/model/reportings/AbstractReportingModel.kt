@@ -96,7 +96,7 @@ abstract class AbstractReportingModel(
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     open val controlPlanTheme: ControlPlanThemeModel? = null,
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "reporting",

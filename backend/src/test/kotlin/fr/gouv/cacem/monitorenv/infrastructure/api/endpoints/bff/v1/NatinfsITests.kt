@@ -1,10 +1,9 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetAllNatinfs
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.Natinfs
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given

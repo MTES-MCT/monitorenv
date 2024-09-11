@@ -1,11 +1,10 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.departmentArea.DepartmentAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeCode
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.DepartmentAreas
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito

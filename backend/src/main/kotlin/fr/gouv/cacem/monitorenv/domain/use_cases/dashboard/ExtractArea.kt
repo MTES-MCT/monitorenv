@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.dashboard
 
+import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
@@ -8,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.locationtech.jts.geom.Geometry
 
+@UseCase
 class ExtractArea(
     private val departmentAreaRepository: IDepartmentAreaRepository,
     private val reportingRepository: IReportingRepository,

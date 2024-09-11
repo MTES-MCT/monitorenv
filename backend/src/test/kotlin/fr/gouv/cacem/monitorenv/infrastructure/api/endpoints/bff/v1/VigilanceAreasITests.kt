@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
@@ -12,7 +12,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceAr
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.VigilanceAreas
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -36,17 +35,23 @@ import java.time.ZonedDateTime
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(VigilanceAreas::class)])
 class VigilanceAreasITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var getAllVigilanceAreas: GetVigilanceAreas
+    @MockBean
+    private lateinit var getAllVigilanceAreas: GetVigilanceAreas
 
-    @MockBean private lateinit var getVigilanceAreaById: GetVigilanceAreaById
+    @MockBean
+    private lateinit var getVigilanceAreaById: GetVigilanceAreaById
 
-    @MockBean private lateinit var createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea
+    @MockBean
+    private lateinit var createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea
 
-    @MockBean private lateinit var deleteVigilanceArea: DeleteVigilanceArea
+    @MockBean
+    private lateinit var deleteVigilanceArea: DeleteVigilanceArea
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     private val polygon =
         WKTReader()

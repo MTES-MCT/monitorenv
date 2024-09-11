@@ -48,5 +48,5 @@ interface IReportingRepository {
 
     fun save(reporting: ReportingEntity): ReportingDTO
 
-    fun findAllByGeometry(geometry: Geometry): List<ReportingEntity>
+    fun findAllByGeometry(geometry: Geometry): List<ReportingDTO>
 }

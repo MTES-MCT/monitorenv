@@ -669,7 +669,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(reportings).hasSize(1)
-        assertThat(reportings[0].id).isEqualTo(3)
+        assertThat(reportings[0].reporting.id).isEqualTo(3)
     }
 
     @Test
