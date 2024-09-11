@@ -38,7 +38,7 @@ class DashboardITest {
     private lateinit var extractArea: ExtractArea
 
     @Test
-    fun `extract should retrieve reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
+    fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
         // Given
         val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
 
@@ -71,7 +71,7 @@ class DashboardITest {
     }
 
     @Test
-    fun `extract should response ok when nothing intersect the given geometry`() {
+    fun `extract response should be ok when nothing intersect the given geometry`() {
         // Given
         val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
 
@@ -101,5 +101,20 @@ class DashboardITest {
             .andExpect(jsonPath("$.regulatoryAreas.size()", equalTo(0)))
             .andExpect(jsonPath("$.amps.size()", equalTo(0)))
             .andExpect(jsonPath("$.vigilanceAreas.size()", equalTo(0)))
+    }
+
+    @Test
+    fun `extract response should be bad request if the given geometry is not valid`() {
+        // Given
+        val geometry = "Wrong geometry param"
+
+        // When
+        mockMvc.perform(
+            get("/bff/v1/dashboard/extract?geometry=$geometry")
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message", equalTo("Error: geometry is not valid")))
     }
 }

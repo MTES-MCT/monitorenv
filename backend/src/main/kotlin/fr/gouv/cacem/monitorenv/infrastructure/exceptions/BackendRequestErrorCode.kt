@@ -20,4 +20,6 @@ enum class BackendRequestErrorCode {
 
     /** Thrown when a request body property has an unexpected type. */
     WRONG_REQUEST_BODY_PROPERTY_TYPE,
+
+    WRONG_REQUEST_PARAM_PROPERTY_TYPE,
 }
