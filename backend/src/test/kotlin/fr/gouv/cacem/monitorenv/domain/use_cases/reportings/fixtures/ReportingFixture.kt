@@ -6,6 +6,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
@@ -48,6 +50,19 @@ class ReportingFixture {
                 isInfractionProven = true,
                 missionId = missionId,
                 attachedToMissionAtUtc = attachedToMissionAtUtc,
+            )
+        }
+
+        fun aReportingDTO(): ReportingDTO {
+            return ReportingDTO(
+                reporting = aReporting(id = 1),
+                reportingSources = listOf(
+                    ReportingSourceDTO(
+                        reportingSource = aReportingSourceSemaphore(),
+                        semaphore = null,
+                        controlUnit = null,
+                    ),
+                ),
             )
         }
 

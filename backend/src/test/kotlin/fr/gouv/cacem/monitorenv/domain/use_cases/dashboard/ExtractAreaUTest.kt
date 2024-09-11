@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture.Companion.anAmp
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryArea.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture.Companion.aVigilanceArea
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -77,7 +77,7 @@ class ExtractAreaUTest {
 
         val inseeCode = "44"
         given(departementAreaRepository.findDepartmentFromGeometry(geometry = polygon)).willReturn(inseeCode)
-        val reportings = listOf(aReporting())
+        val reportings = listOf(aReportingDTO())
         given(reportingRepository.findAllByGeometry(geometry = polygon)).willReturn(reportings)
         val regulatoryAreas = listOf(aRegulatoryArea())
         given(regulatoryAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(regulatoryAreas)
