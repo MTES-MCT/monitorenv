@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanc
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
+import java.util.*
 
 data class VigilanceAreaDataInput(
     val id: Int? = null,
@@ -17,6 +18,7 @@ data class VigilanceAreaDataInput(
     val geom: MultiPolygon? = null,
     val isArchived: Boolean,
     val isDraft: Boolean,
+    val images: List<ImageInputEntity>? = listOf(),
     val links: List<LinkEntity>? = null,
     val linkedAMPs: List<Int>? = listOf(),
     val linkedRegulatoryAreas: List<Int>? = listOf(),
@@ -26,7 +28,9 @@ data class VigilanceAreaDataInput(
     val themes: List<String>? = null,
     val visibility: VisibilityEnum? = null,
 ) {
+
     fun toVigilanceAreaEntity(): VigilanceAreaEntity {
+
         return VigilanceAreaEntity(
             id = this.id,
             comments = this.comments,
@@ -41,6 +45,16 @@ data class VigilanceAreaDataInput(
             isArchived = this.isArchived,
             isDeleted = false,
             isDraft = this.isDraft,
+            images = this.images?.map { image ->
+                return@map ImageEntity(
+                    id = image.id,
+                    vigilanceAreaId = image.vigilanceAreaId,
+                    imageName = image.imageName,
+                    content = decodeBase64Image(image.content),
+                    mimeType = image.mimeType,
+                )
+
+            },
             links = this.links,
             linkedAMPs = this.linkedAMPs,
             linkedRegulatoryAreas = this.linkedRegulatoryAreas,
@@ -51,4 +65,9 @@ data class VigilanceAreaDataInput(
             visibility = this.visibility,
         )
     }
+}
+
+// Helper function to decode the Base64 image to byte[]
+private fun decodeBase64Image(base64Image: String): ByteArray {
+    return Base64.getDecoder().decode(base64Image)
 }

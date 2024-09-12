@@ -1,7 +1,10 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
+import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label, Level, Size } from '@mtes-mct/monitor-ui'
 import Compressor from 'compressorjs'
+import { useFormikContext } from 'formik'
 import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
@@ -12,20 +15,9 @@ const IMAGES_INFORMATIONS_TEXT = '5 photos maximum'
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
 const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
 
-enum Orientation {
-  LANDSCAPE = 'landscape',
-  PORTAIT = 'portrait'
-}
-
-export type ImageProps = {
-  id: string
-  image: string
-  orientation: Orientation
-}
-
 type PhotoUploaderProps = {
-  imagesList: ImageProps[]
-  setImages: (images: ImageProps[]) => void
+  imagesList: VigilanceArea.ImageProps[]
+  setImages: (images: VigilanceArea.ImageProps[]) => void
 }
 
 const getBase64 = async (file: Blob) =>
@@ -43,6 +35,7 @@ const getBase64 = async (file: Blob) =>
   })
 
 export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderProps, ref) {
+  const { values } = useFormikContext<VigilanceArea.VigilanceArea>()
   const dispatch = useAppDispatch()
 
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
@@ -67,7 +60,7 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
       return
     }
 
-    const tempImageList = [] as ImageProps[]
+    const tempImageList = [] as VigilanceArea.ImageProps[]
 
     try {
       await Promise.all(
@@ -88,10 +81,19 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
               async success(result) {
                 try {
                   const base64Image = await getBase64(result)
+                  // console.log('base64Image', base64Image)
+                  const base64String = base64Image.split(',')[1]
+                  // console.log('base64String', base64String)
                   const compressedImage = {
+                    fileName: file.name,
                     id: uuidv4(),
-                    image: base64Image,
-                    orientation: naturalWidth > naturalHeight ? Orientation.LANDSCAPE : Orientation.PORTAIT
+                    image: base64String,
+                    mimeType: result.type,
+                    orientation:
+                      naturalWidth > naturalHeight
+                        ? VigilanceArea.Orientation.LANDSCAPE
+                        : VigilanceArea.Orientation.PORTAIT,
+                    vigilanceAreaId: values.id ?? NEW_VIGILANCE_AREA_ID
                   }
 
                   tempImageList.push(compressedImage)
@@ -167,7 +169,7 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
                 height="82px"
                 onClick={() => openImageViewer(index)}
                 src={image?.image}
-                width={image?.orientation === Orientation.LANDSCAPE ? '122px' : '57px'}
+                width={image?.orientation === VigilanceArea.Orientation.LANDSCAPE ? '122px' : '57px'}
               />
               <StyledButton
                 accent={Accent.SECONDARY}

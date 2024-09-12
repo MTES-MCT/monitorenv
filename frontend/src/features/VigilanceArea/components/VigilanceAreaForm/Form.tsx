@@ -33,7 +33,7 @@ import { AddRegulatoryAreas } from './AddRegulatoryAreas'
 import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
-import { PhotoUploader, type ImageProps } from './PhotoUploader'
+import { PhotoUploader } from './PhotoUploader'
 
 export function Form() {
   const dispatch = useAppDispatch()
@@ -48,7 +48,7 @@ export function Form() {
   } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [imagesList, setImagesList] = useState<ImageProps[]>([])
+  const [imagesList, setImagesList] = useState<VigilanceArea.ImageProps[]>([])
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
@@ -88,10 +88,12 @@ export function Form() {
   const save = () => {
     validateForm({ ...values }).then(errors => {
       if (isEmpty(errors)) {
-        /*  if (imagesList.length > 0) {
-          console.log('imagesList', imagesList)
-        } */
-        dispatch(saveVigilanceArea(values))
+        const images = imagesList.map(image => ({
+          content: image.image,
+          imageName: image.fileName,
+          mimeType: image.mimeType
+        }))
+        dispatch(saveVigilanceArea({ ...values, images }))
       }
     })
   }

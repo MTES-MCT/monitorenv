@@ -1,10 +1,13 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.*
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
@@ -39,6 +42,16 @@ data class VigilanceAreaModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
+    @OneToMany(
+        mappedBy = "vigilanceArea",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.EAGER,
+    )
+    @JsonManagedReference
+    @Fetch(value = FetchMode.SUBSELECT)
+    @OrderBy("id")
+    var images: MutableList<VigilanceAreaImageModel> = mutableListOf(),
     @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "is_draft") val isDraft: Boolean,
@@ -85,6 +98,7 @@ data class VigilanceAreaModel(
             )
         }
     }
+
     fun toVigilanceAreaEntity(): VigilanceAreaEntity {
         return VigilanceAreaEntity(
             id = id,
@@ -100,6 +114,7 @@ data class VigilanceAreaModel(
             isArchived = isArchived,
             isDeleted = isDeleted,
             isDraft = isDraft,
+            images = images.map { it.toVigilanceAreaImage() },
             links = links,
             linkedAMPs = linkedAMPs,
             linkedRegulatoryAreas = linkedRegulatoryAreas,
