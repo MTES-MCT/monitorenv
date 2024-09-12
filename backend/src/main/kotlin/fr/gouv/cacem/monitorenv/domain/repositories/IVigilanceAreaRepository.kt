@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import org.locationtech.jts.geom.Geometry
 

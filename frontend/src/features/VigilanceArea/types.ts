@@ -13,6 +13,7 @@ export namespace VigilanceArea {
     frequency: Frequency | undefined
     geom: GeoJSON.MultiPolygon | undefined
     id: number
+    images: Array<ImagePropsForApi>
     isArchived: boolean
     isDraft: boolean
     linkedAMPs: Array<number>
@@ -88,4 +89,25 @@ export namespace VigilanceArea {
   }
 
   export type VigilanceAreaLayer = VigilanceArea.VigilanceArea & { bbox: number[] }
+
+  export type ImageProps = {
+    fileName: string
+    id: string
+    image: string
+    mimeType: string
+    orientation: Orientation
+    vigilanceAreaId: number
+  }
+
+  export type ImagePropsForApi = {
+    content: string
+    imageName?: string
+    mimeType: string
+    vigilanceAreaId?: number
+  }
+
+  export enum Orientation {
+    LANDSCAPE = 'landscape',
+    PORTAIT = 'portrait'
+  }
 }
