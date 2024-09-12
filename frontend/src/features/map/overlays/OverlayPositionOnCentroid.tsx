@@ -1,3 +1,5 @@
+import { Layers } from 'domain/entities/layers/constants'
+import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { convertToFeature, type MapClickEvent } from 'domain/types/map'
 import { setOpenedOverlay } from 'domain/use_cases/map/setOpenedOverlay'
 import { getCenter, type Extent } from 'ol/extent'
@@ -11,6 +13,8 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
 import type { FeatureLike } from 'ol/Feature'
+import type Feature from 'ol/Feature'
+import type Geometry from 'ol/geom/Geometry'
 import type OpenLayerMap from 'ol/Map'
 
 const OVERLAY_HEIGHT = 174
@@ -170,7 +174,14 @@ export function OverlayPositionOnCentroid({
   useEffect(() => {
     const selectedFeature = convertToFeature(mapClickEvent?.feature)
     if (selectedFeature) {
+      unselectSemaphore(selectedFeature)
       dispatch(setOpenedOverlay(String(selectedFeature.getId())))
+    }
+
+    function unselectSemaphore(semaphoreFeature: Feature<Geometry>) {
+      if (!String(semaphoreFeature.getId()).includes(Layers.SEMAPHORES.code)) {
+        dispatch(resetSelectedSemaphore())
+      }
     }
   }, [dispatch, mapClickEvent?.feature])
 
