@@ -20,6 +20,10 @@ export const isMissionAutoUpdateEnabled = () =>
   isCypress()
     ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE') === 'true'
     : import.meta.env.FRONTEND_MISSION_FORM_AUTO_UPDATE === 'true'
+export const isDashboardEnabled = () =>
+  isCypress()
+    ? window.Cypress.env('CYPRESS_FRONTEND_DASHBOARD') === 'true'
+    : import.meta.env.FRONTEND_DASHBOARD_ENABLED === 'true'
 
 /**
  * should a Formik `onChange` event trigger `saveMission`.

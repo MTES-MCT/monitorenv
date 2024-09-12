@@ -1,5 +1,4 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
-import { ButtonWrapper } from '@features/MainWindow/components/RightMenu/ButtonWrapper'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
@@ -7,8 +6,6 @@ import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { globalActions } from 'domain/shared_slices/Global'
 import { useAuth } from 'react-oidc-context'
 import styled from 'styled-components'
-
-const MARGIN_TOP = 388
 
 export function Account() {
   const dispatch = useAppDispatch()
@@ -30,7 +27,7 @@ export function Account() {
   }
 
   return (
-    <ButtonWrapper topPosition={MARGIN_TOP}>
+    <>
       {isAccountVisible && (
         <StyledContainer>
           <MapMenuDialog.Header>
@@ -57,7 +54,7 @@ export function Account() {
         size={Size.LARGE}
         title="Mon compte"
       />
-    </ButtonWrapper>
+    </>
   )
 }
 

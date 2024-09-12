@@ -1,3 +1,4 @@
+import { StyledMapMenuDialogContainer } from '@components/style'
 import { ReportingFilterContext, ReportingsFilters } from '@features/Reportings/Filters'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -7,7 +8,6 @@ import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { addReporting } from 'domain/use_cases/reporting/addReporting'
-import styled from 'styled-components'
 
 export function SearchReportings() {
   const dispatch = useAppDispatch()
@@ -32,33 +32,27 @@ export function SearchReportings() {
   }
 
   return (
-    <StyledContainer>
-      <MapMenuDialog.Container>
-        <MapMenuDialog.Header>
-          <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeSearchReportings} />
-          <MapMenuDialog.Title>Signalements</MapMenuDialog.Title>
-          <MapMenuDialog.VisibilityButton
-            accent={Accent.SECONDARY}
-            Icon={displayReportingsLayer ? Icon.Display : Icon.Hide}
-            onClick={setReportingsVisibilityOnMap}
-          />
-        </MapMenuDialog.Header>
-        <MapMenuDialog.Body>
-          <ReportingsFilters context={ReportingFilterContext.MAP} />
-        </MapMenuDialog.Body>
-        <MapMenuDialog.Footer>
-          <Button data-cy="add-reporting" Icon={Icon.Plus} isFullWidth onClick={createReporting}>
-            Ajouter un signalement
-          </Button>
-          <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleReportingsWindow}>
-            Voir la vue détaillée des signalements
-          </Button>
-        </MapMenuDialog.Footer>
-      </MapMenuDialog.Container>
-    </StyledContainer>
+    <StyledMapMenuDialogContainer>
+      <MapMenuDialog.Header>
+        <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeSearchReportings} />
+        <MapMenuDialog.Title>Signalements</MapMenuDialog.Title>
+        <MapMenuDialog.VisibilityButton
+          accent={Accent.SECONDARY}
+          Icon={displayReportingsLayer ? Icon.Display : Icon.Hide}
+          onClick={setReportingsVisibilityOnMap}
+        />
+      </MapMenuDialog.Header>
+      <MapMenuDialog.Body>
+        <ReportingsFilters context={ReportingFilterContext.MAP} />
+      </MapMenuDialog.Body>
+      <MapMenuDialog.Footer>
+        <Button data-cy="add-reporting" Icon={Icon.Plus} isFullWidth onClick={createReporting}>
+          Ajouter un signalement
+        </Button>
+        <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleReportingsWindow}>
+          Voir la vue détaillée des signalements
+        </Button>
+      </MapMenuDialog.Footer>
+    </StyledMapMenuDialogContainer>
   )
 }
-
-const StyledContainer = styled.div`
-  display: flex;
-`

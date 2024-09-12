@@ -1,3 +1,4 @@
+import { StyledMapMenuDialogContainer } from '@components/style'
 import { Accent, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo } from 'react'
 
@@ -46,7 +47,7 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   }, [dispatch, displayBaseLayer])
 
   return (
-    <MapMenuDialog.Container style={{ height: 480 }}>
+    <StyledMapMenuDialogContainer style={{ height: 480 }}>
       <MapMenuDialog.Header>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={onClose} />
         <MapMenuDialog.Title>Unités de contrôle</MapMenuDialog.Title>
@@ -63,11 +64,6 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         {filteredControlUnits &&
           filteredControlUnits.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
       </MapMenuDialog.Body>
-      {/* <MapMenuDialog.Footer>
-        <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={noop}>
-          Voir la vue détaillée des unités
-        </Button>
-      </MapMenuDialog.Footer> */}
-    </MapMenuDialog.Container>
+    </StyledMapMenuDialogContainer>
   )
 }
