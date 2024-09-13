@@ -1,4 +1,6 @@
+import { missionActions } from '@features/missions/slice'
 import { Layers } from 'domain/entities/layers/constants'
+import { reportingActions } from 'domain/shared_slices/reporting'
 import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { convertToFeature, type MapClickEvent } from 'domain/types/map'
 import { setOpenedOverlay } from 'domain/use_cases/map/setOpenedOverlay'
@@ -173,14 +175,27 @@ export function OverlayPositionOnCentroid({
 
   useEffect(() => {
     const selectedFeature = convertToFeature(mapClickEvent?.feature)
+
     if (selectedFeature) {
-      unselectSemaphore(selectedFeature)
+      unselectPreviousFeature(selectedFeature)
       dispatch(setOpenedOverlay(String(selectedFeature.getId())))
     }
 
-    function unselectSemaphore(semaphoreFeature: Feature<Geometry>) {
-      if (!String(semaphoreFeature.getId()).includes(Layers.SEMAPHORES.code)) {
+    function unselectPreviousFeature(nextFeature: Feature<Geometry>) {
+      const featureId = String(nextFeature.getId())
+      if (!featureId.includes(Layers.SEMAPHORES.code)) {
         dispatch(resetSelectedSemaphore())
+
+        return
+      }
+      if (!featureId.includes(Layers.MISSIONS.code)) {
+        dispatch(missionActions.resetSelectedMissionIdOnMap())
+
+        return
+      }
+
+      if (!featureId.includes(Layers.REPORTINGS.code)) {
+        dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
       }
     }
   }, [dispatch, mapClickEvent?.feature])

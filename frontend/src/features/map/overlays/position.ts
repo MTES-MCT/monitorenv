@@ -110,7 +110,6 @@ export enum OverlayPosition {
  */
 export function getTopLeftMargin(nextOverlayPosition: OverlayPosition, margins: Margins) {
   const { xLeft, xMiddle, xRight, yBottom, yMiddle, yTop } = margins
-
   switch (nextOverlayPosition) {
     case OverlayPosition.TOP_LEFT:
       return [yTop, xLeft]

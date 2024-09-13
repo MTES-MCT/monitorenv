@@ -15,7 +15,7 @@ const SUPER_USER_MARGINS = {
   xRight: -55,
   yBottom: 50,
   yMiddle: 100,
-  yTop: -170
+  yTop: -200
 }
 
 const MARGINS = {

@@ -3,12 +3,12 @@ import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
 import { MissionCard } from './MissionCard'
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { OverlayPositionOnCentroid } from '../../map/overlays/OverlayPositionOnCentroid'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from '../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../map/BaseMap'
 
 const OPTIONS = {
   margins: {
