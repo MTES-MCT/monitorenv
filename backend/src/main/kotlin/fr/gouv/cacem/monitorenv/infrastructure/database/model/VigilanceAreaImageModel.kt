@@ -13,20 +13,23 @@ data class VigilanceAreaImageModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
 
-    @Lob
     @Column(name = "content", nullable = false, columnDefinition = "bytea")
     val content: ByteArray,
 
     @Column(name = "mime_type", nullable = false)
     val mimeType: String,
 
-    @Column(name = "image_name", nullable = false)
-    val imageName: String,
+    @Column(name = "name", nullable = false)
+    val name: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vigilance_area_id", nullable = false)
     @JsonBackReference
     val vigilanceArea: VigilanceAreaModel,
+
+    @Column(name = "size", nullable = false)
+    val size: Int,
+
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -36,8 +39,8 @@ data class VigilanceAreaImageModel(
 
         if (id != other.id) return false
         if (mimeType != other.mimeType) return false
-        if (imageName != other.imageName) return false
-
+        if (name != other.name) return false
+        if (size != other.size) return false
 
         return true
     }
@@ -45,7 +48,8 @@ data class VigilanceAreaImageModel(
     override fun hashCode(): Int {
         var result = id ?: 0
         result = 31 * result + mimeType.hashCode()
-        result = 31 * result + imageName.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + size
         return result
     }
 
@@ -57,18 +61,19 @@ data class VigilanceAreaImageModel(
             VigilanceAreaImageModel(
                 id = image.id,
                 content = image.content,
-                imageName = image.imageName,
+                name = image.name,
                 mimeType = image.mimeType,
                 vigilanceArea = vigilanceArea,
-
-                )
+                size = image.size,
+            )
     }
 
     fun toVigilanceAreaImage() = ImageEntity(
         id = id,
         content = content,
-        imageName = imageName,
+        name = name,
         mimeType = mimeType,
         vigilanceAreaId = vigilanceArea.id!!,
+        size = size,
     )
 }

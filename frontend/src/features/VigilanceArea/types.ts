@@ -90,19 +90,18 @@ export namespace VigilanceArea {
 
   export type VigilanceAreaLayer = VigilanceArea.VigilanceArea & { bbox: number[] }
 
-  export type ImageProps = {
-    fileName: string
-    id: string
+  export type ImageForFrontProps = {
+    id?: string
     image: string
-    mimeType: string
     orientation: Orientation
-    vigilanceAreaId: number
   }
 
   export type ImagePropsForApi = {
     content: string
-    imageName?: string
+    id?: string
     mimeType: string
+    name: string
+    size: number
     vigilanceAreaId?: number
   }
 

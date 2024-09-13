@@ -1,5 +1,4 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
-import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label, Level, Size } from '@mtes-mct/monitor-ui'
@@ -7,18 +6,12 @@ import Compressor from 'compressorjs'
 import { useFormikContext } from 'formik'
 import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
-import { v4 as uuidv4 } from 'uuid'
 
 import { ImageViewer } from './ImageViewer'
 
 const IMAGES_INFORMATIONS_TEXT = '5 photos maximum'
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
 const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
-
-type PhotoUploaderProps = {
-  imagesList: VigilanceArea.ImageProps[]
-  setImages: (images: VigilanceArea.ImageProps[]) => void
-}
 
 const getBase64 = async (file: Blob) =>
   new Promise<string>(resolve => {
@@ -34,12 +27,13 @@ const getBase64 = async (file: Blob) =>
     }
   })
 
-export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderProps, ref) {
-  const { values } = useFormikContext<VigilanceArea.VigilanceArea>()
+export function PhotoUploaderWithRef(_, ref) {
+  const { setFieldValue, values } = useFormikContext<VigilanceArea.VigilanceArea>()
   const dispatch = useAppDispatch()
 
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
   const [imagesText, setImagesText] = useState<string>(IMAGES_INFORMATIONS_TEXT)
+  const [imagesList, setImagesList] = useState<VigilanceArea.ImageForFrontProps[]>([])
 
   const handleFileChange = e => {
     const { current } = ref
@@ -60,8 +54,8 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
       return
     }
 
-    const tempImageList = [] as VigilanceArea.ImageProps[]
-
+    const tempImageListForFront = [] as VigilanceArea.ImageForFrontProps[]
+    const tempImageList = [] as VigilanceArea.ImagePropsForApi[]
     try {
       await Promise.all(
         [...current.files].map(async file => {
@@ -77,27 +71,28 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
               error(err) {
                 reject(err)
               },
-              quality: 0.6,
+              quality: 0.4,
               async success(result) {
                 try {
                   const base64Image = await getBase64(result)
-                  // console.log('base64Image', base64Image)
-                  const base64String = base64Image.split(',')[1]
-                  // console.log('base64String', base64String)
+                  const base64String = base64Image.split(',')[1] ?? ''
                   const compressedImage = {
-                    fileName: file.name,
-                    id: uuidv4(),
-                    image: base64String,
+                    content: base64String,
                     mimeType: result.type,
+                    name: file.name,
+                    size: result.size,
+                    vigilanceAreaId: values.id
+                  }
+                  const compressedImageForFront = {
+                    image: base64Image,
                     orientation:
                       naturalWidth > naturalHeight
                         ? VigilanceArea.Orientation.LANDSCAPE
-                        : VigilanceArea.Orientation.PORTAIT,
-                    vigilanceAreaId: values.id ?? NEW_VIGILANCE_AREA_ID
+                        : VigilanceArea.Orientation.PORTAIT
                   }
 
+                  tempImageListForFront.push(compressedImageForFront)
                   tempImageList.push(compressedImage)
-
                   resolve()
                 } catch (error) {
                   reject(error)
@@ -112,7 +107,8 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
         setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
       }
 
-      setImages([...imagesList, ...tempImageList])
+      setFieldValue('images', [...values.images, ...tempImageList])
+      setImagesList([...imagesList, ...tempImageListForFront])
     } catch (error) {
       dispatch(
         addMainWindowBanner({
@@ -133,7 +129,7 @@ export function PhotoUploaderWithRef({ imagesList, setImages }: PhotoUploaderPro
 
     const newFileList = [...imagesList].filter(file => file?.id !== idToRemove)
 
-    setImages(newFileList)
+    setImagesList(newFileList)
 
     if (imagesList.length === 5) {
       setImagesText(IMAGES_INFORMATIONS_TEXT)

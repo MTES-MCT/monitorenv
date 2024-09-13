@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 data class ImageInputEntity(
     val id: Int? = null,
     val vigilanceAreaId: Int? = null,
-    val imageName: String,
+    val name: String,
     val content: String,
     val mimeType: String,
+    val size: Int,
 )

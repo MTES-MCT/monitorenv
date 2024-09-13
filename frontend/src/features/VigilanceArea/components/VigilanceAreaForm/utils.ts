@@ -8,6 +8,7 @@ export function getVigilanceAreaInitialValues() {
     endingOccurrencesNumber: undefined,
     frequency: undefined,
     geom: undefined,
+    images: [],
     isDraft: true,
     linkedAMPs: [],
     linkedRegulatoryAreas: [],
