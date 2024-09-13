@@ -48,7 +48,6 @@ export function Form() {
   } = useFormikContext<VigilanceArea.VigilanceArea>()
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [imagesList, setImagesList] = useState<VigilanceArea.ImageProps[]>([])
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
@@ -88,12 +87,7 @@ export function Form() {
   const save = () => {
     validateForm({ ...values }).then(errors => {
       if (isEmpty(errors)) {
-        const images = imagesList.map(image => ({
-          content: image.image,
-          imageName: image.fileName,
-          mimeType: image.mimeType
-        }))
-        dispatch(saveVigilanceArea({ ...values, images }))
+        dispatch(saveVigilanceArea(values))
       }
     })
   }
@@ -219,7 +213,7 @@ export function Form() {
         />
         <AddRegulatoryAreas />
         <AddAMPs />
-        <PhotoUploader ref={uploaderRef} imagesList={imagesList} setImages={setImagesList} />
+        <PhotoUploader ref={uploaderRef} />
         <Links />
         <Separator />
         <InternText>Interne CACEM</InternText>

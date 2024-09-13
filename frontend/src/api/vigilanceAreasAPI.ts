@@ -14,16 +14,11 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     createVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
       invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }],
-      query: vigilanceArea => {
-        console.log('vigilanceArea', vigilanceArea)
-
-        return {
-          body: vigilanceArea,
-          method: 'PUT',
-          multiValueHeaders: { 'content-type': ['application/json'] },
-          url: `/v1/vigilance_areas`
-        }
-      }
+      query: vigilanceArea => ({
+        body: vigilanceArea,
+        method: 'PUT',
+        url: `/v1/vigilance_areas`
+      })
     }),
     deleteVigilanceArea: build.mutation<void, number>({
       invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }],
@@ -53,13 +48,6 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
             }
           })
         )
-    }),
-    saveVigilanceAreaDocuments: build.mutation<void, VigilanceArea.ImageProps[]>({
-      query: documents => ({
-        body: documents,
-        method: 'POST',
-        url: `/v1/vigilance_areas/documents`
-      })
     }),
     updateVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
       invalidatesTags: (_, __, { id }) => [

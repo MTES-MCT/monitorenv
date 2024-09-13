@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea
 
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import io.ktor.util.*
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
-import java.util.*
 
 data class VigilanceAreaDataInput(
     val id: Int? = null,
@@ -30,7 +30,6 @@ data class VigilanceAreaDataInput(
 ) {
 
     fun toVigilanceAreaEntity(): VigilanceAreaEntity {
-
         return VigilanceAreaEntity(
             id = this.id,
             comments = this.comments,
@@ -49,11 +48,11 @@ data class VigilanceAreaDataInput(
                 return@map ImageEntity(
                     id = image.id,
                     vigilanceAreaId = image.vigilanceAreaId,
-                    imageName = image.imageName,
-                    content = decodeBase64Image(image.content),
+                    name = image.name,
+                    content = image.content.decodeBase64Bytes(),
                     mimeType = image.mimeType,
+                    size = image.size,
                 )
-
             },
             links = this.links,
             linkedAMPs = this.linkedAMPs,
@@ -65,9 +64,4 @@ data class VigilanceAreaDataInput(
             visibility = this.visibility,
         )
     }
-}
-
-// Helper function to decode the Base64 image to byte[]
-private fun decodeBase64Image(base64Image: String): ByteArray {
-    return Base64.getDecoder().decode(base64Image)
 }

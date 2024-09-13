@@ -17,9 +17,7 @@ class JpaVigilanceAreaImageRepository(
     @Transactional
     override fun save(image: ImageEntity): ImageEntity? {
         val vigilanceArea = image.vigilanceAreaId.let {
-
             dbVigilanceAreaRepository.getReferenceById(it!!)
-
         }
 
         val imageModel = vigilanceArea.let {
@@ -27,6 +25,5 @@ class JpaVigilanceAreaImageRepository(
         }
 
         return imageModel.let { dbVigilanceAreaImageRepository.save(it).toVigilanceAreaImage() }
-
     }
 }

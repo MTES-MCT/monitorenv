@@ -6,9 +6,10 @@ import kotlinx.serialization.Serializable
 data class ImageEntity(
     val id: Int? = null,
     val vigilanceAreaId: Int? = null,
-    val imageName: String,
+    val name: String,
     val content: ByteArray,
     val mimeType: String,
+    val size: Int,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -17,18 +18,20 @@ data class ImageEntity(
         other as ImageEntity
 
         if (id != other.id) return false
-        if (imageName != other.imageName) return false
+        if (name != other.name) return false
         if (mimeType != other.mimeType) return false
         if (vigilanceAreaId != other.vigilanceAreaId) return false
+        if (size != other.size) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
-        result = 31 * result + imageName.hashCode()
+        result = 31 * result + name.hashCode()
         result = 31 * result + mimeType.hashCode()
         result = 31 * result + vigilanceAreaId.hashCode()
+        result = 31 * result + size
         return result
     }
 }

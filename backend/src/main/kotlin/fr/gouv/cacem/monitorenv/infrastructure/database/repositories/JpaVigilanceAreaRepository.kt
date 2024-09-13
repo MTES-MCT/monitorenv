@@ -6,8 +6,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaImage
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
 import org.locationtech.jts.geom.Geometry
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
@@ -18,8 +16,6 @@ class JpaVigilanceAreaRepository(
         private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
 ) : IVigilanceAreaRepository {
 
-    private val logger: Logger = LoggerFactory.getLogger(JpaVigilanceAreaRepository::class.java)
-
     @Transactional
     override fun findById(id: Int): VigilanceAreaEntity? {
         return dbVigilanceAreaRepository.findByIdOrNull(id)?.toVigilanceAreaEntity()
@@ -28,7 +24,6 @@ class JpaVigilanceAreaRepository(
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity {
-        logger.info("vigilanceAreaEntity: $vigilanceArea")
         val vigilanceAreaModel: VigilanceAreaModel =
                 if (vigilanceArea.id === null) {
                     dbVigilanceAreaRepository.save(
@@ -39,7 +34,6 @@ class JpaVigilanceAreaRepository(
                 } else {
                     VigilanceAreaModel.fromVigilanceArea(vigilanceArea)
                 }
-        logger.info("vigilanceAreaModel: $vigilanceAreaModel")
         val vigilanceAreaImagesModel =
                 vigilanceArea.images?.map {
                     return@map VigilanceAreaImageModel.fromVigilanceAreaImageEntity(
