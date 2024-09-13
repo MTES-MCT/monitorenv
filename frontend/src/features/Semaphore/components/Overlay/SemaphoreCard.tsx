@@ -246,6 +246,7 @@ const UrlContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 6px;
+  margin-top: 16px;
 `
 const StyledIcon = styled(Icon.SortSelectedDown)`
   rotate: -90deg;

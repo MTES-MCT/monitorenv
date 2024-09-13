@@ -99,15 +99,11 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
       return ''
     }
 
-    if (vigilanceArea?.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER) {
-      return `Fin après ${vigilanceArea?.endingOccurrencesNumber} fois`
+    if (vigilanceArea?.endingCondition === VigilanceArea.EndingCondition.NEVER) {
+      return 'Pas de fin de récurrence'
     }
 
-    if (vigilanceArea?.endingCondition === VigilanceArea.EndingCondition.END_DATE) {
-      return `Fin le ${customDayjs(vigilanceArea?.endingOccurrenceDate).utc().format('DD/MM/YYYY')}`
-    }
-
-    return 'Pas de fin de récurrence'
+    return `Fin le ${customDayjs(vigilanceArea?.computedEndDate).utc().format('DD/MM/YYYY')}`
   }
 
   if (!vigilanceArea) {
