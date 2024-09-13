@@ -1,5 +1,5 @@
-import { MissionCard } from '@features/map/overlays/missions/MissionCard'
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
+import { MissionCard } from '@features/missions/Overlays/MissionCard'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { convertToFeature } from 'domain/types/map'
