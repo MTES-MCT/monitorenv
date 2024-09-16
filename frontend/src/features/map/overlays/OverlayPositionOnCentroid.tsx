@@ -185,13 +185,9 @@ export function OverlayPositionOnCentroid({
       const featureId = String(nextFeature.getId())
       if (!featureId.includes(Layers.SEMAPHORES.code)) {
         dispatch(resetSelectedSemaphore())
-
-        return
       }
       if (!featureId.includes(Layers.MISSIONS.code)) {
         dispatch(missionActions.resetSelectedMissionIdOnMap())
-
-        return
       }
 
       if (!featureId.includes(Layers.REPORTINGS.code)) {
