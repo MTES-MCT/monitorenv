@@ -12,7 +12,7 @@ import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceRepor
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { MapToolType } from '../../../domain/entities/map/constants'
-import { globalActions, setDisplayedItems } from '../../../domain/shared_slices/Global'
+import { globalActions } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useEscapeKey } from '../../../hooks/useEscapeKey'
@@ -45,15 +45,7 @@ export function InterestPointMapButton() {
 
   const toggleInterestPointMenu = useCallback(() => {
     if (!isOpen) {
-      dispatch(
-        setDisplayedItems({
-          isControlUnitDialogVisible: false,
-          isControlUnitListDialogVisible: false,
-          isSearchMissionsVisible: false,
-          isSearchReportingsVisible: false,
-          isSearchSemaphoreVisible: false
-        })
-      )
+      dispatch(globalActions.hideSideButtons())
       dispatch(reduceReportingFormOnMap())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
       dispatch(closeAllOverlays())
