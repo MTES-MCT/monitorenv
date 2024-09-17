@@ -12,7 +12,7 @@ data class VigilanceAreaEntity(
     val endingCondition: EndingConditionEnum? = null,
     val endingOccurrenceDate: ZonedDateTime? = null,
     val endingOccurrencesNumber: Int? = null,
-    val images: List<ImageEntity>? = null,
+    val images: List<ImageEntity>? = listOf(),
     val frequency: FrequencyEnum? = null,
     val geom: MultiPolygon? = null,
     val isArchived: Boolean,

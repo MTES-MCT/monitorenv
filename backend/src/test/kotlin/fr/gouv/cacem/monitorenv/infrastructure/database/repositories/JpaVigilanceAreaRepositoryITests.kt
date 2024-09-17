@@ -1,9 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -66,6 +63,15 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                 frequency = FrequencyEnum.ALL_WEEKS,
                 endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = null,
+                images = listOf(
+                    ImageEntity(
+                        content = byteArrayOf(1, 2, 3, 4),
+                        mimeType = "image/jpeg",
+                        name = "test_image.jpg",
+                        size = 1024,
+                    ),
+
+                ),
                 links = null,
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),

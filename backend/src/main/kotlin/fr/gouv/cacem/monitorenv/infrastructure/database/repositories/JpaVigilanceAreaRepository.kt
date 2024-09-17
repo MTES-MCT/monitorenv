@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaVigilanceAreaRepository(
-        private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
+    private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
 ) : IVigilanceAreaRepository {
 
     @Transactional
@@ -25,22 +25,22 @@ class JpaVigilanceAreaRepository(
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity {
         val vigilanceAreaModel: VigilanceAreaModel =
-                if (vigilanceArea.id === null) {
-                    dbVigilanceAreaRepository.save(
-                            VigilanceAreaModel.fromVigilanceArea(
-                                    vigilanceArea.copy(images = listOf())
-                            )
-                    )
-                } else {
-                    VigilanceAreaModel.fromVigilanceArea(vigilanceArea)
-                }
+            if (vigilanceArea.id === null) {
+                dbVigilanceAreaRepository.save(
+                    VigilanceAreaModel.fromVigilanceArea(
+                        vigilanceArea.copy(images = listOf()),
+                    ),
+                )
+            } else {
+                VigilanceAreaModel.fromVigilanceArea(vigilanceArea)
+            }
         val vigilanceAreaImagesModel =
-                vigilanceArea.images?.map {
-                    return@map VigilanceAreaImageModel.fromVigilanceAreaImageEntity(
-                            it,
-                            vigilanceAreaModel
-                    )
-                }
+            vigilanceArea.images?.map {
+                return@map VigilanceAreaImageModel.fromVigilanceAreaImageEntity(
+                    it,
+                    vigilanceAreaModel,
+                )
+            }
 
         vigilanceAreaModel.images.addAll(vigilanceAreaImagesModel ?: emptyList())
 

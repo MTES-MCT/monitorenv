@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -13,15 +13,8 @@ class GetVigilanceAreaByIdUTests {
 
     @Test
     fun `execute should return vigilance area entity`() {
-        val vigilanceAreaId = 10
-        val expectedEntity =
-            VigilanceAreaEntity(
-                id = vigilanceAreaId,
-                comments = "Test Area",
-                isArchived = false,
-                isDeleted = false,
-                isDraft = true,
-            )
+        val vigilanceAreaId = 3
+        val expectedEntity = VigilanceAreaFixture.aArchivedVigilanceAreaEntity()
 
         given(vigilanceAreaRepository.findById(vigilanceAreaId)).willReturn(expectedEntity)
 
