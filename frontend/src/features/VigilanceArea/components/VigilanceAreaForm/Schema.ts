@@ -13,6 +13,7 @@ export const DraftSchema: Yup.SchemaOf<
 > = Yup.object()
   .shape({
     comments: Yup.string().nullable(),
+    computedEndDate: Yup.string().nullable(),
     createdBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
@@ -24,6 +25,9 @@ export const DraftSchema: Yup.SchemaOf<
     frequency: Yup.mixed().nullable(),
     geom: Yup.array().of(ZoneSchema).nullable(),
     id: Yup.number().nullable(),
+    images: Yup.array().nullable(),
+    isArchived: Yup.boolean().required(),
+    isDraft: Yup.boolean().required(),
     linkedAMPs: Yup.array().nullable(),
     linkedRegulatoryAreas: Yup.array().nullable(),
     links: Yup.array().nullable(),
@@ -40,6 +44,7 @@ export const PublishedSchema: Yup.SchemaOf<
 > = Yup.object()
   .shape({
     comments: Yup.string().required(),
+    computedEndDate: Yup.string().nullable(),
     createdBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
@@ -65,6 +70,9 @@ export const PublishedSchema: Yup.SchemaOf<
     frequency: Yup.mixed().oneOf(Object.values(VigilanceArea.Frequency)).required(),
     geom: Yup.array().of(ZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
     id: Yup.number().nullable(),
+    images: Yup.array().nullable(),
+    isArchived: Yup.boolean().required(),
+    isDraft: Yup.boolean().required(),
     linkedAMPs: Yup.array().nullable(),
     linkedRegulatoryAreas: Yup.array().nullable(),
     links: Yup.array().nullable(),

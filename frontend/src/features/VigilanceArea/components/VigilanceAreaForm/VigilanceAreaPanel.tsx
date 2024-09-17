@@ -1,4 +1,5 @@
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
+import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
@@ -8,13 +9,15 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { AMPList } from './AddAMPs/AMPList'
 import { RegulatoryAreas } from './AddRegulatoryAreas/RegulatoryAreas'
+import { ImageViewer } from './ImageViewer'
 import { PublishedSchema } from './Schema'
 import { DeleteButton, FooterContainer, FooterRightButtons } from './style'
+import { getImages } from './utils'
 
 const EMPTY_VALUE = '--'
 
@@ -24,6 +27,8 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
+  const [imagesList, setImagesList] = useState<VigilanceArea.ImageForFrontProps[]>([])
 
   const { validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
@@ -92,6 +97,18 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
       default:
         return ''
     }
+  }
+  useEffect(() => {
+    const fetchImages = async () => {
+      const images = await getImages(values.images)
+      setImagesList(images)
+    }
+
+    fetchImages()
+  }, [values.images])
+
+  const openImageViewer = (currentIndex: number) => {
+    setImageViewerCurrentIndex(currentIndex)
   }
 
   const endingOccurenceText = () => {
@@ -164,6 +181,25 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
             <AMPList isReadOnly linkedAMPs={values?.linkedAMPs} />
           </SubPart>
         )}
+        {imagesList.length > 0 && (
+          <ImageContainer>
+            {imagesList.map((image, index) => (
+              <img
+                key={Math.random()}
+                alt="vigilance_area"
+                aria-hidden="true"
+                height="82px"
+                onClick={() => openImageViewer(index)}
+                src={image?.image}
+                width={
+                  image?.orientation === VigilanceArea.Orientation.LANDSCAPE
+                    ? IMAGES_WIDTH_LANDSCAPE
+                    : IMAGES_WIDTH_PORTRAIT
+                }
+              />
+            ))}
+          </ImageContainer>
+        )}
 
         {vigilanceArea?.links && vigilanceArea?.links.length > 0 && (
           <SubPart>
@@ -195,6 +231,13 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
             </InlineItem>
           )}
         </SubPart>
+        {imageViewerCurrentIndex >= 0 && (
+          <ImageViewer
+            currentIndex={imageViewerCurrentIndex}
+            images={imagesList.map(image => image.image)}
+            onClose={() => setImageViewerCurrentIndex(-1)}
+          />
+        )}
       </Body>
       <FooterContainer>
         <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete} size={Size.SMALL}>
@@ -221,15 +264,29 @@ const PanelContainer = styled.div`
   flex-direction: column;
   flex: 1;
 `
+
 const Body = styled.div`
   overflow-y: auto;
 `
+
 const SubPart = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: 16px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
+`
+
+const ImageContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 16px;
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  > img {
+    cursor: zoom-in;
+  }
 `
 
 const InlineItem = styled.div`

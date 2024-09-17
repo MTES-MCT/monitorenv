@@ -3,10 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
@@ -23,10 +20,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
@@ -76,6 +72,20 @@ class VigilanceAreasITests {
             frequency = FrequencyEnum.ALL_WEEKS,
             endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
             geom = polygon,
+            images = listOf(
+                ImageEntity(
+                    name = "image1.jpg",
+                    content = byteArrayOf(1, 2, 3),
+                    mimeType = "image/jpeg",
+                    size = 1024,
+                ),
+                ImageEntity(
+                    name = "image2.png",
+                    content = byteArrayOf(4, 5, 6),
+                    mimeType = "image/png",
+                    size = 2048,
+                ),
+            ),
             links = null,
             source = "Source de la zone de vigilance",
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
@@ -101,6 +111,7 @@ class VigilanceAreasITests {
                 frequency = FrequencyEnum.ALL_WEEKS,
                 endDatePeriod = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
                 geom = polygon,
+                images = listOf(),
                 links = null,
                 source = "Un particulier",
                 startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
@@ -128,6 +139,14 @@ class VigilanceAreasITests {
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
             )
+            .andExpect(jsonPath("$[0].images[0].name", equalTo("image1.jpg")))
+            .andExpect(jsonPath("$[0].images[0].mimeType", equalTo("image/jpeg")))
+            .andExpect(jsonPath("$[0].images[0].size", equalTo(1024)))
+            .andExpect(jsonPath("$[0].images[0].content", equalTo("AQID")))
+            .andExpect(jsonPath("$[0].images[1].name", equalTo("image2.png")))
+            .andExpect(jsonPath("$[0].images[1].mimeType", equalTo("image/png")))
+            .andExpect(jsonPath("$[0].images[1].size", equalTo(2048)))
+            .andExpect(jsonPath("$[0].images[1].content", equalTo("BAUG")))
             .andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").doesNotExist())
@@ -145,6 +164,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
+            )
+            .andExpect(
+                jsonPath("$[1].images").isEmpty(),
             )
             .andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
@@ -178,6 +200,14 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
+            .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
+            .andExpect(jsonPath("$.images[0].mimeType", equalTo("image/jpeg")))
+            .andExpect(jsonPath("$.images[0].size", equalTo(1024)))
+            .andExpect(jsonPath("$.images[0].content", equalTo("AQID")))
+            .andExpect(jsonPath("$.images[1].name", equalTo("image2.png")))
+            .andExpect(jsonPath("$.images[1].mimeType", equalTo("image/png")))
+            .andExpect(jsonPath("$.images[1].size", equalTo(2048)))
+            .andExpect(jsonPath("$.images[1].content", equalTo("BAUG")))
     }
 
     @Test
@@ -197,6 +227,20 @@ class VigilanceAreasITests {
                 frequency = FrequencyEnum.ALL_WEEKS,
                 endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = polygon,
+                images = listOf(
+                    ImageInputEntity(
+                        name = "image1.jpg",
+                        content = "AQID",
+                        mimeType = "image/jpeg",
+                        size = 1024,
+                    ),
+                    ImageInputEntity(
+                        name = "image2.png",
+                        content = "BAUG",
+                        mimeType = "image/png",
+                        size = 2048,
+                    ),
+                ),
                 links = null,
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
@@ -204,10 +248,11 @@ class VigilanceAreasITests {
                 visibility = VisibilityEnum.PRIVATE,
             )
         given(createOrUpdateVigilanceArea.execute(vigilanceArea1)).willReturn(vigilanceArea1)
+
         // When
         mockMvc.perform(
             put("/bff/v1/vigilance_areas")
-                .contentType("application/json")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(vigilanceAreaDataInput)),
         )
             // Then
@@ -230,6 +275,14 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
+            .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
+            .andExpect(jsonPath("$.images[0].mimeType", equalTo("image/jpeg")))
+            .andExpect(jsonPath("$.images[0].size", equalTo(1024)))
+            .andExpect(jsonPath("$.images[0].content", equalTo("AQID")))
+            .andExpect(jsonPath("$.images[1].name", equalTo("image2.png")))
+            .andExpect(jsonPath("$.images[1].mimeType", equalTo("image/png")))
+            .andExpect(jsonPath("$.images[1].size", equalTo(2048)))
+            .andExpect(jsonPath("$.images[1].content", equalTo("BAUG")))
     }
 
     @Test
@@ -249,13 +302,19 @@ class VigilanceAreasITests {
                 frequency = FrequencyEnum.ALL_WEEKS,
                 endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = polygon,
+                images = emptyList(),
                 links = null,
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PRIVATE,
             )
-        given(createOrUpdateVigilanceArea.execute(vigilanceArea1)).willReturn(vigilanceArea1)
+
+        val updatedVigilanceArea = vigilanceArea1.copy(
+            images = emptyList(),
+        )
+
+        given(createOrUpdateVigilanceArea.execute(updatedVigilanceArea)).willReturn(updatedVigilanceArea)
         // When
         mockMvc.perform(
             put("/bff/v1/vigilance_areas/1")
@@ -282,6 +341,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
+            .andExpect(jsonPath("$.images").isEmpty())
     }
 
     @Test

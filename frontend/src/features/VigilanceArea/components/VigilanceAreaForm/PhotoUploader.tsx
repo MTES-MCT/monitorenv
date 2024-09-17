@@ -1,13 +1,15 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
+import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label, Level, Size } from '@mtes-mct/monitor-ui'
 import Compressor from 'compressorjs'
 import { useFormikContext } from 'formik'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ImageViewer } from './ImageViewer'
+import { getImages } from './utils'
 
 const IMAGES_INFORMATIONS_TEXT = '5 photos maximum'
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
@@ -39,8 +41,21 @@ export function PhotoUploaderWithRef(_, ref) {
     const { current } = ref
     e.preventDefault()
     current?.click()
-    setImagesText(IMAGES_INFORMATIONS_TEXT)
   }
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const images = await getImages(values.images)
+      setImagesList(images)
+      if (images.length === 5) {
+        setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
+      }
+    }
+
+    fetchImages()
+    // we have no dependency here because we want to fetch the images only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const uploadImageDisplay = async () => {
     const { current } = ref
@@ -88,7 +103,7 @@ export function PhotoUploaderWithRef(_, ref) {
                     orientation:
                       naturalWidth > naturalHeight
                         ? VigilanceArea.Orientation.LANDSCAPE
-                        : VigilanceArea.Orientation.PORTAIT
+                        : VigilanceArea.Orientation.PORTRAIT
                   }
 
                   tempImageListForFront.push(compressedImageForFront)
@@ -122,17 +137,22 @@ export function PhotoUploaderWithRef(_, ref) {
     }
   }
 
-  const deleteImage = (idToRemove: string | undefined) => {
-    if (!imagesList || !idToRemove) {
+  const deleteImage = (indexToRemove: number) => {
+    if (!imagesList) {
       return
     }
 
-    const newFileList = [...imagesList].filter(file => file?.id !== idToRemove)
+    const newFileList = [...imagesList].filter((__, index) => index !== indexToRemove)
+    const newImageList = [...values.images].filter((__, index) => index !== indexToRemove)
 
     setImagesList(newFileList)
+    setFieldValue('images', newImageList)
 
-    if (imagesList.length === 5) {
+    if (newFileList.length < 5) {
       setImagesText(IMAGES_INFORMATIONS_TEXT)
+    }
+    if (newFileList.length === 5) {
+      setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
     }
   }
   const openImageViewer = (currentIndex: number) => {
@@ -143,7 +163,15 @@ export function PhotoUploaderWithRef(_, ref) {
     <div>
       <Label>Image</Label>
 
-      <input ref={ref} accept="image/*" hidden id="file" multiple onChange={uploadImageDisplay} type="file" />
+      <input
+        ref={ref}
+        accept="image/*"
+        hidden
+        id="vigilanceAreaFileInput"
+        multiple
+        onChange={uploadImageDisplay}
+        type="file"
+      />
       <Button
         accent={Accent.SECONDARY}
         disabled={imagesList.length >= 5}
@@ -158,22 +186,26 @@ export function PhotoUploaderWithRef(_, ref) {
       <PreviewList>
         {imagesList &&
           imagesList.map((image, index) => (
-            <PreviewContainer key={Math.random()}>
+            <PreviewImagesContainer key={Math.random()}>
               <img
                 alt="vigilance_area"
                 aria-hidden="true"
                 height="82px"
                 onClick={() => openImageViewer(index)}
                 src={image?.image}
-                width={image?.orientation === VigilanceArea.Orientation.LANDSCAPE ? '122px' : '57px'}
+                width={
+                  image?.orientation === VigilanceArea.Orientation.LANDSCAPE
+                    ? IMAGES_WIDTH_LANDSCAPE
+                    : IMAGES_WIDTH_PORTRAIT
+                }
               />
               <StyledButton
                 accent={Accent.SECONDARY}
                 Icon={Icon.Delete}
-                onClick={() => deleteImage(image?.id)}
+                onClick={() => deleteImage(index)}
                 size={Size.SMALL}
               />
-            </PreviewContainer>
+            </PreviewImagesContainer>
           ))}
       </PreviewList>
       {imageViewerCurrentIndex >= 0 && (
@@ -189,9 +221,6 @@ export function PhotoUploaderWithRef(_, ref) {
 
 export const PhotoUploader = forwardRef(PhotoUploaderWithRef)
 
-const PreviewContainer = styled.div`
-  position: relative;
-`
 const PreviewList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -213,4 +242,11 @@ const Text = styled.p<{ $hasError: boolean }>`
   font-style: italic;
   margin-bottom: 4px;
   margin-top: 4px;
+`
+
+const PreviewImagesContainer = styled.div`
+  position: relative;
+  > img {
+    cursor: zoom-in;
+  }
 `

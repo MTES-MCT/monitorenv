@@ -19,11 +19,11 @@ export namespace VigilanceArea {
     linkedAMPs: Array<number>
     linkedRegulatoryAreas: Array<number>
     links: Array<Link>
-    name: string
+    name: string | undefined
     source: string | undefined
     startDatePeriod: string | undefined
     themes: Array<string>
-    visibility: Visibility
+    visibility: Visibility | undefined
   }
 
   export interface Link {
@@ -107,6 +107,6 @@ export namespace VigilanceArea {
 
   export enum Orientation {
     LANDSCAPE = 'landscape',
-    PORTAIT = 'portrait'
+    PORTRAIT = 'portrait'
   }
 }
