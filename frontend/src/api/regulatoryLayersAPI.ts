@@ -5,14 +5,14 @@ import { boundingExtent, createEmpty } from 'ol/extent'
 import { createCachedSelector } from 're-reselect'
 
 import { monitorenvPrivateApi } from './api'
-import { getSelectedRegulatoryLayerIds } from '../domain/shared_slices/Regulatory'
 
 import type {
-  RegulatoryLayerWithMetadata,
-  RegulatoryLayerWithMetadataFromAPI,
   RegulatoryLayerCompact,
-  RegulatoryLayerCompactFromAPI
+  RegulatoryLayerCompactFromAPI,
+  RegulatoryLayerWithMetadata,
+  RegulatoryLayerWithMetadataFromAPI
 } from '../domain/entities/regulatory'
+import type { HomeRootState } from '@store/index'
 import type { Coordinate } from 'ol/coordinate'
 
 const GET_REGULATORY_LAYER_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
@@ -58,7 +58,10 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
 export const { useGetRegulatoryLayerByIdQuery, useGetRegulatoryLayersQuery } = regulatoryLayersAPI
 
 export const getSelectedRegulatoryLayers = createSelector(
-  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(), getSelectedRegulatoryLayerIds],
+  [
+    regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(),
+    (state: HomeRootState) => state.regulatory.selectedRegulatoryLayerIds
+  ],
   (regulatoryLayers, selectedRegulatoryLayerIds) => {
     const emptyArray = []
 
