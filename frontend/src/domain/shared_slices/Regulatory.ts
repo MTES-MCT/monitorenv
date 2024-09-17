@@ -1,9 +1,7 @@
-import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-
-import type { HomeRootState } from '../../store'
 
 const persistConfig = {
   key: 'regulatory',
@@ -81,8 +79,3 @@ export const {
 } = regulatorySlice.actions
 
 export const regulatorySlicePersistedReducer = persistReducer(persistConfig, regulatorySlice.reducer)
-
-export const getSelectedRegulatoryLayerIds = createSelector(
-  [(state: HomeRootState) => state.regulatory.selectedRegulatoryLayerIds],
-  selectedRegulatoryLayerIds => selectedRegulatoryLayerIds
-)
