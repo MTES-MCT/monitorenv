@@ -17,7 +17,8 @@ export default defineConfig({
       initCypressMousePositionPlugin(on)
       initPlugin(on, config)
     },
-    specPattern: ['cypress/e2e/**/*.spec.ts']
+    specPattern: ['cypress/e2e/**/*.spec.ts'],
+    testIsolation: false
   },
   env: {
     'cypress-plugin-snapshots': {
