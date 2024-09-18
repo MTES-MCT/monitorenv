@@ -31,9 +31,8 @@ class VigilanceAreas(
         @RequestBody createVigilanceAreaInput: VigilanceAreaDataInput,
     ): VigilanceAreaDataOutput {
         val vigilanceAreaEntity = createVigilanceAreaInput.toVigilanceAreaEntity()
-        logger.info("vigilanceAreaEntity: $vigilanceAreaEntity")
         val createdVigilanceArea = createOrUpdateVigilanceArea.execute(vigilanceAreaEntity)
-        logger.info("Vigilance area: $createdVigilanceArea")
+
         return VigilanceAreaDataOutput.fromVigilanceArea(vigilanceArea = createdVigilanceArea)
     }
 

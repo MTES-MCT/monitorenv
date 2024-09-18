@@ -10,7 +10,7 @@ context('MonitorExt', () => {
   it('A user can search semaphore', () => {
     cy.wait(200)
     cy.clickButton('Chercher un sémaphore')
-    cy.fill('Rechercher un sémaphore', 'Sémaphore de Fécamp')
+    cy.fill('Rechercher un sémaphore', 'Sémaphore de Fécamp', { delay: 400 })
     cy.get('.baselayer').toMatchImageSnapshot({
       imageConfig: {
         threshold: 0.05,
