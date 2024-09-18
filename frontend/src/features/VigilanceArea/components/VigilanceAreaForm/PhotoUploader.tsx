@@ -76,7 +76,6 @@ export function PhotoUploaderWithRef(_, ref) {
         [...current.files].map(async file => {
           const img = new Image()
           img.src = URL.createObjectURL(file)
-
           await img.decode()
           const { naturalHeight, naturalWidth } = img
 
@@ -163,15 +162,7 @@ export function PhotoUploaderWithRef(_, ref) {
     <div>
       <Label>Image</Label>
 
-      <input
-        ref={ref}
-        accept="image/*"
-        hidden
-        id="vigilanceAreaFileInput"
-        multiple
-        onChange={uploadImageDisplay}
-        type="file"
-      />
+      <input ref={ref} accept="image/*" hidden multiple onChange={uploadImageDisplay} type="file" />
       <Button
         accent={Accent.SECONDARY}
         disabled={imagesList.length >= 5}
