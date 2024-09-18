@@ -35,7 +35,7 @@
     "@tanstack/react-table": "8.20.5",
     "@tanstack/react-virtual": "beta",
     "classnames": "2.5.1",
-    "compressorjs": "^1.2.1",
+    "compressorjs": "1.2.1",
     "dayjs": "1.11.12",
     "deep-object-diff": "1.1.9",
     "formik": "2.4.6",

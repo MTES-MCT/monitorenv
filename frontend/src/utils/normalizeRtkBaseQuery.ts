@@ -1,5 +1,4 @@
 import { isObject, nullify, undefine } from '@mtes-mct/monitor-ui'
-import { omit } from 'lodash'
 
 import { FrontendError } from '../libs/FrontendError'
 
@@ -12,7 +11,7 @@ export const normalizeRtkBaseQuery: BaseQueryEnhancer<unknown, {}, {} | void> =
         typeof args === 'object' && isObject(args.body)
           ? {
               ...args,
-              body: { ...nullify(omit(args.body, ['images'])), images: args.body.images }
+              body: nullify(args.body)
             }
           : args
 
