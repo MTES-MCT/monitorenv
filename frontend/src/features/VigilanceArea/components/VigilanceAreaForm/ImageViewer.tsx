@@ -1,5 +1,6 @@
+import { useEscapeKey } from '@hooks/useEscapeKey'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 interface ImageViewerProps {
@@ -22,34 +23,15 @@ export function ImageViewer({ currentIndex, images, onClose }: ImageViewerProps)
     [images.length, localCurrentIndex]
   )
 
-  const handleKeyDown = useCallback(
-    (event: any) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-
-      if (event.key === 'ArrowLeft') {
-        changeImage(-1)
-      }
-
-      if (event.key === 'ArrowRight') {
-        changeImage(1)
-      }
-    },
-    [onClose, changeImage]
-  )
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
+  useEscapeKey({
+    onArrowLeft: () => changeImage(-1),
+    onArrowRight: () => changeImage(1),
+    onEscape: () => onClose()
+  })
 
   return (
     <>
-      <Wrapper onKeyDown={handleKeyDown}>
+      <Wrapper>
         <CloseButton>
           <IconButton
             accent={Accent.TERTIARY}

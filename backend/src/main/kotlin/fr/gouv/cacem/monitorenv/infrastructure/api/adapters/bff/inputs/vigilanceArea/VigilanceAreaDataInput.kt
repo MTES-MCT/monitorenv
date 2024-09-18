@@ -18,7 +18,7 @@ data class VigilanceAreaDataInput(
     val geom: MultiPolygon? = null,
     val isArchived: Boolean,
     val isDraft: Boolean,
-    val images: List<ImageInputEntity>? = listOf(),
+    val images: List<ImageDataInput>? = listOf(),
     val links: List<LinkEntity>? = null,
     val linkedAMPs: List<Int>? = listOf(),
     val linkedRegulatoryAreas: List<Int>? = listOf(),
@@ -44,8 +44,9 @@ data class VigilanceAreaDataInput(
             isArchived = this.isArchived,
             isDeleted = false,
             isDraft = this.isDraft,
-            images = this.images?.map { image ->
-                return@map ImageEntity(
+            images =
+            this.images?.map { image ->
+                ImageEntity(
                     id = image.id,
                     vigilanceAreaId = image.vigilanceAreaId,
                     name = image.name,

@@ -85,7 +85,7 @@ export function PhotoUploaderWithRef(_, ref) {
               error(err) {
                 reject(err)
               },
-              quality: 0.4,
+              quality: 0.3,
               async success(result) {
                 try {
                   const base64Image = await getBase64(result)
@@ -99,6 +99,7 @@ export function PhotoUploaderWithRef(_, ref) {
                   }
                   const compressedImageForFront = {
                     image: base64Image,
+                    name: file.name,
                     orientation:
                       naturalWidth > naturalHeight
                         ? VigilanceArea.Orientation.LANDSCAPE
@@ -177,19 +178,20 @@ export function PhotoUploaderWithRef(_, ref) {
       <PreviewList>
         {imagesList &&
           imagesList.map((image, index) => (
-            <PreviewImagesContainer key={Math.random()}>
-              <img
-                alt="vigilance_area"
-                aria-hidden="true"
-                height="82px"
-                onClick={() => openImageViewer(index)}
-                src={image?.image}
-                width={
-                  image?.orientation === VigilanceArea.Orientation.LANDSCAPE
-                    ? IMAGES_WIDTH_LANDSCAPE
-                    : IMAGES_WIDTH_PORTRAIT
-                }
-              />
+            // eslint-disable-next-line react/no-array-index-key
+            <PreviewImagesContainer key={index}>
+              <StyledImageButton onClick={() => openImageViewer(index)} type="button">
+                <img
+                  alt={`${values.name}-${image.name}`}
+                  height="82px"
+                  src={image?.image}
+                  width={
+                    image?.orientation === VigilanceArea.Orientation.LANDSCAPE
+                      ? IMAGES_WIDTH_LANDSCAPE
+                      : IMAGES_WIDTH_PORTRAIT
+                  }
+                />
+              </StyledImageButton>
               <StyledButton
                 accent={Accent.SECONDARY}
                 Icon={Icon.Delete}
@@ -212,12 +214,29 @@ export function PhotoUploaderWithRef(_, ref) {
 
 export const PhotoUploader = forwardRef(PhotoUploaderWithRef)
 
-const PreviewList = styled.div`
+const PreviewList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  list-style-type: none;
   margin-top: 10px;
+  padding: 0px;
 `
+
+const PreviewImagesContainer = styled.li`
+  position: relative;
+  > img {
+    object-fit: cover;
+  }
+`
+
+const StyledImageButton = styled.button`
+  cursor: zoom-in;
+  background: none;
+  border: none;
+  padding: 0px;
+`
+
 const StyledButton = styled(Button)`
   background-color: ${p => p.theme.color.white};
   bottom: 4px;
@@ -228,16 +247,10 @@ const StyledButton = styled(Button)`
     margin-right: 0px !important;
   }
 `
+
 const Text = styled.p<{ $hasError: boolean }>`
   color: ${p => (p.$hasError ? p.theme.color.maximumRed : p.theme.color.slateGray)};
   font-style: italic;
   margin-bottom: 4px;
   margin-top: 4px;
-`
-
-const PreviewImagesContainer = styled.div`
-  position: relative;
-  > img {
-    cursor: zoom-in;
-  }
 `

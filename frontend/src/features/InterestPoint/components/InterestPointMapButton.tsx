@@ -41,7 +41,7 @@ export function InterestPointMapButton() {
     close()
   }, [dispatch, close])
 
-  useEscapeKey(cancel)
+  useEscapeKey({ onEscape: cancel })
 
   const toggleInterestPointMenu = useCallback(() => {
     if (!isOpen) {

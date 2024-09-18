@@ -16,7 +16,7 @@ import { AMPList } from './AddAMPs/AMPList'
 import { RegulatoryAreas } from './AddRegulatoryAreas/RegulatoryAreas'
 import { ImageViewer } from './ImageViewer'
 import { PublishedSchema } from './Schema'
-import { DeleteButton, FooterContainer, FooterRightButtons } from './style'
+import { DeleteButton, FooterContainer, FooterRightButtons, StyledImageButton } from './style'
 import { getImages } from './utils'
 
 const EMPTY_VALUE = '--'
@@ -184,19 +184,19 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         {imagesList.length > 0 && (
           <ImageContainer>
             {imagesList.map((image, index) => (
-              <img
-                key={Math.random()}
-                alt="vigilance_area"
-                aria-hidden="true"
-                height="82px"
-                onClick={() => openImageViewer(index)}
-                src={image?.image}
-                width={
-                  image?.orientation === VigilanceArea.Orientation.LANDSCAPE
-                    ? IMAGES_WIDTH_LANDSCAPE
-                    : IMAGES_WIDTH_PORTRAIT
-                }
-              />
+              // eslint-disable-next-line react/no-array-index-key
+              <StyledImageButton key={index} onClick={() => openImageViewer(index)} type="button">
+                <img
+                  alt={`${values.name}-${image.name}`}
+                  height="82px"
+                  src={image?.image}
+                  width={
+                    image?.orientation === VigilanceArea.Orientation.LANDSCAPE
+                      ? IMAGES_WIDTH_LANDSCAPE
+                      : IMAGES_WIDTH_PORTRAIT
+                  }
+                />
+              </StyledImageButton>
             ))}
           </ImageContainer>
         )}
@@ -285,7 +285,7 @@ const ImageContainer = styled.div`
   padding: 16px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
   > img {
-    cursor: zoom-in;
+    object-fit: cover;
   }
 `
 

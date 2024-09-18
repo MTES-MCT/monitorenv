@@ -1,8 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class ImageEntity(
     val id: Int? = null,
     val vigilanceAreaId: Int? = null,

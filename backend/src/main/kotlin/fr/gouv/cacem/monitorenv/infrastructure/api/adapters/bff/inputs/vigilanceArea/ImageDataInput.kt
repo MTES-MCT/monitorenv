@@ -1,9 +1,9 @@
-package fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ImageInputEntity(
+data class ImageDataInput(
     val id: Int? = null,
     val vigilanceAreaId: Int? = null,
     val name: String,

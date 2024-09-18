@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVig
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -228,13 +229,13 @@ class VigilanceAreasITests {
                 endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = polygon,
                 images = listOf(
-                    ImageInputEntity(
+                    ImageDataInput(
                         name = "image1.jpg",
                         content = "AQID",
                         mimeType = "image/jpeg",
                         size = 1024,
                     ),
-                    ImageInputEntity(
+                    ImageDataInput(
                         name = "image2.png",
                         content = "BAUG",
                         mimeType = "image/png",

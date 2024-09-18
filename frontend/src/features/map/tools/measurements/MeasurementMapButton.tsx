@@ -30,9 +30,11 @@ export function MeasurementMapButton() {
     dispatch(globalActions.setIsMapToolVisible(undefined))
   })
 
-  useEscapeKey(() => {
-    dispatch(setMeasurementTypeToAdd(undefined))
-    dispatch(globalActions.setIsMapToolVisible(undefined))
+  useEscapeKey({
+    onEscape: () => {
+      dispatch(setMeasurementTypeToAdd(undefined))
+      dispatch(globalActions.setIsMapToolVisible(undefined))
+    }
   })
 
   useEffect(() => {

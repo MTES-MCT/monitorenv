@@ -53,3 +53,9 @@ export const ValidateButton = styled(Button)`
     border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   }
 `
+export const StyledImageButton = styled.button`
+  cursor: zoom-in;
+  background: none;
+  border: none;
+  padding: 0px;
+`

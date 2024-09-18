@@ -93,6 +93,7 @@ export namespace VigilanceArea {
   export type ImageForFrontProps = {
     id?: string
     image: string
+    name: string
     orientation: Orientation
   }
 
