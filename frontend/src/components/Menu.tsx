@@ -56,21 +56,19 @@ export function Menu({ isSuperUser }: MenuProps) {
         </li>
       )}
 
-      <ToolWrapper>
-        <ToolButtons>
-          {displayMeasurement && isSuperUser && <MeasurementMapButton />}
-          {displayInterestPoint && isSuperUser && (
-            <li>
-              <InterestPointMapButton />
-            </li>
-          )}
-          {displayAccountButton && (
-            <li>
-              <Account />
-            </li>
-          )}
-        </ToolButtons>
-      </ToolWrapper>
+      <ToolButtons>
+        {displayMeasurement && isSuperUser && <MeasurementMapButton />}
+        {displayInterestPoint && isSuperUser && (
+          <div>
+            <InterestPointMapButton />
+          </div>
+        )}
+        {displayAccountButton && (
+          <div>
+            <Account />
+          </div>
+        )}
+      </ToolButtons>
     </ButtonsWrapper>
   )
 }
@@ -89,14 +87,9 @@ const ButtonsWrapper = styled.menu<{
   list-style: none;
 `
 
-const ToolWrapper = styled.li`
+const ToolButtons = styled.div`
   margin-top: 24px;
-`
-
-const ToolButtons = styled.ul`
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  list-style: none;
-  padding: 0;
 `

@@ -1,4 +1,3 @@
-import { StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -6,6 +5,7 @@ import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { globalActions } from 'domain/shared_slices/Global'
 import { useAuth } from 'react-oidc-context'
+import styled from 'styled-components'
 
 export function Account() {
   const dispatch = useAppDispatch()
@@ -29,7 +29,7 @@ export function Account() {
   return (
     <>
       {isAccountVisible && (
-        <StyledMapMenuDialogContainer>
+        <StyledContainer>
           <MapMenuDialog.Header>
             <MapMenuDialog.Title>Déconnexion</MapMenuDialog.Title>
           </MapMenuDialog.Header>
@@ -43,7 +43,7 @@ export function Account() {
               </Button>
             </MapMenuDialog.Footer>
           )}
-        </StyledMapMenuDialogContainer>
+        </StyledContainer>
       )}
 
       <MenuWithCloseButton.ButtonOnMap
@@ -57,3 +57,7 @@ export function Account() {
     </>
   )
 }
+
+const StyledContainer = styled(MapMenuDialog.Container)`
+  margin-right: unset;
+`
