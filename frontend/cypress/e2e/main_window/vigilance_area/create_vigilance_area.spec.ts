@@ -56,15 +56,31 @@ describe('Create Vigilance Area', () => {
     })
     cy.clickButton('Valider les tracés')
 
+    cy.clickButton('Ajouter une image')
+    cy.fixture('vigilanceAreaImage.png', null).then(fileContent => {
+      cy.get('input[type=file]').selectFile(
+        {
+          contents: Cypress.Buffer.from(fileContent),
+          fileName: 'vigilanceAreaImage.png',
+          mimeType: 'image/png'
+        },
+        {
+          action: 'select',
+          force: true,
+          log: true
+        }
+      )
+    })
+
+    cy.wait(500)
+
     // Submit the form
     cy.clickButton('Enregistrer')
     cy.wait('@createVigilanceArea').then(({ request, response }) => {
       const createdVigilanceArea = request.body
       expect(response?.statusCode).equal(200)
-
       const startDateMonth = startDate[1] < 10 ? `0${startDate[1]}` : startDate[1]
       const startDateDay = startDate[2] < 10 ? `0${startDate[2]}` : startDate[2]
-
       const endDateMonth = endDate[1] < 10 ? `0${endDate[1]}` : endDate[1]
       const endDateDay = endDate[2] < 10 ? `0${endDate[2]}` : endDate[2]
       // Check the response
@@ -80,6 +96,10 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.comments).equal('Ceci est un commentaire')
       expect(createdVigilanceArea.createdBy).equal('ABC')
       expect(createdVigilanceArea.isDraft).equal(true)
+      expect(createdVigilanceArea.images).to.have.length(1)
+      expect(createdVigilanceArea.images[0].name).equal('vigilanceAreaImage.png')
+      expect(createdVigilanceArea.images[0].size).equal(396656)
+      expect(createdVigilanceArea.images[0].mimeType).equal('image/png')
 
       cy.getDataCy('banner-stack').should('be.visible')
       cy.getDataCy('banner-stack').contains('La zone de vigilance a bien été créée')
