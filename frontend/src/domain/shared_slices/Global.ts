@@ -1,7 +1,6 @@
 // TODO This slice should disappear in favor of `features/MainWindow/slice.ts` and "Map" feature should have its own slice.
 // TODO "Map" feature should have its own slice where we would transfer the related `display...` props.
 
-import { isDashboardEnabled } from '@features/missions/MissionForm/utils'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
@@ -101,7 +100,7 @@ const initialState: GlobalStateType = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayInterestPoint: true,
-  displayDashboard: true && isDashboardEnabled(),
+  displayDashboard: true,
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
   displayRightMenuControlUnitListButton: true,
