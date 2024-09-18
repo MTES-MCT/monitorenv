@@ -83,7 +83,7 @@ class VigilanceAreaFixture {
             )
         }
 
-        fun aArchivedVigilanceAreaEntity(): VigilanceAreaEntity {
+        fun anArchivedVigilanceAreaEntity(): VigilanceAreaEntity {
             return VigilanceAreaEntity(
                 id = 3,
                 comments = "Basic area comments",

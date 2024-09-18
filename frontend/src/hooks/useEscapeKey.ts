@@ -1,17 +1,30 @@
 import { useEffect } from 'react'
 
-export const useEscapeKey = (onEscape?: () => void) => {
+type UseEscapeKeyProps = {
+  onArrowLeft?: () => void
+  onArrowRight?: () => void
+  onEscape?: () => void
+}
+export const useEscapeKey = ({ onArrowLeft, onArrowRight, onEscape }: UseEscapeKeyProps) => {
   useEffect(() => {
-    const escapeFromKeyboard = event => {
+    const handleKeyDown = event => {
       if (event.key === 'Escape' && onEscape) {
         onEscape()
       }
+
+      if (event.key === 'ArrowLeft' && onArrowLeft) {
+        onArrowLeft()
+      }
+
+      if (event.key === 'ArrowRight' && onArrowRight) {
+        onArrowRight()
+      }
     }
 
-    document.addEventListener('keydown', escapeFromKeyboard, false)
+    document.addEventListener('keydown', handleKeyDown, false)
 
     return () => {
-      document.removeEventListener('keydown', escapeFromKeyboard, false)
+      document.removeEventListener('keydown', handleKeyDown, false)
     }
-  }, [onEscape])
+  }, [onEscape, onArrowLeft, onArrowRight])
 }

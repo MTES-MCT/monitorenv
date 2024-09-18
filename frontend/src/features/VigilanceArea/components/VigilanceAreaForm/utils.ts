@@ -38,6 +38,7 @@ export async function getImages(images: VigilanceArea.ImagePropsForApi[]) {
 
         return {
           image: base64Image,
+          name: image.name,
           orientation:
             naturalWidth > naturalHeight ? VigilanceArea.Orientation.LANDSCAPE : VigilanceArea.Orientation.PORTRAIT
         }
