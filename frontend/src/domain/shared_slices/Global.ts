@@ -42,7 +42,6 @@ type GlobalStateType = {
   displayLocateOnMap: boolean
   displayMeasurement: boolean
   displayInterestPoint: boolean
-  displayDashboard: boolean
   displaySearchSemaphoreButton: boolean
   displayReportingsButton: boolean
   displayRightMenuControlUnitListButton: boolean
@@ -77,8 +76,6 @@ type GlobalStateType = {
 
   displayStationLayer: boolean
 
-  isDashboardDialogVisible: boolean
-
   isLayersSidebarVisible: boolean
 
   isMapToolVisible?: MapToolType
@@ -100,7 +97,6 @@ const initialState: GlobalStateType = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayInterestPoint: true,
-  displayDashboard: true,
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
   displayRightMenuControlUnitListButton: true,
@@ -139,8 +135,6 @@ const initialState: GlobalStateType = {
 
   displayStationLayer: false,
 
-  isDashboardDialogVisible: false,
-
   isMapToolVisible: undefined,
 
   healthcheckTextWarning: undefined,
@@ -170,7 +164,6 @@ const globalSlice = createSlice({
       state.isSearchSemaphoreVisible = false
       state.isSearchMissionsVisible = false
       state.isMapToolVisible = undefined
-      state.isDashboardDialogVisible = false
     },
 
     removeOverlayStroke(state) {

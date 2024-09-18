@@ -9,19 +9,22 @@ import {
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { MapToolType } from '../../../domain/entities/map/constants'
 import { globalActions, setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useEscapeKey } from '../../../hooks/useEscapeKey'
+import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapper'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
   const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
 
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
+
+  const wrapperRef = useRef(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -63,7 +66,7 @@ export function InterestPointMapButton() {
   }, [close, dispatch, isOpen])
 
   return (
-    <>
+    <ButtonWrapper ref={wrapperRef} topPosition={346}>
       {isOpen && <EditInterestPoint cancel={cancel} close={close} />}
 
       <MenuWithCloseButton.ButtonOnMap
@@ -74,6 +77,6 @@ export function InterestPointMapButton() {
         size={Size.LARGE}
         title="Créer un point d'intérêt"
       />
-    </>
+    </ButtonWrapper>
   )
 }

@@ -1,4 +1,5 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { ButtonWrapper } from '@features/MainWindow/components/RightMenu/ButtonWrapper'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
@@ -18,7 +19,7 @@ export function ReportingsButton() {
   }
 
   return (
-    <>
+    <ButtonWrapper topPosition={130}>
       {isSearchReportingsVisible && <SearchReportings />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchReportingsVisible ? '_active' : undefined}
@@ -28,6 +29,6 @@ export function ReportingsButton() {
         size={Size.LARGE}
         title="Chercher des signalements"
       />
-    </>
+    </ButtonWrapper>
   )
 }

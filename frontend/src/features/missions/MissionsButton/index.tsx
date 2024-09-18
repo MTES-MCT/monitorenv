@@ -1,15 +1,17 @@
-import { DialogButton, DialogSeparator, StyledMapMenuDialogContainer } from '@components/style'
-import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
-import { SideWindowStatus, sideWindowActions } from '@features/SideWindow/slice'
-import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
-import { isMissionOrMissionsPage } from '@utils/routes'
-import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { globalActions, setDisplayedItems } from 'domain/shared_slices/Global'
-import { addMission } from 'domain/use_cases/missions/addMission'
-import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
+import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
+import styled from 'styled-components'
+
+import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
+import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { isMissionOrMissionsPage } from '../../../utils/routes'
+import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
+import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapper'
+import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useAppDispatch()
@@ -32,10 +34,14 @@ export function MissionsMenu() {
 
   const toggleMissionsMenu = e => {
     e.preventDefault()
-    dispatch(globalActions.hideSideButtons())
     dispatch(
       setDisplayedItems({
-        isSearchMissionsVisible: !isSearchMissionsVisible
+        isControlUnitDialogVisible: false,
+        isControlUnitListDialogVisible: false,
+        isMapToolVisible: undefined,
+        isSearchMissionsVisible: !isSearchMissionsVisible,
+        isSearchReportingsVisible: false,
+        isSearchSemaphoreVisible: false
       })
     )
     dispatch(reduceReportingFormOnMap())
@@ -45,9 +51,9 @@ export function MissionsMenu() {
   }
 
   return (
-    <>
+    <ButtonWrapper topPosition={82}>
       {isSearchMissionsVisible && (
-        <StyledMapMenuDialogContainer>
+        <MapMenuDialog.Container>
           <MapMenuDialog.Header>
             <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={toggleMissionsMenu} />
             <MapMenuDialog.Title>Missions et contrôles</MapMenuDialog.Title>
@@ -58,15 +64,15 @@ export function MissionsMenu() {
             />
           </MapMenuDialog.Header>
           <MapMenuDialog.Footer>
-            <DialogButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
+            <StyledButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
               Ajouter une nouvelle mission
-            </DialogButton>
-            <DialogSeparator />
-            <DialogButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
+            </StyledButton>
+            <StyledSeparator />
+            <StyledButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
               Voir la vue détaillée des missions
-            </DialogButton>
+            </StyledButton>
           </MapMenuDialog.Footer>
-        </StyledMapMenuDialogContainer>
+        </MapMenuDialog.Container>
       )}
       <MenuWithCloseButton.ButtonOnMap
         className={isMissionButtonIsActive ? '_active' : undefined}
@@ -74,8 +80,20 @@ export function MissionsMenu() {
         Icon={Icon.MissionAction}
         onClick={toggleMissionsMenu}
         size={Size.LARGE}
-        title="Voir les missions"
+        title="voir les missions"
       />
-    </>
+    </ButtonWrapper>
   )
 }
+
+// TODO delete when Monitor-ui component have good padding
+const StyledButton = styled(Button)`
+  padding: 4px 12px;
+`
+
+const StyledSeparator = styled.div`
+  height: 1px;
+  border-top: 1px solid ${p => p.theme.color.gainsboro};
+  margin-left: -12px;
+  margin-right: -12px;
+`

@@ -1,4 +1,5 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { ButtonWrapper } from '@features/MainWindow/components/RightMenu/ButtonWrapper'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
@@ -7,7 +8,7 @@ import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceRepor
 
 import { SearchSemaphores } from './SearchSemaphores'
 
-export function SearchSemaphoreButton() {
+export function SearchSemaphoreButton({ isSuperUser }: { isSuperUser: boolean | undefined }) {
   const dispatch = useAppDispatch()
   const isSearchSemaphoreVisible = useAppSelector(state => state.global.isSearchSemaphoreVisible)
 
@@ -18,7 +19,7 @@ export function SearchSemaphoreButton() {
   }
 
   return (
-    <>
+    <ButtonWrapper topPosition={isSuperUser ? 178 : 82}>
       {isSearchSemaphoreVisible && <SearchSemaphores />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchSemaphoreVisible ? '_active' : undefined}
@@ -28,6 +29,6 @@ export function SearchSemaphoreButton() {
         size={Size.LARGE}
         title="Chercher un sémaphore"
       />
-    </>
+    </ButtonWrapper>
   )
 }
