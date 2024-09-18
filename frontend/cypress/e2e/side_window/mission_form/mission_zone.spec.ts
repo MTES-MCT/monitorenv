@@ -31,7 +31,6 @@ context('Side Window > Mission Form > Mission zone', () => {
       onBeforeLoad: () => {
         Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
         Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
-        Cypress.env('CYPRESS_FRONTEND_DASHBOARD_ENABLED', 'true')
       }
     })
 
