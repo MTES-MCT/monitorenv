@@ -1,5 +1,4 @@
 import { useGetSemaphoresQuery } from '@api/semaphoresAPI'
-import { StyledMapMenuDialogContainer } from '@components/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, CustomSearch, Icon, MapMenuDialog, OPENLAYERS_PROJECTION, Search, Size } from '@mtes-mct/monitor-ui'
@@ -80,7 +79,7 @@ export function SearchSemaphores() {
   }
 
   return (
-    <StyledMapMenuDialogContainer>
+    <MapMenuDialog.Container>
       <MapMenuDialog.Header>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeSearchSemaphore} />
         <MapMenuDialog.Title>Sémaphores</MapMenuDialog.Title>
@@ -117,7 +116,7 @@ export function SearchSemaphores() {
           ))}
         </StyledRegisteredSemaphoreList>
       )}
-    </StyledMapMenuDialogContainer>
+    </MapMenuDialog.Container>
   )
 }
 

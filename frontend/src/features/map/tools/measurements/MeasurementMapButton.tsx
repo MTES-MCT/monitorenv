@@ -13,6 +13,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
 import { useEscapeKey } from '../../../../hooks/useEscapeKey'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
+import { ButtonWrapper } from '../../../MainWindow/components/RightMenu/ButtonWrapper'
 import { MapToolButton } from '../MapToolButton'
 
 export function MeasurementMapButton() {
@@ -71,17 +72,18 @@ export function MeasurementMapButton() {
   }, [dispatch, measurementTypeToAdd])
 
   return (
-    <>
+    <ButtonWrapper ref={wrapperRef} topPosition={298}>
       <MapToolButton
         dataCy="measurement"
         icon={measurementIcon}
         isHidden={!displayMeasurement}
         isOpen={isOpen || !!measurementTypeToAdd}
         onClick={openOrCloseMeasurementMenu}
+        style={{ top: 249 }}
         title="Mesurer une distance"
       />
 
-      <MeasurementOptions ref={wrapperRef} healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
+      <MeasurementOptions healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
         <MeasurementItem
           className="_active"
           data-cy="measurement-multiline"
@@ -98,7 +100,7 @@ export function MeasurementMapButton() {
         />
       </MeasurementOptions>
       <CustomCircleRange />
-    </>
+    </ButtonWrapper>
   )
 }
 
@@ -121,6 +123,7 @@ const MeasurementOptions = styled(MapComponentStyle)<{
   opacity: ${p => (p.isOpen ? '1' : '0')};
   position: absolute;
   right: 10px;
+  top: 0;
   transition: all 0.5s;
   width: 175px;
 `

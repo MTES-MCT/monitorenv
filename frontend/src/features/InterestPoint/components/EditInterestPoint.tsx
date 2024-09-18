@@ -1,4 +1,3 @@
-import { StyledMapMenuDialogContainer } from '@components/style'
 import { SetCoordinates } from '@features/coordinates/SetCoordinates'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -118,7 +117,7 @@ export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
   }
 
   return (
-    <StyledMapMenuDialogContainer data-cy="save-interest-point">
+    <MapMenuDialog.Container data-cy="save-interest-point">
       <MapMenuDialog.Header>
         <MapMenuDialog.CloseButton data-cy="interest-point-close" Icon={Icon.Close} onClick={cancel} />
         <MapMenuDialog.Title data-cy="interest-point-title">
@@ -166,7 +165,7 @@ export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
           Annuler
         </Button>
       </MapMenuDialog.Footer>
-    </StyledMapMenuDialogContainer>
+    </MapMenuDialog.Container>
   )
 }
 

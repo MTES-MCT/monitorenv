@@ -45,7 +45,6 @@ export enum DistanceUnit {
 }
 
 export enum MapToolType {
-  DASHBOARD = 'DASHBOARD',
   FILTERS = 'FILTERS',
   INTEREST_POINT = 'INTEREST_POINT',
   MEASUREMENT = 'MEASUREMENT',
