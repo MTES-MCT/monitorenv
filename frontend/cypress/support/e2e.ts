@@ -41,21 +41,12 @@ Cypress.on('uncaught:exception', err => {
   return undefined
 })
 
-// Run before spec
+// Run before each spec
 before(() => {
   // We use a Cypress session to inject inject a Local Storage key
   // so that we can detect when the browser app is running in Cypress.
   // https://docs.cypress.io/faq/questions/using-cypress-faq#How-do-I-preserve-cookies--localStorage-in-between-my-tests
-  cy.session(
-    'cypress',
-    () => {
-      window.localStorage.setItem('IS_CYPRESS', 'true')
-    },
-    // https://www.cypress.io/blog/mistake-when-using-cy-session-and-how-to-solve-it
-    {
-      validate() {
-        window.localStorage.getItem('IS_CYPRESS') === 'true'
-      }
-    }
-  )
+  cy.session('cypress', () => {
+    window.localStorage.setItem('IS_CYPRESS', 'true')
+  })
 })
