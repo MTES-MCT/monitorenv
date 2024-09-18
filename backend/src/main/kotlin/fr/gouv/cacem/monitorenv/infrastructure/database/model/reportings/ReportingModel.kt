@@ -4,16 +4,17 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
 
+/**
+ *
+ * For native queries prupose only
+ * For JPQL queries you should use [ReportingModelJpa]
+ */
 @Entity
 @Table(name = "reportings")
 class ReportingModel(
