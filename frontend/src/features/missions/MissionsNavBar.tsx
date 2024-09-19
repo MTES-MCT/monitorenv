@@ -65,7 +65,7 @@ export function MissionsNavBar() {
   }
 
   return (
-    <NavBar onClose={removeTab} onSelect={selectTab}>
+    <NavBar name="missions" onClose={removeTab} onSelect={selectTab}>
       {tabs.map((item, index) => (
         <ResponsiveNav.Item key={item.nextPath} data-cy={`mission-${index}`} eventKey={item.nextPath} icon={item.icon}>
           {item.label}

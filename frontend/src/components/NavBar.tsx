@@ -3,14 +3,20 @@ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import ResponsiveNav from '@rsuite/responsive-nav'
 import styled from 'styled-components'
 
-export function NavBar({ children, onClose, onSelect }) {
+type NavBarProps = {
+  children: React.ReactNode[]
+  name: string
+  onClose: (eventKey: string | number | undefined) => void
+  onSelect: (eventKey: string | number | undefined) => void
+}
+export function NavBar({ children, name, onClose, onSelect }: NavBarProps) {
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
   return (
     <StyledResponsiveNav
       activeKey={currentPath}
       appearance="tabs"
-      data-cy="dashboards-nav"
+      data-cy={`${name}-nav`}
       moreProps={{ placement: 'bottomEnd' }}
       moreText={<IconButton accent={Accent.TERTIARY} Icon={Icon.More} />}
       onItemRemove={onClose}

@@ -28,7 +28,7 @@ export function DashboardsNavBar() {
   const closeDashboard = () => {}
 
   return (
-    <NavBar onClose={closeDashboard} onSelect={selectDashboard}>
+    <NavBar name="dashboards" onClose={closeDashboard} onSelect={selectDashboard}>
       {tabs.map((item, index) => (
         <ResponsiveNav.Item
           key={item.nextPath}
