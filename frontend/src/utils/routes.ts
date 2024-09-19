@@ -42,3 +42,13 @@ export function isReportingsPage(path: string) {
     path as string
   )
 }
+
+export function isDashboardsPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: sideWindowPaths.DASHBOARDS
+    },
+    path as string
+  )
+}
