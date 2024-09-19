@@ -49,6 +49,7 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
 const openDrawLayerModal = (dispatch, displayLayersSidebar = true) => {
   dispatch(
     setDisplayedItems({
+      displayDashboard: false,
       displayDrawModal: true,
       displayInterestPoint: false,
       displayLayersSidebar,
