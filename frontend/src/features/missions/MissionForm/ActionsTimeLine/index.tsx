@@ -169,10 +169,12 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
                 envActionsIndex !== undefined &&
                 envActionsIndex >= 0 &&
                 errors?.envActions[envActionsIndex]
+              // Attached and detached reporting are from the same object but action are different (attach/detach)
+              const key = 'action' in action ? action.action + action.id : action.id
 
               return (
                 <ActionCard
-                  key={action.id}
+                  key={key}
                   action={action}
                   duplicateAction={() => handleDuplicateAction(action.id)}
                   hasError={!!envActionsErrors}

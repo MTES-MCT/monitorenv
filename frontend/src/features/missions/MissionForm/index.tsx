@@ -2,7 +2,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { attachReportingToMissionSliceActions } from './AttachReporting/slice'
@@ -23,9 +23,11 @@ export function MissionFormWrapper() {
   )
   const engagedControlUnit = selectedMission?.engagedControlUnit
 
-  dispatch(
-    attachReportingToMissionSliceActions.setAttachedReportings(selectedMission?.missionForm.attachedReportings ?? [])
-  )
+  useEffect(() => {
+    dispatch(
+      attachReportingToMissionSliceActions.setAttachedReportings(selectedMission?.missionForm.attachedReportings ?? [])
+    )
+  }, [dispatch, selectedMission?.missionForm.attachedReportings])
 
   const activeAction = selectedMission?.activeAction
 
