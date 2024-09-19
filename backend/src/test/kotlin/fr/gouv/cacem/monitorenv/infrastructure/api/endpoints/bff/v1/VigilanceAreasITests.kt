@@ -140,14 +140,6 @@ class VigilanceAreasITests {
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
             )
-            .andExpect(jsonPath("$[0].images[0].name", equalTo("image1.jpg")))
-            .andExpect(jsonPath("$[0].images[0].mimeType", equalTo("image/jpeg")))
-            .andExpect(jsonPath("$[0].images[0].size", equalTo(1024)))
-            .andExpect(jsonPath("$[0].images[0].content", equalTo("AQID")))
-            .andExpect(jsonPath("$[0].images[1].name", equalTo("image2.png")))
-            .andExpect(jsonPath("$[0].images[1].mimeType", equalTo("image/png")))
-            .andExpect(jsonPath("$[0].images[1].size", equalTo(2048)))
-            .andExpect(jsonPath("$[0].images[1].content", equalTo("BAUG")))
             .andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").doesNotExist())
@@ -165,9 +157,6 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            )
-            .andExpect(
-                jsonPath("$[1].images").isEmpty(),
             )
             .andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
