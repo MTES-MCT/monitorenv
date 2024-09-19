@@ -131,7 +131,7 @@ context('Side Window > Mission Form > Mission zone', () => {
     // Add control  which is most recent than surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
-    cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
+    cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
     const controlEndDate = getFutureDate(5, 'day')
     cy.fill('Date et heure du contrôle (UTC)', controlEndDate)
     cy.clickButton('Ajouter un point de contrôle')
