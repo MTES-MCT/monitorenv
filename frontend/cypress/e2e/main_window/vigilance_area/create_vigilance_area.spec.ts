@@ -56,7 +56,6 @@ describe('Create Vigilance Area', () => {
     })
     cy.clickButton('Valider les tracés')
 
-    /*     cy.clickButton('Ajouter une image')
     cy.fixture('vigilanceAreaImage.png', null).then(fileContent => {
       cy.get('input[type=file]').selectFile(
         {
@@ -72,7 +71,7 @@ describe('Create Vigilance Area', () => {
       )
     })
 
-    cy.wait(500) */
+    cy.wait(500)
 
     // Submit the form
     cy.clickButton('Enregistrer')
@@ -96,10 +95,10 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.comments).equal('Ceci est un commentaire')
       expect(createdVigilanceArea.createdBy).equal('ABC')
       expect(createdVigilanceArea.isDraft).equal(true)
-      /*       expect(createdVigilanceArea.images).to.have.length(1)
+      expect(createdVigilanceArea.images).to.have.length(1)
       expect(createdVigilanceArea.images[0].name).equal('vigilanceAreaImage.png')
       expect(createdVigilanceArea.images[0].size).equal(396656)
-      expect(createdVigilanceArea.images[0].mimeType).equal('image/png') */
+      expect(createdVigilanceArea.images[0].mimeType).equal('image/png')
 
       cy.getDataCy('banner-stack').should('be.visible')
       cy.getDataCy('banner-stack').contains('La zone de vigilance a bien été créée')
