@@ -34,6 +34,11 @@ export function AttachReportingToMissionModal() {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
 
+  const cancelReportingToAttach = () => {
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+    dispatch(attachReportingToMissionSliceActions.setAttachedReportings(initialAttachedReportings))
+  }
+
   // Close modal when selected mission form is hidden
   useEffect(() => {
     if (previousMissionId && previousMissionId !== routeParams?.params?.id && isReportingAttachmentInProgress) {
@@ -47,6 +52,7 @@ export function AttachReportingToMissionModal() {
 
   return (
     <MapInteraction
+      onCancel={cancelReportingToAttach}
       onReset={resetReportingToAttach}
       onValidate={validateReportingToAttach}
       title="Vous êtes en train de lier un signalement"
