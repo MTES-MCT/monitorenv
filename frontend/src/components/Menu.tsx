@@ -1,6 +1,6 @@
 import { Account } from '@features/Account/components/Account'
 import { ControlUnitListButton } from '@features/ControlUnit/components/ControlUnitListButton'
-import { DashboardMapButton } from '@features/Dashboard/components/DashboardMapButton'
+import { DashboardMenuButton } from '@features/Dashboard/components/MenuButton'
 import { InterestPointMapButton } from '@features/InterestPoint/components/InterestPointMapButton'
 import { MeasurementMapButton } from '@features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '@features/missions/MissionsButton'
@@ -52,7 +52,7 @@ export function Menu({ isSuperUser }: MenuProps) {
       )}
       {displayDashboard && isSuperUser && (
         <li>
-          <DashboardMapButton />
+          <DashboardMenuButton />
         </li>
       )}
 
