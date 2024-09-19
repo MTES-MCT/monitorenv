@@ -1,5 +1,6 @@
 import { ReportingsFilters } from '@features/Reportings/Filters'
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
+import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
@@ -20,7 +21,7 @@ export function ReportingsList() {
   }
 
   return (
-    <StyledReportingsContainer>
+    <SideWindowContent>
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Signalements</Title>
         <StyledButton Icon={Icon.Plus} onClick={createReporting}>
@@ -34,17 +35,9 @@ export function ReportingsList() {
       ) : (
         <ReportingsTable isLoading={isLoading || isFetching} reportings={reportings} />
       )}
-    </StyledReportingsContainer>
+    </SideWindowContent>
   )
 }
-
-const StyledReportingsContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 40px;
-  overflow: auto;
-`
 
 const StyledHeader = styled.div`
   display: flex;

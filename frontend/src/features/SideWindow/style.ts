@@ -26,3 +26,11 @@ export const StyledRouteContainer = styled.section`
   flex-direction: column;
   width: calc(100vw - 64px);
 `
+
+export const SideWindowContent = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 40px;
+  overflow: auto;
+`

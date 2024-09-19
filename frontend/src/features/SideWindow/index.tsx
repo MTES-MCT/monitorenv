@@ -1,3 +1,5 @@
+import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
+import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { ReportingsList } from '@features/Reportings/components/ReportingsList'
@@ -18,7 +20,7 @@ import { ReportingContext } from '../../domain/shared_slices/Global'
 import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
+import { isDashboardsPage, isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
 import { MissionFormWrapper } from '../missions/MissionForm'
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../missions/MissionForm/constants'
 import { useListenMissionEventUpdates } from '../missions/MissionForm/hooks/useListenMissionEventUpdates'
@@ -37,6 +39,7 @@ export function SideWindow() {
 
   const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
+  const isDashboardsButtonIsActive = useMemo(() => isDashboardsPage(currentPath), [currentPath])
 
   /**
    * Use to update mission opened in the side window but not actives
@@ -106,6 +109,12 @@ export function SideWindow() {
                     onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
                     title="Signalements"
                   />
+                  <SideMenu.Button
+                    Icon={Icon.Bullseye}
+                    isActive={isDashboardsButtonIsActive}
+                    onClick={() => navigate(generatePath(sideWindowPaths.DASHBOARDS))}
+                    title="Tableaux de bord"
+                  />
                 </SideMenu>
 
                 <StyledRouteContainer>
@@ -113,6 +122,11 @@ export function SideWindow() {
                   <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
                   <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
+                  <Route
+                    element={<DashboardsNavBar />}
+                    path={[sideWindowPaths.DASHBOARDS, sideWindowPaths.DASHBOARD]}
+                  />
+                  <Route element={<DashboardsList />} path={sideWindowPaths.DASHBOARDS} />
                 </StyledRouteContainer>
                 {isReportingsButtonIsActive && (
                   <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />

@@ -10,6 +10,8 @@ export const sideWindowMenu = {
 }
 
 export const sideWindowPaths = {
+  DASHBOARD: '/dashboard/:id',
+  DASHBOARDS: '/dashboards',
   HOME: '/',
   MISSION: '/mission/:id',
   MISSIONS: '/missions',
