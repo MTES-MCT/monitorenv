@@ -1,3 +1,4 @@
+import { SideWindowContent } from '@features/SideWindow/style'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -17,7 +18,7 @@ export function Missions() {
   }
 
   return (
-    <StyledMissionsContainer>
+    <SideWindowContent>
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Missions et contrôles</Title>
         <StyledButton data-cy="add-mission" Icon={Icon.Plus} onClick={createMission}>
@@ -34,17 +35,9 @@ export function Missions() {
       ) : (
         <MissionsTable isLoading={isLoading || isFetching} missions={missions} />
       )}
-    </StyledMissionsContainer>
+    </SideWindowContent>
   )
 }
-
-const StyledMissionsContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 40px;
-  overflow: auto;
-`
 
 const StyledHeader = styled.div`
   display: flex;
