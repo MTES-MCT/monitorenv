@@ -10,7 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture.Companion.anAmp
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryArea.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture.Companion.aVigilanceArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture.Companion.aVigilanceAreaEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -83,7 +83,7 @@ class ExtractAreaUTest {
         given(regulatoryAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(regulatoryAreas)
         val amps = listOf(anAmp())
         given(ampAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(amps)
-        val vigilanceAreas = listOf(aVigilanceArea())
+        val vigilanceAreas = listOf(aVigilanceAreaEntity())
         given(vigilanceAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(vigilanceAreas)
 
         // When

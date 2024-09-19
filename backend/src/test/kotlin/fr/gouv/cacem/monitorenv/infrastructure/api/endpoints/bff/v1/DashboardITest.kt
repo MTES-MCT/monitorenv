@@ -31,11 +31,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Dashboard::class)])
 class DashboardITest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var extractArea: ExtractArea
+    @MockBean private lateinit var extractArea: ExtractArea
 
     @Test
     fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
@@ -45,16 +43,17 @@ class DashboardITest {
         val reportings = listOf(ReportingFixture.aReportingDTO())
         val regulatoryAreas = listOf(RegulatoryAreaFixture.aRegulatoryArea())
         val amps = listOf(AmpFixture.anAmp())
-        val vigilanceAreas = listOf(VigilanceAreaFixture.aVigilanceArea())
-        given(extractArea.execute(WKTReader().read(geometry))).willReturn(
-            ExtractedAreaEntity(
-                inseeCode = "44",
-                reportings = reportings,
-                regulatoryAreas = regulatoryAreas,
-                amps = amps,
-                vigilanceAreas = vigilanceAreas,
-            ),
-        )
+        val vigilanceAreas = listOf(VigilanceAreaFixture.aVigilanceAreaEntity())
+        given(extractArea.execute(WKTReader().read(geometry)))
+            .willReturn(
+                ExtractedAreaEntity(
+                    inseeCode = "44",
+                    reportings = reportings,
+                    regulatoryAreas = regulatoryAreas,
+                    amps = amps,
+                    vigilanceAreas = vigilanceAreas,
+                ),
+            )
 
         // When
         mockMvc.perform(
@@ -79,15 +78,16 @@ class DashboardITest {
         val regulatoryAreas: List<RegulatoryAreaEntity> = listOf()
         val amps: List<AMPEntity> = listOf()
         val vigilanceAreas: List<VigilanceAreaEntity> = listOf()
-        given(extractArea.execute(WKTReader().read(geometry))).willReturn(
-            ExtractedAreaEntity(
-                inseeCode = null,
-                reportings = reportings,
-                regulatoryAreas = regulatoryAreas,
-                amps = amps,
-                vigilanceAreas = vigilanceAreas,
-            ),
-        )
+        given(extractArea.execute(WKTReader().read(geometry)))
+            .willReturn(
+                ExtractedAreaEntity(
+                    inseeCode = null,
+                    reportings = reportings,
+                    regulatoryAreas = regulatoryAreas,
+                    amps = amps,
+                    vigilanceAreas = vigilanceAreas,
+                ),
+            )
 
         // When
         mockMvc.perform(
