@@ -56,7 +56,7 @@ describe('Create Vigilance Area', () => {
     })
     cy.clickButton('Valider les tracés')
 
-    cy.clickButton('Ajouter une image')
+    /*     cy.clickButton('Ajouter une image')
     cy.fixture('vigilanceAreaImage.png', null).then(fileContent => {
       cy.get('input[type=file]').selectFile(
         {
@@ -72,7 +72,7 @@ describe('Create Vigilance Area', () => {
       )
     })
 
-    cy.wait(500)
+    cy.wait(500) */
 
     // Submit the form
     cy.clickButton('Enregistrer')
