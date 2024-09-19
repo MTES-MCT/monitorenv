@@ -19,16 +19,7 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
     )
     fun delete(id: Int)
 
-    @Query(
-        value =
-        """
-        SELECT *
-        FROM vigilance_areas
-        WHERE is_deleted IS FALSE
-    """,
-        nativeQuery = true,
-    )
-    override fun findAll(): List<VigilanceAreaModel>
+    fun findAllByIsDeletedIsFalse(): List<VigilanceAreaModel>
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(

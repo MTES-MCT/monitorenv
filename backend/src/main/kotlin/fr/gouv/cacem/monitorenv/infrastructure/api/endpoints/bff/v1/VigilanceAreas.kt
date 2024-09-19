@@ -1,16 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetAllNatinfs
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreasDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -23,8 +22,6 @@ class VigilanceAreas(
     private val getVigilanceAreaById: GetVigilanceAreaById,
     private val deleteVigilanceArea: DeleteVigilanceArea,
 ) {
-    private val logger = LoggerFactory.getLogger(GetAllNatinfs::class.java)
-
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new vigilance area")
     fun create(
@@ -38,10 +35,10 @@ class VigilanceAreas(
 
     @GetMapping("")
     @Operation(summary = "List vigilance areas")
-    fun getAll(): List<VigilanceAreaDataOutput> {
+    fun getAll(): List<VigilanceAreasDataOutput> {
         val vigilanceAreas = getVigilanceAreas.execute()
 
-        return vigilanceAreas.map { VigilanceAreaDataOutput.fromVigilanceArea(it) }
+        return vigilanceAreas.map { VigilanceAreasDataOutput.fromVigilanceArea(it) }
     }
 
     @GetMapping("/{vigilanceAreaId}")
