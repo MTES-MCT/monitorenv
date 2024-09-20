@@ -11,34 +11,29 @@ const IconGroup = styled.span`
 `
 
 const Layer = styled.span<{ $metadataIsShown?: boolean; $withBorderBottom?: boolean }>`
-  user-select: none;
-  display: flex;
-  text-align: left;
-  font-size: 13px;
-  padding-left: 20px;
-  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : 'transparent')};
-  color: ${p => p.theme.color.gunMetal};
-  height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   align-items: center;
+  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : 'transparent')};
   border-bottom: ${p => (p.$withBorderBottom ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
-
+  color: ${p => p.theme.color.gunMetal};
+  display: flex;
+  font-size: 13px;
+  height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
+  padding-left: 20px;
+  text-align: left;
+  user-select: none;
   :hover {
     background: ${p => p.theme.color.blueYonder25};
   }
 `
 
-const Name = styled.span`
-  width: 280px;
+const Name = styled.span<{ $withLargeWidth?: boolean }>`
   display: block;
+  margin-left: 8px;
+  overflow: hidden;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow-x: hidden !important;
-  font-size: inherit;
-  text-align: left;
-  span {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  width: ${p => (p.$withLargeWidth ? '500px' : '280px')};
 `
 
 const ZonesNumber = styled.span`
@@ -53,19 +48,20 @@ const ZonesNumber = styled.span`
 `
 
 const GroupWrapper = styled.li<{ $isOpen: boolean; $isPadded?: boolean }>`
-  display: flex;
   align-items: center;
-  user-select: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden !important;
-  height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
+  border-bottom: ${p => (p.$isOpen ? 0 : 1)}px solid ${p => p.theme.color.lightGray};
+  color: ${p => p.theme.color.gunMetal};
+  display: flex;
   font-size: 13px;
+  font-weight: 700;
+  height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
+  justify-content: space-between;
+  overflow: hidden !important;
   padding-left: 18px;
   padding-right: ${p => (p.$isPadded ? '8px' : '0')};
-  font-weight: 700;
-  color: ${p => p.theme.color.gunMetal};
-  border-bottom: ${p => (p.$isOpen ? 0 : 1)}px solid ${p => p.theme.color.lightGray};
+  text-overflow: ellipsis;
+  user-select: none;
+  white-space: nowrap;
 
   :hover {
     background: ${p => p.theme.color.blueYonder25};

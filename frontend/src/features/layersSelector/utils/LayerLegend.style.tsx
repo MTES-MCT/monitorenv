@@ -45,6 +45,5 @@ const Rectangle = styled.div<{ $size: Size; $vectorLayerColor?: string }>`
   background: ${p => p.$vectorLayerColor ?? p.theme.color.gainsboro};
   border: 1px solid ${p => p.theme.color.slateGray};
   display: inline-block;
-  margin-right: 10px;
   flex-shrink: 0;
 `

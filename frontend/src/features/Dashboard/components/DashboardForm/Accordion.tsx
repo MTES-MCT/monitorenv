@@ -11,8 +11,8 @@ type AccordionProps = {
 
 export function Accordion({ children, headerButton, isExpanded, setExpandedAccordion, title }: AccordionProps) {
   return (
-    <AccordionContainer $withCursor={!headerButton} onClick={!headerButton ? setExpandedAccordion : undefined}>
-      <AccordionHeader>
+    <AccordionContainer $withCursor={!headerButton}>
+      <AccordionHeader onClick={!headerButton ? setExpandedAccordion : undefined}>
         <TitleContainer>
           <Title>{title}</Title>
           {headerButton}
@@ -34,6 +34,7 @@ export function Accordion({ children, headerButton, isExpanded, setExpandedAccor
 const AccordionContainer = styled.div<{ $withCursor: boolean }>`
   box-shadow: 0px 3px 6px #70778540;
   cursor: ${({ $withCursor }) => ($withCursor ? 'pointer' : 'default')};
+  width: 571px;
 `
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
@@ -61,7 +62,7 @@ const HeaderSeparator = styled.div`
 const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '535px' : '0px')};
-  overflow: hidden;
+  max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
+  overflow-x: hidden;
   transition: 0.5s max-height;
 `

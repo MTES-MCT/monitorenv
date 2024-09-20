@@ -160,6 +160,7 @@ const Title = styled.span<{ $isDraft: boolean; $isNew: boolean }>`
   font-size: 15px;
   color: ${p => p.theme.color.gunMetal};
   overflow: hidden;
+  margin-left: 8px;
   max-width: ${p => {
     if (p.$isNew) {
       return '100%'
