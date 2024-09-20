@@ -42,6 +42,7 @@ export function Accordion({ children, headerButton, isExpanded, name, setExpande
 const AccordionContainer = styled.div<{ $withCursor: boolean }>`
   box-shadow: 0px 3px 6px #70778540;
   cursor: ${({ $withCursor }) => ($withCursor ? 'pointer' : 'default')};
+  width: 571px;
 `
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
