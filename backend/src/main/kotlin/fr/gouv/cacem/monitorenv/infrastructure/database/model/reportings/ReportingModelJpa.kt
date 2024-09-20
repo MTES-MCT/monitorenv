@@ -130,7 +130,6 @@ open class ReportingModelJpa(
     override val geom: Geometry? = null,
     override val seaFront: String? = null,
     override val description: String? = null,
-
     override val reportType: ReportingTypeEnum? = null,
     override val controlPlanTheme: ControlPlanThemeModel? = null,
     override val controlPlanSubThemes: MutableSet<ReportingsControlPlanSubThemeModel>? = LinkedHashSet(),
