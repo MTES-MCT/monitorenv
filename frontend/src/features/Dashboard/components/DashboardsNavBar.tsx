@@ -9,7 +9,6 @@ import { generatePath } from 'react-router'
 
 export function DashboardsNavBar() {
   const dispatch = useAppDispatch()
-
   const tabs = useMemo(() => {
     const dashboardsList = {
       icon: <Icon.Summary />,

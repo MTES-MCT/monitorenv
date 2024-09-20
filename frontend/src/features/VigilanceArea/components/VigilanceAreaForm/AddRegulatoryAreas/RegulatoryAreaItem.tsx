@@ -177,6 +177,9 @@ const RegulatoryAreaName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  > span {
+    margin-left: 8px;
+  }
 `
 
 const ButtonsContainer = styled.div`

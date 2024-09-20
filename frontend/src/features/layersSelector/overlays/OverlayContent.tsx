@@ -186,6 +186,7 @@ const GroupName = styled.span`
   white-space: nowrap;
   font: normal normal bold 13px/18px Marianne;
   min-width: ${p => (p.title?.length && p.title.length * 7 > 220 ? 200 : 0)}px;
+  margin-left: 8px;
 `
 
 const Name = styled.span`

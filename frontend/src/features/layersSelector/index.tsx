@@ -200,7 +200,6 @@ const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean
   z-index: 1;
   border-radius: 2px;
   position: absolute;
-  display: inline-block;
   transition: 0.5s all;
 `
 

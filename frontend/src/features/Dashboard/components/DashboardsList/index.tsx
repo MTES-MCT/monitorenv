@@ -1,13 +1,10 @@
 import { SideWindowContent } from '@features/SideWindow/style'
 import styled from 'styled-components'
 
-import { DashboardForm } from '../DashboardForm'
-
 export function DashboardsList() {
   return (
     <SideWindowContent>
       <Title>Tableaux de bord</Title>
-      <DashboardForm />
     </SideWindowContent>
   )
 }
