@@ -1,3 +1,4 @@
+import { DashboardForm } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
@@ -127,6 +128,7 @@ export function SideWindow() {
                     path={[sideWindowPaths.DASHBOARDS, sideWindowPaths.DASHBOARD]}
                   />
                   <Route element={<DashboardsList />} path={sideWindowPaths.DASHBOARDS} />
+                  <Route element={<DashboardForm />} path={sideWindowPaths.DASHBOARD} />
                 </StyledRouteContainer>
                 {isReportingsButtonIsActive && (
                   <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
