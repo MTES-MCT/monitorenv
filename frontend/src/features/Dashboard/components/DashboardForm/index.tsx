@@ -22,14 +22,16 @@ export function DashboardForm() {
   }
 
   const clickOnEye = () => {}
+  // TODO 20/09: use constant instead of number to define the accordion index
 
   return (
     <Container>
-      <Column>
+      <FirstColumn>
         <RegulatoryAreas isExpanded={expandedAccordion === 1} setExpandedAccordion={() => handleAccordionClick(1)} />
+
         <Accordion
-          isExpanded={expandedAccordion === 3}
-          setExpandedAccordion={() => handleAccordionClick(3)}
+          isExpanded={expandedAccordion === 2}
+          setExpandedAccordion={() => handleAccordionClick(2)}
           title="Zones AMP"
         >
           <div>TEST</div>
@@ -46,8 +48,8 @@ export function DashboardForm() {
           <div>TEST</div>
         </Accordion>
         <Accordion
-          isExpanded={expandedAccordion === 4}
-          setExpandedAccordion={() => handleAccordionClick(4)}
+          isExpanded={expandedAccordion === 3}
+          setExpandedAccordion={() => handleAccordionClick(3)}
           title="Zones de vigilance"
         >
           <div>TEST</div>
@@ -55,11 +57,11 @@ export function DashboardForm() {
           <div>TEST</div>
           <div>TEST</div>
         </Accordion>
-      </Column>
+      </FirstColumn>
       <Column>
         <Accordion
-          isExpanded={expandedAccordion === 5}
-          setExpandedAccordion={() => handleAccordionClick(5)}
+          isExpanded={expandedAccordion === 4}
+          setExpandedAccordion={() => handleAccordionClick(4)}
           title="Pression territoriale des contrôles et surveillances"
         >
           <div>TEST</div>
@@ -77,8 +79,8 @@ export function DashboardForm() {
         </Accordion>
         <Accordion
           headerButton={<IconButton accent={Accent.TERTIARY} Icon={Icon.Hide} onClick={clickOnEye} />}
-          isExpanded={expandedAccordion === 6}
-          setExpandedAccordion={() => handleAccordionClick(6)}
+          isExpanded={expandedAccordion === 5}
+          setExpandedAccordion={() => handleAccordionClick(5)}
           title="Signalements"
         >
           <div>TEST</div>
@@ -89,8 +91,8 @@ export function DashboardForm() {
       </Column>
       <Column>
         <Accordion
-          isExpanded={expandedAccordion === 7}
-          setExpandedAccordion={() => handleAccordionClick(7)}
+          isExpanded={expandedAccordion === 6}
+          setExpandedAccordion={() => handleAccordionClick(6)}
           title="Unités"
         >
           <div>TEST</div>
@@ -107,8 +109,8 @@ export function DashboardForm() {
           <div>TEST</div>
         </Accordion>
         <Accordion
-          isExpanded={expandedAccordion === 8}
-          setExpandedAccordion={() => handleAccordionClick(8)}
+          isExpanded={expandedAccordion === 7}
+          setExpandedAccordion={() => handleAccordionClick(7)}
           title="Commentaires"
         >
           <div>TEST</div>
@@ -122,12 +124,27 @@ export function DashboardForm() {
 }
 
 const Container = styled(SideWindowContent)`
+  display: flex;
   overflow-y: hidden;
   flex-direction: row;
 `
-const Column = styled.div`
+
+const FirstColumn = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   height: 100vh;
   overflow-y: auto;
   padding: 12px;
   padding-bottom: 100px;
+`
+const Column = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 12px;
+  padding-bottom: 100px;
+  z-index: -1;
 `
