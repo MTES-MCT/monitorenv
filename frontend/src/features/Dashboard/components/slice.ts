@@ -8,12 +8,14 @@ type DashboardState = {
   geometry: GeoJSON.Geometry | undefined
   initialGeometry: GeoJSON.Geometry | undefined
   interactionType: InteractionType
+  isDrawing: boolean
   isGeometryValid: boolean
 }
 const INITIAL_STATE: DashboardState = {
   geometry: undefined,
   initialGeometry: undefined,
   interactionType: InteractionType.POLYGON,
+  isDrawing: false,
   isGeometryValid: false
 }
 export const dashboardSlice = createSlice({
@@ -29,6 +31,9 @@ export const dashboardSlice = createSlice({
     },
     setInteractionType(state, action: PayloadAction<InteractionType>) {
       state.interactionType = action.payload
+    },
+    setIsDrawing(state, action: PayloadAction<boolean>) {
+      state.isDrawing = action.payload
     },
     updateEditingVigilanceArea(
       state,

@@ -59,7 +59,7 @@ export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
     }
   }, [feature])
 
-  const handleSelectInteraction = nextInteraction => () => {
+  const handleSelectInteraction = (nextInteraction: InteractionType) => () => {
     dispatch(vigilanceAreaActions.setInteractionType(nextInteraction))
   }
 

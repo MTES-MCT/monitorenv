@@ -74,6 +74,7 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
   const setGeometryOnModifyEnd = useCallback(
     event => {
       const nextGeometry = event.features.item(0).getGeometry()
+
       if (nextGeometry) {
         const convertedGeometry = convertToGeoJSONGeometryObject(nextGeometry)
         dispatch(dashboardActions.setGeometry(convertedGeometry))

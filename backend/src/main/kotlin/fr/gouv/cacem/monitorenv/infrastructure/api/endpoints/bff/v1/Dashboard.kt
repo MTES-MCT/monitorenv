@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ExtractAreaDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ExtractAreaDataOutput.Companion.fromExtractAreaEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ExtractedAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ExtractedAreaDataOutput.Companion.fromExtractAreaEntity
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.locationtech.jts.io.WKTReader
@@ -18,7 +18,7 @@ class Dashboard(private val extractArea: ExtractArea) {
 
     @GetMapping("/extract")
     @Operation(summary = "Extract all data that intercept the given geometry")
-    fun get(@RequestParam(name = "geometry") pGeometry: String): ExtractAreaDataOutput {
+    fun get(@RequestParam(name = "geometry") pGeometry: String): ExtractedAreaDataOutput {
         val wktReader = WKTReader()
         val geometry = wktReader.read(pGeometry)
         return fromExtractAreaEntity(extractArea.execute(geometry = geometry))
