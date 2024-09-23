@@ -12,4 +12,13 @@ export namespace Dashboard {
     reportings: Reporting[]
     vigilanceAreas: VigilanceArea.VigilanceArea[]
   }
+  export enum Block {
+    AMP = 'AMP',
+    COMMENTS = 'COMMENTS',
+    CONTROL_UNITS = 'CONTROL_UNITS',
+    REGULATORY_AREAS = 'REGULATORY_AREAS',
+    REPORTINGS = 'REPORTINGS',
+    TERRITORIAL_PRESSURE = 'TERRITORIAL_PRESSURE',
+    VIGILANCE_AREAS = 'VIGILANCE_AREAS'
+  }
 }

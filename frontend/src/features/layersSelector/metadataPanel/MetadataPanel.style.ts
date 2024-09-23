@@ -47,7 +47,6 @@ export const Section = styled.div`
   font-weight: 500;
   padding: 15px 45px 15px 20px;
   text-align: left;
-  border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
 
 export const SectionTitle = styled.span`

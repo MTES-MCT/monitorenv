@@ -1,7 +1,9 @@
 import { useGetRegulatoryLayerByIdQuery } from '@api/regulatoryLayersAPI'
+import { dashboardActions } from '@features/Dashboard/slice'
 import { Identification } from '@features/layersSelector/metadataPanel/regulatoryMetadata/Identification'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
@@ -12,19 +14,20 @@ import styled from 'styled-components'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
-export function RegulatoryPanel({ isOpen }: { isOpen: true }) {
-  const { metadataLayerId } = useAppSelector(state => state.layersMetadata)
+export function RegulatoryPanel({ dashboardId }: { dashboardId: number }) {
+  const dispatch = useAppDispatch()
+  const openPanel = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.openPanel)
 
-  const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(metadataLayerId ?? skipToken, {
+  const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(openPanel?.id ?? skipToken, {
     pollingInterval: FOUR_HOURS
   })
 
   const onCloseIconClicked = () => {
-    // TODO add action
+    dispatch(dashboardActions.setDashboardPanel())
   }
 
   return (
-    <Wrapper $regulatoryMetadataPanelIsOpen={isOpen}>
+    <Wrapper $isOpen={!!openPanel}>
       {regulatoryMetadata ? (
         <>
           <Header data-cy="regulatory-metadata-header">
@@ -60,18 +63,16 @@ export function RegulatoryPanel({ isOpen }: { isOpen: true }) {
   )
 }
 
-const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
-  border-radius: 2px;
-  background-color: ${p => p.theme.color.gainsboro};
-  color: ${p => p.theme.color.charcoal};
+const Wrapper = styled.div<{ $isOpen: boolean }>`
+  background-color: ${p => p.theme.color.white};
+  box-shadow: 0px 3px 5px #70778540;
   display: block;
-  opacity: ${p => (p.$regulatoryMetadataPanelIsOpen ? 1 : 0)};
-  padding: 0;
+  margin-left: 37px;
+  opacity: ${p => (p.$isOpen ? 1 : 0)};
   position: absolute;
+  transform: translateX(100%);
   transition: all 0.5s;
   width: 400px;
-  transform: translateX(100%);
-  margin-left: 26px;
 `
 
 const RegulatoryZoneName = styled.span`
@@ -86,8 +87,8 @@ const RegulatoryZoneName = styled.span`
 `
 
 const Header = styled.div`
+  background-color: ${p => p.theme.color.gainsboro};
   color: ${p => p.theme.color.gunMetal};
-  margin-left: 6px;
   text-align: left;
   height: 40px;
   display: flex;
@@ -95,13 +96,12 @@ const Header = styled.div`
   font-size: 15px;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 4px 4px 4px 10px;
 `
 
 const Content = styled.div`
-  border-radius: 2px;
   color: ${p => p.theme.color.lightGray};
-  background: ${p => p.theme.color.white};
+
   overflow-y: auto;
   max-height: 72vh;
 `

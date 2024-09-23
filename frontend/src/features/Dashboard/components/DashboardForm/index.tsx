@@ -1,24 +1,31 @@
+import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
 import { RegulatoryAreas } from './RegulatoryAreas'
+import { dashboardActions } from '../../slice'
 
 export function DashboardForm() {
   const extractedArea = useAppSelector(state => state.dashboard.extractedArea)
 
-  const [expandedAccordion, setExpandedAccordion] = useState<number>(0)
+  const dispatch = useAppDispatch()
+  const dashboardId = 1 // TODO replace with real value
+  const expandedAccordion = useAppSelector(state =>
+    dashboardId ? state.dashboard.dashboards?.[dashboardId]?.openAccordion : undefined
+  )
 
-  const handleAccordionClick = (index: number) => {
-    if (expandedAccordion === index) {
-      setExpandedAccordion(0)
+  const handleAccordionClick = (type: Dashboard.Block) => {
+    if (expandedAccordion === type) {
+      dispatch(dashboardActions.setDashboardAccordion())
 
       return
     }
-    setExpandedAccordion(index)
+    dispatch(dashboardActions.setDashboardAccordion(type))
+    dispatch(dashboardActions.setDashboardPanel())
   }
 
   const clickOnEye = () => {}
@@ -26,12 +33,16 @@ export function DashboardForm() {
 
   return (
     <Container>
-      <FirstColumn>
-        <RegulatoryAreas isExpanded={expandedAccordion === 1} setExpandedAccordion={() => handleAccordionClick(1)} />
+      <Column>
+        <RegulatoryAreas
+          dashboardId={dashboardId}
+          isExpanded={expandedAccordion === 'REGULATORY_AREAS'}
+          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
+        />
 
         <Accordion
-          isExpanded={expandedAccordion === 2}
-          setExpandedAccordion={() => handleAccordionClick(2)}
+          isExpanded={expandedAccordion === Dashboard.Block.AMP}
+          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
           title="Zones AMP"
         >
           <div>TEST</div>
@@ -48,8 +59,8 @@ export function DashboardForm() {
           <div>TEST</div>
         </Accordion>
         <Accordion
-          isExpanded={expandedAccordion === 3}
-          setExpandedAccordion={() => handleAccordionClick(3)}
+          isExpanded={expandedAccordion === Dashboard.Block.VIGILANCE_AREAS}
+          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
           title="Zones de vigilance"
         >
           <div>TEST</div>
@@ -57,11 +68,11 @@ export function DashboardForm() {
           <div>TEST</div>
           <div>TEST</div>
         </Accordion>
-      </FirstColumn>
+      </Column>
       <Column>
         <Accordion
-          isExpanded={expandedAccordion === 4}
-          setExpandedAccordion={() => handleAccordionClick(4)}
+          isExpanded={expandedAccordion === Dashboard.Block.TERRITORIAL_PRESSURE}
+          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
           title="Pression territoriale des contrôles et surveillances"
         >
           <div>TEST</div>
@@ -79,8 +90,8 @@ export function DashboardForm() {
         </Accordion>
         <Accordion
           headerButton={<IconButton accent={Accent.TERTIARY} Icon={Icon.Hide} onClick={clickOnEye} />}
-          isExpanded={expandedAccordion === 5}
-          setExpandedAccordion={() => handleAccordionClick(5)}
+          isExpanded={expandedAccordion === Dashboard.Block.REPORTINGS}
+          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
           title="Signalements"
         >
           <div>TEST</div>
@@ -91,8 +102,8 @@ export function DashboardForm() {
       </Column>
       <Column>
         <Accordion
-          isExpanded={expandedAccordion === 6}
-          setExpandedAccordion={() => handleAccordionClick(6)}
+          isExpanded={expandedAccordion === Dashboard.Block.CONTROL_UNITS}
+          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.CONTROL_UNITS)}
           title="Unités"
         >
           <div>TEST</div>
@@ -109,8 +120,8 @@ export function DashboardForm() {
           <div>TEST</div>
         </Accordion>
         <Accordion
-          isExpanded={expandedAccordion === 7}
-          setExpandedAccordion={() => handleAccordionClick(7)}
+          isExpanded={expandedAccordion === Dashboard.Block.COMMENTS}
+          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}
           title="Commentaires"
         >
           <div>TEST</div>
@@ -129,15 +140,6 @@ const Container = styled(SideWindowContent)`
   flex-direction: row;
 `
 
-const FirstColumn = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100vh;
-  overflow-y: auto;
-  padding: 12px;
-  padding-bottom: 100px;
-`
 const Column = styled.div`
   display: flex;
   flex: 1;
@@ -146,5 +148,4 @@ const Column = styled.div`
   overflow-y: auto;
   padding: 12px;
   padding-bottom: 100px;
-  z-index: -1;
 `

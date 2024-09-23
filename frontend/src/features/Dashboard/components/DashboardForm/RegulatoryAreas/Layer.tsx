@@ -1,5 +1,8 @@
+import { dashboardActions } from '@features/Dashboard/slice'
+import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -10,45 +13,49 @@ import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constant
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../../hooks/useAppSelector'
 
 type RegulatoryLayerProps = {
+  dashboardId: number
   layerId: number
 }
 
-export function Layer({ layerId }: RegulatoryLayerProps) {
+export function Layer({ dashboardId, layerId }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
-  const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const selectedRegulatoryAreas = useAppSelector(
+    state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
+  )
 
+  const isZoneSelected = selectedRegulatoryAreas?.includes(layerId)
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
       layer: result?.currentData?.entities[layerId]
     })
   })
 
-  const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
-
   const handleSelectZone = e => {
     e.stopPropagation()
-    // TODO add action
+
+    const payload = { itemIds: [layerId], type: Dashboard.Block.REGULATORY_AREAS }
+    if (isZoneSelected) {
+      dispatch(dashboardActions.removeItems(payload))
+    } else {
+      dispatch(dashboardActions.addItems(payload))
+      if (!layer?.bbox) {
+        return
+      }
+      const extent = transformExtent(
+        layer?.bbox,
+        new Projection({ code: WSG84_PROJECTION }),
+        new Projection({ code: OPENLAYERS_PROJECTION })
+      )
+      dispatch(setFitToExtent(extent))
+    }
   }
 
   const toggleZoneMetadata = () => {
-    // TODO add action
-  }
-
-  const fitToRegulatoryLayer = () => {
-    if (!layer?.bbox) {
-      return
-    }
-    const extent = transformExtent(
-      layer?.bbox,
-      new Projection({ code: WSG84_PROJECTION }),
-      new Projection({ code: OPENLAYERS_PROJECTION })
-    )
-    dispatch(setFitToExtent(extent))
+    dispatch(dashboardActions.setDashboardPanel({ id: layerId, type: Dashboard.Block.REGULATORY_AREAS }))
   }
 
   return (
@@ -62,7 +69,7 @@ export function Layer({ layerId }: RegulatoryLayerProps) {
         legendKey={layer?.entity_name ?? 'aucun'}
         type={layer?.thematique ?? 'aucun'}
       />
-      <LayerSelector.Name $withLargeWidth onClick={fitToRegulatoryLayer} title={layer?.entity_name}>
+      <LayerSelector.Name $withLargeWidth title={layer?.entity_name}>
         {layer?.entity_name ?? 'AUCUN NOM'}
       </LayerSelector.Name>
 
