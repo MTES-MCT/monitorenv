@@ -71,7 +71,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
   const reinitialize = () => {
     if (!initialGeometry) {
       dispatch(
-        vigilanceAreaActions.setGeometry({
+        dashboardActions.setGeometry({
           coordinates: [],
           type: 'MultiPolygon'
         })
@@ -79,7 +79,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
 
       return
     }
-    dispatch(vigilanceAreaActions.setGeometry(initialGeometry))
+    dispatch(dashboardActions.setGeometry(initialGeometry))
   }
 
   return (
