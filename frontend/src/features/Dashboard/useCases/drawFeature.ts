@@ -7,7 +7,7 @@ import { dashboardActions } from '../components/slice'
 import type { HomeAppThunk } from '@store/index'
 import type Feature from 'ol/Feature'
 
-export const addFeatureToDrawedFeature =
+export const drawFeature =
   (featureToAdd: Feature<Geometry>): HomeAppThunk =>
   (dispatch, getState) => {
     const { geometry } = getState().dashboard

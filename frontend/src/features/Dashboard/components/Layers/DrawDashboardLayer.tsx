@@ -1,3 +1,4 @@
+import { drawFeature } from '@features/Dashboard/useCases/drawFeature'
 import { dottedLayerStyle } from '@features/map/layers/styles/dottedLayer.style'
 import { drawStyle, editStyle } from '@features/map/layers/styles/draw.style'
 import { addFeatureToDrawedFeature } from '@features/VigilanceArea/useCases/addFeatureToDrawedFeature'
@@ -126,7 +127,7 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
     map.addInteraction(draw)
 
     draw.on('drawend', event => {
-      dispatch(addFeatureToDrawedFeature(event.feature))
+      dispatch(drawFeature(event.feature))
       event.stopPropagation()
       drawVectorSourceRef.current.clear(true)
     })
