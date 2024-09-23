@@ -8,10 +8,11 @@ import { RegulatoryPanel } from './Panel'
 import { Accordion } from '../Accordion'
 
 type RegulatoriesAreasProps = {
+  dashboardId: number
   isExpanded: boolean
   setExpandedAccordion: () => void
 }
-export function RegulatoryAreas({ isExpanded, setExpandedAccordion }: RegulatoriesAreasProps) {
+export function RegulatoryAreas({ dashboardId, isExpanded, setExpandedAccordion }: RegulatoriesAreasProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
   const regulatoryAreasByLayerName = groupBy(
@@ -20,8 +21,8 @@ export function RegulatoryAreas({ isExpanded, setExpandedAccordion }: Regulatori
   )
 
   return (
-    <Container>
-      <RegulatoryPanel isOpen />
+    <div>
+      <RegulatoryPanel dashboardId={dashboardId} />
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones règlementaires">
         <StyledLayerList
           $baseLayersLength={Object.values(regulatoryAreasByLayerName).length}
@@ -29,17 +30,19 @@ export function RegulatoryAreas({ isExpanded, setExpandedAccordion }: Regulatori
           $showBaseLayers={isExpanded}
         >
           {Object.entries(regulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
-            <ListLayerGroup key={layerGroupName} groupName={layerGroupName} layerIds={layerIdsInGroup} />
+            <ListLayerGroup
+              key={layerGroupName}
+              dashboardId={dashboardId}
+              groupName={layerGroupName}
+              layerIds={layerIdsInGroup}
+            />
           ))}
         </StyledLayerList>
       </Accordion>
-    </Container>
+    </div>
   )
 }
 
-const Container = styled.div`
-  position: relative;
-`
 const StyledLayerList = styled(LayerSelector.LayerList)`
   height: auto;
 `

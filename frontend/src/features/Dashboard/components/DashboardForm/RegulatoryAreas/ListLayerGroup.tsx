@@ -1,46 +1,47 @@
-import {
-  getExtentOfRegulatoryLayersGroupByGroupName,
-  getNumberOfRegulatoryLayerZonesByGroupName
-} from '@api/regulatoryLayersAPI'
-import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
+import { getNumberOfRegulatoryLayerZonesByGroupName } from '@api/regulatoryLayersAPI'
+import { dashboardActions } from '@features/Dashboard/slice'
+import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
-import { setFitToExtent } from 'domain/shared_slices/Map'
 import { includes, intersection } from 'lodash'
 import { useState } from 'react'
 
 import { Layer } from './Layer'
 
 type ResultListLayerGroupProps = {
+  dashboardId: number
   groupName: string
   layerIds: number[]
 }
-export function ListLayerGroup({ groupName, layerIds }: ResultListLayerGroupProps) {
+export function ListLayerGroup({ dashboardId, groupName, layerIds }: ResultListLayerGroupProps) {
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
-  const layerIdToDisplay = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
-  const groupExtent = useAppSelector(state => getExtentOfRegulatoryLayersGroupByGroupName(state, groupName))
 
-  const selectedLayerIds = []
+  const selectedLayerIds = useAppSelector(
+    state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
+  )
   const zonesSelected = intersection(selectedLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
-  const forceZonesAreOpen = includes(layerIds, layerIdToDisplay)
+  const forceZonesAreOpen = selectedLayerIds?.some(id => includes(layerIds, id)) ?? false
 
   const handleCheckAllZones = e => {
     e.stopPropagation()
+    const payload = { itemIds: layerIds, type: Dashboard.Block.REGULATORY_AREAS }
+
+    if (allTopicZonesAreChecked) {
+      dispatch(dashboardActions.removeItems(payload))
+    } else {
+      dispatch(dashboardActions.addItems(payload))
+    }
   }
 
   const clickOnGroupZones = () => {
     setZonesAreOpen(!zonesAreOpen)
-
-    if (!zonesAreOpen) {
-      dispatch(setFitToExtent(groupExtent))
-    }
   }
 
   return (
@@ -64,7 +65,7 @@ export function ListLayerGroup({ groupName, layerIds }: ResultListLayerGroupProp
       </LayerSelector.GroupWrapper>
       <LayerSelector.SubGroup isOpen={forceZonesAreOpen || zonesAreOpen} length={layerIds?.length}>
         {layerIds?.map(layerId => (
-          <Layer key={layerId} layerId={layerId} />
+          <Layer key={layerId} dashboardId={dashboardId} layerId={layerId} />
         ))}
       </LayerSelector.SubGroup>
     </>
