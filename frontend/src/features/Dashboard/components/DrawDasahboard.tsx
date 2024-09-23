@@ -1,10 +1,3 @@
-import {
-  SubFormBody,
-  SubFormHeader,
-  SubFormHelpText,
-  SubFormTitle,
-  ValidateButton
-} from '@features/VigilanceArea/components/VigilanceAreaForm/style'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -16,10 +9,11 @@ import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { dashboardActions } from './slice'
+import { generateDashboard } from '../useCases/generateDashboard'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
-export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
+export function DrawDashboard({ className, onCancel }: { className?: string; onCancel: () => void }) {
   const dispatch = useAppDispatch()
   const geometry = useAppSelector(state => state.dashboard.geometry)
   const interactionType = useAppSelector(state => state.dashboard.interactionType)
@@ -67,6 +61,9 @@ export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
   }
 
   const handleValidate = () => {
+    if (geometry) {
+      dispatch(generateDashboard(geometry))
+    }
     dispatch(dashboardActions.setInitialGeometry(undefined))
     dispatch(displayOrHideOtherLayers({ display: true }))
   }
@@ -86,66 +83,74 @@ export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
   }
 
   return (
-    <>
-      <SubFormHeader>
-        <SubFormTitle>Ajout de tracés en cours...</SubFormTitle>
+    <div className={className}>
+      <Header>
+        <Title as="h3">Définition d&apos;une zone</Title>
         <IconButton accent={Accent.TERTIARY} color={THEME.color.white} Icon={Icon.Close} onClick={onCancel} />
-      </SubFormHeader>
-      <SubFormBody>
-        <SubFormHelpText>Dessinez ou sélectionnez un ou plusieurs tracés sur la carte</SubFormHelpText>
-        <DrawButtonRow>
-          <IconGroup>
+      </Header>
+      <Body>
+        <Controls>
+          <li>
             <IconButton
               className={interactionType === InteractionType.POLYGON ? '_active' : undefined}
               Icon={Icon.SelectPolygon}
               onClick={handleSelectInteraction(InteractionType.POLYGON)}
             />
-            <IconButton
-              className={interactionType === InteractionType.SQUARE ? '_active' : undefined}
-              Icon={Icon.SelectRectangle}
-              onClick={handleSelectInteraction(InteractionType.SQUARE)}
-            />
+          </li>
+          <IconButton
+            className={interactionType === InteractionType.SQUARE ? '_active' : undefined}
+            Icon={Icon.SelectRectangle}
+            onClick={handleSelectInteraction(InteractionType.SQUARE)}
+          />
+          <li>
             <IconButton
               className={interactionType === InteractionType.CIRCLE ? '_active' : undefined}
               Icon={Icon.SelectCircle}
               onClick={handleSelectInteraction(InteractionType.CIRCLE)}
             />
-          </IconGroup>
-        </DrawButtonRow>
-
-        <ValidateButtonContainer>
-          <ValidateButtonRow>
+          </li>
+          <li style={{ margin: 'auto' }}>
             <Button accent={Accent.SECONDARY} onClick={reinitialize}>
-              Réinitialiser les tracés
+              Réinitialiser
             </Button>
-            <ValidateButton disabled={!isGeometryValid} onClick={handleValidate}>
-              Valider les tracés
-            </ValidateButton>
-          </ValidateButtonRow>
+          </li>
+        </Controls>
+
+        <div>
+          <Button disabled={!isGeometryValid} onClick={handleValidate} style={{ width: '100%' }}>
+            Créer le tableau
+          </Button>
           {!isGeometryValid && <FieldError>Le tracé n&apos;est pas valide</FieldError>}
-        </ValidateButtonContainer>
-      </SubFormBody>
-    </>
+        </div>
+      </Body>
+    </div>
   )
 }
 
-const IconGroup = styled.div`
+const Controls = styled.ul`
   display: flex;
   gap: 16px;
+  padding: 0;
+  list-style: none;
 `
 
-const DrawButtonRow = styled.div`
+const Header = styled.header`
+  align-items: center;
+  background: ${p => p.theme.color.charcoal};
   display: flex;
   justify-content: space-between;
+  padding: 9px 16px 10px;
 `
-const ValidateButtonContainer = styled.div`
-  align-self: end;
-  display: flex;
-  flex-direction: column;
+const Title = styled.h2`
+  color: ${p => p.theme.color.white};
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
 `
 
-const ValidateButtonRow = styled.div`
-  align-self: end;
+const Body = styled.div`
+  background-color: ${p => p.theme.color.white};
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  padding: 16px;
 `
