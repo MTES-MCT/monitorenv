@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.Regulato
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreaDataOutput
 
-class ExtractAreaDataOutput(
+class ExtractedAreaDataOutput(
     val inseeCode: String?,
     val reportings: List<ReportingDataOutput>,
     val regulatoryAreas: List<RegulatoryAreaDataOutput>,
@@ -14,8 +14,8 @@ class ExtractAreaDataOutput(
     val vigilanceAreas: List<VigilanceAreaDataOutput>,
 ) {
     companion object {
-        fun fromExtractAreaEntity(extractedAreaEntity: ExtractedAreaEntity): ExtractAreaDataOutput {
-            return ExtractAreaDataOutput(
+        fun fromExtractAreaEntity(extractedAreaEntity: ExtractedAreaEntity): ExtractedAreaDataOutput {
+            return ExtractedAreaDataOutput(
                 inseeCode = extractedAreaEntity.inseeCode,
                 reportings = extractedAreaEntity.reportings.map { ReportingDataOutput.fromReportingDTO(it) },
                 regulatoryAreas = extractedAreaEntity.regulatoryAreas.map { fromRegulatoryAreaEntity(it) },

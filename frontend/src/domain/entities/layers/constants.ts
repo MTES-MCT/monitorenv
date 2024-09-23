@@ -318,7 +318,8 @@ export const SelectableLayers0To7 = [
     MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
-  ]
+  ],
+  [MonitorEnvLayers.DASHBOARD]
 ]
 
 export const SelectableLayers7To26 = [
@@ -337,7 +338,8 @@ export const SelectableLayers7To26 = [
     MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
-  ]
+  ],
+  [MonitorEnvLayers.DASHBOARD]
 ]
 
 // Priority of hoverable items is determined by the order of the layers in this array
