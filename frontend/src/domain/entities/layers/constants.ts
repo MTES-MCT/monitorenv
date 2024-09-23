@@ -26,6 +26,7 @@ export enum MonitorEnvLayers {
   AMP_PREVIEW = 'AMP_PREVIEW',
   BASE_LAYER = 'BASE_LAYER',
   COMPETENCE_CROSS_AREA = 'COMPETENCE_CROSS_AREA',
+  DASHBOARD = 'DASHBOARD',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
   DRAW_VIGILANCE_AREA = 'DRAW_VIGILANCE_AREA',
@@ -274,6 +275,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
     zIndex: 1400
   },
+  [MonitorEnvLayers.DASHBOARD]: {
+    code: MonitorEnvLayers.DASHBOARD,
+    zIndex: 1300
+  },
   [MonitorEnvLayers.AERA_ICON]: {
     code: MonitorEnvLayers.AERA_ICON
   }
@@ -350,7 +355,8 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.STATIONS],
   [MonitorEnvLayers.VIGILANCE_AREA],
   [MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA],
-  [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA]
+  [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA],
+  [MonitorEnvLayers.DASHBOARD]
 ]
 
 export const HoverableLayers7To26 = [
@@ -370,7 +376,8 @@ export const HoverableLayers7To26 = [
     MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
-  ]
+  ],
+  [MonitorEnvLayers.DASHBOARD]
 ]
 
 export type RegulatoryOrAMPOrViglanceAreaLayerType =

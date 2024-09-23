@@ -1,3 +1,4 @@
+import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
@@ -208,6 +209,10 @@ export function Map({ isSuperUser }) {
       <SelectedVigilanceAreaLayer />
       {/* @ts-ignore */}
       <EditingVigilanceAreaLayer />
+
+      {/* DASHBOARD */}
+      {/* @ts-ignore */}
+      <DrawDashboardLayer />
     </BaseMap>
   )
 }

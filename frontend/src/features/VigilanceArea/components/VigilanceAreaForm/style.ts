@@ -24,7 +24,7 @@ export const SubFormHeader = styled.header`
   justify-content: space-between;
   padding: 9px 16px 10px 16px;
 `
-export const SubFormTitle = styled.h1`
+export const SubFormTitle = styled.h2`
   color: ${p => p.theme.color.white};
   font-size: 16px;
   font-weight: normal;
