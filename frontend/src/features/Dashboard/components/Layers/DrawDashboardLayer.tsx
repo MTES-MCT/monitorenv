@@ -1,7 +1,6 @@
 import { drawFeature } from '@features/Dashboard/useCases/drawFeature'
 import { dottedLayerStyle } from '@features/map/layers/styles/dottedLayer.style'
 import { drawStyle, editStyle } from '@features/map/layers/styles/draw.style'
-import { addFeatureToDrawedFeature } from '@features/VigilanceArea/useCases/addFeatureToDrawedFeature'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
@@ -26,6 +25,7 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const geometry = useAppSelector(state => state.dashboard.geometry)
   const interactionType = useAppSelector(state => state.dashboard.interactionType)
+  const isDrawing = useAppSelector(state => state.dashboard.isDrawing)
 
   const feature = useMemo(() => {
     if (!geometry) {
@@ -85,7 +85,7 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
   )
 
   useEffect(() => {
-    if (isEmpty(feature)) {
+    if (isEmpty(feature) || !isDrawing) {
       return undefined
     }
 
@@ -106,10 +106,10 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
         modify.un('modifyend', setGeometryOnModifyEnd)
       }
     }
-  }, [map, feature, setGeometryOnModifyEnd])
+  }, [map, feature, setGeometryOnModifyEnd, isDrawing])
 
   useEffect(() => {
-    if (!map) {
+    if (!map || !isDrawing) {
       return undefined
     }
 
@@ -141,7 +141,7 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
         drawVectorSourceRef.current.clear(true)
       }
     }
-  }, [map, dispatch, interactionType])
+  }, [map, dispatch, interactionType, isDrawing])
 
   return null
 }
