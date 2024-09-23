@@ -9,10 +9,6 @@ import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayers
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
-import {
-  addRegulatoryZonesToMyLayers,
-  removeRegulatoryZonesFromMyLayers
-} from '../../../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 
@@ -31,21 +27,17 @@ export function Layer({ layerId }: RegulatoryLayerProps) {
       layer: result?.currentData?.entities[layerId]
     })
   })
-  // const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
-  // const metadataIsShown = useAppSelector(state => getMetadataIsOpenForRegulatoryLayerId(state, layerId))
 
   const handleSelectZone = e => {
     e.stopPropagation()
-    if (isZoneSelected) {
-      dispatch(removeRegulatoryZonesFromMyLayers([layerId]))
-    } else {
-      dispatch(addRegulatoryZonesToMyLayers([layerId]))
-    }
+    // TODO add action
   }
 
-  const toggleZoneMetadata = () => {}
+  const toggleZoneMetadata = () => {
+    // TODO add action
+  }
 
   const fitToRegulatoryLayer = () => {
     if (!layer?.bbox) {
