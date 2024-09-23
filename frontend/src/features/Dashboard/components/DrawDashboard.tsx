@@ -1,4 +1,3 @@
-import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -9,7 +8,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { dashboardActions } from './slice'
-import { generateDashboard } from '../useCases/generateDashboard'
+import { createDashboard } from '../useCases/generateDashboard'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -62,7 +61,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
 
   const handleValidate = () => {
     if (geometry) {
-      dispatch(generateDashboard(geometry))
+      dispatch(createDashboard(geometry))
     }
     dispatch(dashboardActions.setInitialGeometry(undefined))
     dispatch(displayOrHideOtherLayers({ display: true }))
@@ -97,11 +96,13 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
               onClick={handleSelectInteraction(InteractionType.POLYGON)}
             />
           </li>
-          <IconButton
-            className={interactionType === InteractionType.SQUARE ? '_active' : undefined}
-            Icon={Icon.SelectRectangle}
-            onClick={handleSelectInteraction(InteractionType.SQUARE)}
-          />
+          <li>
+            <IconButton
+              className={interactionType === InteractionType.SQUARE ? '_active' : undefined}
+              Icon={Icon.SelectRectangle}
+              onClick={handleSelectInteraction(InteractionType.SQUARE)}
+            />
+          </li>
           <li>
             <IconButton
               className={interactionType === InteractionType.CIRCLE ? '_active' : undefined}
@@ -109,17 +110,15 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
               onClick={handleSelectInteraction(InteractionType.CIRCLE)}
             />
           </li>
-          <li style={{ margin: 'auto' }}>
-            <Button accent={Accent.SECONDARY} onClick={reinitialize}>
-              Réinitialiser
-            </Button>
-          </li>
+          <ResetButton accent={Accent.SECONDARY} onClick={reinitialize}>
+            Réinitialiser
+          </ResetButton>
         </Controls>
 
         <div>
-          <Button disabled={!isGeometryValid} onClick={handleValidate} style={{ width: '100%' }}>
+          <CreateDashboardButton disabled={!isGeometryValid} onClick={handleValidate}>
             Créer le tableau
-          </Button>
+          </CreateDashboardButton>
           {!isGeometryValid && <FieldError>Le tracé n&apos;est pas valide</FieldError>}
         </div>
       </Body>
@@ -153,4 +152,12 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   padding: 16px;
+`
+const ResetButton = styled(Button)`
+  height: 32px;
+  margin: 0 auto;
+`
+
+const CreateDashboardButton = styled(Button)`
+  width: 100%;
 `

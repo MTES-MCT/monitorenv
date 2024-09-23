@@ -1,0 +1,43 @@
+import { FAKE_MAPBOX_RESPONSE } from '../../constants'
+
+const geometry =
+  'MULTIPOLYGON%20(((-2.6789771602774035%2047.898039697981204,%20-2.7052495078554344%2048.076572359675794,%20-2.7830569190058054%2048.247661878303035,%20-2.9094092985529074%2048.40483375557591,%20-3.079450995409975%2048.54219784766772,%20-3.286647402527274%2048.65465188138688,%20-3.52303607817637%2048.73805068099921,%20-3.779532738120366%2048.789338682087646,%20-4.046280359562597%2048.80664469317276,%20-4.3130279810048275%2048.789338682087646,%20-4.569524640948822%2048.73805068099921,%20-4.805913316597919%2048.65465188138688,%20-5.0131097237152185%2048.54219784766772,%20-5.183151420572286%2048.40483375557591,%20-5.309503800119388%2048.247661878303035,%20-5.387311211269759%2048.076572359675794,%20-5.41358355884779%2047.898039697981204,%20-5.387311211269759%2047.71888927430237,%20-5.309503800119388%2047.5460405391338,%20-5.183151420572286%2047.38623586562676,%20-5.0131097237152185%2047.245766267062294,%20-4.805913316597919%2047.13020682259142,%20-4.569524640948823%2047.044175457835735,%20-4.313027981004828%2046.99112847129675,%20-4.046280359562597%2046.97320479394838,%20-3.779532738120366%2046.99112847129675,%20-3.52303607817637%2047.044175457835735,%20-3.2866474025272745%2047.13020682259142,%20-3.079450995409975%2047.245766267062294,%20-2.9094092985529074%2047.38623586562676,%20-2.783056919005806%2047.5460405391338,%20-2.7052495078554344%2047.71888927430237,%20-2.6789771602774035%2047.898039697981204)))'
+
+context('Dashboard', () => {
+  beforeEach(() => {
+    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
+    cy.visit('/#@-394744.20,6104201.66,8.72')
+    Cypress.env('CYPRESS_FRONTEND_DASHBOARD_ENABLED', 'true')
+  })
+
+  describe('dashboard', () => {
+    it('should extract insee code, amps, regulatory and vigilance areas from the given geometry', () => {
+      Cypress.env('CYPRESS_FRONTEND_DASHBOARD_ENABLED', 'true')
+
+      cy.intercept('GET', `/bff/v1/dashboard/extract?geometry=${geometry}`).as('extractAreas')
+
+      // When
+      cy.clickButton('Voir les briefs pour les unités')
+
+      cy.clickButton('Créer un tableau de bord')
+      cy.get('#root').click(490, 550)
+      cy.get('#root').click(900, 550)
+
+      cy.clickButton('Créer le tableau')
+
+      // Then
+      cy.wait('@extractAreas').then(({ response }) => {
+        if (!response) {
+          assert.fail('response is undefined.')
+        }
+        const body = response.body
+
+        expect(body.inseeCode).equal('29')
+        expect(body.regulatoryAreas.length).equal(13)
+        expect(body.amps.length).equal(4)
+        expect(body.reportings.length).equal(6)
+        expect(body.vigilanceAreas.length).equal(2)
+      })
+    })
+  })
+})
