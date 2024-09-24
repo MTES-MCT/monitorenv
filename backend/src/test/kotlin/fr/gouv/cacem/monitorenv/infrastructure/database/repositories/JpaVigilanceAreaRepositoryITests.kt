@@ -1,23 +1,40 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
+import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
+@Import(DataSourceProxyBeanPostProcessor::class)
 class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
     @Autowired
+    private val customQueryCountListener: CustomQueryCountListener? = null
+
+    @Autowired
     private lateinit var jpaVigilanceAreaRepository: JpaVigilanceAreaRepository
+
+    @BeforeEach
+    fun setUp() {
+        customQueryCountListener!!.resetQueryCount() // Reset the count before each test
+    }
 
     @Test
     @Transactional
     fun `findAll Should return all vigilance areas`() {
         // When
         val vigilanceAreas = jpaVigilanceAreaRepository.findAll()
+
+        val queryCount = customQueryCountListener?.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+
         // Then
         assertThat(vigilanceAreas.size).isEqualTo(9)
     }
@@ -63,15 +80,15 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                 frequency = FrequencyEnum.ALL_WEEKS,
                 endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = null,
-                images = listOf(
-                    ImageEntity(
-                        content = byteArrayOf(1, 2, 3, 4),
-                        mimeType = "image/jpeg",
-                        name = "test_image.jpg",
-                        size = 1024,
+                images =
+                    listOf(
+                        ImageEntity(
+                            content = byteArrayOf(1, 2, 3, 4),
+                            mimeType = "image/jpeg",
+                            name = "test_image.jpg",
+                            size = 1024,
+                        ),
                     ),
-
-                ),
                 links = null,
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
@@ -175,6 +192,9 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
 
         // When
         val vigilanceAreas = jpaVigilanceAreaRepository.findAllByGeometry(polygon)
+
+        val queryCount = customQueryCountListener?.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
 
         // Then
         assertThat(vigilanceAreas).hasSize(1)

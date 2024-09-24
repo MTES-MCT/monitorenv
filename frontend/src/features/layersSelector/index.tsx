@@ -166,6 +166,7 @@ const MetadataPanelShifter = styled.div<{
   opacity: ${props => (props.metadataPanelIsOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   transition: 0.5s all;
+  z-index: -1;
 `
 
 const VigilanceAreaPanelShifter = styled.div<{
@@ -188,6 +189,7 @@ const VigilanceAreaPanelShifter = styled.div<{
   opacity: ${props => (props.isVigilanceAreaFormOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   transition: 0.5s all;
+  z-index: -1;
 `
 
 const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean }>`

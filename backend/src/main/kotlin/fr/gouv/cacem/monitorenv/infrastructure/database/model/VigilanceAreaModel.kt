@@ -18,6 +18,12 @@ import java.time.Instant
 import java.time.ZoneOffset.UTC
 
 @Entity
+@NamedEntityGraph(
+    name = "VigilanceAreaModel.fullLoad",
+    attributeNodes = [
+        NamedAttributeNode("images", subgraph = "subgraph.images"),
+    ],
+)
 @Table(name = "vigilance_areas")
 data class VigilanceAreaModel(
     @Id
