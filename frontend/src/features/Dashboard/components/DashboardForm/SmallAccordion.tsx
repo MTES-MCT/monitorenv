@@ -3,26 +3,33 @@ import styled from 'styled-components'
 
 type AccordionProps = {
   children: React.ReactNode
-  headerButton?: React.ReactNode
   isExpanded: boolean
+  isReadOnly?: boolean
   setExpandedAccordion: () => void
   title: string
 }
 
-export function Accordion({ children, headerButton, isExpanded, setExpandedAccordion, title }: AccordionProps) {
+export function SmallAccordion({
+  children,
+  isExpanded,
+  isReadOnly = false,
+  setExpandedAccordion,
+  title
+}: AccordionProps) {
   return (
-    <AccordionContainer $withCursor={!headerButton}>
-      <AccordionHeader onClick={!headerButton ? setExpandedAccordion : undefined}>
+    <AccordionContainer>
+      <AccordionHeader onClick={setExpandedAccordion}>
         <TitleContainer>
           <Title>{title}</Title>
-          {headerButton}
         </TitleContainer>
-        <StyledIconButton
-          $isExpanded={isExpanded}
-          accent={Accent.TERTIARY}
-          Icon={Icon.Chevron}
-          onClick={setExpandedAccordion}
-        />
+        {!isReadOnly && (
+          <StyledIconButton
+            $isExpanded={isExpanded}
+            accent={Accent.TERTIARY}
+            Icon={Icon.Chevron}
+            onClick={setExpandedAccordion}
+          />
+        )}
       </AccordionHeader>
       <HeaderSeparator />
       <AccordionContent $isExpanded={isExpanded}>{children}</AccordionContent>
@@ -30,18 +37,21 @@ export function Accordion({ children, headerButton, isExpanded, setExpandedAccor
   )
 }
 
-const AccordionContainer = styled.div<{ $withCursor: boolean }>`
+const AccordionContainer = styled.div`
+  background-color: ${p => p.theme.color.blueGray25};
   box-shadow: 0px 3px 6px #70778540;
-  cursor: ${({ $withCursor }) => ($withCursor ? 'pointer' : 'default')};
+  cursor: pointer;
 `
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform 0.3s;
 `
 const AccordionHeader = styled.header`
+  color: ${p => p.theme.color.blueYonder};
   display: flex;
+  font-weight: 500;
   justify-content: space-between;
-  padding: 24px;
+  padding: 8px 24px;
 `
 const TitleContainer = styled.div`
   align-items: center;
