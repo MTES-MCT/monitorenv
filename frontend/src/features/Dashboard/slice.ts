@@ -13,7 +13,6 @@ type OpenPanel = {
 
 type DashboardType = {
   dashboard: any
-  openAccordion: Dashboard.Block | undefined
   openPanel: OpenPanel | undefined
   [Dashboard.Block.REGULATORY_AREAS]: number[]
 }
@@ -40,7 +39,6 @@ const INITIAL_STATE: DashboardState = {
     1: {
       // TODO: it's just for testing to delete
       dashboard: {},
-      openAccordion: undefined,
       openPanel: undefined,
       [Dashboard.Block.REGULATORY_AREAS]: []
     }
@@ -84,17 +82,6 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         const selectedItems = state.dashboards[id][type]
         state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item))
-      }
-    },
-    setDashboardAccordion(state, action: PayloadAction<Dashboard.Block | undefined>) {
-      const id = state.activeDashboardId
-
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        state.dashboards[id].openAccordion = action.payload
       }
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {

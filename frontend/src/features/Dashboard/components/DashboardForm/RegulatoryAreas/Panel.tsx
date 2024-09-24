@@ -9,12 +9,13 @@ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
+import { useEffect } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
-export function RegulatoryPanel({ dashboardId }: { dashboardId: number }) {
+export function RegulatoryPanel({ $marginLeft, dashboardId }: { $marginLeft: number; dashboardId: number }) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.openPanel)
 
@@ -26,8 +27,18 @@ export function RegulatoryPanel({ dashboardId }: { dashboardId: number }) {
     dispatch(dashboardActions.setDashboardPanel())
   }
 
+  useEffect(
+    () => () => {
+      dispatch(dashboardActions.setDashboardPanel())
+    },
+    [dispatch]
+  )
+  if (!openPanel) {
+    return null
+  }
+
   return (
-    <Wrapper $isOpen={!!openPanel}>
+    <Wrapper $isOpen={!!openPanel} $marginLeft={$marginLeft}>
       {regulatoryMetadata ? (
         <>
           <Header data-cy="regulatory-metadata-header">
@@ -63,16 +74,16 @@ export function RegulatoryPanel({ dashboardId }: { dashboardId: number }) {
   )
 }
 
-const Wrapper = styled.div<{ $isOpen: boolean }>`
+const Wrapper = styled.div<{ $isOpen: boolean; $marginLeft: number }>`
   background-color: ${p => p.theme.color.white};
   box-shadow: 0px 3px 5px #70778540;
-  display: block;
-  margin-left: 37px;
-  opacity: ${p => (p.$isOpen ? 1 : 0)};
   position: absolute;
-  transform: translateX(100%);
-  transition: all 0.5s;
   width: 400px;
+  z-index: 1;
+  left: ${p =>
+    `calc(
+    ${p.$marginLeft}px + 40px + 64px + 20px
+  )`}; // 40px is the padding, 64px is the width of the lsidebar, 20px is the margin
 `
 
 const RegulatoryZoneName = styled.span`
@@ -86,7 +97,7 @@ const RegulatoryZoneName = styled.span`
   margin-right: 5px;
 `
 
-const Header = styled.div`
+const Header = styled.header`
   background-color: ${p => p.theme.color.gainsboro};
   color: ${p => p.theme.color.gunMetal};
   text-align: left;

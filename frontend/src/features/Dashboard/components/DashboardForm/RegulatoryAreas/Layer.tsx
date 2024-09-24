@@ -7,6 +7,7 @@ import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
+import styled from 'styled-components'
 
 import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
@@ -16,10 +17,11 @@ import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 
 type RegulatoryLayerProps = {
   dashboardId: number
+  isSelected: boolean
   layerId: number
 }
 
-export function Layer({ dashboardId, layerId }: RegulatoryLayerProps) {
+export function Layer({ dashboardId, isSelected, layerId }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
@@ -54,16 +56,17 @@ export function Layer({ dashboardId, layerId }: RegulatoryLayerProps) {
     }
   }
 
+  const removeZone = e => {
+    e.stopPropagation()
+    dispatch(dashboardActions.removeItems({ itemIds: [layerId], type: Dashboard.Block.REGULATORY_AREAS }))
+  }
+
   const toggleZoneMetadata = () => {
     dispatch(dashboardActions.setDashboardPanel({ id: layerId, type: Dashboard.Block.REGULATORY_AREAS }))
   }
 
   return (
-    <LayerSelector.Layer
-      ref={ref}
-      // $metadataIsShown={metadataIsShown}
-      onClick={toggleZoneMetadata}
-    >
+    <StyledLayer ref={ref} onClick={toggleZoneMetadata}>
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
         legendKey={layer?.entity_name ?? 'aucun'}
@@ -74,15 +77,31 @@ export function Layer({ dashboardId, layerId }: RegulatoryLayerProps) {
       </LayerSelector.Name>
 
       <LayerSelector.IconGroup>
-        <IconButton
-          accent={Accent.TERTIARY}
-          aria-label="Sélectionner la zone"
-          color={isZoneSelected ? THEME.color.blueGray : THEME.color.slateGray}
-          data-cy="regulatory-zone-check"
-          Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
-          onClick={handleSelectZone}
-        />
+        {isSelected ? (
+          <IconButton
+            accent={Accent.TERTIARY}
+            aria-label="Supprimer la zone"
+            color={THEME.color.slateGray}
+            Icon={Icon.Close}
+            onClick={removeZone}
+            title="Supprimer la/ zone"
+          />
+        ) : (
+          <IconButton
+            accent={Accent.TERTIARY}
+            aria-label="Sélectionner la zone"
+            color={isZoneSelected ? THEME.color.blueGray : THEME.color.slateGray}
+            data-cy="regulatory-zone-check"
+            Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
+            onClick={handleSelectZone}
+          />
+        )}
       </LayerSelector.IconGroup>
-    </LayerSelector.Layer>
+    </StyledLayer>
   )
 }
+
+const StyledLayer = styled(LayerSelector.Layer)`
+  padding-left: 24px;
+  padding-right: 24px;
+`

@@ -8,15 +8,17 @@ import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { includes, intersection } from 'lodash'
 import { useState } from 'react'
+import styled from 'styled-components'
 
 import { Layer } from './Layer'
 
 type ResultListLayerGroupProps = {
   dashboardId: number
   groupName: string
+  isSelected?: boolean
   layerIds: number[]
 }
-export function ListLayerGroup({ dashboardId, groupName, layerIds }: ResultListLayerGroupProps) {
+export function ListLayerGroup({ dashboardId, groupName, isSelected = false, layerIds }: ResultListLayerGroupProps) {
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
@@ -40,34 +42,55 @@ export function ListLayerGroup({ dashboardId, groupName, layerIds }: ResultListL
     }
   }
 
+  const removeAllZones = e => {
+    e.stopPropagation()
+    const payload = { itemIds: layerIds, type: Dashboard.Block.REGULATORY_AREAS }
+    dispatch(dashboardActions.removeItems(payload))
+  }
+
   const clickOnGroupZones = () => {
     setZonesAreOpen(!zonesAreOpen)
   }
 
   return (
     <>
-      <LayerSelector.GroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen} onClick={clickOnGroupZones}>
+      <StyledGroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen} onClick={clickOnGroupZones}>
         <LayerSelector.GroupName data-cy="result-group" title={groupName}>
           {getTitle(groupName) ?? ''}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
-
-          <IconButton
-            accent={Accent.TERTIARY}
-            aria-label="Sélectionner la/les zone(s)"
-            color={allTopicZonesAreChecked ? THEME.color.blueGray : THEME.color.slateGray}
-            Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
-            onClick={handleCheckAllZones}
-            title="Sélectionner la/les zone(s)"
-          />
+          {isSelected ? (
+            <IconButton
+              accent={Accent.TERTIARY}
+              aria-label="Supprimer la/les zone(s)"
+              color={THEME.color.slateGray}
+              Icon={Icon.Close}
+              onClick={removeAllZones}
+              title="Supprimer la/les zone(s)"
+            />
+          ) : (
+            <IconButton
+              accent={Accent.TERTIARY}
+              aria-label="Sélectionner la/les zone(s)"
+              color={allTopicZonesAreChecked ? THEME.color.blueGray : THEME.color.slateGray}
+              Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
+              onClick={handleCheckAllZones}
+              title="Sélectionner la/les zone(s)"
+            />
+          )}
         </LayerSelector.IconGroup>
-      </LayerSelector.GroupWrapper>
+      </StyledGroupWrapper>
       <LayerSelector.SubGroup isOpen={forceZonesAreOpen || zonesAreOpen} length={layerIds?.length}>
         {layerIds?.map(layerId => (
-          <Layer key={layerId} dashboardId={dashboardId} layerId={layerId} />
+          <Layer key={layerId} dashboardId={dashboardId} isSelected={isSelected} layerId={layerId} />
         ))}
       </LayerSelector.SubGroup>
     </>
   )
 }
+
+const StyledGroupWrapper = styled(LayerSelector.GroupWrapper)`
+  padding-left: 24px;
+  padding-right: 24px;
+`
