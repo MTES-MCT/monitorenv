@@ -1,6 +1,7 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -54,6 +55,7 @@ export function DashboardForm() {
         <RegulatoryAreas
           dashboardId={dashboardId}
           isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
+          regulatoryAreas={extractedArea?.regulatoryAreas}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
         />
 

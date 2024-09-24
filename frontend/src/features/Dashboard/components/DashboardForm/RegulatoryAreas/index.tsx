@@ -1,4 +1,3 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -12,34 +11,32 @@ import { RegulatoryPanel } from './Panel'
 import { Accordion } from '../Accordion'
 import { SmallAccordion } from '../SmallAccordion'
 
+import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
+
 type RegulatoriesAreasProps = {
   dashboardId: number
   isExpanded: boolean
+  regulatoryAreas: RegulatoryLayerCompactFromAPI[] | undefined
   setExpandedAccordion: () => void
 }
-export function RegulatoryAreas({ dashboardId, isExpanded, setExpandedAccordion }: RegulatoriesAreasProps) {
+export function RegulatoryAreas({
+  dashboardId,
+  isExpanded,
+  regulatoryAreas,
+  setExpandedAccordion
+}: RegulatoriesAreasProps) {
   const ref = useRef<HTMLDivElement>(null)
   const width = ref.current?.clientWidth
 
   const selectedLayerIds = useAppSelector(
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
   )
-
   const [isExpandedSmallAccordion, setExpandedSmallAccordion] = useState(false)
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
-  const regulatoryAreasByLayerName = groupBy(
-    Object.values(regulatoryLayers?.ids ?? {}),
-    (r: number) => regulatoryLayers?.entities[r]?.layer_name
-  )
+  const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
 
-  const selectedRegulatoryAreaIds = Object.values(regulatoryLayers?.ids ?? {}).filter(id =>
-    selectedLayerIds?.includes(id)
-  )
-  const selectedRegulatoryAreasByLayerName = groupBy(
-    selectedRegulatoryAreaIds,
-    (r: number) => regulatoryLayers?.entities[r]?.layer_name
-  )
+  const selectedRegulatoryAreaIds = regulatoryAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
+  const selectedRegulatoryAreasByLayerName = groupBy(selectedRegulatoryAreaIds, r => r.layer_name)
 
   return (
     <div ref={ref}>
@@ -51,14 +48,18 @@ export function RegulatoryAreas({ dashboardId, isExpanded, setExpandedAccordion 
           $maxHeight={100}
           $showBaseLayers={isExpanded}
         >
-          {Object.entries(regulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
-            <ListLayerGroup
-              key={layerGroupName}
-              dashboardId={dashboardId}
-              groupName={layerGroupName}
-              layerIds={layerIdsInGroup}
-            />
-          ))}
+          {Object.entries(regulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+            const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
+
+            return (
+              <ListLayerGroup
+                key={layerGroupName}
+                dashboardId={dashboardId}
+                groupName={layerGroupName}
+                layerIds={layersId}
+              />
+            )
+          })}
         </StyledLayerList>
       </Accordion>
       <SmallAccordion
@@ -70,15 +71,19 @@ export function RegulatoryAreas({ dashboardId, isExpanded, setExpandedAccordion 
           selectedLayerIds?.length ?? 0
         )}`}
       >
-        {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
-          <ListLayerGroup
-            key={layerGroupName}
-            dashboardId={dashboardId}
-            groupName={layerGroupName}
-            isSelected
-            layerIds={layerIdsInGroup}
-          />
-        ))}
+        {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+          const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
+
+          return (
+            <ListLayerGroup
+              key={layerGroupName}
+              dashboardId={dashboardId}
+              groupName={layerGroupName}
+              isSelected
+              layerIds={layersId}
+            />
+          )
+        })}
       </SmallAccordion>
     </div>
   )

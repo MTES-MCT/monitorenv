@@ -31,7 +31,6 @@ export function SmallAccordion({
           />
         )}
       </AccordionHeader>
-      <HeaderSeparator />
       <AccordionContent $isExpanded={isExpanded}>{children}</AccordionContent>
     </AccordionContainer>
   )
@@ -41,6 +40,7 @@ const AccordionContainer = styled.div`
   background-color: ${p => p.theme.color.blueGray25};
   box-shadow: 0px 3px 6px #70778540;
   cursor: pointer;
+  padding-bottom: 4px;
 `
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
@@ -63,14 +63,13 @@ const Title = styled.span`
   font-weight: 500;
 `
 
-const HeaderSeparator = styled.div`
-  border-bottom: 2px solid ${p => p.theme.color.gainsboro};
-  padding: -24px;
-`
 const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
   overflow-x: hidden;
   transition: 0.5s max-height;
+  & > :last-child {
+    border-bottom: none;
+  }
 `
