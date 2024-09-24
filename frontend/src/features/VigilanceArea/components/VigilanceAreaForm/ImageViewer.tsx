@@ -1,6 +1,7 @@
 import { useEscapeKey } from '@hooks/useEscapeKey'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
+import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
 interface ImageViewerProps {
@@ -29,7 +30,7 @@ export function ImageViewer({ currentIndex, images, onClose }: ImageViewerProps)
     onEscape: () => onClose()
   })
 
-  return (
+  return createPortal(
     <>
       <Wrapper>
         <CloseButton>
@@ -72,7 +73,8 @@ export function ImageViewer({ currentIndex, images, onClose }: ImageViewerProps)
         )}
       </Wrapper>
       <Background />
-    </>
+    </>,
+    document.body as HTMLElement
   )
 }
 

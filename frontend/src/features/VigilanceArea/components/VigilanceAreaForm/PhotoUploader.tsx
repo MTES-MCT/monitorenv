@@ -11,7 +11,7 @@ import styled from 'styled-components'
 import { ImageViewer } from './ImageViewer'
 import { getImages } from './utils'
 
-const IMAGES_INFORMATIONS_TEXT = '5 photos maximum'
+const IMAGES_INFORMATIONS_TEXT = '5 photos maximum. Formats autorisés: jpeg, png, webp'
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
 const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
 
@@ -163,7 +163,14 @@ export function PhotoUploaderWithRef(_, ref) {
     <div>
       <Label>Image</Label>
 
-      <input ref={ref} accept="image/*" hidden multiple onChange={uploadImageDisplay} type="file" />
+      <input
+        ref={ref}
+        accept="image/png, image/jpeg, image/webp"
+        hidden
+        multiple
+        onChange={uploadImageDisplay}
+        type="file"
+      />
       <Button
         accent={Accent.SECONDARY}
         disabled={imagesList.length >= 5}
@@ -225,7 +232,7 @@ const PreviewList = styled.ul`
 
 const PreviewImagesContainer = styled.li`
   position: relative;
-  > img {
+  > button > img {
     object-fit: cover;
   }
 `
@@ -245,6 +252,10 @@ const StyledButton = styled(Button)`
   right: 4px;
   > span {
     margin-right: 0px !important;
+    > svg {
+      height: 16px;
+      width: 16px;
+    }
   }
 `
 

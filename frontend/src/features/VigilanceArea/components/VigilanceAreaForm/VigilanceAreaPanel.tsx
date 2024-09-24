@@ -284,7 +284,7 @@ const ImageContainer = styled.div`
   gap: 4px;
   padding: 16px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
-  > img {
+  > button > img {
     object-fit: cover;
   }
 `
