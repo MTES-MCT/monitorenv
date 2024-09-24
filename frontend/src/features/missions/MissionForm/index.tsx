@@ -1,9 +1,11 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { attachReportingToMissionSliceActions } from './AttachReporting/slice'
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -13,12 +15,19 @@ import { missionFactory } from '../Missions.helpers'
 import type { Mission as MissionType, NewMission } from '../../../domain/entities/missions'
 
 export function MissionFormWrapper() {
+  const dispatch = useAppDispatch()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
 
   const selectedMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
   )
   const engagedControlUnit = selectedMission?.engagedControlUnit
+
+  useEffect(() => {
+    dispatch(
+      attachReportingToMissionSliceActions.setAttachedReportings(selectedMission?.missionForm.attachedReportings ?? [])
+    )
+  }, [dispatch, selectedMission?.missionForm.attachedReportings])
 
   const activeAction = selectedMission?.activeAction
 

@@ -1,12 +1,12 @@
 import {
   Banner,
+  type ControlUnit,
+  customDayjs,
   FormikEffect,
   Icon,
   Level,
   THEME,
-  customDayjs,
-  usePrevious,
-  type ControlUnit
+  usePrevious
 } from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { useFormikContext } from 'formik'
@@ -32,8 +32,8 @@ import { getIsMissionFormValid, isMissionAutoSaveEnabled, shouldSaveMission } fr
 import { missionsAPI } from '../../../api/missionsAPI'
 import {
   FrontCompletionStatus,
-  MissionSourceEnum,
   type Mission,
+  MissionSourceEnum,
   type NewMission
 } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
