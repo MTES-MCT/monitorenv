@@ -48,7 +48,7 @@ export const ValidateButton = styled(Button)`
   background: ${p => p.theme.color.mediumSeaGreen};
   border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   color: ${p => p.theme.color.white};
-  &:hover {
+  &:hover &:not(disabled) {
     background: ${p => p.theme.color.mediumSeaGreen};
     border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   }

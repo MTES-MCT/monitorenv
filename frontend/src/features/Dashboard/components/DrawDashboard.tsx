@@ -1,3 +1,4 @@
+import { ValidateButton } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -9,6 +10,7 @@ import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
 import { createDashboard } from '../useCases/createDashboard'
+import { resetDrawing } from '../useCases/resetDrawing'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -56,6 +58,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
   }, [feature])
 
   const handleSelectInteraction = (nextInteraction: InteractionType) => () => {
+    dispatch(resetDrawing())
     dispatch(dashboardActions.setInteractionType(nextInteraction))
   }
 
@@ -67,14 +70,9 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
     dispatch(displayOrHideOtherLayers({ display: true }))
   }
 
-  const reinitialize = () => {
+  const reset = () => {
     if (!initialGeometry) {
-      dispatch(
-        dashboardActions.setGeometry({
-          coordinates: [],
-          type: 'MultiPolygon'
-        })
-      )
+      dispatch(resetDrawing())
 
       return
     }
@@ -112,7 +110,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
               onClick={handleSelectInteraction(InteractionType.CIRCLE)}
             />
           </li>
-          <ResetButton accent={Accent.SECONDARY} onClick={reinitialize}>
+          <ResetButton accent={Accent.SECONDARY} onClick={reset}>
             Réinitialiser
           </ResetButton>
         </Controls>
@@ -160,6 +158,6 @@ const ResetButton = styled(Button)`
   margin-left: auto;
 `
 
-const CreateDashboardButton = styled(Button)`
+const CreateDashboardButton = styled(ValidateButton)`
   width: 100%;
 `
