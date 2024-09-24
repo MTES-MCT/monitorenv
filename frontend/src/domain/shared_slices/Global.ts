@@ -57,6 +57,7 @@ type GlobalStateType = {
   displayInterestPointLayer: boolean
   displayReportingToAttachLayer: boolean
   displayVigilanceAreaLayer: boolean
+  displayDashboardLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
 
@@ -115,6 +116,7 @@ const initialState: GlobalStateType = {
   displayInterestPointLayer: true,
   displayReportingToAttachLayer: true,
   displayVigilanceAreaLayer: true,
+  displayDashboardLayer: true,
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
