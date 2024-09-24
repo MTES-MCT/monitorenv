@@ -1,4 +1,4 @@
-import { dashboardReducer } from '@features/Dashboard/components/slice'
+import { dashboardReducer } from '@features/Dashboard/slice'
 import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
 import { vigilanceAreaPersistedReducer } from '@features/VigilanceArea/slice'
 

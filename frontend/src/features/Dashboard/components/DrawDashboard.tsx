@@ -7,8 +7,8 @@ import { GeoJSON } from 'ol/format'
 import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { dashboardActions } from './slice'
-import { createDashboard } from '../useCases/generateDashboard'
+import { dashboardActions } from '../slice'
+import { createDashboard } from '../useCases/createDashboard'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -81,10 +81,12 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
     dispatch(dashboardActions.setGeometry(initialGeometry))
   }
 
+  const showErrorMessage = !isGeometryValid && geometry && 'coordinates' in geometry && geometry.coordinates.length > 0
+
   return (
     <div className={className}>
       <Header>
-        <Title as="h3">Définition d&apos;une zone</Title>
+        <Title>Définition d&apos;une zone</Title>
         <IconButton accent={Accent.TERTIARY} color={THEME.color.white} Icon={Icon.Close} onClick={onCancel} />
       </Header>
       <Body>
@@ -119,7 +121,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
           <CreateDashboardButton disabled={!isGeometryValid} onClick={handleValidate}>
             Créer le tableau
           </CreateDashboardButton>
-          {!isGeometryValid && <FieldError>Le tracé n&apos;est pas valide</FieldError>}
+          {showErrorMessage && <FieldError>Le tracé n&apos;est pas valide</FieldError>}
         </div>
       </Body>
     </div>
@@ -140,7 +142,7 @@ const Header = styled.header`
   justify-content: space-between;
   padding: 9px 16px 10px;
 `
-const Title = styled.h2`
+const Title = styled.h3`
   color: ${p => p.theme.color.white};
   font-size: 16px;
   font-weight: normal;
@@ -155,7 +157,7 @@ const Body = styled.div`
 `
 const ResetButton = styled(Button)`
   height: 32px;
-  margin: 0 auto;
+  margin-left: auto;
 `
 
 const CreateDashboardButton = styled(Button)`

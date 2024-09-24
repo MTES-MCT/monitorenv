@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
 
-import type { Dashboard } from 'domain/entities/dashboard'
+import type { Dashboard } from './types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 type DashboardState = {
