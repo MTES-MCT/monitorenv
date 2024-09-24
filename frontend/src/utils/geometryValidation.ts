@@ -102,7 +102,7 @@ function arePolygonsValid(polygons: Coordinate[][][]) {
 
 export function isGeometryValid(geometry: GeoJSON.Geometry) {
   if (geometry && geometry.type === OLGeometryType.MULTIPOLYGON) {
-    return arePolygonsValid(geometry.coordinates as Coordinate[][][])
+    return !!geometry.coordinates.length && arePolygonsValid(geometry.coordinates as Coordinate[][][])
   }
   if (geometry && geometry.type === OLGeometryType.POLYGON) {
     return isPolygonValid(geometry.coordinates as Coordinate[][])

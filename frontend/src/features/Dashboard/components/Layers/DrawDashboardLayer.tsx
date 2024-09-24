@@ -14,7 +14,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import React, { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { dashboardActions } from '../slice'
+import { dashboardActions } from '../../slice'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'

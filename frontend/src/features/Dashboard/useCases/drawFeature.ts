@@ -2,7 +2,7 @@ import { addGeometryToMultiGeometryGeoJSON, convertToGeoJSONGeometryObject } fro
 import { OLGeometryType } from 'domain/entities/map/constants'
 import { Geometry, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom'
 
-import { dashboardActions } from '../components/slice'
+import { dashboardActions } from '../slice'
 
 import type { HomeAppThunk } from '@store/index'
 import type Feature from 'ol/Feature'

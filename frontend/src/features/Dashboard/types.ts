@@ -1,11 +1,11 @@
-import type { AMPFromAPI } from './AMPs'
-import type { RegulatoryLayerCompactFromAPI } from './regulatory'
-import type { Reporting } from './reporting'
+import type { AMPFromAPI } from '../../domain/entities/AMPs'
+import type { RegulatoryLayerCompactFromAPI } from '../../domain/entities/regulatory'
+import type { Reporting } from '../../domain/entities/reporting'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 export namespace Dashboard {
   export interface ExtractedArea {
-    // TODO(): uniformize data naming (properties and types) from api
+    // TODO(24/09/2024): uniformize data naming (properties and types) from api
     amps: AMPFromAPI[]
     inseeCode: string
     regulatoryAreas: RegulatoryLayerCompactFromAPI[]

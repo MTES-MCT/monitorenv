@@ -1,14 +1,16 @@
 import { DialogButton, DialogSeparator, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
+import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { globalActions, setDisplayedItems } from 'domain/shared_slices/Global'
 import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
 import styled from 'styled-components'
 
 import { DrawDashboard } from './DrawDashboard'
-import { dashboardActions } from './slice'
+import { dashboardActions } from '../slice'
 
 export function DashboardMenuButton() {
   const dispatch = useAppDispatch()
@@ -17,6 +19,7 @@ export function DashboardMenuButton() {
 
   const toggleDashboardDialog = e => {
     e.preventDefault()
+
     dispatch(globalActions.hideSideButtons())
     dispatch(
       setDisplayedItems({
@@ -24,7 +27,13 @@ export function DashboardMenuButton() {
       })
     )
     dispatch(reduceReportingFormOnMap())
+
+    if (isDashboardDialogVisible) {
+      dispatch(dashboardActions.setIsDrawing(false))
+    }
   }
+
+  const goToDashboardsList = () => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.DASHBOARDS))
 
   const openDrawModal = () => {
     dispatch(dashboardActions.setIsDrawing(true))
@@ -50,7 +59,7 @@ export function DashboardMenuButton() {
                 Créer un tableau de bord
               </Button>
               <DialogSeparator />
-              <DialogButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={() => {}}>
+              <DialogButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={goToDashboardsList}>
                 Voir les briefs déjà créés
               </DialogButton>
             </MapMenuDialog.Footer>

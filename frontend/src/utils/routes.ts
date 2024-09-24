@@ -8,7 +8,7 @@ export function getMissionPageRoute(path: string) {
       end: true,
       path: sideWindowPaths.MISSION
     },
-    path as string
+    path
   )
 }
 export function isMissionPage(path: string) {
@@ -17,7 +17,7 @@ export function isMissionPage(path: string) {
       end: true,
       path: sideWindowPaths.MISSION
     },
-    path as string
+    path
   )
 }
 
@@ -27,7 +27,7 @@ export function isMissionOrMissionsPage(path: string) {
       end: true,
       path: sideWindowPaths.MISSIONS
     },
-    path as string
+    path
   )
 
   return isMissionPage(path) || isMissionsPage
@@ -39,7 +39,7 @@ export function isReportingsPage(path: string) {
       end: true,
       path: sideWindowPaths.REPORTINGS
     },
-    path as string
+    path
   )
 }
 
@@ -49,6 +49,6 @@ export function isDashboardsPage(path: string) {
       end: true,
       path: sideWindowPaths.DASHBOARDS
     },
-    path as string
+    path
   )
 }

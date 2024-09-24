@@ -3,7 +3,7 @@ import { geoJsonToWKT } from '@utils/geojsonToWKT'
 
 import { monitorenvPrivateApi } from './api'
 
-import type { Dashboard } from 'domain/entities/dashboard'
+import type { Dashboard } from '@features/Dashboard/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 const GET_EXTRACTED_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu créer le tableau de bord"
