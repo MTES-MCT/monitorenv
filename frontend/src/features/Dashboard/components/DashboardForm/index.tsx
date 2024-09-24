@@ -36,7 +36,7 @@ export function DashboardForm() {
       <Column>
         <RegulatoryAreas
           dashboardId={dashboardId}
-          isExpanded={expandedAccordion === 'REGULATORY_AREAS'}
+          isExpanded={expandedAccordion === Dashboard.Block.REGULATORY_AREAS}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
         />
 
