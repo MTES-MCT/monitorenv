@@ -11,6 +11,8 @@ import styled from 'styled-components'
 
 import { DrawDashboard } from './DrawDashboard'
 import { dashboardActions } from '../slice'
+import { closeDashboard } from '../useCases/closeDashboard'
+import { resetDrawing } from '../useCases/resetDrawing'
 
 export function DashboardMenuButton() {
   const dispatch = useAppDispatch()
@@ -40,6 +42,11 @@ export function DashboardMenuButton() {
   }
 
   const closeModal = () => {
+    dispatch(closeDashboard())
+  }
+
+  const cancel = () => {
+    dispatch(resetDrawing())
     dispatch(dashboardActions.setIsDrawing(false))
   }
 
@@ -48,11 +55,11 @@ export function DashboardMenuButton() {
       {isDashboardDialogVisible && (
         <StyledMapMenuDialogContainer>
           <MapMenuDialog.Header>
-            <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={toggleDashboardDialog} />
+            <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeModal} />
             <StyledTitle as="h2">Briefs pour les unités</StyledTitle>
           </MapMenuDialog.Header>
           {isDrawing ? (
-            <StyledDrawDashboard onCancel={closeModal} />
+            <StyledDrawDashboard onCancel={cancel} />
           ) : (
             <MapMenuDialog.Footer>
               <Button Icon={Icon.Plus} isFullWidth onClick={openDrawModal}>

@@ -1,3 +1,4 @@
+import { GET_EXTRACTED_AREAS_ERROR_MESSAGE } from '@features/Dashboard/useCases/createDashboard'
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { geoJsonToWKT } from '@utils/geojsonToWKT'
 
@@ -5,8 +6,6 @@ import { monitorenvPrivateApi } from './api'
 
 import type { Dashboard } from '@features/Dashboard/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
-
-const GET_EXTRACTED_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu créer le tableau de bord"
 
 export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
