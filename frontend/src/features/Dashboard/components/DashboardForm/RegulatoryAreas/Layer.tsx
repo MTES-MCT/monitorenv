@@ -66,7 +66,7 @@ export function Layer({ dashboardId, isSelected, layerId }: RegulatoryLayerProps
   }
 
   return (
-    <StyledLayer ref={ref} onClick={toggleZoneMetadata}>
+    <StyledLayer ref={ref} $isSelected={isSelected} onClick={toggleZoneMetadata}>
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
         legendKey={layer?.entity_name ?? 'aucun'}
@@ -101,7 +101,16 @@ export function Layer({ dashboardId, isSelected, layerId }: RegulatoryLayerProps
   )
 }
 
-const StyledLayer = styled(LayerSelector.Layer)`
+const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
+  background-color: ${p => p.theme.color.white};
   padding-left: 24px;
   padding-right: 24px;
+  ${p =>
+    p.$isSelected &&
+    `
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: 4px;
+        margin-right: 4px;
+    `}
 `

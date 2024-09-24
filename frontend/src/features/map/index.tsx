@@ -214,6 +214,7 @@ export function Map({ isSuperUser }) {
       {/* DASHBOARD */}
       {/* @ts-ignore */}
       <DrawDashboardLayer />
+      {/* @ts-ignore */}
       <DashboardLayer />
     </BaseMap>
   )

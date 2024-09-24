@@ -54,7 +54,11 @@ export function ListLayerGroup({ dashboardId, groupName, isSelected = false, lay
 
   return (
     <>
-      <StyledGroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen} onClick={clickOnGroupZones}>
+      <StyledGroupWrapper
+        $isOpen={forceZonesAreOpen || zonesAreOpen}
+        $isSelected={isSelected}
+        onClick={clickOnGroupZones}
+      >
         <LayerSelector.GroupName data-cy="result-group" title={groupName}>
           {getTitle(groupName) ?? ''}
         </LayerSelector.GroupName>
@@ -90,7 +94,17 @@ export function ListLayerGroup({ dashboardId, groupName, isSelected = false, lay
   )
 }
 
-const StyledGroupWrapper = styled(LayerSelector.GroupWrapper)`
+const StyledGroupWrapper = styled(LayerSelector.GroupWrapper)<{ $isSelected: boolean }>`
+  background-color: ${p => p.theme.color.white};
   padding-left: 24px;
   padding-right: 24px;
+
+  ${p =>
+    p.$isSelected &&
+    `
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: 4px;
+        margin-right: 4px;
+    `}
 `
