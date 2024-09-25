@@ -1,7 +1,7 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-type AccordionProps = {
+type SelectedAccordionProps = {
   children: React.ReactNode
   isExpanded: boolean
   isReadOnly?: boolean
@@ -9,16 +9,20 @@ type AccordionProps = {
   title: string
 }
 
-export function SmallAccordion({
+export function SelectedAccordion({
   children,
   isExpanded,
   isReadOnly = false,
   setExpandedAccordion,
   title
-}: AccordionProps) {
+}: SelectedAccordionProps) {
   return (
     <AccordionContainer>
-      <AccordionHeader onClick={setExpandedAccordion}>
+      <AccordionHeader
+        aria-controls={`selected-${title}-accordion`}
+        aria-expanded={isExpanded}
+        onClick={setExpandedAccordion}
+      >
         <TitleContainer>
           <Title>{title}</Title>
         </TitleContainer>
@@ -31,7 +35,9 @@ export function SmallAccordion({
           />
         )}
       </AccordionHeader>
-      <AccordionContent $isExpanded={isExpanded}>{children}</AccordionContent>
+      <AccordionContent $isExpanded={isExpanded} id={`selected-${title}-accordion`}>
+        {children}
+      </AccordionContent>
     </AccordionContainer>
   )
 }
@@ -39,7 +45,6 @@ export function SmallAccordion({
 const AccordionContainer = styled.div`
   background-color: ${p => p.theme.color.blueGray25};
   box-shadow: 0px 3px 6px #70778540;
-  cursor: pointer;
   padding-bottom: 4px;
 `
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
@@ -48,6 +53,7 @@ const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
 `
 const AccordionHeader = styled.header`
   color: ${p => p.theme.color.blueYonder};
+  cursor: pointer;
   display: flex;
   font-weight: 500;
   justify-content: space-between;

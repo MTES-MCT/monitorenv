@@ -15,7 +15,7 @@ import styled from 'styled-components'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
-export function RegulatoryPanel({ $marginLeft, dashboardId }: { $marginLeft: number; dashboardId: number }) {
+export function RegulatoryPanel({ className, dashboardId }: { className: string; dashboardId: number }) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.openPanel)
 
@@ -38,7 +38,7 @@ export function RegulatoryPanel({ $marginLeft, dashboardId }: { $marginLeft: num
   }
 
   return (
-    <Wrapper $isOpen={!!openPanel} $marginLeft={$marginLeft}>
+    <Wrapper $isOpen={!!openPanel} className={className}>
       {regulatoryMetadata ? (
         <>
           <Header data-cy="regulatory-metadata-header">
@@ -74,16 +74,12 @@ export function RegulatoryPanel({ $marginLeft, dashboardId }: { $marginLeft: num
   )
 }
 
-const Wrapper = styled.div<{ $isOpen: boolean; $marginLeft: number }>`
+const Wrapper = styled.div<{ $isOpen: boolean }>`
   background-color: ${p => p.theme.color.white};
   box-shadow: 0px 3px 5px #70778540;
   position: absolute;
   width: 400px;
   z-index: 1;
-  left: ${p =>
-    `calc(
-    ${p.$marginLeft}px + 40px + 64px + 20px
-  )`}; // 40px is the padding, 64px is the width of the lsidebar, 20px is the margin
 `
 
 const RegulatoryZoneName = styled.span`
