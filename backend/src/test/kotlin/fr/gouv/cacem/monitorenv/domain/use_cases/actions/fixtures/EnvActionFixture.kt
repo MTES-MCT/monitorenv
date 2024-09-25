@@ -12,9 +12,7 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 class EnvActionFixture {
-
     companion object {
-
         fun anEnvAction(
             mapper: ObjectMapper,
             id: UUID,
@@ -22,7 +20,7 @@ class EnvActionFixture {
             endTime: ZonedDateTime? = null,
             observationsByUnit: String? = null,
             missionId: Int? = 1,
-            controlPlans: List<EnvActionControlPlanEntity>? = null
+            controlPlans: List<EnvActionControlPlanEntity>? = null,
         ): EnvActionEntity {
             return EnvActionMapper.getEnvActionEntityFromJSON(
                 mapper,

@@ -38,7 +38,6 @@ class JpaEnvActionRepository(
             val controlPlanTagssReferenceModelMap: MutableMap<Int, ControlPlanTagModel> = mutableMapOf()
             val controlPlanSubThemesReferenceModelMap: MutableMap<Int, ControlPlanSubThemeModel> = mutableMapOf()
 
-
             envAction.controlPlans?.forEach { controlPlan ->
                 controlPlan.tagIds?.forEach { tagId ->
                     controlPlanTagssReferenceModelMap[tagId] = idbControlPlanTagRepository.getReferenceById(tagId)
