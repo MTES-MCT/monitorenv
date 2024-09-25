@@ -74,4 +74,8 @@ html {
       }
   }
 
+  h2 {
+    line-height: normal;
+  }
+
 `

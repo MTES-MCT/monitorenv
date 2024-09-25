@@ -12,7 +12,11 @@ type AccordionProps = {
 export function Accordion({ children, headerButton, isExpanded, setExpandedAccordion, title }: AccordionProps) {
   return (
     <AccordionContainer $withCursor={!headerButton}>
-      <AccordionHeader onClick={!headerButton ? setExpandedAccordion : undefined}>
+      <AccordionHeader
+        aria-controls={`${title}-accordion`}
+        aria-expanded={isExpanded}
+        onClick={!headerButton ? setExpandedAccordion : undefined}
+      >
         <TitleContainer>
           <Title>{title}</Title>
           {headerButton}
@@ -25,7 +29,9 @@ export function Accordion({ children, headerButton, isExpanded, setExpandedAccor
         />
       </AccordionHeader>
       <HeaderSeparator />
-      <AccordionContent $isExpanded={isExpanded}>{children}</AccordionContent>
+      <AccordionContent $isExpanded={isExpanded} id={`${title}-accordion`}>
+        {children}
+      </AccordionContent>
     </AccordionContainer>
   )
 }
@@ -48,7 +54,7 @@ const TitleContainer = styled.div`
   display: flex;
   gap: 16px;
 `
-const Title = styled.span`
+const Title = styled.h2`
   font-size: 16px;
   font-weight: 500;
 `

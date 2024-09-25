@@ -3,31 +3,30 @@ import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.styl
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import { ListLayerGroup } from './ListLayerGroup'
 import { RegulatoryPanel } from './Panel'
 import { Accordion } from '../Accordion'
-import { SmallAccordion } from '../SmallAccordion'
+import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
 type RegulatoriesAreasProps = {
+  columnWidth: number
   dashboardId: number
   isExpanded: boolean
   regulatoryAreas: RegulatoryLayerCompactFromAPI[] | undefined
   setExpandedAccordion: () => void
 }
 export function RegulatoryAreas({
+  columnWidth,
   dashboardId,
   isExpanded,
   regulatoryAreas,
   setExpandedAccordion
 }: RegulatoriesAreasProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const width = ref.current?.clientWidth
-
   const selectedLayerIds = useAppSelector(
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
   )
@@ -39,8 +38,8 @@ export function RegulatoryAreas({
   const selectedRegulatoryAreasByLayerName = groupBy(selectedRegulatoryAreaIds, r => r.layer_name)
 
   return (
-    <div ref={ref}>
-      <RegulatoryPanel $marginLeft={width ?? 0} dashboardId={dashboardId} />
+    <div>
+      <StyledPanel $marginLeft={columnWidth ?? 0} className="regulatory-panel" dashboardId={dashboardId} />
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones règlementaires">
         <StyledLayerList
@@ -62,7 +61,7 @@ export function RegulatoryAreas({
           })}
         </StyledLayerList>
       </Accordion>
-      <SmallAccordion
+      <SelectedAccordion
         isExpanded={isExpandedSmallAccordion}
         isReadOnly={selectedLayerIds?.length === 0}
         setExpandedAccordion={() => setExpandedSmallAccordion(!isExpandedSmallAccordion)}
@@ -84,11 +83,17 @@ export function RegulatoryAreas({
             />
           )
         })}
-      </SmallAccordion>
+      </SelectedAccordion>
     </div>
   )
 }
 
 const StyledLayerList = styled(LayerSelector.LayerList)`
   height: auto;
+`
+const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`
+  left: ${p =>
+    `calc(
+    ${p.$marginLeft}px + 40px + 64px
+  )`}; // 40px is the padding, 64px is the width of the sidebar
 `

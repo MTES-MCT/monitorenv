@@ -3,7 +3,7 @@ import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
@@ -12,6 +12,9 @@ import { dashboardActions } from '../../slice'
 
 export function DashboardForm() {
   const extractedArea = useAppSelector(state => state.dashboard.extractedArea)
+
+  const firstColumnRef = useRef<HTMLDivElement>(null)
+  const firstColumnWidth = firstColumnRef.current?.clientWidth
 
   const dispatch = useAppDispatch()
   const dashboardId = 1 // TODO replace with real value
@@ -51,8 +54,9 @@ export function DashboardForm() {
 
   return (
     <Container>
-      <Column>
+      <Column ref={firstColumnRef}>
         <RegulatoryAreas
+          columnWidth={firstColumnWidth ?? 0}
           dashboardId={dashboardId}
           isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
           regulatoryAreas={extractedArea?.regulatoryAreas}
@@ -162,9 +166,9 @@ const Column = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  gap: 16px;
   height: calc(100vh- 48px - 40px); // 48px = navbar height, 40px = padding
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: visible;
-  box-sizing: content-box;
   padding: 12px;
 `
