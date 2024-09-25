@@ -405,11 +405,6 @@ class MissionModel(
                             resource = controlUnitResourceModel,
                             mission = missionModel,
                         )
-
-                        MissionControlResourceModel(
-                            resource = controlUnitResourceModel,
-                            mission = missionModel,
-                        )
                     }
                 missionModel.controlResources?.addAll(missionControlUnitResourceModels)
             }

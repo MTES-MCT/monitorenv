@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
@@ -21,6 +22,7 @@ class EnvActionFixture {
             endTime: ZonedDateTime? = null,
             observationsByUnit: String? = null,
             missionId: Int? = 1,
+            controlPlans: List<EnvActionControlPlanEntity>? = null
         ): EnvActionEntity {
             return EnvActionMapper.getEnvActionEntityFromJSON(
                 mapper,
@@ -30,7 +32,7 @@ class EnvActionFixture {
                 actionStartDateTimeUtc = startTime,
                 completedBy = "John Doe",
                 completion = ActionCompletionEnum.COMPLETED,
-                controlPlans = listOf(),
+                controlPlans = controlPlans,
                 department = "Department X",
                 facade = "Facade Y",
                 geom = null,
