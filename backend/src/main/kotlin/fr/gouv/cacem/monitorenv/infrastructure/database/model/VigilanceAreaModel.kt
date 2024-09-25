@@ -21,7 +21,7 @@ import java.time.ZoneOffset.UTC
 @NamedEntityGraph(
     name = "VigilanceAreaModel.fullLoad",
     attributeNodes = [
-        NamedAttributeNode("images", subgraph = "subgraph.images"),
+        NamedAttributeNode("images"),
     ],
 )
 @Table(name = "vigilance_areas")
