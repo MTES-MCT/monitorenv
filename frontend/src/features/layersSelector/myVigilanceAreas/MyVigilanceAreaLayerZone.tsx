@@ -87,6 +87,7 @@ export function MyVigilanceAreaLayerZone({
       >
         {layer?.name}
       </LayerSelector.Name>
+
       <LayerSelector.IconGroup>
         <StyledSummaryButton
           $withMargin={pinnedVigilanceArea}

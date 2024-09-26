@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
 import { RegulatoryAreas } from './RegulatoryAreas'
+import { VigilanceAreas } from './VigilanceAreas'
 import { dashboardActions } from '../../slice'
 
 export function DashboardForm() {
@@ -81,16 +82,13 @@ export function DashboardForm() {
           <div>TEST</div>
           <div>TEST</div>
         </Accordion>
-        <Accordion
+        <VigilanceAreas
+          columnWidth={firstColumnWidth ?? 0}
+          dashboardId={dashboardId}
           isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
-          title="Zones de vigilance"
-        >
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-        </Accordion>
+          vigilanceAreas={extractedArea?.vigilanceAreas}
+        />
       </Column>
       <Column>
         <Accordion

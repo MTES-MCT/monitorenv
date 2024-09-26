@@ -15,6 +15,7 @@ type DashboardType = {
   dashboard: any
   openPanel: OpenPanel | undefined
   [Dashboard.Block.REGULATORY_AREAS]: number[]
+  [Dashboard.Block.VIGILANCE_AREAS]: number[]
 }
 
 type SelectedDashboardType = {
@@ -40,7 +41,8 @@ const INITIAL_STATE: DashboardState = {
       // TODO: it's just for testing to delete
       dashboard: {},
       openPanel: undefined,
-      [Dashboard.Block.REGULATORY_AREAS]: []
+      [Dashboard.Block.REGULATORY_AREAS]: [],
+      [Dashboard.Block.VIGILANCE_AREAS]: []
     }
   },
 

@@ -23,9 +23,7 @@ export function SelectedAccordion({
         aria-expanded={isExpanded}
         onClick={setExpandedAccordion}
       >
-        <TitleContainer>
-          <Title>{title}</Title>
-        </TitleContainer>
+        <Title>{title}</Title>
         {!isReadOnly && (
           <StyledIconButton
             $isExpanded={isExpanded}
@@ -52,20 +50,17 @@ const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transition: transform 0.3s;
 `
 const AccordionHeader = styled.header`
+  align-items: center;
   color: ${p => p.theme.color.blueYonder};
   cursor: pointer;
   display: flex;
   font-weight: 500;
   justify-content: space-between;
-  padding: 8px 24px;
+  padding: 4px 24px 2px 24px;
 `
-const TitleContainer = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 16px;
-`
+
 const Title = styled.span`
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 500;
 `
 
