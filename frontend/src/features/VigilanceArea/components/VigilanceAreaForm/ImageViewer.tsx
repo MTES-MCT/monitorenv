@@ -7,10 +7,11 @@ import styled from 'styled-components'
 interface ImageViewerProps {
   currentIndex?: number
   images: string[]
+  isSideWindow?: boolean
   onClose: () => void
 }
 
-export function ImageViewer({ currentIndex, images, onClose }: ImageViewerProps) {
+export function ImageViewer({ currentIndex, images, isSideWindow = false, onClose }: ImageViewerProps) {
   const [localCurrentIndex, setLocalCurrentIndex] = useState(currentIndex ?? 0)
 
   const changeImage = useCallback(
@@ -30,9 +31,9 @@ export function ImageViewer({ currentIndex, images, onClose }: ImageViewerProps)
     onEscape: () => onClose()
   })
 
-  return createPortal(
+  const imageViewerContent = (
     <>
-      <Wrapper>
+      <Wrapper id="test">
         <CloseButton>
           <IconButton
             accent={Accent.TERTIARY}
@@ -73,9 +74,14 @@ export function ImageViewer({ currentIndex, images, onClose }: ImageViewerProps)
         )}
       </Wrapper>
       <Background />
-    </>,
-    document.body as HTMLElement
+    </>
   )
+
+  if (isSideWindow) {
+    return imageViewerContent
+  }
+
+  return createPortal(imageViewerContent, document.body as HTMLElement)
 }
 
 const Background = styled.div`

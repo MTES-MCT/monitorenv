@@ -1,6 +1,41 @@
 import { Button } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
+// FORM
+export const Header = styled.header<{ $isEditing: boolean }>`
+  align-items: center;
+  background-color: ${p => (p.$isEditing ? p.theme.color.gainsboro : p.theme.color.blueGray25)};
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 9px 16px 10px 16px;
+`
+export const Title = styled.span<{ $isDraft: boolean; $isFullWidth: boolean }>`
+  font-size: 15px;
+  color: ${p => p.theme.color.gunMetal};
+  overflow: hidden;
+  margin-left: 8px;
+  min-width: 0;
+  /*   max-width: ${p => {
+    if (p.$isFullWidth) {
+      return '100%'
+    }
+
+    return p.$isDraft ? '230px' : '318px'
+  }}; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+export const SubHeaderContainer = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 16px;
+`
+export const TitleContainer = styled.div`
+  align-items: center;
+  display: flex;
+`
+
 export const DeleteButton = styled(Button)`
   > span {
     color: ${p => p.theme.color.maximumRed};
@@ -58,4 +93,88 @@ export const StyledImageButton = styled.button`
   background: none;
   border: none;
   padding: 0px;
+`
+
+// PANEL
+export const PanelContainer = styled.div`
+  background-color: ${p => p.theme.color.white};
+  box-shadow: 0px 1px 3px #707785b3;
+  max-height: calc(100vh - 107px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`
+
+export const PanelBody = styled.div`
+  overflow-y: auto;
+`
+
+export const PanelSubPart = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+`
+
+export const PanelImageContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 16px;
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  > button > img {
+    object-fit: cover;
+  }
+`
+
+export const PanelInlineItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+`
+
+export const PanelInlineItemLabel = styled.span<{ $isInline?: boolean }>`
+  width: ${p => (p.$isInline ? '76px' : 'auto')};
+  color: ${p => p.theme.color.slateGray};
+  margin-bottom: 4px;
+`
+
+export const PanelInlineItemValue = styled.span<{ $maxLine?: number }>`
+  color: ${p => p.theme.color.gunMetal};
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: ${p => p.$maxLine ?? '1'};
+  overflow: hidden;
+  white-space: pre-wrap;
+`
+
+export const StyledPanelInlineItemValue = styled(PanelInlineItemValue)`
+  margin-bottom: 4px;
+`
+
+export const PanelDateItem = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+export const PanelLinkContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+`
+
+export const PanelLinkText = styled.span`
+  color: ${p => p.theme.color.gunMetal};
+  font-weight: 500;
+`
+
+export const PanelLinkUrl = styled.a`
+  color: #295edb;
+`
+export const PanelInternText = styled.span`
+  color: ${p => p.theme.color.maximumRed};
+  margin-bottom: 8px;
 `

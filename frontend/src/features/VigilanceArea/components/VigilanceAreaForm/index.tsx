@@ -17,9 +17,10 @@ import { SelectAMP } from './AddAMPs/SelectAMPs'
 import { SelectRegulatoryAreas } from './AddRegulatoryAreas/SelectRegulatoryAreas'
 import { DrawVigilanceArea } from './DrawVigilanceArea'
 import { Form } from './Form'
+import { VigilanceAreaPanel } from './Panel'
 import { VigilanceAreaSchema } from './Schema'
+import { Header, SubHeaderContainer, Title, TitleContainer } from './style'
 import { getVigilanceAreaInitialValues } from './utils'
-import { VigilanceAreaPanel } from './VigilanceAreaPanel'
 
 type VigilanceAreaFormProps = {
   isOpen: boolean
@@ -93,7 +94,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
           />
           <Title
             $isDraft={vigilanceArea?.isDraft ?? true}
-            $isNew={isNewVigilanceArea}
+            $isFullWidth={isNewVigilanceArea}
             data-cy="vigilance-area-title"
             title={title}
           >
@@ -146,37 +147,4 @@ const Wrapper = styled.div<{ $isMainFormOpen: boolean; $isOpen: boolean }>`
   padding: 0;
   transition: all 0.5s;
   height: ${p => (p.$isMainFormOpen ? 'calc(100vh - 65px)' : 'auto')};
-`
-
-const Header = styled.header<{ $isEditing: boolean }>`
-  align-items: center;
-  background-color: ${p => (p.$isEditing ? p.theme.color.gainsboro : p.theme.color.blueGray25)};
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-  padding: 9px 16px 10px 16px;
-`
-const Title = styled.span<{ $isDraft: boolean; $isNew: boolean }>`
-  font-size: 15px;
-  color: ${p => p.theme.color.gunMetal};
-  overflow: hidden;
-  margin-left: 8px;
-  max-width: ${p => {
-    if (p.$isNew) {
-      return '100%'
-    }
-
-    return p.$isDraft ? '230px' : '318px'
-  }};
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
-const SubHeaderContainer = styled.div`
-  align-items: center;
-  display: flex;
-  gap: 16px;
-`
-const TitleContainer = styled.div`
-  align-items: center;
-  display: flex;
 `
