@@ -14,6 +14,7 @@ type OpenPanel = {
 type DashboardType = {
   dashboard: any
   openPanel: OpenPanel | undefined
+  regulatoryIdsToBeDisplayed: number[] | []
   [Dashboard.Block.REGULATORY_AREAS]: number[]
   [Dashboard.Block.VIGILANCE_AREAS]: number[]
 }
@@ -41,6 +42,7 @@ const INITIAL_STATE: DashboardState = {
       // TODO: it's just for testing to delete
       dashboard: {},
       openPanel: undefined,
+      regulatoryIdsToBeDisplayed: [],
       [Dashboard.Block.REGULATORY_AREAS]: [],
       [Dashboard.Block.VIGILANCE_AREAS]: []
     }
@@ -73,6 +75,29 @@ export const dashboardSlice = createSlice({
         state.dashboards[id][type] = [...selectedItems, ...itemIds]
       }
     },
+    addRegulatoryIdToBeDisplayed(state, action: PayloadAction<number>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      const regulatoryIds = state.dashboards[id]?.regulatoryIdsToBeDisplayed
+      if (regulatoryIds) {
+        state.dashboards[id].regulatoryIdsToBeDisplayed = [...regulatoryIds, action.payload]
+      } else {
+        state.dashboards[id].regulatoryIdsToBeDisplayed = [action.payload]
+      }
+    },
+    removeAllRegulatoryIdToBeDisplayed(state) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].regulatoryIdsToBeDisplayed = []
+    },
     removeItems(state, action: PayloadAction<{ itemIds: number[]; type: Dashboard.Block }>) {
       const { itemIds, type } = action.payload
       const id = state.activeDashboardId
@@ -84,6 +109,19 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         const selectedItems = state.dashboards[id][type]
         state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item))
+      }
+    },
+    removeRegulatoryIdToBeDisplayed(state, action: PayloadAction<number>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+      const regulatoryIds = state.dashboards[id]?.regulatoryIdsToBeDisplayed
+      if (regulatoryIds) {
+        state.dashboards[id].regulatoryIdsToBeDisplayed = regulatoryIds.filter(
+          regulatoryId => regulatoryId !== action.payload
+        )
       }
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {

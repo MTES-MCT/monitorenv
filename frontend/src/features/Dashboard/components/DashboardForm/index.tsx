@@ -36,6 +36,7 @@ export function DashboardForm() {
       case Dashboard.Block.VIGILANCE_AREAS:
         setExpandedAccordionFirstColumn(expandedAccordionFirstColumn === type ? undefined : type)
         dispatch(dashboardActions.setDashboardPanel())
+        dispatch(dashboardActions.removeAllRegulatoryIdToBeDisplayed())
         break
       case Dashboard.Block.TERRITORIAL_PRESSURE:
       case Dashboard.Block.REPORTINGS:
@@ -165,7 +166,7 @@ const Column = styled.div`
   flex: 1;
   flex-direction: column;
   gap: 16px;
-  height: calc(100vh- 48px - 40px); // 48px = navbar height, 40px = padding
+  height: calc(100vh - 48px - 40px); // 48px = navbar height, 40px = padding
   overflow-y: auto;
   overflow-x: visible;
   padding: 12px;

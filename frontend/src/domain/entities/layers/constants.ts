@@ -27,6 +27,7 @@ export enum MonitorEnvLayers {
   BASE_LAYER = 'BASE_LAYER',
   COMPETENCE_CROSS_AREA = 'COMPETENCE_CROSS_AREA',
   DASHBOARD = 'DASHBOARD',
+  DASHBOARD_PREVIEW = 'DASHBOARD_PREVIEW',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
   DRAW_VIGILANCE_AREA = 'DRAW_VIGILANCE_AREA',
@@ -277,6 +278,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.DASHBOARD]: {
     code: MonitorEnvLayers.DASHBOARD,
+    zIndex: 1300
+  },
+  [MonitorEnvLayers.DASHBOARD_PREVIEW]: {
+    code: MonitorEnvLayers.DASHBOARD_PREVIEW,
     zIndex: 1300
   },
   [MonitorEnvLayers.AERA_ICON]: {

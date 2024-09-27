@@ -61,8 +61,18 @@ export function Layer({ dashboardId, isSelected, layerId }: RegulatoryLayerProps
     dispatch(dashboardActions.removeItems({ itemIds: [layerId], type: Dashboard.Block.REGULATORY_AREAS }))
   }
 
-  const toggleZoneMetadata = () => {
+  const toggleZoneMetadata = event => {
+    event.stopPropagation()
     dispatch(dashboardActions.setDashboardPanel({ id: layerId, type: Dashboard.Block.REGULATORY_AREAS }))
+    if (!layer?.bbox) {
+      return
+    }
+    const extent = transformExtent(
+      layer?.bbox,
+      new Projection({ code: WSG84_PROJECTION }),
+      new Projection({ code: OPENLAYERS_PROJECTION })
+    )
+    dispatch(setFitToExtent(extent))
   }
 
   return (

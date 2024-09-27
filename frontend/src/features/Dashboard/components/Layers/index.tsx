@@ -19,16 +19,18 @@ import type { Geometry } from 'ol/geom'
 
 export function DashboardLayer({ map }: BaseMapChildrenProps) {
   const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+  const isLayerVisible = displayDashboardLayer
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const openPanel = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.openPanel : undefined
+  )
 
+  // Regulatory Areas
   const selectedRegulatoryAreaIds = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.REGULATORY_AREAS] : []
   )
 
-  const isLayerVisible = displayDashboardLayer
-
-  // Regulatory Areas
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const regulatoryLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
     VectorSource<Feature<Geometry>>
@@ -51,8 +53,15 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
       regulatoryLayersVectorSourceRef.current.clear(true)
 
       if (regulatoryLayers?.entities) {
-        const features = (selectedRegulatoryAreaIds ?? []).reduce((feats: Feature[], layerId) => {
+        let regulatoryLayersIds = [...(selectedRegulatoryAreaIds ?? [])]
+        const openPanelIsRegulatory = openPanel?.type === Dashboard.Block.REGULATORY_AREAS
+        // we don't want to display the area twice
+        if (openPanelIsRegulatory) {
+          regulatoryLayersIds = [...(selectedRegulatoryAreaIds ?? [])]?.filter(id => id !== openPanel?.id)
+        }
+        const features = (regulatoryLayersIds ?? []).reduce((feats: Feature[], layerId) => {
           const layer = regulatoryLayers.entities[layerId]
+
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
 
@@ -65,7 +74,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
         regulatoryLayersVectorSourceRef.current.addFeatures(features)
       }
     }
-  }, [map, regulatoryLayers, selectedRegulatoryAreaIds])
+  }, [map, openPanel?.id, openPanel?.type, regulatoryLayers, selectedRegulatoryAreaIds])
 
   // Vigilance Areas
   const selectedVigilanceAreaIds = useAppSelector(state =>
