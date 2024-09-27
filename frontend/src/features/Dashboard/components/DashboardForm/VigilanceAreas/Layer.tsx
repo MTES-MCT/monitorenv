@@ -58,6 +58,14 @@ export function Layer({ dashboardId, isSelected, vigilanceArea }: RegulatoryLaye
 
   const toggleZoneMetadata = () => {
     dispatch(dashboardActions.setDashboardPanel({ id: vigilanceArea.id, type: Dashboard.Block.VIGILANCE_AREAS }))
+    const feature = new GeoJSON({
+      featureProjection: OPENLAYERS_PROJECTION
+    }).readFeature(vigilanceArea.geom)
+
+    const extent = feature?.getGeometry()?.getExtent()
+    if (extent) {
+      dispatch(setFitToExtent(extent))
+    }
   }
 
   return (

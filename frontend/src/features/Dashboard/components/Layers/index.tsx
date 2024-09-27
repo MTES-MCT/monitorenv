@@ -101,8 +101,15 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
     if (map) {
       vigilanceAreaLayersVectorSourceRef.current.clear(true)
 
+      let vigilanceAreaLayersIds = [...(selectedVigilanceAreaIds ?? [])]
+      const openPanelIsVigilanceArea = openPanel?.type === Dashboard.Block.VIGILANCE_AREAS
+      // we don't want to display the area twice
+      if (openPanelIsVigilanceArea) {
+        vigilanceAreaLayersIds = [...(selectedVigilanceAreaIds ?? [])]?.filter(id => id !== openPanel?.id)
+      }
+
       if (vigilanceAreas?.entities) {
-        const features = selectedVigilanceAreaIds?.reduce((feats: Feature[], layerId) => {
+        const features = vigilanceAreaLayersIds?.reduce((feats: Feature[], layerId) => {
           const layer = vigilanceAreas.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
@@ -116,7 +123,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
         vigilanceAreaLayersVectorSourceRef.current.addFeatures(features ?? [])
       }
     }
-  }, [map, vigilanceAreas, selectedVigilanceAreaIds])
+  }, [map, vigilanceAreas, selectedVigilanceAreaIds, openPanel])
 
   useEffect(() => {
     map.getLayers().push(regulatoryLayersVectorLayerRef.current)
