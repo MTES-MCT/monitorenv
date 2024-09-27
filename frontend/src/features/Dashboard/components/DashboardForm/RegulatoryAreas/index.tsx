@@ -1,3 +1,4 @@
+import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -30,6 +31,11 @@ export function RegulatoryAreas({
   const selectedLayerIds = useAppSelector(
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
   )
+
+  const openPanel = useAppSelector(state =>
+    getOpenedPanel(state.dashboard, { id: dashboardId, type: Dashboard.Block.REGULATORY_AREAS })
+  )
+
   const [isExpandedSmallAccordion, setExpandedSmallAccordion] = useState(false)
 
   const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
@@ -39,7 +45,7 @@ export function RegulatoryAreas({
 
   return (
     <div>
-      <StyledPanel $marginLeft={columnWidth ?? 0} className="regulatory-panel" dashboardId={dashboardId} />
+      {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones règlementaires">
         <StyledLayerList

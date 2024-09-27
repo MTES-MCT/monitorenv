@@ -3,7 +3,7 @@ import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
@@ -50,6 +50,11 @@ export function DashboardForm() {
         break
     }
   }
+
+  // remove openedPanel on mount
+  useEffect(() => {
+    dispatch(dashboardActions.setDashboardPanel())
+  }, [dispatch])
 
   const clickOnEye = () => {}
   // TODO 20/09: use constant instead of number to define the accordion index

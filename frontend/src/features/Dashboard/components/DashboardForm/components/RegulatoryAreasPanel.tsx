@@ -5,55 +5,56 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
+import { forwardRef } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
-export function RegulatoryAreasPanel({
-  className,
-  id,
-  onClose
-}: {
-  className?: string
-  id: number
+type RegulatoryAreasPanelProps = {
+  layerId: number
   onClose: () => void
-}) {
-  const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(id, {
-    pollingInterval: FOUR_HOURS
-  })
-
-  return (
-    <Wrapper className={className}>
-      {regulatoryMetadata ? (
-        <>
-          <Header>
-            <LayerLegend
-              layerType={MonitorEnvLayers.REGULATORY_ENV}
-              legendKey={regulatoryMetadata?.entity_name}
-              type={regulatoryMetadata?.thematique}
-            />
-            <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
-              {getTitle(regulatoryMetadata?.layer_name)}
-            </RegulatoryZoneName>
-            <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onClose} />
-          </Header>
-          <Content>
-            <Identification
-              entity_name={regulatoryMetadata?.entity_name}
-              facade={regulatoryMetadata?.facade}
-              thematique={regulatoryMetadata?.thematique}
-              type={regulatoryMetadata?.type}
-            />
-            <RegulatorySummary regulatoryReference={regulatoryMetadata?.ref_reg} url={regulatoryMetadata?.url} />
-          </Content>
-        </>
-      ) : (
-        <CenteredFingerprintSpinner size={100} />
-      )}
-    </Wrapper>
-  )
 }
+
+export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPanelProps>(
+  ({ layerId, onClose, ...props }, ref) => {
+    const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(layerId, {
+      pollingInterval: FOUR_HOURS
+    })
+
+    return (
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      <Wrapper ref={ref} {...props}>
+        {regulatoryMetadata ? (
+          <>
+            <Header>
+              <LayerLegend
+                layerType={MonitorEnvLayers.REGULATORY_ENV}
+                legendKey={regulatoryMetadata?.entity_name}
+                type={regulatoryMetadata?.thematique}
+              />
+              <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
+                {getTitle(regulatoryMetadata?.layer_name)}
+              </RegulatoryZoneName>
+              <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onClose} />
+            </Header>
+            <Content>
+              <Identification
+                entity_name={regulatoryMetadata?.entity_name}
+                facade={regulatoryMetadata?.facade}
+                thematique={regulatoryMetadata?.thematique}
+                type={regulatoryMetadata?.type}
+              />
+              <RegulatorySummary regulatoryReference={regulatoryMetadata?.ref_reg} url={regulatoryMetadata?.url} />
+            </Content>
+          </>
+        ) : (
+          <CenteredFingerprintSpinner size={100} />
+        )}
+      </Wrapper>
+    )
+  }
+)
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};

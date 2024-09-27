@@ -45,7 +45,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
+  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV_PREVIEW.code
 
   useEffect(() => {
     if (map) {
@@ -59,7 +59,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         ) {
           const layer = regulatoryLayers.entities[openPanel?.id]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV.code, layer })
+            const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
             feature.set('metadataIsShowed', true)
 
             regulatoryLayersVectorSourceRef.current.addFeature(feature)
@@ -105,7 +105,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD.code
+  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
 
   useEffect(() => {
     if (map) {
@@ -116,7 +116,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         const layer = vigilanceAreas.entities[openPanel?.id]
         if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
           const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
-
+          feature.set('isSelected', true)
           vigilanceAreaLayersVectorSourceRef.current.addFeature(feature)
         }
       }
