@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
 
@@ -153,6 +153,18 @@ export const dashboardSlice = createSlice({
     }
   }
 })
+
+export const getOpenedPanel = createSelector(
+  [
+    (state: DashboardState) => state.dashboards,
+    (_: DashboardState, dashboard: { id: number; type: Dashboard.Block }) => dashboard
+  ],
+  (dashboards, dashboard) => {
+    const openPanel = dashboards?.[dashboard.id]?.openPanel
+
+    return openPanel?.type === dashboard.type ? openPanel : undefined
+  }
+)
 
 export const dashboardActions = dashboardSlice.actions
 export const dashboardReducer = dashboardSlice.reducer

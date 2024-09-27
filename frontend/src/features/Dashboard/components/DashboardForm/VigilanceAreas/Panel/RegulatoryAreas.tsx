@@ -66,19 +66,13 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Arra
 
   return (
     <>
-      {regulatoryAreaId && (
-        <StyledRegulatoryAreasPanel className="" id={regulatoryAreaId} onClose={closeRegulatoryAreapanel} />
-      )}
+      {regulatoryAreaId && <StyledRegulatoryAreasPanel layerId={regulatoryAreaId} onClose={closeRegulatoryAreapanel} />}
       <PanelSubPart>
         <PanelInlineItemLabel>Réglementations en lien</PanelInlineItemLabel>
         {regulatoryAreas &&
           regulatoryAreas.length > 0 &&
           regulatoryAreas.map(regulatoryArea => (
-            <RegulatoryAreaContainer
-              key={regulatoryArea?.id}
-              data-cy="regulatory-area-item"
-              onClick={e => onClickRegulatoryZoneMetadata(e, regulatoryArea?.id)}
-            >
+            <RegulatoryAreaContainer key={regulatoryArea?.id}>
               <RegulatoryAreaName>
                 <LayerLegend
                   layerType={MonitorEnvLayers.REGULATORY_ENV}
@@ -131,7 +125,6 @@ const RegulatoryAreaContainer = styled.div`
   gap: 4px;
   justify-content: space-between;
   padding: 8px;
-  cursor: pointer;
 
   &:last-child {
     border-bottom: none;
