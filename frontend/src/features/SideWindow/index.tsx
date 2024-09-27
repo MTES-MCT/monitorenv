@@ -21,7 +21,13 @@ import { ReportingContext } from '../../domain/shared_slices/Global'
 import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { isDashboardsPage, isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
+import {
+  isDashboardPage,
+  isDashboardsPage,
+  isMissionOrMissionsPage,
+  isMissionPage,
+  isReportingsPage
+} from '../../utils/routes'
 import { MissionFormWrapper } from '../missions/MissionForm'
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../missions/MissionForm/constants'
 import { useListenMissionEventUpdates } from '../missions/MissionForm/hooks/useListenMissionEventUpdates'
@@ -40,7 +46,10 @@ export function SideWindow() {
 
   const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
-  const isDashboardsButtonIsActive = useMemo(() => isDashboardsPage(currentPath), [currentPath])
+  const isDashboardsButtonIsActive = useMemo(
+    () => isDashboardsPage(currentPath) || isDashboardPage(currentPath),
+    [currentPath]
+  )
 
   /**
    * Use to update mission opened in the side window but not actives
