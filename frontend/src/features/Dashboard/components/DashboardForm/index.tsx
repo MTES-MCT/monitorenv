@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
+import { Amps } from './Amps'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { TerritorialPressure } from './TerritorialPressure'
 import { VigilanceAreas } from './VigilanceAreas'
@@ -79,24 +80,12 @@ export function DashboardForm() {
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
         />
 
-        <Accordion
+        <Amps
+          amps={extractedArea?.amps}
+          dashboardId={dashboardId}
           isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
-          title="Zones AMP"
-        >
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-        </Accordion>
+        />
         <VigilanceAreas
           columnWidth={firstColumnWidth ?? 0}
           dashboardId={dashboardId}
