@@ -30,6 +30,11 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Arra
 
   const onClickRegulatoryZoneMetadata = (event, id: number | undefined) => {
     event.stopPropagation()
+    if (regulatoryAreaId === id) {
+      setRegulatoryAreaId(undefined)
+
+      return
+    }
     setRegulatoryAreaId(id)
   }
 
