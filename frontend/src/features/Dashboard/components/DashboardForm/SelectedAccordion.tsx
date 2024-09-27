@@ -1,3 +1,5 @@
+import { dashboardActions } from '@features/Dashboard/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -16,12 +18,19 @@ export function SelectedAccordion({
   setExpandedAccordion,
   title
 }: SelectedAccordionProps) {
+  const dispatch = useAppDispatch()
+
+  const onClickAccordion = () => {
+    dispatch(dashboardActions.setDashboardPanel())
+    setExpandedAccordion()
+  }
+
   return (
     <AccordionContainer>
       <AccordionHeader
         aria-controls={`selected-${title}-accordion`}
         aria-expanded={isExpanded}
-        onClick={setExpandedAccordion}
+        onClick={onClickAccordion}
       >
         <Title>{title}</Title>
         {!isReadOnly && (
@@ -29,7 +38,7 @@ export function SelectedAccordion({
             $isExpanded={isExpanded}
             accent={Accent.TERTIARY}
             Icon={Icon.Chevron}
-            onClick={setExpandedAccordion}
+            onClick={onClickAccordion}
           />
         )}
       </AccordionHeader>
