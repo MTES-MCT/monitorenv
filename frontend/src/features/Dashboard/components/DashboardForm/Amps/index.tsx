@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
 import { Accordion } from '../Accordion'
-import { SmallAccordion } from '../SmallAccordion'
+import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 
@@ -43,7 +43,7 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
   )
 
   const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
-  const [isExpandedSmallAccordion, setExpandedSmallAccordion] = useState(false)
+  const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const ampssByLayerName = groupBy(amps, r => r.name)
 
@@ -85,10 +85,10 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
               })}
             </StyledLayerList>
           </Accordion>
-          <SmallAccordion
-            isExpanded={isExpandedSmallAccordion}
+          <SelectedAccordion
+            isExpanded={isExpandedSelectedAccordion}
             isReadOnly={selectedLayerIds?.length === 0}
-            setExpandedAccordion={() => setExpandedSmallAccordion(!isExpandedSmallAccordion)}
+            setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
             title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
               'sélectionée',
               selectedLayerIds?.length ?? 0
@@ -107,7 +107,7 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
                 />
               )
             })}
-          </SmallAccordion>
+          </SelectedAccordion>
         </>
       )}
     </div>
@@ -121,6 +121,6 @@ const StyledLayerList = styled(LayerSelector.LayerList)`
 const StyledPanel = styled(AmpPanel)<{ $marginLeft?: number }>`
   left: ${p =>
     `calc(
-    ${p.$marginLeft}px + 40px + 64px + 20px
-  )`}; // 40px is the padding, 64px is the width of the sidebar, 20px is the margin
+    ${p.$marginLeft}px + 25px + 64px + 4px
+  )`}; // 40px is the padding, 64px is the width of the sidebar
 `
