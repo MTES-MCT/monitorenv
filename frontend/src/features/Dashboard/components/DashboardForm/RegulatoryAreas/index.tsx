@@ -35,8 +35,7 @@ export function RegulatoryAreas({
   const openPanel = useAppSelector(state =>
     getOpenedPanel(state.dashboard, { id: dashboardId, type: Dashboard.Block.REGULATORY_AREAS })
   )
-
-  const [isExpandedSmallAccordion, setExpandedSmallAccordion] = useState(false)
+  const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
 
@@ -68,9 +67,9 @@ export function RegulatoryAreas({
         </StyledLayerList>
       </Accordion>
       <SelectedAccordion
-        isExpanded={isExpandedSmallAccordion}
+        isExpanded={isExpandedSelectedAccordion}
         isReadOnly={selectedLayerIds?.length === 0}
-        setExpandedAccordion={() => setExpandedSmallAccordion(!isExpandedSmallAccordion)}
+        setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
         title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
           'sélectionée',
           selectedLayerIds?.length ?? 0
@@ -100,6 +99,6 @@ const StyledLayerList = styled(LayerSelector.LayerList)`
 const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`
   left: ${p =>
     `calc(
-    ${p.$marginLeft}px + 40px + 64px
-  )`}; // 40px is the padding, 64px is the width of the sidebar
+    ${p.$marginLeft}px + 25px + 64px + 4px
+  )`}; // 25px is the padding, 64px is the width of the sidebar, 4px is the margin
 `

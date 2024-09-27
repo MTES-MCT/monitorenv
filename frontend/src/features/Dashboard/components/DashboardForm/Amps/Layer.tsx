@@ -7,8 +7,8 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { hideAmpLayer, showAmpLayer } from 'domain/shared_slices/Amp'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { transformExtent, Projection } from 'ol/proj'
-import { createRef, useEffect } from 'react'
+import { Projection, transformExtent } from 'ol/proj'
+import { createRef } from 'react'
 import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
@@ -38,19 +38,13 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
 
     const payload = { itemIds: [layerId], type: Dashboard.Block.AMP }
     if (isZoneSelected) {
+      dispatch(hideAmpLayer(layerId))
       dispatch(dashboardActions.removeItems(payload))
     } else {
+      dispatch(showAmpLayer([layerId]))
       dispatch(dashboardActions.addItems(payload))
     }
   }
-
-  useEffect(() => {
-    if (isZoneSelected) {
-      dispatch(showAmpLayer([layerId]))
-    } else {
-      dispatch(hideAmpLayer(layerId))
-    }
-  }, [dispatch, isZoneSelected, layerId])
 
   const removeZone = e => {
     e.stopPropagation()

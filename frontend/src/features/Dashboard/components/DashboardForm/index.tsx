@@ -153,6 +153,8 @@ export function DashboardForm() {
 const Container = styled(SideWindowContent)`
   display: flex;
   flex-direction: row;
+  gap: 48px;
+  padding: 24px 0 0 25px;
 `
 
 const Column = styled.div`
@@ -163,7 +165,7 @@ const Column = styled.div`
   height: calc(100vh - 48px - 40px); // 48px = navbar height, 40px = padding
   overflow-y: auto;
   overflow-x: visible;
-  padding: 12px;
+  scrollbar-gutter: stable;
 `
 const StyledTextarea = styled(Textarea)`
   padding: 16px 24px;
