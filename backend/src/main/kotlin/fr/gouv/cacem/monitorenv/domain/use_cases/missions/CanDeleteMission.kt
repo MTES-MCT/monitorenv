@@ -17,7 +17,10 @@ class CanDeleteMission(
     private val logger = LoggerFactory.getLogger(CanDeleteMission::class.java)
 
     @Throws(IllegalArgumentException::class)
-    fun execute(missionId: Int, source: MissionSourceEnum): CanDeleteMissionResponse {
+    fun execute(
+        missionId: Int,
+        source: MissionSourceEnum,
+    ): CanDeleteMissionResponse {
         logger.info("Check if mission $missionId can be deleted")
 
         if (source == MissionSourceEnum.MONITORFISH) {

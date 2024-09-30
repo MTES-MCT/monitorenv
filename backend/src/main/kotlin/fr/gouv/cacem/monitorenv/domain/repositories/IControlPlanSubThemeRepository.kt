@@ -4,5 +4,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanSubThemeE
 
 interface IControlPlanSubThemeRepository {
     fun findAll(): List<ControlPlanSubThemeEntity>
+
     fun findByYear(year: Int): List<ControlPlanSubThemeEntity>
 }

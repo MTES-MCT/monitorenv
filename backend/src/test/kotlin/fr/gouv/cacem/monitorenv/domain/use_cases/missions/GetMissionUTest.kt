@@ -11,7 +11,6 @@ import org.mockito.Mockito.mock
 import kotlin.random.Random
 
 class GetMissionUTest {
-
     private val missionRepository: IMissionRepository = mock()
     private val getMission: GetMission = GetMission(missionRepository)
 

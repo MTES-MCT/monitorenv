@@ -38,8 +38,8 @@ data class EnvActionControlEntity(
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     EnvActionEntity(
-        id = id,
-        actionType = ActionTypeEnum.CONTROL,
-        missionId = missionId,
-        observationsByUnit = observationsByUnit,
-    )
+            id = id,
+            actionType = ActionTypeEnum.CONTROL,
+            missionId = missionId,
+            observationsByUnit = observationsByUnit,
+        )

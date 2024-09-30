@@ -6,7 +6,6 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.junit.jupiter.api.Test
 
 class DeleteVigilanceAreaUTests {
-
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
 
     @Test

@@ -9,11 +9,12 @@ data class NatinfDataOutput(
     val infraction: String?,
 ) {
     companion object {
-        fun fromNatinfEntity(natinf: NatinfEntity) = NatinfDataOutput(
-            natinfCode = natinf.natinfCode,
-            regulation = natinf.regulation,
-            infractionCategory = natinf.infractionCategory,
-            infraction = natinf.infraction,
-        )
+        fun fromNatinfEntity(natinf: NatinfEntity) =
+            NatinfDataOutput(
+                natinfCode = natinf.natinfCode,
+                regulation = natinf.regulation,
+                infractionCategory = natinf.infractionCategory,
+                infraction = natinf.infraction,
+            )
     }
 }

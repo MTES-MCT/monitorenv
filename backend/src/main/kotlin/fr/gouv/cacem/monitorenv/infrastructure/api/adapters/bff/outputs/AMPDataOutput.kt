@@ -13,14 +13,15 @@ data class AMPDataOutput(
     val url_legicem: String? = null,
 ) {
     companion object {
-        fun fromAMPEntity(amp: AMPEntity) = AMPDataOutput(
-            id = amp.id,
-            designation = amp.designation,
-            geom = amp.geom,
-            name = amp.name,
-            ref_reg = amp.ref_reg,
-            type = amp.type,
-            url_legicem = amp.url_legicem,
-        )
+        fun fromAMPEntity(amp: AMPEntity) =
+            AMPDataOutput(
+                id = amp.id,
+                designation = amp.designation,
+                geom = amp.geom,
+                name = amp.name,
+                ref_reg = amp.ref_reg,
+                type = amp.type,
+                url_legicem = amp.url_legicem,
+            )
     }
 }

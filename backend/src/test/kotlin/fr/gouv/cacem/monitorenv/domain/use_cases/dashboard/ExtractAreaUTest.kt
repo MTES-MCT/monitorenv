@@ -18,7 +18,6 @@ import org.locationtech.jts.io.WKTReader
 import org.mockito.Mockito.mock
 
 class ExtractAreaUTest {
-
     private val departementAreaRepository: IDepartmentAreaRepository = mock()
     private val reportingRepository: IReportingRepository = mock()
     private val regulatoryAreaRepository: IRegulatoryAreaRepository = mock()

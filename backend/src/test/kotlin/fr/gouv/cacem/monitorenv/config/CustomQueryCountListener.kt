@@ -7,10 +7,17 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class CustomQueryCountListener : QueryExecutionListener {
     private val queryCount = AtomicInteger()
-    override fun beforeQuery(execInfo: ExecutionInfo, queryInfoList: List<QueryInfo>) {
+
+    override fun beforeQuery(
+        execInfo: ExecutionInfo,
+        queryInfoList: List<QueryInfo>,
+    ) {
     }
 
-    override fun afterQuery(execInfo: ExecutionInfo, queryInfoList: List<QueryInfo>) {
+    override fun afterQuery(
+        execInfo: ExecutionInfo,
+        queryInfoList: List<QueryInfo>,
+    ) {
         queryCount.incrementAndGet()
     }
 

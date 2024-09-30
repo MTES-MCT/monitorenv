@@ -44,7 +44,6 @@ class LegacyMissions(
     private val sseMission: SSEMission,
     private val canDeleteMission: CanDeleteMission,
 ) {
-
     @GetMapping("")
     @Operation(summary = "Get missions")
     fun getAll(

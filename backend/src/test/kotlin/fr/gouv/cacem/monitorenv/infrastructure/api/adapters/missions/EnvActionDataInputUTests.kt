@@ -15,7 +15,6 @@ import java.util.Optional
 import java.util.UUID
 
 class EnvActionDataInputUTests {
-
     @Test
     fun toEnvActionEntityControlType() {
         val input =

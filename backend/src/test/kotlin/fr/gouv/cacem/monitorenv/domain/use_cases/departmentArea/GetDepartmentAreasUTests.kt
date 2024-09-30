@@ -16,18 +16,19 @@ class GetDepartmentAreasUTests {
 
     @Test
     fun `execute should return all department areas`() {
-        val departmentAreas = listOf(
-            DepartmentAreaEntity(
-                inseeCode = "1",
-                geometry = null,
-                name = "DepartmentArea Name",
-            ),
-            DepartmentAreaEntity(
-                inseeCode = "2",
-                geometry = null,
-                name = "DepartmentArea Name 2",
-            ),
-        )
+        val departmentAreas =
+            listOf(
+                DepartmentAreaEntity(
+                    inseeCode = "1",
+                    geometry = null,
+                    name = "DepartmentArea Name",
+                ),
+                DepartmentAreaEntity(
+                    inseeCode = "2",
+                    geometry = null,
+                    name = "DepartmentArea Name 2",
+                ),
+            )
 
         given(departmentAreaRepository.findAll()).willReturn(departmentAreas)
 

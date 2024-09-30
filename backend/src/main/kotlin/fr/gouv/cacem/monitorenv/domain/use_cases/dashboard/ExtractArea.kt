@@ -17,7 +17,6 @@ class ExtractArea(
     private val ampRepository: IAMPRepository,
     private val vigilanceAreaRepository: IVigilanceAreaRepository,
 ) {
-
     fun execute(geometry: Geometry): ExtractedAreaEntity {
         val inseeCode = departmentAreaRepository.findDepartmentFromGeometry(geometry = geometry)
         val reportings = reportingRepository.findAllByGeometry(geometry = geometry)

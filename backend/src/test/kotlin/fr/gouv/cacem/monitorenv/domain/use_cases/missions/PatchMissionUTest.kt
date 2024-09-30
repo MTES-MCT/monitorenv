@@ -18,7 +18,6 @@ import java.util.*
 import kotlin.random.Random
 
 class PatchMissionUTest {
-
     private val missionRepository: IMissionRepository = mock()
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
     private val patchMission: PatchMission = PatchMission(missionRepository, patchEntity)
@@ -30,18 +29,20 @@ class PatchMissionUTest {
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
         val patchedObservationsByUnit = "patched observations"
-        val patchableMission = PatchableMissionEntity(
-            observationsByUnit = Optional.of(patchedObservationsByUnit),
-            startDateTimeUtc = today,
-            endDateTimeUtc = Optional.of(tomorrow),
-        )
+        val patchableMission =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.of(patchedObservationsByUnit),
+                startDateTimeUtc = today,
+                endDateTimeUtc = Optional.of(tomorrow),
+            )
         val missionFromDatabase = aMissionEntity(id = id)
-        val missionPatched = aMissionEntity(
-            id = id,
-            observationsByUnit = patchedObservationsByUnit,
-            startDateTimeUtc = today,
-            endDateTimeUtc = tomorrow,
-        )
+        val missionPatched =
+            aMissionEntity(
+                id = id,
+                observationsByUnit = patchedObservationsByUnit,
+                startDateTimeUtc = today,
+                endDateTimeUtc = tomorrow,
+            )
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
         patchEntity.execute(missionFromDatabase, patchableMission)
@@ -61,11 +62,12 @@ class PatchMissionUTest {
     fun `execute() should throw BackendUsageException with message when the entity does not exist`() {
         // Given
         val id = Random.nextInt()
-        val patchableMission = PatchableMissionEntity(
-            observationsByUnit = null,
-            startDateTimeUtc = null,
-            endDateTimeUtc = null,
-        )
+        val patchableMission =
+            PatchableMissionEntity(
+                observationsByUnit = null,
+                startDateTimeUtc = null,
+                endDateTimeUtc = null,
+            )
 
         given(missionRepository.findById(id)).willReturn(null)
 

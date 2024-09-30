@@ -11,7 +11,6 @@ import java.time.ZonedDateTime
 import java.util.*
 
 class PatchEnvActionEntityUTest {
-
     private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
     private val objectMapper = MapperConfiguration().objectMapper()
 
@@ -24,13 +23,14 @@ class PatchEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(
-            objectMapper,
-            id,
-            startTime = yesterday,
-            endTime = tomorrow,
-            observationsByUnit = "observations",
-        )
+        val envAction =
+            EnvActionFixture.anEnvAction(
+                objectMapper,
+                id,
+                startTime = yesterday,
+                endTime = tomorrow,
+                observationsByUnit = "observations",
+            )
 
         // When
         patchEntity.execute(envAction, patchableEnvActionEntity)
@@ -46,13 +46,14 @@ class PatchEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(
-            objectMapper,
-            id,
-            startTime = yesterday,
-            endTime = tomorrow,
-            observationsByUnit = "observations",
-        )
+        val envAction =
+            EnvActionFixture.anEnvAction(
+                objectMapper,
+                id,
+                startTime = yesterday,
+                endTime = tomorrow,
+                observationsByUnit = "observations",
+            )
 
         // When
         patchEntity.execute(envAction, patchableEnvActionEntity)
@@ -70,13 +71,14 @@ class PatchEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(
-            objectMapper,
-            id,
-            startTime = yesterday,
-            endTime = tomorrow,
-            observationsByUnit = "observations",
-        )
+        val envAction =
+            EnvActionFixture.anEnvAction(
+                objectMapper,
+                id,
+                startTime = yesterday,
+                endTime = tomorrow,
+                observationsByUnit = "observations",
+            )
 
         // When
         patchEntity.execute(envAction, patchableEnvActionEntity)
@@ -92,13 +94,14 @@ class PatchEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(
-            objectMapper,
-            id,
-            startTime = yesterday,
-            endTime = tomorrow,
-            observationsByUnit = "observations",
-        )
+        val envAction =
+            EnvActionFixture.anEnvAction(
+                objectMapper,
+                id,
+                startTime = yesterday,
+                endTime = tomorrow,
+                observationsByUnit = "observations",
+            )
 
         // When
         patchEntity.execute(envAction, patchableEnvActionEntity)
@@ -116,13 +119,14 @@ class PatchEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(
-            objectMapper,
-            id,
-            startTime = yesterday,
-            endTime = tomorrow,
-            observationsByUnit = "oldValue",
-        )
+        val envAction =
+            EnvActionFixture.anEnvAction(
+                objectMapper,
+                id,
+                startTime = yesterday,
+                endTime = tomorrow,
+                observationsByUnit = "oldValue",
+            )
 
         // When
         patchEntity.execute(envAction, patchableEnvActionEntity)
@@ -138,13 +142,14 @@ class PatchEnvActionEntityUTest {
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
-        val envAction = EnvActionFixture.anEnvAction(
-            objectMapper,
-            id,
-            startTime = yesterday,
-            endTime = tomorrow,
-            observationsByUnit = "oldValue",
-        )
+        val envAction =
+            EnvActionFixture.anEnvAction(
+                objectMapper,
+                id,
+                startTime = yesterday,
+                endTime = tomorrow,
+                observationsByUnit = "oldValue",
+            )
 
         // When
         patchEntity.execute(envAction, patchableEnvActionEntity)
@@ -161,13 +166,14 @@ class PatchEnvActionEntityUTest {
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val observationsByUnit = "oldValue"
-        val envAction = EnvActionFixture.anEnvAction(
-            objectMapper,
-            id,
-            startTime = yesterday,
-            endTime = tomorrow,
-            observationsByUnit = observationsByUnit,
-        )
+        val envAction =
+            EnvActionFixture.anEnvAction(
+                objectMapper,
+                id,
+                startTime = yesterday,
+                endTime = tomorrow,
+                observationsByUnit = observationsByUnit,
+            )
 
         // When
         patchEntity.execute(envAction, patchableEnvActionEntity)

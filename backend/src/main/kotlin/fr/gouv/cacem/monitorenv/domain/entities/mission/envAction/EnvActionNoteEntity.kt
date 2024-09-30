@@ -14,9 +14,9 @@ data class EnvActionNoteEntity(
     val observations: String? = null,
 ) :
     EnvActionEntity(
-        id = id,
-        actionType = ActionTypeEnum.NOTE,
-        completion = completion,
-        missionId = missionId,
-        observationsByUnit = observationsByUnit,
-    )
+            id = id,
+            actionType = ActionTypeEnum.NOTE,
+            completion = completion,
+            missionId = missionId,
+            observationsByUnit = observationsByUnit,
+        )

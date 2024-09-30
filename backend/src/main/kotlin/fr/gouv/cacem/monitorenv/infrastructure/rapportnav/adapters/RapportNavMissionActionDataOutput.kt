@@ -9,9 +9,7 @@ data class RapportNavMissionActionDataOutput(
     val containsActionsAddedByUnit: Boolean,
 ) {
     companion object {
-        fun fromRapportNavMissionActionEntity(
-            rapportNavMissionActionEntity: RapportNavMissionActionEntity,
-        ) =
+        fun fromRapportNavMissionActionEntity(rapportNavMissionActionEntity: RapportNavMissionActionEntity) =
             RapportNavMissionActionDataOutput(
                 id = rapportNavMissionActionEntity.id,
                 containsActionsAddedByUnit = rapportNavMissionActionEntity.containsActionsAddedByUnit,

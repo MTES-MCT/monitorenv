@@ -21,11 +21,11 @@ class ExtractedAreaDataOutput(
                 regulatoryAreas = extractedAreaEntity.regulatoryAreas.map { fromRegulatoryAreaEntity(it) },
                 amps = extractedAreaEntity.amps.map { fromAMPEntity(it) },
                 vigilanceAreas =
-                extractedAreaEntity.vigilanceAreas.map {
-                    VigilanceAreasDataOutput.fromVigilanceArea(
-                        it,
-                    )
-                },
+                    extractedAreaEntity.vigilanceAreas.map {
+                        VigilanceAreasDataOutput.fromVigilanceArea(
+                            it,
+                        )
+                    },
             )
         }
     }

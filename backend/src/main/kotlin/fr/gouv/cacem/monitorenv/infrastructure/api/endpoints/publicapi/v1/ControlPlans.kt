@@ -21,7 +21,6 @@ class ControlPlans(
     private val getControlPlans: GetControlPlans,
     private val getControlPlansByYear: GetControlPlansByYear,
 ) {
-
     @GetMapping("")
     @Operation(summary = "Get control plan themes, subthemes and tags and allowed tags")
     fun getAll(): ControlPlanDataOutput {
@@ -36,7 +35,7 @@ class ControlPlans(
     @GetMapping("/{year}")
     @Operation(
         summary =
-        "Get control plan themes, subthemes and tags and allowed tags for a given year",
+            "Get control plan themes, subthemes and tags and allowed tags for a given year",
     )
     fun getControlPlansByYear(
         @PathParam("validity year of the control plan themes")

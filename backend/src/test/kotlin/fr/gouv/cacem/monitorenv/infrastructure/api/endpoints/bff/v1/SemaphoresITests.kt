@@ -39,11 +39,12 @@ class SemaphoresITests {
         val wktReader = WKTReader()
         val pointString = "POINT (-4.54877816747593 48.305559876971)"
         val point = wktReader.read(pointString) as Point
-        val semaphore = SemaphoreEntity(
-            id = 1,
-            name = "Semaphore 1",
-            geom = point,
-        )
+        val semaphore =
+            SemaphoreEntity(
+                id = 1,
+                name = "Semaphore 1",
+                geom = point,
+            )
         given(getAllSemaphores.execute()).willReturn(listOf(semaphore))
         // When
         mockMvc.perform(get("/bff/v1/semaphores"))
@@ -62,11 +63,12 @@ class SemaphoresITests {
         val wktReader = WKTReader()
         val pointString = "POINT (-4.54877816747593 48.305559876971)"
         val point = wktReader.read(pointString) as Point
-        val semaphore = SemaphoreEntity(
-            id = 21,
-            name = "Semaphore 1",
-            geom = point,
-        )
+        val semaphore =
+            SemaphoreEntity(
+                id = 21,
+                name = "Semaphore 1",
+                geom = point,
+            )
         given(getSemaphoreById.execute(21)).willReturn(semaphore)
         // When
         mockMvc.perform(get("/bff/v1/semaphores/21"))

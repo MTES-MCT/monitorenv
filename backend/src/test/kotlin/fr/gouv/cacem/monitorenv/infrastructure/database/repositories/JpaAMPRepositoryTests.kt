@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaAMPRepositoryTests : AbstractDBTests() {
-
     @Autowired
     private lateinit var jpaAMPRepository: JpaAMPRepository
 

@@ -14,7 +14,6 @@ import org.mockito.Mockito.verifyNoInteractions
 import kotlin.random.Random
 
 class GetMissionAndSourceActionUTest {
-
     private val getMission: GetMission = mock()
 
     private val apiFishMissionActionsRepository: IMonitorFishMissionActionsRepository = mock()

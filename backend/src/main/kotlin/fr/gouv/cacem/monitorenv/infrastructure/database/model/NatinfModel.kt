@@ -19,10 +19,11 @@ data class NatinfModel(
     @Column(name = "infraction")
     val infraction: String?,
 ) {
-    fun toNatinf() = NatinfEntity(
-        natinfCode = natinfCode,
-        regulation = regulation,
-        infractionCategory = infractionCategory,
-        infraction = infraction,
-    )
+    fun toNatinf() =
+        NatinfEntity(
+            natinfCode = natinfCode,
+            regulation = regulation,
+            infractionCategory = infractionCategory,
+            infraction = infraction,
+        )
 }

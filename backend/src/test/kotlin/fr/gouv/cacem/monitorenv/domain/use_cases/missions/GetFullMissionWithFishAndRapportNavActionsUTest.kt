@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
 class GetFullMissionWithFishAndRapportNavActionsUTest {
-
     private val getFullMission: GetFullMission = mock()
 
     private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository = mock()

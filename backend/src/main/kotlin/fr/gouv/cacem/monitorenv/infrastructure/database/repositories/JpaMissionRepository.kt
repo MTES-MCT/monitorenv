@@ -129,7 +129,10 @@ class JpaMissionRepository(
         return missions.map { it.toMissionEntity(mapper) }.filter { findBySearchQuery(it, searchQuery) }
     }
 
-    fun findBySearchQuery(mission: MissionEntity, searchQuery: String?): Boolean {
+    fun findBySearchQuery(
+        mission: MissionEntity,
+        searchQuery: String?,
+    ): Boolean {
         if (searchQuery.isNullOrBlank()) {
             return true
         }
@@ -144,8 +147,9 @@ class JpaMissionRepository(
                     infraction.companyName,
                     infraction.controlledPersonIdentity,
                 ).any { field ->
-                    !field.isNullOrBlank() && normalizeField(field)
-                        .contains(normalizeField(searchQuery), ignoreCase = true)
+                    !field.isNullOrBlank() &&
+                        normalizeField(field)
+                            .contains(normalizeField(searchQuery), ignoreCase = true)
                 }
             } ?: false
         } ?: false

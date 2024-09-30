@@ -22,13 +22,14 @@ class DeleteControlUnitUTests {
 
     private var reportingsSourceRepository: IReportingSourceRepository = mock()
 
-    private val deleteControlUnit: DeleteControlUnit = DeleteControlUnit(
-        controlUnitRepository,
-        canDeleteControlUnit,
-        missionRepository,
-        reportingRepository,
-        reportingsSourceRepository,
-    )
+    private val deleteControlUnit: DeleteControlUnit =
+        DeleteControlUnit(
+            controlUnitRepository,
+            canDeleteControlUnit,
+            missionRepository,
+            reportingRepository,
+            reportingsSourceRepository,
+        )
 
     @Test
     fun `execute should delete control unit when canDeleteControlUnit returns true`() {

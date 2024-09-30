@@ -14,11 +14,20 @@ interface IReportingRepository {
 
     fun archiveReportings(ids: List<Int>)
 
-    fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>)
+    fun attachEnvActionsToReportings(
+        envActionId: UUID,
+        reportingIds: List<Int>,
+    )
 
-    fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
+    fun attachReportingsToMission(
+        reportingIds: List<Int>,
+        missionId: Int,
+    )
 
-    fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>)
+    fun detachDanglingEnvActions(
+        missionId: Int,
+        envActionIds: List<UUID>,
+    )
 
     fun count(): Long
 

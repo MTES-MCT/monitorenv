@@ -17,11 +17,12 @@ class GetDepartmentAreaByInseeCodeUTests {
     @Test
     fun `execute should return a department area by its INSEE Code`() {
         val departmentAreaId = "1"
-        val departmentArea = DepartmentAreaEntity(
-            inseeCode = "1",
-            geometry = null,
-            name = "Department Area Name",
-        )
+        val departmentArea =
+            DepartmentAreaEntity(
+                inseeCode = "1",
+                geometry = null,
+                name = "Department Area Name",
+            )
 
         given(departmentAreaRepository.findByInseeCode(departmentAreaId)).willReturn(departmentArea)
 

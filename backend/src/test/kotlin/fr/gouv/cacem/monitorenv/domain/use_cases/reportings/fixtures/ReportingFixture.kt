@@ -13,7 +13,6 @@ import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
 
 class ReportingFixture {
-
     companion object {
         fun aReporting(
             id: Int? = null,
@@ -56,17 +55,21 @@ class ReportingFixture {
         fun aReportingDTO(): ReportingDTO {
             return ReportingDTO(
                 reporting = aReporting(id = 1),
-                reportingSources = listOf(
-                    ReportingSourceDTO(
-                        reportingSource = aReportingSourceSemaphore(),
-                        semaphore = null,
-                        controlUnit = null,
+                reportingSources =
+                    listOf(
+                        ReportingSourceDTO(
+                            reportingSource = aReportingSourceSemaphore(),
+                            semaphore = null,
+                            controlUnit = null,
+                        ),
                     ),
-                ),
             )
         }
 
-        fun aReportingSourceSemaphore(reportingId: Int? = null, semaphoreId: Int = 1): ReportingSourceEntity {
+        fun aReportingSourceSemaphore(
+            reportingId: Int? = null,
+            semaphoreId: Int = 1,
+        ): ReportingSourceEntity {
             return ReportingSourceEntity(
                 id = null,
                 reportingId = reportingId,
@@ -77,7 +80,10 @@ class ReportingFixture {
             )
         }
 
-        fun aReportingSourceControlUnit(reportingId: Int? = null, controlUnitId: Int = 1): ReportingSourceEntity {
+        fun aReportingSourceControlUnit(
+            reportingId: Int? = null,
+            controlUnitId: Int = 1,
+        ): ReportingSourceEntity {
             return ReportingSourceEntity(
                 id = null,
                 reportingId = reportingId,

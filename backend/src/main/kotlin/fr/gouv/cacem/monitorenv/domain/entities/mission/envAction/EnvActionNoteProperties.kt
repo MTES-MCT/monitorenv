@@ -6,7 +6,6 @@ import java.util.*
 
 data class EnvActionNoteProperties(
     val observations: String? = null,
-
 ) {
     fun toEnvActionNoteEntity(
         id: UUID,
@@ -14,15 +13,14 @@ data class EnvActionNoteProperties(
         completion: ActionCompletionEnum?,
         missionId: Int?,
         observationsByUnit: String?,
-    ) =
-        EnvActionNoteEntity(
-            id = id,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            completion = completion,
-            missionId = missionId,
-            observations = observations,
-            observationsByUnit = observationsByUnit,
-        )
+    ) = EnvActionNoteEntity(
+        id = id,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        completion = completion,
+        missionId = missionId,
+        observations = observations,
+        observationsByUnit = observationsByUnit,
+    )
 
     companion object {
         fun fromEnvActionNoteEntity(envAction: EnvActionNoteEntity) =

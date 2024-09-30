@@ -26,11 +26,15 @@ class CreateOrUpdateControlUnitContact(
         return createdOrUpdatedControlUnitContact
     }
 
-    private fun unsubscribeOtherContactsFromEmail(controlUnitId: Int, controlUnitContactId: Int) {
+    private fun unsubscribeOtherContactsFromEmail(
+        controlUnitId: Int,
+        controlUnitContactId: Int,
+    ) {
         val fullControlUnit = controlUnitRepository.findById(controlUnitId)
-        val otherContactsWithEmailSubscription = fullControlUnit.controlUnitContacts
-            // Filter and not find in the spirit of defensive programming
-            .filter { it.id != controlUnitContactId && it.isEmailSubscriptionContact }
+        val otherContactsWithEmailSubscription =
+            fullControlUnit.controlUnitContacts
+                // Filter and not find in the spirit of defensive programming
+                .filter { it.id != controlUnitContactId && it.isEmailSubscriptionContact }
 
         otherContactsWithEmailSubscription.forEach {
             val updatedControlUnitContact = it.copy(isEmailSubscriptionContact = false)
@@ -44,17 +48,18 @@ class CreateOrUpdateControlUnitContact(
      */
     private fun validateSubscriptions(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
         return controlUnitContact.copy(
-            isEmailSubscriptionContact = if (controlUnitContact.isEmailSubscriptionContact && controlUnitContact.email == null) {
-                false
-            } else {
-                controlUnitContact.isEmailSubscriptionContact
-            },
-
-            isSmsSubscriptionContact = if (controlUnitContact.isSmsSubscriptionContact && controlUnitContact.phone == null) {
-                false
-            } else {
-                controlUnitContact.isSmsSubscriptionContact
-            },
+            isEmailSubscriptionContact =
+                if (controlUnitContact.isEmailSubscriptionContact && controlUnitContact.email == null) {
+                    false
+                } else {
+                    controlUnitContact.isEmailSubscriptionContact
+                },
+            isSmsSubscriptionContact =
+                if (controlUnitContact.isSmsSubscriptionContact && controlUnitContact.phone == null) {
+                    false
+                } else {
+                    controlUnitContact.isSmsSubscriptionContact
+                },
         )
     }
 

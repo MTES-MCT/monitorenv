@@ -21,53 +21,57 @@ object TestUtils {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
 
-        val reportingSourceEntity = ReportingSourceEntity(
-            id = UUID.randomUUID(),
-            reportingId = id,
-            sourceType = SourceTypeEnum.SEMAPHORE,
-            semaphoreId = 1,
-            controlUnitId = null,
-            sourceName = null,
-        )
+        val reportingSourceEntity =
+            ReportingSourceEntity(
+                id = UUID.randomUUID(),
+                reportingId = id,
+                sourceType = SourceTypeEnum.SEMAPHORE,
+                semaphoreId = 1,
+                controlUnitId = null,
+                sourceName = null,
+            )
         return ReportingDTO(
             reporting =
-            ReportingEntity(
-                id = id,
-                reportingSources = listOf(
-                    reportingSourceEntity,
+                ReportingEntity(
+                    id = id,
+                    reportingSources =
+                        listOf(
+                            reportingSourceEntity,
+                        ),
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    themeId = 12,
+                    subThemeIds = listOf(82),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                        ZonedDateTime.parse(
+                            "2022-01-15T04:50:09Z",
+                        ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                    isInfractionProven = true,
                 ),
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                themeId = 12,
-                subThemeIds = listOf(82),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                hasNoUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
-                ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
-                isInfractionProven = true,
-            ),
-            reportingSources = listOf(
-                ReportingSourceDTO(
-                    reportingSource = reportingSourceEntity,
-                    semaphore = SemaphoreEntity(
-                        id = 1,
-                        geom = polygon.centroid,
-                        name = "Semaphore de tonnerre de Brest",
+            reportingSources =
+                listOf(
+                    ReportingSourceDTO(
+                        reportingSource = reportingSourceEntity,
+                        semaphore =
+                            SemaphoreEntity(
+                                id = 1,
+                                geom = polygon.centroid,
+                                name = "Semaphore de tonnerre de Brest",
+                            ),
+                        controlUnit = null,
                     ),
-                    controlUnit = null,
                 ),
-            ),
         )
     }
 
@@ -77,59 +81,63 @@ object TestUtils {
                 .read(
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
-        val reportingSourceEntity = ReportingSourceEntity(
-            id = UUID.randomUUID(),
-            reportingId = id,
-            sourceType = SourceTypeEnum.SEMAPHORE,
-            semaphoreId = 1,
-            controlUnitId = null,
-            sourceName = null,
-        )
+        val reportingSourceEntity =
+            ReportingSourceEntity(
+                id = UUID.randomUUID(),
+                reportingId = id,
+                sourceType = SourceTypeEnum.SEMAPHORE,
+                semaphoreId = 1,
+                controlUnitId = null,
+                sourceName = null,
+            )
         return ReportingDTO(
             reporting =
-            ReportingEntity(
-                id = id,
-                reportingSources = listOf(
-                    reportingSourceEntity,
+                ReportingEntity(
+                    id = id,
+                    reportingSources =
+                        listOf(
+                            reportingSourceEntity,
+                        ),
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    themeId = 12,
+                    subThemeIds = listOf(82),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                        ZonedDateTime.parse(
+                            "2022-01-15T04:50:09Z",
+                        ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                    missionId = 1,
+                    attachedToMissionAtUtc =
+                        ZonedDateTime.parse(
+                            "2022-01-15T04:50:09Z",
+                        ),
+                    detachedFromMissionAtUtc = null,
+                    isInfractionProven = true,
                 ),
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                themeId = 12,
-                subThemeIds = listOf(82),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                hasNoUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
-                ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
-                missionId = 1,
-                attachedToMissionAtUtc =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
-                ),
-                detachedFromMissionAtUtc = null,
-                isInfractionProven = true,
-            ),
-            reportingSources = listOf(
-                ReportingSourceDTO(
-                    reportingSource = reportingSourceEntity,
-                    semaphore = SemaphoreEntity(
-                        id = 1,
-                        geom = polygon.centroid,
-                        name = "Semaphore de tonnerre de Brest",
+            reportingSources =
+                listOf(
+                    ReportingSourceDTO(
+                        reportingSource = reportingSourceEntity,
+                        semaphore =
+                            SemaphoreEntity(
+                                id = 1,
+                                geom = polygon.centroid,
+                                name = "Semaphore de tonnerre de Brest",
+                            ),
+                        controlUnit = null,
                     ),
-                    controlUnit = null,
                 ),
-            ),
         )
     }
 }

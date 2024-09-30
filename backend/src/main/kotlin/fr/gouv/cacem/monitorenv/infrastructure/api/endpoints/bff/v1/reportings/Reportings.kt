@@ -44,11 +44,12 @@ class Reportings(
     private val archiveReportings: ArchiveReportings,
     private val sseReporting: SSEReporting,
 ) {
-
     @PutMapping(value = ["/v1/reportings/archive"])
     @Operation(summary = "Archive multiple reportings")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun archiveReportings(@RequestBody ids: List<Int>) {
+    fun archiveReportings(
+        @RequestBody ids: List<Int>,
+    ) {
         archiveReportings.execute(ids)
     }
 
@@ -77,7 +78,9 @@ class Reportings(
     @PutMapping(value = ["/v1/reportings/delete"])
     @Operation(summary = "Delete multiple reportings")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteReportings(@RequestBody ids: List<Int>) {
+    fun deleteReportings(
+        @RequestBody ids: List<Int>,
+    ) {
         deleteReportings.execute(ids)
     }
 

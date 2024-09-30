@@ -29,40 +29,42 @@ class CreateOrUpdateEnvActions(
                 when (it.actionType) {
                     ActionTypeEnum.CONTROL -> {
                         val control = it as EnvActionControlEntity
-                        val normalizedControlPoint = control.geom?.let { nonNullGeom ->
-                            postgisFunctionRepository.normalizeGeometry(nonNullGeom)
-                        }
+                        val normalizedControlPoint =
+                            control.geom?.let { nonNullGeom ->
+                                postgisFunctionRepository.normalizeGeometry(nonNullGeom)
+                            }
                         control.copy(
                             geom = normalizedControlPoint,
                             facade =
-                            normalizedControlPoint?.let { nonNullGeom ->
-                                facadeRepository.findFacadeFromGeometry(nonNullGeom)
-                            },
+                                normalizedControlPoint?.let { nonNullGeom ->
+                                    facadeRepository.findFacadeFromGeometry(nonNullGeom)
+                                },
                             department =
-                            normalizedControlPoint?.let { nonNullGeom ->
-                                departmentRepository.findDepartmentFromGeometry(nonNullGeom)
-                            },
+                                normalizedControlPoint?.let { nonNullGeom ->
+                                    departmentRepository.findDepartmentFromGeometry(nonNullGeom)
+                                },
                         )
                     }
 
                     ActionTypeEnum.SURVEILLANCE -> {
                         val surveillance = it as EnvActionSurveillanceEntity
-                        val normalizedGeometry = surveillance.geom?.let { nonNullGeom ->
-                            postgisFunctionRepository.normalizeGeometry(nonNullGeom)
-                        }
+                        val normalizedGeometry =
+                            surveillance.geom?.let { nonNullGeom ->
+                                postgisFunctionRepository.normalizeGeometry(nonNullGeom)
+                            }
 
                         surveillance.copy(
                             geom = normalizedGeometry,
                             facade =
-                            normalizedGeometry?.let { geom ->
-                                facadeRepository.findFacadeFromGeometry(geom)
-                            },
+                                normalizedGeometry?.let { geom ->
+                                    facadeRepository.findFacadeFromGeometry(geom)
+                                },
                             department =
-                            normalizedGeometry?.let { geom ->
-                                departmentRepository.findDepartmentFromGeometry(
-                                    geom,
-                                )
-                            },
+                                normalizedGeometry?.let { geom ->
+                                    departmentRepository.findDepartmentFromGeometry(
+                                        geom,
+                                    )
+                                },
                         )
                     }
 

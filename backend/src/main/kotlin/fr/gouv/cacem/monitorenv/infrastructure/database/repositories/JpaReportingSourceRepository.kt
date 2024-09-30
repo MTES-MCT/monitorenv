@@ -20,29 +20,31 @@ class JpaReportingSourceRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
 ) : IReportingSourceRepository {
-
     @Transactional
     override fun save(reportingSourceEntity: ReportingSourceEntity): ReportingSourceDTO {
-        val semaphore = if (reportingSourceEntity.semaphoreId != null) {
-            dbSemaphoreRepository.getReferenceById(reportingSourceEntity.semaphoreId)
-        } else {
-            null
-        }
+        val semaphore =
+            if (reportingSourceEntity.semaphoreId != null) {
+                dbSemaphoreRepository.getReferenceById(reportingSourceEntity.semaphoreId)
+            } else {
+                null
+            }
 
-        val controlUnit = if (reportingSourceEntity.controlUnitId != null) {
-            dbControlUnitRepository.getReferenceById(reportingSourceEntity.controlUnitId)
-        } else {
-            null
-        }
+        val controlUnit =
+            if (reportingSourceEntity.controlUnitId != null) {
+                dbControlUnitRepository.getReferenceById(reportingSourceEntity.controlUnitId)
+            } else {
+                null
+            }
 
-        val reportingModel = if (reportingSourceEntity.reportingId != null) {
-            dbReportingRepository.getReferenceById(reportingSourceEntity.reportingId)
-        } else {
-            throw BackendUsageException(
-                BackendUsageErrorCode.ENTITY_NOT_FOUND,
-                "Trying to save a reporting source without a report",
-            )
-        }
+        val reportingModel =
+            if (reportingSourceEntity.reportingId != null) {
+                dbReportingRepository.getReferenceById(reportingSourceEntity.reportingId)
+            } else {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.ENTITY_NOT_FOUND,
+                    "Trying to save a reporting source without a report",
+                )
+            }
 
         return dbReportingSourceRepository.save(
             ReportingSourceModel.fromReportingSourceEntity(

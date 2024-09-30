@@ -18,11 +18,12 @@ class CreateOrUpdateStationUTests {
 
     @Test
     fun `execute should return save() result`() {
-        val newStation = StationEntity(
-            latitude = 0.0,
-            longitude = 0.0,
-            name = "Station Name",
-        )
+        val newStation =
+            StationEntity(
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "Station Name",
+            )
 
         val expectedStation = newStation.copy(id = 0)
 

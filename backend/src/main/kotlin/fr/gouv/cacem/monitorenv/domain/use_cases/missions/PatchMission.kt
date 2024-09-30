@@ -14,8 +14,10 @@ class PatchMission(
     private val missionRepository: IMissionRepository,
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity>,
 ) {
-
-    fun execute(id: Int, patchableMissionEntity: PatchableMissionEntity): MissionDTO {
+    fun execute(
+        id: Int,
+        patchableMissionEntity: PatchableMissionEntity,
+    ): MissionDTO {
         missionRepository.findById(id)?.let {
             patchEntity.execute(it, patchableMissionEntity)
             return missionRepository.save(it)

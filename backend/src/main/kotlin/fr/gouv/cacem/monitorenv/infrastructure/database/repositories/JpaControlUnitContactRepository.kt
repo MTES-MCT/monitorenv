@@ -17,7 +17,6 @@ class JpaControlUnitContactRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
 ) : IControlUnitContactRepository {
-
     @Transactional
     override fun deleteById(controlUnitContactId: Int) {
         dbControlUnitContactRepository.deleteById(controlUnitContactId)

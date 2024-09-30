@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
-
     @Autowired
     private lateinit var jpaFacadeAreasRepository: JpaFacadeAreasRepository
 

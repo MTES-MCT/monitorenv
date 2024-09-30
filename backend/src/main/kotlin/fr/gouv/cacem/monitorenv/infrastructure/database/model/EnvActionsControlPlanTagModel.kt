@@ -20,18 +20,15 @@ import java.util.UUID
 class EnvActionsControlPlanTagModel(
     @EmbeddedId
     val id: EnvActionsTagPk,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("envActionId")
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @MapsId("tagId")
     @JoinColumn(name = "tag_id")
     val controlPlanTag: ControlPlanTagModel? = null,
-
     @Column(name = "order_index", updatable = false, insertable = false)
     val orderIndex: Int? = null,
 ) {
@@ -39,16 +36,15 @@ class EnvActionsControlPlanTagModel(
         fun fromEnvActionControlPlanTagEntity(
             envAction: EnvActionModel,
             controlPlanTag: ControlPlanTagModel,
-        ) =
-            EnvActionsControlPlanTagModel(
-                id =
+        ) = EnvActionsControlPlanTagModel(
+            id =
                 EnvActionsTagPk(
                     envActionId = envAction.id,
                     tagId = controlPlanTag.id,
                 ),
-                envAction = envAction,
-                controlPlanTag = controlPlanTag,
-            )
+            envAction = envAction,
+            controlPlanTag = controlPlanTag,
+        )
     }
 
     override fun equals(other: Any?): Boolean {

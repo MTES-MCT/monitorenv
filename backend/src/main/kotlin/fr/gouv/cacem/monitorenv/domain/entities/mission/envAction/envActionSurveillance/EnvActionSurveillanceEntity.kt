@@ -29,8 +29,8 @@ data class EnvActionSurveillanceEntity(
     val observations: String? = null,
 ) :
     EnvActionEntity(
-        id = id,
-        actionType = ActionTypeEnum.SURVEILLANCE,
-        missionId = missionId,
-        observationsByUnit = observationsByUnit,
-    )
+            id = id,
+            actionType = ActionTypeEnum.SURVEILLANCE,
+            missionId = missionId,
+            observationsByUnit = observationsByUnit,
+        )

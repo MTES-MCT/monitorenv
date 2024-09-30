@@ -12,8 +12,8 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
     val name: String,
     val phone: String?,
 ) : PatchableDataInput<CreateOrUpdateControlUnitContactDataInputV2>(
-    CreateOrUpdateControlUnitContactDataInputV2::class,
-) {
+        CreateOrUpdateControlUnitContactDataInputV2::class,
+    ) {
     fun toControlUnitContact(): ControlUnitContactEntity {
         return ControlUnitContactEntity(
             id = this.id,
@@ -27,7 +27,9 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
     }
 
     companion object {
-        fun fromControlUnitContact(controlUnitContact: ControlUnitContactEntity): CreateOrUpdateControlUnitContactDataInputV2 {
+        fun fromControlUnitContact(
+            controlUnitContact: ControlUnitContactEntity,
+        ): CreateOrUpdateControlUnitContactDataInputV2 {
             return CreateOrUpdateControlUnitContactDataInputV2(
                 id = controlUnitContact.id,
                 controlUnitId = controlUnitContact.controlUnitId,

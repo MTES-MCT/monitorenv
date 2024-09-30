@@ -401,68 +401,68 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val firstMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    openBy = "KIM",
-                    completedBy = "TRA",
-                    facade = "NAMO",
-                    observationsCacem =
-                    "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-03-21T12:11:13Z"),
-                    endDateTimeUtc = null,
-                    geom = polygon,
-                    isDeleted = false,
-                    envActions = listOf(),
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    controlUnits =
-                    listOf(
-                        LegacyControlUnitEntity(
-                            id = 10002,
-                            administration = "DDTM",
-                            isArchived = false,
-                            name = "DML 2A",
-                            resources =
+                    MissionEntity(
+                        id = 10,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        openBy = "KIM",
+                        completedBy = "TRA",
+                        facade = "NAMO",
+                        observationsCacem =
+                            "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-03-21T12:11:13Z"),
+                        endDateTimeUtc = null,
+                        geom = polygon,
+                        isDeleted = false,
+                        envActions = listOf(),
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        controlUnits =
                             listOf(
-                                LegacyControlUnitResourceEntity(
-                                    id = 3,
-                                    controlUnitId =
-                                    10002,
-                                    name =
-                                    "Semi-rigide 1",
-                                ),
-                                LegacyControlUnitResourceEntity(
-                                    id = 4,
-                                    controlUnitId =
-                                    10002,
-                                    name =
-                                    "Semi-rigide 2",
-                                ),
-                                LegacyControlUnitResourceEntity(
-                                    id = 5,
-                                    controlUnitId =
-                                    10002,
-                                    name =
-                                    "Voiture",
+                                LegacyControlUnitEntity(
+                                    id = 10002,
+                                    administration = "DDTM",
+                                    isArchived = false,
+                                    name = "DML 2A",
+                                    resources =
+                                        listOf(
+                                            LegacyControlUnitResourceEntity(
+                                                id = 3,
+                                                controlUnitId =
+                                                10002,
+                                                name =
+                                                    "Semi-rigide 1",
+                                            ),
+                                            LegacyControlUnitResourceEntity(
+                                                id = 4,
+                                                controlUnitId =
+                                                10002,
+                                                name =
+                                                    "Semi-rigide 2",
+                                            ),
+                                            LegacyControlUnitResourceEntity(
+                                                id = 5,
+                                                controlUnitId =
+                                                10002,
+                                                name =
+                                                    "Voiture",
+                                            ),
+                                        ),
                                 ),
                             ),
-                        ),
+                        isGeometryComputedFromControls = false,
                     ),
-                    isGeometryComputedFromControls = false,
-                ),
             )
         val mission = jpaMissionRepository.findFullMissionById(10)
 
         assertThat(
             mission?.copy(
                 mission =
-                mission.mission.copy(
-                    createdAtUtc = null,
-                    updatedAtUtc = null,
-                ),
+                    mission.mission.copy(
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
+                    ),
             ),
         )
             .isEqualTo(firstMission)
@@ -530,67 +530,67 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 envActions =
-                listOf(
-                    EnvActionControlEntity(
-                        id =
-                        UUID.fromString(
-                            "33310163-4e22-4d3d-b585-dac4431eb4b5",
+                    listOf(
+                        EnvActionControlEntity(
+                            id =
+                                UUID.fromString(
+                                    "33310163-4e22-4d3d-b585-dac4431eb4b5",
+                                ),
+                            facade = "Facade 1",
+                            completion = ActionCompletionEnum.TO_COMPLETE,
+                            controlPlans =
+                                listOf(
+                                    EnvActionControlPlanEntity(
+                                        subThemeIds = listOf(1),
+                                        tagIds = listOf(1, 2),
+                                        themeId = 1,
+                                    ),
+                                ),
+                            department = "Department 1",
+                            geom = point,
+                            vehicleType = VehicleTypeEnum.VEHICLE_LAND,
+                            isAdministrativeControl = true,
+                            isComplianceWithWaterRegulationsControl = true,
+                            isSafetyEquipmentAndStandardsComplianceControl =
+                            true,
+                            isSeafarersControl = true,
                         ),
-                        facade = "Facade 1",
-                        completion = ActionCompletionEnum.TO_COMPLETE,
-                        controlPlans =
-                        listOf(
-                            EnvActionControlPlanEntity(
-                                subThemeIds = listOf(1),
-                                tagIds = listOf(1, 2),
-                                themeId = 1,
-                            ),
+                        EnvActionSurveillanceEntity(
+                            id =
+                                UUID.fromString(
+                                    "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                                ),
+                            completion = ActionCompletionEnum.TO_COMPLETE,
+                            facade = "Facade 2",
+                            department = "Department 2",
+                            awareness = null,
+                            geom = polygon,
                         ),
-                        department = "Department 1",
-                        geom = point,
-                        vehicleType = VehicleTypeEnum.VEHICLE_LAND,
-                        isAdministrativeControl = true,
-                        isComplianceWithWaterRegulationsControl = true,
-                        isSafetyEquipmentAndStandardsComplianceControl =
-                        true,
-                        isSeafarersControl = true,
+                        EnvActionNoteEntity(
+                            id =
+                                UUID.fromString(
+                                    "126ded89-2dc0-4c77-9bf2-49f86b9a71a1",
+                                ),
+                            observations = noteObservations,
+                        ),
                     ),
-                    EnvActionSurveillanceEntity(
-                        id =
-                        UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
-                        ),
-                        completion = ActionCompletionEnum.TO_COMPLETE,
-                        facade = "Facade 2",
-                        department = "Department 2",
-                        awareness = null,
-                        geom = polygon,
-                    ),
-                    EnvActionNoteEntity(
-                        id =
-                        UUID.fromString(
-                            "126ded89-2dc0-4c77-9bf2-49f86b9a71a1",
-                        ),
-                        observations = noteObservations,
-                    ),
-                ),
                 controlUnits =
-                listOf(
-                    LegacyControlUnitEntity(
-                        id = 10121,
-                        name = "PAM Jeanne Barret",
-                        administration = "DIRM / DM",
-                        isArchived = false,
-                        resources =
-                        listOf(
-                            LegacyControlUnitResourceEntity(
-                                id = 8,
-                                controlUnitId = 10121,
-                                name = "PAM Jeanne Barret",
-                            ),
+                    listOf(
+                        LegacyControlUnitEntity(
+                            id = 10121,
+                            name = "PAM Jeanne Barret",
+                            administration = "DIRM / DM",
+                            isArchived = false,
+                            resources =
+                                listOf(
+                                    LegacyControlUnitResourceEntity(
+                                        id = 8,
+                                        controlUnitId = 10121,
+                                        name = "PAM Jeanne Barret",
+                                    ),
+                                ),
                         ),
                     ),
-                ),
                 isGeometryComputedFromControls = false,
                 observationsByUnit = noteObservationsByUnit,
             )
@@ -659,22 +659,22 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 controlUnits =
-                listOf(
-                    LegacyControlUnitEntity(
-                        id = 10004,
-                        name = "DPM – DDTM 35",
-                        administration = "DDTM",
-                        isArchived = false,
-                        resources =
-                        listOf(
-                            LegacyControlUnitResourceEntity(
-                                id = 8,
-                                controlUnitId = 10004,
-                                name = "PAM Jeanne Barret",
-                            ),
+                    listOf(
+                        LegacyControlUnitEntity(
+                            id = 10004,
+                            name = "DPM – DDTM 35",
+                            administration = "DDTM",
+                            isArchived = false,
+                            resources =
+                                listOf(
+                                    LegacyControlUnitResourceEntity(
+                                        id = 8,
+                                        controlUnitId = 10004,
+                                        name = "PAM Jeanne Barret",
+                                    ),
+                                ),
                         ),
                     ),
-                ),
                 isGeometryComputedFromControls = false,
             )
         jpaMissionRepository.save(newMission)
@@ -684,30 +684,30 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             jpaMissionRepository.save(
                 newMission.copy(
                     controlUnits =
-                    listOf(
-                        LegacyControlUnitEntity(
-                            id = 10002,
-                            name = "DML 2A",
-                            administration = "DIRM / DM",
-                            isArchived = false,
-                            resources =
-                            listOf(
-                                LegacyControlUnitResourceEntity(
-                                    id = 3,
-                                    controlUnitId =
-                                    10002,
-                                    name =
-                                    "Semi-rigide 1",
-                                ),
-                                LegacyControlUnitResourceEntity(
-                                    id = 5,
-                                    controlUnitId =
-                                    10002,
-                                    name = "Voiture",
-                                ),
+                        listOf(
+                            LegacyControlUnitEntity(
+                                id = 10002,
+                                name = "DML 2A",
+                                administration = "DIRM / DM",
+                                isArchived = false,
+                                resources =
+                                    listOf(
+                                        LegacyControlUnitResourceEntity(
+                                            id = 3,
+                                            controlUnitId =
+                                            10002,
+                                            name =
+                                                "Semi-rigide 1",
+                                        ),
+                                        LegacyControlUnitResourceEntity(
+                                            id = 5,
+                                            controlUnitId =
+                                            10002,
+                                            name = "Voiture",
+                                        ),
+                                    ),
                             ),
                         ),
-                    ),
                 ),
             )
 
@@ -744,20 +744,20 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val nextMission =
             mission?.copy(
                 controlUnits =
-                mission.controlUnits.plus(
-                    LegacyControlUnitEntity(
-                        id = requireNotNull(newControlUnit.controlUnit.id),
-                        administration = newControlUnit.administration.name,
-                        isArchived = newControlUnit.controlUnit.isArchived,
-                        name = newControlUnit.controlUnit.name,
-                        resources =
-                        listOf(
-                            newControlUnitResource
-                                .toLegacyControlUnitResource(),
+                    mission.controlUnits.plus(
+                        LegacyControlUnitEntity(
+                            id = requireNotNull(newControlUnit.controlUnit.id),
+                            administration = newControlUnit.administration.name,
+                            isArchived = newControlUnit.controlUnit.isArchived,
+                            name = newControlUnit.controlUnit.name,
+                            resources =
+                                listOf(
+                                    newControlUnitResource
+                                        .toLegacyControlUnitResource(),
+                                ),
+                            contact = null,
                         ),
-                        contact = null,
                     ),
-                ),
             )
 
         val updatedMission = jpaMissionRepository.save(nextMission!!)
@@ -790,22 +790,22 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 controlUnits =
-                listOf(
-                    LegacyControlUnitEntity(
-                        id = 5,
-                        name = "DPM – DDTM 35",
-                        administration = "DDTM",
-                        isArchived = false,
-                        resources =
-                        listOf(
-                            LegacyControlUnitResourceEntity(
-                                id = 123456,
-                                controlUnitId = 5,
-                                name = "PAM Jeanne Barret",
-                            ),
+                    listOf(
+                        LegacyControlUnitEntity(
+                            id = 5,
+                            name = "DPM – DDTM 35",
+                            administration = "DDTM",
+                            isArchived = false,
+                            resources =
+                                listOf(
+                                    LegacyControlUnitResourceEntity(
+                                        id = 123456,
+                                        controlUnitId = 5,
+                                        name = "PAM Jeanne Barret",
+                                    ),
+                                ),
                         ),
                     ),
-                ),
                 isGeometryComputedFromControls = false,
             )
 
@@ -828,15 +828,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 controlUnits =
-                listOf(
-                    LegacyControlUnitEntity(
-                        id = 123456,
-                        name = "PAM Jeanne Barret",
-                        administration = "",
-                        isArchived = false,
-                        resources = listOf(),
+                    listOf(
+                        LegacyControlUnitEntity(
+                            id = 123456,
+                            name = "PAM Jeanne Barret",
+                            administration = "",
+                            isArchived = false,
+                            resources = listOf(),
+                        ),
                     ),
-                ),
                 isGeometryComputedFromControls = false,
             )
 
@@ -922,26 +922,26 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val expectedUpdatedMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = id,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    openBy = "John Smith",
-                    completedBy = "Carol Tim",
-                    facade = "MEMN",
-                    geom = polygon,
-                    observationsCacem = null,
-                    observationsCnsp = null,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    envActions = envActions,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = id,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        openBy = "John Smith",
+                        completedBy = "Carol Tim",
+                        facade = "MEMN",
+                        geom = polygon,
+                        observationsCacem = null,
+                        observationsCnsp = null,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        envActions = envActions,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
         // When
         jpaMissionRepository.save(missionToUpdate)
@@ -949,10 +949,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(
             updatedMission?.copy(
                 mission =
-                updatedMission.mission.copy(
-                    createdAtUtc = null,
-                    updatedAtUtc = null,
-                ),
+                    updatedMission.mission.copy(
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
+                    ),
             ),
         )
             .isEqualTo(expectedUpdatedMission)
@@ -968,12 +968,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 controlPlans =
-                listOf(
-                    EnvActionControlPlanEntity(
-                        subThemeIds = listOf(48),
-                        themeId = 1,
+                    listOf(
+                        EnvActionControlPlanEntity(
+                            subThemeIds = listOf(48),
+                            themeId = 1,
+                        ),
                     ),
-                ),
                 missionId = id,
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
@@ -999,26 +999,26 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val expectedUpdatedMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = id,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "NAMO",
-                    geom = polygon,
-                    observationsCacem = null,
-                    observationsCnsp = null,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    createdAtUtc = null,
-                    updatedAtUtc = null,
-                    isDeleted = false,
-                    envActions = listOf(envAction),
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = id,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "NAMO",
+                        geom = polygon,
+                        observationsCacem = null,
+                        observationsCnsp = null,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
+                        isDeleted = false,
+                        envActions = listOf(envAction),
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
         // When
         jpaMissionRepository.save(missionToUpdate)
@@ -1026,10 +1026,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(
             updatedMission?.copy(
                 mission =
-                updatedMission.mission.copy(
-                    createdAtUtc = null,
-                    updatedAtUtc = null,
-                ),
+                    updatedMission.mission.copy(
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
+                    ),
             ),
         )
             .isEqualTo(expectedUpdatedMission)
@@ -1062,17 +1062,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val nextMission =
             mission?.copy(
                 envActions =
-                mission.envActions?.map {
-                    if (it.id ==
-                        UUID.fromString(
+                    mission.envActions?.map {
+                        if (it.id ==
+                            UUID.fromString(
                                 "b8007c8a-5135-4bc3-816f-c69c7b75d807",
                             ) && it is EnvActionControlEntity
-                    ) {
-                        it.copy(controlPlans = nextControlPlans)
-                    } else {
-                        it
-                    }
-                },
+                        ) {
+                            it.copy(controlPlans = nextControlPlans)
+                        } else {
+                            it
+                        }
+                    },
             )
         val updatedMission = jpaMissionRepository.save(nextMission!!)
         val updatedControlPlan =

@@ -18,17 +18,14 @@ import java.io.Serializable
 class ReportingsControlPlanSubThemeModel(
     @EmbeddedId
     val id: ReportingsSubThemePk,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("reportingId")
     @JoinColumn(name = "reporting_id")
     val reporting: ReportingModel? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("subthemeId")
     @JoinColumn(name = "subtheme_id")
     val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
-
     @Column(name = "order_index", updatable = false, insertable = false)
     val orderIndex: Int? = null,
 ) {
@@ -37,10 +34,11 @@ class ReportingsControlPlanSubThemeModel(
             reporting: ReportingModel,
             controlPlanSubTheme: ControlPlanSubThemeModel,
         ) = ReportingsControlPlanSubThemeModel(
-            id = ReportingsSubThemePk(
-                reportingId = reporting.id!!,
-                subthemeId = controlPlanSubTheme.id,
-            ),
+            id =
+                ReportingsSubThemePk(
+                    reportingId = reporting.id!!,
+                    subthemeId = controlPlanSubTheme.id,
+                ),
             reporting = reporting,
             controlPlanSubTheme = controlPlanSubTheme,
         )

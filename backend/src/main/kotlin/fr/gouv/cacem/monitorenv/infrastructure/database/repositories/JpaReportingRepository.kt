@@ -42,19 +42,27 @@ class JpaReportingRepository(
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
-
     @Transactional
-    override fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>) {
+    override fun attachEnvActionsToReportings(
+        envActionId: UUID,
+        reportingIds: List<Int>,
+    ) {
         dbReportingRepository.attachEnvActionsToReportings(envActionId, reportingIds)
     }
 
     @Transactional
-    override fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int) {
+    override fun attachReportingsToMission(
+        reportingIds: List<Int>,
+        missionId: Int,
+    ) {
         dbReportingRepository.attachReportingsToMission(reportingIds, missionId)
     }
 
     @Transactional
-    override fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>) {
+    override fun detachDanglingEnvActions(
+        missionId: Int,
+        envActionIds: List<UUID>,
+    ) {
         dbReportingRepository.detachDanglingEnvActions(missionId, envActionIds)
     }
 
@@ -77,11 +85,12 @@ class JpaReportingRepository(
         isAttachedToMission: Boolean?,
         searchQuery: String?,
     ): List<ReportingDTO> {
-        val pageable = if (pageNumber != null && pageSize != null) {
-            PageRequest.of(pageNumber, pageSize)
-        } else {
-            Pageable.unpaged()
-        }
+        val pageable =
+            if (pageNumber != null && pageSize != null) {
+                PageRequest.of(pageNumber, pageSize)
+            } else {
+                Pageable.unpaged()
+            }
         return dbReportingRepository.findAll(
             pageable,
             reportingType = reportingType,
@@ -96,7 +105,10 @@ class JpaReportingRepository(
             .map { it.toReportingDTO(mapper) }.filter { findBySearchQuery(it.reporting, searchQuery) }
     }
 
-    private fun findBySearchQuery(reporting: ReportingEntity, searchQuery: String?): Boolean {
+    private fun findBySearchQuery(
+        reporting: ReportingEntity,
+        searchQuery: String?,
+    ): Boolean {
         if (searchQuery.isNullOrBlank()) {
             return true
         }
@@ -110,8 +122,9 @@ class JpaReportingRepository(
                 targetDetail.operatorName,
                 targetDetail.vesselType?.name,
             ).any { field ->
-                !field.isNullOrBlank() && normalizeField(field)
-                    .contains(normalizeField(searchQuery), ignoreCase = true)
+                !field.isNullOrBlank() &&
+                    normalizeField(field)
+                        .contains(normalizeField(searchQuery), ignoreCase = true)
             }
         } ?: false
     }
@@ -189,24 +202,27 @@ class JpaReportingRepository(
                     )
             }
 
-            val reportingsSourceModels = reporting.reportingSources.map {
-                val controlUnitReference = if (it.controlUnitId != null) {
-                    dbControlUnitRepository.getReferenceById(it.controlUnitId)
-                } else {
-                    null
+            val reportingsSourceModels =
+                reporting.reportingSources.map {
+                    val controlUnitReference =
+                        if (it.controlUnitId != null) {
+                            dbControlUnitRepository.getReferenceById(it.controlUnitId)
+                        } else {
+                            null
+                        }
+                    val semaphoreReference =
+                        if (it.semaphoreId != null) {
+                            dbSemaphoreRepository.getReferenceById(it.semaphoreId)
+                        } else {
+                            null
+                        }
+                    return@map ReportingSourceModel.fromReportingSourceEntity(
+                        reportingSource = it,
+                        controlUnit = controlUnitReference,
+                        semaphore = semaphoreReference,
+                        reporting = reportingModel,
+                    )
                 }
-                val semaphoreReference = if (it.semaphoreId != null) {
-                    dbSemaphoreRepository.getReferenceById(it.semaphoreId)
-                } else {
-                    null
-                }
-                return@map ReportingSourceModel.fromReportingSourceEntity(
-                    reportingSource = it,
-                    controlUnit = controlUnitReference,
-                    semaphore = semaphoreReference,
-                    reporting = reportingModel,
-                )
-            }
             reportingModel.reportingSources.addAll(reportingsSourceModels)
 
             // set controlPlanSubThemes and save again (and flush)

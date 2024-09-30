@@ -110,7 +110,10 @@ object EnvActionMapper {
         }
     }
 
-    fun envActionEntityToJSON(mapper: ObjectMapper, envAction: EnvActionEntity): String {
+    fun envActionEntityToJSON(
+        mapper: ObjectMapper,
+        envAction: EnvActionEntity,
+    ): String {
         return try {
             when (envAction.actionType) {
                 ActionTypeEnum.SURVEILLANCE ->

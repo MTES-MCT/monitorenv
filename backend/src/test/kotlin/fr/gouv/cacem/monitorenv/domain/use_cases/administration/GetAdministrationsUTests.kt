@@ -17,24 +17,27 @@ class GetAdministrationsUTests {
 
     @Test
     fun `execute should return all administrations`() {
-        val fullAdministrations = listOf(
-            FullAdministrationDTO(
-                administration = AdministrationEntity(
-                    id = 1,
-                    name = "Administration Name",
-                    isArchived = false,
+        val fullAdministrations =
+            listOf(
+                FullAdministrationDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 1,
+                            name = "Administration Name",
+                            isArchived = false,
+                        ),
+                    controlUnits = listOf(),
                 ),
-                controlUnits = listOf(),
-            ),
-            FullAdministrationDTO(
-                administration = AdministrationEntity(
-                    id = 2,
-                    name = "Administration Name 2",
-                    isArchived = false,
+                FullAdministrationDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 2,
+                            name = "Administration Name 2",
+                            isArchived = false,
+                        ),
+                    controlUnits = listOf(),
                 ),
-                controlUnits = listOf(),
-            ),
-        )
+            )
 
         given(administrationRepository.findAll()).willReturn(fullAdministrations)
 

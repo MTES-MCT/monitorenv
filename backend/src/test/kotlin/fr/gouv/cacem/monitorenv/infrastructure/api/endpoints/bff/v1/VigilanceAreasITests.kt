@@ -73,20 +73,21 @@ class VigilanceAreasITests {
             frequency = FrequencyEnum.ALL_WEEKS,
             endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
             geom = polygon,
-            images = listOf(
-                ImageEntity(
-                    name = "image1.jpg",
-                    content = byteArrayOf(1, 2, 3),
-                    mimeType = "image/jpeg",
-                    size = 1024,
+            images =
+                listOf(
+                    ImageEntity(
+                        name = "image1.jpg",
+                        content = byteArrayOf(1, 2, 3),
+                        mimeType = "image/jpeg",
+                        size = 1024,
+                    ),
+                    ImageEntity(
+                        name = "image2.png",
+                        content = byteArrayOf(4, 5, 6),
+                        mimeType = "image/png",
+                        size = 2048,
+                    ),
                 ),
-                ImageEntity(
-                    name = "image2.png",
-                    content = byteArrayOf(4, 5, 6),
-                    mimeType = "image/png",
-                    size = 2048,
-                ),
-            ),
             links = null,
             source = "Source de la zone de vigilance",
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
@@ -217,20 +218,21 @@ class VigilanceAreasITests {
                 frequency = FrequencyEnum.ALL_WEEKS,
                 endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = polygon,
-                images = listOf(
-                    ImageDataInput(
-                        name = "image1.jpg",
-                        content = "AQID",
-                        mimeType = "image/jpeg",
-                        size = 1024,
+                images =
+                    listOf(
+                        ImageDataInput(
+                            name = "image1.jpg",
+                            content = "AQID",
+                            mimeType = "image/jpeg",
+                            size = 1024,
+                        ),
+                        ImageDataInput(
+                            name = "image2.png",
+                            content = "BAUG",
+                            mimeType = "image/png",
+                            size = 2048,
+                        ),
                     ),
-                    ImageDataInput(
-                        name = "image2.png",
-                        content = "BAUG",
-                        mimeType = "image/png",
-                        size = 2048,
-                    ),
-                ),
                 links = null,
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
@@ -300,9 +302,10 @@ class VigilanceAreasITests {
                 visibility = VisibilityEnum.PRIVATE,
             )
 
-        val updatedVigilanceArea = vigilanceArea1.copy(
-            images = emptyList(),
-        )
+        val updatedVigilanceArea =
+            vigilanceArea1.copy(
+                images = emptyList(),
+            )
 
         given(createOrUpdateVigilanceArea.execute(updatedVigilanceArea)).willReturn(updatedVigilanceArea)
         // When

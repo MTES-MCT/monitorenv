@@ -17,10 +17,11 @@ data class ControlPlanDataOutput(
         ): ControlPlanDataOutput {
             return ControlPlanDataOutput(
                 themes = themes.associateBy({ it.id }, { ControlPlanThemeDataOutput.fromControlPlanThemeEntity(it) }),
-                subThemes = subThemes.associateBy(
-                    { it.id },
-                    { ControlPlanSubThemeDataOutput.fromControlPlanSubThemeEntity(it) },
-                ),
+                subThemes =
+                    subThemes.associateBy(
+                        { it.id },
+                        { ControlPlanSubThemeDataOutput.fromControlPlanSubThemeEntity(it) },
+                    ),
                 tags = tags.associateBy({ it.id }, { ControlPlanTagDataOutput.fromControlPlanTagEntity(it) }),
             )
         }

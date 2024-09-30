@@ -11,7 +11,6 @@ import java.time.ZonedDateTime
 
 @Component
 class SSEMission {
-
     private val logger = LoggerFactory.getLogger(SSEMission::class.java)
     val mutexLock = Any()
 
@@ -59,25 +58,27 @@ class SSEMission {
         val missionId = event.mission.id
 
         logger.info("SSE: Sending update of mission $missionId to ${sseStore.size} listener(s).")
-        val sseEmittersToRemove = sseStore.map { sseEmitter ->
-            try {
-                val data = MissionWithRapportNavActionsDataOutput.fromMissionEntity(event.mission)
-                val sseEvent = event()
-                    .name(MISSION_UPDATE_EVENT_NAME)
-                    .data(data)
-                    .reconnectTime(0)
-                    .build()
+        val sseEmittersToRemove =
+            sseStore.map { sseEmitter ->
+                try {
+                    val data = MissionWithRapportNavActionsDataOutput.fromMissionEntity(event.mission)
+                    val sseEvent =
+                        event()
+                            .name(MISSION_UPDATE_EVENT_NAME)
+                            .data(data)
+                            .reconnectTime(0)
+                            .build()
 
-                sseEmitter.send(sseEvent)
-                sseEmitter.complete()
+                    sseEmitter.send(sseEvent)
+                    sseEmitter.complete()
 
-                return@map sseEmitter
-            } catch (e: Exception) {
-                sseEmitter.completeWithError(e)
+                    return@map sseEmitter
+                } catch (e: Exception) {
+                    sseEmitter.completeWithError(e)
 
-                return@map sseEmitter
+                    return@map sseEmitter
+                }
             }
-        }
 
         synchronized(mutexLock) {
             sseStore.removeAll(sseEmittersToRemove)

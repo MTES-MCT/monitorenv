@@ -29,7 +29,6 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
-
     @MockBean
     private lateinit var createOrUpdateMission: CreateOrUpdateMission
 
@@ -72,20 +71,20 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         val expectedCreatedMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 100,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 100,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "Outre-Mer",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
                 attachedReportingIds = attachedReportingIds,
             )
 
@@ -191,20 +190,20 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         val expectedCreatedMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 100,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 100,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "Outre-Mer",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
                 attachedReportingIds = attachedReportingIds,
             )
         val envActionAttachedToReportingIds = Pair(envActionControl.id, listOf(1))
@@ -229,9 +228,9 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                     mission = missionToCreate,
                     attachedReportingIds = attachedReportingIds,
                     envActionsAttachedToReportingIds =
-                    listOf(
-                        envActionAttachedToReportingIds,
-                    ),
+                        listOf(
+                            envActionAttachedToReportingIds,
+                        ),
                 )
 
         // Then
@@ -285,20 +284,20 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         val expectedCreatedMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 100,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 100,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "Outre-Mer",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)

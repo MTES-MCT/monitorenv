@@ -13,16 +13,17 @@ class JpaVigilanceAreaImageRepository(
     private val dbVigilanceAreaImageRepository: IDBVigilanceAreaImageRepository,
     private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
 ) : IVigilanceAreaImageRepository {
-
     @Transactional
     override fun save(image: ImageEntity): ImageEntity? {
-        val vigilanceArea = image.vigilanceAreaId.let {
-            dbVigilanceAreaRepository.getReferenceById(it!!)
-        }
+        val vigilanceArea =
+            image.vigilanceAreaId.let {
+                dbVigilanceAreaRepository.getReferenceById(it!!)
+            }
 
-        val imageModel = vigilanceArea.let {
-            VigilanceAreaImageModel.fromVigilanceAreaImageEntity(image, it)
-        }
+        val imageModel =
+            vigilanceArea.let {
+                VigilanceAreaImageModel.fromVigilanceAreaImageEntity(image, it)
+            }
 
         return imageModel.let { dbVigilanceAreaImageRepository.save(it).toVigilanceAreaImage() }
     }

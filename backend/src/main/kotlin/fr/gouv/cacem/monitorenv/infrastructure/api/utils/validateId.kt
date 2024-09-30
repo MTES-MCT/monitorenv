@@ -4,7 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 
-fun validateId(requestDataAsJson: String, idPropName: String, idFromRequestPath: Int, objectMapper: ObjectMapper) {
+fun validateId(
+    requestDataAsJson: String,
+    idPropName: String,
+    idFromRequestPath: Int,
+    objectMapper: ObjectMapper,
+) {
     val requestDataAsJsonNode = objectMapper.readTree(requestDataAsJson)
     val idAsJsonNode = requestDataAsJsonNode.get(idPropName)
 

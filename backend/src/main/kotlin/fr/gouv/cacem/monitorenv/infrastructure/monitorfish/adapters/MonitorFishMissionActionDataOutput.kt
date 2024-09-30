@@ -16,11 +16,8 @@ data class MonitorFishMissionActionDataOutput(
     val otherComments: String? = null,
     val vesselName: String? = null,
 ) {
-
     companion object {
-        fun fromMonitorFishMissionActionEntity(
-            monitorFishMissionActionEntity: MonitorFishMissionActionEntity,
-        ) =
+        fun fromMonitorFishMissionActionEntity(monitorFishMissionActionEntity: MonitorFishMissionActionEntity) =
             MonitorFishMissionActionDataOutput(
                 id = monitorFishMissionActionEntity.id,
                 actionDatetimeUtc = monitorFishMissionActionEntity.actionDatetimeUtc,
@@ -30,7 +27,7 @@ data class MonitorFishMissionActionDataOutput(
                 longitude = monitorFishMissionActionEntity.longitude,
                 missionId = monitorFishMissionActionEntity.missionId,
                 numberOfVesselsFlownOver =
-                monitorFishMissionActionEntity.numberOfVesselsFlownOver,
+                    monitorFishMissionActionEntity.numberOfVesselsFlownOver,
                 otherComments = monitorFishMissionActionEntity.otherComments,
                 vesselName = monitorFishMissionActionEntity.vesselName,
             )

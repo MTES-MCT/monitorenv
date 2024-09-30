@@ -34,10 +34,11 @@ class DepartmentAreaITests {
 
     @Test
     fun `Should get an departmentArea by its ID`() {
-        val expectedDepartmentArea = DepartmentAreaEntity(
-            inseeCode = "1",
-            name = "Department Area Name",
-        )
+        val expectedDepartmentArea =
+            DepartmentAreaEntity(
+                inseeCode = "1",
+                name = "Department Area Name",
+            )
 
         val requestedId = "1"
 
@@ -51,17 +52,17 @@ class DepartmentAreaITests {
 
     @Test
     fun `Should get all departmentAreas`() {
-        val expectedAFulldministrations = listOf(
-            DepartmentAreaEntity(
-                inseeCode = "1",
-                name = "Department Area Name",
-            ),
-
-            DepartmentAreaEntity(
-                inseeCode = "2",
-                name = "Department Area Name 2",
-            ),
-        )
+        val expectedAFulldministrations =
+            listOf(
+                DepartmentAreaEntity(
+                    inseeCode = "1",
+                    name = "Department Area Name",
+                ),
+                DepartmentAreaEntity(
+                    inseeCode = "2",
+                    name = "Department Area Name 2",
+                ),
+            )
 
         given(getDepartmentAreas.execute()).willReturn(expectedAFulldministrations)
 

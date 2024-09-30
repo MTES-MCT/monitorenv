@@ -9,7 +9,6 @@ import java.time.ZonedDateTime
 import java.util.*
 
 class PatchMissionEntityUTest {
-
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
 
     @Test
@@ -17,11 +16,12 @@ class PatchMissionEntityUTest {
         // Given
         val observationsByUnit = "observationsByUnit"
         val missionEntity = MissionFixture.aMissionEntity()
-        val patchableMissionEntity = PatchableMissionEntity(
-            observationsByUnit = Optional.of(observationsByUnit),
-            startDateTimeUtc = null,
-            endDateTimeUtc = null,
-        )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.of(observationsByUnit),
+                startDateTimeUtc = null,
+                endDateTimeUtc = null,
+            )
 
         // When
         patchEntity.execute(missionEntity, patchableMissionEntity)
@@ -34,11 +34,12 @@ class PatchMissionEntityUTest {
     fun `execute() should return mission with observationsByUnit null if its empty`() {
         // Given
         val missionEntity = MissionFixture.aMissionEntity()
-        val patchableMissionEntity = PatchableMissionEntity(
-            observationsByUnit = Optional.empty(),
-            startDateTimeUtc = null,
-            endDateTimeUtc = null,
-        )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = null,
+            )
 
         // When
         patchEntity.execute(missionEntity, patchableMissionEntity)
@@ -52,11 +53,12 @@ class PatchMissionEntityUTest {
         // Given
         val observationsByUnit = "old value"
         val missionEntity = MissionFixture.aMissionEntity(observationsByUnit = observationsByUnit)
-        val patchableMissionEntity = PatchableMissionEntity(
-            observationsByUnit = null,
-            startDateTimeUtc = null,
-            endDateTimeUtc = Optional.empty(),
-        )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = null,
+                startDateTimeUtc = null,
+                endDateTimeUtc = Optional.empty(),
+            )
 
         // When
         patchEntity.execute(missionEntity, patchableMissionEntity)
@@ -71,11 +73,12 @@ class PatchMissionEntityUTest {
         val startDateTimeUtc = ZonedDateTime.parse("2024-04-11T07:00:00Z")
         val endDateTimeUtc = ZonedDateTime.parse("2024-04-22T07:00:00Z")
         val missionEntity = MissionFixture.aMissionEntity()
-        val patchableMissionEntity = PatchableMissionEntity(
-            observationsByUnit = Optional.empty(),
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = Optional.of(endDateTimeUtc),
-        )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = Optional.of(endDateTimeUtc),
+            )
 
         // When
         patchEntity.execute(missionEntity, patchableMissionEntity)
@@ -90,15 +93,17 @@ class PatchMissionEntityUTest {
         // Given
         val startDateTimeUtc = ZonedDateTime.parse("2024-04-11T07:00:00Z")
         val endDateTimeUtc = ZonedDateTime.parse("2024-04-22T07:00:00Z")
-        val missionEntity = MissionFixture.aMissionEntity(
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = endDateTimeUtc,
-        )
-        val patchableMissionEntity = PatchableMissionEntity(
-            observationsByUnit = Optional.empty(),
-            startDateTimeUtc = null,
-            endDateTimeUtc = null,
-        )
+        val missionEntity =
+            MissionFixture.aMissionEntity(
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = endDateTimeUtc,
+            )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = null,
+            )
 
         // When
         patchEntity.execute(missionEntity, patchableMissionEntity)
@@ -112,11 +117,12 @@ class PatchMissionEntityUTest {
     fun `execute() should return mission with endDateTimes null if its empty`() {
         // Given
         val missionEntity = MissionFixture.aMissionEntity()
-        val patchableMissionEntity = PatchableMissionEntity(
-            observationsByUnit = Optional.empty(),
-            startDateTimeUtc = null,
-            endDateTimeUtc = Optional.empty(),
-        )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = Optional.empty(),
+            )
 
         // When
         patchEntity.execute(missionEntity, patchableMissionEntity)

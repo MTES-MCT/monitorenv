@@ -16,6 +16,7 @@ class GetControlPlans(
     private val controlPlanTagRepository: IControlPlanTagRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetControlPlans::class.java)
+
     fun execute(): ControlPlanThemes {
         val controlPlanThemes = controlPlanThemeRepository.findAll()
         val controlPlanSubThemes = controlPlanSubThemeRepository.findAll()
@@ -30,4 +31,5 @@ class GetControlPlans(
 typealias ControlPlanThemes = Triple<
     List<ControlPlanThemeEntity>,
     List<ControlPlanSubThemeEntity>,
-    List<ControlPlanTagEntity>,>
+    List<ControlPlanTagEntity>,
+    >

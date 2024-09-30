@@ -29,18 +29,20 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         val missions: List<MissionEntity> =
             missionRepository.findAll(
                 controlUnitIds = controlUnitIds,
-                missionSources = missionSources
-                    ?: listOf(
-                        MissionSourceEnum.MONITORENV,
-                        MissionSourceEnum.MONITORFISH,
-                    ),
+                missionSources =
+                    missionSources
+                        ?: listOf(
+                            MissionSourceEnum.MONITORENV,
+                            MissionSourceEnum.MONITORFISH,
+                        ),
                 missionStatuses = missionStatuses,
                 missionTypes = missionTypes,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
                 seaFronts = seaFronts,
-                startedAfter = startedAfterDateTime?.toInstant()
-                    ?: ZonedDateTime.now().minusDays(30).toInstant(),
+                startedAfter =
+                    startedAfterDateTime?.toInstant()
+                        ?: ZonedDateTime.now().minusDays(30).toInstant(),
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 searchQuery = searchQuery,
             )

@@ -23,7 +23,9 @@ data class ControlUnitResourceEntity(
         if (photo != null) {
             if (other.photo == null) return false
             if (!photo.contentEquals(other.photo)) return false
-        } else if (other.photo != null) return false
+        } else if (other.photo != null) {
+            return false
+        }
         if (stationId != other.stationId) return false
         if (type != other.type) return false
 

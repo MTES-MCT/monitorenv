@@ -20,14 +20,15 @@ class CreateOrUpdateVigilanceAreaUTests {
 
     @Test
     fun `execute should return save() result`() {
-        val image = ImageEntity(
-            id = 1,
-            vigilanceAreaId = 1,
-            name = "test_image.jpg",
-            content = byteArrayOf(1, 2, 3, 4),
-            mimeType = "image/jpeg",
-            size = 1024,
-        )
+        val image =
+            ImageEntity(
+                id = 1,
+                vigilanceAreaId = 1,
+                name = "test_image.jpg",
+                content = byteArrayOf(1, 2, 3, 4),
+                mimeType = "image/jpeg",
+                size = 1024,
+            )
         val newVigilanceArea =
             VigilanceAreaEntity(
                 comments = "Comments",

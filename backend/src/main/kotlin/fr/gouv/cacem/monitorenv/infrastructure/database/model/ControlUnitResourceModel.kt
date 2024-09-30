@@ -21,39 +21,30 @@ data class ControlUnitResourceModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
     val controlUnit: ControlUnitModel,
-
     @Column(name = "is_archived", nullable = false)
     val isArchived: Boolean,
-
     @Column(name = "name", nullable = false)
     val name: String,
-
     @Column(name = "note")
     val note: String? = null,
-
     @Column(name = "photo")
     val photo: ByteArray? = byteArrayOf(),
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
     @JsonBackReference
     val station: StationModel,
-
     @Column(name = "type", nullable = false, columnDefinition = "control_unit_resource_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val type: ControlUnitResourceType,
-
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
     val createdAtUtc: Instant? = null,
-
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,
@@ -72,7 +63,9 @@ data class ControlUnitResourceModel(
         if (photo != null) {
             if (other.photo == null) return false
             if (!photo.contentEquals(other.photo)) return false
-        } else if (other.photo != null) return false
+        } else if (other.photo != null) {
+            return false
+        }
         if (station != other.station) return false
         if (type != other.type) return false
         if (createdAtUtc != other.createdAtUtc) return false

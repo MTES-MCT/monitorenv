@@ -10,12 +10,13 @@ data class HealthcheckDataOutput(
     val numberOfReportings: Long,
 ) {
     companion object {
-        fun fromHealth(health: Health) = HealthcheckDataOutput(
-            numberOfRegulatoryAreas = health.numberOfRegulatoryAreas,
-            numberOfMissions = health.numberOfMissions,
-            numberOfNatinfs = health.numberOfNatinfs,
-            numberOfSemaphores = health.numberOfSemaphores,
-            numberOfReportings = health.numberOfReportings,
-        )
+        fun fromHealth(health: Health) =
+            HealthcheckDataOutput(
+                numberOfRegulatoryAreas = health.numberOfRegulatoryAreas,
+                numberOfMissions = health.numberOfMissions,
+                numberOfNatinfs = health.numberOfNatinfs,
+                numberOfSemaphores = health.numberOfSemaphores,
+                numberOfReportings = health.numberOfReportings,
+            )
     }
 }

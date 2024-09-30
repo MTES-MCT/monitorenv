@@ -43,7 +43,6 @@ data class MissionDataOutput(
     val isGeometryComputedFromControls: Boolean,
     val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
 ) {
-
     companion object {
         fun fromMissionDTO(dto: MissionDTO): MissionDataOutput {
             requireNotNull(dto.mission.id) { "a mission must have an id" }
@@ -63,68 +62,69 @@ data class MissionDataOutput(
                 createdAtUtc = dto.mission.createdAtUtc,
                 updatedAtUtc = dto.mission.updatedAtUtc,
                 envActions =
-                (
-                    dto.mission.envActions?.map {
-                        when (it.actionType) {
-                            ActionTypeEnum.CONTROL ->
-                                EnvActionControlDataOutput
-                                    .fromEnvActionControlEntity(
-                                        envActionControlEntity =
-                                        it as EnvActionControlEntity,
-                                        reportingIds =
-                                        dto.envActionsAttachedToReportingIds
-                                            ?.find { action ->
-                                                action.first ==
-                                                    it.id
-                                            }
-                                            ?.second
-                                            ?: listOf(),
-                                    )
+                    (
+                        dto.mission.envActions?.map {
+                            when (it.actionType) {
+                                ActionTypeEnum.CONTROL ->
+                                    EnvActionControlDataOutput
+                                        .fromEnvActionControlEntity(
+                                            envActionControlEntity =
+                                                it as EnvActionControlEntity,
+                                            reportingIds =
+                                                dto.envActionsAttachedToReportingIds
+                                                    ?.find { action ->
+                                                        action.first ==
+                                                            it.id
+                                                    }
+                                                    ?.second
+                                                    ?: listOf(),
+                                        )
 
-                            ActionTypeEnum.SURVEILLANCE -> {
-                                EnvActionSurveillanceDataOutput
-                                    .fromEnvActionSurveillanceEntity(
-                                        envActionSurveillanceEntity =
-                                        it as EnvActionSurveillanceEntity,
-                                        reportingIds =
-                                        dto.envActionsAttachedToReportingIds
-                                            ?.find { action ->
-                                                action.first == it.id
-                                            }
-                                            ?.second
-                                            ?: listOf(),
+                                ActionTypeEnum.SURVEILLANCE -> {
+                                    EnvActionSurveillanceDataOutput
+                                        .fromEnvActionSurveillanceEntity(
+                                            envActionSurveillanceEntity =
+                                                it as EnvActionSurveillanceEntity,
+                                            reportingIds =
+                                                dto.envActionsAttachedToReportingIds
+                                                    ?.find { action ->
+                                                        action.first == it.id
+                                                    }
+                                                    ?.second
+                                                    ?: listOf(),
+                                        )
+                                }
+
+                                ActionTypeEnum.NOTE ->
+                                    EnvActionNoteDataOutput.fromEnvActionNoteEntity(
+                                        it as EnvActionNoteEntity,
                                     )
                             }
-
-                            ActionTypeEnum.NOTE ->
-                                EnvActionNoteDataOutput.fromEnvActionNoteEntity(
-                                    it as EnvActionNoteEntity,
-                                )
                         }
-                    }
                     ),
                 fishActions =
-                dto.fishActions?.map {
-                    MonitorFishMissionActionDataOutput
-                        .fromMonitorFishMissionActionEntity(it)
-                },
+                    dto.fishActions?.map {
+                        MonitorFishMissionActionDataOutput
+                            .fromMonitorFishMissionActionEntity(it)
+                    },
                 missionSource = dto.mission.missionSource,
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
                 attachedReportingIds = dto.attachedReportingIds,
                 attachedReportings =
-                dto.attachedReportings?.map {
-                    MissionAttachedReportingDataOutput.fromReportingDTO(it)
-                },
+                    dto.attachedReportings?.map {
+                        MissionAttachedReportingDataOutput.fromReportingDTO(it)
+                    },
                 detachedReportingIds = dto.detachedReportingIds,
                 detachedReportings =
-                dto.detachedReportings?.map {
-                    MissionDetachedReportingDataOutput.fromReporting(it.reporting)
-                },
+                    dto.detachedReportings?.map {
+                        MissionDetachedReportingDataOutput.fromReporting(it.reporting)
+                    },
                 isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
-                hasRapportNavActions = dto.hasRapportNavActions?.let {
-                    RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(it)
-                },
+                hasRapportNavActions =
+                    dto.hasRapportNavActions?.let {
+                        RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(it)
+                    },
             )
         }
     }

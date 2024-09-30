@@ -7,9 +7,7 @@ data class LegacyControlUnitResourceDataOutput(
     val name: String,
 ) {
     companion object {
-        fun fromLegacyControlResourceEntity(
-            legacyControlUnitResource: LegacyControlUnitResourceEntity,
-        ) =
+        fun fromLegacyControlResourceEntity(legacyControlUnitResource: LegacyControlUnitResourceEntity) =
             LegacyControlUnitResourceDataOutput(
                 id = requireNotNull(legacyControlUnitResource.id),
                 name = legacyControlUnitResource.name,

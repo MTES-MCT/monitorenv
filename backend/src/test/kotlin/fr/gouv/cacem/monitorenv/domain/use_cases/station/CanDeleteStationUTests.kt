@@ -20,15 +20,17 @@ class CanDeleteStationUTests {
     @Test
     fun `execute should return true when control unit resources are empty`() {
         val stationId = 1
-        val fullStation = FullStationDTO(
-            station = StationEntity(
-                id = 1,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Station Name",
-            ),
-            controlUnitResources = listOf(),
-        )
+        val fullStation =
+            FullStationDTO(
+                station =
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
+                controlUnitResources = listOf(),
+            )
 
         given(stationRepository.findById(stationId)).willReturn(fullStation)
 
@@ -40,27 +42,29 @@ class CanDeleteStationUTests {
     @Test
     fun `execute should return false when control unit resources are not empty`() {
         val stationId = 1
-        val fullStation = FullStationDTO(
-            station = StationEntity(
-                id = 1,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Station Name",
-            ),
-            controlUnitResources = listOf(
-                ControlUnitResourceEntity(
-                    id = 0,
-                    stationId = 1,
-                    controlUnitId = 0,
-                    isArchived = false,
-                    name = "Control Unit Resource Name",
-                    note = null,
-                    photo = null,
-                    type = ControlUnitResourceType.BARGE,
-
-                ),
-            ),
-        )
+        val fullStation =
+            FullStationDTO(
+                station =
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
+                controlUnitResources =
+                    listOf(
+                        ControlUnitResourceEntity(
+                            id = 0,
+                            stationId = 1,
+                            controlUnitId = 0,
+                            isArchived = false,
+                            name = "Control Unit Resource Name",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                    ),
+            )
 
         given(stationRepository.findById(stationId)).willReturn(fullStation)
 

@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetIsAuthorizedUserUTests {
-
     @MockBean private lateinit var userAuthorizationRepository: JpaUserAuthorizationRepository
 
     @Test

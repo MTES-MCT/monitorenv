@@ -27,12 +27,13 @@ class BffFilterConfig(
         val registrationBean = FilterRegistrationBean<UserAuthorizationCheckFilter>()
 
         registrationBean.order = USER_AUTH_FILTER_PRECEDENCE
-        registrationBean.filter = UserAuthorizationCheckFilter(
-            oidcProperties,
-            protectedPathsAPIProperties,
-            apiClient,
-            getIsAuthorizedUser,
-        )
+        registrationBean.filter =
+            UserAuthorizationCheckFilter(
+                oidcProperties,
+                protectedPathsAPIProperties,
+                apiClient,
+                getIsAuthorizedUser,
+            )
         registrationBean.urlPatterns = protectedPathsAPIProperties.paths
 
         if (registrationBean.urlPatterns == null) {
@@ -53,9 +54,10 @@ class BffFilterConfig(
         val registrationBean = FilterRegistrationBean<ApiKeyCheckFilter>()
 
         registrationBean.order = API_KEY_FILTER_PRECEDENCE
-        registrationBean.filter = ApiKeyCheckFilter(
-            protectedPathsAPIProperties,
-        )
+        registrationBean.filter =
+            ApiKeyCheckFilter(
+                protectedPathsAPIProperties,
+            )
         registrationBean.urlPatterns = protectedPathsAPIProperties.publicPaths
         if (registrationBean.urlPatterns == null) {
             logger.warn(

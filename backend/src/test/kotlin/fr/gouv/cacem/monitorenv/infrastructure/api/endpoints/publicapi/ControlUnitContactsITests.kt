@@ -52,27 +52,30 @@ class ControlUnitContactsITests {
     @Test
     fun `createV1 should create a contact`() {
         // Given
-        val requestDataAsDataInput = CreateControlUnitContactDataInputV1(
-            id = null,
-            controlUnitId = 2,
-            email = "bob@example.org",
-            name = "Contact Name",
-            phone = "0033123456789",
-        )
+        val requestDataAsDataInput =
+            CreateControlUnitContactDataInputV1(
+                id = null,
+                controlUnitId = 2,
+                email = "bob@example.org",
+                name = "Contact Name",
+                phone = "0033123456789",
+            )
         val requestDataAsJson = objectMapper.writeValueAsString(requestDataAsDataInput)
 
-        val useCaseInputExpectation = ControlUnitContactEntity(
-            id = null,
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = false,
-            name = "Contact Name",
-            phone = "0033123456789",
-        )
-        val useCaseOutputMock = useCaseInputExpectation.copy(
-            id = 1,
-        )
+        val useCaseInputExpectation =
+            ControlUnitContactEntity(
+                id = null,
+                controlUnitId = 2,
+                email = "bob@example.org",
+                isEmailSubscriptionContact = false,
+                isSmsSubscriptionContact = false,
+                name = "Contact Name",
+                phone = "0033123456789",
+            )
+        val useCaseOutputMock =
+            useCaseInputExpectation.copy(
+                id = 1,
+            )
         given(createOrUpdateControlUnitContact.execute(useCaseInputExpectation))
             .willReturn(useCaseOutputMock)
 
@@ -92,29 +95,32 @@ class ControlUnitContactsITests {
     @Test
     fun `createV2 should create a contact`() {
         // Given
-        val newControlUnitContactData = CreateOrUpdateControlUnitContactDataInputV2(
-            id = null,
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = false,
-            name = "Contact Name",
-            phone = "0033123456789",
-        )
+        val newControlUnitContactData =
+            CreateOrUpdateControlUnitContactDataInputV2(
+                id = null,
+                controlUnitId = 2,
+                email = "bob@example.org",
+                isEmailSubscriptionContact = false,
+                isSmsSubscriptionContact = false,
+                name = "Contact Name",
+                phone = "0033123456789",
+            )
         val requestDataAsJson = objectMapper.writeValueAsString(newControlUnitContactData)
 
-        val useCaseInputExpectation = ControlUnitContactEntity(
-            id = null,
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = false,
-            name = "Contact Name",
-            phone = "0033123456789",
-        )
-        val useCaseOutputMock = useCaseInputExpectation.copy(
-            id = 1,
-        )
+        val useCaseInputExpectation =
+            ControlUnitContactEntity(
+                id = null,
+                controlUnitId = 2,
+                email = "bob@example.org",
+                isEmailSubscriptionContact = false,
+                isSmsSubscriptionContact = false,
+                name = "Contact Name",
+                phone = "0033123456789",
+            )
+        val useCaseOutputMock =
+            useCaseInputExpectation.copy(
+                id = 1,
+            )
         given(createOrUpdateControlUnitContact.execute(useCaseInputExpectation))
             .willReturn(useCaseOutputMock)
 
@@ -150,26 +156,29 @@ class ControlUnitContactsITests {
         // Given
         val requestedId = 1
 
-        val useCaseOutputMock = FullControlUnitContactDTO(
-            controlUnit = ControlUnitEntity(
-                id = 2,
-                administrationId = 3,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Unit Name",
-                termsNote = null,
-            ),
-            controlUnitContact = ControlUnitContactEntity(
-                id = 1,
-                controlUnitId = 2,
-                email = "bob@example.org",
-                isEmailSubscriptionContact = false,
-                isSmsSubscriptionContact = false,
-                name = "Contact Name",
-                phone = "0033123456789",
-            ),
-        )
+        val useCaseOutputMock =
+            FullControlUnitContactDTO(
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 3,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitContact =
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 2,
+                        email = "bob@example.org",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = false,
+                        name = "Contact Name",
+                        phone = "0033123456789",
+                    ),
+            )
         given(getControlUnitContactById.execute(requestedId)).willReturn(useCaseOutputMock)
 
         // When
@@ -184,49 +193,53 @@ class ControlUnitContactsITests {
     @Test
     fun `getAllV1 should get all contacts`() {
         // Given
-        val useCaseOutputMock = listOf(
-            FullControlUnitContactDTO(
-                controlUnit = ControlUnitEntity(
-                    id = 2,
-                    administrationId = 3,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
+        val useCaseOutputMock =
+            listOf(
+                FullControlUnitContactDTO(
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 2,
+                            administrationId = 3,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
+                    controlUnitContact =
+                        ControlUnitContactEntity(
+                            id = 1,
+                            controlUnitId = 2,
+                            email = "bob@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact Name",
+                            phone = "0033123456789",
+                        ),
                 ),
-                controlUnitContact = ControlUnitContactEntity(
-                    id = 1,
-                    controlUnitId = 2,
-                    email = "bob@example.org",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact Name",
-                    phone = "0033123456789",
+                FullControlUnitContactDTO(
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 5,
+                            administrationId = 6,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
+                    controlUnitContact =
+                        ControlUnitContactEntity(
+                            id = 4,
+                            controlUnitId = 5,
+                            email = "bob@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact Name 2",
+                            phone = "0033123456789",
+                        ),
                 ),
-            ),
-
-            FullControlUnitContactDTO(
-                controlUnit = ControlUnitEntity(
-                    id = 5,
-                    administrationId = 6,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
-                controlUnitContact = ControlUnitContactEntity(
-                    id = 4,
-                    controlUnitId = 5,
-                    email = "bob@example.org",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact Name 2",
-                    phone = "0033123456789",
-                ),
-            ),
-        )
+            )
         given(getControlUnitContacts.execute()).willReturn(useCaseOutputMock)
 
         // When
@@ -243,43 +256,48 @@ class ControlUnitContactsITests {
     fun `patchV1 should patch a contact`() {
         // Given
         val requestedId = 1
-        val requestDataAsJson = objectMapper.createObjectNode().apply {
-            put("id", 1)
-            put("name", "Updated Contact Name")
-        }.toString()
+        val requestDataAsJson =
+            objectMapper.createObjectNode().apply {
+                put("id", 1)
+                put("name", "Updated Contact Name")
+            }.toString()
 
-        val firstUseCaseOutputMock = FullControlUnitContactDTO(
-            controlUnit = ControlUnitEntity(
-                id = 2,
-                administrationId = 3,
-                areaNote = "Area Note",
-                departmentAreaInseeCode = "12345",
-                isArchived = false,
-                name = "Unit Name",
-                termsNote = "Terms Note",
-            ),
-            controlUnitContact = ControlUnitContactEntity(
+        val firstUseCaseOutputMock =
+            FullControlUnitContactDTO(
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 3,
+                        areaNote = "Area Note",
+                        departmentAreaInseeCode = "12345",
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = "Terms Note",
+                    ),
+                controlUnitContact =
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 2,
+                        email = "bob@example.org",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = false,
+                        name = "Contact Name",
+                        phone = "0033123456789",
+                    ),
+            )
+        given(getControlUnitContactById.execute(requestedId))
+            .willReturn(firstUseCaseOutputMock)
+
+        val secondUseCaseInputExpectation =
+            ControlUnitContactEntity(
                 id = 1,
                 controlUnitId = 2,
                 email = "bob@example.org",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
-                name = "Contact Name",
+                name = "Updated Contact Name", // Updated property
                 phone = "0033123456789",
-            ),
-        )
-        given(getControlUnitContactById.execute(requestedId))
-            .willReturn(firstUseCaseOutputMock)
-
-        val secondUseCaseInputExpectation = ControlUnitContactEntity(
-            id = 1,
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = false,
-            name = "Updated Contact Name", // Updated property
-            phone = "0033123456789",
-        )
+            )
         val secondUseCaseOutputMock = secondUseCaseInputExpectation
         given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))
             .willReturn(secondUseCaseOutputMock)
@@ -302,46 +320,51 @@ class ControlUnitContactsITests {
     fun `updateV1 should update a contact`() {
         // Given
         val requestedId = 1
-        val requestDataAsJson = objectMapper.createObjectNode().apply {
-            put("id", 1)
-            put("email", "bob@example.org")
-            put("controlUnitId", 2)
-            put("name", "Updated Contact Name")
-            put("phone", "0033123456789")
-        }.toString()
+        val requestDataAsJson =
+            objectMapper.createObjectNode().apply {
+                put("id", 1)
+                put("email", "bob@example.org")
+                put("controlUnitId", 2)
+                put("name", "Updated Contact Name")
+                put("phone", "0033123456789")
+            }.toString()
 
-        val firstUseCaseOutputMock = FullControlUnitContactDTO(
-            controlUnit = ControlUnitEntity(
-                id = 2,
-                administrationId = 3,
-                areaNote = "Area Note",
-                departmentAreaInseeCode = "12345",
-                isArchived = false,
-                name = "Unit Name",
-                termsNote = "Terms Note",
-            ),
-            controlUnitContact = ControlUnitContactEntity(
+        val firstUseCaseOutputMock =
+            FullControlUnitContactDTO(
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 3,
+                        areaNote = "Area Note",
+                        departmentAreaInseeCode = "12345",
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = "Terms Note",
+                    ),
+                controlUnitContact =
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 2,
+                        email = "bob@example.org",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = false,
+                        name = "Contact Name",
+                        phone = "0033123456789",
+                    ),
+            )
+        given(getControlUnitContactById.execute(requestedId))
+            .willReturn(firstUseCaseOutputMock)
+
+        val secondUseCaseInputExpectation =
+            ControlUnitContactEntity(
                 id = 1,
                 controlUnitId = 2,
                 email = "bob@example.org",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
-                name = "Contact Name",
+                name = "Updated Contact Name", // Updated property
                 phone = "0033123456789",
-            ),
-        )
-        given(getControlUnitContactById.execute(requestedId))
-            .willReturn(firstUseCaseOutputMock)
-
-        val secondUseCaseInputExpectation = ControlUnitContactEntity(
-            id = 1,
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = false,
-            name = "Updated Contact Name", // Updated property
-            phone = "0033123456789",
-        )
+            )
         val secondUseCaseOutputMock = secondUseCaseInputExpectation
         given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))
             .willReturn(secondUseCaseOutputMock)

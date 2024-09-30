@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
 class GetMissionWithRapportNavActionsUTests {
-
     private val getMission: GetMission = mock()
 
     private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository = mock()
@@ -24,10 +23,11 @@ class GetMissionWithRapportNavActionsUTests {
 
         val missionEntity = aMissionEntity()
         val mission = MissionDTO(mission = missionEntity)
-        val rapportNavActions = RapportNavMissionActionEntity(
-            id = 1,
-            containsActionsAddedByUnit = true,
-        )
+        val rapportNavActions =
+            RapportNavMissionActionEntity(
+                id = 1,
+                containsActionsAddedByUnit = true,
+            )
 
         given(getMission.execute(missionId)).willReturn(missionEntity)
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willReturn(
@@ -62,10 +62,11 @@ class GetMissionWithRapportNavActionsUTests {
         val missionEntity = aMissionEntity()
         val mission = MissionDTO(mission = missionEntity)
 
-        val rapportNavActions = RapportNavMissionActionEntity(
-            id = 1,
-            containsActionsAddedByUnit = false,
-        )
+        val rapportNavActions =
+            RapportNavMissionActionEntity(
+                id = 1,
+                containsActionsAddedByUnit = false,
+            )
 
         given(getMission.execute(missionId)).willReturn(missionEntity)
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId)).willReturn(

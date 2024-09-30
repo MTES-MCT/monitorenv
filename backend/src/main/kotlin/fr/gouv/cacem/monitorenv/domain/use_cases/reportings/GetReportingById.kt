@@ -7,7 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 @UseCase
 class GetReportingById(
     private val reportingRepository: IReportingRepository,
-
 ) {
     fun execute(id: Int): ReportingDTO {
         val reporting = reportingRepository.findById(id)

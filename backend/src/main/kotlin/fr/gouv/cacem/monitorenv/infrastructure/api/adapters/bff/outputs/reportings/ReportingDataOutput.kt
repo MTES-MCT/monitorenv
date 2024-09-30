@@ -42,9 +42,7 @@ data class ReportingDataOutput(
     val isInfractionProven: Boolean,
 ) {
     companion object {
-        fun fromReportingDTO(
-            dto: ReportingDTO,
-        ): ReportingDataOutput {
+        fun fromReportingDTO(dto: ReportingDTO): ReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingDataOutput(
                 id = dto.reporting.id,
@@ -71,13 +69,13 @@ data class ReportingDataOutput(
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
                 attachedMission =
-                if (dto.attachedMission != null) {
-                    ReportingMissionDataOutput.fromMission(
-                        dto.attachedMission,
-                    )
-                } else {
-                    null
-                },
+                    if (dto.attachedMission != null) {
+                        ReportingMissionDataOutput.fromMission(
+                            dto.attachedMission,
+                        )
+                    } else {
+                        null
+                    },
                 controlStatus = dto.controlStatus,
                 updatedAtUtc = dto.reporting.updatedAtUtc,
                 withVHFAnswer = dto.reporting.withVHFAnswer,

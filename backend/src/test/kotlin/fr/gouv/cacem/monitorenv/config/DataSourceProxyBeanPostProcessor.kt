@@ -7,14 +7,22 @@ import org.springframework.stereotype.Component
 import javax.sql.DataSource
 
 @Component
-class DataSourceProxyBeanPostProcessor(private val customQueryCountListener: CustomQueryCountListener) : BeanPostProcessor {
+class DataSourceProxyBeanPostProcessor(
+    private val customQueryCountListener: CustomQueryCountListener,
+) : BeanPostProcessor {
     @Throws(BeansException::class)
-    override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
+    override fun postProcessBeforeInitialization(
+        bean: Any,
+        beanName: String,
+    ): Any? {
         return bean
     }
 
     @Throws(BeansException::class)
-    override fun postProcessAfterInitialization(bean: Any, beanName: String): Any? {
+    override fun postProcessAfterInitialization(
+        bean: Any,
+        beanName: String,
+    ): Any? {
         if (bean is DataSource) {
             val listener = customQueryCountListener
 

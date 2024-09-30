@@ -38,9 +38,7 @@ data class AttachedReportingDataOutput(
     val withVHFAnswer: Boolean? = null,
 ) {
     companion object {
-        fun fromReportingDTO(
-            dto: ReportingDTO,
-        ): AttachedReportingDataOutput {
+        fun fromReportingDTO(dto: ReportingDTO): AttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return AttachedReportingDataOutput(
                 id = dto.reporting.id,

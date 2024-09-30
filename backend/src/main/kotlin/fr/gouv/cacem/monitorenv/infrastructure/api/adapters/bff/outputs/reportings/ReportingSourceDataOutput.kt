@@ -14,9 +14,7 @@ data class ReportingSourceDataOutput(
     val displayedSource: String,
 ) {
     companion object {
-        fun fromReportingSourceDTO(
-            reportingSourceDTO: ReportingSourceDTO,
-        ): ReportingSourceDataOutput {
+        fun fromReportingSourceDTO(reportingSourceDTO: ReportingSourceDTO): ReportingSourceDataOutput {
             return ReportingSourceDataOutput(
                 id = reportingSourceDTO.reportingSource.id,
                 reportingId = reportingSourceDTO.reportingSource.reportingId,
@@ -25,11 +23,11 @@ data class ReportingSourceDataOutput(
                 semaphoreId = reportingSourceDTO.semaphore?.id,
                 sourceName = reportingSourceDTO.reportingSource.sourceName,
                 displayedSource =
-                when (reportingSourceDTO.reportingSource.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> reportingSourceDTO.semaphore?.unit ?: reportingSourceDTO.semaphore?.name
-                    SourceTypeEnum.CONTROL_UNIT -> reportingSourceDTO.controlUnit?.controlUnit?.name
-                    SourceTypeEnum.OTHER -> reportingSourceDTO.reportingSource.sourceName
-                } ?: "",
+                    when (reportingSourceDTO.reportingSource.sourceType) {
+                        SourceTypeEnum.SEMAPHORE -> reportingSourceDTO.semaphore?.unit ?: reportingSourceDTO.semaphore?.name
+                        SourceTypeEnum.CONTROL_UNIT -> reportingSourceDTO.controlUnit?.controlUnit?.name
+                        SourceTypeEnum.OTHER -> reportingSourceDTO.reportingSource.sourceName
+                    } ?: "",
             )
         }
     }

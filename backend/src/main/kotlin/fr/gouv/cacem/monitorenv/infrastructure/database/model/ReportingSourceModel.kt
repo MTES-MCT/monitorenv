@@ -47,7 +47,6 @@ class ReportingSourceModel(
     val controlUnit: ControlUnitModel? = null,
     @Column(name = "source_name") val sourceName: String? = null,
 ) {
-
     fun toReportingSource() =
         ReportingSourceEntity(
             id = id,
@@ -58,11 +57,12 @@ class ReportingSourceModel(
             sourceName = sourceName,
         )
 
-    fun toReportingSourceDTO() = ReportingSourceDTO(
-        reportingSource = this.toReportingSource(),
-        semaphore = semaphore?.toSemaphore(),
-        controlUnit = controlUnit?.toFullControlUnit(),
-    )
+    fun toReportingSourceDTO() =
+        ReportingSourceDTO(
+            reportingSource = this.toReportingSource(),
+            semaphore = semaphore?.toSemaphore(),
+            controlUnit = controlUnit?.toFullControlUnit(),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -80,14 +80,13 @@ class ReportingSourceModel(
             semaphore: SemaphoreModel?,
             controlUnit: ControlUnitModel?,
             reporting: ReportingModel,
-        ) =
-            ReportingSourceModel(
-                id = reportingSource.id,
-                sourceType = reportingSource.sourceType,
-                semaphore = semaphore,
-                controlUnit = controlUnit,
-                sourceName = reportingSource.sourceName,
-                reporting = reporting,
-            )
+        ) = ReportingSourceModel(
+            id = reportingSource.id,
+            sourceType = reportingSource.sourceType,
+            semaphore = semaphore,
+            controlUnit = controlUnit,
+            sourceName = reportingSource.sourceName,
+            reporting = reporting,
+        )
     }
 }

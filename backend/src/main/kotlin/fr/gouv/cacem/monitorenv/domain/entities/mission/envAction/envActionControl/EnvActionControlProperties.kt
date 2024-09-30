@@ -32,32 +32,31 @@ data class EnvActionControlProperties(
         missionId: Int?,
         observationsByUnit: String?,
         openBy: String?,
-    ) =
-        EnvActionControlEntity(
-            id = id,
-            actionEndDateTimeUtc = actionEndDateTimeUtc,
-            actionNumberOfControls = actionNumberOfControls,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionTargetType = actionTargetType,
-            completedBy = completedBy,
-            completion = completion,
-            controlPlans = controlPlans,
-            department = department,
-            facade = facade,
-            geom = geom,
-            infractions = infractions,
-            isAdministrativeControl = isAdministrativeControl,
-            isComplianceWithWaterRegulationsControl =
-            isComplianceWithWaterRegulationsControl,
-            isSafetyEquipmentAndStandardsComplianceControl =
-            isSafetyEquipmentAndStandardsComplianceControl,
-            isSeafarersControl = isSeafarersControl,
-            missionId = missionId,
-            observations = observations,
-            observationsByUnit = observationsByUnit,
-            openBy = openBy,
-            vehicleType = vehicleType,
-        )
+    ) = EnvActionControlEntity(
+        id = id,
+        actionEndDateTimeUtc = actionEndDateTimeUtc,
+        actionNumberOfControls = actionNumberOfControls,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionTargetType = actionTargetType,
+        completedBy = completedBy,
+        completion = completion,
+        controlPlans = controlPlans,
+        department = department,
+        facade = facade,
+        geom = geom,
+        infractions = infractions,
+        isAdministrativeControl = isAdministrativeControl,
+        isComplianceWithWaterRegulationsControl =
+        isComplianceWithWaterRegulationsControl,
+        isSafetyEquipmentAndStandardsComplianceControl =
+        isSafetyEquipmentAndStandardsComplianceControl,
+        isSeafarersControl = isSeafarersControl,
+        missionId = missionId,
+        observations = observations,
+        observationsByUnit = observationsByUnit,
+        openBy = openBy,
+        vehicleType = vehicleType,
+    )
 
     companion object {
         fun fromEnvActionControlEntity(envAction: EnvActionControlEntity) =

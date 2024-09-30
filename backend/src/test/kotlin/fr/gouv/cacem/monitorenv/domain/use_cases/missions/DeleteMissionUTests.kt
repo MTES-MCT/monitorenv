@@ -20,7 +20,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class DeleteMissionUTests {
-
     private val getFullMission: GetFullMission = mock()
 
     private val missionRepository: IMissionRepository = mock()

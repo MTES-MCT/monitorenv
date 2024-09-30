@@ -18,14 +18,16 @@ class GetAdministrationByIdUTests {
     @Test
     fun `execute should return an administration by its ID`() {
         val administrationId = 1
-        val fullAdministration = FullAdministrationDTO(
-            administration = AdministrationEntity(
-                id = 1,
-                name = "Administration Name",
-                isArchived = false,
-            ),
-            controlUnits = listOf(),
-        )
+        val fullAdministration =
+            FullAdministrationDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
+                controlUnits = listOf(),
+            )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
 
