@@ -37,12 +37,12 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
 
   // AMP link
   // TODO: ask to Xavier the range date
-  const dates = 'dates=2024-01-01~2024-12-31'
+  const dates = `dates=${currentYear}-01-01~${currentYear}-12-31`
   const amps = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.amps : []))
   const ampsByName = amps?.map(amp => amp.name)
   const formattedAmpLink = useMemo(
     () => (ampsByName ? encodeURIComponent(`amp=${ampsByName.join('&amp=')}&intervalle_de_date=${dates}`) : ''),
-    [ampsByName]
+    [ampsByName, dates]
   )
 
   // Department link
@@ -78,14 +78,15 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
 }
 
 const LinksContainer = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   padding: 16px 24px;
   justify-content: space-between;
   > a {
     align-items: center;
     color: #5597d2;
     display: flex;
+    flex-wrap: wrap;
     gap: 4px;
   }
 `
