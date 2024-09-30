@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
 
+// Id like 199, 216, 197 can be changes if dashboards in metabase changes
 const AMP_LINK = '/dashboard/199-effort-de-surveillance-et-de-controle-en-amp?'
 const REGULATORY_AREA_LINK = '/dashboard/216-tableau-de-bord-par-zone-reglementaire?'
 const DEPARTMENT_LINK = '/dashboard/197-bilan-et-comites-de-pilotage-niveau-departement?'
@@ -16,6 +17,7 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const currentYear = new Date().getFullYear()
+  const dates = `${currentYear}-01-01~${currentYear}-12-31`
 
   // Regulatory Areas link
   const regulatoryAreas = useAppSelector(state =>
@@ -26,28 +28,22 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
   const regulatoryLayersByLayerName = Object.keys(
     groupBy(regulatoryAreaIds, r => regulatoryLayers?.entities[r]?.layer_name)
   )
-  const encodedLinks = encodeURIComponent(regulatoryLayersByLayerName.join("&groupe_d'entité-réglementaire="))
+  const mappedLinks = regulatoryLayersByLayerName.join("&groupe_d'entité-réglementaires=")
   const formattedRegulatoryAreaLink = useMemo(
-    () =>
-      regulatoryLayersByLayerName
-        ? encodeURIComponent(`groupe_d'entité-réglementaire=${encodedLinks}&année=${currentYear}`)
-        : '',
-    [regulatoryLayersByLayerName, encodedLinks, currentYear]
+    () => (regulatoryLayersByLayerName ? `groupe_d'entité-réglementaires=${mappedLinks}&année=${currentYear}` : ''),
+    [regulatoryLayersByLayerName, mappedLinks, currentYear]
   )
 
   // AMP link
-  // TODO: ask to Xavier the range date
-  const dates = `dates=${currentYear}-01-01~${currentYear}-12-31`
   const amps = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.amps : []))
-  const ampsByName = amps?.map(amp => amp.name)
+  const ampsByName = amps?.map(amp => amp.id)
   const formattedAmpLink = useMemo(
-    () => (ampsByName ? encodeURIComponent(`amp=${ampsByName.join('&amp=')}&intervalle_de_date=${dates}`) : ''),
+    () => (ampsByName ? `id=${ampsByName.join('&id=')}&intervalle_de_dates=${dates}&amp=` : ''),
     [ampsByName, dates]
   )
 
   // Department link
   const department = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.inseeCode : undefined))
-  const departmentLink = `département=${department}&année=${encodeURIComponent(currentYear)}`
 
   return (
     <Accordion
@@ -56,22 +52,32 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
       title="Pression territoriale des contrôles et surveillances"
     >
       <LinksContainer>
-        <a
-          href={`${METABASE_URL}${REGULATORY_AREA_LINK}${formattedRegulatoryAreaLink}`}
-          rel="external noreferrer"
-          target="_blank"
-        >
-          <span>Pression zones REG</span>
-          <Icon.Summary />
-        </a>
-        <a href={`${METABASE_URL}${AMP_LINK}${formattedAmpLink}`} rel="external noreferrer" target="_blank">
-          <span>Pression zones AMP</span>
-          <Icon.Summary />
-        </a>
-        <a href={`${METABASE_URL}${DEPARTMENT_LINK}${departmentLink}`} rel="external noreferrer" target="_blank">
-          <span>Pression département</span>
-          <Icon.Summary />
-        </a>
+        {regulatoryAreas && regulatoryAreas.length > 0 && (
+          <a
+            href={`${METABASE_URL}${REGULATORY_AREA_LINK}${formattedRegulatoryAreaLink}`}
+            rel="external noreferrer"
+            target="_blank"
+          >
+            <span>Pression zones REG</span>
+            <Icon.Summary />
+          </a>
+        )}
+        {amps && amps.length > 0 && (
+          <a href={`${METABASE_URL}${AMP_LINK}${formattedAmpLink}`} rel="external noreferrer" target="_blank">
+            <span>Pression zones AMP</span>
+            <Icon.Summary />
+          </a>
+        )}
+        {department && (
+          <a
+            href={`${METABASE_URL}${DEPARTMENT_LINK}&dates=${dates}&département=${department}`}
+            rel="external noreferrer"
+            target="_blank"
+          >
+            <span>Pression département</span>
+            <Icon.Summary />
+          </a>
+        )}
       </LinksContainer>
     </Accordion>
   )
