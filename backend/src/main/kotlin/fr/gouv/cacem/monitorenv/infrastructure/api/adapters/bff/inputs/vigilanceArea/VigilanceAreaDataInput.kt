@@ -28,7 +28,6 @@ data class VigilanceAreaDataInput(
     val themes: List<String>? = null,
     val visibility: VisibilityEnum? = null,
 ) {
-
     fun toVigilanceAreaEntity(): VigilanceAreaEntity {
         return VigilanceAreaEntity(
             id = this.id,
@@ -45,16 +44,16 @@ data class VigilanceAreaDataInput(
             isDeleted = false,
             isDraft = this.isDraft,
             images =
-            this.images?.map { image ->
-                ImageEntity(
-                    id = image.id,
-                    vigilanceAreaId = image.vigilanceAreaId,
-                    name = image.name,
-                    content = image.content.decodeBase64Bytes(),
-                    mimeType = image.mimeType,
-                    size = image.size,
-                )
-            },
+                this.images?.map { image ->
+                    ImageEntity(
+                        id = image.id,
+                        vigilanceAreaId = image.vigilanceAreaId,
+                        name = image.name,
+                        content = image.content.decodeBase64Bytes(),
+                        mimeType = image.mimeType,
+                        size = image.size,
+                    )
+                },
             links = this.links,
             linkedAMPs = this.linkedAMPs,
             linkedRegulatoryAreas = this.linkedRegulatoryAreas,

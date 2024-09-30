@@ -19,15 +19,16 @@ class CreateOrUpdateControlUnitResourceUTests {
 
     @Test
     fun `execute should return save() result`() {
-        val newControlUnitResource = ControlUnitResourceEntity(
-            controlUnitId = 3,
-            isArchived = false,
-            name = "Control Unit Resource Name",
-            note = null,
-            photo = null,
-            stationId = 2,
-            type = ControlUnitResourceType.BARGE,
-        )
+        val newControlUnitResource =
+            ControlUnitResourceEntity(
+                controlUnitId = 3,
+                isArchived = false,
+                name = "Control Unit Resource Name",
+                note = null,
+                photo = null,
+                stationId = 2,
+                type = ControlUnitResourceType.BARGE,
+            )
 
         val expectedControlUnitResource = newControlUnitResource.copy(id = 0)
 

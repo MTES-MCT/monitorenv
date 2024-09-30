@@ -83,26 +83,28 @@ class ControlUnitResourcesITests {
 
     @Test
     fun `create should create a control unit resource`() {
-        val expectedCreatedControlUnitResource = ControlUnitResourceEntity(
-            id = 1,
-            controlUnitId = 0,
-            isArchived = false,
-            name = "Resource Name",
-            note = null,
-            photo = null,
-            stationId = 0,
-            type = ControlUnitResourceType.BARGE,
-        )
+        val expectedCreatedControlUnitResource =
+            ControlUnitResourceEntity(
+                id = 1,
+                controlUnitId = 0,
+                isArchived = false,
+                name = "Resource Name",
+                note = null,
+                photo = null,
+                stationId = 0,
+                type = ControlUnitResourceType.BARGE,
+            )
 
-        val newControlUnitData = CreateOrUpdateControlUnitResourceDataInput(
-            controlUnitId = 0,
-            isArchived = false,
-            name = "Resource Name",
-            note = null,
-            photo = null,
-            stationId = 0,
-            type = ControlUnitResourceType.BARGE,
-        )
+        val newControlUnitData =
+            CreateOrUpdateControlUnitResourceDataInput(
+                controlUnitId = 0,
+                isArchived = false,
+                name = "Resource Name",
+                note = null,
+                photo = null,
+                stationId = 0,
+                type = ControlUnitResourceType.BARGE,
+            )
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(
@@ -132,33 +134,37 @@ class ControlUnitResourcesITests {
 
     @Test
     fun `get should get a control unit resource by its ID`() {
-        val expectedFullControlUnitResource = FullControlUnitResourceDTO(
-            controlUnit = ControlUnitEntity(
-                id = 0,
-                administrationId = 0,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Control Unit Name",
-                termsNote = null,
-            ),
-            controlUnitResource = ControlUnitResourceEntity(
-                id = 1,
-                controlUnitId = 0,
-                isArchived = false,
-                name = "Resource Name",
-                note = null,
-                photo = null,
-                stationId = 0,
-                type = ControlUnitResourceType.BARGE,
-            ),
-            station = StationEntity(
-                id = 0,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Control Unit Name",
-            ),
-        )
+        val expectedFullControlUnitResource =
+            FullControlUnitResourceDTO(
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitResource =
+                    ControlUnitResourceEntity(
+                        id = 1,
+                        controlUnitId = 0,
+                        isArchived = false,
+                        name = "Resource Name",
+                        note = null,
+                        photo = null,
+                        stationId = 0,
+                        type = ControlUnitResourceType.BARGE,
+                    ),
+                station =
+                    StationEntity(
+                        id = 0,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Control Unit Name",
+                    ),
+            )
 
         val requestedId = 1
 
@@ -172,63 +178,69 @@ class ControlUnitResourcesITests {
 
     @Test
     fun `getAll should get all control unit resources`() {
-        val expectedFullControlUnitResources = listOf(
-            FullControlUnitResourceDTO(
-                controlUnit = ControlUnitEntity(
-                    id = 0,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
+        val expectedFullControlUnitResources =
+            listOf(
+                FullControlUnitResourceDTO(
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
+                    controlUnitResource =
+                        ControlUnitResourceEntity(
+                            id = 1,
+                            controlUnitId = 3,
+                            isArchived = false,
+                            name = "Resource Name",
+                            note = null,
+                            photo = null,
+                            stationId = 0,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                    station =
+                        StationEntity(
+                            id = 0,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
                 ),
-                controlUnitResource = ControlUnitResourceEntity(
-                    id = 1,
-                    controlUnitId = 3,
-                    isArchived = false,
-                    name = "Resource Name",
-                    note = null,
-                    photo = null,
-                    stationId = 0,
-                    type = ControlUnitResourceType.BARGE,
+                FullControlUnitResourceDTO(
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
+                    controlUnitResource =
+                        ControlUnitResourceEntity(
+                            id = 2,
+                            controlUnitId = 0,
+                            isArchived = false,
+                            name = "Resource Name 2",
+                            note = null,
+                            photo = null,
+                            stationId = 0,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                    station =
+                        StationEntity(
+                            id = 0,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
                 ),
-                station = StationEntity(
-                    id = 0,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
-                ),
-            ),
-
-            FullControlUnitResourceDTO(
-                controlUnit = ControlUnitEntity(
-                    id = 0,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
-                controlUnitResource = ControlUnitResourceEntity(
-                    id = 2,
-                    controlUnitId = 0,
-                    isArchived = false,
-                    name = "Resource Name 2",
-                    note = null,
-                    photo = null,
-                    stationId = 0,
-                    type = ControlUnitResourceType.BARGE,
-                ),
-                station = StationEntity(
-                    id = 0,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
-                ),
-            ),
-        )
+            )
 
         given(getControlUnitResources.execute()).willReturn(expectedFullControlUnitResources)
 
@@ -241,27 +253,29 @@ class ControlUnitResourcesITests {
 
     @Test
     fun `update should update a control unit resource`() {
-        val expectedUpdatedControlUnitResource = ControlUnitResourceEntity(
-            id = 1,
-            controlUnitId = 0,
-            isArchived = false,
-            name = "Updated Resource Name",
-            note = null,
-            photo = null,
-            stationId = 0,
-            type = ControlUnitResourceType.BARGE,
-        )
+        val expectedUpdatedControlUnitResource =
+            ControlUnitResourceEntity(
+                id = 1,
+                controlUnitId = 0,
+                isArchived = false,
+                name = "Updated Resource Name",
+                note = null,
+                photo = null,
+                stationId = 0,
+                type = ControlUnitResourceType.BARGE,
+            )
 
-        val nextControlUnitData = CreateOrUpdateControlUnitResourceDataInput(
-            id = 1,
-            controlUnitId = 0,
-            isArchived = false,
-            name = "Updated Resource Name",
-            note = null,
-            photo = null,
-            stationId = 0,
-            type = ControlUnitResourceType.BARGE,
-        )
+        val nextControlUnitData =
+            CreateOrUpdateControlUnitResourceDataInput(
+                id = 1,
+                controlUnitId = 0,
+                isArchived = false,
+                name = "Updated Resource Name",
+                note = null,
+                photo = null,
+                stationId = 0,
+                type = ControlUnitResourceType.BARGE,
+            )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(

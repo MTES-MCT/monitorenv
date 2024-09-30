@@ -25,22 +25,21 @@ data class EnvActionSurveillanceDataOutput(
     val awareness: AwarenessDataOuput?,
 ) :
     EnvActionDataOutput(
-        id = id,
-        actionStartDateTimeUtc = actionStartDateTimeUtc,
-        actionType = ActionTypeEnum.SURVEILLANCE,
-    ) {
+            id = id,
+            actionStartDateTimeUtc = actionStartDateTimeUtc,
+            actionType = ActionTypeEnum.SURVEILLANCE,
+        ) {
     companion object {
         fun fromEnvActionSurveillanceEntity(
             envActionSurveillanceEntity: EnvActionSurveillanceEntity,
             reportingIds: List<Int>,
-        ) =
-            EnvActionSurveillanceDataOutput(
-                id = envActionSurveillanceEntity.id,
-                actionEndDateTimeUtc = envActionSurveillanceEntity.actionEndDateTimeUtc,
-                actionStartDateTimeUtc = envActionSurveillanceEntity.actionStartDateTimeUtc,
-                completedBy = envActionSurveillanceEntity.completedBy,
-                completion = envActionSurveillanceEntity.completion,
-                controlPlans =
+        ) = EnvActionSurveillanceDataOutput(
+            id = envActionSurveillanceEntity.id,
+            actionEndDateTimeUtc = envActionSurveillanceEntity.actionEndDateTimeUtc,
+            actionStartDateTimeUtc = envActionSurveillanceEntity.actionStartDateTimeUtc,
+            completedBy = envActionSurveillanceEntity.completedBy,
+            completion = envActionSurveillanceEntity.completion,
+            controlPlans =
                 envActionSurveillanceEntity.controlPlans?.let { plans ->
                     if (plans.isNotEmpty()) {
                         plans.map {
@@ -58,17 +57,18 @@ data class EnvActionSurveillanceDataOutput(
                         listOf(defaultControlPlans)
                     }
                 },
-                department = envActionSurveillanceEntity.department,
-                facade = envActionSurveillanceEntity.facade,
-                geom = envActionSurveillanceEntity.geom,
-                observations = envActionSurveillanceEntity.observations,
-                openBy = envActionSurveillanceEntity.openBy,
-                reportingIds = reportingIds,
-                awareness = envActionSurveillanceEntity.awareness?.let {
+            department = envActionSurveillanceEntity.department,
+            facade = envActionSurveillanceEntity.facade,
+            geom = envActionSurveillanceEntity.geom,
+            observations = envActionSurveillanceEntity.observations,
+            openBy = envActionSurveillanceEntity.openBy,
+            reportingIds = reportingIds,
+            awareness =
+                envActionSurveillanceEntity.awareness?.let {
                     AwarenessDataOuput.fromAwarenessEntity(
                         it,
                     )
                 },
-            )
+        )
     }
 }

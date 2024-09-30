@@ -78,21 +78,21 @@ class CreateOrUpdateReportingUTests {
         val fullControlUnit =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 1,
-                    isArchived = false,
-                    name = "administration 1",
-                ),
+                    AdministrationEntity(
+                        id = 1,
+                        isArchived = false,
+                        name = "administration 1",
+                    ),
                 controlUnit =
-                ControlUnitEntity(
-                    id = 1,
-                    administrationId = 2,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "control unit 1",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 1,
+                        administrationId = 2,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "control unit 1",
+                        termsNote = null,
+                    ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )
@@ -142,16 +142,17 @@ class CreateOrUpdateReportingUTests {
     fun `Should throw an exception when sourceType is set to Semaphore and semaphoreId is null or controlUnitId & sourceName are not null`() {
         val reporting =
             aReporting(
-                reportingSources = listOf(
-                    ReportingSourceEntity(
-                        id = null,
-                        reportingId = null,
-                        sourceType = SourceTypeEnum.SEMAPHORE,
-                        semaphoreId = null,
-                        controlUnitId = null,
-                        sourceName = null,
+                reportingSources =
+                    listOf(
+                        ReportingSourceEntity(
+                            id = null,
+                            reportingId = null,
+                            sourceType = SourceTypeEnum.SEMAPHORE,
+                            semaphoreId = null,
+                            controlUnitId = null,
+                            sourceName = null,
+                        ),
                     ),
-                ),
             )
 
         // When
@@ -177,16 +178,17 @@ class CreateOrUpdateReportingUTests {
         // Given
         val reporting =
             aReporting(
-                reportingSources = listOf(
-                    ReportingSourceEntity(
-                        id = null,
-                        reportingId = null,
-                        sourceType = SourceTypeEnum.CONTROL_UNIT,
-                        semaphoreId = null,
-                        controlUnitId = null,
-                        sourceName = null,
+                reportingSources =
+                    listOf(
+                        ReportingSourceEntity(
+                            id = null,
+                            reportingId = null,
+                            sourceType = SourceTypeEnum.CONTROL_UNIT,
+                            semaphoreId = null,
+                            controlUnitId = null,
+                            sourceName = null,
+                        ),
                     ),
-                ),
             )
 
         // When
@@ -212,44 +214,47 @@ class CreateOrUpdateReportingUTests {
         // Given
         val reportingWithControlUnitId =
             aReporting(
-                reportingSources = listOf(
-                    ReportingSourceEntity(
-                        id = null,
-                        reportingId = null,
-                        sourceType = SourceTypeEnum.OTHER,
-                        semaphoreId = null,
-                        controlUnitId = 1,
-                        sourceName = null,
+                reportingSources =
+                    listOf(
+                        ReportingSourceEntity(
+                            id = null,
+                            reportingId = null,
+                            sourceType = SourceTypeEnum.OTHER,
+                            semaphoreId = null,
+                            controlUnitId = 1,
+                            sourceName = null,
+                        ),
                     ),
-                ),
             )
 
         val reportingWithSemaphoreId =
             aReporting(
-                reportingSources = listOf(
-                    ReportingSourceEntity(
-                        id = null,
-                        reportingId = null,
-                        sourceType = SourceTypeEnum.OTHER,
-                        semaphoreId = 1,
-                        controlUnitId = null,
-                        sourceName = null,
+                reportingSources =
+                    listOf(
+                        ReportingSourceEntity(
+                            id = null,
+                            reportingId = null,
+                            sourceType = SourceTypeEnum.OTHER,
+                            semaphoreId = 1,
+                            controlUnitId = null,
+                            sourceName = null,
+                        ),
                     ),
-                ),
             )
 
         val reportingWithoutSourceName =
             aReporting(
-                reportingSources = listOf(
-                    ReportingSourceEntity(
-                        id = null,
-                        reportingId = null,
-                        sourceType = SourceTypeEnum.OTHER,
-                        semaphoreId = null,
-                        controlUnitId = null,
-                        sourceName = null,
+                reportingSources =
+                    listOf(
+                        ReportingSourceEntity(
+                            id = null,
+                            reportingId = null,
+                            sourceType = SourceTypeEnum.OTHER,
+                            semaphoreId = null,
+                            controlUnitId = null,
+                            sourceName = null,
+                        ),
                     ),
-                ),
             )
 
         // When

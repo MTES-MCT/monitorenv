@@ -19,26 +19,29 @@ class GetControlUnitContactByIdUTests {
     @Test
     fun `execute should return a control unit contact by its ID`() {
         val controlUnitContactId = 1
-        val fullControlUnitContact = FullControlUnitContactDTO(
-            controlUnit = ControlUnitEntity(
-                id = 0,
-                administrationId = 0,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Control Unit Name",
-                termsNote = null,
-            ),
-            controlUnitContact = ControlUnitContactEntity(
-                id = 1,
-                controlUnitId = 0,
-                email = null,
-                name = "Control Unit Contact Name",
-                isEmailSubscriptionContact = false,
-                isSmsSubscriptionContact = false,
-                phone = null,
-            ),
-        )
+        val fullControlUnitContact =
+            FullControlUnitContactDTO(
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitContact =
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 0,
+                        email = null,
+                        name = "Control Unit Contact Name",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = false,
+                        phone = null,
+                    ),
+            )
 
         given(controlUnitContactRepository.findById(controlUnitContactId)).willReturn(fullControlUnitContact)
 

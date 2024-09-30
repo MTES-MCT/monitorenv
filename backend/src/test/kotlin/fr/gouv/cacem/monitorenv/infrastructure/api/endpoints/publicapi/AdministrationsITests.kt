@@ -97,16 +97,18 @@ class AdministrationsITests {
 
     @Test
     fun `create() should create an administration`() {
-        val expectedCreatedAdministration = AdministrationEntity(
-            id = 1,
-            isArchived = false,
-            name = "Administration Name",
-        )
+        val expectedCreatedAdministration =
+            AdministrationEntity(
+                id = 1,
+                isArchived = false,
+                name = "Administration Name",
+            )
 
-        val newAdministrationData = CreateOrUpdateAdministrationDataInput(
-            isArchived = false,
-            name = "Administration Name",
-        )
+        val newAdministrationData =
+            CreateOrUpdateAdministrationDataInput(
+                isArchived = false,
+                name = "Administration Name",
+            )
         val requestBody = objectMapper.writeValueAsString(newAdministrationData)
 
         given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedCreatedAdministration)
@@ -135,14 +137,16 @@ class AdministrationsITests {
 
     @Test
     fun `get() should get an administration by its ID`() {
-        val expectedFullAdministration = FullAdministrationDTO(
-            administration = AdministrationEntity(
-                id = 1,
-                isArchived = false,
-                name = "Administration Name",
-            ),
-            controlUnits = listOf(),
-        )
+        val expectedFullAdministration =
+            FullAdministrationDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 1,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
+                controlUnits = listOf(),
+            )
 
         val requestedId = 1
 
@@ -156,25 +160,27 @@ class AdministrationsITests {
 
     @Test
     fun `getAll() should get all administrations`() {
-        val expectedAFulldministrations = listOf(
-            FullAdministrationDTO(
-                administration = AdministrationEntity(
-                    id = 1,
-                    isArchived = false,
-                    name = "Administration Name",
+        val expectedAFulldministrations =
+            listOf(
+                FullAdministrationDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 1,
+                            isArchived = false,
+                            name = "Administration Name",
+                        ),
+                    controlUnits = listOf(),
                 ),
-                controlUnits = listOf(),
-            ),
-
-            FullAdministrationDTO(
-                administration = AdministrationEntity(
-                    id = 2,
-                    isArchived = false,
-                    name = "Administration Name 2",
+                FullAdministrationDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 2,
+                            isArchived = false,
+                            name = "Administration Name 2",
+                        ),
+                    controlUnits = listOf(),
                 ),
-                controlUnits = listOf(),
-            ),
-        )
+            )
 
         given(getAdministrations.execute()).willReturn(expectedAFulldministrations)
 
@@ -187,17 +193,19 @@ class AdministrationsITests {
 
     @Test
     fun `update() should update an administration`() {
-        val expectedUpdatedAdministration = AdministrationEntity(
-            id = 1,
-            isArchived = false,
-            name = "Updated Administration Name",
-        )
+        val expectedUpdatedAdministration =
+            AdministrationEntity(
+                id = 1,
+                isArchived = false,
+                name = "Updated Administration Name",
+            )
 
-        val nextAdministrationData = CreateOrUpdateAdministrationDataInput(
-            id = 1,
-            isArchived = false,
-            name = "Updated Administration Name",
-        )
+        val nextAdministrationData =
+            CreateOrUpdateAdministrationDataInput(
+                id = 1,
+                isArchived = false,
+                name = "Updated Administration Name",
+            )
         val requestBody = objectMapper.writeValueAsString(nextAdministrationData)
 
         given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedUpdatedAdministration)

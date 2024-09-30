@@ -5,9 +5,14 @@ import org.locationtech.jts.geom.Geometry
 
 interface IVigilanceAreaRepository {
     fun findAll(): List<VigilanceAreaEntity>
+
     fun findById(id: Int): VigilanceAreaEntity?
+
     fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity
+
     fun delete(id: Int)
+
     fun archiveOutdatedVigilanceAreas(): Int
+
     fun findAllByGeometry(geometry: Geometry): List<VigilanceAreaEntity>
 }

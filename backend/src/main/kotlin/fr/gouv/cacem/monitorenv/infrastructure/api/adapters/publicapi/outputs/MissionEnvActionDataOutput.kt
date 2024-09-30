@@ -15,9 +15,7 @@ abstract class MissionEnvActionDataOutput(
     open val observationsByUnit: String? = null,
 ) {
     companion object {
-        fun fromEnvActionEntity(
-            envActionEntity: EnvActionEntity,
-        ): MissionEnvActionDataOutput {
+        fun fromEnvActionEntity(envActionEntity: EnvActionEntity): MissionEnvActionDataOutput {
             return when (envActionEntity.actionType) {
                 ActionTypeEnum.CONTROL ->
                     MissionEnvActionControlDataOutput.fromEnvActionControlEntity(
@@ -27,7 +25,7 @@ abstract class MissionEnvActionDataOutput(
                 ActionTypeEnum.SURVEILLANCE ->
                     MissionEnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
                         envActionSurveillanceEntity =
-                        envActionEntity as EnvActionSurveillanceEntity,
+                            envActionEntity as EnvActionSurveillanceEntity,
                     )
 
                 ActionTypeEnum.NOTE ->

@@ -23,23 +23,22 @@ data class EnvActionSurveillanceProperties(
         geom: Geometry?,
         observationsByUnit: String?,
         openBy: String?,
-    ) =
-        EnvActionSurveillanceEntity(
-            id = id,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionEndDateTimeUtc = actionEndDateTimeUtc,
-            awareness = awareness,
-            completedBy = completedBy,
-            completion = completion,
-            controlPlans = controlPlans,
-            department = department,
-            facade = facade,
-            geom = geom,
-            missionId = missionId,
-            observations = observations,
-            observationsByUnit = observationsByUnit,
-            openBy = openBy,
-        )
+    ) = EnvActionSurveillanceEntity(
+        id = id,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionEndDateTimeUtc = actionEndDateTimeUtc,
+        awareness = awareness,
+        completedBy = completedBy,
+        completion = completion,
+        controlPlans = controlPlans,
+        department = department,
+        facade = facade,
+        geom = geom,
+        missionId = missionId,
+        observations = observations,
+        observationsByUnit = observationsByUnit,
+        openBy = openBy,
+    )
 
     companion object {
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) =

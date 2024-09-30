@@ -13,14 +13,15 @@ data class RegulatoryAreaDataOutput(
     val type: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreaDataOutput(
-            id = regulatoryArea.id,
-            entity_name = regulatoryArea.entity_name,
-            geom = regulatoryArea.geom,
-            layer_name = regulatoryArea.layer_name,
-            ref_reg = regulatoryArea.ref_reg,
-            thematique = regulatoryArea.thematique,
-            type = regulatoryArea.type,
-        )
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
+            RegulatoryAreaDataOutput(
+                id = regulatoryArea.id,
+                entity_name = regulatoryArea.entity_name,
+                geom = regulatoryArea.geom,
+                layer_name = regulatoryArea.layer_name,
+                ref_reg = regulatoryArea.ref_reg,
+                thematique = regulatoryArea.thematique,
+                type = regulatoryArea.type,
+            )
     }
 }

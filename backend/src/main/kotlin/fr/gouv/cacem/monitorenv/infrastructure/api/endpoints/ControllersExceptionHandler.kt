@@ -34,9 +34,7 @@ class ControllersExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BackendInternalException::class)
-    fun handleBackendInternalException(
-        e: BackendInternalException,
-    ): BackendInternalErrorDataOutput {
+    fun handleBackendInternalException(e: BackendInternalException): BackendInternalErrorDataOutput {
         return BackendInternalErrorDataOutput()
     }
 

@@ -16,6 +16,7 @@ class GetControlPlansByYear(
     private val controlPlanTagRepository: IControlPlanTagRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetControlPlansByYear::class.java)
+
     fun execute(year: Int): ControlPlanByYear {
         val controlPlanThemes = controlPlanThemeRepository.findByYear(year)
         val controlPlanSubThemes = controlPlanSubThemeRepository.findByYear(year)

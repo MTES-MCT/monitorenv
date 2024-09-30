@@ -41,9 +41,7 @@ data class ReportingsDataOutput(
     val isInfractionProven: Boolean,
 ) {
     companion object {
-        fun fromReportingDTO(
-            dto: ReportingDTO,
-        ): ReportingsDataOutput {
+        fun fromReportingDTO(dto: ReportingDTO): ReportingsDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingsDataOutput(
                 id = dto.reporting.id,

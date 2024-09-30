@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 class Healthcheck(
     private val getHealthcheck: GetHealthcheck,
 ) {
-
     @GetMapping("")
     @Operation(summary = "Get healtcheck for all resources")
     fun getHealthcheck(): HealthcheckDataOutput {

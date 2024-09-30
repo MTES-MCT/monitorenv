@@ -24,7 +24,6 @@ import java.time.temporal.ChronoUnit
     properties = ["monitorenv.scheduling.enabled=false"],
 )
 abstract class AbstractDBTests {
-
     @MockBean private lateinit var jwtDecoder: JwtDecoder
 
     @MockBean private lateinit var customAuthenticationEntryPoint: CustomAuthenticationEntryPoint

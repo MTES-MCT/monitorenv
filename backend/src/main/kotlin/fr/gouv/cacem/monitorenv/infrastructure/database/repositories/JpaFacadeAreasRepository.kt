@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 class JpaFacadeAreasRepository(private val dbFacadeAreasRepository: IDBFacadeAreasRepository) :
     IFacadeAreasRepository {
-
     override fun findFacadeFromGeometry(geometry: Geometry): String? {
         return dbFacadeAreasRepository.findFacadeFromGeometry(geometry)
     }

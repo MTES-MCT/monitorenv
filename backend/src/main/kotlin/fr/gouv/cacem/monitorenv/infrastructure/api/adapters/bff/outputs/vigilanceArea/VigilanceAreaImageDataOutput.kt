@@ -14,9 +14,7 @@ class VigilanceAreaImageDataOutput(
     val size: Int,
 ) {
     companion object {
-        fun fromVigilanceAreaImage(
-            vigilanceAreaImage: ImageEntity,
-        ): VigilanceAreaImageDataOutput {
+        fun fromVigilanceAreaImage(vigilanceAreaImage: ImageEntity): VigilanceAreaImageDataOutput {
             return VigilanceAreaImageDataOutput(
                 id = vigilanceAreaImage.id,
                 vigilanceAreaId = vigilanceAreaImage.vigilanceAreaId,

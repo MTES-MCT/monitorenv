@@ -15,31 +15,23 @@ data class ControlUnitContactModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
     val controlUnit: ControlUnitModel,
-
     @Column(name = "email")
     val email: String?,
-
     @Column(name = "is_email_subscription_contact")
     val isEmailSubscriptionContact: Boolean,
-
     @Column(name = "is_sms_subscription_contact")
     val isSmsSubscriptionContact: Boolean,
-
     @Column(name = "name")
     val name: String,
-
     @Column(name = "phone")
     val phone: String?,
-
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
     val createdAtUtc: Instant? = null,
-
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,

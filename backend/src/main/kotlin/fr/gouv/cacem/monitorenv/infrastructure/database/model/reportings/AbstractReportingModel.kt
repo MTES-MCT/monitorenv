@@ -131,7 +131,6 @@ abstract class AbstractReportingModel(
     @Column(name = "with_vhf_answer") open val withVHFAnswer: Boolean? = null,
     @Column(name = "is_infraction_proven") open val isInfractionProven: Boolean,
 ) {
-
     fun toReporting() =
         ReportingEntity(
             id = id,
@@ -169,22 +168,22 @@ abstract class AbstractReportingModel(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             attachedMission =
-            if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
-            ) {
-                mission?.toMissionEntity(
-                    objectMapper,
-                )
-            } else {
-                null
-            },
+                if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
+                ) {
+                    mission?.toMissionEntity(
+                        objectMapper,
+                    )
+                } else {
+                    null
+                },
             detachedMission =
-            if (detachedFromMissionAtUtc != null) {
-                mission?.toMissionEntity(
-                    objectMapper,
-                )
-            } else {
-                null
-            },
+                if (detachedFromMissionAtUtc != null) {
+                    mission?.toMissionEntity(
+                        objectMapper,
+                    )
+                } else {
+                    null
+                },
         )
     }
 
@@ -204,33 +203,32 @@ abstract class AbstractReportingModel(
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
             controlPlanThemeReference: ControlPlanThemeModel?,
-        ) =
-            ReportingModel(
-                id = reporting.id,
-                reportingId = reporting.reportingId,
-                targetType = reporting.targetType,
-                vehicleType = reporting.vehicleType,
-                targetDetails = reporting.targetDetails,
-                geom = reporting.geom,
-                seaFront = reporting.seaFront,
-                description = reporting.description,
-                reportType = reporting.reportType,
-                controlPlanTheme = controlPlanThemeReference,
-                actionTaken = reporting.actionTaken,
-                isControlRequired = reporting.isControlRequired,
-                hasNoUnitAvailable = reporting.hasNoUnitAvailable,
-                createdAt = reporting.createdAt.toInstant(),
-                validityTime = reporting.validityTime,
-                isArchived = reporting.isArchived,
-                isDeleted = reporting.isDeleted,
-                openBy = reporting.openBy,
-                mission = missionReference,
-                attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
-                detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
-                attachedEnvAction = envActionReference,
-                updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
-                withVHFAnswer = reporting.withVHFAnswer,
-                isInfractionProven = reporting.isInfractionProven,
-            )
+        ) = ReportingModel(
+            id = reporting.id,
+            reportingId = reporting.reportingId,
+            targetType = reporting.targetType,
+            vehicleType = reporting.vehicleType,
+            targetDetails = reporting.targetDetails,
+            geom = reporting.geom,
+            seaFront = reporting.seaFront,
+            description = reporting.description,
+            reportType = reporting.reportType,
+            controlPlanTheme = controlPlanThemeReference,
+            actionTaken = reporting.actionTaken,
+            isControlRequired = reporting.isControlRequired,
+            hasNoUnitAvailable = reporting.hasNoUnitAvailable,
+            createdAt = reporting.createdAt.toInstant(),
+            validityTime = reporting.validityTime,
+            isArchived = reporting.isArchived,
+            isDeleted = reporting.isDeleted,
+            openBy = reporting.openBy,
+            mission = missionReference,
+            attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
+            detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
+            attachedEnvAction = envActionReference,
+            updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
+            withVHFAnswer = reporting.withVHFAnswer,
+            isInfractionProven = reporting.isInfractionProven,
+        )
     }
 }

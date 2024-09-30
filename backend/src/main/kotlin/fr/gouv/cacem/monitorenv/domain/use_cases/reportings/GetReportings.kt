@@ -33,8 +33,9 @@ class GetReportings(
                 reportingType = reportingType,
                 seaFronts = seaFronts,
                 sourcesType = sourcesType,
-                startedAfter = startedAfterDateTime?.toInstant()
-                    ?: ZonedDateTime.now().minusDays(30).toInstant(),
+                startedAfter =
+                    startedAfterDateTime?.toInstant()
+                        ?: ZonedDateTime.now().minusDays(30).toInstant(),
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 status = status,
                 targetTypes = targetTypes,

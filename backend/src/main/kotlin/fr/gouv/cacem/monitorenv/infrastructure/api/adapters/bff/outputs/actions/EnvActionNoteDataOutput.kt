@@ -12,10 +12,10 @@ data class EnvActionNoteDataOutput(
     val observations: String? = null,
 ) :
     EnvActionDataOutput(
-        id = id,
-        actionStartDateTimeUtc = actionStartDateTimeUtc,
-        actionType = ActionTypeEnum.NOTE,
-    ) {
+            id = id,
+            actionStartDateTimeUtc = actionStartDateTimeUtc,
+            actionType = ActionTypeEnum.NOTE,
+        ) {
     companion object {
         fun fromEnvActionNoteEntity(envActionNoteEntity: EnvActionNoteEntity) =
             EnvActionNoteDataOutput(

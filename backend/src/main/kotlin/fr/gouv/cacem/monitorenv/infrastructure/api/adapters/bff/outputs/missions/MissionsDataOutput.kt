@@ -44,13 +44,13 @@ data class MissionsDataOutput(
                 startDateTimeUtc = dto.mission.startDateTimeUtc,
                 endDateTimeUtc = dto.mission.endDateTimeUtc,
                 envActions =
-                dto.mission.envActions?.map {
-                    EnvActionDataOutput.fromEnvActionEntity(
-                        envActionEntity = it,
-                        envActionsAttachedToReportingIds =
-                        dto.envActionsAttachedToReportingIds,
-                    )
-                },
+                    dto.mission.envActions?.map {
+                        EnvActionDataOutput.fromEnvActionEntity(
+                            envActionEntity = it,
+                            envActionsAttachedToReportingIds =
+                                dto.envActionsAttachedToReportingIds,
+                        )
+                    },
                 missionSource = dto.mission.missionSource,
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,

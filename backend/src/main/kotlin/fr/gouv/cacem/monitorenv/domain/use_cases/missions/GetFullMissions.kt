@@ -13,6 +13,7 @@ class GetFullMissions(
     private val missionRepository: IMissionRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetFullMissions::class.java)
+
     fun execute(
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
@@ -25,14 +26,15 @@ class GetFullMissions(
     ): List<MissionDTO> {
         val missions =
             missionRepository.findAllFullMissions(
-                startedAfter = startedAfterDateTime?.toInstant()
-                    ?: ZonedDateTime.now().minusDays(30).toInstant(),
+                startedAfter =
+                    startedAfterDateTime?.toInstant()
+                        ?: ZonedDateTime.now().minusDays(30).toInstant(),
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 missionSources =
-                listOf(
-                    MissionSourceEnum.MONITORENV,
-                    MissionSourceEnum.MONITORFISH,
-                ),
+                    listOf(
+                        MissionSourceEnum.MONITORENV,
+                        MissionSourceEnum.MONITORFISH,
+                    ),
                 missionTypes = missionTypes,
                 missionStatuses = missionStatuses,
                 seaFronts = seaFronts,

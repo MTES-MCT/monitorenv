@@ -29,10 +29,11 @@ class BypassActionCheckAndDeleteMission(
                     }
 
                     // detach mission to reporting
-                    val detachedReporting = reporting.reporting.copy(
-                        detachedFromMissionAtUtc = ZonedDateTime.now(),
-                        attachedEnvActionId = null,
-                    )
+                    val detachedReporting =
+                        reporting.reporting.copy(
+                            detachedFromMissionAtUtc = ZonedDateTime.now(),
+                            attachedEnvActionId = null,
+                        )
                     reportingRepository.save(detachedReporting)
                 }
             }

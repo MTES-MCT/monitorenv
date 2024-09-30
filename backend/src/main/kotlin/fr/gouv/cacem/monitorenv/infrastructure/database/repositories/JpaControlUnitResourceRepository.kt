@@ -48,11 +48,12 @@ class JpaControlUnitResourceRepository(
             val controlUnitModel =
                 requirePresent(dbControlUnitRepository.findById(controlUnitResource.controlUnitId))
             val stationModel = requirePresent(dbBaseRepository.findById(controlUnitResource.stationId))
-            val controlUnitResourceModel = ControlUnitResourceModel.fromControlUnitResource(
-                controlUnitResource,
-                controlUnitModel,
-                stationModel,
-            )
+            val controlUnitResourceModel =
+                ControlUnitResourceModel.fromControlUnitResource(
+                    controlUnitResource,
+                    controlUnitModel,
+                    stationModel,
+                )
 
             dbControlUnitResourceRepository.save(controlUnitResourceModel).toControlUnitResource()
         } catch (e: InvalidDataAccessApiUsageException) {

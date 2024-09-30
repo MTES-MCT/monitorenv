@@ -50,11 +50,11 @@ data class MissionWithRapportNavActionsDataOutput(
                 createdAtUtc = mission.createdAtUtc,
                 updatedAtUtc = mission.updatedAtUtc,
                 envActions =
-                mission.envActions?.map {
-                    MissionEnvActionDataOutput.fromEnvActionEntity(
-                        envActionEntity = it,
-                    )
-                },
+                    mission.envActions?.map {
+                        MissionEnvActionDataOutput.fromEnvActionEntity(
+                            envActionEntity = it,
+                        )
+                    },
                 missionSource = mission.missionSource,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
@@ -81,20 +81,21 @@ data class MissionWithRapportNavActionsDataOutput(
                 createdAtUtc = missionDto.mission.createdAtUtc,
                 updatedAtUtc = missionDto.mission.updatedAtUtc,
                 envActions =
-                missionDto.mission.envActions?.map {
-                    MissionEnvActionDataOutput.fromEnvActionEntity(
-                        envActionEntity = it,
-                    )
-                },
+                    missionDto.mission.envActions?.map {
+                        MissionEnvActionDataOutput.fromEnvActionEntity(
+                            envActionEntity = it,
+                        )
+                    },
                 missionSource = missionDto.mission.missionSource,
                 hasMissionOrder = missionDto.mission.hasMissionOrder,
                 isUnderJdp = missionDto.mission.isUnderJdp,
                 isGeometryComputedFromControls = missionDto.mission.isGeometryComputedFromControls,
-                hasRapportNavActions = missionDto.hasRapportNavActions?.let {
-                    RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(
-                        it,
-                    )
-                },
+                hasRapportNavActions =
+                    missionDto.hasRapportNavActions?.let {
+                        RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(
+                            it,
+                        )
+                    },
             )
         }
     }

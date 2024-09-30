@@ -40,7 +40,7 @@ class Missions(
                 mission = createMissionDataInput.toMissionEntity(),
                 attachedReportingIds = createMissionDataInput.attachedReportingIds,
                 envActionsAttachedToReportingIds =
-                createMissionDataInput.getEnvActionsAttachedToReportings(),
+                    createMissionDataInput.getEnvActionsAttachedToReportings(),
             )
 
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
@@ -79,9 +79,10 @@ class Missions(
         @PathVariable(name = "missionId")
         missionId: Int,
     ): ResponseEntity<MissionDataOutput> {
-        val (fishActionsApiResponds, mission) = getFullMissionWithFishAndRapportNavActions.execute(
-            missionId = missionId,
-        )
+        val (fishActionsApiResponds, mission) =
+            getFullMissionWithFishAndRapportNavActions.execute(
+                missionId = missionId,
+            )
 
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
 
@@ -157,7 +158,7 @@ class Missions(
                 mission = updateMissionDataInput.toMissionEntity(),
                 attachedReportingIds = updateMissionDataInput.attachedReportingIds,
                 envActionsAttachedToReportingIds =
-                updateMissionDataInput.getEnvActionsAttachedToReportings(),
+                    updateMissionDataInput.getEnvActionsAttachedToReportings(),
             )
 
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT

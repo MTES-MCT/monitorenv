@@ -19,7 +19,6 @@ class RegulatoryAreas(
     private val getAllRegulatoryAreas: GetAllRegulatoryAreas,
     private val getRegulatoryAreaById: GetRegulatoryAreaById,
 ) {
-
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")
     fun get(

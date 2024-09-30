@@ -36,15 +36,16 @@ class AmpsITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val wktReader = WKTReader()
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val amp = AMPEntity(
-            id = 1,
-            designation = "ma designation",
-            geom = polygon,
-            name = "mon nom",
-            ref_reg = "ma ref reg",
-            type = "mon type",
-            url_legicem = "mon url legicem",
-        )
+        val amp =
+            AMPEntity(
+                id = 1,
+                designation = "ma designation",
+                geom = polygon,
+                name = "mon nom",
+                ref_reg = "ma ref reg",
+                type = "mon type",
+                url_legicem = "mon url legicem",
+            )
         given(getAllAMPs.execute()).willReturn(listOf(amp))
 
         // When

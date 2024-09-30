@@ -37,9 +37,7 @@ data class MissionAttachedReportingDataOutput(
     val missionId: Int? = null,
 ) {
     companion object {
-        fun fromReportingDTO(
-            dto: ReportingDTO,
-        ): MissionAttachedReportingDataOutput {
+        fun fromReportingDTO(dto: ReportingDTO): MissionAttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return MissionAttachedReportingDataOutput(
                 id = dto.reporting.id,

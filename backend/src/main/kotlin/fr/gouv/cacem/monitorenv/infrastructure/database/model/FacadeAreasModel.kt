@@ -12,10 +12,8 @@ data class FacadeAreasModel(
     @Id
     @Column(name = "id")
     val id: Int,
-
     @Column(name = "facade")
     val facade: String,
-
     @Column(name = "geometry")
     val geometry: MultiPolygon? = null,
 )

@@ -33,7 +33,6 @@ data class MissionWithFishAndRapportNavActionsDataOutput(
     val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
 ) : MissionOutput {
     companion object {
-
         fun fromMissionDTO(missionDto: MissionDTO): MissionWithFishAndRapportNavActionsDataOutput {
             requireNotNull(missionDto.mission.id) { "a mission must have an id" }
 
@@ -53,25 +52,27 @@ data class MissionWithFishAndRapportNavActionsDataOutput(
                 createdAtUtc = missionDto.mission.createdAtUtc,
                 updatedAtUtc = missionDto.mission.updatedAtUtc,
                 envActions =
-                missionDto.mission.envActions?.map {
-                    MissionEnvActionDataOutput.fromEnvActionEntity(
-                        envActionEntity = it,
-                    )
-                },
+                    missionDto.mission.envActions?.map {
+                        MissionEnvActionDataOutput.fromEnvActionEntity(
+                            envActionEntity = it,
+                        )
+                    },
                 missionSource = missionDto.mission.missionSource,
                 hasMissionOrder = missionDto.mission.hasMissionOrder,
                 isUnderJdp = missionDto.mission.isUnderJdp,
                 isGeometryComputedFromControls = missionDto.mission.isGeometryComputedFromControls,
-                fishActions = missionDto.fishActions?.map {
-                    MonitorFishMissionActionDataOutput.fromMonitorFishMissionActionEntity(
-                        it,
-                    )
-                },
-                hasRapportNavActions = missionDto.hasRapportNavActions?.let {
-                    RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(
-                        it,
-                    )
-                },
+                fishActions =
+                    missionDto.fishActions?.map {
+                        MonitorFishMissionActionDataOutput.fromMonitorFishMissionActionEntity(
+                            it,
+                        )
+                    },
+                hasRapportNavActions =
+                    missionDto.hasRapportNavActions?.let {
+                        RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(
+                            it,
+                        )
+                    },
             )
         }
     }

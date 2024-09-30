@@ -24,43 +24,33 @@ data class ControlUnitModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id", nullable = false)
     @JsonBackReference
     val administration: AdministrationModel,
-
     @Column(name = "area_note")
     val areaNote: String? = null,
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
     @Fetch(FetchMode.SUBSELECT)
     val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
     @Fetch(FetchMode.SUBSELECT)
     val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_area_insee_dep")
     @JsonBackReference
     val departmentArea: DepartmentAreaModel? = null,
-
     @Column(name = "archived", nullable = false)
     val isArchived: Boolean,
-
     @Column(name = "name", nullable = false)
     val name: String,
-
     @Column(name = "terms_note")
     val termsNote: String? = null,
-
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
     val createdAtUtc: Instant? = null,
-
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,

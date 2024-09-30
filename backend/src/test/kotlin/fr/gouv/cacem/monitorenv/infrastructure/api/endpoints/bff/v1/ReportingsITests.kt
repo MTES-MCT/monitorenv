@@ -94,66 +94,68 @@ class ReportingsITests {
         val reporting =
             ReportingDTO(
                 reporting =
-                ReportingEntity(
-                    id = 1,
-                    reportingSources = listOf(),
-                    targetType = TargetTypeEnum.VEHICLE,
-                    vehicleType = VehicleTypeEnum.VESSEL,
-                    geom = polygon,
-                    seaFront = "Facade 1",
-                    description = "description",
-                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(64, 82),
-                    actionTaken = "actions effectuées blabla",
-                    isControlRequired = true,
-                    hasNoUnitAvailable = true,
-                    createdAt =
-                    ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                    ReportingEntity(
+                        id = 1,
+                        reportingSources = listOf(),
+                        targetType = TargetTypeEnum.VEHICLE,
+                        vehicleType = VehicleTypeEnum.VESSEL,
+                        geom = polygon,
+                        seaFront = "Facade 1",
+                        description = "description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        themeId = 12,
+                        subThemeIds = listOf(64, 82),
+                        actionTaken = "actions effectuées blabla",
+                        isControlRequired = true,
+                        hasNoUnitAvailable = true,
+                        createdAt =
+                            ZonedDateTime.parse(
+                                "2022-01-15T04:50:09Z",
+                            ),
+                        validityTime = 10,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "CDA",
+                        updatedAtUtc =
+                            ZonedDateTime.parse(
+                                "2022-01-15T14:50:09Z",
+                            ),
+                        withVHFAnswer = null,
+                        isInfractionProven = true,
                     ),
-                    validityTime = 10,
-                    isArchived = false,
-                    isDeleted = false,
-                    openBy = "CDA",
-                    updatedAtUtc =
-                    ZonedDateTime.parse(
-                        "2022-01-15T14:50:09Z",
-                    ),
-                    withVHFAnswer = null,
-                    isInfractionProven = true,
-                ),
-                reportingSources = listOf(
-                    ReportingSourceDTO(
-                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                        semaphore = SemaphoreEntity(
-                            id = 1,
-                            name = "name",
-                            geom =
-                            WKTReader()
-                                .read(
-                                    "POINT (-61.0 14.0)",
-                                ) as
-                                Point,
-
+                reportingSources =
+                    listOf(
+                        ReportingSourceDTO(
+                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                            semaphore =
+                                SemaphoreEntity(
+                                    id = 1,
+                                    name = "name",
+                                    geom =
+                                        WKTReader()
+                                            .read(
+                                                "POINT (-61.0 14.0)",
+                                            ) as
+                                            Point,
+                                ),
+                            controlUnit = null,
                         ),
-                        controlUnit = null,
                     ),
-                ),
             )
 
         val request =
             CreateOrUpdateReportingDataInput(
-                reportingSources = listOf(
-                    ReportingSourceDataInput(
-                        id = null,
-                        sourceType = SourceTypeEnum.SEMAPHORE,
-                        semaphoreId = 1,
-                        reportingId = null,
-                        controlUnitId = null,
-                        sourceName = null,
+                reportingSources =
+                    listOf(
+                        ReportingSourceDataInput(
+                            id = null,
+                            sourceType = SourceTypeEnum.SEMAPHORE,
+                            semaphoreId = 1,
+                            reportingId = null,
+                            controlUnitId = null,
+                            sourceName = null,
+                        ),
                     ),
-                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -165,16 +167,16 @@ class ReportingsITests {
                 isControlRequired = true,
                 hasNoUnitAvailable = true,
                 createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
-                ),
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
                 validityTime = 10,
                 isArchived = false,
                 openBy = "CDA",
                 updatedAtUtc =
-                ZonedDateTime.parse(
-                    "2022-01-15T14:50:09Z",
-                ),
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
                 isInfractionProven = true,
             )
 
@@ -227,51 +229,52 @@ class ReportingsITests {
         val reporting =
             ReportingDTO(
                 reporting =
-                ReportingEntity(
-                    id = 1,
-                    reportingSources = listOf(),
-                    targetType = TargetTypeEnum.VEHICLE,
-                    vehicleType = VehicleTypeEnum.VESSEL,
-                    geom = polygon,
-                    seaFront = "Facade 1",
-                    description = "description",
-                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(64, 82),
-                    actionTaken = "actions effectuées blabla",
-                    isControlRequired = true,
-                    hasNoUnitAvailable = true,
-                    createdAt =
-                    ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                    ReportingEntity(
+                        id = 1,
+                        reportingSources = listOf(),
+                        targetType = TargetTypeEnum.VEHICLE,
+                        vehicleType = VehicleTypeEnum.VESSEL,
+                        geom = polygon,
+                        seaFront = "Facade 1",
+                        description = "description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        themeId = 12,
+                        subThemeIds = listOf(64, 82),
+                        actionTaken = "actions effectuées blabla",
+                        isControlRequired = true,
+                        hasNoUnitAvailable = true,
+                        createdAt =
+                            ZonedDateTime.parse(
+                                "2022-01-15T04:50:09Z",
+                            ),
+                        validityTime = 10,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "CDA",
+                        updatedAtUtc =
+                            ZonedDateTime.parse(
+                                "2022-01-15T14:50:09Z",
+                            ),
+                        isInfractionProven = true,
                     ),
-                    validityTime = 10,
-                    isArchived = false,
-                    isDeleted = false,
-                    openBy = "CDA",
-                    updatedAtUtc =
-                    ZonedDateTime.parse(
-                        "2022-01-15T14:50:09Z",
-                    ),
-                    isInfractionProven = true,
-                ),
-                reportingSources = listOf(
-                    ReportingSourceDTO(
-                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                        semaphore = SemaphoreEntity(
-                            id = 1,
-                            name = "name",
-                            geom =
-                            WKTReader()
-                                .read(
-                                    "POINT (-61.0 14.0)",
-                                ) as
-                                Point,
-
+                reportingSources =
+                    listOf(
+                        ReportingSourceDTO(
+                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                            semaphore =
+                                SemaphoreEntity(
+                                    id = 1,
+                                    name = "name",
+                                    geom =
+                                        WKTReader()
+                                            .read(
+                                                "POINT (-61.0 14.0)",
+                                            ) as
+                                            Point,
+                                ),
+                            controlUnit = null,
                         ),
-                        controlUnit = null,
                     ),
-                ),
             )
 
         given(getReportingById.execute(any())).willReturn(reporting)
@@ -319,30 +322,30 @@ class ReportingsITests {
         val reporting =
             ReportingDTO(
                 reporting =
-                ReportingEntity(
-                    id = 1,
-                    reportingSources = listOf(),
-                    targetType = TargetTypeEnum.VEHICLE,
-                    vehicleType = VehicleTypeEnum.VESSEL,
-                    geom = polygon,
-                    seaFront = "Facade 1",
-                    description = "description",
-                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(64, 82),
-                    actionTaken = "actions effectuées blabla",
-                    isControlRequired = true,
-                    hasNoUnitAvailable = true,
-                    createdAt =
-                    ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                    ReportingEntity(
+                        id = 1,
+                        reportingSources = listOf(),
+                        targetType = TargetTypeEnum.VEHICLE,
+                        vehicleType = VehicleTypeEnum.VESSEL,
+                        geom = polygon,
+                        seaFront = "Facade 1",
+                        description = "description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        themeId = 12,
+                        subThemeIds = listOf(64, 82),
+                        actionTaken = "actions effectuées blabla",
+                        isControlRequired = true,
+                        hasNoUnitAvailable = true,
+                        createdAt =
+                            ZonedDateTime.parse(
+                                "2022-01-15T04:50:09Z",
+                            ),
+                        validityTime = 10,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "CDA",
+                        isInfractionProven = true,
                     ),
-                    validityTime = 10,
-                    isArchived = false,
-                    isDeleted = false,
-                    openBy = "CDA",
-                    isInfractionProven = true,
-                ),
                 reportingSources = listOf(),
             )
 
@@ -381,41 +384,42 @@ class ReportingsITests {
         val updatedReporting =
             ReportingDTO(
                 reporting =
-                ReportingEntity(
-                    id = 1,
-                    reportingSources = listOf(),
-                    targetType = TargetTypeEnum.VEHICLE,
-                    vehicleType = VehicleTypeEnum.VESSEL,
-                    geom = polygon,
-                    seaFront = "Facade 1",
-                    description = "description",
-                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(64, 82),
-                    actionTaken = "actions effectuées blabla",
-                    isControlRequired = true,
-                    hasNoUnitAvailable = true,
-                    createdAt =
-                    ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                    ReportingEntity(
+                        id = 1,
+                        reportingSources = listOf(),
+                        targetType = TargetTypeEnum.VEHICLE,
+                        vehicleType = VehicleTypeEnum.VESSEL,
+                        geom = polygon,
+                        seaFront = "Facade 1",
+                        description = "description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        themeId = 12,
+                        subThemeIds = listOf(64, 82),
+                        actionTaken = "actions effectuées blabla",
+                        isControlRequired = true,
+                        hasNoUnitAvailable = true,
+                        createdAt =
+                            ZonedDateTime.parse(
+                                "2022-01-15T04:50:09Z",
+                            ),
+                        validityTime = 10,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "CDA",
+                        updatedAtUtc =
+                            ZonedDateTime.parse(
+                                "2022-01-15T14:50:09Z",
+                            ),
+                        isInfractionProven = true,
                     ),
-                    validityTime = 10,
-                    isArchived = false,
-                    isDeleted = false,
-                    openBy = "CDA",
-                    updatedAtUtc =
-                    ZonedDateTime.parse(
-                        "2022-01-15T14:50:09Z",
+                reportingSources =
+                    listOf(
+                        ReportingSourceDTO(
+                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                            SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
+                            null,
+                        ),
                     ),
-                    isInfractionProven = true,
-                ),
-                reportingSources = listOf(
-                    ReportingSourceDTO(
-                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                        SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
-                        null,
-                    ),
-                ),
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(
@@ -433,16 +437,16 @@ class ReportingsITests {
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
                     createdAt =
-                    ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
-                    ),
+                        ZonedDateTime.parse(
+                            "2022-01-15T04:50:09Z",
+                        ),
                     validityTime = 10,
                     isArchived = false,
                     openBy = "CDA",
                     updatedAtUtc =
-                    ZonedDateTime.parse(
-                        "2022-01-15T14:50:09Z",
-                    ),
+                        ZonedDateTime.parse(
+                            "2022-01-15T14:50:09Z",
+                        ),
                     isInfractionProven = true,
                 ),
             )
@@ -536,38 +540,38 @@ class ReportingsITests {
             UpdateReportingEvent(
                 ReportingDTO(
                     reporting =
-                    ReportingEntity(
-                        id = 1,
-                        reportingSources = listOf(ReportingFixture.aReportingSourceSemaphore()),
-                        geom = polygon,
-                        description = "description",
-                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
-                        isControlRequired = true,
-                        hasNoUnitAvailable = true,
-                        createdAt =
-                        ZonedDateTime.parse(
-                            "2022-01-15T04:50:09Z",
+                        ReportingEntity(
+                            id = 1,
+                            reportingSources = listOf(ReportingFixture.aReportingSourceSemaphore()),
+                            geom = polygon,
+                            description = "description",
+                            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                            themeId = 12,
+                            subThemeIds = listOf(64, 82),
+                            isControlRequired = true,
+                            hasNoUnitAvailable = true,
+                            createdAt =
+                                ZonedDateTime.parse(
+                                    "2022-01-15T04:50:09Z",
+                                ),
+                            validityTime = 10,
+                            isArchived = false,
+                            isDeleted = false,
+                            openBy = "CDA",
+                            updatedAtUtc =
+                                ZonedDateTime.parse(
+                                    "2022-01-15T14:50:09Z",
+                                ),
+                            isInfractionProven = true,
                         ),
-                        validityTime = 10,
-                        isArchived = false,
-                        isDeleted = false,
-                        openBy = "CDA",
-                        updatedAtUtc =
-                        ZonedDateTime.parse(
-                            "2022-01-15T14:50:09Z",
+                    reportingSources =
+                        listOf(
+                            ReportingSourceDTO(
+                                reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                                SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
+                                null,
+                            ),
                         ),
-                        isInfractionProven = true,
-                    ),
-                    reportingSources = listOf(
-                        ReportingSourceDTO(
-                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                            SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
-                            null,
-                        ),
-                    ),
-
                 ),
             )
 

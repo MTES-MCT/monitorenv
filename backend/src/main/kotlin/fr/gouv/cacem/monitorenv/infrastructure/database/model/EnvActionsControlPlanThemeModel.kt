@@ -18,30 +18,27 @@ import java.util.UUID
 class EnvActionsControlPlanThemeModel(
     @EmbeddedId
     val id: EnvActionsThemePk,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("envActionId")
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("themeId")
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel? = null,
-
     @Column(name = "order_index", updatable = false, insertable = false)
     val orderIndex: Int? = null,
-
 ) {
     companion object {
         fun fromEnvActionControlPlanThemeEntity(
             envAction: EnvActionModel,
             controlPlanTheme: ControlPlanThemeModel,
         ) = EnvActionsControlPlanThemeModel(
-            id = EnvActionsThemePk(
-                envActionId = envAction.id,
-                themeId = controlPlanTheme.id,
-            ),
+            id =
+                EnvActionsThemePk(
+                    envActionId = envAction.id,
+                    themeId = controlPlanTheme.id,
+                ),
             envAction = envAction,
             controlPlanTheme = controlPlanTheme,
         )
@@ -62,7 +59,6 @@ class EnvActionsControlPlanThemeModel(
 data class EnvActionsThemePk(
     @Column(name = "env_action_id")
     val envActionId: UUID,
-
     @Column(name = "theme_id")
     val themeId: Int,
 ) : Serializable {

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query
 interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> {
     @Query(
         value =
-        """
+            """
             SELECT * FROM regulations_cacem
             WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
         """,

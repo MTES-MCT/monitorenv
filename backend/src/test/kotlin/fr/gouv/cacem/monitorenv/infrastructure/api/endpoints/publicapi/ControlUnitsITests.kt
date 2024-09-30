@@ -96,24 +96,26 @@ class ControlUnitsITests {
 
     @Test
     fun `create() should create a control unit`() {
-        val expectedCreatedControlUnit = ControlUnitEntity(
-            id = 1,
-            administrationId = 0,
-            areaNote = null,
-            departmentAreaInseeCode = null,
-            isArchived = false,
-            name = "Unit Name",
-            termsNote = null,
-        )
+        val expectedCreatedControlUnit =
+            ControlUnitEntity(
+                id = 1,
+                administrationId = 0,
+                areaNote = null,
+                departmentAreaInseeCode = null,
+                isArchived = false,
+                name = "Unit Name",
+                termsNote = null,
+            )
 
-        val newControlUnitData = CreateOrUpdateControlUnitDataInput(
-            administrationId = 2,
-            areaNote = null,
-            departmentAreaInseeCode = null,
-            isArchived = false,
-            name = "Unit Name",
-            termsNote = null,
-        )
+        val newControlUnitData =
+            CreateOrUpdateControlUnitDataInput(
+                administrationId = 2,
+                areaNote = null,
+                departmentAreaInseeCode = null,
+                isArchived = false,
+                name = "Unit Name",
+                termsNote = null,
+            )
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(
@@ -131,24 +133,27 @@ class ControlUnitsITests {
 
     @Test
     fun `get() should get a control unit by its ID`() {
-        val expectedFullControlUnit = FullControlUnitDTO(
-            administration = AdministrationEntity(
-                id = 0,
-                isArchived = false,
-                name = "Administration Name",
-            ),
-            controlUnit = ControlUnitEntity(
-                id = 1,
-                administrationId = 0,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Unit Name",
-                termsNote = null,
-            ),
-            controlUnitContacts = listOf(),
-            controlUnitResources = listOf(),
-        )
+        val expectedFullControlUnit =
+            FullControlUnitDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 0,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 1,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitContacts = listOf(),
+                controlUnitResources = listOf(),
+            )
 
         val requestedId = 1
 
@@ -162,45 +167,49 @@ class ControlUnitsITests {
 
     @Test
     fun `getAll() should get all control units`() {
-        val expectedControlUnits = listOf(
-            FullControlUnitDTO(
-                administration = AdministrationEntity(
-                    id = 0,
-                    isArchived = false,
-                    name = "Administration Name",
+        val expectedControlUnits =
+            listOf(
+                FullControlUnitDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 0,
+                            isArchived = false,
+                            name = "Administration Name",
+                        ),
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 1,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
+                    controlUnitContacts = listOf(),
+                    controlUnitResources = listOf(),
                 ),
-                controlUnit = ControlUnitEntity(
-                    id = 1,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
+                FullControlUnitDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 0,
+                            isArchived = false,
+                            name = "Administration Name",
+                        ),
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 2,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name 2",
+                            termsNote = null,
+                        ),
+                    controlUnitContacts = listOf(),
+                    controlUnitResources = listOf(),
                 ),
-                controlUnitContacts = listOf(),
-                controlUnitResources = listOf(),
-            ),
-
-            FullControlUnitDTO(
-                administration = AdministrationEntity(
-                    id = 0,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
-                controlUnit = ControlUnitEntity(
-                    id = 2,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name 2",
-                    termsNote = null,
-                ),
-                controlUnitContacts = listOf(),
-                controlUnitResources = listOf(),
-            ),
-        )
+            )
 
         given(getControlUnits.execute()).willReturn(expectedControlUnits)
 
@@ -213,25 +222,27 @@ class ControlUnitsITests {
 
     @Test
     fun `update() should update a control unit`() {
-        val expectedUpdatedControlUnit = ControlUnitEntity(
-            id = 1,
-            administrationId = 0,
-            areaNote = null,
-            departmentAreaInseeCode = null,
-            isArchived = false,
-            name = "Updated Unit Name",
-            termsNote = null,
-        )
+        val expectedUpdatedControlUnit =
+            ControlUnitEntity(
+                id = 1,
+                administrationId = 0,
+                areaNote = null,
+                departmentAreaInseeCode = null,
+                isArchived = false,
+                name = "Updated Unit Name",
+                termsNote = null,
+            )
 
-        val nextControlUnitData = CreateOrUpdateControlUnitDataInput(
-            id = 1,
-            administrationId = 0,
-            areaNote = null,
-            departmentAreaInseeCode = null,
-            isArchived = false,
-            name = "Updated Unit Name",
-            termsNote = null,
-        )
+        val nextControlUnitData =
+            CreateOrUpdateControlUnitDataInput(
+                id = 1,
+                administrationId = 0,
+                areaNote = null,
+                departmentAreaInseeCode = null,
+                isArchived = false,
+                name = "Updated Unit Name",
+                termsNote = null,
+            )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
         given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(expectedUpdatedControlUnit)

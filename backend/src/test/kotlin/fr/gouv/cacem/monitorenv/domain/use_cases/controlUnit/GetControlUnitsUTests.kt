@@ -13,52 +13,56 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetControlUnitsUTests {
-
     @MockBean
     private lateinit var controlUnitRepository: IControlUnitRepository
 
     @Test
     fun `execute should return all control units`() {
-        val fullControlUnits = listOf(
-            FullControlUnitDTO(
-                administration = AdministrationEntity(
-                    id = 0,
-                    name = "Admin 1",
-                    isArchived = false,
+        val fullControlUnits =
+            listOf(
+                FullControlUnitDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 0,
+                            name = "Admin 1",
+                            isArchived = false,
+                        ),
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 1,
+                            administrationId = 0,
+                            areaNote = "Area 1",
+                            departmentAreaInseeCode = "A1",
+                            isArchived = false,
+                            name = "CU 1",
+                            termsNote = "Terms 1",
+                        ),
+                    departmentArea = null,
+                    controlUnitContacts = listOf(),
+                    controlUnitResources = listOf(),
                 ),
-                controlUnit = ControlUnitEntity(
-                    id = 1,
-                    administrationId = 0,
-                    areaNote = "Area 1",
-                    departmentAreaInseeCode = "A1",
-                    isArchived = false,
-                    name = "CU 1",
-                    termsNote = "Terms 1",
+                FullControlUnitDTO(
+                    administration =
+                        AdministrationEntity(
+                            id = 1,
+                            name = "Admin 2",
+                            isArchived = false,
+                        ),
+                    controlUnit =
+                        ControlUnitEntity(
+                            id = 2,
+                            administrationId = 1,
+                            areaNote = "Area 2",
+                            departmentAreaInseeCode = "A2",
+                            isArchived = false,
+                            name = "CU 2",
+                            termsNote = "Terms 2",
+                        ),
+                    departmentArea = null,
+                    controlUnitContacts = listOf(),
+                    controlUnitResources = listOf(),
                 ),
-                departmentArea = null,
-                controlUnitContacts = listOf(),
-                controlUnitResources = listOf(),
-            ),
-            FullControlUnitDTO(
-                administration = AdministrationEntity(
-                    id = 1,
-                    name = "Admin 2",
-                    isArchived = false,
-                ),
-                controlUnit = ControlUnitEntity(
-                    id = 2,
-                    administrationId = 1,
-                    areaNote = "Area 2",
-                    departmentAreaInseeCode = "A2",
-                    isArchived = false,
-                    name = "CU 2",
-                    termsNote = "Terms 2",
-                ),
-                departmentArea = null,
-                controlUnitContacts = listOf(),
-                controlUnitResources = listOf(),
-            ),
-        )
+            )
 
         given(controlUnitRepository.findAll()).willReturn(fullControlUnits)
 

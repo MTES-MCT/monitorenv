@@ -12,14 +12,18 @@ class GetMissionAndSourceAction(
     private val apiFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
     private val apiRapportNavMissionActionsRepository: IRapportNavMissionActionsRepository,
 ) {
-    fun execute(missionId: Int, source: MissionSourceEnum?): MissionDTO {
+    fun execute(
+        missionId: Int,
+        source: MissionSourceEnum?,
+    ): MissionDTO {
         getMission.execute(missionId).let {
             when (source) {
                 MissionSourceEnum.MONITORFISH -> return MissionDTO(
                     it,
-                    hasRapportNavActions = apiRapportNavMissionActionsRepository.findRapportNavMissionActionsById(
-                        missionId,
-                    ),
+                    hasRapportNavActions =
+                        apiRapportNavMissionActionsRepository.findRapportNavMissionActionsById(
+                            missionId,
+                        ),
                 )
 
                 MissionSourceEnum.RAPPORT_NAV -> return MissionDTO(

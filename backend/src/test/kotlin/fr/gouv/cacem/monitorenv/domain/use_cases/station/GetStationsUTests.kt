@@ -17,26 +17,29 @@ class GetStationsUTests {
 
     @Test
     fun `execute should return all stations`() {
-        val stations = listOf(
-            FullStationDTO(
-                station = StationEntity(
-                    id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
+        val stations =
+            listOf(
+                FullStationDTO(
+                    station =
+                        StationEntity(
+                            id = 1,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
+                    controlUnitResources = listOf(),
                 ),
-                controlUnitResources = listOf(),
-            ),
-            FullStationDTO(
-                station = StationEntity(
-                    id = 2,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name 2",
+                FullStationDTO(
+                    station =
+                        StationEntity(
+                            id = 2,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name 2",
+                        ),
+                    controlUnitResources = listOf(),
                 ),
-                controlUnitResources = listOf(),
-            ),
-        )
+            )
 
         given(stationRepository.findAll()).willReturn(stations)
 

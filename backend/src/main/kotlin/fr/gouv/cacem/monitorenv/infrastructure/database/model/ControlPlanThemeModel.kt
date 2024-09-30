@@ -21,10 +21,11 @@ data class ControlPlanThemeModel(
     @Column(name = "theme")
     val theme: String,
 ) {
-    fun toControlPlanThemeEntity() = ControlPlanThemeEntity(
-        id = id,
-        theme = theme,
-    )
+    fun toControlPlanThemeEntity() =
+        ControlPlanThemeEntity(
+            id = id,
+            theme = theme,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -91,10 +91,11 @@ class ControlUnitContacts(
         @RequestBody partialControlUnitContactAsJson: String,
     ): ControlUnitContactDataOutput {
         val existingFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
-        val patchedControlUnitContact = CreateOrUpdateControlUnitContactDataInputV2
-            .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
-            .patchFromRequestData(objectMapper, partialControlUnitContactAsJson)
-            .toControlUnitContact()
+        val patchedControlUnitContact =
+            CreateOrUpdateControlUnitContactDataInputV2
+                .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
+                .patchFromRequestData(objectMapper, partialControlUnitContactAsJson)
+                .toControlUnitContact()
         val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(patchedControlUnitContact)
 
         return ControlUnitContactDataOutput.fromControlUnitContact(updatedControlUnitContact)
@@ -112,10 +113,11 @@ class ControlUnitContacts(
         validateId(incompleteControlUnitContactAsJson, "id", controlUnitContactId, objectMapper)
 
         val existingFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
-        val patchedControlUnitContact = CreateOrUpdateControlUnitContactDataInputV2
-            .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
-            .patchFromRequestData(objectMapper, incompleteControlUnitContactAsJson)
-            .toControlUnitContact()
+        val patchedControlUnitContact =
+            CreateOrUpdateControlUnitContactDataInputV2
+                .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
+                .patchFromRequestData(objectMapper, incompleteControlUnitContactAsJson)
+                .toControlUnitContact()
         val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(patchedControlUnitContact)
 
         return ControlUnitContactDataOutput.fromControlUnitContact(updatedControlUnitContact)

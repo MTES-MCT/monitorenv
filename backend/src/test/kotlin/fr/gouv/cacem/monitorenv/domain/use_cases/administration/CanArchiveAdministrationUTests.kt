@@ -19,24 +19,27 @@ class CanArchiveAdministrationUTests {
     @Test
     fun `execute should return true when all control units are archived`() {
         val administrationId = 1
-        val fullAdministration = FullAdministrationDTO(
-            administration = AdministrationEntity(
-                id = 1,
-                name = "Administration Name",
-                isArchived = false,
-            ),
-            controlUnits = listOf(
-                ControlUnitEntity(
-                    id = 0,
-                    administrationId = 1,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = true,
-                    name = "Control Unit Name",
-                    termsNote = null,
-                ),
-            ),
-        )
+        val fullAdministration =
+            FullAdministrationDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
+                controlUnits =
+                    listOf(
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 1,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = true,
+                            name = "Control Unit Name",
+                            termsNote = null,
+                        ),
+                    ),
+            )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
 
@@ -48,24 +51,27 @@ class CanArchiveAdministrationUTests {
     @Test
     fun `execute should return false when some control units are not archived`() {
         val administrationId = 1
-        val fullAdministration = FullAdministrationDTO(
-            administration = AdministrationEntity(
-                id = 1,
-                name = "Administration Name",
-                isArchived = false,
-            ),
-            controlUnits = listOf(
-                ControlUnitEntity(
-                    id = 0,
-                    administrationId = 1,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Control Unit Name",
-                    termsNote = null,
-                ),
-            ),
-        )
+        val fullAdministration =
+            FullAdministrationDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
+                controlUnits =
+                    listOf(
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 1,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Control Unit Name",
+                            termsNote = null,
+                        ),
+                    ),
+            )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
 

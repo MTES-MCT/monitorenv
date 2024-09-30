@@ -20,7 +20,10 @@ class DeleteMission(
     private val logger = LoggerFactory.getLogger(DeleteMission::class.java)
 
     @Throws(IllegalArgumentException::class)
-    fun execute(missionId: Int?, source: MissionSourceEnum) {
+    fun execute(
+        missionId: Int?,
+        source: MissionSourceEnum,
+    ) {
         require(missionId != null) { "No mission to delete" }
 
         logger.info("Delete mission $missionId")

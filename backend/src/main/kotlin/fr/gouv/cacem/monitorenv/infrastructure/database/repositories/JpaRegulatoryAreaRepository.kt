@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository
 @Repository
 class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository) :
     IRegulatoryAreaRepository {
-
     override fun findAll(): List<RegulatoryAreaEntity> {
         return dbRegulatoryAreaRepository.findAll().map { it.toRegulatoryArea() }
     }

@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit
 class CaffeineConfiguration(
     private val oidcProperties: OIDCProperties,
 ) {
-
     val userAuthorization = "user_authorization"
 
     @Bean

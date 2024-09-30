@@ -17,18 +17,19 @@ data class SemaphoreDataOutput(
     val url: String?,
 ) {
     companion object {
-        fun fromSemaphoreEntity(semaphore: SemaphoreEntity) = SemaphoreDataOutput(
-            id = semaphore.id,
-            geom = semaphore.geom,
-            name = semaphore.name,
-            department = semaphore.department,
-            facade = semaphore.facade,
-            administration = semaphore.administration,
-            unit = semaphore.unit,
-            email = semaphore.email,
-            phoneNumber = semaphore.phoneNumber,
-            base = semaphore.base,
-            url = semaphore.url,
-        )
+        fun fromSemaphoreEntity(semaphore: SemaphoreEntity) =
+            SemaphoreDataOutput(
+                id = semaphore.id,
+                geom = semaphore.geom,
+                name = semaphore.name,
+                department = semaphore.department,
+                facade = semaphore.facade,
+                administration = semaphore.administration,
+                unit = semaphore.unit,
+                email = semaphore.email,
+                phoneNumber = semaphore.phoneNumber,
+                base = semaphore.base,
+                url = semaphore.url,
+            )
     }
 }

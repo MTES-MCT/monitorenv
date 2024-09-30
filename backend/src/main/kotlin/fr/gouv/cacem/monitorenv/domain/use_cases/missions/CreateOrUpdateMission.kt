@@ -19,16 +19,16 @@ class CreateOrUpdateMission(
     private val logger = LoggerFactory.getLogger(CreateOrUpdateMission::class.java)
 
     @Throws(IllegalArgumentException::class)
-    fun execute(
-        mission: MissionEntity,
-    ): MissionEntity {
-        val normalizedMission = mission.geom?.let { nonNullGeom ->
-            mission.copy(geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom))
-        } ?: mission
+    fun execute(mission: MissionEntity): MissionEntity {
+        val normalizedMission =
+            mission.geom?.let { nonNullGeom ->
+                mission.copy(geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom))
+            } ?: mission
 
-        val facade = normalizedMission.geom?.let { nonNullGeom ->
-            facadeRepository.findFacadeFromGeometry(nonNullGeom)
-        }
+        val facade =
+            normalizedMission.geom?.let { nonNullGeom ->
+                facadeRepository.findFacadeFromGeometry(nonNullGeom)
+            }
         val storedMission = normalizedMission.id?.let { id -> missionRepository.findById(id) }
 
         val missionToSave =

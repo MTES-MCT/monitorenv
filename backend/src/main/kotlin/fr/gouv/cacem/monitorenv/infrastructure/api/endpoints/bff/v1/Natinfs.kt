@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 class Natinfs(
     private val getAllNatinfs: GetAllNatinfs,
 ) {
-
     @GetMapping("")
     @Operation(summary = "Get all natinfs")
     fun getAll(): List<NatinfDataOutput> {

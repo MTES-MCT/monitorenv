@@ -24,21 +24,21 @@ abstract class EnvActionDataOutput(
                     EnvActionControlDataOutput.fromEnvActionControlEntity(
                         envActionControlEntity = envActionEntity as EnvActionControlEntity,
                         reportingIds =
-                        envActionsAttachedToReportingIds
-                            ?.find { id -> id.first == envActionEntity.id }
-                            ?.second
-                            ?: listOf(),
+                            envActionsAttachedToReportingIds
+                                ?.find { id -> id.first == envActionEntity.id }
+                                ?.second
+                                ?: listOf(),
                     )
 
                 ActionTypeEnum.SURVEILLANCE ->
                     EnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
                         envActionSurveillanceEntity =
-                        envActionEntity as EnvActionSurveillanceEntity,
+                            envActionEntity as EnvActionSurveillanceEntity,
                         reportingIds =
-                        envActionsAttachedToReportingIds
-                            ?.find { id -> id.first == envActionEntity.id }
-                            ?.second
-                            ?: listOf(),
+                            envActionsAttachedToReportingIds
+                                ?.find { id -> id.first == envActionEntity.id }
+                                ?.second
+                                ?: listOf(),
                     )
 
                 ActionTypeEnum.NOTE ->

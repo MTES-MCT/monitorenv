@@ -15,7 +15,6 @@ import java.util.Optional
 import java.util.UUID
 
 class CreateOrUpdateMissionDataInputUTests {
-
     @Test
     fun `getEnvActionsAttachedToReportings should return reportingIds pairs`() {
         // given

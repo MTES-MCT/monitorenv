@@ -14,8 +14,10 @@ class PatchEnvAction(
     private val envActionRepository: IEnvActionRepository,
     private val patchEnvAction: PatchEntity<EnvActionEntity, PatchableEnvActionEntity>,
 ) {
-
-    fun execute(id: UUID, patchableEnvActionEntity: PatchableEnvActionEntity): EnvActionEntity {
+    fun execute(
+        id: UUID,
+        patchableEnvActionEntity: PatchableEnvActionEntity,
+    ): EnvActionEntity {
         envActionRepository.findById(id)?.let {
             patchEnvAction.execute(it, patchableEnvActionEntity)
             return envActionRepository.save(it)

@@ -23,15 +23,13 @@ data class MissionEnvActionSurveillanceDataOutput(
     val openBy: String? = null,
 ) :
     MissionEnvActionDataOutput(
-        id = id,
-        actionStartDateTimeUtc = actionStartDateTimeUtc,
-        actionType = ActionTypeEnum.SURVEILLANCE,
-        observationsByUnit = observationsByUnit,
-    ) {
+            id = id,
+            actionStartDateTimeUtc = actionStartDateTimeUtc,
+            actionType = ActionTypeEnum.SURVEILLANCE,
+            observationsByUnit = observationsByUnit,
+        ) {
     companion object {
-        fun fromEnvActionSurveillanceEntity(
-            envActionSurveillanceEntity: EnvActionSurveillanceEntity,
-        ) =
+        fun fromEnvActionSurveillanceEntity(envActionSurveillanceEntity: EnvActionSurveillanceEntity) =
             MissionEnvActionSurveillanceDataOutput(
                 id = envActionSurveillanceEntity.id,
                 actionEndDateTimeUtc = envActionSurveillanceEntity.actionEndDateTimeUtc,
@@ -39,10 +37,10 @@ data class MissionEnvActionSurveillanceDataOutput(
                 completedBy = envActionSurveillanceEntity.completedBy,
                 completion = envActionSurveillanceEntity.completion,
                 controlPlans =
-                envActionSurveillanceEntity.controlPlans?.map {
-                    MissionEnvActionControlPlanDataOutput
-                        .fromEnvActionControlPlanEntity(it)
-                },
+                    envActionSurveillanceEntity.controlPlans?.map {
+                        MissionEnvActionControlPlanDataOutput
+                            .fromEnvActionControlPlanEntity(it)
+                    },
                 department = envActionSurveillanceEntity.department,
                 facade = envActionSurveillanceEntity.facade,
                 geom = envActionSurveillanceEntity.geom,

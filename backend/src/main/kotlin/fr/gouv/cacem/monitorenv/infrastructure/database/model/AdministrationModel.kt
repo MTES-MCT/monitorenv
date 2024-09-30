@@ -21,21 +21,16 @@ data class AdministrationModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "administration")
     @JsonManagedReference
     val controlUnits: List<ControlUnitModel>? = mutableListOf(),
-
     @Column(name = "is_archived")
     val isArchived: Boolean,
-
     @Column(name = "name", nullable = false, unique = true)
     val name: String,
-
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
     val createdAtUtc: Instant? = null,
-
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,

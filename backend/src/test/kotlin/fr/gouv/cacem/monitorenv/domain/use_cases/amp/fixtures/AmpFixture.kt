@@ -5,7 +5,6 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 
 class AmpFixture {
-
     companion object {
         fun anAmp(id: Int = 1): AMPEntity {
             val wktReader = WKTReader()

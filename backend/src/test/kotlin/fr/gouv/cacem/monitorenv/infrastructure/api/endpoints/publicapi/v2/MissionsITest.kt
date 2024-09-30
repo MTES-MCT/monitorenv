@@ -39,7 +39,6 @@ import kotlin.random.Random
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [Missions::class])
 class MissionsITest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -73,17 +72,19 @@ class MissionsITest {
             { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc" }
             """.trimIndent()
 
-        val patchedMission = aMissionEntity(
-            id = id,
-            observationsByUnit = observationsByUnit,
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = endDateTimeUtc,
-        )
-        val patchableMissionEntity = PatchableMissionEntity(
-            observationsByUnit = Optional.of(observationsByUnit),
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = Optional.of(endDateTimeUtc),
-        )
+        val patchedMission =
+            aMissionEntity(
+                id = id,
+                observationsByUnit = observationsByUnit,
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = endDateTimeUtc,
+            )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.of(observationsByUnit),
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = Optional.of(endDateTimeUtc),
+            )
 
         given(patchMission.execute(id, patchableMissionEntity))
             .willReturn(MissionDTO(mission = patchedMission))
@@ -148,9 +149,10 @@ class MissionsITest {
     fun `patch() should return 400 when the use case throw BackendUsageException`() {
         // Given
         val unknownId = Random.nextInt()
-        val partialMissionAsJson = """
+        val partialMissionAsJson =
+            """
             {}
-        """.trimIndent()
+            """.trimIndent()
 
         val message = "envAction $unknownId not found"
         given(

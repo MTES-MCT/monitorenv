@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class GetVigilanceAreaByIdUTests {
-
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
 
     @Test

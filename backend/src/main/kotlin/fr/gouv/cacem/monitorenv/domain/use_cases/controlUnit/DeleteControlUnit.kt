@@ -30,9 +30,9 @@ class DeleteControlUnit(
             missionRepository.save(
                 deletedMission.copy(
                     controlUnits =
-                    deletedMission.controlUnits.filter { controlUnit ->
-                        controlUnit.id != controlUnitId
-                    },
+                        deletedMission.controlUnits.filter { controlUnit ->
+                            controlUnit.id != controlUnitId
+                        },
                 ),
             )
         }

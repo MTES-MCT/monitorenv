@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional
 class JpaVigilanceAreaRepository(
     private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
 ) : IVigilanceAreaRepository {
-
     @Transactional
     override fun findById(id: Int): VigilanceAreaEntity? {
         return dbVigilanceAreaRepository.findByIdOrNull(id)?.toVigilanceAreaEntity()

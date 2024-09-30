@@ -11,13 +11,15 @@ class GetLegacyControlUnits(private val controlUnitRepository: IControlUnitRepos
 
     fun execute(): List<LegacyControlUnitEntity> {
         val controlUnits = controlUnitRepository.findAll()
-        val controlUnitsWithActiveControlUnitResources = controlUnits.map { controlUnit ->
-            controlUnit.copy(
-                controlUnitResources = controlUnit.controlUnitResources.filter {
-                    !it.controlUnitResource.isArchived
-                },
-            )
-        }
+        val controlUnitsWithActiveControlUnitResources =
+            controlUnits.map { controlUnit ->
+                controlUnit.copy(
+                    controlUnitResources =
+                        controlUnit.controlUnitResources.filter {
+                            !it.controlUnitResource.isArchived
+                        },
+                )
+            }
         logger.info("Found ${controlUnitsWithActiveControlUnitResources.size} control units.")
 
         return controlUnitsWithActiveControlUnitResources.map { it.toLegacyControlUnit() }

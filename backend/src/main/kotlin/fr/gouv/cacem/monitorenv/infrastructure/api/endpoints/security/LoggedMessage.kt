@@ -8,6 +8,6 @@ class LoggedMessage(private val message: String, private val email: String, val 
                 "email": "$email",
                 "URL": "$url"
             }
-        """.trimIndent()
+            """.trimIndent()
     }
 }

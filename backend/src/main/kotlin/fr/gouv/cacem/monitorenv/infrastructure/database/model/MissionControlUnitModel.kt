@@ -10,22 +10,22 @@ data class MissionControlUnitModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     val id: Int? = null,
-
     @Column(name = "contact")
     val contact: String?,
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     val mission: MissionModel,
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "control_unit_id")
     var unit: ControlUnitModel,
 ) {
     companion object {
-        fun fromLegacyControlUnit(legacyControlUnit: LegacyControlUnitEntity, missionModel: MissionModel) =
-            MissionControlUnitModel(
-                unit = ControlUnitModel(
+        fun fromLegacyControlUnit(
+            legacyControlUnit: LegacyControlUnitEntity,
+            missionModel: MissionModel,
+        ) = MissionControlUnitModel(
+            unit =
+                ControlUnitModel(
                     id = legacyControlUnit.id,
                     administration = AdministrationModel(isArchived = false, name = legacyControlUnit.administration),
                     areaNote = null,
@@ -35,8 +35,8 @@ data class MissionControlUnitModel(
                     name = legacyControlUnit.name,
                     termsNote = null,
                 ),
-                mission = missionModel,
-                contact = legacyControlUnit.contact,
-            )
+            mission = missionModel,
+            contact = legacyControlUnit.contact,
+        )
     }
 }

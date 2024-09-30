@@ -18,14 +18,15 @@ class CreateOrUpdateControlUnitUTests {
 
     @Test
     fun `execute should return save() result`() {
-        val newControlUnit = ControlUnitEntity(
-            administrationId = 2,
-            areaNote = null,
-            departmentAreaInseeCode = null,
-            isArchived = false,
-            name = "Control Unit Name",
-            termsNote = null,
-        )
+        val newControlUnit =
+            ControlUnitEntity(
+                administrationId = 2,
+                areaNote = null,
+                departmentAreaInseeCode = null,
+                isArchived = false,
+                name = "Control Unit Name",
+                termsNote = null,
+            )
 
         val expectatedControlUnit = newControlUnit.copy(id = 0)
 

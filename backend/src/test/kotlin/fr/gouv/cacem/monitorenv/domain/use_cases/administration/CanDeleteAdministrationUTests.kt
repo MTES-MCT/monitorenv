@@ -19,14 +19,16 @@ class CanDeleteAdministrationUTests {
     @Test
     fun `execute should return true when control units are empty`() {
         val administrationId = 1
-        val fullAdministration = FullAdministrationDTO(
-            administration = AdministrationEntity(
-                id = 1,
-                name = "Administration Name",
-                isArchived = false,
-            ),
-            controlUnits = listOf(),
-        )
+        val fullAdministration =
+            FullAdministrationDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
+                controlUnits = listOf(),
+            )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
 
@@ -38,24 +40,27 @@ class CanDeleteAdministrationUTests {
     @Test
     fun `execute should return false when control units are not empty`() {
         val administrationId = 1
-        val fullAdministration = FullAdministrationDTO(
-            administration = AdministrationEntity(
-                id = 1,
-                name = "Administration Name",
-                isArchived = false,
-            ),
-            controlUnits = listOf(
-                ControlUnitEntity(
-                    id = 0,
-                    administrationId = 1,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = true,
-                    name = "Control Unit Name",
-                    termsNote = null,
-                ),
-            ),
-        )
+        val fullAdministration =
+            FullAdministrationDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
+                controlUnits =
+                    listOf(
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 1,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = true,
+                            name = "Control Unit Name",
+                            termsNote = null,
+                        ),
+                    ),
+            )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
 

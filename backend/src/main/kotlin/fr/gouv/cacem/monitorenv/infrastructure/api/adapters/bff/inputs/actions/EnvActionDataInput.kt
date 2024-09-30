@@ -19,10 +19,8 @@ data class EnvActionDataInput(
     val id: UUID,
     val actionType: ActionTypeEnum,
     val actionStartDateTimeUtc: ZonedDateTime? = null,
-
     // Common to all action Types
     val observations: String? = null,
-
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val completedBy: String? = null,
@@ -33,7 +31,6 @@ data class EnvActionDataInput(
     val geom: Geometry? = null,
     val openBy: String? = null,
     val awareness: AwarenessDataInput?,
-
     // EnvActionControl Properties
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
@@ -43,7 +40,6 @@ data class EnvActionDataInput(
     val isComplianceWithWaterRegulationsControl: Boolean? = null,
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     val isSeafarersControl: Boolean? = null,
-
     // complementary properties
     val reportingIds: Optional<List<Int>>,
 ) {
@@ -80,16 +76,16 @@ data class EnvActionDataInput(
                     completedBy = this.completedBy,
                     completion = this.completion,
                     controlPlans =
-                    this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
+                        this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
                     infractions = this.infractions?.map { it.toInfractionEntity() },
                     isAdministrativeControl = this.isAdministrativeControl,
                     isComplianceWithWaterRegulationsControl =
-                    this.isComplianceWithWaterRegulationsControl,
+                        this.isComplianceWithWaterRegulationsControl,
                     isSafetyEquipmentAndStandardsComplianceControl =
-                    this.isSafetyEquipmentAndStandardsComplianceControl,
+                        this.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = this.isSeafarersControl,
                     observations = this.observations,
                     openBy = this.openBy,
@@ -104,7 +100,7 @@ data class EnvActionDataInput(
                     completedBy = this.completedBy,
                     completion = this.completion,
                     controlPlans =
-                    this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
+                        this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,

@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/dashboard")
 @Tag(name = "BFF.Dashboard")
 class Dashboard(private val extractArea: ExtractArea) {
-
     @GetMapping("/extract")
     @Operation(summary = "Extract all data that intercept the given geometry")
-    fun get(@RequestParam(name = "geometry") pGeometry: String): ExtractedAreaDataOutput {
+    fun get(
+        @RequestParam(name = "geometry") pGeometry: String,
+    ): ExtractedAreaDataOutput {
         val wktReader = WKTReader()
         val geometry = wktReader.read(pGeometry)
         return fromExtractAreaEntity(extractArea.execute(geometry = geometry))

@@ -6,19 +6,19 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class JpaVigilanceAreaImageRepositoryITests : AbstractDBTests() {
-
     @Autowired
     private lateinit var jpaVigilanceAreaImageRepository: JpaVigilanceAreaImageRepository
 
     @Test
     fun `should save image`() {
-        val image = ImageEntity(
-            vigilanceAreaId = 1,
-            name = "test_image.jpg",
-            content = byteArrayOf(1, 2, 3, 4),
-            mimeType = "image/jpeg",
-            size = 1024,
-        )
+        val image =
+            ImageEntity(
+                vigilanceAreaId = 1,
+                name = "test_image.jpg",
+                content = byteArrayOf(1, 2, 3, 4),
+                mimeType = "image/jpeg",
+                size = 1024,
+            )
 
         val savedImage = jpaVigilanceAreaImageRepository.save(image)
 

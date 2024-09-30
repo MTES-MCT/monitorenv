@@ -35,25 +35,23 @@ data class EnvActionControlDataOutput(
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     EnvActionDataOutput(
-        id = id,
-        actionStartDateTimeUtc = actionStartDateTimeUtc,
-        actionType = ActionTypeEnum.CONTROL,
-    ) {
-
+            id = id,
+            actionStartDateTimeUtc = actionStartDateTimeUtc,
+            actionType = ActionTypeEnum.CONTROL,
+        ) {
     companion object {
         fun fromEnvActionControlEntity(
             envActionControlEntity: EnvActionControlEntity,
             reportingIds: List<Int>,
-        ) =
-            EnvActionControlDataOutput(
-                id = envActionControlEntity.id,
-                actionNumberOfControls = envActionControlEntity.actionNumberOfControls,
-                actionStartDateTimeUtc = envActionControlEntity.actionStartDateTimeUtc,
-                actionEndDateTimeUtc = envActionControlEntity.actionEndDateTimeUtc,
-                actionTargetType = envActionControlEntity.actionTargetType,
-                completedBy = envActionControlEntity.completedBy,
-                completion = envActionControlEntity.completion,
-                controlPlans =
+        ) = EnvActionControlDataOutput(
+            id = envActionControlEntity.id,
+            actionNumberOfControls = envActionControlEntity.actionNumberOfControls,
+            actionStartDateTimeUtc = envActionControlEntity.actionStartDateTimeUtc,
+            actionEndDateTimeUtc = envActionControlEntity.actionEndDateTimeUtc,
+            actionTargetType = envActionControlEntity.actionTargetType,
+            completedBy = envActionControlEntity.completedBy,
+            completion = envActionControlEntity.completion,
+            controlPlans =
                 envActionControlEntity.controlPlans?.let { plans ->
                     if (plans.isNotEmpty()) {
                         plans.map {
@@ -71,21 +69,21 @@ data class EnvActionControlDataOutput(
                         listOf(defaultControlPlans)
                     }
                 },
-                department = envActionControlEntity.department,
-                facade = envActionControlEntity.facade,
-                geom = envActionControlEntity.geom,
-                infractions = envActionControlEntity.infractions,
-                isAdministrativeControl = envActionControlEntity.isAdministrativeControl,
-                isComplianceWithWaterRegulationsControl =
+            department = envActionControlEntity.department,
+            facade = envActionControlEntity.facade,
+            geom = envActionControlEntity.geom,
+            infractions = envActionControlEntity.infractions,
+            isAdministrativeControl = envActionControlEntity.isAdministrativeControl,
+            isComplianceWithWaterRegulationsControl =
                 envActionControlEntity.isComplianceWithWaterRegulationsControl,
-                isSafetyEquipmentAndStandardsComplianceControl =
+            isSafetyEquipmentAndStandardsComplianceControl =
                 envActionControlEntity
                     .isSafetyEquipmentAndStandardsComplianceControl,
-                isSeafarersControl = envActionControlEntity.isSeafarersControl,
-                observations = envActionControlEntity.observations,
-                openBy = envActionControlEntity.openBy,
-                vehicleType = envActionControlEntity.vehicleType,
-                reportingIds = reportingIds,
-            )
+            isSeafarersControl = envActionControlEntity.isSeafarersControl,
+            observations = envActionControlEntity.observations,
+            openBy = envActionControlEntity.openBy,
+            vehicleType = envActionControlEntity.vehicleType,
+            reportingIds = reportingIds,
+        )
     }
 }

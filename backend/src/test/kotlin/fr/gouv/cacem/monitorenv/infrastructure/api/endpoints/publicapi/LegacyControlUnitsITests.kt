@@ -32,19 +32,21 @@ class LegacyControlUnitsITests {
     @Test
     fun `Should get all control units`() {
         // Given
-        val controlUnit = LegacyControlUnitEntity(
-            id = 4,
-            administration = "Gendarmerie nationale",
-            isArchived = false,
-            name = "DF 123",
-            resources = listOf(
-                LegacyControlUnitResourceEntity(
-                    id = 0,
-                    controlUnitId = 4,
-                    name = "Vedette",
-                ),
-            ),
-        )
+        val controlUnit =
+            LegacyControlUnitEntity(
+                id = 4,
+                administration = "Gendarmerie nationale",
+                isArchived = false,
+                name = "DF 123",
+                resources =
+                    listOf(
+                        LegacyControlUnitResourceEntity(
+                            id = 0,
+                            controlUnitId = 4,
+                            name = "Vedette",
+                        ),
+                    ),
+            )
         given(getLegacyControlUnits.execute()).willReturn(listOf(controlUnit))
 
         // When

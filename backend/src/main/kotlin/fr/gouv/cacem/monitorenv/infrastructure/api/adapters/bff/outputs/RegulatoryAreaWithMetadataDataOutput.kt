@@ -15,16 +15,17 @@ data class RegulatoryAreaWithMetadataDataOutput(
     val url: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreaWithMetadataDataOutput(
-            id = regulatoryArea.id,
-            entity_name = regulatoryArea.entity_name,
-            facade = regulatoryArea.facade,
-            geom = regulatoryArea.geom,
-            layer_name = regulatoryArea.layer_name,
-            ref_reg = regulatoryArea.ref_reg,
-            thematique = regulatoryArea.thematique,
-            type = regulatoryArea.type,
-            url = regulatoryArea.url,
-        )
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
+            RegulatoryAreaWithMetadataDataOutput(
+                id = regulatoryArea.id,
+                entity_name = regulatoryArea.entity_name,
+                facade = regulatoryArea.facade,
+                geom = regulatoryArea.geom,
+                layer_name = regulatoryArea.layer_name,
+                ref_reg = regulatoryArea.ref_reg,
+                thematique = regulatoryArea.thematique,
+                type = regulatoryArea.type,
+                url = regulatoryArea.url,
+            )
     }
 }

@@ -18,7 +18,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
-        """
+            """
         UPDATE reportings
         SET is_archived = TRUE
         WHERE (created_at + make_interval(hours => validity_time)) < NOW() AND is_archived IS FALSE
@@ -30,7 +30,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
-        """
+            """
         UPDATE reportings
         SET is_archived = TRUE
         WHERE id in (:ids)
@@ -42,7 +42,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
-        """
+            """
         UPDATE reportings
         SET
             mission_id = :missionId,
@@ -52,24 +52,30 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             """,
         nativeQuery = true,
     )
-    fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
+    fun attachReportingsToMission(
+        reportingIds: List<Int>,
+        missionId: Int,
+    )
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
-        """
+            """
         UPDATE reportings
             SET attached_env_action_id = CASE WHEN id in (:reportingIds) THEN :envActionId ELSE NULL END
             WHERE id in (:reportingIds) or attached_env_action_id = :envActionId
         """,
         nativeQuery = true,
     )
-    fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>)
+    fun attachEnvActionsToReportings(
+        envActionId: UUID,
+        reportingIds: List<Int>,
+    )
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
-        """
+            """
         UPDATE reportings
         SET is_deleted = TRUE
         WHERE id = :id
@@ -81,7 +87,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
-        """
+            """
         UPDATE reportings
         SET is_deleted = TRUE
         WHERE id in (:ids)
@@ -93,14 +99,17 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
-        """
+            """
         UPDATE reportings
         SET attached_env_action_id = NULL
         WHERE mission_id = :missionId AND (:envActionIds IS NULL OR attached_env_action_id NOT IN (:envActionIds))
         """,
         nativeQuery = true,
     )
-    fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>)
+    fun detachDanglingEnvActions(
+        missionId: Int,
+        envActionIds: List<UUID>,
+    )
 
     @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
@@ -167,32 +176,28 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value =
-        """
+            """
         SELECT reporting
         FROM ReportingModelJpa reporting
         INNER JOIN ReportingSourceModel rs ON reporting.id = rs.reporting.id
         WHERE rs.controlUnit.id = :controlUnitId
         """,
     )
-    fun findByControlUnitId(
-        controlUnitId: Int,
-    ): List<ReportingModelJpa>
+    fun findByControlUnitId(controlUnitId: Int): List<ReportingModelJpa>
 
     @Query(
         value =
-        """
+            """
         SELECT reporting
         FROM ReportingModelJpa reporting
         WHERE reporting.mission.id = :missionId
         """,
     )
-    fun findByMissionId(
-        missionId: Int,
-    ): List<ReportingModelJpa>
+    fun findByMissionId(missionId: Int): List<ReportingModelJpa>
 
     @Query(
         value =
-        """
+            """
         SELECT r.* FROM reportings r
         WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
         """,

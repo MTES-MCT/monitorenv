@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Natinfs::class)])
 class NatinfsITests {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -31,12 +30,13 @@ class NatinfsITests {
     @Test
     fun `Should get all infractions`() {
         // Given
-        val natinf = NatinfEntity(
-            natinfCode = 27718,
-            regulation = "ART.L.945-4 AL.1, ART.L.945-5 1°, 2°, 3°, 4° C.RUR",
-            infractionCategory = "Pêche",
-            infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe",
-        )
+        val natinf =
+            NatinfEntity(
+                natinfCode = 27718,
+                regulation = "ART.L.945-4 AL.1, ART.L.945-5 1°, 2°, 3°, 4° C.RUR",
+                infractionCategory = "Pêche",
+                infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe",
+            )
         given(getAllNatinfs.execute()).willReturn(listOf(natinf))
 
         // When

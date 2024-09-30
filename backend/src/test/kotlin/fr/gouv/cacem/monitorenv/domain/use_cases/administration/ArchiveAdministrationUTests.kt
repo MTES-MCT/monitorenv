@@ -37,9 +37,10 @@ class ArchiveAdministrationUTests {
 
         given(canArchiveAdministration.execute(administrationId)).willReturn(false)
 
-        val exception = assertThrows<BackendUsageException> {
-            ArchiveAdministration(administrationRepository, canArchiveAdministration).execute(administrationId)
-        }
+        val exception =
+            assertThrows<BackendUsageException> {
+                ArchiveAdministration(administrationRepository, canArchiveAdministration).execute(administrationId)
+            }
 
         assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNARCHIVED_CHILD)
     }

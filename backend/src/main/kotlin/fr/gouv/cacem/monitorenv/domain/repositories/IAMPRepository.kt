@@ -5,6 +5,8 @@ import org.locationtech.jts.geom.Geometry
 
 interface IAMPRepository {
     fun findAll(): List<AMPEntity>
+
     fun count(): Long
+
     fun findAllByGeometry(geometry: Geometry): List<AMPEntity>
 }

@@ -27,6 +27,7 @@ class UserAuthorizationCheckFilter(
     companion object {
         val EMAIL_HEADER = "EMAIL"
     }
+
     private val CURRENT_USER_AUTHORIZATION_CONTROLLER_PATH = "/bff/v1/authorization/current"
 
     private val BEARER_HEADER_TYPE = "Bearer"

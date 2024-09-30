@@ -7,7 +7,6 @@ import java.time.ZonedDateTime
 import kotlin.random.Random
 
 class MissionFixture {
-
     companion object {
         fun aMissionEntity(
             id: Int? = Random.nextInt(),

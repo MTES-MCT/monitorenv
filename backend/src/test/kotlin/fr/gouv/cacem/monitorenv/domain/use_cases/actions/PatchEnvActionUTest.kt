@@ -17,7 +17,6 @@ import java.time.ZonedDateTime
 import java.util.*
 
 class PatchEnvActionUTest {
-
     private val envActionRepository: IEnvActionRepository = mock()
     private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
     private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, patchEntity)
@@ -31,18 +30,20 @@ class PatchEnvActionUTest {
         val tomorrow = ZonedDateTime.now().plusDays(1)
         val observationsByUnit = "observations"
         val patchedObservationsByUnit = "patched observations"
-        val patchableEnvActionEntity = PatchableEnvActionEntity(
-            Optional.of(today),
-            Optional.of(tomorrow),
-            Optional.of(patchedObservationsByUnit),
-        )
-        val envActionFromDatabase = anEnvAction(
-            objectMapper,
-            id,
-            ZonedDateTime.now(),
-            ZonedDateTime.now().plusDays(2),
-            observationsByUnit,
-        )
+        val patchableEnvActionEntity =
+            PatchableEnvActionEntity(
+                Optional.of(today),
+                Optional.of(tomorrow),
+                Optional.of(patchedObservationsByUnit),
+            )
+        val envActionFromDatabase =
+            anEnvAction(
+                objectMapper,
+                id,
+                ZonedDateTime.now(),
+                ZonedDateTime.now().plusDays(2),
+                observationsByUnit,
+            )
         val envActionPatched =
             anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow, patchedObservationsByUnit)
 

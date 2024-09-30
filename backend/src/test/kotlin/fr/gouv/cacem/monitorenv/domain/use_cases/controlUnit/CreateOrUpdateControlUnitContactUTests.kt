@@ -31,21 +31,23 @@ class CreateOrUpdateControlUnitContactUTests {
     @Test
     fun `execute should return the expected result`() {
         // Given
-        val newControlUnitContact = ControlUnitContactEntity(
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = true,
-            isSmsSubscriptionContact = true,
-            name = "Contact Name",
-            phone = "0033123456789",
-        )
+        val newControlUnitContact =
+            ControlUnitContactEntity(
+                controlUnitId = 2,
+                email = "bob@example.org",
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = true,
+                name = "Contact Name",
+                phone = "0033123456789",
+            )
 
         val repositoryOutputMock = newControlUnitContact.copy(id = 1)
         given(controlUnitContactRepository.save(newControlUnitContact)).willReturn(repositoryOutputMock)
 
         // When
-        val result = CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
-            .execute(newControlUnitContact)
+        val result =
+            CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+                .execute(newControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(repositoryOutputMock)
@@ -57,55 +59,62 @@ class CreateOrUpdateControlUnitContactUTests {
     @Test
     fun `execute should unsubscribe the contact from emails or sms if they are subscribed to emails or sms but have no email or phone`() {
         // Given
-        val updatedControlUnitContact = ControlUnitContactEntity(
-            id = 1,
-            controlUnitId = 2,
-            email = null,
-            isEmailSubscriptionContact = true,
-            isSmsSubscriptionContact = true,
-            name = "Contact Name",
-            phone = null,
-        )
+        val updatedControlUnitContact =
+            ControlUnitContactEntity(
+                id = 1,
+                controlUnitId = 2,
+                email = null,
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = true,
+                name = "Contact Name",
+                phone = null,
+            )
 
-        val firstRepositoryOutputMock = FullControlUnitDTO(
-            administration = AdministrationEntity(
-                id = 3,
-                isArchived = false,
-                name = "Administration Name",
-            ),
-            controlUnit = ControlUnitEntity(
-                id = 2,
-                administrationId = 3,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Unit Name",
-                termsNote = null,
-            ),
-            controlUnitContacts = listOf(
-                updatedControlUnitContact.copy(
-                    email = "bob@example.org",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = false,
-                    phone = "0033123456789",
-                ),
-            ),
-            controlUnitResources = listOf(),
-        )
+        val firstRepositoryOutputMock =
+            FullControlUnitDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 3,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 3,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitContacts =
+                    listOf(
+                        updatedControlUnitContact.copy(
+                            email = "bob@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            phone = "0033123456789",
+                        ),
+                    ),
+                controlUnitResources = listOf(),
+            )
         given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
             .willReturn(firstRepositoryOutputMock)
 
-        val secondRepositoryInputExpectation = updatedControlUnitContact.copy(
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = false,
-        )
+        val secondRepositoryInputExpectation =
+            updatedControlUnitContact.copy(
+                isEmailSubscriptionContact = false,
+                isSmsSubscriptionContact = false,
+            )
         given(controlUnitContactRepository.save(secondRepositoryInputExpectation)).willReturn(
             secondRepositoryInputExpectation,
         )
 
         // When
-        val result = CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
-            .execute(updatedControlUnitContact)
+        val result =
+            CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+                .execute(updatedControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(secondRepositoryInputExpectation)
@@ -116,83 +125,90 @@ class CreateOrUpdateControlUnitContactUTests {
     @Test
     fun `execute should unsubscribe other control unit contacts from emails if a new one is subscribing to emails`() {
         // Given
-        val updatedControlUnitContact = ControlUnitContactEntity(
-            id = 1,
-            controlUnitId = 5,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = true,
-            isSmsSubscriptionContact = false,
-            name = "Contact Name",
-            phone = "0033123456789",
-        )
+        val updatedControlUnitContact =
+            ControlUnitContactEntity(
+                id = 1,
+                controlUnitId = 5,
+                email = "bob@example.org",
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = false,
+                name = "Contact Name",
+                phone = "0033123456789",
+            )
 
-        val firstRepositoryOutputMock = FullControlUnitDTO(
-            administration = AdministrationEntity(
-                id = 6,
-                isArchived = false,
-                name = "Administration Name",
-            ),
-            controlUnit = ControlUnitEntity(
-                id = 5,
-                administrationId = 6,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Unit Name",
-                termsNote = null,
-            ),
-            controlUnitContacts = listOf(
-                ControlUnitContactEntity(
-                    id = updatedControlUnitContact.id,
-                    controlUnitId = 5,
-                    email = "contact1@example.org",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact 1",
-                    phone = null,
-                ),
-                ControlUnitContactEntity(
-                    id = 2,
-                    controlUnitId = 5,
-                    email = "contact2@example.org",
-                    isEmailSubscriptionContact = true,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact 2",
-                    phone = null,
-                ),
-                ControlUnitContactEntity(
-                    id = 3,
-                    controlUnitId = 5,
-                    email = "contact3@example.org",
-                    isEmailSubscriptionContact = true,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact 3",
-                    phone = null,
-                ),
-                ControlUnitContactEntity(
-                    id = 4,
-                    controlUnitId = 5,
-                    email = "contact3@example.org",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact 3",
-                    phone = null,
-                ),
-            ),
-            controlUnitResources = listOf(),
-        )
+        val firstRepositoryOutputMock =
+            FullControlUnitDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 6,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 5,
+                        administrationId = 6,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitContacts =
+                    listOf(
+                        ControlUnitContactEntity(
+                            id = updatedControlUnitContact.id,
+                            controlUnitId = 5,
+                            email = "contact1@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 1",
+                            phone = null,
+                        ),
+                        ControlUnitContactEntity(
+                            id = 2,
+                            controlUnitId = 5,
+                            email = "contact2@example.org",
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 2",
+                            phone = null,
+                        ),
+                        ControlUnitContactEntity(
+                            id = 3,
+                            controlUnitId = 5,
+                            email = "contact3@example.org",
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 3",
+                            phone = null,
+                        ),
+                        ControlUnitContactEntity(
+                            id = 4,
+                            controlUnitId = 5,
+                            email = "contact3@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 3",
+                            phone = null,
+                        ),
+                    ),
+                controlUnitResources = listOf(),
+            )
         given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
             .willReturn(firstRepositoryOutputMock)
 
-        val secondRepositoryExpectedInput = firstRepositoryOutputMock.controlUnitContacts[1].copy(
-            isEmailSubscriptionContact = false,
-        )
+        val secondRepositoryExpectedInput =
+            firstRepositoryOutputMock.controlUnitContacts[1].copy(
+                isEmailSubscriptionContact = false,
+            )
         given(controlUnitContactRepository.save(secondRepositoryExpectedInput))
             .willReturn(secondRepositoryExpectedInput)
 
-        val thirdRepositoryExpectedInput = firstRepositoryOutputMock.controlUnitContacts[2].copy(
-            isEmailSubscriptionContact = false,
-        )
+        val thirdRepositoryExpectedInput =
+            firstRepositoryOutputMock.controlUnitContacts[2].copy(
+                isEmailSubscriptionContact = false,
+            )
         given(controlUnitContactRepository.save(thirdRepositoryExpectedInput))
             .willReturn(thirdRepositoryExpectedInput)
 
@@ -200,8 +216,9 @@ class CreateOrUpdateControlUnitContactUTests {
             .willReturn(updatedControlUnitContact)
 
         // When
-        val result = CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
-            .execute(updatedControlUnitContact)
+        val result =
+            CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+                .execute(updatedControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(updatedControlUnitContact)
@@ -216,19 +233,21 @@ class CreateOrUpdateControlUnitContactUTests {
     @ValueSource(strings = ["invalide phone number", "111 222 333 444 555"])
     fun `execute should throw BackendUsageException when phone is invalid`(phone: String) {
         // Given
-        val newControlUnitContact = ControlUnitContactEntity(
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = true,
-            isSmsSubscriptionContact = true,
-            name = "Contact Name",
-            phone = phone,
-        )
+        val newControlUnitContact =
+            ControlUnitContactEntity(
+                controlUnitId = 2,
+                email = "bob@example.org",
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = true,
+                name = "Contact Name",
+                phone = phone,
+            )
         // When & Then
-        val backendUsageException = assertThrows<BackendUsageException> {
-            CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
-                .execute(newControlUnitContact)
-        }
+        val backendUsageException =
+            assertThrows<BackendUsageException> {
+                CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+                    .execute(newControlUnitContact)
+            }
         assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(backendUsageException.message).isEqualTo("Invalid phone number")
         assertThat(backendUsageException.data).isEqualTo(newControlUnitContact.phone)
@@ -237,14 +256,15 @@ class CreateOrUpdateControlUnitContactUTests {
     @Test
     fun `execute should not throw BackendUsageException when phone is empty`() {
         // Given
-        val newControlUnitContact = ControlUnitContactEntity(
-            controlUnitId = 2,
-            email = "bob@example.org",
-            isEmailSubscriptionContact = true,
-            isSmsSubscriptionContact = true,
-            name = "Contact Name",
-            phone = "",
-        )
+        val newControlUnitContact =
+            ControlUnitContactEntity(
+                controlUnitId = 2,
+                email = "bob@example.org",
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = true,
+                name = "Contact Name",
+                phone = "",
+            )
         // When & Then
         assertDoesNotThrow {
             CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)

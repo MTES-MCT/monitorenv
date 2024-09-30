@@ -46,10 +46,11 @@ class ValidateIdUTests {
         val fakeRequestDataAsJson = "{}"
 
         // Then
-        val exception = assertThrows<BackendRequestException> {
-            // When
-            fakeController.patch(1, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendRequestException> {
+                // When
+                fakeController.patch(1, fakeRequestDataAsJson)
+            }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("`id` is missing in the request data.")
     }
@@ -60,10 +61,11 @@ class ValidateIdUTests {
         val fakeRequestDataAsJson = "{ \"id\": null }"
 
         // Then
-        val exception = assertThrows<BackendRequestException> {
-            // When
-            fakeController.patch(1, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendRequestException> {
+                // When
+                fakeController.patch(1, fakeRequestDataAsJson)
+            }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("`id` is `null` in the request data.")
     }
@@ -74,10 +76,11 @@ class ValidateIdUTests {
         val fakeRequestDataAsJson = "{ \"id\": \"not an integer\" }"
 
         // Then
-        val exception = assertThrows<BackendRequestException> {
-            // When
-            fakeController.patch(1, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendRequestException> {
+                // When
+                fakeController.patch(1, fakeRequestDataAsJson)
+            }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("`id` must be an integer in the request data.")
     }
@@ -88,10 +91,11 @@ class ValidateIdUTests {
         val fakeRequestDataAsJson = "{ \"id\": 2 }"
 
         // Then
-        val exception = assertThrows<BackendRequestException> {
-            // When
-            fakeController.patch(1, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendRequestException> {
+                // When
+                fakeController.patch(1, fakeRequestDataAsJson)
+            }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.BODY_ID_MISMATCH_REQUEST_PATH_ID)
         assertThat(exception).hasMessageContaining(
             "Request data `id` ('2') doesn't match the {id} in the request path ('1').",

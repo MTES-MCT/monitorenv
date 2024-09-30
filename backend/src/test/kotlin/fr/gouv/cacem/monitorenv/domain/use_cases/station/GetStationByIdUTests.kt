@@ -18,15 +18,17 @@ class GetStationByIdUTests {
     @Test
     fun `execute should return a station by its ID`() {
         val stationId = 1
-        val fullStation = FullStationDTO(
-            station = StationEntity(
-                id = 1,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Station Name",
-            ),
-            controlUnitResources = listOf(),
-        )
+        val fullStation =
+            FullStationDTO(
+                station =
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
+                controlUnitResources = listOf(),
+            )
 
         given(stationRepository.findById(stationId)).willReturn(fullStation)
 

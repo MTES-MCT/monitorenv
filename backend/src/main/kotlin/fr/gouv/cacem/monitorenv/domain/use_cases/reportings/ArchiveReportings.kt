@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory
 class ArchiveReportings(
     private val reportingRepository: IReportingRepository,
 ) {
-
     private val logger: Logger = LoggerFactory.getLogger(ArchiveReportings::class.java)
 
     @Throws(IllegalArgumentException::class)

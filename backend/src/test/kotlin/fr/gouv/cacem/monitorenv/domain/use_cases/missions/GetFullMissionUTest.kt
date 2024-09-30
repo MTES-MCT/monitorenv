@@ -13,7 +13,6 @@ import org.mockito.Mockito.mock
 import kotlin.random.Random
 
 class GetFullMissionUTest {
-
     private val missionRepository: IMissionRepository = mock()
     private val getFullMission: GetFullMission = GetFullMission(missionRepository)
 

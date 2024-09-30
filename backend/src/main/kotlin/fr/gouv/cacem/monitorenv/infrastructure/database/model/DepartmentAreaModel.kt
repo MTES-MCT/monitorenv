@@ -13,17 +13,13 @@ data class DepartmentAreaModel(
     @Id
     @Column(name = "insee_dep", nullable = false, unique = true)
     val inseeCode: String,
-
     @Column(name = "geometry")
     val geometry: MultiPolygon? = null,
-
     @Column(name = "name", nullable = false)
     val name: String,
 ) {
     companion object {
-        fun fromDepartmentArea(
-            departmentArea: DepartmentAreaEntity,
-        ): DepartmentAreaModel {
+        fun fromDepartmentArea(departmentArea: DepartmentAreaEntity): DepartmentAreaModel {
             return DepartmentAreaModel(
                 inseeCode = departmentArea.inseeCode,
                 geometry = departmentArea.geometry,

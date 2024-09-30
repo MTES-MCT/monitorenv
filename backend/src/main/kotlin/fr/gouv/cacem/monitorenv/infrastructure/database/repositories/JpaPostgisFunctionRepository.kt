@@ -15,10 +15,10 @@ class JpaPostgisFunctionRepository : IPostgisFunctionRepository {
     override fun normalizeMultipolygon(geometry: MultiPolygon): MultiPolygon {
         return entityManager.createNativeQuery(
             """
-         SELECT CASE
-            WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
-                THEN CAST(CAST(:geom AS geography) AS geometry)
-            ELSE :geom END
+            SELECT CASE
+               WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
+                   THEN CAST(CAST(:geom AS geography) AS geometry)
+               ELSE :geom END
             """.trimIndent(),
             MultiPolygon::class.java,
         )
@@ -29,10 +29,10 @@ class JpaPostgisFunctionRepository : IPostgisFunctionRepository {
     override fun normalizeGeometry(geometry: Geometry): Geometry {
         return entityManager.createNativeQuery(
             """
-         SELECT CASE
-            WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
-                THEN CAST(CAST(:geom AS geography) AS geometry)
-            ELSE :geom END
+            SELECT CASE
+               WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
+                   THEN CAST(CAST(:geom AS geography) AS geometry)
+               ELSE :geom END
             """.trimIndent(),
             Geometry::class.java,
         )

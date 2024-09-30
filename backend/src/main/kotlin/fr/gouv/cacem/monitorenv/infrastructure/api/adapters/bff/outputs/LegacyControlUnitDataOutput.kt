@@ -16,9 +16,10 @@ data class LegacyControlUnitDataOutput(
                 administration = legacyControlUnit.administration,
                 name = legacyControlUnit.name,
                 isArchived = legacyControlUnit.isArchived,
-                resources = legacyControlUnit.resources.map {
-                    LegacyControlUnitResourceDataOutput.fromLegacyControlResourceEntity(it)
-                },
+                resources =
+                    legacyControlUnit.resources.map {
+                        LegacyControlUnitResourceDataOutput.fromLegacyControlResourceEntity(it)
+                    },
             )
     }
 }

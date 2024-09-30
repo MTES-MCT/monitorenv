@@ -59,7 +59,6 @@ import java.util.UUID
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Missions::class)])
 class MissionsITests {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -99,24 +98,24 @@ class MissionsITests {
         val expectedNewMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = polygon,
-                    observationsCacem = null,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 10,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "Outre-Mer",
+                        geom = polygon,
+                        observationsCacem = null,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
         val newMissionRequest =
             CreateOrUpdateMissionDataInput(
@@ -160,17 +159,17 @@ class MissionsITests {
         val expectedFirstMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    missionTypes = listOf(MissionTypeEnum.SEA),
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORFISH,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 10,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORFISH,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
         // we test only if the route is called with the right arg
         given(getFullMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(
@@ -200,13 +199,13 @@ class MissionsITests {
                 completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 controlPlans =
-                listOf(
-                    EnvActionControlPlanEntity(
-                        subThemeIds = listOf(1),
-                        tagIds = listOf(1, 2),
-                        themeId = 1,
+                    listOf(
+                        EnvActionControlPlanEntity(
+                            subThemeIds = listOf(1),
+                            tagIds = listOf(1, 2),
+                            themeId = 1,
+                        ),
                     ),
-                ),
                 geom = point,
                 facade = "Outre-Mer",
                 department = "29",
@@ -225,82 +224,82 @@ class MissionsITests {
         val expectedFirstMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    missionTypes = listOf(MissionTypeEnum.SEA),
-                    controlUnits =
-                    listOf(
-                        LegacyControlUnitEntity(
-                            id = 1,
-                            name = "CU1",
-                            administration = "Admin 1",
-                            resources =
+                    MissionEntity(
+                        id = 10,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        controlUnits =
                             listOf(
-                                LegacyControlUnitResourceEntity(
-                                    id = 2,
-                                    controlUnitId =
-                                    1,
-                                    name =
-                                    "Ressource 2",
+                                LegacyControlUnitEntity(
+                                    id = 1,
+                                    name = "CU1",
+                                    administration = "Admin 1",
+                                    resources =
+                                        listOf(
+                                            LegacyControlUnitResourceEntity(
+                                                id = 2,
+                                                controlUnitId =
+                                                1,
+                                                name =
+                                                    "Ressource 2",
+                                            ),
+                                        ),
+                                    isArchived = false,
                                 ),
                             ),
-                            isArchived = false,
-                        ),
+                        openBy = "OpenBy",
+                        completedBy = "CompletedBy",
+                        facade = "Outre-Mer",
+                        geom = polygon,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        observationsCacem = "obs cacem",
+                        observationsCnsp = "obs cnsp",
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                        envActions = listOf(controlEnvAction),
                     ),
-                    openBy = "OpenBy",
-                    completedBy = "CompletedBy",
-                    facade = "Outre-Mer",
-                    geom = polygon,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    observationsCacem = "obs cacem",
-                    observationsCnsp = "obs cnsp",
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(controlEnvAction),
-                ),
                 attachedReportingIds = listOf(1),
                 attachedReportings =
-                listOf(
-                    ReportingDTO(
-                        reporting =
-                        ReportingEntity(
-                            id = 1,
-                            reportingId = 2300001,
+                    listOf(
+                        ReportingDTO(
+                            reporting =
+                                ReportingEntity(
+                                    id = 1,
+                                    reportingId = 2300001,
+                                    reportingSources = listOf(),
+                                    targetType = TargetTypeEnum.VEHICLE,
+                                    vehicleType =
+                                        VehicleTypeEnum
+                                            .VEHICLE_LAND,
+                                    geom = polygon,
+                                    seaFront = "SeaFront",
+                                    description = "Description",
+                                    reportType =
+                                        ReportingTypeEnum
+                                            .INFRACTION_SUSPICION,
+                                    themeId = 12,
+                                    subThemeIds = listOf(82),
+                                    actionTaken = "ActionTaken",
+                                    isControlRequired = true,
+                                    hasNoUnitAvailable = true,
+                                    createdAt =
+                                        ZonedDateTime.parse(
+                                            "2022-01-15T04:50:09Z",
+                                        ),
+                                    validityTime = 4,
+                                    isArchived = false,
+                                    isDeleted = false,
+                                    openBy = "OpenBy",
+                                    isInfractionProven = true,
+                                ),
                             reportingSources = listOf(),
-                            targetType = TargetTypeEnum.VEHICLE,
-                            vehicleType =
-                            VehicleTypeEnum
-                                .VEHICLE_LAND,
-                            geom = polygon,
-                            seaFront = "SeaFront",
-                            description = "Description",
-                            reportType =
-                            ReportingTypeEnum
-                                .INFRACTION_SUSPICION,
-                            themeId = 12,
-                            subThemeIds = listOf(82),
-                            actionTaken = "ActionTaken",
-                            isControlRequired = true,
-                            hasNoUnitAvailable = true,
-                            createdAt =
-                            ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
-                            ),
-                            validityTime = 4,
-                            isArchived = false,
-                            isDeleted = false,
-                            openBy = "OpenBy",
-                            isInfractionProven = true,
                         ),
-                        reportingSources = listOf(),
                     ),
-                ),
             )
         given(
             getFullMissions.execute(
@@ -482,13 +481,13 @@ class MissionsITests {
                 completedBy = "DEF",
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 controlPlans =
-                listOf(
-                    EnvActionControlPlanEntity(
-                        subThemeIds = listOf(1),
-                        tagIds = listOf(1, 2),
-                        themeId = 1,
+                    listOf(
+                        EnvActionControlPlanEntity(
+                            subThemeIds = listOf(1),
+                            tagIds = listOf(1, 2),
+                            themeId = 1,
+                        ),
                     ),
-                ),
                 geom = point,
                 facade = "Outre-Mer",
                 department = "29",
@@ -507,82 +506,82 @@ class MissionsITests {
         val expectedFirstMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    missionTypes = listOf(MissionTypeEnum.SEA),
-                    controlUnits =
-                    listOf(
-                        LegacyControlUnitEntity(
-                            id = 1,
-                            name = "CU1",
-                            administration = "Admin 1",
-                            resources =
+                    MissionEntity(
+                        id = 10,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        controlUnits =
                             listOf(
-                                LegacyControlUnitResourceEntity(
-                                    id = 2,
-                                    controlUnitId =
-                                    1,
-                                    name =
-                                    "Ressource 2",
+                                LegacyControlUnitEntity(
+                                    id = 1,
+                                    name = "CU1",
+                                    administration = "Admin 1",
+                                    resources =
+                                        listOf(
+                                            LegacyControlUnitResourceEntity(
+                                                id = 2,
+                                                controlUnitId =
+                                                1,
+                                                name =
+                                                    "Ressource 2",
+                                            ),
+                                        ),
+                                    isArchived = false,
                                 ),
                             ),
-                            isArchived = false,
-                        ),
+                        openBy = "OpenBy",
+                        completedBy = "CompletedBy",
+                        facade = "Outre-Mer",
+                        geom = polygon,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        observationsCacem = "obs cacem",
+                        observationsCnsp = "obs cnsp",
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                        envActions = listOf(controlEnvAction),
                     ),
-                    openBy = "OpenBy",
-                    completedBy = "CompletedBy",
-                    facade = "Outre-Mer",
-                    geom = polygon,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    observationsCacem = "obs cacem",
-                    observationsCnsp = "obs cnsp",
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(controlEnvAction),
-                ),
                 attachedReportingIds = listOf(1),
                 attachedReportings =
-                listOf(
-                    ReportingDTO(
-                        reporting =
-                        ReportingEntity(
-                            id = 1,
-                            reportingId = 2300001,
+                    listOf(
+                        ReportingDTO(
+                            reporting =
+                                ReportingEntity(
+                                    id = 1,
+                                    reportingId = 2300001,
+                                    reportingSources = listOf(),
+                                    targetType = TargetTypeEnum.VEHICLE,
+                                    vehicleType =
+                                        VehicleTypeEnum
+                                            .VEHICLE_LAND,
+                                    geom = polygon,
+                                    seaFront = "SeaFront",
+                                    description = "Description",
+                                    reportType =
+                                        ReportingTypeEnum
+                                            .INFRACTION_SUSPICION,
+                                    themeId = 12,
+                                    subThemeIds = listOf(82),
+                                    actionTaken = "ActionTaken",
+                                    isControlRequired = true,
+                                    hasNoUnitAvailable = true,
+                                    createdAt =
+                                        ZonedDateTime.parse(
+                                            "2022-01-15T04:50:09Z",
+                                        ),
+                                    validityTime = 4,
+                                    isArchived = false,
+                                    isDeleted = false,
+                                    openBy = "OpenBy",
+                                    isInfractionProven = true,
+                                ),
                             reportingSources = listOf(),
-                            targetType = TargetTypeEnum.VEHICLE,
-                            vehicleType =
-                            VehicleTypeEnum
-                                .VEHICLE_LAND,
-                            geom = polygon,
-                            seaFront = "SeaFront",
-                            description = "Description",
-                            reportType =
-                            ReportingTypeEnum
-                                .INFRACTION_SUSPICION,
-                            themeId = 12,
-                            subThemeIds = listOf(82),
-                            actionTaken = "ActionTaken",
-                            isControlRequired = true,
-                            hasNoUnitAvailable = true,
-                            createdAt =
-                            ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
-                            ),
-                            validityTime = 4,
-                            isArchived = false,
-                            isDeleted = false,
-                            openBy = "OpenBy",
-                            isInfractionProven = true,
                         ),
-                        reportingSources = listOf(),
                     ),
-                ),
             )
 
         // we test only if the route is called with the right arg
@@ -754,18 +753,18 @@ class MissionsITests {
         val expectedUpdatedMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 14,
-                    missionTypes = listOf(MissionTypeEnum.SEA),
-                    observationsCacem = "updated observationsCacem",
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 14,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        observationsCacem = "updated observationsCacem",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
         val envAction =
             EnvActionDataInput(

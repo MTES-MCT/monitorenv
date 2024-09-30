@@ -16,7 +16,6 @@ class Amps(
     private val getAllAMPs: GetAllAMPs,
     private val objectMapper: ObjectMapper,
 ) {
-
     @GetMapping("")
     @Operation(summary = "Get AMPs")
     fun getAll(): List<AMPDataOutput> {

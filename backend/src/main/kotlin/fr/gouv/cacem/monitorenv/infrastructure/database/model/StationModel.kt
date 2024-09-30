@@ -15,24 +15,18 @@ data class StationModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "station")
     @JsonManagedReference
     val controlUnitResources: List<ControlUnitResourceModel> = listOf(),
-
     @Column(name = "latitude", nullable = false)
     val latitude: Double,
-
     @Column(name = "longitude", nullable = false)
     val longitude: Double,
-
     @Column(name = "name", nullable = false, unique = true)
     val name: String,
-
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
     val createdAtUtc: Instant? = null,
-
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,

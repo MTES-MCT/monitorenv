@@ -65,18 +65,20 @@ class ApiStationsITests {
 
     @Test
     fun `create() should create a base`() {
-        val expectedCreatedStation = StationEntity(
-            id = 1,
-            latitude = 0.0,
-            longitude = 0.0,
-            name = "Station Name",
-        )
+        val expectedCreatedStation =
+            StationEntity(
+                id = 1,
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "Station Name",
+            )
 
-        val newStationData = CreateOrUpdateStationDataInput(
-            latitude = 0.0,
-            longitude = 0.0,
-            name = "Station Name",
-        )
+        val newStationData =
+            CreateOrUpdateStationDataInput(
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "Station Name",
+            )
         val requestBody = objectMapper.writeValueAsString(newStationData)
 
         given(createOrUpdateStation.execute(station = any())).willReturn(expectedCreatedStation)
@@ -105,15 +107,17 @@ class ApiStationsITests {
 
     @Test
     fun `get() should get a base by its ID`() {
-        val expectedFullStation = FullStationDTO(
-            controlUnitResources = listOf(),
-            station = StationEntity(
-                id = 1,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Station Name",
-            ),
-        )
+        val expectedFullStation =
+            FullStationDTO(
+                controlUnitResources = listOf(),
+                station =
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
+            )
 
         val requestedId = 1
 
@@ -127,27 +131,29 @@ class ApiStationsITests {
 
     @Test
     fun `getAll() should get all bases`() {
-        val expectedFullStations = listOf(
-            FullStationDTO(
-                controlUnitResources = listOf(),
-                station = StationEntity(
-                    id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
+        val expectedFullStations =
+            listOf(
+                FullStationDTO(
+                    controlUnitResources = listOf(),
+                    station =
+                        StationEntity(
+                            id = 1,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
                 ),
-            ),
-
-            FullStationDTO(
-                controlUnitResources = listOf(),
-                station = StationEntity(
-                    id = 2,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name 2",
+                FullStationDTO(
+                    controlUnitResources = listOf(),
+                    station =
+                        StationEntity(
+                            id = 2,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name 2",
+                        ),
                 ),
-            ),
-        )
+            )
 
         given(getstations.execute()).willReturn(expectedFullStations)
 
@@ -160,19 +166,21 @@ class ApiStationsITests {
 
     @Test
     fun `update() should update a base`() {
-        val expectedUpdatedStation = StationEntity(
-            id = 1,
-            latitude = 0.0,
-            longitude = 0.0,
-            name = "Updated Station Name",
-        )
+        val expectedUpdatedStation =
+            StationEntity(
+                id = 1,
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "Updated Station Name",
+            )
 
-        val nextStationData = CreateOrUpdateStationDataInput(
-            id = 1,
-            latitude = 0.0,
-            longitude = 0.0,
-            name = "Updated Station Name",
-        )
+        val nextStationData =
+            CreateOrUpdateStationDataInput(
+                id = 1,
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "Updated Station Name",
+            )
         val requestBody = objectMapper.writeValueAsString(nextStationData)
 
         given(createOrUpdateStation.execute(station = any())).willReturn(expectedUpdatedStation)

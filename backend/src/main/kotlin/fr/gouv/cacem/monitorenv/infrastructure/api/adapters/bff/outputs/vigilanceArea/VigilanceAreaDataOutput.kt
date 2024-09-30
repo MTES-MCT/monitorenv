@@ -42,8 +42,9 @@ data class VigilanceAreaDataOutput(
                 geom = vigilanceArea.geom,
                 isArchived = vigilanceArea.isArchived,
                 isDraft = vigilanceArea.isDraft,
-                images = vigilanceArea.images?.map { VigilanceAreaImageDataOutput.fromVigilanceAreaImage(it) }
-                    ?: emptyList(),
+                images =
+                    vigilanceArea.images?.map { VigilanceAreaImageDataOutput.fromVigilanceAreaImage(it) }
+                        ?: emptyList(),
                 links = vigilanceArea.links,
                 linkedAMPs = vigilanceArea.linkedAMPs,
                 linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,

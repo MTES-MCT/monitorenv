@@ -43,36 +43,36 @@ class VigilanceAreaFixture {
                 endingOccurrenceDate = null,
                 endingOccurrencesNumber = 2,
                 images =
-                listOf(
-                    ImageEntity(
-                        name = "image1.jpg",
-                        content = byteArrayOf(1, 2, 3),
-                        mimeType = "image/jpeg",
-                        size = 1024,
+                    listOf(
+                        ImageEntity(
+                            name = "image1.jpg",
+                            content = byteArrayOf(1, 2, 3),
+                            mimeType = "image/jpeg",
+                            size = 1024,
+                        ),
+                        ImageEntity(
+                            name = "image2.png",
+                            content = byteArrayOf(4, 5, 6),
+                            mimeType = "image/png",
+                            size = 2048,
+                        ),
                     ),
-                    ImageEntity(
-                        name = "image2.png",
-                        content = byteArrayOf(4, 5, 6),
-                        mimeType = "image/png",
-                        size = 2048,
-                    ),
-                ),
                 frequency = FrequencyEnum.NONE,
                 geom = null,
                 isArchived = false,
                 isDeleted = false,
                 isDraft = true,
                 links =
-                listOf(
-                    LinkEntity(
-                        linkUrl = "http://example.com/link1",
-                        linkText = "Link 1",
+                    listOf(
+                        LinkEntity(
+                            linkUrl = "http://example.com/link1",
+                            linkText = "Link 1",
+                        ),
+                        LinkEntity(
+                            linkUrl = "http://example.com/link2",
+                            linkText = "Link 2",
+                        ),
                     ),
-                    LinkEntity(
-                        linkUrl = "http://example.com/link2",
-                        linkText = "Link 2",
-                    ),
-                ),
                 linkedAMPs = listOf(1, 2),
                 linkedRegulatoryAreas = listOf(1, 2),
                 name = "Basic Area",

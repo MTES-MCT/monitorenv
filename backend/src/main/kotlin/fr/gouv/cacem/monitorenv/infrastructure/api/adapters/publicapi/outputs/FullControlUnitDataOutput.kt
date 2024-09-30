@@ -22,14 +22,16 @@ data class FullControlUnitDataOutput(
     companion object {
         fun fromFullControlUnit(fullControlUnit: FullControlUnitDTO): FullControlUnitDataOutput {
             val administration = AdministrationDataOutput.fromAdministration(fullControlUnit.administration)
-            val controlUnitContacts = fullControlUnit.controlUnitContacts.map {
-                ControlUnitContactDataOutput.fromControlUnitContact(
-                    it,
-                )
-            }
-            val controlUnitResources = fullControlUnit.controlUnitResources.map {
-                FullControlUnitResourceDataOutput.fromFullControlUnitResource(it)
-            }
+            val controlUnitContacts =
+                fullControlUnit.controlUnitContacts.map {
+                    ControlUnitContactDataOutput.fromControlUnitContact(
+                        it,
+                    )
+                }
+            val controlUnitResources =
+                fullControlUnit.controlUnitResources.map {
+                    FullControlUnitResourceDataOutput.fromFullControlUnitResource(it)
+                }
             val departmentArea = fullControlUnit.departmentArea?.let { DepartmentAreaDataOutput.fromDepartmentArea(it) }
 
             return FullControlUnitDataOutput(

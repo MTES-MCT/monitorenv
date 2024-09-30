@@ -34,14 +34,12 @@ data class MissionEnvActionControlDataOutput(
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     MissionEnvActionDataOutput(
-        id = id,
-        actionStartDateTimeUtc = actionStartDateTimeUtc,
-        actionType = ActionTypeEnum.CONTROL,
-    ) {
+            id = id,
+            actionStartDateTimeUtc = actionStartDateTimeUtc,
+            actionType = ActionTypeEnum.CONTROL,
+        ) {
     companion object {
-        fun fromEnvActionControlEntity(
-            envActionControlEntity: EnvActionControlEntity,
-        ) =
+        fun fromEnvActionControlEntity(envActionControlEntity: EnvActionControlEntity) =
             MissionEnvActionControlDataOutput(
                 id = envActionControlEntity.id,
                 actionNumberOfControls = envActionControlEntity.actionNumberOfControls,
@@ -51,20 +49,20 @@ data class MissionEnvActionControlDataOutput(
                 completedBy = envActionControlEntity.completedBy,
                 completion = envActionControlEntity.completion,
                 controlPlans =
-                envActionControlEntity.controlPlans?.map {
-                    MissionEnvActionControlPlanDataOutput
-                        .fromEnvActionControlPlanEntity(it)
-                },
+                    envActionControlEntity.controlPlans?.map {
+                        MissionEnvActionControlPlanDataOutput
+                            .fromEnvActionControlPlanEntity(it)
+                    },
                 department = envActionControlEntity.department,
                 facade = envActionControlEntity.facade,
                 geom = envActionControlEntity.geom,
                 infractions = envActionControlEntity.infractions,
                 isAdministrativeControl = envActionControlEntity.isAdministrativeControl,
                 isComplianceWithWaterRegulationsControl =
-                envActionControlEntity.isComplianceWithWaterRegulationsControl,
+                    envActionControlEntity.isComplianceWithWaterRegulationsControl,
                 isSafetyEquipmentAndStandardsComplianceControl =
-                envActionControlEntity
-                    .isSafetyEquipmentAndStandardsComplianceControl,
+                    envActionControlEntity
+                        .isSafetyEquipmentAndStandardsComplianceControl,
                 isSeafarersControl = envActionControlEntity.isSeafarersControl,
                 observationsByUnit = envActionControlEntity.observationsByUnit,
                 observations = envActionControlEntity.observations,

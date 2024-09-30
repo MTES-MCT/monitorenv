@@ -32,7 +32,6 @@ import java.util.UUID
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [EnvAction::class])
 class EnvActionITest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -49,17 +48,19 @@ class EnvActionITest {
         val today = ZonedDateTime.now(ZoneOffset.UTC)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val observationsByUnit = "observationsByUnits"
-        val partialEnvActionAsJson = """
+        val partialEnvActionAsJson =
+            """
             { "actionEndDateTimeUtc": "$tomorrow",
               "actionStartDateTimeUtc": "$today",
               "observationsByUnit": "$observationsByUnit"}
-        """.trimIndent()
+            """.trimIndent()
         val patchedEnvAction = anEnvAction(objectMapper, id, yesterday, today, observationsByUnit)
-        val patchableEnvActionEntity = PatchableEnvActionEntity(
-            actionStartDateTimeUtc = Optional.of(today),
-            actionEndDateTimeUtc = Optional.of(tomorrow),
-            Optional.of(observationsByUnit),
-        )
+        val patchableEnvActionEntity =
+            PatchableEnvActionEntity(
+                actionStartDateTimeUtc = Optional.of(today),
+                actionEndDateTimeUtc = Optional.of(tomorrow),
+                Optional.of(observationsByUnit),
+            )
 
         given(patchEnvAction.execute(id, patchableEnvActionEntity)).willReturn(patchedEnvAction)
 
@@ -114,9 +115,10 @@ class EnvActionITest {
     fun `patch() should return 400 when the input contains an incorrect type`() {
         // Given
         val id = UUID.randomUUID()
-        val partialEnvActionAsJson = """
+        val partialEnvActionAsJson =
+            """
             { "actionStartDateTimeUtc": "incorrect type" }
-        """.trimIndent()
+            """.trimIndent()
 
         // When
         mockMvc.perform(
@@ -132,9 +134,10 @@ class EnvActionITest {
     fun `patch() should return 400 when the use case throw BackendUsageException`() {
         // Given
         val unknownId = UUID.randomUUID()
-        val partialEnvActionAsJson = """
+        val partialEnvActionAsJson =
+            """
             {}
-        """.trimIndent()
+            """.trimIndent()
 
         val message = "envAction $unknownId not found"
         given(

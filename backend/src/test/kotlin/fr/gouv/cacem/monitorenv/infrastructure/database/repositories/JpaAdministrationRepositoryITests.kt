@@ -37,22 +37,24 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         // We check the second administration instead of the first here because the first one is named “-”
         assertThat(foundFullAdministrations[0]).isEqualTo(
             FullAdministrationDTO(
-                administration = AdministrationEntity(
-                    id = 1,
-                    isArchived = false,
-                    name = "Affaires Maritimes",
-                ),
+                administration =
+                    AdministrationEntity(
+                        id = 1,
+                        isArchived = false,
+                        name = "Affaires Maritimes",
+                    ),
                 controlUnits = listOf(),
             ),
         )
 
         assertThat(foundFullAdministrations[34]).isEqualTo(
             FullAdministrationDTO(
-                administration = AdministrationEntity(
-                    id = 2006,
-                    isArchived = false,
-                    name = "FOSIT",
-                ),
+                administration =
+                    AdministrationEntity(
+                        id = 2006,
+                        isArchived = false,
+                        name = "FOSIT",
+                    ),
                 controlUnits = listOf(),
             ),
         )
@@ -65,31 +67,33 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullAdministration).isEqualTo(
             FullAdministrationDTO(
-                administration = AdministrationEntity(
-                    id = 6,
-                    isArchived = false,
-                    name = "Gendarmerie Nationale",
-                ),
-                controlUnits = listOf(
-                    ControlUnitEntity(
-                        id = 10020,
-                        administrationId = 6,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
+                administration =
+                    AdministrationEntity(
+                        id = 6,
                         isArchived = false,
-                        name = "BN Toulon",
-                        termsNote = null,
+                        name = "Gendarmerie Nationale",
                     ),
-                    ControlUnitEntity(
-                        id = 10021,
-                        administrationId = 6,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Brigade fluviale de Rouen",
-                        termsNote = null,
+                controlUnits =
+                    listOf(
+                        ControlUnitEntity(
+                            id = 10020,
+                            administrationId = 6,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "BN Toulon",
+                            termsNote = null,
+                        ),
+                        ControlUnitEntity(
+                            id = 10021,
+                            administrationId = 6,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Brigade fluviale de Rouen",
+                            termsNote = null,
+                        ),
                     ),
-                ),
             ),
         )
     }
@@ -100,10 +104,11 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Create
 
-        val newAdministration = AdministrationEntity(
-            isArchived = false,
-            name = "Administration Name",
-        )
+        val newAdministration =
+            AdministrationEntity(
+                isArchived = false,
+                name = "Administration Name",
+            )
 
         val createdAdministration = jpaAdministrationRepository.save(newAdministration)
 
@@ -112,11 +117,12 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Update
 
-        val nextAdministration = AdministrationEntity(
-            id = 2007,
-            isArchived = false,
-            name = "Updated Administration Name",
-        )
+        val nextAdministration =
+            AdministrationEntity(
+                id = 2007,
+                isArchived = false,
+                name = "Updated Administration Name",
+            )
 
         val updatedAdministration = jpaAdministrationRepository.save(nextAdministration)
 

@@ -52,32 +52,35 @@ class PatchableDataInputUTests {
 
     @BeforeEach
     fun setUp() {
-        existingFakeEntityFromDatabase = FakeEntity(
-            id = 1,
-            name = "A name",
-            description = "A description",
-            isAwesome = true,
-            isDeleted = false,
-            isUpdated = false,
-            rank = 2,
-        )
+        existingFakeEntityFromDatabase =
+            FakeEntity(
+                id = 1,
+                name = "A name",
+                description = "A description",
+                isAwesome = true,
+                isDeleted = false,
+                isUpdated = false,
+                rank = 2,
+            )
     }
 
     @Test
     fun `patchFromRequestData Should return the expected data input instance`() {
         // Given
-        val fakeRequestDataAsJson = """
+        val fakeRequestDataAsJson =
+            """
             {
                 "name": "A new name",
                 "description": null,
                 "isUpdated": true
             }
-        """.trimIndent()
+            """.trimIndent()
 
         // When
-        val result = FakeDataInput
-            .fromFakeEntity(existingFakeEntityFromDatabase)
-            .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+        val result =
+            FakeDataInput
+                .fromFakeEntity(existingFakeEntityFromDatabase)
+                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
 
         // Then
         assertThat(result).isEqualTo(
@@ -96,17 +99,19 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should ignore extra properties from the request data JSON`() {
         // Given
-        val fakeRequestDataAsJson = """
+        val fakeRequestDataAsJson =
+            """
             {
                 "name": "A new name",
                 "anNonExistingProperty": "A lost value"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         // When
-        val result = FakeDataInput
-            .fromFakeEntity(existingFakeEntityFromDatabase)
-            .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+        val result =
+            FakeDataInput
+                .fromFakeEntity(existingFakeEntityFromDatabase)
+                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
 
         // Then
         assertThat(result).isEqualTo(
@@ -125,19 +130,21 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should throw a BackendRequestException for an incorrect Boolean type`() {
         // Given
-        val fakeRequestDataAsJson = """
+        val fakeRequestDataAsJson =
+            """
             {
                 "isAwesome": "Not a Boolean"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         // Then
-        val exception = assertThrows<BackendRequestException> {
-            // When
-            FakeDataInput
-                .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendRequestException> {
+                // When
+                FakeDataInput
+                    .fromFakeEntity(existingFakeEntityFromDatabase)
+                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+            }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `isAwesome` is not of type `Boolean`.")
     }
@@ -145,19 +152,21 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should throw a BackendRequestException for an incorrect Int type`() {
         // Given
-        val fakeRequestDataAsJson = """
+        val fakeRequestDataAsJson =
+            """
             {
                 "rank": "Not an Int"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         // Then
-        val exception = assertThrows<BackendRequestException> {
-            // When
-            FakeDataInput
-                .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendRequestException> {
+                // When
+                FakeDataInput
+                    .fromFakeEntity(existingFakeEntityFromDatabase)
+                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+            }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `rank` is not of type `Int`.")
     }
@@ -165,19 +174,21 @@ class PatchableDataInputUTests {
     @Test
     fun `patchFromRequestData Should throw a BackendRequestException for an incorrect String type`() {
         // Given
-        val fakeRequestDataAsJson = """
+        val fakeRequestDataAsJson =
+            """
             {
                 "name": 42
             }
-        """.trimIndent()
+            """.trimIndent()
 
         // Then
-        val exception = assertThrows<BackendRequestException> {
-            // When
-            FakeDataInput
-                .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendRequestException> {
+                // When
+                FakeDataInput
+                    .fromFakeEntity(existingFakeEntityFromDatabase)
+                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+            }
         assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `name` is not of type `String`.")
     }
@@ -189,18 +200,20 @@ class PatchableDataInputUTests {
         ) : PatchableDataInput<FakeDataInput>(FakeDataInput::class)
 
         // Given
-        val fakeRequestDataAsJson = """
+        val fakeRequestDataAsJson =
+            """
             {
                 "anUnsupportedTypedProp": "Another value"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         // Then
-        val exception = assertThrows<BackendInternalException> {
-            // When
-            FakeDataInput(anUnsupportedTypedProp = "A value")
-                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
-        }
+        val exception =
+            assertThrows<BackendInternalException> {
+                // When
+                FakeDataInput(anUnsupportedTypedProp = "A value")
+                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+            }
         assertThat(exception).hasMessageContaining(
             "FakeDataInput: Unsupported type `class kotlin.Any` for property `anUnsupportedTypedProp`.",
         )

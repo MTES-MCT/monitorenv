@@ -12,11 +12,9 @@ data class MissionControlResourceModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     val id: Int? = null,
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     val mission: MissionModel,
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "control_resource_id")

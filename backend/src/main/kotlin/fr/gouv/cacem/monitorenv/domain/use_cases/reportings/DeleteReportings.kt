@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory
 class DeleteReportings(
     private val reportingRepository: IReportingRepository,
 ) {
-
     private val logger: Logger = LoggerFactory.getLogger(DeleteReportings::class.java)
 
     @Throws(IllegalArgumentException::class)

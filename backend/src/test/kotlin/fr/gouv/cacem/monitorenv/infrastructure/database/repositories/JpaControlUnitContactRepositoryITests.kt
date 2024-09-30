@@ -22,47 +22,51 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnitContacts[0]).isEqualTo(
             FullControlUnitContactDTO(
-                controlUnit = ControlUnitEntity(
-                    id = 10000,
-                    administrationId = 1005,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Cultures marines – DDTM 40",
-                    termsNote = null,
-                ),
-                controlUnitContact = ControlUnitContactEntity(
-                    id = 1,
-                    controlUnitId = 10000,
-                    email = "email_1",
-                    isEmailSubscriptionContact = true,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact 1",
-                    phone = "0601xxxxxx",
-                ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 10000,
+                        administrationId = 1005,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Cultures marines – DDTM 40",
+                        termsNote = null,
+                    ),
+                controlUnitContact =
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 10000,
+                        email = "email_1",
+                        isEmailSubscriptionContact = true,
+                        isSmsSubscriptionContact = false,
+                        name = "Contact 1",
+                        phone = "0601xxxxxx",
+                    ),
             ),
         )
 
         assertThat(foundFullControlUnitContacts[2]).isEqualTo(
             FullControlUnitContactDTO(
-                controlUnit = ControlUnitEntity(
-                    id = 10003,
-                    administrationId = 1005,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "DPM – DDTM 14",
-                    termsNote = null,
-                ),
-                controlUnitContact = ControlUnitContactEntity(
-                    id = 3,
-                    controlUnitId = 10003,
-                    email = "email_3",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = true,
-                    name = "Contact 3",
-                    phone = null,
-                ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 10003,
+                        administrationId = 1005,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "DPM – DDTM 14",
+                        termsNote = null,
+                    ),
+                controlUnitContact =
+                    ControlUnitContactEntity(
+                        id = 3,
+                        controlUnitId = 10003,
+                        email = "email_3",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = true,
+                        name = "Contact 3",
+                        phone = null,
+                    ),
             ),
         )
     }
@@ -74,24 +78,26 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnitContact).isEqualTo(
             FullControlUnitContactDTO(
-                controlUnit = ControlUnitEntity(
-                    id = 10000,
-                    administrationId = 1005,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Cultures marines – DDTM 40",
-                    termsNote = null,
-                ),
-                controlUnitContact = ControlUnitContactEntity(
-                    id = 1,
-                    controlUnitId = 10000,
-                    email = "email_1",
-                    isEmailSubscriptionContact = true,
-                    isSmsSubscriptionContact = false,
-                    name = "Contact 1",
-                    phone = "0601xxxxxx",
-                ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 10000,
+                        administrationId = 1005,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Cultures marines – DDTM 40",
+                        termsNote = null,
+                    ),
+                controlUnitContact =
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 10000,
+                        email = "email_1",
+                        isEmailSubscriptionContact = true,
+                        isSmsSubscriptionContact = false,
+                        name = "Contact 1",
+                        phone = "0601xxxxxx",
+                    ),
             ),
         )
     }
@@ -102,14 +108,15 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Create
 
-        val newControlUnitContact = ControlUnitContactEntity(
-            controlUnitId = 10000,
-            email = "Adresse email",
-            isEmailSubscriptionContact = false,
-            isSmsSubscriptionContact = true,
-            name = "Contact Name",
-            phone = "0123456789",
-        )
+        val newControlUnitContact =
+            ControlUnitContactEntity(
+                controlUnitId = 10000,
+                email = "Adresse email",
+                isEmailSubscriptionContact = false,
+                isSmsSubscriptionContact = true,
+                name = "Contact Name",
+                phone = "0123456789",
+            )
 
         val createdControlUnitContact = jpaControlUnitContactRepository.save(newControlUnitContact)
 
@@ -118,15 +125,16 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Update
 
-        val nextControlUnitContact = ControlUnitContactEntity(
-            id = 4,
-            controlUnitId = 10001,
-            email = null,
-            isEmailSubscriptionContact = true,
-            isSmsSubscriptionContact = true,
-            name = "Updated Contact Name",
-            phone = "9876543210",
-        )
+        val nextControlUnitContact =
+            ControlUnitContactEntity(
+                id = 4,
+                controlUnitId = 10001,
+                email = null,
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = true,
+                name = "Updated Contact Name",
+                phone = "9876543210",
+            )
 
         val updatedControlUnitContact = jpaControlUnitContactRepository.save(nextControlUnitContact)
 

@@ -21,33 +21,37 @@ class GetControlUnitResourceByIdUTests {
     @Test
     fun `execute should return a control unit resource by its ID`() {
         val controlUnitResourceId = 1
-        val fullControlUnitResource = FullControlUnitResourceDTO(
-            controlUnit = ControlUnitEntity(
-                id = 0,
-                administrationId = 0,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Control Unit Name",
-                termsNote = null,
-            ),
-            controlUnitResource = ControlUnitResourceEntity(
-                id = 1,
-                controlUnitId = 0,
-                isArchived = false,
-                name = "Control Unit Resource Name",
-                note = null,
-                photo = null,
-                stationId = 0,
-                type = ControlUnitResourceType.BARGE,
-            ),
-            station = StationEntity(
-                id = 0,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Station Name",
-            ),
-        )
+        val fullControlUnitResource =
+            FullControlUnitResourceDTO(
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitResource =
+                    ControlUnitResourceEntity(
+                        id = 1,
+                        controlUnitId = 0,
+                        isArchived = false,
+                        name = "Control Unit Resource Name",
+                        note = null,
+                        photo = null,
+                        stationId = 0,
+                        type = ControlUnitResourceType.BARGE,
+                    ),
+                station =
+                    StationEntity(
+                        id = 0,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
+            )
 
         given(controlUnitResourceRepository.findById(controlUnitResourceId)).willReturn(fullControlUnitResource)
 

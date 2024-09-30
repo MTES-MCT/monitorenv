@@ -19,25 +19,28 @@ class GetControlUnitByIdUTests {
     @Test
     fun `execute should return a control unit by its ID`() {
         val controlUnitId = 1
-        val fullControlUnit = FullControlUnitDTO(
-            administration = AdministrationEntity(
-                id = 0,
-                name = "Administration Name",
-                isArchived = false,
-            ),
-            controlUnit = ControlUnitEntity(
-                id = 1,
-                administrationId = 0,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Control Unit Name",
-                termsNote = null,
-            ),
-            departmentArea = null,
-            controlUnitContacts = listOf(),
-            controlUnitResources = listOf(),
-        )
+        val fullControlUnit =
+            FullControlUnitDTO(
+                administration =
+                    AdministrationEntity(
+                        id = 0,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 1,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
+                    ),
+                departmentArea = null,
+                controlUnitContacts = listOf(),
+                controlUnitResources = listOf(),
+            )
 
         given(controlUnitRepository.findById(controlUnitId)).willReturn(fullControlUnit)
 
