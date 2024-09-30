@@ -17,6 +17,7 @@ type DashboardType = {
   regulatoryIdsToBeDisplayed: number[] | []
   [Dashboard.Block.REGULATORY_AREAS]: number[]
   [Dashboard.Block.VIGILANCE_AREAS]: number[]
+  [Dashboard.Block.AMP]: number[]
 }
 
 type SelectedDashboardType = {
@@ -44,7 +45,8 @@ const INITIAL_STATE: DashboardState = {
       openPanel: undefined,
       regulatoryIdsToBeDisplayed: [],
       [Dashboard.Block.REGULATORY_AREAS]: [],
-      [Dashboard.Block.VIGILANCE_AREAS]: []
+      [Dashboard.Block.VIGILANCE_AREAS]: [],
+      [Dashboard.Block.AMP]: []
     }
   },
 

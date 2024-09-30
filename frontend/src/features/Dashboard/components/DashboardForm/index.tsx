@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
 import { RegulatoryAreas } from './RegulatoryAreas'
+import { TerritorialPressure } from './TerritorialPressure'
 import { VigilanceAreas } from './VigilanceAreas'
 import { dashboardActions } from '../../slice'
 
@@ -97,24 +98,11 @@ export function DashboardForm() {
         />
       </Column>
       <Column>
-        <Accordion
+        <TerritorialPressure
           isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
-          title="Pression territoriale des contrôles et surveillances"
-        >
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-        </Accordion>
+        />
+
         <Accordion
           headerButton={<IconButton accent={Accent.TERTIARY} Icon={Icon.Hide} onClick={clickOnEye} />}
           isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
