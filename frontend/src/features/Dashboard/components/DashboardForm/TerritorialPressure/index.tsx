@@ -28,9 +28,12 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
   const regulatoryLayersByLayerName = Object.keys(
     groupBy(regulatoryAreaIds, r => regulatoryLayers?.entities[r]?.layer_name)
   )
-  const mappedLinks = regulatoryLayersByLayerName.join("&groupe_d'entité-réglementaires=")
+  const mappedLinks = regulatoryLayersByLayerName.join("&groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=")
   const formattedRegulatoryAreaLink = useMemo(
-    () => (regulatoryLayersByLayerName ? `groupe_d'entité-réglementaires=${mappedLinks}&année=${currentYear}` : ''),
+    () =>
+      regulatoryLayersByLayerName
+        ? `groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=${mappedLinks}&ann%25C3%25A9e=${currentYear}`
+        : '',
     [regulatoryLayersByLayerName, mappedLinks, currentYear]
   )
 
@@ -70,7 +73,7 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
         )}
         {department && (
           <a
-            href={`${METABASE_URL}${DEPARTMENT_LINK}&dates=${dates}&département=${department}`}
+            href={`${METABASE_URL}${DEPARTMENT_LINK}&dates=${dates}&d%25C3%25A9partement=${department}`}
             rel="external noreferrer"
             target="_blank"
           >

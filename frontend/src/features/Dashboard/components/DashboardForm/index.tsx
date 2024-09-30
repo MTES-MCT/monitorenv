@@ -2,7 +2,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Textarea } from '@mtes-mct/monitor-ui'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -20,6 +20,8 @@ export function DashboardForm() {
 
   const dispatch = useAppDispatch()
   const dashboardId = 1 // TODO replace with real value
+  const comments = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.comments ?? undefined)
+
   const [expandedAccordionFirstColumn, setExpandedAccordionFirstColumn] = useState<Dashboard.Block | undefined>(
     undefined
   )
@@ -29,6 +31,10 @@ export function DashboardForm() {
   const [expandedAccordionThirdColumn, setExpandedAccordionThirdColumn] = useState<Dashboard.Block | undefined>(
     undefined
   )
+
+  const updateComments = (value: string | undefined) => {
+    dispatch(dashboardActions.setComments(value))
+  }
 
   const handleAccordionClick = (type: Dashboard.Block) => {
     switch (type) {
@@ -139,10 +145,13 @@ export function DashboardForm() {
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}
           title="Commentaires"
         >
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
+          <StyledTextarea
+            isLabelHidden
+            label="Commentaires"
+            name="comments"
+            onChange={updateComments}
+            value={comments}
+          />
         </Accordion>
       </Column>
     </Container>
@@ -163,4 +172,7 @@ const Column = styled.div`
   overflow-y: auto;
   overflow-x: visible;
   padding: 12px;
+`
+const StyledTextarea = styled(Textarea)`
+  padding: 16px 24px;
 `
