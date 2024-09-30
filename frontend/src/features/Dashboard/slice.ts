@@ -12,6 +12,7 @@ type OpenPanel = {
 }
 
 type DashboardType = {
+  comments: string | undefined
   dashboard: any
   openPanel: OpenPanel | undefined
   regulatoryIdsToBeDisplayed: number[] | []
@@ -41,6 +42,7 @@ const INITIAL_STATE: DashboardState = {
   dashboards: {
     1: {
       // TODO: it's just for testing to delete
+      comments: undefined,
       dashboard: {},
       openPanel: undefined,
       regulatoryIdsToBeDisplayed: [],
@@ -125,6 +127,15 @@ export const dashboardSlice = createSlice({
           regulatoryId => regulatoryId !== action.payload
         )
       }
+    },
+    setComments(state, action: PayloadAction<string | undefined>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].comments = action.payload
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {
       const id = state.activeDashboardId
