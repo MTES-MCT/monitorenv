@@ -28,17 +28,18 @@ export function Amps({ ampIds }: { ampIds: Array<number> }) {
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.ampIdsToDisplay : undefined
   )
   const openPanel = useAppSelector(state =>
-    activeDashboardId
-      ? getOpenedPanel(state.dashboard, { id: activeDashboardId, type: Dashboard.Block.VIGILANCE_AREAS })
-      : undefined
+    activeDashboardId ? getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS) : undefined
   )
 
   const isSubPanelOpened = !!(openPanel?.subPanel?.id && openPanel.subPanel.type === Dashboard.Block.AMP)
 
-  const onClick = (event, id: number | undefined) => {
+  const toggleMetadata = (event, id: number | undefined) => {
     event.stopPropagation()
     if (openPanel && id) {
       dispatch(dashboardActions.setDashboardPanel({ ...openPanel, subPanel: { id, type: Dashboard.Block.AMP } }))
+    }
+    if (openPanel?.subPanel?.id === id) {
+      closePanel()
     }
   }
 
@@ -93,7 +94,7 @@ export function Amps({ ampIds }: { ampIds: Array<number> }) {
                   isSubPanelOpened && openPanel?.subPanel?.id === amp?.id ? THEME.color.charcoal : THEME.color.lightGray
                 }
                 Icon={Icon.Summary}
-                onClick={e => onClick(e, amp?.id)}
+                onClick={e => toggleMetadata(e, amp?.id)}
                 title={
                   isSubPanelOpened && openPanel?.subPanel?.id === amp?.id
                     ? 'Fermer la réglementation de la zone'

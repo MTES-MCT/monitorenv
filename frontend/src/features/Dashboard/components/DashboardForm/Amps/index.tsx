@@ -9,7 +9,7 @@ import styled from 'styled-components'
 
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
-import { Accordion, AccordionWrapper } from '../Accordion'
+import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { AMPFromAPI } from 'domain/entities/AMPs'
@@ -38,9 +38,7 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
     return () => window.removeEventListener('resize', updateSize)
   }, [])
 
-  const openPanel = useAppSelector(state =>
-    getOpenedPanel(state.dashboard, { id: dashboardId, type: Dashboard.Block.AMP })
-  )
+  const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
 
   const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
@@ -61,7 +59,7 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
   }, [isMounted])
 
   return (
-    <AccordionWrapper ref={ref}>
+    <div ref={ref}>
       {isMounted && (
         <>
           {openPanel && <StyledPanel $marginLeft={width} layerId={openPanel.id} />}
@@ -110,7 +108,7 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
           </SelectedAccordion>
         </>
       )}
-    </AccordionWrapper>
+    </div>
   )
 }
 

@@ -200,12 +200,16 @@ export const dashboardSlice = createSlice({
 export const getOpenedPanel = createSelector(
   [
     (state: DashboardState) => state.dashboards,
-    (_: DashboardState, dashboard: { id: number; type: Dashboard.Block }) => dashboard
+    (state: DashboardState) => state.activeDashboardId,
+    (_: DashboardState, type: Dashboard.Block) => type
   ],
-  (dashboards, dashboard) => {
-    const openPanel = dashboards?.[dashboard.id]?.openPanel
+  (dashboards, activeDashboardId, type) => {
+    if (!activeDashboardId) {
+      return undefined
+    }
+    const openPanel = dashboards?.[activeDashboardId]?.openPanel
 
-    return openPanel?.type === dashboard.type ? openPanel : undefined
+    return openPanel?.type === type ? openPanel : undefined
   }
 )
 

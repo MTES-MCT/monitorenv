@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { Layer } from './Layer'
 import { Panel } from './Panel'
-import { Accordion, AccordionWrapper } from '../Accordion'
+import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
@@ -27,9 +27,7 @@ export function VigilanceAreas({
   setExpandedAccordion,
   vigilanceAreas
 }: VigilanceAreasProps) {
-  const openPanel = useAppSelector(state =>
-    getOpenedPanel(state.dashboard, { id: dashboardId, type: Dashboard.Block.VIGILANCE_AREAS })
-  )
+  const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
   const selectedLayerIds = useAppSelector(
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.VIGILANCE_AREAS]
   )
@@ -38,7 +36,7 @@ export function VigilanceAreas({
   const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
 
   return (
-    <AccordionWrapper>
+    <div>
       {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones de vigilance">
@@ -61,7 +59,7 @@ export function VigilanceAreas({
           <Layer key={vigilanceArea.id} dashboardId={dashboardId} isSelected vigilanceArea={vigilanceArea} />
         ))}
       </SelectedAccordion>
-    </AccordionWrapper>
+    </div>
   )
 }
 

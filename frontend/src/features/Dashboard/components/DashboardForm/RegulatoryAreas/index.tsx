@@ -9,7 +9,7 @@ import styled from 'styled-components'
 
 import { ListLayerGroup } from './ListLayerGroup'
 import { RegulatoryPanel } from './Panel'
-import { Accordion, AccordionWrapper } from '../Accordion'
+import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
@@ -32,9 +32,7 @@ export function RegulatoryAreas({
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
   )
 
-  const openPanel = useAppSelector(state =>
-    getOpenedPanel(state.dashboard, { id: dashboardId, type: Dashboard.Block.REGULATORY_AREAS })
-  )
+  const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
@@ -43,7 +41,7 @@ export function RegulatoryAreas({
   const selectedRegulatoryAreasByLayerName = groupBy(selectedRegulatoryAreaIds, r => r.layer_name)
 
   return (
-    <AccordionWrapper>
+    <div>
       {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones règlementaires">
@@ -89,7 +87,7 @@ export function RegulatoryAreas({
           )
         })}
       </SelectedAccordion>
-    </AccordionWrapper>
+    </div>
   )
 }
 
