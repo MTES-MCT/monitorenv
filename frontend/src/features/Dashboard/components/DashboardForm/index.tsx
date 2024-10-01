@@ -170,6 +170,8 @@ const Column = styled.div`
   height: calc(100vh - 48px - 24px); // 48px = navbar height, 24px = padding
   scrollbar-gutter: stable;
   overflow-y: auto;
+
+  padding: 3px;
 `
 const StyledTextarea = styled(Textarea)`
   padding: 16px 24px;

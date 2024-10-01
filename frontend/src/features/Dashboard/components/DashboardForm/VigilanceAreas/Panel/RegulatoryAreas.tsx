@@ -28,22 +28,23 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Arra
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.regulatoryIdsToDisplay : undefined
   )
   const openPanel = useAppSelector(state =>
-    activeDashboardId
-      ? getOpenedPanel(state.dashboard, { id: activeDashboardId, type: Dashboard.Block.VIGILANCE_AREAS })
-      : undefined
+    activeDashboardId ? getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS) : undefined
   )
   const isSubPanelOpened = !!(openPanel?.subPanel?.id && openPanel.subPanel.type === Dashboard.Block.REGULATORY_AREAS)
 
-  const onClickRegulatoryZoneMetadata = (event, id: number | undefined) => {
+  const toggleMetadata = (event, id: number | undefined) => {
     event.stopPropagation()
     if (openPanel && id) {
       dispatch(
         dashboardActions.setDashboardPanel({ ...openPanel, subPanel: { id, type: Dashboard.Block.REGULATORY_AREAS } })
       )
     }
+    if (openPanel?.subPanel?.id === id) {
+      closePanel()
+    }
   }
 
-  const closeRegulatoryAreapanel = () => {
+  const closePanel = () => {
     if (isSubPanelOpened) {
       dispatch(dashboardActions.setDashboardPanel({ ...openPanel, subPanel: undefined }))
     }
@@ -74,7 +75,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Arra
   return (
     <>
       {openPanel?.subPanel && isSubPanelOpened && (
-        <StyledRegulatoryAreasPanel layerId={openPanel.subPanel.id} onClose={closeRegulatoryAreapanel} />
+        <StyledRegulatoryAreasPanel layerId={openPanel.subPanel.id} onClose={closePanel} />
       )}
       <PanelSubPart>
         <PanelInlineItemLabel>Réglementations en lien</PanelInlineItemLabel>
@@ -99,7 +100,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Arra
                       : THEME.color.lightGray
                   }
                   Icon={Icon.Summary}
-                  onClick={e => onClickRegulatoryZoneMetadata(e, regulatoryArea?.id)}
+                  onClick={e => toggleMetadata(e, regulatoryArea?.id)}
                   title={
                     isSubPanelOpened && openPanel.subPanel?.id === regulatoryArea?.id
                       ? 'Fermer la réglementation de la zone'

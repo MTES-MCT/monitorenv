@@ -12,7 +12,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -27,6 +27,15 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const openPanel = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.openPanel : undefined
+  )
+
+  const drawBorder = useCallback(
+    (layerId: number, feature: Feature<Geometry>, type: Dashboard.Block) => {
+      if (layerId === openPanel?.id && openPanel.type === type) {
+        feature.set('metadataIsShowed', true)
+      }
+    },
+    [openPanel]
   )
 
   // Regulatory Areas
@@ -66,6 +75,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
           const layer = regulatoryLayers.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
+            drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
             feats.push(feature)
           }
 
@@ -75,7 +85,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         regulatoryLayersVectorSourceRef.current.addFeatures(features)
       }
     }
-  }, [map, openPanel, regulatoryIdsToDisplay, regulatoryLayers?.entities])
+  }, [drawBorder, map, openPanel, regulatoryIdsToDisplay, regulatoryLayers?.entities])
 
   // AMP
   const ampIdsToDisplay = useAppSelector(state =>
@@ -112,6 +122,8 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
           const layer = ampLayers.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
+            drawBorder(layerId, feature, Dashboard.Block.AMP)
+
             feats.push(feature)
           }
 
@@ -121,7 +133,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         ampLayersVectorSourceRef.current.addFeatures(features)
       }
     }
-  }, [ampIdsToDisplay, ampLayers?.entities, map, openPanel])
+  }, [ampIdsToDisplay, ampLayers?.entities, drawBorder, map, openPanel])
 
   // Vigilance Areas
   const selectedVigilanceAreaIds = useAppSelector(state =>
