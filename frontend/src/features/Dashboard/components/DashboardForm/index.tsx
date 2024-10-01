@@ -47,7 +47,7 @@ export function DashboardForm() {
       case Dashboard.Block.VIGILANCE_AREAS:
         setExpandedAccordionFirstColumn(expandedAccordionFirstColumn === type ? undefined : type)
         dispatch(dashboardActions.setDashboardPanel())
-        dispatch(dashboardActions.removeAllRegulatoryIdToBeDisplayed())
+        dispatch(dashboardActions.removeAllRegulatoryIdToDisplay())
         break
       case Dashboard.Block.TERRITORIAL_PRESSURE:
       case Dashboard.Block.REPORTINGS:
@@ -62,9 +62,14 @@ export function DashboardForm() {
     }
   }
 
-  // remove openedPanel on mount
   useEffect(() => {
+    // remove openedPanel on mount
     dispatch(dashboardActions.setDashboardPanel())
+
+    // cleanup preview on unmount
+    return () => {
+      dispatch(dashboardActions.removeAllPreviewedItems())
+    }
   }, [dispatch])
 
   const clickOnEye = () => {}
@@ -151,21 +156,20 @@ export function DashboardForm() {
 }
 
 const Container = styled(SideWindowContent)`
-  display: flex;
-  flex-direction: row;
-  gap: 48px;
-  padding: 24px 0 0 25px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // gap and padding are 3px less than the mockup because of box-shadow is hidden because of overflow @see AccordionWrapper
+  column-gap: 45px;
+  padding: 21px 21px 0 21px;
 `
 
 const Column = styled.div`
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: 16px;
-  height: calc(100vh - 48px - 40px); // 48px = navbar height, 40px = padding
-  overflow-y: auto;
-  overflow-x: visible;
+  height: calc(100vh - 48px - 24px); // 48px = navbar height, 24px = padding
   scrollbar-gutter: stable;
+  overflow-y: auto;
 `
 const StyledTextarea = styled(Textarea)`
   padding: 16px 24px;

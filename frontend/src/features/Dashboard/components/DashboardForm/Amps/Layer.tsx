@@ -5,7 +5,6 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { hideAmpLayer, showAmpLayer } from 'domain/shared_slices/Amp'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
 import { createRef } from 'react'
@@ -38,17 +37,18 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
 
     const payload = { itemIds: [layerId], type: Dashboard.Block.AMP }
     if (isZoneSelected) {
-      dispatch(hideAmpLayer(layerId))
       dispatch(dashboardActions.removeItems(payload))
+      dispatch(dashboardActions.removeAmpIdToDisplay(layerId))
     } else {
-      dispatch(showAmpLayer([layerId]))
       dispatch(dashboardActions.addItems(payload))
+      dispatch(dashboardActions.addAmpIdToDisplay(layerId))
     }
   }
 
   const removeZone = e => {
     e.stopPropagation()
     dispatch(dashboardActions.removeItems({ itemIds: [layerId], type: Dashboard.Block.AMP }))
+    dispatch(dashboardActions.removeAmpIdToDisplay(layerId))
   }
 
   const toggleZoneMetadata = () => {

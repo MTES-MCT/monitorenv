@@ -74,3 +74,7 @@ const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
   transition: ${({ $isExpanded }) => ($isExpanded ? '0.5s max-height ease-in' : '0.3s max-height ease-out')};
 `
+
+export const AccordionWrapper = styled.div`
+  padding: 3px;
+`
