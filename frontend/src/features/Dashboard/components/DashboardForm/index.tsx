@@ -2,8 +2,11 @@ import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, Textarea } from '@mtes-mct/monitor-ui'
-import { useEffect, useRef, useState } from 'react'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Textarea, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getCenter } from 'ol/extent'
+import { GeoJSON } from 'ol/format'
+import { transform } from 'ol/proj'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
@@ -15,7 +18,7 @@ import { dashboardActions } from '../../slice'
 
 export function DashboardForm() {
   const extractedArea = useAppSelector(state => state.dashboard.extractedArea)
-
+  const geom = useAppSelector(state => state.dashboard.geometry)
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth
 
@@ -62,6 +65,26 @@ export function DashboardForm() {
     }
   }
 
+  const coordinates = useMemo(() => {
+    if (!geom) {
+      return ''
+    }
+    const feature = new GeoJSON({
+      featureProjection: OPENLAYERS_PROJECTION
+    }).readFeature(geom)
+
+    const extent = feature?.getGeometry()?.getExtent()
+    const center = extent && getCenter(extent)
+    const centerLatLon = center && transform(center, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+
+    if (!centerLatLon) {
+      return undefined
+    }
+
+    return `${centerLatLon[1]?.toFixed(3)}/${centerLatLon[0]?.toFixed(3)}`
+  }, [geom])
+
+  // remove openedPanel on mount
   useEffect(() => {
     // remove openedPanel on mount
     dispatch(dashboardActions.setDashboardPanel())
@@ -150,6 +173,17 @@ export function DashboardForm() {
             value={comments}
           />
         </Accordion>
+        <WeatherBlock>
+          <WeatherTitle>Météo</WeatherTitle>
+          {coordinates ? (
+            <a href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
+              <span> {`https://www.windy.com/${coordinates}`}</span>
+              <Icon.ExternalLink size={16} />
+            </a>
+          ) : (
+            <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
+          )}
+        </WeatherBlock>
       </Column>
     </Container>
   )
@@ -175,4 +209,27 @@ const Column = styled.div`
 `
 const StyledTextarea = styled(Textarea)`
   padding: 16px 24px;
+`
+const WeatherBlock = styled.div`
+  align-items: center;
+  box-shadow: 0px 3px 6px #70778540;
+  display: flex;
+  gap: 24px;
+  padding: 21px 24px;
+  > a {
+    align-items: center;
+    color: #295edb;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+`
+const WeatherTitle = styled.h2`
+  font-size: 16px;
+  font-weight: 500;
+`
+const CoordinatesError = styled.div`
+  color: ${p => p.theme.color.slateGray};
+  font-size: 11px;
+  font-style: italic;
 `
