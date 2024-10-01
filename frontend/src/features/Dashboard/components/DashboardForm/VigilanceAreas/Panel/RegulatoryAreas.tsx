@@ -1,45 +1,52 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
-import { dashboardActions } from '@features/Dashboard/slice'
+import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
+import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { PanelInlineItemLabel, PanelSubPart } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
-import { useState } from 'react'
 import styled from 'styled-components'
 
+import { ButtonsContainer, Container, Name, StyledButton } from './style'
 import { RegulatoryAreasPanel } from '../../components/RegulatoryAreasPanel'
 
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
-export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Array<number> | undefined }) {
+export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Array<number> }) {
   const dispatch = useAppDispatch()
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
-  const regulatoryAreas = regulatoryAreaIds?.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
-  const [regulatoryAreaId, setRegulatoryAreaId] = useState<number | undefined>(undefined)
+  const regulatoryAreas = regulatoryAreaIds.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
-  const regulatoryIdsToBeDisplayed = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.regulatoryIdsToBeDisplayed : undefined
+  const regulatoryIdsToDisplay = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.regulatoryIdsToDisplay : undefined
   )
+  const openPanel = useAppSelector(state =>
+    activeDashboardId
+      ? getOpenedPanel(state.dashboard, { id: activeDashboardId, type: Dashboard.Block.VIGILANCE_AREAS })
+      : undefined
+  )
+  const isSubPanelOpened = !!(openPanel?.subPanel?.id && openPanel.subPanel.type === Dashboard.Block.REGULATORY_AREAS)
 
   const onClickRegulatoryZoneMetadata = (event, id: number | undefined) => {
     event.stopPropagation()
-    if (regulatoryAreaId === id) {
-      setRegulatoryAreaId(undefined)
-
-      return
+    if (openPanel && id) {
+      dispatch(
+        dashboardActions.setDashboardPanel({ ...openPanel, subPanel: { id, type: Dashboard.Block.REGULATORY_AREAS } })
+      )
     }
-    setRegulatoryAreaId(id)
   }
 
   const closeRegulatoryAreapanel = () => {
-    setRegulatoryAreaId(undefined)
+    if (isSubPanelOpened) {
+      dispatch(dashboardActions.setDashboardPanel({ ...openPanel, subPanel: undefined }))
+    }
   }
 
   const showRegulatoryAreaLayer = (event, regulatoryArea: RegulatoryLayerCompact | undefined) => {
@@ -48,10 +55,10 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Arra
     if (!regulatoryArea?.id) {
       return
     }
-    if (regulatoryIdsToBeDisplayed?.includes(regulatoryArea.id)) {
-      dispatch(dashboardActions.removeRegulatoryIdToBeDisplayed(regulatoryArea.id))
+    if (regulatoryIdsToDisplay?.includes(regulatoryArea.id)) {
+      dispatch(dashboardActions.removeRegulatoryIdToDisplay(regulatoryArea.id))
     } else {
-      dispatch(dashboardActions.addRegulatoryIdToBeDisplayed(regulatoryArea.id))
+      dispatch(dashboardActions.addRegulatoryIdToDisplay(regulatoryArea.id))
       if (!regulatoryArea?.bbox) {
         return
       }
@@ -66,87 +73,64 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Arra
 
   return (
     <>
-      {regulatoryAreaId && <StyledRegulatoryAreasPanel layerId={regulatoryAreaId} onClose={closeRegulatoryAreapanel} />}
+      {openPanel?.subPanel && isSubPanelOpened && (
+        <StyledRegulatoryAreasPanel layerId={openPanel.subPanel.id} onClose={closeRegulatoryAreapanel} />
+      )}
       <PanelSubPart>
         <PanelInlineItemLabel>Réglementations en lien</PanelInlineItemLabel>
         {regulatoryAreas &&
-          regulatoryAreas.length > 0 &&
           regulatoryAreas.map(regulatoryArea => (
-            <RegulatoryAreaContainer key={regulatoryArea?.id}>
-              <RegulatoryAreaName>
+            <Container key={regulatoryArea?.id}>
+              <Name>
                 <LayerLegend
                   layerType={MonitorEnvLayers.REGULATORY_ENV}
                   legendKey={regulatoryArea?.entity_name ?? 'aucun'}
                   type={regulatoryArea?.thematique ?? 'aucun'}
                 />
                 <span title={regulatoryArea?.entity_name}>{regulatoryArea?.entity_name}</span>
-              </RegulatoryAreaName>
+              </Name>
 
               <ButtonsContainer>
                 <StyledButton
                   accent={Accent.TERTIARY}
-                  color={regulatoryAreaId === regulatoryArea?.id ? THEME.color.charcoal : THEME.color.lightGray}
+                  color={
+                    isSubPanelOpened && openPanel.subPanel?.id === regulatoryArea?.id
+                      ? THEME.color.charcoal
+                      : THEME.color.lightGray
+                  }
                   Icon={Icon.Summary}
                   onClick={e => onClickRegulatoryZoneMetadata(e, regulatoryArea?.id)}
                   title={
-                    regulatoryAreaId === regulatoryArea?.id
-                      ? 'Fermer la zone réglementaire'
-                      : 'Afficher la réglementaire'
+                    isSubPanelOpened && openPanel.subPanel?.id === regulatoryArea?.id
+                      ? 'Fermer la réglementation de la zone'
+                      : 'Afficher la réglementation de la zone'
                   }
                 />
 
                 <StyledButton
                   accent={Accent.TERTIARY}
                   color={
-                    regulatoryArea?.id && regulatoryIdsToBeDisplayed?.includes(regulatoryArea?.id)
+                    regulatoryArea?.id && regulatoryIdsToDisplay?.includes(regulatoryArea?.id)
                       ? THEME.color.charcoal
                       : THEME.color.lightGray
                   }
                   Icon={Icon.Display}
                   onClick={e => showRegulatoryAreaLayer(e, regulatoryArea)}
                   title={
-                    regulatoryArea?.id && regulatoryIdsToBeDisplayed?.includes(regulatoryArea?.id)
+                    regulatoryArea?.id && regulatoryIdsToDisplay?.includes(regulatoryArea?.id)
                       ? 'Cacher la zone'
                       : 'Afficher la zone'
                   }
                 />
               </ButtonsContainer>
-            </RegulatoryAreaContainer>
+            </Container>
           ))}
       </PanelSubPart>
     </>
   )
 }
-const RegulatoryAreaContainer = styled.div`
-  align-items: center;
-  border-bottom: 1px solid ${p => p.theme.color.lightGray};
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  justify-content: space-between;
-  padding: 8px;
 
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0px;
-  }
-`
-const RegulatoryAreaName = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  > span {
-    margin-left: 8px;
-  }
-`
 const StyledRegulatoryAreasPanel = styled(RegulatoryAreasPanel)`
   top: 0;
   left: 404px;
-`
-const ButtonsContainer = styled.div`
-  display: flex;
-  gap: 8px;
-`
-const StyledButton = styled(IconButton)`
-  padding: 0;
 `

@@ -8,14 +8,16 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 type OpenPanel = {
   id: number
+  subPanel?: OpenPanel
   type: Dashboard.Block
 }
 
 type DashboardType = {
+  ampIdsToDisplay: number[]
   comments: string | undefined
   dashboard: any
   openPanel: OpenPanel | undefined
-  regulatoryIdsToBeDisplayed: number[] | []
+  regulatoryIdsToDisplay: number[]
   [Dashboard.Block.REGULATORY_AREAS]: number[]
   [Dashboard.Block.VIGILANCE_AREAS]: number[]
   [Dashboard.Block.AMP]: number[]
@@ -41,11 +43,12 @@ const INITIAL_STATE: DashboardState = {
   // TODO: it's just for testing to replace with undefined
   dashboards: {
     1: {
+      ampIdsToDisplay: [],
       // TODO: it's just for testing to delete
       comments: undefined,
       dashboard: {},
       openPanel: undefined,
-      regulatoryIdsToBeDisplayed: [],
+      regulatoryIdsToDisplay: [],
       [Dashboard.Block.REGULATORY_AREAS]: [],
       [Dashboard.Block.VIGILANCE_AREAS]: [],
       [Dashboard.Block.AMP]: []
@@ -67,6 +70,16 @@ export const dashboardSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'dashboard',
   reducers: {
+    addAmpIdToDisplay(state, action: PayloadAction<number>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      const ampIds = state.dashboards[id]?.ampIdsToDisplay
+      state.dashboards[id].ampIdsToDisplay = [...ampIds, action.payload]
+    },
     addItems(state, action: PayloadAction<{ itemIds: number[]; type: Dashboard.Block }>) {
       const { itemIds, type } = action.payload
       const id = state.activeDashboardId
@@ -79,28 +92,45 @@ export const dashboardSlice = createSlice({
         state.dashboards[id][type] = [...selectedItems, ...itemIds]
       }
     },
-    addRegulatoryIdToBeDisplayed(state, action: PayloadAction<number>) {
+    addRegulatoryIdToDisplay(state, action: PayloadAction<number>) {
       const id = state.activeDashboardId
 
       if (!id || !state.dashboards[id]) {
         return
       }
 
-      const regulatoryIds = state.dashboards[id]?.regulatoryIdsToBeDisplayed
-      if (regulatoryIds) {
-        state.dashboards[id].regulatoryIdsToBeDisplayed = [...regulatoryIds, action.payload]
-      } else {
-        state.dashboards[id].regulatoryIdsToBeDisplayed = [action.payload]
-      }
+      const regulatoryIds = state.dashboards[id]?.regulatoryIdsToDisplay
+      state.dashboards[id].regulatoryIdsToDisplay = [...regulatoryIds, action.payload]
     },
-    removeAllRegulatoryIdToBeDisplayed(state) {
+    removeAllPreviewedItems(state) {
       const id = state.activeDashboardId
 
       if (!id || !state.dashboards[id]) {
         return
       }
 
-      state.dashboards[id].regulatoryIdsToBeDisplayed = []
+      state.dashboards[id].regulatoryIdsToDisplay = []
+      state.dashboards[id].ampIdsToDisplay = []
+    },
+    removeAllRegulatoryIdToDisplay(state) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].regulatoryIdsToDisplay = []
+    },
+    removeAmpIdToDisplay(state, action: PayloadAction<number>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+      const ampIds = state.dashboards[id]?.ampIdsToDisplay
+      if (ampIds) {
+        state.dashboards[id].ampIdsToDisplay = ampIds.filter(ampId => ampId !== action.payload)
+      }
     },
     removeItems(state, action: PayloadAction<{ itemIds: number[]; type: Dashboard.Block }>) {
       const { itemIds, type } = action.payload
@@ -115,15 +145,15 @@ export const dashboardSlice = createSlice({
         state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item))
       }
     },
-    removeRegulatoryIdToBeDisplayed(state, action: PayloadAction<number>) {
+    removeRegulatoryIdToDisplay(state, action: PayloadAction<number>) {
       const id = state.activeDashboardId
 
       if (!id || !state.dashboards[id]) {
         return
       }
-      const regulatoryIds = state.dashboards[id]?.regulatoryIdsToBeDisplayed
+      const regulatoryIds = state.dashboards[id]?.regulatoryIdsToDisplay
       if (regulatoryIds) {
-        state.dashboards[id].regulatoryIdsToBeDisplayed = regulatoryIds.filter(
+        state.dashboards[id].regulatoryIdsToDisplay = regulatoryIds.filter(
           regulatoryId => regulatoryId !== action.payload
         )
       }

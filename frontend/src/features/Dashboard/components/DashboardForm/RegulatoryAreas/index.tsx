@@ -9,7 +9,7 @@ import styled from 'styled-components'
 
 import { ListLayerGroup } from './ListLayerGroup'
 import { RegulatoryPanel } from './Panel'
-import { Accordion } from '../Accordion'
+import { Accordion, AccordionWrapper } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
@@ -43,7 +43,7 @@ export function RegulatoryAreas({
   const selectedRegulatoryAreasByLayerName = groupBy(selectedRegulatoryAreaIds, r => r.layer_name)
 
   return (
-    <div>
+    <AccordionWrapper>
       {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones règlementaires">
@@ -89,7 +89,7 @@ export function RegulatoryAreas({
           )
         })}
       </SelectedAccordion>
-    </div>
+    </AccordionWrapper>
   )
 }
 

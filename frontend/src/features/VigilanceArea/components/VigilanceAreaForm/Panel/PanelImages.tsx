@@ -11,7 +11,7 @@ export function PanelImages({
   isSideWindow = false,
   vigilanceAreaName
 }: {
-  images: VigilanceArea.ImagePropsForApi[] | []
+  images: VigilanceArea.ImagePropsForApi[]
   isSideWindow?: boolean
   vigilanceAreaName: string | undefined
 }) {

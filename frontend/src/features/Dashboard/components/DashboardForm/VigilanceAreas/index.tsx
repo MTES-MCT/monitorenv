@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { Layer } from './Layer'
 import { Panel } from './Panel'
-import { Accordion } from '../Accordion'
+import { Accordion, AccordionWrapper } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
@@ -38,7 +38,7 @@ export function VigilanceAreas({
   const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
 
   return (
-    <div>
+    <AccordionWrapper>
       {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones de vigilance">
@@ -61,7 +61,7 @@ export function VigilanceAreas({
           <Layer key={vigilanceArea.id} dashboardId={dashboardId} isSelected vigilanceArea={vigilanceArea} />
         ))}
       </SelectedAccordion>
-    </div>
+    </AccordionWrapper>
   )
 }
 
@@ -71,6 +71,6 @@ const StyledLayerList = styled(LayerSelector.LayerList)`
 const StyledPanel = styled(Panel)<{ $marginLeft: number }>`
   left: ${p =>
     `calc(
-    ${p.$marginLeft}px + 40px + 64px
-  )`}; // 40px is the padding, 64px is the width of the sidebar
+    ${p.$marginLeft}px + 24px + 64px + 4px
+  )`}; // 24px is the padding, 64px is the width of the sidebar, 4px is the margin
 `

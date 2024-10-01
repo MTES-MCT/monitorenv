@@ -9,7 +9,7 @@ import styled from 'styled-components'
 
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
-import { Accordion } from '../Accordion'
+import { Accordion, AccordionWrapper } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { AMPFromAPI } from 'domain/entities/AMPs'
@@ -61,7 +61,7 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
   }, [isMounted])
 
   return (
-    <div ref={ref}>
+    <AccordionWrapper ref={ref}>
       {isMounted && (
         <>
           {openPanel && <StyledPanel $marginLeft={width} layerId={openPanel.id} />}
@@ -110,7 +110,7 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
           </SelectedAccordion>
         </>
       )}
-    </div>
+    </AccordionWrapper>
   )
 }
 
@@ -122,5 +122,5 @@ const StyledPanel = styled(AmpPanel)<{ $marginLeft?: number }>`
   left: ${p =>
     `calc(
     ${p.$marginLeft}px + 25px + 64px + 4px
-  )`}; // 40px is the padding, 64px is the width of the sidebar
+  )`}; // 25px is the padding, 64px is the width of the sidebar
 `

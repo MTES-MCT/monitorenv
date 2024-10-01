@@ -64,6 +64,7 @@ const AccordionHeader = styled.header`
   cursor: pointer;
   display: flex;
   font-weight: 500;
+  line-height: 22px;
   justify-content: space-between;
   padding: 4px 24px 2px 24px;
 `

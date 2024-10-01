@@ -11,10 +11,10 @@ type PanelProps = {
 export const RegulatoryPanel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props }, ref) => {
   const dispatch = useAppDispatch()
 
-  const onCloseIconClicked = () => {
+  const close = () => {
     dispatch(dashboardActions.setDashboardPanel())
   }
 
   // eslint-disable-next-line react/jsx-props-no-spreading
-  return <RegulatoryAreasPanel ref={ref} layerId={layerId} onClose={onCloseIconClicked} {...props} />
+  return <RegulatoryAreasPanel ref={ref} layerId={layerId} onClose={close} {...props} />
 })

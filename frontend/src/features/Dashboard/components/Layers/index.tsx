@@ -1,5 +1,7 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
+import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
@@ -76,6 +78,54 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
     }
   }, [map, openPanel?.id, openPanel?.type, regulatoryLayers, selectedRegulatoryAreaIds])
 
+  // AMP
+  const selectedAmpIds = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.AMP] ?? [] : []
+  )
+
+  const { data: ampLayers } = useGetRegulatoryLayersQuery()
+  const ampLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
+  const ampLayersVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      renderOrder: (a, b) => b.get('area') - a.get('area'),
+      source: ampLayersVectorSourceRef.current,
+      style: getAMPLayerStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.DASHBOARD.zIndex
+    })
+  ) as React.MutableRefObject<VectorLayerWithName>
+  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD.code
+
+  useEffect(() => {
+    if (map) {
+      ampLayersVectorSourceRef.current.clear(true)
+
+      if (ampLayers?.entities) {
+        let ampLayerIds = selectedAmpIds
+        const openPanelIsRegulatory = openPanel?.type === Dashboard.Block.AMP
+        // we don't want to display the area twice
+        if (openPanelIsRegulatory) {
+          ampLayerIds = selectedAmpIds.filter(id => id !== openPanel?.id)
+        }
+        const features = ampLayerIds.reduce((feats: Feature[], layerId) => {
+          const layer = ampLayers.entities[layerId]
+
+          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
+
+            feats.push(feature)
+          }
+
+          return feats
+        }, [])
+
+        ampLayersVectorSourceRef.current.addFeatures(features)
+      }
+    }
+  }, [ampLayers?.entities, map, openPanel?.id, openPanel?.type, selectedAmpIds])
+
   // Vigilance Areas
   const selectedVigilanceAreaIds = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.VIGILANCE_AREAS] : []
@@ -127,11 +177,14 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     map.getLayers().push(regulatoryLayersVectorLayerRef.current)
+    map.getLayers().push(ampLayersVectorLayerRef.current)
     map.getLayers().push(vigilanceAreaLayersVectorLayerRef.current)
 
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       map.removeLayer(regulatoryLayersVectorLayerRef.current)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(ampLayersVectorLayerRef.current)
       // eslint-disable-next-line react-hooks/exhaustive-deps
       map.removeLayer(vigilanceAreaLayersVectorLayerRef.current)
     }
@@ -139,6 +192,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     regulatoryLayersVectorLayerRef.current?.setVisible(isLayerVisible)
+    ampLayersVectorLayerRef.current?.setVisible(isLayerVisible)
     vigilanceAreaLayersVectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
 

@@ -20,6 +20,7 @@ import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { forwardRef, type ComponentProps } from 'react'
 import styled from 'styled-components'
 
+import { Amps } from './Amps'
 import { RegulatoryAreas } from './RegulatoryAreas'
 
 type PanelProps = {
@@ -74,15 +75,11 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
           <PanelComments comments={vigilanceArea?.comments} />
 
           {vigilanceArea?.linkedRegulatoryAreas && vigilanceArea?.linkedRegulatoryAreas.length > 0 && (
-            <RegulatoryAreas regulatoryAreaIds={vigilanceArea?.linkedRegulatoryAreas} />
+            <RegulatoryAreas regulatoryAreaIds={vigilanceArea.linkedRegulatoryAreas} />
           )}
-          {/* TODO : add AMP when the block is added */}
-          {/* {vigilanceArea?.linkedAMPs && vigilanceArea?.linkedAMPs.length > 0 && (
-            <PanelSubPart>
-              <PanelInlineItemLabel>AMP en lien</PanelInlineItemLabel>
-              <AMPList isReadOnly linkedAMPs={vigilanceArea?.linkedAMPs} />
-            </PanelSubPart>
-          )} */}
+          {vigilanceArea?.linkedAMPs && vigilanceArea?.linkedAMPs.length > 0 && (
+            <Amps ampIds={vigilanceArea.linkedAMPs} />
+          )}
           {vigilanceArea?.images && vigilanceArea?.images.length > 0 && (
             <PanelImages images={vigilanceArea?.images} isSideWindow vigilanceAreaName={vigilanceArea?.name} />
           )}
