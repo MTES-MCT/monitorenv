@@ -41,21 +41,13 @@ describe('filterVigilanceAreas', () => {
   }
   const year = {
     computedEndDate: undefined,
-    endDatePeriod: `${customDayjs()
-      .endOf('quarter')
-      .add(3, 'months')
-      .add(1, 'days')
-      .format('YYYY-MM-DD')} 00:00:00.00000`,
+    endDatePeriod: `${customDayjs().add(24, 'days').format('YYYY-MM-DD')} 23:59:59.99999`,
     endingCondition: VigilanceArea.EndingCondition.NEVER,
     endingOccurrenceDate: undefined,
     endingOccurrencesNumber: undefined,
     frequency: VigilanceArea.Frequency.ALL_YEARS,
     id: 3,
-    startDatePeriod: `${customDayjs()
-      .startOf('quarter')
-      .add(3, 'months')
-      .add(1, 'days')
-      .format('YYYY-MM-DD')} 00:00:00.00000`
+    startDatePeriod: `${customDayjs().add(3, 'days').format('YYYY-MM-DD')} 00:00:00.00000`
   }
 
   const areas = [today, quarter, year, outsideFilteredDate]
@@ -75,7 +67,7 @@ describe('filterVigilanceAreas', () => {
       VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER,
       undefined
     )
-    expect(result).toEqual([today, quarter])
+    expect(result).toEqual([today, quarter, year])
   })
 
   it('filters areas within current year', () => {
