@@ -1,15 +1,18 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
+import type { ReactNode } from 'react'
+
 type AccordionProps = {
-  children: React.ReactNode
-  headerButton?: React.ReactNode
+  children: ReactNode
+  headerButton?: ReactNode
   isExpanded: boolean
+  name?: string
   setExpandedAccordion: () => void
-  title: string
+  title: string | ReactNode
 }
 
-export function Accordion({ children, headerButton, isExpanded, setExpandedAccordion, title }: AccordionProps) {
+export function Accordion({ children, headerButton, isExpanded, name, setExpandedAccordion, title }: AccordionProps) {
   return (
     <AccordionContainer $withCursor={!headerButton}>
       <AccordionHeader
@@ -29,7 +32,7 @@ export function Accordion({ children, headerButton, isExpanded, setExpandedAccor
         />
       </AccordionHeader>
       <HeaderSeparator />
-      <AccordionContent $isExpanded={isExpanded} id={`${title}-accordion`}>
+      <AccordionContent $isExpanded={isExpanded} id={`${name ?? title}-accordion`}>
         {children}
       </AccordionContent>
     </AccordionContainer>
