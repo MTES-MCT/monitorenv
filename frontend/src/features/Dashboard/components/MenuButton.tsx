@@ -38,6 +38,8 @@ export function DashboardMenuButton() {
   const goToDashboardsList = () => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.DASHBOARDS))
 
   const openDrawModal = () => {
+    // TODO: delete this line, it's just to test the Weather block which needs a geometry
+    dispatch(resetDrawing())
     dispatch(dashboardActions.setIsDrawing(true))
   }
 
