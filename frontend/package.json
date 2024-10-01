@@ -25,7 +25,7 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "23.0.0",
+    "@mtes-mct/monitor-ui": "23.4.0",
     "@reduxjs/toolkit": "2.2.7",
     "@rsuite/responsive-nav": "5.0.2",
     "@sentry/browser": "7.73.0",

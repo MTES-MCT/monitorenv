@@ -1,8 +1,8 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Icon } from '@mtes-mct/monitor-ui'
+import { Icon, THEME } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
@@ -11,13 +11,21 @@ import { Accordion } from '../Accordion'
 const AMP_LINK = '/dashboard/199-effort-de-surveillance-et-de-controle-en-amp?'
 const REGULATORY_AREA_LINK = '/dashboard/216-tableau-de-bord-par-zone-reglementaire?'
 const DEPARTMENT_LINK = '/dashboard/197-bilan-et-comites-de-pilotage-niveau-departement?'
+const METABASE_URL = import.meta.env.FRONTEND_METABASE_URL
 
-export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
-  const METABASE_URL = import.meta.env.FRONTEND_METABASE_URL
+type TerritorialPressureProps = {
+  columnWidth: number
+  isExpanded: boolean
+  setExpandedAccordion: () => void
+}
+
+export function TerritorialPressure({ columnWidth, isExpanded, setExpandedAccordion }: TerritorialPressureProps) {
+  const [isVisibleTooltip, setIsVisibleTooltip] = useState<boolean>(false)
+
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const currentYear = new Date().getFullYear()
-  const dates = `${currentYear}-01-01~${currentYear}-12-31`
+  const dateRange = `${currentYear}-01-01~${currentYear}-12-31`
 
   // Regulatory Areas link
   const regulatoryAreas = useAppSelector(state =>
@@ -41,18 +49,42 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
   const amps = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.amps : []))
   const ampsByName = amps?.map(amp => amp.id)
   const formattedAmpLink = useMemo(
-    () => (ampsByName ? `id=${ampsByName.join('&id=')}&intervalle_de_dates=${dates}&amp=` : ''),
-    [ampsByName, dates]
+    () => (ampsByName ? `id=${ampsByName.join('&id=')}&intervalle_de_dates=${dateRange}&amp=` : ''),
+    [ampsByName, dateRange]
   )
 
   // Department link
   const department = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.inseeCode : undefined))
 
+  const titleWithTooltip = (
+    <TitleContainer>
+      <span>Pression territoriale des contrôles et surveillances</span>
+      <>
+        <Icon.Info
+          aria-describedby="territorialPressureTooltip"
+          color={THEME.color.slateGray}
+          onBlur={() => setIsVisibleTooltip(false)}
+          onFocus={() => setIsVisibleTooltip(true)}
+          onMouseLeave={() => setIsVisibleTooltip(false)}
+          onMouseOver={() => setIsVisibleTooltip(true)}
+          tabIndex={0}
+        />
+        {isVisibleTooltip && (
+          <StyledTooltip $marginLeft={columnWidth ?? 0} id="territorialPressureTooltip" role="tooltip">
+            Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones REG,
+            les AMP ou à l’échelle du département.
+          </StyledTooltip>
+        )}
+      </>
+    </TitleContainer>
+  )
+
   return (
     <Accordion
       isExpanded={isExpanded}
+      name="Pression territoriale des contrôles et surveillances"
       setExpandedAccordion={setExpandedAccordion}
-      title="Pression territoriale des contrôles et surveillances"
+      title={titleWithTooltip}
     >
       <LinksContainer>
         {regulatoryAreas && regulatoryAreas.length > 0 && (
@@ -62,23 +94,23 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }) {
             target="_blank"
           >
             <span>Pression zones REG</span>
-            <Icon.Summary />
+            <Icon.ExternalLink size={16} />
           </a>
         )}
         {amps && amps.length > 0 && (
           <a href={`${METABASE_URL}${AMP_LINK}${formattedAmpLink}`} rel="external noreferrer" target="_blank">
             <span>Pression zones AMP</span>
-            <Icon.Summary />
+            <Icon.ExternalLink size={16} />
           </a>
         )}
         {department && (
           <a
-            href={`${METABASE_URL}${DEPARTMENT_LINK}&dates=${dates}&d%25C3%25A9partement=${department}`}
+            href={`${METABASE_URL}${DEPARTMENT_LINK}&dates=${dateRange}&d%25C3%25A9partement=${department}`}
             rel="external noreferrer"
             target="_blank"
           >
             <span>Pression département</span>
-            <Icon.Summary />
+            <Icon.ExternalLink size={16} />
           </a>
         )}
       </LinksContainer>
@@ -93,9 +125,25 @@ const LinksContainer = styled.div`
   justify-content: space-between;
   > a {
     align-items: center;
-    color: #5597d2;
+    color: #295edb;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
   }
+`
+const TitleContainer = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
+const StyledTooltip = styled.p<{ $marginLeft: number }>`
+  background: ${p => p.theme.color.cultured};
+  border: ${p => p.theme.color.lightGray} 1px solid;
+  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
+  font-size: 11px;
+  padding: 4px 8px;
+  position: absolute;
+  left: calc(${p => p.$marginLeft}px + 40px);
+  width: 310px;
+  z-index: 2;
 `

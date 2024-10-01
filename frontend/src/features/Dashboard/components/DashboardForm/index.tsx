@@ -18,6 +18,9 @@ export function DashboardForm() {
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth
 
+  const secondColumnRef = useRef<HTMLDivElement>(null)
+  const secondColumnWidth = secondColumnRef.current?.clientWidth
+
   const dispatch = useAppDispatch()
   const dashboardId = 1 // TODO replace with real value
   const comments = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.comments ?? undefined)
@@ -64,7 +67,6 @@ export function DashboardForm() {
   }, [dispatch])
 
   const clickOnEye = () => {}
-  // TODO 20/09: use constant instead of number to define the accordion index
 
   return (
     <Container>
@@ -103,8 +105,9 @@ export function DashboardForm() {
           vigilanceAreas={extractedArea?.vigilanceAreas}
         />
       </Column>
-      <Column>
+      <Column ref={secondColumnRef}>
         <TerritorialPressure
+          columnWidth={(firstColumnWidth ?? 0) + (secondColumnWidth ?? 0)}
           isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
         />
