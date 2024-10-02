@@ -89,14 +89,14 @@ export function MeasurementMapButton() {
           data-cy="measurement-multiline"
           Icon={() => Icon.MeasureBrokenLine({ size: 28 })}
           onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
-          title={"Mesure d'une distance avec lignes brisées"}
+          title="Mesure d'une distance avec lignes brisées"
         />
         <MeasurementItem
           className="_active"
           data-cy="measurement-circle-range"
           Icon={() => Icon.MeasureCircle({ size: 28 })}
           onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
-          title={"Rayon d'action"}
+          title="Rayon d'action"
         />
       </MeasurementOptions>
       <CustomCircleRange />
