@@ -1,8 +1,11 @@
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, OPENLAYERS_PROJECTION, Textarea, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { isNotArchived } from '@utils/isNotArchived'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
 import { transform } from 'ol/proj'
@@ -11,6 +14,7 @@ import styled from 'styled-components'
 
 import { Accordion } from './Accordion'
 import { Amps } from './Amps'
+import { ControlUnits } from './ControlUnits'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
 import { TerritorialPressure } from './TerritorialPressure'
@@ -20,6 +24,10 @@ import { dashboardActions, getFilteredReportings } from '../../slice'
 export function DashboardForm() {
   const extractedArea = useAppSelector(state => state.dashboard.extractedArea)
   const geom = useAppSelector(state => state.dashboard.geometry)
+
+  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
+
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth
 
@@ -138,24 +146,11 @@ export function DashboardForm() {
         />
       </Column>
       <Column>
-        <Accordion
+        <ControlUnits
+          controlUnits={activeControlUnits ?? []}
           isExpanded={expandedAccordionThirdColumn === Dashboard.Block.CONTROL_UNITS}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.CONTROL_UNITS)}
-          title="Unités"
-        >
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-        </Accordion>
+        />
         <Accordion
           isExpanded={expandedAccordionThirdColumn === Dashboard.Block.COMMENTS}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}

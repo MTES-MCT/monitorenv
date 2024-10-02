@@ -8,10 +8,13 @@ import type { Promisable } from 'type-fest'
 
 export type ItemProps = {
   controlUnitResource: ControlUnit.ControlUnitResource
-  onEdit: (controlUnitResourceId: number) => Promisable<void>
+  onEdit?: (controlUnitResourceId: number) => Promisable<void>
 }
 export function Item({ controlUnitResource, onEdit }: ItemProps) {
   const handleEdit = useCallback(() => {
+    if (!onEdit) {
+      return
+    }
     onEdit(controlUnitResource.id)
   }, [controlUnitResource.id, onEdit])
 
@@ -26,9 +29,16 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
             </Name>
             <p>{controlUnitResource.station.name}</p>
           </div>
-          <div>
-            <StyledIconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={handleEdit} title="Éditer ce moyen" />
-          </div>
+          {onEdit && (
+            <div>
+              <StyledIconButton
+                accent={Accent.TERTIARY}
+                Icon={Icon.Edit}
+                onClick={handleEdit}
+                title="Éditer ce moyen"
+              />
+            </div>
+          )}
         </InfoBoxHeader>
         {controlUnitResource.note && <Note>{controlUnitResource.note}</Note>}
       </InfoBox>

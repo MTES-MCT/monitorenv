@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 type SelectedAccordionProps = {
   children: React.ReactNode
+  className?: string
   isExpanded: boolean
   isReadOnly?: boolean
   setExpandedAccordion: () => void
@@ -13,6 +14,7 @@ type SelectedAccordionProps = {
 
 export function SelectedAccordion({
   children,
+  className,
   isExpanded,
   isReadOnly = false,
   setExpandedAccordion,
@@ -42,7 +44,7 @@ export function SelectedAccordion({
           />
         )}
       </AccordionHeader>
-      <AccordionContent $isExpanded={isExpanded} id={`selected-${title}-accordion`}>
+      <AccordionContent $isExpanded={isExpanded} className={className} id={`selected-${title}-accordion`}>
         {children}
       </AccordionContent>
     </AccordionContainer>

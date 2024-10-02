@@ -3,6 +3,7 @@ import { isGeometryValid } from '@utils/geometryValidation'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { InteractionType } from 'domain/entities/map/constants'
 import { StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
+import { set } from 'lodash'
 
 import { Dashboard } from './types'
 import { filter } from './useCases/filterReportings'
@@ -22,9 +23,17 @@ type ReportingFilters = {
   status: StatusFilterEnum[]
 }
 
+export type ControlUnitFilters = {
+  administrationId?: number
+  query?: string
+  stationId?: number
+  type?: string
+}
+
 type DashboardType = {
   ampIdsToDisplay: number[]
   comments: string | undefined
+  controlUnitFilters: ControlUnitFilters
   dashboard: any
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
@@ -34,6 +43,7 @@ type DashboardType = {
   [Dashboard.Block.AMP]: number[]
   [Dashboard.Block.REPORTINGS]: Reporting[]
   reportingFilters: ReportingFilters
+  [Dashboard.Block.CONTROL_UNITS]: number[]
 }
 
 type SelectedDashboardType = {
@@ -57,8 +67,8 @@ const INITIAL_STATE: DashboardState = {
   dashboards: {
     1: {
       ampIdsToDisplay: [],
-      // TODO: it's just for testing to delete
       comments: undefined,
+      controlUnitFilters: {},
       dashboard: {},
       openPanel: undefined,
       regulatoryIdsToDisplay: [],
@@ -67,7 +77,8 @@ const INITIAL_STATE: DashboardState = {
       [Dashboard.Block.AMP]: [],
       [Dashboard.Block.REPORTINGS]: [],
       reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
-      reportingToDisplay: undefined
+      reportingToDisplay: undefined,
+      [Dashboard.Block.CONTROL_UNITS]: []
     }
   },
 
@@ -209,6 +220,25 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].comments = action.payload
+    },
+    setControlUnitsFilters(
+      state,
+      action: PayloadAction<{
+        key: keyof ControlUnitFilters
+        value: any
+      }>
+    ) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].controlUnitFilters = set(
+        state.dashboards[id].controlUnitFilters,
+        action.payload.key,
+        action.payload.value
+      )
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {
       const id = state.activeDashboardId

@@ -35,13 +35,14 @@ export function Accordion({ children, isExpanded, name, setExpandedAccordion, ti
 
 const AccordionContainer = styled.div`
   box-shadow: 0px 3px 6px #70778540;
-  cursor: pointer;
+  width: 100%;
 `
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform 0.3s;
 `
 const AccordionHeader = styled.header`
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   padding: 21px 24px;
@@ -53,7 +54,7 @@ const TitleContainer = styled.div`
 `
 const Title = styled.h2`
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 700;
 `
 
 const HeaderSeparator = styled.div`

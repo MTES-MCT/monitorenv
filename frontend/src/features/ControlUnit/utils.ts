@@ -8,9 +8,10 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { isEmpty, uniq } from 'lodash/fp'
 
-import { isNotArchived } from '../../../../utils/isNotArchived'
+import { isNotArchived } from '../../utils/isNotArchived'
 
-import type { FiltersState } from './types'
+import type { FiltersState } from './components/ControlUnitListDialog/types'
+import type { ControlUnitFilters } from '@features/Dashboard/slice'
 import type { Extent } from 'ol/extent'
 
 export function addBufferToExtent(extent: Extent, bufferRatio: number) {
@@ -64,7 +65,8 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
 
 export function getFilters(
   data: ControlUnit.ControlUnit[],
-  filtersState: FiltersState
+  filtersState: FiltersState | ControlUnitFilters,
+  cacheKey: string
 ): Filter<ControlUnit.ControlUnit>[] {
   const customSearch = new CustomSearch(
     data,
@@ -73,7 +75,7 @@ export function getFilters(
       { name: 'name', weight: 0.9 }
     ],
     {
-      cacheKey: 'MAP_CONTROL_UNIT_LIST',
+      cacheKey,
       isStrict: true,
       withCacheInvalidation: true
     }
@@ -111,7 +113,7 @@ export function getFilters(
   }
 
   // Control Unit Resource Category
-  if (filtersState.categories) {
+  if ('categories' in filtersState && filtersState.categories) {
     const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
       controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
         const matches = controlUnit.controlUnitResources.filter(({ isArchived, type }) => {

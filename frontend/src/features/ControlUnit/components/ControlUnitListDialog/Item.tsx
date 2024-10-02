@@ -5,7 +5,6 @@ import { createEmpty, extend } from 'ol/extent'
 import { fromLonLat } from 'ol/proj'
 import styled from 'styled-components'
 
-import { addBufferToExtent, displayBaseNamesFromControlUnit, displayControlUnitResourcesFromControlUnit } from './utils'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { globalActions } from '../../../../domain/shared_slices/Global'
 import { mapActions } from '../../../../domain/shared_slices/Map'
@@ -14,6 +13,11 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { mainWindowActions } from '../../../MainWindow/slice'
 import { stationActions } from '../../../Station/slice'
+import {
+  addBufferToExtent,
+  displayBaseNamesFromControlUnit,
+  displayControlUnitResourcesFromControlUnit
+} from '../../utils'
 import { controlUnitDialogActions } from '../ControlUnitDialog/slice'
 
 export type ItemProps = {

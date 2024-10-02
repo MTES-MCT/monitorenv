@@ -4,7 +4,6 @@ import { useCallback, useMemo } from 'react'
 
 import { FilterBar } from './FilterBar'
 import { Item } from './Item'
-import { getFilters } from './utils'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { globalActions } from '../../../../domain/shared_slices/Global'
@@ -12,6 +11,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 import { stationActions } from '../../../Station/slice'
+import { getFilters } from '../../utils'
 
 import type { Promisable } from 'type-fest'
 
@@ -31,7 +31,7 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
       return undefined
     }
 
-    const filters = getFilters(activeControlUnits, mapControlUnitListDialog.filtersState)
+    const filters = getFilters(activeControlUnits, mapControlUnitListDialog.filtersState, 'MAP_CONTROL_UNIT_LIST')
 
     return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), activeControlUnits)
   }, [activeControlUnits, mapControlUnitListDialog.filtersState])

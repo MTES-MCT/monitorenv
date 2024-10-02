@@ -6,7 +6,7 @@ import type { Promisable } from 'type-fest'
 
 export type ItemProps = {
   controlUnitContact: ControlUnit.ControlUnitContactData
-  onEdit: (controlUnitContactId: number) => Promisable<void>
+  onEdit?: (controlUnitContactId: number) => Promisable<void>
 }
 
 export function formatPhoneNumber(phoneNumber: string) {
@@ -29,6 +29,9 @@ export function formatPhoneNumber(phoneNumber: string) {
 
 export function Item({ controlUnitContact, onEdit }: ItemProps) {
   const handleEdit = useCallback(() => {
+    if (!onEdit) {
+      return
+    }
     onEdit(controlUnitContact.id)
   }, [controlUnitContact.id, onEdit])
 
@@ -60,9 +63,11 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
           )}
         </MailContainer>
       </Left>
-      <Right>
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={handleEdit} title="Éditer ce contact" />
-      </Right>
+      {onEdit && (
+        <Right>
+          <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={handleEdit} title="Éditer ce contact" />
+        </Right>
+      )}
     </Wrapper>
   )
 }
