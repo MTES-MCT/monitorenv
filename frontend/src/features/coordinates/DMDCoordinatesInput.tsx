@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react'
 import { dmsToDecimal } from 'react-coordinate-input'
-import IMaskInput from 'react-imask/esm/input'
+import { IMaskInput } from 'react-imask'
 import styled from 'styled-components'
 
 import { CoordinatesFormat, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { getCoordinates } from '../../utils/coordinates'
 import { isNumeric } from '../../utils/isNumeric'
-
-// TODO Remove that once the fix is added and released.
-// Open issue: https://github.com/uNmAnNeR/imaskjs/issues/761
-const UntypedIMaskInput: any = IMaskInput
 
 type DMDCoordinatesInputProps = {
   coordinates: number[]
@@ -85,7 +81,7 @@ export function DMDCoordinatesInput({ coordinates, coordinatesFormat, updateCoor
 
   return (
     <Body>
-      <UntypedIMaskInput
+      <IMaskInput
         data-cy="dmd-coordinates-input"
         lazy={false}
         mask="00° 00.000′ a 000° 00.000′ a"
