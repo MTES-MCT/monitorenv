@@ -160,7 +160,7 @@ export const dashboardSlice = createSlice({
         state.dashboards[id].ampIdsToDisplay = ampIds.filter(ampId => ampId !== action.payload)
       }
     },
-    removeItems(state, action: PayloadAction<{ itemIds: number[] | Reporting[]; type: Dashboard.Block }>) {
+    removeItems(state, action: PayloadAction<{ itemIds: number[]; type: Dashboard.Block }>) {
       const { itemIds, type } = action.payload
       const id = state.activeDashboardId
 
@@ -170,7 +170,7 @@ export const dashboardSlice = createSlice({
 
       if (state.dashboards[id]) {
         const selectedItems = state.dashboards[id][type]
-        state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item.id))
+        state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item))
       }
     },
     removeRegulatoryIdToDisplay(state, action: PayloadAction<number>) {

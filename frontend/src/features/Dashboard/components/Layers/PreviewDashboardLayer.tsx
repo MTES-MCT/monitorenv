@@ -8,7 +8,7 @@ import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
-import { selectedReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
+import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -61,7 +61,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV_PREVIEW.code
+  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
 
   useEffect(() => {
     if (map) {
@@ -108,7 +108,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_PREVIEW.code
+  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
 
   useEffect(() => {
     if (map) {
@@ -157,7 +157,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
+  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
 
   useEffect(() => {
     if (map) {
@@ -185,7 +185,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: reportingLayersVectorSourceRef.current,
-      style: selectedReportingStyleFn,
+      style: editingReportingStyleFn,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
@@ -199,7 +199,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
 
       if (selectedReporting?.geom) {
         reportingLayersVectorSourceRef.current.addFeature(
-          getReportingZoneFeature(selectedReporting, Layers.DASHBOARD_PREVIEW.code)
+          getReportingZoneFeature(selectedReporting, Layers.REPORTINGS.code)
         )
       }
     }
