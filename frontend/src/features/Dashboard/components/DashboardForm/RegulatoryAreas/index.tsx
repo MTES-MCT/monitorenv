@@ -69,7 +69,7 @@ export function RegulatoryAreas({
         isReadOnly={selectedLayerIds?.length === 0}
         setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
         title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
-          'sélectionée',
+          'sélectionnée',
           selectedLayerIds?.length ?? 0
         )}`}
       >

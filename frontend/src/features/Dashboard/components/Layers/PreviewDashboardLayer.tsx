@@ -1,11 +1,14 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { getSelectedReporting } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
+import { selectedReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -172,10 +175,41 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
     }
   }, [map, vigilanceAreas, selectedVigilanceAreaIds, openPanel])
 
+  // Reporting
+  const selectedReporting = useAppSelector(state => getSelectedReporting(state.dashboard))
+
+  const reportingLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
+    VectorSource<Feature<Geometry>>
+  >
+  const reportingLayersVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: reportingLayersVectorSourceRef.current,
+      style: selectedReportingStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.DASHBOARD_PREVIEW.zIndex
+    })
+  ) as React.MutableRefObject<VectorLayerWithName>
+  ;(reportingLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
+
+  useEffect(() => {
+    if (map) {
+      reportingLayersVectorSourceRef.current.clear(true)
+
+      if (selectedReporting?.geom) {
+        reportingLayersVectorSourceRef.current.addFeature(
+          getReportingZoneFeature(selectedReporting, Layers.DASHBOARD_PREVIEW.code)
+        )
+      }
+    }
+  }, [map, selectedReporting])
+
   useEffect(() => {
     map.getLayers().push(regulatoryLayersVectorLayerRef.current)
     map.getLayers().push(ampLayersVectorLayerRef.current)
     map.getLayers().push(vigilanceAreaLayersVectorLayerRef.current)
+    map.getLayers().push(reportingLayersVectorLayerRef.current)
 
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,6 +218,8 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       map.removeLayer(ampLayersVectorLayerRef.current)
       // eslint-disable-next-line react-hooks/exhaustive-deps
       map.removeLayer(vigilanceAreaLayersVectorLayerRef.current)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(reportingLayersVectorLayerRef.current)
     }
   }, [map])
 
@@ -191,6 +227,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
     regulatoryLayersVectorLayerRef.current?.setVisible(isLayerVisible)
     ampLayersVectorLayerRef.current?.setVisible(isLayerVisible)
     vigilanceAreaLayersVectorLayerRef.current?.setVisible(isLayerVisible)
+    reportingLayersVectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
 
   return null

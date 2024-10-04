@@ -186,6 +186,7 @@ export function OverlayPositionOnCentroid({
       if (!featureId.includes(Layers.SEMAPHORES.code)) {
         dispatch(resetSelectedSemaphore())
       }
+
       if (!featureId.includes(Layers.MISSIONS.code)) {
         dispatch(missionActions.resetSelectedMissionIdOnMap())
       }

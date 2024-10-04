@@ -5,24 +5,18 @@ import type { ReactNode } from 'react'
 
 type AccordionProps = {
   children: ReactNode
-  headerButton?: ReactNode
   isExpanded: boolean
   name?: string
   setExpandedAccordion: () => void
   title: string | ReactNode
 }
 
-export function Accordion({ children, headerButton, isExpanded, name, setExpandedAccordion, title }: AccordionProps) {
+export function Accordion({ children, isExpanded, name, setExpandedAccordion, title }: AccordionProps) {
   return (
-    <AccordionContainer $withCursor={!headerButton}>
-      <AccordionHeader
-        aria-controls={`${title}-accordion`}
-        aria-expanded={isExpanded}
-        onClick={!headerButton ? setExpandedAccordion : undefined}
-      >
+    <AccordionContainer>
+      <AccordionHeader aria-controls={`${title}-accordion`} aria-expanded={isExpanded} onClick={setExpandedAccordion}>
         <TitleContainer>
           <Title>{title}</Title>
-          {headerButton}
         </TitleContainer>
         <StyledIconButton
           $isExpanded={isExpanded}
@@ -39,9 +33,9 @@ export function Accordion({ children, headerButton, isExpanded, name, setExpande
   )
 }
 
-const AccordionContainer = styled.div<{ $withCursor: boolean }>`
+const AccordionContainer = styled.div`
   box-shadow: 0px 3px 6px #70778540;
-  cursor: ${({ $withCursor }) => ($withCursor ? 'pointer' : 'default')};
+  cursor: pointer;
 `
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
@@ -70,6 +64,7 @@ const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  font-size: 13px;
 
   max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
   transition: ${({ $isExpanded }) => ($isExpanded ? '0.5s max-height ease-in' : '0.3s max-height ease-out')};
