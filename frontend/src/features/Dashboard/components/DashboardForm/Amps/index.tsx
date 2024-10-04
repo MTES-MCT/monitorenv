@@ -18,10 +18,11 @@ type AmpsProps = {
   amps: AMPFromAPI[] | undefined
   dashboardId: number
   isExpanded: boolean
+  isSelectedAccordionOpen: boolean
   setExpandedAccordion: () => void
 }
-export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: AmpsProps) {
-  const [isMounted, setisMounted] = useState(false)
+export function Amps({ amps, dashboardId, isExpanded, isSelectedAccordionOpen, setExpandedAccordion }: AmpsProps) {
+  const [isMounted, setIsMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
 
@@ -43,13 +44,16 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
   const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const ampssByLayerName = groupBy(amps, r => r.name)
+  const ampsFilter = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.filters?.amps)
+  const filteredAmps =
+    ampsFilter && ampsFilter.length > 0 ? amps?.filter(({ type }) => type && ampsFilter?.includes(type)) : amps
+  const ampsByLayerName = groupBy(filteredAmps, r => r.name)
 
   const selectedAmpIds = amps?.filter(({ id }) => selectedLayerIds?.includes(id))
   const selectedAmpByLayerName = groupBy(selectedAmpIds, r => r.name)
 
   useEffect(() => {
-    setisMounted(true)
+    setIsMounted(true)
   }, [])
 
   useEffect(() => {
@@ -58,6 +62,12 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
     }
   }, [isMounted])
 
+  useEffect(() => {
+    if (isSelectedAccordionOpen) {
+      setExpandedSelectedAccordion(isSelectedAccordionOpen)
+    }
+  }, [isSelectedAccordionOpen])
+
   return (
     <div ref={ref}>
       {isMounted && (
@@ -65,11 +75,11 @@ export function Amps({ amps, dashboardId, isExpanded, setExpandedAccordion }: Am
           {openPanel && <StyledPanel $marginLeft={width} layerId={openPanel.id} />}
           <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones AMP">
             <StyledLayerList
-              $baseLayersLength={Object.values(ampssByLayerName).length}
+              $baseLayersLength={Object.values(ampsByLayerName).length}
               $maxHeight={100}
               $showBaseLayers={isExpanded}
             >
-              {Object.entries(ampssByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+              {Object.entries(ampsByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
                 const layersId = layerIdsInGroup.map((layerId: AMPFromAPI) => layerId.id)
 
                 return (

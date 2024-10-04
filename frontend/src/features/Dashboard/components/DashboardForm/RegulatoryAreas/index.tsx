@@ -4,7 +4,7 @@ import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.styl
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ListLayerGroup } from './ListLayerGroup'
@@ -18,6 +18,7 @@ type RegulatoriesAreasProps = {
   columnWidth: number
   dashboardId: number
   isExpanded: boolean
+  isSelectedAccordionOpen: boolean
   regulatoryAreas: RegulatoryLayerCompactFromAPI[] | undefined
   setExpandedAccordion: () => void
 }
@@ -25,6 +26,7 @@ export function RegulatoryAreas({
   columnWidth,
   dashboardId,
   isExpanded,
+  isSelectedAccordionOpen,
   regulatoryAreas,
   setExpandedAccordion
 }: RegulatoriesAreasProps) {
@@ -32,19 +34,32 @@ export function RegulatoryAreas({
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
   )
 
+  const regulatoryAreasFilter = useAppSelector(
+    state => state.dashboard.dashboards?.[dashboardId]?.filters?.regulatoryThemes
+  )
+  const filteredRegulatoryAreas = regulatoryAreasFilter
+    ? regulatoryAreas?.filter(({ thematique }) => regulatoryAreasFilter?.includes(thematique))
+    : regulatoryAreas
+
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
+  const regulatoryAreasByLayerName = groupBy(filteredRegulatoryAreas, r => r.layer_name)
 
-  const selectedRegulatoryAreaIds = regulatoryAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
+  const selectedRegulatoryAreaIds = filteredRegulatoryAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
   const selectedRegulatoryAreasByLayerName = groupBy(selectedRegulatoryAreaIds, r => r.layer_name)
+
+  useEffect(() => {
+    if (isSelectedAccordionOpen) {
+      setExpandedSelectedAccordion(isSelectedAccordionOpen)
+    }
+  }, [isSelectedAccordionOpen])
 
   return (
     <div>
       {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
-      <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones règlementaires">
+      <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones réglementaires">
         <StyledLayerList
           $baseLayersLength={Object.values(regulatoryAreasByLayerName).length}
           $maxHeight={100}

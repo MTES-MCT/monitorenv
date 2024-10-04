@@ -8,6 +8,7 @@ import { set } from 'lodash'
 import { Dashboard } from './types'
 import { filter } from './useCases/filterReportings'
 
+import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -30,11 +31,20 @@ export type ControlUnitFilters = {
   type?: string
 }
 
+type DashboardFilters = {
+  amps?: string[]
+  previewSelection?: boolean
+  regulatoryThemes?: string[]
+  specificPeriod?: DateAsStringRange | undefined
+  vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
+}
+
 type DashboardType = {
   ampIdsToDisplay: number[]
   comments: string | undefined
   controlUnitFilters: ControlUnitFilters
   dashboard: any
+  filters: DashboardFilters
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
@@ -70,26 +80,22 @@ const INITIAL_STATE: DashboardState = {
       comments: undefined,
       controlUnitFilters: {},
       dashboard: {},
+      filters: {},
       openPanel: undefined,
-      regulatoryIdsToDisplay: [],
       [Dashboard.Block.REGULATORY_AREAS]: [],
       [Dashboard.Block.VIGILANCE_AREAS]: [],
       [Dashboard.Block.AMP]: [],
       [Dashboard.Block.REPORTINGS]: [],
+      regulatoryIdsToDisplay: [],
       reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
-      reportingToDisplay: undefined,
-      [Dashboard.Block.CONTROL_UNITS]: []
+      [Dashboard.Block.CONTROL_UNITS]: [],
+      reportingToDisplay: undefined
     }
   },
-
   extractedArea: undefined,
-
   geometry: undefined,
-
   initialGeometry: undefined,
-
   interactionType: InteractionType.CIRCLE,
-
   isDrawing: false,
   isGeometryValid: false
 }
@@ -212,6 +218,15 @@ export const dashboardSlice = createSlice({
         )
       }
     },
+    resetDashboardFilters(state) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].filters = {}
+    },
     setComments(state, action: PayloadAction<string | undefined>) {
       const id = state.activeDashboardId
 
@@ -239,6 +254,21 @@ export const dashboardSlice = createSlice({
         action.payload.key,
         action.payload.value
       )
+    },
+    setDashboardFilters(
+      state,
+      action: PayloadAction<{
+        key: keyof DashboardFilters
+        value: any
+      }>
+    ) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].filters = set(state.dashboards[id].filters, action.payload.key, action.payload.value)
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {
       const id = state.activeDashboardId

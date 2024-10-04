@@ -24,10 +24,16 @@ import { Accordion } from '../Accordion'
 type ControlUnitsProps = {
   controlUnits: ControlUnit.ControlUnit[]
   isExpanded: boolean
+  isSelectedAccordionOpen: boolean
   setExpandedAccordion: () => void
 }
 
-export function ControlUnits({ controlUnits, isExpanded, setExpandedAccordion }: ControlUnitsProps) {
+export function ControlUnits({
+  controlUnits,
+  isExpanded,
+  isSelectedAccordionOpen,
+  setExpandedAccordion
+}: ControlUnitsProps) {
   const dispatch = useAppDispatch()
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
@@ -124,11 +130,12 @@ export function ControlUnits({ controlUnits, isExpanded, setExpandedAccordion }:
             />
           </SelectFilters>
           <ResultList>
-            {controlUnitResults && controlUnitResults.map(controlUnit => <Item controlUnit={controlUnit} />)}
+            {controlUnitResults &&
+              controlUnitResults.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
           </ResultList>
         </Wrapper>
       </Accordion>
-      <SelectedControlUnits controlUnits={controlUnits} />
+      <SelectedControlUnits controlUnits={controlUnits} isSelectedAccordionOpen={isSelectedAccordionOpen} />
     </div>
   )
 }
