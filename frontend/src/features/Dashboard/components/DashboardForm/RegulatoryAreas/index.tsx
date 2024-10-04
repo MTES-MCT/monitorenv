@@ -1,4 +1,4 @@
-import { getOpenedPanel } from '@features/Dashboard/slice'
+import { getFilteredRegulatoryAreas, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -34,19 +34,14 @@ export function RegulatoryAreas({
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
   )
 
-  const regulatoryAreasFilter = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.filters?.regulatoryThemes
-  )
-  const filteredRegulatoryAreas = regulatoryAreasFilter
-    ? regulatoryAreas?.filter(({ thematique }) => regulatoryAreasFilter?.includes(thematique))
-    : regulatoryAreas
+  const filteredRegulatoryAreas = useAppSelector(state => getFilteredRegulatoryAreas(state.dashboard))
 
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const regulatoryAreasByLayerName = groupBy(filteredRegulatoryAreas, r => r.layer_name)
 
-  const selectedRegulatoryAreaIds = filteredRegulatoryAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
+  const selectedRegulatoryAreaIds = regulatoryAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
   const selectedRegulatoryAreasByLayerName = groupBy(selectedRegulatoryAreaIds, r => r.layer_name)
 
   useEffect(() => {

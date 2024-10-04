@@ -106,7 +106,7 @@ export function DashboardForm() {
       setExpandedAccordionFirstColumn(undefined)
       setExpandedAccordionSecondColumn(undefined)
       setExpandedAccordionThirdColumn(undefined)
-      dispatch(dashboardActions.setDashboardFilters({ key: 'previewSelection', value: false }))
+      dispatch(dashboardActions.setDashboardFilters({ previewSelection: false }))
     }
   }, [previewSelectionFilter, dispatch])
 

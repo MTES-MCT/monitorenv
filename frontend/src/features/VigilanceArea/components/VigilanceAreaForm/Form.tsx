@@ -53,7 +53,7 @@ export function Form() {
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers), [regulatoryLayers])
+  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
   const regulatoryThemesCustomSearch = useMemo(
     () => new CustomSearch(regulatoryThemes as Array<Option>, ['label']),
     [regulatoryThemes]

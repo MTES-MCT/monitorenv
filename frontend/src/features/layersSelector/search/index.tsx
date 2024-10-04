@@ -153,9 +153,9 @@ export function LayerSearch() {
     dispatch(layerSidebarActions.toggleRegFilters())
   }
 
-  const ampTypes = useMemo(() => getAmpsAsOptions(amps), [amps])
+  const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers), [regulatoryLayers])
+  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 

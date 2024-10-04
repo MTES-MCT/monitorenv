@@ -1,3 +1,5 @@
+import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
@@ -8,7 +10,6 @@ import { set } from 'lodash'
 import { Dashboard } from './types'
 import { filter } from './useCases/filterReportings'
 
-import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -255,20 +256,13 @@ export const dashboardSlice = createSlice({
         action.payload.value
       )
     },
-    setDashboardFilters(
-      state,
-      action: PayloadAction<{
-        key: keyof DashboardFilters
-        value: any
-      }>
-    ) {
+    setDashboardFilters(state, action: PayloadAction<DashboardFilters>) {
       const id = state.activeDashboardId
 
       if (!id || !state.dashboards[id]) {
         return
       }
-
-      state.dashboards[id].filters = set(state.dashboards[id].filters, action.payload.key, action.payload.value)
+      state.dashboards[id].filters = { ...state.dashboards[id].filters, ...action.payload }
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {
       const id = state.activeDashboardId
@@ -384,3 +378,82 @@ export const getReportingToDisplay = createSelector(
 
 export const dashboardActions = dashboardSlice.actions
 export const dashboardReducer = dashboardSlice.reducer
+
+export const getFilteredRegulatoryAreas = createSelector(
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (state: DashboardState) => state.extractedArea?.regulatoryAreas
+  ],
+  (dashboards, activeDashboardId, regulatoryAreas) => {
+    if (!activeDashboardId) {
+      return undefined
+    }
+
+    if (dashboards[activeDashboardId]) {
+      const regulatoryThemesFilter = dashboards[activeDashboardId].filters.regulatoryThemes
+
+      if (!regulatoryThemesFilter || regulatoryThemesFilter.length === 0) {
+        return regulatoryAreas
+      }
+
+      return regulatoryAreas?.filter(({ thematique }) => regulatoryThemesFilter?.includes(thematique))
+    }
+
+    return undefined
+  }
+)
+
+export const getFilteredAmps = createSelector(
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (state: DashboardState) => state.extractedArea?.amps
+  ],
+  (dashboards, activeDashboardId, amps) => {
+    if (!activeDashboardId) {
+      return undefined
+    }
+
+    if (dashboards[activeDashboardId]) {
+      const ampsFilter = dashboards[activeDashboardId].filters.amps
+
+      if (!ampsFilter || ampsFilter.length === 0) {
+        return amps
+      }
+
+      return amps?.filter(({ type }) => type && ampsFilter?.includes(type))
+    }
+
+    return undefined
+  }
+)
+
+export const getFilteredVigilanceAreas = createSelector(
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (state: DashboardState) => state.extractedArea?.vigilanceAreas
+  ],
+  (dashboards, activeDashboardId, vigilanceAreas) => {
+    if (!activeDashboardId) {
+      return undefined
+    }
+
+    if (dashboards[activeDashboardId]) {
+      const periodFilter = dashboards[activeDashboardId].filters.vigilanceAreaPeriod
+      const specificPeriodFilter = dashboards[activeDashboardId].filters.specificPeriod
+
+      if (
+        !periodFilter ||
+        (periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && !specificPeriodFilter)
+      ) {
+        return vigilanceAreas
+      }
+
+      return getFilterVigilanceAreasPerPeriod(vigilanceAreas, periodFilter, specificPeriodFilter)
+    }
+
+    return undefined
+  }
+)

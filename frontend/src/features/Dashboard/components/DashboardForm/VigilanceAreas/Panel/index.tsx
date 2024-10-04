@@ -48,9 +48,9 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
             size={Size.NORMAL}
             type={vigilanceArea?.name ?? 'aucun nom'}
           />
-          <Title $isDraft={vigilanceArea?.isDraft ?? true} $isFullWidth title={vigilanceArea?.name}>
+          <StyledTitle $isDraft={vigilanceArea?.isDraft ?? true} $isFullWidth title={vigilanceArea?.name}>
             {vigilanceArea?.name}
-          </Title>
+          </StyledTitle>
         </TitleContainer>
 
         <SubHeaderContainer>
@@ -98,4 +98,7 @@ const Wrapper = styled.div`
   position: absolute;
   width: 400px;
   z-index: 2;
+`
+const StyledTitle = styled(Title)`
+  max-width: 215px;
 `

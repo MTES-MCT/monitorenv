@@ -30,29 +30,29 @@ export function DashboardFilters() {
   )
 
   const regulatoryAreas = useAppSelector(state => state.dashboard.extractedArea?.regulatoryAreas)
-  const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(regulatoryAreas)
+  const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(regulatoryAreas ?? [])
   const regulatoryThemesCustomSearch = useMemo(
     () => new CustomSearch(regulatoryThemesAsOption as Array<Option<string>>, ['label']),
     [regulatoryThemesAsOption]
   )
 
   const amps = useAppSelector(state => state.dashboard.extractedArea?.amps)
-  const ampsAsOptions = useMemo(() => getAmpsAsOptions(amps), [amps])
+  const ampsAsOptions = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions as Array<Option>, ['label']), [ampsAsOptions])
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
   const setFilteredRegulatoryThemes = (value: string[] | undefined) => {
-    dispatch(dashboardActions.setDashboardFilters({ key: 'regulatoryThemes', value }))
+    dispatch(dashboardActions.setDashboardFilters({ regulatoryThemes: value }))
   }
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
-    dispatch(dashboardActions.setDashboardFilters({ key: 'amps', value }))
+    dispatch(dashboardActions.setDashboardFilters({ amps: value }))
   }
 
   const setFilteredVigilancePeriod = (nextValue: OptionValueType | undefined) => {
     const value = nextValue as VigilanceArea.VigilanceAreaFilterPeriod | undefined
-    dispatch(dashboardActions.setDashboardFilters({ key: 'vigilanceAreaPeriod', value }))
+    dispatch(dashboardActions.setDashboardFilters({ vigilanceAreaPeriod: value }))
   }
 
   const deleteRegulatoryTheme = (regulatoryThemeToDelete: string) => {
@@ -64,7 +64,7 @@ export function DashboardFilters() {
   }
 
   const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
-    dispatch(dashboardActions.setDashboardFilters({ key: 'specificPeriod', value: dateRange }))
+    dispatch(dashboardActions.setDashboardFilters({ specificPeriod: dateRange }))
   }
 
   const resetFilters = () => {
@@ -72,7 +72,7 @@ export function DashboardFilters() {
   }
 
   const showSelectedItems = () => {
-    dispatch(dashboardActions.setDashboardFilters({ key: 'previewSelection', value: true }))
+    dispatch(dashboardActions.setDashboardFilters({ previewSelection: true }))
   }
 
   const hasFilters = !!(
