@@ -16,13 +16,13 @@ export const Title = styled.span<{ $isDraft: boolean; $isFullWidth: boolean }>`
   overflow: hidden;
   margin-left: 8px;
   min-width: 0;
-  /*   max-width: ${p => {
+  max-width: ${p => {
     if (p.$isFullWidth) {
       return '100%'
     }
 
     return p.$isDraft ? '230px' : '318px'
-  }}; */
+  }};
   text-overflow: ellipsis;
   white-space: nowrap;
 `

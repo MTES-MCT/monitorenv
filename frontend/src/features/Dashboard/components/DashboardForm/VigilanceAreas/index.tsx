@@ -1,11 +1,10 @@
-import { getOpenedPanel } from '@features/Dashboard/slice'
+import { getFilteredVigilanceAreas, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Layer } from './Layer'
@@ -37,22 +36,7 @@ export function VigilanceAreas({
 
   const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
 
-  const vigilanceAreasFilter = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.filters?.vigilanceAreaPeriod
-  )
-  const specificPeriodFilter = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.filters?.specificPeriod
-  )
-
-  const filteredVigilanceAreas = useMemo(
-    () =>
-      vigilanceAreasFilter &&
-      (vigilanceAreasFilter !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD ||
-        (vigilanceAreasFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && specificPeriodFilter))
-        ? getFilterVigilanceAreasPerPeriod(vigilanceAreas, vigilanceAreasFilter, specificPeriodFilter)
-        : vigilanceAreas,
-    [vigilanceAreas, vigilanceAreasFilter, specificPeriodFilter]
-  )
+  const filteredVigilanceAreas = useAppSelector(state => getFilteredVigilanceAreas(state.dashboard))
 
   useEffect(() => {
     if (isSelectedAccordionOpen) {

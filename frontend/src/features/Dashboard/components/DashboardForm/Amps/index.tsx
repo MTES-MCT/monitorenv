@@ -1,4 +1,4 @@
-import { getOpenedPanel } from '@features/Dashboard/slice'
+import { getFilteredAmps, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -44,9 +44,7 @@ export function Amps({ amps, dashboardId, isExpanded, isSelectedAccordionOpen, s
   const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const ampsFilter = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.filters?.amps)
-  const filteredAmps =
-    ampsFilter && ampsFilter.length > 0 ? amps?.filter(({ type }) => type && ampsFilter?.includes(type)) : amps
+  const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard))
   const ampsByLayerName = groupBy(filteredAmps, r => r.name)
 
   const selectedAmpIds = amps?.filter(({ id }) => selectedLayerIds?.includes(id))
