@@ -2,7 +2,7 @@ plugins {
     `java-library`
     `maven-publish`
     id("org.springframework.boot") version "3.3.4"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.9.23"
+    id("org.jetbrains.kotlin.plugin.spring") version "2.0.20"
     kotlin("jvm") version "2.0.20"
     id("org.jetbrains.kotlin.plugin.allopen") version "2.0.20"
     kotlin("plugin.noarg") version "1.9.10"
