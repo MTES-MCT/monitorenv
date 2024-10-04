@@ -1,13 +1,19 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { ControlUnit, pluralize } from '@mtes-mct/monitor-ui'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ControlUnitAccordion } from './ControlUnitAccordion'
 import { SelectedAccordion } from '../../SelectedAccordion'
 
-export function SelectedControlUnits({ controlUnits }: { controlUnits: ControlUnit.ControlUnit[] }) {
+export function SelectedControlUnits({
+  controlUnits,
+  isSelectedAccordionOpen
+}: {
+  controlUnits: ControlUnit.ControlUnit[]
+  isSelectedAccordionOpen: boolean
+}) {
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
   const [controlUnitIdExpanded, setControlUnitIdExpanded] = useState<number | undefined>(undefined)
 
@@ -25,6 +31,12 @@ export function SelectedControlUnits({ controlUnits }: { controlUnits: ControlUn
     setControlUnitIdExpanded(id)
   }
 
+  useEffect(() => {
+    if (isSelectedAccordionOpen) {
+      setExpandedSelectedAccordion(isSelectedAccordionOpen)
+    }
+  }, [isSelectedAccordionOpen])
+
   return (
     <StyledSelectedAccordion
       className="control-units-selected-accordion"
@@ -41,6 +53,7 @@ export function SelectedControlUnits({ controlUnits }: { controlUnits: ControlUn
 
         return (
           <ControlUnitAccordion
+            key={controlUnit?.id}
             controlUnit={controlUnit}
             controlUnitIdExpanded={controlUnitIdExpanded}
             expandUnit={expandedControlUnit}

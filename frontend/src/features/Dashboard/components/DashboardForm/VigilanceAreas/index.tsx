@@ -1,9 +1,11 @@
 import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Layer } from './Layer'
@@ -11,12 +13,11 @@ import { Panel } from './Panel'
 import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 
-import type { VigilanceArea } from '@features/VigilanceArea/types'
-
 type VigilanceAreasProps = {
   columnWidth: number
   dashboardId: number
   isExpanded: boolean
+  isSelectedAccordionOpen: boolean
   setExpandedAccordion: () => void
   vigilanceAreas: VigilanceArea.VigilanceArea[] | undefined
 }
@@ -24,6 +25,7 @@ export function VigilanceAreas({
   columnWidth,
   dashboardId,
   isExpanded,
+  isSelectedAccordionOpen,
   setExpandedAccordion,
   vigilanceAreas
 }: VigilanceAreasProps) {
@@ -31,25 +33,52 @@ export function VigilanceAreas({
   const selectedLayerIds = useAppSelector(
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.VIGILANCE_AREAS]
   )
-  const [isExpandedSmallAccordion, setExpandedSmallAccordion] = useState(false)
+  const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
+
+  const vigilanceAreasFilter = useAppSelector(
+    state => state.dashboard.dashboards?.[dashboardId]?.filters?.vigilanceAreaPeriod
+  )
+  const specificPeriodFilter = useAppSelector(
+    state => state.dashboard.dashboards?.[dashboardId]?.filters?.specificPeriod
+  )
+
+  const filteredVigilanceAreas = useMemo(
+    () =>
+      vigilanceAreasFilter &&
+      (vigilanceAreasFilter !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD ||
+        (vigilanceAreasFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && specificPeriodFilter))
+        ? getFilterVigilanceAreasPerPeriod(vigilanceAreas, vigilanceAreasFilter, specificPeriodFilter)
+        : vigilanceAreas,
+    [vigilanceAreas, vigilanceAreasFilter, specificPeriodFilter]
+  )
+
+  useEffect(() => {
+    if (isSelectedAccordionOpen) {
+      setExpandedSelectedAccordion(isSelectedAccordionOpen)
+    }
+  }, [isSelectedAccordionOpen])
 
   return (
     <div>
       {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones de vigilance">
-        <StyledLayerList $baseLayersLength={vigilanceAreas?.length ?? 0} $maxHeight={100} $showBaseLayers={isExpanded}>
-          {vigilanceAreas?.map(vigilanceArea => (
+        <StyledLayerList
+          $baseLayersLength={filteredVigilanceAreas?.length ?? 0}
+          $maxHeight={100}
+          $showBaseLayers={isExpanded}
+        >
+          {filteredVigilanceAreas?.map(vigilanceArea => (
             <Layer key={vigilanceArea.id} dashboardId={dashboardId} isSelected={false} vigilanceArea={vigilanceArea} />
           ))}
         </StyledLayerList>
       </Accordion>
       <SelectedAccordion
-        isExpanded={isExpandedSmallAccordion}
+        isExpanded={isExpandedSelectedAccordion}
         isReadOnly={selectedLayerIds?.length === 0}
-        setExpandedAccordion={() => setExpandedSmallAccordion(!isExpandedSmallAccordion)}
+        setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
         title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
           'sélectionnée',
           selectedLayerIds?.length ?? 0

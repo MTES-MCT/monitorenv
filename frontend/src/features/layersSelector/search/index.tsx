@@ -1,7 +1,8 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
-import { getOptionsFromLabelledEnum, type DateAsStringRange, type Option } from '@mtes-mct/monitor-ui'
+import { getOptionsFromLabelledEnum, type DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
@@ -152,17 +153,7 @@ export function LayerSearch() {
     dispatch(layerSidebarActions.toggleRegFilters())
   }
 
-  const ampTypes = useMemo(
-    () =>
-      _.chain(amps?.entities)
-        .map(l => l?.type?.trim())
-        .uniq()
-        .filter(l => !!l)
-        .map(l => ({ label: l, value: l }))
-        .sortBy('label')
-        .value() as Option<string>[],
-    [amps]
-  )
+  const ampTypes = useMemo(() => getAmpsAsOptions(amps), [amps])
 
   const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers), [regulatoryLayers])
 

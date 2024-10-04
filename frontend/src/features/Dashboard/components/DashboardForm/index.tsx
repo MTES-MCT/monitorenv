@@ -15,6 +15,7 @@ import styled from 'styled-components'
 import { Accordion } from './Accordion'
 import { Amps } from './Amps'
 import { ControlUnits } from './ControlUnits'
+import { DashboardFilters } from './Filters'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
 import { TerritorialPressure } from './TerritorialPressure'
@@ -37,6 +38,8 @@ export function DashboardForm() {
   const dispatch = useAppDispatch()
   const dashboardId = 1 // TODO replace with real value
   const comments = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.comments ?? undefined)
+  const previewSelectionFilter =
+    useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.filters?.previewSelection) ?? false
 
   const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard))
 
@@ -97,6 +100,17 @@ export function DashboardForm() {
 
   // remove openedPanel on mount
   useEffect(() => {
+    if (previewSelectionFilter) {
+      dispatch(dashboardActions.setDashboardPanel())
+      dispatch(dashboardActions.removeAllPreviewedItems())
+      setExpandedAccordionFirstColumn(undefined)
+      setExpandedAccordionSecondColumn(undefined)
+      setExpandedAccordionThirdColumn(undefined)
+      dispatch(dashboardActions.setDashboardFilters({ key: 'previewSelection', value: false }))
+    }
+  }, [previewSelectionFilter, dispatch])
+
+  useEffect(() => {
     // remove openedPanel on mount
     dispatch(dashboardActions.setDashboardPanel())
 
@@ -107,76 +121,83 @@ export function DashboardForm() {
   }, [dispatch])
 
   return (
-    <Container>
-      <Column ref={firstColumnRef}>
-        <RegulatoryAreas
-          columnWidth={firstColumnWidth ?? 0}
-          dashboardId={dashboardId}
-          isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
-          regulatoryAreas={extractedArea?.regulatoryAreas}
-          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
-        />
-
-        <Amps
-          amps={extractedArea?.amps}
-          dashboardId={dashboardId}
-          isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
-          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
-        />
-        <VigilanceAreas
-          columnWidth={firstColumnWidth ?? 0}
-          dashboardId={dashboardId}
-          isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
-          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
-          vigilanceAreas={extractedArea?.vigilanceAreas}
-        />
-      </Column>
-      <Column ref={secondColumnRef}>
-        <TerritorialPressure
-          columnWidth={(firstColumnWidth ?? 0) + (secondColumnWidth ?? 0)}
-          isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
-          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
-        />
-
-        <Reportings
-          dashboardId={dashboardId}
-          isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
-          reportings={filteredReportings ?? []}
-          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
-        />
-      </Column>
-      <Column>
-        <ControlUnits
-          controlUnits={activeControlUnits ?? []}
-          isExpanded={expandedAccordionThirdColumn === Dashboard.Block.CONTROL_UNITS}
-          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.CONTROL_UNITS)}
-        />
-        <Accordion
-          isExpanded={expandedAccordionThirdColumn === Dashboard.Block.COMMENTS}
-          setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}
-          title="Commentaires"
-        >
-          <StyledTextarea
-            isLabelHidden
-            label="Commentaires"
-            name="comments"
-            onChange={updateComments}
-            value={comments}
+    <>
+      <DashboardFilters />
+      <Container>
+        <Column ref={firstColumnRef}>
+          <RegulatoryAreas
+            columnWidth={firstColumnWidth ?? 0}
+            dashboardId={dashboardId}
+            isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
+            isSelectedAccordionOpen={previewSelectionFilter}
+            regulatoryAreas={extractedArea?.regulatoryAreas}
+            setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
           />
-        </Accordion>
-        <WeatherBlock>
-          <WeatherTitle>Météo</WeatherTitle>
-          {coordinates ? (
-            <a href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
-              <span> {`https://www.windy.com/${coordinates}`}</span>
-              <Icon.ExternalLink size={16} />
-            </a>
-          ) : (
-            <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
-          )}
-        </WeatherBlock>
-      </Column>
-    </Container>
+
+          <Amps
+            amps={extractedArea?.amps}
+            dashboardId={dashboardId}
+            isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
+            isSelectedAccordionOpen={previewSelectionFilter}
+            setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
+          />
+          <VigilanceAreas
+            columnWidth={firstColumnWidth ?? 0}
+            dashboardId={dashboardId}
+            isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
+            isSelectedAccordionOpen={previewSelectionFilter}
+            setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
+            vigilanceAreas={extractedArea?.vigilanceAreas}
+          />
+        </Column>
+        <Column ref={secondColumnRef}>
+          <TerritorialPressure
+            columnWidth={(firstColumnWidth ?? 0) + (secondColumnWidth ?? 0)}
+            isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
+            setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
+          />
+
+          <Reportings
+            dashboardId={dashboardId}
+            isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
+            reportings={filteredReportings ?? []}
+            setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
+          />
+        </Column>
+        <Column>
+          <ControlUnits
+            controlUnits={activeControlUnits ?? []}
+            isExpanded={expandedAccordionThirdColumn === Dashboard.Block.CONTROL_UNITS}
+            isSelectedAccordionOpen={previewSelectionFilter}
+            setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.CONTROL_UNITS)}
+          />
+          <Accordion
+            isExpanded={expandedAccordionThirdColumn === Dashboard.Block.COMMENTS}
+            setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}
+            title="Commentaires"
+          >
+            <StyledTextarea
+              isLabelHidden
+              label="Commentaires"
+              name="comments"
+              onChange={updateComments}
+              value={comments}
+            />
+          </Accordion>
+          <WeatherBlock>
+            <WeatherTitle>Météo</WeatherTitle>
+            {coordinates ? (
+              <a href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
+                <span> {`https://www.windy.com/${coordinates}`}</span>
+                <Icon.ExternalLink size={16} />
+              </a>
+            ) : (
+              <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
+            )}
+          </WeatherBlock>
+        </Column>
+      </Container>
+    </>
   )
 }
 

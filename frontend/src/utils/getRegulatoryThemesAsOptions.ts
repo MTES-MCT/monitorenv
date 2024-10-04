@@ -1,9 +1,9 @@
-import _ from 'lodash'
+import { chain } from 'lodash'
 
 import type { Option } from '@mtes-mct/monitor-ui'
 
 export function getRegulatoryThemesAsOptions(regulatoryThemes) {
-  return _.chain(regulatoryThemes?.entities)
+  return chain(regulatoryThemes?.entities ?? regulatoryThemes)
     .filter(l => !!l?.thematique)
     .map(l => l?.thematique.split(','))
     .flatMap(l => l)
