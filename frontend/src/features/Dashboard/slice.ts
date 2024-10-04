@@ -19,7 +19,7 @@ type OpenPanel = {
 type ReportingFilters = {
   dateRange: ReportingDateRangeEnum
   period?: DateAsStringRange
-  status: StatusFilterEnum
+  status: StatusFilterEnum[]
 }
 
 type DashboardType = {
@@ -28,7 +28,7 @@ type DashboardType = {
   dashboard: any
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
-  selectedReporting: Reporting | undefined
+  reportingToDisplay: Reporting | undefined
   [Dashboard.Block.REGULATORY_AREAS]: number[]
   [Dashboard.Block.VIGILANCE_AREAS]: number[]
   [Dashboard.Block.AMP]: number[]
@@ -66,8 +66,8 @@ const INITIAL_STATE: DashboardState = {
       [Dashboard.Block.VIGILANCE_AREAS]: [],
       [Dashboard.Block.AMP]: [],
       [Dashboard.Block.REPORTINGS]: [],
-      reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: StatusFilterEnum.IN_PROGRESS },
-      selectedReporting: undefined
+      reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
+      reportingToDisplay: undefined
     }
   },
 
@@ -257,7 +257,7 @@ export const dashboardSlice = createSlice({
       }
 
       if (state.dashboards[id]) {
-        state.dashboards[id].selectedReporting = action.payload
+        state.dashboards[id].reportingToDisplay = action.payload
       }
     }
   }
@@ -291,10 +291,9 @@ export const getFilteredReportings = createSelector(
     }
 
     if (dashboards[activeDashboardId]) {
-      const selectedReportings = reportings
       const filters = dashboards[activeDashboardId].reportingFilters
 
-      return selectedReportings?.filter(reporting => filter(reporting, filters))
+      return reportings?.filter(reporting => filter(reporting, filters))
     }
 
     return undefined
@@ -312,14 +311,14 @@ export const getReportingFilters = createSelector(
   }
 )
 
-export const getSelectedReporting = createSelector(
+export const getReportingToDisplay = createSelector(
   [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
   (dashboards, activeDashboardId) => {
     if (!activeDashboardId) {
       return undefined
     }
 
-    return dashboards?.[activeDashboardId]?.selectedReporting
+    return dashboards?.[activeDashboardId]?.reportingToDisplay
   }
 )
 

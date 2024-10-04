@@ -1,7 +1,7 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { getSelectedReporting } from '@features/Dashboard/slice'
+import { getReportingToDisplay } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
@@ -176,7 +176,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
   }, [map, vigilanceAreas, selectedVigilanceAreaIds, openPanel])
 
   // Reporting
-  const selectedReporting = useAppSelector(state => getSelectedReporting(state.dashboard))
+  const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
 
   const reportingLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
     VectorSource<Feature<Geometry>>

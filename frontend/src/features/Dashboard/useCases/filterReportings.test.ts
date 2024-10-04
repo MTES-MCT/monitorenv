@@ -8,7 +8,7 @@ import { filter } from './filterReportings'
 
 describe('filter', () => {
   describe('date range', () => {
-    const status = StatusFilterEnum.IN_PROGRESS
+    const status = [StatusFilterEnum.IN_PROGRESS]
     it('should return true when reporting is within the day', async () => {
       // Given
       const reporting: Reporting = aReporting({
@@ -116,7 +116,7 @@ describe('filter', () => {
     })
   })
   describe('in progress reporting', () => {
-    const status = StatusFilterEnum.IN_PROGRESS
+    const status = [StatusFilterEnum.IN_PROGRESS]
     it('should return true when reporting is in progress and within validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
@@ -140,7 +140,7 @@ describe('filter', () => {
     })
   })
   describe('archived reporting', () => {
-    const status = StatusFilterEnum.ARCHIVED
+    const status = [StatusFilterEnum.ARCHIVED]
     it('should return true when reporting is archived and within validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
@@ -162,6 +162,42 @@ describe('filter', () => {
 
       // When & then
       expect(filter(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(false)
+    })
+  })
+
+  describe('archived and in progress', () => {
+    const status = [StatusFilterEnum.ARCHIVED, StatusFilterEnum.IN_PROGRESS]
+    it('should return true when reporting is archived and in progress', async () => {
+      // Given
+      const reporting: Reporting = aReporting({
+        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        isArchived: true
+      })
+
+      // When & then
+      expect(filter(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+    })
+
+    it('should return true when reporting is archived and in progress and out of (archived) validity time', async () => {
+      // Given
+      const reporting: Reporting = aReporting({
+        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        isArchived: true,
+        validityTime: 1
+      })
+
+      // When & then
+      expect(filter(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+    })
+    it('should return true when reporting is archived and in progress and out of (in progress) validity time', async () => {
+      // Given
+      const reporting: Reporting = aReporting({
+        createdAt: `${customDayjs().utc().subtract(2, 'hours').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        validityTime: 1
+      })
+
+      // When & then
+      expect(filter(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
     })
   })
 })
