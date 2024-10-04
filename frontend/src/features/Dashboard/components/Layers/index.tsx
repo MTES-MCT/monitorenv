@@ -5,7 +5,7 @@ import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
-import { selectedReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
+import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -189,7 +189,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: reportingLayersVectorSourceRef.current,
-      style: selectedReportingStyleFn,
+      style: editingReportingStyleFn,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.DASHBOARD.zIndex
@@ -204,7 +204,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
       if (selectedReportings) {
         const features = selectedReportings.reduce((feats: Feature[], reporting) => {
           if (reporting.geom) {
-            feats.push(getReportingZoneFeature(reporting, Layers.DASHBOARD.code))
+            feats.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
           }
 
           return feats

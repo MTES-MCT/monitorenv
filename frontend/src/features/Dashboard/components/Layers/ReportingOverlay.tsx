@@ -32,13 +32,13 @@ export function DashboardReportingOverlay({ map, mapClickEvent }: BaseMapChildre
     ?.getArray()
     ?.find(
       (l): l is VectorLayerWithName =>
-        Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.DASHBOARD.code
+        Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.REPORTINGS.code
     )
     ?.getSource()
-    ?.getFeatureById(`${Layers.DASHBOARD.code}:${selectedReporting?.id}`)
+    ?.getFeatureById(`${Layers.REPORTINGS.code}:${selectedReporting?.id}`)
 
   const canOverlayBeOpened = useAppSelector(state =>
-    isOverlayOpened(state.global, `${Layers.DASHBOARD.code}:${selectedReporting?.id}`)
+    isOverlayOpened(state.global, `${Layers.REPORTINGS.code}:${selectedReporting?.id}`)
   )
 
   const updateSelectedMargins = (cardHeight: number) => {

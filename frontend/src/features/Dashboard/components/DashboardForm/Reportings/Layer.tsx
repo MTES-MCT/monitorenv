@@ -42,9 +42,6 @@ export function Layer({ dashboardId, isSelected = false, reporting }: ReportingL
     ref,
     () => {
       dispatch(dashboardActions.setSelectedReporting(undefined))
-      if (!isPinned) {
-        dispatch(dashboardActions.removeReporting(reporting))
-      }
     },
     newWindowContainerRef.current
   )
