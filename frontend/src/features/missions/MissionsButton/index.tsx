@@ -1,4 +1,4 @@
-import { DialogButton, DialogSeparator, StyledMapMenuDialogContainer } from '@components/style'
+import { DialogButton, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { SideWindowStatus, sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -10,6 +10,8 @@ import { globalActions, setDisplayedItems } from 'domain/shared_slices/Global'
 import { addMission } from 'domain/use_cases/missions/addMission'
 import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useMemo } from 'react'
+
+import { MissionFilterContext, MissionFilters } from '../components/Filters'
 
 export function MissionsMenu() {
   const dispatch = useAppDispatch()
@@ -57,11 +59,13 @@ export function MissionsMenu() {
               onClick={toggleMissionsLayer}
             />
           </MapMenuDialog.Header>
+          <MapMenuDialog.Body>
+            <MissionFilters context={MissionFilterContext.MAP} />
+          </MapMenuDialog.Body>
           <MapMenuDialog.Footer>
             <DialogButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
               Ajouter une nouvelle mission
             </DialogButton>
-            <DialogSeparator />
             <DialogButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
               Voir la vue détaillée des missions
             </DialogButton>
