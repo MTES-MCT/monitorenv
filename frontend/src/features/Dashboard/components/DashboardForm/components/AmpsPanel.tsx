@@ -69,7 +69,7 @@ const Wrapper = styled.div`
   box-shadow: 0px 3px 5px #70778540;
   position: absolute;
   width: 400px;
-  z-index: 1;
+  z-index: 2;
 `
 
 const Name = styled.span`

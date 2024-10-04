@@ -1,7 +1,9 @@
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
-import { isOverlayOpened } from 'domain/shared_slices/Global'
+import { isOverlayOpened, removeOverlayStroke } from 'domain/shared_slices/Global'
+import { reportingActions } from 'domain/shared_slices/reporting'
 import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
@@ -21,6 +23,7 @@ const OPTIONS = {
   }
 }
 export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+  const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
   const displayReportingsOverlay = useAppSelector(state => state.global.displayReportingsOverlay)
@@ -58,6 +61,11 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
     }
   }
 
+  const close = () => {
+    dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
+    dispatch(removeOverlayStroke())
+  }
+
   return (
     <>
       <OverlayPositionOnCentroid
@@ -68,7 +76,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         options={selectedOptions}
         zIndex={5000}
       >
-        <ReportingCard feature={feature} selected updateMargins={updateSelectedMargins} />
+        <ReportingCard feature={feature} onClose={close} selected updateMargins={updateSelectedMargins} />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
@@ -78,7 +86,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         options={hoveredOptions}
         zIndex={5000}
       >
-        <ReportingCard feature={hoveredFeature} updateMargins={updateHoveredMargins} />
+        <ReportingCard feature={hoveredFeature} onClose={close} updateMargins={updateHoveredMargins} />
       </OverlayPositionOnCentroid>
     </>
   )

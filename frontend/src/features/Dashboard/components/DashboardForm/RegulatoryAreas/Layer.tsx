@@ -90,20 +90,19 @@ export function Layer({ dashboardId, isSelected, layerId }: RegulatoryLayerProps
         {isSelected ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Supprimer la zone"
             color={THEME.color.slateGray}
             Icon={Icon.Close}
             onClick={removeZone}
-            title="Supprimer la/ zone"
+            title="Supprimer la zone"
           />
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Sélectionner la zone"
             color={isZoneSelected ? THEME.color.blueGray : THEME.color.slateGray}
             data-cy="regulatory-zone-check"
             Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
+            title="Sélectionner la zone"
           />
         )}
       </LayerSelector.IconGroup>

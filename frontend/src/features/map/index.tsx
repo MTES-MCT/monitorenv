@@ -1,6 +1,7 @@
 import { DashboardLayer } from '@features/Dashboard/components/Layers'
 import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
 import { DashboardPreviewLayer } from '@features/Dashboard/components/Layers/PreviewDashboardLayer'
+import { DashboardReportingOverlay } from '@features/Dashboard/components/Layers/ReportingOverlay'
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
@@ -219,6 +220,8 @@ export function Map({ isSuperUser }) {
       <DashboardLayer />
       {/* @ts-ignore */}
       <DashboardPreviewLayer />
+      {/* @ts-ignore */}
+      <DashboardReportingOverlay />
     </BaseMap>
   )
 }

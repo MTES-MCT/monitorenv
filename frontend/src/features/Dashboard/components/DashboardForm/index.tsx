@@ -2,7 +2,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Textarea, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Icon, OPENLAYERS_PROJECTION, Textarea, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
 import { transform } from 'ol/proj'
@@ -12,9 +12,10 @@ import styled from 'styled-components'
 import { Accordion } from './Accordion'
 import { Amps } from './Amps'
 import { RegulatoryAreas } from './RegulatoryAreas'
+import { Reportings } from './Reportings'
 import { TerritorialPressure } from './TerritorialPressure'
 import { VigilanceAreas } from './VigilanceAreas'
-import { dashboardActions } from '../../slice'
+import { dashboardActions, getFilteredReportings } from '../../slice'
 
 export function DashboardForm() {
   const extractedArea = useAppSelector(state => state.dashboard.extractedArea)
@@ -28,6 +29,8 @@ export function DashboardForm() {
   const dispatch = useAppDispatch()
   const dashboardId = 1 // TODO replace with real value
   const comments = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.comments ?? undefined)
+
+  const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard))
 
   const [expandedAccordionFirstColumn, setExpandedAccordionFirstColumn] = useState<Dashboard.Block | undefined>(
     undefined
@@ -50,7 +53,7 @@ export function DashboardForm() {
       case Dashboard.Block.VIGILANCE_AREAS:
         setExpandedAccordionFirstColumn(expandedAccordionFirstColumn === type ? undefined : type)
         dispatch(dashboardActions.setDashboardPanel())
-        dispatch(dashboardActions.removeAllRegulatoryIdToDisplay())
+        dispatch(dashboardActions.removeAllPreviewedItems())
         break
       case Dashboard.Block.TERRITORIAL_PRESSURE:
       case Dashboard.Block.REPORTINGS:
@@ -95,8 +98,6 @@ export function DashboardForm() {
     }
   }, [dispatch])
 
-  const clickOnEye = () => {}
-
   return (
     <Container>
       <Column ref={firstColumnRef}>
@@ -129,17 +130,12 @@ export function DashboardForm() {
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
         />
 
-        <Accordion
-          headerButton={<IconButton accent={Accent.TERTIARY} Icon={Icon.Hide} onClick={clickOnEye} />}
+        <Reportings
+          dashboardId={dashboardId}
           isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
+          reportings={filteredReportings ?? []}
           setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
-          title="Signalements"
-        >
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-          <div>TEST</div>
-        </Accordion>
+        />
       </Column>
       <Column>
         <Accordion

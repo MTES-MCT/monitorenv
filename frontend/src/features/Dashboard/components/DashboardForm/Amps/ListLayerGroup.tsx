@@ -96,4 +96,13 @@ const StyledGroupWrapper = styled(LayerSelector.GroupWrapper)<{ $isSelected: boo
   background-color: ${p => p.theme.color.white};
   padding-left: 24px;
   padding-right: 24px;
+
+  ${p =>
+    p.$isSelected &&
+    `
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: 4px;
+        margin-right: 4px;
+    `}
 `

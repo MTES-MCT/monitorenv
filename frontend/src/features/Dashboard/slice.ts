@@ -1,9 +1,13 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
+import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { InteractionType } from 'domain/entities/map/constants'
+import { StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
 
 import { Dashboard } from './types'
+import { filter } from './useCases/filterReportings'
 
+import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 type OpenPanel = {
@@ -12,15 +16,24 @@ type OpenPanel = {
   type: Dashboard.Block
 }
 
+type ReportingFilters = {
+  dateRange: ReportingDateRangeEnum
+  period?: DateAsStringRange
+  status: StatusFilterEnum
+}
+
 type DashboardType = {
   ampIdsToDisplay: number[]
   comments: string | undefined
   dashboard: any
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
+  selectedReporting: Reporting | undefined
   [Dashboard.Block.REGULATORY_AREAS]: number[]
   [Dashboard.Block.VIGILANCE_AREAS]: number[]
   [Dashboard.Block.AMP]: number[]
+  [Dashboard.Block.REPORTINGS]: Reporting[]
+  reportingFilters: ReportingFilters
 }
 
 type SelectedDashboardType = {
@@ -51,7 +64,10 @@ const INITIAL_STATE: DashboardState = {
       regulatoryIdsToDisplay: [],
       [Dashboard.Block.REGULATORY_AREAS]: [],
       [Dashboard.Block.VIGILANCE_AREAS]: [],
-      [Dashboard.Block.AMP]: []
+      [Dashboard.Block.AMP]: [],
+      [Dashboard.Block.REPORTINGS]: [],
+      reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: StatusFilterEnum.IN_PROGRESS },
+      selectedReporting: undefined
     }
   },
 
@@ -102,6 +118,18 @@ export const dashboardSlice = createSlice({
       const regulatoryIds = state.dashboards[id]?.regulatoryIdsToDisplay
       state.dashboards[id].regulatoryIdsToDisplay = [...regulatoryIds, action.payload]
     },
+    addReporting(state, action: PayloadAction<Reporting>) {
+      const reporting = action.payload
+      const id = state.activeDashboardId
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        const selectedReportings = state.dashboards[id][Dashboard.Block.REPORTINGS]
+        state.dashboards[id][Dashboard.Block.REPORTINGS] = [...selectedReportings, reporting]
+      }
+    },
     removeAllPreviewedItems(state) {
       const id = state.activeDashboardId
 
@@ -132,7 +160,7 @@ export const dashboardSlice = createSlice({
         state.dashboards[id].ampIdsToDisplay = ampIds.filter(ampId => ampId !== action.payload)
       }
     },
-    removeItems(state, action: PayloadAction<{ itemIds: number[]; type: Dashboard.Block }>) {
+    removeItems(state, action: PayloadAction<{ itemIds: number[] | Reporting[]; type: Dashboard.Block }>) {
       const { itemIds, type } = action.payload
       const id = state.activeDashboardId
 
@@ -142,7 +170,7 @@ export const dashboardSlice = createSlice({
 
       if (state.dashboards[id]) {
         const selectedItems = state.dashboards[id][type]
-        state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item))
+        state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item.id))
       }
     },
     removeRegulatoryIdToDisplay(state, action: PayloadAction<number>) {
@@ -155,6 +183,21 @@ export const dashboardSlice = createSlice({
       if (regulatoryIds) {
         state.dashboards[id].regulatoryIdsToDisplay = regulatoryIds.filter(
           regulatoryId => regulatoryId !== action.payload
+        )
+      }
+    },
+    removeReporting(state, action: PayloadAction<Reporting>) {
+      const reporting = action.payload
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        const selectedReportings = state.dashboards[id][Dashboard.Block.REPORTINGS]
+        state.dashboards[id][Dashboard.Block.REPORTINGS] = selectedReportings.filter(
+          selectedReporting => selectedReporting.id !== reporting.id
         )
       }
     },
@@ -193,6 +236,29 @@ export const dashboardSlice = createSlice({
     },
     setIsDrawing(state, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
+    },
+    setReportingFilters(state, action: PayloadAction<Partial<ReportingFilters>>) {
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        const { reportingFilters } = state.dashboards[id]
+        state.dashboards[id].reportingFilters = { ...reportingFilters, ...action.payload }
+      }
+    },
+    setSelectedReporting(state, action: PayloadAction<Reporting | undefined>) {
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        state.dashboards[id].selectedReporting = action.payload
+      }
     }
   }
 })
@@ -210,6 +276,50 @@ export const getOpenedPanel = createSelector(
     const openPanel = dashboards?.[activeDashboardId]?.openPanel
 
     return openPanel?.type === type ? openPanel : undefined
+  }
+)
+
+export const getFilteredReportings = createSelector(
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (state: DashboardState) => state.extractedArea?.reportings
+  ],
+  (dashboards, activeDashboardId, reportings) => {
+    if (!activeDashboardId) {
+      return undefined
+    }
+
+    if (dashboards[activeDashboardId]) {
+      const selectedReportings = reportings
+      const filters = dashboards[activeDashboardId].reportingFilters
+
+      return selectedReportings?.filter(reporting => filter(reporting, filters))
+    }
+
+    return undefined
+  }
+)
+
+export const getReportingFilters = createSelector(
+  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
+  (dashboards, activeDashboardId) => {
+    if (!activeDashboardId) {
+      return undefined
+    }
+
+    return dashboards?.[activeDashboardId]?.reportingFilters
+  }
+)
+
+export const getSelectedReporting = createSelector(
+  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
+  (dashboards, activeDashboardId) => {
+    if (!activeDashboardId) {
+      return undefined
+    }
+
+    return dashboards?.[activeDashboardId]?.selectedReporting
   }
 )
 

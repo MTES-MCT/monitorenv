@@ -1,4 +1,7 @@
 import { ReportingCard } from '@features/Reportings/components/ReportingOverlay/Reporting/ReportingCard'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
+import { reportingActions } from 'domain/shared_slices/reporting'
 import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 
@@ -20,6 +23,8 @@ const OPTIONS = {
 }
 
 export function ReportingToAttachOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+  const dispatch = useAppDispatch()
+
   const displayReportingToAttachLayer = useAppSelector(state => state.global.displayReportingToAttachLayer)
 
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
@@ -35,6 +40,11 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map, mapClickEve
     }
   }
 
+  const close = () => {
+    dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
+    dispatch(removeOverlayStroke())
+  }
+
   return (
     <OverlayPositionOnCentroid
       appClassName="overlay-reporting-to-attach-hover"
@@ -44,7 +54,7 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map, mapClickEve
       options={hoveredOptions}
       zIndex={5000}
     >
-      <ReportingCard feature={hoveredFeature} isOnlyHoverable updateMargins={updateHoveredMargins} />
+      <ReportingCard feature={hoveredFeature} isOnlyHoverable onClose={close} updateMargins={updateHoveredMargins} />
     </OverlayPositionOnCentroid>
   )
 }

@@ -65,7 +65,7 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
   }
 
   return (
-    <StyledLayer ref={ref} onClick={toggleZoneMetadata}>
+    <StyledLayer ref={ref} $isSelected={isSelected} onClick={toggleZoneMetadata}>
       <Wrapper>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
         <LayerSelector.Name data-cy="amp-layer-type" title={layer?.type ?? 'aucun'}>
@@ -76,7 +76,6 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
         {isSelected ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Supprimer la zone"
             color={THEME.color.slateGray}
             Icon={Icon.Close}
             onClick={removeZone}
@@ -85,11 +84,11 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Sélectionner la zone"
             color={isZoneSelected ? THEME.color.blueGray : THEME.color.slateGray}
             data-cy="regulatory-zone-check"
             Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
+            title="Sélectionner la zone"
           />
         )}
       </LayerSelector.IconGroup>
@@ -97,11 +96,20 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
   )
 }
 
-const StyledLayer = styled(LayerSelector.Layer)`
+const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
   background-color: ${p => p.theme.color.white};
   padding-left: 24px;
   padding-right: 24px;
   justify-content: space-between;
+
+  ${p =>
+    p.$isSelected &&
+    `
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: 4px;
+        margin-right: 4px;
+    `}
 `
 
 const Wrapper = styled.div`
