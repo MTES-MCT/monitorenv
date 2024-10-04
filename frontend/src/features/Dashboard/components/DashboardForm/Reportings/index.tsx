@@ -24,27 +24,25 @@ export function Reportings({ dashboardId, isExpanded, reportings, setExpandedAcc
 
   return (
     <div>
-      <>
-        <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Signalements">
-          <StyledFilters $isExpanded={isExpanded} />
-          {reportings?.map(reporting => (
-            <Layer key={reporting.id} dashboardId={dashboardId} reporting={reporting} />
-          ))}
-        </Accordion>
-        <SelectedAccordion
-          isExpanded={isExpandedSelectedAccordion}
-          isReadOnly={selectedReportings?.length === 0}
-          setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-          title={`${selectedReportings?.length ?? 0} ${pluralize(
-            'signalement',
-            selectedReportings?.length ?? 0
-          )} ${pluralize('sélectionné', selectedReportings?.length ?? 0)}`}
-        >
-          {selectedReportings?.map(reporting => (
-            <Layer key={reporting.id} dashboardId={dashboardId} isSelected reporting={reporting} />
-          ))}
-        </SelectedAccordion>
-      </>
+      <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Signalements">
+        <StyledFilters $isExpanded={isExpanded} />
+        {reportings?.map(reporting => (
+          <Layer key={reporting.id} dashboardId={dashboardId} reporting={reporting} />
+        ))}
+      </Accordion>
+      <SelectedAccordion
+        isExpanded={isExpandedSelectedAccordion}
+        isReadOnly={selectedReportings?.length === 0}
+        setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
+        title={`${selectedReportings?.length ?? 0} ${pluralize(
+          'signalement',
+          selectedReportings?.length ?? 0
+        )} ${pluralize('sélectionné', selectedReportings?.length ?? 0)}`}
+      >
+        {selectedReportings?.map(reporting => (
+          <Layer key={reporting.id} dashboardId={dashboardId} isSelected reporting={reporting} />
+        ))}
+      </SelectedAccordion>
     </div>
   )
 }

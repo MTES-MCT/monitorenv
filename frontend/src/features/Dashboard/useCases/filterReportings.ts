@@ -4,7 +4,7 @@ import { StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
 
 export function filter(
   reporting: Reporting,
-  filters: { dateRange: ReportingDateRangeEnum; period?: DateAsStringRange; status: StatusFilterEnum }
+  filters: { dateRange: ReportingDateRangeEnum; period?: DateAsStringRange; status: StatusFilterEnum[] }
 ) {
   let shouldBeFiltered = false
   const createdAt = customDayjs(reporting.createdAt).utc()
@@ -51,8 +51,12 @@ export function filter(
       break
     }
   }
+  // No filter if both checkbox are checked
+  if (filters.status.length !== 1) {
+    return shouldBeFiltered
+  }
 
-  switch (filters.status) {
+  switch (filters.status[0]) {
     case StatusFilterEnum.ARCHIVED:
       shouldBeFiltered =
         shouldBeFiltered &&

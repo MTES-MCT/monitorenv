@@ -1,4 +1,4 @@
-import { dashboardActions, getSelectedReporting } from '@features/Dashboard/slice'
+import { dashboardActions, getReportingToDisplay } from '@features/Dashboard/slice'
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
 import { ReportingCard } from '@features/Reportings/components/ReportingOverlay/Reporting/ReportingCard'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -22,7 +22,7 @@ const OPTIONS = {
 }
 export function DashboardReportingOverlay({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const selectedReporting = useAppSelector(state => getSelectedReporting(state.dashboard))
+  const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
   const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
 
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)

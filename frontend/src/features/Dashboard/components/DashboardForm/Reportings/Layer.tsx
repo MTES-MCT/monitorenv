@@ -127,18 +127,15 @@ export function Layer({ dashboardId, isSelected = false, reporting }: ReportingL
 }
 
 const StyledReporting = styled.div<{ $isSelected: boolean }>`
-  background-color: ${p => p.theme.color.white};
   display: flex;
   flex-direction: column;
-
+  background-color: ${p => p.theme.color.white};
+  border-top: 1px solid ${p => p.theme.color.lightGray};
   padding: 16px 24px;
-
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
     cursor: pointer;
   }
-
-  border-top: 1px solid ${p => p.theme.color.lightGray};
 
   ${p =>
     p.$isSelected &&
@@ -159,11 +156,9 @@ const Header = styled.header`
 const Name = styled.span`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
   margin: 0 auto 0 11px;
 `
 

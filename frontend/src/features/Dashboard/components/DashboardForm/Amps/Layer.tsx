@@ -79,7 +79,7 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
             color={THEME.color.slateGray}
             Icon={Icon.Close}
             onClick={removeZone}
-            title="Supprimer la/ zone"
+            title="Supprimer la zone"
           />
         ) : (
           <IconButton
