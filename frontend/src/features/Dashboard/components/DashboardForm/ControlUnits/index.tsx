@@ -152,7 +152,7 @@ const StyledTextInput = styled(TextInput)`
   width: 100%;
 `
 
-const SelectFilters = styled.span`
+const SelectFilters = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 16px;

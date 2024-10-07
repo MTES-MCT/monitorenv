@@ -160,6 +160,7 @@ export function DashboardForm() {
           <Reportings
             dashboardId={dashboardId}
             isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
+            isSelectedAccordionOpen={previewSelectionFilter}
             reportings={filteredReportings ?? []}
             setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
           />
