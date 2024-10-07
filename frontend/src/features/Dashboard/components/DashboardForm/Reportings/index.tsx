@@ -2,7 +2,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { type Reporting } from 'domain/entities/reporting'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Filters } from './Filters'
@@ -13,14 +13,27 @@ import { SelectedAccordion } from '../SelectedAccordion'
 type ReportingsProps = {
   dashboardId: number
   isExpanded: boolean
+  isSelectedAccordionOpen: boolean
   reportings: Reporting[] | undefined
   setExpandedAccordion: () => void
 }
-export function Reportings({ dashboardId, isExpanded, reportings, setExpandedAccordion }: ReportingsProps) {
+export function Reportings({
+  dashboardId,
+  isExpanded,
+  isSelectedAccordionOpen,
+  reportings,
+  setExpandedAccordion
+}: ReportingsProps) {
   const selectedReportings = useAppSelector(
     state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REPORTINGS]
   )
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
+
+  useEffect(() => {
+    if (isSelectedAccordionOpen) {
+      setExpandedSelectedAccordion(isSelectedAccordionOpen)
+    }
+  }, [isSelectedAccordionOpen])
 
   return (
     <div>
