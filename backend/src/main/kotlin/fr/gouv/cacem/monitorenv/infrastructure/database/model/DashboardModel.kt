@@ -28,10 +28,44 @@ data class DashboardModel(
     val briefings: MutableList<BriefingModel>,
 ) {
     fun toDashboardEntity(): DashboardEntity {
+        val amps: MutableList<Int> = mutableListOf()
+        val regulatoryAreas: MutableList<Int> = mutableListOf()
+        val vigilanceAreas: MutableList<Int> = mutableListOf()
+        val reportings: MutableList<Int> = mutableListOf()
+        var inseeCode: String? = null
+        briefings.forEach { briefing ->
+            briefing.amp.let {
+                if (it?.id != null) {
+                    amps.add(it.id)
+                }
+            }
+            briefing.regulatoryAreaModel.let {
+                if (it?.id != null) {
+                    regulatoryAreas.add(it.id)
+                }
+            }
+            briefing.vigilanceAreaModel.let {
+                if (it?.id != null) {
+                    vigilanceAreas.add(it.id)
+                }
+            }
+            briefing.reportingModel.let {
+                if (it?.id != null) {
+                    reportings.add(it.id)
+                }
+            }
+            briefing.inseeCode.let {
+                inseeCode = it
+            }
+        }
         return DashboardEntity(
             id = id,
             name = name,
-            briefings = briefings.map { it.toBriefingEntity() },
+            inseeCode = inseeCode,
+            amps = amps,
+            regulatoryAreas = regulatoryAreas,
+            vigilanceAreas = vigilanceAreas,
+            reportings = reportings,
         )
     }
 

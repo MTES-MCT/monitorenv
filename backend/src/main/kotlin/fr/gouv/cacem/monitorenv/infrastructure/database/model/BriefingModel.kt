@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -34,40 +33,8 @@ data class BriefingModel(
     @JoinColumn(name = "vigilance_area_id")
     val vigilanceAreaModel: VigilanceAreaModel?,
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regulatory_cacem_id")
+    @JoinColumn(name = "regulations_cacem_id")
     val regulatoryAreaModel: RegulatoryAreaModel?,
     @Column(name = "insee_code")
     val inseeCode: String?,
-) {
-    fun toBriefingEntity(): BriefingEntity {
-        return BriefingEntity(
-            id = id,
-            ampId = amp?.id,
-            reportingId = reportingModel?.id,
-            inseeCode = inseeCode,
-            vigilanceAreaId = vigilanceAreaModel?.id,
-            regulatoryAreaId = regulatoryAreaModel?.id,
-        )
-    }
-
-    companion object {
-        fun fromBriefingEntity(
-            dashboard: DashboardModel?,
-            briefingEntity: BriefingEntity,
-            amp: AMPModel?,
-            reportingModel: ReportingModel?,
-            regulatoryAreaModel: RegulatoryAreaModel?,
-            vigilanceAreaModel: VigilanceAreaModel?,
-        ): BriefingModel {
-            return BriefingModel(
-                id = briefingEntity.id,
-                dashboard = dashboard,
-                amp = amp,
-                reportingModel = reportingModel,
-                regulatoryAreaModel = regulatoryAreaModel,
-                vigilanceAreaModel = vigilanceAreaModel,
-                inseeCode = briefingEntity.inseeCode,
-            )
-        }
-    }
-}
+)
