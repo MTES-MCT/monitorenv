@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 
-class ExtractedAreaEntity(
+data class ExtractedAreaEntity(
     val inseeCode: String?,
     val reportings: List<ReportingDTO>,
     val regulatoryAreas: List<RegulatoryAreaEntity>,

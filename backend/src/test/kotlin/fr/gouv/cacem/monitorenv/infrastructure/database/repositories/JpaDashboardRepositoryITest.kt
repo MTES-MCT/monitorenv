@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aBriefing
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,7 +10,7 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
     private lateinit var jpaDashboardRepository: JpaDashboardRepository
 
     @Test
-    fun `save should save a dashboard without briefing and return saved entity when dashboard doesnt exist`() {
+    fun `save should delete all his briefings then save a dashboard and return saved entity when dashboard doesnt exist`() {
         // Given
         val dashboard = aDashboard()
 
@@ -20,7 +19,6 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.briefings).isEmpty()
     }
 
     @Test
@@ -34,37 +32,79 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(updatedDashboard.id).isEqualTo(createdDashboard.id)
-        assertThat(updatedDashboard.briefings).isEmpty()
+        assertThat(updatedDashboard.reportings).isEmpty()
+        assertThat(updatedDashboard.amps).isEmpty()
+        assertThat(updatedDashboard.reportings).isEmpty()
+        assertThat(updatedDashboard.regulatoryAreas).isEmpty()
     }
 
     @Test
-    fun `save should save a dashboard with briefings and return saved entity when dashboard doesnt exist`() {
+    fun `save should save a dashboard with amps and return saved entity when dashboard doesnt exist`() {
         // Given
-        val briefings = listOf(aBriefing())
-        val dashboard = aDashboard(briefings = briefings)
+        val amps = listOf(1)
+        val dashboard = aDashboard(amps = amps)
 
         // When
         val savedDashboard = jpaDashboardRepository.save(dashboard)
 
         // Then
         assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.briefings).hasSameSizeAs(briefings)
-        savedDashboard.briefings.forEach { assertThat(it.id).isNotNull() }
+        assertThat(savedDashboard.amps).isEqualTo(amps)
     }
 
     @Test
-    fun `save should update a dashboard with briefings and return saved entity when dashboard exist`() {
+    fun `save should save a dashboard with regulatory areas and return saved entity when dashboard doesnt exist`() {
         // Given
-        val briefings = listOf(aBriefing())
-        val dashboard = aDashboard(briefings = briefings)
-        val createdDashboard = jpaDashboardRepository.save(dashboard)
+        val regulatoryAreas = listOf(523)
+        val dashboard = aDashboard(regulatoryAreas = regulatoryAreas)
 
         // When
-        val updatedDashboard = jpaDashboardRepository.save(createdDashboard)
+        val savedDashboard = jpaDashboardRepository.save(dashboard)
 
         // Then
-        assertThat(updatedDashboard.id).isEqualTo(createdDashboard.id)
-        assertThat(updatedDashboard.briefings).hasSameSizeAs(createdDashboard.briefings)
-        assertThat(updatedDashboard.briefings).usingRecursiveComparison().isEqualTo(createdDashboard.briefings)
+        assertThat(savedDashboard.id).isNotNull()
+        assertThat(savedDashboard.regulatoryAreas).isEqualTo(regulatoryAreas)
+    }
+
+    @Test
+    fun `save should save a dashboard with reportings and return saved entity when dashboard doesnt exist`() {
+        // Given
+        val reportings = listOf(1)
+        val dashboard = aDashboard(reportings = reportings)
+
+        // When
+        val savedDashboard = jpaDashboardRepository.save(dashboard)
+
+        // Then
+        assertThat(savedDashboard.id).isNotNull()
+        assertThat(savedDashboard.reportings).isEqualTo(reportings)
+    }
+
+    @Test
+    fun `save should save a dashboard with vigilance areas and return saved entity when dashboard doesnt exist`() {
+        // Given
+        val vigilanceAreas = listOf(1)
+        val dashboard = aDashboard(vigilanceAreas = vigilanceAreas)
+
+        // When
+        val savedDashboard = jpaDashboardRepository.save(dashboard)
+
+        // Then
+        assertThat(savedDashboard.id).isNotNull()
+        assertThat(savedDashboard.vigilanceAreas).isEqualTo(vigilanceAreas)
+    }
+
+    @Test
+    fun `save should save a dashboard with an insee code and return saved entity when dashboard doesnt exist`() {
+        // Given
+        val inseeCode = "94"
+        val dashboard = aDashboard(inseeCode = inseeCode)
+
+        // When
+        val savedDashboard = jpaDashboardRepository.save(dashboard)
+
+        // Then
+        assertThat(savedDashboard.id).isNotNull()
+        assertThat(savedDashboard.inseeCode).isEqualTo(inseeCode)
     }
 }

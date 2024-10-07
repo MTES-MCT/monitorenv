@@ -1,7 +1,9 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.dashboards
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.AMPDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.AMPDataOutput.Companion.fromAMPEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreasDataOutput
