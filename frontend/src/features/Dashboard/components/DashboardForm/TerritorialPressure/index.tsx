@@ -2,7 +2,7 @@ import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, THEME } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
@@ -14,12 +14,14 @@ const DEPARTMENT_LINK = '/dashboard/197-bilan-et-comites-de-pilotage-niveau-depa
 const METABASE_URL = import.meta.env.FRONTEND_METABASE_URL
 
 type TerritorialPressureProps = {
-  columnWidth: number
   isExpanded: boolean
   setExpandedAccordion: () => void
 }
 
-export function TerritorialPressure({ columnWidth, isExpanded, setExpandedAccordion }: TerritorialPressureProps) {
+export function TerritorialPressure({ isExpanded, setExpandedAccordion }: TerritorialPressureProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  const refLeftPosition = ref.current?.getBoundingClientRect().left ?? 0
+
   const [isVisibleTooltip, setIsVisibleTooltip] = useState<boolean>(false)
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
@@ -57,7 +59,7 @@ export function TerritorialPressure({ columnWidth, isExpanded, setExpandedAccord
   const department = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.inseeCode : undefined))
 
   const titleWithTooltip = (
-    <TitleContainer>
+    <TitleContainer ref={ref}>
       <span>Pression territoriale des contrôles et surveillances</span>
       <>
         <Icon.Info
@@ -70,7 +72,7 @@ export function TerritorialPressure({ columnWidth, isExpanded, setExpandedAccord
           tabIndex={0}
         />
         {isVisibleTooltip && (
-          <StyledTooltip $marginLeft={columnWidth ?? 0} id="territorialPressureTooltip" role="tooltip">
+          <StyledTooltip $marginLeft={refLeftPosition} id="territorialPressureTooltip" role="tooltip">
             Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones REG,
             les AMP ou à l’échelle du département.
           </StyledTooltip>
@@ -143,7 +145,7 @@ const StyledTooltip = styled.p<{ $marginLeft: number }>`
   font-size: 11px;
   padding: 4px 8px;
   position: absolute;
-  left: calc(${p => p.$marginLeft}px + 40px);
+  left: calc(${p => p.$marginLeft}px + 40px + 310px + 16px);
   width: 310px;
   z-index: 2;
 `

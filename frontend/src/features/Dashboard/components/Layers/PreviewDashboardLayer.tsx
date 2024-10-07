@@ -61,7 +61,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
+  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV.code
 
   useEffect(() => {
     if (map) {
@@ -108,7 +108,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
+  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP.code
 
   useEffect(() => {
     if (map) {
@@ -157,7 +157,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
+  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
 
   useEffect(() => {
     if (map) {
