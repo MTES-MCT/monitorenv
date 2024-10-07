@@ -5,7 +5,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened, removeOverlayStroke } from 'domain/shared_slices/Global'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import { convertToFeature } from 'domain/types/map'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
 
@@ -26,6 +26,11 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
+  const listener = useAppSelector(state => state.draw.listener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
+  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
   const displayReportingsOverlay = useAppSelector(state => state.global.displayReportingsOverlay)
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
@@ -48,6 +53,11 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.REPORTINGS.code) &&
     currentfeatureId !== `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`
+
+  const isCardVisible = useMemo(
+    () => displayReportingsLayer && !listener && !isMissionAttachmentInProgress,
+    [displayReportingsLayer, listener, isMissionAttachmentInProgress]
+  )
 
   const updateHoveredMargins = (cardHeight: number) => {
     if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
@@ -76,7 +86,13 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         options={selectedOptions}
         zIndex={5000}
       >
-        <ReportingCard feature={feature} onClose={close} selected updateMargins={updateSelectedMargins} />
+        <ReportingCard
+          feature={feature}
+          isCardVisible={isCardVisible}
+          onClose={close}
+          selected
+          updateMargins={updateSelectedMargins}
+        />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
@@ -86,7 +102,12 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         options={hoveredOptions}
         zIndex={5000}
       >
-        <ReportingCard feature={hoveredFeature} onClose={close} updateMargins={updateHoveredMargins} />
+        <ReportingCard
+          feature={hoveredFeature}
+          isCardVisible={isCardVisible}
+          onClose={close}
+          updateMargins={updateHoveredMargins}
+        />
       </OverlayPositionOnCentroid>
     </>
   )

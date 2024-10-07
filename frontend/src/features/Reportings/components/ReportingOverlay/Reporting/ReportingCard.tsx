@@ -5,7 +5,6 @@ import {
   getTimeLeft
 } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
@@ -22,6 +21,7 @@ import { StatusActionTag } from '../../StatusActionTag'
 
 type ReportingCardProps = {
   feature: any
+  isCardVisible?: boolean
   isOnlyHoverable?: boolean
   onClose: () => void
   selected?: boolean
@@ -57,6 +57,7 @@ function StatusTag({
 
 export function ReportingCard({
   feature,
+  isCardVisible = true,
   isOnlyHoverable = false,
   onClose,
   selected = false,
@@ -64,12 +65,6 @@ export function ReportingCard({
 }: ReportingCardProps) {
   const { isLoading, subThemes, themes } = useGetControlPlans()
   const dispatch = useAppDispatch()
-  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
-
-  const listener = useAppSelector(state => state.draw.listener)
-  const isMissionAttachmentInProgress = useAppSelector(
-    state => state.attachMissionToReporting.isMissionAttachmentInProgress
-  )
 
   const ref = useRef<HTMLDivElement>(null)
 
@@ -128,11 +123,6 @@ export function ReportingCard({
 
     return `Fin dans ${Math.round(timeLeft)} h`
   }, [timeLeft, isArchived])
-
-  const isCardVisible = useMemo(
-    () => displayReportingsLayer && !listener && !isMissionAttachmentInProgress,
-    [displayReportingsLayer, listener, isMissionAttachmentInProgress]
-  )
 
   const editReporting = () => {
     dispatch(editReportingInLocalStore(id, ReportingContext.MAP))
