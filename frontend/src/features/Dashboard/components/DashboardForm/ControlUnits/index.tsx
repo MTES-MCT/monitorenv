@@ -133,7 +133,7 @@ export function ControlUnits({ controlUnits, isExpanded, setExpandedAccordion }:
   )
 }
 
-const Wrapper = styled.span`
+const Wrapper = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -152,9 +152,11 @@ const SelectFilters = styled.span`
   justify-content: space-between;
   width: 100%;
 `
-const ResultList = styled.span`
+const ResultList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  list-style-type: none;
+  padding: 0px;
   width: 100%;
 `

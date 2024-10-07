@@ -36,11 +36,11 @@ export function Item({ controlUnit }: { controlUnit: ControlUnit.ControlUnit }) 
         </ControlUnitName>
         <IconButton
           accent={Accent.TERTIARY}
-          aria-label="Sélectionner la zone"
           color={isSelected ? THEME.color.blueGray : THEME.color.slateGray}
           data-cy="regulatory-zone-check"
           Icon={isSelected ? Icon.PinFilled : Icon.Pin}
           onClick={selectControlUnit}
+          title="Sélectionner la zone"
         />
       </FirstLine>
 
@@ -50,7 +50,7 @@ export function Item({ controlUnit }: { controlUnit: ControlUnit.ControlUnit }) 
     </Wrapper>
   )
 }
-const Wrapper = styled.div`
+const Wrapper = styled.li`
   background-color: ${p => p.theme.color.gainsboro};
   padding: 16px;
 `
@@ -60,11 +60,11 @@ const FirstLine = styled.div`
   justify-content: space-between;
 `
 
-const ControlUnitName = styled.div`
+const ControlUnitName = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `
-const ResourcesAndPortsText = styled.div`
+const ResourcesAndPortsText = styled.span`
   color: ${p => p.theme.color.slateGray};
 `
