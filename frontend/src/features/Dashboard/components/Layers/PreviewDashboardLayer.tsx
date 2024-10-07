@@ -40,194 +40,125 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
     },
     [openPanel]
   )
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: ampLayers } = useGetAMPsQuery()
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
 
-  // Regulatory Areas
   const regulatoryIdsToDisplay = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.regulatoryIdsToDisplay ?? [] : []
   )
-
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
-    VectorSource<Feature<Geometry>>
-  >
-  const regulatoryLayersVectorLayerRef = useRef(
-    new VectorLayer({
-      renderBuffer: 7,
-      renderOrder: (a, b) => b.get('area') - a.get('area'),
-      source: regulatoryLayersVectorSourceRef.current,
-      style: getRegulatoryLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
-      zIndex: Layers.DASHBOARD_PREVIEW.zIndex
-    })
-  ) as React.MutableRefObject<VectorLayerWithName>
-  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV.code
-
-  useEffect(() => {
-    if (map) {
-      regulatoryLayersVectorSourceRef.current.clear(true)
-
-      let regulatoryAreaToDisplay = regulatoryIdsToDisplay
-
-      if (openPanel?.type === Dashboard.Block.REGULATORY_AREAS && !regulatoryAreaToDisplay.includes(openPanel.id)) {
-        regulatoryAreaToDisplay = [...regulatoryAreaToDisplay, openPanel.id]
-      }
-
-      if (regulatoryLayers?.entities) {
-        const features = regulatoryAreaToDisplay.reduce((feats: Feature[], layerId) => {
-          const layer = regulatoryLayers.entities[layerId]
-          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
-            drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
-            feats.push(feature)
-          }
-
-          return feats
-        }, [])
-
-        regulatoryLayersVectorSourceRef.current.addFeatures(features)
-      }
-    }
-  }, [drawBorder, map, openPanel, regulatoryIdsToDisplay, regulatoryLayers?.entities])
-
-  // AMP
   const ampIdsToDisplay = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.ampIdsToDisplay ?? [] : []
   )
 
-  const { data: ampLayers } = useGetAMPsQuery()
-  const ampLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
-  const ampLayersVectorLayerRef = useRef(
+  const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
+
+  const previewLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
+    VectorSource<Feature<Geometry>>
+  >
+  const previewLayersVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
-      source: ampLayersVectorSourceRef.current,
-      style: getAMPLayerStyle,
+      source: previewLayersVectorSourceRef.current,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP.code
+  ;(previewLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
 
   useEffect(() => {
     if (map) {
-      ampLayersVectorSourceRef.current.clear(true)
+      previewLayersVectorSourceRef.current.clear(true)
 
-      let ampToDisplay = ampIdsToDisplay
+      // Regulatory Areas
+      if (regulatoryLayers?.entities) {
+        let regulatoryAreaToDisplay = regulatoryIdsToDisplay
 
-      if (openPanel?.type === Dashboard.Block.AMP && !ampToDisplay.includes(openPanel.id)) {
-        ampToDisplay = [...ampToDisplay, openPanel.id]
-      }
-
-      if (ampLayers?.entities) {
-        const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
-          const layer = ampLayers.entities[layerId]
+        if (openPanel?.type === Dashboard.Block.REGULATORY_AREAS && !regulatoryAreaToDisplay.includes(openPanel.id)) {
+          regulatoryAreaToDisplay = [...regulatoryAreaToDisplay, openPanel.id]
+        }
+        const features = regulatoryAreaToDisplay.reduce((feats: Feature[], layerId) => {
+          const layer = regulatoryLayers.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
-            drawBorder(layerId, feature, Dashboard.Block.AMP)
-
+            const feature = getRegulatoryFeature({ code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS, layer })
+            drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
+            feature.setStyle(getRegulatoryLayerStyle(feature))
             feats.push(feature)
           }
 
           return feats
         }, [])
 
-        ampLayersVectorSourceRef.current.addFeatures(features)
+        previewLayersVectorSourceRef.current.addFeatures(features)
       }
-    }
-  }, [ampIdsToDisplay, ampLayers?.entities, drawBorder, map, openPanel])
 
-  // Vigilance Areas
-  const selectedVigilanceAreaIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.VIGILANCE_AREAS] : []
-  )
-  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
+      // AMP
+      if (ampLayers?.entities) {
+        let ampToDisplay = ampIdsToDisplay
 
-  const vigilanceAreaLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
-    VectorSource<Feature<Geometry>>
-  >
-  const vigilanceAreaLayersVectorLayerRef = useRef(
-    new VectorLayer({
-      renderBuffer: 7,
-      source: vigilanceAreaLayersVectorSourceRef.current,
-      style: getVigilanceAreaLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
-      zIndex: Layers.DASHBOARD.zIndex
-    })
-  ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
+        if (openPanel?.type === Dashboard.Block.AMP && !ampToDisplay.includes(openPanel.id)) {
+          ampToDisplay = [...ampToDisplay, openPanel.id]
+        }
+        const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
+          const layer = ampLayers.entities[layerId]
+          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHOARD_AMP, layer })
+            drawBorder(layerId, feature, Dashboard.Block.AMP)
+            feature.setStyle(getAMPLayerStyle(feature))
+            feats.push(feature)
+          }
 
-  useEffect(() => {
-    if (map) {
-      vigilanceAreaLayersVectorSourceRef.current.clear(true)
+          return feats
+        }, [])
+
+        previewLayersVectorSourceRef.current.addFeatures(features)
+      }
+
+      // Vigilance Areas
       const openPanelIsVigilanceArea = openPanel?.type === Dashboard.Block.VIGILANCE_AREAS
-
       if (vigilanceAreas?.entities && openPanelIsVigilanceArea) {
         const layer = vigilanceAreas.entities[openPanel?.id]
         if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-          const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
+          const feature = getVigilanceAreaZoneFeature(layer, Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS)
           feature.set('isSelected', true)
-          vigilanceAreaLayersVectorSourceRef.current.addFeature(feature)
+          feature.setStyle(getVigilanceAreaLayerStyle(feature))
+
+          previewLayersVectorSourceRef.current.addFeature(feature)
         }
       }
-    }
-  }, [map, vigilanceAreas, selectedVigilanceAreaIds, openPanel])
 
-  // Reporting
-  const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
-
-  const reportingLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
-    VectorSource<Feature<Geometry>>
-  >
-  const reportingLayersVectorLayerRef = useRef(
-    new VectorLayer({
-      renderBuffer: 7,
-      source: reportingLayersVectorSourceRef.current,
-      style: editingReportingStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
-      zIndex: Layers.DASHBOARD_PREVIEW.zIndex
-    })
-  ) as React.MutableRefObject<VectorLayerWithName>
-  ;(reportingLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
-
-  useEffect(() => {
-    if (map) {
-      reportingLayersVectorSourceRef.current.clear(true)
-
+      // Reporting
       if (selectedReporting?.geom) {
-        reportingLayersVectorSourceRef.current.addFeature(
-          getReportingZoneFeature(selectedReporting, Layers.REPORTINGS.code)
-        )
+        const feature = getReportingZoneFeature(selectedReporting, Dashboard.featuresCode.DASHBOARD_REPORTINGS)
+        feature.setStyle(editingReportingStyleFn)
+        previewLayersVectorSourceRef.current.addFeature(feature)
       }
     }
-  }, [map, selectedReporting])
+  }, [
+    ampIdsToDisplay,
+    ampLayers?.entities,
+    drawBorder,
+    map,
+    openPanel,
+    regulatoryIdsToDisplay,
+    regulatoryLayers?.entities,
+    selectedReporting,
+    vigilanceAreas?.entities
+  ])
 
   useEffect(() => {
-    map.getLayers().push(regulatoryLayersVectorLayerRef.current)
-    map.getLayers().push(ampLayersVectorLayerRef.current)
-    map.getLayers().push(vigilanceAreaLayersVectorLayerRef.current)
-    map.getLayers().push(reportingLayersVectorLayerRef.current)
+    map.getLayers().push(previewLayersVectorLayerRef.current)
 
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(regulatoryLayersVectorLayerRef.current)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(ampLayersVectorLayerRef.current)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(vigilanceAreaLayersVectorLayerRef.current)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(reportingLayersVectorLayerRef.current)
+      map.removeLayer(previewLayersVectorLayerRef.current)
     }
   }, [map])
 
   useEffect(() => {
-    regulatoryLayersVectorLayerRef.current?.setVisible(isLayerVisible)
-    ampLayersVectorLayerRef.current?.setVisible(isLayerVisible)
-    vigilanceAreaLayersVectorLayerRef.current?.setVisible(isLayerVisible)
-    reportingLayersVectorLayerRef.current?.setVisible(isLayerVisible)
+    previewLayersVectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
 
   return null

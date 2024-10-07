@@ -1,5 +1,6 @@
 // selectors taht will be moved to the slice
 
+import { Dashboard } from '@features/Dashboard/types'
 import {
   Layers,
   MonitorEnvLayers,
@@ -21,7 +22,8 @@ export const getClickedRegulatoryFeatures = (mapClickEvent: MapClickEvent) =>
     return (
       (featureId &&
         (featureId.includes(Layers.REGULATORY_ENV_PREVIEW.code) || featureId.includes(Layers.REGULATORY_ENV.code))) ||
-      featureId.includes(Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code)
+      featureId.includes(Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code) ||
+      featureId.includes(Dashboard.Layer.DASHBOARD_REGULATORY_AREAS)
     )
   })
 
@@ -33,7 +35,8 @@ export const getClickedAmpFeatures = (mapClickEvent: MapClickEvent) =>
       featureId &&
       (featureId.includes(Layers.AMP_PREVIEW.code) ||
         featureId.includes(Layers.AMP.code) ||
-        featureId.includes(Layers.AMP_LINKED_TO_VIGILANCE_AREA.code))
+        featureId.includes(Layers.AMP_LINKED_TO_VIGILANCE_AREA.code) ||
+        featureId.includes(Dashboard.Layer.DASHOARD_AMP))
     )
   })
 
@@ -41,7 +44,11 @@ export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =
   mapClickEvent.featureList?.filter(feature => {
     const featureId = String(feature.id).split(':')[0]
 
-    return featureId === Layers.VIGILANCE_AREA.code || featureId === Layers.VIGILANCE_AREA_PREVIEW.code
+    return (
+      featureId === Layers.VIGILANCE_AREA.code ||
+      featureId === Layers.VIGILANCE_AREA_PREVIEW.code ||
+      featureId === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
+    )
   })
 
 export const getOverlayItemsFromFeatures = (

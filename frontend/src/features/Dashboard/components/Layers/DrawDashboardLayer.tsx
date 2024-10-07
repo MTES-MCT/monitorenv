@@ -55,11 +55,11 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
       style: [dottedLayerStyle, editStyle],
       updateWhileAnimating: true,
       updateWhileInteracting: true,
-      zIndex: Layers.DASHBOARD.zIndex
+      zIndex: Layers.DRAW_DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
 
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD.code
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.DRAW_DASHBOARD.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

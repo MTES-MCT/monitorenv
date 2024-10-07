@@ -6,7 +6,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
-import { includes, intersection } from 'lodash'
+import { intersection } from 'lodash'
 import { useState } from 'react'
 import styled from 'styled-components'
 
@@ -27,7 +27,6 @@ export function ListLayerGroup({ dashboardId, groupName, isSelected = false, lay
   const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
   const zonesSelected = intersection(selectedLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
-  const forceZonesAreOpen = selectedLayerIds?.some(id => includes(layerIds, id)) ?? false
 
   const handleCheckAllZones = e => {
     e.stopPropagation()
@@ -52,11 +51,7 @@ export function ListLayerGroup({ dashboardId, groupName, isSelected = false, lay
 
   return (
     <>
-      <StyledGroupWrapper
-        $isOpen={forceZonesAreOpen || zonesAreOpen}
-        $isSelected={isSelected}
-        onClick={clickOnGroupZones}
-      >
+      <StyledGroupWrapper $isOpen={zonesAreOpen} $isSelected={isSelected} onClick={clickOnGroupZones}>
         <LayerSelector.GroupName data-cy="result-group" title={groupName}>
           {getTitle(groupName) ?? ''}
         </LayerSelector.GroupName>
@@ -83,7 +78,7 @@ export function ListLayerGroup({ dashboardId, groupName, isSelected = false, lay
           )}
         </LayerSelector.IconGroup>
       </StyledGroupWrapper>
-      <LayerSelector.SubGroup isOpen={forceZonesAreOpen || zonesAreOpen} length={layerIds?.length}>
+      <LayerSelector.SubGroup isOpen={zonesAreOpen} length={layerIds?.length}>
         {layerIds?.map(layerId => (
           <Layer key={layerId} dashboardId={dashboardId} isSelected={isSelected} layerId={layerId} />
         ))}

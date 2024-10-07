@@ -1,3 +1,4 @@
+import { Dashboard } from '@features/Dashboard/types'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
@@ -11,13 +12,15 @@ type GenericLayerType = AMPProperties | RegulatoryLayerCompactProperties | Vigil
 const isAMPLayer = (layerType: RegulatoryOrAMPOrViglanceAreaLayerType) =>
   layerType === MonitorEnvLayers.AMP ||
   layerType === MonitorEnvLayers.AMP_PREVIEW ||
-  layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
+  layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA ||
+  layerType === Dashboard.Layer.DASHOARD_AMP
 
 export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
   if (
     isAMPLayer(layerType) ||
     layerType === MonitorEnvLayers.VIGILANCE_AREA ||
-    layerType === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW
+    layerType === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
+    layerType === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
   ) {
     return (layer as AMPProperties | VigilanceArea.VigilanceAreaProperties)?.name
   }
@@ -30,10 +33,12 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
+    case Dashboard.Layer.DASHOARD_AMP:
       return (layer as AMPProperties).type
 
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
+    case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
       return (layer as VigilanceArea.VigilanceAreaProperties)?.themes?.join(', ')
 
     default:
@@ -46,10 +51,12 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
+    case Dashboard.Layer.DASHOARD_AMP:
       return (layer as AMPProperties).name
 
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
+    case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
       return (layer as VigilanceArea.VigilanceAreaProperties).comments
 
     default:
@@ -62,10 +69,12 @@ export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAM
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
+    case Dashboard.Layer.DASHOARD_AMP:
       return (layer as AMPProperties).type
 
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
+    case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
       return (layer as VigilanceArea.VigilanceAreaProperties).name
 
     default:

@@ -1,3 +1,4 @@
+import { Dashboard } from '@features/Dashboard/types'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -34,6 +35,24 @@ type OverlayContentProps = {
     | undefined
 }
 
+function isRegulatoryLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
+  return (
+    type === MonitorEnvLayers.REGULATORY_ENV ||
+    type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW ||
+    type === MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA ||
+    type === Dashboard.Layer.DASHBOARD_REGULATORY_AREAS
+  )
+}
+
+function isAmpLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
+  return (
+    type === MonitorEnvLayers.AMP ||
+    type === MonitorEnvLayers.AMP_PREVIEW ||
+    type === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA ||
+    type === Dashboard.Layer.DASHOARD_AMP
+  )
+}
+
 export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
 
@@ -48,11 +67,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const handleClick = (type, id) => () => {
-    if (
-      type === MonitorEnvLayers.AMP ||
-      type === MonitorEnvLayers.AMP_PREVIEW ||
-      type === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
-    ) {
+    if (isAmpLayer(type)) {
       dispatch(openAMPMetadataPanel(id))
       dispatch(layerSidebarActions.toggleAmpResults(true))
 
@@ -60,11 +75,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
     }
-    if (
-      type === MonitorEnvLayers.REGULATORY_ENV ||
-      type === MonitorEnvLayers.REGULATORY_ENV_PREVIEW ||
-      type === MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
-    ) {
+    if (isRegulatoryLayer(type)) {
       dispatch(openRegulatoryMetadataPanel(id))
       dispatch(layerSidebarActions.toggleRegulatoryResults(true))
 
@@ -72,7 +83,11 @@ export function OverlayContent({ items }: OverlayContentProps) {
         dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
     }
-    if (type === MonitorEnvLayers.VIGILANCE_AREA || type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW) {
+    if (
+      type === MonitorEnvLayers.VIGILANCE_AREA ||
+      type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
+      type === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
+    ) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
       dispatch(closeMetadataPanel())
       dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
@@ -96,7 +111,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
           if (isLinkingZonesToVigilanceArea) {
             return (
               item.layerType !== MonitorEnvLayers.VIGILANCE_AREA &&
-              item.layerType !== MonitorEnvLayers.VIGILANCE_AREA_PREVIEW
+              item.layerType !== MonitorEnvLayers.VIGILANCE_AREA_PREVIEW &&
+              item.layerType !== Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
             )
           }
 
@@ -110,15 +126,9 @@ export function OverlayContent({ items }: OverlayContentProps) {
           const legendKey = getLegendKey(item.properties, item.layerType)
           const isSelected =
             (id === layerId && !!layerType && item.layerType.includes(layerType)) || selectedVigilanceAreaId === id
-          const isRegulatory =
-            item.layerType === MonitorEnvLayers.REGULATORY_ENV ||
-            item.layerType === MonitorEnvLayers.REGULATORY_ENV_PREVIEW ||
-            item.layerType === MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
+          const isRegulatory = isRegulatoryLayer(item.layerType)
 
-          const isAMP =
-            item.layerType === MonitorEnvLayers.AMP ||
-            item.layerType === MonitorEnvLayers.AMP_PREVIEW ||
-            item.layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
+          const isAMP = isAmpLayer(item.layerType)
 
           const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
 
