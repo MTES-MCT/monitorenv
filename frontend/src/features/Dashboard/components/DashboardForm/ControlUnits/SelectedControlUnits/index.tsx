@@ -34,7 +34,7 @@ export function SelectedControlUnits({ controlUnits }: { controlUnits: ControlUn
       title={`${selectedControlUnitIds?.length ?? 0} ${pluralize(
         'unité',
         selectedControlUnitIds?.length ?? 0
-      )} ${pluralize('sélectionée', selectedControlUnitIds?.length ?? 0)}`}
+      )} ${pluralize('sélectionnée', selectedControlUnitIds?.length ?? 0)}`}
     >
       {selectedControlUnitIds?.map(controlUnitId => {
         const controlUnit = controlUnits.find(({ id }) => id === controlUnitId)
