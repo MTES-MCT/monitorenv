@@ -1,6 +1,7 @@
 import { DashboardForm } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
+import { isDashboardEnabled } from '@features/Dashboard/utils'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { ReportingsList } from '@features/Reportings/components/ReportingsList'
@@ -119,12 +120,14 @@ export function SideWindow() {
                     onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
                     title="Signalements"
                   />
-                  <SideMenu.Button
-                    Icon={Icon.Bullseye}
-                    isActive={isDashboardsButtonIsActive}
-                    onClick={() => navigate(generatePath(sideWindowPaths.DASHBOARDS))}
-                    title="Tableaux de bord"
-                  />
+                  {isDashboardEnabled() && (
+                    <SideMenu.Button
+                      Icon={Icon.Bullseye}
+                      isActive={isDashboardsButtonIsActive}
+                      onClick={() => navigate(generatePath(sideWindowPaths.DASHBOARDS))}
+                      title="Tableaux de bord"
+                    />
+                  )}
                 </SideMenu>
 
                 <StyledRouteContainer>
