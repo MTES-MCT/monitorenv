@@ -1,4 +1,4 @@
-import { BrowserTracing } from '@sentry/browser'
+import { browserTracingIntegration } from '@sentry/browser'
 import { init } from '@sentry/react'
 import { measureScrollbarWidth } from '@utils/styleHelpers'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
@@ -18,13 +18,9 @@ if (import.meta.env.PROD && !isEmpty(import.meta.env.FRONTEND_SENTRY_DSN)) {
   init({
     dsn: import.meta.env.FRONTEND_SENTRY_DSN,
     environment: import.meta.env.FRONTEND_SENTRY_ENV,
-    integrations: [
-      new BrowserTracing({
-        tracingOrigins: [import.meta.env.FRONTEND_SENTRY_TRACING_ORIGIN]
-      })
-    ],
+    integrations: [browserTracingIntegration()],
     release: import.meta.env.FRONTEND_MONITORENV_VERSION,
-
+    tracePropagationTargets: [import.meta.env.FRONTEND_SENTRY_TRACING_ORIGIN],
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production
