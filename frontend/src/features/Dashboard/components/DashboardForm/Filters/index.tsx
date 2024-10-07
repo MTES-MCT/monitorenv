@@ -160,7 +160,7 @@ export function DashboardFilters() {
           ))}
 
           {filters?.amps?.map(type => (
-            <SingleTag key={type} accent={Accent.SECONDARY} onDelete={() => deleteAmpType(type)} title={type}>
+            <SingleTag key={type} onDelete={() => deleteAmpType(type)} title={type}>
               {type}
             </SingleTag>
           ))}

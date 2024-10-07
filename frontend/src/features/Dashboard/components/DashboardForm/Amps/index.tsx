@@ -4,7 +4,7 @@ import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.styl
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ListLayerGroup } from './ListLayerGroup'
@@ -16,29 +16,20 @@ import type { AMPFromAPI } from 'domain/entities/AMPs'
 
 type AmpsProps = {
   amps: AMPFromAPI[] | undefined
+  columnWidth: number
   dashboardId: number
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
   setExpandedAccordion: () => void
 }
-export function Amps({ amps, dashboardId, isExpanded, isSelectedAccordionOpen, setExpandedAccordion }: AmpsProps) {
-  const [isMounted, setIsMounted] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState(0)
-
-  useLayoutEffect(() => {
-    function updateSize() {
-      if (ref.current) {
-        setWidth(ref.current.clientWidth)
-      }
-    }
-
-    window.addEventListener('resize', updateSize)
-    updateSize()
-
-    return () => window.removeEventListener('resize', updateSize)
-  }, [])
-
+export function Amps({
+  amps,
+  columnWidth,
+  dashboardId,
+  isExpanded,
+  isSelectedAccordionOpen,
+  setExpandedAccordion
+}: AmpsProps) {
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
 
   const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
@@ -51,71 +42,57 @@ export function Amps({ amps, dashboardId, isExpanded, isSelectedAccordionOpen, s
   const selectedAmpByLayerName = groupBy(selectedAmpIds, r => r.name)
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (isMounted && ref.current) {
-      setWidth(ref.current.clientWidth)
-    }
-  }, [isMounted])
-
-  useEffect(() => {
     if (isSelectedAccordionOpen) {
       setExpandedSelectedAccordion(isSelectedAccordionOpen)
     }
   }, [isSelectedAccordionOpen])
 
   return (
-    <div ref={ref}>
-      {isMounted && (
-        <>
-          {openPanel && <StyledPanel $marginLeft={width} layerId={openPanel.id} />}
-          <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones AMP">
-            <StyledLayerList
-              $baseLayersLength={Object.values(ampsByLayerName).length}
-              $maxHeight={100}
-              $showBaseLayers={isExpanded}
-            >
-              {Object.entries(ampsByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-                const layersId = layerIdsInGroup.map((layerId: AMPFromAPI) => layerId.id)
+    <div>
+      {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
+      <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones AMP">
+        <StyledLayerList
+          $baseLayersLength={Object.values(ampsByLayerName).length}
+          $maxHeight={100}
+          $showBaseLayers={isExpanded}
+        >
+          {Object.entries(ampsByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+            const layersId = layerIdsInGroup.map((layerId: AMPFromAPI) => layerId.id)
 
-                return (
-                  <ListLayerGroup
-                    key={layerGroupName}
-                    dashboardId={dashboardId}
-                    groupName={layerGroupName}
-                    layerIds={layersId}
-                  />
-                )
-              })}
-            </StyledLayerList>
-          </Accordion>
-          <SelectedAccordion
-            isExpanded={isExpandedSelectedAccordion}
-            isReadOnly={selectedLayerIds?.length === 0}
-            setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-            title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
-              'sélectionnée',
-              selectedLayerIds?.length ?? 0
-            )}`}
-          >
-            {Object.entries(selectedAmpByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-              const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
+            return (
+              <ListLayerGroup
+                key={layerGroupName}
+                dashboardId={dashboardId}
+                groupName={layerGroupName}
+                layerIds={layersId}
+              />
+            )
+          })}
+        </StyledLayerList>
+      </Accordion>
+      <SelectedAccordion
+        isExpanded={isExpandedSelectedAccordion}
+        isReadOnly={selectedLayerIds?.length === 0}
+        setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
+        title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
+          'sélectionnée',
+          selectedLayerIds?.length ?? 0
+        )}`}
+      >
+        {Object.entries(selectedAmpByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+          const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
 
-              return (
-                <ListLayerGroup
-                  key={layerGroupName}
-                  dashboardId={dashboardId}
-                  groupName={layerGroupName}
-                  isSelected
-                  layerIds={layersId}
-                />
-              )
-            })}
-          </SelectedAccordion>
-        </>
-      )}
+          return (
+            <ListLayerGroup
+              key={layerGroupName}
+              dashboardId={dashboardId}
+              groupName={layerGroupName}
+              isSelected
+              layerIds={layersId}
+            />
+          )
+        })}
+      </SelectedAccordion>
     </div>
   )
 }

@@ -23,18 +23,6 @@ import { VigilanceAreas } from './VigilanceAreas'
 import { dashboardActions, getFilteredReportings } from '../../slice'
 
 export function DashboardForm() {
-  const extractedArea = useAppSelector(state => state.dashboard.extractedArea)
-  const geom = useAppSelector(state => state.dashboard.geometry)
-
-  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
-
-  const firstColumnRef = useRef<HTMLDivElement>(null)
-  const firstColumnWidth = firstColumnRef.current?.clientWidth
-
-  const secondColumnRef = useRef<HTMLDivElement>(null)
-  const secondColumnWidth = secondColumnRef.current?.clientWidth
-
   const dispatch = useAppDispatch()
   const dashboardId = 1 // TODO replace with real value
   const comments = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.comments ?? undefined)
@@ -42,6 +30,15 @@ export function DashboardForm() {
     useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.filters?.previewSelection) ?? false
 
   const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard))
+
+  const extractedArea = useAppSelector(state => state.dashboard.extractedArea)
+  const geom = useAppSelector(state => state.dashboard.geometry)
+
+  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
+
+  const firstColumnRef = useRef<HTMLDivElement>(null)
+  const firstColumnWidth = firstColumnRef.current?.clientWidth ?? 0
 
   const [expandedAccordionFirstColumn, setExpandedAccordionFirstColumn] = useState<Dashboard.Block | undefined>(
     undefined
@@ -98,21 +95,13 @@ export function DashboardForm() {
     return `${centerLatLon[1]?.toFixed(3)}/${centerLatLon[0]?.toFixed(3)}`
   }, [geom])
 
-  // remove openedPanel on mount
-  useEffect(() => {
-    if (previewSelectionFilter) {
-      dispatch(dashboardActions.setDashboardPanel())
-      dispatch(dashboardActions.removeAllPreviewedItems())
-      setExpandedAccordionFirstColumn(undefined)
-      setExpandedAccordionSecondColumn(undefined)
-      setExpandedAccordionThirdColumn(undefined)
-      dispatch(dashboardActions.setDashboardFilters({ previewSelection: false }))
-    }
-  }, [previewSelectionFilter, dispatch])
-
   useEffect(() => {
     // remove openedPanel on mount
     dispatch(dashboardActions.setDashboardPanel())
+    setExpandedAccordionFirstColumn(undefined)
+    setExpandedAccordionSecondColumn(undefined)
+    setExpandedAccordionThirdColumn(undefined)
+    dispatch(dashboardActions.setDashboardFilters({ previewSelection: false }))
 
     // cleanup preview on unmount
     return () => {
@@ -126,7 +115,7 @@ export function DashboardForm() {
       <Container>
         <Column ref={firstColumnRef}>
           <RegulatoryAreas
-            columnWidth={firstColumnWidth ?? 0}
+            columnWidth={firstColumnWidth}
             dashboardId={dashboardId}
             isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
             isSelectedAccordionOpen={previewSelectionFilter}
@@ -136,13 +125,14 @@ export function DashboardForm() {
 
           <Amps
             amps={extractedArea?.amps}
+            columnWidth={firstColumnWidth}
             dashboardId={dashboardId}
             isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
             isSelectedAccordionOpen={previewSelectionFilter}
             setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
           />
           <VigilanceAreas
-            columnWidth={firstColumnWidth ?? 0}
+            columnWidth={firstColumnWidth}
             dashboardId={dashboardId}
             isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
             isSelectedAccordionOpen={previewSelectionFilter}
@@ -150,9 +140,8 @@ export function DashboardForm() {
             vigilanceAreas={extractedArea?.vigilanceAreas}
           />
         </Column>
-        <Column ref={secondColumnRef}>
+        <Column>
           <TerritorialPressure
-            columnWidth={(firstColumnWidth ?? 0) + (secondColumnWidth ?? 0)}
             isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
             setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
           />

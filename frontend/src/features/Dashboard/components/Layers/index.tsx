@@ -1,3 +1,4 @@
+import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
@@ -50,7 +51,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD.code
+  ;(regulatoryLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV.code
 
   useEffect(() => {
     if (map) {
@@ -85,7 +86,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.AMP] ?? [] : []
   )
 
-  const { data: ampLayers } = useGetRegulatoryLayersQuery()
+  const { data: ampLayers } = useGetAMPsQuery()
   const ampLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampLayersVectorLayerRef = useRef(
     new VectorLayer({
@@ -98,7 +99,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD.code
+  ;(ampLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP.code
 
   useEffect(() => {
     if (map) {
@@ -111,6 +112,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
         if (openPanelIsRegulatory) {
           ampLayerIds = selectedAmpIds.filter(id => id !== openPanel?.id)
         }
+
         const features = ampLayerIds.reduce((feats: Feature[], layerId) => {
           const layer = ampLayers.entities[layerId]
 
@@ -147,7 +149,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD.code
+  ;(vigilanceAreaLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
 
   useEffect(() => {
     if (map) {

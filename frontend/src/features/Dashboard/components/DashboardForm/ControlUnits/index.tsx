@@ -80,7 +80,7 @@ export function ControlUnits({
   return (
     <div>
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Unités">
-        <Wrapper>
+        <Wrapper $hasChildren={!!(controlUnitResults && controlUnitResults?.length > 1)}>
           <StyledTextInput
             Icon={Icon.Search}
             isLabelHidden
@@ -91,48 +91,52 @@ export function ControlUnits({
             placeholder="Rechercher une unité"
             value={filters?.query}
           />
-          <SelectFilters>
-            <Select
+          <SelectFilters
+            $hasChildren={!!(controlUnitResults && controlUnitResults?.length > 1)}
+            $isExpanded={isExpanded}
+          >
+            <StyledSelect
               isLabelHidden
               isTransparent
               label="Administration"
+              menuStyle={{ width: '300px' }}
               name="administrationId"
-              onChange={updateAdministrationId}
+              onChange={updateAdministrationId as any}
               options={administrationsAsOptions ?? []}
               placeholder="Administration"
               searchable
-              style={{ flex: 1 }}
               value={filters?.administrationId}
             />
-            <Select
+            <StyledSelect
               isLabelHidden
               isTransparent
               label="Type de moyen"
               name="type"
-              onChange={updateType}
+              onChange={updateType as any}
               options={typesAsOptions}
               placeholder="Type de moyen"
               searchable
-              style={{ flex: 1 }}
               value={filters?.type}
             />
-            <Select
+            <StyledSelect
               isLabelHidden
               isTransparent
               label="Base du moyen"
               name="stationId"
-              onChange={updateBaseId}
+              onChange={updateBaseId as any}
               options={basesAsOptions ?? []}
               placeholder="Base du moyen"
               searchable
-              style={{ flex: 1 }}
               value={filters?.stationId}
             />
           </SelectFilters>
-          <ResultList>
-            {controlUnitResults &&
-              controlUnitResults.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
-          </ResultList>
+          {controlUnitResults && controlUnitResults.length > 0 && (
+            <ResultList>
+              {controlUnitResults.map(controlUnit => (
+                <Item key={controlUnit.id} controlUnit={controlUnit} />
+              ))}
+            </ResultList>
+          )}
         </Wrapper>
       </Accordion>
       <SelectedControlUnits controlUnits={controlUnits} isSelectedAccordionOpen={isSelectedAccordionOpen} />
@@ -140,24 +144,40 @@ export function ControlUnits({
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $hasChildren: boolean }>`
   align-items: center;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 16px 24px;
+  ${({ $hasChildren }) => !$hasChildren && 'padding-bottom: 58px;'}
 `
 
 const StyledTextInput = styled(TextInput)`
   width: 100%;
 `
 
-const SelectFilters = styled.div`
+const StyledSelect = styled(Select)`
+  flex: 1;
+`
+
+const SelectFilters = styled.div<{ $hasChildren: boolean; $isExpanded: boolean }>`
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   justify-content: space-between;
   width: 100%;
+  visibility: hidden;
+  max-height: 0px;
+  transition: 0.3s max-height ease-out, 0.3s visibility;
+
+  ${p =>
+    p.$isExpanded && {
+      maxHeight: '100vh',
+      transition: '0.5s max-height ease-in, 0.5s visibility',
+      visibility: 'visible'
+    }}
+  ${({ $hasChildren }) => !$hasChildren && 'position: absolute;  margin-top: 41px; width: 27%;'}
 `
 const ResultList = styled.ul`
   display: flex;
