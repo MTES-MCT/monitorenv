@@ -1,17 +1,23 @@
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useGetControlPlans } from '@hooks/useGetControlPlans'
+import { FrontendError } from '@libs/FrontendError'
 import {
   Checkbox,
   CheckPicker,
   CustomSearch,
   DateRangePicker,
   Select,
+  SingleTag,
   useNewWindow,
   type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { MissionFiltersEnum, updateFilters } from 'domain/shared_slices/MissionFilters'
+import { FrontCompletionStatusLabel, missionTypeEnum } from 'domain/entities/missions'
+import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -43,6 +49,9 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
 
     const { administrations, completion, controlUnits, dates, status, themes, types } = optionsList
 
+    const controlUnitsData = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+    const { themesAsOptions } = useGetControlPlans()
+
     const controlUnitCustomSearch = useMemo(
       () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
       [controlUnits]
@@ -63,6 +72,23 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
       }
     }
 
+    const onDeleteTag = <K extends MissionFiltersEnum>(
+      valueToDelete: number | string,
+      filterKey: K,
+      selectedValues: MissionFiltersState[K]
+    ) => {
+      if (!Array.isArray(selectedValues)) {
+        throw new FrontendError('`selectedValues` should be an array.')
+      }
+
+      const nextSelectedValues = selectedValues.filter(selectedValue => selectedValue !== valueToDelete) as
+        | string[]
+        | number[]
+      dispatch(
+        updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues })
+      )
+    }
+
     return (
       <FilterWrapper ref={ref}>
         <StyledBloc>
@@ -71,7 +97,6 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
               <Checkbox
                 key={missionStatus.label}
                 checked={selectedStatuses?.includes(String(missionStatus.value))}
-                data-cy={`status-filter-${missionStatus.label}`}
                 label={missionStatus.label}
                 name={missionStatus.label}
                 onChange={isChecked => udpateStatusFilter(isChecked, missionStatus.value)}
@@ -80,8 +105,8 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
           </StyledStatusFilter>
           <StyledSelect
             cleanable={false}
-            data-cy="select-period-filter"
             isLabelHidden
+            isTransparent
             label="Période"
             name="Période"
             onChange={onUpdatePeriodFilter as any}
@@ -94,7 +119,6 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
               <DateRangePicker
                 key="dateRange"
                 baseContainer={newWindowContainerRef.current}
-                data-cy="datepicker-missionStartedAfter"
                 defaultValue={
                   startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
                 }
@@ -109,8 +133,8 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
         </StyledBloc>
         <StyledBloc>
           <CheckPicker
-            data-cy="select-administration-filter"
             isLabelHidden
+            isTransparent
             label="Administration"
             name="administration"
             onChange={onUpdateAdministrationFilter as any}
@@ -125,11 +149,25 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             searchable
             value={selectedAdministrationNames}
           />
+
+          {selectedAdministrationNames &&
+            selectedAdministrationNames?.length > 0 &&
+            selectedAdministrationNames.map(admin => (
+              <SingleTag
+                key={admin}
+                onDelete={() =>
+                  onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)
+                }
+              >
+                {String(`Admin. ${admin}`)}
+              </SingleTag>
+            ))}
+
           <CheckPicker
             key={controlUnits?.length}
             customSearch={controlUnitCustomSearch}
-            data-cy="select-units-filter"
             isLabelHidden
+            isTransparent
             label="Unité"
             name="controlUnit"
             onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
@@ -141,9 +179,22 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             }
             value={selectedControlUnitIds}
           />
+          {selectedControlUnitIds &&
+            selectedControlUnitIds?.length > 0 &&
+            selectedControlUnitIds.map(unit => (
+              <SingleTag
+                key={unit}
+                onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
+              >
+                {String(
+                  `Unité ${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`
+                )}
+              </SingleTag>
+            ))}
+
           <CheckPicker
-            data-cy="select-types-filter"
             isLabelHidden
+            isTransparent
             label="Type de mission"
             name="missionType"
             onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
@@ -154,9 +205,20 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             }
             value={selectedMissionTypes}
           />
+          {selectedMissionTypes &&
+            selectedMissionTypes?.length > 0 &&
+            selectedMissionTypes.map(type => (
+              <SingleTag
+                key={type}
+                onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
+              >
+                {String(`Type ${missionTypeEnum[type].libelle}`)}
+              </SingleTag>
+            ))}
+
           <CheckPicker
-            data-cy="select-completion-statuses-filter"
             isLabelHidden
+            isTransparent
             label="Etat des données"
             name="completion"
             onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.COMPLETION_STATUS_FILTER)}
@@ -169,13 +231,25 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             }
             value={selectedCompletionStatus}
           />
+          {selectedCompletionStatus &&
+            selectedCompletionStatus?.length > 0 &&
+            selectedCompletionStatus.map(completionStatus => (
+              <SingleTag
+                key={completionStatus}
+                onDelete={() =>
+                  onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
+                }
+              >
+                {String(`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`)}
+              </SingleTag>
+            ))}
         </StyledBloc>
         <StyledBloc>
           <CheckPicker
             key={`theme${themes?.length}${JSON.stringify(selectedThemes)}`}
             customSearch={themeCustomSearch}
-            data-cy="mission-theme-filter"
             isLabelHidden
+            isTransparent
             label="Thématique"
             name="theme"
             onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
@@ -185,6 +259,16 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
             value={selectedThemes}
           />
+          {selectedThemes &&
+            selectedThemes?.length > 0 &&
+            selectedThemes.map(theme => (
+              <SingleTag
+                key={theme}
+                onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
+              >
+                {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`)}
+              </SingleTag>
+            ))}
         </StyledBloc>
       </FilterWrapper>
     )

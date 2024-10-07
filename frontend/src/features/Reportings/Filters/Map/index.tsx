@@ -1,4 +1,4 @@
-import { CheckPicker, DateRangePicker, Checkbox, SingleTag, Accent } from '@mtes-mct/monitor-ui'
+import { CheckPicker, DateRangePicker, Checkbox, SingleTag } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
@@ -98,6 +98,7 @@ export function MapReportingsFiltersWithRef(
           cleanable={false}
           data-cy="select-period-filter"
           isLabelHidden
+          isTransparent
           label="Période"
           name="Période"
           onChange={updatePeriodFilter}
@@ -129,6 +130,7 @@ export function MapReportingsFiltersWithRef(
         <CheckPicker
           data-cy="select-source-type-filter"
           isLabelHidden
+          isTransparent
           label="Type de source"
           name="sourceType"
           onChange={value => updateSourceTypeFilter(value)}
@@ -144,7 +146,6 @@ export function MapReportingsFiltersWithRef(
             {sourceTypeFilter.map(sourceType => (
               <SingleTag
                 key={sourceType}
-                accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
                 title={String(`${ReportingSourceLabels[sourceType]}`)}
               >
@@ -157,6 +158,7 @@ export function MapReportingsFiltersWithRef(
         <StyledSelect
           data-cy="select-type-filter"
           isLabelHidden
+          isTransparent
           label="Type de signalement"
           name="type"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TYPE_FILTER)}
@@ -166,6 +168,7 @@ export function MapReportingsFiltersWithRef(
         />
         <CheckPicker
           isLabelHidden
+          isTransparent
           label="Type de cible"
           name="targetType"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}
@@ -179,7 +182,6 @@ export function MapReportingsFiltersWithRef(
             {targetTypeFilter.map(targetType => (
               <SingleTag
                 key={targetType}
-                accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(targetType, ReportingsFiltersEnum.TARGET_TYPE_FILTER, targetTypeFilter)}
                 title={String(ReportingTargetTypeLabels[targetType])}
               >
@@ -191,7 +193,9 @@ export function MapReportingsFiltersWithRef(
       </StyledBloc>
       <StyledBloc>
         <CheckPicker
+          key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
           isLabelHidden
+          isTransparent
           label="Thématiques"
           name="themes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
@@ -207,7 +211,6 @@ export function MapReportingsFiltersWithRef(
             {themeFilter.map(themeId => (
               <SingleTag
                 key={themeId}
-                accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(themeId, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
                 title={themes[themeId]?.theme}
               >
@@ -218,7 +221,9 @@ export function MapReportingsFiltersWithRef(
         )}
 
         <CheckPicker
+          key={`subtheme${subThemesOptions.length}${JSON.stringify(subThemesFilter)}`}
           isLabelHidden
+          isTransparent
           label="Sous-thématiques"
           name="subThemes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
@@ -234,7 +239,6 @@ export function MapReportingsFiltersWithRef(
             {subThemesFilter.map(subThemeId => (
               <SingleTag
                 key={subThemeId}
-                accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(subThemeId, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
                 title={subThemes[subThemeId]?.subTheme}
               >

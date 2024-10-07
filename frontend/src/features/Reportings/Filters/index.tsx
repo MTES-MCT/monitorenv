@@ -142,6 +142,16 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     dispatch(
       reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
     )
+
+    // if we change the year, we reset the theme and subtheme filters
+    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : undefined
+    const currentYear = customDayjs().get('year')
+    if (actuelFilterYear && currentYear !== actuelFilterYear) {
+      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: undefined }))
+      dispatch(
+        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SUB_THEMES_FILTER, value: undefined })
+      )
+    }
   }
 
   const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
@@ -157,6 +167,16 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
         value: date && date[1] ? date[1] : undefined
       })
     )
+
+    // if we change the year, we reset the theme and subtheme filters
+    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : customDayjs().get('year')
+    const newFilterYear = date && date[0] ? customDayjs(date[0]).get('year') : undefined
+    if (newFilterYear && newFilterYear !== actuelFilterYear) {
+      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: undefined }))
+      dispatch(
+        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SUB_THEMES_FILTER, value: undefined })
+      )
+    }
   }
 
   const updateSimpleFilter = (value, filter) => {

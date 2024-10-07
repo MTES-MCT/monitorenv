@@ -95,6 +95,13 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     // these filters are only uses when user selects a date range
     dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: undefined }))
     dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
+
+    // if we change the year, we reset the theme and subtheme filters
+    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : undefined
+    const currentYear = customDayjs().get('year')
+    if (actuelFilterYear && currentYear !== actuelFilterYear) {
+      dispatch(updateFilters({ key: MissionFiltersEnum.THEME_FILTER, value: undefined }))
+    }
   }
 
   const updateAdministrationFilter = (nextSelectedAdministrationIds: string[] | undefined) => {
@@ -117,6 +124,13 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     dispatch(
       updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: date && date[1] ? date[1] : undefined })
     )
+
+    // if we change the year, we reset the theme and subtheme filters
+    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : customDayjs().get('year')
+    const newFilterYear = date && date[0] ? customDayjs(date[0]).get('year') : undefined
+    if (newFilterYear && newFilterYear !== actuelFilterYear) {
+      dispatch(updateFilters({ key: MissionFiltersEnum.THEME_FILTER, value: undefined }))
+    }
   }
 
   const updateSimpleFilter = (nextSelectedValues: number[] | undefined | boolean, filterKey: MissionFiltersEnum) => {

@@ -10,9 +10,8 @@ export const Bold = styled.span`
 `
 
 export const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
-  display: block;
+  display: flex;
   margin-left: -6px;
-  max-height: auto;
   position: absolute;
   transform: translateX(-100%);
 `
