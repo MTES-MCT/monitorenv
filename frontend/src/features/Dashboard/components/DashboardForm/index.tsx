@@ -98,16 +98,21 @@ export function DashboardForm() {
   useEffect(() => {
     // remove openedPanel on mount
     dispatch(dashboardActions.setDashboardPanel())
-    setExpandedAccordionFirstColumn(undefined)
-    setExpandedAccordionSecondColumn(undefined)
-    setExpandedAccordionThirdColumn(undefined)
-    dispatch(dashboardActions.setDashboardFilters({ previewSelection: false }))
 
     // cleanup preview on unmount
     return () => {
       dispatch(dashboardActions.removeAllPreviewedItems())
     }
   }, [dispatch])
+
+  useEffect(() => {
+    if (previewSelectionFilter) {
+      setExpandedAccordionFirstColumn(undefined)
+      setExpandedAccordionSecondColumn(undefined)
+      setExpandedAccordionThirdColumn(undefined)
+      dispatch(dashboardActions.setDashboardFilters({ previewSelection: false }))
+    }
+  }, [previewSelectionFilter, dispatch])
 
   return (
     <>

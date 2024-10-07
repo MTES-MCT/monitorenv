@@ -1,3 +1,5 @@
+import { Dashboard } from '@features/Dashboard/types'
+
 export enum LayerType {
   ADMINISTRATIVE = 'ADMINISTRATIVE',
   BASE_LAYER = 'BASE_LAYER',
@@ -30,6 +32,7 @@ export enum MonitorEnvLayers {
   DASHBOARD_PREVIEW = 'DASHBOARD_PREVIEW',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
+  DRAW_DASHBOARD = 'DRAW_DASHBOARD',
   DRAW_VIGILANCE_AREA = 'DRAW_VIGILANCE_AREA',
   EEZ = 'EEZ',
   FACADES = 'FACADES',
@@ -276,6 +279,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
     zIndex: 1400
   },
+  [MonitorEnvLayers.DRAW_DASHBOARD]: {
+    code: MonitorEnvLayers.DASHBOARD,
+    zIndex: 1300
+  },
   [MonitorEnvLayers.DASHBOARD]: {
     code: MonitorEnvLayers.DASHBOARD,
     zIndex: 1300
@@ -324,7 +331,8 @@ export const SelectableLayers0To7 = [
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ],
-  [MonitorEnvLayers.DASHBOARD]
+  [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 
 export const SelectableLayers7To26 = [
@@ -344,7 +352,8 @@ export const SelectableLayers7To26 = [
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ],
-  [MonitorEnvLayers.DASHBOARD]
+  [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 
 // Priority of hoverable items is determined by the order of the layers in this array
@@ -363,7 +372,8 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.VIGILANCE_AREA],
   [MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA],
   [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA],
-  [MonitorEnvLayers.DASHBOARD]
+  [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 
 export const HoverableLayers7To26 = [
@@ -384,7 +394,8 @@ export const HoverableLayers7To26 = [
     MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ],
-  [MonitorEnvLayers.DASHBOARD]
+  [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 
 export type RegulatoryOrAMPOrViglanceAreaLayerType =
@@ -396,6 +407,10 @@ export type RegulatoryOrAMPOrViglanceAreaLayerType =
   | MonitorEnvLayers.VIGILANCE_AREA_PREVIEW
   | MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA
   | MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
+  | MonitorEnvLayers.DASHBOARD
+  | Dashboard.Layer.DASHBOARD_REGULATORY_AREAS
+  | Dashboard.Layer.DASHOARD_AMP
+  | Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
 
 export const RegulatoryOrAMPOrViglanceAreaLayerTypeAsList = [
   MonitorEnvLayers.AMP,
@@ -405,5 +420,9 @@ export const RegulatoryOrAMPOrViglanceAreaLayerTypeAsList = [
   MonitorEnvLayers.VIGILANCE_AREA,
   MonitorEnvLayers.VIGILANCE_AREA_PREVIEW,
   MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA,
-  MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
+  MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
+  MonitorEnvLayers.DASHBOARD,
+  Dashboard.Layer.DASHBOARD_REGULATORY_AREAS,
+  Dashboard.Layer.DASHOARD_AMP,
+  Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
 ]

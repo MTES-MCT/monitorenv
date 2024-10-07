@@ -1,3 +1,4 @@
+import { Dashboard } from '@features/Dashboard/types'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
@@ -26,13 +27,16 @@ export function LayerLegend({
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
+    case Dashboard.Layer.DASHOARD_AMP:
       return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, legendKey)} />
     case MonitorEnvLayers.REGULATORY_ENV:
     case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
     case MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA:
+    case Dashboard.Layer.DASHBOARD_REGULATORY_AREAS:
       return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey)} />
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
+    case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
       return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isArchived)} />
     default:
       return <Rectangle $size={size} />
