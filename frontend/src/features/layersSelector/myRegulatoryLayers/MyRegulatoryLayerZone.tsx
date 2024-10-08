@@ -44,6 +44,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
       displayedName={displayedName}
       hasMetadata={!!regulatoryZone?.entity_name}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}
+      id={regulatoryZone.id}
       layerType={MonitorEnvLayers.REGULATORY_ENV}
       layerZoneIsShowed={regulatoryZoneIsShowed}
       metadataIsShown={metadataIsShown}

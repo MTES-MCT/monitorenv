@@ -1,5 +1,6 @@
+import { getIsLinkingAMPToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
-import _ from 'lodash'
+import { difference, intersection } from 'lodash'
 import { useState } from 'react'
 
 import { MyAMPLayerZone } from './MyAMPLayerZone'
@@ -29,7 +30,12 @@ export function MyAMPLayerGroup({
 
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
-  const ampZonesAreShowed = _.intersection(groupLayerIds, showedAmpLayerIds).length > 0
+  const ampZonesAreShowed = intersection(groupLayerIds, showedAmpLayerIds).length > 0
+
+  const ampLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
+  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+
+  const isLayerGroupDisabled = difference(groupLayerIds, ampLinkedToVigilanceAreaForm).length === 0
 
   const fitToGroupExtent = () => {
     const extent = getExtentOfLayersGroup(layers)
@@ -63,6 +69,10 @@ export function MyAMPLayerGroup({
     setZonesAreOpen(!zonesAreOpen)
   }
 
+  const addZonesToVigilanceArea = () => {
+    dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea(groupLayerIds))
+  }
+
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
@@ -71,24 +81,36 @@ export function MyAMPLayerGroup({
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.NumberOfZones>{`${layers?.length}/${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
-          <IconButton
-            accent={Accent.TERTIARY}
-            color={ampZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
-            data-cy={ampZonesAreShowed ? 'my-amp-zone-hide' : 'my-amp-zone-show'}
-            Icon={Icon.Display}
-            onClick={toggleLayerDisplay}
-            title={ampZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
-          />
+          {isLinkingAMPToVigilanceArea ? (
+            <IconButton
+              accent={Accent.TERTIARY}
+              disabled={isLayerGroupDisabled}
+              Icon={Icon.Plus}
+              onClick={addZonesToVigilanceArea}
+              title="Ajouter la/les zone(s) à la zone de vigilance"
+            />
+          ) : (
+            <>
+              <IconButton
+                accent={Accent.TERTIARY}
+                color={ampZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
+                data-cy={ampZonesAreShowed ? 'my-amp-zone-hide' : 'my-amp-zone-show'}
+                Icon={Icon.Display}
+                onClick={toggleLayerDisplay}
+                title={ampZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
+              />
 
-          <IconButton
-            accent={Accent.TERTIARY}
-            color={THEME.color.slateGray}
-            data-cy="my-amp-zone-delete"
-            Icon={Icon.Close}
-            onClick={handleRemoveZone}
-            size={Size.SMALL}
-            title="Supprimer la/les zone(s) de ma sélection"
-          />
+              <IconButton
+                accent={Accent.TERTIARY}
+                color={THEME.color.slateGray}
+                data-cy="my-amp-zone-delete"
+                Icon={Icon.Close}
+                onClick={handleRemoveZone}
+                size={Size.SMALL}
+                title="Supprimer la/les zone(s) de ma sélection"
+              />
+            </>
+          )}
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>
       <LayerSelector.GroupList isOpen={zonesAreOpen} length={layers?.length}>

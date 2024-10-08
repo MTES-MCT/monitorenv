@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { groupBy, isEmpty } from 'lodash'
 import { useState } from 'react'
 
 import { RegulatoryLayerGroup } from './MyRegulatoryLayerGroup'
@@ -12,7 +12,7 @@ export function RegulatoryLayersList() {
 
   const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)
 
-  if (_.isEmpty(selectedRegulatoryLayers)) {
+  if (isEmpty(selectedRegulatoryLayers)) {
     return (
       <LayerSelector.LayerList
         $baseLayersLength={0}
@@ -24,7 +24,7 @@ export function RegulatoryLayersList() {
     )
   }
 
-  const layersByLayersName = _.groupBy(selectedRegulatoryLayers, r => r?.layer_name)
+  const layersByLayersName = groupBy(selectedRegulatoryLayers, r => r?.layer_name)
 
   return (
     <LayerSelector.LayerList

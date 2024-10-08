@@ -1,3 +1,9 @@
+import {
+  getIsLinkingAMPToVigilanceArea,
+  getIsLinkingZonesToVigilanceArea,
+  vigilanceAreaActions
+} from '@features/VigilanceArea/slice'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -15,6 +21,7 @@ type MyLayerZoneProps = {
   displayedName: string
   hasMetadata: boolean
   hideLayer: () => void
+  id: number
   layerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP
   layerZoneIsShowed: boolean
   metadataIsShown?: boolean
@@ -30,6 +37,7 @@ export function MyLayerZone({
   displayedName,
   hasMetadata,
   hideLayer,
+  id,
   layerType,
   layerZoneIsShowed,
   metadataIsShown,
@@ -40,6 +48,17 @@ export function MyLayerZone({
   type
 }: MyLayerZoneProps) {
   const dispatch = useAppDispatch()
+
+  const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
+  const ampLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
+
+  const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
+  const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
+
+  const isDisabled =
+    layerType === MonitorEnvLayers.AMP
+      ? ampLinkedToVigilanceAreaForm.includes(id)
+      : regulatoryAreasLinkedToVigilanceAreaForm.includes(id)
 
   const zoomToLayerExtent = () => {
     const extent = transformExtent(
@@ -68,6 +87,17 @@ export function MyLayerZone({
     }
   }
 
+  const addZoneToVigilanceArea = e => {
+    e.stopPropagation()
+
+    if (isLinkingAMPToVigilanceArea) {
+      dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([id]))
+
+      return
+    }
+    dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea([id]))
+  }
+
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
       <LayerLegend layerType={layerType} legendKey={name} type={type} />
@@ -75,34 +105,46 @@ export function MyLayerZone({
         {displayedName}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
-        {hasMetadata && (
-          <IconButton
+        {isLinkingZonesToVigilanceArea ? (
+          <PaddedIconButton
             accent={Accent.TERTIARY}
-            color={metadataIsShown ? THEME.color.charcoal : THEME.color.lightGray}
-            Icon={Icon.Summary}
-            iconSize={20}
-            onClick={toggleZoneMetadata}
-            size={Size.SMALL}
-            title={metadataIsShown ? 'Fermer la réglementation' : 'Afficher la réglementation'}
+            disabled={isDisabled}
+            Icon={Icon.Plus}
+            onClick={addZoneToVigilanceArea}
+            title="Ajouter la zone à la zone de vigilance"
           />
+        ) : (
+          <>
+            {hasMetadata && (
+              <IconButton
+                accent={Accent.TERTIARY}
+                color={metadataIsShown ? THEME.color.charcoal : THEME.color.lightGray}
+                Icon={Icon.Summary}
+                iconSize={20}
+                onClick={toggleZoneMetadata}
+                size={Size.SMALL}
+                title={metadataIsShown ? 'Fermer la réglementation' : 'Afficher la réglementation'}
+              />
+            )}
+
+            <IconButton
+              accent={Accent.TERTIARY}
+              color={layerZoneIsShowed ? THEME.color.charcoal : THEME.color.lightGray}
+              Icon={Icon.Display}
+              onClick={toggleLayerDisplay}
+              title={layerZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
+            />
+
+            <PaddedIconButton
+              accent={Accent.TERTIARY}
+              color={THEME.color.slateGray}
+              Icon={Icon.Close}
+              onClick={removeZone}
+              size={Size.SMALL}
+              title="Supprimer la zone de ma sélection"
+            />
+          </>
         )}
-
-        <IconButton
-          accent={Accent.TERTIARY}
-          color={layerZoneIsShowed ? THEME.color.charcoal : THEME.color.lightGray}
-          Icon={Icon.Display}
-          onClick={toggleLayerDisplay}
-          title={layerZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
-        />
-
-        <PaddedIconButton
-          accent={Accent.TERTIARY}
-          color={THEME.color.slateGray}
-          Icon={Icon.Close}
-          onClick={removeZone}
-          size={Size.SMALL}
-          title="Supprimer la zone de ma sélection"
-        />
       </LayerSelector.IconGroup>
     </LayerSelector.Layer>
   )

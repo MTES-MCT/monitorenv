@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { groupBy, isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 
 import { MyAMPLayerGroup } from './MyAMPLayerGroup'
@@ -20,10 +20,10 @@ export function AMPLayersList() {
     () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((layer): layer is AMP => !!layer),
     [amps, selectedAmpLayerIds]
   )
-  const layersByLayersName = useMemo(() => _.groupBy(selectedAmps, r => r?.name), [selectedAmps])
+  const layersByLayersName = useMemo(() => groupBy(selectedAmps, r => r?.name), [selectedAmps])
   const layersLength = Object.keys(layersByLayersName).length
 
-  if (_.isEmpty(selectedAmpLayerIds)) {
+  if (isEmpty(selectedAmpLayerIds)) {
     return (
       <LayerSelector.LayerList $baseLayersLength={0} $showBaseLayers={myAmpsIsOpen}>
         <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
