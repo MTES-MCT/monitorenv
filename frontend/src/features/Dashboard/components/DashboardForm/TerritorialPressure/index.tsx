@@ -59,18 +59,20 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }: Territ
   const department = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.inseeCode : undefined))
 
   const titleWithTooltip = (
-    <TitleContainer ref={ref}>
+    <TitleContainer>
       <span>Pression territoriale des contrôles et surveillances</span>
       <>
-        <Icon.Info
-          aria-describedby="territorialPressureTooltip"
-          color={THEME.color.slateGray}
-          onBlur={() => setIsVisibleTooltip(false)}
-          onFocus={() => setIsVisibleTooltip(true)}
-          onMouseLeave={() => setIsVisibleTooltip(false)}
-          onMouseOver={() => setIsVisibleTooltip(true)}
-          tabIndex={0}
-        />
+        <div ref={ref}>
+          <Icon.Info
+            aria-describedby="territorialPressureTooltip"
+            color={THEME.color.slateGray}
+            onBlur={() => setIsVisibleTooltip(false)}
+            onFocus={() => setIsVisibleTooltip(true)}
+            onMouseLeave={() => setIsVisibleTooltip(false)}
+            onMouseOver={() => setIsVisibleTooltip(true)}
+            tabIndex={0}
+          />
+        </div>
         {isVisibleTooltip && (
           <StyledTooltip $marginLeft={refLeftPosition} id="territorialPressureTooltip" role="tooltip">
             Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones REG,
@@ -145,7 +147,7 @@ const StyledTooltip = styled.p<{ $marginLeft: number }>`
   font-size: 11px;
   padding: 4px 8px;
   position: absolute;
-  left: calc(${p => p.$marginLeft}px + 40px + 310px + 16px);
+  left: calc(${p => p.$marginLeft}px + 30px);
   width: 310px;
   z-index: 2;
 `
