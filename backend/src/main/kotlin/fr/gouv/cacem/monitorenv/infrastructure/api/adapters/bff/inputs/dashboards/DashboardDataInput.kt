@@ -8,22 +8,26 @@ class DashboardDataInput(
     val id: UUID?,
     val name: String,
     val geom: Geometry,
-    val reportings: List<Int>,
-    val regulatoryAreas: List<Int>,
-    val amps: List<Int>,
-    val vigilanceAreas: List<Int>,
+    val comments: String?,
     val inseeCode: String?,
+    val amps: List<Int>,
+    val controlUnits: List<Int>,
+    val regulatoryAreas: List<Int>,
+    val reportings: List<Int>,
+    val vigilanceAreas: List<Int>,
 ) {
     fun toDashboardEntity(): DashboardEntity {
         return DashboardEntity(
             id = id,
             name = name,
             geom = geom,
+            comments = comments,
+            inseeCode = inseeCode,
+            amps = amps,
+            controlUnits = controlUnits,
             reportings = reportings,
             regulatoryAreas = regulatoryAreas,
-            amps = amps,
             vigilanceAreas = vigilanceAreas,
-            inseeCode = inseeCode,
         )
     }
 }

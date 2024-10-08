@@ -37,6 +37,34 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
     }
 
     @Test
+    fun `save should save a dashboard with an insee code and return saved entity when dashboard doesnt exist`() {
+        // Given
+        val inseeCode = "94"
+        val dashboard = aDashboard(inseeCode = inseeCode)
+
+        // When
+        val savedDashboard = jpaDashboardRepository.save(dashboard)
+
+        // Then
+        assertThat(savedDashboard.id).isNotNull()
+        assertThat(savedDashboard.inseeCode).isEqualTo(inseeCode)
+    }
+
+    @Test
+    fun `save should save a dashboard with controlUnits and return saved entity when dashboard doesnt exist`() {
+        // Given
+        val controlUnits = listOf(10000)
+        val dashboard = aDashboard(controlUnits = controlUnits)
+
+        // When
+        val savedDashboard = jpaDashboardRepository.save(dashboard)
+
+        // Then
+        assertThat(savedDashboard.id).isNotNull()
+        assertThat(savedDashboard.controlUnits).isEqualTo(controlUnits)
+    }
+
+    @Test
     fun `save should save a dashboard with regulatory areas and return saved entity when dashboard doesnt exist`() {
         // Given
         val regulatoryAreas = listOf(523)
@@ -79,20 +107,6 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
     }
 
     @Test
-    fun `save should save a dashboard with an insee code and return saved entity when dashboard doesnt exist`() {
-        // Given
-        val inseeCode = "94"
-        val dashboard = aDashboard(inseeCode = inseeCode)
-
-        // When
-        val savedDashboard = jpaDashboardRepository.save(dashboard)
-
-        // Then
-        assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.inseeCode).isEqualTo(inseeCode)
-    }
-
-    @Test
     fun `save should update a dashboard and return saved entity when dashboard exist`() {
         // Given
         val dashboard = aDashboard()
@@ -101,22 +115,28 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
         assertThat(createdDashboard.amps).isEmpty()
         assertThat(createdDashboard.reportings).isEmpty()
         assertThat(createdDashboard.regulatoryAreas).isEmpty()
+        assertThat(createdDashboard.controlUnits).isEmpty()
 
         val name = "updatedDashboard"
+        val comments = "updated comments"
         val geom = WKTReader().read("MULTIPOINT ((-1.555 44.315),(-1.555 44.305))")
         val inseeCode = "94"
-        val amps = listOf(1)
-        val reportings = listOf(1)
-        val regulatoryAreas = listOf(523)
-        val vigilanceAreas = listOf(1)
+        val amps = listOf(1, 2)
+        val reportings = listOf(1, 2)
+        val regulatoryAreas = listOf(522, 523)
+        val vigilanceAreas = listOf(1, 2)
+        val controlUnits = listOf(10000, 10001)
+
         createdDashboard =
             createdDashboard.copy(
                 name = name,
+                comments = comments,
                 geom = geom,
                 inseeCode = inseeCode,
                 amps = amps,
-                reportings = reportings,
+                controlUnits = controlUnits,
                 regulatoryAreas = regulatoryAreas,
+                reportings = reportings,
                 vigilanceAreas = vigilanceAreas,
             )
 
@@ -127,10 +147,12 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
         assertThat(updatedDashboard.id).isEqualTo(createdDashboard.id)
         assertThat(updatedDashboard.name).isEqualTo(name)
         assertThat(updatedDashboard.geom).isEqualTo(geom)
+        assertThat(updatedDashboard.comments).isEqualTo(comments)
         assertThat(updatedDashboard.inseeCode).isEqualTo(inseeCode)
         assertThat(updatedDashboard.amps).isEqualTo(amps)
-        assertThat(updatedDashboard.reportings).isEqualTo(reportings)
+        assertThat(updatedDashboard.controlUnits).isEqualTo(controlUnits)
         assertThat(updatedDashboard.regulatoryAreas).isEqualTo(regulatoryAreas)
+        assertThat(updatedDashboard.reportings).isEqualTo(reportings)
         assertThat(updatedDashboard.vigilanceAreas).isEqualTo(vigilanceAreas)
     }
 }

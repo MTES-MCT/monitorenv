@@ -8,11 +8,13 @@ class DashboardDataOutput(
     val id: UUID?,
     val name: String,
     val geom: Geometry,
-    val reportings: List<Int>,
-    val regulatoryAreas: List<Int>,
-    val amps: List<Int>,
-    val vigilanceAreas: List<Int>,
+    val comments: String?,
     val inseeCode: String?,
+    val amps: List<Int>,
+    val controlUnits: List<Int>,
+    val regulatoryAreas: List<Int>,
+    val reportings: List<Int>,
+    val vigilanceAreas: List<Int>,
 ) {
     companion object {
         fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardDataOutput {
@@ -20,11 +22,13 @@ class DashboardDataOutput(
                 id = dashboardEntity.id,
                 name = dashboardEntity.name,
                 geom = dashboardEntity.geom,
-                reportings = dashboardEntity.reportings,
-                amps = dashboardEntity.amps,
-                regulatoryAreas = dashboardEntity.regulatoryAreas,
-                vigilanceAreas = dashboardEntity.vigilanceAreas,
+                comments = dashboardEntity.comments,
                 inseeCode = dashboardEntity.inseeCode,
+                amps = dashboardEntity.amps,
+                controlUnits = dashboardEntity.controlUnits,
+                regulatoryAreas = dashboardEntity.regulatoryAreas,
+                reportings = dashboardEntity.reportings,
+                vigilanceAreas = dashboardEntity.vigilanceAreas,
             )
         }
     }

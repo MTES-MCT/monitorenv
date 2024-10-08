@@ -22,74 +22,84 @@ data class DashboardModel(
     val id: UUID?,
     val name: String,
     val geom: Geometry,
+    val comments: String?,
     @OneToMany(
         mappedBy = "dashboard",
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
-    val briefings: MutableList<BriefingModel>,
+    val dashboardDatas: MutableList<DashboardDatasModel>,
 ) {
     fun toDashboardEntity(): DashboardEntity {
         val amps: MutableList<Int> = mutableListOf()
         val regulatoryAreas: MutableList<Int> = mutableListOf()
         val vigilanceAreas: MutableList<Int> = mutableListOf()
         val reportings: MutableList<Int> = mutableListOf()
+        val controlUnits: MutableList<Int> = mutableListOf()
         var inseeCode: String? = null
-        briefings.forEach { briefing ->
-            briefing.amp.let {
+        dashboardDatas.forEach { datas ->
+            datas.amp.let {
                 if (it?.id != null) {
                     amps.add(it.id)
                 }
             }
-            briefing.regulatoryAreaModel.let {
+            datas.regulatoryAreaModel.let {
                 if (it?.id != null) {
                     regulatoryAreas.add(it.id)
                 }
             }
-            briefing.vigilanceAreaModel.let {
+            datas.vigilanceAreaModel.let {
                 if (it?.id != null) {
                     vigilanceAreas.add(it.id)
                 }
             }
-            briefing.reportingModel.let {
+            datas.reportingModel.let {
                 if (it?.id != null) {
                     reportings.add(it.id)
                 }
             }
-            if (briefing.inseeCode != null) {
-                inseeCode = briefing.inseeCode
+            datas.controlUnitModel.let {
+                if (it?.id != null) {
+                    controlUnits.add(it.id)
+                }
+            }
+            if (datas.inseeCode != null) {
+                inseeCode = datas.inseeCode
             }
         }
         return DashboardEntity(
             id = id,
             name = name,
             geom = geom,
+            comments = comments,
             inseeCode = inseeCode,
             amps = amps,
+            controlUnits = controlUnits,
             regulatoryAreas = regulatoryAreas,
-            vigilanceAreas = vigilanceAreas,
             reportings = reportings,
+            vigilanceAreas = vigilanceAreas,
         )
     }
 
-    fun addBriefing(briefing: BriefingModel) {
-        briefing.dashboard = this
-        briefings.add(briefing)
+    fun addBriefing(dashboardDatasModel: DashboardDatasModel) {
+        dashboardDatasModel.dashboard = this
+        this.dashboardDatas.add(dashboardDatasModel)
     }
 
     companion object {
         fun fromDashboardEntity(
             dashboardEntity: DashboardEntity,
-            briefings: List<BriefingModel>,
+            dashboardDatasModels: List<DashboardDatasModel>,
         ): DashboardModel {
             val dashboardModel =
                 DashboardModel(
                     id = dashboardEntity.id,
                     name = dashboardEntity.name,
                     geom = dashboardEntity.geom,
-                    briefings = mutableListOf(),
+                    comments = dashboardEntity.comments,
+                    dashboardDatas = mutableListOf(),
                 )
-            briefings.forEach {
+            dashboardDatasModels.forEach {
                 dashboardModel.addBriefing(it)
             }
             return dashboardModel
