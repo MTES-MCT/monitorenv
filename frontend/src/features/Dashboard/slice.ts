@@ -46,6 +46,8 @@ type DashboardType = {
   controlUnitFilters: ControlUnitFilters
   dashboard: any
   filters: DashboardFilters
+  id?: number
+  name: string
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
@@ -82,6 +84,8 @@ const INITIAL_STATE: DashboardState = {
       controlUnitFilters: {},
       dashboard: {},
       filters: {},
+      id: 1,
+      name: 'Tab 08/10/2024',
       openPanel: undefined,
       [Dashboard.Block.REGULATORY_AREAS]: [],
       [Dashboard.Block.VIGILANCE_AREAS]: [],
@@ -290,6 +294,15 @@ export const dashboardSlice = createSlice({
     },
     setIsDrawing(state, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
+    },
+    setName(state, action: PayloadAction<string>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].name = action.payload
     },
     setReportingFilters(state, action: PayloadAction<Partial<ReportingFilters>>) {
       const id = state.activeDashboardId

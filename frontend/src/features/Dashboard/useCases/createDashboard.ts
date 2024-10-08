@@ -1,7 +1,7 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { sideWindowActions } from '@features/SideWindow/slice'
-import { Level } from '@mtes-mct/monitor-ui'
+import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 
 import { closeDashboard } from './closeDashboard'
@@ -19,6 +19,9 @@ export const createDashboard =
     if (data) {
       dispatch(closeDashboard())
       dispatch(dashboardActions.setExtractedArea(data))
+      const date = customDayjs().format('DD/MM/YYYY')
+      const newDashboardName = `Tab ${date}`
+      dispatch(dashboardActions.setName(newDashboardName))
       dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.DASHBOARD))
     }
     if (error) {
