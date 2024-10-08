@@ -32,6 +32,7 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
       displayedName={displayedName}
       hasMetadata={!!amp.name}
       hideLayer={() => dispatch(hideAmpLayer(amp.id))}
+      id={amp.id}
       layerType={MonitorEnvLayers.AMP}
       layerZoneIsShowed={isDisplayed}
       metadataIsShown={metadataIsShown}

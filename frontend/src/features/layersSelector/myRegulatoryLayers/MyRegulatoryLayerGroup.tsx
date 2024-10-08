@@ -1,6 +1,7 @@
+import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
-import _ from 'lodash'
+import { difference, intersection } from 'lodash'
 import { useState } from 'react'
 
 import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
@@ -33,8 +34,13 @@ export function RegulatoryLayerGroup({
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const metadataPanelIsOpen = useAppSelector(state => getMetadataIsOpenForRegulatoryLayerIds(state, groupLayerIds))
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
-  const regulatoryZonesAreShowed = _.intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
+  const regulatoryZonesAreShowed = intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+
+  const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+
+  const isLayerGroupDisabled = difference(groupLayerIds, regulatoryAreasLinkedToVigilanceAreaForm).length === 0
 
   const fitToGroupExtent = () => {
     const extent = getExtentOfLayersGroup(layers)
@@ -71,6 +77,10 @@ export function RegulatoryLayerGroup({
     }
   }
 
+  const addZonesToVigilanceArea = () => {
+    dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(groupLayerIds))
+  }
+
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
@@ -83,24 +93,35 @@ export function RegulatoryLayerGroup({
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.NumberOfZones>{`${layers?.length}/${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
-          <IconButton
-            accent={Accent.TERTIARY}
-            aria-label={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
-            color={regulatoryZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
-            Icon={Icon.Display}
-            onClick={toggleLayerDisplay}
-            title={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
-          />
+          {isLinkingRegulatoryToVigilanceArea ? (
+            <IconButton
+              accent={Accent.TERTIARY}
+              disabled={isLayerGroupDisabled}
+              Icon={Icon.Plus}
+              onClick={addZonesToVigilanceArea}
+              title="Ajouter la/les zone(s) à la zone de vigilance"
+            />
+          ) : (
+            <>
+              <IconButton
+                accent={Accent.TERTIARY}
+                color={regulatoryZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
+                Icon={Icon.Display}
+                onClick={toggleLayerDisplay}
+                title={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
+              />
 
-          <IconButton
-            accent={Accent.TERTIARY}
-            color={THEME.color.slateGray}
-            data-cy="my-regulatory-group-delete"
-            Icon={Icon.Close}
-            onClick={handleRemoveZone}
-            size={Size.SMALL}
-            title="Supprimer la/les zone(s) de ma sélection"
-          />
+              <IconButton
+                accent={Accent.TERTIARY}
+                color={THEME.color.slateGray}
+                data-cy="my-regulatory-group-delete"
+                Icon={Icon.Close}
+                onClick={handleRemoveZone}
+                size={Size.SMALL}
+                title="Supprimer la/les zone(s) de ma sélection"
+              />
+            </>
+          )}
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>
       <LayerSelector.GroupList isOpen={zonesAreOpen || metadataPanelIsOpen} length={layers?.length}>

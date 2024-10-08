@@ -18,7 +18,7 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $withBorderBottom?: bool
   display: flex;
   font-size: 13px;
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
-  padding-left: 20px;
+  padding-left: 18px;
   text-align: left;
   user-select: none;
   :hover {
