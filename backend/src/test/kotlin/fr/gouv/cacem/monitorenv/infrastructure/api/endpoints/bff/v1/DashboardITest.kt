@@ -137,33 +137,39 @@ class DashboardITest {
         // Given
         val id = UUID.randomUUID()
         val name = "dashboard1"
+        val comments = "comments"
         val geometry = WKTReader().read("MULTIPOINT ((-1.548 44.315),(-1.245 44.305))")
         val amps = listOf(1)
         val regulatoryAreas = listOf(2)
         val vigilanceAreas = listOf(3)
         val reportings = listOf(4)
+        val controlUnits = listOf(4)
         val inseeCode = "94"
         val input =
             DashboardDataInput(
                 id = id,
                 name = name,
+                comments = comments,
                 geom = geometry,
                 inseeCode = inseeCode,
                 amps = amps,
                 regulatoryAreas = regulatoryAreas,
                 vigilanceAreas = vigilanceAreas,
                 reportings = reportings,
+                controlUnits = controlUnits,
             )
         val dashboard =
             aDashboard(
                 id = id,
                 name = name,
+                comments = comments,
                 geom = geometry,
                 amps = amps,
                 vigilanceAreas = vigilanceAreas,
                 reportings = reportings,
                 regulatoryAreas = regulatoryAreas,
                 inseeCode = inseeCode,
+                controlUnits = controlUnits,
             )
         given(saveDashboard.execute(dashboard)).willReturn(dashboard)
 
@@ -177,11 +183,13 @@ class DashboardITest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(id.toString())))
             .andExpect(jsonPath("$.name", equalTo(name)))
+            .andExpect(jsonPath("$.comments", equalTo(comments)))
             .andExpect(jsonPath("$.geom.type", equalTo(geometry.geometryType)))
             .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
             .andExpect(jsonPath("$.amps", equalTo(amps)))
             .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))
             .andExpect(jsonPath("$.reportings", equalTo(reportings)))
             .andExpect(jsonPath("$.vigilanceAreas", equalTo(vigilanceAreas)))
+            .andExpect(jsonPath("$.controlUnits", equalTo(controlUnits)))
     }
 }

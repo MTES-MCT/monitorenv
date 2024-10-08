@@ -10,22 +10,26 @@ class DashboardFixture {
         fun aDashboard(
             id: UUID? = null,
             name: String = "",
+            comments: String = "",
             geom: Geometry = WKTReader().read("MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"),
             amps: List<Int> = listOf(),
             regulatoryAreas: List<Int> = listOf(),
             reportings: List<Int> = listOf(),
             vigilanceAreas: List<Int> = listOf(),
+            controlUnits: List<Int> = listOf(),
             inseeCode: String? = null,
         ): DashboardEntity {
             return DashboardEntity(
                 id = id,
                 name = name,
                 geom = geom,
+                comments = comments,
                 amps = amps,
                 regulatoryAreas = regulatoryAreas,
                 inseeCode = inseeCode,
                 reportings = reportings,
                 vigilanceAreas = vigilanceAreas,
+                controlUnits = controlUnits,
             )
         }
     }

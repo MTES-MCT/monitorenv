@@ -14,8 +14,8 @@ import jakarta.persistence.Table
 import java.util.UUID
 
 @Entity
-@Table(name = "briefing")
-data class BriefingModel(
+@Table(name = "dashboard_datas")
+data class DashboardDatasModel(
     @Id
     @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,6 +35,9 @@ data class BriefingModel(
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regulations_cacem_id")
     val regulatoryAreaModel: RegulatoryAreaModel?,
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "control_unit_id")
+    val controlUnitModel: ControlUnitModel?,
     @Column(name = "insee_code")
     val inseeCode: String?,
 )
