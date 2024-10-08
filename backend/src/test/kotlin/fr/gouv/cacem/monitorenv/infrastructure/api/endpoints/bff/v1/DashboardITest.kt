@@ -46,7 +46,8 @@ class DashboardITest {
     @MockBean
     private lateinit var saveDashboard: SaveDashboard
 
-    private val objectMapper: ObjectMapper = ObjectMapper()
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     @Test
     fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
@@ -132,10 +133,11 @@ class DashboardITest {
     }
 
     @Test
-    fun `put response should be ok with id`() {
+    fun `put response should be ok with and return the saved dashboard`() {
         // Given
         val id = UUID.randomUUID()
         val name = "dashboard1"
+        val geometry = WKTReader().read("MULTIPOINT ((-1.548 44.315),(-1.245 44.305))")
         val amps = listOf(1)
         val regulatoryAreas = listOf(2)
         val vigilanceAreas = listOf(3)
@@ -145,6 +147,7 @@ class DashboardITest {
             DashboardDataInput(
                 id = id,
                 name = name,
+                geom = geometry,
                 inseeCode = inseeCode,
                 amps = amps,
                 regulatoryAreas = regulatoryAreas,
@@ -155,6 +158,7 @@ class DashboardITest {
             aDashboard(
                 id = id,
                 name = name,
+                geom = geometry,
                 amps = amps,
                 vigilanceAreas = vigilanceAreas,
                 reportings = reportings,
@@ -173,6 +177,7 @@ class DashboardITest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(id.toString())))
             .andExpect(jsonPath("$.name", equalTo(name)))
+            .andExpect(jsonPath("$.geom.type", equalTo(geometry.geometryType)))
             .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
             .andExpect(jsonPath("$.amps", equalTo(amps)))
             .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))

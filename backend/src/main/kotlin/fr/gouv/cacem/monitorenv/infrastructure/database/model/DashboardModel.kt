@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.locationtech.jts.geom.Geometry
 import java.util.UUID
 
 @Entity
@@ -20,6 +21,7 @@ data class DashboardModel(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID?,
     val name: String,
+    val geom: Geometry,
     @OneToMany(
         mappedBy = "dashboard",
         fetch = FetchType.LAZY,
@@ -54,13 +56,14 @@ data class DashboardModel(
                     reportings.add(it.id)
                 }
             }
-            briefing.inseeCode.let {
-                inseeCode = it
+            if (briefing.inseeCode != null) {
+                inseeCode = briefing.inseeCode
             }
         }
         return DashboardEntity(
             id = id,
             name = name,
+            geom = geom,
             inseeCode = inseeCode,
             amps = amps,
             regulatoryAreas = regulatoryAreas,
@@ -80,7 +83,12 @@ data class DashboardModel(
             briefings: List<BriefingModel>,
         ): DashboardModel {
             val dashboardModel =
-                DashboardModel(id = dashboardEntity.id, dashboardEntity.name, briefings = mutableListOf())
+                DashboardModel(
+                    id = dashboardEntity.id,
+                    name = dashboardEntity.name,
+                    geom = dashboardEntity.geom,
+                    briefings = mutableListOf(),
+                )
             briefings.forEach {
                 dashboardModel.addBriefing(it)
             }

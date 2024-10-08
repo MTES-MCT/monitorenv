@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 
 class JpaDashboardRepositoryITest : AbstractDBTests() {
@@ -19,23 +20,6 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(savedDashboard.id).isNotNull()
-    }
-
-    @Test
-    fun `save should update a dashboard and return saved entity when dashboard exist`() {
-        // Given
-        val dashboard = aDashboard()
-        val createdDashboard = jpaDashboardRepository.save(dashboard)
-
-        // When
-        val updatedDashboard = jpaDashboardRepository.save(createdDashboard)
-
-        // Then
-        assertThat(updatedDashboard.id).isEqualTo(createdDashboard.id)
-        assertThat(updatedDashboard.reportings).isEmpty()
-        assertThat(updatedDashboard.amps).isEmpty()
-        assertThat(updatedDashboard.reportings).isEmpty()
-        assertThat(updatedDashboard.regulatoryAreas).isEmpty()
     }
 
     @Test
@@ -106,5 +90,47 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
         // Then
         assertThat(savedDashboard.id).isNotNull()
         assertThat(savedDashboard.inseeCode).isEqualTo(inseeCode)
+    }
+
+    @Test
+    fun `save should update a dashboard and return saved entity when dashboard exist`() {
+        // Given
+        val dashboard = aDashboard()
+        var createdDashboard = jpaDashboardRepository.save(dashboard)
+        assertThat(createdDashboard.reportings).isEmpty()
+        assertThat(createdDashboard.amps).isEmpty()
+        assertThat(createdDashboard.reportings).isEmpty()
+        assertThat(createdDashboard.regulatoryAreas).isEmpty()
+
+        val name = "updatedDashboard"
+        val geom = WKTReader().read("MULTIPOINT ((-1.555 44.315),(-1.555 44.305))")
+        val inseeCode = "94"
+        val amps = listOf(1)
+        val reportings = listOf(1)
+        val regulatoryAreas = listOf(523)
+        val vigilanceAreas = listOf(1)
+        createdDashboard =
+            createdDashboard.copy(
+                name = name,
+                geom = geom,
+                inseeCode = inseeCode,
+                amps = amps,
+                reportings = reportings,
+                regulatoryAreas = regulatoryAreas,
+                vigilanceAreas = vigilanceAreas,
+            )
+
+        // When
+        val updatedDashboard = jpaDashboardRepository.save(createdDashboard)
+
+        // Then
+        assertThat(updatedDashboard.id).isEqualTo(createdDashboard.id)
+        assertThat(updatedDashboard.name).isEqualTo(name)
+        assertThat(updatedDashboard.geom).isEqualTo(geom)
+        assertThat(updatedDashboard.inseeCode).isEqualTo(inseeCode)
+        assertThat(updatedDashboard.amps).isEqualTo(amps)
+        assertThat(updatedDashboard.reportings).isEqualTo(reportings)
+        assertThat(updatedDashboard.regulatoryAreas).isEqualTo(regulatoryAreas)
+        assertThat(updatedDashboard.vigilanceAreas).isEqualTo(vigilanceAreas)
     }
 }
