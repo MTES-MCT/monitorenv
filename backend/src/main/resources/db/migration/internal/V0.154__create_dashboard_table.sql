@@ -1,7 +1,8 @@
 CREATE TABLE dashboard
 (
     id   uuid PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255)             NOT NULL,
+    geom geometry(geometry, 4326) NOT NULL
 );
 
 CREATE TABLE briefing
