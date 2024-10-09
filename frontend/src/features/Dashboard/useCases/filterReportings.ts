@@ -1,6 +1,6 @@
 import { customDayjs, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
-import { StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
+import { getReportingStatus, ReportingStatusEnum, StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
 
 export function filter(
   reporting: Reporting,
@@ -58,18 +58,10 @@ export function filter(
 
   switch (filters.status[0]) {
     case StatusFilterEnum.ARCHIVED:
-      shouldBeFiltered =
-        shouldBeFiltered &&
-        reporting.isArchived &&
-        !!(reporting.validityTime ? createdAt.add(reporting.validityTime, 'hour').isBefore(customDayjs().utc()) : true)
+      shouldBeFiltered = shouldBeFiltered && getReportingStatus({ ...reporting }) === ReportingStatusEnum.ARCHIVED
       break
     case StatusFilterEnum.IN_PROGRESS:
-      shouldBeFiltered =
-        shouldBeFiltered &&
-        !reporting.isArchived &&
-        !!(reporting.validityTime
-          ? createdAt.add(reporting.validityTime, 'hour').isSameOrAfter(customDayjs().utc())
-          : true)
+      shouldBeFiltered = shouldBeFiltered && getReportingStatus({ ...reporting }) !== ReportingStatusEnum.ARCHIVED
       break
     default:
       break

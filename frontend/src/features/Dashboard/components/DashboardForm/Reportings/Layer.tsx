@@ -1,7 +1,10 @@
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { StatusActionTag } from '@features/Reportings/components/StatusActionTag'
+import { getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useClickOutside } from '@hooks/useClickOutside'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
@@ -13,10 +16,14 @@ import {
   useClickOutsideEffect,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
-import { ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
+import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
 import { setFitToExtent } from 'domain/shared_slices/Map'
+import ArchivedFlag from 'features/Reportings/icons/archived_reporting.svg?react'
+import ArchivedInfractionFlag from 'features/Reportings/icons/archived_reporting_infraction.svg?react'
+import ArchivedObservationFlag from 'features/Reportings/icons/archived_reporting_observation.svg?react'
+import ArchivedWithMissionFlag from 'features/Reportings/icons/archived_reporting_with_mission_attached.svg?react'
 import { GeoJSON } from 'ol/format'
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 type ReportingLayerProps = {
@@ -45,6 +52,10 @@ export function Layer({ dashboardId, isSelected = false, reporting }: ReportingL
     },
     newWindowContainerRef.current
   )
+
+  useClickOutside(newWindowContainerRef, () => {
+    dispatch(dashboardActions.setSelectedReporting(undefined))
+  })
 
   const handleSelect = e => {
     e.stopPropagation()
@@ -79,21 +90,84 @@ export function Layer({ dashboardId, isSelected = false, reporting }: ReportingL
     dispatch(dashboardActions.removeReporting(reporting))
   }
 
-  return (
-    <StyledReporting ref={ref} $isSelected={isSelected} onClick={e => focus(e)}>
-      <Header>
-        <Icon.Report
-          color={
-            reporting.reportType === ReportingTypeEnum.INFRACTION_SUSPICION
-              ? THEME.color.maximumRed
-              : THEME.color.blueGray
-          }
-        />
-        <Name>
-          Signalement {reporting.reportingId} -{' '}
-          {reporting.reportingSources.map(source => source.displayedSource).join(', ')}
-        </Name>
+  const reportingStatusFlag = useMemo(() => {
+    const reportingStatus = getReportingStatus({ ...reporting })
 
+    if (reporting.attachedMission && reportingStatus !== ReportingStatusEnum.ARCHIVED) {
+      return <Icon.Report color={THEME.color.mediumSeaGreen} />
+    }
+
+    switch (reportingStatus) {
+      case ReportingStatusEnum.ARCHIVED:
+        return getReportingArchivedFlag()
+      case ReportingStatusEnum.IN_PROGRESS:
+        return <Icon.Report color={THEME.color.blueGray} />
+      case ReportingStatusEnum.INFRACTION_SUSPICION:
+        return <Icon.Report color={THEME.color.maximumRed} />
+      case ReportingStatusEnum.OBSERVATION:
+        return <Icon.Report color={THEME.color.blueGray} />
+
+      default:
+        return <Icon.Report color={THEME.color.slateGray} />
+    }
+
+    function getReportingArchivedFlag() {
+      if (reporting.attachedMission) {
+        return <StyledArchivedWithMissionFlag />
+      }
+      switch (reporting.reportType) {
+        case ReportingTypeEnum.INFRACTION_SUSPICION:
+          return <StyledArchivedInfractionFlag />
+        case ReportingTypeEnum.OBSERVATION:
+          return <StyledArchivedObservationFlag />
+        default:
+          return <StyledArchivedFlag />
+      }
+    }
+  }, [reporting])
+
+  const targetText = useMemo(() => {
+    const targetName = getTargetName({
+      target: reporting.targetDetails?.[0],
+      targetType: reporting.targetType,
+      vehicleType: reporting.vehicleType
+    })
+
+    const targetDetails = getTargetDetailsSubText({
+      target: reporting.targetDetails?.[0],
+      targetType: reporting.targetType,
+      vehicleType: reporting.vehicleType
+    })
+
+    return `${targetName} ${targetDetails ? `(${targetDetails})` : ''}`
+  }, [reporting.targetDetails, reporting.targetType, reporting.vehicleType])
+
+  return (
+    <StyledReporting ref={ref} $isSelected={isSelected} onClick={focus}>
+      <Header>
+        {reportingStatusFlag}
+        <Summary>
+          <Title>
+            <Name>
+              Signalement {reporting.reportingId} -{' '}
+              {reporting.reportingSources.map(source => source.displayedSource).join(', ')}
+            </Name>
+            <Target>{targetText}</Target>
+            {reporting.createdAt && (
+              <Date>{getLocalizedDayjs(reporting.createdAt).format('DD MMM YYYY à HH:mm')} (UTC)</Date>
+            )}
+          </Title>
+          <div>
+            {reporting.themeId && (
+              <Theme>
+                {themes[reporting.themeId]?.theme} /{' '}
+                {reporting.subThemeIds.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
+              </Theme>
+            )}
+            <Description>{reporting.description}</Description>
+          </div>
+          <StatusActionTag controlStatus={reporting.controlStatus} />
+        </Summary>
         {isSelected ? (
           <IconButton
             accent={Accent.TERTIARY}
@@ -112,16 +186,6 @@ export function Layer({ dashboardId, isSelected = false, reporting }: ReportingL
           />
         )}
       </Header>
-      {reporting.createdAt && <Date>{getLocalizedDayjs(reporting.createdAt).format('DD MMM YYYY à HH:mm')} (UTC)</Date>}
-      <Content>
-        {reporting.themeId && (
-          <Theme>
-            {themes[reporting.themeId]?.theme} /{' '}
-            {reporting.subThemeIds.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
-          </Theme>
-        )}
-        <Description>{reporting.description}</Description>
-      </Content>
     </StyledReporting>
   )
 }
@@ -151,20 +215,44 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  align-items: baseline;
 `
 
-const Name = styled.span`
+const Summary = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 auto 0 11px;
+  width: 100%;
+  overflow: hidden;
+`
+
+const Title = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const Name = styled.h3`
   color: ${p => p.theme.color.gunMetal};
+  font-weight: bold;
+  line-height: inherit;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const Date = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-weight: normal;
+`
+
+const Target = styled.span`
+  color: ${p => p.theme.color.charcoal};
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 auto 0 11px;
-`
-
-const Date = styled.span`
-  margin-left: 31px;
-  color: ${p => p.theme.color.slateGray};
 `
 
 const Theme = styled.span`
@@ -176,7 +264,22 @@ const Description = styled.span`
   color: ${p => p.theme.color.charcoal};
 `
 
-const Content = styled.div`
-  margin-left: 31px;
-  margin-top: 8px;
+const StyledArchivedFlag = styled(ArchivedFlag)`
+  width: 20px;
+  height: 20px;
+`
+
+const StyledArchivedObservationFlag = styled(ArchivedObservationFlag)`
+  width: 20px;
+  height: 20px;
+`
+
+const StyledArchivedInfractionFlag = styled(ArchivedInfractionFlag)`
+  width: 20px;
+  height: 20px;
+`
+
+const StyledArchivedWithMissionFlag = styled(ArchivedWithMissionFlag)`
+  width: 20px;
+  height: 20px;
 `
