@@ -11,7 +11,7 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
     private lateinit var jpaDashboardRepository: JpaDashboardRepository
 
     @Test
-    fun `save should delete all his briefings then save a dashboard and return saved entity when dashboard doesnt exist`() {
+    fun `save should save a dashboard and return saved entity when dashboard doesnt exist`() {
         // Given
         val dashboard = aDashboard()
 
@@ -20,102 +20,47 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(savedDashboard.id).isNotNull()
+        assertThat(savedDashboard.createdAt).isNotNull()
+        assertThat(savedDashboard.updatedAt).isNull()
+        assertThat(savedDashboard).usingRecursiveComparison().ignoringFields("id", "createdAt").isEqualTo(dashboard)
     }
 
     @Test
-    fun `save should save a dashboard with amps and return saved entity when dashboard doesnt exist`() {
+    fun `save should save a dashboard with amps, control units, reportings, regulatory areas and vigilance areas and return saved entity when dashboard doesnt exist`() {
         // Given
-        val amps = listOf(1)
-        val dashboard = aDashboard(amps = amps)
+        val dashboard =
+            aDashboard(
+                inseeCode = "94",
+                amps = listOf(1),
+                controlUnits = listOf(10000),
+                reportings = listOf(1),
+                regulatoryAreas = listOf(523),
+                vigilanceAreas = listOf(1),
+            )
 
         // When
         val savedDashboard = jpaDashboardRepository.save(dashboard)
 
         // Then
         assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.amps).isEqualTo(amps)
-    }
-
-    @Test
-    fun `save should save a dashboard with an insee code and return saved entity when dashboard doesnt exist`() {
-        // Given
-        val inseeCode = "94"
-        val dashboard = aDashboard(inseeCode = inseeCode)
-
-        // When
-        val savedDashboard = jpaDashboardRepository.save(dashboard)
-
-        // Then
-        assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.inseeCode).isEqualTo(inseeCode)
-    }
-
-    @Test
-    fun `save should save a dashboard with controlUnits and return saved entity when dashboard doesnt exist`() {
-        // Given
-        val controlUnits = listOf(10000)
-        val dashboard = aDashboard(controlUnits = controlUnits)
-
-        // When
-        val savedDashboard = jpaDashboardRepository.save(dashboard)
-
-        // Then
-        assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.controlUnits).isEqualTo(controlUnits)
-    }
-
-    @Test
-    fun `save should save a dashboard with regulatory areas and return saved entity when dashboard doesnt exist`() {
-        // Given
-        val regulatoryAreas = listOf(523)
-        val dashboard = aDashboard(regulatoryAreas = regulatoryAreas)
-
-        // When
-        val savedDashboard = jpaDashboardRepository.save(dashboard)
-
-        // Then
-        assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.regulatoryAreas).isEqualTo(regulatoryAreas)
-    }
-
-    @Test
-    fun `save should save a dashboard with reportings and return saved entity when dashboard doesnt exist`() {
-        // Given
-        val reportings = listOf(1)
-        val dashboard = aDashboard(reportings = reportings)
-
-        // When
-        val savedDashboard = jpaDashboardRepository.save(dashboard)
-
-        // Then
-        assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.reportings).isEqualTo(reportings)
-    }
-
-    @Test
-    fun `save should save a dashboard with vigilance areas and return saved entity when dashboard doesnt exist`() {
-        // Given
-        val vigilanceAreas = listOf(1)
-        val dashboard = aDashboard(vigilanceAreas = vigilanceAreas)
-
-        // When
-        val savedDashboard = jpaDashboardRepository.save(dashboard)
-
-        // Then
-        assertThat(savedDashboard.id).isNotNull()
-        assertThat(savedDashboard.vigilanceAreas).isEqualTo(vigilanceAreas)
+        assertThat(savedDashboard.createdAt).isNotNull()
+        assertThat(savedDashboard.updatedAt).isNull()
+        assertThat(savedDashboard).usingRecursiveComparison().ignoringFields("id", "createdAt").isEqualTo(dashboard)
     }
 
     @Test
     fun `save should update a dashboard and return saved entity when dashboard exist`() {
         // Given
-        val dashboard = aDashboard()
-        var createdDashboard = jpaDashboardRepository.save(dashboard)
-        assertThat(createdDashboard.reportings).isEmpty()
-        assertThat(createdDashboard.amps).isEmpty()
-        assertThat(createdDashboard.reportings).isEmpty()
-        assertThat(createdDashboard.regulatoryAreas).isEmpty()
-        assertThat(createdDashboard.controlUnits).isEmpty()
+        val dashboard =
+            aDashboard(
+                inseeCode = "94",
+                amps = listOf(1),
+                controlUnits = listOf(10000),
+                reportings = listOf(1),
+                regulatoryAreas = listOf(523),
+                vigilanceAreas = listOf(1),
+            )
+        val createdDashboard = jpaDashboardRepository.save(dashboard)
 
         val name = "updatedDashboard"
         val comments = "updated comments"
@@ -127,7 +72,7 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
         val vigilanceAreas = listOf(1, 2)
         val controlUnits = listOf(10000, 10001)
 
-        createdDashboard =
+        val dashboardToUpdate =
             createdDashboard.copy(
                 name = name,
                 comments = comments,
@@ -141,18 +86,10 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
             )
 
         // When
-        val updatedDashboard = jpaDashboardRepository.save(createdDashboard)
+        val updatedDashboard = jpaDashboardRepository.save(dashboardToUpdate)
 
         // Then
-        assertThat(updatedDashboard.id).isEqualTo(createdDashboard.id)
-        assertThat(updatedDashboard.name).isEqualTo(name)
-        assertThat(updatedDashboard.geom).isEqualTo(geom)
-        assertThat(updatedDashboard.comments).isEqualTo(comments)
-        assertThat(updatedDashboard.inseeCode).isEqualTo(inseeCode)
-        assertThat(updatedDashboard.amps).isEqualTo(amps)
-        assertThat(updatedDashboard.controlUnits).isEqualTo(controlUnits)
-        assertThat(updatedDashboard.regulatoryAreas).isEqualTo(regulatoryAreas)
-        assertThat(updatedDashboard.reportings).isEqualTo(reportings)
-        assertThat(updatedDashboard.vigilanceAreas).isEqualTo(vigilanceAreas)
+        assertThat(updatedDashboard.updatedAt).isNotNull()
+        assertThat(updatedDashboard).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(dashboardToUpdate)
     }
 }

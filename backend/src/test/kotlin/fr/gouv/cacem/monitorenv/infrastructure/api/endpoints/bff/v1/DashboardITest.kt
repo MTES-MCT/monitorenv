@@ -150,6 +150,8 @@ class DashboardITest {
                 id = id,
                 name = name,
                 comments = comments,
+                createdAt = null,
+                updatedAt = null,
                 geom = geometry,
                 inseeCode = inseeCode,
                 amps = amps,

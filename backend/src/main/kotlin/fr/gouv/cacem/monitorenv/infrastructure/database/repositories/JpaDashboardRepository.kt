@@ -5,8 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardDatasModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardModel.Companion.fromDashboardEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAMPRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBBriefingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardDatasRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class JpaDashboardRepository(
     private val dashboardRepository: IDBDashboardRepository,
-    private val briefingRepository: IDBBriefingRepository,
+    private val dashboardDatasRepository: IDBDashboardDatasRepository,
     private val ampRepository: IDBAMPRepository,
     private val controlUnitRepository: IDBControlUnitRepository,
     private val regulatoryAreaRepository: IDBRegulatoryAreaRepository,
@@ -27,24 +27,24 @@ class JpaDashboardRepository(
     IDashboardRepository {
     @Transactional
     override fun save(dashboard: DashboardEntity): DashboardEntity {
-        dashboard.id?.let { briefingRepository.deleteAllByDashboardId(dashboardId = it) }
-        val briefingsToSave: MutableList<DashboardDatasModel> = mutableListOf()
-        addAmps(dashboard, briefingsToSave)
-        addInseeCode(dashboard, briefingsToSave)
-        addReportings(dashboard, briefingsToSave)
-        addVigilanceAreas(dashboard, briefingsToSave)
-        addRegulatoryAreas(dashboard, briefingsToSave)
-        addControlUnits(dashboard, briefingsToSave)
-        val dashboardModel = dashboardRepository.save(fromDashboardEntity(dashboard, briefingsToSave))
+        dashboard.id?.let { dashboardDatasRepository.deleteAllByDashboardId(dashboardId = it) }
+        val dashboardDatasToSave: MutableList<DashboardDatasModel> = mutableListOf()
+        addAmps(dashboard, dashboardDatasToSave)
+        addInseeCode(dashboard, dashboardDatasToSave)
+        addReportings(dashboard, dashboardDatasToSave)
+        addVigilanceAreas(dashboard, dashboardDatasToSave)
+        addRegulatoryAreas(dashboard, dashboardDatasToSave)
+        addControlUnits(dashboard, dashboardDatasToSave)
+        val dashboardModel = dashboardRepository.saveAndFlush(fromDashboardEntity(dashboard, dashboardDatasToSave))
         return dashboardModel.toDashboardEntity()
     }
 
     private fun addRegulatoryAreas(
         dashboard: DashboardEntity,
-        briefingsToSave: MutableList<DashboardDatasModel>,
+        dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
         dashboard.regulatoryAreas.forEach {
-            briefingsToSave.add(
+            dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
                     dashboard = null,
@@ -61,10 +61,10 @@ class JpaDashboardRepository(
 
     private fun addVigilanceAreas(
         dashboard: DashboardEntity,
-        briefingsToSave: MutableList<DashboardDatasModel>,
+        dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
         dashboard.vigilanceAreas.forEach {
-            briefingsToSave.add(
+            dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
                     dashboard = null,
@@ -81,10 +81,10 @@ class JpaDashboardRepository(
 
     private fun addReportings(
         dashboard: DashboardEntity,
-        briefingsToSave: MutableList<DashboardDatasModel>,
+        dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
         dashboard.reportings.forEach {
-            briefingsToSave.add(
+            dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
                     dashboard = null,
@@ -101,10 +101,10 @@ class JpaDashboardRepository(
 
     private fun addInseeCode(
         dashboard: DashboardEntity,
-        briefingsToSave: MutableList<DashboardDatasModel>,
+        dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
         dashboard.inseeCode?.let {
-            briefingsToSave.add(
+            dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
                     dashboard = null,
@@ -121,10 +121,10 @@ class JpaDashboardRepository(
 
     private fun addAmps(
         dashboard: DashboardEntity,
-        briefingsToSave: MutableList<DashboardDatasModel>,
+        dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
         dashboard.amps.forEach {
-            briefingsToSave.add(
+            dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
                     dashboard = null,
@@ -141,10 +141,10 @@ class JpaDashboardRepository(
 
     private fun addControlUnits(
         dashboard: DashboardEntity,
-        briefingsToSave: MutableList<DashboardDatasModel>,
+        dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
         dashboard.controlUnits.forEach {
-            briefingsToSave.add(
+            dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
                     dashboard = null,

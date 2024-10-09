@@ -2,12 +2,15 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboar
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import org.locationtech.jts.geom.Geometry
+import java.time.ZonedDateTime
 import java.util.UUID
 
 class DashboardDataInput(
     val id: UUID?,
     val name: String,
     val geom: Geometry,
+    val createdAt: ZonedDateTime?,
+    val updatedAt: ZonedDateTime?,
     val comments: String?,
     val inseeCode: String?,
     val amps: List<Int>,
@@ -22,6 +25,8 @@ class DashboardDataInput(
             name = name,
             geom = geom,
             comments = comments,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
             inseeCode = inseeCode,
             amps = amps,
             controlUnits = controlUnits,
