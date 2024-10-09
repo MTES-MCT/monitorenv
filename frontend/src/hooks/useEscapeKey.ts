@@ -3,11 +3,16 @@ import { useEffect } from 'react'
 type UseEscapeKeyProps = {
   onArrowLeft?: () => void
   onArrowRight?: () => void
+  onEnter?: () => void
   onEscape?: () => void
 }
-export const useEscapeKey = ({ onArrowLeft, onArrowRight, onEscape }: UseEscapeKeyProps) => {
+export const useEscapeKey = ({ onArrowLeft, onArrowRight, onEnter, onEscape }: UseEscapeKeyProps) => {
   useEffect(() => {
     const handleKeyDown = event => {
+      if (event.key === 'Enter' && onEnter) {
+        onEnter()
+      }
+
       if (event.key === 'Escape' && onEscape) {
         onEscape()
       }
@@ -26,5 +31,5 @@ export const useEscapeKey = ({ onArrowLeft, onArrowRight, onEscape }: UseEscapeK
     return () => {
       document.removeEventListener('keydown', handleKeyDown, false)
     }
-  }, [onEscape, onArrowLeft, onArrowRight])
+  }, [onEscape, onArrowLeft, onArrowRight, onEnter])
 }
