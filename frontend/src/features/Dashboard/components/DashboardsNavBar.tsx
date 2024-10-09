@@ -2,10 +2,11 @@ import { NavBar } from '@components/NavBar'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Icon, TextInput, THEME } from '@mtes-mct/monitor-ui'
+// import { useEscapeKey } from '@hooks/useEscapeKey'
+import { Icon, TextInput, THEME, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
 import ResponsiveNav from '@rsuite/responsive-nav'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
@@ -13,39 +14,60 @@ import { dashboardActions } from '../slice'
 
 export function DashboardsNavBar() {
   const dispatch = useAppDispatch()
-
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
 
-  const [editingDashoardId, setEditingDashboardId] = useState<number | undefined>()
+  const ref = useRef<HTMLDivElement>(null)
+  const { newWindowContainerRef } = useNewWindow()
 
-  const editName = (e, id: number | undefined) => {
-    e.stopPropagation()
-    e.preventDefault()
-    setEditingDashboardId(id)
+  const [editingDashoardId, setEditingDashboardId] = useState<number | undefined>()
+  const [updatedName, setUpdatedName] = useState<string | undefined>()
+
+  const validateName = () => {
+    if (updatedName) {
+      dispatch(dashboardActions.setName(updatedName))
+      setUpdatedName(undefined)
+      setEditingDashboardId(undefined)
+    }
   }
 
-  const updateDashboardName = useCallback(
-    (value: string | undefined) => {
-      if (!value) {
+  useClickOutsideEffect(
+    ref,
+    () => {
+      validateName()
+    },
+    newWindowContainerRef.current
+  )
+
+  // TODO Fix it
+  /* useEscapeKey({ onEnter: () => validateName() }) */
+
+  const editName = useCallback(
+    (e, id: number | undefined) => {
+      if (!id) {
         return
       }
-      dispatch(dashboardActions.setName(value))
+      e.stopPropagation()
+      e.preventDefault()
+      setEditingDashboardId(id)
+      setUpdatedName(dashboards[id]?.name)
     },
-    [dispatch]
+    [dashboards]
   )
 
   const getLabel = useCallback(
     dashboard => {
       if (editingDashoardId === dashboard.id) {
         return (
-          <StyledTextInput
-            isLabelHidden
-            isTransparent
-            label="Nom du tableau de bord"
-            name="name"
-            onChange={updateDashboardName}
-            value={dashboard.name}
-          />
+          <span ref={ref}>
+            <StyledTextInput
+              isLabelHidden
+              isTransparent
+              label="Nom du tableau de bord"
+              name="name"
+              onChange={value => setUpdatedName(value)}
+              value={updatedName}
+            />
+          </span>
         )
       }
 
@@ -56,7 +78,7 @@ export function DashboardsNavBar() {
         </Container>
       )
     },
-    [editingDashoardId, updateDashboardName]
+    [editName, editingDashoardId, updatedName]
   )
 
   const tabs = useMemo(() => {
