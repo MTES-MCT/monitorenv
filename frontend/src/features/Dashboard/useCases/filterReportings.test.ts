@@ -7,12 +7,14 @@ import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { filter } from './filterReportings'
 
 describe('filter', () => {
+  const today = customDayjs().utc()
+
   describe('date range', () => {
     const status = [StatusFilterEnum.IN_PROGRESS]
     it('should return true when reporting is within the day', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -22,7 +24,7 @@ describe('filter', () => {
     it('should return false when reporting is not within the day', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().subtract(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.subtract(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -32,7 +34,7 @@ describe('filter', () => {
     it('should return true when reporting is within the week', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -42,7 +44,7 @@ describe('filter', () => {
     it('should return false when reporting is not within the week', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().subtract(1, 'week').format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.subtract(1, 'week').format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -51,7 +53,7 @@ describe('filter', () => {
     it('should return true when reporting is within the month', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -61,7 +63,7 @@ describe('filter', () => {
     it('should return false when reporting is not within the month', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().subtract(1, 'month').format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.subtract(1, 'month').format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -70,7 +72,7 @@ describe('filter', () => {
     it('should return true when reporting is within the year', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -80,7 +82,7 @@ describe('filter', () => {
     it('should return false when reporting is not within the year', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().subtract(1, 'year').format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.subtract(1, 'year').format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -90,11 +92,11 @@ describe('filter', () => {
     it('should return true when reporting is within the specific period', async () => {
       // Given
       const period: DateAsStringRange = [
-        `${customDayjs().utc().subtract(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
-        `${customDayjs().utc().add(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        `${today.subtract(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        `${today.add(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`
       ]
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -104,11 +106,11 @@ describe('filter', () => {
     it('should return false when reporting is not within the specific period', async () => {
       // Given
       const period: DateAsStringRange = [
-        `${customDayjs().utc().subtract(3, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
-        `${customDayjs().utc().subtract(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        `${today.subtract(3, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        `${today.subtract(1, 'day').format('YYYY-MM-DDTHH:mm')}:00.000Z`
       ]
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`
       })
 
       // When & then
@@ -120,7 +122,7 @@ describe('filter', () => {
     it('should return true when reporting is in progress and within validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
         validityTime: 1
       })
 
@@ -131,7 +133,7 @@ describe('filter', () => {
     it('should return false when reporting is in progress and out of validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().subtract(2, 'hours').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        createdAt: `${today.subtract(2, 'hours').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
         validityTime: 1
       })
 
@@ -144,7 +146,7 @@ describe('filter', () => {
     it('should return true when reporting is archived and within validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
         isArchived: true
       })
 
@@ -152,16 +154,16 @@ describe('filter', () => {
       expect(filter(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
     })
 
-    it('should return false when reporting is archived and out of validity time', async () => {
+    it('should return true when reporting is archived and out of validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
         isArchived: true,
-        validityTime: 1
+        validityTime: 2
       })
 
       // When & then
-      expect(filter(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(false)
+      expect(filter(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
     })
   })
 
@@ -170,7 +172,7 @@ describe('filter', () => {
     it('should return true when reporting is archived and in progress', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
         isArchived: true
       })
 
@@ -181,7 +183,7 @@ describe('filter', () => {
     it('should return true when reporting is archived and in progress and out of (archived) validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
         isArchived: true,
         validityTime: 1
       })
@@ -192,7 +194,8 @@ describe('filter', () => {
     it('should return true when reporting is archived and in progress and out of (in progress) validity time', async () => {
       // Given
       const reporting: Reporting = aReporting({
-        createdAt: `${customDayjs().utc().subtract(2, 'hours').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        createdAt: `${today.subtract(1, 'hours').format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        isArchived: false,
         validityTime: 1
       })
 
@@ -227,7 +230,7 @@ const aReporting = (reporting?: Partial<Reporting>) => ({
   targetType: ReportingTargetTypeEnum.COMPANY,
   themeId: 0,
   updatedAtUtc: undefined,
-  validityTime: 0,
+  validityTime: 1,
   vehicleType: undefined,
   withVHFAnswer: undefined,
   ...reporting

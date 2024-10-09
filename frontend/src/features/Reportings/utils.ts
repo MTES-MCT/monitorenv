@@ -1,4 +1,4 @@
-import { customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 
 import {
@@ -11,6 +11,7 @@ import { ReportingTargetTypeEnum, ReportingTargetTypeLabels } from '../../domain
 import { VehicleTypeEnum, vehicleTypeLabels } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
+import type { Dayjs } from 'dayjs'
 
 export const createNewReportingSource: () => ReportingSource = () => ({
   controlUnitId: undefined,
@@ -133,8 +134,8 @@ export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetails
   return targetDetailsAsTextA.localeCompare(targetDetailsAsTextB)
 }
 
-export function getTimeLeft(endOfValidity) {
-  return customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+export function getTimeLeft(endOfValidity: string | Dayjs | Date) {
+  return customDayjs(endOfValidity).diff(customDayjs(), 'hour', true)
 }
 
 export function getTargetName({ target, targetType, vehicleType }) {
