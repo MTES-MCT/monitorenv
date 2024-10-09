@@ -1,9 +1,11 @@
 CREATE TABLE dashboard
 (
-    id       uuid PRIMARY KEY,
-    name     VARCHAR(255)             NOT NULL,
-    geom     geometry(geometry, 4326) NOT NULL,
-    comments VARCHAR(255)
+    id         uuid PRIMARY KEY,
+    name       VARCHAR(255)             NOT NULL,
+    geom       geometry(geometry, 4326) NOT NULL,
+    comments   VARCHAR(255),
+    created_at TIMESTAMP                NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE dashboard_datas

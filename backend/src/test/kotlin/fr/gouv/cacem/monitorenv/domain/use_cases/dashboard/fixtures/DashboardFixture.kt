@@ -24,6 +24,8 @@ class DashboardFixture {
                 name = name,
                 geom = geom,
                 comments = comments,
+                createdAt = null,
+                updatedAt = null,
                 amps = amps,
                 regulatoryAreas = regulatoryAreas,
                 inseeCode = inseeCode,

@@ -9,8 +9,11 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
 import org.locationtech.jts.geom.Geometry
+import java.time.ZonedDateTime
 import java.util.UUID
 
 @Entity
@@ -23,6 +26,8 @@ data class DashboardModel(
     val name: String,
     val geom: Geometry,
     val comments: String?,
+    var createdAt: ZonedDateTime?,
+    var updatedAt: ZonedDateTime?,
     @OneToMany(
         mappedBy = "dashboard",
         fetch = FetchType.LAZY,
@@ -72,6 +77,8 @@ data class DashboardModel(
             name = name,
             geom = geom,
             comments = comments,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
             inseeCode = inseeCode,
             amps = amps,
             controlUnits = controlUnits,
@@ -81,9 +88,19 @@ data class DashboardModel(
         )
     }
 
-    fun addBriefing(dashboardDatasModel: DashboardDatasModel) {
+    fun addDashboardDatas(dashboardDatasModel: DashboardDatasModel) {
         dashboardDatasModel.dashboard = this
         this.dashboardDatas.add(dashboardDatasModel)
+    }
+
+    @PrePersist
+    private fun prePersist() {
+        this.createdAt = ZonedDateTime.now()
+    }
+
+    @PreUpdate
+    private fun preUpdate() {
+        this.updatedAt = ZonedDateTime.now()
     }
 
     companion object {
@@ -97,10 +114,12 @@ data class DashboardModel(
                     name = dashboardEntity.name,
                     geom = dashboardEntity.geom,
                     comments = dashboardEntity.comments,
+                    createdAt = dashboardEntity.createdAt,
+                    updatedAt = dashboardEntity.updatedAt,
                     dashboardDatas = mutableListOf(),
                 )
             dashboardDatasModels.forEach {
-                dashboardModel.addBriefing(it)
+                dashboardModel.addDashboardDatas(it)
             }
             return dashboardModel
         }
