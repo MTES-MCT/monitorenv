@@ -1,8 +1,5 @@
-import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
-import { getTitle } from 'domain/entities/layers/utils'
-import { difference, intersection } from 'lodash'
-import { useState } from 'react'
+import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { intersection } from 'lodash'
 
 import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
 import { getNumberOfRegulatoryLayerZonesByGroupName } from '../../../api/regulatoryLayersAPI'
@@ -14,9 +11,8 @@ import {
 } from '../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getMetadataIsOpenForRegulatoryLayerIds } from '../metadataPanel/slice'
 import { getExtentOfLayersGroup } from '../utils/getExtentOfLayersGroup'
-import { LayerSelector } from '../utils/LayerSelector.style'
+import { MyLayerGroup } from '../utils/MyLayerGroup'
 
 import type { RegulatoryLayerCompact } from '../../../domain/entities/regulatory'
 
@@ -32,28 +28,11 @@ export function RegulatoryLayerGroup({
   const dispatch = useAppDispatch()
   const groupLayerIds = layers.map(l => l.id)
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
-  const metadataPanelIsOpen = useAppSelector(state => getMetadataIsOpenForRegulatoryLayerIds(state, groupLayerIds))
-  const [zonesAreOpen, setZonesAreOpen] = useState(false)
+
   const regulatoryZonesAreShowed = intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-
-  const isLayerGroupDisabled = difference(groupLayerIds, regulatoryAreasLinkedToVigilanceAreaForm).length === 0
-
-  const fitToGroupExtent = () => {
-    const extent = getExtentOfLayersGroup(layers)
-    dispatch(setFitToExtent(extent))
-  }
-
-  const handleClickOnGroupName = () => {
-    if (!zonesAreOpen && regulatoryZonesAreShowed) {
-      fitToGroupExtent()
-    }
-
-    setTotalNumberOfZones(zonesAreOpen ? 0 : totalNumberOfZones)
-  }
 
   const handleRemoveZone = e => {
     e.stopPropagation()
@@ -71,64 +50,26 @@ export function RegulatoryLayerGroup({
     }
   }
 
-  const toggleZonesAreOpen = () => {
-    if (!metadataPanelIsOpen) {
-      setZonesAreOpen(!zonesAreOpen)
-    }
-  }
-
   const addZonesToVigilanceArea = () => {
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(groupLayerIds))
   }
 
   return (
-    <>
-      <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
-        <LayerSelector.GroupName
-          data-cy="my-regulatory-group"
-          onClick={handleClickOnGroupName}
-          title={getTitle(groupName)}
-        >
-          {getTitle(groupName)}
-        </LayerSelector.GroupName>
-        <LayerSelector.IconGroup>
-          <LayerSelector.NumberOfZones>{`${layers?.length}/${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
-          {isLinkingRegulatoryToVigilanceArea ? (
-            <IconButton
-              accent={Accent.TERTIARY}
-              disabled={isLayerGroupDisabled}
-              Icon={Icon.Plus}
-              onClick={addZonesToVigilanceArea}
-              title="Ajouter la/les zone(s) à la zone de vigilance"
-            />
-          ) : (
-            <>
-              <IconButton
-                accent={Accent.TERTIARY}
-                color={regulatoryZonesAreShowed ? THEME.color.charcoal : THEME.color.lightGray}
-                Icon={Icon.Display}
-                onClick={toggleLayerDisplay}
-                title={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
-              />
-
-              <IconButton
-                accent={Accent.TERTIARY}
-                color={THEME.color.slateGray}
-                data-cy="my-regulatory-group-delete"
-                Icon={Icon.Close}
-                onClick={handleRemoveZone}
-                size={Size.SMALL}
-                title="Supprimer la/les zone(s) de ma sélection"
-              />
-            </>
-          )}
-        </LayerSelector.IconGroup>
-      </LayerSelector.GroupWrapper>
-      <LayerSelector.GroupList isOpen={zonesAreOpen || metadataPanelIsOpen} length={layers?.length}>
-        {layers?.map(regulatoryZone => (
-          <RegulatoryLayerZone key={regulatoryZone.id} regulatoryZone={regulatoryZone} />
-        ))}
-      </LayerSelector.GroupList>
-    </>
+    <MyLayerGroup
+      addZonesToVigilanceArea={addZonesToVigilanceArea}
+      groupName={groupName}
+      layers={layers}
+      name="regulatory"
+      onRemoveZone={e => handleRemoveZone(e)}
+      setTotalNumberOfZones={setTotalNumberOfZones}
+      toggleLayerDisplay={toggleLayerDisplay}
+      totalNumberOfZones={totalNumberOfZones}
+      zonesAreShowed={regulatoryZonesAreShowed}
+      zonesLinkedToVigilanceArea={regulatoryAreasLinkedToVigilanceAreaForm}
+    >
+      {layers?.map(regulatoryZone => (
+        <RegulatoryLayerZone key={regulatoryZone.id} regulatoryZone={regulatoryZone} />
+      ))}
+    </MyLayerGroup>
   )
 }
