@@ -202,6 +202,7 @@ const Container = styled(SideWindowContent)`
   // gap and padding are 3px less than the mockup because of box-shadow is hidden because of overflow @see AccordionWrapper
   column-gap: 45px;
   padding: 21px 21px 0 21px;
+  overflow: hidden;
 `
 
 const Column = styled.div`
@@ -211,7 +212,6 @@ const Column = styled.div`
   height: calc(100vh - 48px - 24px); // 48px = navbar height, 24px = padding
   scrollbar-gutter: stable;
   overflow-y: auto;
-
   padding: 3px;
 `
 const StyledTextarea = styled(Textarea)`

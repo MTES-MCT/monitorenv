@@ -77,10 +77,12 @@ export function ControlUnits({
     dispatch(dashboardActions.setControlUnitsFilters({ key: 'type', value: nextValue }))
   }
 
+  const hasChildren = !!(controlUnitResults && controlUnitResults?.length > 5)
+
   return (
     <div>
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Unités">
-        <Wrapper $hasChildren={!!(controlUnitResults && controlUnitResults?.length > 1)}>
+        <Wrapper $hasChildren={hasChildren}>
           <StyledTextInput
             Icon={Icon.Search}
             isLabelHidden
@@ -91,10 +93,7 @@ export function ControlUnits({
             placeholder="Rechercher une unité"
             value={filters?.query}
           />
-          <SelectFilters
-            $hasChildren={!!(controlUnitResults && controlUnitResults?.length > 1)}
-            $isExpanded={isExpanded}
-          >
+          <SelectFilters $hasChildren={hasChildren} $isExpanded={isExpanded}>
             <StyledSelect
               isLabelHidden
               isTransparent
@@ -130,13 +129,10 @@ export function ControlUnits({
               value={filters?.stationId}
             />
           </SelectFilters>
-          {controlUnitResults && controlUnitResults.length > 0 && (
-            <ResultList>
-              {controlUnitResults.map(controlUnit => (
-                <Item key={controlUnit.id} controlUnit={controlUnit} />
-              ))}
-            </ResultList>
-          )}
+          <ResultList $hasResults={hasChildren}>
+            {controlUnitResults &&
+              controlUnitResults.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
+          </ResultList>
         </Wrapper>
       </Accordion>
       <SelectedControlUnits controlUnits={controlUnits} isSelectedAccordionOpen={isSelectedAccordionOpen} />
@@ -150,7 +146,6 @@ const Wrapper = styled.div<{ $hasChildren: boolean }>`
   flex-direction: column;
   gap: 16px;
   padding: 16px 24px;
-  ${({ $hasChildren }) => !$hasChildren && 'padding-bottom: 58px;'}
 `
 
 const StyledTextInput = styled(TextInput)`
@@ -179,11 +174,12 @@ const SelectFilters = styled.div<{ $hasChildren: boolean; $isExpanded: boolean }
     }}
   ${({ $hasChildren }) => !$hasChildren && 'position: absolute;  margin-top: 41px; width: 27%;'}
 `
-const ResultList = styled.ul`
+const ResultList = styled.ul<{ $hasResults: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
   list-style-type: none;
   padding: 0px;
   width: 100%;
+  ${({ $hasResults }) => !$hasResults && 'margin-top: 37px;'}
 `
