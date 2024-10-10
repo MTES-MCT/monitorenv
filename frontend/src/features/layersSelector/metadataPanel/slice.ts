@@ -1,5 +1,4 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
-import { includes } from 'lodash'
 
 import {
   MonitorEnvLayers,
@@ -88,15 +87,6 @@ export const getMetadataIsOpenForRegulatoryLayerId = createSelector(
   [isMetadataPanelOpen, getMetadataLayerType, getMetadataLayerId, (_, layerId: number) => layerId],
   (isOpen, metadataLayerType, metadataLayerId, layerId) =>
     isOpen && metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId === layerId
-)
-
-export const getMetadataIsOpenForRegulatoryLayerIds = createSelector(
-  [isMetadataPanelOpen, getMetadataLayerType, getMetadataLayerId, (_, layerIds: number[]) => layerIds],
-  (isOpen, metadataLayerType, metadataLayerId, layerIds) =>
-    isOpen &&
-    metadataLayerType === MonitorEnvLayers.REGULATORY_ENV &&
-    !!metadataLayerId &&
-    includes(layerIds, metadataLayerId)
 )
 
 export const getMetadataIsOpenForAMPLayerId = createSelector(
