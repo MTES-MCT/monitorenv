@@ -5,8 +5,9 @@ type UseEscapeKeyProps = {
   onArrowRight?: () => void
   onEnter?: () => void
   onEscape?: () => void
+  ref?: React.RefObject<HTMLElement>
 }
-export const useEscapeKey = ({ onArrowLeft, onArrowRight, onEnter, onEscape }: UseEscapeKeyProps) => {
+export const useEscapeKey = ({ onArrowLeft, onArrowRight, onEnter, onEscape, ref }: UseEscapeKeyProps) => {
   useEffect(() => {
     const handleKeyDown = event => {
       if (event.key === 'Enter' && onEnter) {
@@ -26,10 +27,19 @@ export const useEscapeKey = ({ onArrowLeft, onArrowRight, onEnter, onEscape }: U
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown, false)
+    if (ref) {
+      ref.current?.addEventListener('keydown', handleKeyDown, false)
+    } else {
+      document.addEventListener('keydown', handleKeyDown, false)
+    }
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown, false)
+      if (ref) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        ref.current?.removeEventListener('keydown', handleKeyDown, false)
+      } else {
+        document.removeEventListener('keydown', handleKeyDown, false)
+      }
     }
-  }, [onEscape, onArrowLeft, onArrowRight, onEnter])
+  }, [onEscape, onArrowLeft, onArrowRight, onEnter, ref])
 }
