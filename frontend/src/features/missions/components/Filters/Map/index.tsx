@@ -159,7 +159,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                   onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)
                 }
               >
-                {String(`Admin. ${admin}`)}
+                {`Admin. ${admin}`}
               </SingleTag>
             ))}
 
@@ -186,9 +186,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={unit}
                 onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
               >
-                {String(
-                  `Unité ${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`
-                )}
+                {`Unité ${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`}
               </SingleTag>
             ))}
 
@@ -212,7 +210,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={type}
                 onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
               >
-                {String(`Type ${missionTypeEnum[type].libelle}`)}
+                {`Type ${missionTypeEnum[type].libelle}`}
               </SingleTag>
             ))}
 
@@ -240,7 +238,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                   onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
                 }
               >
-                {String(`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`)}
+                {`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`}
               </SingleTag>
             ))}
         </StyledBloc>
@@ -266,7 +264,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={theme}
                 onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
               >
-                {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`)}
+                {`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`}
               </SingleTag>
             ))}
         </StyledBloc>
