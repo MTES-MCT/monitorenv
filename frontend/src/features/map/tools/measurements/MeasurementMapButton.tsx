@@ -10,7 +10,7 @@ import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measur
 import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
+import { useClickOutside } from '../../../../hooks/useClickOutside'
 import { useEscapeKey } from '../../../../hooks/useEscapeKey'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
 import { MapToolButton } from '../MapToolButton'
@@ -26,8 +26,10 @@ export function MeasurementMapButton() {
   const isMeasurementToolOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT, [isMapToolVisible])
   const wrapperRef = useRef(null)
 
-  useClickOutsideWhenOpenedAndExecute(wrapperRef, isOpen, () => {
-    dispatch(globalActions.setIsMapToolVisible(undefined))
+  useClickOutside(wrapperRef, () => {
+    if (isOpen) {
+      dispatch(globalActions.setIsMapToolVisible(undefined))
+    }
   })
 
   useEscapeKey({
