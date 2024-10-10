@@ -82,7 +82,7 @@ describe('Edit Vigilance Area', () => {
       // add regulatory area to "Mes zones réglementaires"
       cy.clickButton('Ajouter la zone à Mes zones réglementaires')
       // check if the regulatory area is added
-      cy.getDataCy('my-regulatory-group').contains('RNN Iroise').click({ force: true })
+      cy.getDataCy('regulatory-layer-topic').contains('RNN Iroise').click({ force: true })
       cy.getDataCy("my-zone-Partie marine (plus basses eaux) RNN d'Iroise").should('exist')
 
       // Reset data

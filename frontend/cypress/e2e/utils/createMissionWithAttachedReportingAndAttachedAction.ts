@@ -65,6 +65,8 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.fill('Unité 1', 'BN Toulon')
 
+    cy.wait(250)
+
     return cy.waitForLastRequest(
       '@createMission',
       {

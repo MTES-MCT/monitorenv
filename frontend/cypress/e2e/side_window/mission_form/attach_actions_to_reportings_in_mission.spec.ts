@@ -240,6 +240,12 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
             cy.get('.Field-MultiRadio').contains('Mise en demeure').get('[aria-checked="true"]').contains('En attente')
             cy.get('[name="infraction-natinf"]').should('have.value', 1508)
             cy.getDataCy('infraction-form-nbTarget').should('have.value', 1)
+
+            cy.wait(250)
+
+            cy.clickButton('Supprimer la mission')
+            cy.wait(400)
+            cy.get('*[name="delete-mission-modal-confirm"]').click()
           }
         )
       })
