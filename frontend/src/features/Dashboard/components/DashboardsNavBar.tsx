@@ -2,7 +2,7 @@ import { NavBar } from '@components/NavBar'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-// import { useEscapeKey } from '@hooks/useEscapeKey'
+import { useEscapeKey } from '@hooks/useEscapeKey'
 import { Icon, TextInput, THEME, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
 import ResponsiveNav from '@rsuite/responsive-nav'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
@@ -37,9 +37,7 @@ export function DashboardsNavBar() {
     },
     newWindowContainerRef.current
   )
-
-  // TODO Fix it
-  /* useEscapeKey({ onEnter: () => validateName() }) */
+  useEscapeKey({ onEnter: () => validateName(), ref })
 
   const editName = useCallback(
     (e, id: number | undefined) => {
@@ -58,16 +56,15 @@ export function DashboardsNavBar() {
     dashboard => {
       if (editingDashoardId === dashboard.id) {
         return (
-          <span ref={ref}>
-            <StyledTextInput
-              isLabelHidden
-              isTransparent
-              label="Nom du tableau de bord"
-              name="name"
-              onChange={value => setUpdatedName(value)}
-              value={updatedName}
-            />
-          </span>
+          <StyledTextInput
+            inputRef={ref}
+            isLabelHidden
+            isTransparent
+            label="Nom du tableau de bord"
+            name="name"
+            onChange={value => setUpdatedName(value)}
+            value={updatedName}
+          />
         )
       }
 
@@ -84,18 +81,20 @@ export function DashboardsNavBar() {
   const tabs = useMemo(() => {
     const dashboardsList = {
       icon: <Icon.Summary />,
+      isEditing: false,
       label: 'Liste des tableaux de bords',
       nextPath: sideWindowPaths.DASHBOARDS
     }
 
     const openDashboards = Object.values(dashboards).map(dashboard => ({
       icon: <Icon.CircleFilled color={THEME.color.blueGray} size={14} />,
+      isEditing: dashboard.id === editingDashoardId,
       label: getLabel(dashboard),
       nextPath: generatePath(sideWindowPaths.DASHBOARD, { id: dashboard.id })
     }))
 
     return [dashboardsList, ...openDashboards]
-  }, [dashboards, getLabel])
+  }, [dashboards, getLabel, editingDashoardId])
 
   const selectDashboard = path => {
     if (editingDashoardId) {
@@ -111,6 +110,7 @@ export function DashboardsNavBar() {
       {tabs.map((item, index) => (
         <ResponsiveNav.Item
           key={item.nextPath}
+          as={item.isEditing ? 'div' : 'a'}
           data-cy={`dashboard-${index}`}
           eventKey={item.nextPath}
           icon={item.icon}
