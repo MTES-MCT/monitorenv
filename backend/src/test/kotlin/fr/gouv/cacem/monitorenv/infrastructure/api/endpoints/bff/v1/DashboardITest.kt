@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
@@ -9,10 +10,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryArea.fixtures.RegulatoryAreaFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.DashboardDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
@@ -24,16 +28,26 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Dashboard::class)])
 class DashboardITest {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var extractArea: ExtractArea
+    @MockBean
+    private lateinit var extractArea: ExtractArea
+
+    @MockBean
+    private lateinit var saveDashboard: SaveDashboard
+
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     @Test
     fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
@@ -116,5 +130,68 @@ class DashboardITest {
             // Then
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.message", equalTo("Error: geometry is not valid")))
+    }
+
+    @Test
+    fun `put response should be ok with and return the saved dashboard`() {
+        // Given
+        val id = UUID.randomUUID()
+        val name = "dashboard1"
+        val comments = "comments"
+        val geometry = WKTReader().read("MULTIPOINT ((-1.548 44.315),(-1.245 44.305))")
+        val amps = listOf(1)
+        val regulatoryAreas = listOf(2)
+        val vigilanceAreas = listOf(3)
+        val reportings = listOf(4)
+        val controlUnits = listOf(4)
+        val inseeCode = "94"
+        val input =
+            DashboardDataInput(
+                id = id,
+                name = name,
+                comments = comments,
+                createdAt = null,
+                updatedAt = null,
+                geom = geometry,
+                inseeCode = inseeCode,
+                amps = amps,
+                regulatoryAreas = regulatoryAreas,
+                vigilanceAreas = vigilanceAreas,
+                reportings = reportings,
+                controlUnits = controlUnits,
+            )
+        val dashboard =
+            aDashboard(
+                id = id,
+                name = name,
+                comments = comments,
+                geom = geometry,
+                amps = amps,
+                vigilanceAreas = vigilanceAreas,
+                reportings = reportings,
+                regulatoryAreas = regulatoryAreas,
+                inseeCode = inseeCode,
+                controlUnits = controlUnits,
+            )
+        given(saveDashboard.execute(dashboard)).willReturn(dashboard)
+
+        // When
+        mockMvc.perform(
+            put("/bff/v1/dashboard")
+                .content(objectMapper.writeValueAsString(input))
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(id.toString())))
+            .andExpect(jsonPath("$.name", equalTo(name)))
+            .andExpect(jsonPath("$.comments", equalTo(comments)))
+            .andExpect(jsonPath("$.geom.type", equalTo(geometry.geometryType)))
+            .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
+            .andExpect(jsonPath("$.amps", equalTo(amps)))
+            .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))
+            .andExpect(jsonPath("$.reportings", equalTo(reportings)))
+            .andExpect(jsonPath("$.vigilanceAreas", equalTo(vigilanceAreas)))
+            .andExpect(jsonPath("$.controlUnits", equalTo(controlUnits)))
     }
 }

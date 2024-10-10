@@ -35,4 +35,7 @@ enum class BackendUsageErrorCode {
 
     /** Thrown when an entity contain an unvalid property. */
     UNVALID_PROPERTY,
+
+    /** Thrown when an entity could not be saved. */
+    ENTITY_NOT_SAVED,
 }
