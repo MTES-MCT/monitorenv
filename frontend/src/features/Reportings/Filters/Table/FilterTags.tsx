@@ -1,4 +1,4 @@
-import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
+import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -52,7 +52,6 @@ export function FilterTags() {
         sourceTypeFilter.map(sourceType => (
           <SingleTag
             key={sourceType}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
           >
             {String(`Type ${ReportingSourceLabels[sourceType]}`)}
@@ -63,7 +62,6 @@ export function FilterTags() {
         sourceFilter.map(source => (
           <SingleTag
             key={`${source.id}-${source.label}`}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(source, ReportingsFiltersEnum.SOURCE_FILTER, sourceFilter)}
           >
             {String(`Source ${source.label}`)}
@@ -74,7 +72,6 @@ export function FilterTags() {
         targetTypeFilter.map(targetType => (
           <SingleTag
             key={targetType}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(targetType, ReportingsFiltersEnum.TARGET_TYPE_FILTER, targetTypeFilter)}
           >
             {String(`Cible ${ReportingTargetTypeLabels[targetType]}`)}
@@ -85,7 +82,6 @@ export function FilterTags() {
         themeFilter.map(themeId => (
           <SingleTag
             key={themeId}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(themeId, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
           >
             {String(`Thème ${themes[themeId]?.theme}`)}
@@ -96,7 +92,6 @@ export function FilterTags() {
         subThemesFilter.map(subThemeId => (
           <SingleTag
             key={subThemeId}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(subThemeId, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
           >
             {String(`Sous-thème ${subThemes[subThemeId]?.subTheme}`)}
@@ -107,7 +102,6 @@ export function FilterTags() {
         seaFrontFilter.map(seaFront => (
           <SingleTag
             key={seaFront}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(seaFront, ReportingsFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
           >
             {String(`Façade ${seaFront}`)}

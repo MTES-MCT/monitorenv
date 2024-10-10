@@ -2,11 +2,11 @@ import { SideWindowContent } from '@features/SideWindow/style'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
+import { MissionFilterContext, MissionFilters } from '../components/Filters'
 
 export function Missions() {
   const dispatch = useAppDispatch()
@@ -25,7 +25,7 @@ export function Missions() {
           Ajouter une nouvelle mission
         </StyledButton>
       </StyledHeader>
-      <MissionsTableFilters />
+      <MissionFilters context={MissionFilterContext.TABLE} />
       <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
         {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
       </NumberOfDisplayedMissions>

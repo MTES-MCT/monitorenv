@@ -10,10 +10,10 @@ export const Bold = styled.span`
 `
 
 export const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
+  display: flex;
+  margin-left: -6px;
   position: absolute;
   transform: translateX(-100%);
-  margin-left: -6px;
-  display: block;
 `
 
 // TODO delete when Monitor-ui component have good padding
