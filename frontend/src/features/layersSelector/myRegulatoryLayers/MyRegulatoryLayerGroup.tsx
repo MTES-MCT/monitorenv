@@ -1,4 +1,5 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { getTitle } from 'domain/entities/layers/utils'
 import { intersection } from 'lodash'
 
 import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
@@ -57,7 +58,7 @@ export function RegulatoryLayerGroup({
   return (
     <MyLayerGroup
       addZonesToVigilanceArea={addZonesToVigilanceArea}
-      groupName={groupName}
+      groupName={getTitle(groupName)}
       layers={layers}
       name="regulatory"
       onRemoveZone={e => handleRemoveZone(e)}
