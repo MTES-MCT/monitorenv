@@ -3,8 +3,9 @@ import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/s
 import { Feature } from 'ol'
 import { fromExtent } from 'ol/geom/Polygon'
 import { Vector } from 'ol/layer'
+import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
@@ -15,6 +16,7 @@ import { dottedLayerStyle } from '../styles/dottedLayer.style'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
+import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
@@ -31,95 +33,67 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const isLayerVisible = isLayersSidebarVisible && isAmpSearchResultsVisible && !isLinkingRegulatoryToVigilanceArea
 
-  const ampLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
-  const ampVectorSourceRef = useRef(new VectorSource())
-  const isThrottled = useRef(false)
+  const ampPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const ampPreviewVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 4,
+      renderOrder: (a, b) => b.get('area') - a.get('area'),
+      source: ampPreviewVectorSourceRef.current,
+      style: getAMPLayerStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(ampPreviewVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_PREVIEW.code
 
-  const searchExtentLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
-  const seachExtentVectorSourceRef = useRef(new VectorSource())
-  useEffect(() => {
-    if (map) {
-      const features = ampVectorSourceRef.current.getFeatures()
-      if (features?.length) {
-        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('id') === ampMetadataLayerId))
-      }
-    }
-  }, [map, ampMetadataLayerId])
+  const ampLayersFeatures = useMemo(() => {
+    let ampFeatures: Feature[] = []
 
-  useEffect(() => {
-    function refreshPreviewLayer() {
-      ampVectorSourceRef.current.clear()
-      if (ampsSearchResult && ampLayers?.entities) {
-        const features = ampsSearchResult.reduce((amplayers, id) => {
-          if (showedAmpLayerIds.includes(id)) {
-            return amplayers
-          }
-          const layer = ampLayers.entities[id]
-
-          if (layer && layer.geom) {
-            const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
-
-            amplayers.push(feature)
-          }
-
+    if (ampsSearchResult && ampLayers?.entities) {
+      ampFeatures = ampsSearchResult.reduce((amplayers, id) => {
+        if (showedAmpLayerIds.includes(id)) {
           return amplayers
-        }, [] as Feature[])
-        ampVectorSourceRef.current.addFeatures(features)
-      }
+        }
+        const layer = ampLayers.entities[id]
+
+        if (layer && layer.geom) {
+          const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
+
+          if (feature) {
+            const metadataIsShowed = layer.id === ampMetadataLayerId
+            feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+          }
+
+          amplayers.push(feature)
+        }
+
+        return amplayers
+      }, [] as Feature[])
     }
 
-    if (map) {
-      if (isThrottled.current) {
-        return
-      }
-
-      isThrottled.current = true
-
-      window.setTimeout(() => {
-        isThrottled.current = false
-        refreshPreviewLayer()
-      }, 300)
-    }
-  }, [map, ampsSearchResult, ampLayers, showedAmpLayerIds])
+    return ampFeatures
+  }, [ampLayers?.entities, ampMetadataLayerId, ampsSearchResult, showedAmpLayerIds])
 
   useEffect(() => {
-    function getLayer() {
-      if (!ampLayerRef.current) {
-        ampLayerRef.current = new Vector({
-          properties: {
-            name: Layers.AMP.code
-          },
-          renderBuffer: 4,
-          renderOrder: (a, b) => b.get('area') - a.get('area'),
-          source: ampVectorSourceRef.current,
-          style: getAMPLayerStyle,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true
-        })
-        ampLayerRef.current.name = Layers.AMP.code
-      }
-
-      return ampLayerRef.current
+    ampPreviewVectorSourceRef.current?.clear(true)
+    if (ampLayersFeatures) {
+      ampPreviewVectorSourceRef.current?.addFeatures(ampLayersFeatures)
     }
-    if (map) {
-      map.getLayers().push(getLayer())
-    }
+  }, [ampLayersFeatures])
 
-    return () => {
-      if (map) {
-        map.removeLayer(getLayer())
-      }
-    }
-  }, [map])
-
-  useEffect(() => {
-    searchExtentLayerRef.current?.setVisible(isLayerVisible)
-    ampLayerRef.current?.setVisible(isLayerVisible)
-  }, [isLayerVisible])
+  const seachExtentVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const searchExtentLayerRef = useRef(
+    new Vector({
+      source: seachExtentVectorSourceRef.current,
+      style: dottedLayerStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true
+    })
+  ) as MutableRefObject<Vector<VectorSource>>
 
   useEffect(() => {
     if (map) {
-      seachExtentVectorSourceRef.current.clear()
+      seachExtentVectorSourceRef.current.clear(true)
       if (searchExtent) {
         const feature = new Feature(fromExtent(searchExtent))
         seachExtentVectorSourceRef.current.addFeature(feature)
@@ -128,25 +102,22 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   }, [map, searchExtent])
 
   useEffect(() => {
-    function getLayer() {
-      if (!searchExtentLayerRef.current) {
-        searchExtentLayerRef.current = new Vector({
-          source: seachExtentVectorSourceRef.current,
-          style: dottedLayerStyle,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true
-        })
-      }
+    searchExtentLayerRef.current?.setVisible(isLayerVisible)
+    ampPreviewVectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
-      return searchExtentLayerRef.current
-    }
+  useEffect(() => {
     if (map) {
-      map.getLayers().push(getLayer())
+      map.getLayers().push(ampPreviewVectorLayerRef.current)
+      map.getLayers().push(searchExtentLayerRef.current)
     }
 
     return () => {
       if (map) {
-        map.removeLayer(getLayer())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(ampPreviewVectorLayerRef.current)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(searchExtentLayerRef.current)
       }
     }
   }, [map])

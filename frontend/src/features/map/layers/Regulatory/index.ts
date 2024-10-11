@@ -1,8 +1,8 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
-import { Vector } from 'ol/layer'
+import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
@@ -11,7 +11,9 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
@@ -23,80 +25,64 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLayerVisible = !isLinkingAMPToVigilanceArea
 
-  const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  function getVectorSource() {
-    if (!vectorSourceRef.current) {
-      vectorSourceRef.current = new VectorSource({
-        features: []
-      })
+  const regulatoryVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const regulatoryVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 4,
+      renderOrder: (a, b) => b.get('area') - a.get('area'),
+      source: regulatoryVectorSourceRef.current,
+      style: getRegulatoryLayerStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(regulatoryVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV.code
+
+  const regulatoryLayersFeatures = useMemo(() => {
+    let regulatoryFeatures: Feature[] = []
+
+    if (regulatoryLayers?.entities) {
+      regulatoryFeatures = showedRegulatoryLayerIds.reduce((feats: Feature[], regulatorylayerId) => {
+        const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
+        if (regulatorylayer) {
+          const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV.code, layer: regulatorylayer })
+          if (feature) {
+            const metadataIsShowed = regulatorylayer.id === regulatoryMetadataLayerId
+            feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+          }
+          feats.push(feature)
+        }
+
+        return feats
+      }, [])
     }
 
-    return vectorSourceRef.current
-  }
-  const layerRef = useRef() as MutableRefObject<Vector<VectorSource>>
+    return regulatoryFeatures
+  }, [regulatoryLayers, showedRegulatoryLayerIds, regulatoryMetadataLayerId])
 
   useEffect(() => {
-    function getLayer() {
-      if (!layerRef.current) {
-        layerRef.current = new Vector({
-          properties: {
-            name: Layers.REGULATORY_ENV_PREVIEW.code
-          },
-          renderBuffer: 4,
-          renderOrder: (a, b) => b.get('area') - a.get('area'),
-          source: getVectorSource(),
-          style: getRegulatoryLayerStyle,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true
-        })
-      }
-
-      return layerRef.current
+    regulatoryVectorSourceRef.current?.clear(true)
+    if (regulatoryLayersFeatures) {
+      regulatoryVectorSourceRef.current?.addFeatures(regulatoryLayersFeatures)
     }
+  }, [regulatoryLayersFeatures])
+
+  useEffect(() => {
     if (map) {
-      map.getLayers().push(getLayer())
+      map.getLayers().push(regulatoryVectorLayerRef.current)
     }
 
     return () => {
       if (map) {
-        map.removeLayer(getLayer())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(regulatoryVectorLayerRef.current)
       }
     }
   }, [map])
 
   useEffect(() => {
-    layerRef.current?.setVisible(isLayerVisible)
+    regulatoryVectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
-
-  useEffect(() => {
-    if (map) {
-      getVectorSource().clear()
-      if (regulatoryLayers?.entities) {
-        const features = showedRegulatoryLayerIds.reduce((feats: Feature[], regulatorylayerId) => {
-          const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
-          if (regulatorylayer) {
-            const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV.code, layer: regulatorylayer })
-
-            feats.push(feature)
-          }
-
-          return feats
-        }, [])
-        getVectorSource().addFeatures(features)
-      }
-    }
-  }, [map, regulatoryLayers, showedRegulatoryLayerIds])
-
-  useEffect(() => {
-    if (map) {
-      const features = getVectorSource().getFeatures()
-      if (features?.length) {
-        features.forEach(feature => {
-          feature.set(metadataIsShowedPropertyName, feature.get('id') === regulatoryMetadataLayerId)
-        })
-      }
-    }
-  }, [map, regulatoryMetadataLayerId])
 
   return null
 }
