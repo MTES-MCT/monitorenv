@@ -3,8 +3,9 @@ import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Feature } from 'ol'
 import { fromExtent } from 'ol/geom/Polygon'
 import { Vector } from 'ol/layer'
+import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
@@ -14,6 +15,8 @@ import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLa
 import { dottedLayerStyle } from '../styles/dottedLayer.style'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from 'domain/types/layer'
+import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
@@ -29,142 +32,92 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
 
-  const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
-  const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const isThrottled = useRef(false)
+  const regulatoryPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
+    VectorSource<Feature<Geometry>>
+  >
+  const regulatoryPreviewVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 4,
+      renderOrder: (a, b) => b.get('area') - a.get('area'),
+      source: regulatoryPreviewVectorSourceRef.current,
+      style: getRegulatoryLayerStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(regulatoryPreviewVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV_PREVIEW.code
 
-  function getRegulatoryVectorSource() {
-    if (!regulatoryVectorSourceRef.current) {
-      regulatoryVectorSourceRef.current = new VectorSource({
-        features: []
-      })
-    }
+  const regulatoryLayersFeatures = useMemo(() => {
+    let regulatoryFeatures: Feature[] = []
+    if (regulatoryLayersSearchResult) {
+      regulatoryFeatures = regulatoryLayersSearchResult.reduce((regulatorylayers, id) => {
+        const layer = regulatoryLayers?.entities[id]
 
-    return regulatoryVectorSourceRef.current
-  }
+        if (layer && layer.geom) {
+          const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
 
-  const searchExtentLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
-  const seachExtentVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  function getSearchExtentVectorSource() {
-    if (!seachExtentVectorSourceRef.current) {
-      seachExtentVectorSourceRef.current = new VectorSource({
-        features: []
-      })
-    }
-
-    return seachExtentVectorSourceRef.current
-  }
-
-  useEffect(() => {
-    if (map) {
-      const features = getRegulatoryVectorSource().getFeatures()
-      if (features?.length) {
-        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('id') === regulatoryMetadataLayerId))
-      }
-    }
-  }, [map, regulatoryMetadataLayerId])
-
-  useEffect(() => {
-    function refreshPreviewLayer() {
-      getRegulatoryVectorSource().clear()
-      if (regulatoryLayersSearchResult) {
-        const features = regulatoryLayersSearchResult.reduce((regulatorylayers, id) => {
-          const layer = regulatoryLayers?.entities[id]
-
-          if (layer && layer.geom) {
-            const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
-
-            regulatorylayers.push(feature)
+          if (feature) {
+            const metadataIsShowed = layer.id === regulatoryMetadataLayerId
+            feature.set(metadataIsShowedPropertyName, metadataIsShowed)
           }
+          regulatorylayers.push(feature)
+        }
 
-          return regulatorylayers
-        }, [] as Feature[])
-        getRegulatoryVectorSource().addFeatures(features)
-      }
+        return regulatorylayers
+      }, [] as Feature[])
     }
 
-    if (map) {
-      if (isThrottled.current) {
-        return
-      }
-
-      isThrottled.current = true
-
-      window.setTimeout(() => {
-        isThrottled.current = false
-        refreshPreviewLayer()
-      }, 300)
-    }
-  }, [map, regulatoryLayersSearchResult, regulatoryLayers])
+    return regulatoryFeatures
+  }, [regulatoryLayers, regulatoryMetadataLayerId, regulatoryLayersSearchResult])
 
   useEffect(() => {
-    function getLayer() {
-      if (!regulatoryLayerRef.current) {
-        regulatoryLayerRef.current = new Vector({
-          properties: {
-            name: Layers.REGULATORY_ENV_PREVIEW.code
-          },
-          renderBuffer: 4,
-          renderOrder: (a, b) => b.get('area') - a.get('area'),
-          source: getRegulatoryVectorSource(),
-          style: getRegulatoryLayerStyle,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true
-        })
-      }
+    regulatoryPreviewVectorSourceRef.current?.clear(true)
+    if (regulatoryLayersFeatures) {
+      regulatoryPreviewVectorSourceRef.current?.addFeatures(regulatoryLayersFeatures)
+    }
+  }, [regulatoryLayersFeatures])
 
-      return regulatoryLayerRef.current
-    }
-    if (map) {
-      map.getLayers().push(getLayer())
-    }
-
-    return () => {
-      if (map) {
-        map.removeLayer(getLayer())
-      }
-    }
-  }, [map])
+  const seachExtentVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const searchExtentLayerRef = useRef(
+    new Vector({
+      source: seachExtentVectorSourceRef.current,
+      style: dottedLayerStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true
+    })
+  ) as MutableRefObject<Vector<VectorSource>>
 
   useEffect(() => {
     if (map) {
-      searchExtentLayerRef.current?.setVisible(isLayerVisible)
-      regulatoryLayerRef.current?.setVisible(isLayerVisible)
-    }
-  }, [map, isLayerVisible])
-
-  useEffect(() => {
-    if (map) {
-      getSearchExtentVectorSource().clear()
+      seachExtentVectorSourceRef.current.clear(true)
       if (searchExtent) {
         const feature = new Feature(fromExtent(searchExtent))
-        getSearchExtentVectorSource().addFeature(feature)
+        seachExtentVectorSourceRef.current.addFeature(feature)
       }
     }
   }, [map, searchExtent])
 
   useEffect(() => {
-    function getLayer() {
-      if (!searchExtentLayerRef.current) {
-        searchExtentLayerRef.current = new Vector({
-          source: getSearchExtentVectorSource(),
-          style: dottedLayerStyle,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true
-        })
-      }
-
-      return searchExtentLayerRef.current
-    }
     if (map) {
-      map.getLayers().push(getLayer())
+      searchExtentLayerRef.current?.setVisible(isLayerVisible)
+      regulatoryPreviewVectorLayerRef.current?.setVisible(isLayerVisible)
     }
+  }, [map, isLayerVisible])
 
-    return () => {
-      if (map) {
-        map.removeLayer(getLayer())
+  useEffect(() => {
+    if (map) {
+      map.getLayers().push(searchExtentLayerRef.current)
+      map.getLayers().push(regulatoryPreviewVectorLayerRef.current)
+
+      return () => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(searchExtentLayerRef.current)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(regulatoryPreviewVectorLayerRef.current)
       }
     }
+
+    return () => {}
   }, [map])
 
   return null

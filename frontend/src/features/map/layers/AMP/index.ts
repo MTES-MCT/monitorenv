@@ -1,8 +1,8 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
-import { Vector } from 'ol/layer'
+import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
@@ -13,6 +13,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
@@ -25,67 +26,64 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
 
   const { data: ampLayers } = useGetAMPsQuery()
 
-  const vectorSourceRef = useRef(new VectorSource())
-
-  const layerRef = useRef<VectorLayerWithName>(
-    new Vector({
+  const ampVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const ampVectorLayerRef = useRef(
+    new VectorLayer({
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
-      source: vectorSourceRef.current,
+      source: ampVectorSourceRef.current,
       style: getAMPLayerStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true
     })
-  )
-  layerRef.current.name = Layers.AMP.code
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(ampVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP.code
+
+  const ampLayersFeatures = useMemo(() => {
+    let ampFeatures: Feature[] = []
+
+    if (ampLayers?.entities) {
+      ampFeatures = showedAmpLayerIds.reduce((feats: Feature[], ampLayerId) => {
+        const ampLayer = ampLayers.entities[ampLayerId]
+        if (ampLayer) {
+          const feature = getAMPFeature({ code: Layers.AMP.code, layer: ampLayer })
+          if (feature) {
+            const metadataIsShowed = ampLayer.id === showedAmpMetadataLayerId
+            feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+          }
+          feats.push(feature)
+        }
+
+        return feats
+      }, [])
+    }
+
+    return ampFeatures
+  }, [ampLayers?.entities, showedAmpLayerIds, showedAmpMetadataLayerId])
 
   useEffect(() => {
-    const layer = layerRef.current
+    ampVectorSourceRef.current?.clear(true)
+    if (ampLayersFeatures) {
+      ampVectorSourceRef.current?.addFeatures(ampLayersFeatures)
+    }
+  }, [ampLayersFeatures])
+
+  useEffect(() => {
     if (map) {
-      map.getLayers().push(layerRef.current)
+      map.getLayers().push(ampVectorLayerRef.current)
     }
 
     return () => {
       if (map) {
-        map.removeLayer(layer)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(ampVectorLayerRef.current)
       }
     }
   }, [map])
 
   useEffect(() => {
-    layerRef.current?.setVisible(isLayerVisible)
+    ampVectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
-
-  useEffect(() => {
-    if (map) {
-      vectorSourceRef.current.clear()
-      if (ampLayers?.entities) {
-        const features = showedAmpLayerIds.reduce((feats: Feature[], layerId) => {
-          const ampLayer = ampLayers.entities[layerId]
-          if (ampLayer) {
-            const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer: ampLayer })
-
-            feats.push(feature)
-          }
-
-          return feats
-        }, [])
-
-        vectorSourceRef.current.addFeatures(features)
-      }
-    }
-  }, [map, ampLayers, showedAmpLayerIds])
-
-  useEffect(() => {
-    if (map) {
-      const features = vectorSourceRef.current.getFeatures()
-      if (features?.length) {
-        features.forEach(f => {
-          f.set(metadataIsShowedPropertyName, f.get('id') === showedAmpMetadataLayerId)
-        })
-      }
-    }
-  }, [map, showedAmpMetadataLayerId])
 
   return null
 }
