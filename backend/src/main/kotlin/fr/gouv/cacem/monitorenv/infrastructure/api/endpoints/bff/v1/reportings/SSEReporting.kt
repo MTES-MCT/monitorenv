@@ -2,12 +2,12 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
-import java.time.ZonedDateTime
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
+import java.time.ZonedDateTime
 
 @Component
 class SSEReporting {
@@ -48,28 +48,28 @@ class SSEReporting {
         val reportingId = event.reporting.reporting.id
 
         logger.info(
-                "SSE: Sending update of reporting $reportingId to ${sseStore.size} listener(s)."
+            "SSE: Sending update of reporting $reportingId to ${sseStore.size} listener(s).",
         )
         val sseEmittersToRemove =
-                sseStore.map { sseEmitter ->
-                    try {
-                        val data = ReportingDataOutput.fromReportingDTO(event.reporting)
-                        val sseEvent =
-                                event().name(REPORTING_UPDATE_EVENT_NAME)
-                                        .data(data)
-                                        .reconnectTime(0)
-                                        .build()
+            sseStore.map { sseEmitter ->
+                try {
+                    val data = ReportingDataOutput.fromReportingDTO(event.reporting)
+                    val sseEvent =
+                        event().name(REPORTING_UPDATE_EVENT_NAME)
+                            .data(data)
+                            .reconnectTime(0)
+                            .build()
 
-                        sseEmitter.send(sseEvent)
-                        sseEmitter.complete()
+                    sseEmitter.send(sseEvent)
+                    sseEmitter.complete()
 
-                        return@map sseEmitter
-                    } catch (e: Exception) {
-                        sseEmitter.completeWithError(e)
+                    return@map sseEmitter
+                } catch (e: Exception) {
+                    sseEmitter.completeWithError(e)
 
-                        return@map sseEmitter
-                    }
+                    return@map sseEmitter
                 }
+            }
 
         synchronized(mutexLock) { sseStore.removeAll(sseEmittersToRemove) }
         logger.info("Removed ${sseEmittersToRemove.size} SSE listeners of reporting updates.")

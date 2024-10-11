@@ -1,8 +1,6 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Feature } from 'ol'
-import { fromExtent } from 'ol/geom/Polygon'
-import { Vector } from 'ol/layer'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
@@ -12,7 +10,6 @@ import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
-import { dottedLayerStyle } from '../styles/dottedLayer.style'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -24,7 +21,6 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
-  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
@@ -77,41 +73,17 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     }
   }, [regulatoryLayersFeatures])
 
-  const seachExtentVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
-  const searchExtentLayerRef = useRef(
-    new Vector({
-      source: seachExtentVectorSourceRef.current,
-      style: dottedLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true
-    })
-  ) as MutableRefObject<Vector<VectorSource>>
-
   useEffect(() => {
     if (map) {
-      seachExtentVectorSourceRef.current.clear(true)
-      if (searchExtent) {
-        const feature = new Feature(fromExtent(searchExtent))
-        seachExtentVectorSourceRef.current.addFeature(feature)
-      }
-    }
-  }, [map, searchExtent])
-
-  useEffect(() => {
-    if (map) {
-      searchExtentLayerRef.current?.setVisible(isLayerVisible)
       regulatoryPreviewVectorLayerRef.current?.setVisible(isLayerVisible)
     }
   }, [map, isLayerVisible])
 
   useEffect(() => {
     if (map) {
-      map.getLayers().push(searchExtentLayerRef.current)
       map.getLayers().push(regulatoryPreviewVectorLayerRef.current)
 
       return () => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        map.removeLayer(searchExtentLayerRef.current)
         // eslint-disable-next-line react-hooks/exhaustive-deps
         map.removeLayer(regulatoryPreviewVectorLayerRef.current)
       }
