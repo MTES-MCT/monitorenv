@@ -1,8 +1,6 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Feature } from 'ol'
-import { fromExtent } from 'ol/geom/Polygon'
-import { Vector } from 'ol/layer'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
@@ -12,7 +10,6 @@ import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { dottedLayerStyle } from '../styles/dottedLayer.style'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -24,7 +21,6 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
-  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
@@ -81,43 +77,19 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     }
   }, [ampLayersFeatures])
 
-  const seachExtentVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
-  const searchExtentLayerRef = useRef(
-    new Vector({
-      source: seachExtentVectorSourceRef.current,
-      style: dottedLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true
-    })
-  ) as MutableRefObject<Vector<VectorSource>>
-
   useEffect(() => {
-    if (map) {
-      seachExtentVectorSourceRef.current.clear(true)
-      if (searchExtent) {
-        const feature = new Feature(fromExtent(searchExtent))
-        seachExtentVectorSourceRef.current.addFeature(feature)
-      }
-    }
-  }, [map, searchExtent])
-
-  useEffect(() => {
-    searchExtentLayerRef.current?.setVisible(isLayerVisible)
     ampPreviewVectorLayerRef.current?.setVisible(isLayerVisible)
   }, [isLayerVisible])
 
   useEffect(() => {
     if (map) {
       map.getLayers().push(ampPreviewVectorLayerRef.current)
-      map.getLayers().push(searchExtentLayerRef.current)
     }
 
     return () => {
       if (map) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         map.removeLayer(ampPreviewVectorLayerRef.current)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        map.removeLayer(searchExtentLayerRef.current)
       }
     }
   }, [map])

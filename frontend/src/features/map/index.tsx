@@ -25,6 +25,7 @@ import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
 import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
 import { RegulatoryLayers } from './layers/Regulatory'
 import { RegulatoryPreviewLayer } from './layers/Regulatory/RegulatoryPreviewLayer'
+import { SearchExtentLayer } from './layers/SearchExtentLayer'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
@@ -83,6 +84,8 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <AdministrativeLayers />
         {/* @ts-ignore */}
+        <SearchExtentLayer />
+        {/* @ts-ignore */}
         <LayerEvents />
         {/* @ts-ignore */}
         <LayersOverlay />
@@ -130,6 +133,8 @@ export function Map({ isSuperUser }) {
       <RegulatoryPreviewLayer />
       {/* @ts-ignore */}
       <AdministrativeLayers />
+      {/* @ts-ignore */}
+      <SearchExtentLayer />
       {/* @ts-ignore */}
       <LayerEvents />
       {/* @ts-ignore */}

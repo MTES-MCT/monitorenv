@@ -1,13 +1,10 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { dottedLayerStyle } from '@features/map/layers/styles/dottedLayer.style'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
-import { fromExtent } from 'ol/geom/Polygon'
-import { Vector } from 'ol/layer'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef, type MutableRefObject } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
@@ -24,10 +21,6 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
   )
-  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
-  const myVigilanceAreaIdsDisplayed = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIdsDisplayed)
-
-  const isThrottled = useRef(false)
 
   const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible
 
@@ -47,76 +40,50 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   ) as React.MutableRefObject<VectorLayerWithName>
   ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA_PREVIEW.code
 
-  const seachExtentVectorSourceRef = useRef(new VectorSource())
-  const searchExtentLayerRef = useRef(
-    new Vector({
-      source: seachExtentVectorSourceRef.current,
-      style: dottedLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true
-    })
-  ) as MutableRefObject<Vector<VectorSource>>
+  const vigilanceAreasFeatures = useMemo(() => {
+    let features: Feature[] = []
+    if (vigilanceAreaSearchResult && vigilanceAreas) {
+      features = vigilanceAreaSearchResult.reduce((amplayers, id) => {
+        const layer = vigilanceAreas.entities[id]
 
-  useEffect(() => {
-    function refreshPreviewLayer() {
-      vectorSourceRef.current.clear(true)
-      if (vigilanceAreaSearchResult && vigilanceAreas) {
-        const features = vigilanceAreaSearchResult.reduce((amplayers, id) => {
-          const layer = vigilanceAreas.entities[id]
+        if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+          const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA_PREVIEW.code)
 
-          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA_PREVIEW.code)
+          amplayers.push(feature)
+        }
 
-            amplayers.push(feature)
-          }
-
-          return amplayers
-        }, [] as Feature[])
-
-        vectorSourceRef.current.addFeatures(features)
-      }
+        return amplayers
+      }, [] as Feature[])
     }
 
+    return features
+  }, [vigilanceAreaSearchResult, vigilanceAreas])
+
+  useEffect(() => {
+    vectorSourceRef.current?.clear(true)
+    if (vigilanceAreasFeatures) {
+      vectorSourceRef.current?.addFeatures(vigilanceAreasFeatures)
+    }
+  }, [vigilanceAreasFeatures])
+
+  useEffect(() => {
     if (map) {
-      if (isThrottled.current) {
-        return
-      }
-
-      isThrottled.current = true
-
-      window.setTimeout(() => {
-        isThrottled.current = false
-        refreshPreviewLayer()
-      }, 300)
+      vectorLayerRef.current?.setVisible(isLayerVisible)
     }
-  }, [map, vigilanceAreaSearchResult, vigilanceAreas, myVigilanceAreaIdsDisplayed])
+  }, [map, isLayerVisible])
 
   useEffect(() => {
-    map.getLayers().push(vectorLayerRef.current)
-    map.getLayers().push(searchExtentLayerRef.current)
+    if (map) {
+      map.getLayers().push(vectorLayerRef.current)
 
-    return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(vectorLayerRef.current)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      map.removeLayer(searchExtentLayerRef.current)
+      return () => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(vectorLayerRef.current)
+      }
     }
+
+    return () => {}
   }, [map])
-
-  useEffect(() => {
-    if (map) {
-      seachExtentVectorSourceRef.current.clear()
-      if (searchExtent) {
-        const feature = new Feature(fromExtent(searchExtent))
-        seachExtentVectorSourceRef.current.addFeature(feature)
-      }
-    }
-  }, [map, searchExtent])
-
-  useEffect(() => {
-    vectorLayerRef.current?.setVisible(isLayerVisible)
-    searchExtentLayerRef.current?.setVisible(isLayerVisible)
-  }, [isLayerVisible])
 
   return null
 }
