@@ -1,3 +1,4 @@
+import { LocalizeCell } from '@components/Table/LocalizeCell'
 import { getFormattedReportingId, sortTargetDetails } from '@features/Reportings/utils'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
@@ -6,7 +7,6 @@ import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
 import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionThemes } from '../Cells/CellActionThemes'
 import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
-import { CellLocalizeReporting } from '../Cells/CellLocalizeReporting'
 import { CellStatus } from '../Cells/CellStatus'
 import { CellTarget } from '../Cells/CellTarget'
 import { CellValidityTime } from '../Cells/CellValidityTime'
@@ -166,7 +166,7 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.geom,
-    cell: info => <CellLocalizeReporting geom={info.getValue()} />,
+    cell: info => <LocalizeCell geom={info.getValue()} />,
     enableSorting: false,
     header: () => '',
     id: 'geom',

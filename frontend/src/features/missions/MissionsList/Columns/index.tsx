@@ -1,7 +1,8 @@
+import { LocalizeCell } from '@components/Table/LocalizeCell'
+
 import { CellActionThemes } from '../CellActionThemes'
 import { CellCompletionStatus } from '../CellCompletionStatus'
 import { CellEditMission } from '../CellEditMission'
-import { CellLocalizeMission } from '../CellLocalizeMission'
 import { CellStatus } from '../CellStatus'
 import { getDateCell } from '../getDateCell'
 import { getMissionTypeCell } from '../getMissionTypeCell'
@@ -87,7 +88,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.geom,
-    cell: info => <CellLocalizeMission geom={info.getValue()} />,
+    cell: info => <LocalizeCell geom={info.getValue()} />,
     enableSorting: false,
     header: () => '',
     id: 'geom',

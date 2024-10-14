@@ -4,13 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardDatasModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardModel.Companion.fromDashboardEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAMPRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardDatasRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -37,6 +31,10 @@ class JpaDashboardRepository(
         addControlUnits(dashboard, dashboardDatasToSave)
         val dashboardModel = dashboardRepository.saveAndFlush(fromDashboardEntity(dashboard, dashboardDatasToSave))
         return dashboardModel.toDashboardEntity()
+    }
+
+    override fun findAll(): List<DashboardEntity> {
+        return dashboardRepository.findAll().map { it.toDashboardEntity() }
     }
 
     private fun addRegulatoryAreas(
