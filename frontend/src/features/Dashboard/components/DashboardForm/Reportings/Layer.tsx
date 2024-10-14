@@ -3,7 +3,6 @@ import { Dashboard } from '@features/Dashboard/types'
 import { StatusActionTag } from '@features/Reportings/components/StatusActionTag'
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
@@ -26,17 +25,13 @@ import { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 type ReportingLayerProps = {
-  dashboardId: string
+  isPinned?: boolean
   isSelected?: boolean
   reporting: Reporting
 }
 
-export function Layer({ dashboardId, isSelected = false, reporting }: ReportingLayerProps) {
+export function Layer({ isPinned = false, isSelected = false, reporting }: ReportingLayerProps) {
   const dispatch = useAppDispatch()
-
-  const selectedReportings = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.reportings)
-
-  const isPinned = selectedReportings?.includes(reporting)
 
   const { subThemes, themes } = useGetControlPlans()
 

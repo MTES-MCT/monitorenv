@@ -5,16 +5,13 @@ import { bannerClosingDelay } from '@features/Dashboard/utils'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Banner, Icon, Level, OPENLAYERS_PROJECTION, Textarea, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
-import { getCenter } from 'ol/extent'
-import { GeoJSON } from 'ol/format'
-import { transform } from 'ol/proj'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from './Accordion'
 import { Amps } from './Amps'
+import { Comments } from './Comments'
 import { Controls } from './Controls'
 import { ControlUnits } from './ControlUnits'
 import { DashboardFilters } from './Filters'
@@ -22,25 +19,18 @@ import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
 import { TerritorialPressure } from './TerritorialPressure'
 import { VigilanceAreas } from './VigilanceAreas'
-import { dashboardActions, getFilteredReportings } from '../../slice'
+import { Weather } from './Weather'
+import { dashboardActions, getFilteredReportings, type DashboardType } from '../../slice'
 
 type DashboardProps = {
-  dashboardId: string
+  dashboard: DashboardType
   isActive: boolean
 }
-export function DashboardForm({ dashboardId, isActive }: DashboardProps) {
+export function DashboardForm({ dashboard, isActive }: DashboardProps) {
   const dispatch = useAppDispatch()
-  const comments = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.comments ?? undefined)
-  const previewSelectionFilter =
-    useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.filters?.previewSelection) ?? false
-
-  const isBannerDisplayed =
-    useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.isBannerDisplayed) ?? false
+  const previewSelectionFilter = dashboard.filters.previewSelection ?? false
 
   const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard))
-
-  const extractedArea = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.extractedArea ?? undefined)
-  const geom = useAppSelector(state => state.dashboard.geometry)
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
@@ -57,10 +47,6 @@ export function DashboardForm({ dashboardId, isActive }: DashboardProps) {
   const [expandedAccordionThirdColumn, setExpandedAccordionThirdColumn] = useState<Dashboard.Block | undefined>(
     undefined
   )
-
-  const updateComments = (value: string | undefined) => {
-    dispatch(dashboardActions.setComments(value))
-  }
 
   const handleAccordionClick = (type: Dashboard.Block) => {
     switch (type) {
@@ -83,25 +69,6 @@ export function DashboardForm({ dashboardId, isActive }: DashboardProps) {
         break
     }
   }
-
-  const coordinates = useMemo(() => {
-    if (!geom) {
-      return ''
-    }
-    const feature = new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom)
-
-    const extent = feature?.getGeometry()?.getExtent()
-    const center = extent && getCenter(extent)
-    const centerLatLon = center && transform(center, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-
-    if (!centerLatLon) {
-      return undefined
-    }
-
-    return `${centerLatLon[1]?.toFixed(3)}/${centerLatLon[0]?.toFixed(3)}`
-  }, [geom])
 
   useEffect(() => {
     // remove openedPanel on mount
@@ -126,7 +93,7 @@ export function DashboardForm({ dashboardId, isActive }: DashboardProps) {
     <>
       {isActive && (
         <>
-          {isBannerDisplayed && (
+          {dashboard.isBannerDisplayed && (
             <Banner
               closingDelay={bannerClosingDelay}
               isClosable
@@ -146,28 +113,28 @@ export function DashboardForm({ dashboardId, isActive }: DashboardProps) {
             <Column ref={firstColumnRef}>
               <RegulatoryAreas
                 columnWidth={firstColumnWidth}
-                dashboardId={dashboardId}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
-                regulatoryAreas={extractedArea?.regulatoryAreas}
+                regulatoryAreas={dashboard.extractedArea?.regulatoryAreas}
+                selectedRegulatoryAreaIds={dashboard.dashboard.regulatoryAreas}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
               />
 
               <Amps
-                amps={extractedArea?.amps}
+                amps={dashboard.extractedArea?.amps}
                 columnWidth={firstColumnWidth}
-                dashboardId={dashboardId}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
                 isSelectedAccordionOpen={previewSelectionFilter}
+                selectedAmpIds={dashboard.dashboard.amps}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
               />
               <VigilanceAreas
                 columnWidth={firstColumnWidth}
-                dashboardId={dashboardId}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
+                selectedVigilanceAreaIds={dashboard.dashboard.vigilanceAreas}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
-                vigilanceAreas={extractedArea?.vigilanceAreas}
+                vigilanceAreas={dashboard.extractedArea?.vigilanceAreas}
               />
             </Column>
             <Column>
@@ -177,10 +144,10 @@ export function DashboardForm({ dashboardId, isActive }: DashboardProps) {
               />
 
               <Reportings
-                dashboardId={dashboardId}
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 reportings={filteredReportings ?? []}
+                selectedReportings={dashboard.dashboard.reportings}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
               />
             </Column>
@@ -191,30 +158,12 @@ export function DashboardForm({ dashboardId, isActive }: DashboardProps) {
                 isSelectedAccordionOpen={previewSelectionFilter}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.CONTROL_UNITS)}
               />
-              <Accordion
+              <Comments
+                comments={dashboard.dashboard.comments}
                 isExpanded={expandedAccordionThirdColumn === Dashboard.Block.COMMENTS}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}
-                title="Commentaires"
-              >
-                <StyledTextarea
-                  isLabelHidden
-                  label="Commentaires"
-                  name="comments"
-                  onChange={updateComments}
-                  value={comments}
-                />
-              </Accordion>
-              <WeatherBlock>
-                <WeatherTitle>Météo</WeatherTitle>
-                {coordinates ? (
-                  <a href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
-                    <span> {`https://www.windy.com/${coordinates}`}</span>
-                    <Icon.ExternalLink size={16} />
-                  </a>
-                ) : (
-                  <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
-                )}
-              </WeatherBlock>
+              />
+              <Weather geom={dashboard.dashboard.geom} />
             </Column>
           </Container>
           <Controls />
@@ -241,30 +190,4 @@ const Column = styled.div`
   overflow-y: auto;
 
   padding: 3px;
-`
-const StyledTextarea = styled(Textarea)`
-  padding: 16px 24px;
-`
-const WeatherBlock = styled.div`
-  align-items: center;
-  box-shadow: 0px 3px 6px #70778540;
-  display: flex;
-  gap: 24px;
-  padding: 21px 24px;
-  > a {
-    align-items: center;
-    color: #295edb;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-`
-const WeatherTitle = styled.h2`
-  font-size: 16px;
-  font-weight: 500;
-`
-const CoordinatesError = styled.div`
-  color: ${p => p.theme.color.slateGray};
-  font-size: 11px;
-  font-style: italic;
 `

@@ -1,4 +1,3 @@
-import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { type Reporting } from 'domain/entities/reporting'
 import { useEffect, useState } from 'react'
@@ -10,20 +9,19 @@ import { Filters } from './Filters'
 import { Layer } from './Layer'
 
 type ReportingsProps = {
-  dashboardId: string
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
   reportings: Reporting[] | undefined
+  selectedReportings: Reporting[]
   setExpandedAccordion: () => void
 }
 export function Reportings({
-  dashboardId,
   isExpanded,
   isSelectedAccordionOpen,
   reportings,
+  selectedReportings,
   setExpandedAccordion
 }: ReportingsProps) {
-  const selectedReportings = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.reportings)
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   useEffect(() => {
@@ -37,7 +35,7 @@ export function Reportings({
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Signalements">
         <StyledFilters $isExpanded={isExpanded} />
         {reportings?.map(reporting => (
-          <Layer key={reporting.id} dashboardId={dashboardId} reporting={reporting} />
+          <Layer key={reporting.id} isPinned={selectedReportings.includes(reporting)} reporting={reporting} />
         ))}
       </Accordion>
       <SelectedAccordion
@@ -50,7 +48,7 @@ export function Reportings({
         )} ${pluralize('sélectionné', selectedReportings?.length ?? 0)}`}
       >
         {selectedReportings?.map(reporting => (
-          <Layer key={reporting.id} dashboardId={dashboardId} isSelected reporting={reporting} />
+          <Layer key={reporting.id} isSelected reporting={reporting} />
         ))}
       </SelectedAccordion>
     </div>

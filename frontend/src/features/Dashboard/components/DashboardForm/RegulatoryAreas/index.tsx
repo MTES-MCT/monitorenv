@@ -16,22 +16,20 @@ import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
 type RegulatoriesAreasProps = {
   columnWidth: number
-  dashboardId: string
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
   regulatoryAreas: RegulatoryLayerCompactFromAPI[] | undefined
+  selectedRegulatoryAreaIds: number[]
   setExpandedAccordion: () => void
 }
 export function RegulatoryAreas({
   columnWidth,
-  dashboardId,
   isExpanded,
   isSelectedAccordionOpen,
   regulatoryAreas,
+  selectedRegulatoryAreaIds: selectedRegulatoryAreas,
   setExpandedAccordion
 }: RegulatoriesAreasProps) {
-  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.regulatoryAreas)
-
   const filteredRegulatoryAreas = useAppSelector(state => getFilteredRegulatoryAreas(state.dashboard))
 
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
@@ -39,8 +37,10 @@ export function RegulatoryAreas({
 
   const regulatoryAreasByLayerName = groupBy(filteredRegulatoryAreas, r => r.layer_name)
 
-  const selectedRegulatoryAreaIds = regulatoryAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
-  const selectedRegulatoryAreasByLayerName = groupBy(selectedRegulatoryAreaIds, r => r.layer_name)
+  const selectedRegulatoryAreasByLayerName = groupBy(
+    regulatoryAreas?.filter(({ id }) => selectedRegulatoryAreas.includes(id)),
+    r => r.layer_name
+  )
 
   useEffect(() => {
     if (isSelectedAccordionOpen) {
@@ -64,9 +64,9 @@ export function RegulatoryAreas({
             return (
               <ListLayerGroup
                 key={layerGroupName}
-                dashboardId={dashboardId}
                 groupName={layerGroupName}
                 layerIds={layersId}
+                selectedRegulatoryAreaIds={selectedRegulatoryAreas}
               />
             )
           })}
@@ -74,11 +74,11 @@ export function RegulatoryAreas({
       </Accordion>
       <SelectedAccordion
         isExpanded={isExpandedSelectedAccordion}
-        isReadOnly={selectedLayerIds?.length === 0}
+        isReadOnly={selectedRegulatoryAreas.length === 0}
         setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-        title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
+        title={`${selectedRegulatoryAreas.length} ${pluralize('zone', selectedRegulatoryAreas.length)} ${pluralize(
           'sélectionnée',
-          selectedLayerIds?.length ?? 0
+          selectedRegulatoryAreas.length
         )}`}
       >
         {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
@@ -87,10 +87,10 @@ export function RegulatoryAreas({
           return (
             <ListLayerGroup
               key={layerGroupName}
-              dashboardId={dashboardId}
               groupName={layerGroupName}
               isSelected
               layerIds={layersId}
+              selectedRegulatoryAreaIds={selectedRegulatoryAreas}
             />
           )
         })}

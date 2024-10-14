@@ -14,25 +14,24 @@ import { SelectedAccordion } from '../SelectedAccordion'
 
 type VigilanceAreasProps = {
   columnWidth: number
-  dashboardId: string
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
+  selectedVigilanceAreaIds: number[]
   setExpandedAccordion: () => void
   vigilanceAreas: VigilanceArea.VigilanceArea[] | undefined
 }
 export function VigilanceAreas({
   columnWidth,
-  dashboardId,
   isExpanded,
   isSelectedAccordionOpen,
+  selectedVigilanceAreaIds,
   setExpandedAccordion,
   vigilanceAreas
 }: VigilanceAreasProps) {
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
-  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.vigilanceAreas)
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedLayerIds?.includes(id))
+  const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedVigilanceAreaIds?.includes(id))
 
   const filteredVigilanceAreas = useAppSelector(state => getFilteredVigilanceAreas(state.dashboard))
 
@@ -53,21 +52,26 @@ export function VigilanceAreas({
           $showBaseLayers={isExpanded}
         >
           {filteredVigilanceAreas?.map(vigilanceArea => (
-            <Layer key={vigilanceArea.id} dashboardId={dashboardId} isSelected={false} vigilanceArea={vigilanceArea} />
+            <Layer
+              key={vigilanceArea.id}
+              isPinned={selectedVigilanceAreaIds.includes(vigilanceArea.id)}
+              isSelected={false}
+              vigilanceArea={vigilanceArea}
+            />
           ))}
         </StyledLayerList>
       </Accordion>
       <SelectedAccordion
         isExpanded={isExpandedSelectedAccordion}
-        isReadOnly={selectedLayerIds?.length === 0}
+        isReadOnly={selectedVigilanceAreaIds.length === 0}
         setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-        title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
+        title={`${selectedVigilanceAreaIds.length} ${pluralize('zone', selectedVigilanceAreaIds.length)} ${pluralize(
           'sélectionnée',
-          selectedLayerIds?.length ?? 0
+          selectedVigilanceAreaIds.length
         )}`}
       >
         {selectedVigilanceAreas?.map(vigilanceArea => (
-          <Layer key={vigilanceArea.id} dashboardId={dashboardId} isSelected vigilanceArea={vigilanceArea} />
+          <Layer key={vigilanceArea.id} isSelected vigilanceArea={vigilanceArea} />
         ))}
       </SelectedAccordion>
     </div>

@@ -3,7 +3,6 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
@@ -14,18 +13,15 @@ import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constant
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 
 type AmpLayerProps = {
-  dashboardId: string
+  isPinned?: boolean
   isSelected: boolean
   layerId: number
 }
 
-export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
+export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
-  const selectedAmps = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.amps)
-
-  const isZoneSelected = selectedAmps?.includes(layerId)
   const { layer } = useGetAMPsQuery(undefined, {
     selectFromResult: result => ({
       layer: result?.currentData?.entities[layerId]
@@ -36,7 +32,7 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
     e.stopPropagation()
 
     const payload = { itemIds: [layerId], type: Dashboard.Block.AMP }
-    if (isZoneSelected) {
+    if (isPinned) {
       dispatch(dashboardActions.removeItems(payload))
       dispatch(dashboardActions.removeAmpIdToDisplay(layerId))
     } else {
@@ -84,9 +80,9 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            color={isZoneSelected ? THEME.color.blueGray : THEME.color.slateGray}
+            color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
             data-cy="regulatory-zone-check"
-            Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
+            Icon={isPinned ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
             title="Sélectionner la zone"
           />
