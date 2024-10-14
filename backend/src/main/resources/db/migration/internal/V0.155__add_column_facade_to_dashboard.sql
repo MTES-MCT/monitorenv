@@ -1,3 +1,3 @@
 ALTER TABLE dashboard
-    ADD COLUMN facade VARCHAR;
+    ADD COLUMN sea_front VARCHAR;
 

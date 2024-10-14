@@ -17,8 +17,8 @@ class SaveDashboard(
 
     fun execute(dashboard: DashboardEntity): DashboardEntity {
         try {
-            val facade = facadeAreasRepository.findFacadeFromGeometry(dashboard.geom)
-            return dashboardRepository.save(dashboard.copy(facade = facade))
+            val seaFront = facadeAreasRepository.findFacadeFromGeometry(dashboard.geom)
+            return dashboardRepository.save(dashboard.copy(seaFront = seaFront))
         } catch (e: Exception) {
             val errorMessage = "dashboard ${dashboard.id} couldn't be saved"
             logger.error(errorMessage, e)
