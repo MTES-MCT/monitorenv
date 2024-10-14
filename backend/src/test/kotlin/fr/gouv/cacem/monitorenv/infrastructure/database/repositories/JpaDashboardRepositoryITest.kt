@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.transaction.annotation.Transactional
 
 class JpaDashboardRepositoryITest : AbstractDBTests() {
     @Autowired
@@ -92,5 +93,15 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
         // Then
         assertThat(updatedDashboard.updatedAt).isNotNull()
         assertThat(updatedDashboard).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(dashboardToUpdate)
+    }
+
+    @Test
+    @Transactional
+    fun `findAll should return all dashboards`() {
+        // When
+        val dashboards = jpaDashboardRepository.findAll()
+
+        // Then
+        assertThat(dashboards).hasSize(4)
     }
 }

@@ -8,8 +8,15 @@ import { monitorenvPrivateApi } from './api'
 import type { Dashboard } from '@features/Dashboard/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
+const GET_DASHBOARDS_ERROR_MESSAGE = "Nous n'avons pas pu créer la liste des tableaux de bord"
+
 export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
+    getDashboards: build.query<Dashboard.Dashboard[], void>({
+      query: () => '/v1/dashboard',
+      transformErrorResponse: response => new FrontendApiError(GET_DASHBOARDS_ERROR_MESSAGE, response),
+      transformResponse: (response: Dashboard.Dashboard[]) => response
+    }),
     getExtratedArea: build.query<Dashboard.ExtractedArea, GeoJSON.Geometry>({
       query: geometry => `/v1/dashboards/extract?geometry=${geoJsonToWKT(geometry)}`,
       transformErrorResponse: response => new FrontendApiError(GET_EXTRACTED_AREAS_ERROR_MESSAGE, response)
@@ -25,4 +32,4 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetExtratedAreaQuery } = dashboardsAPI
+export const { useGetDashboardsQuery, useGetExtratedAreaQuery } = dashboardsAPI

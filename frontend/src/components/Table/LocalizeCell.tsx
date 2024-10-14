@@ -1,12 +1,10 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import GeoJSON from 'ol/format/GeoJSON'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { setFitToExtent } from 'domain/shared_slices/Map'
+import { GeoJSON } from 'ol/format'
 import styled from 'styled-components'
 
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-
-export function CellLocalizeMission({ geom }: { geom: any }) {
+export function LocalizeCell({ geom }: { geom: any }) {
   const dispatch = useAppDispatch()
 
   if (!geom) {
