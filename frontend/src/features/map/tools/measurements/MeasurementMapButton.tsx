@@ -1,19 +1,19 @@
+import { useClickOutside } from '@hooks/useClickOutside'
 import { Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
 import { globalActions } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
 import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useClickOutside } from '../../../../hooks/useClickOutside'
 import { useEscapeKey } from '../../../../hooks/useEscapeKey'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
 import { MapToolButton } from '../MapToolButton'
+import { CustomCircleRange } from './CustomCircleRange'
 
 export function MeasurementMapButton() {
   const dispatch = useAppDispatch()
