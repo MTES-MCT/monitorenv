@@ -33,6 +33,7 @@ class DashboardDataInput(
             reportings = reportings,
             regulatoryAreas = regulatoryAreas,
             vigilanceAreas = vigilanceAreas,
+            facade = null
         )
     }
 }

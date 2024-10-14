@@ -12,6 +12,7 @@ data class DashboardEntity(
     val createdAt: ZonedDateTime?,
     val updatedAt: ZonedDateTime?,
     val inseeCode: String?,
+    val facade: String?,
     val amps: List<Int>,
     val controlUnits: List<Int>,
     val regulatoryAreas: List<Int>,

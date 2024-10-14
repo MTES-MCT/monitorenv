@@ -31,6 +31,7 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
         val dashboard =
             aDashboard(
                 inseeCode = "94",
+                facade = "MED",
                 amps = listOf(1),
                 controlUnits = listOf(10000),
                 reportings = listOf(1),

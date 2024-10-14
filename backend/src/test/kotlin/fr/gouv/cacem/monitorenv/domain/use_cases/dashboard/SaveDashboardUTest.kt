@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -14,22 +15,27 @@ import java.util.UUID
 
 class SaveDashboardUTest {
     private val dashboardRepository: IDashboardRepository = mock()
+    private val facadeAreasRepository: IFacadeAreasRepository = mock()
 
-    private val saveDashboard = SaveDashboard(dashboardRepository)
+    private val saveDashboard = SaveDashboard(dashboardRepository, facadeAreasRepository)
 
     @Test
-    fun `execute should save dashboard and return saved dashboard`() {
+    fun `execute should find its facade then save dashboard and return saved dashboard`() {
         // Given
         val dashboard = aDashboard()
         val id = UUID.randomUUID()
-        given(dashboardRepository.save(dashboard)).willReturn(aDashboard(id))
+        val facade = "MED"
+        given(facadeAreasRepository.findFacadeFromGeometry(dashboard.geom)).willReturn(facade)
+        val dashboardWithFacade = dashboard.copy(facade = facade)
+        given(dashboardRepository.save(dashboardWithFacade)).willReturn(dashboardWithFacade.copy(id = id))
 
         // When
         val savedDashboard = saveDashboard.execute(dashboard)
 
         // Then
         assertThat(savedDashboard.id).isEqualTo(id)
-        verify(dashboardRepository).save(dashboard)
+        verify(dashboardRepository).save(dashboardWithFacade)
+        verify(facadeAreasRepository).findFacadeFromGeometry(dashboard.geom)
     }
 
     @Test
