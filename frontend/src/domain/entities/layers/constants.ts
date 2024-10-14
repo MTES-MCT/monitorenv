@@ -409,7 +409,7 @@ export type RegulatoryOrAMPOrViglanceAreaLayerType =
   | MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   | MonitorEnvLayers.DASHBOARD
   | Dashboard.Layer.DASHBOARD_REGULATORY_AREAS
-  | Dashboard.Layer.DASHOARD_AMP
+  | Dashboard.Layer.DASHBOARD_AMP
   | Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
 
 export const RegulatoryOrAMPOrViglanceAreaLayerTypeAsList = [
@@ -423,6 +423,6 @@ export const RegulatoryOrAMPOrViglanceAreaLayerTypeAsList = [
   MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA,
   MonitorEnvLayers.DASHBOARD,
   Dashboard.Layer.DASHBOARD_REGULATORY_AREAS,
-  Dashboard.Layer.DASHOARD_AMP,
+  Dashboard.Layer.DASHBOARD_AMP,
   Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
 ]

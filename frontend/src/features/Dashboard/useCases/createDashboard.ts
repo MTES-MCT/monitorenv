@@ -3,9 +3,10 @@ import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindow
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
+import { generatePath } from 'react-router'
 
-import { closeDashboard } from './closeDashboard'
 import { dashboardActions } from '../slice'
+import { closeDrawDashboard } from './closeDrawDashboard'
 
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -14,15 +15,16 @@ export const GET_EXTRACTED_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu créer le 
 
 export const createDashboard =
   (geometry: GeoJSON.Geometry): HomeAppThunk =>
-  async dispatch => {
+  async (dispatch, getState) => {
     const { data, error } = await dispatch(dashboardsAPI.endpoints.getExtratedArea.initiate(geometry))
     if (data) {
-      dispatch(closeDashboard())
-      dispatch(dashboardActions.setExtractedArea(data))
+      dispatch(closeDrawDashboard())
+      const newId = `new-${Object.keys(getState().dashboard.dashboards).length}`
       const date = customDayjs().format('DD/MM/YYYY')
       const newDashboardName = `Tab ${date}`
       dispatch(dashboardActions.setName(newDashboardName))
-      dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.DASHBOARD))
+      dispatch(dashboardActions.createDashboard({ extractedArea: data, geom: geometry, id: newId }))
+      dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
     }
     if (error) {
       dispatch(

@@ -15,7 +15,7 @@ export function Item({ controlUnit }: { controlUnit: ControlUnit.ControlUnit }) 
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const selectedControlUnitIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.CONTROL_UNITS] : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.controlUnits : []
   )
   const isSelected = selectedControlUnitIds?.includes(controlUnit.id)
 

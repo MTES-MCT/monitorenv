@@ -16,7 +16,7 @@ import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
 type RegulatoriesAreasProps = {
   columnWidth: number
-  dashboardId: number
+  dashboardId: string
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
   regulatoryAreas: RegulatoryLayerCompactFromAPI[] | undefined
@@ -30,9 +30,7 @@ export function RegulatoryAreas({
   regulatoryAreas,
   setExpandedAccordion
 }: RegulatoriesAreasProps) {
-  const selectedLayerIds = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
-  )
+  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.regulatoryAreas)
 
   const filteredRegulatoryAreas = useAppSelector(state => getFilteredRegulatoryAreas(state.dashboard))
 

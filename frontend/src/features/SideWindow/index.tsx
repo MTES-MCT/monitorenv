@@ -1,21 +1,18 @@
-import { DashboardForm } from '@features/Dashboard/components/DashboardForm'
+import { DashboardForms } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
 import { isDashboardEnabled } from '@features/Dashboard/utils'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { ReportingsList } from '@features/Reportings/components/ReportingsList'
-import { Icon, SideMenu, type NewWindowContextValue, NewWindowContext } from '@mtes-mct/monitor-ui'
+import { Icon, NewWindowContext, SideMenu, type NewWindowContextValue } from '@mtes-mct/monitor-ui'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import { omit } from 'lodash'
-import { useEffect, useMemo, useState, useRef, type MutableRefObject } from 'react'
+import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import { StyleSheetManager } from 'styled-components'
 
-import { Route } from './Route'
-import { sideWindowActions } from './slice'
-import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext } from '../../domain/shared_slices/Global'
@@ -36,6 +33,9 @@ import { missionFormsActions } from '../missions/MissionForm/slice'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
+import { Route } from './Route'
+import { sideWindowActions } from './slice'
+import { StyledRouteContainer, Wrapper } from './style'
 
 export function SideWindow() {
   const dispatch = useAppDispatch()
@@ -140,7 +140,7 @@ export function SideWindow() {
                     path={[sideWindowPaths.DASHBOARDS, sideWindowPaths.DASHBOARD]}
                   />
                   <Route element={<DashboardsList />} path={sideWindowPaths.DASHBOARDS} />
-                  <Route element={<DashboardForm />} path={sideWindowPaths.DASHBOARD} />
+                  <Route element={<DashboardForms />} path={sideWindowPaths.DASHBOARD} />
                 </StyledRouteContainer>
                 {isReportingsButtonIsActive && (
                   <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />

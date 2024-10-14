@@ -104,7 +104,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
           const layer = ampLayers.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHOARD_AMP, layer })
+            const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
             drawBorder(layerId, feature, Dashboard.Block.AMP)
             feature.setStyle(getAMPLayerStyle(feature))
             feats.push(feature)

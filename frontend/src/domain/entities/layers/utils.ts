@@ -13,7 +13,7 @@ const isAMPLayer = (layerType: RegulatoryOrAMPOrViglanceAreaLayerType) =>
   layerType === MonitorEnvLayers.AMP ||
   layerType === MonitorEnvLayers.AMP_PREVIEW ||
   layerType === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA ||
-  layerType === Dashboard.Layer.DASHOARD_AMP
+  layerType === Dashboard.Layer.DASHBOARD_AMP
 
 export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
   if (
@@ -33,7 +33,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
-    case Dashboard.Layer.DASHOARD_AMP:
+    case Dashboard.Layer.DASHBOARD_AMP:
       return (layer as AMPProperties).type
 
     case MonitorEnvLayers.VIGILANCE_AREA:
@@ -51,7 +51,7 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
-    case Dashboard.Layer.DASHOARD_AMP:
+    case Dashboard.Layer.DASHBOARD_AMP:
       return (layer as AMPProperties).name
 
     case MonitorEnvLayers.VIGILANCE_AREA:
@@ -69,7 +69,7 @@ export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAM
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
-    case Dashboard.Layer.DASHOARD_AMP:
+    case Dashboard.Layer.DASHBOARD_AMP:
       return (layer as AMPProperties).type
 
     case MonitorEnvLayers.VIGILANCE_AREA:

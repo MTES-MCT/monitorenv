@@ -49,7 +49,7 @@ function isAmpLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
     type === MonitorEnvLayers.AMP ||
     type === MonitorEnvLayers.AMP_PREVIEW ||
     type === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA ||
-    type === Dashboard.Layer.DASHOARD_AMP
+    type === Dashboard.Layer.DASHBOARD_AMP
   )
 }
 

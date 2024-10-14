@@ -62,7 +62,7 @@ const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
 `
 const AccordionHeader = styled.header`
   align-items: center;
-  color: ${p => p.theme.color.blueYonder};
+  color: ${p => p.theme.color.charcoal};
   cursor: pointer;
   display: flex;
   font-weight: 500;

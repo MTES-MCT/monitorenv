@@ -27,7 +27,7 @@ export function LayerLegend({
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
-    case Dashboard.Layer.DASHOARD_AMP:
+    case Dashboard.Layer.DASHBOARD_AMP:
       return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, legendKey)} />
     case MonitorEnvLayers.REGULATORY_ENV:
     case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:

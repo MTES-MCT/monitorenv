@@ -13,6 +13,28 @@ import { filter } from './useCases/filterReportings'
 import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
+const initialDashboard: DashboardType = {
+  ampIdsToDisplay: [],
+  controlUnitFilters: {},
+  dashboard: {
+    amps: [],
+    controlUnits: [],
+    geom: undefined,
+    id: '',
+    name: '',
+    regulatoryAreas: [],
+    reportings: [],
+    vigilanceAreas: []
+  },
+  extractedArea: undefined,
+  filters: {},
+  isBannerDisplayed: false,
+  openPanel: undefined,
+  regulatoryIdsToDisplay: [],
+  reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
+  reportingToDisplay: undefined
+}
+
 type OpenPanel = {
   id: number
   subPanel?: OpenPanel
@@ -42,21 +64,17 @@ type DashboardFilters = {
 
 type DashboardType = {
   ampIdsToDisplay: number[]
-  comments: string | undefined
   controlUnitFilters: ControlUnitFilters
-  dashboard: any
+  dashboard: Dashboard.Dashboard
+  extractedArea?: Dashboard.ExtractedArea
   filters: DashboardFilters
   id?: number
   name: string
+  isBannerDisplayed: boolean
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
-  reportingToDisplay: Reporting | undefined
-  [Dashboard.Block.REGULATORY_AREAS]: number[]
-  [Dashboard.Block.VIGILANCE_AREAS]: number[]
-  [Dashboard.Block.AMP]: number[]
-  [Dashboard.Block.REPORTINGS]: Reporting[]
   reportingFilters: ReportingFilters
-  [Dashboard.Block.CONTROL_UNITS]: number[]
+  reportingToDisplay: Reporting | undefined
 }
 
 type SelectedDashboardType = {
@@ -64,9 +82,11 @@ type SelectedDashboardType = {
 }
 
 type DashboardState = {
-  activeDashboardId: number | undefined
+  activeDashboardId: string | undefined
   dashboards: SelectedDashboardType
-  extractedArea?: Dashboard.ExtractedArea
+  expandedAccordionFirstColumn: Dashboard.Block | undefined
+  expandedAccordionSecondColumn: Dashboard.Block | undefined
+  expandedAccordionThirdColumn: Dashboard.Block | undefined
   geometry: GeoJSON.Geometry | undefined
   initialGeometry: GeoJSON.Geometry | undefined
   interactionType: InteractionType
@@ -75,29 +95,11 @@ type DashboardState = {
 }
 
 const INITIAL_STATE: DashboardState = {
-  activeDashboardId: 1,
-  // TODO: it's just for testing to replace with undefined
-  dashboards: {
-    1: {
-      ampIdsToDisplay: [],
-      comments: undefined,
-      controlUnitFilters: {},
-      dashboard: {},
-      filters: {},
-      id: 1,
-      name: 'Tab 08/10/2024',
-      openPanel: undefined,
-      [Dashboard.Block.REGULATORY_AREAS]: [],
-      [Dashboard.Block.VIGILANCE_AREAS]: [],
-      [Dashboard.Block.AMP]: [],
-      [Dashboard.Block.REPORTINGS]: [],
-      regulatoryIdsToDisplay: [],
-      reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
-      [Dashboard.Block.CONTROL_UNITS]: [],
-      reportingToDisplay: undefined
-    }
-  },
-  extractedArea: undefined,
+  activeDashboardId: undefined,
+  dashboards: {},
+  expandedAccordionFirstColumn: undefined,
+  expandedAccordionSecondColumn: undefined,
+  expandedAccordionThirdColumn: undefined,
   geometry: undefined,
   initialGeometry: undefined,
   interactionType: InteractionType.CIRCLE,
@@ -126,8 +128,30 @@ export const dashboardSlice = createSlice({
       }
 
       if (state.dashboards[id]) {
-        const selectedItems = state.dashboards[id][type]
-        state.dashboards[id][type] = [...selectedItems, ...itemIds]
+        switch (type) {
+          case Dashboard.Block.AMP:
+            state.dashboards[id].dashboard.amps = [...state.dashboards[id].dashboard.amps, ...itemIds]
+            break
+          case Dashboard.Block.CONTROL_UNITS:
+            state.dashboards[id].dashboard.controlUnits = [...state.dashboards[id].dashboard.controlUnits, ...itemIds]
+            break
+          case Dashboard.Block.REGULATORY_AREAS:
+            state.dashboards[id].dashboard.regulatoryAreas = [
+              ...state.dashboards[id].dashboard.regulatoryAreas,
+              ...itemIds
+            ]
+            break
+          case Dashboard.Block.VIGILANCE_AREAS:
+            state.dashboards[id].dashboard.vigilanceAreas = [
+              ...state.dashboards[id].dashboard.vigilanceAreas,
+              ...itemIds
+            ]
+            break
+          case Dashboard.Block.REPORTINGS:
+          case Dashboard.Block.COMMENTS:
+          case Dashboard.Block.TERRITORIAL_PRESSURE:
+          default:
+        }
       }
     },
     addRegulatoryIdToDisplay(state, action: PayloadAction<number>) {
@@ -148,8 +172,30 @@ export const dashboardSlice = createSlice({
       }
 
       if (state.dashboards[id]) {
-        const selectedReportings = state.dashboards[id][Dashboard.Block.REPORTINGS]
-        state.dashboards[id][Dashboard.Block.REPORTINGS] = [...selectedReportings, reporting]
+        const selectedReportings = state.dashboards[id].dashboard.reportings
+        state.dashboards[id].dashboard.reportings = [...selectedReportings, reporting]
+      }
+    },
+
+    createDashboard(
+      state,
+      action: PayloadAction<{ extractedArea: Dashboard.ExtractedArea; geom: GeoJSON.Geometry; id: string }>
+    ) {
+      state.activeDashboardId = action.payload.id
+      state.dashboards[action.payload.id] = {
+        ...initialDashboard,
+        dashboard: {
+          amps: [],
+          controlUnits: [],
+          geom: action.payload.geom,
+          id: action.payload.id,
+          inseeCode: action.payload.extractedArea.inseeCode,
+          name: '',
+          regulatoryAreas: [],
+          reportings: [],
+          vigilanceAreas: []
+        },
+        extractedArea: action.payload.extractedArea
       }
     },
     removeAllPreviewedItems(state) {
@@ -191,8 +237,32 @@ export const dashboardSlice = createSlice({
       }
 
       if (state.dashboards[id]) {
-        const selectedItems = state.dashboards[id][type]
-        state.dashboards[id][type] = selectedItems.filter(item => !itemIds.includes(item))
+        switch (type) {
+          case Dashboard.Block.AMP:
+            state.dashboards[id].dashboard.amps = state.dashboards[id].dashboard.amps.filter(
+              item => !itemIds.includes(item)
+            )
+            break
+          case Dashboard.Block.CONTROL_UNITS:
+            state.dashboards[id].dashboard.controlUnits = state.dashboards[id].dashboard.controlUnits.filter(
+              item => !itemIds.includes(item)
+            )
+            break
+          case Dashboard.Block.REGULATORY_AREAS:
+            state.dashboards[id].dashboard.regulatoryAreas = state.dashboards[id].dashboard.regulatoryAreas.filter(
+              item => !itemIds.includes(item)
+            )
+            break
+          case Dashboard.Block.VIGILANCE_AREAS:
+            state.dashboards[id].dashboard.vigilanceAreas = state.dashboards[id].dashboard.vigilanceAreas.filter(
+              item => !itemIds.includes(item)
+            )
+            break
+          case Dashboard.Block.REPORTINGS:
+          case Dashboard.Block.COMMENTS:
+          case Dashboard.Block.TERRITORIAL_PRESSURE:
+          default:
+        }
       }
     },
     removeRegulatoryIdToDisplay(state, action: PayloadAction<number>) {
@@ -217,10 +287,16 @@ export const dashboardSlice = createSlice({
       }
 
       if (state.dashboards[id]) {
-        const selectedReportings = state.dashboards[id][Dashboard.Block.REPORTINGS]
-        state.dashboards[id][Dashboard.Block.REPORTINGS] = selectedReportings.filter(
+        const selectedReportings = state.dashboards[id].dashboard.reportings
+        state.dashboards[id].dashboard.reportings = selectedReportings.filter(
           selectedReporting => selectedReporting.id !== reporting.id
         )
+      }
+    },
+    removeTab(state, action: PayloadAction<string>) {
+      const dashboard = state.dashboards[action.payload]
+      if (dashboard) {
+        delete state.dashboards[action.payload]
       }
     },
     resetDashboardFilters(state) {
@@ -232,6 +308,17 @@ export const dashboardSlice = createSlice({
 
       state.dashboards[id].filters = {}
     },
+    setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
+      state.activeDashboardId = action.payload
+    },
+    setBanner(state, action: PayloadAction<boolean>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+      state.dashboards[id].isBannerDisplayed = action.payload
+    },
     setComments(state, action: PayloadAction<string | undefined>) {
       const id = state.activeDashboardId
 
@@ -239,7 +326,7 @@ export const dashboardSlice = createSlice({
         return
       }
 
-      state.dashboards[id].comments = action.payload
+      state.dashboards[id].dashboard.comments = action.payload
     },
     setControlUnitsFilters(
       state,
@@ -278,9 +365,6 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         state.dashboards[id].openPanel = action.payload
       }
-    },
-    setExtractedArea(state, action: PayloadAction<Dashboard.ExtractedArea>) {
-      state.extractedArea = action.payload
     },
     setGeometry(state, action: PayloadAction<GeoJSON.Geometry | undefined>) {
       state.geometry = action.payload
@@ -326,6 +410,30 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         state.dashboards[id].reportingToDisplay = action.payload
       }
+    },
+    updateDashboard(state, action: PayloadAction<{ dashboard: Dashboard.DashboardFromApi }>) {
+      const { id } = action.payload.dashboard
+      const { activeDashboardId } = state
+
+      if (activeDashboardId?.includes('new-') && activeDashboardId !== id) {
+        const dashboard = state.dashboards[activeDashboardId]
+        if (dashboard) {
+          delete state.dashboards[activeDashboardId]
+
+          const reportings = dashboard.extractedArea?.reportings
+          const dashboardToUpdate: Dashboard.Dashboard = {
+            ...action.payload.dashboard,
+            reportings:
+              reportings?.filter(reporting => action.payload.dashboard.reportings.includes(+reporting.id)) ?? []
+          }
+
+          state.dashboards = {
+            ...state.dashboards,
+            [id]: { ...dashboard, dashboard: dashboardToUpdate }
+          }
+          state.activeDashboardId = id
+        }
+      }
     }
   }
 })
@@ -347,18 +455,15 @@ export const getOpenedPanel = createSelector(
 )
 
 export const getFilteredReportings = createSelector(
-  [
-    (state: DashboardState) => state.dashboards,
-    (state: DashboardState) => state.activeDashboardId,
-    (state: DashboardState) => state.extractedArea?.reportings
-  ],
-  (dashboards, activeDashboardId, reportings) => {
+  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
+  (dashboards, activeDashboardId) => {
     if (!activeDashboardId) {
       return undefined
     }
 
     if (dashboards[activeDashboardId]) {
       const filters = dashboards[activeDashboardId].reportingFilters
+      const reportings = dashboards[activeDashboardId].extractedArea?.reportings
 
       return reportings?.filter(reporting => filter(reporting, filters))
     }
@@ -389,22 +494,16 @@ export const getReportingToDisplay = createSelector(
   }
 )
 
-export const dashboardActions = dashboardSlice.actions
-export const dashboardReducer = dashboardSlice.reducer
-
 export const getFilteredRegulatoryAreas = createSelector(
-  [
-    (state: DashboardState) => state.dashboards,
-    (state: DashboardState) => state.activeDashboardId,
-    (state: DashboardState) => state.extractedArea?.regulatoryAreas
-  ],
-  (dashboards, activeDashboardId, regulatoryAreas) => {
+  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
+  (dashboards, activeDashboardId) => {
     if (!activeDashboardId) {
       return undefined
     }
 
     if (dashboards[activeDashboardId]) {
       const regulatoryThemesFilter = dashboards[activeDashboardId].filters.regulatoryThemes
+      const regulatoryAreas = dashboards[activeDashboardId].extractedArea?.regulatoryAreas
 
       if (!regulatoryThemesFilter || regulatoryThemesFilter.length === 0) {
         return regulatoryAreas
@@ -418,18 +517,15 @@ export const getFilteredRegulatoryAreas = createSelector(
 )
 
 export const getFilteredAmps = createSelector(
-  [
-    (state: DashboardState) => state.dashboards,
-    (state: DashboardState) => state.activeDashboardId,
-    (state: DashboardState) => state.extractedArea?.amps
-  ],
-  (dashboards, activeDashboardId, amps) => {
+  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
+  (dashboards, activeDashboardId) => {
     if (!activeDashboardId) {
       return undefined
     }
 
     if (dashboards[activeDashboardId]) {
       const ampsFilter = dashboards[activeDashboardId].filters.amps
+      const amps = dashboards[activeDashboardId].extractedArea?.amps
 
       if (!ampsFilter || ampsFilter.length === 0) {
         return amps
@@ -443,12 +539,8 @@ export const getFilteredAmps = createSelector(
 )
 
 export const getFilteredVigilanceAreas = createSelector(
-  [
-    (state: DashboardState) => state.dashboards,
-    (state: DashboardState) => state.activeDashboardId,
-    (state: DashboardState) => state.extractedArea?.vigilanceAreas
-  ],
-  (dashboards, activeDashboardId, vigilanceAreas) => {
+  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
+  (dashboards, activeDashboardId) => {
     if (!activeDashboardId) {
       return undefined
     }
@@ -456,6 +548,7 @@ export const getFilteredVigilanceAreas = createSelector(
     if (dashboards[activeDashboardId]) {
       const periodFilter = dashboards[activeDashboardId].filters.vigilanceAreaPeriod
       const specificPeriodFilter = dashboards[activeDashboardId].filters.specificPeriod
+      const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas
 
       if (
         !periodFilter ||
@@ -470,3 +563,6 @@ export const getFilteredVigilanceAreas = createSelector(
     return undefined
   }
 )
+
+export const dashboardActions = dashboardSlice.actions
+export const dashboardReducer = dashboardSlice.reducer
