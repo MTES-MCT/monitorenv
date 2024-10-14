@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
-export function Controls() {
+export function Footer() {
   const dispatch = useAppDispatch()
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const dashboardForm = useAppSelector(state =>
