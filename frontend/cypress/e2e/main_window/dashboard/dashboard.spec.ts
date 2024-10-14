@@ -9,7 +9,7 @@ context('Dashboard', () => {
 
   describe('dashboard', () => {
     it('should extract insee code, amps, regulatory and vigilance areas from the given geometry', () => {
-      cy.intercept('GET', `/bff/v1/dashboard/extract?geometry=*`).as('extractAreas')
+      cy.intercept('GET', `/bff/v1/dashboards/extract?geometry=*`).as('extractAreas')
 
       // When
       cy.clickButton('Voir les briefs pour les unités')

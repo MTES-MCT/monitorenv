@@ -7,39 +7,40 @@ import { groupBy } from 'lodash'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { ListLayerGroup } from './ListLayerGroup'
-import { AmpPanel } from './Panel'
 import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { ListLayerGroup } from './ListLayerGroup'
+import { AmpPanel } from './Panel'
 
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 
 type AmpsProps = {
   amps: AMPFromAPI[] | undefined
   columnWidth: number
-  dashboardId: string
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
+  selectedAmpIds: number[]
   setExpandedAccordion: () => void
 }
 export function Amps({
   amps,
   columnWidth,
-  dashboardId,
   isExpanded,
   isSelectedAccordionOpen,
+  selectedAmpIds,
   setExpandedAccordion
 }: AmpsProps) {
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
 
-  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.amps)
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard))
   const ampsByLayerName = groupBy(filteredAmps, r => r.name)
 
-  const selectedAmpIds = amps?.filter(({ id }) => selectedLayerIds?.includes(id))
-  const selectedAmpByLayerName = groupBy(selectedAmpIds, r => r.name)
+  const selectedAmpByLayerName = groupBy(
+    amps?.filter(({ id }) => selectedAmpIds.includes(id)),
+    r => r.name
+  )
 
   useEffect(() => {
     if (isSelectedAccordionOpen) {
@@ -62,9 +63,9 @@ export function Amps({
             return (
               <ListLayerGroup
                 key={layerGroupName}
-                dashboardId={dashboardId}
                 groupName={layerGroupName}
                 layerIds={layersId}
+                selectedAmpIds={selectedAmpIds}
               />
             )
           })}
@@ -72,11 +73,11 @@ export function Amps({
       </Accordion>
       <SelectedAccordion
         isExpanded={isExpandedSelectedAccordion}
-        isReadOnly={selectedLayerIds?.length === 0}
+        isReadOnly={selectedAmpIds.length === 0}
         setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-        title={`${selectedLayerIds?.length ?? 0} ${pluralize('zone', selectedLayerIds?.length ?? 0)} ${pluralize(
+        title={`${selectedAmpIds.length} ${pluralize('zone', selectedAmpIds.length)} ${pluralize(
           'sélectionnée',
-          selectedLayerIds?.length ?? 0
+          selectedAmpIds.length
         )}`}
       >
         {Object.entries(selectedAmpByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
@@ -85,10 +86,10 @@ export function Amps({
           return (
             <ListLayerGroup
               key={layerGroupName}
-              dashboardId={dashboardId}
               groupName={layerGroupName}
               isSelected
               layerIds={layersId}
+              selectedAmpIds={selectedAmpIds}
             />
           )
         })}

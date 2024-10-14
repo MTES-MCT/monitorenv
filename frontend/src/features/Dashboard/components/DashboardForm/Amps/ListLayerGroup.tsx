@@ -13,19 +13,18 @@ import styled from 'styled-components'
 import { Layer } from './Layer'
 
 type ResultListLayerGroupProps = {
-  dashboardId: string
   groupName: string
   isSelected?: boolean
   layerIds: number[]
+  selectedAmpIds: number[]
 }
-export function ListLayerGroup({ dashboardId, groupName, isSelected = false, layerIds }: ResultListLayerGroupProps) {
+export function ListLayerGroup({ groupName, isSelected = false, layerIds, selectedAmpIds }: ResultListLayerGroupProps) {
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
   const totalNumberOfZones = useAppSelector(state => getNumberOfAMPByGroupName(state, groupName))
 
-  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.amps)
-  const zonesSelected = intersection(selectedLayerIds, layerIds)
+  const zonesSelected = intersection(selectedAmpIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
 
   const handleCheckAllZones = e => {
@@ -80,7 +79,7 @@ export function ListLayerGroup({ dashboardId, groupName, isSelected = false, lay
       </StyledGroupWrapper>
       <LayerSelector.SubGroup isOpen={zonesAreOpen} length={layerIds?.length}>
         {layerIds?.map(layerId => (
-          <Layer key={layerId} dashboardId={dashboardId} isSelected={isSelected} layerId={layerId} />
+          <Layer key={layerId} isPinned={selectedAmpIds.includes(layerId)} isSelected={isSelected} layerId={layerId} />
         ))}
       </LayerSelector.SubGroup>
     </>

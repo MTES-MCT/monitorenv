@@ -1,8 +1,5 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
-import { sideWindowActions } from '@features/SideWindow/slice'
-import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { setToast } from 'domain/shared_slices/Global'
-import { generatePath } from 'react-router'
 
 import { dashboardActions } from '../slice'
 import { bannerClosingDelay } from '../utils'
@@ -18,7 +15,6 @@ export const saveDashboard =
     const { data, error } = await dispatch(dashboardsAPI.endpoints.save.initiate(dashboard))
     if (data) {
       dispatch(dashboardActions.updateDashboard({ dashboard: data }))
-      dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: data.id })))
       dispatch(dashboardActions.setBanner(true))
       setTimeout(() => {
         dispatch(dashboardActions.setBanner(false))

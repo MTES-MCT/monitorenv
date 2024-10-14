@@ -2,7 +2,6 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { GeoJSON } from 'ol/format'
 import { createRef } from 'react'
@@ -16,26 +15,20 @@ import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 type RegulatoryLayerProps = {
-  dashboardId: string
+  isPinned?: boolean
   isSelected: boolean
   vigilanceArea: VigilanceArea.VigilanceArea
 }
 
-export function Layer({ dashboardId, isSelected, vigilanceArea }: RegulatoryLayerProps) {
+export function Layer({ isPinned = false, isSelected, vigilanceArea }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
-
-  const selectedVigilaneAreas = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.dashboard.vigilanceAreas
-  )
-
-  const isZoneSelected = selectedVigilaneAreas?.includes(vigilanceArea.id)
 
   const handleSelectZone = e => {
     e.stopPropagation()
 
     const payload = { itemIds: [vigilanceArea.id], type: Dashboard.Block.VIGILANCE_AREAS }
-    if (isZoneSelected) {
+    if (isPinned) {
       dispatch(dashboardActions.removeItems(payload))
     } else {
       dispatch(dashboardActions.addItems(payload))
@@ -95,9 +88,9 @@ export function Layer({ dashboardId, isSelected, vigilanceArea }: RegulatoryLaye
         <IconButton
           accent={Accent.TERTIARY}
           aria-label="Sélectionner la zone"
-          color={isZoneSelected ? THEME.color.blueGray : THEME.color.slateGray}
+          color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
           data-cy="regulatory-zone-check"
-          Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
+          Icon={isPinned ? Icon.PinFilled : Icon.Pin}
           onClick={handleSelectZone}
         />
       )}

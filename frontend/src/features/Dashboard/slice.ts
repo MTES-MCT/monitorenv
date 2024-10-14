@@ -1,5 +1,6 @@
 import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { customDayjs, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
@@ -10,7 +11,6 @@ import { set } from 'lodash'
 import { Dashboard } from './types'
 import { filter } from './useCases/filterReportings'
 
-import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 const initialDashboard: DashboardType = {
@@ -62,14 +62,12 @@ type DashboardFilters = {
   vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
 }
 
-type DashboardType = {
+export type DashboardType = {
   ampIdsToDisplay: number[]
   controlUnitFilters: ControlUnitFilters
   dashboard: Dashboard.Dashboard
   extractedArea?: Dashboard.ExtractedArea
   filters: DashboardFilters
-  id?: number
-  name: string
   isBannerDisplayed: boolean
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
@@ -182,6 +180,8 @@ export const dashboardSlice = createSlice({
       action: PayloadAction<{ extractedArea: Dashboard.ExtractedArea; geom: GeoJSON.Geometry; id: string }>
     ) {
       state.activeDashboardId = action.payload.id
+      const date = customDayjs().format('DD/MM/YYYY')
+      const newDashboardName = `Tab ${date}`
       state.dashboards[action.payload.id] = {
         ...initialDashboard,
         dashboard: {
@@ -190,7 +190,7 @@ export const dashboardSlice = createSlice({
           geom: action.payload.geom,
           id: action.payload.id,
           inseeCode: action.payload.extractedArea.inseeCode,
-          name: '',
+          name: newDashboardName,
           regulatoryAreas: [],
           reportings: [],
           vigilanceAreas: []
@@ -386,7 +386,7 @@ export const dashboardSlice = createSlice({
         return
       }
 
-      state.dashboards[id].name = action.payload
+      state.dashboards[id].dashboard.name = action.payload
     },
     setReportingFilters(state, action: PayloadAction<Partial<ReportingFilters>>) {
       const id = state.activeDashboardId
@@ -412,14 +412,11 @@ export const dashboardSlice = createSlice({
       }
     },
     updateDashboard(state, action: PayloadAction<{ dashboard: Dashboard.DashboardFromApi }>) {
-      const { id } = action.payload.dashboard
       const { activeDashboardId } = state
 
-      if (activeDashboardId?.includes('new-') && activeDashboardId !== id) {
+      if (activeDashboardId) {
         const dashboard = state.dashboards[activeDashboardId]
         if (dashboard) {
-          delete state.dashboards[activeDashboardId]
-
           const reportings = dashboard.extractedArea?.reportings
           const dashboardToUpdate: Dashboard.Dashboard = {
             ...action.payload.dashboard,
@@ -429,9 +426,8 @@ export const dashboardSlice = createSlice({
 
           state.dashboards = {
             ...state.dashboards,
-            [id]: { ...dashboard, dashboard: dashboardToUpdate }
+            [activeDashboardId]: { ...dashboard, dashboard: dashboardToUpdate }
           }
-          state.activeDashboardId = id
         }
       }
     }

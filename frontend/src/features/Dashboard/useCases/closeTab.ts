@@ -13,6 +13,7 @@ export const closeTab =
     const { activeDashboardId } = getState().dashboard
     const routeParams = getDashboardPageRoute(path)
     const id = routeParams?.params.id
+
     if (id) {
       dispatch(dashboardActions.removeTab(id))
       if (id === activeDashboardId) {

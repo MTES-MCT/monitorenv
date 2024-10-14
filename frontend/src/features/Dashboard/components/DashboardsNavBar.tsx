@@ -14,6 +14,8 @@ import styled from 'styled-components'
 import { dashboardActions } from '../slice'
 import { closeTab } from '../useCases/closeTab'
 
+import type { Dashboard } from '../types'
+
 export function DashboardsNavBar() {
   const dispatch = useAppDispatch()
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
@@ -21,7 +23,7 @@ export function DashboardsNavBar() {
   const ref = useRef<HTMLDivElement>(null)
   const { newWindowContainerRef } = useNewWindow()
 
-  const [editingDashoardId, setEditingDashboardId] = useState<number | undefined>()
+  const [editingDashboardId, setEditingDashboardId] = useState<string | undefined>()
   const [updatedName, setUpdatedName] = useState<string | undefined>()
 
   const validateName = () => {
@@ -42,21 +44,21 @@ export function DashboardsNavBar() {
   useEscapeKey({ onEnter: () => validateName(), ref })
 
   const editName = useCallback(
-    (e, id: number | undefined) => {
+    (e, id: string | undefined) => {
       if (!id) {
         return
       }
       e.stopPropagation()
       e.preventDefault()
       setEditingDashboardId(id)
-      setUpdatedName(dashboards[id]?.name)
+      setUpdatedName(dashboards[id]?.dashboard.name)
     },
     [dashboards]
   )
 
   const getLabel = useCallback(
-    dashboard => {
-      if (editingDashoardId === dashboard.id) {
+    (dashboard: Dashboard.Dashboard) => {
+      if (editingDashboardId === dashboard.id) {
         return (
           <StyledTextInput
             inputRef={ref}
@@ -77,7 +79,7 @@ export function DashboardsNavBar() {
         </Container>
       )
     },
-    [editName, editingDashoardId, updatedName]
+    [editName, editingDashboardId, updatedName]
   )
 
   const tabs = useMemo(() => {
@@ -88,18 +90,18 @@ export function DashboardsNavBar() {
       nextPath: sideWindowPaths.DASHBOARDS
     }
 
-    const openDashboards = Object.values(dashboards).map(dashboard => ({
+    const openDashboards = Object.entries(dashboards).map(([key, { dashboard }]) => ({
       icon: <Icon.CircleFilled color={THEME.color.blueGray} size={14} />,
-      isEditing: dashboard.id === editingDashoardId,
+      isEditing: key === editingDashboardId,
       label: getLabel(dashboard),
-      nextPath: generatePath(sideWindowPaths.DASHBOARD, { id: dashboard.id })
+      nextPath: generatePath(sideWindowPaths.DASHBOARD, { id: key })
     }))
 
     return [dashboardsList, ...openDashboards]
-  }, [dashboards, getLabel, editingDashoardId])
+  }, [dashboards, getLabel, editingDashboardId])
 
   const selectDashboard = (path: string | number | undefined) => {
-    if (editingDashoardId) {
+    if (editingDashboardId) {
       return
     }
     if (path && typeof path === 'string') {
@@ -113,7 +115,7 @@ export function DashboardsNavBar() {
   }
 
   const closeDashboard = path => {
-    closeTab(path)
+    dispatch(closeTab(path))
   }
 
   return (

@@ -1,7 +1,7 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { sideWindowActions } from '@features/SideWindow/slice'
-import { customDayjs, Level } from '@mtes-mct/monitor-ui'
+import { Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
@@ -20,9 +20,6 @@ export const createDashboard =
     if (data) {
       dispatch(closeDrawDashboard())
       const newId = `new-${Object.keys(getState().dashboard.dashboards).length}`
-      const date = customDayjs().format('DD/MM/YYYY')
-      const newDashboardName = `Tab ${date}`
-      dispatch(dashboardActions.setName(newDashboardName))
       dispatch(dashboardActions.createDashboard({ extractedArea: data, geom: geometry, id: newId }))
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
     }
