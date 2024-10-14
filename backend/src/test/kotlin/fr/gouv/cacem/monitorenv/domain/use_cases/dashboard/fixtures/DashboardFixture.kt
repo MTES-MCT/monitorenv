@@ -11,7 +11,7 @@ class DashboardFixture {
             id: UUID? = null,
             name: String = "",
             comments: String = "",
-            seaFront: String = "",
+            seaFront: String? = null,
             geom: Geometry = WKTReader().read("MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"),
             amps: List<Int> = listOf(),
             regulatoryAreas: List<Int> = listOf(),
@@ -33,7 +33,7 @@ class DashboardFixture {
                 reportings = reportings,
                 vigilanceAreas = vigilanceAreas,
                 controlUnits = controlUnits,
-                seaFront = seaFront
+                seaFront = seaFront,
             )
         }
     }

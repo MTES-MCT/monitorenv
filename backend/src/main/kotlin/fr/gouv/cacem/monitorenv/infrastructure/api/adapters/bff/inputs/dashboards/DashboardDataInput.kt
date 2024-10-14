@@ -33,7 +33,7 @@ class DashboardDataInput(
             reportings = reportings,
             regulatoryAreas = regulatoryAreas,
             vigilanceAreas = vigilanceAreas,
-            seaFront = null
+            seaFront = null,
         )
     }
 }

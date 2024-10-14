@@ -86,7 +86,7 @@ data class DashboardModel(
             regulatoryAreas = regulatoryAreas,
             reportings = reportings,
             vigilanceAreas = vigilanceAreas,
-            seaFront = seaFront
+            seaFront = seaFront,
         )
     }
 

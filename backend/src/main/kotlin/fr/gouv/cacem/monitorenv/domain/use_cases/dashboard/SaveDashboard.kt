@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 @UseCase
 class SaveDashboard(
     private val dashboardRepository: IDashboardRepository,
-    private val facadeAreasRepository: IFacadeAreasRepository
+    private val facadeAreasRepository: IFacadeAreasRepository,
 ) {
     private val logger = LoggerFactory.getLogger(SaveDashboard::class.java)
 
