@@ -1,7 +1,6 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { Dashboard } from '@features/Dashboard/types'
-import { bannerClosingDelay } from '@features/Dashboard/utils'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -12,9 +11,9 @@ import styled from 'styled-components'
 
 import { Amps } from './Amps'
 import { Comments } from './Comments'
-import { Controls } from './Controls'
 import { ControlUnits } from './ControlUnits'
 import { DashboardFilters } from './Filters'
+import { Footer } from './Footer'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
 import { TerritorialPressure } from './TerritorialPressure'
@@ -94,15 +93,7 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
       {isActive && (
         <>
           {dashboard.isBannerDisplayed && (
-            <Banner
-              closingDelay={bannerClosingDelay}
-              isClosable
-              isCollapsible={false}
-              isHiddenByDefault={false}
-              level={Level.SUCCESS}
-              top="0"
-              withAutomaticClosing
-            >
+            <Banner isClosable level={Level.SUCCESS} top="0" withAutomaticClosing>
               <Icon.Confirm color={THEME.color.mediumSeaGreen} />
               Le tableau de bord a bien été enregistré
             </Banner>
@@ -166,7 +157,7 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
               <Weather geom={dashboard.dashboard.geom} />
             </Column>
           </Container>
-          <Controls />
+          <Footer />
         </>
       )}
     </>
