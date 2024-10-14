@@ -54,7 +54,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
       startedBefore
     } = useAppSelector(state => state.missionFilters)
 
-    const { administrations, completion, controlUnits, dates, seaFonts, status, themes, types } = optionsList
+    const { administrations, completion, controlUnits, dates, seaFronts, status, themes, types } = optionsList
 
     const controlUnitCustomSearch = useMemo(
       () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -75,7 +75,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               label="Façade"
               name="seaFront"
               onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
-              options={seaFonts ?? []}
+              options={seaFronts ?? []}
               placeholder="Façade"
               renderValue={() =>
                 selectedSeaFronts && <OptionValue>{`Façade (${selectedSeaFronts.length})`}</OptionValue>
