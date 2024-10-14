@@ -37,16 +37,16 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
 
   // Selected items
   const selectedRegulatoryAreaIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.REGULATORY_AREAS] : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.regulatoryAreas : []
   )
   const selectedAmpIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.AMP] ?? [] : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.amps ?? [] : []
   )
   const selectedVigilanceAreaIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.VIGILANCE_AREAS] : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.vigilanceAreas : []
   )
   const selectedReportings = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.REPORTINGS] : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.reportings : []
   )
 
   const layersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
@@ -102,7 +102,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
           const layer = ampLayers.entities[layerId]
 
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHOARD_AMP, layer })
+            const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
             feature.setStyle(getAMPLayerStyle(feature))
 
             feats.push(feature)

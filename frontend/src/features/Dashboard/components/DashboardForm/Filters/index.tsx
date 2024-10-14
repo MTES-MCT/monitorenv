@@ -29,14 +29,19 @@ export function DashboardFilters() {
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.filters : undefined
   )
 
-  const regulatoryAreas = useAppSelector(state => state.dashboard.extractedArea?.regulatoryAreas)
+  const regulatoryAreas = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.regulatoryAreas : undefined
+  )
+
   const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(regulatoryAreas ?? [])
   const regulatoryThemesCustomSearch = useMemo(
     () => new CustomSearch(regulatoryThemesAsOption as Array<Option<string>>, ['label']),
     [regulatoryThemesAsOption]
   )
 
-  const amps = useAppSelector(state => state.dashboard.extractedArea?.amps)
+  const amps = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.amps : undefined
+  )
   const ampsAsOptions = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions as Array<Option>, ['label']), [ampsAsOptions])
 

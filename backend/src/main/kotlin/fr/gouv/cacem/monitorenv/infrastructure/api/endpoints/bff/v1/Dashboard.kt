@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/bff/v1/dashboard")
+@RequestMapping("/bff/v1/dashboards")
 @Tag(name = "BFF.Dashboard")
 class Dashboard(private val extractArea: ExtractArea, private val saveDashboard: SaveDashboard) {
     @GetMapping("/extract")
     @Operation(summary = "Extract all data that intercept the given geometry")
-    fun get(
+    fun extract(
         @RequestParam(name = "geometry") pGeometry: String,
     ): ExtractedAreaDataOutput {
         val wktReader = WKTReader()

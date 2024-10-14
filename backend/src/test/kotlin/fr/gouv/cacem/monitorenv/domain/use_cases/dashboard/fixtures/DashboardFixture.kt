@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.io.WKTReader
+import java.time.ZonedDateTime
 import java.util.UUID
 
 class DashboardFixture {
@@ -12,6 +13,8 @@ class DashboardFixture {
             name: String = "",
             comments: String = "",
             geom: Geometry = WKTReader().read("MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"),
+            createdAt: ZonedDateTime? = null,
+            updatedAt: ZonedDateTime? = null,
             amps: List<Int> = listOf(),
             regulatoryAreas: List<Int> = listOf(),
             reportings: List<Int> = listOf(),
@@ -24,8 +27,8 @@ class DashboardFixture {
                 name = name,
                 geom = geom,
                 comments = comments,
-                createdAt = null,
-                updatedAt = null,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
                 amps = amps,
                 regulatoryAreas = regulatoryAreas,
                 inseeCode = inseeCode,

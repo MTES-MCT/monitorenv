@@ -36,7 +36,7 @@ export const getClickedAmpFeatures = (mapClickEvent: MapClickEvent) =>
       (featureId.includes(Layers.AMP_PREVIEW.code) ||
         featureId.includes(Layers.AMP.code) ||
         featureId.includes(Layers.AMP_LINKED_TO_VIGILANCE_AREA.code) ||
-        featureId.includes(Dashboard.Layer.DASHOARD_AMP))
+        featureId.includes(Dashboard.Layer.DASHBOARD_AMP))
     )
   })
 

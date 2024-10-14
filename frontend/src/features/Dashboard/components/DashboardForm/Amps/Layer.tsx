@@ -14,7 +14,7 @@ import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constant
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 
 type AmpLayerProps = {
-  dashboardId: number
+  dashboardId: string
   isSelected: boolean
   layerId: number
 }
@@ -23,7 +23,7 @@ export function Layer({ dashboardId, isSelected, layerId }: AmpLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
-  const selectedAmps = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
+  const selectedAmps = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.amps)
 
   const isZoneSelected = selectedAmps?.includes(layerId)
   const { layer } = useGetAMPsQuery(undefined, {

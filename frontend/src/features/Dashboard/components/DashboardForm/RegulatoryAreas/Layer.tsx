@@ -16,7 +16,7 @@ import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 
 type RegulatoryLayerProps = {
-  dashboardId: number
+  dashboardId: string
   isSelected: boolean
   layerId: number
 }
@@ -26,7 +26,7 @@ export function Layer({ dashboardId, isSelected, layerId }: RegulatoryLayerProps
   const ref = createRef<HTMLSpanElement>()
 
   const selectedRegulatoryAreas = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
+    state => state.dashboard.dashboards?.[dashboardId]?.dashboard.regulatoryAreas
   )
 
   const isZoneSelected = selectedRegulatoryAreas?.includes(layerId)

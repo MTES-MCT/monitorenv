@@ -2,6 +2,7 @@ import type { AMPFromAPI } from '../../domain/entities/AMPs'
 import type { RegulatoryLayerCompactFromAPI } from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace Dashboard {
   export interface ExtractedArea {
@@ -12,6 +13,38 @@ export namespace Dashboard {
     reportings: Reporting[]
     vigilanceAreas: VigilanceArea.VigilanceArea[]
   }
+  export type Dashboard = {
+    amps: number[]
+    comments?: string
+    controlUnits: number[]
+    createdAt?: string
+    geom?: GeoJSON.Geometry
+    id: string
+    inseeCode?: string
+    name: string
+    regulatoryAreas: number[]
+    reportings: Reporting[]
+    updatedAt?: string
+    vigilanceAreas: number[]
+  }
+
+  export type DashboardToApi = {
+    amps: number[]
+    comments?: string
+    controlUnits: number[]
+    createdAt?: string
+    geom?: GeoJSON.Geometry
+    id?: string
+    inseeCode?: string
+    name: string
+    regulatoryAreas: number[]
+    reportings: number[]
+    updatedAt?: string
+    vigilanceAreas: number[]
+  }
+
+  export type DashboardFromApi = Omit<DashboardToApi, 'id, createdAt'> & { createdAt: string; id: string }
+
   export enum Block {
     AMP = 'AMP',
     COMMENTS = 'COMMENTS',
@@ -23,16 +56,16 @@ export namespace Dashboard {
   }
 
   export enum Layer {
+    DASHBOARD_AMP = 'DASHBOARD_AMP',
     DASHBOARD_REGULATORY_AREAS = 'DASHBOARD_REGULATORY_AREAS',
     DASHBOARD_REPORTINGS = 'DASHBOARD_REPORTINGS',
-    DASHBOARD_VIGILANCE_AREAS = 'DASHBOARD_VIGILANCE_AREAS',
-    DASHOARD_AMP = 'DASHOARD_AMP'
+    DASHBOARD_VIGILANCE_AREAS = 'DASHBOARD_VIGILANCE_AREAS'
   }
 
   export const featuresCode = {
     [Layer.DASHBOARD_REGULATORY_AREAS]: 'DASHBOARD_REGULATORY_AREAS',
     [Layer.DASHBOARD_REPORTINGS]: 'DASHBOARD_REPORTINGS',
     [Layer.DASHBOARD_VIGILANCE_AREAS]: 'DASHBOARD_VIGILANCE_AREAS',
-    [Layer.DASHOARD_AMP]: 'DASHOARD_AMP'
+    [Layer.DASHBOARD_AMP]: 'DASHBOARD_AMP'
   }
 }
