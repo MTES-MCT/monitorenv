@@ -11,11 +11,11 @@ import type { Dashboard } from '@features/Dashboard/types'
 
 export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: number = 0) => [
   {
-    accessorFn: row => row.seaFont,
+    accessorFn: row => row.seaFront,
     cell: info => info.getValue(),
     enableSorting: true,
     header: () => 'Façade',
-    id: 'seaFont',
+    id: 'seaFront',
     size: 104 + legacyFirefoxOffset
   },
   {

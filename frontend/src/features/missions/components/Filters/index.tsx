@@ -83,7 +83,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     completion: completionStatusAsOptions,
     controlUnits: controlUnitsAsOptions,
     dates: dateRangesAsOptions,
-    seaFonts: seaFrontsAsOptions,
+    seaFronts: seaFrontsAsOptions,
     status: missionStatusesAsOptions,
     themes: themesAsOptionsPerPeriod,
     types: missionTypesAsOptions
