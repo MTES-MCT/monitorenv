@@ -4,8 +4,6 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import type { Dashboard } from '@features/Dashboard/types'
-
 export function Footer() {
   const dispatch = useAppDispatch()
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
@@ -15,11 +13,6 @@ export function Footer() {
   if (!dashboardForm) {
     return null
   }
-  const dashboardToSave: Dashboard.DashboardToApi = {
-    ...dashboardForm.dashboard,
-    id: dashboardForm.dashboard.id?.includes('new-') ? undefined : dashboardForm.dashboard.id,
-    reportings: dashboardForm.dashboard.reportings.map(reporting => +reporting.id)
-  }
 
   return (
     <Wrapper>
@@ -27,7 +20,7 @@ export function Footer() {
         accent={Accent.SECONDARY}
         disabled={!activeDashboardId}
         Icon={Icon.Save}
-        onClick={() => dispatch(saveDashboard(dashboardToSave))}
+        onClick={() => dispatch(saveDashboard(dashboardForm.dashboard))}
       >
         Enregistrer le tableau
       </SaveButton>

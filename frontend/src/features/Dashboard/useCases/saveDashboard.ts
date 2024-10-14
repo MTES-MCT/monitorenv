@@ -10,9 +10,14 @@ import type { HomeAppThunk } from '@store/index'
 export const SAVE_DASHBOARD_ERROR_MESSAGE = "Nous n'avons pas pu enregistrer le tableau de bord"
 
 export const saveDashboard =
-  (dashboard: Dashboard.DashboardToApi): HomeAppThunk =>
+  (dashboard: Dashboard.Dashboard): HomeAppThunk =>
   async dispatch => {
-    const { data, error } = await dispatch(dashboardsAPI.endpoints.save.initiate(dashboard))
+    const dashboardToSave: Dashboard.DashboardToApi = {
+      ...dashboard,
+      id: dashboard.id?.includes('new-') ? undefined : dashboard.id,
+      reportings: dashboard.reportings.map(reporting => +reporting.id)
+    }
+    const { data, error } = await dispatch(dashboardsAPI.endpoints.save.initiate(dashboardToSave))
     if (data) {
       dispatch(dashboardActions.updateDashboard({ dashboard: data }))
       dispatch(dashboardActions.setBanner(true))
