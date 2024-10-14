@@ -1,14 +1,12 @@
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { StatusActionTag } from '@features/Reportings/components/StatusActionTag'
-import { getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
+import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useClickOutside } from '@hooks/useClickOutside'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
-  getLocalizedDayjs,
   Icon,
   IconButton,
   OPENLAYERS_PROJECTION,
@@ -16,6 +14,7 @@ import {
   useClickOutsideEffect,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
+import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import ArchivedFlag from 'features/Reportings/icons/archived_reporting.svg?react'
@@ -53,7 +52,7 @@ export function Layer({ dashboardId, isSelected = false, reporting }: ReportingL
     newWindowContainerRef.current
   )
 
-  useClickOutside(newWindowContainerRef, () => {
+  useClickOutsideEffect(newWindowContainerRef, () => {
     dispatch(dashboardActions.setSelectedReporting(undefined))
   })
 
@@ -149,13 +148,11 @@ export function Layer({ dashboardId, isSelected = false, reporting }: ReportingL
         <Summary>
           <Title>
             <Name>
-              Signalement {reporting.reportingId} -{' '}
+              Signalement {getFormattedReportingId(reporting.reportingId)} -{' '}
               {reporting.reportingSources.map(source => source.displayedSource).join(', ')}
             </Name>
             <Target>{targetText}</Target>
-            {reporting.createdAt && (
-              <Date>{getLocalizedDayjs(reporting.createdAt).format('DD MMM YYYY à HH:mm')} (UTC)</Date>
-            )}
+            {reporting.createdAt && <Date>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Date>}
           </Title>
           <div>
             {reporting.themeId && (
