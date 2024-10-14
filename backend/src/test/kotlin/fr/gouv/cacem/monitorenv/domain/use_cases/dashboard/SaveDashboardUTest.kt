@@ -20,13 +20,13 @@ class SaveDashboardUTest {
     private val saveDashboard = SaveDashboard(dashboardRepository, facadeAreasRepository)
 
     @Test
-    fun `execute should find its facade then save dashboard and return saved dashboard`() {
+    fun `execute should find its sea front then save dashboard and return saved dashboard`() {
         // Given
         val dashboard = aDashboard()
         val id = UUID.randomUUID()
-        val facade = "MED"
-        given(facadeAreasRepository.findFacadeFromGeometry(dashboard.geom)).willReturn(facade)
-        val dashboardWithFacade = dashboard.copy(facade = facade)
+        val seaFront = "MED"
+        given(facadeAreasRepository.findFacadeFromGeometry(dashboard.geom)).willReturn(seaFront)
+        val dashboardWithFacade = dashboard.copy(seaFront = seaFront)
         given(dashboardRepository.save(dashboardWithFacade)).willReturn(dashboardWithFacade.copy(id = id))
 
         // When
