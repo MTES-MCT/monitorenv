@@ -4,7 +4,7 @@ import { dashboardActions } from '../slice'
 
 import type { HomeAppThunk } from '@store/index'
 
-export const closeDashboard = (): HomeAppThunk => dispatch => {
+export const closeDrawDashboard = (): HomeAppThunk => dispatch => {
   closeMenuDialog()
 
   function closeMenuDialog() {

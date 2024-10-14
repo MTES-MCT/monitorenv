@@ -5,12 +5,14 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useEscapeKey } from '@hooks/useEscapeKey'
 import { Icon, TextInput, THEME, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
 import ResponsiveNav from '@rsuite/responsive-nav'
+import { getDashboardPageRoute } from '@utils/routes'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
+import { closeTab } from '../useCases/closeTab'
 
 export function DashboardsNavBar() {
   const dispatch = useAppDispatch()
@@ -96,14 +98,23 @@ export function DashboardsNavBar() {
     return [dashboardsList, ...openDashboards]
   }, [dashboards, getLabel, editingDashoardId])
 
-  const selectDashboard = path => {
+  const selectDashboard = (path: string | number | undefined) => {
     if (editingDashoardId) {
       return
     }
-    dispatch(sideWindowActions.setCurrentPath(path))
+    if (path && typeof path === 'string') {
+      dispatch(sideWindowActions.setCurrentPath(path))
+      const routeParams = getDashboardPageRoute(path)
+      const id = routeParams?.params.id
+      if (id) {
+        dispatch(dashboardActions.setActiveDashboardId(id))
+      }
+    }
   }
 
-  const closeDashboard = () => {}
+  const closeDashboard = path => {
+    closeTab(path)
+  }
 
   return (
     <NavBar name="dashboards" onClose={closeDashboard} onSelect={selectDashboard}>

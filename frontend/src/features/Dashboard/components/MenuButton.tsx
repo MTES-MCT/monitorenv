@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 import { DrawDashboard } from './DrawDashboard'
 import { dashboardActions } from '../slice'
-import { closeDashboard } from '../useCases/closeDashboard'
+import { closeDrawDashboard } from '../useCases/closeDrawDashboard'
 import { resetDrawing } from '../useCases/resetDrawing'
 
 export function DashboardMenuButton() {
@@ -44,7 +44,7 @@ export function DashboardMenuButton() {
   }
 
   const closeModal = () => {
-    dispatch(closeDashboard())
+    dispatch(closeDrawDashboard())
   }
 
   const cancel = () => {

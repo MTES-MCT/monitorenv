@@ -62,3 +62,13 @@ export function isDashboardPage(path: string) {
     path
   )
 }
+
+export function getDashboardPageRoute(path: string) {
+  return matchPath<'id', string>(
+    {
+      end: true,
+      path: sideWindowPaths.DASHBOARD
+    },
+    path
+  )
+}

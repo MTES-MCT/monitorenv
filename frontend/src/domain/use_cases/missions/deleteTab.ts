@@ -8,8 +8,10 @@ import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 
+import type { HomeAppThunk } from '@store/index'
+
 export const deleteTab =
-  (path: string, forceQuitAndRedirectToList = false) =>
+  (path: string, forceQuitAndRedirectToList = false): HomeAppThunk =>
   async (dispatch, getState) => {
     const { missions } = getState().missionForms
     const { activeMissionId } = getState().missionForms

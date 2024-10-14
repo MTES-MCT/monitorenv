@@ -16,7 +16,7 @@ import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 type RegulatoryLayerProps = {
-  dashboardId: number
+  dashboardId: string
   isSelected: boolean
   vigilanceArea: VigilanceArea.VigilanceArea
 }
@@ -26,7 +26,7 @@ export function Layer({ dashboardId, isSelected, vigilanceArea }: RegulatoryLaye
   const ref = createRef<HTMLSpanElement>()
 
   const selectedVigilaneAreas = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.VIGILANCE_AREAS]
+    state => state.dashboard.dashboards?.[dashboardId]?.dashboard.vigilanceAreas
   )
 
   const isZoneSelected = selectedVigilaneAreas?.includes(vigilanceArea.id)

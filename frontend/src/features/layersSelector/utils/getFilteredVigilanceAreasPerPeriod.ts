@@ -13,8 +13,8 @@ function isWithinPeriod(date: Dayjs, startDate: Dayjs, endDate: Dayjs) {
 export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, vigilanceAreaSpecificPeriodFilter) => {
   const now = customDayjs()
 
-  let startDateFilter
-  let endDateFilter
+  let startDateFilter: Dayjs
+  let endDateFilter: Dayjs
 
   if (vigilanceAreaSpecificPeriodFilter) {
     startDateFilter = customDayjs(vigilanceAreaSpecificPeriodFilter[0]).utc()

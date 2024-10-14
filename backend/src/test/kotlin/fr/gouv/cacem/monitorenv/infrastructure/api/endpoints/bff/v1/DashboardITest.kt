@@ -31,6 +31,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
@@ -71,7 +73,7 @@ class DashboardITest {
 
         // When
         mockMvc.perform(
-            get("/bff/v1/dashboard/extract?geometry=$geometry")
+            get("/bff/v1/dashboards/extract?geometry=$geometry")
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
@@ -105,7 +107,7 @@ class DashboardITest {
 
         // When
         mockMvc.perform(
-            get("/bff/v1/dashboard/extract?geometry=$geometry")
+            get("/bff/v1/dashboards/extract?geometry=$geometry")
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
@@ -124,7 +126,7 @@ class DashboardITest {
 
         // When
         mockMvc.perform(
-            get("/bff/v1/dashboard/extract?geometry=$geometry")
+            get("/bff/v1/dashboards/extract?geometry=$geometry")
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
@@ -145,13 +147,15 @@ class DashboardITest {
         val reportings = listOf(4)
         val controlUnits = listOf(4)
         val inseeCode = "94"
+        val createdAt = ZonedDateTime.parse("2024-01-01T00:00Z")
+        val updatedAt = ZonedDateTime.parse("2024-01-02T00:00Z")
         val input =
             DashboardDataInput(
                 id = id,
                 name = name,
                 comments = comments,
-                createdAt = null,
-                updatedAt = null,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
                 geom = geometry,
                 inseeCode = inseeCode,
                 amps = amps,
@@ -166,6 +170,8 @@ class DashboardITest {
                 name = name,
                 comments = comments,
                 geom = geometry,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
                 amps = amps,
                 vigilanceAreas = vigilanceAreas,
                 reportings = reportings,
@@ -177,7 +183,7 @@ class DashboardITest {
 
         // When
         mockMvc.perform(
-            put("/bff/v1/dashboard")
+            put("/bff/v1/dashboards")
                 .content(objectMapper.writeValueAsString(input))
                 .contentType(MediaType.APPLICATION_JSON),
         )
@@ -187,6 +193,8 @@ class DashboardITest {
             .andExpect(jsonPath("$.name", equalTo(name)))
             .andExpect(jsonPath("$.comments", equalTo(comments)))
             .andExpect(jsonPath("$.geom.type", equalTo(geometry.geometryType)))
+            .andExpect(jsonPath("$.createdAt", equalTo(createdAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))))
+            .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))))
             .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
             .andExpect(jsonPath("$.amps", equalTo(amps)))
             .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))

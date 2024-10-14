@@ -14,7 +14,7 @@ import { SelectedAccordion } from '../SelectedAccordion'
 
 type VigilanceAreasProps = {
   columnWidth: number
-  dashboardId: number
+  dashboardId: string
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
   setExpandedAccordion: () => void
@@ -29,9 +29,7 @@ export function VigilanceAreas({
   vigilanceAreas
 }: VigilanceAreasProps) {
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
-  const selectedLayerIds = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.VIGILANCE_AREAS]
-  )
+  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.vigilanceAreas)
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedLayerIds?.includes(id))

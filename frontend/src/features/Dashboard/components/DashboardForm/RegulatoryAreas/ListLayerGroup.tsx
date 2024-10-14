@@ -13,7 +13,7 @@ import styled from 'styled-components'
 import { Layer } from './Layer'
 
 type ResultListLayerGroupProps = {
-  dashboardId: number
+  dashboardId: string
   groupName: string
   isSelected?: boolean
   layerIds: number[]
@@ -24,9 +24,7 @@ export function ListLayerGroup({ dashboardId, groupName, isSelected = false, lay
 
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
 
-  const selectedLayerIds = useAppSelector(
-    state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.REGULATORY_AREAS]
-  )
+  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.regulatoryAreas)
   const zonesSelected = intersection(selectedLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
 

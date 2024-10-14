@@ -31,7 +31,7 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }: Territ
 
   // Regulatory Areas link
   const regulatoryAreas = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.extractedArea?.regulatoryAreas : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.regulatoryAreas : []
   )
   const regulatoryAreaIds = regulatoryAreas?.map(area => area.id)
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
@@ -48,7 +48,9 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }: Territ
   )
 
   // AMP link
-  const amps = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.amps : []))
+  const amps = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.amps : []
+  )
   const ampsByName = amps?.map(amp => amp.id)
   const formattedAmpLink = useMemo(
     () => (ampsByName ? `id=${ampsByName.join('&id=')}&intervalle_de_dates=${dateRange}&amp=` : ''),
@@ -56,7 +58,9 @@ export function TerritorialPressure({ isExpanded, setExpandedAccordion }: Territ
   )
 
   // Department link
-  const department = useAppSelector(state => (activeDashboardId ? state.dashboard.extractedArea?.inseeCode : undefined))
+  const department = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.inseeCode : undefined
+  )
 
   const titleWithTooltip = (
     <TitleContainer>

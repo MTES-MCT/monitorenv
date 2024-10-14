@@ -1,4 +1,3 @@
-import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { ControlUnit, pluralize } from '@mtes-mct/monitor-ui'
 import { useEffect, useState } from 'react'
@@ -19,7 +18,7 @@ export function SelectedControlUnits({
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const selectedControlUnitIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.[Dashboard.Block.CONTROL_UNITS] : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.controlUnits : []
   )
 
   const expandedControlUnit = id => {

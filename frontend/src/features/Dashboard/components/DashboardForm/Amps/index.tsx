@@ -17,7 +17,7 @@ import type { AMPFromAPI } from 'domain/entities/AMPs'
 type AmpsProps = {
   amps: AMPFromAPI[] | undefined
   columnWidth: number
-  dashboardId: number
+  dashboardId: string
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
   setExpandedAccordion: () => void
@@ -32,7 +32,7 @@ export function Amps({
 }: AmpsProps) {
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
 
-  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.[Dashboard.Block.AMP])
+  const selectedLayerIds = useAppSelector(state => state.dashboard.dashboards?.[dashboardId]?.dashboard.amps)
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
   const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard))
