@@ -28,6 +28,7 @@ data class DashboardModel(
     val comments: String?,
     var createdAt: ZonedDateTime?,
     var updatedAt: ZonedDateTime?,
+    val facade: String?,
     @OneToMany(
         mappedBy = "dashboard",
         fetch = FetchType.LAZY,
@@ -85,6 +86,7 @@ data class DashboardModel(
             regulatoryAreas = regulatoryAreas,
             reportings = reportings,
             vigilanceAreas = vigilanceAreas,
+            facade = facade
         )
     }
 
@@ -116,6 +118,7 @@ data class DashboardModel(
                     comments = dashboardEntity.comments,
                     createdAt = dashboardEntity.createdAt,
                     updatedAt = dashboardEntity.updatedAt,
+                    facade = dashboardEntity.facade,
                     dashboardDatas = mutableListOf(),
                 )
             dashboardDatasModels.forEach {
