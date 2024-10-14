@@ -1,6 +1,6 @@
 import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { customDayjs, type DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
@@ -177,24 +177,13 @@ export const dashboardSlice = createSlice({
 
     createDashboard(
       state,
-      action: PayloadAction<{ extractedArea: Dashboard.ExtractedArea; geom: GeoJSON.Geometry; id: string }>
+      action: PayloadAction<{ dashboard: Dashboard.Dashboard; extractedArea: Dashboard.ExtractedArea }>
     ) {
-      state.activeDashboardId = action.payload.id
-      const date = customDayjs().format('DD/MM/YYYY')
-      const newDashboardName = `Tab ${date}`
-      state.dashboards[action.payload.id] = {
+      state.activeDashboardId = action.payload.dashboard.id
+
+      state.dashboards[action.payload.dashboard.id] = {
         ...initialDashboard,
-        dashboard: {
-          amps: [],
-          controlUnits: [],
-          geom: action.payload.geom,
-          id: action.payload.id,
-          inseeCode: action.payload.extractedArea.inseeCode,
-          name: newDashboardName,
-          regulatoryAreas: [],
-          reportings: [],
-          vigilanceAreas: []
-        },
+        dashboard: action.payload.dashboard,
         extractedArea: action.payload.extractedArea
       }
     },
