@@ -10,53 +10,53 @@ VALUES
 -- Dashboard 1 with no Amp
 INSERT INTO dashboard_datas (id, dashboard_id, reportings_id, amp_cacem_id, regulations_cacem_id, vigilance_area_id, control_unit_id, insee_code)
 VALUES
-    ('e1e99b92-1e61-4f9f-9cbf-8cfae2395d41','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', 1, null, null, null, null, null), /* reportingId */
-    ('43f2ec9c-98f0-4841-bbee-88c08692ca1e','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', 2, null, null, null, null, null), /* reportingId */
-    ('f8f876d6-af23-415c-8051-a485564b45bc','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 625, null, null, null), /* regulatoryAreaId */
-    ('cd136bbe-db51-46c0-a73b-7b7e3d9e9ee7','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 134, null, null, null), /* regulatoryAreaId */
-    ('a8f48cc8-47f2-450e-bb45-5919c9b45e7d','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 300, null, null, null), /* regulatoryAreaId */
-    ('49ba7340-377c-48c8-a9ef-3d617f529290','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 625, null, null, null), /* regulatoryAreaId */
-    ('de391685-2262-4080-be14-b97b1e713360','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, null, 7, null, null), /* vigilanceAreaId */
-    ('a00f61f9-fd25-4ffc-8ab4-ab48d89656f8','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, null, null, 10002, null), /* controlUnitId */
-    ('45ccdb8a-6011-4425-824c-d2016719e158','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, null, null, null, '56'); /* inseeCode */
+    ('e1e99b92-1e61-4f9f-9cbf-8cfae2395d41','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', 1, null, null, null, null, null), -- reportingId --
+    ('43f2ec9c-98f0-4841-bbee-88c08692ca1e','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', 2, null, null, null, null, null), -- reportingId --
+    ('f8f876d6-af23-415c-8051-a485564b45bc','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 625, null, null, null), -- regulatoryAreaId --
+    ('cd136bbe-db51-46c0-a73b-7b7e3d9e9ee7','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 134, null, null, null), -- regulatoryAreaId --
+    ('a8f48cc8-47f2-450e-bb45-5919c9b45e7d','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 300, null, null, null), -- regulatoryAreaId --
+    ('49ba7340-377c-48c8-a9ef-3d617f529290','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, 625, null, null, null), -- regulatoryAreaId --
+    ('de391685-2262-4080-be14-b97b1e713360','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, null, 7, null, null), -- vigilanceAreaId --
+    ('a00f61f9-fd25-4ffc-8ab4-ab48d89656f8','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, null, null, 10002, null), -- controlUnitId --
+    ('45ccdb8a-6011-4425-824c-d2016719e158','e1e99b92-1e61-4f9f-9cbf-8cfae2395d41', null, null, null, null, null, '56'); -- inseeCode --
 
 -- Dashboard 2 with all
 INSERT INTO dashboard_datas (id, dashboard_id, reportings_id, amp_cacem_id, regulations_cacem_id, vigilance_area_id, control_unit_id, insee_code)
 VALUES
-    ('aade45ca-1451-4001-b21f-afbdcce19e08','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', 6, null, null, null, null, null), /* reportingId */
-    ('4c38005d-fcce-4cf7-a845-26beaee6da70','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, 7, null, null, null, null), /* ampId */
-    ('8f17722d-7102-4223-b5a5-f70830205dc8','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, 134, null, null, null), /* regulatoryAreaId */
-    ('27df62c9-eb79-46c1-b4bc-752d10d24aa6','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, null, 9, null, null), /* vigilanceAreaId */
-    ('89a821df-2cf6-4976-978c-c9c294c60cf6','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, null, null, 10000, null), /* controlUnitId */
-    ('12fdc187-70ec-49a8-b3ed-ab2f47b524a2','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, null, null, null, '33'); /* inseeCode */
+    ('aade45ca-1451-4001-b21f-afbdcce19e08','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', 6, null, null, null, null, null), -- reportingId --
+    ('4c38005d-fcce-4cf7-a845-26beaee6da70','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, 7, null, null, null, null), -- ampId --
+    ('8f17722d-7102-4223-b5a5-f70830205dc8','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, 134, null, null, null), -- regulatoryAreaId --
+    ('27df62c9-eb79-46c1-b4bc-752d10d24aa6','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, null, 9, null, null), -- vigilanceAreaId --
+    ('89a821df-2cf6-4976-978c-c9c294c60cf6','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, null, null, 10000, null), -- controlUnitId --
+    ('12fdc187-70ec-49a8-b3ed-ab2f47b524a2','e2a7d0ae-55ff-4fd9-8a6d-88b92d2b1a42', null, null, null, null, null, '33'); -- inseeCode --
 
 
 -- Dashboard 3 with no ReagulatoryAreas
 INSERT INTO dashboard_datas (id, dashboard_id, reportings_id, amp_cacem_id, regulations_cacem_id, vigilance_area_id, control_unit_id, insee_code)
 VALUES
-    ('200b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4d5e','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', 10, null, null, null, null, ''), /* reportingId */
-    ('300c3d4e-5f6a-7b8c-9d0e-1f2a3b4d5e6f','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', 6, null, null, null, null, ''), /* reportingId */
-    ('3a6e9337-2efd-4b6f-96b7-9c62080174a4','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 5, null, null, null, ''), /* ampId */
-    ('f085e7d6-6d08-4fe5-9ffe-e9fb458957a5','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 6, null, null, null, ''), /* ampId */
-    ('17ccb0ff-c3e5-4494-a5c5-4baa57f99d1e','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 7, null, null, null, ''), /* ampId */
-    ('02d7ea96-a426-45c5-8b7a-cc7399119c67','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 8, null, null, null, ''), /* ampId */
-    ('e1500e25-9935-43dc-92c2-41926545f047','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, 4, null, ''), /* vigilanceAreaId */
-    ('5c625c0a-cec3-4981-9245-693762816e0c','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, 9, null, ''), /* vigilanceAreaId */
-    ('c3060bc9-0051-4e49-964a-2991ca4a167f','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, null, 10023, ''), /* controlUnitId */
-    ('13bb9341-89ed-4a6d-a4b3-7e4284a3d850','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, null, null, '29'); /* inseeCode */
+    ('200b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4d5e','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', 10, null, null, null, null, ''), -- reportingId --
+    ('300c3d4e-5f6a-7b8c-9d0e-1f2a3b4d5e6f','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', 6, null, null, null, null, ''), -- reportingId --
+    ('3a6e9337-2efd-4b6f-96b7-9c62080174a4','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 5, null, null, null, ''), -- ampId --
+    ('f085e7d6-6d08-4fe5-9ffe-e9fb458957a5','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 6, null, null, null, ''), -- ampId --
+    ('17ccb0ff-c3e5-4494-a5c5-4baa57f99d1e','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 7, null, null, null, ''), -- ampId --
+    ('02d7ea96-a426-45c5-8b7a-cc7399119c67','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, 8, null, null, null, ''), -- ampId --
+    ('e1500e25-9935-43dc-92c2-41926545f047','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, 4, null, ''), -- vigilanceAreaId --
+    ('5c625c0a-cec3-4981-9245-693762816e0c','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, 9, null, ''), -- vigilanceAreaId --
+    ('c3060bc9-0051-4e49-964a-2991ca4a167f','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, null, 10023, ''), -- controlUnitId --
+    ('13bb9341-89ed-4a6d-a4b3-7e4284a3d850','b28b8b22-93d4-45d9-8d5d-9ddcbf3e5e53', null, null, null, null, null, '29'); -- inseeCode --
 
 
 -- Dashboard 3 with no Reportings
 INSERT INTO dashboard_datas (id, dashboard_id, reportings_id, amp_cacem_id, regulations_cacem_id, vigilance_area_id, control_unit_id, insee_code)
 VALUES
-    ('396b4ff4-4285-47a8-bd6a-1cac1e1e7871','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, 13, null, null, null, ''), /* ampId */
-    ('837da234-52dd-4212-bfdb-50cae6633b5f','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, 20, null, null, null, ''), /* ampId */
-    ('5f0a65fe-eeb6-4558-8664-19690e9c65a1','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, 329, null, null, null), /* regulatoryAreaId */
-    ('56fedbc2-e523-44ef-bc87-03d336a25137','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, 359, null, null, null), /* regulatoryAreaId */
-    ('bbe52d94-0fe8-4853-ba6a-bffb07dfc26d','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, 4, null, ''), /* vigilanceAreaId */
-    ('ce71d064-8b41-4277-afed-bafb3c31024e','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, 5, null, ''), /* vigilanceAreaId */
-    ('c846cd07-fabd-44f8-9fbe-f0452cd68a08','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, null, 10016, ''), /* controlUnitId */
-    ('01bb9cd2-00d4-4b4f-8ea5-55f94ce7fb04','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, null, null, '34'); /* inseeCode */
+    ('396b4ff4-4285-47a8-bd6a-1cac1e1e7871','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, 13, null, null, null, ''), -- ampId --
+    ('837da234-52dd-4212-bfdb-50cae6633b5f','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, 20, null, null, null, ''), -- ampId --
+    ('5f0a65fe-eeb6-4558-8664-19690e9c65a1','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, 329, null, null, null), -- regulatoryAreaId --
+    ('56fedbc2-e523-44ef-bc87-03d336a25137','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, 359, null, null, null), -- regulatoryAreaId --
+    ('bbe52d94-0fe8-4853-ba6a-bffb07dfc26d','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, 4, null, ''), -- vigilanceAreaId --
+    ('ce71d064-8b41-4277-afed-bafb3c31024e','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, 5, null, ''), -- vigilanceAreaId --
+    ('c846cd07-fabd-44f8-9fbe-f0452cd68a08','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, null, 10016, ''), -- controlUnitId --
+    ('01bb9cd2-00d4-4b4f-8ea5-55f94ce7fb04','c8c92b8d-832f-4ba9-96e1-dca3fb6c6f64', null, null, null, null, null, '34'); -- inseeCode --
 
 
 
