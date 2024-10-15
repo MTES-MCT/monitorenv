@@ -2,9 +2,11 @@ import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { Table } from '@components/Table'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
+import { getCoreRowModel, getSortedRowModel, useReactTable, type SortingState } from '@tanstack/react-table'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
-import { useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { Columns } from './Columns'
@@ -17,14 +19,13 @@ interface DashboardsTableProps {
 }
 
 export function DashboardsTable({ dashboards, isLoading }: DashboardsTableProps) {
+  const tableContainerRef = useRef<HTMLDivElement>(null)
+
   const { pathname } = useLocation()
+  const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -25 : 0
 
   const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
   const { data: controlUnits } = useGetControlUnitsQuery()
-
-  const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -25 : 0
-
-  const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : dashboards), [isLoading, dashboards])
 
   const columns = useMemo(
     () =>
@@ -37,7 +38,34 @@ export function DashboardsTable({ dashboards, isLoading }: DashboardsTableProps)
     [isLoading, controlUnits, regulatoryAreas, legacyFirefoxOffset]
   )
 
-  const tableContainerRef = useRef<HTMLDivElement>(null)
+  const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'updatedAt' }])
 
-  return <Table ref={tableContainerRef} columns={columns} data={tableData} />
+  const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : dashboards), [isLoading, dashboards])
+
+  const table = useReactTable({
+    columns,
+    data: tableData,
+    enableSortingRemoval: false,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      sorting
+    }
+  })
+
+  const { rows } = table.getRowModel()
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    estimateSize: () => 43,
+    getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
+    getScrollElement: () => tableContainerRef.current,
+    overscan: 10,
+    scrollPaddingEnd: 40,
+    scrollPaddingStart: 40
+  })
+
+  const virtualRows = rowVirtualizer.getVirtualItems()
+
+  return <Table ref={tableContainerRef} rows={rows} table={table} virtualRows={virtualRows} />
 }

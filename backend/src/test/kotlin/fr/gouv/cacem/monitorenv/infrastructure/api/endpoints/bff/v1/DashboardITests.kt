@@ -18,10 +18,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.DashboardDataInput
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import java.util.UUID
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
@@ -36,20 +32,28 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Dashboard::class)])
 class DashboardITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var extractArea: ExtractArea
+    @MockBean
+    private lateinit var extractArea: ExtractArea
 
-    @MockBean private lateinit var saveDashboard: SaveDashboard
+    @MockBean
+    private lateinit var saveDashboard: SaveDashboard
 
-    @MockBean private lateinit var getDashboards: GetDashboards
+    @MockBean
+    private lateinit var getDashboards: GetDashboards
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     @Test
     fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
@@ -61,28 +65,28 @@ class DashboardITests {
         val amps = listOf(AmpFixture.anAmp())
         val vigilanceAreas = listOf(VigilanceAreaFixture.aVigilanceAreaEntity())
         given(extractArea.execute(WKTReader().read(geometry)))
-                .willReturn(
-                        ExtractedAreaEntity(
-                                inseeCode = "44",
-                                reportings = reportings,
-                                regulatoryAreas = regulatoryAreas,
-                                amps = amps,
-                                vigilanceAreas = vigilanceAreas,
-                        ),
-                )
+            .willReturn(
+                ExtractedAreaEntity(
+                    inseeCode = "44",
+                    reportings = reportings,
+                    regulatoryAreas = regulatoryAreas,
+                    amps = amps,
+                    vigilanceAreas = vigilanceAreas,
+                ),
+            )
 
         // When
         mockMvc.perform(
-                        get("/bff/v1/dashboards/extract?geometry=$geometry")
-                                .contentType(MediaType.APPLICATION_JSON),
-                )
-                // Then
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$.inseeCode", equalTo("44")))
-                .andExpect(jsonPath("$.reportings[0].id", equalTo(reportings[0].reporting.id)))
-                .andExpect(jsonPath("$.regulatoryAreas[0].id", equalTo(regulatoryAreas[0].id)))
-                .andExpect(jsonPath("$.amps[0].id", equalTo(amps[0].id)))
-                .andExpect(jsonPath("$.vigilanceAreas[0].id", equalTo(vigilanceAreas[0].id)))
+            get("/bff/v1/dashboards/extract?geometry=$geometry")
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.inseeCode", equalTo("44")))
+            .andExpect(jsonPath("$.reportings[0].id", equalTo(reportings[0].reporting.id)))
+            .andExpect(jsonPath("$.regulatoryAreas[0].id", equalTo(regulatoryAreas[0].id)))
+            .andExpect(jsonPath("$.amps[0].id", equalTo(amps[0].id)))
+            .andExpect(jsonPath("$.vigilanceAreas[0].id", equalTo(vigilanceAreas[0].id)))
     }
 
     @Test
@@ -95,28 +99,28 @@ class DashboardITests {
         val amps: List<AMPEntity> = listOf()
         val vigilanceAreas: List<VigilanceAreaEntity> = listOf()
         given(extractArea.execute(WKTReader().read(geometry)))
-                .willReturn(
-                        ExtractedAreaEntity(
-                                inseeCode = null,
-                                reportings = reportings,
-                                regulatoryAreas = regulatoryAreas,
-                                amps = amps,
-                                vigilanceAreas = vigilanceAreas,
-                        ),
-                )
+            .willReturn(
+                ExtractedAreaEntity(
+                    inseeCode = null,
+                    reportings = reportings,
+                    regulatoryAreas = regulatoryAreas,
+                    amps = amps,
+                    vigilanceAreas = vigilanceAreas,
+                ),
+            )
 
         // When
         mockMvc.perform(
-                        get("/bff/v1/dashboards/extract?geometry=$geometry")
-                                .contentType(MediaType.APPLICATION_JSON),
-                )
-                // Then
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$.inseeCode", equalTo(null)))
-                .andExpect(jsonPath("$.reportings.size()", equalTo(0)))
-                .andExpect(jsonPath("$.regulatoryAreas.size()", equalTo(0)))
-                .andExpect(jsonPath("$.amps.size()", equalTo(0)))
-                .andExpect(jsonPath("$.vigilanceAreas.size()", equalTo(0)))
+            get("/bff/v1/dashboards/extract?geometry=$geometry")
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.inseeCode", equalTo(null)))
+            .andExpect(jsonPath("$.reportings.size()", equalTo(0)))
+            .andExpect(jsonPath("$.regulatoryAreas.size()", equalTo(0)))
+            .andExpect(jsonPath("$.amps.size()", equalTo(0)))
+            .andExpect(jsonPath("$.vigilanceAreas.size()", equalTo(0)))
     }
 
     @Test
@@ -126,12 +130,12 @@ class DashboardITests {
 
         // When
         mockMvc.perform(
-                        get("/bff/v1/dashboards/extract?geometry=$geometry")
-                                .contentType(MediaType.APPLICATION_JSON),
-                )
-                // Then
-                .andExpect(status().isBadRequest)
-                .andExpect(jsonPath("$.message", equalTo("Error: geometry is not valid")))
+            get("/bff/v1/dashboards/extract?geometry=$geometry")
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message", equalTo("Error: geometry is not valid")))
     }
 
     @Test
@@ -150,92 +154,92 @@ class DashboardITests {
         val createdAt = ZonedDateTime.parse("2024-01-01T00:00Z")
         val updatedAt = ZonedDateTime.parse("2024-01-02T00:00Z")
         val input =
-                DashboardDataInput(
-                        id = id,
-                        name = name,
-                        comments = comments,
-                        createdAt = createdAt,
-                        updatedAt = updatedAt,
-                        geom = geometry,
-                        inseeCode = inseeCode,
-                        amps = amps,
-                        regulatoryAreas = regulatoryAreas,
-                        vigilanceAreas = vigilanceAreas,
-                        reportings = reportings,
-                        controlUnits = controlUnits,
-                )
+            DashboardDataInput(
+                id = id,
+                name = name,
+                comments = comments,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
+                geom = geometry,
+                inseeCode = inseeCode,
+                amps = amps,
+                regulatoryAreas = regulatoryAreas,
+                vigilanceAreas = vigilanceAreas,
+                reportings = reportings,
+                controlUnits = controlUnits,
+            )
         val dashboard =
-                aDashboard(
-                        id = id,
-                        name = name,
-                        comments = comments,
-                        geom = geometry,
-                        createdAt = createdAt,
-                        updatedAt = updatedAt,
-                        amps = amps,
-                        vigilanceAreas = vigilanceAreas,
-                        reportings = reportings,
-                        regulatoryAreas = regulatoryAreas,
-                        inseeCode = inseeCode,
-                        controlUnits = controlUnits,
-                )
+            aDashboard(
+                id = id,
+                name = name,
+                comments = comments,
+                geom = geometry,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
+                amps = amps,
+                vigilanceAreas = vigilanceAreas,
+                reportings = reportings,
+                regulatoryAreas = regulatoryAreas,
+                inseeCode = inseeCode,
+                controlUnits = controlUnits,
+            )
         given(saveDashboard.execute(dashboard)).willReturn(dashboard)
 
         // When
         mockMvc.perform(
-                        put("/bff/v1/dashboards")
-                                .content(objectMapper.writeValueAsString(input))
-                                .contentType(MediaType.APPLICATION_JSON),
-                )
-                // Then
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$.id", equalTo(id.toString())))
-                .andExpect(jsonPath("$.name", equalTo(name)))
-                .andExpect(jsonPath("$.comments", equalTo(comments)))
-                .andExpect(jsonPath("$.geom.type", equalTo(geometry.geometryType)))
-                .andExpect(
-                        jsonPath(
-                                "$.createdAt",
-                                equalTo(createdAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-                        )
-                )
-                .andExpect(
-                        jsonPath(
-                                "$.updatedAt",
-                                equalTo(updatedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-                        )
-                )
-                .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
-                .andExpect(jsonPath("$.amps", equalTo(amps)))
-                .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))
-                .andExpect(jsonPath("$.reportings", equalTo(reportings)))
-                .andExpect(jsonPath("$.vigilanceAreas", equalTo(vigilanceAreas)))
-                .andExpect(jsonPath("$.controlUnits", equalTo(controlUnits)))
+            put("/bff/v1/dashboards")
+                .content(objectMapper.writeValueAsString(input))
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(id.toString())))
+            .andExpect(jsonPath("$.name", equalTo(name)))
+            .andExpect(jsonPath("$.comments", equalTo(comments)))
+            .andExpect(jsonPath("$.geom.type", equalTo(geometry.geometryType)))
+            .andExpect(
+                jsonPath(
+                    "$.createdAt",
+                    equalTo(createdAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
+                ),
+            )
+            .andExpect(
+                jsonPath(
+                    "$.updatedAt",
+                    equalTo(updatedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
+                ),
+            )
+            .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
+            .andExpect(jsonPath("$.amps", equalTo(amps)))
+            .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))
+            .andExpect(jsonPath("$.reportings", equalTo(reportings)))
+            .andExpect(jsonPath("$.vigilanceAreas", equalTo(vigilanceAreas)))
+            .andExpect(jsonPath("$.controlUnits", equalTo(controlUnits)))
     }
 
     @Test
     fun `getAll response should return dashboards list`() {
         // Given
         val dashboard1 =
-                aDashboard(
-                        id = UUID.randomUUID(),
-                )
+            aDashboard(
+                id = UUID.randomUUID(),
+            )
         val dashboard2 =
-                aDashboard(
-                        id = UUID.randomUUID(),
-                )
+            aDashboard(
+                id = UUID.randomUUID(),
+            )
         val dashboards = listOf(dashboard1, dashboard2)
         given(getDashboards.execute()).willReturn(dashboards)
 
         // When
         mockMvc.perform(
-                        get("/bff/v1/dashboard").contentType(MediaType.APPLICATION_JSON),
-                )
-                // Then
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$[0].id", equalTo(dashboard1.id.toString())))
-                .andExpect(
-                        jsonPath("$[1].id", equalTo(dashboard2.id.toString())),
-                )
+            get("/bff/v1/dashboards").contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id", equalTo(dashboard1.id.toString())))
+            .andExpect(
+                jsonPath("$[1].id", equalTo(dashboard2.id.toString())),
+            )
     }
 }

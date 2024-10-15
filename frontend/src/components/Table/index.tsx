@@ -1,45 +1,10 @@
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
-import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable, type SortingState } from '@tanstack/react-table'
-import { useVirtualizer } from '@tanstack/react-virtual'
-import { forwardRef, useCallback, useState } from 'react'
+import { flexRender } from '@tanstack/react-table'
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 
-export function TableWithRef({ columns, data }, ref) {
-  const { current: currentRef } = ref
-
-  const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'updatedAt' }])
-
-  const table = useReactTable({
-    columns,
-    data,
-    enableSortingRemoval: false,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    state: {
-      sorting
-    }
-  })
-
-  const { rows } = table.getRowModel()
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    estimateSize: () => 40,
-    getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
-    getScrollElement: () => currentRef,
-    overscan: 10
-  })
-
-  const virtualRows = rowVirtualizer.getVirtualItems()
-  const [paddingTop, paddingBottom] =
-    virtualRows.length > 0
-      ? [
-          Math.max(0, virtualRows[0]?.start ?? 0),
-          Math.max(0, rowVirtualizer.getTotalSize() - (virtualRows[virtualRows.length - 1]?.end ?? 0))
-        ]
-      : [0, 0]
-
+export function TableWithRef({ rows, table, virtualRows }, ref) {
   return (
     <StyledDasboardsContainer ref={ref}>
       <SimpleTable.Table>
@@ -68,11 +33,6 @@ export function TableWithRef({ columns, data }, ref) {
           ))}
         </SimpleTable.Head>
         <tbody>
-          {paddingTop > 0 && (
-            <tr>
-              <td aria-label="empty-line-for-scroll" style={{ height: `${paddingTop}px` }} />
-            </tr>
-          )}
           {virtualRows.map(virtualRow => {
             const row = rows[virtualRow.index]
 
@@ -95,11 +55,6 @@ export function TableWithRef({ columns, data }, ref) {
               </SimpleTable.BodyTr>
             )
           })}
-          {paddingBottom > 0 && (
-            <tr>
-              <td aria-label="empty-line-for-scroll" style={{ height: `${paddingBottom}px` }} />
-            </tr>
-          )}
         </tbody>
       </SimpleTable.Table>
     </StyledDasboardsContainer>
