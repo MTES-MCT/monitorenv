@@ -334,8 +334,8 @@ jobs:
           ignore_empty: true
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG_TEST_TO_DELETE }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_TEST_TO_DELETE }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
           SENTRY_LOG_LEVEL: 'debug'
 
