@@ -333,7 +333,7 @@ jobs:
           ignore_missing: true
           ignore_empty: true
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN_TEST_TO_DELETE }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG_TEST_TO_DELETE }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_TEST_TO_DELETE }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
