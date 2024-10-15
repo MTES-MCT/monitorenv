@@ -307,6 +307,7 @@ jobs:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_LOG_LEVEL: 'debug'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -337,6 +338,7 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_LOG_LEVEL: 'debug'
 
   push_to_registry:
     name: Push to registry
