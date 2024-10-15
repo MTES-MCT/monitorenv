@@ -117,9 +117,9 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
-            token: ${{ secrets.CODECOV_TOKEN }}
-            verbose: true
-            working-directory: ./frontend
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+          working-directory: ./frontend
 
   build:
     name: Build and package
@@ -179,7 +179,7 @@ jobs:
 
   e2e_test:
     name: Run E2E tests
-    needs: [version, build]
+    needs: [ version, build ]
     runs-on: ubuntu-22.04
     strategy:
       # when one test fails, DO NOT cancel the other
@@ -188,7 +188,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        containers: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
@@ -242,14 +242,14 @@ jobs:
           record: true
           wait-on: "http://localhost:8880"
           working-directory: ./frontend
-      
+
       - name: Display Docker container logs for debugging
         if: failure()
         run: docker logs monitorenv_backend
 
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
-    needs: [version, build]
+    needs: [ version, build ]
     runs-on: ubuntu-22.04
     if: false
     env:
@@ -298,7 +298,7 @@ jobs:
 
   generate_and_upload_source_maps:
     name: Generate and upload source maps to Sentry
-    needs: [version, build, unit_test_backend, unit_test_frontend, e2e_test]
+    needs: [ version, build, unit_test_backend, unit_test_frontend, e2e_test ]
     runs-on: ubuntu-22.04
     env:
       VERSION: ${{ needs.version.outputs.VERSION }}
@@ -306,6 +306,7 @@ jobs:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_LOG_LEVEL: 'debug'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -336,10 +337,11 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_LOG_LEVEL: 'debug'
 
   push_to_registry:
     name: Push to registry
-    needs: [version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps]
+    needs: [ version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps ]
     # needs: [version, e2e_test, e2e_multi_windows_test, unit_test_frontend, e2e_test]
     runs-on: ubuntu-22.04
     if: startsWith(github.ref, 'refs/heads/dependabot') == false
