@@ -19,10 +19,10 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
-import { useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
-export function DashboardFilters() {
+export const DashboardFilters = forwardRef<HTMLDivElement>((_, ref) => {
   const dispatch = useAppDispatch()
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const filters = useAppSelector(state =>
@@ -87,7 +87,7 @@ export function DashboardFilters() {
   )
 
   return (
-    <Wrapper>
+    <Wrapper ref={ref}>
       <FiltersContainer>
         <div>
           <CheckPicker
@@ -175,7 +175,7 @@ export function DashboardFilters() {
       )}
     </Wrapper>
   )
-}
+})
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};

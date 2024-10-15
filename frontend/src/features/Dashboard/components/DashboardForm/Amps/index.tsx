@@ -7,10 +7,10 @@ import { groupBy } from 'lodash'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
-import { SelectedAccordion } from '../SelectedAccordion'
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
+import { Accordion } from '../Accordion'
+import { SelectedAccordion } from '../SelectedAccordion'
 
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 
@@ -105,6 +105,6 @@ const StyledLayerList = styled(LayerSelector.LayerList)`
 const StyledPanel = styled(AmpPanel)<{ $marginLeft?: number }>`
   left: ${p =>
     `calc(
-    ${p.$marginLeft}px + 25px + 64px + 4px
+    ${p.$marginLeft}px + 25px + 4px
   )`}; // 25px is the padding, 64px is the width of the sidebar
 `

@@ -37,6 +37,8 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth ?? 0
 
+  const filterRef = useRef<HTMLDivElement>(null)
+  const filterHeight = filterRef.current?.clientHeight ?? 0
   const [expandedAccordionFirstColumn, setExpandedAccordionFirstColumn] = useState<Dashboard.Block | undefined>(
     undefined
   )
@@ -92,16 +94,15 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
     <>
       {isActive && (
         <>
-          {dashboard.isBannerDisplayed && (
-            <Banner isClosable level={Level.SUCCESS} top="0" withAutomaticClosing>
-              <Icon.Confirm color={THEME.color.mediumSeaGreen} />
-              Le tableau de bord a bien été enregistré
-            </Banner>
-          )}
-
-          <DashboardFilters />
+          <DashboardFilters ref={filterRef} />
           <Container>
-            <Column ref={firstColumnRef}>
+            {dashboard.isBannerDisplayed && (
+              <Banner isClosable level={Level.SUCCESS} top="0" withAutomaticClosing>
+                <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+                Le tableau de bord a bien été enregistré
+              </Banner>
+            )}
+            <Column ref={firstColumnRef} $filterHeight={filterHeight}>
               <RegulatoryAreas
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
@@ -128,7 +129,7 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
                 vigilanceAreas={dashboard.extractedArea?.vigilanceAreas}
               />
             </Column>
-            <Column>
+            <Column $filterHeight={filterHeight}>
               <TerritorialPressure
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
@@ -142,7 +143,7 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
               />
             </Column>
-            <Column>
+            <Column $filterHeight={filterHeight}>
               <ControlUnits
                 controlUnits={activeControlUnits ?? []}
                 isExpanded={expandedAccordionThirdColumn === Dashboard.Block.CONTROL_UNITS}
@@ -170,13 +171,17 @@ const Container = styled(SideWindowContent)`
   // gap and padding are 3px less than the mockup because of box-shadow is hidden because of overflow @see AccordionWrapper
   column-gap: 45px;
   padding: 21px 21px 0 21px;
+  position: relative;
+  overflow: hidden;
 `
 
-const Column = styled.div`
+const Column = styled.div<{ $filterHeight: number }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: calc(100vh - 48px - 24px - 66px); // 48px = navbar height, 24px = padding, 66px = bottom bar height
+  height: calc(
+    100vh - 48px - 24px - 66px - ${p => p.$filterHeight}
+  ); // 48px = navbar height, 24px = padding, 66px = bottom bar height, filterHeight is variable
   scrollbar-gutter: stable;
   overflow-y: auto;
 

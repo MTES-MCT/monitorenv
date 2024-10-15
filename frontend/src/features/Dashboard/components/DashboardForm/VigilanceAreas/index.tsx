@@ -84,6 +84,6 @@ const StyledLayerList = styled(LayerSelector.LayerList)`
 const StyledPanel = styled(Panel)<{ $marginLeft: number }>`
   left: ${p =>
     `calc(
-    ${p.$marginLeft}px + 24px + 64px + 4px
+    ${p.$marginLeft}px + 24px + 4px
   )`}; // 24px is the padding, 64px is the width of the sidebar, 4px is the margin
 `
