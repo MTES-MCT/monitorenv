@@ -5,8 +5,8 @@ import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
-import { dashboardActions } from '../slice'
 import { closeDrawDashboard } from './closeDrawDashboard'
+import { dashboardActions } from '../slice'
 
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -20,8 +20,7 @@ export const createDashboard =
     if (data) {
       dispatch(closeDrawDashboard())
       const newId = `new-${Object.keys(getState().dashboard.dashboards).length}`
-      const date = customDayjs().format('DD/MM/YYYY')
-      const newDashboardName = `Tab ${date}`
+      const newDashboardName = `Tab ${customDayjs().format('DD/MM/YYYY')}`
       const dashboard = {
         amps: [],
         controlUnits: [],
@@ -33,7 +32,7 @@ export const createDashboard =
         reportings: [],
         vigilanceAreas: []
       }
-      dispatch(dashboardActions.createDashboard({ dashboard, extractedArea: data }))
+      dispatch(dashboardActions.createDashboard({ dashboard, defaultName: newDashboardName, extractedArea: data }))
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
     }
     if (error) {

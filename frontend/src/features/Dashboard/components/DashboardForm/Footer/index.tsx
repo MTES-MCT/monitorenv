@@ -12,7 +12,7 @@ export function Footer() {
   const dashboardForm = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards[activeDashboardId] : undefined
   )
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [updatedName, setUpdatedName] = useState<string | undefined>(dashboardForm?.dashboard.name)
   if (!dashboardForm) {
     return null
@@ -20,12 +20,22 @@ export function Footer() {
 
   const save = () => {
     dispatch(saveDashboard({ ...dashboardForm.dashboard, name: updatedName ?? dashboardForm.dashboard.name }))
-    setIsModalOpen(false)
+    setIsDialogOpen(false)
+  }
+
+  const handleSave = () => {
+    const hasDefaultName =
+      dashboardForm.defaultName === dashboardForm.dashboard.name && !dashboardForm.dashboard.createdAt
+    if (hasDefaultName) {
+      setIsDialogOpen(true)
+    } else {
+      dispatch(saveDashboard({ ...dashboardForm.dashboard }))
+    }
   }
 
   return (
     <>
-      {isModalOpen && (
+      {isDialogOpen && (
         <Dialog isAbsolute>
           <Dialog.Title as="h2">Enregistrer le tableau de bord</Dialog.Title>
           <Dialog.Body $color={THEME.color.gunMetal}>
@@ -41,7 +51,7 @@ export function Footer() {
             />
           </Dialog.Body>
           <StyledDialogActions>
-            <Button accent={Accent.SECONDARY} onClick={() => setIsModalOpen(false)}>
+            <Button accent={Accent.SECONDARY} onClick={() => setIsDialogOpen(false)}>
               Annuler
             </Button>
             <Button Icon={Icon.Save} onClick={save}>
@@ -51,12 +61,7 @@ export function Footer() {
         </Dialog>
       )}
       <Wrapper>
-        <SaveButton
-          accent={Accent.SECONDARY}
-          disabled={!activeDashboardId}
-          Icon={Icon.Save}
-          onClick={() => setIsModalOpen(true)}
-        >
+        <SaveButton accent={Accent.SECONDARY} disabled={!activeDashboardId} Icon={Icon.Save} onClick={handleSave}>
           Enregistrer le tableau
         </SaveButton>
       </Wrapper>
