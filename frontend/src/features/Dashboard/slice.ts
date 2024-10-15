@@ -26,6 +26,7 @@ const initialDashboard: DashboardType = {
     reportings: [],
     vigilanceAreas: []
   },
+  defaultName: '',
   extractedArea: undefined,
   filters: {},
   isBannerDisplayed: false,
@@ -66,6 +67,7 @@ export type DashboardType = {
   ampIdsToDisplay: number[]
   controlUnitFilters: ControlUnitFilters
   dashboard: Dashboard.Dashboard
+  defaultName: string | undefined
   extractedArea?: Dashboard.ExtractedArea
   filters: DashboardFilters
   isBannerDisplayed: boolean
@@ -177,13 +179,18 @@ export const dashboardSlice = createSlice({
 
     createDashboard(
       state,
-      action: PayloadAction<{ dashboard: Dashboard.Dashboard; extractedArea: Dashboard.ExtractedArea }>
+      action: PayloadAction<{
+        dashboard: Dashboard.Dashboard
+        defaultName: string
+        extractedArea: Dashboard.ExtractedArea
+      }>
     ) {
       state.activeDashboardId = action.payload.dashboard.id
 
       state.dashboards[action.payload.dashboard.id] = {
         ...initialDashboard,
         dashboard: action.payload.dashboard,
+        defaultName: action.payload.defaultName,
         extractedArea: action.payload.extractedArea
       }
     },
