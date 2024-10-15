@@ -102,6 +102,6 @@ class JpaDashboardRepositoryITest : AbstractDBTests() {
         val dashboards = jpaDashboardRepository.findAll()
 
         // Then
-        assertThat(dashboards).hasSize(4)
+        assertThat(dashboards).hasSize(7)
     }
 }

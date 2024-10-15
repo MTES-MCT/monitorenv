@@ -13,7 +13,7 @@ const GET_DASHBOARDS_ERROR_MESSAGE = "Nous n'avons pas pu créer la liste des ta
 export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     getDashboards: build.query<Dashboard.Dashboard[], void>({
-      query: () => '/v1/dashboard',
+      query: () => '/v1/dashboards',
       transformErrorResponse: response => new FrontendApiError(GET_DASHBOARDS_ERROR_MESSAGE, response),
       transformResponse: (response: Dashboard.Dashboard[]) => response
     }),

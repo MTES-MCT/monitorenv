@@ -5,21 +5,6 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace Dashboard {
-  export interface Dashboard {
-    amps: number[]
-    comments: string
-    controlUnits: number[]
-    createdAt: string
-    geom: GeoJSON.MultiPolygon | undefined
-    id?: number
-    inseeCode?: string
-    name: string
-    regulatoryAreas: number[]
-    reportings: number[]
-    updatedAt: string
-    vigilanceAreas: number[]
-  }
-
   export interface ExtractedArea {
     // TODO(24/09/2024): uniformize data naming (properties and types) from api
     amps: AMPFromAPI[]
