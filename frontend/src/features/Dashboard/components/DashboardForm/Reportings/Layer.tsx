@@ -36,6 +36,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
 
   const ref = useRef<HTMLDivElement>(null)
   const { newWindowContainerRef } = useNewWindow()
+
   useClickOutsideEffect(
     ref,
     () => {
@@ -43,10 +44,6 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
     },
     newWindowContainerRef.current
   )
-
-  useClickOutsideEffect(newWindowContainerRef, () => {
-    dispatch(dashboardActions.setSelectedReporting(undefined))
-  })
 
   const handleSelect = e => {
     e.stopPropagation()
@@ -141,7 +138,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
           <Title>
             <Name>
               Signalement {getFormattedReportingId(reporting.reportingId)} -{' '}
-              {reporting.reportingSources.map(source => source.displayedSource).join(', ')}
+              {reporting.reportingSources?.map(source => source.displayedSource).join(', ')}
             </Name>
             <Target>{targetText}</Target>
             {reporting.createdAt && <Date>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Date>}
@@ -150,7 +147,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
             {reporting.themeId && (
               <Theme>
                 {themes[reporting.themeId]?.theme} /{' '}
-                {reporting.subThemeIds.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
+                {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
               </Theme>
             )}
             <Description>{reporting.description}</Description>

@@ -1,8 +1,8 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
-import { setToast } from 'domain/shared_slices/Global'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { Level } from '@mtes-mct/monitor-ui'
 
 import { dashboardActions } from '../slice'
-import { bannerClosingDelay } from '../utils'
 
 import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
@@ -20,12 +20,26 @@ export const saveDashboard =
     const { data, error } = await dispatch(dashboardsAPI.endpoints.save.initiate(dashboardToSave))
     if (data) {
       dispatch(dashboardActions.updateDashboard({ dashboard: data }))
-      dispatch(dashboardActions.setBanner(true))
-      setTimeout(() => {
-        dispatch(dashboardActions.setBanner(false))
-      }, bannerClosingDelay)
+
+      dispatch(
+        addSideWindowBanner({
+          children: 'Le tableau de bord a bien été enregistré',
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
+        })
+      )
     }
     if (error) {
-      dispatch(setToast({ containerId: 'sideWindow', message: SAVE_DASHBOARD_ERROR_MESSAGE }))
+      dispatch(
+        addSideWindowBanner({
+          children: SAVE_DASHBOARD_ERROR_MESSAGE,
+          isClosable: true,
+          isFixed: true,
+          level: Level.ERROR,
+          withAutomaticClosing: true
+        })
+      )
     }
   }

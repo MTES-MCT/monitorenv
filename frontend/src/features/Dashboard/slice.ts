@@ -13,7 +13,7 @@ import { filter } from './useCases/filterReportings'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
-const initialDashboard: DashboardType = {
+export const initialDashboard: DashboardType = {
   ampIdsToDisplay: [],
   controlUnitFilters: {},
   dashboard: {
@@ -29,7 +29,6 @@ const initialDashboard: DashboardType = {
   defaultName: '',
   extractedArea: undefined,
   filters: {},
-  isBannerDisplayed: false,
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
   reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
@@ -70,7 +69,6 @@ export type DashboardType = {
   defaultName: string | undefined
   extractedArea?: Dashboard.ExtractedArea
   filters: DashboardFilters
-  isBannerDisplayed: boolean
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingFilters: ReportingFilters
@@ -194,6 +192,13 @@ export const dashboardSlice = createSlice({
         extractedArea: action.payload.extractedArea
       }
     },
+    editDashboard(state, action: PayloadAction<DashboardType>) {
+      const { id } = action.payload.dashboard
+      if (!id) {
+        return
+      }
+      state.dashboards[id] = action.payload
+    },
     removeAllPreviewedItems(state) {
       const id = state.activeDashboardId
 
@@ -306,14 +311,6 @@ export const dashboardSlice = createSlice({
     },
     setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
       state.activeDashboardId = action.payload
-    },
-    setBanner(state, action: PayloadAction<boolean>) {
-      const id = state.activeDashboardId
-
-      if (!id || !state.dashboards[id]) {
-        return
-      }
-      state.dashboards[id].isBannerDisplayed = action.payload
     },
     setComments(state, action: PayloadAction<string | undefined>) {
       const id = state.activeDashboardId

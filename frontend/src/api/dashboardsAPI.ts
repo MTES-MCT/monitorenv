@@ -9,9 +9,15 @@ import type { Dashboard } from '@features/Dashboard/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 const GET_DASHBOARDS_ERROR_MESSAGE = "Nous n'avons pas pu créer la liste des tableaux de bord"
+const GET_DASHBOARD_ERROR_MESSAGE = "Nous n'avons pas pu créer les tableau de bord"
 
 export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
+    getDashboard: build.query<Dashboard.DashboardFromApi, string>({
+      query: id => `/v1/dashboards/${id}`,
+      transformErrorResponse: response => new FrontendApiError(GET_DASHBOARD_ERROR_MESSAGE, response),
+      transformResponse: (response: Dashboard.DashboardFromApi) => response
+    }),
     getDashboards: build.query<Dashboard.Dashboard[], void>({
       query: () => '/v1/dashboards',
       transformErrorResponse: response => new FrontendApiError(GET_DASHBOARDS_ERROR_MESSAGE, response),
@@ -32,4 +38,4 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetDashboardsQuery, useGetExtratedAreaQuery } = dashboardsAPI
+export const { useGetDashboardQuery, useGetDashboardsQuery, useGetExtratedAreaQuery } = dashboardsAPI
