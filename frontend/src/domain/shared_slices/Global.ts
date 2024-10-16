@@ -116,7 +116,7 @@ const initialState: GlobalStateType = {
   displayInterestPointLayer: true,
   displayReportingToAttachLayer: true,
   displayVigilanceAreaLayer: true,
-  displayDashboardLayer: true,
+  displayDashboardLayer: true && isDashboardEnabled(),
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
@@ -195,6 +195,8 @@ const globalSlice = createSlice({
       state.displayReportingsOverlay = true
       state.displayRightMenuControlUnitListButton = true
       state.displaySearchSemaphoreButton = true
+      state.displayDashboard = true && isDashboardEnabled()
+      state.displayDashboardLayer = true && isDashboardEnabled()
     },
 
     setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {

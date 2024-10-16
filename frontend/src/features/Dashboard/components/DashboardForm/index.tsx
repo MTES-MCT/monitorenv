@@ -7,6 +7,6 @@ export function DashboardForms() {
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   return Object.entries(dashboards).map(([key, dashboard]) => (
-    <DashboardForm key={key} dashboard={dashboard} isActive={activeDashboardId === key} />
+    <DashboardForm key={key} dashboardForm={[key, dashboard]} isActive={activeDashboardId === key} />
   ))
 }
