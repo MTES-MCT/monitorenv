@@ -58,7 +58,7 @@ const StyledMultiRadio = styled(MultiRadio)`
     padding: 10px 16px;
     width: 100%;
 
-    :hover {
+    &:hover {
       background-color: ${p => p.theme.color.blueYonder25};
     }
   }

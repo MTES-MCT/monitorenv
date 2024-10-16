@@ -110,7 +110,7 @@ const StyledButtonsContainer = styled.div`
 `
 
 const StyledButton = styled(Button)`
-  :not([disabled]) {
+  &:not([disabled]) {
     svg {
       color: ${p => p.theme.color.maximumRed};
     }
