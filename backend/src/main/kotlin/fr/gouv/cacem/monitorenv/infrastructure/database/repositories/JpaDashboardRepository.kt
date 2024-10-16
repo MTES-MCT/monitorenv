@@ -5,8 +5,10 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardDatasModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardModel.Companion.fromDashboardEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Repository
 class JpaDashboardRepository(
@@ -35,6 +37,10 @@ class JpaDashboardRepository(
 
     override fun findAll(): List<DashboardEntity> {
         return dashboardRepository.findAll().map { it.toDashboardEntity() }
+    }
+
+    override fun findById(id: UUID): DashboardEntity? {
+        return dashboardRepository.findByIdOrNull(id)?.toDashboardEntity()
     }
 
     private fun addRegulatoryAreas(

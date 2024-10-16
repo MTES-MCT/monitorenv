@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboards
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
@@ -38,8 +39,8 @@ import java.util.*
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = [(Dashboard::class)])
-class DashboardITests {
+@WebMvcTest(value = [(Dashboards::class)])
+class DashboardsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -52,11 +53,14 @@ class DashboardITests {
     @MockBean
     private lateinit var getDashboards: GetDashboards
 
+    @MockBean
+    private lateinit var getDashboard: GetDashboard
+
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
+    fun `Should extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
         // Given
         val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
 
@@ -90,7 +94,7 @@ class DashboardITests {
     }
 
     @Test
-    fun `extract response should be ok when nothing intersect the given geometry`() {
+    fun `Should extract response should be ok when nothing intersect the given geometry`() {
         // Given
         val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
 
@@ -124,7 +128,7 @@ class DashboardITests {
     }
 
     @Test
-    fun `extract response should be bad request if the given geometry is not valid`() {
+    fun `Should extract response should be bad request if the given geometry is not valid`() {
         // Given
         val geometry = "Wrong geometry param"
 
@@ -139,7 +143,7 @@ class DashboardITests {
     }
 
     @Test
-    fun `put response should be ok with and return the saved dashboard`() {
+    fun `Should put response should be ok with and return the saved dashboard`() {
         // Given
         val id = UUID.randomUUID()
         val name = "dashboard1"
@@ -218,7 +222,7 @@ class DashboardITests {
     }
 
     @Test
-    fun `getAll response should return dashboards list`() {
+    fun `Should getAll response should return dashboards list`() {
         // Given
         val dashboard1 =
             aDashboard(
@@ -241,5 +245,40 @@ class DashboardITests {
             .andExpect(
                 jsonPath("$[1].id", equalTo(dashboard2.id.toString())),
             )
+    }
+
+    @Test
+    fun `Should get specific dashboard when requested by Id`() {
+        // Given
+        val id = UUID.randomUUID()
+        val dashboard =
+            aDashboard(
+                id = id,
+                inseeCode = "44",
+                amps = listOf(1),
+                controlUnits = listOf(10000),
+                reportings = listOf(1, 2, 3),
+                regulatoryAreas = listOf(523),
+                vigilanceAreas = listOf(1),
+            )
+        given(getDashboard.execute(id)).willReturn(dashboard)
+
+        // When
+        mockMvc.perform(
+            get("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(id.toString())))
+            .andExpect(jsonPath("$.name", equalTo(dashboard.name)))
+            .andExpect(jsonPath("$.comments", equalTo(dashboard.comments)))
+            .andExpect(jsonPath("$.geom.type", equalTo(dashboard.geom.geometryType)))
+            .andExpect(jsonPath("$.createdAt", equalTo(dashboard.createdAt)))
+            .andExpect(jsonPath("$.updatedAt", equalTo(dashboard.updatedAt)))
+            .andExpect(jsonPath("$.inseeCode", equalTo(dashboard.inseeCode)))
+            .andExpect(jsonPath("$.amps", equalTo(dashboard.amps)))
+            .andExpect(jsonPath("$.regulatoryAreas", equalTo(dashboard.regulatoryAreas)))
+            .andExpect(jsonPath("$.reportings", equalTo(dashboard.reportings)))
+            .andExpect(jsonPath("$.vigilanceAreas", equalTo(dashboard.vigilanceAreas)))
     }
 }

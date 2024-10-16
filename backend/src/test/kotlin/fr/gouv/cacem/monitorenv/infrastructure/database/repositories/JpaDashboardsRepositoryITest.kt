@@ -7,7 +7,7 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-class JpaDashboardRepositoryITest : AbstractDBTests() {
+class JpaDashboardsRepositoryITest : AbstractDBTests() {
     @Autowired
     private lateinit var jpaDashboardRepository: JpaDashboardRepository
 
