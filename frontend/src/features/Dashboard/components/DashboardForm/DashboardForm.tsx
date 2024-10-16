@@ -12,20 +12,20 @@ import styled from 'styled-components'
 import { Amps } from './Amps'
 import { Comments } from './Comments'
 import { ControlUnits } from './ControlUnits'
-import { DashboardFilters } from './Filters'
 import { Footer } from './Footer'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
 import { TerritorialPressure } from './TerritorialPressure'
+import { Toolbar } from './Toolbar'
 import { VigilanceAreas } from './VigilanceAreas'
 import { Weather } from './Weather'
 import { dashboardActions, getFilteredReportings, type DashboardType } from '../../slice'
 
 type DashboardProps = {
-  dashboard: DashboardType
+  dashboardForm: [string, DashboardType]
   isActive: boolean
 }
-export function DashboardForm({ dashboard, isActive }: DashboardProps) {
+export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: DashboardProps) {
   const dispatch = useAppDispatch()
   const previewSelectionFilter = dashboard.filters.previewSelection ?? false
 
@@ -37,8 +37,8 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth ?? 0
 
-  const filterRef = useRef<HTMLDivElement>(null)
-  const filterHeight = filterRef.current?.clientHeight ?? 0
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const toolbarHeight = toolbarRef.current?.clientHeight ?? 0
   const [expandedAccordionFirstColumn, setExpandedAccordionFirstColumn] = useState<Dashboard.Block | undefined>(
     undefined
   )
@@ -94,7 +94,8 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
     <>
       {isActive && (
         <>
-          <DashboardFilters ref={filterRef} />
+          <Toolbar ref={toolbarRef} dashboardForm={[key, dashboard]} geometry={dashboard.dashboard.geom} />
+
           <Container>
             {dashboard.isBannerDisplayed && (
               <Banner isClosable level={Level.SUCCESS} top="0" withAutomaticClosing>
@@ -102,7 +103,7 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
                 Le tableau de bord a bien été enregistré
               </Banner>
             )}
-            <Column ref={firstColumnRef} $filterHeight={filterHeight}>
+            <Column ref={firstColumnRef} $filterHeight={toolbarHeight}>
               <RegulatoryAreas
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
@@ -129,7 +130,7 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
                 vigilanceAreas={dashboard.extractedArea?.vigilanceAreas}
               />
             </Column>
-            <Column $filterHeight={filterHeight}>
+            <Column $filterHeight={toolbarHeight}>
               <TerritorialPressure
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
@@ -143,7 +144,7 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
               />
             </Column>
-            <Column $filterHeight={filterHeight}>
+            <Column $filterHeight={toolbarHeight}>
               <ControlUnits
                 controlUnits={activeControlUnits ?? []}
                 isExpanded={expandedAccordionThirdColumn === Dashboard.Block.CONTROL_UNITS}

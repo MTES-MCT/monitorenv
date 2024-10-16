@@ -1,8 +1,7 @@
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
-import { dashboardActions } from '@features/Dashboard/slice'
+import { dashboardActions, type DashboardType } from '@features/Dashboard/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
 import {
   Accent,
   CheckPicker,
@@ -19,30 +18,23 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
-import { forwardRef, useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
-export const DashboardFilters = forwardRef<HTMLDivElement>((_, ref) => {
+type FiltersProps = {
+  dashboard: DashboardType
+}
+export function DashboardFilters({ dashboard }: FiltersProps) {
   const dispatch = useAppDispatch()
-  const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
-  const filters = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.filters : undefined
-  )
+  const { extractedArea, filters } = dashboard
 
-  const regulatoryAreas = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.regulatoryAreas : undefined
-  )
-
-  const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(regulatoryAreas ?? [])
+  const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(extractedArea?.regulatoryAreas ?? [])
   const regulatoryThemesCustomSearch = useMemo(
     () => new CustomSearch(regulatoryThemesAsOption as Array<Option<string>>, ['label']),
     [regulatoryThemesAsOption]
   )
 
-  const amps = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.amps : undefined
-  )
-  const ampsAsOptions = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
+  const ampsAsOptions = useMemo(() => getAmpsAsOptions(extractedArea?.amps ?? []), [extractedArea?.amps])
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions as Array<Option>, ['label']), [ampsAsOptions])
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
@@ -87,7 +79,7 @@ export const DashboardFilters = forwardRef<HTMLDivElement>((_, ref) => {
   )
 
   return (
-    <Wrapper ref={ref}>
+    <>
       <FiltersContainer>
         <div>
           <CheckPicker
@@ -173,18 +165,9 @@ export const DashboardFilters = forwardRef<HTMLDivElement>((_, ref) => {
           <ReinitializeFiltersButton onClick={resetFilters} />
         </TagsContainer>
       )}
-    </Wrapper>
+    </>
   )
-})
-
-const Wrapper = styled.div`
-  background-color: ${p => p.theme.color.white};
-  box-shadow: 0pc 3px 6px #00000029;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 16px 24px;
-`
+}
 
 const OptionValue = styled.span`
   display: flex;

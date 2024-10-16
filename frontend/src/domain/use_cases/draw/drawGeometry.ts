@@ -20,6 +20,22 @@ export const drawPolygon =
     )
   }
 
+export const drawCircle =
+  (geometry: GeoJSONNamespace.Geometry | undefined, listener: InteractionListener) => dispatch => {
+    if (geometry) {
+      dispatch(setGeometry(geometry))
+      dispatch(setInitialGeometry(geometry))
+    }
+
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.DRAW_ZONE_OR_POINT))
+    dispatch(
+      setInteractionTypeAndListener({
+        listener,
+        type: InteractionType.CIRCLE
+      })
+    )
+  }
+
 export const drawPoint =
   (geometry: GeoJSONNamespace.Geometry | undefined, listener?: InteractionListener) => dispatch => {
     if (geometry) {

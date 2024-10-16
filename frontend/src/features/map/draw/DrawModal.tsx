@@ -30,14 +30,16 @@ import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
 const titlePlaceholder = {
-  CONTROL_POINT: 'un point de contrôle',
-  MISSION_ZONE: 'une zone de mission',
-  REPORTING_POINT: 'un point de signalement',
-  REPORTING_ZONE: 'une zone de signalement',
-  SURVEILLANCE_ZONE: 'une zone de surveillance'
+  CONTROL_POINT: "Vous êtes en train d'ajouter un point de contrôle",
+  DASHBOARD_ZONE: 'Édition de la zone du tableau de bord',
+  MISSION_ZONE: "Vous êtes en train d'ajouter une zone de mission",
+  REPORTING_POINT: "Vous êtes en train d'ajouter un point de signalement",
+  REPORTING_ZONE: "Vous êtes en train d'ajouter une zone de signalement",
+  SURVEILLANCE_ZONE: "Vous êtes en train d'ajouter une zone de surveillance"
 }
 const validateButtonPlaceholder = {
   CONTROL_POINT: 'le point de contrôle',
+  DASHBOARD_ZONE: 'la zone',
   MISSION_ZONE: 'la zone de mission',
   REPORTING_POINT: 'le point',
   REPORTING_ZONE: 'la zone',
@@ -176,7 +178,8 @@ export function DrawModal() {
     () =>
       listener === InteractionListener.MISSION_ZONE ||
       listener === InteractionListener.REPORTING_ZONE ||
-      listener === InteractionListener.SURVEILLANCE_ZONE,
+      listener === InteractionListener.SURVEILLANCE_ZONE ||
+      listener === InteractionListener.DASHBOARD_ZONE,
     [listener]
   )
   if (!listener) {
@@ -210,7 +213,7 @@ export function DrawModal() {
       onCancel={handleCancel}
       onReset={handleReset}
       onValidate={handleValidate}
-      title={`Vous êtes en train d'ajouter ${listener && titlePlaceholder[listener]}`}
+      title={`${listener && titlePlaceholder[listener]}`}
       validateButtonText={`Valider ${listener && validateButtonPlaceholder[listener]}`}
     >
       {(listener === InteractionListener.CONTROL_POINT || listener === InteractionListener.REPORTING_POINT) && (

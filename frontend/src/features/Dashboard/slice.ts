@@ -407,6 +407,20 @@ export const dashboardSlice = createSlice({
         state.dashboards[id].reportingToDisplay = action.payload
       }
     },
+    updateArea(
+      state,
+      action: PayloadAction<{
+        dashboardKey: string
+        extractedArea: Dashboard.ExtractedArea
+        filteredDashboard: Dashboard.Dashboard
+      }>
+    ) {
+      const { dashboardKey: id, extractedArea, filteredDashboard } = action.payload
+      if (state.dashboards[id]) {
+        state.dashboards[id].extractedArea = extractedArea
+        state.dashboards[id].dashboard = filteredDashboard
+      }
+    },
     updateDashboard(state, action: PayloadAction<{ dashboard: Dashboard.DashboardFromApi }>) {
       const { activeDashboardId } = state
 
