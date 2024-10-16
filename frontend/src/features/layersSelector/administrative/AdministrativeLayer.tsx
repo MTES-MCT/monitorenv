@@ -45,7 +45,7 @@ const Row = styled.span<{ $isGrouped: boolean }>`
   width: -webkit-fill-available;
   width: stretch;
 
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
   & > :last-child {
