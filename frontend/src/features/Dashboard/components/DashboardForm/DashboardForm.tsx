@@ -4,7 +4,6 @@ import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -96,12 +95,6 @@ export function DashboardForm({ dashboard, isActive }: DashboardProps) {
         <>
           <DashboardFilters ref={filterRef} />
           <Container>
-            {dashboard.isBannerDisplayed && (
-              <Banner isClosable level={Level.SUCCESS} top="0" withAutomaticClosing>
-                <Icon.Confirm color={THEME.color.mediumSeaGreen} />
-                Le tableau de bord a bien été enregistré
-              </Banner>
-            )}
             <Column ref={firstColumnRef} $filterHeight={filterHeight}>
               <RegulatoryAreas
                 columnWidth={firstColumnWidth}

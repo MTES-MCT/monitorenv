@@ -1,11 +1,12 @@
-// import { useAppDispatch } from '@hooks/useAppDispatch'
+import { editDashboard } from '@features/Dashboard/useCases/editDashboard'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function EditDashboardCell({ id }: { id: number }) {
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
   const edit = () => {
-    // TODO: dispatch action to edit dashboard
+    dispatch(editDashboard(id))
   }
 
   return (

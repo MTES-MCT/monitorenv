@@ -1,6 +1,6 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
-import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { sideWindowActions } from '@features/SideWindow/slice'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
@@ -37,7 +37,7 @@ export const createDashboard =
     }
     if (error) {
       dispatch(
-        addMainWindowBanner({
+        addSideWindowBanner({
           children: GET_EXTRACTED_AREAS_ERROR_MESSAGE,
           isClosable: true,
           isFixed: true,

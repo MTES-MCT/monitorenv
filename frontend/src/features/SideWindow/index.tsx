@@ -13,6 +13,7 @@ import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import { StyleSheetManager } from 'styled-components'
 
+import { BannerStack } from './components/BannerStack'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext } from '../../domain/shared_slices/Global'
@@ -81,9 +82,12 @@ export function SideWindow() {
     const isCurrentPathIsMissionPage = isMissionPage(currentPath)
     if (isCurrentPathIsMissionPage) {
       dispatch(switchTab(nextPath))
-    } else {
-      dispatch(sideWindowActions.setCurrentPath(nextPath))
+
+      return
     }
+
+    dispatch(sideWindowActions.setCurrentPath(nextPath))
+    dispatch(sideWindowActions.removeBanners())
   }
 
   const newWindowContextProviderValue: NewWindowContextValue = useMemo(
@@ -131,6 +135,7 @@ export function SideWindow() {
                 </SideMenu>
 
                 <StyledRouteContainer>
+                  <BannerStack />
                   <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
                   <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />

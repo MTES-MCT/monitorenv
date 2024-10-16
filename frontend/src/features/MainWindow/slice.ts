@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, type EntityState, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { BannerStackItem } from './types'
+import type { BannerStackItem } from 'types'
 
 export const bannerStackAdapter = createEntityAdapter({
   selectId: (bannerStackItem: BannerStackItem) => bannerStackItem.id,
