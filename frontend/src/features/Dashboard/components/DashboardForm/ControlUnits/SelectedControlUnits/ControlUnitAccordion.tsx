@@ -30,7 +30,11 @@ export function ControlUnitAccordion({
 
   return (
     <AccordionContainer>
-      <AccordionHeader aria-controls={`control-unit-accordion-${controlUnit.id}`} aria-expanded={isExpanded}>
+      <AccordionHeader
+        aria-controls={`control-unit-accordion-${controlUnit.id}`}
+        aria-expanded={isExpanded}
+        data-cy={`dashboard-control-unit-accordion-${controlUnit.id}`}
+      >
         <TitleContainer onClick={() => expandUnit(controlUnit.id)}>
           <Bold>
             {controlUnit.name} - {controlUnit.administration.name}

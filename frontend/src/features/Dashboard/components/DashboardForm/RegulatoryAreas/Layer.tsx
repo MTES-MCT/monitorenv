@@ -76,7 +76,11 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
         legendKey={layer?.entity_name ?? 'aucun'}
         type={layer?.thematique ?? 'aucun'}
       />
-      <LayerSelector.Name $withLargeWidth title={layer?.entity_name}>
+      <LayerSelector.Name
+        $withLargeWidth
+        data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}
+        title={layer?.entity_name}
+      >
         {layer?.entity_name ?? 'AUCUN NOM'}
       </LayerSelector.Name>
 
@@ -93,7 +97,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
           <IconButton
             accent={Accent.TERTIARY}
             color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
-            data-cy="regulatory-zone-check"
+            data-cy="dashboard-regulatory-zone-check"
             Icon={isPinned ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
             title="Sélectionner la zone"

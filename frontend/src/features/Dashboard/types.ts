@@ -24,6 +24,7 @@ export namespace Dashboard {
     name: string
     regulatoryAreas: number[]
     reportings: Reporting[]
+    seaFront?: string
     updatedAt?: string
     vigilanceAreas: number[]
   }
