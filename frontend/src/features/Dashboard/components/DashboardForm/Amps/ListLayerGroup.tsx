@@ -51,7 +51,10 @@ export function ListLayerGroup({ groupName, isSelected = false, layerIds, select
   return (
     <>
       <StyledGroupWrapper $isOpen={zonesAreOpen} $isSelected={isSelected} onClick={clickOnGroupZones}>
-        <LayerSelector.GroupName data-cy="result-group" title={groupName}>
+        <LayerSelector.GroupName
+          data-cy={`dashboard-${isSelected ? 'selected-' : ''}amp-result-group`}
+          title={groupName}
+        >
           {getTitle(groupName) ?? ''}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>

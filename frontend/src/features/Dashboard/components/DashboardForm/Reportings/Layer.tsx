@@ -136,7 +136,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
         {reportingStatusFlag}
         <Summary>
           <Title>
-            <Name>
+            <Name data-cy={`dashboard-${isSelected ? 'selected-' : ''}reporting-${reporting.id}`}>
               Signalement {getFormattedReportingId(reporting.reportingId)} -{' '}
               {reporting.reportingSources?.map(source => source.displayedSource).join(', ')}
             </Name>

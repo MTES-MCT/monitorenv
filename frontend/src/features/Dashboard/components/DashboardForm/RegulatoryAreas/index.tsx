@@ -57,6 +57,7 @@ export function RegulatoryAreas({
           $baseLayersLength={Object.values(regulatoryAreasByLayerName).length}
           $maxHeight={100}
           $showBaseLayers={isExpanded}
+          data-cy="dashboard-regulatory-areas-list"
         >
           {Object.entries(regulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
             const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)

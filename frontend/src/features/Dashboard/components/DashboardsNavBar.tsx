@@ -141,7 +141,7 @@ const Container = styled.div`
 `
 const DashboardName = styled.span`
   margin-right: 16px;
-  width: 50%;
+  max-width: 50%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

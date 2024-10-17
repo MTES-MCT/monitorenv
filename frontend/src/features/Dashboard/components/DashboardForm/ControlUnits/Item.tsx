@@ -28,7 +28,7 @@ export function Item({ controlUnit }: { controlUnit: ControlUnit.ControlUnit }) 
   }
 
   return (
-    <Wrapper>
+    <Wrapper data-cy={`dashboard-control-unit-${controlUnit.id}`}>
       <FirstLine>
         <ControlUnitName>
           <Bold>{controlUnit.name} - </Bold>
@@ -37,7 +37,7 @@ export function Item({ controlUnit }: { controlUnit: ControlUnit.ControlUnit }) 
         <IconButton
           accent={Accent.TERTIARY}
           color={isSelected ? THEME.color.blueGray : THEME.color.slateGray}
-          data-cy="regulatory-zone-check"
+          data-cy="dashboard-control-unit-selected"
           Icon={isSelected ? Icon.PinFilled : Icon.Pin}
           onClick={selectControlUnit}
           title="Sélectionner la zone"
