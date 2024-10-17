@@ -1,7 +1,7 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { getDashboardById, type DashboardType } from '@features/Dashboard/slice'
+import { getDashboardById } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
@@ -27,13 +27,11 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
-  const dashboard: DashboardType = useAppSelector(state => getDashboardById(state, activeDashboardId))
+  const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
 
-  const isLayerVisible = displayDashboardLayer && !!dashboard
+  const isLayerVisible = displayDashboardLayer
 
-  const openPanel = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.openPanel : undefined
-  )
+  const openPanel = dashboard?.openPanel
 
   const drawBorder = useCallback(
     (layerId: number, feature: Feature<Geometry>, type: Dashboard.Block) => {
@@ -66,71 +64,73 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
     if (map) {
       previewLayersVectorSourceRef.current.clear(true)
 
-      // Regulatory Areas
-      if (regulatoryLayers?.entities && dashboard) {
-        let regulatoryAreaToDisplay = dashboard.regulatoryIdsToDisplay
+      if (dashboard) {
+        // Regulatory Areas
+        if (regulatoryLayers?.entities) {
+          let regulatoryAreaToDisplay = dashboard.regulatoryIdsToDisplay
 
-        if (openPanel?.type === Dashboard.Block.REGULATORY_AREAS && !regulatoryAreaToDisplay.includes(openPanel.id)) {
-          regulatoryAreaToDisplay = [...regulatoryAreaToDisplay, openPanel.id]
-        }
-        const features = regulatoryAreaToDisplay.reduce((feats: Feature[], layerId) => {
-          const layer = regulatoryLayers.entities[layerId]
-          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getRegulatoryFeature({ code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS, layer })
-            drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
-            feature.setStyle(getRegulatoryLayerStyle(feature))
-            feats.push(feature)
+          if (openPanel?.type === Dashboard.Block.REGULATORY_AREAS && !regulatoryAreaToDisplay.includes(openPanel.id)) {
+            regulatoryAreaToDisplay = [...regulatoryAreaToDisplay, openPanel.id]
           }
+          const features = regulatoryAreaToDisplay.reduce((feats: Feature[], layerId) => {
+            const layer = regulatoryLayers.entities[layerId]
+            if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+              const feature = getRegulatoryFeature({ code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS, layer })
+              drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
+              feature.setStyle(getRegulatoryLayerStyle(feature))
+              feats.push(feature)
+            }
 
-          return feats
-        }, [])
+            return feats
+          }, [])
 
-        previewLayersVectorSourceRef.current.addFeatures(features)
-      }
-
-      // AMP
-      if (ampLayers?.entities && dashboard) {
-        let ampToDisplay = dashboard.ampIdsToDisplay
-
-        if (openPanel?.type === Dashboard.Block.AMP && !ampToDisplay?.includes(openPanel.id)) {
-          ampToDisplay = [...(ampToDisplay ?? []), openPanel.id]
+          previewLayersVectorSourceRef.current.addFeatures(features)
         }
-        const features = ampToDisplay?.reduce((feats: Feature[], layerId) => {
-          const layer = ampLayers.entities[layerId]
-          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
-            drawBorder(layerId, feature, Dashboard.Block.AMP)
-            feature.setStyle(getAMPLayerStyle(feature))
-            feats.push(feature)
+
+        // AMP
+        if (ampLayers?.entities) {
+          let ampToDisplay = dashboard.ampIdsToDisplay
+
+          if (openPanel?.type === Dashboard.Block.AMP && !ampToDisplay.includes(openPanel.id)) {
+            ampToDisplay = [...ampToDisplay, openPanel.id]
           }
+          const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
+            const layer = ampLayers.entities[layerId]
+            if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
+              drawBorder(layerId, feature, Dashboard.Block.AMP)
+              feature.setStyle(getAMPLayerStyle(feature))
+              feats.push(feature)
+            }
 
-          return feats
-        }, [])
+            return feats
+          }, [])
 
-        previewLayersVectorSourceRef.current.addFeatures(features ?? [])
-      }
+          previewLayersVectorSourceRef.current.addFeatures(features ?? [])
+        }
 
-      // Vigilance Areas
-      const openPanelIsVigilanceArea = openPanel?.type === Dashboard.Block.VIGILANCE_AREAS
-      if (vigilanceAreas?.entities && openPanelIsVigilanceArea) {
-        const layer = vigilanceAreas.entities[openPanel?.id]
-        if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-          const feature = getVigilanceAreaZoneFeature(layer, Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS)
-          feature.set('isSelected', true)
-          feature.setStyle(getVigilanceAreaLayerStyle(feature))
+        // Vigilance Areas
+        const openPanelIsVigilanceArea = openPanel?.type === Dashboard.Block.VIGILANCE_AREAS
+        if (vigilanceAreas?.entities && openPanelIsVigilanceArea) {
+          const layer = vigilanceAreas.entities[openPanel?.id]
+          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            const feature = getVigilanceAreaZoneFeature(layer, Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS)
+            feature.set('isSelected', true)
+            feature.setStyle(getVigilanceAreaLayerStyle(feature))
 
+            previewLayersVectorSourceRef.current.addFeature(feature)
+          }
+        }
+
+        // Reporting
+        if (dashboard.reportingToDisplay?.geom) {
+          const feature = getReportingZoneFeature(
+            dashboard.reportingToDisplay,
+            Dashboard.featuresCode.DASHBOARD_REPORTINGS
+          )
+          feature.setStyle(editingReportingStyleFn)
           previewLayersVectorSourceRef.current.addFeature(feature)
         }
-      }
-
-      // Reporting
-      if (dashboard?.reportingToDisplay?.geom && dashboard) {
-        const feature = getReportingZoneFeature(
-          dashboard.reportingToDisplay,
-          Dashboard.featuresCode.DASHBOARD_REPORTINGS
-        )
-        feature.setStyle(editingReportingStyleFn)
-        previewLayersVectorSourceRef.current.addFeature(feature)
       }
     }
   }, [ampLayers?.entities, dashboard, drawBorder, map, openPanel, regulatoryLayers?.entities, vigilanceAreas?.entities])
