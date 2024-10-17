@@ -5,13 +5,16 @@ import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { measurementStyle, measurementStyleWithCenter } from '@features/map/layers/styles/measurement.style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
+import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef } from 'react'
@@ -36,6 +39,9 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
 
   // Selected items
+  const geom = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.geom : undefined
+  )
   const selectedRegulatoryAreaIds = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.regulatoryAreas : []
   )
@@ -150,9 +156,19 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
 
         layersVectorSourceRef.current.addFeatures(features)
       }
+
+      if (geom) {
+        const dashboardAreaFeature = new GeoJSON({
+          featureProjection: OPENLAYERS_PROJECTION
+        }).readFeature(geom)
+        dashboardAreaFeature.setStyle([measurementStyle, measurementStyleWithCenter])
+
+        layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
+      }
     }
   }, [
     ampLayers?.entities,
+    geom,
     map,
     openPanel?.id,
     openPanel?.type,
