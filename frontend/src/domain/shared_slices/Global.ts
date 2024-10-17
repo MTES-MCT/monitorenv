@@ -102,7 +102,7 @@ const initialState: GlobalStateType = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayInterestPoint: true,
-  displayDashboard: true && isDashboardEnabled(),
+  displayDashboard: isDashboardEnabled(),
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
   displayRightMenuControlUnitListButton: true,
@@ -116,7 +116,7 @@ const initialState: GlobalStateType = {
   displayInterestPointLayer: true,
   displayReportingToAttachLayer: true,
   displayVigilanceAreaLayer: true,
-  displayDashboardLayer: true && isDashboardEnabled(),
+  displayDashboardLayer: isDashboardEnabled(),
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
@@ -195,8 +195,8 @@ const globalSlice = createSlice({
       state.displayReportingsOverlay = true
       state.displayRightMenuControlUnitListButton = true
       state.displaySearchSemaphoreButton = true
-      state.displayDashboard = true && isDashboardEnabled()
-      state.displayDashboardLayer = true && isDashboardEnabled()
+      state.displayDashboard = isDashboardEnabled()
+      state.displayDashboardLayer = isDashboardEnabled()
     },
 
     setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
