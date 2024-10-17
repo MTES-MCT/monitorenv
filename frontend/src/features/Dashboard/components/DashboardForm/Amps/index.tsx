@@ -56,6 +56,7 @@ export function Amps({
           $baseLayersLength={Object.values(ampsByLayerName).length}
           $maxHeight={100}
           $showBaseLayers={isExpanded}
+          data-cy="dashboard-amp-list"
         >
           {Object.entries(ampsByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
             const layersId = layerIdsInGroup.map((layerId: AMPFromAPI) => layerId.id)

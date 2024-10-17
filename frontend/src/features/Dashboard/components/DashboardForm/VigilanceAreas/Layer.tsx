@@ -70,7 +70,10 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
           legendKey={vigilanceArea?.comments ?? 'aucun nom'}
           type={vigilanceArea?.name ?? 'aucun nom'}
         />
-        <LayerSelector.Name data-cy={`vigilance-area-zone-${vigilanceArea?.name}`} title={vigilanceArea?.name}>
+        <LayerSelector.Name
+          data-cy={`dashboard-${isSelected ? 'selected-' : ''}vigilance-area-zone-${vigilanceArea?.name}`}
+          title={vigilanceArea?.name}
+        >
           {vigilanceArea?.name}
         </LayerSelector.Name>
       </NameContainer>
@@ -89,7 +92,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
           accent={Accent.TERTIARY}
           aria-label="Sélectionner la zone"
           color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
-          data-cy="regulatory-zone-check"
+          data-cy="dashboard-vigilance-area-zone-check"
           Icon={isPinned ? Icon.PinFilled : Icon.Pin}
           onClick={handleSelectZone}
         />

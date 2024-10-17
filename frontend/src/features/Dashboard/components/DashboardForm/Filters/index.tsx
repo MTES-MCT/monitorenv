@@ -138,7 +138,7 @@ export const DashboardFilters = forwardRef<HTMLDivElement>((_, ref) => {
         </StyledButton>
       </FiltersContainer>
       {(hasFilters || filters?.specificPeriod) && (
-        <TagsContainer>
+        <TagsContainer data-cy="dashboard-filter-tags">
           {filters?.vigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && (
             <StyledCustomPeriodContainer>
               <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
