@@ -567,5 +567,18 @@ export const getFilteredVigilanceAreas = createSelector(
   }
 )
 
+const getDashboardState = state => state.dashboard
+
+// The extra variables are accessible like so..
+// We create a selector that ignores the state variable
+// Returning just the passed id
+const getId = (_, id) => id
+
+export const getDashboardById = createSelector(
+  getDashboardState,
+  getId,
+  (dashboardSate, id) => dashboardSate.dashboards[id]
+)
+
 export const dashboardActions = dashboardSlice.actions
 export const dashboardReducer = dashboardSlice.reducer
