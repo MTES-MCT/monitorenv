@@ -13,9 +13,6 @@ import type { HomeAppThunk } from '@store/index'
 export const editDashboard =
   (id): HomeAppThunk =>
   async (dispatch, getState) => {
-    const dashboardToEdit = dashboardsAPI.endpoints.getDashboard
-    const extractedArea = dashboardsAPI.endpoints.getExtratedArea
-
     // if dasbaord already open
     if (getState().dashboard.dashboards[id] === id) {
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id })))
@@ -24,38 +21,43 @@ export const editDashboard =
     }
 
     try {
-      const dashboardRequest = dispatch(dashboardToEdit.initiate(id))
-      const dashboardResponse = await dashboardRequest.unwrap()
-      if (!dashboardResponse || !dashboardResponse.geom) {
+      const { data: dashboard } = await dispatch(dashboardsAPI.endpoints.getDashboard.initiate(id))
+      if (!dashboard || !dashboard.geom) {
         throw Error()
       }
 
+      // get reportings
       // TODO(17/10.24): use api to get reporting by ids when available
-      const reportingsIds = dashboardResponse.reportings
-
+      const reportingsIds = dashboard.reportings
       const reportings = await Promise.all(
         reportingsIds.map(async reportingId => {
-          const reportingRequest = dispatch(reportingsAPI.endpoints.getReporting.initiate(reportingId))
-          const reportingResponse = await reportingRequest.unwrap()
+          const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(reportingId))
+          if (!reporting) {
+            throw Error()
+          }
 
-          return reportingResponse
+          return reporting
         })
       )
-      const extractedAreaRequest = dispatch(extractedArea.initiate(dashboardResponse.geom))
-      const extractedAreaResponse = await extractedAreaRequest.unwrap()
+
+      // geta dashboardData
+      const { data: extractedArea } = await dispatch(dashboardsAPI.endpoints.getExtratedArea.initiate(dashboard.geom))
+      if (!extractedArea) {
+        throw Error()
+      }
 
       const formattedDashboard = {
         ...initialDashboard,
         dashboard: {
-          ...dashboardResponse,
+          ...dashboard,
           reportings
         },
-        extractedArea: extractedAreaResponse
+        extractedArea
       }
 
       dispatch(dashboardActions.editDashboard(formattedDashboard))
-      dispatch(dashboardActions.setActiveDashboardId(dashboardResponse.id))
-      dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: dashboardResponse.id })))
+      dispatch(dashboardActions.setActiveDashboardId(dashboard.id))
+      dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: dashboard.id })))
     } catch (error) {
       dispatch(
         addSideWindowBanner({

@@ -1,7 +1,7 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { getReportingToDisplay } from '@features/Dashboard/slice'
+import { getDashboardById, type DashboardType } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
@@ -24,9 +24,12 @@ import type { Geometry } from 'ol/geom'
 
 export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
   const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
-  const isLayerVisible = displayDashboardLayer
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+
+  const dashboard: DashboardType = useAppSelector(state => getDashboardById(state, activeDashboardId))
+
+  const isLayerVisible = displayDashboardLayer && !!dashboard
 
   const openPanel = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.openPanel : undefined
@@ -43,15 +46,6 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: ampLayers } = useGetAMPsQuery()
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
-
-  const regulatoryIdsToDisplay = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.regulatoryIdsToDisplay ?? [] : []
-  )
-  const ampIdsToDisplay = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.ampIdsToDisplay ?? [] : []
-  )
-
-  const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
 
   const previewLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
     VectorSource<Feature<Geometry>>
@@ -73,8 +67,8 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       previewLayersVectorSourceRef.current.clear(true)
 
       // Regulatory Areas
-      if (regulatoryLayers?.entities) {
-        let regulatoryAreaToDisplay = regulatoryIdsToDisplay
+      if (regulatoryLayers?.entities && dashboard) {
+        let regulatoryAreaToDisplay = dashboard.regulatoryIdsToDisplay
 
         if (openPanel?.type === Dashboard.Block.REGULATORY_AREAS && !regulatoryAreaToDisplay.includes(openPanel.id)) {
           regulatoryAreaToDisplay = [...regulatoryAreaToDisplay, openPanel.id]
@@ -95,13 +89,13 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       }
 
       // AMP
-      if (ampLayers?.entities) {
-        let ampToDisplay = ampIdsToDisplay
+      if (ampLayers?.entities && dashboard) {
+        let ampToDisplay = dashboard.ampIdsToDisplay
 
-        if (openPanel?.type === Dashboard.Block.AMP && !ampToDisplay.includes(openPanel.id)) {
-          ampToDisplay = [...ampToDisplay, openPanel.id]
+        if (openPanel?.type === Dashboard.Block.AMP && !ampToDisplay?.includes(openPanel.id)) {
+          ampToDisplay = [...(ampToDisplay ?? []), openPanel.id]
         }
-        const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
+        const features = ampToDisplay?.reduce((feats: Feature[], layerId) => {
           const layer = ampLayers.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
@@ -113,7 +107,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
           return feats
         }, [])
 
-        previewLayersVectorSourceRef.current.addFeatures(features)
+        previewLayersVectorSourceRef.current.addFeatures(features ?? [])
       }
 
       // Vigilance Areas
@@ -130,23 +124,16 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       }
 
       // Reporting
-      if (selectedReporting?.geom) {
-        const feature = getReportingZoneFeature(selectedReporting, Dashboard.featuresCode.DASHBOARD_REPORTINGS)
+      if (dashboard?.reportingToDisplay?.geom && dashboard) {
+        const feature = getReportingZoneFeature(
+          dashboard.reportingToDisplay,
+          Dashboard.featuresCode.DASHBOARD_REPORTINGS
+        )
         feature.setStyle(editingReportingStyleFn)
         previewLayersVectorSourceRef.current.addFeature(feature)
       }
     }
-  }, [
-    ampIdsToDisplay,
-    ampLayers?.entities,
-    drawBorder,
-    map,
-    openPanel,
-    regulatoryIdsToDisplay,
-    regulatoryLayers?.entities,
-    selectedReporting,
-    vigilanceAreas?.entities
-  ])
+  }, [ampLayers?.entities, dashboard, drawBorder, map, openPanel, regulatoryLayers?.entities, vigilanceAreas?.entities])
 
   useEffect(() => {
     map.getLayers().push(previewLayersVectorLayerRef.current)
