@@ -30,6 +30,7 @@ export const editDashboard =
         throw Error()
       }
 
+      // TODO(17/10.24): use api to get reporting by ids when available
       const reportingsIds = dashboardResponse.reportings
 
       const reportings = await Promise.all(

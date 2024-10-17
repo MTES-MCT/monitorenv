@@ -64,7 +64,10 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
     <StyledLayer ref={ref} $isSelected={isSelected} onClick={toggleZoneMetadata}>
       <Wrapper>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
-        <LayerSelector.Name data-cy="amp-layer-type" title={layer?.type ?? 'aucun'}>
+        <LayerSelector.Name
+          data-cy={`dashboard-${isSelected ? 'selected-' : ''}amp-zone-${layer?.id}`}
+          title={layer?.type ?? 'aucun'}
+        >
           {layer?.type ?? 'AUCUN TYPE'}
         </LayerSelector.Name>
       </Wrapper>
@@ -81,7 +84,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
           <IconButton
             accent={Accent.TERTIARY}
             color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
-            data-cy="regulatory-zone-check"
+            data-cy="dashboard-amp-zone-check"
             Icon={isPinned ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
             title="Sélectionner la zone"

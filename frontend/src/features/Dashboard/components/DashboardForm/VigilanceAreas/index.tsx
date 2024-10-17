@@ -50,6 +50,7 @@ export function VigilanceAreas({
           $baseLayersLength={filteredVigilanceAreas?.length ?? 0}
           $maxHeight={100}
           $showBaseLayers={isExpanded}
+          data-cy="dashboard-vigilance-areas-list"
         >
           {filteredVigilanceAreas?.map(vigilanceArea => (
             <Layer
