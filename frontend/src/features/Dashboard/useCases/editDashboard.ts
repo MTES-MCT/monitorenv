@@ -7,6 +7,7 @@ import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
 import { dashboardActions, initialDashboard } from '../slice'
+import { filterDashboardWithExtractedData } from '../utils'
 
 import type { HomeAppThunk } from '@store/index'
 
@@ -22,7 +23,7 @@ export const editDashboard =
 
     try {
       const { data: dashboard } = await dispatch(dashboardsAPI.endpoints.getDashboard.initiate(id))
-      if (!dashboard || !dashboard.geom) {
+      if (!dashboard?.geom) {
         throw Error()
       }
 
@@ -46,15 +47,19 @@ export const editDashboard =
         throw Error()
       }
 
+      const dashboardWithReportings = {
+        ...dashboard,
+        reportings
+      }
+      const filteredDashboard = filterDashboardWithExtractedData(dashboardWithReportings, extractedArea)
+
       const formattedDashboard = {
         ...initialDashboard,
         dashboard: {
-          ...dashboard,
-          reportings
+          ...filteredDashboard
         },
         extractedArea
       }
-
       dispatch(dashboardActions.editDashboard(formattedDashboard))
       dispatch(dashboardActions.setActiveDashboardId(dashboard.id))
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: dashboard.id })))

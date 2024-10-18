@@ -59,11 +59,11 @@ class DashboardsITests {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    @Test
-    fun `Should extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
-        // Given
-        val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
+    val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
 
+    @Test
+    fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
+        // Given
         val reportings = listOf(ReportingFixture.aReportingDTO())
         val regulatoryAreas = listOf(RegulatoryAreaFixture.aRegulatoryArea())
         val amps = listOf(AmpFixture.anAmp())
@@ -94,10 +94,8 @@ class DashboardsITests {
     }
 
     @Test
-    fun `Should extract response should be ok when nothing intersect the given geometry`() {
+    fun `extract response should be ok when nothing intersect the given geometry`() {
         // Given
-        val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
-
         val reportings: List<ReportingDTO> = listOf()
         val regulatoryAreas: List<RegulatoryAreaEntity> = listOf()
         val amps: List<AMPEntity> = listOf()
@@ -128,7 +126,7 @@ class DashboardsITests {
     }
 
     @Test
-    fun `Should extract response should be bad request if the given geometry is not valid`() {
+    fun `extract response should be bad request if the given geometry is not valid`() {
         // Given
         val geometry = "Wrong geometry param"
 
@@ -143,12 +141,12 @@ class DashboardsITests {
     }
 
     @Test
-    fun `Should put response should be ok with and return the saved dashboard`() {
+    fun `put response should be ok with and return the saved dashboard`() {
         // Given
         val id = UUID.randomUUID()
         val name = "dashboard1"
         val comments = "comments"
-        val geometry = WKTReader().read("MULTIPOINT ((-1.548 44.315),(-1.245 44.305))")
+        val geometry = WKTReader().read(geometry)
         val amps = listOf(1)
         val regulatoryAreas = listOf(2)
         val vigilanceAreas = listOf(3)
@@ -222,7 +220,7 @@ class DashboardsITests {
     }
 
     @Test
-    fun `Should getAll response should return dashboards list`() {
+    fun `getAll response should return dashboards list`() {
         // Given
         val dashboard1 =
             aDashboard(
@@ -248,7 +246,7 @@ class DashboardsITests {
     }
 
     @Test
-    fun `Should get specific dashboard when requested by Id`() {
+    fun `get specific dashboard when requested by Id`() {
         // Given
         val id = UUID.randomUUID()
         val dashboard =
