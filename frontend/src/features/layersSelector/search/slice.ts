@@ -35,6 +35,22 @@ const layerSearchSlice = createSlice({
   initialState,
   name: 'layerSearch',
   reducers: {
+    resetSearch(state) {
+      state.regulatoryLayersSearchResult = undefined
+      state.isRegulatorySearchResultsVisible = false
+      state.filteredRegulatoryThemes = []
+      state.ampsSearchResult = undefined
+      state.isAmpSearchResultsVisible = false
+      state.filteredAmpTypes = []
+      state.vigilanceAreaSearchResult = undefined
+      state.isVigilanceAreaSearchResultsVisible = false
+      state.vigilanceAreaSpecificPeriodFilter = undefined
+      state.filteredVigilanceAreaPeriod = undefined
+      state.shouldFilterSearchOnMapExtent = false
+      state.globalSearchText = ''
+      state.searchExtent = undefined
+    },
+
     /**
      * Set the selected zone to filter regulations
      * @param {Object=} state
@@ -66,10 +82,10 @@ const layerSearchSlice = createSlice({
     setIsAmpSearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isAmpSearchResultsVisible = action.payload
     },
-
     setIsRegulatorySearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isRegulatorySearchResultsVisible = action.payload
     },
+
     setIsVigilanceAreaSearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isVigilanceAreaSearchResultsVisible = action.payload
     },
@@ -89,14 +105,14 @@ const layerSearchSlice = createSlice({
     setVigilanceAreaSpecificPeriodFilter(state, action: PayloadAction<Array<string> | undefined>) {
       state.vigilanceAreaSpecificPeriodFilter = action.payload
     },
-
-    setVigilanceAreasSearchResult(state, action: PayloadAction<Array<number>>) {
+    setVigilanceAreasSearchResult(state, action: PayloadAction<Array<number> | undefined>) {
       state.vigilanceAreaSearchResult = action.payload
     }
   }
 })
 
 export const {
+  resetSearch,
   resetSearchExtent,
   setAMPsSearchResult,
   setFilteredAmpTypes,
