@@ -17,8 +17,7 @@ class JpaAMPRepository(private val dbAMPRepository: IDBAMPRepository) :
         return dbAMPRepository.count()
     }
 
-    override fun findAllByGeometry(geometry: Geometry): List<AMPEntity> {
-        val amps = dbAMPRepository.findAllByGeom(geometry)
-        return amps.map { it.toAMP() }
+    override fun findAllIdByGeometry(geometry: Geometry): List<Int> {
+        return dbAMPRepository.findAllIdByGeom(geometry)
     }
 }

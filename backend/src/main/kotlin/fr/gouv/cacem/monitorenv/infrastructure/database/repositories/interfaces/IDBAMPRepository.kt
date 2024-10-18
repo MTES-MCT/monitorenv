@@ -10,10 +10,9 @@ interface IDBAMPRepository : JpaRepository<AMPModel, Int> {
         value =
             """
 
-        SELECT * FROM amp_cacem
+        SELECT id FROM AMPModel
         WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
         """,
-        nativeQuery = true,
     )
-    fun findAllByGeom(geometry: Geometry): List<AMPModel>
+    fun findAllIdByGeom(geometry: Geometry): List<Int>
 }

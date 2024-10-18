@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingsDataOutput
@@ -38,6 +39,7 @@ import java.time.ZonedDateTime
 class Reportings(
     private val createOrUpdateReporting: CreateOrUpdateReporting,
     private val getReportingById: GetReportingById,
+    private val getReportingByIds: GetReportingsByIds,
     private val getReportings: GetReportings,
     private val deleteReporting: DeleteReporting,
     private val deleteReportings: DeleteReportings,
@@ -92,6 +94,16 @@ class Reportings(
         id: Int,
     ): ReportingDataOutput {
         return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
+    }
+
+    @GetMapping("/v1/reportings/ids/{ids}")
+    @Operation(summary = "Get reportings by ids")
+    fun getAll(
+        @PathVariable(name = "ids")
+        @PathParam("ids")
+        ids: List<Int>,
+    ): List<ReportingDataOutput> {
+        return getReportingByIds.execute(ids).map { ReportingDataOutput.fromReportingDTO(it) }
     }
 
     @GetMapping("/v1/reportings")
