@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -87,10 +87,10 @@ class DashboardsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.inseeCode", equalTo("44")))
-            .andExpect(jsonPath("$.reportings[0].id", equalTo(reportings[0].reporting.id)))
-            .andExpect(jsonPath("$.regulatoryAreas[0].id", equalTo(regulatoryAreas[0].id)))
-            .andExpect(jsonPath("$.amps[0].id", equalTo(amps[0].id)))
-            .andExpect(jsonPath("$.vigilanceAreas[0].id", equalTo(vigilanceAreas[0].id)))
+            .andExpect(jsonPath("$.reportings[0]", equalTo(reportings[0].reporting.id)))
+            .andExpect(jsonPath("$.regulatoryAreas[0]", equalTo(regulatoryAreas[0].id)))
+            .andExpect(jsonPath("$.amps[0]", equalTo(amps[0].id)))
+            .andExpect(jsonPath("$.vigilanceAreas[0]", equalTo(vigilanceAreas[0].id)))
     }
 
     @Test
