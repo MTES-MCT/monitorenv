@@ -8,17 +8,13 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import {
+  resetSearch,
   resetSearchExtent,
-  setAMPsSearchResult,
-  setFilteredAmpTypes,
-  setFilteredRegulatoryThemes,
-  setFilteredVigilanceAreaPeriod,
-  setGlobalSearchText,
-  setRegulatoryLayersSearchResult,
+  setIsAmpSearchResultsVisible,
+  setIsRegulatorySearchResultsVisible,
+  setIsVigilanceAreaSearchResultsVisible,
   setSearchExtent,
-  setShouldFilterSearchOnMapExtent,
-  setVigilanceAreaSpecificPeriodFilter,
-  setVigilanceAreasSearchResult
+  setShouldFilterSearchOnMapExtent
 } from './slice'
 import { closeMetadataPanel } from '../metadataPanel/slice'
 
@@ -71,17 +67,8 @@ export function SearchOnExtentExtraButtons({
   }
 
   const handleResetSearch = () => {
-    dispatch(setRegulatoryLayersSearchResult([]))
-    dispatch(setAMPsSearchResult([]))
-    dispatch(setVigilanceAreasSearchResult([]))
     setShouldReloadSearchOnExtent(false)
-    dispatch(setShouldFilterSearchOnMapExtent(false))
-    dispatch(setGlobalSearchText(''))
-    dispatch(setFilteredRegulatoryThemes([]))
-    dispatch(setFilteredAmpTypes([]))
-    dispatch(setFilteredVigilanceAreaPeriod(undefined))
-    dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
-    dispatch(resetSearchExtent())
+    dispatch(resetSearch())
     dispatch(closeMetadataPanel())
     dispatch(closeAreaOverlay())
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
@@ -97,6 +84,9 @@ export function SearchOnExtentExtraButtons({
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
     }
+    dispatch(setIsAmpSearchResultsVisible(true))
+    dispatch(setIsRegulatorySearchResultsVisible(true))
+    dispatch(setIsVigilanceAreaSearchResultsVisible(true))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,

@@ -53,6 +53,7 @@ context('Side Window > Mission Form > Mission zone', () => {
     cy.wait(250)
 
     dispatch(setGeometry(surveillanceGeometry))
+    cy.wait(250)
   })
 
   it('Should add a surveillance and computed mission zone with surveillance zone', () => {
@@ -106,7 +107,7 @@ context('Side Window > Mission Form > Mission zone', () => {
       5,
       0,
       response => {
-        expect(response && response.statusCode).equal(200)
+        expect(response?.statusCode).equal(200)
         expect(response.body.geom).to.deep.equal(response.body.envActions[0].geom)
 
         cy.wait(200)
@@ -131,7 +132,7 @@ context('Side Window > Mission Form > Mission zone', () => {
     // Add control  which is most recent than surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
-    cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
+
     const controlEndDate = getFutureDate(5, 'day')
     cy.fill('Date et heure du contrôle (UTC)', controlEndDate)
     cy.clickButton('Ajouter un point de contrôle')
@@ -142,10 +143,13 @@ context('Side Window > Mission Form > Mission zone', () => {
       type: 'MultiPoint'
     }
     dispatch(setGeometry(controlGeometry))
-    cy.wait(1000)
+    cy.wait(500)
     // close manually the draw modal
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-    cy.wait(1000)
+    cy.wait(500)
+
+    cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
+
     const computedMissionZone: GeoJSON.Geometry = {
       coordinates: [
         [
@@ -237,7 +241,7 @@ context('Side Window > Mission Form > Mission zone', () => {
       5,
       0,
       response => {
-        expect(response && response.statusCode).equal(200)
+        expect(response?.statusCode).equal(200)
         expect(response.body.geom.coordinates).to.deep.equal(computedMissionZone.coordinates)
         expect(response.body.geom.type).to.deep.equal(computedMissionZone.type)
 

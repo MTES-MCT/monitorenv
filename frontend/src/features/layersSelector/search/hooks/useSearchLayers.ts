@@ -112,7 +112,7 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
         )
         dispatch(setAMPsSearchResult(searchedAMPsInExtent))
       } else {
-        dispatch(setAMPsSearchResult([]))
+        dispatch(setAMPsSearchResult(undefined))
       }
 
       if (shouldSearchByText || shouldSearchThroughRegulatoryThemes || shouldSearchByExtent) {
@@ -200,7 +200,7 @@ export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers })
         dispatch(setVigilanceAreasSearchResult(searchedVigilanceAreasInExtent))
       } else {
         dispatch(setVigilanceAreasSearchResult(vigilanceAreaIdsPerPeriod))
-        dispatch(setRegulatoryLayersSearchResult([]))
+        dispatch(setRegulatoryLayersSearchResult(undefined))
       }
     }
 

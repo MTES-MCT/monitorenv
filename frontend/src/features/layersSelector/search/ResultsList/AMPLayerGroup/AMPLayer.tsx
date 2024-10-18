@@ -89,26 +89,26 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
           textToHighlight={layer?.type ?? ''}
         />
-        {layer?.type ?? 'AUCUN TYPE'}
+        {!layer?.type && 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
         {isLinkingAMPToVigilanceArea ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Ajouter la zone AMP à la zone de vigilance"
             data-cy="amp-zone-add"
             disabled={ampsLinkedToVigilanceAreaForm.includes(layerId)}
             Icon={Icon.Plus}
             onClick={addAMPToVigilanceArea}
+            title="Ajouter la zone AMP à la zone de vigilance"
           />
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Sélectionner la zone"
             color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
             data-cy="amp-zone-check"
             Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
+            title="Sélectionner la zone"
           />
         )}
       </LayerSelector.IconGroup>
