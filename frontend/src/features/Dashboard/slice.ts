@@ -146,6 +146,8 @@ export const dashboardSlice = createSlice({
             ]
             break
           case Dashboard.Block.REPORTINGS:
+            state.dashboards[id].dashboard.reportings = [...state.dashboards[id].dashboard.reportings, ...itemIds]
+            break
           case Dashboard.Block.COMMENTS:
           case Dashboard.Block.TERRITORIAL_PRESSURE:
           default:
@@ -161,18 +163,6 @@ export const dashboardSlice = createSlice({
 
       const regulatoryIds = state.dashboards[id]?.regulatoryIdsToDisplay
       state.dashboards[id].regulatoryIdsToDisplay = [...regulatoryIds, action.payload]
-    },
-    addReporting(state, action: PayloadAction<Reporting>) {
-      const reporting = action.payload
-      const id = state.activeDashboardId
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        const selectedReportings = state.dashboards[id].dashboard.reportings
-        state.dashboards[id].dashboard.reportings = [...selectedReportings, reporting]
-      }
     },
     createDashboard(
       state,
@@ -260,6 +250,10 @@ export const dashboardSlice = createSlice({
             )
             break
           case Dashboard.Block.REPORTINGS:
+            state.dashboards[id].dashboard.reportings = state.dashboards[id].dashboard.reportings.filter(
+              item => !itemIds.includes(item)
+            )
+            break
           case Dashboard.Block.COMMENTS:
           case Dashboard.Block.TERRITORIAL_PRESSURE:
           default:
@@ -276,21 +270,6 @@ export const dashboardSlice = createSlice({
       if (regulatoryIds) {
         state.dashboards[id].regulatoryIdsToDisplay = regulatoryIds.filter(
           regulatoryId => regulatoryId !== action.payload
-        )
-      }
-    },
-    removeReporting(state, action: PayloadAction<Reporting>) {
-      const reporting = action.payload
-      const id = state.activeDashboardId
-
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        const selectedReportings = state.dashboards[id].dashboard.reportings
-        state.dashboards[id].dashboard.reportings = selectedReportings.filter(
-          selectedReporting => selectedReporting.id !== reporting.id
         )
       }
     },
@@ -427,12 +406,7 @@ export const dashboardSlice = createSlice({
       if (activeDashboardId) {
         const dashboard = state.dashboards[activeDashboardId]
         if (dashboard) {
-          const reportings = dashboard.extractedArea?.reportings
-          const dashboardToUpdate: Dashboard.Dashboard = {
-            ...action.payload.dashboard,
-            reportings:
-              reportings?.filter(reporting => action.payload.dashboard.reportings.includes(+reporting.id)) ?? []
-          }
+          const dashboardToUpdate: Dashboard.Dashboard = action.payload.dashboard
 
           state.dashboards = {
             ...state.dashboards,
