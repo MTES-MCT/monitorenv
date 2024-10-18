@@ -20,11 +20,11 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // Edit the dashboard
     cy.get('h2').contains('Zones de vigilance').click()
     cy.wait(250)
-    cy.getDataCy('dashboard-vigilance-area-zone-check').eq(1).click()
+    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click()
 
     cy.get('h2').contains('Unités').click()
     cy.wait(250)
-    cy.getDataCy('dashboard-control-unit-selected').first().click()
+    cy.getDataCy('dashboard-control-unit-selected-10023').click()
 
     cy.clickButton('Prévisualiser la sélection')
 
@@ -43,6 +43,17 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
         vigilanceAreas: [9, 8]
       })
     })
+
+    // Undo modification
+    cy.get('h2').contains('Zones de vigilance').click()
+    cy.wait(250)
+    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click()
+
+    cy.get('h2').contains('Unités').click()
+    cy.wait(250)
+    cy.getDataCy('dashboard-control-unit-selected-10023').click()
+
+    cy.clickButton('Enregistrer le tableau')
 
     // close dashboard
     cy.get('[data-cy="dashboard-1"] > svg').first().click({ force: true }).wait(250)

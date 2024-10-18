@@ -14,5 +14,5 @@ interface IVigilanceAreaRepository {
 
     fun archiveOutdatedVigilanceAreas(): Int
 
-    fun findAllByGeometry(geometry: Geometry): List<VigilanceAreaEntity>
+    fun findAllIdByGeometry(geometry: Geometry): List<Int>
 }

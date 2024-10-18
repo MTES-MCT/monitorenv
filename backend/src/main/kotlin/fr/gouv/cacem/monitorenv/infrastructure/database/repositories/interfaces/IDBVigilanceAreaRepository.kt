@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
 import org.locationtech.jts.geom.Geometry
-import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -34,13 +33,12 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
     )
     fun archiveOutdatedVigilanceAreas(): Int
 
-    @EntityGraph(value = "VigilanceAreaModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value =
             """
-            SELECT vigilanceArea FROM VigilanceAreaModel vigilanceArea
+            SELECT vigilanceArea.id FROM VigilanceAreaModel vigilanceArea
             WHERE ST_INTERSECTS(st_setsrid(vigilanceArea.geom, 4326), st_setsrid(:geometry, 4326))
         """,
     )
-    fun findAllByGeom(geometry: Geometry): List<VigilanceAreaModel>
+    fun findAllIdByGeom(geometry: Geometry): List<Int>
 }

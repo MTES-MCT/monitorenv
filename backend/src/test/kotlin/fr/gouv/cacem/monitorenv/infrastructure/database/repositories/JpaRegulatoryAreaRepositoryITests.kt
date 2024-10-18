@@ -103,13 +103,13 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val regulatoryAreas = jpaRegulatoryAreasRepository.findAllByGeometry(polygon)
+        val regulatoryAreas = jpaRegulatoryAreasRepository.findAllIdByGeometry(polygon)
 
         // Then
         assertThat(regulatoryAreas).hasSize(4)
-        assertThat(regulatoryAreas[0].id).isEqualTo(425)
-        assertThat(regulatoryAreas[1].id).isEqualTo(134)
-        assertThat(regulatoryAreas[2].id).isEqualTo(300)
-        assertThat(regulatoryAreas[3].id).isEqualTo(625)
+        assertThat(regulatoryAreas[0]).isEqualTo(425)
+        assertThat(regulatoryAreas[1]).isEqualTo(134)
+        assertThat(regulatoryAreas[2]).isEqualTo(300)
+        assertThat(regulatoryAreas[3]).isEqualTo(625)
     }
 }

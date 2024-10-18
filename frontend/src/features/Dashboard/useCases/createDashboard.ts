@@ -5,8 +5,9 @@ import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
-import { closeDrawDashboard } from './closeDrawDashboard'
 import { dashboardActions } from '../slice'
+import { populateExtractAreaFromApi } from '../utils'
+import { closeDrawDashboard } from './closeDrawDashboard'
 
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -16,26 +17,32 @@ export const GET_EXTRACTED_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu créer le 
 export const createDashboard =
   (geometry: GeoJSON.Geometry): HomeAppThunk =>
   async (dispatch, getState) => {
-    const { data, error } = await dispatch(dashboardsAPI.endpoints.getExtratedArea.initiate(geometry))
-    if (data) {
-      dispatch(closeDrawDashboard())
-      const newId = `new-${Object.keys(getState().dashboard.dashboards).length}`
-      const newDashboardName = `Tab ${customDayjs().format('DD/MM/YYYY')}`
-      const dashboard = {
-        amps: [],
-        controlUnits: [],
-        geom: geometry,
-        id: newId,
-        inseeCode: data.inseeCode,
-        name: newDashboardName,
-        regulatoryAreas: [],
-        reportings: [],
-        vigilanceAreas: []
+    try {
+      const { data, error } = await dispatch(dashboardsAPI.endpoints.getExtratedArea.initiate(geometry))
+      if (data) {
+        dispatch(closeDrawDashboard())
+        const newId = `new-${Object.keys(getState().dashboard.dashboards).length}`
+        const newDashboardName = `Tab ${customDayjs().format('DD/MM/YYYY')}`
+        const dashboard = {
+          amps: [],
+          controlUnits: [],
+          geom: geometry,
+          id: newId,
+          inseeCode: data.inseeCode,
+          name: newDashboardName,
+          regulatoryAreas: [],
+          reportings: [],
+          vigilanceAreas: []
+        }
+        const extractedArea = await populateExtractAreaFromApi(dispatch, data)
+        dispatch(dashboardActions.createDashboard({ dashboard, defaultName: newDashboardName, extractedArea }))
+        dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
       }
-      dispatch(dashboardActions.createDashboard({ dashboard, defaultName: newDashboardName, extractedArea: data }))
-      dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
-    }
-    if (error) {
+
+      if (error) {
+        throw new Error()
+      }
+    } catch (error) {
       dispatch(
         addSideWindowBanner({
           children: GET_EXTRACTED_AREAS_ERROR_MESSAGE,

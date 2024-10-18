@@ -2,7 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -191,13 +195,13 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val vigilanceAreas = jpaVigilanceAreaRepository.findAllByGeometry(polygon)
+        val vigilanceAreas = jpaVigilanceAreaRepository.findAllIdByGeometry(polygon)
 
         val queryCount = customQueryCountListener?.getQueryCount()
         println("Number of Queries Executed: $queryCount")
 
         // Then
         assertThat(vigilanceAreas).hasSize(1)
-        assertThat(vigilanceAreas[0].id).isEqualTo(8)
+        assertThat(vigilanceAreas[0]).isEqualTo(8)
     }
 }

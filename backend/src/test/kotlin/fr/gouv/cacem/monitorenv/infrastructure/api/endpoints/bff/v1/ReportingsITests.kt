@@ -17,6 +17,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
@@ -67,6 +68,9 @@ class ReportingsITests {
 
     @MockBean
     private lateinit var getReportingById: GetReportingById
+
+    @MockBean
+    private lateinit var getReportingsByIds: GetReportingsByIds
 
     @MockBean
     private lateinit var deleteReporting: DeleteReporting

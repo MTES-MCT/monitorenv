@@ -198,10 +198,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         value =
             """
-        SELECT r.* FROM reportings r
-        WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
+        SELECT r.id FROM ReportingModel r
+        WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), st_setsrid(:geometry, 4326))
         """,
-        nativeQuery = true,
     )
-    fun findAllByGeom(geometry: Geometry): List<ReportingModel>
+    fun findAllByGeom(geometry: Geometry): List<Int>
 }

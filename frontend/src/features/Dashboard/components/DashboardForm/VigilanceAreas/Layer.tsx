@@ -92,7 +92,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
           accent={Accent.TERTIARY}
           aria-label="Sélectionner la zone"
           color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
-          data-cy="dashboard-vigilance-area-zone-check"
+          data-cy={`dashboard-vigilance-area-zone-check-${vigilanceArea.id}`}
           Icon={isPinned ? Icon.PinFilled : Icon.Pin}
           onClick={handleSelectZone}
         />
