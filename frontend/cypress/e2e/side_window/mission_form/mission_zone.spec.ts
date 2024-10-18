@@ -107,7 +107,7 @@ context('Side Window > Mission Form > Mission zone', () => {
       5,
       0,
       response => {
-        expect(response && response.statusCode).equal(200)
+        expect(response?.statusCode).equal(200)
         expect(response.body.geom).to.deep.equal(response.body.envActions[0].geom)
 
         cy.wait(200)
@@ -241,7 +241,7 @@ context('Side Window > Mission Form > Mission zone', () => {
       5,
       0,
       response => {
-        expect(response && response.statusCode).equal(200)
+        expect(response?.statusCode).equal(200)
         expect(response.body.geom.coordinates).to.deep.equal(computedMissionZone.coordinates)
         expect(response.body.geom.type).to.deep.equal(computedMissionZone.type)
 
