@@ -15,7 +15,6 @@ context('LayerTree > Vigilance Area Layers', () => {
   })
   it('A vigilance area Should be searched, added to My Zones and showed on the map with the Zone button', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    // cy.getDataCy('vigilance-area-results-list-button').contains('5 résultats')
 
     cy.fill('Rechercher une zone', 'Lorem ipsum') // "Lorem ipsum" is in comments of vigilance area
     cy.getDataCy('vigilance-area-results-list-button').contains('1 résultat').click()
