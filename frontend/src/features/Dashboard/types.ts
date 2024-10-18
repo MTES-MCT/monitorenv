@@ -13,6 +13,13 @@ export namespace Dashboard {
     reportings: Reporting[]
     vigilanceAreas: VigilanceArea.VigilanceArea[]
   }
+  export interface ExtractedAreaFromApi {
+    amps: number[]
+    inseeCode: string
+    regulatoryAreas: number[]
+    reportings: number[]
+    vigilanceAreas: number[]
+  }
   export type Dashboard = {
     amps: number[]
     comments?: string

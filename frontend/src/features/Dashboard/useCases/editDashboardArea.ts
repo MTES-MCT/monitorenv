@@ -1,10 +1,15 @@
+import { ampsAPI } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
+import { regulatoryLayersAPI } from '@api/regulatoryLayersAPI'
+import { reportingsAPI } from '@api/reportingsAPI'
+import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
 
 import { dashboardActions } from '../slice'
 import { filterDashboardWithExtractedData } from '../utils'
 
+import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
