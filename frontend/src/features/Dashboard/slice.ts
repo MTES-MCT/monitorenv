@@ -174,7 +174,6 @@ export const dashboardSlice = createSlice({
         state.dashboards[id].dashboard.reportings = [...selectedReportings, reporting]
       }
     },
-
     createDashboard(
       state,
       action: PayloadAction<{
@@ -192,6 +191,7 @@ export const dashboardSlice = createSlice({
         extractedArea: action.payload.extractedArea
       }
     },
+
     editDashboard(state, action: PayloadAction<DashboardType>) {
       const { id } = action.payload.dashboard
       if (!id) {
@@ -308,6 +308,9 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].filters = {}
+    },
+    resetDashboards() {
+      return INITIAL_STATE
     },
     setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
       state.activeDashboardId = action.payload

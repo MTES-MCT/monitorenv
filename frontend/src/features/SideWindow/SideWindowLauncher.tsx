@@ -1,3 +1,4 @@
+import { dashboardActions } from '@features/Dashboard/slice'
 import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo } from 'react'
 
@@ -50,6 +51,7 @@ export function SideWindowLauncher() {
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
     dispatch(reportingActions.resetReportingsOnSideWindow(reportingsOpenOnSideWindow))
     dispatch(missionFormsActions.resetMissions())
+    dispatch(dashboardActions.resetDashboards())
 
     if (reportingFormVisibility.context === ReportingContext.SIDE_WINDOW) {
       dispatch(setReportingFormVisibility({ context: ReportingContext.MAP, visibility: VisibilityState.NONE }))

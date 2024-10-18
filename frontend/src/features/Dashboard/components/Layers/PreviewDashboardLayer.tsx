@@ -28,10 +28,9 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
-
-  const isLayerVisible = displayDashboardLayer
-
   const openPanel = dashboard?.openPanel
+
+  const isLayerVisible = displayDashboardLayer && !!dashboard
 
   const drawBorder = useCallback(
     (layerId: number, feature: Feature<Geometry>, type: Dashboard.Block) => {

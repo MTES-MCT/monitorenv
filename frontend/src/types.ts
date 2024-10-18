@@ -4,7 +4,6 @@ import type { Geometry } from 'ol/geom'
 import type BaseLayer from 'ol/layer/Base'
 import type VectorImageLayer from 'ol/layer/VectorImage'
 import type VectorSource from 'ol/source/Vector'
-import type { CSSObject } from 'styled-components'
 
 export type MonitorEnvBaseLayer = BaseLayer & {
   layerId?: number
@@ -31,7 +30,6 @@ export type BannerStackItem = {
   id: number
   props: BannerStackItemProps
 }
-export type BannerStackItemProps = Omit<BannerProps, 'chilren' | 'onAutoClose' | 'onClose' | 'top'> & {
-  children: string
-  style?: CSSObject
+export type BannerStackItemProps = Omit<BannerProps, 'children' | 'onAutoClose' | 'onClose' | 'top'> & {
+  children: React.ReactNode
 }

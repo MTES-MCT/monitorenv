@@ -108,9 +108,7 @@ export function DashboardsNavBar() {
       dispatch(sideWindowActions.setCurrentPath(path))
       const routeParams = getDashboardPageRoute(path)
       const id = routeParams?.params.id
-      if (id) {
-        dispatch(dashboardActions.setActiveDashboardId(id))
-      }
+      dispatch(dashboardActions.setActiveDashboardId(id))
     }
   }
 

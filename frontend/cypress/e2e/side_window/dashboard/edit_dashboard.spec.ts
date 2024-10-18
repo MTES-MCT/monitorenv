@@ -54,7 +54,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
 
     cy.intercept('GET', `/bff/v1/dashboards/${id}`).as('editDashboard')
 
-    // Tab should be bisible
+    // Tab should be visible
     cy.getDataCy('dashboard-1').contains('Dashboard 1')
 
     cy.wait(250)
@@ -63,7 +63,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.fill('Thématique réglementaire', ['Mixte'])
     cy.get('h2').contains('Zones réglementaires').click()
     cy.wait(250)
-    // because result list have li / div for separtor we need to multiply the results by 2
+    // because result list have a separator so we need to multiply the results by 2
     cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 4)
     cy.getDataCy('dashboard-filter-tags').find('.Component-SingleTag > span').contains('Mixte')
 

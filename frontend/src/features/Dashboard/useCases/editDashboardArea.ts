@@ -1,9 +1,9 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
-import { intersection, intersectionBy } from 'lodash'
 
 import { dashboardActions } from '../slice'
+import { filterDashboardWithExtractedData } from '../utils'
 
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -18,26 +18,19 @@ export const editDashboardArea =
     if (data) {
       const dashboard = getState().dashboard.dashboards[dashboardKey]?.dashboard
       if (dashboard) {
-        const filteredDashboard = {
-          ...dashboard,
-          amps: intersection(
-            dashboard.amps,
-            data.amps.map(amp => amp.id)
-          ),
-          geom: geometry,
-          inseeCode: data.inseeCode,
-          regulatoryAreas: intersection(
-            dashboard.regulatoryAreas,
-            data.regulatoryAreas.map(reg => reg.id)
-          ),
-          reportings: intersectionBy(dashboard.reportings, data.reportings, 'id'),
-          vigilanceAreas: intersection(
-            dashboard.vigilanceAreas,
-            data.vigilanceAreas.map(vigilanceArea => vigilanceArea.id)
-          )
+        const filteredDashboard = filterDashboardWithExtractedData(dashboard, data)
+        const filteredDashboardWithGeom = {
+          ...filteredDashboard,
+          geom: geometry
         }
 
-        dispatch(dashboardActions.updateArea({ dashboardKey, extractedArea: data, filteredDashboard }))
+        dispatch(
+          dashboardActions.updateArea({
+            dashboardKey,
+            extractedArea: data,
+            filteredDashboard: filteredDashboardWithGeom
+          })
+        )
       }
     }
     if (error) {

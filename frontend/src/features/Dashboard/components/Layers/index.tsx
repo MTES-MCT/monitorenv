@@ -42,7 +42,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
   const openPanel = dashboard?.openPanel
   const activeDashboard = dashboard?.dashboard
 
-  const isLayerVisible = displayDashboardLayer
+  const isLayerVisible = displayDashboardLayer && !!dashboard
 
   const layersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const layersVectorLayerRef = useRef(
