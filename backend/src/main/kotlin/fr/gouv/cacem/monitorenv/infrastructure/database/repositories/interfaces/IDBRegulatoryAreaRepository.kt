@@ -9,10 +9,9 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     @Query(
         value =
             """
-            SELECT * FROM regulations_cacem
-            WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
+            SELECT r.id FROM RegulatoryAreaModel r
+            WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), st_setsrid(:geometry, 4326))
         """,
-        nativeQuery = true,
     )
-    fun findAllByGeom(geometry: Geometry): List<RegulatoryAreaModel>
+    fun findAllIdByGeom(geometry: Geometry): List<Int>
 }

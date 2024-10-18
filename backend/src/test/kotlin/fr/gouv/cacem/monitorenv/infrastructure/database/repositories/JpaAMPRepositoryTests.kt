@@ -30,10 +30,10 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val amps = jpaAMPRepository.findAllByGeometry(polygon)
+        val amps = jpaAMPRepository.findAllIdByGeometry(polygon)
 
         // Then
         assertThat(amps).hasSize(1)
-        assertThat(amps[0].id).isEqualTo(12)
+        assertThat(amps[0]).isEqualTo(12)
     }
 }

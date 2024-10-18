@@ -41,7 +41,7 @@ export const createDashboard =
       const { data: regulatoryLayers } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
       const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
       const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
-      const { data: reportings } = await dispatch(reportingsAPI.endpoints.getReportings.initiate())
+      const { data: reportings } = await dispatch(reportingsAPI.endpoints.getReportingsByIds.initiate(data.reportings))
       const extractedArea: Dashboard.ExtractedArea = {
         ...data,
         amps: Object.values(ampLayers?.entities ?? []).filter(amp => data.amps.includes(amp.id)),
