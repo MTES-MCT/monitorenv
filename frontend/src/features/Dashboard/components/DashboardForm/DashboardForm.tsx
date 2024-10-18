@@ -32,6 +32,9 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
+  const selectedReportings =
+    dashboard.extractedArea?.reportings.filter(reporting => dashboard.dashboard.reportings.includes(+reporting.id)) ??
+    []
 
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth ?? 0
@@ -133,7 +136,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 reportings={filteredReportings ?? []}
-                selectedReportings={dashboard.dashboard.reportings}
+                selectedReportings={selectedReportings}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
               />
             </Column>
