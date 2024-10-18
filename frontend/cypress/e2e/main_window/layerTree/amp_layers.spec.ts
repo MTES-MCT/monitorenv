@@ -1,6 +1,6 @@
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 
-context('Main Window > AMP Layers', () => {
+context('LayerTree > AMP Layers', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
 
