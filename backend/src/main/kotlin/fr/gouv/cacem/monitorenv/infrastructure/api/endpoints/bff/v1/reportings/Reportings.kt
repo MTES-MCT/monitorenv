@@ -23,6 +23,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -96,11 +97,10 @@ class Reportings(
         return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
     }
 
-    @GetMapping("/v1/reportings/ids/{ids}")
+    @PostMapping("/v1/reportings")
     @Operation(summary = "Get reportings by ids")
     fun getAll(
-        @PathVariable(name = "ids")
-        @PathParam("ids")
+        @RequestBody
         ids: List<Int>,
     ): List<ReportingDataOutput> {
         return getReportingByIds.execute(ids).map { ReportingDataOutput.fromReportingDTO(it) }
