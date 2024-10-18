@@ -75,6 +75,14 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       query: filters => getQueryString('/v1/reportings', filters),
       transformResponse: (response: Reporting[]) => ReportingAdapter.setAll(initialState, response)
     }),
+    getReportingsByIds: build.query<EntityState<Reporting, number | string>, number[]>({
+      providesTags: result =>
+        result?.ids
+          ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]
+          : [{ id: 'LIST', type: 'Reportings' }],
+      query: ids => `/v1/reportings/ids/${ids.join(',')}`,
+      transformResponse: (response: Reporting[]) => ReportingAdapter.setAll(initialState, response)
+    }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
       invalidatesTags: (_, __, { id, missionId }) => [
         { id, type: 'Reportings' },
