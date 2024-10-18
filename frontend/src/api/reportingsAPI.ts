@@ -80,7 +80,7 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
         result?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
-      query: ids => `/v1/reportings/ids/${ids.join(',')}`,
+      query: ids => ({ body: ids, method: 'POST', url: '/v1/reportings' }),
       transformResponse: (response: Reporting[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
