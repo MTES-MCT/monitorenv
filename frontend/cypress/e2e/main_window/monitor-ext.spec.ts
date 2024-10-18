@@ -1,4 +1,5 @@
 import { FAKE_MAPBOX_RESPONSE } from '../constants'
+import { getBaseLayerSnapShot } from './utils'
 
 context('MonitorExt', () => {
   beforeEach(() => {
@@ -11,15 +12,7 @@ context('MonitorExt', () => {
     cy.wait(200)
     cy.clickButton('Chercher un sémaphore')
     cy.fill('Rechercher un sémaphore', 'Sémaphore de Fécamp', { delay: 400 })
-    cy.get('.baselayer').toMatchImageSnapshot({
-      imageConfig: {
-        threshold: 0.05,
-        thresholdType: 'percent'
-      },
-      screenshotConfig: {
-        clip: { height: 250, width: 250, x: 440, y: 450 }
-      }
-    })
+    getBaseLayerSnapShot()
   })
 
   it("A user can't see missions, reportings, bases and measurements tools button", () => {
