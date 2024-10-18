@@ -43,7 +43,8 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const vigilanceAreasFeatures = useMemo(() => {
     let features: Feature[] = []
     if (vigilanceAreaSearchResult && vigilanceAreas) {
-      features = vigilanceAreaSearchResult.reduce((amplayers, id) => {
+      const vigilanceAreasToDisplay = vigilanceAreaSearchResult ?? vigilanceAreas?.ids ?? []
+      features = vigilanceAreasToDisplay.reduce((amplayers, id) => {
         const layer = vigilanceAreas.entities[id]
 
         if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
