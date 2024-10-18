@@ -41,7 +41,7 @@ context('MonitorExt', () => {
     cy.get('[label="Période de vigilance"]').should('not.exist')
 
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.getDataCy('vigilance-area-results-list').should('not.exist')
+    cy.getDataCy('vigilance-area-results-list-button').should('not.exist')
     cy.getDataCy('my-vigilance-areas-layers').should('not.exist')
   })
 })

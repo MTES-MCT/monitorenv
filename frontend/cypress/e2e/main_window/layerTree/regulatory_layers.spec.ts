@@ -1,7 +1,7 @@
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 
 context('LayerTree > Regulatory Layers', () => {
-  it('A regulation Should be searched, added to My Zones and showed on the map with the Zone button', () => {
+  beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulation')
 
@@ -12,12 +12,14 @@ context('LayerTree > Regulatory Layers', () => {
     cy.wait('@getRegulation').then(({ response }) => expect(response && response.statusCode).equal(200))
     cy.log('search for a regulation by zone')
     cy.clickButton('Arbre des couches')
+  })
+  it('A regulation Should be searched, added to My Zones and showed on the map with the Zone button', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.getDataCy('regulatory-layers-result-title').contains('13 résultats')
+    cy.getDataCy('regulatory-result-list-button').contains('13 résultats')
 
     cy.log('search a regulation by name')
     cy.fill('Rechercher une zone', 'querlin') // "querlin" contains a typo to test fuzzy search ("querlen" in source)
-    cy.getDataCy('regulatory-layers-result-title').contains('2 résultats').click()
+    cy.getDataCy('regulatory-result-list-button').contains('2 résultats').click()
 
     cy.log("zoom on the regulation's zone and show metadata")
     cy.getDataCy('result-group').contains('ZMEL Cale Querlen').click()
@@ -99,5 +101,16 @@ context('LayerTree > Regulatory Layers', () => {
       }
     })
     cy.getDataCy('my-regulatory-layers-list').contains('Aucune zone sélectionnée')
+  })
+
+  it('Result list should be displayed by default but not checked and total should be visible', () => {
+    cy.getDataCy('regulatory-result-list-button').contains('13 résultats')
+
+    cy.get('#isRegulatorySearchResultsVisible').should('not.be.checked')
+    cy.getDataCy('regulatory-result-list-button').click()
+    // we have 13 results but 9 groups of regulatory layers areas
+    // because result list have a separator so we need to multiply the results by 2
+    cy.getDataCy('regulatory-result-list').children().should('have.length', 18)
+    cy.get('#isRegulatorySearchResultsVisible').should('be.checked')
   })
 })
