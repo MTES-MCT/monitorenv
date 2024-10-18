@@ -1,5 +1,5 @@
 import { isCypress } from '@utils/isCypress'
-import { intersection, intersectionBy } from 'lodash'
+import { intersection } from 'lodash'
 
 import type { Dashboard } from './types'
 
@@ -8,23 +8,14 @@ export const isDashboardEnabled = () =>
     ? window.Cypress.env('CYPRESS_FRONTEND_DASHBOARD_ENABLED') === 'true'
     : import.meta.env.FRONTEND_DASHBOARD_ENABLED === 'true'
 
-export const filterDashboardWithExtractedData = (
+export const updateDashboardDatas = (
   dashboard: Dashboard.Dashboard,
-  extractedData: Dashboard.ExtractedArea
+  extractedData: Dashboard.ExtractedAreaFromApi
 ): Dashboard.Dashboard => ({
   ...dashboard,
-  amps: intersection(
-    dashboard.amps,
-    extractedData.amps.map(amp => amp.id)
-  ),
+  amps: intersection(dashboard.amps, extractedData.amps),
   inseeCode: extractedData.inseeCode,
-  regulatoryAreas: intersection(
-    dashboard.regulatoryAreas,
-    extractedData.regulatoryAreas.map(reg => reg.id)
-  ),
-  reportings: intersectionBy(dashboard.reportings, extractedData.reportings, 'id'),
-  vigilanceAreas: intersection(
-    dashboard.vigilanceAreas,
-    extractedData.vigilanceAreas.map(vigilanceArea => vigilanceArea.id)
-  )
+  regulatoryAreas: intersection(dashboard.regulatoryAreas, extractedData.regulatoryAreas),
+  reportings: intersection(dashboard.reportings, extractedData.reportings),
+  vigilanceAreas: intersection(dashboard.vigilanceAreas, extractedData.vigilanceAreas)
 })

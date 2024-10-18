@@ -7,7 +7,7 @@ import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindow
 import { Level } from '@mtes-mct/monitor-ui'
 
 import { dashboardActions } from '../slice'
-import { filterDashboardWithExtractedData } from '../utils'
+import { updateDashboardDatas } from '../utils'
 
 import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
@@ -23,19 +23,30 @@ export const editDashboardArea =
     if (data) {
       const dashboard = getState().dashboard.dashboards[dashboardKey]?.dashboard
       if (dashboard) {
-        const filteredDashboard = filterDashboardWithExtractedData(dashboard, data)
-        const filteredDashboardWithGeom = {
-          ...filteredDashboard,
+        const filteredDashboard = {
+          ...updateDashboardDatas(dashboard, data),
           geom: geometry
         }
 
-        dispatch(
-          dashboardActions.updateArea({
-            dashboardKey,
-            extractedArea: data,
-            filteredDashboard: filteredDashboardWithGeom
-          })
+        const { data: regulatoryLayers } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
+        const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
+        const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
+        const { data: reportings } = await dispatch(
+          reportingsAPI.endpoints.getReportingsByIds.initiate(data.reportings)
         )
+        const extractedArea: Dashboard.ExtractedArea = {
+          ...data,
+          amps: Object.values(ampLayers?.entities ?? []).filter(amp => data.amps.includes(amp.id)),
+          regulatoryAreas: Object.values(regulatoryLayers?.entities ?? []).filter(reg =>
+            data.regulatoryAreas.includes(reg.id)
+          ),
+          reportings: Object.values(reportings?.entities ?? []),
+          vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
+            data.vigilanceAreas.includes(vigilanceArea.id)
+          )
+        }
+
+        dispatch(dashboardActions.updateArea({ dashboardKey, extractedArea, filteredDashboard }))
       }
     }
     if (error) {

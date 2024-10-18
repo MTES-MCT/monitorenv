@@ -1,5 +1,6 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getDashboardById } from '@features/Dashboard/slice'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
@@ -31,14 +32,12 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
+  const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
+  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportings ?? [])
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: ampLayers } = useGetAMPsQuery()
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
 
-  const geom = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.geom : undefined
-  )
-  const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
   const openPanel = dashboard?.openPanel
   const activeDashboard = dashboard?.dashboard
 
@@ -133,8 +132,8 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
         }
 
         // Reportings
-        if (activeDashboard.reportings) {
-          const features = activeDashboard.reportings.reduce((feats: Feature[], reporting) => {
+        if (reportings) {
+          const features = Object.values(reportings?.entities ?? []).reduce((feats: Feature[], reporting) => {
             if (reporting.geom) {
               const feature = getReportingZoneFeature(reporting, Dashboard.featuresCode.DASHBOARD_REPORTINGS)
               feature.setStyle(editingReportingStyleFn)
@@ -148,10 +147,10 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
         }
       }
 
-      if (geom) {
+      if (dashboard?.dashboard.geom) {
         const dashboardAreaFeature = new GeoJSON({
           featureProjection: OPENLAYERS_PROJECTION
-        }).readFeature(geom)
+        }).readFeature(dashboard?.dashboard.geom)
         dashboardAreaFeature.setStyle([measurementStyle, measurementStyleWithCenter])
 
         layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
@@ -160,7 +159,6 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
   }, [
     activeDashboard,
     ampLayers?.entities,
-    geom,
     activeDashboard?.amps,
     activeDashboard?.regulatoryAreas,
     activeDashboard?.reportings,
@@ -169,7 +167,9 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
     openPanel?.id,
     openPanel?.type,
     regulatoryLayers,
-    vigilanceAreas?.entities
+    vigilanceAreas?.entities,
+    reportings,
+    dashboard?.dashboard.geom
   ])
 
   useEffect(() => {

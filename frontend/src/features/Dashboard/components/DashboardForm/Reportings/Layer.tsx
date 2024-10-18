@@ -1,4 +1,5 @@
 import { dashboardActions } from '@features/Dashboard/slice'
+import { Dashboard } from '@features/Dashboard/types'
 import { StatusActionTag } from '@features/Reportings/components/StatusActionTag'
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -49,10 +50,10 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
     e.stopPropagation()
 
     if (isPinned) {
-      dispatch(dashboardActions.removeReporting(reporting))
+      dispatch(dashboardActions.removeItems({ itemIds: [+reporting.id], type: Dashboard.Block.REPORTINGS }))
       dispatch(dashboardActions.setSelectedReporting(undefined))
     } else {
-      dispatch(dashboardActions.addReporting(reporting))
+      dispatch(dashboardActions.addItems({ itemIds: [+reporting.id], type: Dashboard.Block.REPORTINGS }))
 
       focus(e)
     }
@@ -75,7 +76,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
   const remove = e => {
     e.stopPropagation()
 
-    dispatch(dashboardActions.removeReporting(reporting))
+    dispatch(dashboardActions.removeItems({ itemIds: [+reporting.id], type: Dashboard.Block.REPORTINGS }))
   }
 
   const reportingStatusFlag = useMemo(() => {

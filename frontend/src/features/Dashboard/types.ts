@@ -30,7 +30,7 @@ export namespace Dashboard {
     inseeCode?: string
     name: string
     regulatoryAreas: number[]
-    reportings: Reporting[]
+    reportings: number[]
     seaFront?: string
     updatedAt?: string
     vigilanceAreas: number[]
