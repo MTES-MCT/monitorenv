@@ -100,7 +100,6 @@ export function ResultListLayerGroup({
           {isLinkingZonesToVigilanceArea ? (
             <IconButton
               accent={Accent.TERTIARY}
-              aria-label="Ajouter la/les zone(s) à la zone de vigilance"
               disabled={isLayerGroupDisabled}
               Icon={Icon.Plus}
               onClick={addZonesToVigilanceArea}
@@ -109,7 +108,6 @@ export function ResultListLayerGroup({
           ) : (
             <IconButton
               accent={Accent.TERTIARY}
-              aria-label="Sélectionner la/les zone(s)"
               color={allTopicZonesAreChecked ? THEME.color.blueGray : THEME.color.gunMetal}
               Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
               onClick={handleCheckAllZones}

@@ -12,7 +12,8 @@ context('Main Window > AMP Layers', () => {
     cy.fill("Type d'AMP", ['Natura 2000'])
     cy.getDataCy('amp-results-list-button').click()
     cy.getDataCy('amp-result-list').find('li').first().click()
-    cy.clickButton('Sélectionner la/les zone(s)')
+    cy.wait(1000)
+    cy.getDataCy('amp-zone-check').first().click()
 
     cy.getDataCy('my-amp-layers-zones').click({ force: true })
     cy.getDataCy('my-amp-zones-list').should('have.length', 1)
