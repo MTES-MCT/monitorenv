@@ -1,15 +1,10 @@
-import { ampsAPI } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
-import { regulatoryLayersAPI } from '@api/regulatoryLayersAPI'
-import { reportingsAPI } from '@api/reportingsAPI'
-import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
 
 import { dashboardActions } from '../slice'
-import { updateDashboardDatas } from '../utils'
+import { getFilteredDashboardAndExtractedArea as getEditedDashboardAndExtractedArea } from '../utils'
 
-import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -23,28 +18,12 @@ export const editDashboardArea =
     if (data) {
       const dashboard = getState().dashboard.dashboards[dashboardKey]?.dashboard
       if (dashboard) {
-        const filteredDashboard = {
-          ...updateDashboardDatas(dashboard, data),
-          geom: geometry
-        }
-
-        const { data: regulatoryLayers } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
-        const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
-        const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
-        const { data: reportings } = await dispatch(
-          reportingsAPI.endpoints.getReportingsByIds.initiate(data.reportings)
+        const { extractedArea, filteredDashboard } = await getEditedDashboardAndExtractedArea(
+          dashboard,
+          geometry,
+          data,
+          dispatch
         )
-        const extractedArea: Dashboard.ExtractedArea = {
-          ...data,
-          amps: Object.values(ampLayers?.entities ?? []).filter(amp => data.amps.includes(amp.id)),
-          regulatoryAreas: Object.values(regulatoryLayers?.entities ?? []).filter(reg =>
-            data.regulatoryAreas.includes(reg.id)
-          ),
-          reportings: Object.values(reportings?.entities ?? []),
-          vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
-            data.vigilanceAreas.includes(vigilanceArea.id)
-          )
-        }
 
         dispatch(dashboardActions.updateArea({ dashboardKey, extractedArea, filteredDashboard }))
       }

@@ -1,8 +1,4 @@
-import { ampsAPI } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
-import { regulatoryLayersAPI } from '@api/regulatoryLayersAPI'
-import { reportingsAPI } from '@api/reportingsAPI'
-import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
@@ -10,9 +6,8 @@ import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
 import { dashboardActions, initialDashboard } from '../slice'
-import { updateDashboardDatas } from '../utils'
+import { getFilteredDashboardAndExtractedArea } from '../utils'
 
-import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
 
 export const editDashboard =
@@ -37,23 +32,12 @@ export const editDashboard =
         throw Error()
       }
 
-      const filteredDashboard = updateDashboardDatas(dashboard, data)
-
-      const { data: regulatoryLayers } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
-      const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
-      const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
-      const { data: reportings } = await dispatch(reportingsAPI.endpoints.getReportingsByIds.initiate(data.reportings))
-      const extractedArea: Dashboard.ExtractedArea = {
-        ...data,
-        amps: Object.values(ampLayers?.entities ?? []).filter(amp => data.amps.includes(amp.id)),
-        regulatoryAreas: Object.values(regulatoryLayers?.entities ?? []).filter(reg =>
-          data.regulatoryAreas.includes(reg.id)
-        ),
-        reportings: Object.values(reportings?.entities ?? []),
-        vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
-          data.vigilanceAreas.includes(vigilanceArea.id)
-        )
-      }
+      const { extractedArea, filteredDashboard } = await getFilteredDashboardAndExtractedArea(
+        dashboard,
+        dashboard.geom,
+        data,
+        dispatch
+      )
 
       const formattedDashboard = {
         ...initialDashboard,
