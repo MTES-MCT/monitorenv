@@ -361,14 +361,14 @@ export const dashboardSlice = createSlice({
     setIsDrawing(state, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
     },
-    setName(state, action: PayloadAction<string>) {
-      const id = state.activeDashboardId
+    setName(state, action: PayloadAction<{ key: string; name: string }>) {
+      const id = action.payload.key
 
       if (!id || !state.dashboards[id]) {
         return
       }
 
-      state.dashboards[id].dashboard.name = action.payload
+      state.dashboards[id].dashboard.name = action.payload.name
     },
     setReportingFilters(state, action: PayloadAction<Partial<ReportingFilters>>) {
       const id = state.activeDashboardId
