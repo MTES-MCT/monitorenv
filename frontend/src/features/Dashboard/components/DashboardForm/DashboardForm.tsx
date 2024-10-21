@@ -42,9 +42,12 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
+  const [firstColumnWidth, setFirstColumnWidth] = useState<number | undefined>(undefined)
+  const selectedReportings =
+    dashboard.extractedArea?.reportings.filter(reporting => dashboard.dashboard.reportingIds.includes(+reporting.id)) ??
+    []
 
   const firstColumnRef = useRef<HTMLDivElement>(null)
-  const firstColumnWidth = firstColumnRef.current?.clientWidth ?? 0
 
   const toolbarRef = useRef<HTMLDivElement>(null)
   const toolbarHeight = toolbarRef.current?.clientHeight ?? 0
@@ -81,6 +84,12 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   }
 
   useEffect(() => {
+    if (isActive) {
+      setFirstColumnWidth(firstColumnRef.current?.clientWidth)
+    }
+  }, [isActive])
+
+  useEffect(() => {
     // remove openedPanel on mount
     dispatch(dashboardActions.setDashboardPanel())
 
@@ -108,7 +117,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
           <Container>
             <Column ref={firstColumnRef} $filterHeight={toolbarHeight}>
               <RegulatoryAreas
-                columnWidth={firstColumnWidth}
+                columnWidth={firstColumnWidth ?? 0}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 regulatoryAreas={filteredRegulatoryAreas ?? []}
@@ -118,14 +127,14 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
               <Amps
                 amps={filteredAmps ?? []}
-                columnWidth={firstColumnWidth}
+                columnWidth={firstColumnWidth ?? 0}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 selectedAmpIds={dashboard.dashboard.ampIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
               />
               <VigilanceAreas
-                columnWidth={firstColumnWidth}
+                columnWidth={firstColumnWidth ?? 0}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 selectedVigilanceAreaIds={dashboard.dashboard.vigilanceAreaIds}
