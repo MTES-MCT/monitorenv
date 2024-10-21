@@ -201,6 +201,8 @@ export const dashboardSlice = createSlice({
 
       state.dashboards[id].regulatoryIdsToDisplay = []
       state.dashboards[id].ampIdsToDisplay = []
+      state.dashboards[id].reportingToDisplay = undefined
+      state.dashboards[id].openPanel = undefined
     },
     removeAllRegulatoryIdToDisplay(state) {
       const id = state.activeDashboardId
