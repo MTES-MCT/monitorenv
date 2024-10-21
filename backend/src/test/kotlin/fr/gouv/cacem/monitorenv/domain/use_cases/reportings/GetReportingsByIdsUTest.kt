@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
 class GetReportingsByIdsUTest {
-
     private val reportingRepository: IReportingRepository = mock()
 
     private val getReportingsByIds = GetReportingsByIds(reportingRepository)
