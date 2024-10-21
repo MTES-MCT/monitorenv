@@ -84,6 +84,10 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     const { asDatePickerDate: expectedEndDate } = getUtcDateInMultipleFormats('2024/09/02')
 
     cy.fill('Période spécifique', [expectedStartDate, expectedEndDate])
+    cy.get('h2').contains('Zones de vigilance').click()
+    cy.wait(250)
+    cy.getDataCy('dashboard-vigilance-areas-list').children().should('have.length', 0)
+
     cy.clickButton('Prévisualiser la sélection')
 
     // Selected regulatoryAreas should be visible
