@@ -71,6 +71,7 @@ class JpaReportingRepository(
         return dbReportingRepository.findById(reportingId).get().toReportingDTO(mapper)
     }
 
+    @Transactional
     override fun findAllById(reportingId: List<Int>): List<ReportingDTO> {
         return dbReportingRepository.findAllById(reportingId).map { it.toReportingDTO(mapper) }
     }
@@ -127,8 +128,8 @@ class JpaReportingRepository(
                 targetDetail.vesselType?.name,
             ).any { field ->
                 !field.isNullOrBlank() &&
-                    normalizeField(field)
-                        .contains(normalizeField(searchQuery), ignoreCase = true)
+                        normalizeField(field)
+                            .contains(normalizeField(searchQuery), ignoreCase = true)
             }
         } ?: false
     }

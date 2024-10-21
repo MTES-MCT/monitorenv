@@ -134,7 +134,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 existingReportingDTO.reporting.copy(
                     missionId = 38,
                     attachedToMissionAtUtc =
-                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                    ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 ),
             )
         assertThat(reportingWithMissionDTO.reporting.attachedEnvActionId).isNull()
@@ -144,7 +144,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         jpaReportingRepository.save(
             reportingWithMissionDTO.reporting.copy(
                 attachedEnvActionId =
-                    UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
             ),
         )
 
@@ -395,16 +395,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val newReporting =
             ReportingEntity(
                 reportingSources =
-                    listOf(
-                        ReportingSourceEntity(
-                            id = UUID.randomUUID(),
-                            sourceType = SourceTypeEnum.SEMAPHORE,
-                            semaphoreId = 21,
-                            controlUnitId = null,
-                            sourceName = null,
-                            reportingId = null,
-                        ),
+                listOf(
+                    ReportingSourceEntity(
+                        id = UUID.randomUUID(),
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 21,
+                        controlUnitId = null,
+                        sourceName = null,
+                        reportingId = null,
                     ),
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -468,16 +468,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val updatedReporting =
             existingReportingDTO.reporting.copy(
                 reportingSources =
-                    listOf(
-                        ReportingSourceEntity(
-                            id = UUID.randomUUID(),
-                            reportingId = null,
-                            sourceType = SourceTypeEnum.SEMAPHORE,
-                            semaphoreId = 23,
-                            controlUnitId = null,
-                            sourceName = null,
-                        ),
+                listOf(
+                    ReportingSourceEntity(
+                        id = UUID.randomUUID(),
+                        reportingId = null,
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 23,
+                        controlUnitId = null,
+                        sourceName = null,
                     ),
+                ),
                 createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 isArchived = false,
                 openBy = "CDA",
@@ -507,7 +507,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         attachedEnvActionId =
-                            UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                        UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
                     ),
                 )
             }
@@ -534,7 +534,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                     existingReportingDTO.reporting.copy(
                         missionId = 42,
                         attachedEnvActionId =
-                            UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                        UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
                     ),
                 )
             }
@@ -559,7 +559,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                     existingReportingDTO.reporting.copy(
                         missionId = 100,
                         attachedToMissionAtUtc =
-                            ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                     ),
                 )
             }
@@ -582,7 +582,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         detachedFromMissionAtUtc =
-                            ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                     ),
                 )
             }
@@ -654,6 +654,21 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 .detachedFromMissionAtUtc,
         )
             .isNull()
+    }
+
+    @Test
+    fun `findAllById should return all reportings that match ids `() {
+        // Given
+        val ids = listOf(1, 2, 3)
+
+        // When
+        val reportings = jpaReportingRepository.findAllById(ids)
+
+        // Then
+        assertThat(reportings).hasSize(3)
+        assertThat(reportings[0].reporting.id).isEqualTo(1)
+        assertThat(reportings[1].reporting.id).isEqualTo(2)
+        assertThat(reportings[2].reporting.id).isEqualTo(3)
     }
 
     @Test

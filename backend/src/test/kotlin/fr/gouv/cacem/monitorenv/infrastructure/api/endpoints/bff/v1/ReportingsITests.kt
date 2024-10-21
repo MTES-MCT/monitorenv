@@ -22,6 +22,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
@@ -43,6 +44,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -98,68 +100,68 @@ class ReportingsITests {
         val reporting =
             ReportingDTO(
                 reporting =
-                    ReportingEntity(
-                        id = 1,
-                        reportingSources = listOf(),
-                        targetType = TargetTypeEnum.VEHICLE,
-                        vehicleType = VehicleTypeEnum.VESSEL,
-                        geom = polygon,
-                        seaFront = "Facade 1",
-                        description = "description",
-                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
-                        actionTaken = "actions effectuées blabla",
-                        isControlRequired = true,
-                        hasNoUnitAvailable = true,
-                        createdAt =
-                            ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
-                            ),
-                        validityTime = 10,
-                        isArchived = false,
-                        isDeleted = false,
-                        openBy = "CDA",
-                        updatedAtUtc =
-                            ZonedDateTime.parse(
-                                "2022-01-15T14:50:09Z",
-                            ),
-                        withVHFAnswer = null,
-                        isInfractionProven = true,
+                ReportingEntity(
+                    id = 1,
+                    reportingSources = listOf(),
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
                     ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
+                    withVHFAnswer = null,
+                    isInfractionProven = true,
+                ),
                 reportingSources =
-                    listOf(
-                        ReportingSourceDTO(
-                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                            semaphore =
-                                SemaphoreEntity(
-                                    id = 1,
-                                    name = "name",
-                                    geom =
-                                        WKTReader()
-                                            .read(
-                                                "POINT (-61.0 14.0)",
-                                            ) as
-                                            Point,
-                                ),
-                            controlUnit = null,
+                listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        semaphore =
+                        SemaphoreEntity(
+                            id = 1,
+                            name = "name",
+                            geom =
+                            WKTReader()
+                                .read(
+                                    "POINT (-61.0 14.0)",
+                                ) as
+                                    Point,
                         ),
+                        controlUnit = null,
                     ),
+                ),
             )
 
         val request =
             CreateOrUpdateReportingDataInput(
                 reportingSources =
-                    listOf(
-                        ReportingSourceDataInput(
-                            id = null,
-                            sourceType = SourceTypeEnum.SEMAPHORE,
-                            semaphoreId = 1,
-                            reportingId = null,
-                            controlUnitId = null,
-                            sourceName = null,
-                        ),
+                listOf(
+                    ReportingSourceDataInput(
+                        id = null,
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 1,
+                        reportingId = null,
+                        controlUnitId = null,
+                        sourceName = null,
                     ),
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -171,16 +173,16 @@ class ReportingsITests {
                 isControlRequired = true,
                 hasNoUnitAvailable = true,
                 createdAt =
-                    ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
-                    ),
+                ZonedDateTime.parse(
+                    "2022-01-15T04:50:09Z",
+                ),
                 validityTime = 10,
                 isArchived = false,
                 openBy = "CDA",
                 updatedAtUtc =
-                    ZonedDateTime.parse(
-                        "2022-01-15T14:50:09Z",
-                    ),
+                ZonedDateTime.parse(
+                    "2022-01-15T14:50:09Z",
+                ),
                 isInfractionProven = true,
             )
 
@@ -233,52 +235,52 @@ class ReportingsITests {
         val reporting =
             ReportingDTO(
                 reporting =
-                    ReportingEntity(
-                        id = 1,
-                        reportingSources = listOf(),
-                        targetType = TargetTypeEnum.VEHICLE,
-                        vehicleType = VehicleTypeEnum.VESSEL,
-                        geom = polygon,
-                        seaFront = "Facade 1",
-                        description = "description",
-                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
-                        actionTaken = "actions effectuées blabla",
-                        isControlRequired = true,
-                        hasNoUnitAvailable = true,
-                        createdAt =
-                            ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
-                            ),
-                        validityTime = 10,
-                        isArchived = false,
-                        isDeleted = false,
-                        openBy = "CDA",
-                        updatedAtUtc =
-                            ZonedDateTime.parse(
-                                "2022-01-15T14:50:09Z",
-                            ),
-                        isInfractionProven = true,
+                ReportingEntity(
+                    id = 1,
+                    reportingSources = listOf(),
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
                     ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
+                    isInfractionProven = true,
+                ),
                 reportingSources =
-                    listOf(
-                        ReportingSourceDTO(
-                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                            semaphore =
-                                SemaphoreEntity(
-                                    id = 1,
-                                    name = "name",
-                                    geom =
-                                        WKTReader()
-                                            .read(
-                                                "POINT (-61.0 14.0)",
-                                            ) as
-                                            Point,
-                                ),
-                            controlUnit = null,
+                listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        semaphore =
+                        SemaphoreEntity(
+                            id = 1,
+                            name = "name",
+                            geom =
+                            WKTReader()
+                                .read(
+                                    "POINT (-61.0 14.0)",
+                                ) as
+                                    Point,
                         ),
+                        controlUnit = null,
                     ),
+                ),
             )
 
         given(getReportingById.execute(any())).willReturn(reporting)
@@ -326,30 +328,30 @@ class ReportingsITests {
         val reporting =
             ReportingDTO(
                 reporting =
-                    ReportingEntity(
-                        id = 1,
-                        reportingSources = listOf(),
-                        targetType = TargetTypeEnum.VEHICLE,
-                        vehicleType = VehicleTypeEnum.VESSEL,
-                        geom = polygon,
-                        seaFront = "Facade 1",
-                        description = "description",
-                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
-                        actionTaken = "actions effectuées blabla",
-                        isControlRequired = true,
-                        hasNoUnitAvailable = true,
-                        createdAt =
-                            ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
-                            ),
-                        validityTime = 10,
-                        isArchived = false,
-                        isDeleted = false,
-                        openBy = "CDA",
-                        isInfractionProven = true,
+                ReportingEntity(
+                    id = 1,
+                    reportingSources = listOf(),
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
                     ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                    isInfractionProven = true,
+                ),
                 reportingSources = listOf(),
             )
 
@@ -388,42 +390,42 @@ class ReportingsITests {
         val updatedReporting =
             ReportingDTO(
                 reporting =
-                    ReportingEntity(
-                        id = 1,
-                        reportingSources = listOf(),
-                        targetType = TargetTypeEnum.VEHICLE,
-                        vehicleType = VehicleTypeEnum.VESSEL,
-                        geom = polygon,
-                        seaFront = "Facade 1",
-                        description = "description",
-                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
-                        actionTaken = "actions effectuées blabla",
-                        isControlRequired = true,
-                        hasNoUnitAvailable = true,
-                        createdAt =
-                            ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
-                            ),
-                        validityTime = 10,
-                        isArchived = false,
-                        isDeleted = false,
-                        openBy = "CDA",
-                        updatedAtUtc =
-                            ZonedDateTime.parse(
-                                "2022-01-15T14:50:09Z",
-                            ),
-                        isInfractionProven = true,
+                ReportingEntity(
+                    id = 1,
+                    reportingSources = listOf(),
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
                     ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                    updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
+                    isInfractionProven = true,
+                ),
                 reportingSources =
-                    listOf(
-                        ReportingSourceDTO(
-                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                            SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
-                            null,
-                        ),
+                listOf(
+                    ReportingSourceDTO(
+                        reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                        SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
+                        null,
                     ),
+                ),
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(
@@ -441,16 +443,16 @@ class ReportingsITests {
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
                     createdAt =
-                        ZonedDateTime.parse(
-                            "2022-01-15T04:50:09Z",
-                        ),
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
                     validityTime = 10,
                     isArchived = false,
                     openBy = "CDA",
                     updatedAtUtc =
-                        ZonedDateTime.parse(
-                            "2022-01-15T14:50:09Z",
-                        ),
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
                     isInfractionProven = true,
                 ),
             )
@@ -533,6 +535,33 @@ class ReportingsITests {
     }
 
     @Test
+    fun `Should retrieve reportings that match ids`() {
+
+        // Given
+        val ids = listOf(1, 2, 3)
+        given(getReportingsByIds.execute(ids)).willReturn(
+            listOf(
+                aReportingDTO(1),
+                aReportingDTO(2),
+                aReportingDTO(3)
+            )
+        )
+        // When
+        mockedApi
+            .perform(
+                post("/bff/v1/reportings")
+                    .content(objectMapper.writeValueAsString(ids))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[1].id").value(2))
+            .andExpect(jsonPath("$[2].id").value(3))
+
+    }
+
+    @Test
     fun `Should receive an event When listening to reporting updates`() {
         // Given
         val polygon =
@@ -544,38 +573,38 @@ class ReportingsITests {
             UpdateReportingEvent(
                 ReportingDTO(
                     reporting =
-                        ReportingEntity(
-                            id = 1,
-                            reportingSources = listOf(ReportingFixture.aReportingSourceSemaphore()),
-                            geom = polygon,
-                            description = "description",
-                            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                            themeId = 12,
-                            subThemeIds = listOf(64, 82),
-                            isControlRequired = true,
-                            hasNoUnitAvailable = true,
-                            createdAt =
-                                ZonedDateTime.parse(
-                                    "2022-01-15T04:50:09Z",
-                                ),
-                            validityTime = 10,
-                            isArchived = false,
-                            isDeleted = false,
-                            openBy = "CDA",
-                            updatedAtUtc =
-                                ZonedDateTime.parse(
-                                    "2022-01-15T14:50:09Z",
-                                ),
-                            isInfractionProven = true,
+                    ReportingEntity(
+                        id = 1,
+                        reportingSources = listOf(ReportingFixture.aReportingSourceSemaphore()),
+                        geom = polygon,
+                        description = "description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        themeId = 12,
+                        subThemeIds = listOf(64, 82),
+                        isControlRequired = true,
+                        hasNoUnitAvailable = true,
+                        createdAt =
+                        ZonedDateTime.parse(
+                            "2022-01-15T04:50:09Z",
                         ),
+                        validityTime = 10,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "CDA",
+                        updatedAtUtc =
+                        ZonedDateTime.parse(
+                            "2022-01-15T14:50:09Z",
+                        ),
+                        isInfractionProven = true,
+                    ),
                     reportingSources =
-                        listOf(
-                            ReportingSourceDTO(
-                                reportingSource = ReportingFixture.aReportingSourceSemaphore(),
-                                SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
-                                null,
-                            ),
+                    listOf(
+                        ReportingSourceDTO(
+                            reportingSource = ReportingFixture.aReportingSourceSemaphore(),
+                            SemaphoreEntity(id = 1, geom = polygon.centroid, name = ""),
+                            null,
                         ),
+                    ),
                 ),
             )
 
