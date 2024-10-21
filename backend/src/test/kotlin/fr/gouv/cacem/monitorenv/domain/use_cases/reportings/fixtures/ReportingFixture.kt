@@ -56,13 +56,13 @@ class ReportingFixture {
             return ReportingDTO(
                 reporting = aReporting(id),
                 reportingSources =
-                listOf(
-                    ReportingSourceDTO(
-                        reportingSource = aReportingSourceSemaphore(),
-                        semaphore = null,
-                        controlUnit = null,
+                    listOf(
+                        ReportingSourceDTO(
+                            reportingSource = aReportingSourceSemaphore(),
+                            semaphore = null,
+                            controlUnit = null,
+                        ),
                     ),
-                ),
             )
         }
 
