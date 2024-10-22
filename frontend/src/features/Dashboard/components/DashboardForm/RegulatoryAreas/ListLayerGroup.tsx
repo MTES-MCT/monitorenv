@@ -58,9 +58,9 @@ export function ListLayerGroup({
       <StyledGroupWrapper $isOpen={zonesAreOpen} $isSelected={isSelected} onClick={clickOnGroupZones}>
         <LayerSelector.GroupName
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-result-group`}
-          title={groupName}
+          title={getTitle(groupName)}
         >
-          {getTitle(groupName) ?? ''}
+          {getTitle(groupName)}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>

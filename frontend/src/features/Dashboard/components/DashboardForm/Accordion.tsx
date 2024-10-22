@@ -61,10 +61,12 @@ const HeaderSeparator = styled.div`
   border-bottom: 2px solid ${p => p.theme.color.gainsboro};
   padding: -24px;
 `
-const AccordionContent = styled.div<{ $isExpanded: boolean }>`
+export const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  overflow-y: auto;
+
   font-size: 13px;
 
   max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
