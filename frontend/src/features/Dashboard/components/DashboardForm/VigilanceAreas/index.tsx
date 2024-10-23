@@ -48,7 +48,7 @@ export function VigilanceAreas({
 
   return (
     <div>
-      {openPanel && columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
+      {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones de vigilance">
         <StyledLayerList

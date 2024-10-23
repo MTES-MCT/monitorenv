@@ -54,7 +54,7 @@ export function Amps({
 
   return (
     <div>
-      {openPanel && columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
+      {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones AMP">
         <StyledLayerList
           $baseLayersLength={Object.values(ampsByLayerName).length}
