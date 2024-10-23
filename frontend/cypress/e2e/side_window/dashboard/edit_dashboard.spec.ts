@@ -1,3 +1,4 @@
+import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 import { visitSideWindow } from '../../utils/visitSideWindow'
 
 context('Side Window > Dashboard > Edit Dashboard', () => {
@@ -20,11 +21,11 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // Edit the dashboard
     cy.get('h2').contains('Zones de vigilance').click()
     cy.wait(250)
-    cy.getDataCy('dashboard-vigilance-area-zone-check').eq(1).click()
+    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click()
 
     cy.get('h2').contains('Unités').click()
     cy.wait(250)
-    cy.getDataCy('dashboard-control-unit-selected').first().click()
+    cy.getDataCy('dashboard-control-unit-selected-10023').click()
 
     cy.clickButton('Prévisualiser la sélection')
 
@@ -43,6 +44,17 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
         vigilanceAreas: [9, 8]
       })
     })
+
+    // Undo modification
+    cy.get('h2').contains('Zones de vigilance').click()
+    cy.wait(250)
+    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click()
+
+    cy.get('h2').contains('Unités').click()
+    cy.wait(250)
+    cy.getDataCy('dashboard-control-unit-selected-10023').click()
+
+    cy.clickButton('Enregistrer le tableau')
 
     // close dashboard
     cy.get('[data-cy="dashboard-1"] > svg').first().click({ force: true }).wait(250)
@@ -67,11 +79,11 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 4)
     cy.getDataCy('dashboard-filter-tags').find('.Component-SingleTag > span').contains('Mixte')
 
-    cy.fill('Période de vigilance', 'En ce moment')
-    cy.get('h2').contains('Zones de vigilance').click()
-    cy.wait(250)
-    cy.getDataCy('dashboard-vigilance-areas-list').children().should('have.length', 0)
+    cy.fill('Période de vigilance', 'Période spécifique')
+    const { asDatePickerDate: expectedStartDate } = getUtcDateInMultipleFormats('2024/09/01')
+    const { asDatePickerDate: expectedEndDate } = getUtcDateInMultipleFormats('2024/09/02')
 
+    cy.fill('Période spécifique', [expectedStartDate, expectedEndDate])
     cy.clickButton('Prévisualiser la sélection')
 
     // Selected regulatoryAreas should be visible

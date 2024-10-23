@@ -37,7 +37,7 @@ export function Item({ controlUnit }: { controlUnit: ControlUnit.ControlUnit }) 
         <IconButton
           accent={Accent.TERTIARY}
           color={isSelected ? THEME.color.blueGray : THEME.color.slateGray}
-          data-cy="dashboard-control-unit-selected"
+          data-cy={`dashboard-control-unit-selected-${controlUnit.id}`}
           Icon={isSelected ? Icon.PinFilled : Icon.Pin}
           onClick={selectControlUnit}
           title="Sélectionner la zone"
