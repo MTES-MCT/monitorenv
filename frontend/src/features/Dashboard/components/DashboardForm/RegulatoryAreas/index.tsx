@@ -53,7 +53,7 @@ export function RegulatoryAreas({
 
   return (
     <div>
-      {openPanel && columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
+      {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones réglementaires">
         <StyledLayerList
