@@ -9,36 +9,38 @@ import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../ma
 import { addMission } from '../missions/addMission'
 
 import type { Reporting } from '../../entities/reporting'
+import type { HomeAppThunk } from '@store/index'
 
-export const createMissionFromReporting = (values: Reporting | Partial<Reporting>) => async (dispatch, getState) => {
-  const {
-    reportingFormVisibility: { context: reportingContext }
-  } = getState().global
+export const createMissionFromReporting =
+  (values: Reporting | Partial<Reporting>): HomeAppThunk =>
+  async (dispatch, getState) => {
+    const {
+      reportingFormVisibility: { context: reportingContext }
+    } = getState().global
 
-  const valuesToSave = omit(values, ['attachedMission'])
-  const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
-  const endpoint = reportingsAPI.endpoints.createReporting
+    const valuesToSave = omit(values, ['attachedMission'])
+    const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
 
-  try {
-    const response = await dispatch(endpoint.initiate(newOrNextReportingData))
+    try {
+      const response = await dispatch(reportingsAPI.endpoints.createReporting.initiate(newOrNextReportingData))
 
-    if ('data' in response) {
-      if (reportingContext === ReportingContext.MAP) {
-        dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+      if (response.data) {
+        if (reportingContext === ReportingContext.MAP) {
+          dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+        }
+        dispatch(
+          setReportingFormVisibility({
+            context: reportingContext,
+            visibility: VisibilityState.NONE
+          })
+        )
+        dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+        dispatch(reportingActions.deleteSelectedReporting(values.id))
+        dispatch(addMission({ attachedReporting: response.data }))
+      } else {
+        throw Error('Erreur à la création ou à la modification du signalement')
       }
-      dispatch(
-        setReportingFormVisibility({
-          context: reportingContext,
-          visibility: VisibilityState.NONE
-        })
-      )
-      await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-      await dispatch(reportingActions.deleteSelectedReporting(values.id))
-      await dispatch(addMission({ attachedReporting: response.data }))
-    } else {
-      throw Error('Erreur à la création ou à la modification du signalement')
+    } catch (error) {
+      dispatch(setToast({ containerId: reportingContext, message: error }))
     }
-  } catch (error) {
-    dispatch(setToast({ containerId: reportingContext, message: error }))
   }
-}
