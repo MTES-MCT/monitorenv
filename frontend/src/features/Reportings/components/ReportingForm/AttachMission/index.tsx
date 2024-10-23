@@ -33,8 +33,8 @@ export function AttachMission() {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.ATTACH_MISSION))
   }
 
-  const unattachMission = async () => {
-    await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
+  const unattachMission = () => {
+    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     setFieldValue('detachedFromMissionAtUtc', customDayjs().utc().format())
     setFieldValue('attachedEnvActionId', null)
     setFieldValue('hasNoUnitAvailable', false)
@@ -48,7 +48,7 @@ export function AttachMission() {
     if (!isValid) {
       return
     }
-    await dispatch(createMissionFromReporting(values))
+    dispatch(createMissionFromReporting(values))
   }
 
   // the form listens to the redux store to update the attached mission

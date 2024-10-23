@@ -3,21 +3,26 @@ import { attachMissionToReportingSliceActions } from '../../../features/Reportin
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
+import type { HomeAppThunk } from '@store/index'
+
 export const switchReporting =
-  (nextReportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
+  (nextReportingId: number, reportingContext: ReportingContext): HomeAppThunk =>
+  async (dispatch, getState) => {
     const { reportings } = getState().reporting
 
-    await dispatch(reportingActions.setActiveReportingId(nextReportingId))
+    dispatch(reportingActions.setActiveReportingId(nextReportingId))
 
     const nextReporting = reportings[nextReportingId]
+    if (!nextReporting) {
+      return
+    }
     const hasAttachedMission =
       !!nextReporting.reporting.attachedMission && !nextReporting.reporting.detachedFromMissionAtUtc
-    await dispatch(
+    dispatch(
       attachMissionToReportingSliceActions.setAttachedMission(
         hasAttachedMission ? nextReporting.reporting.attachedMission : undefined
       )
     )
-
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(reportingContext === ReportingContext.MAP))
     dispatch(
       setReportingFormVisibility({

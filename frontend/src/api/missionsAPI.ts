@@ -2,7 +2,7 @@ import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ApiErrorCode } from './types'
-import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
+import { MissionSourceEnum, type Mission, type MissionData, type NewMission } from '../domain/entities/missions'
 import { FrontendApiError } from '../libs/FrontendApiError'
 
 const CAN_DELETE_MISSION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette mission est supprimable."
@@ -68,7 +68,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
         return response
       }
     }),
-    createMission: builder.mutation<Mission, MissionData>({
+    createMission: builder.mutation<NewMission, MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },

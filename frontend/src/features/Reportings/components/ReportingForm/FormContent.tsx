@@ -186,11 +186,11 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
   }
 
-  const closeReporting = async () => {
+  const closeReporting = () => {
     if (isFormDirty) {
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
     } else {
-      await dispatch(reportingActions.deleteSelectedReporting(selectedReporting?.id))
+      dispatch(reportingActions.deleteSelectedReporting(selectedReporting?.id))
       dispatch(
         setReportingFormVisibility({
           context: reportingContext,

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { Reporting } from '../../../../domain/entities/reporting'
 
@@ -25,11 +25,11 @@ const attachReportingToMissionSlice = createSlice({
     resetAttachReportingState() {
       return INITIAL_STATE
     },
-    setAttachedReportings(state, action) {
+    setAttachedReportings(state, action: PayloadAction<Reporting[]>) {
       const attachedReportings = action.payload
       state.attachedReportings = attachedReportings
 
-      const attachedReportingIds = attachedReportings.map(reporting => reporting.id)
+      const attachedReportingIds = attachedReportings.map(reporting => +reporting.id)
       state.attachedReportingIds = attachedReportingIds
     },
     setInitialAttachedReportings(state, action) {
