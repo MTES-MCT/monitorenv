@@ -51,9 +51,8 @@ class JpaVigilanceAreaRepository(
         return dbVigilanceAreaRepository.findAllByIsDeletedIsFalse().map { it.toVigilanceAreaEntity() }
     }
 
-    override fun findAllByGeometry(geometry: Geometry): List<VigilanceAreaEntity> {
-        val vigilanceAreas = dbVigilanceAreaRepository.findAllByGeom(geometry)
-        return vigilanceAreas.map { it.toVigilanceAreaEntity() }
+    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> {
+        return dbVigilanceAreaRepository.findAllIdsByGeom(geometry)
     }
 
     @Transactional

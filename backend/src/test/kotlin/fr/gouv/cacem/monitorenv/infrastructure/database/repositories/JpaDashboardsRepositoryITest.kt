@@ -80,11 +80,11 @@ class JpaDashboardsRepositoryITest : AbstractDBTests() {
                 comments = comments,
                 geom = geom,
                 inseeCode = inseeCode,
-                amps = amps,
-                controlUnits = controlUnits,
-                regulatoryAreas = regulatoryAreas,
-                reportings = reportings,
-                vigilanceAreas = vigilanceAreas,
+                ampIds = amps,
+                controlUnitIds = controlUnits,
+                regulatoryAreaIds = regulatoryAreas,
+                reportingIds = reportings,
+                vigilanceAreaIds = vigilanceAreas,
             )
 
         // When

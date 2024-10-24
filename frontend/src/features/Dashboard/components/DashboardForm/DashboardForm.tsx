@@ -32,6 +32,9 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
+  const selectedReportings =
+    dashboard.extractedArea?.reportings.filter(reporting => dashboard.dashboard.reportingIds.includes(+reporting.id)) ??
+    []
 
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth ?? 0
@@ -102,7 +105,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 regulatoryAreas={dashboard.extractedArea?.regulatoryAreas}
-                selectedRegulatoryAreaIds={dashboard.dashboard.regulatoryAreas}
+                selectedRegulatoryAreaIds={dashboard.dashboard.regulatoryAreaIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
               />
 
@@ -111,14 +114,14 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
                 isSelectedAccordionOpen={previewSelectionFilter}
-                selectedAmpIds={dashboard.dashboard.amps}
+                selectedAmpIds={dashboard.dashboard.ampIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
               />
               <VigilanceAreas
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
-                selectedVigilanceAreaIds={dashboard.dashboard.vigilanceAreas}
+                selectedVigilanceAreaIds={dashboard.dashboard.vigilanceAreaIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
                 vigilanceAreas={dashboard.extractedArea?.vigilanceAreas}
               />
@@ -133,7 +136,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 reportings={filteredReportings ?? []}
-                selectedReportings={dashboard.dashboard.reportings}
+                selectedReportings={selectedReportings}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
               />
             </Column>

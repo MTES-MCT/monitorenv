@@ -7,10 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture.Companion.anAmp
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryArea.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture.Companion.aVigilanceAreaEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -43,26 +39,26 @@ class ExtractAreaUTest {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         given(departementAreaRepository.findDepartmentFromGeometry(geometry = polygon)).willReturn(null)
-        given(reportingRepository.findAllByGeometry(geometry = polygon)).willReturn(listOf())
-        given(regulatoryAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(listOf())
-        given(ampAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(listOf())
-        given(vigilanceAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(listOf())
+        given(reportingRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
+        given(regulatoryAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
+        given(ampAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
+        given(vigilanceAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
 
         // When
         val extractedAreaEntity = extractArea.execute(polygon)
 
         // Then
         verify(departementAreaRepository).findDepartmentFromGeometry(geometry = polygon)
-        verify(reportingRepository).findAllByGeometry(geometry = polygon)
-        verify(regulatoryAreaRepository).findAllByGeometry(geometry = polygon)
-        verify(ampAreaRepository).findAllByGeometry(geometry = polygon)
-        verify(vigilanceAreaRepository).findAllByGeometry(geometry = polygon)
+        verify(reportingRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(regulatoryAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(ampAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(vigilanceAreaRepository).findAllIdsByGeometry(geometry = polygon)
 
         assertThat(extractedAreaEntity.inseeCode).isNull()
-        assertThat(extractedAreaEntity.reportings).isEmpty()
-        assertThat(extractedAreaEntity.regulatoryAreas).isEmpty()
-        assertThat(extractedAreaEntity.amps).isEmpty()
-        assertThat(extractedAreaEntity.vigilanceAreas).isEmpty()
+        assertThat(extractedAreaEntity.reportingIds).isEmpty()
+        assertThat(extractedAreaEntity.regulatoryAreaIds).isEmpty()
+        assertThat(extractedAreaEntity.ampIds).isEmpty()
+        assertThat(extractedAreaEntity.vigilanceAreaIds).isEmpty()
     }
 
     @Test
@@ -76,29 +72,29 @@ class ExtractAreaUTest {
 
         val inseeCode = "44"
         given(departementAreaRepository.findDepartmentFromGeometry(geometry = polygon)).willReturn(inseeCode)
-        val reportings = listOf(aReportingDTO())
-        given(reportingRepository.findAllByGeometry(geometry = polygon)).willReturn(reportings)
-        val regulatoryAreas = listOf(aRegulatoryArea())
-        given(regulatoryAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(regulatoryAreas)
-        val amps = listOf(anAmp())
-        given(ampAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(amps)
-        val vigilanceAreas = listOf(aVigilanceAreaEntity())
-        given(vigilanceAreaRepository.findAllByGeometry(geometry = polygon)).willReturn(vigilanceAreas)
+        val reportings = listOf(1)
+        given(reportingRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(reportings)
+        val regulatoryAreas = listOf(2)
+        given(regulatoryAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(regulatoryAreas)
+        val amps = listOf(3)
+        given(ampAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(amps)
+        val vigilanceAreas = listOf(4)
+        given(vigilanceAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(vigilanceAreas)
 
         // When
         val extractedAreaEntity = extractArea.execute(polygon)
 
         // Then
         verify(departementAreaRepository).findDepartmentFromGeometry(geometry = polygon)
-        verify(reportingRepository).findAllByGeometry(geometry = polygon)
-        verify(regulatoryAreaRepository).findAllByGeometry(geometry = polygon)
-        verify(ampAreaRepository).findAllByGeometry(geometry = polygon)
-        verify(vigilanceAreaRepository).findAllByGeometry(geometry = polygon)
+        verify(reportingRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(regulatoryAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(ampAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(vigilanceAreaRepository).findAllIdsByGeometry(geometry = polygon)
 
         assertThat(extractedAreaEntity.inseeCode).isEqualTo(inseeCode)
-        assertThat(extractedAreaEntity.reportings).isEqualTo(reportings)
-        assertThat(extractedAreaEntity.regulatoryAreas).isEqualTo(regulatoryAreas)
-        assertThat(extractedAreaEntity.amps).isEqualTo(amps)
-        assertThat(extractedAreaEntity.vigilanceAreas).isEqualTo(vigilanceAreas)
+        assertThat(extractedAreaEntity.reportingIds).isEqualTo(reportings)
+        assertThat(extractedAreaEntity.regulatoryAreaIds).isEqualTo(regulatoryAreas)
+        assertThat(extractedAreaEntity.ampIds).isEqualTo(amps)
+        assertThat(extractedAreaEntity.vigilanceAreaIds).isEqualTo(vigilanceAreas)
     }
 }

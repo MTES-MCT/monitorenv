@@ -12,15 +12,11 @@ export function ControlUnitAccordion({
   controlUnitIdExpanded,
   expandUnit
 }: {
-  controlUnit?: ControlUnit.ControlUnit
+  controlUnit: ControlUnit.ControlUnit
   controlUnitIdExpanded: number | undefined
   expandUnit: (id: number) => void
 }) {
   const dispatch = useAppDispatch()
-
-  if (!controlUnit) {
-    return null
-  }
 
   const isExpanded = controlUnitIdExpanded === controlUnit.id
 

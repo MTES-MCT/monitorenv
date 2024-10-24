@@ -47,7 +47,7 @@ class JpaDashboardRepository(
         dashboard: DashboardEntity,
         dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
-        dashboard.regulatoryAreas.forEach {
+        dashboard.regulatoryAreaIds.forEach {
             dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
@@ -67,7 +67,7 @@ class JpaDashboardRepository(
         dashboard: DashboardEntity,
         dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
-        dashboard.vigilanceAreas.forEach {
+        dashboard.vigilanceAreaIds.forEach {
             dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
@@ -87,7 +87,7 @@ class JpaDashboardRepository(
         dashboard: DashboardEntity,
         dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
-        dashboard.reportings.forEach {
+        dashboard.reportingIds.forEach {
             dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
@@ -127,7 +127,7 @@ class JpaDashboardRepository(
         dashboard: DashboardEntity,
         dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
-        dashboard.amps.forEach {
+        dashboard.ampIds.forEach {
             dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,
@@ -147,7 +147,7 @@ class JpaDashboardRepository(
         dashboard: DashboardEntity,
         dashboardDatasToSave: MutableList<DashboardDatasModel>,
     ) {
-        dashboard.controlUnits.forEach {
+        dashboard.controlUnitIds.forEach {
             dashboardDatasToSave.add(
                 DashboardDatasModel(
                     id = null,

@@ -52,9 +52,9 @@ class ReportingFixture {
             )
         }
 
-        fun aReportingDTO(): ReportingDTO {
+        fun aReportingDTO(id: Int? = 1): ReportingDTO {
             return ReportingDTO(
-                reporting = aReporting(id = 1),
+                reporting = aReporting(id),
                 reportingSources =
                     listOf(
                         ReportingSourceDTO(

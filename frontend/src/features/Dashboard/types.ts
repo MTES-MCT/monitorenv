@@ -1,5 +1,5 @@
-import type { AMPFromAPI } from '../../domain/entities/AMPs'
-import type { RegulatoryLayerCompactFromAPI } from '../../domain/entities/regulatory'
+import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
+import type { RegulatoryLayerCompact, RegulatoryLayerCompactFromAPI } from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -13,38 +13,59 @@ export namespace Dashboard {
     reportings: Reporting[]
     vigilanceAreas: VigilanceArea.VigilanceArea[]
   }
+  export interface ExtractedAreaFromApi {
+    ampIds: number[]
+    inseeCode: string
+    regulatoryAreaIds: number[]
+    reportingIds: number[]
+    vigilanceAreaIds: number[]
+  }
   export type Dashboard = {
-    amps: number[]
+    ampIds: number[]
     comments?: string
-    controlUnits: number[]
+    controlUnitIds: number[]
     createdAt?: string
     geom?: GeoJSON.Geometry
     id: string
     inseeCode?: string
     name: string
-    regulatoryAreas: number[]
-    reportings: Reporting[]
+    regulatoryAreaIds: number[]
+    reportingIds: number[]
     seaFront?: string
     updatedAt?: string
-    vigilanceAreas: number[]
+    vigilanceAreaIds: number[]
   }
 
   export type DashboardToApi = {
-    amps: number[]
+    ampIds: number[]
     comments?: string
-    controlUnits: number[]
+    controlUnitIds: number[]
     createdAt?: string
     geom?: GeoJSON.Geometry
     id?: string
     inseeCode?: string
     name: string
-    regulatoryAreas: number[]
-    reportings: number[]
+    regulatoryAreaIds: number[]
+    reportingIds: number[]
     updatedAt?: string
-    vigilanceAreas: number[]
+    vigilanceAreaIds: number[]
   }
 
-  export type DashboardFromApi = Omit<DashboardToApi, 'id, createdAt'> & { createdAt: string; id: string }
+  export type DashboardFromApi = Omit<DashboardToApi, 'id' | 'createdAt' | 'geom'> & {
+    createdAt: string
+    geom: GeoJSON.Geometry
+    id: string
+  }
+
+  export type PopulatedDashboard = Omit<
+    DashboardFromApi,
+    'reportings' | 'amps' | 'vigilanceAreas' | 'regulatoryAreas'
+  > & {
+    amps: AMP[]
+    regulatoryAreas: RegulatoryLayerCompact[]
+    reportings: Reporting[]
+    vigilanceAreas: VigilanceArea.VigilanceAreaLayer[]
+  }
 
   export enum Block {
     AMP = 'AMP',

@@ -17,10 +17,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
@@ -42,6 +44,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -67,6 +70,9 @@ class ReportingsITests {
 
     @MockBean
     private lateinit var getReportingById: GetReportingById
+
+    @MockBean
+    private lateinit var getReportingsByIds: GetReportingsByIds
 
     @MockBean
     private lateinit var deleteReporting: DeleteReporting
@@ -526,6 +532,31 @@ class ReportingsITests {
             .andExpect(status().isNoContent())
 
         Mockito.verify(deleteReportings).execute(listOf(1, 2, 3))
+    }
+
+    @Test
+    fun `Should retrieve reportings that match ids`() {
+        // Given
+        val ids = listOf(1, 2, 3)
+        given(getReportingsByIds.execute(ids)).willReturn(
+            listOf(
+                aReportingDTO(1),
+                aReportingDTO(2),
+                aReportingDTO(3),
+            ),
+        )
+        // When
+        mockedApi
+            .perform(
+                post("/bff/v1/reportings")
+                    .content(objectMapper.writeValueAsString(ids))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[1].id").value(2))
+            .andExpect(jsonPath("$[2].id").value(3))
     }
 
     @Test

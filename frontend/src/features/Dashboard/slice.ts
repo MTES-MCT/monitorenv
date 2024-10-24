@@ -17,14 +17,14 @@ export const initialDashboard: DashboardType = {
   ampIdsToDisplay: [],
   controlUnitFilters: {},
   dashboard: {
-    amps: [],
-    controlUnits: [],
+    ampIds: [],
+    controlUnitIds: [],
     geom: undefined,
     id: '',
     name: '',
-    regulatoryAreas: [],
-    reportings: [],
-    vigilanceAreas: []
+    regulatoryAreaIds: [],
+    reportingIds: [],
+    vigilanceAreaIds: []
   },
   defaultName: '',
   extractedArea: undefined,
@@ -90,6 +90,7 @@ type DashboardState = {
   interactionType: InteractionType
   isDrawing: boolean
   isGeometryValid: boolean
+  selectedDashboardOnMap: Dashboard.PopulatedDashboard | undefined
 }
 
 const INITIAL_STATE: DashboardState = {
@@ -102,7 +103,8 @@ const INITIAL_STATE: DashboardState = {
   initialGeometry: undefined,
   interactionType: InteractionType.CIRCLE,
   isDrawing: false,
-  isGeometryValid: false
+  isGeometryValid: false,
+  selectedDashboardOnMap: undefined
 }
 export const dashboardSlice = createSlice({
   initialState: INITIAL_STATE,
@@ -128,24 +130,29 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         switch (type) {
           case Dashboard.Block.AMP:
-            state.dashboards[id].dashboard.amps = [...state.dashboards[id].dashboard.amps, ...itemIds]
+            state.dashboards[id].dashboard.ampIds = [...state.dashboards[id].dashboard.ampIds, ...itemIds]
             break
           case Dashboard.Block.CONTROL_UNITS:
-            state.dashboards[id].dashboard.controlUnits = [...state.dashboards[id].dashboard.controlUnits, ...itemIds]
+            state.dashboards[id].dashboard.controlUnitIds = [
+              ...state.dashboards[id].dashboard.controlUnitIds,
+              ...itemIds
+            ]
             break
           case Dashboard.Block.REGULATORY_AREAS:
-            state.dashboards[id].dashboard.regulatoryAreas = [
-              ...state.dashboards[id].dashboard.regulatoryAreas,
+            state.dashboards[id].dashboard.regulatoryAreaIds = [
+              ...state.dashboards[id].dashboard.regulatoryAreaIds,
               ...itemIds
             ]
             break
           case Dashboard.Block.VIGILANCE_AREAS:
-            state.dashboards[id].dashboard.vigilanceAreas = [
-              ...state.dashboards[id].dashboard.vigilanceAreas,
+            state.dashboards[id].dashboard.vigilanceAreaIds = [
+              ...state.dashboards[id].dashboard.vigilanceAreaIds,
               ...itemIds
             ]
             break
           case Dashboard.Block.REPORTINGS:
+            state.dashboards[id].dashboard.reportingIds = [...state.dashboards[id].dashboard.reportingIds, ...itemIds]
+            break
           case Dashboard.Block.COMMENTS:
           case Dashboard.Block.TERRITORIAL_PRESSURE:
           default:
@@ -161,18 +168,6 @@ export const dashboardSlice = createSlice({
 
       const regulatoryIds = state.dashboards[id]?.regulatoryIdsToDisplay
       state.dashboards[id].regulatoryIdsToDisplay = [...regulatoryIds, action.payload]
-    },
-    addReporting(state, action: PayloadAction<Reporting>) {
-      const reporting = action.payload
-      const id = state.activeDashboardId
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        const selectedReportings = state.dashboards[id].dashboard.reportings
-        state.dashboards[id].dashboard.reportings = [...selectedReportings, reporting]
-      }
     },
     createDashboard(
       state,
@@ -240,26 +235,30 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         switch (type) {
           case Dashboard.Block.AMP:
-            state.dashboards[id].dashboard.amps = state.dashboards[id].dashboard.amps.filter(
+            state.dashboards[id].dashboard.ampIds = state.dashboards[id].dashboard.ampIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.CONTROL_UNITS:
-            state.dashboards[id].dashboard.controlUnits = state.dashboards[id].dashboard.controlUnits.filter(
+            state.dashboards[id].dashboard.controlUnitIds = state.dashboards[id].dashboard.controlUnitIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.REGULATORY_AREAS:
-            state.dashboards[id].dashboard.regulatoryAreas = state.dashboards[id].dashboard.regulatoryAreas.filter(
+            state.dashboards[id].dashboard.regulatoryAreaIds = state.dashboards[id].dashboard.regulatoryAreaIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.VIGILANCE_AREAS:
-            state.dashboards[id].dashboard.vigilanceAreas = state.dashboards[id].dashboard.vigilanceAreas.filter(
+            state.dashboards[id].dashboard.vigilanceAreaIds = state.dashboards[id].dashboard.vigilanceAreaIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.REPORTINGS:
+            state.dashboards[id].dashboard.reportingIds = state.dashboards[id].dashboard.reportingIds.filter(
+              item => !itemIds.includes(item)
+            )
+            break
           case Dashboard.Block.COMMENTS:
           case Dashboard.Block.TERRITORIAL_PRESSURE:
           default:
@@ -276,21 +275,6 @@ export const dashboardSlice = createSlice({
       if (regulatoryIds) {
         state.dashboards[id].regulatoryIdsToDisplay = regulatoryIds.filter(
           regulatoryId => regulatoryId !== action.payload
-        )
-      }
-    },
-    removeReporting(state, action: PayloadAction<Reporting>) {
-      const reporting = action.payload
-      const id = state.activeDashboardId
-
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        const selectedReportings = state.dashboards[id].dashboard.reportings
-        state.dashboards[id].dashboard.reportings = selectedReportings.filter(
-          selectedReporting => selectedReporting.id !== reporting.id
         )
       }
     },
@@ -396,6 +380,9 @@ export const dashboardSlice = createSlice({
         state.dashboards[id].reportingFilters = { ...reportingFilters, ...action.payload }
       }
     },
+    setSelectedDashboardOnMap(state, action: PayloadAction<Dashboard.PopulatedDashboard | undefined>) {
+      state.selectedDashboardOnMap = action.payload
+    },
     setSelectedReporting(state, action: PayloadAction<Reporting | undefined>) {
       const id = state.activeDashboardId
 
@@ -427,12 +414,7 @@ export const dashboardSlice = createSlice({
       if (activeDashboardId) {
         const dashboard = state.dashboards[activeDashboardId]
         if (dashboard) {
-          const reportings = dashboard.extractedArea?.reportings
-          const dashboardToUpdate: Dashboard.Dashboard = {
-            ...action.payload.dashboard,
-            reportings:
-              reportings?.filter(reporting => action.payload.dashboard.reportings.includes(+reporting.id)) ?? []
-          }
+          const dashboardToUpdate: Dashboard.Dashboard = action.payload.dashboard
 
           state.dashboards = {
             ...state.dashboards,

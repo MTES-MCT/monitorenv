@@ -30,7 +30,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
     accessorFn: row => row.createdAt,
     cell: info => <DateCell date={info.getValue()} />,
     enableSorting: true,
-    header: () => 'Créée le ...',
+    header: () => 'Créé le ...',
     id: 'createdAt',
     size: 212 + legacyFirefoxOffset
   },
@@ -87,19 +87,19 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
     sortingFn: (rowA: Row<Dashboard.Dashboard>, rowB: Row<Dashboard.Dashboard>) => {
       const dasboardA = rowA.original
       const totalSelectedItemsA =
-        (dasboardA?.reportings?.length ?? 0) +
-        (dasboardA?.regulatoryAreas?.length ?? 0) +
-        (dasboardA.controlUnits?.length ?? 0) +
-        (dasboardA.amps?.length ?? 0) +
-        (dasboardA.vigilanceAreas?.length ?? 0)
+        (dasboardA?.reportingIds?.length ?? 0) +
+        (dasboardA?.regulatoryAreaIds?.length ?? 0) +
+        (dasboardA.controlUnitIds?.length ?? 0) +
+        (dasboardA.ampIds?.length ?? 0) +
+        (dasboardA.vigilanceAreaIds?.length ?? 0)
 
       const dasboardB = rowB.original
       const totalSelectedItemsB =
-        (dasboardB?.reportings?.length ?? 0) +
-        (dasboardB?.regulatoryAreas?.length ?? 0) +
-        (dasboardB.controlUnits?.length ?? 0) +
-        (dasboardB.amps?.length ?? 0) +
-        (dasboardB.vigilanceAreas?.length ?? 0)
+        (dasboardB?.reportingIds?.length ?? 0) +
+        (dasboardB?.regulatoryAreaIds?.length ?? 0) +
+        (dasboardB.controlUnitIds?.length ?? 0) +
+        (dasboardB.ampIds?.length ?? 0) +
+        (dasboardB.vigilanceAreaIds?.length ?? 0)
 
       return totalSelectedItemsA - totalSelectedItemsB
     }

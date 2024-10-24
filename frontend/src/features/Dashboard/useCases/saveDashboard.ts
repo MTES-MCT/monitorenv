@@ -14,8 +14,7 @@ export const saveDashboard =
   async dispatch => {
     const dashboardToSave: Dashboard.DashboardToApi = {
       ...dashboard,
-      id: dashboard.id?.includes('new-') ? undefined : dashboard.id,
-      reportings: dashboard.reportings.map(reporting => +reporting.id)
+      id: dashboard.createdAt ? dashboard.id : undefined
     }
     const { data, error } = await dispatch(dashboardsAPI.endpoints.save.initiate(dashboardToSave))
     if (data) {

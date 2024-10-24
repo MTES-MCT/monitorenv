@@ -72,6 +72,11 @@ class JpaReportingRepository(
     }
 
     @Transactional
+    override fun findAllById(reportingId: List<Int>): List<ReportingDTO> {
+        return dbReportingRepository.findAllById(reportingId).map { it.toReportingDTO(mapper) }
+    }
+
+    @Transactional
     override fun findAll(
         pageNumber: Int?,
         pageSize: Int?,
@@ -244,9 +249,8 @@ class JpaReportingRepository(
     }
 
     @Transactional
-    override fun findAllByGeometry(geometry: Geometry): List<ReportingDTO> {
-        val reportings = dbReportingRepository.findAllByGeom(geometry = geometry)
-        return reportings.map { it.toReportingDTO(mapper) }
+    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> {
+        return dbReportingRepository.findAllIdsByGeom(geometry = geometry)
     }
 
     @Transactional

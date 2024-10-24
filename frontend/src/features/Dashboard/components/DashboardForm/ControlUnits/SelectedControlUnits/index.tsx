@@ -18,7 +18,7 @@ export function SelectedControlUnits({
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const selectedControlUnitIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.controlUnits : []
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.controlUnitIds : []
   )
 
   const expandedControlUnit = id => {
@@ -47,18 +47,16 @@ export function SelectedControlUnits({
         selectedControlUnitIds?.length ?? 0
       )} ${pluralize('sélectionnée', selectedControlUnitIds?.length ?? 0)}`}
     >
-      {selectedControlUnitIds?.map(controlUnitId => {
-        const controlUnit = controlUnits.find(({ id }) => id === controlUnitId)
-
-        return (
+      {controlUnits
+        .filter(controlUnit => selectedControlUnitIds?.includes(controlUnit.id))
+        .map(controlUnit => (
           <ControlUnitAccordion
-            key={controlUnit?.id}
+            key={controlUnit.id}
             controlUnit={controlUnit}
             controlUnitIdExpanded={controlUnitIdExpanded}
             expandUnit={expandedControlUnit}
           />
-        )
-      })}
+        ))}
     </StyledSelectedAccordion>
   )
 }

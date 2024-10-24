@@ -3,7 +3,7 @@ import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindow
 import { Level } from '@mtes-mct/monitor-ui'
 
 import { dashboardActions } from '../slice'
-import { filterDashboardWithExtractedData } from '../utils'
+import { getFilteredDashboardAndExtractedArea } from '../utils'
 
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -18,19 +18,14 @@ export const editDashboardArea =
     if (data) {
       const dashboard = getState().dashboard.dashboards[dashboardKey]?.dashboard
       if (dashboard) {
-        const filteredDashboard = filterDashboardWithExtractedData(dashboard, data)
-        const filteredDashboardWithGeom = {
-          ...filteredDashboard,
-          geom: geometry
-        }
-
-        dispatch(
-          dashboardActions.updateArea({
-            dashboardKey,
-            extractedArea: data,
-            filteredDashboard: filteredDashboardWithGeom
-          })
+        const { extractedArea, filteredDashboard } = await getFilteredDashboardAndExtractedArea(
+          dashboard,
+          geometry,
+          data,
+          dispatch
         )
+
+        dispatch(dashboardActions.updateArea({ dashboardKey, extractedArea, filteredDashboard }))
       }
     }
     if (error) {
