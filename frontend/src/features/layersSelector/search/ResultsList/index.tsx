@@ -1,3 +1,4 @@
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -52,14 +53,19 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: amps } = useGetAMPsQuery()
-
-  const ampResulstsByAMPName = groupBy(ampsSearchResult, a => amps?.entities[a]?.name)
-
   const regulatoryLayersByLayerName = groupBy(
-    regulatoryLayersSearchResult,
+    regulatoryLayersSearchResult ?? regulatoryLayers?.ids,
     r => regulatoryLayers?.entities[r]?.layer_name
   )
+  const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
+
+  const { data: amps } = useGetAMPsQuery()
+  const ampResulstsByAMPName = groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name)
+  const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
+
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
+  const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
+  const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
@@ -110,7 +116,7 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   return (
     <List>
-      {regulatoryLayersSearchResult && !isLinkingAmpToVigilanceArea && (
+      {!isLinkingAmpToVigilanceArea && (
         <>
           <Header>
             <StyledCheckbox
@@ -119,15 +125,14 @@ export function ResultList({ searchedText }: ResultListProps) {
               name="isRegulatorySearchResultsVisible"
               onChange={toggleRegulatoryVisibility}
             />
-            <Title data-cy="regulatory-layers-result-title" onClick={toggleRegulatory}>
+            <Title data-cy="regulatory-result-list-button" onClick={toggleRegulatory}>
               ZONES RÉGLEMENTAIRES &nbsp;
               <NumberOfResults>
-                ({regulatoryLayersSearchResult?.length || '0'}{' '}
-                {pluralize('résultat', regulatoryLayersSearchResult?.length)})
+                ({totalRegulatoryAreas} {pluralize('résultat', totalRegulatoryAreas)})
               </NumberOfResults>
             </Title>
           </Header>
-          <SubList $isExpanded={areRegulatoryResultsOpen}>
+          <SubList $isExpanded={areRegulatoryResultsOpen} data-cy="regulatory-result-list">
             {Object.entries(regulatoryLayersByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
               <RegulatoryLayerGroup
                 key={layerGroupName}
@@ -139,7 +144,7 @@ export function ResultList({ searchedText }: ResultListProps) {
           </SubList>
         </>
       )}
-      {ampsSearchResult && !isLinkingRegulatoryToVigilanceArea && (
+      {!isLinkingRegulatoryToVigilanceArea && (
         <>
           <HeaderAMP>
             <StyledCheckbox
@@ -151,8 +156,7 @@ export function ResultList({ searchedText }: ResultListProps) {
             <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
               ZONES AMP &nbsp;
               <NumberOfResults>
-                {' '}
-                ({ampsSearchResult?.length || '0'} {pluralize('résultat', ampsSearchResult?.length)})
+                ({totalAmps} {pluralize('résultat', totalAmps)})
               </NumberOfResults>
             </Title>
           </HeaderAMP>
@@ -163,7 +167,7 @@ export function ResultList({ searchedText }: ResultListProps) {
           </SubListAMP>
         </>
       )}
-      {isSuperUser && vigilanceAreaSearchResult && !isLinkingZonesToVigilanceArea && (
+      {isSuperUser && !isLinkingZonesToVigilanceArea && (
         <>
           <Header>
             <StyledCheckbox
@@ -172,16 +176,15 @@ export function ResultList({ searchedText }: ResultListProps) {
               name="isVigilanceAreaSearchResultsVisible"
               onChange={toggleVigilanceAreaVisibility}
             />
-            <Title data-cy="vigilance-area-results-list" onClick={toggleVigilanceAreas}>
+            <Title data-cy="vigilance-area-results-list-button" onClick={toggleVigilanceAreas}>
               ZONES DE VIGILANCE &nbsp;
               <NumberOfResults>
-                {' '}
-                ({vigilanceAreaSearchResult?.length || '0'} {pluralize('résultat', vigilanceAreaSearchResult?.length)})
+                ({totalVigilanceAreas} {pluralize('résultat', totalVigilanceAreas)})
               </NumberOfResults>
             </Title>
           </Header>
           <SubList $isExpanded={areMyVigilanceAreasOpen} data-cy="vigilance-area-result-list">
-            {vigilanceAreaSearchResult.map(id => (
+            {vigilanceAreasIds?.map(id => (
               <VigilanceAreaLayer key={id} layerId={id} searchedText={searchedText} />
             ))}
           </SubList>

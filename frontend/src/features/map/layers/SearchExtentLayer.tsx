@@ -14,15 +14,9 @@ import type { Geometry } from 'ol/geom'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function SearchExtentLayer({ map }: BaseMapChildrenProps) {
-  const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
-  const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
-  const isVigilanceAreaSearchResultsVisible = useAppSelector(
-    state => state.layerSearch.isVigilanceAreaSearchResultsVisible
-  )
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
 
-  const isLayerVisible =
-    isRegulatorySearchResultsVisible || isAmpSearchResultsVisible || isVigilanceAreaSearchResultsVisible
+  const isLayerVisible = !!searchExtent
 
   const searchExtentVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const searchExtentLayerRef = useRef(
