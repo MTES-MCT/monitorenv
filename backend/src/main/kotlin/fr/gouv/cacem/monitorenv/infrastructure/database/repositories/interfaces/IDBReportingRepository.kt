@@ -202,5 +202,5 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), st_setsrid(:geometry, 4326))
         """,
     )
-    fun findAllByGeom(geometry: Geometry): List<Int>
+    fun findAllIdsByGeom(geometry: Geometry): List<Int>
 }

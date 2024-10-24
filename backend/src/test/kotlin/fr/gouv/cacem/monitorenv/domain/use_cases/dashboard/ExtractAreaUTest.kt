@@ -39,26 +39,26 @@ class ExtractAreaUTest {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         given(departementAreaRepository.findDepartmentFromGeometry(geometry = polygon)).willReturn(null)
-        given(reportingRepository.findAllIdByGeometry(geometry = polygon)).willReturn(listOf())
-        given(regulatoryAreaRepository.findAllIdByGeometry(geometry = polygon)).willReturn(listOf())
-        given(ampAreaRepository.findAllIdByGeometry(geometry = polygon)).willReturn(listOf())
-        given(vigilanceAreaRepository.findAllIdByGeometry(geometry = polygon)).willReturn(listOf())
+        given(reportingRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
+        given(regulatoryAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
+        given(ampAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
+        given(vigilanceAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
 
         // When
         val extractedAreaEntity = extractArea.execute(polygon)
 
         // Then
         verify(departementAreaRepository).findDepartmentFromGeometry(geometry = polygon)
-        verify(reportingRepository).findAllIdByGeometry(geometry = polygon)
-        verify(regulatoryAreaRepository).findAllIdByGeometry(geometry = polygon)
-        verify(ampAreaRepository).findAllIdByGeometry(geometry = polygon)
-        verify(vigilanceAreaRepository).findAllIdByGeometry(geometry = polygon)
+        verify(reportingRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(regulatoryAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(ampAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(vigilanceAreaRepository).findAllIdsByGeometry(geometry = polygon)
 
         assertThat(extractedAreaEntity.inseeCode).isNull()
-        assertThat(extractedAreaEntity.reportings).isEmpty()
-        assertThat(extractedAreaEntity.regulatoryAreas).isEmpty()
-        assertThat(extractedAreaEntity.amps).isEmpty()
-        assertThat(extractedAreaEntity.vigilanceAreas).isEmpty()
+        assertThat(extractedAreaEntity.reportingIds).isEmpty()
+        assertThat(extractedAreaEntity.regulatoryAreaIds).isEmpty()
+        assertThat(extractedAreaEntity.ampIds).isEmpty()
+        assertThat(extractedAreaEntity.vigilanceAreaIds).isEmpty()
     }
 
     @Test
@@ -73,28 +73,28 @@ class ExtractAreaUTest {
         val inseeCode = "44"
         given(departementAreaRepository.findDepartmentFromGeometry(geometry = polygon)).willReturn(inseeCode)
         val reportings = listOf(1)
-        given(reportingRepository.findAllIdByGeometry(geometry = polygon)).willReturn(reportings)
+        given(reportingRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(reportings)
         val regulatoryAreas = listOf(2)
-        given(regulatoryAreaRepository.findAllIdByGeometry(geometry = polygon)).willReturn(regulatoryAreas)
+        given(regulatoryAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(regulatoryAreas)
         val amps = listOf(3)
-        given(ampAreaRepository.findAllIdByGeometry(geometry = polygon)).willReturn(amps)
+        given(ampAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(amps)
         val vigilanceAreas = listOf(4)
-        given(vigilanceAreaRepository.findAllIdByGeometry(geometry = polygon)).willReturn(vigilanceAreas)
+        given(vigilanceAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(vigilanceAreas)
 
         // When
         val extractedAreaEntity = extractArea.execute(polygon)
 
         // Then
         verify(departementAreaRepository).findDepartmentFromGeometry(geometry = polygon)
-        verify(reportingRepository).findAllIdByGeometry(geometry = polygon)
-        verify(regulatoryAreaRepository).findAllIdByGeometry(geometry = polygon)
-        verify(ampAreaRepository).findAllIdByGeometry(geometry = polygon)
-        verify(vigilanceAreaRepository).findAllIdByGeometry(geometry = polygon)
+        verify(reportingRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(regulatoryAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(ampAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(vigilanceAreaRepository).findAllIdsByGeometry(geometry = polygon)
 
         assertThat(extractedAreaEntity.inseeCode).isEqualTo(inseeCode)
-        assertThat(extractedAreaEntity.reportings).isEqualTo(reportings)
-        assertThat(extractedAreaEntity.regulatoryAreas).isEqualTo(regulatoryAreas)
-        assertThat(extractedAreaEntity.amps).isEqualTo(amps)
-        assertThat(extractedAreaEntity.vigilanceAreas).isEqualTo(vigilanceAreas)
+        assertThat(extractedAreaEntity.reportingIds).isEqualTo(reportings)
+        assertThat(extractedAreaEntity.regulatoryAreaIds).isEqualTo(regulatoryAreas)
+        assertThat(extractedAreaEntity.ampIds).isEqualTo(amps)
+        assertThat(extractedAreaEntity.vigilanceAreaIds).isEqualTo(vigilanceAreas)
     }
 }

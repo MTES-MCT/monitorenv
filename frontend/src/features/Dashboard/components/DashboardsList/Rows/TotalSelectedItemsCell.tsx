@@ -9,11 +9,11 @@ export function TotalSelectedItemsCell({ row }: { row: Row<Dashboard.Dashboard> 
   }
 
   const totalSelectedItems =
-    (dashboard.reportings?.length ?? 0) +
-    (dashboard.regulatoryAreas?.length ?? 0) +
-    (dashboard.controlUnits?.length ?? 0) +
-    (dashboard.amps?.length ?? 0) +
-    (dashboard.vigilanceAreas?.length ?? 0)
+    (dashboard.reportingIds?.length ?? 0) +
+    (dashboard.regulatoryAreaIds?.length ?? 0) +
+    (dashboard.controlUnitIds?.length ?? 0) +
+    (dashboard.ampIds?.length ?? 0) +
+    (dashboard.vigilanceAreaIds?.length ?? 0)
 
   return <span>{totalSelectedItems}</span>
 }

@@ -66,10 +66,10 @@ class DashboardsITests {
             .willReturn(
                 ExtractedAreaEntity(
                     inseeCode = "44",
-                    reportings = reportings,
-                    regulatoryAreas = regulatoryAreas,
-                    amps = amps,
-                    vigilanceAreas = vigilanceAreas,
+                    reportingIds = reportings,
+                    regulatoryAreaIds = regulatoryAreas,
+                    ampIds = amps,
+                    vigilanceAreaIds = vigilanceAreas,
                 ),
             )
 
@@ -81,10 +81,10 @@ class DashboardsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.inseeCode", equalTo("44")))
-            .andExpect(jsonPath("$.reportings[0]", equalTo(reportings[0])))
-            .andExpect(jsonPath("$.regulatoryAreas[0]", equalTo(regulatoryAreas[0])))
-            .andExpect(jsonPath("$.amps[0]", equalTo(amps[0])))
-            .andExpect(jsonPath("$.vigilanceAreas[0]", equalTo(vigilanceAreas[0])))
+            .andExpect(jsonPath("$.reportingIds[0]", equalTo(reportings[0])))
+            .andExpect(jsonPath("$.regulatoryAreaIds[0]", equalTo(regulatoryAreas[0])))
+            .andExpect(jsonPath("$.ampIds[0]", equalTo(amps[0])))
+            .andExpect(jsonPath("$.vigilanceAreaIds[0]", equalTo(vigilanceAreas[0])))
     }
 
     @Test
@@ -100,10 +100,10 @@ class DashboardsITests {
             .willReturn(
                 ExtractedAreaEntity(
                     inseeCode = null,
-                    reportings = reportings,
-                    regulatoryAreas = regulatoryAreas,
-                    amps = amps,
-                    vigilanceAreas = vigilanceAreas,
+                    reportingIds = reportings,
+                    regulatoryAreaIds = regulatoryAreas,
+                    ampIds = amps,
+                    vigilanceAreaIds = vigilanceAreas,
                 ),
             )
 
@@ -115,10 +115,10 @@ class DashboardsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.inseeCode", equalTo(null)))
-            .andExpect(jsonPath("$.reportings.size()", equalTo(0)))
-            .andExpect(jsonPath("$.regulatoryAreas.size()", equalTo(0)))
-            .andExpect(jsonPath("$.amps.size()", equalTo(0)))
-            .andExpect(jsonPath("$.vigilanceAreas.size()", equalTo(0)))
+            .andExpect(jsonPath("$.reportingIds.size()", equalTo(0)))
+            .andExpect(jsonPath("$.regulatoryAreaIds.size()", equalTo(0)))
+            .andExpect(jsonPath("$.ampIds.size()", equalTo(0)))
+            .andExpect(jsonPath("$.vigilanceAreaIds.size()", equalTo(0)))
     }
 
     @Test
@@ -160,11 +160,11 @@ class DashboardsITests {
                 updatedAt = updatedAt,
                 geom = geometry,
                 inseeCode = inseeCode,
-                amps = amps,
-                regulatoryAreas = regulatoryAreas,
-                vigilanceAreas = vigilanceAreas,
-                reportings = reportings,
-                controlUnits = controlUnits,
+                ampIds = amps,
+                regulatoryAreaIds = regulatoryAreas,
+                vigilanceAreaIds = vigilanceAreas,
+                reportingIds = reportings,
+                controlUnitIds = controlUnits,
             )
         val dashboard =
             aDashboard(
@@ -208,11 +208,11 @@ class DashboardsITests {
                 ),
             )
             .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
-            .andExpect(jsonPath("$.amps", equalTo(amps)))
-            .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))
-            .andExpect(jsonPath("$.reportings", equalTo(reportings)))
-            .andExpect(jsonPath("$.vigilanceAreas", equalTo(vigilanceAreas)))
-            .andExpect(jsonPath("$.controlUnits", equalTo(controlUnits)))
+            .andExpect(jsonPath("$.ampIds", equalTo(amps)))
+            .andExpect(jsonPath("$.regulatoryAreaIds", equalTo(regulatoryAreas)))
+            .andExpect(jsonPath("$.reportingIds", equalTo(reportings)))
+            .andExpect(jsonPath("$.vigilanceAreaIds", equalTo(vigilanceAreas)))
+            .andExpect(jsonPath("$.controlUnitIds", equalTo(controlUnits)))
     }
 
     @Test
@@ -270,9 +270,10 @@ class DashboardsITests {
             .andExpect(jsonPath("$.createdAt", equalTo(dashboard.createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(dashboard.updatedAt)))
             .andExpect(jsonPath("$.inseeCode", equalTo(dashboard.inseeCode)))
-            .andExpect(jsonPath("$.amps", equalTo(dashboard.amps)))
-            .andExpect(jsonPath("$.regulatoryAreas", equalTo(dashboard.regulatoryAreas)))
-            .andExpect(jsonPath("$.reportings", equalTo(dashboard.reportings)))
-            .andExpect(jsonPath("$.vigilanceAreas", equalTo(dashboard.vigilanceAreas)))
+            .andExpect(jsonPath("$.ampIds", equalTo(dashboard.ampIds)))
+            .andExpect(jsonPath("$.regulatoryAreaIds", equalTo(dashboard.regulatoryAreaIds)))
+            .andExpect(jsonPath("$.reportingIds", equalTo(dashboard.reportingIds)))
+            .andExpect(jsonPath("$.vigilanceAreaIds", equalTo(dashboard.vigilanceAreaIds)))
+            .andExpect(jsonPath("$.controlUnitIds", equalTo(dashboard.controlUnitIds)))
     }
 }

@@ -37,11 +37,11 @@ const updateDashboardDatas = (
   extractedData: Dashboard.ExtractedAreaFromApi
 ): Dashboard.Dashboard => ({
   ...dashboard,
-  amps: intersection(dashboard.amps, extractedData.amps),
+  ampIds: intersection(dashboard.ampIds, extractedData.ampIds),
   inseeCode: extractedData.inseeCode,
-  regulatoryAreas: intersection(dashboard.regulatoryAreas, extractedData.regulatoryAreas),
-  reportings: intersection(dashboard.reportings, extractedData.reportings),
-  vigilanceAreas: intersection(dashboard.vigilanceAreas, extractedData.vigilanceAreas)
+  regulatoryAreaIds: intersection(dashboard.regulatoryAreaIds, extractedData.regulatoryAreaIds),
+  reportingIds: intersection(dashboard.reportingIds, extractedData.reportingIds),
+  vigilanceAreaIds: intersection(dashboard.vigilanceAreaIds, extractedData.vigilanceAreaIds)
 })
 
 export async function populateExtractAreaFromApi(
@@ -52,18 +52,18 @@ export async function populateExtractAreaFromApi(
   const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
   const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
   const { data: reportings } = await dispatch(
-    reportingsAPI.endpoints.getReportingsByIds.initiate(extractedAreaFromApi.reportings)
+    reportingsAPI.endpoints.getReportingsByIds.initiate(extractedAreaFromApi.reportingIds)
   )
 
   const extractedArea: Dashboard.ExtractedArea = {
     ...extractedAreaFromApi,
-    amps: Object.values(ampLayers?.entities ?? []).filter(amp => extractedAreaFromApi.amps.includes(amp.id)),
+    amps: Object.values(ampLayers?.entities ?? []).filter(amp => extractedAreaFromApi.ampIds.includes(amp.id)),
     regulatoryAreas: Object.values(regulatoryLayers?.entities ?? []).filter(reg =>
-      extractedAreaFromApi.regulatoryAreas.includes(reg.id)
+      extractedAreaFromApi.regulatoryAreaIds.includes(reg.id)
     ),
     reportings: Object.values(reportings?.entities ?? []),
     vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
-      extractedAreaFromApi.vigilanceAreas.includes(vigilanceArea.id)
+      extractedAreaFromApi.vigilanceAreaIds.includes(vigilanceArea.id)
     )
   }
 

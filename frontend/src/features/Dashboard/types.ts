@@ -14,41 +14,41 @@ export namespace Dashboard {
     vigilanceAreas: VigilanceArea.VigilanceArea[]
   }
   export interface ExtractedAreaFromApi {
-    amps: number[]
+    ampIds: number[]
     inseeCode: string
-    regulatoryAreas: number[]
-    reportings: number[]
-    vigilanceAreas: number[]
+    regulatoryAreaIds: number[]
+    reportingIds: number[]
+    vigilanceAreaIds: number[]
   }
   export type Dashboard = {
-    amps: number[]
+    ampIds: number[]
     comments?: string
-    controlUnits: number[]
+    controlUnitIds: number[]
     createdAt?: string
     geom?: GeoJSON.Geometry
     id: string
     inseeCode?: string
     name: string
-    regulatoryAreas: number[]
-    reportings: number[]
+    regulatoryAreaIds: number[]
+    reportingIds: number[]
     seaFront?: string
     updatedAt?: string
-    vigilanceAreas: number[]
+    vigilanceAreaIds: number[]
   }
 
   export type DashboardToApi = {
-    amps: number[]
+    ampIds: number[]
     comments?: string
-    controlUnits: number[]
+    controlUnitIds: number[]
     createdAt?: string
     geom?: GeoJSON.Geometry
     id?: string
     inseeCode?: string
     name: string
-    regulatoryAreas: number[]
-    reportings: number[]
+    regulatoryAreaIds: number[]
+    reportingIds: number[]
     updatedAt?: string
-    vigilanceAreas: number[]
+    vigilanceAreaIds: number[]
   }
 
   export type DashboardFromApi = Omit<DashboardToApi, 'id, createdAt'> & { createdAt: string; id: string }

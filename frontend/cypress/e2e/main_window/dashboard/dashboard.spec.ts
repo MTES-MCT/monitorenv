@@ -28,10 +28,10 @@ context('Dashboard', () => {
         const body = response.body
 
         expect(body.inseeCode).equal('29')
-        expect(body.regulatoryAreas.length).equal(13)
-        expect(body.amps.length).equal(4)
-        expect(body.reportings.length).equal(6)
-        expect(body.vigilanceAreas.length).equal(2)
+        expect(body.regulatoryAreaIds.length).equal(13)
+        expect(body.ampIds.length).equal(4)
+        expect(body.reportingIds.length).equal(6)
+        expect(body.vigilanceAreaIds.length).equal(2)
       })
     })
   })
