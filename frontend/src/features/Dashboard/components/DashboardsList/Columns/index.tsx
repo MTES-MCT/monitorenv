@@ -30,7 +30,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
     accessorFn: row => row.createdAt,
     cell: info => <DateCell date={info.getValue()} />,
     enableSorting: true,
-    header: () => 'Créée le ...',
+    header: () => 'Créé le ...',
     id: 'createdAt',
     size: 212 + legacyFirefoxOffset
   },

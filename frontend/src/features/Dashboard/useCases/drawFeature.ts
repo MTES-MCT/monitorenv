@@ -5,6 +5,7 @@ import { Geometry, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom'
 import { dashboardActions } from '../slice'
 
 import type { HomeAppThunk } from '@store/index'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 import type Feature from 'ol/Feature'
 
 export const drawFeature =
@@ -19,7 +20,7 @@ export const drawFeature =
     if (!geometry) {
       const typeOfGeometryToAdd = geometryToAdd.getType()
 
-      let nextGeometry
+      let nextGeometry: GeoJSON.Geometry | undefined
       switch (typeOfGeometryToAdd) {
         case OLGeometryType.POLYGON:
           nextGeometry = convertToGeoJSONGeometryObject(new MultiPolygon([geometryToAdd as Polygon]))
