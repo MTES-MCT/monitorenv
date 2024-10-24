@@ -16,6 +16,8 @@ import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
 import { AMPLayers } from './layers/AMP'
 import { AMPPreviewLayer } from './layers/AMP/AMPPreviewLayer'
+import { DashboardsLayer } from './layers/Dashboards'
+import { SelectedDashboardLayer } from './layers/Dashboards/SelectedDashboardLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { MapLayer } from './layers/MapLayer'
 import { MeasurementLayer } from './layers/MeasurementLayer'
@@ -30,6 +32,7 @@ import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
 import { ZoomListener } from './ZoomListener'
+import { DashboardOverlay } from '../Dashboard/components/Overlays/DashboardOverlay'
 import { InterestPointLayer } from '../InterestPoint/components/InterestPointLayer'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
@@ -121,7 +124,6 @@ export function Map({ isSuperUser }) {
       <MapCoordinatesBox />
       {/* @ts-ignore */}
       <MapLayer />
-
       {/* ZONE */}
       {/* @ts-ignore */}
       <AMPLayers />
@@ -139,7 +141,6 @@ export function Map({ isSuperUser }) {
       <LayerEvents />
       {/* @ts-ignore */}
       <LayersOverlay />
-
       {/* MAP */}
       {/* @ts-ignore */}
       <MeasurementLayer />
@@ -151,7 +152,6 @@ export function Map({ isSuperUser }) {
       <MapHistory />
       {/* @ts-ignore */}
       <DrawLayer />
-
       {/* MISSION */}
       {/* @ts-ignore */}
       <MissionsLayer />
@@ -171,7 +171,6 @@ export function Map({ isSuperUser }) {
       <HoveredReportingToAttachLayer />
       {/* @ts-ignore */}
       <ReportingToAttachOverlays />
-
       {/* SEMAPHORE */}
       {/* @ts-ignore */}
       <SemaphoresLayer />
@@ -181,7 +180,6 @@ export function Map({ isSuperUser }) {
       <SelectedSemaphoreLayer />
       {/* @ts-ignore */}
       <SemaphoreOverlay isSuperUser />
-
       {/* REPORTING */}
       {/* @ts-ignore */}
       <EditingReportingLayer />
@@ -205,7 +203,6 @@ export function Map({ isSuperUser }) {
       <SelectedMissionToAttachLayer />
       {/* @ts-ignore */}
       <MissionToAttachOverlays />
-
       {/* VIGILANCE AREA */}
       {/* @ts-ignore */}
       <VigilanceAreasLayer />
@@ -217,7 +214,6 @@ export function Map({ isSuperUser }) {
       <SelectedVigilanceAreaLayer />
       {/* @ts-ignore */}
       <EditingVigilanceAreaLayer />
-
       {/* DASHBOARD */}
       {/* @ts-ignore */}
       <DrawDashboardLayer />
@@ -227,6 +223,12 @@ export function Map({ isSuperUser }) {
       <DashboardPreviewLayer />
       {/* @ts-ignore */}
       <DashboardReportingOverlay />
+      {/* @ts-ignore */}
+      <DashboardOverlay />
+      {/* @ts-ignore */}
+      <DashboardsLayer />
+      {/* @ts-ignore */}
+      <SelectedDashboardLayer />
     </BaseMap>
   )
 }
