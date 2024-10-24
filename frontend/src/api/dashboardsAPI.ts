@@ -24,20 +24,28 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
       transformErrorResponse: response => new FrontendApiError(DELETE_DASHBOARD_ERROR_MESSAGE, response)
     }),
     getDashboard: build.query<Dashboard.DashboardFromApi, string>({
+      providesTags: (_, __, id) => [{ id, type: 'Dashboards' }],
       query: id => `/v1/dashboards/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_DASHBOARD_ERROR_MESSAGE, response),
       transformResponse: (response: Dashboard.DashboardFromApi) => response
     }),
-    getDashboards: build.query<Dashboard.Dashboard[], void>({
+    getDashboards: build.query<Dashboard.DashboardFromApi[], void>({
+      providesTags: result =>
+        result
+          ? // successful query
+            [...result.map(({ id }) => ({ id, type: 'Dashboards' as const })), { id: 'LIST', type: 'Dashboards' }]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Missions', id: 'LIST' }` is invalidated
+            [{ id: 'LIST', type: 'Dashboards' }],
       query: () => '/v1/dashboards',
       transformErrorResponse: response => new FrontendApiError(GET_DASHBOARDS_ERROR_MESSAGE, response),
-      transformResponse: (response: Dashboard.Dashboard[]) => response
+      transformResponse: (response: Dashboard.DashboardFromApi[]) => response
     }),
     getExtratedArea: build.query<Dashboard.ExtractedAreaFromApi, GeoJSON.Geometry>({
       query: geometry => `/v1/dashboards/extract?geometry=${geoJsonToWKT(geometry)}`,
       transformErrorResponse: response => new FrontendApiError(GET_EXTRACTED_AREAS_ERROR_MESSAGE, response)
     }),
-    save: build.query<Dashboard.DashboardFromApi, Dashboard.DashboardToApi>({
+    save: build.mutation<Dashboard.DashboardFromApi, Dashboard.DashboardToApi>({
+      invalidatesTags: (_, __, { id }) => [{ id, type: 'Dashboards' }],
       query: dashboard => ({
         body: dashboard,
         method: 'PUT',
