@@ -13,11 +13,11 @@ class DashboardDataInput(
     val updatedAt: ZonedDateTime?,
     val comments: String?,
     val inseeCode: String?,
-    val amps: List<Int>,
-    val controlUnits: List<Int>,
-    val regulatoryAreas: List<Int>,
-    val reportings: List<Int>,
-    val vigilanceAreas: List<Int>,
+    val ampIds: List<Int>,
+    val controlUnitIds: List<Int>,
+    val regulatoryAreaIds: List<Int>,
+    val reportingIds: List<Int>,
+    val vigilanceAreaIds: List<Int>,
 ) {
     fun toDashboardEntity(): DashboardEntity {
         return DashboardEntity(
@@ -28,11 +28,11 @@ class DashboardDataInput(
             createdAt = createdAt,
             updatedAt = updatedAt,
             inseeCode = inseeCode,
-            amps = amps,
-            controlUnits = controlUnits,
-            reportings = reportings,
-            regulatoryAreas = regulatoryAreas,
-            vigilanceAreas = vigilanceAreas,
+            ampIds = ampIds,
+            controlUnitIds = controlUnitIds,
+            reportingIds = reportingIds,
+            regulatoryAreaIds = regulatoryAreaIds,
+            vigilanceAreaIds = vigilanceAreaIds,
             seaFront = null,
         )
     }

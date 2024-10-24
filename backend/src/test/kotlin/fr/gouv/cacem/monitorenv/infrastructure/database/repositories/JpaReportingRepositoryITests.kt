@@ -681,7 +681,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val reportings = jpaReportingRepository.findAllIdByGeometry(polygon)
+        val reportings = jpaReportingRepository.findAllIdsByGeometry(polygon)
 
         // Then
         assertThat(reportings).hasSize(1)
@@ -699,7 +699,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val reportings = jpaReportingRepository.findAllIdByGeometry(polygon)
+        val reportings = jpaReportingRepository.findAllIdsByGeometry(polygon)
 
         // Then
         assertThat(reportings).isEmpty()

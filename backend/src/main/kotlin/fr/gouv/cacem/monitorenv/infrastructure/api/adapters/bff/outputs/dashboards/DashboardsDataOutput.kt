@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.dashboa
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 class DashboardsDataOutput(
     val id: UUID?,
@@ -13,12 +13,12 @@ class DashboardsDataOutput(
     val createdAt: ZonedDateTime?,
     val updatedAt: ZonedDateTime?,
     val inseeCode: String?,
-    val amps: List<Int>,
-    val controlUnits: List<Int>,
-    val regulatoryAreas: List<Int>,
-    val reportings: List<Int>,
+    val ampIds: List<Int>,
+    val controlUnitIds: List<Int>,
+    val regulatoryAreaIds: List<Int>,
+    val reportingIds: List<Int>,
+    val vigilanceAreaIds: List<Int>,
     val seaFront: String?,
-    val vigilanceAreas: List<Int>,
 ) {
     companion object {
         fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardsDataOutput {
@@ -30,12 +30,12 @@ class DashboardsDataOutput(
                 createdAt = dashboardEntity.createdAt,
                 updatedAt = dashboardEntity.updatedAt,
                 inseeCode = dashboardEntity.inseeCode,
-                amps = dashboardEntity.amps,
-                controlUnits = dashboardEntity.controlUnits,
-                regulatoryAreas = dashboardEntity.regulatoryAreas,
-                reportings = dashboardEntity.reportings,
+                ampIds = dashboardEntity.ampIds,
+                controlUnitIds = dashboardEntity.controlUnitIds,
+                regulatoryAreaIds = dashboardEntity.regulatoryAreaIds,
+                reportingIds = dashboardEntity.reportingIds,
                 seaFront = dashboardEntity.seaFront,
-                vigilanceAreas = dashboardEntity.vigilanceAreas,
+                vigilanceAreaIds = dashboardEntity.vigilanceAreaIds,
             )
         }
     }

@@ -21,7 +21,7 @@ class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBReg
         return dbRegulatoryAreaRepository.count()
     }
 
-    override fun findAllIdByGeometry(geometry: Geometry): List<Int> {
-        return dbRegulatoryAreaRepository.findAllIdByGeom(geometry)
+    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> {
+        return dbRegulatoryAreaRepository.findAllIdsByGeom(geometry)
     }
 }
