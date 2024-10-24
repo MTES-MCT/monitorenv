@@ -39,9 +39,9 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        controlUnits: [10000, 10023],
+        controlUnitIds: [10000, 10023],
         id,
-        vigilanceAreas: [9, 8]
+        vigilanceAreaIds: [9, 8]
       })
     })
 

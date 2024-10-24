@@ -14,5 +14,5 @@ interface IDBAMPRepository : JpaRepository<AMPModel, Int> {
         WHERE ST_INTERSECTS(st_setsrid(geom, 4326), st_setsrid(:geometry, 4326))
         """,
     )
-    fun findAllIdByGeom(geometry: Geometry): List<Int>
+    fun findAllIdsByGeom(geometry: Geometry): List<Int>
 }

@@ -33,7 +33,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
-  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportings ?? [])
+  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [])
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const { data: ampLayers } = useGetAMPsQuery()
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
@@ -63,7 +63,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
       if (activeDashboard) {
         // Regulatory Areas
         if (regulatoryLayers?.entities) {
-          let regulatoryLayersIds = activeDashboard.regulatoryAreas
+          let regulatoryLayersIds = activeDashboard.regulatoryAreaIds
           const openPanelIsRegulatory = openPanel?.type === Dashboard.Block.REGULATORY_AREAS
           // we don't want to display the area twice
           if (openPanelIsRegulatory) {
@@ -86,7 +86,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
 
         // AMP
         if (ampLayers?.entities) {
-          let ampLayerIds = activeDashboard.amps
+          let ampLayerIds = activeDashboard.ampIds
           const openPanelIsRegulatory = openPanel?.type === Dashboard.Block.AMP
           // we don't want to display the area twice
           if (openPanelIsRegulatory) {
@@ -111,7 +111,7 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
 
         // Vigilance Areas
         if (vigilanceAreas?.entities) {
-          let vigilanceAreaLayersIds = activeDashboard.vigilanceAreas
+          let vigilanceAreaLayersIds = activeDashboard.vigilanceAreaIds
           const openPanelIsVigilanceArea = openPanel?.type === Dashboard.Block.VIGILANCE_AREAS
           // we don't want to display the area twice
           if (openPanelIsVigilanceArea) {
@@ -159,10 +159,10 @@ export function DashboardLayer({ map }: BaseMapChildrenProps) {
   }, [
     activeDashboard,
     ampLayers?.entities,
-    activeDashboard?.amps,
-    activeDashboard?.regulatoryAreas,
-    activeDashboard?.reportings,
-    activeDashboard?.vigilanceAreas,
+    activeDashboard?.ampIds,
+    activeDashboard?.regulatoryAreaIds,
+    activeDashboard?.reportingIds,
+    activeDashboard?.vigilanceAreaIds,
     map,
     openPanel?.id,
     openPanel?.type,

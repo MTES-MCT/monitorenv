@@ -24,15 +24,15 @@ export const createDashboard =
         const newId = `new-${Object.keys(getState().dashboard.dashboards).length}`
         const newDashboardName = `Tab ${customDayjs().format('DD/MM/YYYY')}`
         const dashboard = {
-          amps: [],
-          controlUnits: [],
+          ampIds: [],
+          controlUnitIds: [],
           geom: geometry,
           id: newId,
           inseeCode: data.inseeCode,
           name: newDashboardName,
-          regulatoryAreas: [],
-          reportings: [],
-          vigilanceAreas: []
+          regulatoryAreaIds: [],
+          reportingIds: [],
+          vigilanceAreaIds: []
         }
         const extractedArea = await populateExtractAreaFromApi(dispatch, data)
         dispatch(dashboardActions.createDashboard({ dashboard, defaultName: newDashboardName, extractedArea }))

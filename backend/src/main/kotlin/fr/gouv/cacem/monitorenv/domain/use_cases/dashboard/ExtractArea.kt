@@ -19,17 +19,17 @@ class ExtractArea(
 ) {
     fun execute(geometry: Geometry): ExtractedAreaEntity {
         val inseeCode = departmentAreaRepository.findDepartmentFromGeometry(geometry = geometry)
-        val reportings = reportingRepository.findAllIdByGeometry(geometry = geometry)
-        val regulatoryAreas = regulatoryAreaRepository.findAllIdByGeometry(geometry = geometry)
-        val amps = ampRepository.findAllIdByGeometry(geometry = geometry)
-        val vigilanceAreas = vigilanceAreaRepository.findAllIdByGeometry(geometry = geometry)
+        val reportings = reportingRepository.findAllIdsByGeometry(geometry = geometry)
+        val regulatoryAreas = regulatoryAreaRepository.findAllIdsByGeometry(geometry = geometry)
+        val amps = ampRepository.findAllIdsByGeometry(geometry = geometry)
+        val vigilanceAreas = vigilanceAreaRepository.findAllIdsByGeometry(geometry = geometry)
 
         return ExtractedAreaEntity(
             inseeCode = inseeCode,
-            reportings = reportings,
-            regulatoryAreas = regulatoryAreas,
-            amps = amps,
-            vigilanceAreas = vigilanceAreas,
+            reportingIds = reportings,
+            regulatoryAreaIds = regulatoryAreas,
+            ampIds = amps,
+            vigilanceAreaIds = vigilanceAreas,
         )
     }
 }

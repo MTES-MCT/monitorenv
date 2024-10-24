@@ -17,14 +17,14 @@ export const initialDashboard: DashboardType = {
   ampIdsToDisplay: [],
   controlUnitFilters: {},
   dashboard: {
-    amps: [],
-    controlUnits: [],
+    ampIds: [],
+    controlUnitIds: [],
     geom: undefined,
     id: '',
     name: '',
-    regulatoryAreas: [],
-    reportings: [],
-    vigilanceAreas: []
+    regulatoryAreaIds: [],
+    reportingIds: [],
+    vigilanceAreaIds: []
   },
   defaultName: '',
   extractedArea: undefined,
@@ -128,25 +128,28 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         switch (type) {
           case Dashboard.Block.AMP:
-            state.dashboards[id].dashboard.amps = [...state.dashboards[id].dashboard.amps, ...itemIds]
+            state.dashboards[id].dashboard.ampIds = [...state.dashboards[id].dashboard.ampIds, ...itemIds]
             break
           case Dashboard.Block.CONTROL_UNITS:
-            state.dashboards[id].dashboard.controlUnits = [...state.dashboards[id].dashboard.controlUnits, ...itemIds]
+            state.dashboards[id].dashboard.controlUnitIds = [
+              ...state.dashboards[id].dashboard.controlUnitIds,
+              ...itemIds
+            ]
             break
           case Dashboard.Block.REGULATORY_AREAS:
-            state.dashboards[id].dashboard.regulatoryAreas = [
-              ...state.dashboards[id].dashboard.regulatoryAreas,
+            state.dashboards[id].dashboard.regulatoryAreaIds = [
+              ...state.dashboards[id].dashboard.regulatoryAreaIds,
               ...itemIds
             ]
             break
           case Dashboard.Block.VIGILANCE_AREAS:
-            state.dashboards[id].dashboard.vigilanceAreas = [
-              ...state.dashboards[id].dashboard.vigilanceAreas,
+            state.dashboards[id].dashboard.vigilanceAreaIds = [
+              ...state.dashboards[id].dashboard.vigilanceAreaIds,
               ...itemIds
             ]
             break
           case Dashboard.Block.REPORTINGS:
-            state.dashboards[id].dashboard.reportings = [...state.dashboards[id].dashboard.reportings, ...itemIds]
+            state.dashboards[id].dashboard.reportingIds = [...state.dashboards[id].dashboard.reportingIds, ...itemIds]
             break
           case Dashboard.Block.COMMENTS:
           case Dashboard.Block.TERRITORIAL_PRESSURE:
@@ -230,27 +233,27 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         switch (type) {
           case Dashboard.Block.AMP:
-            state.dashboards[id].dashboard.amps = state.dashboards[id].dashboard.amps.filter(
+            state.dashboards[id].dashboard.ampIds = state.dashboards[id].dashboard.ampIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.CONTROL_UNITS:
-            state.dashboards[id].dashboard.controlUnits = state.dashboards[id].dashboard.controlUnits.filter(
+            state.dashboards[id].dashboard.controlUnitIds = state.dashboards[id].dashboard.controlUnitIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.REGULATORY_AREAS:
-            state.dashboards[id].dashboard.regulatoryAreas = state.dashboards[id].dashboard.regulatoryAreas.filter(
+            state.dashboards[id].dashboard.regulatoryAreaIds = state.dashboards[id].dashboard.regulatoryAreaIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.VIGILANCE_AREAS:
-            state.dashboards[id].dashboard.vigilanceAreas = state.dashboards[id].dashboard.vigilanceAreas.filter(
+            state.dashboards[id].dashboard.vigilanceAreaIds = state.dashboards[id].dashboard.vigilanceAreaIds.filter(
               item => !itemIds.includes(item)
             )
             break
           case Dashboard.Block.REPORTINGS:
-            state.dashboards[id].dashboard.reportings = state.dashboards[id].dashboard.reportings.filter(
+            state.dashboards[id].dashboard.reportingIds = state.dashboards[id].dashboard.reportingIds.filter(
               item => !itemIds.includes(item)
             )
             break

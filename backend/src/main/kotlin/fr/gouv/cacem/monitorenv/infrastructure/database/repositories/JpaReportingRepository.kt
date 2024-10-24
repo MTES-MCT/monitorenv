@@ -249,8 +249,8 @@ class JpaReportingRepository(
     }
 
     @Transactional
-    override fun findAllIdByGeometry(geometry: Geometry): List<Int> {
-        return dbReportingRepository.findAllByGeom(geometry = geometry)
+    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> {
+        return dbReportingRepository.findAllIdsByGeom(geometry = geometry)
     }
 
     @Transactional

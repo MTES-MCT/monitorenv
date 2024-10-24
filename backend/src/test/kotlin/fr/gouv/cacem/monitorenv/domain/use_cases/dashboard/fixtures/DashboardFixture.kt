@@ -30,12 +30,12 @@ class DashboardFixture {
                 comments = comments,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
-                amps = amps,
-                regulatoryAreas = regulatoryAreas,
+                ampIds = amps,
+                regulatoryAreaIds = regulatoryAreas,
                 inseeCode = inseeCode,
-                reportings = reportings,
-                vigilanceAreas = vigilanceAreas,
-                controlUnits = controlUnits,
+                reportingIds = reportings,
+                vigilanceAreaIds = vigilanceAreas,
+                controlUnitIds = controlUnits,
                 seaFront = seaFront,
             )
         }

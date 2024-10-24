@@ -10,5 +10,5 @@ interface IRegulatoryAreaRepository {
 
     fun count(): Long
 
-    fun findAllIdByGeometry(geometry: Geometry): List<Int>
+    fun findAllIdsByGeometry(geometry: Geometry): List<Int>
 }

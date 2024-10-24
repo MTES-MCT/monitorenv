@@ -195,7 +195,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val vigilanceAreas = jpaVigilanceAreaRepository.findAllIdByGeometry(polygon)
+        val vigilanceAreas = jpaVigilanceAreaRepository.findAllIdsByGeometry(polygon)
 
         val queryCount = customQueryCountListener?.getQueryCount()
         println("Number of Queries Executed: $queryCount")
