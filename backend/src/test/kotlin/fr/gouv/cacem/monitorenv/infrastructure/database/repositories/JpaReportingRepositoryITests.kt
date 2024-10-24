@@ -657,6 +657,21 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    fun `findAllById should return all reportings that match ids `() {
+        // Given
+        val ids = listOf(1, 2, 3)
+
+        // When
+        val reportings = jpaReportingRepository.findAllById(ids)
+
+        // Then
+        assertThat(reportings).hasSize(3)
+        assertThat(reportings[0].reporting.id).isEqualTo(1)
+        assertThat(reportings[1].reporting.id).isEqualTo(2)
+        assertThat(reportings[2].reporting.id).isEqualTo(3)
+    }
+
+    @Test
     fun `findAllByGeometry should return all reportings that intersect the geometry `() {
         // Given
         val wktReader = WKTReader()
@@ -666,11 +681,11 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val reportings = jpaReportingRepository.findAllByGeometry(polygon)
+        val reportings = jpaReportingRepository.findAllIdsByGeometry(polygon)
 
         // Then
         assertThat(reportings).hasSize(1)
-        assertThat(reportings[0].reporting.id).isEqualTo(3)
+        assertThat(reportings[0]).isEqualTo(3)
     }
 
     @Test
@@ -684,7 +699,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val reportings = jpaReportingRepository.findAllByGeometry(polygon)
+        val reportings = jpaReportingRepository.findAllIdsByGeometry(polygon)
 
         // Then
         assertThat(reportings).isEmpty()

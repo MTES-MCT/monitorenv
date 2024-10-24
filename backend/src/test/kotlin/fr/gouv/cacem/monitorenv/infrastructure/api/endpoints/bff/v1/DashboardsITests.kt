@@ -4,20 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboards
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryArea.fixtures.RegulatoryAreaFixture
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.DashboardDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -35,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -64,18 +56,20 @@ class DashboardsITests {
     @Test
     fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
         // Given
-        val reportings = listOf(ReportingFixture.aReportingDTO())
-        val regulatoryAreas = listOf(RegulatoryAreaFixture.aRegulatoryArea())
-        val amps = listOf(AmpFixture.anAmp())
-        val vigilanceAreas = listOf(VigilanceAreaFixture.aVigilanceAreaEntity())
+        val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
+
+        val reportings = listOf(1)
+        val regulatoryAreas = listOf(2)
+        val amps = listOf(3)
+        val vigilanceAreas = listOf(4)
         given(extractArea.execute(WKTReader().read(geometry)))
             .willReturn(
                 ExtractedAreaEntity(
                     inseeCode = "44",
-                    reportings = reportings,
-                    regulatoryAreas = regulatoryAreas,
-                    amps = amps,
-                    vigilanceAreas = vigilanceAreas,
+                    reportingIds = reportings,
+                    regulatoryAreaIds = regulatoryAreas,
+                    ampIds = amps,
+                    vigilanceAreaIds = vigilanceAreas,
                 ),
             )
 
@@ -87,27 +81,29 @@ class DashboardsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.inseeCode", equalTo("44")))
-            .andExpect(jsonPath("$.reportings[0].id", equalTo(reportings[0].reporting.id)))
-            .andExpect(jsonPath("$.regulatoryAreas[0].id", equalTo(regulatoryAreas[0].id)))
-            .andExpect(jsonPath("$.amps[0].id", equalTo(amps[0].id)))
-            .andExpect(jsonPath("$.vigilanceAreas[0].id", equalTo(vigilanceAreas[0].id)))
+            .andExpect(jsonPath("$.reportingIds[0]", equalTo(reportings[0])))
+            .andExpect(jsonPath("$.regulatoryAreaIds[0]", equalTo(regulatoryAreas[0])))
+            .andExpect(jsonPath("$.ampIds[0]", equalTo(amps[0])))
+            .andExpect(jsonPath("$.vigilanceAreaIds[0]", equalTo(vigilanceAreas[0])))
     }
 
     @Test
     fun `extract response should be ok when nothing intersect the given geometry`() {
         // Given
-        val reportings: List<ReportingDTO> = listOf()
-        val regulatoryAreas: List<RegulatoryAreaEntity> = listOf()
-        val amps: List<AMPEntity> = listOf()
-        val vigilanceAreas: List<VigilanceAreaEntity> = listOf()
+        val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
+
+        val reportings: List<Int> = listOf()
+        val regulatoryAreas: List<Int> = listOf()
+        val amps: List<Int> = listOf()
+        val vigilanceAreas: List<Int> = listOf()
         given(extractArea.execute(WKTReader().read(geometry)))
             .willReturn(
                 ExtractedAreaEntity(
                     inseeCode = null,
-                    reportings = reportings,
-                    regulatoryAreas = regulatoryAreas,
-                    amps = amps,
-                    vigilanceAreas = vigilanceAreas,
+                    reportingIds = reportings,
+                    regulatoryAreaIds = regulatoryAreas,
+                    ampIds = amps,
+                    vigilanceAreaIds = vigilanceAreas,
                 ),
             )
 
@@ -119,10 +115,10 @@ class DashboardsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.inseeCode", equalTo(null)))
-            .andExpect(jsonPath("$.reportings.size()", equalTo(0)))
-            .andExpect(jsonPath("$.regulatoryAreas.size()", equalTo(0)))
-            .andExpect(jsonPath("$.amps.size()", equalTo(0)))
-            .andExpect(jsonPath("$.vigilanceAreas.size()", equalTo(0)))
+            .andExpect(jsonPath("$.reportingIds.size()", equalTo(0)))
+            .andExpect(jsonPath("$.regulatoryAreaIds.size()", equalTo(0)))
+            .andExpect(jsonPath("$.ampIds.size()", equalTo(0)))
+            .andExpect(jsonPath("$.vigilanceAreaIds.size()", equalTo(0)))
     }
 
     @Test
@@ -164,11 +160,11 @@ class DashboardsITests {
                 updatedAt = updatedAt,
                 geom = geometry,
                 inseeCode = inseeCode,
-                amps = amps,
-                regulatoryAreas = regulatoryAreas,
-                vigilanceAreas = vigilanceAreas,
-                reportings = reportings,
-                controlUnits = controlUnits,
+                ampIds = amps,
+                regulatoryAreaIds = regulatoryAreas,
+                vigilanceAreaIds = vigilanceAreas,
+                reportingIds = reportings,
+                controlUnitIds = controlUnits,
             )
         val dashboard =
             aDashboard(
@@ -212,11 +208,11 @@ class DashboardsITests {
                 ),
             )
             .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
-            .andExpect(jsonPath("$.amps", equalTo(amps)))
-            .andExpect(jsonPath("$.regulatoryAreas", equalTo(regulatoryAreas)))
-            .andExpect(jsonPath("$.reportings", equalTo(reportings)))
-            .andExpect(jsonPath("$.vigilanceAreas", equalTo(vigilanceAreas)))
-            .andExpect(jsonPath("$.controlUnits", equalTo(controlUnits)))
+            .andExpect(jsonPath("$.ampIds", equalTo(amps)))
+            .andExpect(jsonPath("$.regulatoryAreaIds", equalTo(regulatoryAreas)))
+            .andExpect(jsonPath("$.reportingIds", equalTo(reportings)))
+            .andExpect(jsonPath("$.vigilanceAreaIds", equalTo(vigilanceAreas)))
+            .andExpect(jsonPath("$.controlUnitIds", equalTo(controlUnits)))
     }
 
     @Test
@@ -274,9 +270,10 @@ class DashboardsITests {
             .andExpect(jsonPath("$.createdAt", equalTo(dashboard.createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(dashboard.updatedAt)))
             .andExpect(jsonPath("$.inseeCode", equalTo(dashboard.inseeCode)))
-            .andExpect(jsonPath("$.amps", equalTo(dashboard.amps)))
-            .andExpect(jsonPath("$.regulatoryAreas", equalTo(dashboard.regulatoryAreas)))
-            .andExpect(jsonPath("$.reportings", equalTo(dashboard.reportings)))
-            .andExpect(jsonPath("$.vigilanceAreas", equalTo(dashboard.vigilanceAreas)))
+            .andExpect(jsonPath("$.ampIds", equalTo(dashboard.ampIds)))
+            .andExpect(jsonPath("$.regulatoryAreaIds", equalTo(dashboard.regulatoryAreaIds)))
+            .andExpect(jsonPath("$.reportingIds", equalTo(dashboard.reportingIds)))
+            .andExpect(jsonPath("$.vigilanceAreaIds", equalTo(dashboard.vigilanceAreaIds)))
+            .andExpect(jsonPath("$.controlUnitIds", equalTo(dashboard.controlUnitIds)))
     }
 }

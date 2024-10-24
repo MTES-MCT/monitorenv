@@ -8,5 +8,5 @@ interface IAMPRepository {
 
     fun count(): Long
 
-    fun findAllByGeometry(geometry: Geometry): List<AMPEntity>
+    fun findAllIdsByGeometry(geometry: Geometry): List<Int>
 }

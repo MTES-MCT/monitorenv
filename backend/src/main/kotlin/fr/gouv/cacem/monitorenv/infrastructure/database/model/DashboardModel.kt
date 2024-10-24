@@ -81,11 +81,11 @@ data class DashboardModel(
             createdAt = createdAt,
             updatedAt = updatedAt,
             inseeCode = inseeCode,
-            amps = amps,
-            controlUnits = controlUnits,
-            regulatoryAreas = regulatoryAreas,
-            reportings = reportings,
-            vigilanceAreas = vigilanceAreas,
+            ampIds = amps,
+            controlUnitIds = controlUnits,
+            regulatoryAreaIds = regulatoryAreas,
+            reportingIds = reportings,
+            vigilanceAreaIds = vigilanceAreas,
             seaFront = seaFront,
         )
     }
