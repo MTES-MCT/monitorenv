@@ -29,6 +29,7 @@ export enum MonitorEnvLayers {
   BASE_LAYER = 'BASE_LAYER',
   COMPETENCE_CROSS_AREA = 'COMPETENCE_CROSS_AREA',
   DASHBOARD = 'DASHBOARD',
+  DASHBOARDS = 'DASHBOARDS',
   DASHBOARD_PREVIEW = 'DASHBOARD_PREVIEW',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
@@ -291,6 +292,11 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.DASHBOARD_PREVIEW,
     zIndex: 1300
   },
+
+  [MonitorEnvLayers.DASHBOARDS]: {
+    code: MonitorEnvLayers.DASHBOARDS,
+    zIndex: 1500
+  },
   [MonitorEnvLayers.AERA_ICON]: {
     code: MonitorEnvLayers.AERA_ICON
   }
@@ -332,6 +338,7 @@ export const SelectableLayers0To7 = [
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ],
   [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 
@@ -353,6 +360,7 @@ export const SelectableLayers7To26 = [
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ],
   [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 
@@ -373,6 +381,7 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA],
   [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA],
   [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 
@@ -395,6 +404,7 @@ export const HoverableLayers7To26 = [
     MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA
   ],
   [MonitorEnvLayers.DASHBOARD],
+  [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW]
 ]
 

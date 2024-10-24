@@ -90,6 +90,7 @@ type DashboardState = {
   interactionType: InteractionType
   isDrawing: boolean
   isGeometryValid: boolean
+  selectedDashboardOnMap: Dashboard.PopulatedDashboard | undefined
 }
 
 const INITIAL_STATE: DashboardState = {
@@ -102,7 +103,8 @@ const INITIAL_STATE: DashboardState = {
   initialGeometry: undefined,
   interactionType: InteractionType.CIRCLE,
   isDrawing: false,
-  isGeometryValid: false
+  isGeometryValid: false,
+  selectedDashboardOnMap: undefined
 }
 export const dashboardSlice = createSlice({
   initialState: INITIAL_STATE,
@@ -379,6 +381,9 @@ export const dashboardSlice = createSlice({
         const { reportingFilters } = state.dashboards[id]
         state.dashboards[id].reportingFilters = { ...reportingFilters, ...action.payload }
       }
+    },
+    setSelectedDashboardOnMap(state, action: PayloadAction<Dashboard.PopulatedDashboard | undefined>) {
+      state.selectedDashboardOnMap = action.payload
     },
     setSelectedReporting(state, action: PayloadAction<Reporting | undefined>) {
       const id = state.activeDashboardId

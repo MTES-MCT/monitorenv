@@ -13,9 +13,13 @@ import type { HomeAppThunk } from '@store/index'
 export const editDashboard =
   (id): HomeAppThunk =>
   async (dispatch, getState) => {
-    // if dashboard is already open
-    if (getState().dashboard.dashboards[id] === id) {
-      dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id })))
+    const openedDashboard = Object.entries(getState().dashboard.dashboards).find(
+      ([key, dashboard]) => key === id || dashboard.dashboard.id === id
+    )
+
+    if (openedDashboard) {
+      dispatch(dashboardActions.setActiveDashboardId(openedDashboard[0]))
+      dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: openedDashboard[0] })))
 
       return
     }
@@ -36,7 +40,7 @@ export const editDashboard =
 
       const formattedDashboard = { ...initialDashboard, dashboard, extractedArea }
       dispatch(dashboardActions.editDashboard(formattedDashboard))
-      dispatch(dashboardActions.setActiveDashboardId(dashboard.id))
+      dispatch(dashboardActions.setActiveDashboardId(id))
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: dashboard.id })))
     } catch (error) {
       dispatch(

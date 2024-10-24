@@ -47,18 +47,16 @@ export function SelectedControlUnits({
         selectedControlUnitIds?.length ?? 0
       )} ${pluralize('sélectionnée', selectedControlUnitIds?.length ?? 0)}`}
     >
-      {selectedControlUnitIds?.map(controlUnitId => {
-        const controlUnit = controlUnits.find(({ id }) => id === controlUnitId)
-
-        return (
+      {controlUnits
+        .filter(controlUnit => selectedControlUnitIds?.includes(controlUnit.id))
+        .map(controlUnit => (
           <ControlUnitAccordion
-            key={controlUnit?.id}
+            key={controlUnit.id}
             controlUnit={controlUnit}
             controlUnitIdExpanded={controlUnitIdExpanded}
             expandUnit={expandedControlUnit}
           />
-        )
-      })}
+        ))}
     </StyledSelectedAccordion>
   )
 }
