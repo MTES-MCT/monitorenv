@@ -4,6 +4,7 @@ import { editingReportingStyleFn } from '@features/Reportings/components/Reporti
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { Feature } from 'ol'
 import { GeoJSON as OLGeoJSON } from 'ol/format'
 import { type Geometry } from 'ol/geom'
@@ -51,6 +52,18 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
     return () => {}
   }, [map])
 
+  const overlayCoordinates = useAppSelector(state =>
+    getOverlayCoordinates(state.global, `${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`)
+  )
+
+  useEffect(() => {
+    const feature = dashboardDatasVectorSourceRef.current.getFeatureById(
+      `${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`
+    )
+
+    feature?.setProperties({ overlayCoordinates })
+  }, [overlayCoordinates, selectedDashboardOnMap])
+
   useEffect(() => {
     dashboardDatasVectorLayerRef.current?.setVisible(displayDashboardLayer)
   }, [displayDashboardLayer])
@@ -66,7 +79,9 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       })
       const feats: Feature[] = []
       const feat = new Feature({ geometry })
+
       feat.setStyle([measurementStyle, measurementStyleWithCenter])
+      feat.setId(`${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`)
       feats.push(feat)
       selectedDashboardOnMap.reportings.forEach(reporting => {
         const reportingFeature = getReportingZoneFeature(reporting, Dashboard.featuresCode.DASHBOARD_REPORTINGS)

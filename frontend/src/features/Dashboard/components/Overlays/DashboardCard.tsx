@@ -37,11 +37,11 @@ export function DashboardCard({
   }
   const creationDate = getLocalizedDayjs(dashboard.createdAt).format('DD MMM YYYY')
   const numberOfItemsSelected =
-    dashboard.amps.length +
-    dashboard.controlUnits.length +
-    dashboard.regulatoryAreas.length +
-    dashboard.vigilanceAreas.length +
-    dashboard.reportings.length
+    dashboard.ampIds.length +
+    dashboard.controlUnitIds.length +
+    dashboard.regulatoryAreaIds.length +
+    dashboard.vigilanceAreaIds.length +
+    dashboard.reportingIds.length
 
   return (
     isCardVisible && (
