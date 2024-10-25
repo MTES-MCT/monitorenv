@@ -1,5 +1,5 @@
+import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { type Reporting } from 'domain/entities/reporting'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -8,18 +8,20 @@ import { SelectedAccordion } from '../SelectedAccordion'
 import { Filters } from './Filters'
 import { Layer } from './Layer'
 
+import type { Reporting } from 'domain/entities/reporting'
+
 type ReportingsProps = {
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
-  reportings: Reporting[] | undefined
-  selectedReportings: Reporting[]
+  reportings: Reporting[]
+  selectedReportingIds: number[]
   setExpandedAccordion: () => void
 }
 export function Reportings({
   isExpanded,
   isSelectedAccordionOpen,
   reportings,
-  selectedReportings,
+  selectedReportingIds,
   setExpandedAccordion
 }: ReportingsProps) {
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
@@ -30,24 +32,26 @@ export function Reportings({
     }
   }, [isSelectedAccordionOpen])
 
+  const { data: selectedReportings } = useGetReportingsByIdsQuery(selectedReportingIds)
+
   return (
     <div>
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Signalements">
         <StyledFilters $isExpanded={isExpanded} />
         {reportings?.map(reporting => (
-          <Layer key={reporting.id} isPinned={selectedReportings.includes(reporting)} reporting={reporting} />
+          <Layer key={reporting.id} isPinned={selectedReportingIds.includes(+reporting.id)} reporting={reporting} />
         ))}
       </Accordion>
       <SelectedAccordion
         isExpanded={isExpandedSelectedAccordion}
-        isReadOnly={selectedReportings?.length === 0}
+        isReadOnly={selectedReportingIds?.length === 0}
         setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-        title={`${selectedReportings?.length ?? 0} ${pluralize(
+        title={`${selectedReportingIds?.length ?? 0} ${pluralize(
           'signalement',
-          selectedReportings?.length ?? 0
-        )} ${pluralize('sélectionné', selectedReportings?.length ?? 0)}`}
+          selectedReportingIds?.length ?? 0
+        )} ${pluralize('sélectionné', selectedReportingIds?.length ?? 0)}`}
       >
-        {selectedReportings?.map(reporting => (
+        {Object.values(selectedReportings?.entities ?? []).map(reporting => (
           <Layer key={reporting.id} isSelected reporting={reporting} />
         ))}
       </SelectedAccordion>

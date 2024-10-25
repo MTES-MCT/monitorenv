@@ -1,4 +1,5 @@
-import { getFilteredAmps, getOpenedPanel } from '@features/Dashboard/slice'
+import { useGetAMPsQuery } from '@api/ampsAPI'
+import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -7,15 +8,15 @@ import { groupBy } from 'lodash'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { ListLayerGroup } from './ListLayerGroup'
-import { AmpPanel } from './Panel'
 import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { ListLayerGroup } from './ListLayerGroup'
+import { AmpPanel } from './Panel'
 
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 
 type AmpsProps = {
-  amps: AMPFromAPI[] | undefined
+  amps: AMPFromAPI[]
   columnWidth: number
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
@@ -34,13 +35,16 @@ export function Amps({
 
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard))
-  const ampsByLayerName = groupBy(filteredAmps, r => r.name)
+  const ampsByLayerName = groupBy(amps, r => r.name)
 
-  const selectedAmpByLayerName = groupBy(
-    amps?.filter(({ id }) => selectedAmpIds.includes(id)),
-    r => r.name
-  )
+  const { selectedAmpByLayerName } = useGetAMPsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      selectedAmpByLayerName: groupBy(
+        Object.values(data?.entities ?? []).filter(amp => selectedAmpIds.includes(amp.id)),
+        amp => amp.name
+      )
+    })
+  })
 
   useEffect(() => {
     if (isSelectedAccordionOpen) {

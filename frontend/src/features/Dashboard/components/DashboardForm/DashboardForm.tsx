@@ -18,7 +18,14 @@ import { TerritorialPressure } from './TerritorialPressure'
 import { Toolbar } from './Toolbar'
 import { VigilanceAreas } from './VigilanceAreas'
 import { Weather } from './Weather'
-import { dashboardActions, getFilteredReportings, type DashboardType } from '../../slice'
+import {
+  dashboardActions,
+  getFilteredAmps,
+  getFilteredRegulatoryAreas,
+  getFilteredReportings,
+  getFilteredVigilanceAreas,
+  type DashboardType
+} from '../../slice'
 
 type DashboardProps = {
   dashboardForm: [string, DashboardType]
@@ -28,13 +35,13 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   const dispatch = useAppDispatch()
   const previewSelectionFilter = dashboard.filters.previewSelection ?? false
 
+  const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard))
+  const filteredRegulatoryAreas = useAppSelector(state => getFilteredRegulatoryAreas(state.dashboard))
+  const filteredVigilanceAreas = useAppSelector(state => getFilteredVigilanceAreas(state.dashboard))
   const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard))
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
-  const selectedReportings =
-    dashboard.extractedArea?.reportings.filter(reporting => dashboard.dashboard.reportingIds.includes(+reporting.id)) ??
-    []
 
   const firstColumnRef = useRef<HTMLDivElement>(null)
   const firstColumnWidth = firstColumnRef.current?.clientWidth ?? 0
@@ -104,13 +111,13 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
-                regulatoryAreas={dashboard.extractedArea?.regulatoryAreas}
+                regulatoryAreas={filteredRegulatoryAreas ?? []}
                 selectedRegulatoryAreaIds={dashboard.dashboard.regulatoryAreaIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REGULATORY_AREAS)}
               />
 
               <Amps
-                amps={dashboard.extractedArea?.amps}
+                amps={filteredAmps ?? []}
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
                 isSelectedAccordionOpen={previewSelectionFilter}
@@ -123,7 +130,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 isSelectedAccordionOpen={previewSelectionFilter}
                 selectedVigilanceAreaIds={dashboard.dashboard.vigilanceAreaIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
-                vigilanceAreas={dashboard.extractedArea?.vigilanceAreas}
+                vigilanceAreas={filteredVigilanceAreas ?? []}
               />
             </Column>
             <Column $filterHeight={toolbarHeight}>
@@ -136,7 +143,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 reportings={filteredReportings ?? []}
-                selectedReportings={selectedReportings}
+                selectedReportingIds={dashboard.dashboard.reportingIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
               />
             </Column>

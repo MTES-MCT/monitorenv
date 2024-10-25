@@ -392,15 +392,15 @@ export const dashboardSlice = createSlice({
     updateArea(
       state,
       action: PayloadAction<{
+        dashboard: Dashboard.Dashboard
         dashboardKey: string
         extractedArea: Dashboard.ExtractedArea
-        filteredDashboard: Dashboard.Dashboard
       }>
     ) {
-      const { dashboardKey: id, extractedArea, filteredDashboard } = action.payload
+      const { dashboard, dashboardKey: id, extractedArea } = action.payload
       if (state.dashboards[id]) {
         state.dashboards[id].extractedArea = extractedArea
-        state.dashboards[id].dashboard = filteredDashboard
+        state.dashboards[id].dashboard = dashboard
       }
     },
     updateDashboard(state, action: PayloadAction<{ dashboard: Dashboard.DashboardFromApi }>) {
