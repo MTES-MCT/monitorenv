@@ -1,4 +1,5 @@
-import { getFilteredVigilanceAreas, getOpenedPanel } from '@features/Dashboard/slice'
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -7,10 +8,10 @@ import { pluralize } from '@mtes-mct/monitor-ui'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { Layer } from './Layer'
-import { Panel } from './Panel'
 import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { Layer } from './Layer'
+import { Panel } from './Panel'
 
 type VigilanceAreasProps = {
   columnWidth: number
@@ -18,7 +19,7 @@ type VigilanceAreasProps = {
   isSelectedAccordionOpen: boolean
   selectedVigilanceAreaIds: number[]
   setExpandedAccordion: () => void
-  vigilanceAreas: VigilanceArea.VigilanceArea[] | undefined
+  vigilanceAreas: VigilanceArea.VigilanceArea[]
 }
 export function VigilanceAreas({
   columnWidth,
@@ -31,9 +32,13 @@ export function VigilanceAreas({
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const selectedVigilanceAreas = vigilanceAreas?.filter(({ id }) => selectedVigilanceAreaIds?.includes(id))
-
-  const filteredVigilanceAreas = useAppSelector(state => getFilteredVigilanceAreas(state.dashboard))
+  const { selectedVigilanceAreas } = useGetVigilanceAreasQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      selectedVigilanceAreas: Object.values(data?.entities ?? []).filter(vigilanceArea =>
+        selectedVigilanceAreaIds.includes(vigilanceArea.id)
+      )
+    })
+  })
 
   useEffect(() => {
     if (isSelectedAccordionOpen) {
@@ -47,12 +52,12 @@ export function VigilanceAreas({
 
       <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones de vigilance">
         <StyledLayerList
-          $baseLayersLength={filteredVigilanceAreas?.length ?? 0}
+          $baseLayersLength={vigilanceAreas.length}
           $maxHeight={100}
           $showBaseLayers={isExpanded}
           data-cy="dashboard-vigilance-areas-list"
         >
-          {filteredVigilanceAreas?.map(vigilanceArea => (
+          {vigilanceAreas.map(vigilanceArea => (
             <Layer
               key={vigilanceArea.id}
               isPinned={selectedVigilanceAreaIds.includes(vigilanceArea.id)}

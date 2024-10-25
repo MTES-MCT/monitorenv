@@ -1,4 +1,5 @@
-import { getFilteredRegulatoryAreas, getOpenedPanel } from '@features/Dashboard/slice'
+import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -7,10 +8,10 @@ import { groupBy } from 'lodash'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { ListLayerGroup } from './ListLayerGroup'
-import { RegulatoryPanel } from './Panel'
 import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { ListLayerGroup } from './ListLayerGroup'
+import { RegulatoryPanel } from './Panel'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
@@ -18,7 +19,7 @@ type RegulatoriesAreasProps = {
   columnWidth: number
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
-  regulatoryAreas: RegulatoryLayerCompactFromAPI[] | undefined
+  regulatoryAreas: RegulatoryLayerCompactFromAPI[]
   selectedRegulatoryAreaIds: number[]
   setExpandedAccordion: () => void
 }
@@ -30,17 +31,19 @@ export function RegulatoryAreas({
   selectedRegulatoryAreaIds: selectedRegulatoryAreas,
   setExpandedAccordion
 }: RegulatoriesAreasProps) {
-  const filteredRegulatoryAreas = useAppSelector(state => getFilteredRegulatoryAreas(state.dashboard))
-
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
   const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const regulatoryAreasByLayerName = groupBy(filteredRegulatoryAreas, r => r.layer_name)
+  const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
 
-  const selectedRegulatoryAreasByLayerName = groupBy(
-    regulatoryAreas?.filter(({ id }) => selectedRegulatoryAreas.includes(id)),
-    r => r.layer_name
-  )
+  const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      selectedRegulatoryAreasByLayerName: groupBy(
+        Object.values(data?.entities ?? []).filter(regulatory => selectedRegulatoryAreas.includes(regulatory.id)),
+        regulatory => regulatory.layer_name
+      )
+    })
+  })
 
   useEffect(() => {
     if (isSelectedAccordionOpen) {
