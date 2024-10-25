@@ -16,7 +16,7 @@ export const selectDashboardOnMap =
     // get dashboard datas
     try {
       const { data: reportings } = await dispatch(
-        reportingsAPI.endpoints.getReportingsByIds.initiate(dashboard.reportings)
+        reportingsAPI.endpoints.getReportingsByIds.initiate(dashboard.reportingIds)
       )
 
       const { data: amps } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
@@ -24,15 +24,15 @@ export const selectDashboardOnMap =
       const { data: regulatoryAreas } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
       const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
 
-      const filteredAmps = Object.values(amps?.entities ?? []).filter(amp => dashboard.amps.includes(amp.id))
+      const filteredAmps = Object.values(amps?.entities ?? []).filter(amp => dashboard.ampIds.includes(amp.id))
       const filteredRegulatoryAreas = Object.values(regulatoryAreas?.entities ?? []).filter(regulatoryArea =>
-        dashboard.regulatoryAreas.includes(regulatoryArea.id)
+        dashboard.regulatoryAreaIds.includes(regulatoryArea.id)
       )
       const filteredReportings = Object.values(reportings?.entities ?? []).filter(reporting =>
-        dashboard.reportings.includes(+reporting.id)
+        dashboard.reportingIds.includes(+reporting.id)
       )
       const filteredVigilanceAreas = Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
-        dashboard.vigilanceAreas.includes(vigilanceArea.id)
+        dashboard.vigilanceAreaIds.includes(vigilanceArea.id)
       )
       dispatch(
         dashboardActions.setSelectedDashboardOnMap({

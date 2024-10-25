@@ -1,3 +1,4 @@
+import { dashboardActions } from '@features/Dashboard/slice'
 import { missionActions } from '@features/missions/slice'
 import { Layers } from 'domain/entities/layers/constants'
 import { reportingActions } from 'domain/shared_slices/reporting'
@@ -193,6 +194,10 @@ export function OverlayPositionOnCentroid({
 
       if (!featureId.includes(Layers.REPORTINGS.code)) {
         dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
+      }
+
+      if (!featureId.includes(Layers.DASHBOARDS.code)) {
+        dispatch(dashboardActions.setSelectedDashboardOnMap(undefined))
       }
     }
   }, [dispatch, mapClickEvent?.feature])

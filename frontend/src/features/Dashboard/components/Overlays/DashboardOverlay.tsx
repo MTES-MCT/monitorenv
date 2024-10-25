@@ -97,7 +97,7 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         options={hoveredOptions}
         zIndex={5000}
       >
-        {hoveredFeature?.getProperties().dashboard && (
+        {displayHoveredFeature && (
           <DashboardCard
             dashboardId={hoveredFeature?.getProperties().dashboard.id}
             onClose={close}

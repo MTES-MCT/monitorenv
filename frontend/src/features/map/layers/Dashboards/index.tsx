@@ -1,5 +1,4 @@
 import { useGetDashboardsQuery } from '@api/dashboardsAPI'
-import { dashboardActions } from '@features/Dashboard/slice'
 import { selectDashboardOnMap } from '@features/Dashboard/useCases/selectDashboardOnMap'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { convertToFeature } from 'domain/types/map'
@@ -77,8 +76,6 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.DASHBOARDS.code)) {
         dispatch(selectDashboardOnMap(feature.getProperties().dashboard))
       }
-    } else {
-      dispatch(dashboardActions.setSelectedDashboardOnMap())
     }
   }, [dispatch, mapClickEvent])
 }
