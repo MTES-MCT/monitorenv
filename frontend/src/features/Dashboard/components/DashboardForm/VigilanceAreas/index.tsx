@@ -29,7 +29,8 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
       isSelectedAccordionOpen,
       selectedVigilanceAreaIds,
       setExpandedAccordion,
-      vigilanceAreas
+      vigilanceAreas,
+      ...props
     },
     ref
   ) => {
@@ -47,7 +48,8 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
     }, [isSelectedAccordionOpen])
 
     return (
-      <StickyContainer ref={ref}>
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      <StickyContainer ref={ref} {...props}>
         {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
 
         <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones de vigilance">
@@ -87,7 +89,6 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
 
 const StyledLayerList = styled(LayerSelector.LayerList)`
   overflow-y: auto;
-  max-height: 30%;
 `
 const StyledPanel = styled(Panel)<{ $marginLeft: number }>`
   left: ${p =>
@@ -97,7 +98,7 @@ const StyledPanel = styled(Panel)<{ $marginLeft: number }>`
 `
 
 const StickyContainer = styled.div`
-  position: sticky;
-  bottom: 0;
+  // position: sticky;
+  // bottom: 0;
   background: white;
 `

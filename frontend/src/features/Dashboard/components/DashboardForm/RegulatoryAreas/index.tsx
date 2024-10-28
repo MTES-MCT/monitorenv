@@ -56,9 +56,10 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
 
     return (
       <>
-        {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        {/*  eslint-disable-next-line react/jsx-props-no-spreading */}
         <StickyContainer ref={ref} {...props}>
+          {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones réglementaires">
             <StyledLayerList
               $baseLayersLength={Object.values(regulatoryAreasByLayerName).length}
@@ -109,7 +110,9 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
   }
 )
 
-const StyledLayerList = styled(LayerSelector.LayerList)``
+const StyledLayerList = styled(LayerSelector.LayerList)`
+  overflow-y: auto;
+`
 const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`
   left: ${p =>
     `calc(
@@ -118,7 +121,7 @@ const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`
 `
 
 const StickyContainer = styled.div`
-  position: sticky;
-  top: 0;
+  // position: sticky;
+  // top: 0;
   background: white;
 `

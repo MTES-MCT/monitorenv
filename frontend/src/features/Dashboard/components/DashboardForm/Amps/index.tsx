@@ -44,10 +44,10 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
 
     return (
       <>
-        {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
-
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <StickyContainer ref={ref} {...props}>
+          {openPanel && <StyledPanel $marginLeft={columnWidth ?? 0} layerId={openPanel.id} />}
+
           <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones AMP">
             <StyledLayerList
               $baseLayersLength={Object.values(ampsByLayerName).length}
@@ -109,6 +109,6 @@ const StyledPanel = styled(AmpPanel)<{ $marginLeft?: number }>`
   )`}; // 25px is the padding, 64px is the width of the sidebar
 `
 const StickyContainer = styled.div`
-  position: sticky;
-  background: white;
+  // position: sticky;
+  // background: white;
 `

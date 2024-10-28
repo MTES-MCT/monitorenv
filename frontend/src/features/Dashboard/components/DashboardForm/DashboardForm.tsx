@@ -45,10 +45,10 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   const regRef = useRef<HTMLDivElement>(null)
   const ampRef = useRef<HTMLDivElement>(null)
   const zdvRef = useRef<HTMLDivElement>(null)
-  const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
-  const [regulatoryAreasHeight, setRegulatoryAreasHeight] = useState<number | undefined>(undefined)
-  const [ampsHeight, setAmpsHeight] = useState<number | undefined>(undefined)
-  const [vigilanceAreasHeight, setVigilanceAreasHeight] = useState<number | undefined>(undefined)
+  const [containerHeight, setContainerHeight] = useState<number>(0)
+  const [regulatoryAreasHeight, setRegulatoryAreasHeight] = useState<number>(0)
+  const [ampsHeight, setAmpsHeight] = useState<number>(0)
+  const [vigilanceAreasHeight, setVigilanceAreasHeight] = useState<number>(0)
 
   const toolbarRef = useRef<HTMLDivElement>(null)
   const toolbarHeight = toolbarRef.current?.clientHeight ?? 0
@@ -105,7 +105,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
   useEffect(() => {
     if (isActive) {
-      setContainerHeight(containerRef.current?.clientHeight)
+      setContainerHeight(containerRef.current?.clientHeight ?? 0)
     }
   }, [isActive])
 
@@ -131,9 +131,9 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
             <Column ref={firstColumnRef} $filterHeight={toolbarHeight}>
               <StyledRegulatoryAreas
                 ref={regRef}
-                $maxContentHeight={dashboard.extractedArea ? dashboard.extractedArea.regulatoryAreas.length * 10 : 0}
-                $maxHeight={regulatoryAreasHeight}
-                $maxSelectedHeight={dashboard.dashboard.regulatoryAreas.length * 10}
+                $maxContentHeight={150}
+                $maxHeight={containerHeight - ampsHeight - vigilanceAreasHeight - 16}
+                $maxSelectedHeight={80}
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
@@ -144,10 +144,9 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
               <StyledAmps
                 ref={ampRef}
-                $maxContentHeight={dashboard.extractedArea ? dashboard.extractedArea.amps.length * 10 : 0}
-                $maxHeight={ampsHeight}
-                $maxSelectedHeight={dashboard.dashboard.amps.length * 10}
-                $top={regulatoryAreasHeight ?? 0}
+                $maxContentHeight={150}
+                $maxHeight={containerHeight - regulatoryAreasHeight - vigilanceAreasHeight - 16}
+                $maxSelectedHeight={80}
                 amps={dashboard.extractedArea?.amps}
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
@@ -155,11 +154,11 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 selectedAmpIds={dashboard.dashboard.ampIds}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
               />
-              <StyledVigilanceAreass
+              <StyledVigilanceAreas
                 ref={zdvRef}
-                $maxContentHeight={dashboard.extractedArea ? dashboard.extractedArea.vigilanceAreas.length * 10 : 0}
-                $maxHeight={vigilanceAreasHeight}
-                $maxSelectedHeight={dashboard.dashboard.vigilanceAreas.length * 10}
+                $maxContentHeight={150}
+                $maxHeight={containerHeight - ampsHeight - regulatoryAreasHeight - 16}
+                $maxSelectedHeight={80}
                 columnWidth={firstColumnWidth}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
@@ -225,7 +224,7 @@ const Column = styled.div<{ $filterHeight: number }>`
 
   scrollbar-gutter: stable;
 
-  padding: 3px;
+  // padding: 3px;
 `
 
 const StyledRegulatoryAreas = styled(RegulatoryAreas)<{
@@ -233,8 +232,8 @@ const StyledRegulatoryAreas = styled(RegulatoryAreas)<{
   $maxHeight: number | undefined
   $maxSelectedHeight: number | undefined
 }>`
-  // max-height: ${p => p.$maxHeight && p.$maxHeight}px;
-  overflow-y: hidden;
+  padding: 5px;
+  max-height: ${p => p.$maxHeight && p.$maxHeight}px;
   ${AccordionContent} {
     max-height: ${p => p.$maxContentHeight && p.$maxContentHeight}px;
     overflow-y: auto;
@@ -248,10 +247,10 @@ const StyledAmps = styled(Amps)<{
   $maxContentHeight: number | undefined
   $maxHeight: number | undefined
   $maxSelectedHeight: number | undefined
-  $top: number
 }>`
-  // max-height: ${p => p.$maxHeight && p.$maxHeight}px;
-  overflow-y: hidden;
+  padding: 5px;
+
+  max-height: ${p => p.$maxHeight && p.$maxHeight}px;
   ${AccordionContent} {
     max-height: ${p => p.$maxContentHeight && p.$maxContentHeight}px;
     overflow-y: auto;
@@ -261,12 +260,15 @@ const StyledAmps = styled(Amps)<{
   }
 `
 
-const StyledVigilanceAreass = styled(VigilanceAreas)<{
+const StyledVigilanceAreas = styled(VigilanceAreas)<{
   $maxContentHeight: number | undefined
   $maxHeight: number | undefined
   $maxSelectedHeight: number | undefined
 }>`
-  // max-height: ${p => p.$maxHeight && p.$maxHeight}px;
+  padding: 5px;
+
+  max-height: ${p => p.$maxHeight && p.$maxHeight}px;
+
   ${AccordionContent} {
     max-height: ${p => p.$maxContentHeight && p.$maxContentHeight}px;
     overflow-y: auto;
