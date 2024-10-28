@@ -79,7 +79,10 @@ const missionFormsSlice = createSlice({
     setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload
     },
-    setCreatedMission(state, action: PayloadAction<{ createdMission: MissionInStateType; previousId: string }>) {
+    setCreatedMission(
+      state,
+      action: PayloadAction<{ createdMission: MissionInStateType; previousId: string | number | undefined }>
+    ) {
       const { previousId } = action.payload
       const createdMissionId = action.payload.createdMission.missionForm.id
       if (!previousId || !createdMissionId) {

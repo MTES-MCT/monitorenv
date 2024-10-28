@@ -1,35 +1,37 @@
+import { isNewMission } from '@utils/isNewMission'
+
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { setToast } from '../../shared_slices/Global'
 
-export const attachReportingFromMap = (reportingId: number) => async (dispatch, getState) => {
-  const { attachedReportings } = getState().attachReportingToMission
-  const { attachedReportingIds } = getState().attachReportingToMission
-  const missionId = getState().missionForms.activeMissionId
+import type { HomeAppThunk } from '@store/index'
 
-  if (attachedReportingIds.includes(reportingId)) {
-    return
-  }
+export const attachReportingFromMap =
+  (reportingId: number): HomeAppThunk =>
+  async (dispatch, getState) => {
+    const { attachedReportingIds, attachedReportings } = getState().attachReportingToMission
+    const missionId = getState().missionForms.activeMissionId
 
-  try {
-    const reportingRequest = dispatch(reportingsAPI.endpoints.getReporting.initiate(reportingId))
-    const reportingResponse = await reportingRequest.unwrap()
-    if (!reportingResponse) {
-      throw Error()
+    if (attachedReportingIds.includes(reportingId)) {
+      return
     }
 
-    await dispatch(
-      attachReportingToMissionSliceActions.setAttachedReportings([
-        ...attachedReportings,
-        {
-          ...reportingResponse,
-          missionId
-        }
-      ])
-    )
+    try {
+      const reportingRequest = dispatch(reportingsAPI.endpoints.getReporting.initiate(reportingId))
+      const reportingResponse = await reportingRequest.unwrap()
+      if (!reportingResponse) {
+        throw Error()
+      }
 
-    await reportingRequest.unsubscribe()
-  } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
+      dispatch(
+        attachReportingToMissionSliceActions.setAttachedReportings([
+          ...attachedReportings,
+          { ...reportingResponse, missionId: !missionId || isNewMission(missionId) ? undefined : +missionId }
+        ])
+      )
+
+      reportingRequest.unsubscribe()
+    } catch (error) {
+      dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
+    }
   }
-}

@@ -253,11 +253,11 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
 }
 
 export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' | 'id'> & {
-  controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
+  controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'> & { id: number | undefined }>
   id: string
 }
 // Mission for API
-export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings'>
+export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings' | 'detachedReportings' | 'fishActions'>
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
