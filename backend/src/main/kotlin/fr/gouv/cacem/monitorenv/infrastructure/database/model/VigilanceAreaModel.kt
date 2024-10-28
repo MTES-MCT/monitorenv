@@ -70,6 +70,7 @@ data class VigilanceAreaModel(
     val linkedRegulatoryAreas: List<Int>? = listOf(),
     @Column(name = "name") val name: String? = null,
     @Column(name = "start_date_period") val startDatePeriod: Instant? = null,
+    @Column(name = "sea_front") val seaFront: String? = null,
     @Column(name = "source") val source: String? = null,
     @Column(name = "themes") val themes: List<String>? = null,
     @Column(name = "visibility", columnDefinition = "vigilance_area_visibility")
@@ -97,6 +98,7 @@ data class VigilanceAreaModel(
                 linkedAMPs = vigilanceArea.linkedAMPs,
                 linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
                 name = vigilanceArea.name,
+                seaFront = vigilanceArea.seaFront,
                 source = vigilanceArea.source,
                 startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
                 themes = vigilanceArea.themes,
@@ -125,6 +127,7 @@ data class VigilanceAreaModel(
             linkedAMPs = linkedAMPs,
             linkedRegulatoryAreas = linkedRegulatoryAreas,
             name = name,
+            seaFront = seaFront,
             source = source,
             startDatePeriod = startDatePeriod?.atZone(UTC),
             themes = themes,

@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -13,9 +14,12 @@ import org.junit.jupiter.api.Test
 class CreateOrUpdateVigilanceAreaUTests {
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
 
+    private val facadeAreasRepository: IFacadeAreasRepository = mock()
+
     private val createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea =
         CreateOrUpdateVigilanceArea(
             vigilanceAreaRepository,
+            facadeAreasRepository,
         )
 
     @Test
