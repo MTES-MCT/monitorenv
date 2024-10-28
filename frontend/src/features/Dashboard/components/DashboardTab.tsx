@@ -1,10 +1,10 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useEscapeKey } from '@hooks/useEscapeKey'
-import { Icon, TextInput, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
-import { useRef, useState } from 'react'
+import { Icon } from '@mtes-mct/monitor-ui'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
+import { TabNameInput } from './TabNameInput'
 
 export function DashboardTab({
   isEditing,
@@ -19,27 +19,14 @@ export function DashboardTab({
 }) {
   const dispatch = useAppDispatch()
 
-  const ref = useRef<HTMLDivElement>(null)
-  const { newWindowContainerRef } = useNewWindow()
-
-  const [updatedName, setUpdatedName] = useState<string | undefined>()
+  const [updatedName, setUpdatedName] = useState<string | undefined>(name)
 
   const validateName = () => {
     if (updatedName) {
       dispatch(dashboardActions.setName({ key: tabKey, name: updatedName }))
-      setUpdatedName(undefined)
     }
     onEdit(false)
   }
-
-  useClickOutsideEffect(
-    ref,
-    () => {
-      validateName()
-    },
-    newWindowContainerRef.current
-  )
-  useEscapeKey({ onEnter: () => validateName(), ref })
 
   const editName = e => {
     e.stopPropagation()
@@ -51,15 +38,7 @@ export function DashboardTab({
   return (
     <>
       {isEditing ? (
-        <StyledTextInput
-          inputRef={ref}
-          isLabelHidden
-          isTransparent
-          label="Nom du tableau de bord"
-          name="name"
-          onChange={value => setUpdatedName(value)}
-          value={updatedName}
-        />
+        <TabNameInput onChange={setUpdatedName} validate={validateName} value={updatedName} />
       ) : (
         <Container>
           <DashboardName>{name}</DashboardName>
@@ -80,7 +59,4 @@ const DashboardName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`
-const StyledTextInput = styled(TextInput)`
-  flex-grow: 1;
 `
