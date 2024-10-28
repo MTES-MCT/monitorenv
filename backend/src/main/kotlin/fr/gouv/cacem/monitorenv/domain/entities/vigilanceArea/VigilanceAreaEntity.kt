@@ -22,6 +22,7 @@ data class VigilanceAreaEntity(
     val linkedAMPs: List<Int>? = listOf(),
     val linkedRegulatoryAreas: List<Int>? = listOf(),
     val name: String? = null,
+    val seaFront: String? = null,
     val source: String? = null,
     val startDatePeriod: ZonedDateTime? = null,
     val themes: List<String>? = null,
