@@ -81,15 +81,6 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('envaction-theme-element').contains('Oiseaux').click({ force: true }) // id 11
     cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
 
-    /*
-    TODO: fix this command in monitor-ui
-    cy.fill(
-      'Sous-thématiques de contrôle',
-      ["Destruction, capture, arrachage d'espèces protégées", 'Détention des espèces protégées'], // id 117 and 120
-      { delay: 250 }
-    )
-    cy.fill('Précisions sur la thématique', ['Habitat', 'Oiseaux'], { delay: 250 }) // id 15 and 11
-    */
     cy.getDataCy('envaction-add-theme').should('not.exist')
     cy.wait(500)
 
@@ -390,10 +381,12 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.getDataCy('action-missing-fields-text').contains('3 champs nécessaires aux statistiques à compléter')
 
-    cy.getDataCy('envaction-theme-selector').eq(0).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(0).contains('Épave').click({ force: true }) // id 105
+    // select sub-theme and prefill theme
     cy.getDataCy('envaction-subtheme-selector').eq(0).click({ force: true })
     cy.getDataCy('envaction-theme-element').eq(0).contains("Découverte d'une épave maritime").click({ force: true }) // id 128
+    cy.getDataCy('envaction-theme-element').eq(0).contains('Épave') // id 105
+    // add another sub-theme
+    cy.getDataCy('envaction-subtheme-selector').eq(0).click({ force: true })
     cy.getDataCy('envaction-theme-element').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
     cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })

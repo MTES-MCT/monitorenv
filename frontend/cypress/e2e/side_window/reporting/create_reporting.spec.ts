@@ -41,9 +41,9 @@ context('Reportings', () => {
 
     // select themes and sub-themes for a specific year
     cy.fill('Date et heure (UTC)', [2023, 5, 26, 23, 35])
-    cy.fill('Thématique du signalement', 'Atteintes aux biens culturels maritimes')
-    cy.fill('Sous-thématique du signalement', ['Atteinte aux biens culturels', 'Contrôle administratif'])
-
+    // select sub-theme and prefill theme
+    cy.fill('Sous-thématique du signalement', ['Atteinte aux biens culturels'])
+    cy.getDataCy('reporting-theme-selector').contains('Atteintes aux biens culturels maritimes')
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
     // change date year
