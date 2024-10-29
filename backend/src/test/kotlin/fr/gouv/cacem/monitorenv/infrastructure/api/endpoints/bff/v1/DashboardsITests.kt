@@ -2,9 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.DeleteDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboards
@@ -21,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -47,6 +50,9 @@ class DashboardsITests {
 
     @MockBean
     private lateinit var getDashboard: GetDashboard
+
+    @MockBean
+    private lateinit var deleteDashboard: DeleteDashboard
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -275,5 +281,20 @@ class DashboardsITests {
             .andExpect(jsonPath("$.reportingIds", equalTo(dashboard.reportingIds)))
             .andExpect(jsonPath("$.vigilanceAreaIds", equalTo(dashboard.vigilanceAreaIds)))
             .andExpect(jsonPath("$.controlUnitIds", equalTo(dashboard.controlUnitIds)))
+    }
+
+    @Test
+    fun `delete response should be OK`() {
+        // Given
+        val id = UUID.randomUUID()
+
+        // When
+        mockMvc.perform(
+            delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
+            .andExpect(status().isOk)
+
+        verify(deleteDashboard).execute(id)
     }
 }

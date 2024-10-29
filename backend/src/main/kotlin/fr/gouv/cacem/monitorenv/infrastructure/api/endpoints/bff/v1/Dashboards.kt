@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.DeleteDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboards
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.locationtech.jts.io.WKTReader
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -31,6 +33,7 @@ class Dashboards(
     private val saveDashboard: SaveDashboard,
     private val getDashboards: GetDashboards,
     private val getDashboard: GetDashboard,
+    private val deleteDashboard: DeleteDashboard,
 ) {
     @GetMapping("/extract")
     @Operation(summary = "Extract all data that intercept the given geometry")
@@ -56,6 +59,16 @@ class Dashboards(
         @RequestBody dashboardDataInput: DashboardDataInput,
     ): DashboardDataOutput {
         return fromDashboardEntity(saveDashboard.execute(dashboardDataInput.toDashboardEntity()))
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "create or update the given dashboard")
+    fun delete(
+        @PathParam("Mission Id")
+        @PathVariable(name = "id")
+        id: UUID,
+    ) {
+        deleteDashboard.execute(id)
     }
 
     @GetMapping("/{dashboardId}")

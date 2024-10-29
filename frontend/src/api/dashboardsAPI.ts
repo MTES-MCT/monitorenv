@@ -13,6 +13,15 @@ const GET_DASHBOARD_ERROR_MESSAGE = "Nous n'avons pas pu récupérer le tableau 
 
 export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
+    delete: build.mutation<void, string>({
+      invalidatesTags: [{ id: 'LIST', type: 'Dashboards' }],
+      query: id => ({
+        method: 'DELETE',
+        url: `/v1/dashboards/${id}`
+      }),
+
+      transformErrorResponse: response => new FrontendApiError(SAVE_DASHBOARD_ERROR_MESSAGE, response)
+    }),
     getDashboard: build.query<Dashboard.DashboardFromApi, string>({
       query: id => `/v1/dashboards/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_DASHBOARD_ERROR_MESSAGE, response),
@@ -28,8 +37,8 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
       transformErrorResponse: response => new FrontendApiError(GET_EXTRACTED_AREAS_ERROR_MESSAGE, response)
     }),
     save: build.query<Dashboard.DashboardFromApi, Dashboard.DashboardToApi>({
-      query: mission => ({
-        body: mission,
+      query: dashboard => ({
+        body: dashboard,
         method: 'PUT',
         url: `/v1/dashboards`
       }),

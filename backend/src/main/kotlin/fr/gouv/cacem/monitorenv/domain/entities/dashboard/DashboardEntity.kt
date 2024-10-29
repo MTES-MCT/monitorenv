@@ -11,6 +11,7 @@ data class DashboardEntity(
     val comments: String?,
     val createdAt: ZonedDateTime?,
     val updatedAt: ZonedDateTime?,
+    val isDeleted: Boolean = false,
     val inseeCode: String?,
     val seaFront: String?,
     val ampIds: List<Int>,

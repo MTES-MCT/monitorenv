@@ -22,6 +22,7 @@ class DashboardFixture {
             vigilanceAreas: List<Int> = listOf(),
             controlUnits: List<Int> = listOf(),
             inseeCode: String? = null,
+            isDeleted: Boolean = false,
         ): DashboardEntity {
             return DashboardEntity(
                 id = id,
@@ -37,6 +38,7 @@ class DashboardFixture {
                 vigilanceAreaIds = vigilanceAreas,
                 controlUnitIds = controlUnits,
                 seaFront = seaFront,
+                isDeleted = isDeleted,
             )
         }
     }
