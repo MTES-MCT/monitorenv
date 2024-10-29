@@ -1,8 +1,8 @@
 import { NavBar } from '@components/NavBar'
-import { Icon } from '@mtes-mct/monitor-ui'
-import ResponsiveNav from '@rsuite/responsive-nav'
+import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import { generatePath } from 'react-router-dom'
+import { Nav } from 'rsuite'
 import styled from 'styled-components'
 
 import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
@@ -39,16 +39,35 @@ export function MissionsNavBar() {
     const openMissions = Object.values(selectedMissions)?.map(selectedMission => {
       const { missionForm } = selectedMission
       const missionIsNewMission = isNewMission(missionForm?.id)
+      const close = nextPath => {
+        if (!nextPath) {
+          return
+        }
+        dispatch(deleteTab(nextPath))
+      }
+
+      const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionForm.id })
 
       return {
         icon: !missionIsNewMission ? <MissionStatus mission={missionForm} /> : undefined,
-        label: <span>{getMissionTitle(missionIsNewMission, missionForm)}</span>,
-        nextPath: generatePath(sideWindowPaths.MISSION, { id: missionForm.id })
+        label: (
+          <>
+            <span>{getMissionTitle(missionIsNewMission, missionForm)}</span>
+            <IconButton
+              accent={Accent.TERTIARY}
+              color={THEME.color.slateGray}
+              Icon={Icon.Close}
+              onClick={() => close(nextPath)}
+              size={Size.SMALL}
+            />
+          </>
+        ),
+        nextPath
       }
     })
 
     return [missionsList, ...openMissions]
-  }, [selectedMissions])
+  }, [dispatch, selectedMissions])
 
   const selectTab = nextPath => {
     if (!nextPath) {
@@ -57,19 +76,12 @@ export function MissionsNavBar() {
     dispatch(switchTab(nextPath))
   }
 
-  const removeTab = nextPath => {
-    if (!nextPath) {
-      return
-    }
-    dispatch(deleteTab(nextPath))
-  }
-
   return (
-    <NavBar name="missions" onClose={removeTab} onSelect={selectTab}>
+    <NavBar name="missions" onSelect={selectTab}>
       {tabs.map((item, index) => (
-        <ResponsiveNav.Item key={item.nextPath} data-cy={`mission-${index}`} eventKey={item.nextPath} icon={item.icon}>
+        <Nav.Item key={item.nextPath} data-cy={`mission-${index}`} eventKey={item.nextPath} icon={item.icon}>
           {item.label}
-        </ResponsiveNav.Item>
+        </Nav.Item>
       ))}
     </NavBar>
   )

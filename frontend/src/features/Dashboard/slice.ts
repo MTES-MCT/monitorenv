@@ -29,6 +29,7 @@ export const initialDashboard: DashboardType = {
   defaultName: '',
   extractedArea: undefined,
   filters: {},
+  isEditingTabName: false,
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
   reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
@@ -69,6 +70,7 @@ export type DashboardType = {
   defaultName: string | undefined
   extractedArea?: Dashboard.ExtractedArea
   filters: DashboardFilters
+  isEditingTabName: boolean
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingFilters: ReportingFilters
@@ -358,6 +360,15 @@ export const dashboardSlice = createSlice({
     },
     setIsDrawing(state, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
+    },
+    setisEditingTabName(state, action: PayloadAction<{ isEditing: boolean; key: string }>) {
+      const id = action.payload.key
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].isEditingTabName = action.payload.isEditing
     },
     setName(state, action: PayloadAction<{ key: string; name: string }>) {
       const id = action.payload.key

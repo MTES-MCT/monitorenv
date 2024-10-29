@@ -1,23 +1,25 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Icon } from '@mtes-mct/monitor-ui'
-import { useState } from 'react'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { useEscapeKey } from '@hooks/useEscapeKey'
+import {
+  Accent,
+  Icon,
+  IconButton,
+  Size,
+  TextInput,
+  THEME,
+  useClickOutsideEffect,
+  useNewWindow
+} from '@mtes-mct/monitor-ui'
+import { useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
-import { TabNameInput } from './TabNameInput'
 
-export function DashboardTab({
-  isEditing,
-  name,
-  onEdit,
-  tabKey
-}: {
-  isEditing: boolean
-  name: string
-  onEdit: (isEditing: boolean) => void
-  tabKey: string
-}) {
+export function DashboardTab({ close, name, tabKey }: { close: () => void; name: string; tabKey: string }) {
   const dispatch = useAppDispatch()
+  const isEditing = useAppSelector(state => state.dashboard.dashboards[tabKey]?.isEditingTabName)
+  const ref = useRef<HTMLInputElement>(null)
 
   const [updatedName, setUpdatedName] = useState<string | undefined>(name)
 
@@ -25,26 +27,52 @@ export function DashboardTab({
     if (updatedName) {
       dispatch(dashboardActions.setName({ key: tabKey, name: updatedName }))
     }
-    onEdit(false)
+    dispatch(dashboardActions.setisEditingTabName({ isEditing: false, key: tabKey }))
   }
 
-  const editName = e => {
-    e.stopPropagation()
-    e.preventDefault()
+  const editName = useCallback(() => {
     setUpdatedName(name)
-    onEdit(true)
-  }
+    dispatch(dashboardActions.setisEditingTabName({ isEditing: true, key: tabKey }))
+  }, [dispatch, name, tabKey])
+
+  const { newWindowContainerRef } = useNewWindow()
+
+  useClickOutsideEffect(
+    ref,
+    () => {
+      validateName()
+    },
+    newWindowContainerRef.current
+  )
+
+  useEscapeKey({ onEnter: () => validateName(), ref })
 
   return (
     <>
       {isEditing ? (
-        <TabNameInput onChange={setUpdatedName} validate={validateName} value={updatedName} />
+        <StyledTextInput
+          autoFocus
+          inputRef={ref}
+          isLabelHidden
+          isTransparent
+          label="Nom du tableau de bord"
+          name="name"
+          onChange={setUpdatedName}
+          value={updatedName}
+        />
       ) : (
         <Container>
           <DashboardName>{name}</DashboardName>
-          <Icon.EditUnbordered onClick={e => editName(e)} />
+          <Icon.EditUnbordered onClick={() => editName()} />
         </Container>
       )}
+      <IconButton
+        accent={Accent.TERTIARY}
+        color={THEME.color.slateGray}
+        Icon={Icon.Close}
+        onClick={close}
+        size={Size.SMALL}
+      />
     </>
   )
 }
@@ -59,4 +87,7 @@ const DashboardName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+const StyledTextInput = styled(TextInput)`
+  flex-grow: 1;
 `
