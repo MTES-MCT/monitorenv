@@ -1,6 +1,7 @@
 import { MultiSelect, type Option } from '@mtes-mct/monitor-ui'
+import { sortControlPlans } from '@utils/sortControlPlans'
 import { useField, useFormikContext } from 'formik'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { updateSubThemes } from '../../../formikUseCases/updateActionThemes'
@@ -12,7 +13,13 @@ type SubThemesSelectorProps = {
   isError: boolean
   isLoading: boolean
   label: string
-  subThemes: Array<Option<number>>
+  subThemes: {
+    [key: number]: {
+      id: number
+      subTheme: string
+      themeId: number
+    }
+  }
   themeId: number
   themeIndex: number
 }
@@ -25,21 +32,35 @@ export function SubThemesSelector({
   themeId,
   themeIndex
 }: SubThemesSelectorProps) {
+  const subThemesByYearAsOptions: Array<Option<number>> = useMemo(
+    () =>
+      Object.values(subThemes ?? {})
+        ?.filter(subTheme => (themeId ? subTheme.themeId === themeId : true))
+        .map(({ id, subTheme }) => ({ label: subTheme, value: id }))
+        .sort(sortControlPlans) || [],
+    [subThemes, themeId]
+  )
+
   const { setFieldValue } = useFormikContext<Mission>()
   const [currentSubThemesField, currentSubThemesProps] = useField<number[]>(
     `envActions[${actionIndex}].controlPlans[${themeIndex}].subThemeIds`
   )
 
-  const handleUpdateSubTheme = subTheme => {
-    updateSubThemes(setFieldValue)(subTheme, actionIndex, themeIndex)
+  const handleUpdateSubTheme = (subThemeIds: number[] | undefined) => {
+    const subThemeId = subThemeIds?.[0]
+    const themeOfSubThemeId = subThemeId ? subThemes[subThemeId]?.themeId : undefined
+
+    updateSubThemes(setFieldValue)(subThemeIds, actionIndex, themeIndex, themeId, themeOfSubThemeId)
   }
 
   useEffect(() => {
-    if (subThemes.length === 1) {
-      setFieldValue(`envActions[${actionIndex}].controlPlans[${themeIndex}].subThemeIds`, [subThemes[0]?.value])
+    if (subThemesByYearAsOptions.length === 1) {
+      setFieldValue(`envActions[${actionIndex}].controlPlans[${themeIndex}].subThemeIds`, [
+        subThemesByYearAsOptions[0]?.value
+      ])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subThemes, actionIndex, themeIndex])
+  }, [subThemesByYearAsOptions, actionIndex, themeIndex])
 
   return (
     <>
@@ -48,9 +69,8 @@ export function SubThemesSelector({
       {!isError && !isLoading && (
         <MultiSelect
           // force update when name or theme changes
-          key={`${actionIndex}-${themeId}-${subThemes.length}`}
+          key={`${actionIndex}-${themeId}-${subThemesByYearAsOptions.length}`}
           data-cy="envaction-subtheme-selector"
-          disabled={!themeId}
           error={currentSubThemesProps.error}
           isErrorMessageHidden
           isLight
@@ -58,7 +78,8 @@ export function SubThemesSelector({
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateSubTheme}
-          options={subThemes}
+          options={subThemesByYearAsOptions}
+          searchable={subThemesByYearAsOptions.length > 10}
           value={currentSubThemesField.value?.map(value => value) as any[]}
         />
       )}

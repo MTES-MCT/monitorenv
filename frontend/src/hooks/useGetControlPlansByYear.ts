@@ -48,9 +48,12 @@ export function useGetControlPlansByYear({
 
   const themesByYear = useMemo(() => data?.themes ?? {}, [data?.themes])
 
+  const subThemesByYear = useMemo(() => data?.subThemes ?? {}, [data?.subThemes])
+
   return {
     isError,
     isLoading,
+    subThemesByYear,
     subThemesByYearAsOptions,
     tagsByYearAsOptions,
     themesByYear,

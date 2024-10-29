@@ -32,12 +32,10 @@ export function ActionTheme({
   const [actionControlPlansField] = useField<Array<ControlPlansData>>(`envActions[${actionIndex}].controlPlans`)
   const [currentThemeField] = useField<number>(`envActions[${actionIndex}].controlPlans[${themeIndex}].themeId`)
 
-  const { isError, isLoading, subThemesByYearAsOptions, tagsByYearAsOptions, themesByYearAsOptions } =
-    useGetControlPlansByYear({
-      selectedTheme: currentThemeField?.value,
-      year: themesYear
-    })
-
+  const { isError, isLoading, subThemesByYear, tagsByYearAsOptions, themesByYearAsOptions } = useGetControlPlansByYear({
+    selectedTheme: currentThemeField?.value,
+    year: themesYear
+  })
   const formattedThemesAsOptions = useMemo(() => {
     if (actionType === ActionTypeEnum.CONTROL) {
       return themesByYearAsOptions?.filter(theme => theme.label !== GENERAL_SURVEILLANCE).sort(sortControlPlans)
@@ -67,7 +65,7 @@ export function ActionTheme({
         isError={isError}
         isLoading={isLoading}
         label={labelSubTheme}
-        subThemes={subThemesByYearAsOptions}
+        subThemes={subThemesByYear}
         themeId={currentThemeField?.value}
         themeIndex={themeIndex}
       />

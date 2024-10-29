@@ -51,7 +51,7 @@ import {
 import { deleteReporting } from 'domain/use_cases/reporting/deleteReporting'
 import { reduceOrCollapseReportingForm } from 'domain/use_cases/reporting/reduceOrCollapseReportingForm'
 import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
-import { FieldArray, useField, useFormikContext } from 'formik'
+import { FieldArray, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -97,7 +97,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     ReportingContext.MAP
 
   const { errors, setFieldValue, setValues, validateForm, values } = useFormikContext<AtLeast<Reporting, 'id'>>()
-  const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
   const [mustIncreaseValidity, setMustIncreaseValidity] = useState(false)
@@ -349,13 +348,8 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           />
         </div>
         <StyledThemeContainer>
-          <ThemeSelector isLight={false} label="Thématique du signalement" name="themeId" />
-          <SubThemesSelector
-            isLight={false}
-            label="Sous-thématique du signalement"
-            name="subThemeIds"
-            theme={themeField?.value}
-          />
+          <ThemeSelector label="Thématique du signalement" name="themeId" />
+          <SubThemesSelector label="Sous-thématique du signalement" name="subThemeIds" />
           {values.themeId === INDIVIDUAL_ANCHORING_THEME_ID && (
             <FormikMultiRadio
               isInline

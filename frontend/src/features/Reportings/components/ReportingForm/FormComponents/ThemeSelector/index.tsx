@@ -6,9 +6,7 @@ import { useField, useFormikContext } from 'formik'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { updateTheme } from '../../formikUseCases/updateReportingThemes'
-
-export function ThemeSelector({ isLight = true, label, name }) {
+export function ThemeSelector({ label, name }) {
   const [currentThemeField, currentThemeMeta] = useField<number | undefined>(name)
   const { setFieldValue, values } = useFormikContext<Reporting>()
 
@@ -17,7 +15,8 @@ export function ThemeSelector({ isLight = true, label, name }) {
     year
   })
   const handleUpdateTheme = (theme: number | undefined) => {
-    updateTheme(setFieldValue)(theme)
+    setFieldValue('themeId', theme)
+    setFieldValue('subThemeIds', [])
 
     if (theme !== INDIVIDUAL_ANCHORING_THEME_ID) {
       setFieldValue('withVHFAnswer', undefined)
@@ -25,7 +24,8 @@ export function ThemeSelector({ isLight = true, label, name }) {
   }
 
   useEffect(() => {
-    updateTheme(setFieldValue)(undefined)
+    setFieldValue('themeId', undefined)
+    setFieldValue('subThemeIds', [])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
@@ -56,7 +56,6 @@ export function ThemeSelector({ isLight = true, label, name }) {
           data-cy="reporting-theme-selector"
           error={currentThemeMeta.error}
           isErrorMessageHidden
-          isLight={isLight}
           isRequired
           label={label}
           name={name}
