@@ -43,9 +43,6 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
   const [firstColumnWidth, setFirstColumnWidth] = useState<number | undefined>(undefined)
-  const selectedReportings =
-    dashboard.extractedArea?.reportings.filter(reporting => dashboard.dashboard.reportingIds.includes(+reporting.id)) ??
-    []
 
   const firstColumnRef = useRef<HTMLDivElement>(null)
 
