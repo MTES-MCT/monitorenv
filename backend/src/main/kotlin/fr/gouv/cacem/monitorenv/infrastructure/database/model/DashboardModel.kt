@@ -28,6 +28,8 @@ data class DashboardModel(
     val comments: String?,
     var createdAt: ZonedDateTime?,
     var updatedAt: ZonedDateTime?,
+    @Column(name = "deleted")
+    val isDeleted: Boolean,
     val seaFront: String?,
     @OneToMany(
         mappedBy = "dashboard",
@@ -87,6 +89,7 @@ data class DashboardModel(
             reportingIds = reportings,
             vigilanceAreaIds = vigilanceAreas,
             seaFront = seaFront,
+            isDeleted = isDeleted,
         )
     }
 
@@ -120,6 +123,7 @@ data class DashboardModel(
                     updatedAt = dashboardEntity.updatedAt,
                     seaFront = dashboardEntity.seaFront,
                     dashboardDatas = mutableListOf(),
+                    isDeleted = dashboardEntity.isDeleted,
                 )
             dashboardDatasModels.forEach {
                 dashboardModel.addDashboardDatas(it)

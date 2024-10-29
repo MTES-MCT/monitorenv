@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 class JpaDashboardsRepositoryITest : AbstractDBTests() {
     @Autowired
@@ -103,5 +104,19 @@ class JpaDashboardsRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(dashboards).hasSize(7)
+    }
+
+    @Test
+    @Transactional
+    fun `delete should update set deleted to true`() {
+        // Given
+        val id = UUID.fromString("e1e99b92-1e61-4f9f-9cbf-8cfae2395d41")
+        assertThat(jpaDashboardRepository.findById(id)?.isDeleted).isFalse()
+
+        // When
+        jpaDashboardRepository.delete(id)
+
+        // Then
+        assertThat(jpaDashboardRepository.findById(id)?.isDeleted).isTrue()
     }
 }

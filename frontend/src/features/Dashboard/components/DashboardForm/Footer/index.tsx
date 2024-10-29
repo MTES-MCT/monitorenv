@@ -1,3 +1,4 @@
+import { deleteDashboard } from '@features/Dashboard/useCases/deleteDashboard'
 import { saveDashboard } from '@features/Dashboard/useCases/saveDashboard'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -33,6 +34,10 @@ export function Footer() {
     }
   }
 
+  const handleDelete = () => {
+    dispatch(deleteDashboard(dashboardForm.dashboard))
+  }
+
   return (
     <>
       {isDialogOpen && (
@@ -64,6 +69,9 @@ export function Footer() {
         <SaveButton accent={Accent.SECONDARY} disabled={!activeDashboardId} Icon={Icon.Save} onClick={handleSave}>
           Enregistrer le tableau
         </SaveButton>
+        <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={handleDelete}>
+          Supprimer le tableau
+        </DeleteButton>
       </Wrapper>
     </>
   )
@@ -82,6 +90,11 @@ const SaveButton = styled(Button)`
   float: right;
 `
 
+const DeleteButton = styled(Button)`
+  svg {
+    color: ${p => p.theme.color.maximumRed};
+  }
+`
 const StyledTextInput = styled(TextInput)`
   margin-top: 24px;
   width: 360px;
