@@ -13,7 +13,8 @@ export function Footer() {
   const dashboardForm = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards[activeDashboardId] : undefined
   )
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [updatedName, setUpdatedName] = useState<string | undefined>(dashboardForm?.dashboard.name)
   if (!dashboardForm) {
     return null
@@ -21,26 +22,32 @@ export function Footer() {
 
   const save = () => {
     dispatch(saveDashboard({ ...dashboardForm.dashboard, name: updatedName ?? dashboardForm.dashboard.name }))
-    setIsDialogOpen(false)
+    setIsSaveDialogOpen(false)
   }
 
   const handleSave = () => {
     const hasDefaultName =
       dashboardForm.defaultName === dashboardForm.dashboard.name && !dashboardForm.dashboard.createdAt
     if (hasDefaultName) {
-      setIsDialogOpen(true)
+      setIsSaveDialogOpen(true)
     } else {
       dispatch(saveDashboard({ ...dashboardForm.dashboard }))
     }
   }
 
-  const handleDelete = () => {
+  const confirmDelete = () => {
     dispatch(deleteDashboard(dashboardForm.dashboard))
+
+    setIsDeleteDialogOpen(false)
+  }
+
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true)
   }
 
   return (
     <>
-      {isDialogOpen && (
+      {isSaveDialogOpen && (
         <Dialog isAbsolute>
           <Dialog.Title as="h2">Enregistrer le tableau de bord</Dialog.Title>
           <Dialog.Body $color={THEME.color.gunMetal}>
@@ -56,12 +63,26 @@ export function Footer() {
             />
           </Dialog.Body>
           <StyledDialogActions>
-            <Button accent={Accent.SECONDARY} onClick={() => setIsDialogOpen(false)}>
+            <Button accent={Accent.SECONDARY} onClick={() => setIsSaveDialogOpen(false)}>
               Annuler
             </Button>
             <Button Icon={Icon.Save} onClick={save}>
               Enregistrer
             </Button>
+          </StyledDialogActions>
+        </Dialog>
+      )}
+      {isDeleteDialogOpen && (
+        <Dialog isAbsolute>
+          <Dialog.Title as="h2">Supprimer le tableau de bord</Dialog.Title>
+          <Dialog.Body $color={THEME.color.gunMetal}>
+            <StyledDialogMessage>Êtes-vous sûr de vouloir supprimer le tableau de bord ?</StyledDialogMessage>
+          </Dialog.Body>
+          <StyledDialogActions>
+            <Button accent={Accent.SECONDARY} onClick={() => setIsDeleteDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={confirmDelete}>Supprimer</Button>
           </StyledDialogActions>
         </Dialog>
       )}
