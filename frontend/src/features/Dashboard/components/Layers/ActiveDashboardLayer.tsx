@@ -27,7 +27,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
-export function DashboardLayer({ map }: BaseMapChildrenProps) {
+export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)

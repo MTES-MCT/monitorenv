@@ -1,29 +1,28 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
+import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
+import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
+import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { measurementStyle, measurementStyleWithCenter } from '@features/map/layers/styles/measurement.style'
 import { overlayStroke } from '@features/map/overlays/style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { Feature } from 'ol'
-import { GeoJSON as OLGeoJSON } from 'ol/format'
-import { type Geometry } from 'ol/geom'
+import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef, type MutableRefObject } from 'react'
+import { useRef, type MutableRefObject, useEffect } from 'react'
 
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { getAMPFeature } from '../AMP/AMPGeometryHelpers'
-import { getAMPLayerStyle } from '../AMP/AMPLayers.style'
-import { getRegulatoryFeature } from '../Regulatory/regulatoryGeometryHelpers'
-import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
-import { measurementStyle, measurementStyleWithCenter } from '../styles/measurement.style'
-
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
+import type { Geometry } from 'ol/geom'
 
 export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -72,7 +71,7 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     dashboardDatasVectorSourceRef.current.clear(true)
     if (selectedDashboardOnMap) {
-      const geoJSON = new OLGeoJSON()
+      const geoJSON = new GeoJSON()
 
       const geometry = geoJSON.readGeometry(selectedDashboardOnMap.geom, {
         dataProjection: WSG84_PROJECTION,

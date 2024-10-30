@@ -1,6 +1,9 @@
 import { useGetDashboardsQuery } from '@api/dashboardsAPI'
 import { selectDashboardOnMap } from '@features/Dashboard/useCases/selectDashboardOnMap'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Layers } from 'domain/entities/layers/constants'
 import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
 import { getCenter } from 'ol/extent'
@@ -11,11 +14,7 @@ import VectorSource from 'ol/source/Vector'
 import { Icon, Style } from 'ol/style'
 import { useEffect, useRef, type MutableRefObject } from 'react'
 
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 
 export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
