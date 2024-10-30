@@ -1,9 +1,11 @@
 import { useAppSelector } from '@hooks/useAppSelector'
+import { Icon } from '@mtes-mct/monitor-ui'
 import React, { useRef, type ReactNode } from 'react'
 import { Nav, Navbar as RsuiteNavBar } from 'rsuite'
 import styled from 'styled-components'
 
-const threshold = 6
+const THRESHOLD = 6
+
 type NavBarProps = {
   children: React.ReactNode[]
   name: string
@@ -11,8 +13,8 @@ type NavBarProps = {
 }
 export function NavBar({ children, name, onSelect }: NavBarProps) {
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
-  const tabs = children.slice(0, threshold)
-  const dropdown = tabs.length >= threshold ? children.slice(threshold) : []
+  const tabs = children.slice(0, THRESHOLD)
+  const dropdown = tabs.length >= THRESHOLD ? children.slice(THRESHOLD) : []
 
   // Swap tabs to keep same order as before
   const lastSwappedIndexes = useRef<number[]>([])
@@ -49,7 +51,11 @@ export function NavBar({ children, name, onSelect }: NavBarProps) {
     <StyledResponsiveNav>
       <Nav activeKey={currentPath} appearance="tabs" data-cy={`${name}-nav`} onSelect={onSelect}>
         {tabs}
-        {dropdown.length > 0 && <StyledNavMenu title="...">{dropdown}</StyledNavMenu>}
+        {dropdown.length > 0 && (
+          <StyledNavMenu icon={<Icon.More />} placement="bottomEnd">
+            {dropdown}
+          </StyledNavMenu>
+        )}
       </Nav>
     </StyledResponsiveNav>
   )
@@ -58,9 +64,9 @@ export function NavBar({ children, name, onSelect }: NavBarProps) {
 const StyledResponsiveNav = styled(RsuiteNavBar)`
   > .rs-navbar-nav {
     display: flex;
-    box-shadow: 0px 3px 4px #7077854d;
     height: 48px;
     width: 100%;
+    background: ${p => p.theme.color.white};
 
     .rs-navbar-item {
       width: 360px;
@@ -110,14 +116,12 @@ const StyledResponsiveNav = styled(RsuiteNavBar)`
     .rs-dropdown {
       > .rs-dropdown-toggle {
         height: 100%;
-        border-radius: 0px !important;
         > .rs-icon {
           display: none;
         }
       }
       .rs-dropdown-menu {
-        right: 0px;
-        left: unset;
+        border-radius: 0px !important;
         .rs-dropdown-item {
           color: ${p => p.theme.color.slateGray};
           display: flex;
@@ -135,17 +139,11 @@ const StyledResponsiveNav = styled(RsuiteNavBar)`
       }
     }
   }
-
-  > .rs-nav-bar {
-    border-top: 0px;
-  }
 `
 
 const StyledNavMenu = styled(Nav.Menu)`
-  width: fit-content;
-
   .rs-navbar-item {
-    width: unset !important;
+    width: auto !important;
     height: 100% !important;
   }
 `
