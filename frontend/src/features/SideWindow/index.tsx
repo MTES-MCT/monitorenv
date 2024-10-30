@@ -5,6 +5,7 @@ import { isDashboardEnabled } from '@features/Dashboard/utils'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { ReportingsList } from '@features/Reportings/components/ReportingsList'
+import { VigilancesAreasList } from '@features/VigilanceArea/components/VigilanceAreasList'
 import { Icon, NewWindowContext, SideMenu, type NewWindowContextValue } from '@mtes-mct/monitor-ui'
 import { reportingActions } from 'domain/shared_slices/reporting'
 import { omit } from 'lodash'
@@ -52,6 +53,7 @@ export function SideWindow() {
     () => isDashboardsPage(currentPath) || isDashboardPage(currentPath),
     [currentPath]
   )
+  const isVigilanceAreasButtonIsActive = useMemo(() => currentPath === sideWindowPaths.VIGILANCE_AREAS, [currentPath])
 
   /**
    * Use to update mission opened in the side window but not actives
@@ -124,6 +126,12 @@ export function SideWindow() {
                     onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
                     title="Signalements"
                   />
+                  <SideMenu.Button
+                    Icon={Icon.VigilanceAreas}
+                    isActive={isVigilanceAreasButtonIsActive}
+                    onClick={() => navigate(generatePath(sideWindowPaths.VIGILANCE_AREAS))}
+                    title="Zones de vigilance"
+                  />
                   {isDashboardEnabled() && (
                     <SideMenu.Button
                       Icon={Icon.Bullseye}
@@ -140,6 +148,7 @@ export function SideWindow() {
                   <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
                   <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
+                  <Route element={<VigilancesAreasList />} path={sideWindowPaths.VIGILANCE_AREAS} />
                   <Route
                     element={<DashboardsNavBar />}
                     path={[sideWindowPaths.DASHBOARDS, sideWindowPaths.DASHBOARD]}

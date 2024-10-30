@@ -34,11 +34,15 @@ export function getDateAsLocalizedStringCompact(date: string | undefined | null,
   )
 }
 
-export function getDateAsLocalizedStringVeryCompact(date: string | undefined | null) {
+export function getDateAsLocalizedStringVeryCompact(date: string | undefined | null, withoutTime = false) {
   if (!date || date.trim() === '') {
     return undefined
   }
   const dayJsDate = getLocalizedDayjs(date)
+
+  if (withoutTime) {
+    return <>{formatDateLabel(dayJsDate.format('DD/MM/YY'))}</>
+  }
 
   return (
     <>
