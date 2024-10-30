@@ -62,12 +62,13 @@ export function DashboardTab({ close, name, tabKey }: { close: () => void; name:
         />
       ) : (
         <Container>
-          <DashboardName>{name}</DashboardName>
+          <DashboardName title={name}>{name}</DashboardName>
           <Icon.EditUnbordered onClick={() => editName()} />
         </Container>
       )}
       <IconButton
         accent={Accent.TERTIARY}
+        aria-label="close"
         color={THEME.color.slateGray}
         Icon={Icon.Close}
         onClick={close}
