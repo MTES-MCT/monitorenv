@@ -45,6 +45,8 @@ export function SubThemesSelector({ label, name }: SubThemesSelectorProps) {
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
         <MultiSelect
+          // force update when year changes
+          key={String(year)}
           data-cy="reporting-subtheme-selector"
           error={currentSubThemesMeta.error}
           isErrorMessageHidden
