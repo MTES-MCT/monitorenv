@@ -177,7 +177,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait(500)
 
-    cy.get('[data-cy="mission-2"] > [aria-label="close"]').eq(0).click({ force: true })
+    cy.clickButton('Fermer Mission Terre – DML 2A')
     cy.wait(500)
   })
 
