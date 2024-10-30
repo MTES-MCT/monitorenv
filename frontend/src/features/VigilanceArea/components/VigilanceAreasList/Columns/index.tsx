@@ -1,9 +1,10 @@
 import { DateCell } from '@components/Table/DateCell'
-import { LocalizeCell } from '@components/Table/LocalizeCell'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 
 import { EditCell } from '../Rows/EditCell'
 import { FrequencyCell } from '../Rows/FrequencyCell'
+import { HighlightCell } from '../Rows/HighlightCell'
+import { LocalizeCell } from '../Rows/LocalizeCell'
 import { StatusCell } from '../Rows/StatusCell'
 
 import type { Row } from '@tanstack/react-table'
@@ -41,7 +42,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.name,
-    cell: info => <span title={info.getValue()}>{info.getValue()}</span>,
+    cell: info => <HighlightCell text={info.getValue()} />,
     enableSorting: true,
     header: () => 'Nom de la zone',
     id: 'name',
@@ -51,13 +52,13 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
     accessorFn: row => row.themes?.join(', '),
     cell: info => <span title={info.getValue()}>{info.getValue()}</span>,
     enableSorting: true,
-    header: () => 'Thématiques',
+    header: () => 'Thématique',
     id: 'themes',
     size: 260 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.comments,
-    cell: info => <span title={info.getValue()}>{info.getValue()}</span>,
+    cell: info => <HighlightCell text={info.getValue()} />,
     enableSorting: true,
     header: () => 'Commentaire',
     id: 'comments',
@@ -69,7 +70,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 110 + legacyFirefoxOffset
+    size: 104 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.isDraft,
@@ -89,7 +90,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.geom,
-    cell: info => <LocalizeCell geom={info.getValue()} />,
+    cell: ({ row }) => <LocalizeCell geom={row.original.geom} id={row.original.id} />,
     enableSorting: false,
     header: () => '',
     id: 'geom',
@@ -97,7 +98,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.id,
-    cell: info => <EditCell id={info.getValue()} />,
+    cell: ({ row }) => <EditCell geom={row.original.geom} id={row.original.id} />,
     enableSorting: false,
     header: () => '',
     id: 'edit',

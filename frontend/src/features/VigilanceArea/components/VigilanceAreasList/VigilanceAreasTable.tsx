@@ -1,5 +1,5 @@
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
-import { Icon, TableWithSelectableRows, THEME } from '@mtes-mct/monitor-ui'
+import { Icon, pluralize, TableWithSelectableRows, THEME } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable, type SortingState } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
@@ -60,7 +60,8 @@ export function VigilanceAreasTable({ isLoading, vigilanceAreas }) {
   const virtualRows = rowVirtualizer.getVirtualItems()
 
   return (
-    <StyledReportingsContainer ref={tableContainerRef}>
+    <Wrapper ref={tableContainerRef}>
+      <Total>{`${vigilanceAreas.length ?? 0} ${pluralize('zone', vigilanceAreas.length ?? 0)} de vigilance`}</Total>
       <TableWithSelectableRows.Table>
         <TableWithSelectableRows.Head>
           {table.getHeaderGroups().map(headerGroup => (
@@ -93,7 +94,7 @@ export function VigilanceAreasTable({ isLoading, vigilanceAreas }) {
             const row = rows[virtualRow.index]
 
             return (
-              <TableWithSelectableRows.BodyTr key={virtualRow.key} data-cy="reporting-row">
+              <TableWithSelectableRows.BodyTr key={virtualRow.key} data-cy="vigilance-area-row">
                 {row?.getVisibleCells().map(cell => (
                   <TableWithSelectableRows.Td
                     key={cell.id}
@@ -108,12 +109,21 @@ export function VigilanceAreasTable({ isLoading, vigilanceAreas }) {
           })}
         </tbody>
       </TableWithSelectableRows.Table>
-    </StyledReportingsContainer>
+    </Wrapper>
   )
 }
-const StyledReportingsContainer = styled.div`
+const Wrapper = styled.div`
   overflow: auto;
   width: fit-content;
   // scroll width (~15px) + 4px
   padding-right: 19px;
+  > table {
+    width: 100%;
+  }
+`
+
+const Total = styled.h3`
+  font-size: 16px;
+  line-height: 30px;
+  text-align: end;
 `
