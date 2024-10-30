@@ -2,11 +2,12 @@ import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { Table } from '@components/Table'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
-import { getCoreRowModel, getSortedRowModel, useReactTable, type SortingState } from '@tanstack/react-table'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { useTable } from '@hooks/useTable'
+import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+import { type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { Columns } from './Columns'
@@ -42,28 +43,16 @@ export function DashboardsTable({ dashboards, isLoading }: DashboardsTableProps)
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : dashboards), [isLoading, dashboards])
 
-  const table = useReactTable({
+  const table = useTable({
     columns,
     data: tableData,
-    enableSortingRemoval: false,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    state: {
-      sorting
-    }
+    setSorting,
+    sorting,
+    withRowSelection: false
   })
 
   const { rows } = table.getRowModel()
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    estimateSize: () => 43,
-    getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
-    getScrollElement: () => tableContainerRef.current,
-    overscan: 10,
-    scrollPaddingEnd: 40,
-    scrollPaddingStart: 40
-  })
+  const rowVirtualizer = useTableVirtualizer({ estimateSize: 45, ref: tableContainerRef, rows })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
