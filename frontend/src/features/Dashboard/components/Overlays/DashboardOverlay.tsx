@@ -83,8 +83,8 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         {selectedDashboardOnMap && (
           <DashboardCard
             dashboardId={selectedDashboardOnMap?.id}
+            isSelected
             onClose={close}
-            selected
             updateMargins={updateSelectedMargins}
           />
         )}

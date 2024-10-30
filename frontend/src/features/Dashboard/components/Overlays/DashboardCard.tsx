@@ -9,16 +9,16 @@ import styled from 'styled-components'
 type DashboardCardProps = {
   dashboardId: string
   isCardVisible?: boolean
+  isSelected?: boolean
   onClose: () => void
-  selected?: boolean
   updateMargins: (margin: number) => void
 }
 
 export function DashboardCard({
   dashboardId,
   isCardVisible = true,
+  isSelected = false,
   onClose,
-  selected = false,
   updateMargins
 }: DashboardCardProps) {
   const dispatch = useAppDispatch()
@@ -43,6 +43,11 @@ export function DashboardCard({
     dashboard.vigilanceAreaIds.length +
     dashboard.reportingIds.length
 
+  const handleEdit = () => {
+    dispatch(editDashboard(dashboard.id))
+    dispatch(closeAllOverlays())
+  }
+
   return (
     isCardVisible && (
       <Wrapper ref={ref} data-cy="reporting-overlay">
@@ -59,25 +64,15 @@ export function DashboardCard({
           </StyledHeaderFirstLine>
 
           <CloseButton
-            $isVisible={selected}
+            $isVisible={isSelected}
             accent={Accent.TERTIARY}
-            data-cy="reporting-overlay-close"
             Icon={Icon.Close}
             iconSize={14}
             onClick={onClose}
           />
         </StyledHeader>
 
-        <StyledButton
-          data-cy="map-edit-reporting"
-          disabled={!selected}
-          Icon={Icon.Edit}
-          onClick={() => {
-            dispatch(editDashboard(dashboard.id))
-            dispatch(closeAllOverlays())
-          }}
-          size={Size.SMALL}
-        >
+        <StyledButton disabled={!isSelected} Icon={Icon.Edit} onClick={handleEdit} size={Size.SMALL}>
           Éditer le tableau
         </StyledButton>
       </Wrapper>
