@@ -11,12 +11,20 @@ import {
   useClickOutsideEffect,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
 
-export function DashboardTab({ close, name, tabKey }: { close: () => void; name: string; tabKey: string }) {
+export function DashboardTab({
+  close,
+  name,
+  tabKey
+}: {
+  close: MouseEventHandler<HTMLButtonElement>
+  name: string
+  tabKey: string
+}) {
   const dispatch = useAppDispatch()
   const isEditing = useAppSelector(state => state.dashboard.dashboards[tabKey]?.isEditingTabName)
   const ref = useRef<HTMLInputElement>(null)

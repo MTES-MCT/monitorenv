@@ -21,17 +21,18 @@ export function DashboardsNavBar() {
     const dashboardsList = {
       icon: <Icon.Summary />,
       isEditing: false,
-      label: 'Liste des tableaux de bords',
+      label: <span>Liste des tableaux de bords</span>,
       nextPath: sideWindowPaths.DASHBOARDS
     }
 
     const openDashboards = Object.entries(dashboards).map(([key, { dashboard, isEditingTabName }]) => {
       const nextPath = generatePath(sideWindowPaths.DASHBOARD, { id: key })
-      const closeDashboard = path => {
+      const closeDashboard = (path, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation()
         dispatch(closeTab(path))
       }
 
-      const tab = <DashboardTab close={() => closeDashboard(nextPath)} name={dashboard.name} tabKey={key} />
+      const tab = <DashboardTab close={e => closeDashboard(nextPath, e)} name={dashboard.name} tabKey={key} />
 
       return {
         icon: <Icon.CircleFilled color={THEME.color.blueGray} size={14} />,
