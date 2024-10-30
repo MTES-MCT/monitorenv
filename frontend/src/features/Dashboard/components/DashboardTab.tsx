@@ -68,11 +68,11 @@ export function DashboardTab({ close, name, tabKey }: { close: () => void; name:
       )}
       <IconButton
         accent={Accent.TERTIARY}
-        aria-label="close"
         color={THEME.color.slateGray}
         Icon={Icon.Close}
         onClick={close}
         size={Size.SMALL}
+        title={`Fermer ${name}`}
       />
     </>
   )

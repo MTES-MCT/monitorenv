@@ -46,8 +46,8 @@ export function NavBar({ children, name, onSelect }: NavBarProps) {
   }
 
   return (
-    <StyledResponsiveNav data-cy={`${name}-nav`}>
-      <Nav activeKey={currentPath} appearance="tabs" onSelect={onSelect}>
+    <StyledResponsiveNav>
+      <Nav activeKey={currentPath} appearance="tabs" data-cy={`${name}-nav`} onSelect={onSelect}>
         {tabs}
         {dropdown.length > 0 && <StyledNavMenu title="...">{dropdown}</StyledNavMenu>}
       </Nav>

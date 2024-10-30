@@ -15,7 +15,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
 
     cy.intercept('GET', `/bff/v1/dashboards/${id}`).as('editDashboard')
 
-    // Tab should be bisible
+    // Tab should be visible
     cy.getDataCy('dashboard-1').contains('Dashboard 2')
 
     // Edit the dashboard
@@ -57,7 +57,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.clickButton('Enregistrer le tableau')
 
     // close dashboard
-    cy.get('[data-cy="dashboard-1"] > svg').first().click({ force: true }).wait(250)
+    cy.clickButton('Fermer Dashboard 2')
   })
 
   it('Should filter data in dashboard and preview selection', () => {
