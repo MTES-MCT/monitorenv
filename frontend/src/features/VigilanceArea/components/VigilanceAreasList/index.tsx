@@ -12,8 +12,6 @@ export function VigilancesAreasList() {
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Zones de vigilance</Title>
       </StyledHeader>
-      {/*       {isControlPlansLoading ? <div>Chargement</div> : <ReportingsFilters />}
-       */}
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
       ) : (

@@ -1,12 +1,14 @@
+import { TableWithSelectableRowsHeader } from '@components/TableWithSelectableRows/Header'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { Icon, THEME, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
-import { flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { useTable } from '@hooks/useTable'
+import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
+import { flexRender, type RowSelectionState, type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import styled, { css } from 'styled-components'
 
@@ -28,7 +30,7 @@ export function ReportingsTable({
 
   const openReportings = useAppSelector(state => state.reporting.reportings)
   const { themes } = useGetControlPlans()
-  const [rowSelection, setRowSelection] = useState({})
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
@@ -41,32 +43,20 @@ export function ReportingsTable({
     [isLoading, legacyFirefoxOffset, themes]
   )
 
-  const table = useReactTable({
+  const table = useTable({
     columns,
     data: tableData,
-    enableMultiRowSelection: true,
-    enableRowSelection: true,
-    enableSortingRemoval: false,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    state: {
-      rowSelection,
-      sorting
-    }
+    rowSelection,
+    setRowSelection,
+    setSorting,
+    sorting,
+    withRowSelection: true
   })
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { rows } = table.getRowModel()
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    estimateSize: () => 40,
-    getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
-    getScrollElement: () => tableContainerRef.current,
-    overscan: 10
-  })
+  const rowVirtualizer = useTableVirtualizer({ estimateSize: 48, ref: tableContainerRef, rows })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
   const paddingTop = virtualRows.length > 0 ? Math.max(0, virtualRows[0]?.start ?? 0) : 0
@@ -92,29 +82,7 @@ export function ReportingsTable({
         <StyledTable $isSideWindowOpenInTab={pathname === paths.sidewindow} $withRowCheckbox>
           <TableWithSelectableRows.Head>
             {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <TableWithSelectableRows.Th key={header.id} $width={header.column.getSize()}>
-                    {header.id === 'select' && flexRender(header.column.columnDef.header, header.getContext())}
-                    {header.id !== 'select' && !header.isPlaceholder && (
-                      <TableWithSelectableRows.SortContainer
-                        className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-
-                        {header.column.getCanSort() &&
-                          ({
-                            asc: <Icon.SortSelectedUp size={14} />,
-                            desc: <Icon.SortSelectedDown size={14} />
-                          }[header.column.getIsSorted() as string] ?? (
-                            <Icon.SortingChevrons color={THEME.color.lightGray} size={14} />
-                          ))}
-                      </TableWithSelectableRows.SortContainer>
-                    )}
-                  </TableWithSelectableRows.Th>
-                ))}
-              </tr>
+              <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
             ))}
           </TableWithSelectableRows.Head>
           <tbody>
@@ -135,8 +103,8 @@ export function ReportingsTable({
                   {row?.getVisibleCells().map(cell => (
                     <StyledTd
                       key={cell.id}
-                      $hasRightBorder={!!(cell.column.id === 'geom')}
-                      $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
+                      $hasRightBorder={cell.column.id === 'geom'}
+                      $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
                       $isLegacyFirefox={!!legacyFirefoxOffset}
                       style={{
                         maxWidth: cell.column.getSize(),
