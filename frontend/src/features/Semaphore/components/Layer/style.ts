@@ -1,27 +1,10 @@
+import { overlayStroke } from '@features/map/overlays/style'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
 import { LineString, MultiLineString, Point } from 'ol/geom'
 import { Circle, Icon, Stroke, Style } from 'ol/style'
-
-const lineStyle = new Style({
-  geometry: feature => {
-    const overlayPostion = feature.get('overlayCoordinates')
-
-    if (isEmpty(overlayPostion)) {
-      return undefined
-    }
-    const featureGeometry = (feature?.getGeometry() as Point)?.getCoordinates()
-
-    return new LineString([overlayPostion.coordinates, featureGeometry])
-  },
-  stroke: new Stroke({
-    color: THEME.color.slateGray,
-    lineDash: [4, 4],
-    width: 2
-  })
-})
 
 export const reportingLinkStyle = new Style({
   geometry: feature => {
@@ -92,10 +75,10 @@ export const getSemaphoreStyle = (feature, isSuperUser) => {
   }
 
   if (isSuperUser) {
-    return [lineStyle, semaphoreStyle, semaphoreCircleStyle]
+    return [overlayStroke, semaphoreStyle, semaphoreCircleStyle]
   }
 
-  return [lineStyle, semaphoreStyle]
+  return [overlayStroke, semaphoreStyle]
 }
 
 export const getSelectedSemaphoreStyle = (feature, isSuperUser) => [

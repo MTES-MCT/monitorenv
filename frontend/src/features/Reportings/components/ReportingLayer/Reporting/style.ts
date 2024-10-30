@@ -1,9 +1,9 @@
+import { overlayStroke } from '@features/map/overlays/style'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
 import { LineString, Point } from 'ol/geom'
-import { Fill, Icon, Stroke, Style, Circle } from 'ol/style'
+import { Circle, Fill, Icon, Stroke, Style } from 'ol/style'
 
 import { OLGeometryType } from '../../../../../domain/entities/map/constants'
 import { ReportingStatusEnum, ReportingTypeEnum, getReportingStatus } from '../../../../../domain/entities/reporting'
@@ -80,27 +80,7 @@ const selectedReportingStyleFactory = (color, fillColor) => [
       src: 'Close.svg'
     })
   }),
-  new Style({
-    geometry: feature => {
-      const overlayPostion = feature.get('overlayCoordinates')
-      if (isEmpty(overlayPostion)) {
-        return undefined
-      }
-
-      const extent = feature?.getGeometry()?.getExtent()
-      const center = extent && getCenter(extent)
-      if (!center) {
-        return undefined
-      }
-
-      return new LineString([overlayPostion.coordinates, center])
-    },
-    stroke: new Stroke({
-      color: THEME.color.slateGray,
-      lineDash: [4, 4],
-      width: 2
-    })
-  })
+  overlayStroke
 ]
 
 export const hoveredReportingStyleFn = feature => {

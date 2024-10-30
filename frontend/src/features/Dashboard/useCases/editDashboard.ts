@@ -41,6 +41,7 @@ export const editDashboard =
       const formattedDashboard = { ...initialDashboard, dashboard, extractedArea }
       dispatch(dashboardActions.editDashboard(formattedDashboard))
       dispatch(dashboardActions.setActiveDashboardId(id))
+      dispatch(dashboardActions.setSelectedDashboardOnMap(undefined))
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: dashboard.id })))
     } catch (error) {
       dispatch(

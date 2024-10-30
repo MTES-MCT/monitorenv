@@ -43,7 +43,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const vectorLayer = useRef(
     new VectorLayer({
       source: vectorSource.current,
-      style: (feature, resolution) => layerListIconStyle(feature, resolution)
+      style: resolution => layerListIconStyle(resolution)
     })
   )
   const feature = vectorSource.current?.getFeatureById(`${Layers.AERA_ICON}:${FEATURE_ID}`)
