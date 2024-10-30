@@ -1,7 +1,9 @@
-import { DashboardLayer } from '@features/Dashboard/components/Layers'
+import { ActiveDashboardLayer } from '@features/Dashboard/components/Layers/ActiveDashboardLayer'
+import { DashboardsLayer } from '@features/Dashboard/components/Layers/DashboardsLayer'
 import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
 import { DashboardPreviewLayer } from '@features/Dashboard/components/Layers/PreviewDashboardLayer'
 import { DashboardReportingOverlay } from '@features/Dashboard/components/Layers/ReportingOverlay'
+import { SelectedDashboardLayer } from '@features/Dashboard/components/Layers/SelectedDashboardLayer'
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
@@ -16,8 +18,6 @@ import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
 import { AMPLayers } from './layers/AMP'
 import { AMPPreviewLayer } from './layers/AMP/AMPPreviewLayer'
-import { DashboardsLayer } from './layers/Dashboards'
-import { SelectedDashboardLayer } from './layers/Dashboards/SelectedDashboardLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { MapLayer } from './layers/MapLayer'
 import { MeasurementLayer } from './layers/MeasurementLayer'
@@ -218,7 +218,7 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <DrawDashboardLayer />
       {/* @ts-ignore */}
-      <DashboardLayer />
+      <ActiveDashboardLayer />
       {/* @ts-ignore */}
       <DashboardPreviewLayer />
       {/* @ts-ignore */}
