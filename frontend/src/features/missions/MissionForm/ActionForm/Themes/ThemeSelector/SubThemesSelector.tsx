@@ -68,8 +68,6 @@ export function SubThemesSelector({
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
         <MultiSelect
-          // force update when name or theme changes
-          key={`${actionIndex}-${themeId}-${subThemesByYearAsOptions.length}`}
           data-cy="envaction-subtheme-selector"
           error={currentSubThemesProps.error}
           isErrorMessageHidden
