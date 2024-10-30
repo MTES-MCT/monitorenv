@@ -1,10 +1,10 @@
+import { DateCell } from '@components/Table/DateCell'
 import { LocalizeCell } from '@components/Table/LocalizeCell'
 
 import { CellActionThemes } from '../CellActionThemes'
 import { CellCompletionStatus } from '../CellCompletionStatus'
 import { CellEditMission } from '../CellEditMission'
 import { CellStatus } from '../CellStatus'
-import { getDateCell } from '../getDateCell'
 import { getMissionTypeCell } from '../getMissionTypeCell'
 import { getNumberOfControlsCell } from '../getNumberOfControlsCell'
 import { getResourcesCell } from '../getResourcesCell'
@@ -15,7 +15,7 @@ import type { Row } from '@tanstack/react-table'
 export const Columns = (legacyFirefoxOffset: number = 0) => [
   {
     accessorFn: row => row.startDateTimeUtc,
-    cell: info => getDateCell(info.getValue()),
+    cell: info => <DateCell date={info.getValue()} />,
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
@@ -23,7 +23,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.endDateTimeUtc,
-    cell: info => getDateCell(info.getValue()),
+    cell: info => <DateCell date={info.getValue()} />,
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',

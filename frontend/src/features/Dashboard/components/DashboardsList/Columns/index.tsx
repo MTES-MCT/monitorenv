@@ -1,8 +1,8 @@
+import { DateCell } from '@components/Table/DateCell'
 import { LocalizeCell } from '@components/Table/LocalizeCell'
 import { type Row } from '@tanstack/react-table'
 
 import { ControlUnitsCell } from '../Rows/ControlUnitsCell'
-import { DateCell } from '../Rows/DateCell'
 import { EditDashboardCell } from '../Rows/EditDashboardCell'
 import { RegulatoryAreasThemesCell } from '../Rows/RegulatoryAreasThemesCell'
 import { TotalSelectedItemsCell } from '../Rows/TotalSelectedItemsCell'

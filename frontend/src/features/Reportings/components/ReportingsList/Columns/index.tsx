@@ -1,3 +1,4 @@
+import { DateCell } from '@components/Table/DateCell'
 import { LocalizeCell } from '@components/Table/LocalizeCell'
 import { getFormattedReportingId, sortTargetDetails } from '@features/Reportings/utils'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
@@ -10,7 +11,6 @@ import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
 import { CellStatus } from '../Cells/CellStatus'
 import { CellTarget } from '../Cells/CellTarget'
 import { CellValidityTime } from '../Cells/CellValidityTime'
-import { getDateCell } from '../Cells/getDateCell'
 import { getReportType } from '../Cells/getReportType'
 
 import type { Row } from '@tanstack/react-table'
@@ -47,11 +47,11 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.createdAt,
-    cell: info => getDateCell(info.getValue()),
+    cell: info => <DateCell date={info.getValue()} />,
     enableSorting: true,
     header: () => 'Date (UTC)',
     id: 'createdAt',
-    size: 136 + legacyFirefoxOffset
+    size: 153 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.validityTime,
