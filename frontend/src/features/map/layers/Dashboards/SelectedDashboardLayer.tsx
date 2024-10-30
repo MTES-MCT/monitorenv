@@ -1,4 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { overlayStroke } from '@features/map/overlays/style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
@@ -80,7 +81,7 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       const feats: Feature[] = []
       const feat = new Feature({ geometry })
 
-      feat.setStyle([measurementStyle, measurementStyleWithCenter])
+      feat.setStyle([measurementStyle, measurementStyleWithCenter, overlayStroke])
       feat.setId(`${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`)
       feats.push(feat)
       selectedDashboardOnMap.reportings.forEach(reporting => {
