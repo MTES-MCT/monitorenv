@@ -1,4 +1,5 @@
 import { GET_EXTRACTED_AREAS_ERROR_MESSAGE } from '@features/Dashboard/useCases/createDashboard'
+import { DELETE_DASHBOARD_ERROR_MESSAGE } from '@features/Dashboard/useCases/deleteDashboard'
 import { SAVE_DASHBOARD_ERROR_MESSAGE } from '@features/Dashboard/useCases/saveDashboard'
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { geoJsonToWKT } from '@utils/geojsonToWKT'
@@ -20,7 +21,7 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
         url: `/v1/dashboards/${id}`
       }),
 
-      transformErrorResponse: response => new FrontendApiError(SAVE_DASHBOARD_ERROR_MESSAGE, response)
+      transformErrorResponse: response => new FrontendApiError(DELETE_DASHBOARD_ERROR_MESSAGE, response)
     }),
     getDashboard: build.query<Dashboard.DashboardFromApi, string>({
       query: id => `/v1/dashboards/${id}`,
