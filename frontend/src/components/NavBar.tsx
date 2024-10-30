@@ -1,24 +1,55 @@
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import React, { useRef, type ReactNode } from 'react'
 import { Nav, Navbar as RsuiteNavBar } from 'rsuite'
 import styled from 'styled-components'
 
+const threshold = 6
 type NavBarProps = {
-  children: React.ReactNode
+  children: React.ReactNode[]
   name: string
   onSelect: (eventKey: string | number | undefined) => void
 }
 export function NavBar({ children, name, onSelect }: NavBarProps) {
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+  const tabs = children.slice(0, threshold)
+  const dropdown = tabs.length >= threshold ? children.slice(threshold) : []
+
+  // Swap tabs to keep same order as before
+  const lastSwappedIndexes = useRef<number[]>([])
+  if (lastSwappedIndexes.current[0] && lastSwappedIndexes.current[1]) {
+    const tabToSwap = tabs[lastSwappedIndexes.current[0]]
+    tabs.splice(lastSwappedIndexes.current[0], 1, dropdown[lastSwappedIndexes.current[1]])
+    dropdown.splice(lastSwappedIndexes.current[1], 1, tabToSwap)
+  }
+
+  // Swap the last tab with the dropdown active one
+  if (dropdown.length > 0) {
+    const getChildProps = (child: ReactNode) => {
+      if (React.isValidElement(child)) {
+        return child.props
+      }
+
+      return null
+    }
+
+    const activeTabIndex = dropdown.findIndex(
+      item => getChildProps(item) && getChildProps(item).eventKey === currentPath
+    )
+
+    if (activeTabIndex > -1) {
+      const tabToSwap = tabs[tabs.length - 1]
+      tabs.splice(tabs.length - 1, 1, dropdown[activeTabIndex])
+      dropdown.splice(activeTabIndex, 1, tabToSwap)
+
+      lastSwappedIndexes.current = [tabs.length - 1, activeTabIndex]
+    }
+  }
 
   return (
-    <StyledResponsiveNav
-      data-cy={`${name}-nav`}
-      moreProps={{ placement: 'bottomEnd' }}
-      moreText={<IconButton accent={Accent.TERTIARY} Icon={Icon.More} />}
-    >
+    <StyledResponsiveNav data-cy={`${name}-nav`}>
       <Nav activeKey={currentPath} appearance="tabs" onSelect={onSelect}>
-        {children}
+        {tabs}
+        {dropdown.length > 0 && <StyledNavMenu title="...">{dropdown}</StyledNavMenu>}
       </Nav>
     </StyledResponsiveNav>
   )
@@ -84,12 +115,15 @@ const StyledResponsiveNav = styled(RsuiteNavBar)`
           display: none;
         }
       }
-      > .rs-dropdown-menu {
-        > .rs-dropdown-item {
+      .rs-dropdown-menu {
+        right: 0px;
+        left: unset;
+        .rs-dropdown-item {
           color: ${p => p.theme.color.slateGray};
           display: flex;
           flex-direction: row;
           align-items: center;
+          justify-content: space-around;
           &:hover {
             background-color: ${p => p.theme.color.blueYonder25};
           }
@@ -104,5 +138,14 @@ const StyledResponsiveNav = styled(RsuiteNavBar)`
 
   > .rs-nav-bar {
     border-top: 0px;
+  }
+`
+
+const StyledNavMenu = styled(Nav.Menu)`
+  width: fit-content;
+
+  .rs-navbar-item {
+    width: unset !important;
+    height: 100% !important;
   }
 `

@@ -55,10 +55,12 @@ export function MissionsNavBar() {
             <span>{getMissionTitle(missionIsNewMission, missionForm)}</span>
             <IconButton
               accent={Accent.TERTIARY}
+              aria-label="close"
               color={THEME.color.slateGray}
               Icon={Icon.Close}
               onClick={() => close(nextPath)}
               size={Size.SMALL}
+              style={{ marginLeft: 'auto' }}
             />
           </>
         ),
