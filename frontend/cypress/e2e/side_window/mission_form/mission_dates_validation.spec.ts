@@ -37,7 +37,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
-    cy.getDataCy('surveillance-open-by').type('ABC')
+    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('envaction-theme-selector').click()
     cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
     cy.getDataCy('envaction-subtheme-selector').click({ force: true })
