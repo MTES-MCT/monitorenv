@@ -1,3 +1,4 @@
+import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { CheckPicker, DateRangePicker, Checkbox, CustomSearch, type Option, useNewWindow } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
@@ -9,15 +10,7 @@ import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../..
 import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReportingSearch } from '../ReportingSearch'
-import {
-  OptionValue,
-  Separator,
-  StyledCustomPeriodContainer,
-  StyledCutomPeriodLabel,
-  StyledSelect,
-  StyledStatusFilter,
-  StyledTagsContainer
-} from '../style'
+import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
 
 export function TableReportingsFiltersWithRef(
   {
@@ -260,8 +253,8 @@ export function TableReportingsFiltersWithRef(
       </FilterWrapper>
       <StyledTagsContainer $withTopMargin={isCustomPeriodVisible || hasFilters}>
         {isCustomPeriodVisible && (
-          <StyledCustomPeriodContainer>
-            <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
+          <CustomPeriodContainer>
+            <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
             <DateRangePicker
               key="dateRange"
               baseContainer={newWindowContainerRef.current}
@@ -275,7 +268,7 @@ export function TableReportingsFiltersWithRef(
               name="dateRange"
               onChange={updateDateRangeFilter}
             />
-          </StyledCustomPeriodContainer>
+          </CustomPeriodContainer>
         )}
 
         <FilterTags />

@@ -1,7 +1,11 @@
+import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
 import { useMemo } from 'react'
@@ -12,8 +16,15 @@ import { setAMPsSearchResult, setRegulatoryLayersSearchResult, setVigilanceAreas
 import type { AMP } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
-export function useSearchLayers({ amps, regulatoryLayers, vigilanceAreaLayers }) {
+export function useSearchLayers() {
   const dispatch = useAppDispatch()
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser
+
+  const { data: amps } = useGetAMPsQuery()
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery(undefined, { skip: !isSuperUser })
+
   const debouncedSearchLayers = useMemo(() => {
     const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
       ignoreLocation: true,

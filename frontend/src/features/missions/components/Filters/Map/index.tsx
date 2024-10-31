@@ -1,5 +1,6 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { CustomPeriodContainer } from '@components/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
@@ -123,6 +124,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                   startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
                 }
                 hasSingleCalendar
+                isLabelHidden
                 isStringDate
                 label="Période spécifique"
                 name="missionDateRange"
@@ -302,10 +304,7 @@ export const StyledTagsContainer = styled.div<{ $withTopMargin: boolean }>`
   align-items: end;
 `
 
-const StyledCustomPeriodContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`
   margin-top: 5px;
 `
 
