@@ -71,7 +71,7 @@ const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
 const AccordionHeader = styled.header`
   display: flex;
   justify-content: space-between;
-  padding: 21px 24px;
+  padding: 21px 20px;
 `
 const TitleContainer = styled.div`
   cursor: pointer;

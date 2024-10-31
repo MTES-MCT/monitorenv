@@ -35,5 +35,6 @@ const Wrapper = styled.div`
   left: 64px;
   position: absolute;
   top: 48px;
-  width: 96%;
+  // 64px is the sidemenu width
+  width: calc(100% - 64px);
 `

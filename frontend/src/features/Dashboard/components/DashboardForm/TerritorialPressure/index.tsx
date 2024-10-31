@@ -149,9 +149,11 @@ const StyledTooltip = styled.p<{ $marginLeft: number }>`
   border: ${p => p.theme.color.lightGray} 1px solid;
   box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
   font-size: 11px;
+  font-weight: normal;
   padding: 4px 8px;
   position: absolute;
-  left: calc(${p => p.$marginLeft}px + 30px);
+  left: calc(${p => p.$marginLeft}px - 24px);
   width: 310px;
+  pointer-events: none;
   z-index: 2;
 `

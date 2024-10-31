@@ -33,6 +33,7 @@ export function Details({ controlUnit }: { controlUnit: ControlUnit.ControlUnit 
           Secteurs d&apos;intervention
         </StyledButton>
       </NavBar>
+
       {selectedNavBar === 'CONTACTS' && (
         <ContactDetails contacts={controlUnit.controlUnitContacts} termsNote={controlUnit.termsNote} />
       )}
@@ -43,12 +44,16 @@ export function Details({ controlUnit }: { controlUnit: ControlUnit.ControlUnit 
 }
 
 const Wrapper = styled.div`
-  padding: 12px;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `
 const NavBar = styled.div`
   background-color: ${p => p.theme.color.slateGray};
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 0 16px;
+  display: flex;
+  gap: 24px;
 `
 const StyledButton = styled.button<{ $isSelected: boolean }>`
   background-color: transparent;
