@@ -17,7 +17,6 @@ export const closeTab =
     if (id) {
       dispatch(dashboardActions.removeTab(id))
       if (id === activeDashboardId) {
-        dispatch(dashboardActions.setActiveDashboardId(undefined))
         dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.DASHBOARDS)))
       }
     }
