@@ -361,7 +361,7 @@ export const dashboardSlice = createSlice({
     setIsDrawing(state, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
     },
-    setisEditingTabName(state, action: PayloadAction<{ isEditing: boolean; key: string }>) {
+    setIsEditingTabName(state, action: PayloadAction<{ isEditing: boolean; key: string }>) {
       const id = action.payload.key
 
       if (!id || !state.dashboards[id]) {
