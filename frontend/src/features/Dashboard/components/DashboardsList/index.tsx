@@ -1,4 +1,5 @@
 import { useGetDashboardsQuery } from '@api/dashboardsAPI'
+import { TotalResults } from '@components/Table/style'
 import { SideWindowContent } from '@features/SideWindow/style'
 import styled from 'styled-components'
 
@@ -12,9 +13,9 @@ export function DashboardsList() {
       <StyledHeader>
         <Title>Tableaux de bord</Title>
       </StyledHeader>
-      <NumberOfDisplayedDashboards>
+      <StyledTotalResults>
         {dashboards?.length ?? '0'} Tableau{dashboards && dashboards.length > 1 ? 'x' : ''}
-      </NumberOfDisplayedDashboards>
+      </StyledTotalResults>
 
       {isError ? (
         <p>Erreur au chargement des données</p>
@@ -36,7 +37,6 @@ const StyledHeader = styled.div`
   gap: 32px;
   margin-bottom: 40px;
 `
-const NumberOfDisplayedDashboards = styled.h3`
-  font-size: 13px;
-  margin-top: 12px;
+const StyledTotalResults = styled(TotalResults)`
+  margin-bottom: 8px;
 `

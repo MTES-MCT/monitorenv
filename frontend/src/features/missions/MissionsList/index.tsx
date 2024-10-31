@@ -1,3 +1,4 @@
+import { TotalResults } from '@components/Table/style'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
@@ -26,9 +27,9 @@ export function Missions() {
         </StyledButton>
       </StyledHeader>
       <MissionFilters context={MissionFilterContext.TABLE} />
-      <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
+      <StyledTotalResults data-cy="Missions-numberOfDisplayedMissions">
         {missions?.length ?? '0'} Mission{missions && missions.length > 1 ? 's' : ''}
-      </NumberOfDisplayedMissions>
+      </StyledTotalResults>
 
       {isError ? (
         <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
@@ -52,10 +53,10 @@ const Title = styled.h1`
   line-height: 50px;
 `
 
-const NumberOfDisplayedMissions = styled.h3`
-  font-size: 13px;
-  margin-top: 12px;
-`
 const StyledButton = styled(Button)`
   align-self: center;
+`
+
+const StyledTotalResults = styled(TotalResults)`
+  margin-bottom: 8px;
 `

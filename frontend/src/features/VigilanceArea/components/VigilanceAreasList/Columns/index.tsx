@@ -50,7 +50,9 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.themes?.join(', '),
-    cell: info => <span title={info.getValue()}>{info.getValue()}</span>,
+    cell: info => (
+      <span title={info.getValue()}>{info.getValue() && info.getValue().length > 0 ? info.getValue() : '-'}</span>
+    ),
     enableSorting: true,
     header: () => 'Thématique',
     id: 'themes',
@@ -66,7 +68,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.seaFront,
-    cell: info => info.getValue(),
+    cell: info => info.getValue() ?? '-',
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
@@ -82,7 +84,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.createdBy,
-    cell: info => info.getValue(),
+    cell: info => info.getValue() ?? '-',
     enableSorting: true,
     header: () => 'Créée par',
     id: 'createdBy',

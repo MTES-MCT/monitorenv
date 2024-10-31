@@ -1,3 +1,4 @@
+import { TotalResults } from '@components/Table/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, pluralize } from '@mtes-mct/monitor-ui'
 import { archiveReportings } from 'domain/use_cases/reporting/archiveReportings'
@@ -33,9 +34,9 @@ export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds,
           title="Supprimer"
         />
       </StyledButtonsContainer>
-      <NumberOfDisplayedReportings data-cy="totalReportings">
+      <TotalResults data-cy="totalReportings">
         {totalReportings} {pluralize('Signalement', totalReportings)}
-      </NumberOfDisplayedReportings>
+      </TotalResults>
     </StyledGroupActionContainer>
   )
 }
@@ -53,8 +54,4 @@ const StyledButtonsContainer = styled.div`
   display: flex;
   gap: 8px;
   align-self: end;
-`
-const NumberOfDisplayedReportings = styled.h3`
-  font-size: 16px;
-  line-height: 30px;
 `
