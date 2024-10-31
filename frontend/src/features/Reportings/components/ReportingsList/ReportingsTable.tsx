@@ -1,4 +1,4 @@
-import { TableWithSelectableRowsHeader } from '@components/TableWithSelectableRows/Header'
+import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'

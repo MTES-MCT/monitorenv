@@ -1,7 +1,7 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 
-export function FrequencyCell({ frequency }: { frequency: string }) {
-  if (frequency === VigilanceArea.Frequency.NONE) {
+export function FrequencyCell({ frequency }: { frequency: string | undefined }) {
+  if (!frequency) {
     return <span>-</span>
   }
 

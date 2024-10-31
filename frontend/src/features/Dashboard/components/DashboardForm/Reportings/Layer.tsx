@@ -219,7 +219,7 @@ const Title = styled.div`
   flex-direction: column;
 `
 
-const Name = styled.h3`
+const Name = styled.h2`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
   line-height: inherit;

@@ -140,7 +140,7 @@ const Header = styled.header`
   justify-content: space-between;
   padding: 9px 16px 10px;
 `
-const Title = styled.h3`
+const Title = styled.h2`
   color: ${p => p.theme.color.white};
   font-size: 16px;
   font-weight: normal;

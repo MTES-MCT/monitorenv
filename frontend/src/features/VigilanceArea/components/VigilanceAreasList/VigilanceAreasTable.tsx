@@ -1,4 +1,5 @@
-import { TableWithSelectableRowsHeader } from '@components/TableWithSelectableRows/Header'
+import { TotalResults } from '@components/Table/style'
+import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
@@ -12,7 +13,15 @@ import styled from 'styled-components'
 
 import { Columns } from './Columns'
 
-export function VigilanceAreasTable({ isLoading, vigilanceAreas }) {
+import type { VigilanceArea } from '@features/VigilanceArea/types'
+
+export function VigilanceAreasTable({
+  isLoading,
+  vigilanceAreas
+}: {
+  isLoading: boolean
+  vigilanceAreas: VigilanceArea.VigilanceArea[]
+}) {
   const { pathname } = useLocation()
 
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
@@ -46,7 +55,10 @@ export function VigilanceAreasTable({ isLoading, vigilanceAreas }) {
 
   return (
     <Wrapper ref={tableContainerRef}>
-      <Total>{`${vigilanceAreas.length ?? 0} ${pluralize('zone', vigilanceAreas.length ?? 0)} de vigilance`}</Total>
+      <TotalResults>{`${vigilanceAreas.length ?? 0} ${pluralize(
+        'zone',
+        vigilanceAreas.length ?? 0
+      )} de vigilance`}</TotalResults>
       <TableWithSelectableRows.Table>
         <TableWithSelectableRows.Head>
           {table.getHeaderGroups().map(headerGroup => (
@@ -84,10 +96,4 @@ const Wrapper = styled.div`
   > table {
     width: 100%;
   }
-`
-
-const Total = styled.h3`
-  font-size: 16px;
-  line-height: 30px;
-  text-align: end;
 `
