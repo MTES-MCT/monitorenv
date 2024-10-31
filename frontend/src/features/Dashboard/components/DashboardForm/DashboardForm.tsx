@@ -93,6 +93,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
     // cleanup preview on unmount
     return () => {
       dispatch(dashboardActions.removeAllPreviewedItems())
+      dispatch(dashboardActions.setActiveDashboardId(undefined))
     }
   }, [dispatch])
 
