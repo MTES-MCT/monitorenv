@@ -35,12 +35,12 @@ export function DashboardTab({
     if (updatedName) {
       dispatch(dashboardActions.setName({ key: tabKey, name: updatedName }))
     }
-    dispatch(dashboardActions.setisEditingTabName({ isEditing: false, key: tabKey }))
+    dispatch(dashboardActions.setIsEditingTabName({ isEditing: false, key: tabKey }))
   }
 
   const editName = useCallback(() => {
     setUpdatedName(name)
-    dispatch(dashboardActions.setisEditingTabName({ isEditing: true, key: tabKey }))
+    dispatch(dashboardActions.setIsEditingTabName({ isEditing: true, key: tabKey }))
   }, [dispatch, name, tabKey])
 
   const { newWindowContainerRef } = useNewWindow()
