@@ -1,6 +1,7 @@
 import { dashboardFiltersPersistedReducer } from '@features/Dashboard/components/DashboardForm/slice'
 import { dashboardReducer } from '@features/Dashboard/slice'
 import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
+import { vigilanceAreaFiltersPersistedReducer } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { vigilanceAreaPersistedReducer } from '@features/VigilanceArea/slice'
 
 import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
@@ -67,5 +68,6 @@ export const homeReducers = {
   sideWindow: sideWindowReducer,
   station: stationReducer,
   stationTable: stationTablePersistedReducer,
-  vigilanceArea: vigilanceAreaPersistedReducer
+  vigilanceArea: vigilanceAreaPersistedReducer,
+  vigilanceAreaFilters: vigilanceAreaFiltersPersistedReducer
 }

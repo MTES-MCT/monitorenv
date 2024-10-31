@@ -1,3 +1,4 @@
+import { CustomPeriodContainer } from '@components/style'
 import { CheckPicker, DateRangePicker, Checkbox, SingleTag } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef } from 'react'
@@ -260,10 +261,7 @@ const FilterWrapper = styled.div`
   flex-direction: column;
   padding: 12px 4px;
 `
-export const StyledCustomPeriodContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+export const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`
   align-items: start;
   text-align: left;
 `

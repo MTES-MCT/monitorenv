@@ -1,3 +1,4 @@
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { Accent, IconButton, Icon, Size, TextInput } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -11,8 +12,11 @@ export function SearchInput({
   setGlobalSearchText,
   toggleRegFilters
 }) {
+  const defaulVigilanceAreaPeriod =
+    filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
+
   const numberOfFilters =
-    (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0) + (filteredVigilanceAreaPeriod ? 1 : 0)
+    (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0) + (!defaulVigilanceAreaPeriod ? 1 : 0)
 
   return (
     <SearchHeader>

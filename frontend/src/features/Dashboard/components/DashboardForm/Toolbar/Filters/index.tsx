@@ -1,3 +1,4 @@
+import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { type DashboardType } from '@features/Dashboard/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -137,8 +138,8 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
       {(hasFilters || filters?.specificPeriod) && (
         <TagsContainer data-cy="dashboard-filter-tags">
           {filters?.vigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && (
-            <StyledCustomPeriodContainer>
-              <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
+            <CustomPeriodContainer>
+              <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
               <DateRangePicker
                 key="dateRange"
                 defaultValue={filters?.specificPeriod ?? undefined}
@@ -148,7 +149,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
                 name="dateRange"
                 onChange={updateDateRangeFilter}
               />
-            </StyledCustomPeriodContainer>
+            </CustomPeriodContainer>
           )}
           {filters?.regulatoryThemes?.map(theme => (
             <SingleTag key={theme} onDelete={() => deleteRegulatoryTheme(theme)} title={theme}>
@@ -191,15 +192,7 @@ const TagsContainer = styled.div`
   flex: 0 1 50%;
   gap: 16px;
 `
-export const StyledCustomPeriodContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`
-export const StyledCutomPeriodLabel = styled.div`
-  color: ${p => p.theme.color.slateGray};
-  font-size: 13px;
-`
+
 const StyledButton = styled.button`
   background-color: ${p => p.theme.color.white};
   color: ${p => p.theme.color.slateGray};

@@ -1,3 +1,5 @@
+import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -5,6 +7,7 @@ import {
 } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import {
   type DateAsStringRange,
   type Option,
@@ -13,7 +16,6 @@ import {
   CustomSearch,
   DateRangePicker,
   Icon,
-  Select,
   SingleTag,
   THEME
 } from '@mtes-mct/monitor-ui'
@@ -26,15 +28,9 @@ type LayerFiltersProps = {
   filteredRegulatoryThemes: string[]
   filteredVigilanceAreaPeriod: string | undefined
   handleResetFilters: () => void
-  isSuperUser: boolean
-  regulatoryThemes: Option<string>[]
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
-  setFilteredVigilanceAreaPeriod: (
-    filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
-  ) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
-  vigilanceAreaPeriodOptions: Option<string>[]
 }
 
 enum TooltipTypeVisible {
@@ -48,14 +44,13 @@ export function LayerFilters({
   filteredRegulatoryThemes,
   filteredVigilanceAreaPeriod,
   handleResetFilters,
-  isSuperUser,
-  regulatoryThemes,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
-  setFilteredVigilanceAreaPeriod,
-  updateDateRangeFilter,
-  vigilanceAreaPeriodOptions
+  updateDateRangeFilter
 }: LayerFiltersProps) {
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser
+
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
@@ -73,21 +68,9 @@ export function LayerFilters({
     setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
-  const handleSetFilteredRegulatoryThemes = nextRegulatoryThemes => {
-    setFilteredRegulatoryThemes(nextRegulatoryThemes ?? [])
-  }
   const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: string) => () => {
     setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete))
   }
-
-  const handleSetFilteredVigilancePeriod = nextVigilanceAreaPeriod => {
-    setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod)
-  }
-
-  const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemes as Array<Option<string>>, ['label']),
-    [regulatoryThemes]
-  )
 
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
 
@@ -95,22 +78,8 @@ export function LayerFilters({
     <FiltersWrapper>
       {!isLinkingAmpToVigilanceArea && (
         <SelectContainer>
-          <StyledCheckPicker
-            customSearch={regulatoryThemesCustomSearch}
-            isLabelHidden
-            isTransparent
-            label="Thématique réglementaire"
-            name="regulatoryThemes"
-            onChange={handleSetFilteredRegulatoryThemes}
-            options={regulatoryThemes || []}
-            placeholder="Thématique réglementaire"
-            renderValue={() =>
-              filteredRegulatoryThemes && (
-                <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
-              )
-            }
-            value={filteredRegulatoryThemes}
-          />
+          <RegulatoryThemesFilter style={{ flex: 1 }} />
+
           <IconAndMessageWrapper>
             <StyledIconAttention
               aria-describedby="regulatoryThemesTooltip"
@@ -167,16 +136,7 @@ export function LayerFilters({
 
       {isSuperUser && !isLinkingZonesToVigilanceArea && (
         <SelectContainer>
-          <StyledSelect
-            isLabelHidden
-            isTransparent
-            label="Période de vigilance"
-            name="periodOfVigilanceArea"
-            onChange={handleSetFilteredVigilancePeriod}
-            options={vigilanceAreaPeriodOptions}
-            placeholder="Période de vigilance"
-            value={filteredVigilanceAreaPeriod}
-          />
+          <PeriodFilter style={{ flex: 1 }} />
           <IconAndMessageWrapper>
             <StyledIconAttention
               aria-describedby="vigilanceAreaPeriodTooltip"
@@ -230,7 +190,9 @@ export function LayerFilters({
           ))}
         </TagWrapper>
       )}
-      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0 || !!filteredVigilanceAreaPeriod) && (
+      {(filteredRegulatoryThemes?.length > 0 ||
+        filteredAmpTypes?.length > 0 ||
+        filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
       )}
     </FiltersWrapper>
@@ -270,9 +232,7 @@ const OptionValue = styled.span`
 const StyledCheckPicker = styled(CheckPicker)`
   flex: 1;
 `
-const StyledSelect = styled(Select)`
-  flex: 1;
-`
+
 const SelectContainer = styled.div`
   align-items: end;
   display: flex;

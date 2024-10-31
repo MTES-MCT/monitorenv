@@ -2,6 +2,7 @@ import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { SideWindowContent } from '@features/SideWindow/style'
 import styled from 'styled-components'
 
+import { VigilanceAreasFilters } from './Filters'
 import { VigilanceAreasTable } from './VigilanceAreasTable'
 
 export function VigilancesAreasList() {
@@ -12,6 +13,7 @@ export function VigilancesAreasList() {
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Zones de vigilance</Title>
       </StyledHeader>
+      <VigilanceAreasFilters />
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
       ) : (

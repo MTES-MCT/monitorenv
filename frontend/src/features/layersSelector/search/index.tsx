@@ -1,9 +1,5 @@
-import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { VigilanceArea } from '@features/VigilanceArea/types'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
-import { getOptionsFromLabelledEnum, type DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
 import { useMemo } from 'react'
@@ -15,26 +11,21 @@ import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
 import { SearchOnExtentExtraButtons } from './SearchOnExtentExtraButtons'
 import {
+  resetFilters,
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes,
-  setFilteredVigilanceAreaPeriod,
   setGlobalSearchText,
   setVigilanceAreaSpecificPeriodFilter
 } from './slice'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '../../../api/regulatoryLayersAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
 export function LayerSearch() {
   const dispatch = useAppDispatch()
 
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
-
   const { data: amps } = useGetAMPsQuery()
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery(undefined, { skip: !isSuperUser })
+
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
@@ -50,11 +41,7 @@ export function LayerSearch() {
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
 
-  const debouncedSearchLayers = useSearchLayers({
-    amps,
-    regulatoryLayers,
-    vigilanceAreaLayers
-  })
+  const debouncedSearchLayers = useSearchLayers()
 
   const handleSearchInputChange = searchedText => {
     dispatch(setGlobalSearchText(searchedText))
@@ -95,36 +82,8 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredVigilanceAreaPeriod = (
-    nextVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
-  ) => {
-    dispatch(setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod))
-
-    if (nextVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) {
-      dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
-    }
-
-    const nextVigilanceAreaSpecificPeriodFilter =
-      nextVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
-        ? vigilanceAreaSpecificPeriodFilter
-        : undefined
-
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: nextVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter: nextVigilanceAreaSpecificPeriodFilter
-    })
-  }
-
   const handleResetFilters = () => {
-    dispatch(setFilteredRegulatoryThemes([]))
-    dispatch(setFilteredAmpTypes([]))
-    dispatch(setFilteredVigilanceAreaPeriod(undefined))
-    dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
+    dispatch(resetFilters())
     debouncedSearchLayers({
       ampTypes: [],
       extent: searchExtent,
@@ -155,10 +114,6 @@ export function LayerSearch() {
 
   const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
-
-  const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
-
   const allowResetResults =
     !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult) || !_.isEmpty(vigilanceAreaSearchResult)
 
@@ -182,13 +137,9 @@ export function LayerSearch() {
             filteredRegulatoryThemes={filteredRegulatoryThemes}
             filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
             handleResetFilters={handleResetFilters}
-            isSuperUser={isSuperUser}
-            regulatoryThemes={regulatoryThemes}
             setFilteredAmpTypes={handleSetFilteredAmpTypes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
-            setFilteredVigilanceAreaPeriod={handleSetFilteredVigilanceAreaPeriod}
             updateDateRangeFilter={updateDateRangeFilter}
-            vigilanceAreaPeriodOptions={vigilanceAreaPeriodOptions}
           />
         )}
         <ResultList searchedText={globalSearchText} />

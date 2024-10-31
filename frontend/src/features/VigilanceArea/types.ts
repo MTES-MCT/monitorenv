@@ -82,6 +82,13 @@ export namespace VigilanceArea {
     SPECIFIC_PERIOD = 'Période spécifique'
   }
 
+  export type VigilanceAreaFilterPeriodType =
+    | 'AT_THE_MOMENT'
+    | 'NEXT_THREE_MONTHS'
+    | 'CURRENT_QUARTER'
+    | 'CURRENT_YEAR'
+    | 'SPECIFIC_PERIOD'
+
   export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
     id: number
     isSelected: boolean
@@ -109,5 +116,17 @@ export namespace VigilanceArea {
   export enum Orientation {
     LANDSCAPE = 'landscape',
     PORTRAIT = 'portrait'
+  }
+
+  export type StatusType = 'DRAFT' | 'PUBLISHED'
+
+  export enum Status {
+    DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED'
+  }
+
+  export enum StatusLabel {
+    DRAFT = 'Non publiée',
+    PUBLISHED = 'Publiée'
   }
 }

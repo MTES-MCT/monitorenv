@@ -1,5 +1,6 @@
+import { CustomPeriodContainer } from '@components/style'
 import { getFilteredReportings } from '@features/Dashboard/slice'
-import { StyledCustomPeriodContainer, StyledSelect } from '@features/Reportings/Filters/style'
+import { StyledSelect } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -93,7 +94,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
           value={reportingFilters.dateRange}
         />
         {reportingFilters.dateRange === ReportingDateRangeEnum.CUSTOM && (
-          <StyledCustomPeriodContainer>
+          <CustomPeriodContainer>
             <DateRangePicker
               key="dateRange"
               baseContainer={newWindowContainerRef.current}
@@ -104,7 +105,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
               name="dateRange"
               onChange={setCustomPeriodFilter}
             />
-          </StyledCustomPeriodContainer>
+          </CustomPeriodContainer>
         )}
       </StyledDatesWrapper>
 

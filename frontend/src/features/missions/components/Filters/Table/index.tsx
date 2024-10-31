@@ -1,3 +1,4 @@
+import { CustomPeriodContainer, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { MissionSearch } from '@features/missions/MissionsSearch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -205,7 +206,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
             />
           </FilterWrapperLine>
         </FilterWrapper>
-        <StyledTagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM || hasFilters}>
+        <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM || hasFilters}>
           {selectedPeriod === DateRangeEnum.CUSTOM && (
             <StyledCustomPeriodContainer>
               <DateRangePicker
@@ -225,7 +226,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
           <FilterTags />
 
           {hasFilters && <ReinitializeFiltersButton onClick={onResetFilters} />}
-        </StyledTagsContainer>
+        </TagsContainer>
       </>
     )
   }
@@ -253,20 +254,7 @@ const StyledSelect = styled(Select)`
   }
 `
 
-export const StyledTagsContainer = styled.div<{ $withTopMargin: boolean }>`
-  margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
-  display: flex;
-  flex-direction: row;
-  max-width: 100%;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: end;
-`
-
-const StyledCustomPeriodContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`
   margin-top: 5px;
 `
 

@@ -59,15 +59,15 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
       return (
         isWithinPeriod(startDate, startDateFilter, endDateFilter) ||
         isWithinPeriod(endDate, startDateFilter, endDateFilter) ||
-        startDateFilter.isBetween(startDate, endDate) ||
-        endDateFilter.isBetween(startDate, endDate)
+        startDateFilter?.isBetween(startDate, endDate) ||
+        endDateFilter?.isBetween(startDate, endDate)
       )
     }
 
     if (
       !!startDateFilter &&
       !!endDateFilter &&
-      (startDateFilter.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
+      (startDateFilter?.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
     ) {
       return true
     }
