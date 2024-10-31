@@ -17,6 +17,8 @@ import { resetDrawing } from '../useCases/resetDrawing'
 export function DashboardMenuButton() {
   const dispatch = useAppDispatch()
   const isDashboardDialogVisible = useAppSelector(state => state.global.isDashboardDialogVisible)
+  const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+
   const isDrawing = useAppSelector(state => state.dashboard.isDrawing)
 
   const toggleDashboardDialog = e => {
@@ -52,13 +54,22 @@ export function DashboardMenuButton() {
     dispatch(dashboardActions.setIsDrawing(false))
   }
 
+  const handleDashboardsVisibility = () => {
+    dispatch(globalActions.setDisplayedItems({ displayDashboardLayer: !displayDashboardLayer }))
+  }
+
   return (
     <>
       {isDashboardDialogVisible && (
         <StyledMapMenuDialogContainer>
           <MapMenuDialog.Header>
-            <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeModal} />
+            <CloseButton Icon={Icon.Close} onClick={closeModal} />
             <StyledTitle as="h2">Briefs pour les unités</StyledTitle>
+            <MapMenuDialog.VisibilityButton
+              accent={Accent.SECONDARY}
+              Icon={displayDashboardLayer ? Icon.Display : Icon.Hide}
+              onClick={handleDashboardsVisibility}
+            />
           </MapMenuDialog.Header>
           {isDrawing ? (
             <StyledDrawDashboard onCancel={cancel} />
@@ -94,4 +105,8 @@ const StyledTitle = styled(MapMenuDialog.Title)`
 
 const StyledDrawDashboard = styled(DrawDashboard)`
   margin-top: 2px;
+`
+
+const CloseButton = styled(MapMenuDialog.CloseButton)`
+  margin: auto 0;
 `

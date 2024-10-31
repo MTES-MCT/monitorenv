@@ -86,7 +86,6 @@ const GroupName = styled.span`
   font-weight: 700;
   text-align: left;
   color: ${p => p.theme.color.gunMetal};
-  max-width: 300px;
   line-height: 33px;
   flex: 1;
   padding-right: 8px;
@@ -135,9 +134,7 @@ const Wrapper = styled.div<{ $hasPinnedLayers?: boolean; $isExpanded: boolean }>
   height: 38px;
   font-size: 16px;
   line-height: 22px;
-  padding-top: 6px;
-  padding-left: 16px;
-  padding-right: 4px;
+  padding: 6px 4px 0 16px;
   color: ${p => p.theme.color.gainsboro};
   display: flex;
   cursor: pointer;

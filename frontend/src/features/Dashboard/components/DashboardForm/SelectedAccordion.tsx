@@ -68,7 +68,8 @@ const AccordionHeader = styled.header`
   font-weight: 500;
   line-height: 22px;
   justify-content: space-between;
-  padding: 4px 24px 2px 24px;
+  padding: 0 24px;
+  height: 32px;
 `
 
 const Title = styled.span`

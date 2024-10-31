@@ -3,7 +3,6 @@ import { dashboardActions, type DashboardType } from '@features/Dashboard/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
-  Accent,
   CheckPicker,
   CustomSearch,
   DateRangePicker,
@@ -146,12 +145,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
             </StyledCustomPeriodContainer>
           )}
           {filters?.regulatoryThemes?.map(theme => (
-            <SingleTag
-              key={theme}
-              accent={Accent.SECONDARY}
-              onDelete={() => deleteRegulatoryTheme(theme)}
-              title={theme}
-            >
+            <SingleTag key={theme} onDelete={() => deleteRegulatoryTheme(theme)} title={theme}>
               {theme}
             </SingleTag>
           ))}

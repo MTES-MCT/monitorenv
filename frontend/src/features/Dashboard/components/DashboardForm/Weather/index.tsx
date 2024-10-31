@@ -35,10 +35,10 @@ export function Weather({ geom }: WeatherProps) {
     <WeatherBlock>
       <WeatherTitle>Météo</WeatherTitle>
       {coordinates ? (
-        <a href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
-          <span> {`https://www.windy.com/${coordinates}`}</span>
+        <StyledLink href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
+          {`https://www.windy.com/${coordinates}`}
           <Icon.ExternalLink size={16} />
-        </a>
+        </StyledLink>
       ) : (
         <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
       )}
@@ -52,13 +52,6 @@ const WeatherBlock = styled.div`
   display: flex;
   gap: 24px;
   padding: 21px 24px;
-  > a {
-    align-items: center;
-    color: #295edb;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
 `
 const WeatherTitle = styled.h2`
   font-size: 16px;
@@ -68,4 +61,13 @@ const CoordinatesError = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-size: 11px;
   font-style: italic;
+`
+
+const StyledLink = styled.a`
+  align-items: center;
+  color: #295edb;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  word-break: break-all;
 `
