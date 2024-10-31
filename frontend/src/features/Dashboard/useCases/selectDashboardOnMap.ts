@@ -44,7 +44,6 @@ export const selectDashboardOnMap =
         })
       )
     } catch (error) {
-      // TODO
       dispatch(
         addSideWindowBanner({
           children: 'Un problème est survenu lors de la sélection du tableau de bord',

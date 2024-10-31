@@ -73,7 +73,7 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   return (
     <>
       <OverlayPositionOnCentroid
-        appClassName="overlay-reporting-selected"
+        appClassName="overlay-dashboard-selected"
         feature={displayDashboardLayer && canOverlayBeOpened ? feature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
@@ -90,7 +90,7 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         )}
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
-        appClassName="overlay-reporting-hover"
+        appClassName="overlay-dashboard-hover"
         feature={displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
