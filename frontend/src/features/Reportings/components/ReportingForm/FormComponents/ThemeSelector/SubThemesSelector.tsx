@@ -1,5 +1,5 @@
 import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
-import { customDayjs, MultiSelect, type Option } from '@mtes-mct/monitor-ui'
+import { customDayjs, CustomSearch, MultiSelect, type Option } from '@mtes-mct/monitor-ui'
 import { sortControlPlans } from '@utils/sortControlPlans'
 import { useField, useFormikContext } from 'formik'
 import { useMemo } from 'react'
@@ -39,14 +39,21 @@ export function SubThemesSelector({ label, name }: SubThemesSelectorProps) {
     }
   }
 
+  const customSearch = new CustomSearch(subThemesByYearAsOptions, ['label'], {
+    cacheKey: 'REPORTING_SUB_THEMES',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
   return (
     <>
       {isError && <Msg>Erreur</Msg>}
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
         <MultiSelect
-          // force update when year changes
-          key={String(year)}
+          // force update when options changes
+          key={String(subThemesByYearAsOptions)}
+          customSearch={customSearch}
           data-cy="reporting-subtheme-selector"
           error={currentSubThemesMeta.error}
           isErrorMessageHidden
