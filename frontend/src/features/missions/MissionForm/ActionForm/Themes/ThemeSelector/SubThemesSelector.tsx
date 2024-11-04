@@ -1,4 +1,4 @@
-import { MultiSelect, type Option } from '@mtes-mct/monitor-ui'
+import { CustomSearch, MultiSelect, type Option } from '@mtes-mct/monitor-ui'
 import { sortControlPlans } from '@utils/sortControlPlans'
 import { useField, useFormikContext } from 'formik'
 import { useEffect, useMemo } from 'react'
@@ -62,12 +62,21 @@ export function SubThemesSelector({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subThemesByYearAsOptions, actionIndex, themeIndex])
 
+  const customSearch = new CustomSearch(subThemesByYearAsOptions, ['label'], {
+    cacheKey: 'MISSION_SUB_THEMES',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
   return (
     <>
       {isError && <Msg>Erreur</Msg>}
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
         <MultiSelect
+          // force update when options changes
+          key={String(subThemesByYearAsOptions)}
+          customSearch={customSearch}
           data-cy="envaction-subtheme-selector"
           error={currentSubThemesProps.error}
           isErrorMessageHidden
