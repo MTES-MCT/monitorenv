@@ -33,7 +33,7 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
     }),
     getVigilanceAreas: build.query<EntityState<VigilanceArea.VigilanceAreaLayer, number>, void>({
       providesTags: () => [{ id: 'LIST', type: 'VigilanceAreas' } as const],
-      query: () => `/v1/vigilance_areas`,
+      query: () => '/v1/vigilance_areas',
       transformResponse: (response: VigilanceArea.VigilanceAreaLayer[]) =>
         VigilanceAreaLayersAdapter.setAll(
           vigilanceAreaLayersInitialState,

@@ -18,7 +18,7 @@ export function FilterTags() {
     dispatch(
       vigilanceAreaFiltersActions.updateFilters({
         key: filterKey,
-        value: updatedFilter.length === 0 ? undefined : updatedFilter
+        value: updatedFilter.length === 0 ? [] : updatedFilter
       })
     )
   }
@@ -38,7 +38,7 @@ export function FilterTags() {
   }
 
   return (
-    <StyledContainer>
+    <StyledContainer data-cy="vigilance-areas-filter-tags">
       {createdBy.map(author => (
         <SingleTag key={author} onDelete={() => onDeleteTag(author, 'createdBy', createdBy)}>
           {author}

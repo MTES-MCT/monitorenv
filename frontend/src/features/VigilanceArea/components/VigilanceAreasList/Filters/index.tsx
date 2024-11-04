@@ -1,7 +1,11 @@
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
-import { setFilteredRegulatoryThemes, setFilteredVigilanceAreaPeriod } from '@features/layersSelector/search/slice'
+import {
+  setFilteredRegulatoryThemes,
+  setFilteredVigilanceAreaPeriod,
+  setVigilanceAreaSpecificPeriodFilter
+} from '@features/layersSelector/search/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -25,11 +29,15 @@ export function VigilanceAreasFilters() {
   const dispatch = useAppDispatch()
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
 
-  const seaFrontFilter = useAppSelector(state => state.vigilanceAreaFilters.seaFronts)
-  const createdByFilter = useAppSelector(state => state.vigilanceAreaFilters.createdBy)
-  const statusFilter = useAppSelector(state => state.vigilanceAreaFilters.status)
-  const searchQueryFilter = useAppSelector(state => state.vigilanceAreaFilters.searchQuery)
+  const {
+    createdBy: createdByFilter,
+    seaFronts: seaFrontFilter,
+    searchQuery: searchQueryFilter,
+    status: statusFilter
+  } = useAppSelector(state => state.vigilanceAreaFilters)
+
   const seaFrontsAsOptions = Object.values(seaFrontLabels)
 
   const hasFilters =
@@ -37,7 +45,8 @@ export function VigilanceAreasFilters() {
     createdByFilter.length > 0 ||
     statusFilter.length !== 2 ||
     !!searchQueryFilter ||
-    filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
+    filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS ||
+    filteredRegulatoryThemes.length > 0
 
   const updateSeaFrontFilter = selectedSeaFronts => {
     dispatch(vigilanceAreaFiltersActions.setSeaFronts(selectedSeaFronts))
@@ -62,6 +71,7 @@ export function VigilanceAreasFilters() {
     dispatch(vigilanceAreaFiltersActions.resetFilters())
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setFilteredVigilanceAreaPeriod(VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS))
+    dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
   }
 
   const hasCustomPeriodFilter = filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
@@ -116,18 +126,20 @@ export function VigilanceAreasFilters() {
           />
         </>
       </FilterContainer>
-      <TagsContainer $withTopMargin={hasCustomPeriodFilter || hasFilters}>
-        {hasCustomPeriodFilter && (
-          <CustomPeriodContainer>
-            <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
-            <SpecificPeriodFilter />
-          </CustomPeriodContainer>
-        )}
+      {(hasCustomPeriodFilter || hasFilters) && (
+        <TagsContainer $withTopMargin={false}>
+          {hasCustomPeriodFilter && (
+            <CustomPeriodContainer>
+              <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
+              <SpecificPeriodFilter />
+            </CustomPeriodContainer>
+          )}
 
-        <FilterTags />
+          <FilterTags />
 
-        {(hasFilters || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
-      </TagsContainer>
+          {(hasFilters || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
+        </TagsContainer>
+      )}
     </Wrapper>
   )
 }
@@ -135,7 +147,7 @@ export function VigilanceAreasFilters() {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 `
 
 const FilterContainer = styled.div`

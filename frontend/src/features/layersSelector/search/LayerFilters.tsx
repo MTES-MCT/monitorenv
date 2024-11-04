@@ -6,6 +6,7 @@ import {
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import {
@@ -21,6 +22,8 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
+
+import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from './slice'
 
 type LayerFiltersProps = {
   ampTypes: Option<string>[]
@@ -48,6 +51,7 @@ export function LayerFilters({
   setFilteredRegulatoryThemes,
   updateDateRangeFilter
 }: LayerFiltersProps) {
+  const dispatch = useAppDispatch()
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const isSuperUser = user?.isSuperUser
 
@@ -65,10 +69,16 @@ export function LayerFilters({
     setFilteredAmpTypes(nextAmpThemes ?? [])
   }
   const handleDeleteAmpType = (ampThemeToDelete: string) => () => {
+    if (filteredAmpTypes.length === 1) {
+      dispatch(setIsAmpSearchResultsVisible(false))
+    }
     setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
   const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: string) => () => {
+    if (filteredRegulatoryThemes.length === 1) {
+      dispatch(setIsRegulatorySearchResultsVisible(false))
+    }
     setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete))
   }
 

@@ -20,6 +20,7 @@ export namespace VigilanceArea {
     linkedRegulatoryAreas: Array<number>
     links: Array<Link>
     name: string | undefined
+    seaFront: string | undefined
     source: string | undefined
     startDatePeriod: string | undefined
     themes: Array<string>

@@ -18,6 +18,7 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     linkedRegulatoryAreas: [],
     links: [],
     name: undefined,
+    seaFront: undefined,
     source: undefined,
     startDatePeriod: undefined,
     themes: [],

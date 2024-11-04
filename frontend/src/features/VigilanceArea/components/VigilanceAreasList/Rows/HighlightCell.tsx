@@ -1,13 +1,14 @@
+import { useAppSelector } from '@hooks/useAppSelector'
 import Highlighter from 'react-highlight-words'
 
 export function HighlightCell({ text }) {
-  // TODO(30/10/24): get search query filters to add to `searchWords` when filters are added
+  const searchQuery = useAppSelector(state => state.vigilanceAreaFilters.searchQuery)
 
   return (
     <Highlighter
       autoEscape
       highlightClassName="highlight"
-      searchWords={[]}
+      searchWords={searchQuery && searchQuery.length > 0 ? searchQuery.split(' ') : []}
       textToHighlight={text ?? '-'}
       title={text}
     />
