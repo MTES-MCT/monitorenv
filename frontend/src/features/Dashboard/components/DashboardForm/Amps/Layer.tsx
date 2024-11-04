@@ -1,8 +1,9 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { dashboardActions } from '@features/Dashboard/slice'
+import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
@@ -20,6 +21,7 @@ type AmpLayerProps = {
 
 export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) {
   const dispatch = useAppDispatch()
+  const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
   const ref = createRef<HTMLSpanElement>()
 
   const { layer } = useGetAMPsQuery(undefined, {
@@ -48,7 +50,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
   }
 
   const toggleZoneMetadata = () => {
-    dispatch(dashboardActions.setDashboardPanel({ id: layerId, type: Dashboard.Block.AMP }))
+    dispatch(dashboardActions.setDashboardPanel({ id: layerId, isPinned: isSelected, type: Dashboard.Block.AMP }))
     if (!layer?.bbox) {
       return
     }
@@ -61,7 +63,12 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
   }
 
   return (
-    <StyledLayer ref={ref} $isSelected={isSelected} onClick={toggleZoneMetadata}>
+    <StyledLayer
+      ref={ref}
+      $isSelected={isSelected}
+      $metadataIsShown={openPanel?.id === layerId && openPanel?.isPinned === isSelected}
+      onClick={toggleZoneMetadata}
+    >
       <Wrapper>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
         <LayerSelector.Name
@@ -96,7 +103,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
 }
 
 const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
-  background-color: ${p => p.theme.color.white};
+  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : p.theme.color.white)};
   padding-left: 24px;
   padding-right: 24px;
   justify-content: space-between;

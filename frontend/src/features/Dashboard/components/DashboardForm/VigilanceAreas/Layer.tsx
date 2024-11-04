@@ -1,7 +1,8 @@
-import { dashboardActions } from '@features/Dashboard/slice'
+import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { createRef } from 'react'
@@ -13,14 +14,16 @@ import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
-type RegulatoryLayerProps = {
+type VigilanceAreaLayerProps = {
   isPinned?: boolean
   isSelected: boolean
   vigilanceArea: VigilanceArea.VigilanceArea
 }
 
-export function Layer({ isPinned = false, isSelected, vigilanceArea }: RegulatoryLayerProps) {
+export function Layer({ isPinned = false, isSelected, vigilanceArea }: VigilanceAreaLayerProps) {
   const dispatch = useAppDispatch()
+  const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
+
   const ref = createRef<HTMLSpanElement>()
 
   const handleSelectZone = e => {
@@ -47,6 +50,14 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
   }
 
   const toggleZoneMetadata = () => {
+    dispatch(
+      dashboardActions.setDashboardPanel({
+        id: vigilanceArea.id,
+        isPinned: isSelected,
+        type: Dashboard.Block.VIGILANCE_AREAS
+      })
+    )
+
     dispatch(dashboardActions.setDashboardPanel({ id: vigilanceArea.id, type: Dashboard.Block.VIGILANCE_AREAS }))
     const feature = getFeature(vigilanceArea.geom)
 
@@ -57,7 +68,13 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
   }
 
   return (
-    <StyledLayer ref={ref} $isSelected={isSelected} $withBorderBottom onClick={toggleZoneMetadata}>
+    <StyledLayer
+      ref={ref}
+      $isSelected={isSelected}
+      $metadataIsShown={openPanel?.id === vigilanceArea.id && openPanel?.isPinned === isSelected}
+      $withBorderBottom
+      onClick={toggleZoneMetadata}
+    >
       <NameContainer>
         <LayerLegend
           isArchived={vigilanceArea?.isArchived}
@@ -97,7 +114,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
 }
 
 const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
-  background-color: ${p => p.theme.color.white};
+  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : p.theme.color.white)};
   justify-content: space-between;
   padding-left: 24px;
   padding-right: 24px;

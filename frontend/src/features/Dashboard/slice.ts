@@ -34,6 +34,7 @@ export const initialDashboard: DashboardType = {
 
 type OpenPanel = {
   id: number
+  isPinned?: boolean
   subPanel?: OpenPanel
   type: Dashboard.Block
 }
