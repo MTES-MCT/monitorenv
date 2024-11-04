@@ -1,31 +1,21 @@
-import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
-import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { Dashboard } from '@features/Dashboard/types'
+import { sideWindowActions } from '@features/SideWindow/slice'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { useEffect, useRef, useState } from 'react'
+import { generatePath } from 'react-router'
 import styled, { css } from 'styled-components'
 
-import { dashboardActions, type DashboardType } from '../../slice'
+import { dashboardActions, type DashboardType, isCancelEditModalOpen } from '../../slice'
 import { FirstColumn } from './Columns/FirstColumn'
 import { SecondColumn } from './Columns/SecondColumn'
 import { ThirdColumn } from './Columns/ThirdColumn'
 import { Footer } from './Footer'
 import { dashboardFiltersActions } from './slice'
 import { Toolbar } from './Toolbar'
-import { VigilanceAreas } from './VigilanceAreas'
-import { Weather } from './Weather'
-import {
-  dashboardActions,
-  getFilteredAmps,
-  getFilteredRegulatoryAreas,
-  getFilteredReportings,
-  getFilteredVigilanceAreas,
-  isCancelEditModalOpen,
-  type DashboardType
-} from '../../slice'
 
 type DashboardProps = {
   dashboardForm: [string, DashboardType]
@@ -35,7 +25,6 @@ type DashboardProps = {
 export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: DashboardProps) {
   const dispatch = useAppDispatch()
   const isCancelModalOpen = useAppSelector(state => isCancelEditModalOpen(state.dashboard, key))
-  const previewSelectionFilter = dashboard.filters.previewSelection ?? false
 
   const filters = useAppSelector(state => state.dashboardFilters?.dashboards[key]?.filters)
   const previewSelectionFilter = filters?.previewSelection ?? false
@@ -94,13 +83,18 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
     }
   }, [previewSelectionFilter, dispatch, key])
 
+  const confirmCancelEdit = () => {
+    dispatch(dashboardActions.removeTab(key))
+    dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.DASHBOARDS)))
+  }
+
   return (
     <>
       <CancelEditDialog
         onCancel={() => {
           dispatch(dashboardActions.setIsCancelModalOpen({ isCancelModalOpen: false, key }))
         }}
-        onConfirm={() => {}}
+        onConfirm={confirmCancelEdit}
         open={isCancelModalOpen}
         subText="Voulez-vous enregistrer les modifications avant de quitter ?"
         text={`Vous êtes en train d'abandonner l'édition du tableau de bord`}
