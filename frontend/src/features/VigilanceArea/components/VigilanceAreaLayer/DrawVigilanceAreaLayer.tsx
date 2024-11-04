@@ -53,8 +53,6 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: [dottedLayerStyle, editStyle],
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.DRAW_VIGILANCE_AREA.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>

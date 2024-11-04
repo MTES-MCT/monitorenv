@@ -32,8 +32,6 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: vectorSourceRef.current,
       style: getVigilanceAreaLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.VIGILANCE_AREA_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>

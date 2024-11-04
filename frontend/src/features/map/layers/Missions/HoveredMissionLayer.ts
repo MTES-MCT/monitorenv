@@ -18,8 +18,6 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
       renderBuffer: 7,
       source: hoveredMissionVectorSourceRef.current,
       style: missionZoneStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.HOVERED_MISSION.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

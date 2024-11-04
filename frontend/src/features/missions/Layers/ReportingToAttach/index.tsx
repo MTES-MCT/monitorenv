@@ -73,8 +73,6 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: reportingPinStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>

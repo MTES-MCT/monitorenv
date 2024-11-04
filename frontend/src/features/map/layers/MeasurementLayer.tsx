@@ -96,8 +96,6 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
         renderBuffer: 7,
         source: GetVectorSource(),
         style: [measurementStyle, measurementStyleWithCenter],
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
         zIndex: Layers.MEASUREMENT.zIndex
       })
       map.getLayers().push(vectorLayer)

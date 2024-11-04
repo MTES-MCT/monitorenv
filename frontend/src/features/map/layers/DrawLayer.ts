@@ -74,8 +74,6 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
           renderBuffer: 7,
           source: getVectorSource(),
           style: [dottedLayerStyle, editStyle],
-          updateWhileAnimating: true,
-          updateWhileInteracting: true,
           zIndex: Layers.DRAW.zIndex
         })
         vectorLayerRef.current.name = Layers.DRAW.code

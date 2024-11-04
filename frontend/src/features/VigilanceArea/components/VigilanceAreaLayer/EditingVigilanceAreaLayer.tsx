@@ -54,8 +54,6 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: getVigilanceAreaLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
@@ -90,8 +88,6 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: regulatoryAreasVectorSourceRef.current,
       style: getRegulatoryLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
@@ -131,8 +127,6 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: ampVectorSourceRef.current,
       style: getAMPLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.AMP_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

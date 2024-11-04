@@ -52,8 +52,6 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: previewLayersVectorSourceRef.current,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>

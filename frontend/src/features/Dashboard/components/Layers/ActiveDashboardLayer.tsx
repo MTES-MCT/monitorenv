@@ -49,8 +49,6 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: layersVectorSourceRef.current,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>

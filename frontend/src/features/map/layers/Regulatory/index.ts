@@ -31,9 +31,7 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: regulatoryVectorSourceRef.current,
-      style: getRegulatoryLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true
+      style: getRegulatoryLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
   ;(regulatoryVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV.code

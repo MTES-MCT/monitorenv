@@ -28,8 +28,6 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: dashboardsVectorSourceRef.current,
       style: dashboardIcon,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.DASHBOARDS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

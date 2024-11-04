@@ -22,9 +22,7 @@ export function SearchExtentLayer({ map }: BaseMapChildrenProps) {
   const searchExtentLayerRef = useRef(
     new Vector({
       source: searchExtentVectorSourceRef.current,
-      style: dottedLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true
+      style: dottedLayerStyle
     })
   ) as MutableRefObject<Vector<VectorSource>>
 

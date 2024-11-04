@@ -35,9 +35,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: ampPreviewVectorSourceRef.current,
-      style: getAMPLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true
+      style: getAMPLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
   ;(ampPreviewVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_PREVIEW.code

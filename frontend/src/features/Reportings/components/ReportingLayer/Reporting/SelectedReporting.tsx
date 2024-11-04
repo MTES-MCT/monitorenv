@@ -41,8 +41,6 @@ export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChild
       renderBuffer: 7,
       source: selectedReportingVectorSourceRef.current,
       style: selectedReportingStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.REPORTING_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

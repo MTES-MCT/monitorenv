@@ -32,9 +32,7 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: ampVectorSourceRef.current,
-      style: getAMPLayerStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true
+      style: getAMPLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
   ;(ampVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP.code

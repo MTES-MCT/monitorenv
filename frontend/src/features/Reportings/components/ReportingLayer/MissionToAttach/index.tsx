@@ -45,8 +45,6 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: missionStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

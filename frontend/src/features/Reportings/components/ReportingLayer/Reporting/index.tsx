@@ -119,8 +119,6 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: reportingPinStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.REPORTINGS.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
