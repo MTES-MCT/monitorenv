@@ -39,22 +39,28 @@ export function HomePage() {
 
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const reportings = useAppSelector(state => state.reporting.reportings)
+  const dashboards = useAppSelector(state => state.dashboard.dashboards)
 
   const reportingEvent = useListenReportingEventUpdates()
 
   const hasAtLeastOneMissionFormDirty = useMemo(
-    () => !!Object.values(selectedMissions).find(mission => mission.isFormDirty),
+    () => Object.values(selectedMissions).some(mission => mission.isFormDirty),
     [selectedMissions]
   )
 
   const hasAtLeastOneReportingFormDirty = useMemo(
-    () => !!Object.values(reportings).find(reporting => reporting.isFormDirty),
+    () => Object.values(reportings).some(reporting => reporting.isFormDirty),
     [reportings]
+  )
+
+  const hasAtLeastOneDashboardFormDirty = useMemo(
+    () => Object.values(dashboards).some(({ dashboard, unsavedDashboard }) => dashboard !== unsavedDashboard),
+    [dashboards]
   )
 
   const beforeUnload = useCallback(
     event => {
-      if (hasAtLeastOneMissionFormDirty || hasAtLeastOneReportingFormDirty) {
+      if (hasAtLeastOneMissionFormDirty || hasAtLeastOneReportingFormDirty || hasAtLeastOneDashboardFormDirty) {
         event.preventDefault()
 
         // eslint-disable-next-line no-return-assign, no-param-reassign
@@ -63,7 +69,7 @@ export function HomePage() {
 
       return undefined
     },
-    [hasAtLeastOneMissionFormDirty, hasAtLeastOneReportingFormDirty]
+    [hasAtLeastOneDashboardFormDirty, hasAtLeastOneMissionFormDirty, hasAtLeastOneReportingFormDirty]
   )
 
   useBeforeUnload(beforeUnload)

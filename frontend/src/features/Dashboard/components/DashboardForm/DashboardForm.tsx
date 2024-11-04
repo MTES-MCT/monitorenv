@@ -1,3 +1,6 @@
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -12,6 +15,17 @@ import { ThirdColumn } from './Columns/ThirdColumn'
 import { Footer } from './Footer'
 import { dashboardFiltersActions } from './slice'
 import { Toolbar } from './Toolbar'
+import { VigilanceAreas } from './VigilanceAreas'
+import { Weather } from './Weather'
+import {
+  dashboardActions,
+  getFilteredAmps,
+  getFilteredRegulatoryAreas,
+  getFilteredReportings,
+  getFilteredVigilanceAreas,
+  isCancelEditModalOpen,
+  type DashboardType
+} from '../../slice'
 
 type DashboardProps = {
   dashboardForm: [string, DashboardType]
@@ -20,6 +34,8 @@ type DashboardProps = {
 
 export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: DashboardProps) {
   const dispatch = useAppDispatch()
+  const isCancelModalOpen = useAppSelector(state => isCancelEditModalOpen(state.dashboard, key))
+  const previewSelectionFilter = dashboard.filters.previewSelection ?? false
 
   const filters = useAppSelector(state => state.dashboardFilters?.dashboards[key]?.filters)
   const previewSelectionFilter = filters?.previewSelection ?? false
@@ -80,6 +96,16 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
   return (
     <>
+      <CancelEditDialog
+        onCancel={() => {
+          dispatch(dashboardActions.setIsCancelModalOpen({ isCancelModalOpen: false, key }))
+        }}
+        onConfirm={() => {}}
+        open={isCancelModalOpen}
+        subText="Voulez-vous enregistrer les modifications avant de quitter ?"
+        text={`Vous êtes en train d'abandonner l'édition du tableau de bord`}
+        title="Enregistrer les modifications"
+      />
       {isActive && (
         <>
           <Toolbar ref={toolbarRef} dashboardForm={[key, dashboard]} geometry={dashboard.dashboard.geom} />

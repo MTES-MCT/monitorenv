@@ -17,6 +17,7 @@ export function SideWindowLauncher() {
 
   const missions = useAppSelector(state => state.missionForms.missions)
   const reportings = useAppSelector(state => state.reporting.reportings)
+  const dashboards = useAppSelector(state => state.dashboard.dashboards)
   const sideWindow = useAppSelector(state => state.sideWindow)
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
@@ -46,6 +47,11 @@ export function SideWindowLauncher() {
     [reportingsOpenOnSideWindow]
   )
 
+  const hasAtLeastOneDashboardFormDirty = useMemo(
+    () => Object.values(dashboards).some(({ dashboard, unsavedDashboard }) => dashboard !== unsavedDashboard),
+    [dashboards]
+  )
+
   const onUnload = () => {
     dispatch(sideWindowActions.close())
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
@@ -71,7 +77,7 @@ export function SideWindowLauncher() {
       onChangeFocus={onChangeFocus}
       onUnload={onUnload}
       shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
-      showPrompt={hasAtLeastOneMissionFormDirty || hasAtLeastOneReportingFormDirty}
+      showPrompt={hasAtLeastOneMissionFormDirty || hasAtLeastOneReportingFormDirty || hasAtLeastOneDashboardFormDirty}
       title="MonitorEnv"
     >
       <SideWindow />
