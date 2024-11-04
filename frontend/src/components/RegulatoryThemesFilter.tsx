@@ -46,6 +46,7 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   return (
     <CheckPicker
+      key={String(regulatoryThemes.length)}
       customSearch={regulatoryThemesCustomSearch}
       isLabelHidden
       isTransparent

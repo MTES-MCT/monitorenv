@@ -236,7 +236,7 @@ const FilterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 `
 const FilterWrapperLine = styled.div`
   display: flex;

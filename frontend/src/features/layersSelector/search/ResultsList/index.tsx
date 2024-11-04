@@ -1,5 +1,5 @@
-import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -63,7 +63,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const ampResulstsByAMPName = groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name)
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
-  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
   const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 

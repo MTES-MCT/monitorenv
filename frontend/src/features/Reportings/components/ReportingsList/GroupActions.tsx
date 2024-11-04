@@ -34,9 +34,9 @@ export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds,
           title="Supprimer"
         />
       </StyledButtonsContainer>
-      <TotalResults data-cy="totalReportings">
+      <StyledTotalResults data-cy="totalReportings">
         {totalReportings} {pluralize('Signalement', totalReportings)}
-      </TotalResults>
+      </StyledTotalResults>
     </StyledGroupActionContainer>
   )
 }
@@ -46,7 +46,7 @@ const StyledGroupActionContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 8px;
-  margin-top: 40px;
+  margin-top: 32px;
   align-items: end;
   padding-right: 2%;
 `
@@ -54,4 +54,7 @@ const StyledButtonsContainer = styled.div`
   display: flex;
   gap: 8px;
   align-self: end;
+`
+const StyledTotalResults = styled(TotalResults)`
+  margin-top: 0px;
 `

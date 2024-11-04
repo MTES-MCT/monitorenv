@@ -1,3 +1,4 @@
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
@@ -90,7 +91,7 @@ export function LayerSearch() {
       regulatoryThemes: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: undefined,
+      vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
       vigilanceAreaSpecificPeriodFilter: undefined
     })
   }
@@ -115,7 +116,10 @@ export function LayerSearch() {
   const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
 
   const allowResetResults =
-    !_.isEmpty(regulatoryLayersSearchResult) || !_.isEmpty(ampsSearchResult) || !_.isEmpty(vigilanceAreaSearchResult)
+    !_.isEmpty(regulatoryLayersSearchResult) ||
+    !_.isEmpty(ampsSearchResult) ||
+    (!_.isEmpty(vigilanceAreaSearchResult) &&
+      filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS)
 
   return (
     <SearchContainer>

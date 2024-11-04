@@ -1,12 +1,12 @@
-import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { SideWindowContent } from '@features/SideWindow/style'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import styled from 'styled-components'
 
 import { VigilanceAreasFilters } from './Filters'
 import { VigilanceAreasTable } from './VigilanceAreasTable'
 
 export function VigilancesAreasList() {
-  const { data, isError, isFetching, isLoading } = useGetVigilanceAreasQuery()
+  const { isError, isFetching, isLoading, vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   return (
     <SideWindowContent>
@@ -17,7 +17,10 @@ export function VigilancesAreasList() {
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
       ) : (
-        <VigilanceAreasTable isLoading={isLoading || isFetching} vigilanceAreas={Object.values(data?.entities ?? {})} />
+        <VigilanceAreasTable
+          isLoading={isLoading || isFetching}
+          vigilanceAreas={Object.values(vigilanceAreas?.entities ?? {})}
+        />
       )}
     </SideWindowContent>
   )

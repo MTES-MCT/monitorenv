@@ -1,4 +1,4 @@
-import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -8,7 +8,6 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
-import { TWO_MINUTES } from '../../../../constants'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -24,7 +23,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
 
   const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible
 
-  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { pollingInterval: TWO_MINUTES })
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
