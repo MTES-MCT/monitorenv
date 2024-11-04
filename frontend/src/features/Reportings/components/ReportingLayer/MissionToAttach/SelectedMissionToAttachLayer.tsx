@@ -35,8 +35,6 @@ export function SelectedMissionToAttachLayer({ currentFeatureOver, map }: BaseMa
       renderBuffer: 7,
       source: selectedAttachedMissionVectorSourceRef.current,
       style: selectedMissionStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

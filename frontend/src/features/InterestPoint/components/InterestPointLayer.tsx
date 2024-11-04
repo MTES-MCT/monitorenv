@@ -92,8 +92,6 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: (feature, resolution) => (isFeatureIsALine(feature) ? getLineStyle() : getInterestPointStyle(resolution)),
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.INTEREST_POINT.zIndex
     })
   ) as MutableRefObject<VectorLayer<VectorSource>>

@@ -63,8 +63,6 @@ export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildr
       renderBuffer: 7,
       source: editingReportingVectorSourceRef.current,
       style: editingReportingStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.REPORTING_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

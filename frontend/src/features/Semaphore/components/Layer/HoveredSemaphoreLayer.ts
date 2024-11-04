@@ -20,8 +20,6 @@ export function HoveredSemaphoreLayer({ currentFeatureOver, map }: BaseMapChildr
       renderBuffer: 7,
       source: hoveredSemaphoreVectorSourceRef.current,
       style: reportingLinkStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.SEMAPHORES.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

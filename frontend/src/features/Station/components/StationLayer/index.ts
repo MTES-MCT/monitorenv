@@ -23,8 +23,6 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: getFeatureStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.STATIONS.zIndex
     })
   )

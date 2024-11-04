@@ -97,8 +97,6 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: missionVectorSourceRef.current,
       style: missionStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.MISSIONS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

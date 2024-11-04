@@ -50,8 +50,6 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
       renderBuffer: 7,
       source: selectedMissionVectorSourceRef.current,
       style: selectedMissionStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.MISSION_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
@@ -64,8 +62,6 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
     new VectorLayer({
       renderBuffer: 7,
       source: selectedMissionActionsVectorSourceRef.current,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.ACTIONS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

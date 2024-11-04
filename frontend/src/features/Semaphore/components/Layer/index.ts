@@ -46,8 +46,6 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: semaphoreVectorSourceRef.current,
       style: feature => getSemaphoreStyle(feature, isSuperUser),
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.SEMAPHORES.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

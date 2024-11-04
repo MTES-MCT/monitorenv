@@ -53,8 +53,6 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: [dottedLayerStyle, editStyle],
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.DRAW_DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>

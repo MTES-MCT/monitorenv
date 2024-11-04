@@ -55,8 +55,6 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       source: selectedSemaphoreVectorSourceRef.current,
       style: feature => getSelectedSemaphoreStyle(feature, isSuperUser),
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.SEMAPHORES.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

@@ -46,8 +46,6 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
       renderBuffer: 7,
       source: editingMissionVectorSourceRef.current,
       style: selectedMissionStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.MISSION_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
@@ -60,8 +58,6 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
     new VectorLayer({
       renderBuffer: 7,
       source: editingMissionActionsVectorSourceRef.current,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.ACTIONS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

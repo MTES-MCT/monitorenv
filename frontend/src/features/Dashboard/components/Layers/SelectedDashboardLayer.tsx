@@ -34,8 +34,6 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: dashboardDatasVectorSourceRef.current,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.DASHBOARDS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

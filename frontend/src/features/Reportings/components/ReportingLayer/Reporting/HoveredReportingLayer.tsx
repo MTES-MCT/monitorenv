@@ -17,8 +17,6 @@ export function HoveredReportingLayer({ currentFeatureOver, map }: BaseMapChildr
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: hoveredReportingStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.REPORTINGS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

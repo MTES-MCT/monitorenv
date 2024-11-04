@@ -17,8 +17,6 @@ export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseM
       renderBuffer: 7,
       source: vectorSourceRef.current,
       style: hoveredReportingStyleFn,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
       zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
