@@ -13,7 +13,7 @@ const vigilanceAreaLayersInitialState = VigilanceAreaLayersAdapter.getInitialSta
 export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     createVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
-      invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }],
+      invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }, 'ExtractArea'],
       query: vigilanceArea => ({
         body: vigilanceArea,
         method: 'PUT',
@@ -21,7 +21,7 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     deleteVigilanceArea: build.mutation<void, number>({
-      invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }],
+      invalidatesTags: [{ id: 'LIST', type: 'VigilanceAreas' }, 'ExtractArea'],
       query: id => ({
         method: 'DELETE',
         url: `/v1/vigilance_areas/${id}`
@@ -55,7 +55,8 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
     updateVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
       invalidatesTags: (_, __, { id }) => [
         { id: 'LIST', type: 'VigilanceAreas' },
-        { id, type: 'VigilanceAreas' }
+        { id, type: 'VigilanceAreas' },
+        'ExtractArea'
       ],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },

@@ -34,13 +34,14 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
         result
           ? // successful query
             [...result.map(({ id }) => ({ id, type: 'Dashboards' as const })), { id: 'LIST', type: 'Dashboards' }]
-          : // an error occurred, but we still want to refetch this query when `{ type: 'Missions', id: 'LIST' }` is invalidated
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Dashboards', id: 'LIST' }` is invalidated
             [{ id: 'LIST', type: 'Dashboards' }],
       query: () => '/v1/dashboards',
       transformErrorResponse: response => new FrontendApiError(GET_DASHBOARDS_ERROR_MESSAGE, response),
       transformResponse: (response: Dashboard.DashboardFromApi[]) => response
     }),
     getExtratedArea: build.query<Dashboard.ExtractedAreaFromApi, GeoJSON.Geometry>({
+      providesTags: ['ExtractArea'],
       query: geometry => `/v1/dashboards/extract?geometry=${geoJsonToWKT(geometry)}`,
       transformErrorResponse: response => new FrontendApiError(GET_EXTRACTED_AREAS_ERROR_MESSAGE, response)
     }),

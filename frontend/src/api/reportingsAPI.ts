@@ -37,7 +37,8 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: (_, __, { missionId }) => [
         { id: 'LIST', type: 'Reportings' },
         { id: 'LIST', type: 'Missions' },
-        { id: missionId, type: 'Missions' }
+        { id: missionId, type: 'Missions' },
+        'ExtractArea'
       ],
       query: reporting => ({
         body: reporting,
@@ -46,7 +47,7 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     deleteReporting: build.mutation({
-      invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
+      invalidatesTags: [{ id: 'LIST', type: 'Reportings' }, 'ExtractArea'],
       query: ({ id }) => ({
         method: 'DELETE',
         url: `/v1/reportings/${id}`
@@ -56,7 +57,7 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: (_, __, results) =>
         results?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
-          : [{ id: 'LIST', type: 'Reportings' }],
+          : [{ id: 'LIST', type: 'Reportings' }, 'ExtractArea'],
       query: ({ ids }: { ids: number[] }) => ({
         body: ids,
         method: 'PUT',
@@ -84,7 +85,8 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
         { id, type: 'Reportings' },
         { id: 'LIST', type: 'Reportings' },
         { id: 'LIST', type: 'Missions' },
-        { id: missionId, type: 'Missions' }
+        { id: missionId, type: 'Missions' },
+        'ExtractArea'
       ],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
