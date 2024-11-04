@@ -15,6 +15,11 @@ export const closeTab =
     const id = routeParams?.params.id
 
     if (id) {
+      if (getState().dashboard.dashboards[id]?.dashboard !== getState().dashboard.dashboards[id]?.unsavedDashboard) {
+        dispatch(dashboardActions.setIsCancelModalOpen({ isCancelModalOpen: true, key: id }))
+
+        return
+      }
       dispatch(dashboardActions.removeTab(id))
       if (id === activeDashboardId) {
         dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.DASHBOARDS)))

@@ -24,10 +24,12 @@ export const initialDashboard: DashboardType = {
   },
   defaultName: '',
   extractedArea: undefined,
+  isCancelEditModalOpen: false,
   isEditingTabName: false,
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
-  reportingToDisplay: undefined
+  reportingToDisplay: undefined,
+  unsavedDashboard: undefined
 }
 
 type OpenPanel = {
@@ -41,10 +43,12 @@ export type DashboardType = {
   dashboard: Dashboard.Dashboard
   defaultName: string | undefined
   extractedArea?: Dashboard.ExtractedArea
+  isCancelEditModalOpen: boolean
   isEditingTabName: boolean
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
+  unsavedDashboard: Dashboard.Dashboard | undefined
 }
 
 type SelectedDashboardType = {
@@ -155,7 +159,8 @@ export const dashboardSlice = createSlice({
         ...initialDashboard,
         dashboard: action.payload.dashboard,
         defaultName: action.payload.defaultName,
-        extractedArea: action.payload.extractedArea
+        extractedArea: action.payload.extractedArea,
+        unsavedDashboard: action.payload.dashboard
       }
     },
 
@@ -294,6 +299,15 @@ export const dashboardSlice = createSlice({
     setInteractionType(state, action: PayloadAction<InteractionType>) {
       state.interactionType = action.payload
     },
+    setIsCancelModalOpen(state, action: PayloadAction<{ isCancelModalOpen: boolean; key: string }>) {
+      const id = action.payload.key
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].isCancelEditModalOpen = action.payload.isCancelModalOpen
+    },
     setIsDrawing(state, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
     },
@@ -329,6 +343,17 @@ export const dashboardSlice = createSlice({
         state.dashboards[id].reportingToDisplay = action.payload
       }
     },
+    setUnsavedDashboard(state, action: PayloadAction<Dashboard.Dashboard | undefined>) {
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        state.dashboards[id].unsavedDashboard = action.payload
+      }
+    },
     updateArea(
       state,
       action: PayloadAction<{
@@ -353,7 +378,7 @@ export const dashboardSlice = createSlice({
 
           state.dashboards = {
             ...state.dashboards,
-            [activeDashboardId]: { ...dashboard, dashboard: dashboardToUpdate }
+            [activeDashboardId]: { ...dashboard, dashboard: dashboardToUpdate, unsavedDashboard: dashboardToUpdate }
           }
         }
       }
@@ -513,6 +538,10 @@ const getId = (_: DashboardState, id: string | undefined) => id
 
 export const getDashboardById = createSelector([getDashboards, getId], (dashboards, id) =>
   id ? dashboards[id] : undefined
+)
+
+export const isCancelEditModalOpen = createSelector([getDashboards, getId], (dashboards, id) =>
+  id ? !!dashboards[id]?.isCancelEditModalOpen : false
 )
 
 export const dashboardActions = dashboardSlice.actions
