@@ -551,18 +551,27 @@ export const getFilteredVigilanceAreas = createSelector(
     }
 
     if (dashboards[activeDashboardId]) {
+      const regulatoryThemesFilter = dashboards[activeDashboardId].filters.regulatoryThemes
       const periodFilter = dashboards[activeDashboardId].filters.vigilanceAreaPeriod
       const specificPeriodFilter = dashboards[activeDashboardId].filters.specificPeriod
       const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas
+
+      let filteredVigilanceAreasByThemes = vigilanceAreas
+
+      if (regulatoryThemesFilter && regulatoryThemesFilter.length > 0) {
+        filteredVigilanceAreasByThemes = vigilanceAreas?.filter(({ themes }) =>
+          themes?.some(theme => regulatoryThemesFilter?.includes(theme))
+        )
+      }
 
       if (
         !periodFilter ||
         (periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && !specificPeriodFilter)
       ) {
-        return vigilanceAreas
+        return filteredVigilanceAreasByThemes
       }
 
-      return getFilterVigilanceAreasPerPeriod(vigilanceAreas, periodFilter, specificPeriodFilter)
+      return getFilterVigilanceAreasPerPeriod(filteredVigilanceAreasByThemes, periodFilter, specificPeriodFilter)
     }
 
     return undefined
