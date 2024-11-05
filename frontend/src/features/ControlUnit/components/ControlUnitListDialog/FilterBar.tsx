@@ -1,5 +1,6 @@
 import {
   ControlUnit,
+  CustomSearch,
   Field,
   Icon,
   MultiCheckbox,
@@ -72,6 +73,24 @@ export function FilterBar() {
     [dispatch]
   )
 
+  const administrationCustomSearch = new CustomSearch(administrationsAsOptions ?? [], ['label'], {
+    cacheKey: 'CONTROL_UNIT_FILTERS_ADMINISTRATIONS',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
+  const typeCustomSearch = new CustomSearch(typesAsOptions ?? [], ['label'], {
+    cacheKey: 'CONTROL_UNIT_FILTERS_TYPES',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
+  const baseCustomSearch = new CustomSearch(basesAsOptions ?? [], ['label'], {
+    cacheKey: 'CONTROL_UNIT_FILTERS_BASES',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
   if (!administrationsAsOptions || !basesAsOptions) {
     return <p>Chargement en cours...</p>
   }
@@ -90,6 +109,8 @@ export function FilterBar() {
         value={mapControlUnitListDialog.filtersState.query}
       />
       <Select
+        key={String(administrationsAsOptions.length)}
+        customSearch={administrationCustomSearch}
         isLabelHidden
         isTransparent
         label="Administration"
@@ -101,6 +122,8 @@ export function FilterBar() {
         value={mapControlUnitListDialog.filtersState.administrationId}
       />
       <Select
+        key={String(typesAsOptions.length)}
+        customSearch={typeCustomSearch}
         isLabelHidden
         isTransparent
         label="Type de moyen"
@@ -112,6 +135,8 @@ export function FilterBar() {
         value={mapControlUnitListDialog.filtersState.type}
       />
       <Select
+        key={String(basesAsOptions.length)}
+        customSearch={baseCustomSearch}
         isLabelHidden
         isTransparent
         label="Base du moyen"

@@ -1,6 +1,6 @@
 import { useGetMissionsQuery } from '@api/missionsAPI'
 import { sideWindowActions } from '@features/SideWindow/slice'
-import { Accent, Button, customDayjs, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
+import { Accent, Button, customDayjs, Icon, IconButton, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
@@ -72,6 +72,17 @@ export function ControlUnitDialog() {
     dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
   }
 
+  const backToList = () => {
+    dispatch(
+      globalActions.setDisplayedItems({
+        isControlUnitDialogVisible: false,
+        isControlUnitListDialogVisible: true
+      })
+    )
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+    dispatch(globalActions.setDisplayedItems({ isControlUnitListDialogVisible: true }))
+  }
+
   if (!controlUnit) {
     return (
       <MapMenuDialog.Container>
@@ -85,12 +96,13 @@ export function ControlUnitDialog() {
 
   return (
     <Wrapper $isRightMenuOpened={isRightMenuOpened}>
-      <MapMenuDialog.Header>
+      <StyledHeader>
+        <StyledIconButton Icon={Icon.Chevron} onClick={backToList} />
         <MapMenuDialog.Title title={`${controlUnit.name} (${controlUnit.administration.name})`}>
           <b>{controlUnit.name}</b> ({controlUnit.administration.name})
         </MapMenuDialog.Title>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
-      </MapMenuDialog.Header>
+      </StyledHeader>
       <Formik initialValues={controlUnit} onSubmit={noop}>
         <StyledMapMenuDialogBody>
           <Button accent={Accent.PRIMARY} Icon={Icon.Plus} isFullWidth onClick={openNewMission}>
@@ -143,6 +155,14 @@ const Wrapper = styled(MapMenuDialog.Container)<{
   z-index: 2;
 `
 
+const StyledHeader = styled(MapMenuDialog.Header)`
+  height: 48px;
+  padding: 14px 11px;
+`
+
+const StyledIconButton = styled(IconButton)`
+  transform: rotate(90deg);
+`
 const StyledMapMenuDialogBody = styled(MapMenuDialog.Body)`
   background-color: ${p => p.theme.color.gainsboro};
 

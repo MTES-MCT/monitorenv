@@ -1,11 +1,12 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetStationsQuery } from '@api/stationsAPI'
-import { getFilters } from '@features/ControlUnit/utils'
+import { getFilteredControlUnits } from '@features/ControlUnit/useCases/getFilteredControlUnits'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   ControlUnit,
+  CustomSearch,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
   Icon,
@@ -35,21 +36,20 @@ export function ControlUnits({
   setExpandedAccordion
 }: ControlUnitsProps) {
   const dispatch = useAppDispatch()
-
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const filters = useAppSelector(state =>
     activeDashboardId ? state.dashboardFilters.dashboards[activeDashboardId]?.controlUnitFilters : undefined
   )
 
   const controlUnitResults = useMemo(() => {
-    if (!controlUnits) {
-      return undefined
+    if (!filters) {
+      return []
     }
 
-    const results = getFilters(controlUnits, filters ?? {}, 'DASHBOARD_CONTROL_UNIT_LIST')
+    const results = getFilteredControlUnits('DASHBOARD_CONTROL_UNIT_LIST', filters, controlUnits)
 
-    return results.reduce((previousControlUnits, filter) => filter(previousControlUnits), controlUnits)
-  }, [controlUnits, filters])
+    return results
+  }, [filters, controlUnits])
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: bases } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
@@ -85,6 +85,24 @@ export function ControlUnits({
     dispatch(dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'type', value: nextValue }))
   }
 
+  const administrationCustomSearch = new CustomSearch(administrationsAsOptions ?? [], ['label'], {
+    cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_ADMINISTRATIONS',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
+  const typeCustomSearch = new CustomSearch(typesAsOptions ?? [], ['label'], {
+    cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_TYPES',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
+  const baseCustomSearch = new CustomSearch(basesAsOptions ?? [], ['label'], {
+    cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_BASES',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
   const hasChildren = !!(controlUnitResults && controlUnitResults?.length > 5)
 
   return (
@@ -103,6 +121,7 @@ export function ControlUnits({
           />
           <SelectFilters $hasChildren={hasChildren} $isExpanded={isExpanded}>
             <StyledSelect
+              customSearch={administrationCustomSearch}
               isLabelHidden
               isTransparent
               label="Administration"
@@ -115,6 +134,7 @@ export function ControlUnits({
               value={filters?.administrationId}
             />
             <StyledSelect
+              customSearch={typeCustomSearch}
               isLabelHidden
               isTransparent
               label="Type de moyen"
@@ -126,6 +146,7 @@ export function ControlUnits({
               value={filters?.type}
             />
             <StyledSelect
+              customSearch={baseCustomSearch}
               isLabelHidden
               isTransparent
               label="Base du moyen"

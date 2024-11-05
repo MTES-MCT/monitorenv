@@ -1,4 +1,7 @@
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetStationsQuery } from '@api/stationsAPI'
+import { getFilteredControlUnits } from '@features/ControlUnit/useCases/getFilteredControlUnits'
 import { stationActions } from '@features/Station/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -34,6 +37,23 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const highlightedFeatureIds = useAppSelector(state => state.station.highlightedFeatureIds)
   const selectedFeatureId = useAppSelector(state => state.station.selectedFeatureId)
 
+  const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
+  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+
+  const filteredControlUnits = useMemo(() => {
+    if (!mapControlUnitListDialog.filtersState) {
+      return []
+    }
+
+    const results = getFilteredControlUnits(
+      'MAP_CONTROL_UNIT_FOR_STATION',
+      mapControlUnitListDialog.filtersState,
+      controlUnits
+    )
+
+    return results
+  }, [mapControlUnitListDialog.filtersState, controlUnits])
+
   // we don't want to display stations on the map if the user so decides (displayStationLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
   const hasMapInteraction = useHasMapInteraction()
@@ -45,8 +65,19 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const { data: stations } = useGetStationsQuery()
 
   const stationsAsFeatures = useMemo(
-    () => (stations ?? []).filter(station => station.controlUnitResourceIds.length > 0).map(getStationPointFeature),
-    [stations]
+    () =>
+      (stations ?? [])
+        .filter(station => {
+          if (filteredControlUnits.length === 0) {
+            return false
+          }
+
+          return station.controlUnitResourceIds.some(stationId =>
+            filteredControlUnits.some(controlUnit => controlUnit.controlUnitResourceIds.includes(stationId))
+          )
+        })
+        .map(getStationPointFeature),
+    [filteredControlUnits, stations]
   )
 
   // ---------------------------------------------------------------------------
