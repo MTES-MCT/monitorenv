@@ -68,7 +68,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.clickButton('Filtrer par type de zones')
     cy.fill('Période de vigilance', 'Cette année')
     cy.getDataCy('vigilance-area-results-list-button').click()
-    // cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 4')
