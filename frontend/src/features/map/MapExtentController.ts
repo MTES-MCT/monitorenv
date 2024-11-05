@@ -24,7 +24,7 @@ export function MapExtentController({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (zoomToCenter) {
-      map?.getView().animate({ center: zoomToCenter, zoom: 8 })
+      map?.getView().animate({ center: zoomToCenter, zoom: 12 })
     }
   }, [map, zoomToCenter])
 

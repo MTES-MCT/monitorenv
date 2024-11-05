@@ -72,7 +72,8 @@ export function getFilters(
     data,
     [
       { name: 'administration.name', weight: 0.1 },
-      { name: 'name', weight: 0.9 }
+      { name: 'name', weight: 0.9 },
+      { name: 'controlUnitResources.name', weight: 0.9 }
     ],
     {
       cacheKey,
