@@ -112,6 +112,7 @@ export function LayerFilters({
       {!isLinkingRegulatoryToVigilanceArea && (
         <SelectContainer>
           <StyledCheckPicker
+            key={String(ampTypes.length)}
             customSearch={AMPCustomSearch}
             isLabelHidden
             isTransparent

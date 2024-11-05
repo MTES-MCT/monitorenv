@@ -9,6 +9,7 @@ describe('Edit Vigilance Area', () => {
   it('Should successfully update a vigilance area', () => {
     cy.visit('/#@-192242.97,5819420.73,9.93')
     cy.wait(1000)
+    cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
     cy.wait(1000)
 
@@ -45,6 +46,7 @@ describe('Edit Vigilance Area', () => {
   it('Should successfully add regulatory area to a vigilance area and consult them', () => {
     cy.visit('/#@-668012.81,6169323.28,8.44')
     cy.wait(1000)
+    cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
     cy.wait(1000)
 
@@ -55,7 +57,6 @@ describe('Edit Vigilance Area', () => {
     cy.clickButton('Editer')
 
     cy.clickButton('Ajouter une réglementation en lien')
-    cy.clickButton('Arbre des couches')
     cy.getDataCy('my-amp-layers-zones').should('not.exist')
     cy.clickButton('Filtrer par type de zones')
     cy.fill('Thématique réglementaire', ['AMP', 'Dragage', 'Mixte'])
@@ -97,6 +98,7 @@ describe('Edit Vigilance Area', () => {
   it('Should successfully add AMP to a vigilance area and consult them', () => {
     cy.visit('/#@-181811.71,5844094.04,9.31')
     cy.wait(1000)
+    cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
     cy.wait(1000)
 
@@ -107,7 +109,6 @@ describe('Edit Vigilance Area', () => {
     cy.clickButton('Editer')
 
     cy.clickButton('Ajouter une AMP en lien')
-    cy.clickButton('Arbre des couches')
     cy.getDataCy('my-regulatory-layers').should('not.exist')
     cy.clickButton('Filtrer par type de zones')
     cy.fill("Type d'AMP", ['Natura 2000'])

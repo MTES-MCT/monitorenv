@@ -8,7 +8,6 @@ context('LayerTree > AMP Layers', () => {
     cy.clickButton('Arbre des couches').wait(1000)
   })
   it('An AMP Should be searched, added to My Zones and showed on the map with the Zone button', () => {
-    cy.clickButton('Filtrer par type de zones').wait(1000)
     cy.fill("Type d'AMP", ['Natura 2000'])
     cy.getDataCy('amp-results-list-button').click()
     cy.getDataCy('amp-result-list').find('li').first().click()
