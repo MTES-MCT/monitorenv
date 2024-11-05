@@ -17,6 +17,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
 
     cy.fill('Rechercher une zone', 'Lorem ipsum') // "Lorem ipsum" is in comments of vigilance area
+    cy.fill('Période de vigilance', 'Cette année')
     cy.getDataCy('vigilance-area-results-list-button').contains('1 résultat').click()
 
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 4').click()
@@ -44,10 +45,7 @@ context('LayerTree > Vigilance Area Layers', () => {
   })
 
   it('A vigilance area should be searched per period', () => {
-    cy.clickButton('Filtrer par type de zones')
-
     // Filter "Next three months"
-    cy.fill('Période de vigilance', 'Les trois prochains mois')
     cy.getDataCy('vigilance-area-results-list-button').click()
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
@@ -78,11 +76,11 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
   })
   it('Result list should be displayed by default but not checked and total should be visible', () => {
-    cy.getDataCy('vigilance-area-results-list-button').contains('9 résultats')
+    cy.getDataCy('vigilance-area-results-list-button').contains('5 résultats')
 
     cy.get('#isVigilanceAreaSearchResultsVisible').should('not.be.checked')
     cy.getDataCy('vigilance-area-results-list-button').click()
-    cy.getDataCy('vigilance-area-result-list').children().should('have.length', 9)
+    cy.getDataCy('vigilance-area-result-list').children().should('have.length', 5)
     cy.get('#isVigilanceAreaSearchResultsVisible').should('be.checked')
   })
 })
