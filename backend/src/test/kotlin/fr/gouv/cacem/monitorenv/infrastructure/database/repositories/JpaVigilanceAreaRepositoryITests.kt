@@ -2,11 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -203,5 +199,14 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(vigilanceAreas).hasSize(1)
         assertThat(vigilanceAreas[0]).isEqualTo(8)
+    }
+
+    @Test
+    fun `findAllTrigrams should return all vigilance areas trigrams`() {
+        // When
+        val trigrams = jpaVigilanceAreaRepository.findAllTrigrams()
+
+        // Then
+        assertThat(trigrams).hasSize(4)
     }
 }

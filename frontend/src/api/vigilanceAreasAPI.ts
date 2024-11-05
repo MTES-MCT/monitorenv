@@ -27,6 +27,9 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
         url: `/v1/vigilance_areas/${id}`
       })
     }),
+    getTrigrams: build.query<string[], void>({
+      query: () => '/v1/vigilance_areas/trigrams'
+    }),
     getVigilanceArea: build.query<VigilanceArea.VigilanceArea, number>({
       providesTags: (_, __, id) => [{ id, type: 'VigilanceAreas' }],
       query: id => `/v1/vigilance_areas/${id}`
@@ -65,6 +68,7 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
 
 export const {
   useCreateVigilanceAreaMutation,
+  useGetTrigramsQuery,
   useGetVigilanceAreaQuery,
   useGetVigilanceAreasQuery,
   useUpdateVigilanceAreaMutation
