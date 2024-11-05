@@ -1,4 +1,4 @@
-import { dashboardActions, getFilteredReportings, getReportingFilters } from '@features/Dashboard/slice'
+import { getFilteredReportings } from '@features/Dashboard/slice'
 import { StyledCustomPeriodContainer, StyledSelect } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -16,10 +16,14 @@ import { StatusFilterEnum, StatusFilterLabels } from 'domain/entities/reporting'
 import { forwardRef, type ComponentProps } from 'react'
 import styled from 'styled-components'
 
+import { dashboardFiltersActions, getReportingFilters } from '../slice'
+
 export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...props }, ref) => {
   const dispatch = useAppDispatch()
-  const reportingFilters = useAppSelector(state => getReportingFilters(state.dashboard))
-  const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard)) ?? []
+  const dashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+
+  const reportingFilters = useAppSelector(state => getReportingFilters(state.dashboardFilters, dashboardId))
+  const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard, reportingFilters)) ?? []
 
   const { newWindowContainerRef } = useNewWindow()
 
@@ -32,8 +36,9 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
 
   const setCustomPeriodFilter = (date: DateAsStringRange | undefined) => {
     dispatch(
-      dashboardActions.setReportingFilters({
-        period: date
+      dashboardFiltersActions.setReportingFilters({
+        filters: { period: date },
+        id: dashboardId
       })
     )
   }
@@ -41,8 +46,9 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
   const setPeriodFilter = (dateRange: OptionValueType | undefined) => {
     if (dateRange) {
       dispatch(
-        dashboardActions.setReportingFilters({
-          dateRange: dateRange as ReportingDateRangeEnum
+        dashboardFiltersActions.setReportingFilters({
+          filters: { dateRange: dateRange as ReportingDateRangeEnum },
+          id: dashboardId
         })
       )
     }
@@ -51,14 +57,16 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
   const setStatusFilter = (statusOption: Option<string>, isChecked: boolean | undefined) => {
     if (isChecked) {
       dispatch(
-        dashboardActions.setReportingFilters({
-          status: [...reportingFilters.status, statusOption.value as StatusFilterEnum]
+        dashboardFiltersActions.setReportingFilters({
+          filters: { status: [...reportingFilters.status, statusOption.value as StatusFilterEnum] },
+          id: dashboardId
         })
       )
     } else {
       dispatch(
-        dashboardActions.setReportingFilters({
-          status: reportingFilters.status.filter(status => status !== statusOption.value)
+        dashboardFiltersActions.setReportingFilters({
+          filters: { status: reportingFilters.status.filter(status => status !== statusOption.value) },
+          id: dashboardId
         })
       )
     }

@@ -1,7 +1,8 @@
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
-import { dashboardActions, type DashboardType } from '@features/Dashboard/slice'
+import { type DashboardType } from '@features/Dashboard/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CheckPicker,
   CustomSearch,
@@ -20,12 +21,17 @@ import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOption
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { dashboardFiltersActions } from '../../slice'
+
 type FiltersProps = {
   dashboard: DashboardType
 }
 export function DashboardFilters({ dashboard }: FiltersProps) {
   const dispatch = useAppDispatch()
-  const { extractedArea, filters } = dashboard
+  const { extractedArea } = dashboard
+  const { id } = dashboard.dashboard
+
+  const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
   const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(extractedArea?.regulatoryAreas ?? [])
   const regulatoryThemesCustomSearch = useMemo(
@@ -39,16 +45,16 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
   const setFilteredRegulatoryThemes = (value: string[] | undefined) => {
-    dispatch(dashboardActions.setDashboardFilters({ regulatoryThemes: value }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: value }, id }))
   }
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
-    dispatch(dashboardActions.setDashboardFilters({ amps: value }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
   }
 
   const setFilteredVigilancePeriod = (nextValue: OptionValueType | undefined) => {
     const value = nextValue as VigilanceArea.VigilanceAreaFilterPeriod | undefined
-    dispatch(dashboardActions.setDashboardFilters({ vigilanceAreaPeriod: value }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { vigilanceAreaPeriod: value }, id }))
   }
 
   const deleteRegulatoryTheme = (regulatoryThemeToDelete: string) => {
@@ -60,15 +66,15 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   }
 
   const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
-    dispatch(dashboardActions.setDashboardFilters({ specificPeriod: dateRange }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { specificPeriod: dateRange }, id }))
   }
 
   const resetFilters = () => {
-    dispatch(dashboardActions.resetDashboardFilters())
+    dispatch(dashboardFiltersActions.resetDashboardFilters({ id }))
   }
 
   const showSelectedItems = () => {
-    dispatch(dashboardActions.setDashboardFilters({ previewSelection: true }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { previewSelection: true }, id }))
   }
 
   const hasFilters = !!(

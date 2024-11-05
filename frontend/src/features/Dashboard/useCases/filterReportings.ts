@@ -2,7 +2,7 @@ import { customDayjs, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { getReportingStatus, ReportingStatusEnum, StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
 
-export function filter(
+export function filterReportings(
   reporting: Reporting,
   filters: { dateRange: ReportingDateRangeEnum; period?: DateAsStringRange; status: StatusFilterEnum[] }
 ) {

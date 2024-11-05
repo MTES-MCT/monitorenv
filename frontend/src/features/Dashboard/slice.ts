@@ -1,21 +1,17 @@
 import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { InteractionType } from 'domain/entities/map/constants'
-import { StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
-import { set } from 'lodash'
+import { type Reporting } from 'domain/entities/reporting'
 
 import { Dashboard } from './types'
-import { filter } from './useCases/filterReportings'
+import { filterReportings } from './useCases/filterReportings'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
   ampIdsToDisplay: [],
-  controlUnitFilters: {},
   dashboard: {
     ampIds: [],
     controlUnitIds: [],
@@ -28,11 +24,9 @@ export const initialDashboard: DashboardType = {
   },
   defaultName: '',
   extractedArea: undefined,
-  filters: {},
   isEditingTabName: false,
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
-  reportingFilters: { dateRange: ReportingDateRangeEnum.MONTH, status: [StatusFilterEnum.IN_PROGRESS] },
   reportingToDisplay: undefined
 }
 
@@ -42,38 +36,14 @@ type OpenPanel = {
   type: Dashboard.Block
 }
 
-type ReportingFilters = {
-  dateRange: ReportingDateRangeEnum
-  period?: DateAsStringRange
-  status: StatusFilterEnum[]
-}
-
-export type ControlUnitFilters = {
-  administrationId?: number
-  query?: string
-  stationId?: number
-  type?: string
-}
-
-type DashboardFilters = {
-  amps?: string[]
-  previewSelection?: boolean
-  regulatoryThemes?: string[]
-  specificPeriod?: DateAsStringRange | undefined
-  vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
-}
-
 export type DashboardType = {
   ampIdsToDisplay: number[]
-  controlUnitFilters: ControlUnitFilters
   dashboard: Dashboard.Dashboard
   defaultName: string | undefined
   extractedArea?: Dashboard.ExtractedArea
-  filters: DashboardFilters
   isEditingTabName: boolean
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
-  reportingFilters: ReportingFilters
   reportingToDisplay: Reporting | undefined
 }
 
@@ -288,15 +258,6 @@ export const dashboardSlice = createSlice({
         delete state.dashboards[action.payload]
       }
     },
-    resetDashboardFilters(state) {
-      const id = state.activeDashboardId
-
-      if (!id || !state.dashboards[id]) {
-        return
-      }
-
-      state.dashboards[id].filters = {}
-    },
     resetDashboards() {
       return INITIAL_STATE
     },
@@ -311,33 +272,6 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].dashboard.comments = action.payload
-    },
-    setControlUnitsFilters(
-      state,
-      action: PayloadAction<{
-        key: keyof ControlUnitFilters
-        value: any
-      }>
-    ) {
-      const id = state.activeDashboardId
-
-      if (!id || !state.dashboards[id]) {
-        return
-      }
-
-      state.dashboards[id].controlUnitFilters = set(
-        state.dashboards[id].controlUnitFilters,
-        action.payload.key,
-        action.payload.value
-      )
-    },
-    setDashboardFilters(state, action: PayloadAction<DashboardFilters>) {
-      const id = state.activeDashboardId
-
-      if (!id || !state.dashboards[id]) {
-        return
-      }
-      state.dashboards[id].filters = { ...state.dashboards[id].filters, ...action.payload }
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {
       const id = state.activeDashboardId
@@ -380,18 +314,6 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].dashboard.name = action.payload.name
-    },
-    setReportingFilters(state, action: PayloadAction<Partial<ReportingFilters>>) {
-      const id = state.activeDashboardId
-
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        const { reportingFilters } = state.dashboards[id]
-        state.dashboards[id].reportingFilters = { ...reportingFilters, ...action.payload }
-      }
     },
     setSelectedDashboardOnMap(state, action: PayloadAction<Dashboard.PopulatedDashboard | undefined>) {
       state.selectedDashboardOnMap = action.payload
@@ -456,31 +378,24 @@ export const getOpenedPanel = createSelector(
 )
 
 export const getFilteredReportings = createSelector(
-  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
-  (dashboards, activeDashboardId) => {
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (_, reportingFilters) => reportingFilters
+  ],
+  (dashboards, activeDashboardId, reportingFilters) => {
     if (!activeDashboardId) {
       return undefined
     }
 
     if (dashboards[activeDashboardId]) {
-      const filters = dashboards[activeDashboardId].reportingFilters
+      const filters = reportingFilters
       const reportings = dashboards[activeDashboardId].extractedArea?.reportings
 
-      return reportings?.filter(reporting => filter(reporting, filters))
+      return reportings?.filter(reporting => filterReportings(reporting, filters))
     }
 
     return undefined
-  }
-)
-
-export const getReportingFilters = createSelector(
-  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
-  (dashboards, activeDashboardId) => {
-    if (!activeDashboardId) {
-      return undefined
-    }
-
-    return dashboards?.[activeDashboardId]?.reportingFilters
   }
 )
 
@@ -496,14 +411,17 @@ export const getReportingToDisplay = createSelector(
 )
 
 export const getFilteredRegulatoryAreas = createSelector(
-  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
-  (dashboards, activeDashboardId) => {
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (_, regulatoryThemesFilter) => regulatoryThemesFilter
+  ],
+  (dashboards, activeDashboardId, regulatoryThemesFilter) => {
     if (!activeDashboardId) {
       return undefined
     }
 
     if (dashboards[activeDashboardId]) {
-      const regulatoryThemesFilter = dashboards[activeDashboardId].filters.regulatoryThemes
       const regulatoryAreas = dashboards[activeDashboardId].extractedArea?.regulatoryAreas
 
       if (!regulatoryThemesFilter || regulatoryThemesFilter.length === 0) {
@@ -522,21 +440,24 @@ export const getFilteredRegulatoryAreas = createSelector(
 )
 
 export const getFilteredAmps = createSelector(
-  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
-  (dashboards, activeDashboardId) => {
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (_, ampFilter) => ampFilter
+  ],
+  (dashboards, activeDashboardId, ampFilter) => {
     if (!activeDashboardId) {
       return undefined
     }
 
     if (dashboards[activeDashboardId]) {
-      const ampsFilter = dashboards[activeDashboardId].filters.amps
       const amps = dashboards[activeDashboardId].extractedArea?.amps
 
-      if (!ampsFilter || ampsFilter.length === 0) {
+      if (!ampFilter || ampFilter.length === 0) {
         return amps
       }
 
-      return amps?.filter(({ type }) => type && ampsFilter?.includes(type))
+      return amps?.filter(({ type }) => type && ampFilter?.includes(type))
     }
 
     return undefined
@@ -544,16 +465,20 @@ export const getFilteredAmps = createSelector(
 )
 
 export const getFilteredVigilanceAreas = createSelector(
-  [(state: DashboardState) => state.dashboards, (state: DashboardState) => state.activeDashboardId],
-  (dashboards, activeDashboardId) => {
+  [
+    (state: DashboardState) => state.dashboards,
+    (state: DashboardState) => state.activeDashboardId,
+    (_, filters) => filters
+  ],
+  (dashboards, activeDashboardId, filters) => {
     if (!activeDashboardId) {
       return undefined
     }
 
     if (dashboards[activeDashboardId]) {
-      const regulatoryThemesFilter = dashboards[activeDashboardId].filters.regulatoryThemes
-      const periodFilter = dashboards[activeDashboardId].filters.vigilanceAreaPeriod
-      const specificPeriodFilter = dashboards[activeDashboardId].filters.specificPeriod
+      const regulatoryThemesFilter = filters?.regulatoryThemes
+      const periodFilter = filters?.vigilanceAreaPeriod
+      const specificPeriodFilter = filters?.specificPeriod
       const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas
 
       let filteredVigilanceAreasByThemes = vigilanceAreas

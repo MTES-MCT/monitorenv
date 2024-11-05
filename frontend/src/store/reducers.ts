@@ -1,3 +1,4 @@
+import { dashboardFiltersPersistedReducer } from '@features/Dashboard/components/DashboardForm/slice'
 import { dashboardReducer } from '@features/Dashboard/slice'
 import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
 import { vigilanceAreaPersistedReducer } from '@features/VigilanceArea/slice'
@@ -44,6 +45,7 @@ export const homeReducers = {
   backOffice: backOfficeReducer,
   controlUnitTable: controlUnitTablePersistedReducer,
   dashboard: dashboardReducer,
+  dashboardFilters: dashboardFiltersPersistedReducer,
   draw: drawReducer,
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
