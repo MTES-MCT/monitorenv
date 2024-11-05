@@ -8,6 +8,7 @@ import { generatePath } from 'react-router'
 import { dashboardActions } from '../slice'
 import { populateExtractAreaFromApi } from '../utils'
 import { closeDrawDashboard } from './closeDrawDashboard'
+import { dashboardFiltersActions } from '../components/DashboardForm/slice'
 
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -34,7 +35,9 @@ export const createDashboard =
           reportingIds: [],
           vigilanceAreaIds: []
         }
+
         const extractedArea = await populateExtractAreaFromApi(dispatch, data)
+        dispatch(dashboardFiltersActions.createDashboardFilters({ id: newId }))
         dispatch(dashboardActions.createDashboard({ dashboard, defaultName: newDashboardName, extractedArea }))
         dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
       }

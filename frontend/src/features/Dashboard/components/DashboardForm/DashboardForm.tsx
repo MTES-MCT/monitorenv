@@ -14,6 +14,7 @@ import { ControlUnits } from './ControlUnits'
 import { Footer } from './Footer'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
+import { dashboardFiltersActions, getReportingFilters } from './slice'
 import { TerritorialPressure } from './TerritorialPressure'
 import { Toolbar } from './Toolbar'
 import { VigilanceAreas } from './VigilanceAreas'
@@ -33,12 +34,18 @@ type DashboardProps = {
 }
 export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: DashboardProps) {
   const dispatch = useAppDispatch()
-  const previewSelectionFilter = dashboard.filters.previewSelection ?? false
 
-  const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard))
-  const filteredRegulatoryAreas = useAppSelector(state => getFilteredRegulatoryAreas(state.dashboard))
-  const filteredVigilanceAreas = useAppSelector(state => getFilteredVigilanceAreas(state.dashboard))
-  const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard))
+  const filters = useAppSelector(state => state.dashboardFilters?.dashboards[key]?.filters)
+  const previewSelectionFilter = filters?.previewSelection ?? false
+
+  const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard, filters?.amps))
+  const filteredRegulatoryAreas = useAppSelector(state =>
+    getFilteredRegulatoryAreas(state.dashboard, filters?.regulatoryThemes)
+  )
+  const filteredVigilanceAreas = useAppSelector(state => getFilteredVigilanceAreas(state.dashboard, filters))
+
+  const reportingFilters = useAppSelector(state => getReportingFilters(state.dashboardFilters, key))
+  const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard, reportingFilters))
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
@@ -102,9 +109,9 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
       setExpandedAccordionFirstColumn(undefined)
       setExpandedAccordionSecondColumn(undefined)
       setExpandedAccordionThirdColumn(undefined)
-      dispatch(dashboardActions.setDashboardFilters({ previewSelection: false }))
+      dispatch(dashboardFiltersActions.setFilters({ filters: { previewSelection: false }, id: key }))
     }
-  }, [previewSelectionFilter, dispatch])
+  }, [previewSelectionFilter, dispatch, key])
 
   return (
     <>

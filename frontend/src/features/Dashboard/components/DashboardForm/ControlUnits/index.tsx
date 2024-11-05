@@ -2,7 +2,6 @@ import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetStationsQuery } from '@api/stationsAPI'
 import { getFilters } from '@features/ControlUnit/utils'
-import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -20,6 +19,7 @@ import styled from 'styled-components'
 import { Item } from './Item'
 import { SelectedControlUnits } from './SelectedControlUnits'
 import { Accordion } from '../Accordion'
+import { dashboardFiltersActions } from '../slice'
 
 type ControlUnitsProps = {
   controlUnits: ControlUnit.ControlUnit[]
@@ -38,7 +38,7 @@ export function ControlUnits({
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const filters = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.controlUnitFilters : {}
+    activeDashboardId ? state.dashboardFilters.dashboards[activeDashboardId]?.controlUnitFilters : undefined
   )
 
   const controlUnitResults = useMemo(() => {
@@ -62,19 +62,27 @@ export function ControlUnits({
   const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceTypeLabel), [])
 
   const updateQuery = (nextValue: string | undefined) => {
-    dispatch(dashboardActions.setControlUnitsFilters({ key: 'query', value: nextValue }))
+    dispatch(dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'query', value: nextValue }))
   }
 
   const updateAdministrationId = (nextValue: number | undefined) => {
-    dispatch(dashboardActions.setControlUnitsFilters({ key: 'administrationId', value: nextValue }))
+    dispatch(
+      dashboardFiltersActions.setControlUnitsFilters({
+        id: activeDashboardId,
+        key: 'administrationId',
+        value: nextValue
+      })
+    )
   }
 
   const updateBaseId = (nextValue: number | undefined) => {
-    dispatch(dashboardActions.setControlUnitsFilters({ key: 'stationId', value: nextValue }))
+    dispatch(
+      dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'stationId', value: nextValue })
+    )
   }
 
   const updateType = (nextValue: string | undefined) => {
-    dispatch(dashboardActions.setControlUnitsFilters({ key: 'type', value: nextValue }))
+    dispatch(dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'type', value: nextValue }))
   }
 
   const hasChildren = !!(controlUnitResults && controlUnitResults?.length > 5)

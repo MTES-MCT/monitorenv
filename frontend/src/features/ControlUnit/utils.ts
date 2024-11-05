@@ -11,7 +11,7 @@ import { isEmpty, uniq } from 'lodash/fp'
 import { isNotArchived } from '../../utils/isNotArchived'
 
 import type { FiltersState } from './components/ControlUnitListDialog/types'
-import type { ControlUnitFilters } from '@features/Dashboard/slice'
+import type { ControlUnitFilters } from '@features/Dashboard/components/DashboardForm/slice'
 import type { Extent } from 'ol/extent'
 
 export function addBufferToExtent(extent: Extent, bufferRatio: number) {

@@ -5,6 +5,7 @@ import { Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
+import { dashboardFiltersActions } from '../components/DashboardForm/slice'
 import { dashboardActions, initialDashboard } from '../slice'
 import { getPopulatedExtractedArea } from '../utils'
 
@@ -13,6 +14,8 @@ import type { HomeAppThunk } from '@store/index'
 export const editDashboard =
   (id): HomeAppThunk =>
   async (dispatch, getState) => {
+    const dashboardFilters = getState().dashboardFilters.dashboards[id]
+
     const openedDashboard = Object.entries(getState().dashboard.dashboards).find(
       ([key, dashboard]) => key === id || dashboard.dashboard.id === id
     )
@@ -20,6 +23,7 @@ export const editDashboard =
     if (openedDashboard) {
       dispatch(dashboardActions.setActiveDashboardId(openedDashboard[0]))
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: openedDashboard[0] })))
+      dispatch(dashboardFiltersActions.setDashboardFilters({ filters: dashboardFilters, id }))
 
       return
     }
@@ -39,6 +43,7 @@ export const editDashboard =
       const extractedArea = await getPopulatedExtractedArea(data, dispatch)
 
       const formattedDashboard = { ...initialDashboard, dashboard, extractedArea }
+      dispatch(dashboardFiltersActions.setDashboardFilters({ filters: dashboardFilters, id }))
       dispatch(dashboardActions.editDashboard(formattedDashboard))
       dispatch(dashboardActions.setActiveDashboardId(id))
       dispatch(dashboardActions.setSelectedDashboardOnMap(undefined))
