@@ -20,8 +20,8 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
   )
-
-  const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible
+  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
+  const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible && isLayersSidebarVisible
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 

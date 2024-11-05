@@ -28,9 +28,9 @@ export function FilterTags() {
   }
 
   const hasFilters =
-    createdBy.length > 0 ||
-    seaFronts.length > 0 ||
-    filteredRegulatoryThemes.length > 0 ||
+    createdBy?.length > 0 ||
+    seaFronts?.length > 0 ||
+    filteredRegulatoryThemes?.length > 0 ||
     filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
 
   if (!hasFilters) {
@@ -39,17 +39,17 @@ export function FilterTags() {
 
   return (
     <StyledContainer data-cy="vigilance-areas-filter-tags">
-      {createdBy.map(author => (
+      {createdBy?.map(author => (
         <SingleTag key={author} onDelete={() => onDeleteTag(author, 'createdBy', createdBy)}>
           {author}
         </SingleTag>
       ))}
-      {seaFronts.map(seaFront => (
+      {seaFronts?.map(seaFront => (
         <SingleTag key={seaFront} onDelete={() => onDeleteTag(seaFront, 'seaFronts', seaFronts)}>
           {String(`Façade ${seaFront}`)}
         </SingleTag>
       ))}
-      {filteredRegulatoryThemes.map(theme => (
+      {filteredRegulatoryThemes?.map(theme => (
         <SingleTag key={theme} onDelete={() => deleteRegulatoryTheme(theme)}>
           {theme}
         </SingleTag>

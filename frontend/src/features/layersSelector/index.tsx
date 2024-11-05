@@ -5,6 +5,7 @@ import {
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
@@ -51,6 +52,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
       dispatch(closeMetadataPanel())
     }
     dispatch(setDisplayedItems({ isLayersSidebarVisible: !isLayersSidebarVisible }))
+    dispatch(layerSidebarActions.toggleRegFilters(true))
   }
 
   return (
