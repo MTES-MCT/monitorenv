@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import org.hamcrest.Matchers.equalTo
@@ -46,6 +43,9 @@ class VigilanceAreasITests {
 
     @MockBean
     private lateinit var deleteVigilanceArea: DeleteVigilanceArea
+
+    @MockBean
+    private lateinit var getTrigrams: GetTrigrams
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -349,5 +349,19 @@ class VigilanceAreasITests {
         mockMvc.perform(delete("/bff/v1/vigilance_areas/$vigilanceAreaId"))
             // Then
             .andExpect(status().isNoContent())
+    }
+
+    @Test
+    fun `Should getTrigrams for vigilance areas`() {
+        // Given
+        val trigrams = listOf("ABC", "DEF", "GHI")
+        given(getTrigrams.execute()).willReturn(trigrams)
+        // When
+        mockMvc.perform(get("/bff/v1/vigilance_areas/trigrams"))
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0]", equalTo("ABC")))
+            .andExpect(jsonPath("$[1]", equalTo("DEF")))
+            .andExpect(jsonPath("$[2]", equalTo("GHI")))
     }
 }

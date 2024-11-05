@@ -1,3 +1,4 @@
+import { useGetTrigramsQuery } from '@api/vigilanceAreasAPI'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
@@ -19,14 +20,11 @@ import { vigilanceAreaFiltersActions } from './slice'
 import { PeriodFilter } from '../../PeriodFilter'
 import { SpecificPeriodFilter } from '../../SpecificPeriodFilter'
 
-const CREATED_BY_OPTIONS = [
-  { label: 'ABC', value: 'ABC' },
-  { label: 'DEF', value: 'DEF' },
-  { label: 'GHI', value: 'GHI' },
-  { label: 'JKL', value: 'JKL' }
-]
 export function VigilanceAreasFilters() {
   const dispatch = useAppDispatch()
+
+  const { data: trigrams } = useGetTrigramsQuery()
+  const trigramsAsOptions = trigrams?.map(trigram => ({ label: trigram, value: trigram })) ?? []
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
@@ -90,7 +88,7 @@ export function VigilanceAreasFilters() {
           label="Zone créée par..."
           name="createdBy"
           onChange={updateCreatedByFilter}
-          options={CREATED_BY_OPTIONS}
+          options={trigramsAsOptions}
           placeholder="Zone créée par..."
           renderValue={() => createdByFilter && <OptionValue>{`Créée par (${createdByFilter.length})`}</OptionValue>}
           searchable

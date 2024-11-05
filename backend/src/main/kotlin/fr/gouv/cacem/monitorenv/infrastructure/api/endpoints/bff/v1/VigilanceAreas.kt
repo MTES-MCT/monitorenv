@@ -1,9 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreasDataOutput
@@ -21,6 +18,7 @@ class VigilanceAreas(
     private val createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea,
     private val getVigilanceAreaById: GetVigilanceAreaById,
     private val deleteVigilanceArea: DeleteVigilanceArea,
+    private val getTrigrams: GetTrigrams,
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new vigilance area")
@@ -76,5 +74,11 @@ class VigilanceAreas(
         id: Int,
     ) {
         deleteVigilanceArea.execute(id = id)
+    }
+
+    @GetMapping("/trigrams")
+    @Operation(summary = "List vigilance areas trigrams")
+    fun getTrigrams(): List<String> {
+        return getTrigrams.execute()
     }
 }

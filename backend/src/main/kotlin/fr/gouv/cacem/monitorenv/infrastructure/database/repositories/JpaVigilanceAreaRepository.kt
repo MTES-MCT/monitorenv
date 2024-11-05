@@ -64,4 +64,9 @@ class JpaVigilanceAreaRepository(
     override fun archiveOutdatedVigilanceAreas(): Int {
         return dbVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
     }
+
+    @Transactional
+    override fun findAllTrigrams(): List<String> {
+        return dbVigilanceAreaRepository.findAllTrigrams()
+    }
 }

@@ -41,4 +41,13 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
+
+    @Query(
+        value =
+            """
+            SELECT DISTINCT vigilanceArea.createdBy FROM VigilanceAreaModel vigilanceArea
+            WHERE vigilanceArea.createdBy IS NOT NULL
+        """,
+    )
+    fun findAllTrigrams(): List<String>
 }
