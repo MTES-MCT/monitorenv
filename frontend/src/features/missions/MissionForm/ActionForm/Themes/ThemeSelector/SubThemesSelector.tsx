@@ -74,8 +74,8 @@ export function SubThemesSelector({
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
         <MultiSelect
-          // force update when options changes
-          key={String(subThemesByYearAsOptions)}
+          // force update when name or theme changes
+          key={`${actionIndex}-${themeId}-${subThemesByYearAsOptions.length}`}
           customSearch={customSearch}
           data-cy="envaction-subtheme-selector"
           error={currentSubThemesProps.error}
