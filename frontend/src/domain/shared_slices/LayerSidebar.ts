@@ -16,7 +16,7 @@ const initialState: LayerSidebarSliceState = {
   administrativeZonesIsOpen: false,
   areAmpsResultsOpen: false,
   areMyVigilanceAreasOpen: false,
-  areRegFiltersOpen: false,
+  areRegFiltersOpen: true,
   areRegulatoryResultsOpen: false,
   baselayerIsOpen: false,
   myAmpsIsOpen: false,
@@ -34,55 +34,65 @@ export const layerSidebarSlice = createSlice({
     toggleAdministrativeZones(state) {
       return {
         ...initialState,
-        administrativeZonesIsOpen: !state.administrativeZonesIsOpen
+        administrativeZonesIsOpen: !state.administrativeZonesIsOpen,
+        areRegFiltersOpen: false
       }
     },
     toggleAmpResults(state, action: PayloadAction<boolean | undefined>) {
       return {
         ...initialState,
-        areAmpsResultsOpen: action?.payload ?? !state.areAmpsResultsOpen
+        areAmpsResultsOpen: action?.payload ?? !state.areAmpsResultsOpen,
+        areRegFiltersOpen: false
       }
     },
     toggleBaseLayer(state) {
       return {
         ...initialState,
+        areRegFiltersOpen: false,
         baselayerIsOpen: !state.baselayerIsOpen
       }
     },
     toggleMyAmps(state) {
       return {
         ...initialState,
+        areRegFiltersOpen: false,
         myAmpsIsOpen: !state.myAmpsIsOpen
       }
     },
     toggleMyRegulatoryZones(state) {
       return {
         ...initialState,
+        areRegFiltersOpen: false,
         myRegulatoryZonesIsOpen: !state.myRegulatoryZonesIsOpen
       }
     },
     toggleMyVigilanceAreas(state) {
       return {
         ...initialState,
+        areRegFiltersOpen: false,
         myVigilanceAreasIsOpen: !state.myVigilanceAreasIsOpen
       }
     },
-    toggleRegFilters(state) {
+    toggleRegFilters(state, action: PayloadAction<boolean | undefined>) {
+      const isChecked = action?.payload ?? !state.areRegFiltersOpen
+
       return {
         ...initialState,
-        areRegFiltersOpen: !state.areRegFiltersOpen
+        areRegFiltersOpen: isChecked
       }
     },
     toggleRegulatoryResults(state, action: PayloadAction<boolean | undefined>) {
       return {
         ...initialState,
+        areRegFiltersOpen: false,
         areRegulatoryResultsOpen: action?.payload ?? !state.areRegulatoryResultsOpen
       }
     },
     toggleVigilanceAreaResults(state, action: PayloadAction<boolean | undefined>) {
       return {
         ...initialState,
-        areMyVigilanceAreasOpen: action?.payload ?? !state.areMyVigilanceAreasOpen
+        areMyVigilanceAreasOpen: action?.payload ?? !state.areMyVigilanceAreasOpen,
+        areRegFiltersOpen: false
       }
     }
   }

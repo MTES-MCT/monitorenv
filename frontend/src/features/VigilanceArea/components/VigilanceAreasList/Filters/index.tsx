@@ -39,12 +39,12 @@ export function VigilanceAreasFilters() {
   const seaFrontsAsOptions = Object.values(seaFrontLabels)
 
   const hasFilters =
-    seaFrontFilter.length > 0 ||
-    createdByFilter.length > 0 ||
+    seaFrontFilter?.length > 0 ||
+    createdByFilter?.length > 0 ||
     statusFilter.length !== 2 ||
     !!searchQueryFilter ||
     filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS ||
-    filteredRegulatoryThemes.length > 0
+    filteredRegulatoryThemes?.length > 0
 
   const updateSeaFrontFilter = selectedSeaFronts => {
     dispatch(vigilanceAreaFiltersActions.setSeaFronts(selectedSeaFronts))

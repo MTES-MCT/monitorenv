@@ -2,9 +2,9 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 export function isVigilanceAreaPartOfCreatedBy(
   vigilanceArea: VigilanceArea.VigilanceArea,
-  createdBy: string[]
+  createdBy: string[] | undefined
 ): boolean {
-  if (createdBy.length === 0) {
+  if (!createdBy || createdBy.length === 0) {
     return true
   }
 
