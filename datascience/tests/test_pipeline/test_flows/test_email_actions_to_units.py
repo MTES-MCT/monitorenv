@@ -170,16 +170,8 @@ def expected_env_actions() -> pd.DataFrame:
                 },
                 {"Aucun thème": ["Aucun sous-thème"]},
                 {"Aucun thème": ["Aucun sous-thème"]},
-                {
-                    "Activités et manifestations soumises à évaluation d’incidence Natura 2000": [
-                        "Aucun sous-thème"
-                    ]
-                },
-                {
-                    "Activités et manifestations soumises à évaluation d’incidence Natura 2000": [
-                        "Aucun sous-thème"
-                    ]
-                },
+                {"EIN2000": ["Aucun sous-thème"]},
+                {"EIN2000": ["Aucun sous-thème"]},
             ],
             "longitude": [None, -3.0193, -3.0193, None, None],
             "latitude": [None, 48.12065, 48.12065, None, None],
