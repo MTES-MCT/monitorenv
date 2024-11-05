@@ -510,7 +510,11 @@ export const getFilteredRegulatoryAreas = createSelector(
         return regulatoryAreas
       }
 
-      return regulatoryAreas?.filter(({ thematique }) => regulatoryThemesFilter?.includes(thematique))
+      return regulatoryAreas?.filter(({ thematique }) => {
+        const themes = thematique.split(',').map(theme => theme.trim())
+
+        return themes.some(theme => regulatoryThemesFilter?.includes(theme))
+      })
     }
 
     return undefined
