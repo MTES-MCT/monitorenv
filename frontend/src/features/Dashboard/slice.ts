@@ -264,14 +264,14 @@ export const dashboardSlice = createSlice({
     setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
       state.activeDashboardId = action.payload
     },
-    setComments(state, action: PayloadAction<string | undefined>) {
-      const id = state.activeDashboardId
+    setComments(state, action: PayloadAction<{ comments: string | undefined; key: string }>) {
+      const id = action.payload.key
 
       if (!id || !state.dashboards[id]) {
         return
       }
 
-      state.dashboards[id].dashboard.comments = action.payload
+      state.dashboards[id].dashboard.comments = action.payload.comments
     },
     setDashboardPanel(state, action: PayloadAction<OpenPanel | undefined>) {
       const id = state.activeDashboardId

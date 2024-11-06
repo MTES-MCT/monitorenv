@@ -170,6 +170,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
               />
               <Comments
                 comments={dashboard.dashboard.comments}
+                dashboardKey={key}
                 isExpanded={expandedAccordionThirdColumn === Dashboard.Block.COMMENTS}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}
               />
