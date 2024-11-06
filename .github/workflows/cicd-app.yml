@@ -326,7 +326,7 @@ jobs:
       - name: Generate and upload source maps to Sentry
         uses: getsentry/action-release@v1
         with:
-          environment: ${{ needs.version.outputs.ENV_PROFILE }}
+          environment: ${{ env.ENV_PROFILE }}
           version: ${{ env.VERSION }}
           sourcemaps: ./frontend_build
           ignore_missing: true
