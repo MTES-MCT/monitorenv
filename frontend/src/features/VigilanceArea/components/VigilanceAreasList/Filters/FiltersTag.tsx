@@ -1,5 +1,4 @@
 import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
-import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { SingleTag } from '@mtes-mct/monitor-ui'
@@ -11,7 +10,6 @@ export function FilterTags() {
   const dispatch = useAppDispatch()
   const { createdBy, seaFronts } = useAppSelector(state => state.vigilanceAreaFilters)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
-  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: string, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -27,11 +25,7 @@ export function FilterTags() {
     dispatch(setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete)))
   }
 
-  const hasFilters =
-    createdBy?.length > 0 ||
-    seaFronts?.length > 0 ||
-    filteredRegulatoryThemes?.length > 0 ||
-    filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
+  const hasFilters = createdBy?.length > 0 || seaFronts?.length > 0 || filteredRegulatoryThemes?.length > 0
 
   if (!hasFilters) {
     return null

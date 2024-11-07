@@ -8,5 +8,5 @@ export function isVigilanceAreaPartOfSeaFront(
     return true
   }
 
-  return !!seaFront.includes(vigilanceArea.seaFront ?? '')
+  return seaFront.includes(vigilanceArea.seaFront ?? '')
 }

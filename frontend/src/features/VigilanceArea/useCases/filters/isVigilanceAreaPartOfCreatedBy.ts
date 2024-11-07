@@ -8,5 +8,5 @@ export function isVigilanceAreaPartOfCreatedBy(
     return true
   }
 
-  return !!createdBy.includes(vigilanceArea.createdBy ?? '')
+  return createdBy.includes(vigilanceArea.createdBy ?? '')
 }

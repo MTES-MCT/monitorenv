@@ -8,12 +8,8 @@ export function isVigilanceAreaPartOfStatus(
     return true
   }
 
-  if (vigilanceArea.isDraft && status.includes(VigilanceArea.Status.DRAFT)) {
-    return true
-  }
-  if (!vigilanceArea.isDraft && status.includes(VigilanceArea.Status.PUBLISHED)) {
-    return true
-  }
-
-  return false
+  return (
+    (vigilanceArea.isDraft && status.includes(VigilanceArea.Status.DRAFT)) ||
+    (!vigilanceArea.isDraft && status.includes(VigilanceArea.Status.PUBLISHED))
+  )
 }
