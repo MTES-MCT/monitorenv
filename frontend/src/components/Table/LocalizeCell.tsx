@@ -1,11 +1,8 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { GeoJSON } from 'ol/format'
 import styled from 'styled-components'
-
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
 
 export function LocalizeCell({ geom }: { geom: any }) {
   const dispatch = useAppDispatch()
@@ -14,9 +11,7 @@ export function LocalizeCell({ geom }: { geom: any }) {
     return <StyledEmptyContainer>-</StyledEmptyContainer>
   }
   const handleZoomToMission = () => {
-    const feature = new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom) as Feature<Geometry>
+    const feature = getFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

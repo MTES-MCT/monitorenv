@@ -1,13 +1,11 @@
 import { Icon, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import { getCenter } from 'ol/extent'
-import { GeoJSON as GeoJSONOL } from 'ol/format'
 import { transform } from 'ol/proj'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
 
 type WeatherProps = {
   geom: GeoJSON.Geometry | undefined
@@ -18,9 +16,7 @@ export function Weather({ geom }: WeatherProps) {
     if (!geom) {
       return ''
     }
-    const feature = new GeoJSONOL({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom) as Feature<Geometry>
+    const feature = getFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
     const center = extent && getCenter(extent)

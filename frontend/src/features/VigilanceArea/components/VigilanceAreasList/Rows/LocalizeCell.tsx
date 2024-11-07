@@ -1,13 +1,11 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { GeoJSON as GeoJsonOpenLayer } from 'ol/format'
 import styled from 'styled-components'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
 
 export function LocalizeCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: number }) {
   const dispatch = useAppDispatch()
@@ -18,9 +16,7 @@ export function LocalizeCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: nu
 
   const handleZoomToVigilanceArea = () => {
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
-    const feature = new GeoJsonOpenLayer({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom) as Feature<Geometry>
+    const feature = getFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

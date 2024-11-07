@@ -2,18 +2,16 @@ import { useGetSemaphoresQuery } from '@api/semaphoresAPI'
 import { StyledMapMenuDialogContainer } from '@components/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, CustomSearch, Icon, MapMenuDialog, OPENLAYERS_PROJECTION, Search, Size } from '@mtes-mct/monitor-ui'
+import { Accent, CustomSearch, Icon, MapMenuDialog, Search, Size } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { addSemaphore, setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { reduce } from 'lodash'
-import { GeoJSON } from 'ol/format'
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import type { Semaphore } from 'domain/entities/semaphore'
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
 
 export function SearchSemaphores() {
   const dispatch = useAppDispatch()
@@ -71,9 +69,7 @@ export function SearchSemaphores() {
   }
 
   const zoomOnSemaphore = geom => {
-    const feature = new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom) as Feature<Geometry>
+    const feature = getFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

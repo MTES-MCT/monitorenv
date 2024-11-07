@@ -1,6 +1,6 @@
+import { getFeature } from '@utils/getFeature'
 import { getCenter } from 'ol/extent'
 import Feature from 'ol/Feature'
-import GeoJSON from 'ol/format/GeoJSON'
 import Circle from 'ol/geom/Circle'
 import LineString from 'ol/geom/LineString'
 import { circular, fromCircle } from 'ol/geom/Polygon'
@@ -114,10 +114,11 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
     if (measurementsDrawed && map) {
       GetVectorSource().clear(true)
       measurementsDrawed.forEach(measurement => {
-        const feature = new GeoJSON({
-          featureProjection: OPENLAYERS_PROJECTION
-        }).readFeature(measurement.feature) as Feature<Geometry>
+        const feature = getFeature(measurement)
 
+        if (!feature) {
+          return
+        }
         GetVectorSource().addFeature(feature)
       })
     }

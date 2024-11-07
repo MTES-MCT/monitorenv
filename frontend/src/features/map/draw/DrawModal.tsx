@@ -1,6 +1,6 @@
 import { type Coordinates, CoordinatesInput, IconButton, Icon, usePrevious } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import Feature from 'ol/Feature'
-import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
 import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -27,7 +27,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 
-import type { Geometry, MultiPoint, MultiPolygon } from 'ol/geom'
+import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
 const titlePlaceholder = {
   CONTROL_POINT: "Vous êtes en train d'ajouter un point de contrôle",
@@ -70,9 +70,7 @@ export function DrawModal() {
       return undefined
     }
 
-    return new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry) as Feature<Geometry>
+    return getFeature(geometry)
   }, [geometry])
 
   useEffect(() => {

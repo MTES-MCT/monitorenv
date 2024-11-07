@@ -3,18 +3,15 @@ import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { GeoJSON } from 'ol/format'
+import { getFeature } from '@utils/getFeature'
 import { createRef } from 'react'
 import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
 
 type RegulatoryLayerProps = {
   isPinned?: boolean
@@ -35,9 +32,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
     } else {
       dispatch(dashboardActions.addItems(payload))
 
-      const feature = new GeoJSON({
-        featureProjection: OPENLAYERS_PROJECTION
-      }).readFeature(vigilanceArea.geom) as Feature<Geometry>
+      const feature = getFeature(vigilanceArea.geom)
 
       const extent = feature?.getGeometry()?.getExtent()
       if (extent) {
@@ -53,9 +48,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
 
   const toggleZoneMetadata = () => {
     dispatch(dashboardActions.setDashboardPanel({ id: vigilanceArea.id, type: Dashboard.Block.VIGILANCE_AREAS }))
-    const feature = new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(vigilanceArea.geom) as Feature<Geometry>
+    const feature = getFeature(vigilanceArea.geom)
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

@@ -47,8 +47,8 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
           if (feature) {
             const metadataIsShowed = regulatorylayer.id === regulatoryMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+            feats.push(feature)
           }
-          feats.push(feature)
         }
 
         return feats

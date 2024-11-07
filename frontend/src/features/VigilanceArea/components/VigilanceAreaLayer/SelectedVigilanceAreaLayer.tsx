@@ -81,6 +81,9 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
           layer: regulatorylayer
         })
 
+        if (!feature) {
+          return feats
+        }
         feats.push(feature)
       }
 
@@ -127,7 +130,9 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
           code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
           layer: AMPlayer
         })
-
+        if (!feature) {
+          return feats
+        }
         feats.push(feature)
       }
 

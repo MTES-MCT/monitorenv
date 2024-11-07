@@ -4,28 +4,17 @@ import { StatusActionTag } from '@features/Reportings/components/StatusActionTag
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import {
-  Accent,
-  Icon,
-  IconButton,
-  OPENLAYERS_PROJECTION,
-  THEME,
-  useClickOutsideEffect,
-  useNewWindow
-} from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
+import { getFeature } from '@utils/getFeature'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import ArchivedFlag from 'features/Reportings/icons/archived_reporting.svg?react'
 import ArchivedInfractionFlag from 'features/Reportings/icons/archived_reporting_infraction.svg?react'
 import ArchivedObservationFlag from 'features/Reportings/icons/archived_reporting_observation.svg?react'
 import ArchivedWithMissionFlag from 'features/Reportings/icons/archived_reporting_with_mission_attached.svg?react'
-import { GeoJSON } from 'ol/format'
 import { useMemo, useRef } from 'react'
 import styled from 'styled-components'
-
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
 
 type ReportingLayerProps = {
   isPinned?: boolean
@@ -66,9 +55,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
     e.stopPropagation()
     dispatch(dashboardActions.setSelectedReporting(reporting))
 
-    const feature = new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(reporting.geom) as Feature<Geometry>
+    const feature = getFeature(reporting.geom)
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {
