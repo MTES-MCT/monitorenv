@@ -27,7 +27,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 
-import type { MultiPoint, MultiPolygon } from 'ol/geom'
+import type { Geometry, MultiPoint, MultiPolygon } from 'ol/geom'
 
 const titlePlaceholder = {
   CONTROL_POINT: "Vous êtes en train d'ajouter un point de contrôle",
@@ -72,7 +72,7 @@ export function DrawModal() {
 
     return new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry)
+    }).readFeature(geometry) as Feature<Geometry>
   }, [geometry])
 
   useEffect(() => {

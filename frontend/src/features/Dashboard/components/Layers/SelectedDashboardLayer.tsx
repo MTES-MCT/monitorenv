@@ -88,7 +88,10 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
         feats.push(reportingFeature)
       })
       selectedDashboardOnMap.amps.forEach(amp => {
-        const ampFeature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer: amp })
+        const ampFeature = getAMPFeature({
+          code: Dashboard.featuresCode.DASHBOARD_AMP,
+          layer: amp
+        }) as Feature<Geometry>
 
         ampFeature.setStyle(getAMPLayerStyle(ampFeature))
 
@@ -98,7 +101,7 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
         const regulatoryAreaFeature = getRegulatoryFeature({
           code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
           layer: regulatoryArea
-        })
+        }) as Feature<Geometry>
         regulatoryAreaFeature.setStyle(getRegulatoryLayerStyle(regulatoryAreaFeature))
 
         feats.push(regulatoryAreaFeature)

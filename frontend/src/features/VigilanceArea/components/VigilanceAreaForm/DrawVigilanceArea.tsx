@@ -12,7 +12,8 @@ import styled from 'styled-components'
 
 import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButton } from './style'
 
-import type { MultiPoint, MultiPolygon } from 'ol/geom'
+import type { Feature } from 'ol'
+import type { Geometry, MultiPoint, MultiPolygon } from 'ol/geom'
 
 export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
   const dispatch = useAppDispatch()
@@ -32,7 +33,7 @@ export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
 
     return new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry)
+    }).readFeature(geometry) as Feature<Geometry>
   }, [geometry])
 
   useEffect(() => {

@@ -12,7 +12,8 @@ import { dashboardActions } from '../slice'
 import { createDashboard } from '../useCases/createDashboard'
 import { resetDrawing } from '../useCases/resetDrawing'
 
-import type { MultiPoint, MultiPolygon } from 'ol/geom'
+import type { Feature } from 'ol'
+import type { Geometry, MultiPoint, MultiPolygon } from 'ol/geom'
 
 export function DrawDashboard({ className, onCancel }: { className?: string; onCancel: () => void }) {
   const dispatch = useAppDispatch()
@@ -30,7 +31,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
 
     return new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry)
+    }).readFeature(geometry) as Feature<Geometry>
   }, [geometry])
 
   useEffect(() => {

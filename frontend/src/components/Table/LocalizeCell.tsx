@@ -4,6 +4,9 @@ import { setFitToExtent } from 'domain/shared_slices/Map'
 import { GeoJSON } from 'ol/format'
 import styled from 'styled-components'
 
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
+
 export function LocalizeCell({ geom }: { geom: any }) {
   const dispatch = useAppDispatch()
 
@@ -13,7 +16,7 @@ export function LocalizeCell({ geom }: { geom: any }) {
   const handleZoomToMission = () => {
     const feature = new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom)
+    }).readFeature(geom) as Feature<Geometry>
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

@@ -73,7 +73,7 @@ export const convertToFeature = <P>(
   if (!serializedFeature) {
     return undefined
   }
-  const feature = parser.readFeature(serializedFeature)
+  const feature = parser.readFeature(serializedFeature) as Feature<Geometry>
 
   return feature
 }

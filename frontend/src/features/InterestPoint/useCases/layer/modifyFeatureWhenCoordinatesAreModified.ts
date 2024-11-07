@@ -4,16 +4,11 @@ import { GeoJSON } from 'ol/format'
 
 import { type InterestPointState, updateCurrentInterestPoint } from '../../slice'
 
-import type { Feature } from 'ol'
 import type { Coordinate } from 'ol/coordinate'
-import type { LineString } from 'ol/geom'
-import type VectorSource from 'ol/source/Vector'
-import type { MutableRefObject } from 'react'
 import type { Dispatch } from 'redux'
 
 export const modifyFeatureWhenCoordinatesAreModifiedAction =
-  (vectorSource: MutableRefObject<VectorSource<Feature<LineString>>>) =>
-  (dispatch: Dispatch, getState: () => { interestPoint: InterestPointState }) => {
+  vectorSource => (dispatch: Dispatch, getState: () => { interestPoint: InterestPointState }) => {
     const { currentInterestPoint }: InterestPointState = getState().interestPoint
     if (currentInterestPoint.coordinates?.length) {
       const drawingFeatureToUpdate = vectorSource.current.getFeatureById(currentInterestPoint.uuid)

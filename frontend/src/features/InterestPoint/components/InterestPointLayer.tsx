@@ -14,7 +14,7 @@ import { Draw } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
-import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { InterestPointOverlay } from './InterestPointOverlay'
 import { POIStyle, getInterestPointStyle, getLineStyle } from '../../map/layers/styles/interestPoint.style'
@@ -84,9 +84,8 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
   }, [dispatch])
 
-  const vectorSourceRef = useRef(new VectorSource({ wrapX: false })) as MutableRefObject<
-    VectorSource<Feature<LineString>>
-  >
+  // TODO(07/11/24): re-add typing
+  const vectorSourceRef = useRef(new VectorSource({ wrapX: false }))
   const vectorLayer = useRef(
     new VectorLayer({
       renderBuffer: 7,
@@ -94,7 +93,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       style: (feature, resolution) => (isFeatureIsALine(feature) ? getLineStyle() : getInterestPointStyle(resolution)),
       zIndex: Layers.INTEREST_POINT.zIndex
     })
-  ) as MutableRefObject<VectorLayer<VectorSource>>
+  )
 
   useEffect(() => {
     const layer = vectorLayer.current
@@ -114,7 +113,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
             if (interestPoint.feature) {
               const nextFeature = new GeoJSON({
                 featureProjection: OPENLAYERS_PROJECTION
-              }).readFeature(interestPoint.feature)
+              }).readFeature(interestPoint.feature) as Feature<LineString>
 
               const { feature, ...interestPointWithoutFeature } = interestPoint
               nextFeature.setProperties(interestPointWithoutFeature)
@@ -132,7 +131,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
         if (currentFeature) {
           const currentFeatureToDraw = new GeoJSON({
             featureProjection: OPENLAYERS_PROJECTION
-          }).readFeature(currentInterestPoint.feature)
+          }).readFeature(currentInterestPoint.feature) as Feature<LineString>
           currentFeatureToDraw.setProperties(currentInterestPointWithoutFeature)
 
           // FIXME Remove this cast.
@@ -239,7 +238,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
     const interestPointFeature = vectorSourceRef.current.getFeatureById(uuid)
 
     if (existingLabelLineFeature) {
-      const geometry = interestPointFeature?.getGeometry()
+      const geometry = interestPointFeature?.getGeometry() as LineString
       if (geometry) {
         existingLabelLineFeature.setGeometry(new LineString([nextCoordinates, geometry.getFlatCoordinates()]))
       }

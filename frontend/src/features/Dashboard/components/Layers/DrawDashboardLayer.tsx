@@ -34,7 +34,7 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
 
     return new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry)
+    }).readFeature(geometry) as Feature<Geometry>
   }, [geometry])
 
   const vectorSourceRef = useRef(

@@ -24,6 +24,9 @@ import { GeoJSON } from 'ol/format'
 import { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
+
 type ReportingLayerProps = {
   isPinned?: boolean
   isSelected?: boolean
@@ -65,7 +68,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
 
     const feature = new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(reporting.geom)
+    }).readFeature(reporting.geom) as Feature<Geometry>
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {
