@@ -116,7 +116,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       measurementsDrawed.forEach(measurement => {
         const feature = new GeoJSON({
           featureProjection: OPENLAYERS_PROJECTION
-        }).readFeature(measurement.feature)
+        }).readFeature(measurement.feature) as Feature<Geometry>
 
         GetVectorSource().addFeature(feature)
       })

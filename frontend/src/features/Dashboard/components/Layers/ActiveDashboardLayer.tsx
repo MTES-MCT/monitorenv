@@ -71,7 +71,10 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
             const layer = regulatoryLayers.entities[layerId]
 
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-              const feature = getRegulatoryFeature({ code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS, layer })
+              const feature = getRegulatoryFeature({
+                code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
+                layer
+              }) as Feature<Geometry>
               feature.setStyle(getRegulatoryLayerStyle(feature))
               feats.push(feature)
             }
@@ -95,7 +98,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
             const layer = ampLayers.entities[layerId]
 
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
+              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer }) as Feature<Geometry>
               feature.setStyle(getAMPLayerStyle(feature))
 
               feats.push(feature)
@@ -148,7 +151,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
       if (dashboard?.dashboard.geom) {
         const dashboardAreaFeature = new GeoJSON({
           featureProjection: OPENLAYERS_PROJECTION
-        }).readFeature(dashboard?.dashboard.geom)
+        }).readFeature(dashboard?.dashboard.geom) as Feature<Geometry>
         dashboardAreaFeature.setStyle([measurementStyle, measurementStyleWithCenter])
 
         layersVectorSourceRef.current.addFeature(dashboardAreaFeature)

@@ -6,6 +6,8 @@ import { GeoJSON as GeoJsonOpenLayer } from 'ol/format'
 import styled from 'styled-components'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 export function LocalizeCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: number }) {
   const dispatch = useAppDispatch()
@@ -18,7 +20,7 @@ export function LocalizeCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: nu
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
     const feature = new GeoJsonOpenLayer({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom)
+    }).readFeature(geom) as Feature<Geometry>
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

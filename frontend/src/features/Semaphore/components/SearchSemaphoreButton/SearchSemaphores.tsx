@@ -12,6 +12,8 @@ import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import type { Semaphore } from 'domain/entities/semaphore'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 export function SearchSemaphores() {
   const dispatch = useAppDispatch()
@@ -71,7 +73,7 @@ export function SearchSemaphores() {
   const zoomOnSemaphore = geom => {
     const feature = new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom)
+    }).readFeature(geom) as Feature<Geometry>
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

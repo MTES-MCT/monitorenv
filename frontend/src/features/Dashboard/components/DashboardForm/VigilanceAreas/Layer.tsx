@@ -13,6 +13,8 @@ import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 type RegulatoryLayerProps = {
   isPinned?: boolean
@@ -35,7 +37,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
 
       const feature = new GeoJSON({
         featureProjection: OPENLAYERS_PROJECTION
-      }).readFeature(vigilanceArea.geom)
+      }).readFeature(vigilanceArea.geom) as Feature<Geometry>
 
       const extent = feature?.getGeometry()?.getExtent()
       if (extent) {
@@ -53,7 +55,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Regulator
     dispatch(dashboardActions.setDashboardPanel({ id: vigilanceArea.id, type: Dashboard.Block.VIGILANCE_AREAS }))
     const feature = new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(vigilanceArea.geom)
+    }).readFeature(vigilanceArea.geom) as Feature<Geometry>
 
     const extent = feature?.getGeometry()?.getExtent()
     if (extent) {

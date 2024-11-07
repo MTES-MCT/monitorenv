@@ -6,6 +6,8 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
 
 type WeatherProps = {
   geom: GeoJSON.Geometry | undefined
@@ -18,7 +20,7 @@ export function Weather({ geom }: WeatherProps) {
     }
     const feature = new GeoJSONOL({
       featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geom)
+    }).readFeature(geom) as Feature<Geometry>
 
     const extent = feature?.getGeometry()?.getExtent()
     const center = extent && getCenter(extent)
