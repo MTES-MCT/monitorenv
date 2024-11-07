@@ -12,11 +12,11 @@ export function SearchInput({
   setGlobalSearchText,
   toggleRegFilters
 }) {
-  const defaulVigilanceAreaPeriod =
+  const defaultVigilanceAreaPeriod =
     filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
 
   const numberOfFilters =
-    (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0) + (!defaulVigilanceAreaPeriod ? 1 : 0)
+    (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0) + (!defaultVigilanceAreaPeriod ? 1 : 0)
 
   return (
     <SearchHeader>
