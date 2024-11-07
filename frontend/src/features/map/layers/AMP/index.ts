@@ -48,8 +48,8 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
           if (feature) {
             const metadataIsShowed = ampLayer.id === showedAmpMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+            feats.push(feature)
           }
-          feats.push(feature)
         }
 
         return feats

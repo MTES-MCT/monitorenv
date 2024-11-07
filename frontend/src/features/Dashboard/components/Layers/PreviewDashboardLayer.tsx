@@ -75,7 +75,11 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
               const feature = getRegulatoryFeature({
                 code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
                 layer
-              }) as Feature<Geometry>
+              })
+              if (!feature) {
+                return feats
+              }
+
               drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
               feature.setStyle(getRegulatoryLayerStyle(feature))
               feats.push(feature)
@@ -97,7 +101,10 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
           const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
             const layer = ampLayers.entities[layerId]
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer }) as Feature<Geometry>
+              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
+              if (!feature) {
+                return feats
+              }
               drawBorder(layerId, feature, Dashboard.Block.AMP)
               feature.setStyle(getAMPLayerStyle(feature))
               feats.push(feature)

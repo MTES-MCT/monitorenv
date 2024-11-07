@@ -1,6 +1,7 @@
 import { dottedLayerStyle } from '@features/map/layers/styles/dottedLayer.style'
 import { editStyle } from '@features/map/layers/styles/draw.style'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
 import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
@@ -19,9 +20,7 @@ export function useDrawVectorLayer(geometry: any, layerName: string) {
       return undefined
     }
 
-    return new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry) as Feature<Geometry>
+    return getFeature(geometry)
   }, [geometry])
 
   // Create the vector sources and layer references

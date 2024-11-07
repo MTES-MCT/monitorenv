@@ -3,17 +3,12 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, FieldError, Icon, IconButton, OPENLAYERS_PROJECTION, THEME } from '@mtes-mct/monitor-ui'
-import { InteractionType, OLGeometryType } from 'domain/entities/map/constants'
+import { Accent, Button, FieldError, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { InteractionType } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
-import { GeoJSON } from 'ol/format'
-import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButton } from './style'
-
-import type { Feature } from 'ol'
-import type { Geometry, MultiPoint, MultiPolygon } from 'ol/geom'
 
 export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
   const dispatch = useAppDispatch()
@@ -23,42 +18,6 @@ export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
   const initialGeometry = useAppSelector(state => state.vigilanceArea.initialGeometry)
 
   const { setFieldValue } = useFormikContext<VigilanceArea.VigilanceArea>()
-
-  const initialFeatureNumberRef = useRef<number | undefined>(undefined)
-
-  const feature = useMemo(() => {
-    if (!geometry) {
-      return undefined
-    }
-
-    return new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry) as Feature<Geometry>
-  }, [geometry])
-
-  useEffect(() => {
-    if (initialFeatureNumberRef.current !== undefined) {
-      return
-    }
-
-    if (!feature) {
-      initialFeatureNumberRef.current = 0
-
-      return
-    }
-    const geomType = feature.getGeometry()?.getType()
-    switch (geomType) {
-      case OLGeometryType.MULTIPOLYGON:
-        initialFeatureNumberRef.current = (feature.getGeometry() as MultiPolygon).getPolygons().length
-        break
-      case OLGeometryType.MULTIPOINT:
-        initialFeatureNumberRef.current = (feature.getGeometry() as MultiPoint).getPoints().length
-        break
-      default:
-        initialFeatureNumberRef.current = 0
-        break
-    }
-  }, [feature])
 
   const handleSelectInteraction = (nextInteraction: InteractionType) => () => {
     dispatch(vigilanceAreaActions.setInteractionType(nextInteraction))

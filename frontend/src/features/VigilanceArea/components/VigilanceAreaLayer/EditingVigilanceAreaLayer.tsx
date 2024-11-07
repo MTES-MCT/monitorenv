@@ -74,6 +74,9 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
           code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
           layer: regulatorylayer
         })
+        if (!feature) {
+          return feats
+        }
 
         feats.push(feature)
       }
@@ -110,6 +113,9 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
             code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
             layer: ampLayer
           })
+          if (!feature) {
+            return feats
+          }
 
           feats.push(feature)
         }

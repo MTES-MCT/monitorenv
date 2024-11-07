@@ -13,10 +13,9 @@ import { editingReportingStyleFn } from '@features/Reportings/components/Reporti
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
-import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef } from 'react'
@@ -74,7 +73,10 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
               const feature = getRegulatoryFeature({
                 code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
                 layer
-              }) as Feature<Geometry>
+              })
+              if (!feature) {
+                return feats
+              }
               feature.setStyle(getRegulatoryLayerStyle(feature))
               feats.push(feature)
             }
@@ -98,8 +100,12 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
             const layer = ampLayers.entities[layerId]
 
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer }) as Feature<Geometry>
-              feature.setStyle(getAMPLayerStyle(feature))
+              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
+              feature?.setStyle(getAMPLayerStyle(feature))
+
+              if (!feature) {
+                return feats
+              }
 
               feats.push(feature)
             }
@@ -149,10 +155,11 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
       }
 
       if (dashboard?.dashboard.geom) {
-        const dashboardAreaFeature = new GeoJSON({
-          featureProjection: OPENLAYERS_PROJECTION
-        }).readFeature(dashboard?.dashboard.geom) as Feature<Geometry>
-        dashboardAreaFeature.setStyle([measurementStyle, measurementStyleWithCenter])
+        const dashboardAreaFeature = getFeature(dashboard.dashboard.geom)
+        if (!dashboardAreaFeature) {
+          return
+        }
+        dashboardAreaFeature?.setStyle([measurementStyle, measurementStyleWithCenter])
 
         layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
       }

@@ -58,9 +58,8 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
           if (feature) {
             const metadataIsShowed = layer.id === ampMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+            amplayers.push(feature)
           }
-
-          amplayers.push(feature)
         }
 
         return amplayers

@@ -54,8 +54,8 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
           if (feature) {
             const metadataIsShowed = layer.id === regulatoryMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+            regulatorylayers.push(feature)
           }
-          regulatorylayers.push(feature)
         }
 
         return regulatorylayers

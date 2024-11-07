@@ -91,20 +91,28 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
         const ampFeature = getAMPFeature({
           code: Dashboard.featuresCode.DASHBOARD_AMP,
           layer: amp
-        }) as Feature<Geometry>
+        })
+
+        if (!ampFeature) {
+          return feats
+        }
 
         ampFeature.setStyle(getAMPLayerStyle(ampFeature))
 
-        feats.push(ampFeature)
+        return feats.push(ampFeature)
       })
       selectedDashboardOnMap.regulatoryAreas.forEach(regulatoryArea => {
         const regulatoryAreaFeature = getRegulatoryFeature({
           code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
           layer: regulatoryArea
-        }) as Feature<Geometry>
+        })
+        if (!regulatoryAreaFeature) {
+          return feats
+        }
+
         regulatoryAreaFeature.setStyle(getRegulatoryLayerStyle(regulatoryAreaFeature))
 
-        feats.push(regulatoryAreaFeature)
+        return feats.push(regulatoryAreaFeature)
       })
       selectedDashboardOnMap.vigilanceAreas.forEach(vigilanceArea => {
         const vigilanceAreaFeature = getVigilanceAreaZoneFeature(
