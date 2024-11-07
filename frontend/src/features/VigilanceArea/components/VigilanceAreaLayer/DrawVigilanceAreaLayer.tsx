@@ -1,24 +1,17 @@
-import { dottedLayerStyle } from '@features/map/layers/styles/dottedLayer.style'
-import { drawStyle, editStyle } from '@features/map/layers/styles/draw.style'
+import { drawStyle } from '@features/map/layers/styles/draw.style'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { addFeatureToDrawedFeature } from '@features/VigilanceArea/useCases/addFeatureToDrawedFeature'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useDrawVectorLayer } from '@hooks/useDrawVectorLayer'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
-import { Layers } from 'domain/entities/layers/constants'
-import { InteractionType, OLGeometryType, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from 'domain/entities/map/constants'
+import { InteractionType, OLGeometryType } from 'domain/entities/map/constants'
 import { isEmpty } from 'lodash'
-import GeoJSON from 'ol/format/GeoJSON'
 import { Modify } from 'ol/interaction'
 import Draw, { createBox, createRegularPolygon, type GeometryFunction } from 'ol/interaction/Draw'
-import VectorLayer from 'ol/layer/Vector'
-import VectorSource from 'ol/source/Vector'
-import React, { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
-import type Feature from 'ol/Feature'
-import type { Geometry } from 'ol/geom'
 
 function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -27,37 +20,10 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const formTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const isDrawFormOpen = formTypeOpen === VigilanceAreaFormTypeOpen.DRAW
 
-  const feature = useMemo(() => {
-    if (!geometry) {
-      return undefined
-    }
-
-    return new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry) as Feature<Geometry>
-  }, [geometry])
-
-  const vectorSourceRef = useRef(
-    new VectorSource({
-      format: new GeoJSON({
-        dataProjection: WSG84_PROJECTION,
-        featureProjection: OPENLAYERS_PROJECTION
-      })
-    })
-  ) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
-
-  const drawVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
-
-  const vectorLayerRef = useRef(
-    new VectorLayer({
-      renderBuffer: 7,
-      source: vectorSourceRef.current,
-      style: [dottedLayerStyle, editStyle],
-      zIndex: Layers.DRAW_VIGILANCE_AREA.zIndex
-    })
-  ) as React.MutableRefObject<VectorLayerWithName>
-
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.DRAW_VIGILANCE_AREA.code
+  const { drawVectorSourceRef, feature, vectorLayerRef, vectorSourceRef } = useDrawVectorLayer(
+    geometry,
+    'DRAW_VIGILANCE_AREA'
+  )
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
@@ -68,7 +34,7 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
         map.removeLayer(vectorLayerRef.current)
       }
     }
-  }, [map])
+  }, [map, vectorLayerRef])
 
   const setGeometryOnModifyEnd = useCallback(
     event => {
@@ -103,7 +69,7 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
         modify.un('modifyend', setGeometryOnModifyEnd)
       }
     }
-  }, [map, feature, isDrawFormOpen, setGeometryOnModifyEnd])
+  }, [map, feature, isDrawFormOpen, setGeometryOnModifyEnd, vectorSourceRef, drawVectorSourceRef])
 
   useEffect(() => {
     if (!map || !isDrawFormOpen) {
@@ -138,7 +104,7 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
         drawVectorSourceRef.current.clear(true)
       }
     }
-  }, [map, dispatch, isDrawFormOpen, interactionType])
+  }, [map, dispatch, isDrawFormOpen, interactionType, drawVectorSourceRef, vectorSourceRef])
 
   return null
 }

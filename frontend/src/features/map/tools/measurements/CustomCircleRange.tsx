@@ -215,6 +215,5 @@ const Header = styled.div`
 `
 
 const Wrapper = styled(MapToolBox)`
-  top: 0;
   width: 306px;
 `

@@ -1,28 +1,17 @@
+import { useDrawVectorLayer } from '@hooks/useDrawVectorLayer'
 import { isEmpty } from 'lodash'
-import GeoJSON from 'ol/format/GeoJSON'
 import { Modify } from 'ol/interaction'
 import Draw, { createBox, createRegularPolygon, type GeometryFunction } from 'ol/interaction/Draw'
-import VectorLayer from 'ol/layer/Vector'
-import VectorSource from 'ol/source/Vector'
-import React, { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
-import { dottedLayerStyle } from './styles/dottedLayer.style'
-import { drawStyle, editStyle } from './styles/draw.style'
-import { Layers } from '../../../domain/entities/layers/constants'
-import {
-  InteractionType,
-  OLGeometryType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from '../../../domain/entities/map/constants'
+import { drawStyle } from './styles/draw.style'
+import { InteractionType, OLGeometryType } from '../../../domain/entities/map/constants'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { setGeometry } from '../../../domain/use_cases/draw/setGeometry'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-import type { VectorLayerWithName } from '../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../BaseMap'
-import type Feature from 'ol/Feature'
 import type Geometry from 'ol/geom/Geometry'
 
 function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
@@ -31,67 +20,20 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
   const interactionType = useAppSelector(state => state.draw.interactionType)
   const listener = useAppSelector(state => state.draw.listener)
 
-  const feature = useMemo(() => {
-    if (!geometry) {
-      return undefined
-    }
-
-    return new GeoJSON({
-      featureProjection: OPENLAYERS_PROJECTION
-    }).readFeature(geometry) as Feature<Geometry>
-  }, [geometry])
-
-  const vectorSourceRef = useRef() as MutableRefObject<VectorSource<Feature<Geometry>>>
-  const getVectorSource = useCallback((): VectorSource<Feature<Geometry>> => {
-    if (vectorSourceRef.current === undefined) {
-      vectorSourceRef.current = new VectorSource({
-        format: new GeoJSON({
-          dataProjection: WSG84_PROJECTION,
-          featureProjection: OPENLAYERS_PROJECTION
-        })
-      })
-    }
-
-    return vectorSourceRef.current
-  }, [])
-
-  const drawVectorSourceRef = useRef() as MutableRefObject<VectorSource<Feature<Geometry>>>
-
-  const getDrawVectorSource = useCallback((): VectorSource<Feature<Geometry>> => {
-    if (drawVectorSourceRef.current === undefined) {
-      drawVectorSourceRef.current = new VectorSource()
-    }
-
-    return drawVectorSourceRef.current
-  }, [])
-
-  const vectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+  const { drawVectorSourceRef, feature, vectorLayerRef, vectorSourceRef } = useDrawVectorLayer(geometry, 'DRAW')
 
   useEffect(() => {
-    function getVectorLayer() {
-      if (vectorLayerRef.current === undefined) {
-        vectorLayerRef.current = new VectorLayer({
-          renderBuffer: 7,
-          source: getVectorSource(),
-          style: [dottedLayerStyle, editStyle],
-          zIndex: Layers.DRAW.zIndex
-        })
-        vectorLayerRef.current.name = Layers.DRAW.code
-      }
-
-      return vectorLayerRef.current
-    }
-
     if (map) {
-      map.getLayers().push(getVectorLayer())
+      map.getLayers().push(vectorLayerRef.current)
     }
 
     return () => {
       if (map) {
-        map.removeLayer(getVectorLayer())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        map.removeLayer(vectorLayerRef.current)
       }
     }
-  }, [map, getVectorSource])
+  }, [map, vectorLayerRef])
 
   const setGeometryOnModifyEnd = useCallback(
     event => {
@@ -109,11 +51,11 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
     }
 
     resetModifyInteractions(map)
-    getVectorSource().clear(true)
-    getDrawVectorSource().clear(true)
-    getVectorSource().addFeature(feature)
+    vectorSourceRef.current.clear(true)
+    drawVectorSourceRef.current.clear(true)
+    vectorSourceRef.current.addFeature(feature)
     const modify = new Modify({
-      source: getVectorSource()
+      source: vectorSourceRef.current
     })
     map?.addInteraction(modify)
 
@@ -125,7 +67,7 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
         modify.un('modifyend', setGeometryOnModifyEnd)
       }
     }
-  }, [getVectorSource, getDrawVectorSource, map, feature, interactionType, setGeometryOnModifyEnd])
+  }, [map, feature, interactionType, setGeometryOnModifyEnd, vectorSourceRef, drawVectorSourceRef])
 
   useEffect(() => {
     if (!map || !interactionType) {
@@ -137,7 +79,7 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
 
     const draw = new Draw({
       geometryFunction,
-      source: getDrawVectorSource(),
+      source: drawVectorSourceRef.current,
       stopClick: true,
       style: drawStyle,
       type: geometryType
@@ -148,17 +90,19 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
     draw.on('drawend', event => {
       dispatch(addFeatureToDrawedFeature(event.feature))
       event.stopPropagation()
-      getDrawVectorSource().clear(true)
+      drawVectorSourceRef.current.clear(true)
     })
 
     return () => {
       if (map) {
         map.removeInteraction(draw)
-        getVectorSource().clear(true)
-        getDrawVectorSource().clear(true)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        vectorSourceRef.current.clear(true)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        drawVectorSourceRef.current.clear(true)
       }
     }
-  }, [map, dispatch, getDrawVectorSource, listener, getVectorSource, interactionType])
+  }, [map, dispatch, listener, interactionType, drawVectorSourceRef, vectorSourceRef])
 
   return null
 }
