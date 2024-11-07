@@ -57,10 +57,10 @@ export const missionStyleFn = feature => {
   }
 }
 
-export const selectedMissionControlStyle = [
+export const selectedMissionControlStyle = (feature, missionGeom) => [
   // Close icon for controls
   new Style({
-    geometry: feature => {
+    geometry: () => {
       const extent = feature.getGeometry()?.getExtent()
       if (!extent) {
         throw new Error('`extent` is undefined.')
@@ -78,7 +78,7 @@ export const selectedMissionControlStyle = [
   }),
   // Control icon with infraction
   new Style({
-    geometry: feature => {
+    geometry: () => {
       const controlHasInfraction = feature.get('infractions').length > 0
       if (!controlHasInfraction) {
         return undefined
@@ -102,7 +102,7 @@ export const selectedMissionControlStyle = [
   }),
   // Control icon without infraction
   new Style({
-    geometry: feature => {
+    geometry: () => {
       const controlHasInfraction = feature.get('infractions') && feature.get('infractions').length > 0
       if (controlHasInfraction) {
         return undefined
@@ -128,12 +128,7 @@ export const selectedMissionControlStyle = [
     fill: new Fill({
       color: 'rgba(86, 151, 210, .2)' // Blue Gray
     }),
-    geometry: feature => {
-      // if mission zone is computed we want to display a "control zone"
-      if (feature.get('isGeometryComputedFromControls')) {
-        return feature.getGeometry()
-      }
-
+    geometry: () => {
       const extent = feature.getGeometry()?.getExtent()
       if (!extent) {
         throw new Error('`extent` is undefined.')
@@ -148,6 +143,27 @@ export const selectedMissionControlStyle = [
       lineCap: 'square',
       lineDash: [2, 8],
       width: 4
+    })
+  }),
+  new Style({
+    geometry: () => {
+      const extent = feature.getGeometry()?.getExtent()
+      const controlCenter = extent && getCenter(extent)
+
+      const geoJSON = new GeoJSON()
+      const formattedMissionGeometry = geoJSON.readGeometry(missionGeom, {
+        dataProjection: WSG84_PROJECTION,
+        featureProjection: OPENLAYERS_PROJECTION
+      })
+
+      const missionExtent = formattedMissionGeometry?.getExtent()
+      const missionCenter = missionExtent && getCenter(missionExtent)
+
+      return new LineString([missionCenter, controlCenter])
+    },
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      width: 1
     })
   })
 ]
