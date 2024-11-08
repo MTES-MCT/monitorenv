@@ -1,6 +1,6 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 
-export function FrequencyCell({ frequency }: { frequency: string | undefined }) {
+export function FrequencyCell({ frequency }: { frequency: VigilanceArea.Frequency | undefined }) {
   if (!frequency) {
     return <span>-</span>
   }
