@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import { MissionsTable } from './MissionsTable'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { MissionFilterContext, MissionFilters } from '../components/Filters'
+import { useGetFilteredMissionsQuery } from '../hooks/useGetFilteredMissionsQuery'
 
 export function Missions() {
   const dispatch = useAppDispatch()

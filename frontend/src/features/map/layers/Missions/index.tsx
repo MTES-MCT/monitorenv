@@ -1,3 +1,4 @@
+import { useGetFilteredMissionsQuery } from '@features/missions/hooks/useGetFilteredMissionsQuery'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
@@ -9,7 +10,6 @@ import { missionStyleFn } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 import { missionActions } from '../../../missions/slice'
 

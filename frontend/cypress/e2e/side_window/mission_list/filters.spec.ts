@@ -30,6 +30,15 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
   })
 
+  it('Should filter missions for the current year', () => {
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}`).as('getMissionsForCurrentYear')
+    cy.fill('Période', 'Année en cours')
+    cy.wait('@getMissionsForCurrentYear')
+
+    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+  })
+
   it('Should filter missions by completion status', () => {
     cy.fill('Etat des données', ['Complétées'])
 

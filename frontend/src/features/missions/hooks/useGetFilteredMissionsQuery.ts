@@ -1,15 +1,15 @@
+import { useGetMissionsQuery } from '@api/missionsAPI'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
+import { isMissionPartOfSelectedAdministrationNames } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedAdministrationNames'
 import { isMissionPartOfSelectedCompletionStatus } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedCompletionStatus'
+import { isMissionPartOfSelectedControlPlans } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedControlPlans'
+import { isMissionPartOfSelectedControlUnitIds } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedControlUnitIds'
 import { isMissionPartOfSelectedWithEnvActions } from 'domain/use_cases/missions/filters/isMissionPartOfSelectedWithEnvActions'
 import { useMemo } from 'react'
 
-import { useAppSelector } from './useAppSelector'
-import { useGetMissionsQuery } from '../api/missionsAPI'
-import { TWO_MINUTES } from '../constants'
-import { isMissionPartOfSelectedAdministrationNames } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedAdministrationNames'
-import { isMissionPartOfSelectedControlPlans } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedControlPlans'
-import { isMissionPartOfSelectedControlUnitIds } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedControlUnitIds'
+import { TWO_MINUTES } from '../../../constants'
 
 export const useGetFilteredMissionsQuery = () => {
   const {
@@ -44,6 +44,10 @@ export const useGetFilteredMissionsQuery = () => {
 
       case DateRangeEnum.MONTH:
         startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(30, 'day').toISOString()
+
+        break
+      case DateRangeEnum.YEAR:
+        startedAfterDate = customDayjs().utc().startOf('year').toISOString()
 
         break
 
