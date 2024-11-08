@@ -3,7 +3,8 @@ export enum DateRangeEnum {
   CUSTOM = 'CUSTOM',
   DAY = 'DAY',
   MONTH = 'MONTH',
-  WEEK = 'WEEK'
+  WEEK = 'WEEK',
+  YEAR = 'YEAR'
 }
 
 export type DateRangeLabel = {
@@ -25,6 +26,10 @@ export const DATE_RANGE_LABEL: DateRangeLabel = {
   MONTH: {
     label: 'Un mois',
     value: DateRangeEnum.MONTH
+  },
+  YEAR: {
+    label: 'Année en cours',
+    value: DateRangeEnum.YEAR
   },
   CUSTOM: {
     label: 'Période spécifique',
