@@ -1,5 +1,7 @@
+import { TotalResults } from '@components/Table/style'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
+import { pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { VigilanceAreasFilters } from './Filters'
@@ -7,6 +9,8 @@ import { VigilanceAreasTable } from './VigilanceAreasTable'
 
 export function VigilancesAreasList() {
   const { isError, isFetching, isLoading, vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
+
+  const vigilanceAreasResults = Object.values(vigilanceAreas?.entities ?? {})
 
   return (
     <SideWindowContent>
@@ -17,10 +21,13 @@ export function VigilancesAreasList() {
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
       ) : (
-        <VigilanceAreasTable
-          isLoading={isLoading || isFetching}
-          vigilanceAreas={Object.values(vigilanceAreas?.entities ?? {})}
-        />
+        <>
+          <TotalResults>{`${vigilanceAreasResults.length ?? 0} ${pluralize(
+            'zone',
+            vigilanceAreasResults.length ?? 0
+          )} de vigilance`}</TotalResults>
+          <VigilanceAreasTable isLoading={isLoading || isFetching} vigilanceAreas={vigilanceAreasResults} />
+        </>
       )}
     </SideWindowContent>
   )
