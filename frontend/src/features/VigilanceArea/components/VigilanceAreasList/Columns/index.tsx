@@ -32,7 +32,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
     enableSorting: true,
     header: () => 'Récurrence',
     id: 'frequency',
-    size: 155 + legacyFirefoxOffset,
+    size: 160 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
       const frequencyA = rowA.original.frequency
       const frequencyB = rowB.original.frequency
