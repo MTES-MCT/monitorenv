@@ -76,6 +76,11 @@ export function VigilanceAreasTable({
                     key={cell.id}
                     $hasRightBorder={cell.column.id === 'geom'}
                     $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
+                    style={{
+                      maxWidth: cell.column.getSize(),
+                      minWidth: cell.column.getSize(),
+                      width: cell.column.getSize()
+                    }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableWithSelectableRows.Td>
@@ -93,7 +98,4 @@ const Wrapper = styled.div`
   width: fit-content;
   // scroll width (~15px) + 4px
   padding-right: 19px;
-  > table {
-    width: 100%;
-  }
 `

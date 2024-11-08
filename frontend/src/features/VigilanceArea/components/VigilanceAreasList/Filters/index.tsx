@@ -2,9 +2,12 @@ import { useGetTrigramsQuery } from '@api/vigilanceAreasAPI'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
+import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import {
   setFilteredRegulatoryThemes,
   setFilteredVigilanceAreaPeriod,
+  setIsRegulatorySearchResultsVisible,
+  setIsVigilanceAreaSearchResultsVisible,
   setVigilanceAreaSpecificPeriodFilter
 } from '@features/layersSelector/search/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -28,6 +31,11 @@ export function VigilanceAreasFilters() {
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
+  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
 
   const {
     createdBy: createdByFilter,
@@ -65,11 +73,26 @@ export function VigilanceAreasFilters() {
 
     dispatch(vigilanceAreaFiltersActions.setStatus(filter))
   }
+  const debouncedSearchLayers = useSearchLayers()
+
   const resetFilters = () => {
     dispatch(vigilanceAreaFiltersActions.resetFilters())
+
     dispatch(setFilteredRegulatoryThemes([]))
+    dispatch(setIsRegulatorySearchResultsVisible(false))
     dispatch(setFilteredVigilanceAreaPeriod(VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS))
+    dispatch(setIsVigilanceAreaSearchResultsVisible(false))
     dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
+
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryThemes: [],
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
+      vigilanceAreaSpecificPeriodFilter: undefined
+    })
   }
 
   const hasCustomPeriodFilter = filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
