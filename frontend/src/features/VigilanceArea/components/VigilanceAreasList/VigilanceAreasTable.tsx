@@ -1,9 +1,8 @@
-import { TotalResults } from '@components/Table/style'
 import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
-import { pluralize, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
+import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
@@ -55,10 +54,6 @@ export function VigilanceAreasTable({
 
   return (
     <Wrapper ref={tableContainerRef}>
-      <TotalResults>{`${vigilanceAreas.length ?? 0} ${pluralize(
-        'zone',
-        vigilanceAreas.length ?? 0
-      )} de vigilance`}</TotalResults>
       <TableWithSelectableRows.Table>
         <TableWithSelectableRows.Head>
           {table.getHeaderGroups().map(headerGroup => (
