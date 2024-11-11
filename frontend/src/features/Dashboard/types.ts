@@ -1,7 +1,13 @@
 import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
-import type { RegulatoryLayerCompact, RegulatoryLayerCompactFromAPI } from '../../domain/entities/regulatory'
+import type {
+  RegulatoryLayerCompact,
+  RegulatoryLayerCompactFromAPI,
+  RegulatoryLayerWithMetadata
+} from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
+import type { ControlUnit } from '@mtes-mct/monitor-ui'
+import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace Dashboard {
@@ -34,6 +40,21 @@ export namespace Dashboard {
     seaFront?: string
     updatedAt?: string
     vigilanceAreaIds: number[]
+  }
+
+  export type Brief = {
+    allLinkedAMPs: AMPFromAPI[]
+    allLinkedRegulatoryAreas: RegulatoryLayerWithMetadata[]
+    amps: AMPFromAPI[]
+    comments?: string
+    controlUnits: ControlUnit.ControlUnit[]
+    name: string
+    regulatoryAreas: RegulatoryLayerWithMetadata[]
+    reportings: Reporting[]
+    subThemes: ControlPlansSubThemeCollection
+    themes: ControlPlansThemeCollection
+    updatedAt?: string
+    vigilanceAreas: VigilanceArea.VigilanceArea[]
   }
 
   export type DashboardToApi = {

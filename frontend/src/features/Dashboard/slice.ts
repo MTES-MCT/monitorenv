@@ -503,7 +503,8 @@ export const getFilteredVigilanceAreas = createSelector(
   }
 )
 
-const getDashboards = (state: DashboardState) => state.dashboards
+export const getDashboards = (state: DashboardState) => state.dashboards
+export const getActiveDashboardId = (state: DashboardState) => state.activeDashboardId
 
 // The extra variables are accessible like so..
 // We create a selector that ignores the state variable

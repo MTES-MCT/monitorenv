@@ -1,4 +1,4 @@
-import { createEntityAdapter, type EntityState } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSelector, type EntityState } from '@reduxjs/toolkit'
 import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
@@ -73,3 +73,8 @@ export const {
   useGetVigilanceAreasQuery,
   useUpdateVigilanceAreaMutation
 } = vigilanceAreasAPI
+
+export const getVigilanceAreasByIds = createSelector(
+  [vigilanceAreasAPI.endpoints.getVigilanceAreas.select(), (_, ids: number[]) => ids],
+  ({ data }, ids) => Object.values(data?.entities ?? []).filter(vigilanceArea => ids.includes(vigilanceArea.id))
+)

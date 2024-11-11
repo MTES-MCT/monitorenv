@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@mtes-mct/monitor-ui": "24.6.0",
+    "@react-pdf/renderer": "4.0.0",
     "@reduxjs/toolkit": "2.3.0",
     "@sentry/browser": "8.37.1",
     "@sentry/react": "8.37.1",

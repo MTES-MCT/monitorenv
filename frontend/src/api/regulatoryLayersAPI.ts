@@ -8,7 +8,6 @@ import { monitorenvPrivateApi } from './api'
 
 import type {
   RegulatoryLayerCompact,
-  RegulatoryLayerCompactFromAPI,
   RegulatoryLayerWithMetadata,
   RegulatoryLayerWithMetadataFromAPI
 } from '../domain/entities/regulatory'
@@ -18,7 +17,7 @@ import type { Coordinate } from 'ol/coordinate'
 const GET_REGULATORY_LAYER_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
 const GET_REGULATORY_LAYERS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
 
-const RegulatoryLayersAdapter = createEntityAdapter<RegulatoryLayerCompact>()
+const RegulatoryLayersAdapter = createEntityAdapter<RegulatoryLayerWithMetadata>()
 
 const regulatoryLayersInitialState = RegulatoryLayersAdapter.getInitialState()
 
@@ -36,10 +35,10 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getRegulatoryLayers: builder.query<EntityState<RegulatoryLayerCompact, number>, void>({
+    getRegulatoryLayers: builder.query<EntityState<RegulatoryLayerWithMetadata, number>, void>({
       query: () => `/v1/regulatory`,
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_LAYERS_ERROR_MESSAGE, response),
-      transformResponse: (response: RegulatoryLayerCompactFromAPI[]) =>
+      transformResponse: (response: RegulatoryLayerWithMetadata[]) =>
         RegulatoryLayersAdapter.setAll(
           regulatoryLayersInitialState,
           response.map(regulatoryLayer => {
@@ -68,7 +67,7 @@ export const getSelectedRegulatoryLayers = createSelector(
     return (
       selectedRegulatoryLayerIds
         .map(id => regulatoryLayers?.data?.entities[id])
-        .filter((layer): layer is RegulatoryLayerCompact => !!layer) ?? emptyArray
+        .filter((layer): layer is RegulatoryLayerWithMetadata => !!layer) ?? emptyArray
     )
   }
 )
@@ -103,6 +102,11 @@ export const getNumberOfRegulatoryLayerZonesByGroupName = createCachedSelector(
   [getRegulatoryLayersIdsGroupedByName, (_, name: string) => name],
   (regulatoryLayerZonesByName, name): number => regulatoryLayerZonesByName[name]?.length ?? 0
 )((_, name) => name)
+
+export const getRegulatoryAreasByIds = createSelector(
+  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(), (_, ids: number[]) => ids],
+  ({ data }, ids) => Object.values(data?.entities ?? []).filter(regulatoryArea => ids.includes(regulatoryArea.id))
+)
 
 export const getExtentOfRegulatoryLayersGroupByGroupName = createCachedSelector(
   [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(), getRegulatoryLayersIdsByGroupName],
