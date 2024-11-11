@@ -40,9 +40,9 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
     },
     [openPanel]
   )
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: ampLayers } = useGetAMPsQuery()
-  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
+  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const previewLayersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<
     VectorSource<Feature<Geometry>>

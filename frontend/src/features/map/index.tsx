@@ -1,3 +1,9 @@
+import { ActiveDashboardLayer } from '@features/Dashboard/components/Layers/ActiveDashboardLayer'
+import { DashboardsLayer } from '@features/Dashboard/components/Layers/DashboardsLayer'
+import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
+import { DashboardPreviewLayer } from '@features/Dashboard/components/Layers/PreviewDashboardLayer'
+import { DashboardReportingOverlay } from '@features/Dashboard/components/Layers/ReportingOverlay'
+import { SelectedDashboardLayer } from '@features/Dashboard/components/Layers/SelectedDashboardLayer'
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
@@ -11,26 +17,11 @@ import { MapAttributionsBox } from './controls/MapAttributionsBox'
 import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
 import { AMPLayers } from './layers/AMP'
-import { MeasurementLayer } from './layers/MeasurementLayer'
-import { MissionsLayer } from './layers/Missions'
-import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
-import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
-import { MissionOverlays } from '../missions/Overlays'
-import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
-import { HoveredReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/HoveredReportingLayer'
-import { SelectedReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/SelectedReporting'
-import { MissionToAttachOverlays } from '../Reportings/components/ReportingOverlay/MissionToAttach'
-import { ReportingOverlay } from '../Reportings/components/ReportingOverlay/Reporting'
-import { SemaphoresLayer } from '../Semaphore/components/Layer'
-import { HoveredSemaphoreLayer } from '../Semaphore/components/Layer/HoveredSemaphoreLayer'
-import { SelectedSemaphoreLayer } from '../Semaphore/components/Layer/SelectedSemaphoreLayer'
-import { SemaphoreOverlay } from '../Semaphore/components/Overlay'
-import { StationLayer } from '../Station/components/StationLayer'
-import { StationOverlay } from '../Station/components/StationOverlay'
 import { AMPPreviewLayer } from './layers/AMP/AMPPreviewLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { MapLayer } from './layers/MapLayer'
-import { InterestPointLayer } from '../InterestPoint/components/InterestPointLayer'
+import { MeasurementLayer } from './layers/MeasurementLayer'
+import { MissionsLayer } from './layers/Missions'
 import { EditingMissionLayer } from './layers/Missions/EditingMissionLayer'
 import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
 import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
@@ -41,11 +32,27 @@ import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
 import { ZoomListener } from './ZoomListener'
+import { DashboardOverlay } from '../Dashboard/components/Overlays/DashboardOverlay'
+import { InterestPointLayer } from '../InterestPoint/components/InterestPointLayer'
+import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
+import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
+import { MissionOverlays } from '../missions/Overlays'
+import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
 import { MissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach'
 import { HoveredMissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach/HoveredMissionToAttachLayer'
 import { SelectedMissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach/SelectedMissionToAttachLayer'
 import { ReportingsLayer } from '../Reportings/components/ReportingLayer/Reporting'
 import { EditingReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/EditingReportingLayer'
+import { HoveredReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/HoveredReportingLayer'
+import { SelectedReportingLayer } from '../Reportings/components/ReportingLayer/Reporting/SelectedReporting'
+import { MissionToAttachOverlays } from '../Reportings/components/ReportingOverlay/MissionToAttach'
+import { ReportingOverlay } from '../Reportings/components/ReportingOverlay/Reporting'
+import { SemaphoresLayer } from '../Semaphore/components/Layer'
+import { HoveredSemaphoreLayer } from '../Semaphore/components/Layer/HoveredSemaphoreLayer'
+import { SelectedSemaphoreLayer } from '../Semaphore/components/Layer/SelectedSemaphoreLayer'
+import { SemaphoreOverlay } from '../Semaphore/components/Overlay'
+import { StationLayer } from '../Station/components/StationLayer'
+import { StationOverlay } from '../Station/components/StationOverlay'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
@@ -209,19 +216,19 @@ export function Map({ isSuperUser }) {
       <EditingVigilanceAreaLayer />
       {/* DASHBOARD */}
       {/* @ts-ignore */}
-      {/* <DrawDashboardLayer /> */}
+      <DrawDashboardLayer />
       {/* @ts-ignore */}
-      {/* <ActiveDashboardLayer /> */}
+      <ActiveDashboardLayer />
       {/* @ts-ignore */}
-      {/* <DashboardPreviewLayer /> */}
+      <DashboardPreviewLayer />
       {/* @ts-ignore */}
-      {/* <DashboardReportingOverlay /> */}
+      <DashboardReportingOverlay />
       {/* @ts-ignore */}
-      {/* <DashboardOverlay /> */}
+      <DashboardOverlay />
       {/* @ts-ignore */}
-      {/* <DashboardsLayer /> */}
+      <DashboardsLayer />
       {/* @ts-ignore */}
-      {/* <SelectedDashboardLayer /> */}
+      <SelectedDashboardLayer />
     </BaseMap>
   )
 }
