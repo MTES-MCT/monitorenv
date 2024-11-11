@@ -1,42 +1,42 @@
 import { deleteDashboard } from '@features/Dashboard/useCases/deleteDashboard'
 import { saveDashboard } from '@features/Dashboard/useCases/saveDashboard'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Dialog, Icon, TextInput, THEME } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-export function Footer() {
+import { GeneratePdfButton } from '../../Pdf/GeneratePdfButton'
+
+import type { Dashboard } from '@features/Dashboard/types'
+
+type FooterProps = {
+  dashboard: Dashboard.Dashboard
+  defaultName: string | undefined
+}
+
+export function Footer({ dashboard, defaultName }: FooterProps) {
   const dispatch = useAppDispatch()
 
-  const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
-  const dashboardForm = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards[activeDashboardId] : undefined
-  )
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [updatedName, setUpdatedName] = useState<string | undefined>(dashboardForm?.dashboard.name)
-  if (!dashboardForm) {
-    return null
-  }
+  const [updatedName, setUpdatedName] = useState<string | undefined>(dashboard.name)
 
   const save = () => {
-    dispatch(saveDashboard({ ...dashboardForm.dashboard, name: updatedName ?? dashboardForm.dashboard.name }))
+    dispatch(saveDashboard({ ...dashboard, name: updatedName ?? dashboard.name }))
     setIsSaveDialogOpen(false)
   }
 
   const handleSave = () => {
-    const hasDefaultName =
-      dashboardForm.defaultName === dashboardForm.dashboard.name && !dashboardForm.dashboard.createdAt
+    const hasDefaultName = defaultName === dashboard.name && !dashboard.createdAt
     if (hasDefaultName) {
       setIsSaveDialogOpen(true)
     } else {
-      dispatch(saveDashboard({ ...dashboardForm.dashboard }))
+      dispatch(saveDashboard({ ...dashboard }))
     }
   }
 
   const confirmDelete = () => {
-    dispatch(deleteDashboard(dashboardForm.dashboard))
+    dispatch(deleteDashboard(dashboard))
 
     setIsDeleteDialogOpen(false)
   }
@@ -87,12 +87,17 @@ export function Footer() {
         </Dialog>
       )}
       <Wrapper>
-        <SaveButton accent={Accent.SECONDARY} disabled={!activeDashboardId} Icon={Icon.Save} onClick={handleSave}>
-          Enregistrer le tableau
-        </SaveButton>
         <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={handleDelete}>
           Supprimer le tableau
         </DeleteButton>
+
+        <ButtonsWrapper>
+          <GeneratePdfButton dashboard={dashboard} />
+
+          <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>
+            Enregistrer le tableau
+          </Button>
+        </ButtonsWrapper>
       </Wrapper>
     </>
   )
@@ -107,8 +112,11 @@ const Wrapper = styled.div`
   bottom: 0;
 `
 
-const SaveButton = styled(Button)`
+const ButtonsWrapper = styled.div`
   float: right;
+  display: flex;
+  gap: 24px;
+  align-items: center;
 `
 
 const DeleteButton = styled(Button)`

@@ -177,7 +177,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
               <Weather geom={dashboard.dashboard.geom} />
             </Column>
           </Container>
-          <Footer />
+          <Footer dashboard={dashboard.dashboard} defaultName={dashboard.defaultName} />
         </>
       )}
     </>

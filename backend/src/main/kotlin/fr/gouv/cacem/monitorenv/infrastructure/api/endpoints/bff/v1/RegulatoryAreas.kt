@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaWithMetadataDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -33,8 +32,8 @@ class RegulatoryAreas(
 
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
-    fun getAll(): List<RegulatoryAreaDataOutput> {
+    fun getAll(): List<RegulatoryAreaWithMetadataDataOutput> {
         val regulatoryAreas = getAllRegulatoryAreas.execute()
-        return regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
+        return regulatoryAreas.map { RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(it) }
     }
 }

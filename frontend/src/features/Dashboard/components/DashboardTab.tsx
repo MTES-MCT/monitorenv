@@ -35,7 +35,9 @@ export function DashboardTab({
     if (updatedName) {
       dispatch(dashboardActions.setName({ key: tabKey, name: updatedName }))
     }
-    dispatch(dashboardActions.setIsEditingTabName({ isEditing: false, key: tabKey }))
+    if (isEditing) {
+      dispatch(dashboardActions.setIsEditingTabName({ isEditing: false, key: tabKey }))
+    }
   }
 
   const editName = useCallback(() => {
@@ -48,7 +50,9 @@ export function DashboardTab({
   useClickOutsideEffect(
     ref,
     () => {
-      validateName()
+      if (isEditing) {
+        validateName()
+      }
     },
     newWindowContainerRef.current
   )

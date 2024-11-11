@@ -1,4 +1,5 @@
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
+import { createSelector } from '@reduxjs/toolkit'
 
 import { monitorenvPublicApi } from './api'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
@@ -86,3 +87,8 @@ export const {
   useGetControlUnitsQuery,
   useUpdateControlUnitMutation
 } = controlUnitsAPI
+
+export const getControlUnitsByIds = createSelector(
+  [controlUnitsAPI.endpoints.getControlUnits.select(), (_, ids: number[]) => ids],
+  ({ data }, ids) => (data ?? []).filter(controlUnit => ids.includes(controlUnit.id))
+)

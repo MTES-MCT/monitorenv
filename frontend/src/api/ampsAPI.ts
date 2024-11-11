@@ -73,6 +73,11 @@ export const getNumberOfAMPByGroupName = createCachedSelector(
   (ampIdsByName, groupName) => (ampIdsByName && ampIdsByName[groupName]?.length) ?? 0
 )((_, groupName: string) => groupName)
 
+export const getAmpsByIds = createSelector(
+  [ampsAPI.endpoints.getAMPs.select(), (_, ids: number[]) => ids],
+  ({ data }, ids) => Object.values(data?.entities ?? []).filter(amp => ids.includes(amp.id))
+)
+
 export const getExtentOfAMPLayersGroupByGroupName = createCachedSelector(
   [ampsAPI.endpoints.getAMPs.select(), getAMPsIdsByGroupName],
   (ampsQuery, ampIdsByName) => {
