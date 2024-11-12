@@ -43,8 +43,9 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
-    if (regulatoryLayersSearchResult) {
-      regulatoryFeatures = regulatoryLayersSearchResult.reduce((regulatorylayers, id) => {
+    if (regulatoryLayersSearchResult || regulatoryLayers?.ids) {
+      const regulatoryAreasToDisplay = regulatoryLayersSearchResult ?? regulatoryLayers?.ids ?? []
+      regulatoryFeatures = regulatoryAreasToDisplay?.reduce((regulatorylayers, id) => {
         const layer = regulatoryLayers?.entities[id]
 
         if (layer && layer.geom) {
