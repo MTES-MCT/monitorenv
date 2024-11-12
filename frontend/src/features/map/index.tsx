@@ -1,9 +1,3 @@
-import { ActiveDashboardLayer } from '@features/Dashboard/components/Layers/ActiveDashboardLayer'
-import { DashboardsLayer } from '@features/Dashboard/components/Layers/DashboardsLayer'
-import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
-import { DashboardPreviewLayer } from '@features/Dashboard/components/Layers/PreviewDashboardLayer'
-import { DashboardReportingOverlay } from '@features/Dashboard/components/Layers/ReportingOverlay'
-import { SelectedDashboardLayer } from '@features/Dashboard/components/Layers/SelectedDashboardLayer'
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
@@ -32,7 +26,6 @@ import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
 import { ZoomListener } from './ZoomListener'
-import { DashboardOverlay } from '../Dashboard/components/Overlays/DashboardOverlay'
 import { InterestPointLayer } from '../InterestPoint/components/InterestPointLayer'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
@@ -216,19 +209,19 @@ export function Map({ isSuperUser }) {
       <EditingVigilanceAreaLayer />
       {/* DASHBOARD */}
       {/* @ts-ignore */}
-      <DrawDashboardLayer />
+      {/* <DrawDashboardLayer /> */}
       {/* @ts-ignore */}
-      <ActiveDashboardLayer />
+      {/* <ActiveDashboardLayer /> */}
       {/* @ts-ignore */}
-      <DashboardPreviewLayer />
+      {/* <DashboardPreviewLayer /> */}
       {/* @ts-ignore */}
-      <DashboardReportingOverlay />
+      {/* <DashboardReportingOverlay /> */}
       {/* @ts-ignore */}
-      <DashboardOverlay />
+      {/* <DashboardOverlay /> */}
       {/* @ts-ignore */}
-      <DashboardsLayer />
+      {/* <DashboardsLayer /> */}
       {/* @ts-ignore */}
-      <SelectedDashboardLayer />
+      {/* <SelectedDashboardLayer /> */}
     </BaseMap>
   )
 }
