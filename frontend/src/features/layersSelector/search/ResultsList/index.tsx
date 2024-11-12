@@ -58,14 +58,11 @@ export function ResultList({ searchedText }: ResultListProps) {
     r => regulatoryLayers?.entities[r]?.layer_name
   )
   // const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
+
   const { data: amps } = useGetAMPsQuery()
-
-  const ampResulstsByAMPName = groupBy(ampsSearchResult, a => amps?.entities[a]?.name)
-
-  /*   const { data: amps } = useGetAMPsQuery()
   const ampResulstsByAMPName = groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name)
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
- */
+
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
   const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
@@ -160,7 +157,7 @@ export function ResultList({ searchedText }: ResultListProps) {
             <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
               ZONES AMP &nbsp;
               <NumberOfResults>
-                ({ampsSearchResult?.length ?? '0'} {pluralize('résultat', ampsSearchResult?.length ?? 0)})
+                ({totalAmps} {pluralize('résultat', totalAmps)})
               </NumberOfResults>
             </Title>
           </HeaderAMP>
