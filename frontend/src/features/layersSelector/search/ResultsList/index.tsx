@@ -8,8 +8,8 @@ import {
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
+import { groupBy } from 'lodash'
 import styled from 'styled-components'
-import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
@@ -53,14 +53,19 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryLayersByLayerName = MonitorEnvWebWorker.getRegulatoryLayersByLayerName(
-    regulatoryLayersSearchResult ?? regulatoryLayers?.ids,
-    regulatoryLayers
+  const regulatoryLayersByLayerName = groupBy(
+    !regulatoryLayersSearchResult && isRegulatorySearchResultsVisible
+      ? regulatoryLayers?.ids
+      : regulatoryLayersSearchResult ?? [],
+    r => regulatoryLayers?.entities[r]?.layer_name
   )
   const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
   const { data: amps } = useGetAMPsQuery()
-  const ampResultsByAMPName = MonitorEnvWebWorker.getAMPsGroupByName(ampsSearchResult ?? amps?.ids, amps)
+  const ampResultsByAMPName = groupBy(
+    !ampsSearchResult && isAmpSearchResultsVisible ? amps?.ids : ampsSearchResult ?? [],
+    a => amps?.entities[a]?.name
+  )
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
