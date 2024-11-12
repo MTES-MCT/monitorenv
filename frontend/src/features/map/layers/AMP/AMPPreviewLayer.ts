@@ -42,6 +42,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const ampLayersFeatures = useMemo(() => {
     let ampFeatures: Feature[] = []
+
     if (ampsSearchResult || ampLayers?.entities) {
       const ampsToDisplay = ampsSearchResult ?? ampLayers?.ids ?? []
 
