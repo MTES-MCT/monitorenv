@@ -43,7 +43,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
-    if (regulatoryLayersSearchResult || regulatoryLayers?.ids) {
+    if ((regulatoryLayersSearchResult || regulatoryLayers?.ids) && isLayerVisible) {
       const regulatoryAreasToDisplay = regulatoryLayersSearchResult ?? regulatoryLayers?.ids ?? []
       regulatoryFeatures = regulatoryAreasToDisplay?.reduce((regulatorylayers, id) => {
         const layer = regulatoryLayers?.entities[id]
@@ -63,7 +63,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     return regulatoryFeatures
-  }, [regulatoryLayers, regulatoryMetadataLayerId, regulatoryLayersSearchResult])
+  }, [regulatoryLayers, regulatoryMetadataLayerId, regulatoryLayersSearchResult, isLayerVisible])
 
   useEffect(() => {
     regulatoryPreviewVectorSourceRef.current?.clear(true)

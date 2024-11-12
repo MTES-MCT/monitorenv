@@ -39,7 +39,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
 
   const vigilanceAreasFeatures = useMemo(() => {
     let features: Feature[] = []
-    if (vigilanceAreaSearchResult ?? vigilanceAreas) {
+    if ((vigilanceAreaSearchResult ?? vigilanceAreas) && isLayerVisible) {
       const vigilanceAreasToDisplay = vigilanceAreaSearchResult ?? vigilanceAreas?.ids ?? []
       features = vigilanceAreasToDisplay.reduce((amplayers, id) => {
         const layer = vigilanceAreas?.entities[id]
@@ -55,7 +55,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     }
 
     return features
-  }, [vigilanceAreaSearchResult, vigilanceAreas])
+  }, [vigilanceAreaSearchResult, vigilanceAreas, isLayerVisible])
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
