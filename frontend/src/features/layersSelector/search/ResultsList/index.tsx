@@ -60,7 +60,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   // const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
   const { data: amps } = useGetAMPsQuery()
-  const ampResulstsByAMPName = groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name)
+  const ampResultsByAMPName = groupBy(ampsSearchResult /* ?? amps?.ids */, a => amps?.entities[a]?.name)
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
@@ -162,7 +162,7 @@ export function ResultList({ searchedText }: ResultListProps) {
             </Title>
           </HeaderAMP>
           <SubListAMP $isExpanded={areAmpsResultsOpen} data-cy="amp-result-list">
-            {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
+            {Object.entries(ampResultsByAMPName).map(([ampName, ampIdsInGroup]) => (
               <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
             ))}
           </SubListAMP>
