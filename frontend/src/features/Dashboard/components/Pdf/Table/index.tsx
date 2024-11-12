@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   cell: {
     border: `1 solid ${THEME.color.blueGray25}`,
     borderTop: 'none',
-    fontSize: 5.5,
+    fontSize: 6.8,
     padding: '4.3 12'
   },
   header: {

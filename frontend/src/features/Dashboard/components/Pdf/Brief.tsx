@@ -2,64 +2,24 @@
 
 // TODO (04/11/2024) : use monitor-ui fonts instead of imported/duplicated ones
 
-import MarianeBold from '/fonts/Marianne-Bold.woff2?url'
-import MarianeBoldItalic from '/fonts/Marianne-Bold_Italic.woff2?url'
-import MarianeLight from '/fonts/Marianne-Light.woff2?url'
-import MarianeMedium from '/fonts/Marianne-Medium.woff2?url'
-import MarianeRegular from '/fonts/Marianne-Regular.woff2?url'
-import MarianeRegularItalic from '/fonts/Marianne-Regular_Italic.woff2?url'
-
-import { Document, Font, Page, Text, View } from '@react-pdf/renderer'
-
-import { ControlUnits } from './ControlUnits'
-import { Headings } from './Layout/Headings'
-import { Reportings } from './Reportings'
-import { layoutStyle } from './style'
-
-import type { Dashboard } from '@features/Dashboard/types'
+import { Document, Page, Text, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
+import { ControlUnits } from './ControlUnits'
+import { Headings } from './Layout/Headings'
 import { RegulatoryAreas } from './RegulatoryAreas'
+import { Reportings } from './Reportings'
+import { layoutStyle, registerFonts } from './style'
 import { AreaTable } from './Table'
 import { VigilanceAreas } from './VigilanceAreas'
 
-// Create styles
-Font.register({
-  family: 'Mariane',
-  fontWeight: 'bold',
-  src: MarianeBold
-})
-Font.register({
-  family: 'Mariane',
-  fontWeight: 'normal',
-  src: MarianeRegular
-})
-Font.register({
-  family: 'Mariane',
-  fontWeight: 'medium',
-  src: MarianeMedium
-})
-Font.register({
-  family: 'Mariane',
-  fontWeight: 'light',
-  src: MarianeLight
-})
-Font.register({
-  family: 'Mariane',
-  fontStyle: 'italic',
-  fontWeight: 'bold',
-  src: MarianeBoldItalic
-})
-Font.register({
-  family: 'Mariane',
-  fontStyle: 'italic',
-  fontWeight: 'normal',
-  src: MarianeRegularItalic
-})
+import type { Dashboard } from '@features/Dashboard/types'
 
 type BriefProps = {
   brief: Dashboard.Brief
 }
+
+registerFonts()
 
 export function Brief({ brief }: BriefProps) {
   return (
