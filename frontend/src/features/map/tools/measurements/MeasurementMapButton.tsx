@@ -1,4 +1,3 @@
-import { useClickOutside } from '@hooks/useClickOutside'
 import { Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -26,11 +25,11 @@ export function MeasurementMapButton() {
   const isMeasurementToolOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT, [isMapToolVisible])
   const wrapperRef = useRef(null)
 
-  useClickOutside(wrapperRef, () => {
-    if (isOpen) {
-      dispatch(globalActions.setIsMapToolVisible(undefined))
-    }
-  })
+  // useClickOutside(wrapperRef, () => {
+  //   if (isOpen) {
+  //     dispatch(globalActions.setIsMapToolVisible(undefined))
+  //   }
+  // })
 
   useEscapeKey({
     onEscape: () => {

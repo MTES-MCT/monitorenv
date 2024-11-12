@@ -1,16 +1,7 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useEscapeKey } from '@hooks/useEscapeKey'
-import {
-  Accent,
-  Icon,
-  IconButton,
-  Size,
-  TextInput,
-  THEME,
-  useClickOutsideEffect,
-  useNewWindow
-} from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, TextInput, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useRef, useState, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
@@ -43,15 +34,15 @@ export function DashboardTab({
     dispatch(dashboardActions.setIsEditingTabName({ isEditing: true, key: tabKey }))
   }, [dispatch, name, tabKey])
 
-  const { newWindowContainerRef } = useNewWindow()
+  // const { newWindowContainerRef } = useNewWindow()
 
-  useClickOutsideEffect(
-    ref,
-    () => {
-      validateName()
-    },
-    newWindowContainerRef.current
-  )
+  // useClickOutsideEffect(
+  //   ref,
+  //   () => {
+  //     validateName()
+  //   },
+  //   newWindowContainerRef.current
+  // )
 
   useEscapeKey({ onEnter: () => validateName(), ref })
 

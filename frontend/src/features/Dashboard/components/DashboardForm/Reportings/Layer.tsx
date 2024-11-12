@@ -4,7 +4,7 @@ import { StatusActionTag } from '@features/Reportings/components/StatusActionTag
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { Accent, Icon, IconButton, THEME, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
 import { getFeature } from '@utils/getFeature'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
@@ -28,15 +28,15 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
   const { subThemes, themes } = useGetControlPlans()
 
   const ref = useRef<HTMLDivElement>(null)
-  const { newWindowContainerRef } = useNewWindow()
+  // const { newWindowContainerRef } = useNewWindow()
 
-  useClickOutsideEffect(
-    ref,
-    () => {
-      dispatch(dashboardActions.setSelectedReporting(undefined))
-    },
-    newWindowContainerRef.current
-  )
+  // useClickOutsideEffect(
+  //   ref,
+  //   () => {
+  //     dispatch(dashboardActions.setSelectedReporting(undefined))
+  //   },
+  //   newWindowContainerRef.current
+  // )
 
   const handleSelect = e => {
     e.stopPropagation()

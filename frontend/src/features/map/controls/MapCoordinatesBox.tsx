@@ -10,7 +10,6 @@ import {
 import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 import { getCoordinates } from '../../../utils/coordinates'
 
 import type { BaseMapChildrenProps } from '../BaseMap'
@@ -58,7 +57,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat) as CoordinatesFormat
   const [coordinatesSelectionIsOpen, setCoordinatesSelectionIsOpen] = useState(false)
-  const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, coordinatesSelectionIsOpen)
+  // const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, coordinatesSelectionIsOpen)
 
   const selectCordinatesFormat = value => {
     if (!value) {
@@ -67,11 +66,11 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
     dispatch(setCoordinatesFormat(value))
   }
 
-  useEffect(() => {
-    if (clickedOutsideComponent) {
-      setCoordinatesSelectionIsOpen(false)
-    }
-  }, [clickedOutsideComponent])
+  // useEffect(() => {
+  //   if (clickedOutsideComponent) {
+  //     setCoordinatesSelectionIsOpen(false)
+  //   }
+  // }, [clickedOutsideComponent])
 
   return (
     <div ref={wrapperRef}>

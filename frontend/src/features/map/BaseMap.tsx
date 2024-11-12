@@ -38,7 +38,6 @@ import { setDistanceUnit } from '../../domain/shared_slices/Map'
 import { updateMeasurementsWithNewDistanceUnit } from '../../domain/use_cases/map/updateMeasurementsWithNewDistanceUnit'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
 
 import type { VectorLayerWithName } from '../../domain/types/layer'
 import type { MapBrowserEvent } from 'ol'
@@ -74,7 +73,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   const wrapperRef = useRef(null)
   const distanceUnit = useAppSelector(state => state.map.distanceUnit)
   const [unitsSelectionIsOpen, setUnitsSelectionIsOpen] = useState(false)
-  const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, unitsSelectionIsOpen)
+  // const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, unitsSelectionIsOpen)
 
   const handleMapClick = useCallback((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
     if (event && current_map) {
@@ -209,11 +208,11 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     dispatch(updateMeasurementsWithNewDistanceUnit())
   }
 
-  useEffect(() => {
-    if (clickedOutsideComponent) {
-      setUnitsSelectionIsOpen(false)
-    }
-  }, [clickedOutsideComponent])
+  // useEffect(() => {
+  //   if (clickedOutsideComponent) {
+  //     setUnitsSelectionIsOpen(false)
+  //   }
+  // }, [clickedOutsideComponent])
 
   return (
     <MapWrapper>

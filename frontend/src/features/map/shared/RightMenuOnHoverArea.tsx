@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 import { mainWindowActions } from '../../MainWindow/slice'
 
 export function RightMenuOnHoverArea() {
@@ -17,15 +16,15 @@ export function RightMenuOnHoverArea() {
     dispatch(mainWindowActions.setIsRightMenuOpened(true))
   }
 
-  const clickedOutsideComponent = useClickOutsideWhenOpened(areaRef, hasFullHeightRightDialogOpen)
-  useEffect(() => {
-    if (clickedOutsideComponent) {
-      dispatch(mainWindowActions.setIsRightMenuOpened(false))
-    }
+  // const clickedOutsideComponent = useClickOutsideWhenOpened(areaRef, hasFullHeightRightDialogOpen)
+  // useEffect(() => {
+  //   if (clickedOutsideComponent) {
+  //     dispatch(mainWindowActions.setIsRightMenuOpened(false))
+  //   }
 
-    // to prevent re-render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clickedOutsideComponent])
+  //   // to prevent re-render
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [clickedOutsideComponent])
 
   return hasFullHeightRightDialogOpen ? (
     <Area ref={areaRef} $isRightMenuOpened={isRightMenuOpened} onMouseEnter={onMouseEnter} />
