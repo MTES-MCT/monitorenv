@@ -1,10 +1,8 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
-import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
 import {
-  // getExtentOfRegulatoryLayersGroupByGroupName,
-  // getNumberOfRegulatoryLayerZonesByGroupName,
-  useGetRegulatoryLayersQuery
+  getExtentOfRegulatoryLayersGroupByGroupName,
+  getNumberOfRegulatoryLayerZonesByGroupName
 } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import {
@@ -26,18 +24,11 @@ export function RegulatoryLayerGroup({
 }) {
   const dispatch = useAppDispatch()
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
-  // const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
 
-  const regulatoryLayersIdsGroupedByName = MonitorEnvWebWorker.getRegulatoryLayersIdsGroupedByName(regulatoryLayers)
-  const totalNumberOfZones = regulatoryLayersIdsGroupedByName[groupName]?.length ?? 0
-
-  // const groupExtent = useAppSelector(state => getExtentOfRegulatoryLayersGroupByGroupName(state, groupName))
-
-  const groupExtent = MonitorEnvWebWorker.getExtentOfRegulatoryLayersGroupByGroupName(groupName, regulatoryLayers)
+  const groupExtent = useAppSelector(state => getExtentOfRegulatoryLayersGroupByGroupName(state, groupName))
 
   const handleAddLayers = ids => dispatch(addRegulatoryZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeRegulatoryZonesFromMyLayers(ids))
