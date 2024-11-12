@@ -1,5 +1,5 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
-// import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -65,11 +65,11 @@ export function ResultList({ searchedText }: ResultListProps) {
   /*   const { data: amps } = useGetAMPsQuery()
   const ampResulstsByAMPName = groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name)
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
-
+ */
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
   const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
- */
+
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
       dispatch(setIsRegulatorySearchResultsVisible(true))
@@ -183,13 +183,12 @@ export function ResultList({ searchedText }: ResultListProps) {
             <Title data-cy="vigilance-area-results-list-button" onClick={toggleVigilanceAreas}>
               ZONES DE VIGILANCE &nbsp;
               <NumberOfResults>
-                ({vigilanceAreaSearchResult?.length ?? '0'}{' '}
-                {pluralize('résultat', vigilanceAreaSearchResult?.length ?? 0)})
+                ({totalVigilanceAreas} {pluralize('résultat', totalVigilanceAreas)})
               </NumberOfResults>
             </Title>
           </Header>
           <SubList $isExpanded={areMyVigilanceAreasOpen} data-cy="vigilance-area-result-list">
-            {vigilanceAreaSearchResult?.map(id => (
+            {vigilanceAreasIds?.map(id => (
               <VigilanceAreaLayer key={id} layerId={id} searchedText={searchedText} />
             ))}
           </SubList>
