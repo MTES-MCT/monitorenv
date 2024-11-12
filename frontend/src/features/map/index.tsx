@@ -36,7 +36,6 @@ import { StationOverlay } from '../Station/components/StationOverlay'
 import { EditingMissionLayer } from './layers/Missions/EditingMissionLayer'
 import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
 import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
-import { SearchExtentLayer } from './layers/SearchExtentLayer'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
@@ -75,7 +74,7 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <AdministrativeLayers />
         {/* @ts-ignore */}
-        <SearchExtentLayer />
+        {/* <SearchExtentLayer /> */}
         {/* @ts-ignore */}
         <LayerEvents />
         {/* @ts-ignore */}
@@ -124,7 +123,7 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <AdministrativeLayers />
       {/* @ts-ignore */}
-      <SearchExtentLayer />
+      {/* <SearchExtentLayer /> */}
       {/* @ts-ignore */}
       <LayerEvents />
       {/* @ts-ignore */}
