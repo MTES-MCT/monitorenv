@@ -13,7 +13,6 @@ import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAtt
 import { MissionOverlays } from '../missions/Overlays'
 import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
-import { AMPLayers } from './layers/AMP'
 import { DrawLayer } from './layers/DrawLayer'
 import { MapLayer } from './layers/MapLayer'
 import { MeasurementLayer } from './layers/MeasurementLayer'
@@ -37,7 +36,6 @@ import { StationOverlay } from '../Station/components/StationOverlay'
 import { EditingMissionLayer } from './layers/Missions/EditingMissionLayer'
 import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
 import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
-import { RegulatoryLayers } from './layers/Regulatory'
 import { SearchExtentLayer } from './layers/SearchExtentLayer'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
@@ -67,11 +65,11 @@ export function Map({ isSuperUser }) {
 
         {/* ZONE */}
         {/* @ts-ignore */}
-        <AMPLayers />
+        {/* <AMPLayers /> */}
         {/* @ts-ignore */}
         {/* <AMPPreviewLayer /> */}
         {/* @ts-ignore */}
-        <RegulatoryLayers />
+        {/* <RegulatoryLayers /> */}
         {/* @ts-ignore */}
         {/* <RegulatoryPreviewLayer /> */}
         {/* @ts-ignore */}
@@ -116,11 +114,11 @@ export function Map({ isSuperUser }) {
       <MapLayer />
       {/* ZONE */}
       {/* @ts-ignore */}
-      <AMPLayers />
+      {/* <AMPLayers /> */}
       {/* @ts-ignore */}
       {/* <AMPPreviewLayer /> */}
       {/* @ts-ignore */}
-      <RegulatoryLayers />
+      {/* <RegulatoryLayers /> */}
       {/* @ts-ignore */}
       {/* <RegulatoryPreviewLayer /> */}
       {/* @ts-ignore */}
