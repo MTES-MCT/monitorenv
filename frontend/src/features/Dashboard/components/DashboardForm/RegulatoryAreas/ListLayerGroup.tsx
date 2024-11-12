@@ -1,14 +1,15 @@
-import { getNumberOfRegulatoryLayerZonesByGroupName } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
+// import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { intersection } from 'lodash'
 import { useState } from 'react'
 import styled from 'styled-components'
+import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
 import { Layer } from './Layer'
 
@@ -27,8 +28,11 @@ export function ListLayerGroup({
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
-  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
-
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  // const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+  const regulatoryLayersIdsGroupedByName = MonitorEnvWebWorker.getRegulatoryLayersIdsGroupedByName(regulatoryLayers)
+  const totalNumberOfZones = regulatoryLayersIdsGroupedByName[groupName]?.length ?? 0
+  // console.log('totalNumberOfZones', totalNumberOfZones)
   const zonesSelected = intersection(selectedRegulatoryAreaIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
 
