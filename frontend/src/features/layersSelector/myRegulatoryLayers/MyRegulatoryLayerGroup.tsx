@@ -1,9 +1,10 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { getTitle } from 'domain/entities/layers/utils'
 import { intersection } from 'lodash'
+import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
 import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
-import { getNumberOfRegulatoryLayerZonesByGroupName } from '../../../api/regulatoryLayersAPI'
+import { useGetRegulatoryLayersQuery } from '../../../api/regulatoryLayersAPI'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import {
   hideRegulatoryLayers,
@@ -31,7 +32,11 @@ export function RegulatoryLayerGroup({
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
 
   const regulatoryZonesAreShowed = intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
-  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+  // const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const regulatoryLayersIdsGroupedByName = MonitorEnvWebWorker.getRegulatoryLayersIdsGroupedByName(regulatoryLayers)
+  const totalNumberOfZones = regulatoryLayersIdsGroupedByName[groupName]?.length ?? 0
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
 

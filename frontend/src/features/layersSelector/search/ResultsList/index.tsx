@@ -54,13 +54,13 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const regulatoryLayersByLayerName = MonitorEnvWebWorker.getRegulatoryLayersByLayerName(
-    regulatoryLayersSearchResult,
+    regulatoryLayersSearchResult ?? regulatoryLayers?.ids,
     regulatoryLayers
   )
   const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
   const { data: amps } = useGetAMPsQuery()
-  const ampResultsByAMPName = MonitorEnvWebWorker.getAMPsGroupByName(ampsSearchResult ?? amps?.entities, amps)
+  const ampResultsByAMPName = MonitorEnvWebWorker.getAMPsGroupByName(ampsSearchResult ?? amps?.ids, amps)
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
@@ -144,6 +144,7 @@ export function ResultList({ searchedText }: ResultListProps) {
           </SubList>
         </>
       )}
+
       {!isLinkingRegulatoryToVigilanceArea && (
         <>
           <HeaderAMP>
@@ -167,6 +168,7 @@ export function ResultList({ searchedText }: ResultListProps) {
           </SubListAMP>
         </>
       )}
+
       {isSuperUser && !isLinkingZonesToVigilanceArea && (
         <>
           <Header>
