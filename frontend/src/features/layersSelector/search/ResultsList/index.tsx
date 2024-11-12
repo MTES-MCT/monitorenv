@@ -9,6 +9,7 @@ import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurren
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
@@ -53,19 +54,26 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryLayersByLayerName = groupBy(
-    regulatoryLayersSearchResult ?? regulatoryLayers?.ids,
-    r => regulatoryLayers?.entities[r]?.layer_name
+  const regulatoryLayersByLayerName = useMemo(
+    () =>
+      groupBy(regulatoryLayersSearchResult ?? regulatoryLayers?.ids, r => regulatoryLayers?.entities[r]?.layer_name),
+    [regulatoryLayersSearchResult, regulatoryLayers]
   )
-  const totalRegulatoryAreas = 10 // regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
+  const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
   const { data: amps } = useGetAMPsQuery()
-  const ampResulstsByAMPName = groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name)
-  const totalAmps = 10 // ampsSearchResult?.length ?? amps?.ids?.length ?? 0
+  const ampResulstsByAMPName = useMemo(
+    () => groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name),
+    [ampsSearchResult, amps]
+  )
+  const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
-  const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
-  const totalVigilanceAreas = 10 // vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
+  const vigilanceAreasIds = useMemo(
+    () => vigilanceAreaSearchResult ?? vigilanceAreas?.ids,
+    [vigilanceAreaSearchResult, vigilanceAreas]
+  )
+  const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
