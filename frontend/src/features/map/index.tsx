@@ -3,33 +3,21 @@ import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
 import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/EditingVigilanceAreaLayer'
-import { PreviewVigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/PreviewVigilanceAreasLayer'
 import { SelectedVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/SelectedVigilanceAreaLayer'
 
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
-import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
-import { AdministrativeLayers } from './layers/AdministrativeLayers'
-import { AMPLayers } from './layers/AMP'
-import { AMPPreviewLayer } from './layers/AMP/AMPPreviewLayer'
-import { DrawLayer } from './layers/DrawLayer'
-import { MapLayer } from './layers/MapLayer'
-import { MeasurementLayer } from './layers/MeasurementLayer'
-import { MissionsLayer } from './layers/Missions'
-import { EditingMissionLayer } from './layers/Missions/EditingMissionLayer'
-import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
-import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
-import { RegulatoryLayers } from './layers/Regulatory'
-import { RegulatoryPreviewLayer } from './layers/Regulatory/RegulatoryPreviewLayer'
-import { SearchExtentLayer } from './layers/SearchExtentLayer'
-import { MapExtentController } from './MapExtentController'
-import { MapHistory } from './MapHistory'
-import { ActionOverlay } from './overlays/actions'
-import { ZoomListener } from './ZoomListener'
 import { InterestPointLayer } from '../InterestPoint/components/InterestPointLayer'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
 import { MissionOverlays } from '../missions/Overlays'
+import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
+import { AdministrativeLayers } from './layers/AdministrativeLayers'
+import { AMPLayers } from './layers/AMP'
+import { DrawLayer } from './layers/DrawLayer'
+import { MapLayer } from './layers/MapLayer'
+import { MeasurementLayer } from './layers/MeasurementLayer'
+import { MissionsLayer } from './layers/Missions'
 import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
 import { MissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach'
 import { HoveredMissionToAttachLayer } from '../Reportings/components/ReportingLayer/MissionToAttach/HoveredMissionToAttachLayer'
@@ -46,6 +34,15 @@ import { SelectedSemaphoreLayer } from '../Semaphore/components/Layer/SelectedSe
 import { SemaphoreOverlay } from '../Semaphore/components/Overlay'
 import { StationLayer } from '../Station/components/StationLayer'
 import { StationOverlay } from '../Station/components/StationOverlay'
+import { EditingMissionLayer } from './layers/Missions/EditingMissionLayer'
+import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
+import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
+import { RegulatoryLayers } from './layers/Regulatory'
+import { SearchExtentLayer } from './layers/SearchExtentLayer'
+import { MapExtentController } from './MapExtentController'
+import { MapHistory } from './MapHistory'
+import { ActionOverlay } from './overlays/actions'
+import { ZoomListener } from './ZoomListener'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
@@ -72,11 +69,11 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <AMPLayers />
         {/* @ts-ignore */}
-        <AMPPreviewLayer />
+        {/* <AMPPreviewLayer /> */}
         {/* @ts-ignore */}
         <RegulatoryLayers />
         {/* @ts-ignore */}
-        <RegulatoryPreviewLayer />
+        {/* <RegulatoryPreviewLayer /> */}
         {/* @ts-ignore */}
         <AdministrativeLayers />
         {/* @ts-ignore */}
@@ -121,11 +118,11 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <AMPLayers />
       {/* @ts-ignore */}
-      <AMPPreviewLayer />
+      {/* <AMPPreviewLayer /> */}
       {/* @ts-ignore */}
       <RegulatoryLayers />
       {/* @ts-ignore */}
-      <RegulatoryPreviewLayer />
+      {/* <RegulatoryPreviewLayer /> */}
       {/* @ts-ignore */}
       <AdministrativeLayers />
       {/* @ts-ignore */}
@@ -200,7 +197,7 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <VigilanceAreasLayer />
       {/* @ts-ignore */}
-      <PreviewVigilanceAreasLayer />
+      {/* <PreviewVigilanceAreasLayer /> */}
       {/* @ts-ignore */}
       <DrawVigilanceAreaLayer />
       {/* @ts-ignore */}
