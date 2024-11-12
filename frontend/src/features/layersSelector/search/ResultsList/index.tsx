@@ -59,21 +59,30 @@ export function ResultList({ searchedText }: ResultListProps) {
       groupBy(regulatoryLayersSearchResult ?? regulatoryLayers?.ids, r => regulatoryLayers?.entities[r]?.layer_name),
     [regulatoryLayersSearchResult, regulatoryLayers]
   )
-  const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
+  const totalRegulatoryAreas = useMemo(
+    () => regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0,
+    [regulatoryLayersSearchResult?.length, regulatoryLayers?.ids?.length]
+  )
 
   const { data: amps } = useGetAMPsQuery()
   const ampResulstsByAMPName = useMemo(
     () => groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name),
     [ampsSearchResult, amps]
   )
-  const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
+  const totalAmps = useMemo(
+    () => ampsSearchResult?.length ?? amps?.ids?.length ?? 0,
+    [ampsSearchResult?.length, amps?.ids?.length]
+  )
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const vigilanceAreasIds = useMemo(
     () => vigilanceAreaSearchResult ?? vigilanceAreas?.ids,
     [vigilanceAreaSearchResult, vigilanceAreas]
   )
-  const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
+  const totalVigilanceAreas = useMemo(
+    () => vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0,
+    [vigilanceAreaSearchResult?.length, vigilanceAreas?.ids?.length]
+  )
 
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
