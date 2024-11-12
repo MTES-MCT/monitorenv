@@ -8,8 +8,8 @@ import {
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import { groupBy } from 'lodash'
 import styled from 'styled-components'
+import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
@@ -53,14 +53,14 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryLayersByLayerName = groupBy(
+  const regulatoryLayersByLayerName = MonitorEnvWebWorker.getRegulatoryLayersByLayerName(
     regulatoryLayersSearchResult,
-    r => regulatoryLayers?.entities[r]?.layer_name
+    regulatoryLayers
   )
-  // const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
+  const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
   const { data: amps } = useGetAMPsQuery()
-  const ampResultsByAMPName = groupBy(ampsSearchResult /* ?? amps?.ids */, a => amps?.entities[a]?.name)
+  const ampResultsByAMPName = MonitorEnvWebWorker.getAMPsGroupByName(ampsSearchResult ?? amps?.entities, amps)
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
@@ -128,8 +128,7 @@ export function ResultList({ searchedText }: ResultListProps) {
             <Title data-cy="regulatory-result-list-button" onClick={toggleRegulatory}>
               ZONES RÉGLEMENTAIRES &nbsp;
               <NumberOfResults>
-                ({regulatoryLayersSearchResult?.length || '0'}{' '}
-                {pluralize('résultat', regulatoryLayersSearchResult?.length ?? 0)})
+                ({totalRegulatoryAreas} {pluralize('résultat', totalRegulatoryAreas)})
               </NumberOfResults>
             </Title>
           </Header>
