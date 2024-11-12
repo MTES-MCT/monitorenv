@@ -42,11 +42,8 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const ampLayersFeatures = useMemo(() => {
     let ampFeatures: Feature[] = []
-
-    if (ampsSearchResult || ampLayers?.entities) {
-      const ampsToDisplay = ampsSearchResult ?? ampLayers?.ids ?? []
-
-      ampFeatures = ampsToDisplay.reduce((amplayers, id) => {
+    if (ampsSearchResult && ampLayers?.entities) {
+      ampFeatures = ampsSearchResult.reduce((amplayers, id) => {
         if (showedAmpLayerIds.includes(id)) {
           return amplayers
         }
@@ -67,7 +64,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     return ampFeatures
-  }, [ampLayers?.entities, ampLayers?.ids, ampMetadataLayerId, ampsSearchResult, showedAmpLayerIds])
+  }, [ampLayers?.entities, ampMetadataLayerId, ampsSearchResult, showedAmpLayerIds])
 
   useEffect(() => {
     ampPreviewVectorSourceRef.current?.clear(true)
