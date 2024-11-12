@@ -54,7 +54,7 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const regulatoryLayersByLayerName = groupBy(
-    !regulatoryLayersSearchResult && isRegulatorySearchResultsVisible
+    !regulatoryLayersSearchResult && areRegulatoryResultsOpen
       ? regulatoryLayers?.ids
       : regulatoryLayersSearchResult ?? [],
     r => regulatoryLayers?.entities[r]?.layer_name
@@ -63,7 +63,7 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const { data: amps } = useGetAMPsQuery()
   const ampResultsByAMPName = groupBy(
-    !ampsSearchResult && isAmpSearchResultsVisible ? amps?.ids : ampsSearchResult ?? [],
+    !ampsSearchResult && areAmpsResultsOpen ? amps?.ids : ampsSearchResult ?? [],
     a => amps?.entities[a]?.name
   )
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
