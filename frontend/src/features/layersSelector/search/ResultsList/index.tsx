@@ -57,15 +57,15 @@ export function ResultList({ searchedText }: ResultListProps) {
     regulatoryLayersSearchResult ?? regulatoryLayers?.ids,
     r => regulatoryLayers?.entities[r]?.layer_name
   )
-  const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
+  const totalRegulatoryAreas = 10 // regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
   const { data: amps } = useGetAMPsQuery()
   const ampResulstsByAMPName = groupBy(ampsSearchResult ?? amps?.ids, a => amps?.entities[a]?.name)
-  const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
+  const totalAmps = 10 // ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
-  const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
+  const totalVigilanceAreas = 10 // vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
