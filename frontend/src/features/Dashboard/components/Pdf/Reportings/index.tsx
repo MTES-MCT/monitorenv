@@ -213,7 +213,7 @@ export function Reportings({
             {reporting.createdAt && (
               <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
             )}
-            {reporting.themeId && (
+            {!!reporting.themeId && (
               <Text>
                 {themes[reporting.themeId]?.theme} /{' '}
                 {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}

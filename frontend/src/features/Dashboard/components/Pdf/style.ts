@@ -1,5 +1,46 @@
 import { THEME } from '@mtes-mct/monitor-ui'
-import { StyleSheet } from '@react-pdf/renderer'
+import MarianeBold from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Bold.woff2'
+import MarianeBoldItalic from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Bold_Italic.woff2'
+import MarianeLight from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Light.woff2'
+import MarianeMedium from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Medium.woff2'
+import MarianeRegular from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Regular.woff2'
+import MarianeRegularItalic from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Regular_Italic.woff2'
+import { Font, StyleSheet } from '@react-pdf/renderer'
+
+export const registerFonts = () => {
+  Font.register({
+    family: 'Mariane',
+    fontWeight: 'bold',
+    src: MarianeBold
+  })
+  Font.register({
+    family: 'Mariane',
+    fontWeight: 'normal',
+    src: MarianeRegular
+  })
+  Font.register({
+    family: 'Mariane',
+    fontWeight: 'medium',
+    src: MarianeMedium
+  })
+  Font.register({
+    family: 'Mariane',
+    fontWeight: 'light',
+    src: MarianeLight
+  })
+  Font.register({
+    family: 'Mariane',
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    src: MarianeBoldItalic
+  })
+  Font.register({
+    family: 'Mariane',
+    fontStyle: 'italic',
+    fontWeight: 'normal',
+    src: MarianeRegularItalic
+  })
+}
 
 export const layoutStyle = StyleSheet.create({
   bold: {
@@ -64,26 +105,23 @@ export const areaStyle = StyleSheet.create({
     borderRadius: 1,
     borderStyle: 'solid',
     borderWidth: 1,
-    fontSize: 6.8,
+    fontSize: 5.5,
     width: '30%'
   },
   content: {
     backgroundColor: THEME.color.white,
-    padding: 5
+    padding: 5.5
   },
   description: {
     color: THEME.color.slateGray,
-    fontSize: 5,
-    width: '25%'
+    width: '30%'
   },
   details: {
     color: THEME.color.charcoal,
-    fontSize: 5.5,
-    width: '75%'
+    width: '70%'
   },
   header: {
     backgroundColor: THEME.color.gainsboro,
-    fontSize: 5.5,
     minHeight: 12.4,
     padding: '2 14'
   }

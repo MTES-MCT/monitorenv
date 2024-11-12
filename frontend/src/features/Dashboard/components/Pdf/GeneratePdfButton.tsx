@@ -5,7 +5,7 @@ import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { LinkButton } from '@mtes-mct/monitor-ui'
+import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { usePDF } from '@react-pdf/renderer'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
@@ -49,14 +49,14 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
       amps,
-      comments: dashboard.comments ?? '',
+      comments: dashboard.comments,
       controlUnits,
-      name: dashboard.name ?? '',
+      name: dashboard.name,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
       subThemes,
       themes,
-      updatedAt: dashboard.updatedAt ?? '',
+      updatedAt: dashboard.updatedAt,
       vigilanceAreas
     }),
     [
@@ -79,11 +79,18 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   useEffect(() => update(<Brief brief={brief} />), [brief, update])
 
+  const handleDownload = () => {
+    const link = document.createElement('a')
+    link.href = pdf.url ?? `${dashboard.name}.pdf`
+    link.download = `${dashboard.name}.pdf`
+    link.click()
+  }
+
   return (
-    <StyledLinkButton as="a" download={`${dashboard.name}.pdf`} href={pdf.url ?? `${dashboard.name}.pdf`}>
+    <StyledLinkButton Icon={Icon.Download} onClick={handleDownload}>
       Générer un brief
     </StyledLinkButton>
   )
 }
 
-const StyledLinkButton = styled(LinkButton)``
+const StyledLinkButton = styled(Button)``
