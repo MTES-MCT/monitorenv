@@ -47,7 +47,7 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
               accent={Accent.TERTIARY}
               Icon={Icon.FocusZones}
               onClick={focusOnStation}
-              title="Zommer sur la ville d'attache du moyen"
+              title="Zoom sur la ville d'attache du moyen"
             />
           </ButtonsContainer>
         </InfoBoxHeader>

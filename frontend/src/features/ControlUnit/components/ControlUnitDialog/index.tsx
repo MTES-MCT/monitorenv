@@ -97,7 +97,7 @@ export function ControlUnitDialog() {
   return (
     <Wrapper $isRightMenuOpened={isRightMenuOpened}>
       <StyledHeader>
-        <StyledIconButton Icon={Icon.Chevron} onClick={backToList} />
+        <StyledIconButton accent={Accent.TERTIARY} Icon={Icon.Chevron} onClick={backToList} />
         <MapMenuDialog.Title title={`${controlUnit.name} (${controlUnit.administration.name})`}>
           <b>{controlUnit.name}</b> ({controlUnit.administration.name})
         </MapMenuDialog.Title>
@@ -157,11 +157,26 @@ const Wrapper = styled(MapMenuDialog.Container)<{
 
 const StyledHeader = styled(MapMenuDialog.Header)`
   height: 48px;
-  padding: 14px 11px;
+  padding: 14px 11px 14px 8px;
 `
 
 const StyledIconButton = styled(IconButton)`
   transform: rotate(90deg);
+  color: ${p => p.theme.color.white};
+  &:hover,
+  &._hover {
+    color: ${p => p.theme.color.white};
+  }
+
+  &:active,
+  &._active {
+    color: ${p => p.theme.color.white};
+  }
+
+  &:disabled,
+  &._disabled {
+    color: ${p => p.theme.color.white};
+  }
 `
 const StyledMapMenuDialogBody = styled(MapMenuDialog.Body)`
   background-color: ${p => p.theme.color.gainsboro};
