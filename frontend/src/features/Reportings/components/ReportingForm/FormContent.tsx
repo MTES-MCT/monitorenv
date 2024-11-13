@@ -16,7 +16,7 @@ import {
   StyledThemeContainer,
   StyledToggle
 } from '@features/Reportings/style'
-import { isNewReporting } from '@features/Reportings/utils'
+import { createNewReportingSource, isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -127,8 +127,14 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   }, [selectedReporting])
 
   useEffect(() => {
+    // Force rerender init values for thematiques and empty reporting sources
     if (selectedReporting) {
-      setValues(selectedReporting)
+      setValues({
+        ...selectedReporting,
+        reportingSources: !selectedReporting.reportingSources?.length
+          ? [createNewReportingSource()]
+          : selectedReporting.reportingSources
+      })
       dispatch(reportingActions.setReportingContext(reportingContext))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
