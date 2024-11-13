@@ -32,10 +32,12 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
-  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [])
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: ampLayers } = useGetAMPsQuery()
-  const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
+  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [], {
+    skip: !dashboard
+  })
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
+  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const openPanel = dashboard?.openPanel
   const activeDashboard = dashboard?.dashboard
