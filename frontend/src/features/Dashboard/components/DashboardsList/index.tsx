@@ -4,9 +4,15 @@ import { SideWindowContent } from '@features/SideWindow/style'
 import styled from 'styled-components'
 
 import { DashboardsTable } from './DashboardsTable'
+import { TWO_MINUTES } from '../../../../constants'
 
 export function DashboardsList() {
-  const { data: dashboards, isError, isFetching, isLoading } = useGetDashboardsQuery()
+  const {
+    data: dashboards,
+    isError,
+    isFetching,
+    isLoading
+  } = useGetDashboardsQuery(undefined, { pollingInterval: TWO_MINUTES })
 
   return (
     <SideWindowContent>
@@ -20,7 +26,7 @@ export function DashboardsList() {
       {isError ? (
         <p>Erreur au chargement des données</p>
       ) : (
-        <DashboardsTable dashboards={dashboards ?? []} isLoading={isLoading || isFetching} />
+        <DashboardsTable dashboards={dashboards ?? []} isFetching={isFetching} isLoading={isLoading} />
       )}
     </SideWindowContent>
   )

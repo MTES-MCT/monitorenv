@@ -18,9 +18,11 @@ import { GroupActions } from './GroupActions'
 import type { Reporting } from 'domain/entities/reporting'
 
 export function ReportingsTable({
+  isFetching,
   isLoading,
   reportings
 }: {
+  isFetching: boolean
   isLoading: boolean
   reportings: (Reporting | undefined)[]
 }) {
@@ -33,15 +35,15 @@ export function ReportingsTable({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
-  const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
-
   const columns = useMemo(
     () =>
       isLoading
-        ? Columns(themes, legacyFirefoxOffset).map(column => ({ ...column, cell: StyledSkeletonRow }))
-        : Columns(themes, legacyFirefoxOffset),
-    [isLoading, legacyFirefoxOffset, themes]
+        ? Columns(themes, legacyFirefoxOffset, false).map(column => ({ ...column, cell: StyledSkeletonRow }))
+        : Columns(themes, legacyFirefoxOffset, isFetching),
+    [isLoading, isFetching, legacyFirefoxOffset, themes]
   )
+
+  const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
 
   const table = useTable({
     columns,

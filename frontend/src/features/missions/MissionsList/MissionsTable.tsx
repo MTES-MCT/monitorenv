@@ -1,4 +1,5 @@
 import { Table } from '@components/Table'
+import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
 import { type SortingState } from '@tanstack/react-table'
@@ -8,11 +9,16 @@ import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { Columns } from './Columns'
-import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 
 import type { Mission } from '../../../domain/entities/missions'
 
-export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
+type MissionsTableProps = {
+  isFetching: boolean
+  isLoading: boolean
+  missions: Mission[]
+}
+
+export function MissionsTable({ isFetching, isLoading, missions }: MissionsTableProps) {
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { pathname } = useLocation()
@@ -23,9 +29,9 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
   const columns = useMemo(
     () =>
       isLoading
-        ? Columns(legacyFirefoxOffset).map(column => ({ ...column, cell: StyledSkeletonRow }))
-        : Columns(legacyFirefoxOffset),
-    [isLoading, legacyFirefoxOffset]
+        ? Columns(legacyFirefoxOffset, false).map(column => ({ ...column, cell: StyledSkeletonRow }))
+        : Columns(legacyFirefoxOffset, isFetching),
+    [isLoading, isFetching, legacyFirefoxOffset]
   )
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
