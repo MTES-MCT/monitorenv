@@ -15,9 +15,11 @@ import { Columns } from './Columns'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 export function VigilanceAreasTable({
+  isFetching,
   isLoading,
   vigilanceAreas
 }: {
+  isFetching: boolean
   isLoading: boolean
   vigilanceAreas: VigilanceArea.VigilanceArea[]
 }) {
@@ -27,15 +29,15 @@ export function VigilanceAreasTable({
 
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'name' }])
 
-  const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : vigilanceAreas), [isLoading, vigilanceAreas])
-
   const columns = useMemo(
     () =>
       isLoading
-        ? Columns(legacyFirefoxOffset).map(column => ({ ...column, cell: StyledSkeletonRow }))
-        : Columns(legacyFirefoxOffset),
-    [isLoading, legacyFirefoxOffset]
+        ? Columns(legacyFirefoxOffset, false).map(column => ({ ...column, cell: StyledSkeletonRow }))
+        : Columns(legacyFirefoxOffset, isFetching),
+    [isLoading, isFetching, legacyFirefoxOffset]
   )
+
+  const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : vigilanceAreas), [isLoading, vigilanceAreas])
 
   const table = useTable({
     columns,

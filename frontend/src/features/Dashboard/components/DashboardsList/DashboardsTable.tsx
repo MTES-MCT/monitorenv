@@ -16,10 +16,11 @@ import type { Dashboard } from '@features/Dashboard/types'
 
 interface DashboardsTableProps {
   dashboards: Dashboard.Dashboard[]
+  isFetching: boolean
   isLoading: boolean
 }
 
-export function DashboardsTable({ dashboards, isLoading }: DashboardsTableProps) {
+export function DashboardsTable({ dashboards, isFetching, isLoading }: DashboardsTableProps) {
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { pathname } = useLocation()
@@ -31,16 +32,17 @@ export function DashboardsTable({ dashboards, isLoading }: DashboardsTableProps)
   const columns = useMemo(
     () =>
       isLoading
-        ? Columns(regulatoryAreas, controlUnits, legacyFirefoxOffset).map(column => ({
-            ...column,
-            cell: StyledSkeletonRow
-          }))
-        : Columns(regulatoryAreas, controlUnits, legacyFirefoxOffset),
-    [isLoading, controlUnits, regulatoryAreas, legacyFirefoxOffset]
+        ? Columns(Object.values(regulatoryAreas?.entities ?? {}), controlUnits, legacyFirefoxOffset, false).map(
+            column => ({
+              ...column,
+              cell: StyledSkeletonRow
+            })
+          )
+        : Columns(Object.values(regulatoryAreas?.entities ?? {}), controlUnits, legacyFirefoxOffset, isFetching),
+    [isFetching, isLoading, controlUnits, regulatoryAreas, legacyFirefoxOffset]
   )
 
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'updatedAt' }])
-
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : dashboards), [isLoading, dashboards])
 
   const table = useTable({

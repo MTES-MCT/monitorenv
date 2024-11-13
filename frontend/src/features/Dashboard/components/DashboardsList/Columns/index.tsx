@@ -1,5 +1,6 @@
 import { DateCell } from '@components/Table/DateCell'
 import { LocalizeCell } from '@components/Table/LocalizeCell'
+import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { type Row } from '@tanstack/react-table'
 
 import { ControlUnitsCell } from '../Rows/ControlUnitsCell'
@@ -8,11 +9,18 @@ import { RegulatoryAreasThemesCell } from '../Rows/RegulatoryAreasThemesCell'
 import { TotalSelectedItemsCell } from '../Rows/TotalSelectedItemsCell'
 
 import type { Dashboard } from '@features/Dashboard/types'
+import type { ControlUnit } from '@mtes-mct/monitor-ui'
+import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
-export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: number = 0) => [
+export const Columns = (
+  regulatoryAreas: RegulatoryLayerCompactFromAPI[],
+  controlUnits: ControlUnit.ControlUnit[] | undefined,
+  legacyFirefoxOffset: number = 0,
+  isFetching: boolean = false
+) => [
   {
     accessorFn: row => row.seaFront,
-    cell: info => info.getValue(),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue()),
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
@@ -20,7 +28,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
   },
   {
     accessorFn: row => row.name,
-    cell: info => info.getValue(),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue()),
     enableSorting: true,
     header: () => 'Nom',
     id: 'name',
@@ -28,7 +36,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
   },
   {
     accessorFn: row => row.createdAt,
-    cell: info => <DateCell date={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
     enableSorting: true,
     header: () => 'Créé le ...',
     id: 'createdAt',
@@ -36,7 +44,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
   },
   {
     accessorFn: row => row.updatedAt,
-    cell: info => <DateCell date={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
     enableSorting: true,
     header: () => 'Mis à jour le ...',
     id: 'updatedAt',
@@ -44,7 +52,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
   },
   {
     accessorFn: row => row.controlUnitIds,
-    cell: info => <ControlUnitsCell controlUnitIds={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <ControlUnitsCell controlUnitIds={info.getValue()} />),
     enableSorting: true,
     header: () => 'Unité (Administration)',
     id: 'controlUnitIds',
@@ -62,7 +70,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
   },
   {
     accessorFn: row => row.regulatoryAreaIds,
-    cell: info => <RegulatoryAreasThemesCell themeIds={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <RegulatoryAreasThemesCell themeIds={info.getValue()} />),
     enableSorting: true,
     header: () => 'Thématiques',
     id: 'regulatoryAreaIds',
@@ -71,15 +79,15 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
       const themeIdA = rowA.original[columnId][0]
       const themeIdB = rowB.original[columnId][0]
 
-      const themeA: string = regulatoryAreas?.entities[themeIdA]?.layer_name ?? ''
-      const themeB: string = regulatoryAreas?.entities[themeIdB]?.layer_name ?? ''
+      const themeA: string = regulatoryAreas?.[themeIdA]?.layer_name ?? ''
+      const themeB: string = regulatoryAreas?.[themeIdB]?.layer_name ?? ''
 
       return themeA?.localeCompare(themeB)
     }
   },
   {
     accessorFn: row => row,
-    cell: ({ row }) => <TotalSelectedItemsCell row={row} />,
+    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <TotalSelectedItemsCell row={row} />),
     enableSorting: true,
     header: () => "Nb d'éléments sélectionnés",
     id: 'totalSelectedItems',
@@ -106,7 +114,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
   },
   {
     accessorFn: row => row.geom,
-    cell: info => <LocalizeCell geom={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <LocalizeCell geom={info.getValue()} />),
     enableSorting: false,
     header: () => '',
     id: 'geom',
@@ -114,7 +122,7 @@ export const Columns = (regulatoryAreas, controlUnits, legacyFirefoxOffset: numb
   },
   {
     accessorFn: row => row.id,
-    cell: info => <EditDashboardCell id={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <EditDashboardCell id={info.getValue()} />),
     enableSorting: false,
     header: () => '',
     id: 'edit',

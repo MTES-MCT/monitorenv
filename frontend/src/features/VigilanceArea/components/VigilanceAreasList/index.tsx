@@ -26,7 +26,7 @@ export function VigilancesAreasList() {
             'zone',
             vigilanceAreasResults.length ?? 0
           )} de vigilance`}</TotalResults>
-          <VigilanceAreasTable isLoading={isLoading || isFetching} vigilanceAreas={vigilanceAreasResults} />
+          <VigilanceAreasTable isFetching={isFetching} isLoading={isLoading} vigilanceAreas={vigilanceAreasResults} />
         </>
       )}
     </SideWindowContent>

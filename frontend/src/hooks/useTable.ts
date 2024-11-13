@@ -32,6 +32,7 @@ export function useTable({
     enableRowSelection: withRowSelection,
     enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: (row: any) => row.id,
     getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: withRowSelection ? setRowSelection : undefined,
     onSortingChange: setSorting,

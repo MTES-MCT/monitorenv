@@ -1,5 +1,6 @@
 import { DateCell } from '@components/Table/DateCell'
 import { LocalizeCell } from '@components/Table/LocalizeCell'
+import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 
 import { CellActionThemes } from '../CellActionThemes'
 import { CellCompletionStatus } from '../CellCompletionStatus'
@@ -12,10 +13,10 @@ import { sortCompletion, sortNumberOfControls, sortStatus } from '../utils'
 
 import type { Row } from '@tanstack/react-table'
 
-export const Columns = (legacyFirefoxOffset: number = 0) => [
+export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => [
   {
     accessorFn: row => row.startDateTimeUtc,
-    cell: info => <DateCell date={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
@@ -23,7 +24,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.endDateTimeUtc,
-    cell: info => <DateCell date={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
@@ -31,7 +32,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.facade,
-    cell: info => info.getValue(),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue()),
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
@@ -39,7 +40,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.missionTypes,
-    cell: info => getMissionTypeCell(info.getValue()),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : getMissionTypeCell(info.getValue())),
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
@@ -47,7 +48,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.controlUnits,
-    cell: info => getResourcesCell(info.getValue()),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : getResourcesCell(info.getValue())),
     enableSorting: false,
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
@@ -56,7 +57,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
 
   {
     accessorFn: row => row.envActions,
-    cell: info => <CellActionThemes envActions={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <CellActionThemes envActions={info.getValue()} />),
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
@@ -64,7 +65,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.envActions,
-    cell: info => getNumberOfControlsCell(info.getValue()),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : getNumberOfControlsCell(info.getValue())),
     header: () => 'Ctr.',
     id: 'envActions',
     size: 75 + legacyFirefoxOffset,
@@ -72,7 +73,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row,
-    cell: ({ row }) => <CellStatus row={row} />,
+    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellStatus row={row} />),
     header: () => 'Statut',
     id: 'status',
     size: 121 + legacyFirefoxOffset,
@@ -80,7 +81,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row,
-    cell: ({ row }) => <CellCompletionStatus row={row} />,
+    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellCompletionStatus row={row} />),
     header: () => 'État données',
     id: 'completion',
     size: 144 + legacyFirefoxOffset,
@@ -88,7 +89,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.geom,
-    cell: info => <LocalizeCell geom={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <LocalizeCell geom={info.getValue()} />),
     enableSorting: false,
     header: () => '',
     id: 'geom',
@@ -96,7 +97,7 @@ export const Columns = (legacyFirefoxOffset: number = 0) => [
   },
   {
     accessorFn: row => row.id,
-    cell: info => <CellEditMission id={info.getValue()} />,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <CellEditMission id={info.getValue()} />),
     enableSorting: false,
     header: () => '',
     id: 'edit',
