@@ -52,7 +52,7 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
       .max(3, 'Maximum 3 lettres pour le trigramme')
       .nullable()
       .required('Requis'),
-    reportingSources: Yup.array().of(ReportingSourceSchema).ensure().required(),
+    reportingSources: Yup.array().of(ReportingSourceSchema).min(1).required(),
     reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),
     subThemeIds: Yup.array()
       .of(Yup.number().required())
