@@ -10,7 +10,11 @@ import {
   type NewMission,
   type NewInfraction
 } from '../../../../../../domain/entities/missions'
-import { ControlStatusEnum, type ReportingForTimeline } from '../../../../../../domain/entities/reporting'
+import {
+  ControlStatusEnum,
+  ReportingTypeEnum,
+  type ReportingForTimeline
+} from '../../../../../../domain/entities/reporting'
 import { useGetControlPlans } from '../../../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../../../utils/getDateAsLocalizedString'
 import { StatusActionTag } from '../../../../../Reportings/components/StatusActionTag'
@@ -49,6 +53,7 @@ export function ReportingCard({
     let newInfractions: Array<NewInfraction> = []
 
     if (
+      action.reportType === ReportingTypeEnum.INFRACTION_SUSPICION &&
       action.targetType !== ReportingTargetTypeEnum.OTHER &&
       action.targetDetails &&
       action.targetDetails.length > 0
@@ -104,6 +109,7 @@ export function ReportingCard({
 
     setFieldValue('envActions', [newControl, ...(values?.envActions ?? [])])
     setCurrentActionId(newControl.id)
+
     const reportingToUpdateIndex = values?.attachedReportings
       ? values?.attachedReportings?.findIndex(reporting => Number(reporting.id) === Number(action.id))
       : -1
