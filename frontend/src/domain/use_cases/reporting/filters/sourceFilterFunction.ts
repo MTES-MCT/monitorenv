@@ -1,4 +1,4 @@
-import type { SourceFilterProps } from '../../../shared_slices/ReportingsFilters'
+import type { SourceFilterProps } from '@features/Reportings/Filters/slice'
 import type { Reporting } from 'domain/entities/reporting'
 
 export function sourceFilterFunction(reporting: Reporting, sourceFilter: SourceFilterProps[] | undefined) {

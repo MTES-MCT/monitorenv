@@ -1,4 +1,3 @@
-import { attachMissionToReportingSliceActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import { diff } from 'deep-object-diff'
@@ -6,6 +5,7 @@ import { useFormikContext } from 'formik'
 import { omit } from 'lodash'
 import { useEffect } from 'react'
 
+import { attachMissionToReportingSliceActions } from './AttachMission/slice'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 
 import type { Reporting } from 'domain/entities/reporting'

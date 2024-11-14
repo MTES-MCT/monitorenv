@@ -1,8 +1,9 @@
+import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
+import { reportingActions } from '@features/Reportings/slice'
+
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { reportingActions } from '../../shared_slices/reporting'
 
 export const duplicateReporting = (reportingId: number) => async (dispatch, getState) => {
   const { reportings } = getState().reporting

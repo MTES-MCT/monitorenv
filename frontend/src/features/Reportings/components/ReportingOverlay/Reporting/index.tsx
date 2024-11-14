@@ -1,9 +1,9 @@
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
+import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened, removeOverlayStroke } from 'domain/shared_slices/Global'
-import { reportingActions } from 'domain/shared_slices/reporting'
 import { convertToFeature } from 'domain/types/map'
 import { useMemo, useState } from 'react'
 

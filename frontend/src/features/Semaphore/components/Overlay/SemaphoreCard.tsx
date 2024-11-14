@@ -1,8 +1,12 @@
+import { reportingsFiltersActions, ReportingsFiltersEnum } from '@features/Reportings/Filters/slice'
+import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { ReportingSourceEnum } from 'domain/entities/reporting'
+import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { ReportingSourceEnum, StatusFilterEnum } from 'domain/entities/reporting'
+import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { removeOverlayStroke, ReportingContext } from 'domain/shared_slices/Global'
 import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
@@ -89,6 +93,34 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
     dispatch(closeAllOverlays())
   }
 
+  const goToReportingsList = () => {
+    dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.REPORTINGS))
+    dispatch(reportingsFiltersActions.resetReportingsFilters())
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.PERIOD_FILTER,
+        value: ReportingDateRangeEnum.YEAR
+      })
+    )
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.STATUS_FILTER,
+        value: [StatusFilterEnum.IN_PROGRESS, StatusFilterEnum.ARCHIVED]
+      })
+    )
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.SOURCE_FILTER,
+        value: [
+          {
+            id,
+            label: unit ?? name
+          }
+        ]
+      })
+    )
+  }
+
   if (!displaySemaphoresLayer || hasMapInteraction) {
     return null
   }
@@ -160,9 +192,14 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
             </UrlContainer>
           )}
 
-          <StyledButton Icon={Icon.Plus} isFullWidth onClick={createSemaphoreReporting}>
-            Créer un signalement
-          </StyledButton>
+          <ButtonsContainer>
+            <StyledButton Icon={Icon.Plus} isFullWidth onClick={createSemaphoreReporting}>
+              Créer un signalement
+            </StyledButton>
+            <StyledButton accent={Accent.SECONDARY} Icon={Icon.Report} isFullWidth onClick={goToReportingsList}>
+              Voir les signalements du sémaphore
+            </StyledButton>
+          </ButtonsContainer>
         </StyledContactContainer>
       )}
     </Wrapper>
@@ -238,9 +275,15 @@ const StyledTooltip = styled(Tooltip)`
   }
 `
 // TODO delete when Monitor-ui component have good padding
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+`
 const StyledButton = styled(Button)`
   padding: 4px 12px;
-  margin-top: 16px;
 `
 const UrlContainer = styled.div`
   display: flex;

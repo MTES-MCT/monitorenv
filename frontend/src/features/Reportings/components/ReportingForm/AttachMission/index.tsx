@@ -1,4 +1,3 @@
-import { attachMissionToReportingSliceActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
@@ -15,6 +14,7 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { AttachedMissionCard } from './AttachedMissionCard'
+import { attachMissionToReportingSliceActions } from './slice'
 
 import type { Reporting } from 'domain/entities/reporting'
 

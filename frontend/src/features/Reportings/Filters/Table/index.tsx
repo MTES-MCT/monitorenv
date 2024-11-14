@@ -7,9 +7,9 @@ import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
-import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReportingSearch } from '../ReportingSearch'
+import { ReportingsFiltersEnum } from '../slice'
 import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
 
 export function TableReportingsFiltersWithRef(

@@ -1,3 +1,4 @@
+import { reportingActions } from '@features/Reportings/slice'
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
@@ -5,7 +6,6 @@ import { ApiErrorCode } from '../../../api/types'
 import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 import type { Reporting } from '../../entities/reporting'

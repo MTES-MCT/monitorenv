@@ -1,9 +1,9 @@
+import { reportingActions } from '@features/Reportings/slice'
 import { useFormikContext, type FormikErrors } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
-import { reportingActions } from '../../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 

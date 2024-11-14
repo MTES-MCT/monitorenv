@@ -1,11 +1,10 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice } from '@reduxjs/toolkit'
+import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { StatusFilterEnum } from 'domain/entities/reporting'
 import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-
-import { ReportingDateRangeEnum } from '../entities/dateRange'
-import { StatusFilterEnum } from '../entities/reporting'
 
 export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
 
