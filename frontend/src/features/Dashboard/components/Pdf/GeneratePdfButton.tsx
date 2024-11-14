@@ -87,7 +87,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
   }
 
   return (
-    <StyledLinkButton Icon={Icon.Download} onClick={handleDownload}>
+    <StyledLinkButton Icon={Icon.Document} onClick={handleDownload}>
       Générer un brief
     </StyledLinkButton>
   )
