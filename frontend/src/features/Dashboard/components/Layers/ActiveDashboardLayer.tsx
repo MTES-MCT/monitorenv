@@ -18,7 +18,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { Dashboard } from '../../types'
 
@@ -41,6 +41,16 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const activeDashboard = dashboard?.dashboard
 
   const isLayerVisible = displayDashboardLayer && !!dashboard
+
+  const metadataLayerId = useAppSelector(state => state.layersMetadata.metadataLayerId)
+  const drawBorder = useCallback(
+    (layerId: number, feature: Feature<Geometry>, type: Dashboard.Block) => {
+      if ((layerId === openPanel?.id && openPanel.type === type) || metadataLayerId === layerId) {
+        feature.set('metadataIsShowed', true)
+      }
+    },
+    [openPanel, metadataLayerId]
+  )
 
   const layersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const layersVectorLayerRef = useRef(
@@ -77,6 +87,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
               if (!feature) {
                 return feats
               }
+              drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
               feature.setStyle(getRegulatoryLayerStyle(feature))
               feats.push(feature)
             }
@@ -101,11 +112,12 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
 
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
               const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
-              feature?.setStyle(getAMPLayerStyle(feature))
 
               if (!feature) {
                 return feats
               }
+              drawBorder(layerId, feature, Dashboard.Block.AMP)
+              feature?.setStyle(getAMPLayerStyle(feature))
 
               feats.push(feature)
             }
@@ -177,7 +189,8 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     regulatoryLayers,
     vigilanceAreas?.entities,
     reportings,
-    dashboard?.dashboard.geom
+    dashboard?.dashboard.geom,
+    drawBorder
   ])
 
   useEffect(() => {

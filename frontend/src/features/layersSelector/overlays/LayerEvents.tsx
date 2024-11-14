@@ -43,10 +43,11 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const vectorLayer = useRef(
     new VectorLayer({
       source: vectorSource.current,
-      style: (_, resolution) => layerListIconStyle(resolution)
+      style: (_, resolution) => layerListIconStyle(resolution),
+      zIndex: Layers.AREA_ICON.zIndex
     })
   )
-  const feature = vectorSource.current?.getFeatureById(`${Layers.AERA_ICON}:${FEATURE_ID}`)
+  const feature = vectorSource.current?.getFeatureById(`${Layers.AREA_ICON}:${FEATURE_ID}`)
   const overlayCoordinates = useAppSelector(state => getOverlayCoordinates(state.global, String(feature?.getId())))
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
     const iconFeature = new Feature({
       geometry: new Point(mapClickEvent.coordinates ?? [0, 0])
     })
-    iconFeature.setId(`${Layers.AERA_ICON}:${FEATURE_ID}`)
+    iconFeature.setId(`${Layers.AREA_ICON}:${FEATURE_ID}`)
 
     vectorSource.current?.addFeature(iconFeature)
 

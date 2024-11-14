@@ -22,10 +22,10 @@ type Layer = {
 export enum MonitorEnvLayers {
   ACTIONS = 'ACTIONS',
   AEM = 'AEM',
-  AERA_ICON = 'AERA_ICON',
   AMP = 'AMP',
   AMP_LINKED_TO_VIGILANCE_AREA = 'AMP_LINKED_TO_VIGILANCE_AREA',
   AMP_PREVIEW = 'AMP_PREVIEW',
+  AREA_ICON = 'AREA_ICON',
   BASE_LAYER = 'BASE_LAYER',
   COMPETENCE_CROSS_AREA = 'COMPETENCE_CROSS_AREA',
   DASHBOARD = 'DASHBOARD',
@@ -179,7 +179,7 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.REGULATORY_ENV,
     name: 'environment_regulatory_areas',
     type: LayerType.REGULATORY,
-    zIndex: 900
+    zIndex: 935
   },
   [MonitorEnvLayers.AMP]: {
     code: 'AMP',
@@ -292,13 +292,13 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.DASHBOARD_PREVIEW,
     zIndex: 1300
   },
-
   [MonitorEnvLayers.DASHBOARDS]: {
     code: MonitorEnvLayers.DASHBOARDS,
     zIndex: 1500
   },
-  [MonitorEnvLayers.AERA_ICON]: {
-    code: MonitorEnvLayers.AERA_ICON
+  [MonitorEnvLayers.AREA_ICON]: {
+    code: MonitorEnvLayers.AREA_ICON,
+    zIndex: 1500
   }
 }
 
