@@ -4,7 +4,6 @@ updates:
     directory: "/"
     assignees:
       - "claire2212"
-      - "ivangabriele"
       - "maximeperraultdev"
     schedule:
       interval: "monthly"
@@ -26,11 +25,11 @@ updates:
       non-major-dependencies:
         applies-to: version-updates
         dependency-type: production
-        update-types: ['minor', 'patch']
+        update-types: ["minor", "patch"]
       non-major-dev-dependencies:
         applies-to: version-updates
         dependency-type: development
-        update-types: ['minor', 'patch']
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "pip"
     directory: "/datascience"
@@ -49,17 +48,16 @@ updates:
       non-major-dependencies:
         applies-to: version-updates
         dependency-type: production
-        update-types: ['minor', 'patch']
+        update-types: ["minor", "patch"]
       non-major-dev-dependencies:
         applies-to: version-updates
         dependency-type: development
-        update-types: ['minor', 'patch']
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "npm"
     directory: "/frontend"
     assignees:
       - "claire2212"
-      - "ivangabriele"
       - "maximeperraultdev"
     schedule:
       interval: "monthly"
@@ -72,8 +70,8 @@ updates:
       non-major-dependencies:
         applies-to: version-updates
         dependency-type: production
-        update-types: ['minor', 'patch']
+        update-types: ["minor", "patch"]
       non-major-dev-dependencies:
         applies-to: version-updates
         dependency-type: development
-        update-types: ['minor', 'patch']
+        update-types: ["minor", "patch"]
