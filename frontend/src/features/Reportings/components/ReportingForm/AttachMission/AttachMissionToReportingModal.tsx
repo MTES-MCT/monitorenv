@@ -1,5 +1,4 @@
 import { MapInteraction } from '@features/commonComponents/Modals/MapInteraction'
-import { attachMissionToReportingSliceActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -7,6 +6,8 @@ import {
   updateMapInteractionListeners
 } from 'domain/use_cases/map/updateMapInteractionListeners'
 import styled from 'styled-components'
+
+import { attachMissionToReportingSliceActions } from './slice'
 
 export function AttachMissionToReportingModal() {
   const dispatch = useAppDispatch()

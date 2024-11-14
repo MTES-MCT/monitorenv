@@ -3,7 +3,7 @@ import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { useSyncFormValuesWithRedux } from '@features/Reportings/hooks/useSyncFormValuesWithRedux'
-import { attachMissionToReportingSliceActions } from '@features/Reportings/slice'
+import { reportingActions } from '@features/Reportings/slice'
 import {
   ReportTypeMultiRadio,
   SaveBanner,
@@ -43,7 +43,6 @@ import {
   setReportingFormVisibility,
   VisibilityState
 } from 'domain/shared_slices/Global'
-import { reportingActions } from 'domain/shared_slices/reporting'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -58,6 +57,7 @@ import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { AttachMission } from './AttachMission'
+import { attachMissionToReportingSliceActions } from './AttachMission/slice'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
 import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'

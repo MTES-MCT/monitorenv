@@ -1,7 +1,8 @@
+import { reportingActions } from '@features/Reportings/slice'
+
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { mainWindowActions } from '../../../features/MainWindow/slice'
 import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
-import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const deleteReporting = (id: number | string | undefined) => async (dispatch, getState) => {

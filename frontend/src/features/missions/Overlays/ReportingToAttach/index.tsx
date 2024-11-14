@@ -1,7 +1,7 @@
 import { ReportingCard } from '@features/Reportings/components/ReportingOverlay/Reporting/ReportingCard'
+import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
-import { reportingActions } from 'domain/shared_slices/reporting'
 import { convertToFeature } from 'domain/types/map'
 import { useState } from 'react'
 

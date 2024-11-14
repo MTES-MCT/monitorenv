@@ -3,7 +3,7 @@ import { debounce } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
+import { reportingsFiltersActions, ReportingsFiltersEnum } from './slice'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 

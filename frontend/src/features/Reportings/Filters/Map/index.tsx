@@ -10,10 +10,10 @@ import {
   ReportingSourceLabels
 } from '../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
-import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
+import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
 export function MapReportingsFiltersWithRef(

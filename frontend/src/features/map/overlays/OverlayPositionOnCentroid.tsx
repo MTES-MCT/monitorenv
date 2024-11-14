@@ -1,7 +1,7 @@
 import { dashboardActions } from '@features/Dashboard/slice'
 import { missionActions } from '@features/missions/slice'
+import { reportingActions } from '@features/Reportings/slice'
 import { Layers } from 'domain/entities/layers/constants'
-import { reportingActions } from 'domain/shared_slices/reporting'
 import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { convertToFeature, type MapClickEvent } from 'domain/types/map'
 import { setOpenedOverlay } from 'domain/use_cases/map/setOpenedOverlay'

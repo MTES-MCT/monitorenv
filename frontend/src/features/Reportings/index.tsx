@@ -10,7 +10,7 @@ import { switchReporting } from '../../domain/use_cases/reporting/switchReportin
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
-import type { ReportingType } from 'domain/shared_slices/reporting'
+import type { ReportingType } from './slice'
 
 export function Reportings({ context }: { context: ReportingContext }) {
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)

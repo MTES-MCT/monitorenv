@@ -1,11 +1,11 @@
 import { dashboardActions } from '@features/Dashboard/slice'
+import { reportingActions } from '@features/Reportings/slice'
 import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { SideWindow } from '.'
 import { SideWindowStatus, sideWindowActions } from './slice'
 import { ReportingContext, VisibilityState, setReportingFormVisibility } from '../../domain/shared_slices/Global'
-import { reportingActions } from '../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { mainWindowActions } from '../MainWindow/slice'

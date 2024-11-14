@@ -1,8 +1,9 @@
+import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
+import { reportingActions } from '@features/Reportings/slice'
+
 import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { reportingActions } from '../../shared_slices/reporting'
 
 import type { Reporting } from '../../entities/reporting'
 import type { HomeAppThunk } from '@store/index'

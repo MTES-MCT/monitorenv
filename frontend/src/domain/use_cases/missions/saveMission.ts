@@ -1,3 +1,4 @@
+import { reportingActions } from '@features/Reportings/slice'
 import omit from 'lodash/omit'
 import { generatePath } from 'react-router'
 
@@ -10,7 +11,6 @@ import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
-import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const saveMission =

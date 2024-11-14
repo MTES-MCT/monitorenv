@@ -1,7 +1,8 @@
+import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
+import { reportingActions } from '@features/Reportings/slice'
+
 import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const closeReporting =
