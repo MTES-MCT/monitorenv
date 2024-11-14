@@ -2,6 +2,7 @@ import { useGetDashboardsQuery } from '@api/dashboardsAPI'
 import { selectDashboardOnMap } from '@features/Dashboard/useCases/selectDashboardOnMap'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { convertToFeature } from 'domain/types/map'
@@ -20,6 +21,9 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displayDashboardLayer } = useAppSelector(state => state.global)
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = displayDashboardLayer && !hasMapInteraction
+
   const { data: dashboards } = useGetDashboardsQuery()
 
   const dashboardsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
@@ -64,8 +68,8 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [dashboards])
 
   useEffect(() => {
-    dashboardsVectorLayerRef.current?.setVisible(displayDashboardLayer)
-  }, [displayDashboardLayer])
+    dashboardsVectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
   useEffect(() => {
     const feature = convertToFeature(mapClickEvent?.feature)
