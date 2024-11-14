@@ -71,7 +71,7 @@ export function OverlayPositionOnCoordinates({
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
 
           const FEATURE_ID = 'AreaIconFeature'
-          dispatch(setOverlayCoordinates({ coordinates: nextCoordinates, name: `${Layers.AERA_ICON}:${FEATURE_ID}` }))
+          dispatch(setOverlayCoordinates({ coordinates: nextCoordinates, name: `${Layers.AREA_ICON}:${FEATURE_ID}` }))
 
           isThrottled.current = false
         }
