@@ -54,9 +54,6 @@ export const layoutStyle = StyleSheet.create({
   column: {
     flexDirection: 'column'
   },
-  comments: {
-    fontSize: 7.5
-  },
   header: {
     display: 'flex',
     flexDirection: 'row',

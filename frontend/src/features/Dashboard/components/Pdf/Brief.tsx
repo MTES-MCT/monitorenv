@@ -2,9 +2,10 @@
 
 // TODO (04/11/2024) : use monitor-ui fonts instead of imported/duplicated ones
 
-import { Document, Page, Text, View } from '@react-pdf/renderer'
+import { Document, Page, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
+import { Comments } from './Comments'
 import { ControlUnits } from './ControlUnits'
 import { Headings } from './Layout/Headings'
 import { RegulatoryAreas } from './RegulatoryAreas'
@@ -29,9 +30,8 @@ export function Brief({ brief }: BriefProps) {
         <View style={layoutStyle.section}>
           <ControlUnits controlUnits={brief.controlUnits} />
         </View>
-        <View style={layoutStyle.section}>
-          <Text style={layoutStyle.title}>Commentaires</Text>
-          <Text style={layoutStyle.comments}>{brief.comments}</Text>
+        <View>
+          <Comments comments={brief.comments} />
         </View>
         <View style={layoutStyle.section}>
           <Reportings reportings={brief.reportings} subThemes={brief.subThemes} themes={brief.themes} />
