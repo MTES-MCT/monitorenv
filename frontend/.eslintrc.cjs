@@ -8,7 +8,7 @@ module.exports = {
     ecmaVersion: 2022,
     project: path.join(__dirname, 'tsconfig.json')
   },
-  ignorePatterns: ['.eslintrc.js', '.eslintrc.partial.js'],
+  ignorePatterns: ['.eslintrc.cjs'],
   env: {
     browser: true
   },
@@ -138,7 +138,7 @@ module.exports = {
       files: ['**/*.test.ts', '**/*.test.tsx', 'puppeteer/**/*.ts'],
       plugins: ['jest'],
       env: {
-        jest: true,
+        jest: true
       },
       rules: {
         'jest/no-disabled-tests': 'error',
@@ -151,7 +151,7 @@ module.exports = {
         'no-restricted-syntax': 'off',
         'no-underscore-dangle': 'off',
         'import/no-default-export': 'off',
-        'import/no-extraneous-dependencies': 'off',
+        'import/no-extraneous-dependencies': 'off'
       }
     },
 
@@ -199,6 +199,12 @@ module.exports = {
       env: {
         browser: false,
         node: true
+      },
+      rules: {
+        'import/no-default-export': 'off',
+        'import/no-extraneous-dependencies': 'off',
+
+        '@typescript-eslint/naming-convention': 'off'
       }
     }
   ]

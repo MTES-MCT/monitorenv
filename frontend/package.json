@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "license": "AGPL-3.0",
   "private": true,
+  "type": "module",
   "engines": {
     "node": "20",
     "npm": "10"
@@ -16,7 +17,7 @@
     "start": "vite preview --port 3000",
     "test:e2e": "cypress run --browser firefox --config-file ./config/cypress.config.ts --e2e",
     "test:e2e:open": "cypress open --browser firefox --config-file ./config/cypress.config.ts --e2e",
-    "test:lint": "eslint ./src",
+    "test:lint": "eslint --config=./.eslintrc.cjs ./src",
     "test:lint:fix": "npm run test:lint -- --fix",
     "test:multi-windows:open": "IS_HEADLESS=false jest --config=./config/multi-windows/jest.config.js",
     "test:multi-windows:run": "IS_HEADLESS=true jest --config=./config/multi-windows/jest.config.js",
