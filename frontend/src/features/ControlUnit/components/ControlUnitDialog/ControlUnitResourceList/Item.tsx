@@ -1,5 +1,7 @@
+import { stationActions } from '@features/Station/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, ControlUnit, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Layers } from 'domain/entities/layers/constants'
 import { mapActions } from 'domain/shared_slices/Map'
 import { fromLonLat } from 'ol/proj'
 import { useCallback } from 'react'
@@ -24,8 +26,10 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
   }, [controlUnitResource.id, onEdit])
 
   const focusOnStation = () => {
-    const baseCoordinate = fromLonLat([controlUnitResource.station.longitude, controlUnitResource.station.latitude])
+    const { station } = controlUnitResource
+    const baseCoordinate = fromLonLat([station.longitude, station.latitude])
     dispatch(mapActions.setZoomToCenter(baseCoordinate))
+    dispatch(stationActions.hightlightFeatureIds([`${Layers.STATIONS.code}:${station.id}`]))
   }
 
   return (
