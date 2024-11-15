@@ -46,6 +46,11 @@
     "useUnknownInCatchVariables": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["**/*.js", "**/*.jsx", "**/*.mjs", "**/*.mts", "**/*.ts", "**/*.tsx", "vite.config.mts"],
-  "exclude": ["node_modules/*"]
+  "include": ["**/*.cjs", "**/*.cts", "**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx", "vite.config.ts"],
+  "exclude": ["node_modules/*"],
+  "ts-node": {
+    "esm": true,
+    "swc": true,
+    "transpileOnly": true
+  }
 }
