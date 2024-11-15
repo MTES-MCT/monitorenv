@@ -2,6 +2,7 @@ import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import { useEffect, useState } from 'react'
@@ -70,6 +71,7 @@ export function SearchOnExtentExtraButtons({
     dispatch(resetSearch())
     dispatch(closeMetadataPanel())
     dispatch(closeAreaOverlay())
+    dispatch(layerSidebarActions.closeAllResultsList())
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
   }
 
