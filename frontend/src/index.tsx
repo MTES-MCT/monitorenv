@@ -3,6 +3,7 @@ import { init } from '@sentry/react'
 import { measureScrollbarWidth } from '@utils/styleHelpers'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { isEmpty } from 'lodash'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AuthProvider } from 'react-oidc-context'
 
@@ -39,8 +40,10 @@ const root = createRoot(container)
 const { oidcConfig } = getOIDCConfig()
 
 root.render(
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  <AuthProvider {...oidcConfig}>
-    <App />
-  </AuthProvider>
+  <StrictMode>
+    {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+    <AuthProvider {...oidcConfig}>
+      <App />
+    </AuthProvider>
+  </StrictMode>
 )
