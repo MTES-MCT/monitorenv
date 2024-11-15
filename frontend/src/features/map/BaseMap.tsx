@@ -51,9 +51,25 @@ export type BaseMapChildrenProps = {
   pixel: number[] | undefined
 }
 
+const CENTERED_ON_FRANCE = [2.99049, 46.82801]
+const initialMap = new OpenLayerMap({
+  controls: defaultControls().extend([
+    new Zoom({
+      className: 'zoom'
+    })
+  ]),
+  layers: [],
+
+  view: new View({
+    center: transform(CENTERED_ON_FRANCE, WSG84_PROJECTION, OPENLAYERS_PROJECTION),
+    minZoom: 3,
+    projection: OPENLAYERS_PROJECTION,
+    zoom: 6
+  })
+})
+
 export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
-  const [currentMap, setCurrentMap] = useState<OpenLayerMap | undefined>(undefined)
   const [mapClickEvent, setMapClickEvent] = useState<MapClickEvent>({
     coordinates: undefined,
     ctrlKeyPressed: false,
@@ -156,32 +172,12 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   }, [distanceUnit])
 
   useEffect(() => {
-    if (currentMap) {
-      return
-    }
-
-    const centeredOnFrance = [2.99049, 46.82801]
-    const initialMap = new OpenLayerMap({
-      controls: defaultControls().extend([
-        updateScaleControl(),
-        new Zoom({
-          className: 'zoom'
-        })
-      ]),
-      layers: [],
-      target: mapElement.current,
-      view: new View({
-        center: transform(centeredOnFrance, WSG84_PROJECTION, OPENLAYERS_PROJECTION),
-        minZoom: 3,
-        projection: OPENLAYERS_PROJECTION,
-        zoom: 6
-      })
-    })
+    initialMap.setTarget(mapElement.current)
+    initialMap.addControl(updateScaleControl())
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
-
-    setCurrentMap(initialMap)
-  }, [currentMap, handleMapClick, handleMouseOverFeature, updateScaleControl])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const updateDistanceUnit = (value: DistanceUnit | undefined) => {
     if (!value) {
@@ -201,19 +197,20 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   return (
     <MapWrapper>
       <MapContainer ref={mapElement} />
-      {currentMap &&
-        Children.map(
-          children,
-          child =>
-            child &&
-            cloneElement(child, {
-              currentFeatureListOver,
-              currentFeatureOver,
-              map: currentMap,
-              mapClickEvent,
-              pixel
-            })
-        )}
+
+      {Children.map(
+        children,
+        child =>
+          child &&
+          cloneElement(child, {
+            currentFeatureListOver,
+            currentFeatureOver,
+            map: initialMap,
+            mapClickEvent,
+            pixel
+          })
+      )}
+
       <StyledDistanceUnitContainer ref={wrapperRef}>
         <DistanceUnitsTypeSelection isOpen={unitsSelectionIsOpen}>
           <Header onClick={() => setUnitsSelectionIsOpen(false)}>Unités des distances</Header>
