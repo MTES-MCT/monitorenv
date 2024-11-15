@@ -9,7 +9,6 @@ import styled from 'styled-components'
 
 import {
   resetSearch,
-  resetSearchExtent,
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
   setIsVigilanceAreaSearchResultsVisible,
@@ -75,18 +74,18 @@ export function SearchOnExtentExtraButtons({
   }
 
   const toggleFilterSearchOnMapExtent = () => {
+    dispatch(setIsAmpSearchResultsVisible(!shouldFilterSearchOnMapExtent))
+    dispatch(setIsRegulatorySearchResultsVisible(!shouldFilterSearchOnMapExtent))
+    dispatch(setIsVigilanceAreaSearchResultsVisible(!shouldFilterSearchOnMapExtent))
     if (shouldFilterSearchOnMapExtent) {
-      setShouldReloadSearchOnExtent(false)
-      dispatch(resetSearchExtent())
       dispatch(setShouldFilterSearchOnMapExtent(false))
+      handleResetSearch()
     } else if (currentMapExtentTracker) {
       dispatch(setShouldFilterSearchOnMapExtent(true))
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
     }
-    dispatch(setIsAmpSearchResultsVisible(true))
-    dispatch(setIsRegulatorySearchResultsVisible(true))
-    dispatch(setIsVigilanceAreaSearchResultsVisible(true))
+
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,
