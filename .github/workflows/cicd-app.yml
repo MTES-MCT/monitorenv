@@ -14,6 +14,10 @@ on:
   schedule:
     - cron: "38 11 */3 * *"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
 jobs:
   version:
     name: Set application version and env profile
@@ -55,6 +59,7 @@ jobs:
           fi
           echo $VERSION
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+    timeout-minutes: 30
 
   unit_test_backend:
     name: Run backend unit tests
@@ -80,7 +85,8 @@ jobs:
 
       - name: Unit test
         run: make test-back
-
+    timeout-minutes: 30
+  
   unit_test_frontend:
     name: Run frontend unit tests
     needs: version
@@ -120,7 +126,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
           working-directory: ./frontend
-
+    timeout-minutes: 30
+  
   build:
     name: Build and package
     needs: version
@@ -176,7 +183,8 @@ jobs:
         uses: ishworkh/container-image-artifact-upload@v2.0.0
         with:
           image: monitorenv-app:${{ env.VERSION }}
-
+    timeout-minutes: 30
+  
   e2e_test:
     name: Run E2E tests
     needs: [ version, build ]
@@ -246,6 +254,7 @@ jobs:
       - name: Display Docker container logs for debugging
         if: failure()
         run: docker logs monitorenv_backend
+    timeout-minutes: 30
 
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
@@ -295,6 +304,7 @@ jobs:
       - name: Run multi-windows tests
         run: npm run test:multi-windows:run
         working-directory: ./frontend
+    timeout-minutes: 30
 
   generate_and_upload_source_maps:
     name: Generate and upload source maps to Sentry
@@ -336,6 +346,7 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
+    timeout-minutes: 30
 
   push_to_registry:
     name: Push to registry
@@ -361,3 +372,4 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
           make docker-tag-app
           make docker-push-app
+    timeout-minutes: 30
