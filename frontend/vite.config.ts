@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies, sort-keys-fix/sort-keys-fix */
-
 import importMetaEnv from '@import-meta-env/unplugin'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
@@ -10,7 +10,8 @@ import viteTsconfigPaths from 'vite-tsconfig-paths'
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({
   build: {
-    outDir: './build'
+    outDir: './build',
+    sourcemap: true
   },
 
   plugins: [
@@ -20,6 +21,11 @@ export default defineConfig({
     importMetaEnv.vite({
       env: './.env',
       example: './.env.frontend.example'
+    }),
+    sentryVitePlugin({
+      org: 'betagouv',
+      project: 'monitorenv',
+      url: 'https://sentry.incubateur.net/'
     })
   ],
 
