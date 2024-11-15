@@ -31,6 +31,15 @@ export const layerSidebarSlice = createSlice({
     closeAll() {
       return { ...initialState }
     },
+    closeAllResultsList() {
+      return {
+        ...initialState,
+        areAmpsResultsOpen: false,
+        areMyVigilanceAreasOpen: false,
+        areRegFiltersOpen: false,
+        areRegulatoryResultsOpen: false
+      }
+    },
     toggleAdministrativeZones(state) {
       return {
         ...initialState,
