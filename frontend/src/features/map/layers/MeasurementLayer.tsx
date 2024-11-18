@@ -114,7 +114,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
     if (measurementsDrawed && map) {
       GetVectorSource().clear(true)
       measurementsDrawed.forEach(measurement => {
-        const feature = getFeature(measurement)
+        const feature = getFeature(measurement.feature)
 
         if (!feature) {
           return
