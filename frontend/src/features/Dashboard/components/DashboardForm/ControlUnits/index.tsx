@@ -14,7 +14,7 @@ import {
   TextInput
 } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
-import { useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Item } from './Item'
@@ -29,145 +29,144 @@ type ControlUnitsProps = {
   setExpandedAccordion: () => void
 }
 
-export function ControlUnits({
-  controlUnits,
-  isExpanded,
-  isSelectedAccordionOpen,
-  setExpandedAccordion
-}: ControlUnitsProps) {
-  const dispatch = useAppDispatch()
-  const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
-  const filters = useAppSelector(state =>
-    activeDashboardId ? state.dashboardFilters.dashboards[activeDashboardId]?.controlUnitFilters : undefined
-  )
+export const ControlUnits = forwardRef<HTMLDivElement, ControlUnitsProps>(
+  ({ controlUnits, isExpanded, isSelectedAccordionOpen, setExpandedAccordion }, ref) => {
+    const dispatch = useAppDispatch()
+    const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+    const filters = useAppSelector(state =>
+      activeDashboardId ? state.dashboardFilters.dashboards[activeDashboardId]?.controlUnitFilters : undefined
+    )
 
-  const controlUnitResults = useMemo(() => {
-    if (!filters) {
-      return []
+    const controlUnitResults = useMemo(() => {
+      if (!filters) {
+        return []
+      }
+
+      const results = getFilteredControlUnits('DASHBOARD_CONTROL_UNIT_LIST', filters, controlUnits)
+
+      return results
+    }, [filters, controlUnits])
+
+    const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+    const { data: bases } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+
+    const administrationsAsOptions = useMemo(
+      () => getOptionsFromIdAndName((administrations ?? []).filter(isNotArchived)),
+      [administrations]
+    )
+    const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])
+    const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceTypeLabel), [])
+
+    const updateQuery = (nextValue: string | undefined) => {
+      dispatch(
+        dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'query', value: nextValue })
+      )
     }
 
-    const results = getFilteredControlUnits('DASHBOARD_CONTROL_UNIT_LIST', filters, controlUnits)
+    const updateAdministrationId = (nextValue: number | undefined) => {
+      dispatch(
+        dashboardFiltersActions.setControlUnitsFilters({
+          id: activeDashboardId,
+          key: 'administrationId',
+          value: nextValue
+        })
+      )
+    }
 
-    return results
-  }, [filters, controlUnits])
+    const updateBaseId = (nextValue: number | undefined) => {
+      dispatch(
+        dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'stationId', value: nextValue })
+      )
+    }
 
-  const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { data: bases } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+    const updateType = (nextValue: string | undefined) => {
+      dispatch(dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'type', value: nextValue }))
+    }
 
-  const administrationsAsOptions = useMemo(
-    () => getOptionsFromIdAndName((administrations ?? []).filter(isNotArchived)),
-    [administrations]
-  )
-  const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])
-  const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceTypeLabel), [])
+    const administrationCustomSearch = new CustomSearch(administrationsAsOptions ?? [], ['label'], {
+      cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_ADMINISTRATIONS',
+      isStrict: true,
+      withCacheInvalidation: true
+    })
 
-  const updateQuery = (nextValue: string | undefined) => {
-    dispatch(dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'query', value: nextValue }))
-  }
+    const typeCustomSearch = new CustomSearch(typesAsOptions ?? [], ['label'], {
+      cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_TYPES',
+      isStrict: true,
+      withCacheInvalidation: true
+    })
 
-  const updateAdministrationId = (nextValue: number | undefined) => {
-    dispatch(
-      dashboardFiltersActions.setControlUnitsFilters({
-        id: activeDashboardId,
-        key: 'administrationId',
-        value: nextValue
-      })
+    const baseCustomSearch = new CustomSearch(basesAsOptions ?? [], ['label'], {
+      cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_BASES',
+      isStrict: true,
+      withCacheInvalidation: true
+    })
+
+    const hasChildren = !!(controlUnitResults && controlUnitResults?.length > 5)
+
+    return (
+      <div>
+        <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Unités" titleRef={ref}>
+          <Wrapper $hasChildren={hasChildren}>
+            <StyledTextInput
+              Icon={Icon.Search}
+              isLabelHidden
+              isTransparent
+              label="Rechercher une unité"
+              name="query"
+              onChange={updateQuery}
+              placeholder="Rechercher une unité"
+              value={filters?.query}
+            />
+            <SelectFilters $hasChildren={hasChildren} $isExpanded={isExpanded}>
+              <StyledSelect
+                customSearch={administrationCustomSearch}
+                isLabelHidden
+                isTransparent
+                label="Administration"
+                menuStyle={{ width: '300px' }}
+                name="administrationId"
+                onChange={updateAdministrationId}
+                options={administrationsAsOptions ?? []}
+                placeholder="Administration"
+                searchable
+                value={filters?.administrationId}
+              />
+              <TypesSelect
+                customSearch={typeCustomSearch}
+                isLabelHidden
+                isTransparent
+                label="Type de moyen"
+                name="type"
+                onChange={updateType}
+                options={typesAsOptions}
+                placeholder="Type de moyen"
+                searchable
+                value={filters?.type}
+              />
+              <StyledSelect
+                customSearch={baseCustomSearch}
+                isLabelHidden
+                isTransparent
+                label="Base du moyen"
+                name="stationId"
+                onChange={updateBaseId}
+                options={basesAsOptions ?? []}
+                placeholder="Base du moyen"
+                searchable
+                value={filters?.stationId}
+              />
+            </SelectFilters>
+            <ResultList $hasResults={hasChildren}>
+              {controlUnitResults &&
+                controlUnitResults.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
+            </ResultList>
+          </Wrapper>
+        </Accordion>
+        <SelectedControlUnits controlUnits={controlUnits} isSelectedAccordionOpen={isSelectedAccordionOpen} />
+      </div>
     )
   }
-
-  const updateBaseId = (nextValue: number | undefined) => {
-    dispatch(
-      dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'stationId', value: nextValue })
-    )
-  }
-
-  const updateType = (nextValue: string | undefined) => {
-    dispatch(dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'type', value: nextValue }))
-  }
-
-  const administrationCustomSearch = new CustomSearch(administrationsAsOptions ?? [], ['label'], {
-    cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_ADMINISTRATIONS',
-    isStrict: true,
-    withCacheInvalidation: true
-  })
-
-  const typeCustomSearch = new CustomSearch(typesAsOptions ?? [], ['label'], {
-    cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_TYPES',
-    isStrict: true,
-    withCacheInvalidation: true
-  })
-
-  const baseCustomSearch = new CustomSearch(basesAsOptions ?? [], ['label'], {
-    cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_BASES',
-    isStrict: true,
-    withCacheInvalidation: true
-  })
-
-  const hasChildren = !!(controlUnitResults && controlUnitResults?.length > 5)
-
-  return (
-    <div>
-      <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Unités">
-        <Wrapper $hasChildren={hasChildren}>
-          <StyledTextInput
-            Icon={Icon.Search}
-            isLabelHidden
-            isTransparent
-            label="Rechercher une unité"
-            name="query"
-            onChange={updateQuery}
-            placeholder="Rechercher une unité"
-            value={filters?.query}
-          />
-          <SelectFilters $hasChildren={hasChildren} $isExpanded={isExpanded}>
-            <StyledSelect
-              customSearch={administrationCustomSearch}
-              isLabelHidden
-              isTransparent
-              label="Administration"
-              menuStyle={{ width: '300px' }}
-              name="administrationId"
-              onChange={updateAdministrationId}
-              options={administrationsAsOptions ?? []}
-              placeholder="Administration"
-              searchable
-              value={filters?.administrationId}
-            />
-            <TypesSelect
-              customSearch={typeCustomSearch}
-              isLabelHidden
-              isTransparent
-              label="Type de moyen"
-              name="type"
-              onChange={updateType}
-              options={typesAsOptions}
-              placeholder="Type de moyen"
-              searchable
-              value={filters?.type}
-            />
-            <StyledSelect
-              customSearch={baseCustomSearch}
-              isLabelHidden
-              isTransparent
-              label="Base du moyen"
-              name="stationId"
-              onChange={updateBaseId}
-              options={basesAsOptions ?? []}
-              placeholder="Base du moyen"
-              searchable
-              value={filters?.stationId}
-            />
-          </SelectFilters>
-          <ResultList $hasResults={hasChildren}>
-            {controlUnitResults &&
-              controlUnitResults.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
-          </ResultList>
-        </Wrapper>
-      </Accordion>
-      <SelectedControlUnits controlUnits={controlUnits} isSelectedAccordionOpen={isSelectedAccordionOpen} />
-    </div>
-  )
-}
+)
 
 const Wrapper = styled.div<{ $hasChildren: boolean }>`
   align-items: center;

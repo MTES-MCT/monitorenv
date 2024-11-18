@@ -5,7 +5,7 @@ import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.styl
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
@@ -23,85 +23,95 @@ type RegulatoriesAreasProps = {
   selectedRegulatoryAreaIds: number[]
   setExpandedAccordion: () => void
 }
-export function RegulatoryAreas({
-  columnWidth,
-  isExpanded,
-  isSelectedAccordionOpen,
-  regulatoryAreas,
-  selectedRegulatoryAreaIds: selectedRegulatoryAreas,
-  setExpandedAccordion
-}: RegulatoriesAreasProps) {
-  const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
-  const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
+export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps>(
+  (
+    {
+      columnWidth,
+      isExpanded,
+      isSelectedAccordionOpen,
+      regulatoryAreas,
+      selectedRegulatoryAreaIds: selectedRegulatoryAreas,
+      setExpandedAccordion
+    },
+    ref
+  ) => {
+    const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
+    const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
+    const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
 
-  const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      selectedRegulatoryAreasByLayerName: groupBy(
-        Object.values(data?.entities ?? []).filter(regulatory => selectedRegulatoryAreas.includes(regulatory.id)),
-        regulatory => regulatory.layer_name
-      )
+    const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
+      selectFromResult: ({ data }) => ({
+        selectedRegulatoryAreasByLayerName: groupBy(
+          Object.values(data?.entities ?? []).filter(regulatory => selectedRegulatoryAreas.includes(regulatory.id)),
+          regulatory => regulatory.layer_name
+        )
+      })
     })
-  })
 
-  useEffect(() => {
-    if (isSelectedAccordionOpen) {
-      setExpandedSelectedAccordion(isSelectedAccordionOpen)
-    }
-  }, [isSelectedAccordionOpen])
+    useEffect(() => {
+      if (isSelectedAccordionOpen) {
+        setExpandedSelectedAccordion(isSelectedAccordionOpen)
+      }
+    }, [isSelectedAccordionOpen])
 
-  return (
-    <div>
-      {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
+    return (
+      <div>
+        {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
 
-      <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones réglementaires">
-        <StyledLayerList
-          $baseLayersLength={Object.values(regulatoryAreasByLayerName).length}
-          $maxHeight={100}
-          $showBaseLayers={isExpanded}
-          data-cy="dashboard-regulatory-areas-list"
+        <Accordion
+          isExpanded={isExpanded}
+          setExpandedAccordion={setExpandedAccordion}
+          title="Zones réglementaires"
+          titleRef={ref}
         >
-          {Object.entries(regulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+          <StyledLayerList
+            $baseLayersLength={Object.values(regulatoryAreasByLayerName).length}
+            $maxHeight={100}
+            $showBaseLayers={isExpanded}
+            data-cy="dashboard-regulatory-areas-list"
+          >
+            {Object.entries(regulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+              const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
+
+              return (
+                <ListLayerGroup
+                  key={layerGroupName}
+                  groupName={layerGroupName}
+                  layerIds={layersId}
+                  selectedRegulatoryAreaIds={selectedRegulatoryAreas}
+                />
+              )
+            })}
+          </StyledLayerList>
+        </Accordion>
+        <SelectedAccordion
+          isExpanded={isExpandedSelectedAccordion}
+          isReadOnly={selectedRegulatoryAreas.length === 0}
+          setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
+          title={`${selectedRegulatoryAreas.length} ${pluralize('zone', selectedRegulatoryAreas.length)} ${pluralize(
+            'sélectionnée',
+            selectedRegulatoryAreas.length
+          )}`}
+        >
+          {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
             const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
 
             return (
               <ListLayerGroup
                 key={layerGroupName}
                 groupName={layerGroupName}
+                isSelected
                 layerIds={layersId}
                 selectedRegulatoryAreaIds={selectedRegulatoryAreas}
               />
             )
           })}
-        </StyledLayerList>
-      </Accordion>
-      <SelectedAccordion
-        isExpanded={isExpandedSelectedAccordion}
-        isReadOnly={selectedRegulatoryAreas.length === 0}
-        setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-        title={`${selectedRegulatoryAreas.length} ${pluralize('zone', selectedRegulatoryAreas.length)} ${pluralize(
-          'sélectionnée',
-          selectedRegulatoryAreas.length
-        )}`}
-      >
-        {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-          const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
-
-          return (
-            <ListLayerGroup
-              key={layerGroupName}
-              groupName={layerGroupName}
-              isSelected
-              layerIds={layersId}
-              selectedRegulatoryAreaIds={selectedRegulatoryAreas}
-            />
-          )
-        })}
-      </SelectedAccordion>
-    </div>
-  )
-}
+        </SelectedAccordion>
+      </div>
+    )
+  }
+)
 
 const StyledLayerList = styled(LayerSelector.LayerList)`
   height: auto;
