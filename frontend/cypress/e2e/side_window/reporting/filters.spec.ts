@@ -222,6 +222,6 @@ context('Reportings', () => {
     cy.get('#themes-listbox > div').should('have.length', 34)
 
     cy.getDataCy('reporting-sub-theme-filter').click()
-    cy.get('#subThemes-listbox > div').should('have.length', 161)
+    cy.get('#subThemes-listbox > div').should('have.length', 218)
   })
 })
