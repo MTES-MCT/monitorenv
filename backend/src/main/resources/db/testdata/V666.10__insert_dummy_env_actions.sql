@@ -154,28 +154,28 @@ WHERE mission_id > 20;
 ;
 
 INSERT INTO public.env_actions_control_plan_themes (env_action_id, theme_id)
-VALUES ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 100), /* OK */
-       ('475d2887-5344-46cd-903b-8cb5e42f9a9c', 107), /* OK */
+VALUES ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 100),
+       ('475d2887-5344-46cd-903b-8cb5e42f9a9c', 107),
        ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 103),
        ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 100),
-       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 112), /* OK */
-       ('e2257638-ddef-4611-960c-7675a3254c38', 107), /* OK */
+       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 112),
+       ('e2257638-ddef-4611-960c-7675a3254c38', 107),
        ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 12),
        ('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 101),
        ('5865b619-3280-4c67-94ca-9f15da7d5aa7', 3)
 ;
 
 INSERT INTO public.env_actions_control_plan_sub_themes(env_action_id, subtheme_id)
-VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 214), /* OK */
-       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 231), /* OK */
-       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 232), /* OK */
-       ('475d2887-5344-46cd-903b-8cb5e42f9a9c', 214), /* OK */
+VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 214),
+       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 231),
+       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 232),
+       ('475d2887-5344-46cd-903b-8cb5e42f9a9c', 214),
        ('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 182),
-       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 100),
-       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 102),
-       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 195), /* OK */
-       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 196),/* OK */
-       ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 180), /* OK */
+       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 178),
+       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 180),
+       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 195),
+       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 196),
+       ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 180),
        ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 42),
        ('5865b619-3280-4c67-94ca-9f15da7d5aa7', 5)
 ;

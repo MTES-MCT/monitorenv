@@ -13,7 +13,7 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
         // When
         val requestedControlPlanSubThemes = jpaControlPlanSubThemeRepository.findAll()
         // Then
-        assertThat(requestedControlPlanSubThemes.size).isEqualTo(161)
+        assertThat(requestedControlPlanSubThemes.size).isEqualTo(218)
         assertThat(requestedControlPlanSubThemes[5].id).isEqualTo(6)
         assertThat(requestedControlPlanSubThemes[5].themeId).isEqualTo(4)
         assertThat(requestedControlPlanSubThemes[5].subTheme)

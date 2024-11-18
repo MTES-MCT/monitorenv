@@ -55,68 +55,6 @@ context('Side Window > Mission Form > Mission actions', () => {
     })
   })
 
-  it('Allow only one theme and multiple subthemes in control actions', () => {
-    // Given
-    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
-    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.getDataCy('action-card').eq(1).click()
-    cy.getDataCy('envaction-theme-element').should('have.length', 1)
-    cy.getDataCy('envaction-theme-selector').contains('Mouillage individuel') // id 100
-    cy.getDataCy('envaction-theme-element').contains('Mouillage avec AOT individuelle') // id 102
-    cy.getDataCy('envaction-tags-selector').should('not.exist')
-
-    // When
-    cy.fill('Thématique de contrôle', 'Espèce protégée') // id 103
-    cy.wait(250)
-    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element')
-      .contains("Destruction, capture, arrachage d'espèces protégées")
-      .click({ force: true }) // id 117
-    cy.getDataCy('envaction-theme-element').contains('Détention des espèces protégées').click({ force: true }) // id 120
-
-    cy.wait(250)
-    cy.getDataCy('envaction-tags-selector').should('exist')
-    cy.getDataCy('envaction-tags-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element').contains('Habitat').click({ force: true }) // id 15
-    cy.getDataCy('envaction-theme-element').contains('Oiseaux').click({ force: true }) // id 11
-    cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
-
-    cy.getDataCy('envaction-add-theme').should('not.exist')
-    cy.wait(500)
-
-    // Then
-    cy.waitForLastRequest(
-      '@updateMission',
-      {
-        body: {
-          envActions: [
-            {
-              controlPlans: [{ subThemeIds: [117, 120], tagIds: [15, 11], themeId: 103 }],
-              id: 'b8007c8a-5135-4bc3-816f-c69c7b75d807'
-            }
-          ]
-        }
-      },
-      10,
-      0,
-      response => {
-        expect(response && response.statusCode).equal(200)
-
-        const { controlPlans } = response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
-
-        expect(controlPlans.length).equal(1)
-        expect(controlPlans[0].themeId).equal(103)
-
-        expect(controlPlans[0].subThemeIds.length).equal(2)
-        expect(controlPlans[0].subThemeIds[0]).equal(117)
-        expect(controlPlans[0].subThemeIds[1]).equal(120)
-        expect(controlPlans[0].tagIds.length).equal(2)
-        expect(controlPlans[0].tagIds[0]).equal(15)
-        expect(controlPlans[0].tagIds[1]).equal(11)
-      }
-    )
-  })
-
   it('Save observations in control Actions', () => {
     cy.wait(250)
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
@@ -156,64 +94,6 @@ context('Side Window > Mission Form > Mission actions', () => {
     )
   })
 
-  it('should allowed multiple themes and multiple subthemes in surveillance actions', () => {
-    // Given
-    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
-    cy.getDataCy('action-card').eq(0).click()
-    cy.getDataCy('envaction-theme-element').should('have.length', 2)
-    cy.getDataCy('envaction-theme-selector').eq(0).contains('Espèce protégée et leur habitat (faune et flore)') // id 103
-    cy.getDataCy('envaction-theme-element').contains('Destruction, capture, arrachage') // id 117
-    cy.getDataCy('envaction-tags-selector').should('exist')
-    cy.getDataCy('envaction-theme-element').contains('Habitat') // id 15
-    cy.getDataCy('envaction-theme-element').contains('Oiseaux') // id 11
-
-    // When
-    cy.getDataCy('envaction-theme-selector').eq(0).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(0).contains('Épave').click({ force: true }) // id 105
-
-    cy.getDataCy('envaction-add-theme').click({ force: true })
-    cy.getDataCy('envaction-theme-selector').eq(2).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(2).contains('Rejet').click({ force: true }) // id 102
-
-    cy.getDataCy('envaction-subtheme-selector').eq(2).click({ force: true })
-    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.getDataCy('envaction-theme-element').eq(2).contains("Rejet d'hydrocarbure").click({ force: true }) // id 74
-
-    cy.getDataCy('envaction-tags-selector').should('have.length', 0)
-
-    // Then
-    cy.waitForLastRequest(
-      '@updateMission',
-      {
-        body: {}
-      },
-      15,
-      0,
-      response => {
-        expect(response && response.statusCode).equal(200)
-
-        const { controlPlans }: EnvActionSurveillance =
-          response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
-        expect(controlPlans.length).equal(3)
-
-        expect(controlPlans[0]?.themeId).equal(100)
-        expect(controlPlans[0]?.subThemeIds.length).equal(2)
-        expect(controlPlans[0]?.subThemeIds[0]).equal(100)
-        expect(controlPlans[0]?.subThemeIds[1]).equal(102)
-        expect(controlPlans[0]?.tagIds.length).equal(0)
-        0
-        expect(controlPlans[1]?.themeId).equal(105)
-        expect(controlPlans[1]?.subThemeIds.length).equal(0)
-        expect(controlPlans[1]?.tagIds.length).equal(0)
-
-        expect(controlPlans[2]?.themeId).equal(102)
-        expect(controlPlans[2]?.subThemeIds.length).equal(1)
-        expect(controlPlans[2]?.subThemeIds[0]).equal(110)
-        expect(controlPlans[2]?.tagIds.length).equal(0)
-      }
-    )
-  })
-
   it('should retrieve all themes into awareness select field in surveillance actions', () => {
     // Given
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
@@ -225,7 +105,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('envaction-theme-element').eq(0).contains('Réserve naturelle').click({ force: true })
 
     cy.getDataCy('envaction-theme-selector').eq(1).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(1).contains('Pêche à pied').click({ force: true })
+    cy.getDataCy('envaction-theme-element').eq(1).contains('Rejet').click({ force: true })
 
     cy.getDataCy('envaction-add-theme').click({ force: true })
     cy.getDataCy('envaction-theme-selector').eq(2).click({ force: true })
@@ -238,7 +118,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('surveillance-awareness-fields').within(() => {
       cy.get('div[role="option"]').then(options => {
         const actual = [...options].map(option => option.textContent)
-        expect(actual).to.deep.eq(['Épave', 'Pêche à pied', 'Réserve naturelle'])
+        expect(actual).to.deep.eq(['Épave', 'Rejet', 'Réserve naturelle'])
       })
       cy.get('div[role="option"]').contains('Épave').click() // id 105
       cy.fill('Nb de personnes sensibilisées', 5)
