@@ -1,6 +1,7 @@
+/* eslint-disable import/extensions */
 import { defineConfig } from 'cypress'
-import initCypressMousePositionPlugin from 'cypress-mouse-position/plugin'
-import { initPlugin } from 'cypress-plugin-snapshots/plugin'
+import initCypressMousePositionPlugin from 'cypress-mouse-position/plugin.js'
+import { initPlugin } from 'cypress-plugin-snapshots/plugin.js'
 
 const IS_CI = Boolean(process.env.CI)
 const WEBAPP_PORT = IS_CI ? 8880 : 3000
@@ -17,7 +18,7 @@ export default defineConfig({
       initCypressMousePositionPlugin(on)
       initPlugin(on, config)
     },
-    specPattern: ['cypress/e2e/**/*.spec.ts']
+    specPattern: 'cypress/e2e/**/*.spec.ts'
   },
   env: {
     'cypress-plugin-snapshots': {
