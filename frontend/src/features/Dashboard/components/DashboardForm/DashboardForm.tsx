@@ -4,7 +4,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, Icon, useNewWindow } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import styled from 'styled-components'
@@ -18,6 +18,7 @@ import { Reportings } from './Reportings'
 import { dashboardFiltersActions, getReportingFilters } from './slice'
 import { TerritorialPressure } from './TerritorialPressure'
 import { Toolbar } from './Toolbar'
+import { useObserver } from './useObserver'
 import { VigilanceAreas } from './VigilanceAreas'
 import { Weather } from './Weather'
 import {
@@ -34,7 +35,7 @@ type DashboardProps = {
   isActive: boolean
 }
 
-type BookmarkType = {
+export type BookmarkType = {
   orientation?: 'top' | 'bottom'
   ref: RefObject<HTMLDivElement>
   title: string
@@ -203,186 +204,22 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   const scrollToSection = (sectionRef: RefObject<HTMLDivElement>) => {
     sectionRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+  useObserver(firstColumnRef, [
+    { ref: regulatoryAreaRef, setState: setRegBookmark, state: regBookmark },
+    { ref: ampRef, setState: setAmpBookmark, state: ampBookMark },
+    { ref: vigilanceAreaRef, setState: setVigilanceBookmark, state: vigilanceBookMark }
+  ])
 
-  const { newWindowContainerRef } = useNewWindow()
+  useObserver(secondColumnRef, [
+    { ref: territorialPressureRef, setState: setTerritorialPressionBookmark, state: territorialPressionBookmark },
+    { ref: reportingRef, setState: setReportingBookmark, state: reportingBookmark }
+  ])
 
-  const checkVisibility = (
-    entries: IntersectionObserverEntry[],
-    state: BookmarkType,
-    setState: React.Dispatch<React.SetStateAction<BookmarkType>>
-  ) => {
-    entries.forEach(entry => {
-      const { boundingClientRect, isIntersecting, rootBounds } = entry
-      const isVisible = isIntersecting
-      let { orientation } = state
-
-      if (!isVisible) {
-        // Si l'élément est hors écran, détermine l'orientation
-        if (rootBounds) {
-          if (boundingClientRect.bottom < rootBounds.top) {
-            // Hors du conteneur par le haut
-            orientation = 'top'
-          } else if (boundingClientRect.top > rootBounds.bottom) {
-            // Hors du conteneur par le bas
-            orientation = 'bottom'
-          }
-        }
-      }
-      setState({ ...state, orientation, visible: !isVisible })
-    })
-  }
-
-  useEffect(() => {
-    const regObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, regBookmark, setRegBookmark)
-      },
-      {
-        root: firstColumnRef.current,
-        threshold: 1
-      }
-    )
-    const ampObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, ampBookMark, setAmpBookmark)
-      },
-      {
-        root: firstColumnRef.current,
-        threshold: 1
-      }
-    )
-    const vigilanceObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, vigilanceBookMark, setVigilanceBookmark)
-      },
-      {
-        root: firstColumnRef.current,
-        threshold: 1
-      }
-    )
-
-    const vigilanceArea = vigilanceAreaRef.current
-    const regulatoryArea = regulatoryAreaRef.current
-    const amp = ampRef.current
-
-    if (regulatoryArea) {
-      regObserver.observe(regulatoryArea)
-    }
-    if (amp) {
-      ampObserver.observe(amp)
-    }
-    if (vigilanceArea) {
-      vigilanceObserver.observe(vigilanceArea)
-    }
-
-    return () => {
-      if (regulatoryArea) {
-        regObserver.unobserve(regulatoryArea)
-      }
-      if (amp) {
-        ampObserver.unobserve(amp)
-      }
-      if (vigilanceArea) {
-        vigilanceObserver.unobserve(vigilanceArea)
-      }
-    }
-  }, [ampBookMark, newWindowContainerRef, regBookmark, vigilanceBookMark])
-
-  useEffect(() => {
-    const territorialPressureObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, territorialPressionBookmark, setTerritorialPressionBookmark)
-      },
-      {
-        root: secondColumnRef.current,
-        threshold: 1
-      }
-    )
-    const reportingObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, reportingBookmark, setReportingBookmark)
-      },
-      {
-        root: secondColumnRef.current,
-        threshold: 1
-      }
-    )
-
-    const territorialPressure = territorialPressureRef.current
-    const reporting = reportingRef.current
-
-    if (territorialPressure) {
-      territorialPressureObserver.observe(territorialPressure)
-    }
-    if (reporting) {
-      reportingObserver.observe(reporting)
-    }
-
-    return () => {
-      if (territorialPressure) {
-        territorialPressureObserver.unobserve(territorialPressure)
-      }
-      if (reporting) {
-        reportingObserver.unobserve(reporting)
-      }
-    }
-  }, [newWindowContainerRef, reportingBookmark, territorialPressionBookmark])
-
-  useEffect(() => {
-    const controlUnitObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, controlUnitBookmark, setControlUnitBookmark)
-      },
-      {
-        root: thirdColumnRef.current,
-        threshold: 1
-      }
-    )
-    const commentsObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, commentsBookmark, setCommentsBookmark)
-      },
-      {
-        root: thirdColumnRef.current,
-        threshold: 1
-      }
-    )
-    const weatherObserver = new IntersectionObserver(
-      entries => {
-        checkVisibility(entries, weatherBookmark, setWeatherBookmark)
-      },
-      {
-        root: thirdColumnRef.current,
-        threshold: 1
-      }
-    )
-
-    const controlUnit = controlUnitRef.current
-    const comments = commentsRef.current
-    const weather = weatherRef.current
-
-    if (controlUnit) {
-      controlUnitObserver.observe(controlUnit)
-    }
-    if (comments) {
-      commentsObserver.observe(comments)
-    }
-    if (weather) {
-      weatherObserver.observe(weather)
-    }
-
-    return () => {
-      if (controlUnit) {
-        controlUnitObserver.unobserve(controlUnit)
-      }
-      if (comments) {
-        commentsObserver.unobserve(comments)
-      }
-      if (weather) {
-        weatherObserver.unobserve(weather)
-      }
-    }
-  }, [commentsBookmark, controlUnitBookmark, newWindowContainerRef, weatherBookmark])
+  useObserver(thirdColumnRef, [
+    { ref: controlUnitRef, setState: setControlUnitBookmark, state: controlUnitBookmark },
+    { ref: commentsRef, setState: setCommentsBookmark, state: commentsBookmark },
+    { ref: weatherRef, setState: setWeatherBookmark, state: weatherBookmark }
+  ])
 
   return (
     <>
