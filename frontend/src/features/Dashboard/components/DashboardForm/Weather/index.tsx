@@ -2,7 +2,7 @@ import { Icon, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor
 import { getFeature } from '@utils/getFeature'
 import { getCenter } from 'ol/extent'
 import { transform } from 'ol/proj'
-import { useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -11,7 +11,7 @@ type WeatherProps = {
   geom: GeoJSON.Geometry | undefined
 }
 
-export function Weather({ geom }: WeatherProps) {
+export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom }, ref) => {
   const coordinates = useMemo(() => {
     if (!geom) {
       return ''
@@ -31,7 +31,7 @@ export function Weather({ geom }: WeatherProps) {
 
   return (
     <WeatherBlock>
-      <WeatherTitle>Météo</WeatherTitle>
+      <WeatherTitle ref={ref}>Météo</WeatherTitle>
       {coordinates ? (
         <StyledLink href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
           {`https://www.windy.com/${coordinates}`}
@@ -42,7 +42,7 @@ export function Weather({ geom }: WeatherProps) {
       )}
     </WeatherBlock>
   )
-}
+})
 
 const WeatherBlock = styled.div`
   align-items: center;

@@ -1,6 +1,6 @@
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
@@ -17,47 +17,48 @@ type ReportingsProps = {
   selectedReportingIds: number[]
   setExpandedAccordion: () => void
 }
-export function Reportings({
-  isExpanded,
-  isSelectedAccordionOpen,
-  reportings,
-  selectedReportingIds,
-  setExpandedAccordion
-}: ReportingsProps) {
-  const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
+export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
+  ({ isExpanded, isSelectedAccordionOpen, reportings, selectedReportingIds, setExpandedAccordion }, ref) => {
+    const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-  useEffect(() => {
-    if (isSelectedAccordionOpen) {
-      setExpandedSelectedAccordion(isSelectedAccordionOpen)
-    }
-  }, [isSelectedAccordionOpen])
+    useEffect(() => {
+      if (isSelectedAccordionOpen) {
+        setExpandedSelectedAccordion(isSelectedAccordionOpen)
+      }
+    }, [isSelectedAccordionOpen])
 
-  const { data: selectedReportings } = useGetReportingsByIdsQuery(selectedReportingIds)
+    const { data: selectedReportings } = useGetReportingsByIdsQuery(selectedReportingIds)
 
-  return (
-    <div>
-      <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Signalements">
-        <StyledFilters $isExpanded={isExpanded} />
-        {reportings?.map(reporting => (
-          <Layer key={reporting.id} isPinned={selectedReportingIds.includes(+reporting.id)} reporting={reporting} />
-        ))}
-      </Accordion>
-      <SelectedAccordion
-        isExpanded={isExpandedSelectedAccordion}
-        isReadOnly={selectedReportingIds?.length === 0}
-        setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-        title={`${selectedReportingIds?.length ?? 0} ${pluralize(
-          'signalement',
-          selectedReportingIds?.length ?? 0
-        )} ${pluralize('sélectionné', selectedReportingIds?.length ?? 0)}`}
-      >
-        {Object.values(selectedReportings?.entities ?? []).map(reporting => (
-          <Layer key={reporting.id} isSelected reporting={reporting} />
-        ))}
-      </SelectedAccordion>
-    </div>
-  )
-}
+    return (
+      <div>
+        <Accordion
+          isExpanded={isExpanded}
+          setExpandedAccordion={setExpandedAccordion}
+          title="Signalements"
+          titleRef={ref}
+        >
+          <StyledFilters $isExpanded={isExpanded} />
+          {reportings?.map(reporting => (
+            <Layer key={reporting.id} isPinned={selectedReportingIds.includes(+reporting.id)} reporting={reporting} />
+          ))}
+        </Accordion>
+        <SelectedAccordion
+          isExpanded={isExpandedSelectedAccordion}
+          isReadOnly={selectedReportingIds?.length === 0}
+          setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
+          title={`${selectedReportingIds?.length ?? 0} ${pluralize(
+            'signalement',
+            selectedReportingIds?.length ?? 0
+          )} ${pluralize('sélectionné', selectedReportingIds?.length ?? 0)}`}
+        >
+          {Object.values(selectedReportings?.entities ?? []).map(reporting => (
+            <Layer key={reporting.id} isSelected reporting={reporting} />
+          ))}
+        </SelectedAccordion>
+      </div>
+    )
+  }
+)
 
 const StyledFilters = styled(Filters)<{ $isExpanded: boolean }>`
   visibility: ${({ $isExpanded }) => ($isExpanded ? 'visible' : 'hidden')};

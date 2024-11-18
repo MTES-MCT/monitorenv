@@ -1,7 +1,6 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { type ForwardedRef, type ReactNode } from 'react'
 import styled from 'styled-components'
-
-import type { ReactNode } from 'react'
 
 type AccordionProps = {
   children: ReactNode
@@ -9,12 +8,18 @@ type AccordionProps = {
   name?: string
   setExpandedAccordion: () => void
   title: string | ReactNode
+  titleRef?: ForwardedRef<HTMLDivElement>
 }
 
-export function Accordion({ children, isExpanded, name, setExpandedAccordion, title }: AccordionProps) {
+export function Accordion({ children, isExpanded, name, setExpandedAccordion, title, titleRef }: AccordionProps) {
   return (
     <AccordionContainer>
-      <AccordionHeader aria-controls={`${title}-accordion`} aria-expanded={isExpanded} onClick={setExpandedAccordion}>
+      <AccordionHeader
+        ref={titleRef}
+        aria-controls={`${title}-accordion`}
+        aria-expanded={isExpanded}
+        onClick={setExpandedAccordion}
+      >
         <TitleContainer>
           <Title>{title}</Title>
         </TitleContainer>

@@ -2,7 +2,7 @@ import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, THEME } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { useMemo, useRef, useState } from 'react'
+import { forwardRef, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
@@ -18,113 +18,116 @@ type TerritorialPressureProps = {
   setExpandedAccordion: () => void
 }
 
-export function TerritorialPressure({ isExpanded, setExpandedAccordion }: TerritorialPressureProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const refLeftPosition = ref.current?.getBoundingClientRect().left ?? 0
+export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressureProps>(
+  ({ isExpanded, setExpandedAccordion }, ref) => {
+    const tooltipRef = useRef<HTMLDivElement>(null)
+    const refLeftPosition = tooltipRef.current?.getBoundingClientRect().left ?? 0
 
-  const [isVisibleTooltip, setIsVisibleTooltip] = useState<boolean>(false)
+    const [isVisibleTooltip, setIsVisibleTooltip] = useState<boolean>(false)
 
-  const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+    const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
-  const currentYear = new Date().getFullYear()
-  const dateRange = `${currentYear}-01-01~${currentYear}-12-31`
+    const currentYear = new Date().getFullYear()
+    const dateRange = `${currentYear}-01-01~${currentYear}-12-31`
 
-  // Regulatory Areas link
-  const regulatoryAreas = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.regulatoryAreas : []
-  )
-  const regulatoryAreaIds = regulatoryAreas?.map(area => area.id)
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryLayersByLayerName = Object.keys(
-    groupBy(regulatoryAreaIds, r => regulatoryLayers?.entities[r]?.layer_name)
-  )
-  const mappedLinks = regulatoryLayersByLayerName.join("&groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=")
-  const formattedRegulatoryAreaLink = useMemo(
-    () =>
-      regulatoryLayersByLayerName
-        ? `groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=${mappedLinks}&ann%25C3%25A9e=${currentYear}`
-        : '',
-    [regulatoryLayersByLayerName, mappedLinks, currentYear]
-  )
+    // Regulatory Areas link
+    const regulatoryAreas = useAppSelector(state =>
+      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.regulatoryAreas : []
+    )
+    const regulatoryAreaIds = regulatoryAreas?.map(area => area.id)
+    const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+    const regulatoryLayersByLayerName = Object.keys(
+      groupBy(regulatoryAreaIds, r => regulatoryLayers?.entities[r]?.layer_name)
+    )
+    const mappedLinks = regulatoryLayersByLayerName.join("&groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=")
+    const formattedRegulatoryAreaLink = useMemo(
+      () =>
+        regulatoryLayersByLayerName
+          ? `groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=${mappedLinks}&ann%25C3%25A9e=${currentYear}`
+          : '',
+      [regulatoryLayersByLayerName, mappedLinks, currentYear]
+    )
 
-  // AMP link
-  const amps = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.amps : []
-  )
-  const ampsByName = amps?.map(amp => amp.id)
-  const formattedAmpLink = useMemo(
-    () => (ampsByName ? `id=${ampsByName.join('&id=')}&intervalle_de_dates=${dateRange}&amp=` : ''),
-    [ampsByName, dateRange]
-  )
+    // AMP link
+    const amps = useAppSelector(state =>
+      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.amps : []
+    )
+    const ampsByName = amps?.map(amp => amp.id)
+    const formattedAmpLink = useMemo(
+      () => (ampsByName ? `id=${ampsByName.join('&id=')}&intervalle_de_dates=${dateRange}&amp=` : ''),
+      [ampsByName, dateRange]
+    )
 
-  // Department link
-  const department = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.inseeCode : undefined
-  )
+    // Department link
+    const department = useAppSelector(state =>
+      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.inseeCode : undefined
+    )
 
-  const titleWithTooltip = (
-    <TitleContainer>
-      <span>Pression territoriale des contrôles et surveillances</span>
-      <>
-        <div ref={ref}>
-          <Icon.Info
-            aria-describedby="territorialPressureTooltip"
-            color={THEME.color.slateGray}
-            onBlur={() => setIsVisibleTooltip(false)}
-            onFocus={() => setIsVisibleTooltip(true)}
-            onMouseLeave={() => setIsVisibleTooltip(false)}
-            onMouseOver={() => setIsVisibleTooltip(true)}
-            tabIndex={0}
-          />
-        </div>
-        {isVisibleTooltip && (
-          <StyledTooltip $marginLeft={refLeftPosition} id="territorialPressureTooltip" role="tooltip">
-            Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones REG,
-            les AMP ou à l’échelle du département.
-          </StyledTooltip>
-        )}
-      </>
-    </TitleContainer>
-  )
+    const titleWithTooltip = (
+      <TitleContainer>
+        <span>Pression territoriale des contrôles et surveillances</span>
+        <>
+          <div ref={tooltipRef}>
+            <Icon.Info
+              aria-describedby="territorialPressureTooltip"
+              color={THEME.color.slateGray}
+              onBlur={() => setIsVisibleTooltip(false)}
+              onFocus={() => setIsVisibleTooltip(true)}
+              onMouseLeave={() => setIsVisibleTooltip(false)}
+              onMouseOver={() => setIsVisibleTooltip(true)}
+              tabIndex={0}
+            />
+          </div>
+          {isVisibleTooltip && (
+            <StyledTooltip $marginLeft={refLeftPosition} id="territorialPressureTooltip" role="tooltip">
+              Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones
+              REG, les AMP ou à l’échelle du département.
+            </StyledTooltip>
+          )}
+        </>
+      </TitleContainer>
+    )
 
-  return (
-    <Accordion
-      isExpanded={isExpanded}
-      name="Pression territoriale des contrôles et surveillances"
-      setExpandedAccordion={setExpandedAccordion}
-      title={titleWithTooltip}
-    >
-      <LinksContainer>
-        {regulatoryAreas && regulatoryAreas.length > 0 && (
-          <a
-            href={`${METABASE_URL}${REGULATORY_AREA_LINK}${formattedRegulatoryAreaLink}`}
-            rel="external noreferrer"
-            target="_blank"
-          >
-            <span>Pression zones REG</span>
-            <Icon.ExternalLink size={16} />
-          </a>
-        )}
-        {amps && amps.length > 0 && (
-          <a href={`${METABASE_URL}${AMP_LINK}${formattedAmpLink}`} rel="external noreferrer" target="_blank">
-            <span>Pression zones AMP</span>
-            <Icon.ExternalLink size={16} />
-          </a>
-        )}
-        {department && (
-          <a
-            href={`${METABASE_URL}${DEPARTMENT_LINK}&dates=${dateRange}&d%25C3%25A9partement=${department}`}
-            rel="external noreferrer"
-            target="_blank"
-          >
-            <span>Pression département</span>
-            <Icon.ExternalLink size={16} />
-          </a>
-        )}
-      </LinksContainer>
-    </Accordion>
-  )
-}
+    return (
+      <Accordion
+        isExpanded={isExpanded}
+        name="Pression territoriale des contrôles et surveillances"
+        setExpandedAccordion={setExpandedAccordion}
+        title={titleWithTooltip}
+        titleRef={ref}
+      >
+        <LinksContainer>
+          {regulatoryAreas && regulatoryAreas.length > 0 && (
+            <a
+              href={`${METABASE_URL}${REGULATORY_AREA_LINK}${formattedRegulatoryAreaLink}`}
+              rel="external noreferrer"
+              target="_blank"
+            >
+              <span>Pression zones REG</span>
+              <Icon.ExternalLink size={16} />
+            </a>
+          )}
+          {amps && amps.length > 0 && (
+            <a href={`${METABASE_URL}${AMP_LINK}${formattedAmpLink}`} rel="external noreferrer" target="_blank">
+              <span>Pression zones AMP</span>
+              <Icon.ExternalLink size={16} />
+            </a>
+          )}
+          {department && (
+            <a
+              href={`${METABASE_URL}${DEPARTMENT_LINK}&dates=${dateRange}&d%25C3%25A9partement=${department}`}
+              rel="external noreferrer"
+              target="_blank"
+            >
+              <span>Pression département</span>
+              <Icon.ExternalLink size={16} />
+            </a>
+          )}
+        </LinksContainer>
+      </Accordion>
+    )
+  }
+)
 
 const LinksContainer = styled.div`
   align-items: center;

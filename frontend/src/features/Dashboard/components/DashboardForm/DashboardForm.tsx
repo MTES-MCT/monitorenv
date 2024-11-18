@@ -4,8 +4,9 @@ import { Dashboard } from '@features/Dashboard/types'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { Accent, Button, Icon, useNewWindow } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import styled from 'styled-components'
 
 import { Amps } from './Amps'
@@ -32,6 +33,13 @@ type DashboardProps = {
   dashboardForm: [string, DashboardType]
   isActive: boolean
 }
+
+type BookmarkType = {
+  orientation?: 'top' | 'bottom'
+  ref: RefObject<HTMLDivElement>
+  title: string
+  visible: boolean
+}
 export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: DashboardProps) {
   const dispatch = useAppDispatch()
 
@@ -50,8 +58,20 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
   const [firstColumnWidth, setFirstColumnWidth] = useState<number | undefined>(undefined)
+  const [secondColumnWidth, setSecondColumnWidth] = useState<number | undefined>(undefined)
+  const [thirdColumnWidth, setThirdColumnWidth] = useState<number | undefined>(undefined)
 
   const firstColumnRef = useRef<HTMLDivElement>(null)
+  const secondColumnRef = useRef<HTMLDivElement>(null)
+  const thirdColumnRef = useRef<HTMLDivElement>(null)
+  const regulatoryAreaRef = useRef<HTMLDivElement>(null)
+  const ampRef = useRef<HTMLDivElement>(null)
+  const vigilanceAreaRef = useRef<HTMLDivElement>(null)
+  const territorialPressureRef = useRef<HTMLDivElement>(null)
+  const reportingRef = useRef<HTMLDivElement>(null)
+  const controlUnitRef = useRef<HTMLDivElement>(null)
+  const commentsRef = useRef<HTMLDivElement>(null)
+  const weatherRef = useRef<HTMLDivElement>(null)
 
   const toolbarRef = useRef<HTMLDivElement>(null)
   const toolbarHeight = toolbarRef.current?.clientHeight ?? 0
@@ -63,6 +83,71 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   )
   const [expandedAccordionThirdColumn, setExpandedAccordionThirdColumn] = useState<Dashboard.Block | undefined>(
     undefined
+  )
+
+  const [regBookmark, setRegBookmark] = useState<BookmarkType>({
+    ref: regulatoryAreaRef,
+    title: 'Zones REG',
+    visible: false
+  })
+
+  const [ampBookMark, setAmpBookmark] = useState<BookmarkType>({ ref: ampRef, title: 'Zones AMP', visible: false })
+
+  const [vigilanceBookMark, setVigilanceBookmark] = useState<BookmarkType>({
+    ref: vigilanceAreaRef,
+    title: 'Zones de vigilance',
+    visible: false
+  })
+
+  const [territorialPressionBookmark, setTerritorialPressionBookmark] = useState<BookmarkType>({
+    ref: territorialPressureRef,
+    title: 'Pression territoriale',
+    visible: false
+  })
+
+  const [reportingBookmark, setReportingBookmark] = useState<BookmarkType>({
+    ref: reportingRef,
+    title: 'Signalements',
+    visible: false
+  })
+
+  const [controlUnitBookmark, setControlUnitBookmark] = useState<BookmarkType>({
+    ref: controlUnitRef,
+    title: 'Unités',
+    visible: false
+  })
+
+  const [commentsBookmark, setCommentsBookmark] = useState<BookmarkType>({
+    ref: commentsRef,
+    title: 'Commentaires',
+    visible: false
+  })
+
+  const [weatherBookmark, setWeatherBookmark] = useState<BookmarkType>({
+    ref: weatherRef,
+    title: 'Météo',
+    visible: false
+  })
+
+  const firstColumnTopBookmarks = [regBookmark, ampBookMark, vigilanceBookMark].filter(
+    bookmark => bookmark.visible && bookmark.orientation === 'top'
+  )
+  const firstColumnBottomBookmarks = [regBookmark, ampBookMark, vigilanceBookMark].filter(
+    bookmark => bookmark.visible && bookmark.orientation === 'bottom'
+  )
+
+  const secondColumnTopBookmarks = [territorialPressionBookmark, reportingBookmark].filter(
+    bookmark => bookmark.visible && bookmark.orientation === 'top'
+  )
+  const secondColumnBottomBookmarks = [territorialPressionBookmark].filter(
+    bookmark => bookmark.visible && bookmark.orientation === 'bottom'
+  )
+
+  const thirdColumnTopBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark].filter(
+    bookmark => bookmark.visible && bookmark.orientation === 'top'
+  )
+  const thirdColumnBottomBookmarks = [commentsBookmark, weatherBookmark].filter(
+    bookmark => bookmark.visible && bookmark.orientation === 'bottom'
   )
 
   const handleAccordionClick = (type: Dashboard.Block) => {
@@ -90,6 +175,8 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   useEffect(() => {
     if (isActive) {
       setFirstColumnWidth(firstColumnRef.current?.clientWidth)
+      setSecondColumnWidth(secondColumnRef.current?.clientWidth)
+      setThirdColumnWidth(thirdColumnRef.current?.clientWidth)
     }
   }, [isActive])
 
@@ -113,6 +200,190 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
     }
   }, [previewSelectionFilter, dispatch, key])
 
+  const scrollToSection = (sectionRef: RefObject<HTMLDivElement>) => {
+    sectionRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const { newWindowContainerRef } = useNewWindow()
+
+  const checkVisibility = (
+    entries: IntersectionObserverEntry[],
+    state: BookmarkType,
+    setState: React.Dispatch<React.SetStateAction<BookmarkType>>
+  ) => {
+    entries.forEach(entry => {
+      const { boundingClientRect, isIntersecting, rootBounds } = entry
+      const isVisible = isIntersecting
+      let { orientation } = state
+
+      if (!isVisible) {
+        // Si l'élément est hors écran, détermine l'orientation
+        if (rootBounds) {
+          if (boundingClientRect.bottom < rootBounds.top) {
+            // Hors du conteneur par le haut
+            orientation = 'top'
+          } else if (boundingClientRect.top > rootBounds.bottom) {
+            // Hors du conteneur par le bas
+            orientation = 'bottom'
+          }
+        }
+      }
+      setState({ ...state, orientation, visible: !isVisible })
+    })
+  }
+
+  useEffect(() => {
+    const regObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, regBookmark, setRegBookmark)
+      },
+      {
+        root: firstColumnRef.current,
+        threshold: 1
+      }
+    )
+    const ampObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, ampBookMark, setAmpBookmark)
+      },
+      {
+        root: firstColumnRef.current,
+        threshold: 1
+      }
+    )
+    const vigilanceObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, vigilanceBookMark, setVigilanceBookmark)
+      },
+      {
+        root: firstColumnRef.current,
+        threshold: 1
+      }
+    )
+
+    const vigilanceArea = vigilanceAreaRef.current
+    const regulatoryArea = regulatoryAreaRef.current
+    const amp = ampRef.current
+
+    if (regulatoryArea) {
+      regObserver.observe(regulatoryArea)
+    }
+    if (amp) {
+      ampObserver.observe(amp)
+    }
+    if (vigilanceArea) {
+      vigilanceObserver.observe(vigilanceArea)
+    }
+
+    return () => {
+      if (regulatoryArea) {
+        regObserver.unobserve(regulatoryArea)
+      }
+      if (amp) {
+        ampObserver.unobserve(amp)
+      }
+      if (vigilanceArea) {
+        vigilanceObserver.unobserve(vigilanceArea)
+      }
+    }
+  }, [ampBookMark, newWindowContainerRef, regBookmark, vigilanceBookMark])
+
+  useEffect(() => {
+    const territorialPressureObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, territorialPressionBookmark, setTerritorialPressionBookmark)
+      },
+      {
+        root: secondColumnRef.current,
+        threshold: 1
+      }
+    )
+    const reportingObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, reportingBookmark, setReportingBookmark)
+      },
+      {
+        root: secondColumnRef.current,
+        threshold: 1
+      }
+    )
+
+    const territorialPressure = territorialPressureRef.current
+    const reporting = reportingRef.current
+
+    if (territorialPressure) {
+      territorialPressureObserver.observe(territorialPressure)
+    }
+    if (reporting) {
+      reportingObserver.observe(reporting)
+    }
+
+    return () => {
+      if (territorialPressure) {
+        territorialPressureObserver.unobserve(territorialPressure)
+      }
+      if (reporting) {
+        reportingObserver.unobserve(reporting)
+      }
+    }
+  }, [newWindowContainerRef, reportingBookmark, territorialPressionBookmark])
+
+  useEffect(() => {
+    const controlUnitObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, controlUnitBookmark, setControlUnitBookmark)
+      },
+      {
+        root: thirdColumnRef.current,
+        threshold: 1
+      }
+    )
+    const commentsObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, commentsBookmark, setCommentsBookmark)
+      },
+      {
+        root: thirdColumnRef.current,
+        threshold: 1
+      }
+    )
+    const weatherObserver = new IntersectionObserver(
+      entries => {
+        checkVisibility(entries, weatherBookmark, setWeatherBookmark)
+      },
+      {
+        root: thirdColumnRef.current,
+        threshold: 1
+      }
+    )
+
+    const controlUnit = controlUnitRef.current
+    const comments = commentsRef.current
+    const weather = weatherRef.current
+
+    if (controlUnit) {
+      controlUnitObserver.observe(controlUnit)
+    }
+    if (comments) {
+      commentsObserver.observe(comments)
+    }
+    if (weather) {
+      weatherObserver.observe(weather)
+    }
+
+    return () => {
+      if (controlUnit) {
+        controlUnitObserver.unobserve(controlUnit)
+      }
+      if (comments) {
+        commentsObserver.unobserve(comments)
+      }
+      if (weather) {
+        weatherObserver.unobserve(weather)
+      }
+    }
+  }, [commentsBookmark, controlUnitBookmark, newWindowContainerRef, weatherBookmark])
+
   return (
     <>
       {isActive && (
@@ -121,7 +392,32 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
           <Container>
             <Column ref={firstColumnRef} $filterHeight={toolbarHeight}>
+              <Bookmark $left={firstColumnWidth ?? 0}>
+                {firstColumnTopBookmarks.map(bookmark => (
+                  <ButtonUp
+                    key={bookmark.title}
+                    accent={Accent.TERTIARY}
+                    Icon={Icon.DoubleChevron}
+                    onClick={() => scrollToSection(bookmark.ref)}
+                  >
+                    {bookmark.title}
+                  </ButtonUp>
+                ))}
+              </Bookmark>
+              <BottomBookmark $left={firstColumnWidth ?? 0}>
+                {firstColumnBottomBookmarks.map(bookmark => (
+                  <ButtonDown
+                    key={bookmark.title}
+                    accent={Accent.TERTIARY}
+                    Icon={Icon.DoubleChevron}
+                    onClick={() => scrollToSection(bookmark.ref)}
+                  >
+                    {bookmark.title}
+                  </ButtonDown>
+                ))}
+              </BottomBookmark>
               <RegulatoryAreas
+                ref={regulatoryAreaRef}
                 columnWidth={firstColumnWidth ?? 0}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.REGULATORY_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
@@ -131,6 +427,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
               />
 
               <Amps
+                ref={ampRef}
                 amps={filteredAmps ?? []}
                 columnWidth={firstColumnWidth ?? 0}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.AMP}
@@ -139,6 +436,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.AMP)}
               />
               <VigilanceAreas
+                ref={vigilanceAreaRef}
                 columnWidth={firstColumnWidth ?? 0}
                 isExpanded={expandedAccordionFirstColumn === Dashboard.Block.VIGILANCE_AREAS}
                 isSelectedAccordionOpen={previewSelectionFilter}
@@ -147,13 +445,39 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 vigilanceAreas={filteredVigilanceAreas ?? []}
               />
             </Column>
-            <Column $filterHeight={toolbarHeight}>
+            <Column ref={secondColumnRef} $filterHeight={toolbarHeight}>
+              <Bookmark $left={secondColumnWidth ?? 0}>
+                {secondColumnTopBookmarks.map(bookmark => (
+                  <ButtonUp
+                    key={bookmark.title}
+                    accent={Accent.TERTIARY}
+                    Icon={Icon.DoubleChevron}
+                    onClick={() => scrollToSection(bookmark.ref)}
+                  >
+                    {bookmark.title}
+                  </ButtonUp>
+                ))}
+              </Bookmark>
+              <BottomBookmark $left={secondColumnWidth ?? 0}>
+                {secondColumnBottomBookmarks.map(bookmark => (
+                  <ButtonDown
+                    key={bookmark.title}
+                    accent={Accent.TERTIARY}
+                    Icon={Icon.DoubleChevron}
+                    onClick={() => scrollToSection(bookmark.ref)}
+                  >
+                    {bookmark.title}
+                  </ButtonDown>
+                ))}
+              </BottomBookmark>
               <TerritorialPressure
+                ref={territorialPressureRef}
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.TERRITORIAL_PRESSURE}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
               />
 
               <Reportings
+                ref={reportingRef}
                 isExpanded={expandedAccordionSecondColumn === Dashboard.Block.REPORTINGS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 reportings={filteredReportings ?? []}
@@ -161,20 +485,46 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.REPORTINGS)}
               />
             </Column>
-            <Column $filterHeight={toolbarHeight}>
+            <Column ref={thirdColumnRef} $filterHeight={toolbarHeight}>
+              <Bookmark $left={thirdColumnWidth ?? 0}>
+                {thirdColumnTopBookmarks.map(bookmark => (
+                  <ButtonUp
+                    key={bookmark.title}
+                    accent={Accent.TERTIARY}
+                    Icon={Icon.DoubleChevron}
+                    onClick={() => scrollToSection(bookmark.ref)}
+                  >
+                    {bookmark.title}
+                  </ButtonUp>
+                ))}
+              </Bookmark>
+              <BottomBookmark $left={thirdColumnWidth ?? 0}>
+                {thirdColumnBottomBookmarks.map(bookmark => (
+                  <ButtonDown
+                    key={bookmark.title}
+                    accent={Accent.TERTIARY}
+                    Icon={Icon.DoubleChevron}
+                    onClick={() => scrollToSection(bookmark.ref)}
+                  >
+                    {bookmark.title}
+                  </ButtonDown>
+                ))}
+              </BottomBookmark>
               <ControlUnits
+                ref={controlUnitRef}
                 controlUnits={activeControlUnits ?? []}
                 isExpanded={expandedAccordionThirdColumn === Dashboard.Block.CONTROL_UNITS}
                 isSelectedAccordionOpen={previewSelectionFilter}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.CONTROL_UNITS)}
               />
               <Comments
+                ref={commentsRef}
                 comments={dashboard.dashboard.comments}
                 dashboardKey={key}
                 isExpanded={expandedAccordionThirdColumn === Dashboard.Block.COMMENTS}
                 setExpandedAccordion={() => handleAccordionClick(Dashboard.Block.COMMENTS)}
               />
-              <Weather geom={dashboard.dashboard.geom} />
+              <Weather ref={weatherRef} geom={dashboard.dashboard.geom} />
             </Column>
           </Container>
           <Footer dashboard={dashboard.dashboard} defaultName={dashboard.defaultName} />
@@ -187,9 +537,9 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 const Container = styled(SideWindowContent)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  // gap and padding are 3px less than the mockup because of box-shadow is hidden because of overflow @see AccordionWrapper
-  column-gap: 45px;
-  padding: 21px 21px 0 21px;
+  // gap and padding are 8px less than the mockup because of box-shadow is hidden because of overflow @see AccordionWrapper
+  column-gap: 40px;
+  padding: 16px 16px 0 16px;
   position: relative;
   overflow: hidden;
 `
@@ -204,5 +554,38 @@ const Column = styled.div<{ $filterHeight: number }>`
   scrollbar-gutter: stable;
   overflow-y: auto;
 
-  padding: 3px;
+  padding: 8px;
+`
+
+const ButtonDown = styled(Button)`
+  box-shadow: 0px 3px 6px ${p => p.theme.color.gainsboro};
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 24px;
+`
+
+const ButtonUp = styled(ButtonDown)`
+  .Element-IconBox {
+    transform: rotate(180deg);
+  }
+`
+
+const Bookmark = styled.div<{ $left: number }>`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  font-weight: bold;
+  font-style: italic;
+  margin-left: ${({ $left }) => `${$left}`};
+  transform: translateX(-100%);
+  margin-top: -24px;
+  position: fixed;
+  box-shadow: 0px 3px 6px ${p => p.theme.color.gainsboro};
+  z-index: 1000;
+`
+
+const BottomBookmark = styled(Bookmark)`
+  bottom: 66px;
 `
