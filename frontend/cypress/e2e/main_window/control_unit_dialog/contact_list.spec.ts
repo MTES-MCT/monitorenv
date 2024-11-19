@@ -132,7 +132,9 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
   it('Should open the mission list of the unit within last 6 months period', () => {
     goToMainWindowAndOpenControlUnit(10018)
-
+    cy.window().then(win => {
+      cy.stub(win, 'open').as('open')
+    })
     cy.clickButton("Voir les missions de l'unité")
 
     cy.visit(`/side_window`).wait(1000)
@@ -155,6 +157,9 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
   it('Should open the current mission of the unit', () => {
     goToMainWindowAndOpenControlUnit(10018)
+    cy.window().then(win => {
+      cy.stub(win, 'open').as('open')
+    })
 
     cy.intercept('GET', `/bff/v1/missions/29`).as('getMission')
     cy.clickButton('Ouvrir la mission en cours')
