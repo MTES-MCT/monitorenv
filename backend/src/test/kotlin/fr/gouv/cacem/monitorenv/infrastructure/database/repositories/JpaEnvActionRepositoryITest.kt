@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.transaction.annotation.Transactional
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -19,6 +20,7 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
     private val objectMapper: ObjectMapper = ObjectMapper()
 
     @Test
+    @Transactional
     fun `findById() should return the appropriate envAction`() {
         // Given
         val id = UUID.fromString("16eeb9e8-f30c-430e-b36b-32b4673f81ce")
@@ -60,9 +62,9 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
                 observationsByUnit,
                 missionId = 38,
                 controlPlans =
-                    listOf(
-                        EnvActionControlPlanEntity(themeId = 9, subThemeIds = listOf(51), tagIds = listOf()),
-                    ),
+                listOf(
+                    EnvActionControlPlanEntity(themeId = 9, subThemeIds = listOf(51), tagIds = listOf()),
+                ),
             )
 
         // When

@@ -35,10 +35,10 @@ class ReportingsControlPlanSubThemeModel(
             controlPlanSubTheme: ControlPlanSubThemeModel,
         ) = ReportingsControlPlanSubThemeModel(
             id =
-                ReportingsSubThemePk(
-                    reportingId = reporting.id!!,
-                    subthemeId = controlPlanSubTheme.id,
-                ),
+            ReportingsSubThemePk(
+                reportingId = reporting.id!!,
+                subthemeId = controlPlanSubTheme.id,
+            ),
             reporting = reporting,
             controlPlanSubTheme = controlPlanSubTheme,
         )
@@ -67,7 +67,7 @@ data class ReportingsSubThemePk(
         if (other !is ReportingsSubThemePk) return false
 
         return reportingId == other.reportingId &&
-            subthemeId == other.subthemeId
+                subthemeId == other.subthemeId
     }
 
     override fun hashCode(): Int {

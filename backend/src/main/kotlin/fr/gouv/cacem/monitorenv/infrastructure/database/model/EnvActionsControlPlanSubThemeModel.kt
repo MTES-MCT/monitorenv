@@ -38,10 +38,10 @@ class EnvActionsControlPlanSubThemeModel(
             controlPlanSubTheme: ControlPlanSubThemeModel,
         ) = EnvActionsControlPlanSubThemeModel(
             id =
-                EnvActionsSubThemePk(
-                    envActionId = envAction.id,
-                    subthemeId = controlPlanSubTheme.id,
-                ),
+            EnvActionsSubThemePk(
+                envActionId = envAction.id,
+                subthemeId = controlPlanSubTheme.id,
+            ),
             envAction = envAction,
             controlPlanSubTheme = controlPlanSubTheme,
         )

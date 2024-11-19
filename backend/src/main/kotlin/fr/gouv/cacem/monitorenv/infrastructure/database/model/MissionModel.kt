@@ -49,120 +49,120 @@ import java.time.ZoneOffset.UTC
 @NamedEntityGraph(
     name = "MissionModel.fullLoad",
     attributeNodes =
-        [
-            NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
-            NamedAttributeNode(
-                "attachedReportings",
-                subgraph = "subgraph.attachedReportings",
-            ),
-            NamedAttributeNode(
-                "controlResources",
-                subgraph = "subgraph.missionControlResources",
-            ),
-            NamedAttributeNode(
-                "controlUnits",
-                subgraph = "subgraph.missionControlUnits",
-            ),
-        ],
+    [
+        NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
+        NamedAttributeNode(
+            "attachedReportings",
+            subgraph = "subgraph.attachedReportings",
+        ),
+        NamedAttributeNode(
+            "controlResources",
+            subgraph = "subgraph.missionControlResources",
+        ),
+        NamedAttributeNode(
+            "controlUnits",
+            subgraph = "subgraph.missionControlUnits",
+        ),
+    ],
     subgraphs =
-        [
-            NamedSubgraph(
-                name = "subgraph.envActions",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("controlPlanThemes"),
-                        NamedAttributeNode(
-                            "controlPlanSubThemes",
-                            subgraph =
-                                "subgraph.linkedControlPlanSubThemes",
-                        ),
-                        NamedAttributeNode(
-                            "controlPlanTags",
-                            subgraph = "subgraph.linkedControlPlanTags",
-                        ),
-                        NamedAttributeNode("attachedReporting"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.attachedReportings",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanSubThemes",
-                            subgraph =
-                                "subgraph.linkedControlPlanSubThemes",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.linkedControlPlanSubThemes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanSubTheme",
-                            subgraph = "subgraph.controlPlanSubThemes",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlPlanSubThemes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("controlPlanTheme"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.linkedControlPlanTags",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanTag",
-                            subgraph = "subgraph.controlPlanTags",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlPlanTags",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("controlPlanTheme"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.missionControlResources",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "resource",
-                            subgraph = "subgraph.controlResource",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.missionControlUnits",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "unit",
-                            subgraph = "subgraph.controlUnit",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlUnit",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("administration"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlResource",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("station"),
-                    ],
-            ),
-        ],
+    [
+        NamedSubgraph(
+            name = "subgraph.envActions",
+            attributeNodes =
+            [
+                NamedAttributeNode("controlPlanThemes"),
+                NamedAttributeNode(
+                    "controlPlanSubThemes",
+                    subgraph =
+                    "subgraph.linkedControlPlanSubThemes",
+                ),
+                NamedAttributeNode(
+                    "controlPlanTags",
+                    subgraph = "subgraph.linkedControlPlanTags",
+                ),
+                NamedAttributeNode("attachedReporting"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.attachedReportings",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanSubThemes",
+                    subgraph =
+                    "subgraph.linkedControlPlanSubThemes",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanSubThemes",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanSubTheme",
+                    subgraph = "subgraph.controlPlanSubThemes",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanSubThemes",
+            attributeNodes =
+            [
+                NamedAttributeNode("controlPlanTheme"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.linkedControlPlanTags",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "controlPlanTag",
+                    subgraph = "subgraph.controlPlanTags",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlPlanTags",
+            attributeNodes =
+            [
+                NamedAttributeNode("controlPlanTheme"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.missionControlResources",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "resource",
+                    subgraph = "subgraph.controlResource",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.missionControlUnits",
+            attributeNodes =
+            [
+                NamedAttributeNode(
+                    "unit",
+                    subgraph = "subgraph.controlUnit",
+                ),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlUnit",
+            attributeNodes =
+            [
+                NamedAttributeNode("administration"),
+            ],
+        ),
+        NamedSubgraph(
+            name = "subgraph.controlResource",
+            attributeNodes =
+            [
+                NamedAttributeNode("station"),
+            ],
+        ),
+    ],
 )
 @Table(name = "missions")
 class MissionModel(
@@ -171,7 +171,7 @@ class MissionModel(
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
-    @OneToMany(mappedBy = "mission", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
@@ -180,7 +180,7 @@ class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -190,7 +190,7 @@ class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -319,25 +319,25 @@ class MissionModel(
         return MissionDTO(
             mission = this.toMissionEntity(objectMapper),
             attachedReportingIds =
-                this.attachedReportings
-                    ?.filter { it.detachedFromMissionAtUtc == null }
-                    ?.map { it.id as Int }
-                    ?: listOf(),
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc == null }
+                ?.map { it.id as Int }
+                ?: listOf(),
             attachedReportings =
-                this.attachedReportings
-                    ?.filter { it.detachedFromMissionAtUtc == null }
-                    ?.map { it.toReportingDTO(objectMapper) }
-                    ?: listOf(),
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc == null }
+                ?.map { it.toReportingDTO(objectMapper) }
+                ?: listOf(),
             detachedReportings =
-                this.attachedReportings
-                    ?.filter { it.detachedFromMissionAtUtc != null }
-                    ?.map { it.toReportingDTO(objectMapper) }
-                    ?: listOf(),
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc != null }
+                ?.map { it.toReportingDTO(objectMapper) }
+                ?: listOf(),
             detachedReportingIds =
-                this.attachedReportings
-                    ?.filter { it.detachedFromMissionAtUtc != null }
-                    ?.map { it.id as Int }
-                    ?: listOf(),
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc != null }
+                ?.map { it.id as Int }
+                ?: listOf(),
             envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
         )
     }
