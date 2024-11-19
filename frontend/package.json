@@ -74,7 +74,7 @@
     "use-debounce": "10.0.4",
     "uuid": "9.0.1",
     "worker-loader": "3.0.8",
-    "yup": "0.32.11"
+    "yup": "1.4.0"
   },
   "devDependencies": {
     "@faker-js/faker": "8.4.1",
