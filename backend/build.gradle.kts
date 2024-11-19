@@ -50,7 +50,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-json:3.3.5")
     implementation("org.springframework.boot:spring-boot-starter-security:3.3.5")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.5")
-    implementation("org.hibernate.orm:hibernate-spatial:6.6.2.Final")
+    implementation("org.hibernate.orm:hibernate-spatial:6.5.2.Final")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.1")
     implementation("org.n52.jackson:jackson-datatype-jts:1.2.10")
     implementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
