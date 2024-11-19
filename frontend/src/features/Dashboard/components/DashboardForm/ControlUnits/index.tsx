@@ -127,19 +127,19 @@ export function ControlUnits({
               label="Administration"
               menuStyle={{ width: '300px' }}
               name="administrationId"
-              onChange={updateAdministrationId as any}
+              onChange={updateAdministrationId}
               options={administrationsAsOptions ?? []}
               placeholder="Administration"
               searchable
               value={filters?.administrationId}
             />
-            <StyledSelect
+            <TypesSelect
               customSearch={typeCustomSearch}
               isLabelHidden
               isTransparent
               label="Type de moyen"
               name="type"
-              onChange={updateType as any}
+              onChange={updateType}
               options={typesAsOptions}
               placeholder="Type de moyen"
               searchable
@@ -151,7 +151,7 @@ export function ControlUnits({
               isTransparent
               label="Base du moyen"
               name="stationId"
-              onChange={updateBaseId as any}
+              onChange={updateBaseId}
               options={basesAsOptions ?? []}
               placeholder="Base du moyen"
               searchable
@@ -181,7 +181,10 @@ const StyledTextInput = styled(TextInput)`
   width: 100%;
 `
 
-const StyledSelect = styled(Select)`
+const StyledSelect = styled(Select<number>)`
+  flex: 1;
+`
+const TypesSelect = styled(Select<ControlUnit.ControlUnitResourceType>)`
   flex: 1;
 `
 

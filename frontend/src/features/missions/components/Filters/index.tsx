@@ -9,7 +9,8 @@ import {
   customDayjs,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
-  type DateAsStringRange
+  type DateAsStringRange,
+  type Option
 } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
 import { DATE_RANGE_LABEL, type DateRangeEnum } from 'domain/entities/dateRange'
@@ -72,7 +73,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     return getOptionsFromIdAndName(selectableControlUnits) ?? []
   }, [legacyControlUnits, selectedAdministrationNames])
 
-  const dateRangesAsOptions = Object.values(DATE_RANGE_LABEL)
+  const dateRangesAsOptions = Object.values(DATE_RANGE_LABEL) as Option<DateRangeEnum>[]
   const missionStatusesAsOptions = getOptionsFromLabelledEnum(MissionStatusLabel)
   const missionTypesAsOptions = getOptionsFromLabelledEnum(MissionTypeLabel)
   const seaFrontsAsOptions = Object.values(seaFrontLabels)

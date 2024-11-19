@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import { isNumeric } from '../../utils/isNumeric'
 
 type DDCoordinatesInputProps = {
-  coordinates: [number, number]
-  updateCoordinates: (nextCoordinates: [number, number], coordinates: [number, number]) => void
+  coordinates: number[]
+  updateCoordinates: (nextCoordinates: [number, number], coordinates: number[]) => void
 }
 export function DDCoordinatesInput({ coordinates, updateCoordinates: onUpdateCoordinates }: DDCoordinatesInputProps) {
   const latitudeInputRef = useRef<HTMLInputElement>()

@@ -9,7 +9,7 @@ import { FilterTags } from './FilterTags'
 import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReportingSearch } from '../ReportingSearch'
-import { ReportingsFiltersEnum } from '../slice'
+import { ReportingsFiltersEnum, type SourceFilterProps } from '../slice'
 import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
 
 export function TableReportingsFiltersWithRef(
@@ -56,7 +56,7 @@ export function TableReportingsFiltersWithRef(
 
   const sourceCustomSearch = useMemo(
     () =>
-      new CustomSearch(sourceOptions as Array<Option>, ['label'], {
+      new CustomSearch(sourceOptions as Array<Option<SourceFilterProps>>, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
@@ -171,7 +171,7 @@ export function TableReportingsFiltersWithRef(
             popupWidth={300}
             renderValue={() => sourceFilter && <OptionValue>{`Source (${sourceFilter.length})`}</OptionValue>}
             style={tagPickerStyle}
-            value={sourceFilter as any}
+            value={sourceFilter}
           />
 
           <StyledSelect

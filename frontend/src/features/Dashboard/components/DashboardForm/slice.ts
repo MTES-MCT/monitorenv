@@ -6,7 +6,7 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
-import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
+import type { ControlUnit, DateAsStringRange } from '@mtes-mct/monitor-ui'
 
 const persistConfig = {
   key: 'dashboardFilters',
@@ -23,7 +23,7 @@ export type ControlUnitFilters = {
   administrationId?: number
   query?: string
   stationId?: number
-  type?: string
+  type?: ControlUnit.ControlUnitResourceType
 }
 
 type DashboardFilters = {

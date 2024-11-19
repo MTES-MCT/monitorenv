@@ -4,7 +4,7 @@ import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { DATE_RANGE_LABEL } from '../entities/dateRange'
+import { DATE_RANGE_LABEL, DateRangeEnum } from '../entities/dateRange'
 
 export const TODAY = customDayjs().utc().startOf('day').toISOString()
 
@@ -30,7 +30,7 @@ type MissionFilterValues = {
   selectedCompletionStatus: string[] | undefined
   selectedControlUnitIds: number[] | undefined
   selectedMissionTypes: string[] | undefined
-  selectedPeriod: string
+  selectedPeriod: DateRangeEnum
   selectedSeaFronts: string[] | undefined
   selectedStatuses: string[] | undefined
   selectedThemes: number[] | undefined
