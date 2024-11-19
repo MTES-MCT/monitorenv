@@ -1,6 +1,7 @@
 import { DashboardForms } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
+import { dashboardActions } from '@features/Dashboard/slice'
 import { isDashboardEnabled } from '@features/Dashboard/utils'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
@@ -22,6 +23,7 @@ import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import {
+  getDashboardPageRoute,
   isDashboardPage,
   isDashboardsPage,
   isMissionOrMissionsPage,
@@ -86,6 +88,15 @@ export function SideWindow() {
       dispatch(switchTab(nextPath))
 
       return
+    }
+
+    const isCurrentPathDashboard = isDashboardPage(currentPath)
+
+    if (isCurrentPathDashboard) {
+      const id = getDashboardPageRoute(currentPath)?.params.id
+      if (!id) {
+        dispatch(dashboardActions.setActiveDashboardId(undefined))
+      }
     }
 
     dispatch(sideWindowActions.setCurrentPath(nextPath))
