@@ -13,7 +13,7 @@ const persistConfig = {
   storage
 }
 
-type ReportingFilters = {
+export type ReportingFilters = {
   dateRange: ReportingDateRangeEnum
   period?: DateAsStringRange
   status: StatusFilterEnum[]
@@ -26,7 +26,7 @@ export type ControlUnitFilters = {
   type?: ControlUnit.ControlUnitResourceType
 }
 
-type DashboardFilters = {
+export type DashboardFilters = {
   amps?: string[]
   previewSelection?: boolean
   regulatoryThemes?: string[]

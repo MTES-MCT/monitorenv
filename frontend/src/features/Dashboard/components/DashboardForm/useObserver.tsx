@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import type { BookmarkType } from './DashboardForm'
+import type { BookmarkType } from './Bookmark'
 
 const createObserver = (root: HTMLElement | null, callback: IntersectionObserverCallback): IntersectionObserver =>
   new IntersectionObserver(callback, {
