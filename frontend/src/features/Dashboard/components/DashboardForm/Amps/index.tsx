@@ -13,7 +13,7 @@ import { SelectedAccordion } from '../SelectedAccordion'
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
 
-import type { AMPFromAPI } from 'domain/entities/AMPs'
+import type { AMP, AMPFromAPI } from 'domain/entities/AMPs'
 
 type AmpsProps = {
   amps: AMPFromAPI[]
@@ -80,7 +80,7 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
           )}`}
         >
           {Object.entries(selectedAmpByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-            const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
+            const layersId = layerIdsInGroup.map((layerId: AMP) => layerId.id)
 
             return (
               <ListLayerGroup

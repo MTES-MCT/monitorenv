@@ -188,7 +188,6 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
     // cleanup preview on unmount
     return () => {
       dispatch(dashboardActions.removeAllPreviewedItems())
-      dispatch(dashboardActions.setActiveDashboardId(undefined))
     }
   }, [dispatch])
 
@@ -204,6 +203,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
   const scrollToSection = (sectionRef: RefObject<HTMLDivElement>) => {
     sectionRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+
   useObserver(firstColumnRef, [
     { ref: regulatoryAreaRef, setState: setRegBookmark, state: regBookmark },
     { ref: ampRef, setState: setAmpBookmark, state: ampBookMark },
