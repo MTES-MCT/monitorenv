@@ -34,7 +34,7 @@ export function SetCoordinates({ coordinates, updateCoordinates }: SetCoordinate
           />
         )
       case CoordinatesFormat.DECIMAL_DEGREES:
-        return <DDCoordinatesInput coordinates={coordinates as any} updateCoordinates={updateCoordinates} />
+        return <DDCoordinatesInput coordinates={coordinates} updateCoordinates={updateCoordinates} />
       default:
         return null
     }

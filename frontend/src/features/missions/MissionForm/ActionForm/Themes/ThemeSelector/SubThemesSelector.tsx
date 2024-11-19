@@ -87,7 +87,7 @@ export function SubThemesSelector({
           onChange={handleUpdateSubTheme}
           options={subThemesByYearAsOptions}
           searchable={subThemesByYearAsOptions.length > 10}
-          value={currentSubThemesField.value?.map(value => value) as any[]}
+          value={currentSubThemesField.value?.map(value => value)}
         />
       )}
     </>

@@ -26,7 +26,7 @@ export function TagsSelector({ actionIndex, tags, themeIndex }: TagsSelectorProp
       name={`${actionIndex}-${themeIndex}`}
       onChange={handleUpdateTags}
       options={tags}
-      value={currentTagsField.value?.map(value => value) as any[]}
+      value={currentTagsField.value?.map(value => value)}
     />
   )
 }

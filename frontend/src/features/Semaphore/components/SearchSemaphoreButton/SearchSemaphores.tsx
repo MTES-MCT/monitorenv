@@ -100,7 +100,7 @@ export function SearchSemaphores() {
         onClose={onClose}
         onQuery={handleQuerySemaphore}
         options={optionsRef.current}
-        optionValueKey={'name' as any}
+        optionValueKey={'name' as string}
         placeholder="Rechercher un sémaphore"
         size={Size.LARGE}
       />

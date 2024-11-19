@@ -23,7 +23,7 @@ type TableMissionFiltersProps = {
   onResetFilters: () => void
   onUpdateAdministrationFilter: (value: any) => void
   onUpdateDateRangeFilter: (value: DateAsStringRange | undefined) => void
-  onUpdatePeriodFilter: (value: DateRangeEnum) => void
+  onUpdatePeriodFilter: (value: DateRangeEnum | undefined) => void
   onUpdateSimpleFilter: (value: any, filter: MissionFiltersEnum) => void
   optionsList: { [key: string]: Option<string | number>[] }
 }
@@ -90,7 +90,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               isTransparent
               label="Administration"
               name="administration"
-              onChange={onUpdateAdministrationFilter as any}
+              onChange={onUpdateAdministrationFilter}
               options={administrations ?? []}
               placeholder="Administration"
               popupWidth={300}
@@ -130,8 +130,8 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               isTransparent
               label="Période"
               name="Période"
-              onChange={onUpdatePeriodFilter as any}
-              options={dates ?? []}
+              onChange={onUpdatePeriodFilter}
+              options={(dates ?? []) as Option<DateRangeEnum>[]}
               placeholder="Date de mission depuis"
               style={tagPickerStyle}
               value={selectedPeriod}
@@ -247,7 +247,7 @@ const FilterWrapperLine = styled.div`
 
 const tagPickerStyle = { width: 200 }
 
-const StyledSelect = styled(Select)`
+const StyledSelect = styled(Select<DateRangeEnum>)`
   .rs-picker-toggle-caret,
   .rs-picker-toggle-clean {
     top: 5px !important;

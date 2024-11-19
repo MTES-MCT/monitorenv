@@ -255,7 +255,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       if (distanceUnit === DistanceUnit.METRIC) {
         radiusInMeters = METERS_PER_UNIT.m * (circleMeasurementToAdd?.circleRadiusToAdd || 0)
       }
-      let coordinates = [] as any[]
+      let coordinates = [] as number[]
       if (circleMeasurementHasCoordinatesAndRadiusFromForm()) {
         coordinates = [
           circleMeasurementToAdd?.circleCoordinatesToAdd[longitude],

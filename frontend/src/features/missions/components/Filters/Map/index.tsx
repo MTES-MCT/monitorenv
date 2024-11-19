@@ -25,9 +25,9 @@ import styled from 'styled-components'
 type MapMissionFiltersProps = {
   onUpdateAdministrationFilter: (value: any) => void
   onUpdateDateRangeFilter: (value: DateAsStringRange | undefined) => void
-  onUpdatePeriodFilter: (value: DateRangeEnum) => void
+  onUpdatePeriodFilter: (value: DateRangeEnum | undefined) => void
   onUpdateSimpleFilter: (value: any, filter: MissionFiltersEnum) => void
-  optionsList: { [key: string]: Option<string | number>[] }
+  optionsList: { [key: string]: Option<string | number | DateRangeEnum>[] }
 }
 export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersProps>(
   (
@@ -110,8 +110,8 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             isTransparent
             label="Période"
             name="Période"
-            onChange={onUpdatePeriodFilter as any}
-            options={dates ?? []}
+            onChange={onUpdatePeriodFilter}
+            options={(dates ?? []) as Option<DateRangeEnum>[]}
             placeholder="Date de mission depuis"
             value={selectedPeriod}
           />
@@ -139,7 +139,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             isTransparent
             label="Administration"
             name="administration"
-            onChange={onUpdateAdministrationFilter as any}
+            onChange={onUpdateAdministrationFilter}
             options={administrations ?? []}
             placeholder="Administration"
             popupWidth={300}
@@ -287,7 +287,7 @@ const StyledBloc = styled.div`
   gap: 8px;
 `
 
-const StyledSelect = styled(Select)`
+const StyledSelect = styled(Select<DateRangeEnum>)`
   .rs-picker-toggle-caret,
   .rs-picker-toggle-clean {
     top: 5px !important;

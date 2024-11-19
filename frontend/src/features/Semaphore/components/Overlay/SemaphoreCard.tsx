@@ -99,7 +99,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
     dispatch(
       reportingsFiltersActions.updateFilters({
         key: ReportingsFiltersEnum.PERIOD_FILTER,
-        value: ReportingDateRangeEnum.YEAR
+        value: ReportingDateRangeEnum.MONTH
       })
     )
     dispatch(
