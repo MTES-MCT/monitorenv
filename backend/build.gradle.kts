@@ -32,6 +32,9 @@ configurations.all {
     exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 }
 
+val developmentOnly = configurations.getByName("developmentOnly")
+configurations.runtimeClasspath.get().extendsFrom(developmentOnly)
+
 tasks.named("compileKotlin", org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask::class.java) {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")
@@ -88,6 +91,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.20.3")
     testImplementation("net.java.dev.jna:jna:5.15.0")
     testImplementation("net.ttddyy:datasource-proxy:1.10.1")
+    developmentOnly("org.springframework.boot:spring-boot-devtools:3.3.5")
 }
 
 group = "fr.gouv.cacem"

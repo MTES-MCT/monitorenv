@@ -4,8 +4,16 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
-import jakarta.persistence.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import jakarta.persistence.Entity
+import jakarta.persistence.NamedAttributeNode
+import jakarta.persistence.NamedEntityGraph
+import jakarta.persistence.NamedSubgraph
+import jakarta.persistence.Table
 import org.hibernate.annotations.Formula
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
@@ -23,7 +31,7 @@ import java.time.Instant
             NamedAttributeNode("reportingSources", subgraph = "subgraph.reportingSources"),
             NamedAttributeNode(
                 "controlPlanSubThemes",
-                subgraph = "subgraph.controlPlanSubThemes",
+                subgraph = "subgraph.reportingControlPlanSubThemes",
             ),
             NamedAttributeNode(
                 "controlPlanTheme",
@@ -42,37 +50,18 @@ import java.time.Instant
                 name = "subgraph.reportingSources",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "controlUnit",
-                        ),
-                        NamedAttributeNode(
-                            "semaphore",
-                        ),
+                        NamedAttributeNode("controlUnit"),
+                        NamedAttributeNode("semaphore"),
                     ],
             ),
             NamedSubgraph(
                 name = "subgraph.mission",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "envActions",
-                            subgraph = "subgraph.envActions",
-                        ),
-                        NamedAttributeNode(
-                            "controlUnits",
-                        ),
-                        NamedAttributeNode(
-                            "controlResources",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlPlanSubThemes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanSubTheme",
-                        ),
+                        NamedAttributeNode("attachedReportings"),
+                        NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
+                        NamedAttributeNode("controlUnits", subgraph = "subgraph.missionControlUnit"),
+                        NamedAttributeNode("controlResources"),
                     ],
             ),
             NamedSubgraph(
@@ -80,35 +69,15 @@ import java.time.Instant
                 attributeNodes =
                     [
                         NamedAttributeNode("controlPlanThemes"),
-                        NamedAttributeNode(
-                            "controlPlanSubThemes",
-                            subgraph =
-                                "subgraph.linkedControlPlanSubThemes",
-                        ),
-                        NamedAttributeNode(
-                            "controlPlanTags",
-                            subgraph = "subgraph.linkedControlPlanTags",
-                        ),
-                        NamedAttributeNode("attachedReporting"),
+                        NamedAttributeNode("controlPlanSubThemes"),
+                        NamedAttributeNode("controlPlanTags"),
                     ],
             ),
             NamedSubgraph(
-                name = "subgraph.linkedControlPlanSubThemes",
+                name = "subgraph.reportingControlPlanSubThemes",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "controlPlanSubTheme",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.linkedControlPlanTags",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanTag",
-                            subgraph = "subgraph.controlPlanTags",
-                        ),
+                        NamedAttributeNode("controlPlanSubTheme"),
                     ],
             ),
             NamedSubgraph(
@@ -118,12 +87,20 @@ import java.time.Instant
                         NamedAttributeNode("controlPlanTheme"),
                     ],
             ),
+            NamedSubgraph(
+                name = "subgraph.missionControlUnit",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("mission"),
+                        NamedAttributeNode("unit"),
+                    ],
+            ),
         ],
 )
 open class ReportingModelJpa(
     override val id: Int? = null,
     override val reportingId: Long? = null,
-    override val reportingSources: MutableList<ReportingSourceModel> = mutableListOf(),
+    override val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
     override val targetType: TargetTypeEnum? = null,
     override val vehicleType: VehicleTypeEnum? = null,
     override val targetDetails: MutableList<TargetDetailsEntity>? = mutableListOf(),
@@ -149,7 +126,7 @@ open class ReportingModelJpa(
     override val withVHFAnswer: Boolean? = null,
     override val isInfractionProven: Boolean,
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
-    val validityEndTime: Instant? = null,
+    open val validityEndTime: Instant? = null,
 ) : AbstractReportingModel(
         id = id,
         reportingId = reportingId,
