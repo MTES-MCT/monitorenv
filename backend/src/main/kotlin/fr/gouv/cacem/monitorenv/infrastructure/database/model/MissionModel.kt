@@ -171,7 +171,7 @@ class MissionModel(
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
-    @OneToMany(mappedBy = "mission", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
@@ -180,7 +180,7 @@ class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -190,7 +190,7 @@ class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)

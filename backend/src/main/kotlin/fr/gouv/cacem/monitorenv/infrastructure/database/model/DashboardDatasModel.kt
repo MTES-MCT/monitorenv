@@ -23,19 +23,19 @@ data class DashboardDatasModel(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "dashboard_id")
     var dashboard: DashboardModel?,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "amp_cacem_id")
     val amp: AMPModel?,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "reportings_id")
     val reportingModel: ReportingModel?,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "vigilance_area_id")
     val vigilanceAreaModel: VigilanceAreaModel?,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "regulations_cacem_id")
     val regulatoryAreaModel: RegulatoryAreaModel?,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "control_unit_id")
     val controlUnitModel: ControlUnitModel?,
     @Column(name = "insee_code")

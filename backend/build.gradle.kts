@@ -88,6 +88,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.20.4")
     testImplementation("net.java.dev.jna:jna:5.16.0")
     testImplementation("net.ttddyy:datasource-proxy:1.10.1")
+    developmentOnly("org.springframework.boot:spring-boot-devtools:3.3.5")
 }
 
 group = "fr.gouv.cacem"

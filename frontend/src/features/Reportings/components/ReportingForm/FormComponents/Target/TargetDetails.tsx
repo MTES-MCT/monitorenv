@@ -69,7 +69,9 @@ export function TargetDetails({ form, push, remove }) {
         </TargetWrapper>
       )}
 
-      {form.values.targetType === ReportingTargetTypeEnum.VEHICLE && form?.values.targetDetails?.length > 0
+      {form.values.targetType === ReportingTargetTypeEnum.VEHICLE &&
+      form.values.vehicleType &&
+      form?.values.targetDetails?.length > 0
         ? form.values.targetDetails.map((_, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <TargetWrapper key={index}>
