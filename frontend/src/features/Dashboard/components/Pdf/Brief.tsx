@@ -30,7 +30,7 @@ export function Brief({ brief }: BriefProps) {
         <View style={layoutStyle.section}>
           <ControlUnits controlUnits={brief.controlUnits} />
         </View>
-        <View>
+        <View style={layoutStyle.section}>
           <Comments comments={brief.comments} />
         </View>
         <View style={layoutStyle.section}>
