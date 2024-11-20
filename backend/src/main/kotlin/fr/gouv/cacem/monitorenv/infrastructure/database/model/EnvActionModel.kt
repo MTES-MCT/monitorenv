@@ -91,7 +91,7 @@ class EnvActionModel(
     @OrderBy("id")
     val attachedReporting: MutableSet<ReportingModel>? = LinkedHashSet(),
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "envAction",
@@ -109,7 +109,7 @@ class EnvActionModel(
     @OrderBy("orderIndex")
     val controlPlanSubThemes: MutableSet<EnvActionsControlPlanSubThemeModel>? = LinkedHashSet(),
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "envAction",
@@ -124,21 +124,21 @@ class EnvActionModel(
                 EnvActionControlPlanEntity(
                     themeId = it.id.themeId,
                     subThemeIds =
-                        controlPlanSubThemes
-                            ?.filter { subTheme ->
-                                it.id.themeId ==
+                    controlPlanSubThemes
+                        ?.filter { subTheme ->
+                            it.id.themeId ==
                                     subTheme.controlPlanSubTheme
                                         ?.controlPlanTheme
                                         ?.id
-                            }
-                            ?.map { it.id.subthemeId },
+                        }
+                        ?.map { it.id.subthemeId },
                     tagIds =
-                        controlPlanTags
-                            ?.filter { tag ->
-                                it.id.themeId ==
+                    controlPlanTags
+                        ?.filter { tag ->
+                            it.id.themeId ==
                                     tag.controlPlanTag?.controlPlanTheme?.id
-                            }
-                            ?.map { it.id.tagId },
+                        }
+                        ?.map { it.id.tagId },
                 )
             }
 
@@ -187,9 +187,9 @@ class EnvActionModel(
                     facade = action.facade,
                     isAdministrativeControl = action.isAdministrativeControl,
                     isComplianceWithWaterRegulationsControl =
-                        action.isComplianceWithWaterRegulationsControl,
+                    action.isComplianceWithWaterRegulationsControl,
                     isSafetyEquipmentAndStandardsComplianceControl =
-                        action.isSafetyEquipmentAndStandardsComplianceControl,
+                    action.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = action.isSeafarersControl,
                     openBy = action.openBy,
                     observationsByUnit = action.observationsByUnit,

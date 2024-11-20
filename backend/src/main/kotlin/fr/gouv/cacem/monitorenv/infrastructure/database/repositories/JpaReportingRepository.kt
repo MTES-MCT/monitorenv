@@ -128,8 +128,8 @@ class JpaReportingRepository(
                 targetDetail.vesselType?.name,
             ).any { field ->
                 !field.isNullOrBlank() &&
-                    normalizeField(field)
-                        .contains(normalizeField(searchQuery), ignoreCase = true)
+                        normalizeField(field)
+                            .contains(normalizeField(searchQuery), ignoreCase = true)
             }
         } ?: false
     }

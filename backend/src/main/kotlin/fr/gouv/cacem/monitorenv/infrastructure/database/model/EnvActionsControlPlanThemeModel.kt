@@ -4,7 +4,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
@@ -18,11 +17,11 @@ import java.util.UUID
 class EnvActionsControlPlanThemeModel(
     @EmbeddedId
     val id: EnvActionsThemePk,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("envActionId")
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("themeId")
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel? = null,
@@ -35,10 +34,10 @@ class EnvActionsControlPlanThemeModel(
             controlPlanTheme: ControlPlanThemeModel,
         ) = EnvActionsControlPlanThemeModel(
             id =
-                EnvActionsThemePk(
-                    envActionId = envAction.id,
-                    themeId = controlPlanTheme.id,
-                ),
+            EnvActionsThemePk(
+                envActionId = envAction.id,
+                themeId = controlPlanTheme.id,
+            ),
             envAction = envAction,
             controlPlanTheme = controlPlanTheme,
         )
@@ -67,7 +66,7 @@ data class EnvActionsThemePk(
         if (other !is EnvActionsThemePk) return false
 
         return envActionId == other.envActionId &&
-            themeId == other.themeId
+                themeId == other.themeId
     }
 
     override fun hashCode(): Int {

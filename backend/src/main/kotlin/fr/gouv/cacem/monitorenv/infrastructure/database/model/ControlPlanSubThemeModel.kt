@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanSubThemeEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -13,8 +12,6 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 
 @Entity
 @Table(name = "control_plan_sub_themes")
@@ -26,8 +23,7 @@ class ControlPlanSubThemeModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     val id: Int,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
+    @ManyToOne
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel,
     @Column(name = "subtheme") val subTheme: String,

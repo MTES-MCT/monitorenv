@@ -65,12 +65,12 @@ abstract class AbstractReportingModel(
         mappedBy = "reporting",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
-    open val reportingSources: MutableList<ReportingSourceModel> = mutableListOf(),
+    open val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
@@ -92,7 +92,7 @@ abstract class AbstractReportingModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     open val reportType: ReportingTypeEnum? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     open val controlPlanTheme: ControlPlanThemeModel? = null,
     @OneToMany(
@@ -112,7 +112,7 @@ abstract class AbstractReportingModel(
     @Column(name = "is_archived", nullable = false) open val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) open val isDeleted: Boolean,
     @Column(name = "open_by") open val openBy: String? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     open val mission: MissionModel? = null,
@@ -120,7 +120,7 @@ abstract class AbstractReportingModel(
     @Column(name = "detached_from_mission_at_utc")
     open val detachedFromMissionAtUtc: Instant? = null,
     @JdbcType(UUIDJdbcType::class)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(
         name = "attached_env_action_id",
         columnDefinition = "uuid",
@@ -168,22 +168,22 @@ abstract class AbstractReportingModel(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             attachedMission =
-                if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
-                ) {
-                    mission?.toMissionEntity(
-                        objectMapper,
-                    )
-                } else {
-                    null
-                },
+            if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
+            ) {
+                mission?.toMissionEntity(
+                    objectMapper,
+                )
+            } else {
+                null
+            },
             detachedMission =
-                if (detachedFromMissionAtUtc != null) {
-                    mission?.toMissionEntity(
-                        objectMapper,
-                    )
-                } else {
-                    null
-                },
+            if (detachedFromMissionAtUtc != null) {
+                mission?.toMissionEntity(
+                    objectMapper,
+                )
+            } else {
+                null
+            },
         )
     }
 

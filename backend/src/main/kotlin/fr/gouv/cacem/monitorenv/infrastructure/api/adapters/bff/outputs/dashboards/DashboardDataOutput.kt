@@ -23,7 +23,7 @@ class DashboardDataOutput(
         fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardDataOutput {
             return DashboardDataOutput(
                 id = dashboardEntity.id,
-                name = dashboardEntity.name,
+                name = "pouet",
                 geom = dashboardEntity.geom,
                 comments = dashboardEntity.comments,
                 createdAt = dashboardEntity.createdAt,

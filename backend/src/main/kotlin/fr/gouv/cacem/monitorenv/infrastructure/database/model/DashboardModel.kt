@@ -12,6 +12,8 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -36,6 +38,7 @@ data class DashboardModel(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
+    @Fetch(FetchMode.SUBSELECT)
     val dashboardDatas: MutableList<DashboardDatasModel>,
 ) {
     fun toDashboardEntity(): DashboardEntity {

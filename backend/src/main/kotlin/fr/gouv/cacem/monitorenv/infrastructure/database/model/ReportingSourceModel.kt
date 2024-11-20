@@ -9,7 +9,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -33,15 +32,15 @@ class ReportingSourceModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val sourceType: SourceTypeEnum,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "reportings_id", nullable = false)
     @JsonBackReference
     val reporting: ReportingModel,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "semaphore_id")
     @JsonBackReference
     val semaphore: SemaphoreModel? = null,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "control_unit_id")
     @JsonBackReference
     val controlUnit: ControlUnitModel? = null,

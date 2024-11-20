@@ -5,7 +5,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
@@ -18,11 +17,11 @@ import java.io.Serializable
 class ReportingsControlPlanSubThemeModel(
     @EmbeddedId
     val id: ReportingsSubThemePk,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("reportingId")
     @JoinColumn(name = "reporting_id")
     val reporting: ReportingModel? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("subthemeId")
     @JoinColumn(name = "subtheme_id")
     val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
@@ -35,10 +34,10 @@ class ReportingsControlPlanSubThemeModel(
             controlPlanSubTheme: ControlPlanSubThemeModel,
         ) = ReportingsControlPlanSubThemeModel(
             id =
-                ReportingsSubThemePk(
-                    reportingId = reporting.id!!,
-                    subthemeId = controlPlanSubTheme.id,
-                ),
+            ReportingsSubThemePk(
+                reportingId = reporting.id!!,
+                subthemeId = controlPlanSubTheme.id,
+            ),
             reporting = reporting,
             controlPlanSubTheme = controlPlanSubTheme,
         )
@@ -67,7 +66,7 @@ data class ReportingsSubThemePk(
         if (other !is ReportingsSubThemePk) return false
 
         return reportingId == other.reportingId &&
-            subthemeId == other.subthemeId
+                subthemeId == other.subthemeId
     }
 
     override fun hashCode(): Int {
