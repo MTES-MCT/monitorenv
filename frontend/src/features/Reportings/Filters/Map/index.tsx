@@ -1,5 +1,5 @@
 import { CustomPeriodContainer } from '@components/style'
-import { CheckPicker, DateRangePicker, Checkbox, SingleTag } from '@mtes-mct/monitor-ui'
+import { CheckPicker, DateRangePicker, Checkbox, SingleTag, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
@@ -15,6 +15,22 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
+
+import type { ReportingsOptionsListType } from '..'
+
+type MapReportingsFiltersProps = {
+  optionsList: ReportingsOptionsListType
+  updateCheckboxFilter: (
+    isChecked: boolean,
+    value: string,
+    filter: ReportingsFiltersEnum,
+    filterValues: string[]
+  ) => void
+  updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
+  updatePeriodFilter: (value: ReportingDateRangeEnum) => void
+  updateSimpleFilter: (value: string, filter: ReportingsFiltersEnum) => void
+  updateSourceTypeFilter: (value: string[]) => void
+}
 
 export function MapReportingsFiltersWithRef(
   {
@@ -253,7 +269,7 @@ export function MapReportingsFiltersWithRef(
   )
 }
 
-export const MapReportingsFilters = forwardRef(MapReportingsFiltersWithRef)
+export const MapReportingsFilters = forwardRef<HTMLDivElement, MapReportingsFiltersProps>(MapReportingsFiltersWithRef)
 
 const FilterWrapper = styled.div`
   display: flex;

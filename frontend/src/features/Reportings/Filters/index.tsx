@@ -1,10 +1,10 @@
 import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
-import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 
 import { MapReportingsFilters } from './Map'
-import { reportingsFiltersActions, ReportingsFiltersEnum } from './slice'
+import { reportingsFiltersActions, ReportingsFiltersEnum, type SourceFilterProps } from './slice'
 import { TableReportingsFilters } from './Table'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
@@ -26,6 +26,19 @@ export enum ReportingFilterContext {
   MAP = 'MAP',
   TABLE = 'TABLE'
 }
+
+export type ReportingsOptionsListType = {
+  dateRangeOptions: Option<string>[]
+  seaFrontsOptions: Option<string>[]
+  sourceOptions: Option<SourceFilterProps>[]
+  sourceTypeOptions: Option<string>[]
+  statusOptions: Option<string>[]
+  subThemesOptions: Option<number>[]
+  targetTypeOtions: Option<string>[]
+  themesOptions: Option<number>[]
+  typeOptions: Option<string>[]
+}
+
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
   const { sourceTypeFilter, startedAfter, startedBefore, subThemesFilter } = useAppSelector(

@@ -27,6 +27,17 @@ export enum MissionFilterContext {
   TABLE = 'TABLE'
 }
 
+export type MissionOptionsListType = {
+  administrations: Option<string>[]
+  completion: Option<string>[]
+  controlUnits: Option<number>[]
+  dates: Option<DateRangeEnum>[]
+  seaFronts: Option<string>[]
+  status: Option<string>[]
+  themes: Option<number>[]
+  types: Option<string>[]
+}
+
 export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 

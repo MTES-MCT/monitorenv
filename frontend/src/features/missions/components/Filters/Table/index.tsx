@@ -9,8 +9,7 @@ import {
   DateRangePicker,
   Select,
   useNewWindow,
-  type DateAsStringRange,
-  type Option
+  type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum } from 'domain/shared_slices/MissionFilters'
@@ -19,14 +18,17 @@ import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 
+import type { MissionOptionsListType } from '..'
+
 type TableMissionFiltersProps = {
   onResetFilters: () => void
   onUpdateAdministrationFilter: (value: any) => void
   onUpdateDateRangeFilter: (value: DateAsStringRange | undefined) => void
   onUpdatePeriodFilter: (value: DateRangeEnum | undefined) => void
   onUpdateSimpleFilter: (value: any, filter: MissionFiltersEnum) => void
-  optionsList: { [key: string]: Option<string | number>[] }
+  optionsList: MissionOptionsListType
 }
+
 export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFiltersProps>(
   (
     {
@@ -131,7 +133,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               label="Période"
               name="Période"
               onChange={onUpdatePeriodFilter}
-              options={(dates ?? []) as Option<DateRangeEnum>[]}
+              options={dates ?? []}
               placeholder="Date de mission depuis"
               style={tagPickerStyle}
               value={selectedPeriod}

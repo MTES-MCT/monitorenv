@@ -30,7 +30,7 @@ const findSelfIntersects = function findSelfIntersects(geoJsonPolygon) {
     return undefined
   }
 
-  const res = [] as number[][]
+  const res: number[][] = []
   const graph = new JSTSGeometryGraph(0, jstsPolygon)
   const cat = new JSTSConsistentAreaTester(graph)
   const r = cat.isNodeConsistentArea()

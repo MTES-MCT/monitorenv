@@ -1,6 +1,14 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
-import { CheckPicker, DateRangePicker, Checkbox, CustomSearch, type Option, useNewWindow } from '@mtes-mct/monitor-ui'
+import {
+  CheckPicker,
+  DateRangePicker,
+  Checkbox,
+  CustomSearch,
+  type Option,
+  useNewWindow,
+  type DateAsStringRange
+} from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
@@ -11,6 +19,24 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReportingSearch } from '../ReportingSearch'
 import { ReportingsFiltersEnum, type SourceFilterProps } from '../slice'
 import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
+
+import type { ReportingsOptionsListType } from '..'
+
+type TableReportingsFiltersProps = {
+  optionsList: ReportingsOptionsListType
+  resetFilters: () => void
+  updateCheckboxFilter: (
+    isChecked: boolean,
+    value: string,
+    filter: ReportingsFiltersEnum,
+    filterValues: string[]
+  ) => void
+  updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
+  updatePeriodFilter: (value: ReportingDateRangeEnum) => void
+  updateSimpleFilter: (value: string, filter: ReportingsFiltersEnum) => void
+  updateSourceTypeFilter: (value: string[]) => void
+  updateThemeFilter: (value: number[]) => void
+}
 
 export function TableReportingsFiltersWithRef(
   {
@@ -56,7 +82,7 @@ export function TableReportingsFiltersWithRef(
 
   const sourceCustomSearch = useMemo(
     () =>
-      new CustomSearch(sourceOptions as Array<Option<SourceFilterProps>>, ['label'], {
+      new CustomSearch<Option<SourceFilterProps>>(sourceOptions, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
@@ -64,7 +90,7 @@ export function TableReportingsFiltersWithRef(
   )
   const themeCustomSearch = useMemo(
     () =>
-      new CustomSearch(themesOptions as Array<Option<number>>, ['label'], {
+      new CustomSearch<Option<number>>(themesOptions, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
@@ -73,7 +99,7 @@ export function TableReportingsFiltersWithRef(
 
   const subThemeCustomSearch = useMemo(
     () =>
-      new CustomSearch(subThemesOptions as Array<Option<number>>, ['label'], {
+      new CustomSearch<Option<number>>(subThemesOptions, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
@@ -279,7 +305,9 @@ export function TableReportingsFiltersWithRef(
   )
 }
 
-export const TableReportingsFilters = forwardRef(TableReportingsFiltersWithRef)
+export const TableReportingsFilters = forwardRef<HTMLDivElement, TableReportingsFiltersProps>(
+  TableReportingsFiltersWithRef
+)
 
 const FilterWrapper = styled.div`
   display: flex;
