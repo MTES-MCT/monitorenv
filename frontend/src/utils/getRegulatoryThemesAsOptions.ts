@@ -21,5 +21,5 @@ export function getRegulatoryThemesAsOptions(
     .uniq()
     .map(l => ({ label: l, value: l }))
     .sortBy('label')
-    .value() as Option<string>[]
+    .value()
 }

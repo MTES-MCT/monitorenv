@@ -22,13 +22,16 @@ import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'dom
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
+import type { MissionOptionsListType } from '..'
+
 type MapMissionFiltersProps = {
   onUpdateAdministrationFilter: (value: any) => void
   onUpdateDateRangeFilter: (value: DateAsStringRange | undefined) => void
   onUpdatePeriodFilter: (value: DateRangeEnum | undefined) => void
   onUpdateSimpleFilter: (value: any, filter: MissionFiltersEnum) => void
-  optionsList: { [key: string]: Option<string | number | DateRangeEnum>[] }
+  optionsList: MissionOptionsListType
 }
+
 export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersProps>(
   (
     { onUpdateAdministrationFilter, onUpdateDateRangeFilter, onUpdatePeriodFilter, onUpdateSimpleFilter, optionsList },

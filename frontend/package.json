@@ -97,7 +97,7 @@
     "@vitejs/plugin-react": "4.3.2",
     "babel-eslint": "10.1.0",
     "codecov": "3.8.3",
-    "cypress": "^13.15.0",
+    "cypress": "13.15.2",
     "cypress-mouse-position": "1.0.0",
     "cypress-plugin-snapshots": "github:ivangabriele/cypress-plugin-snapshots",
     "dotenv": "16.4.5",
@@ -133,10 +133,9 @@
     "ramda": "0.30.1",
     "type-fest": "4.26.1",
     "typescript": "5.6.2",
-    "vite": "5.4.8",
-    "vite-plugin-svgr": "4.2.0",
-    "vite-tsconfig-paths": "5.0.1",
-    "webpack": "5.95.0"
+    "vite": "5.4.10",
+    "vite-plugin-svgr": "4.3.0",
+    "vite-tsconfig-paths": "5.0.1"
   },
   "browserslist": {
     "production": [
