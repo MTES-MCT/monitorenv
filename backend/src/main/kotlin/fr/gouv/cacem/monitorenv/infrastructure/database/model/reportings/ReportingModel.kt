@@ -20,7 +20,7 @@ import java.time.Instant
 class ReportingModel(
     override val id: Int? = null,
     override val reportingId: Long? = null,
-    override val reportingSources: MutableList<ReportingSourceModel> = mutableListOf(),
+    override val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
     override val targetType: TargetTypeEnum? = null,
     override val vehicleType: VehicleTypeEnum? = null,
     override val targetDetails: List<TargetDetailsEntity>? = listOf(),
