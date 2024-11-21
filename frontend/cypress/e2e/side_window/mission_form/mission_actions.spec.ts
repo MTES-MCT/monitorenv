@@ -36,8 +36,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       const { infractions }: EnvActionControl = request.body.envActions.find(
         a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807'
       )
-      expect(infractions.length).equal(2)
-      const duplicatedInfraction = infractions[1]
+      expect(infractions?.length).equal(2)
+      const duplicatedInfraction = infractions?.[1]
 
       expect(duplicatedInfraction?.controlledPersonIdentity).equal('John Doe')
       expect(duplicatedInfraction?.formalNotice).equal('PENDING')
@@ -51,7 +51,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       expect(duplicatedInfraction?.vesselSize).equal(45)
       expect(duplicatedInfraction?.vesselType).equal('COMMERCIAL')
       expect(duplicatedInfraction?.nbTarget).equal(1)
-      expect(duplicatedInfraction?.id).not.equal(infractions[0]?.id)
+      expect(duplicatedInfraction?.id).not.equal(infractions?.[0]?.id)
     })
   })
 
@@ -310,11 +310,11 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       // surveillance
       const surveillance: EnvActionSurveillance = envActions.find(a => a.actionType === 'SURVEILLANCE')
-      const surveillanceControlPlans = surveillance.controlPlans[0]
+      const surveillanceControlPlans = surveillance.controlPlans?.[0]
       expect(surveillanceControlPlans?.themeId).equal(105)
-      expect(surveillanceControlPlans?.subThemeIds.length).equal(2)
-      expect(surveillanceControlPlans?.subThemeIds[0]).equal(128)
-      expect(surveillanceControlPlans?.subThemeIds[1]).equal(131)
+      expect(surveillanceControlPlans?.subThemeIds?.length).equal(2)
+      expect(surveillanceControlPlans?.subThemeIds?.[0]).equal(128)
+      expect(surveillanceControlPlans?.subThemeIds?.[1]).equal(131)
 
       const id = response && response.body.id
       // update mission date to 2023

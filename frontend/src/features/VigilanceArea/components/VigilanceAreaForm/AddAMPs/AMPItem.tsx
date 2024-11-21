@@ -49,7 +49,7 @@ export function AMPItem({ amp, isReadOnly }: AMPItemProps) {
     dispatch(vigilanceAreaActions.deleteAmpFromVigilanceArea(ampId))
     setFieldValue(
       'linkedAMPs',
-      linkedAMPs.filter(id => id !== ampId)
+      linkedAMPs?.filter(id => id !== ampId)
     )
   }
 

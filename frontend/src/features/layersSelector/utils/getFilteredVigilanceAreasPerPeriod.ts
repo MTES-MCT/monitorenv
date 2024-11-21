@@ -10,7 +10,11 @@ function isWithinPeriod(date: Dayjs, startDate: Dayjs, endDate: Dayjs) {
   return (date.isAfter(startDate) && date.isBefore(endDate)) || date.isSame(startDate) || date.isSame(endDate)
 }
 
-export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, vigilanceAreaSpecificPeriodFilter) => {
+export const getFilterVigilanceAreasPerPeriod = (
+  vigilanceAreas: (VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi)[],
+  periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
+  vigilanceAreaSpecificPeriodFilter?: string[]
+): Array<VigilanceArea.VigilanceAreaFromApi> => {
   const now = customDayjs()
 
   let startDateFilter: Dayjs
@@ -44,7 +48,7 @@ export const getFilterVigilanceAreasPerPeriod = (vigilanceAreas, periodFilter, v
     }
   }
 
-  return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceArea>) ?? []).filter(vigilanceArea => {
+  return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaFromApi>) ?? []).filter(vigilanceArea => {
     if (!vigilanceArea || !vigilanceArea.startDatePeriod || !vigilanceArea.endDatePeriod) {
       return false
     }

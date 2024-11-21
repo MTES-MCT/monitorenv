@@ -66,7 +66,7 @@ export function useSearchLayers() {
       regulatoryThemes: string[]
       searchedText: string
       shouldSearchByExtent: boolean
-      vigilanceAreaPeriodFilter: string | undefined
+      vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined
       vigilanceAreaSpecificPeriodFilter: string[] | undefined
     }) => {
       const shouldSearchByText = searchedText?.length > 2
@@ -74,11 +74,11 @@ export function useSearchLayers() {
       const shouldSearchThroughRegulatoryThemes = regulatoryThemes?.length > 0
 
       let vigilanceAreasPerPeriod = [] as Array<VigilanceArea.VigilanceArea>
-      let vigilanceAreaIdsPerPeriod = [] as Array<number>
+      let vigilanceAreaIdsPerPeriod = [] as number[]
 
       if (vigilanceAreaPeriodFilter) {
         vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
-          vigilanceAreaLayers?.entities,
+          vigilanceAreaLayers?.entities ? Object.values(vigilanceAreaLayers.entities) : [],
           vigilanceAreaPeriodFilter,
           vigilanceAreaSpecificPeriodFilter
         )

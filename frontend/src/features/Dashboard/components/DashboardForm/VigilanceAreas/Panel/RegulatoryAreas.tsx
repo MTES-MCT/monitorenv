@@ -16,7 +16,7 @@ import { RegulatoryAreasPanel } from '../../components/RegulatoryAreasPanel'
 
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
-export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: Array<number> }) {
+export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: number[] }) {
   const dispatch = useAppDispatch()
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()

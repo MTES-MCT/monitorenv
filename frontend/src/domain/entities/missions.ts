@@ -1,9 +1,10 @@
 import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 
 import type { ControlPlansData } from './controlPlan'
-import type { LegacyControlUnit } from './legacyControlUnit'
+import type { LegacyControlUnit, LegacyControlUnitForm } from './legacyControlUnit'
 import type { DetachedReportingForTimeline, Reporting, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
+import type { TargetTypeEnum } from './targetType'
 import type { VesselTypeEnum } from './vesselType'
 import type { FishMissionAction } from '@features/missions/fishActions.types'
 import type { RapportNavMissionAction } from '@features/missions/rapportNavActions.types'
@@ -228,12 +229,12 @@ export enum ActionSource {
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
   attachedReportings: Reporting[]
-  completedBy: string
+  completedBy: string | undefined
   controlUnits: LegacyControlUnit[]
   createdAtUtc?: string | undefined
   detachedReportingIds: number[]
   detachedReportings?: []
-  endDateTimeUtc?: string
+  endDateTimeUtc: string
   envActions: EnvAction[]
   facade: SeaFrontEnum
   fishActions: FishMissionAction.MissionAction[]
@@ -247,13 +248,13 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   missionTypes: MissionTypeEnum[]
   observationsCacem?: string
   observationsCnsp?: string
-  openBy: string
+  openBy?: string | undefined
   startDateTimeUtc: string
   updatedAtUtc?: string | undefined
 }
 
 export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' | 'id'> & {
-  controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
+  controlUnits: Array<Omit<LegacyControlUnitForm, 'administrationId' | 'id'>>
   id: string
 }
 // Mission for API
@@ -263,43 +264,43 @@ export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 
 export type EnvActionCommonProperties = {
-  actionStartDateTimeUtc?: string | null
+  actionStartDateTimeUtc?: string | undefined
   id: string
 }
 
 export type NewEnvActionControl = EnvActionCommonProperties & {
-  actionEndDateTimeUtc?: string | null
+  actionEndDateTimeUtc?: string | undefined
   actionNumberOfControls?: number
-  actionTargetType?: string
+  actionTargetType?: TargetTypeEnum | undefined
   actionType: ActionTypeEnum.CONTROL
-  completedBy: string
+  completedBy?: string | undefined
   completion: CompletionStatus
-  controlPlans: ControlPlansData[]
+  controlPlans?: ControlPlansData[] | undefined
   geom?: GeoJSON.MultiPolygon | GeoJSON.MultiPoint
-  infractions: Infraction[] | NewInfraction[]
+  infractions?: Infraction[] | NewInfraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
   isSeafarersControl?: boolean
-  observations: string | null
+  observations?: string | undefined
   openBy: string
   reportingIds: number[]
-  vehicleType?: string
+  vehicleType?: string | undefined
 }
 export type EnvActionControl = NewEnvActionControl & {
-  actionTargetType: string
+  actionTargetType: TargetTypeEnum
 }
 
 export type EnvActionSurveillance = EnvActionCommonProperties & {
-  actionEndDateTimeUtc?: string | null
+  actionEndDateTimeUtc?: string | undefined
   actionType: ActionTypeEnum.SURVEILLANCE
   awareness?: Awareness
-  completedBy: string
+  completedBy?: string | undefined
   completion: CompletionStatus
-  controlPlans: ControlPlansData[]
+  controlPlans?: ControlPlansData[] | undefined
   durationMatchesMission?: boolean
   geom?: GeoJSON.MultiPolygon
-  observations: string | null
+  observations?: string | undefined
   openBy: string
   reportingIds: number[]
 }
@@ -314,32 +315,33 @@ export type ControlOrSurveillance = EnvActionControl | EnvActionSurveillance
 
 export type EnvActionNote = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE
-  observations?: string | null
+  observations?: string | undefined
 }
 
 export type NewInfraction = {
-  administrativeResponse?: AdministrativeResponseType
-  companyName?: string | null
-  controlledPersonIdentity?: string | null
+  administrativeResponse?: AdministrativeResponseType | undefined
+  companyName?: string | undefined
+  controlledPersonIdentity?: string | undefined
   formalNotice?: FormalNoticeEnum
   id: string
-  imo?: string | null
-  infractionType?: InfractionTypeEnum
-  mmsi?: string | null
+  imo?: string | undefined
+  infractionType?: InfractionTypeEnum | undefined
+  mmsi?: string | undefined
   natinf?: string[]
-  nbTarget: number
-  observations?: string | null
-  registrationNumber?: string | null
-  relevantCourt?: string | null
-  toProcess: boolean
-  vesselName?: string | null
-  vesselSize?: Number | null
-  vesselType?: VesselTypeEnum | null
+  nbTarget?: number | undefined
+  observations?: string | undefined
+  registrationNumber?: string | undefined
+  relevantCourt?: string | undefined
+  toProcess?: boolean | undefined
+  vesselName?: string | undefined
+  vesselSize?: number | undefined
+  vesselType?: VesselTypeEnum | undefined
 }
 export type Infraction = NewInfraction & {
   administrativeResponse: AdministrativeResponseType
   formalNotice: FormalNoticeEnum
   infractionType: InfractionTypeEnum
+  nbTarget: number
 }
 
 export type EnvActionForTimeline = EnvAction & {
@@ -359,8 +361,8 @@ export const getMissionStatus = ({
   endDateTimeUtc,
   startDateTimeUtc
 }: {
-  endDateTimeUtc?: string | null
-  startDateTimeUtc?: string | null
+  endDateTimeUtc?: string | undefined
+  startDateTimeUtc?: string | undefined
 }) => {
   if (!startDateTimeUtc) {
     return 'ERROR'

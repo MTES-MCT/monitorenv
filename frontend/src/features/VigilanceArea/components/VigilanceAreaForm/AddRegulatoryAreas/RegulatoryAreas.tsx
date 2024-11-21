@@ -4,7 +4,7 @@ import { RegulatoryAreaItem } from './RegulatoryAreaItem'
 
 type RegulatoryAreasProps = {
   isReadOnly?: boolean
-  linkedRegulatoryAreas: Array<number> | undefined
+  linkedRegulatoryAreas: number[] | undefined
 }
 export function RegulatoryAreas({ isReadOnly = false, linkedRegulatoryAreas }: RegulatoryAreasProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()

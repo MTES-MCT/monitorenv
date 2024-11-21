@@ -23,8 +23,8 @@ export enum VigilanceAreaFormTypeOpen {
 }
 
 type VigilanceAreaSliceState = {
-  ampIdsToBeDisplayed: Array<number> | undefined
-  ampToAdd: Array<number>
+  ampIdsToBeDisplayed: number[] | undefined
+  ampToAdd: number[]
   editingVigilanceAreaId: number | undefined
   formTypeOpen: VigilanceAreaFormTypeOpen | undefined
   geometry: GeoJSON.Geometry | undefined
@@ -32,10 +32,10 @@ type VigilanceAreaSliceState = {
   interactionType: InteractionType
   isCancelModalOpen: boolean
   isGeometryValid: boolean
-  myVigilanceAreaIds: Array<number>
-  myVigilanceAreaIdsDisplayed: Array<number>
-  regulatoryAreaIdsToBeDisplayed: Array<number> | undefined
-  regulatoryAreasToAdd: Array<number>
+  myVigilanceAreaIds: number[]
+  myVigilanceAreaIdsDisplayed: number[]
+  regulatoryAreaIdsToBeDisplayed: number[] | undefined
+  regulatoryAreasToAdd: number[]
   selectedVigilanceAreaId: number | undefined
   vigilanceAreaIdToCancel: number | undefined
 }
@@ -67,7 +67,7 @@ export const vigilanceAreaSlice = createSlice({
         state.ampIdsToBeDisplayed = [action.payload]
       }
     },
-    addAmpIdsToVigilanceArea(state, action: PayloadAction<Array<number>>) {
+    addAmpIdsToVigilanceArea(state, action: PayloadAction<number[]>) {
       if (action.payload.length === 0) {
         state.ampToAdd = []
 
@@ -83,11 +83,11 @@ export const vigilanceAreaSlice = createSlice({
       const newAMPToAdd = action.payload.filter(id => !state.ampToAdd?.includes(id))
       state.ampToAdd = [...state.ampToAdd, ...newAMPToAdd]
     },
-    addIdsToMyVigilanceAreaIds(state, action: PayloadAction<Array<number>>) {
+    addIdsToMyVigilanceAreaIds(state, action: PayloadAction<number[]>) {
       state.myVigilanceAreaIds = [...state.myVigilanceAreaIds, ...action.payload]
       state.myVigilanceAreaIdsDisplayed = [...state.myVigilanceAreaIdsDisplayed, ...action.payload]
     },
-    addIdsToMyVigilanceAreaIdsToBeDisplayed(state, action: PayloadAction<Array<number>>) {
+    addIdsToMyVigilanceAreaIdsToBeDisplayed(state, action: PayloadAction<number[]>) {
       state.myVigilanceAreaIdsDisplayed = [...state.myVigilanceAreaIdsDisplayed, ...action.payload]
     },
 
@@ -98,7 +98,7 @@ export const vigilanceAreaSlice = createSlice({
         state.regulatoryAreaIdsToBeDisplayed = [action.payload]
       }
     },
-    addRegulatoryAreasToVigilanceArea(state, action: PayloadAction<Array<number>>) {
+    addRegulatoryAreasToVigilanceArea(state, action: PayloadAction<number[]>) {
       if (action.payload.length === 0) {
         state.regulatoryAreasToAdd = []
 
@@ -225,9 +225,9 @@ export const vigilanceAreaSlice = createSlice({
     updateEditingVigilanceArea(
       state,
       action: PayloadAction<{
-        ampToAdd: Array<number>
+        ampToAdd: number[]
         geometry: GeoJSON.Geometry | undefined
-        regulatoryAreasToAdd: Array<number>
+        regulatoryAreasToAdd: number[]
       }>
     ) {
       state.ampToAdd = action.payload.ampToAdd

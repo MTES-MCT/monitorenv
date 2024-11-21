@@ -171,7 +171,7 @@ export const getNumberOfInfractionTarget = createSelector(
 
   (selectedInfraction: Infraction[] | NewInfraction[] | undefined) =>
     (selectedInfraction &&
-      selectedInfraction.reduce((sumNbTarget, infraction) => sumNbTarget + infraction.nbTarget, 0)) ||
+      selectedInfraction.reduce((sumNbTarget, infraction) => sumNbTarget + (infraction?.nbTarget ?? 0), 0)) ||
     0
 )
 

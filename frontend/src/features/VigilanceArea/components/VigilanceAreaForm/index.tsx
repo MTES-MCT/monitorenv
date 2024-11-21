@@ -62,9 +62,9 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
     if (editingVigilanceAreaId && vigilanceArea && vigilanceArea.id === editingVigilanceAreaId) {
       dispatch(
         vigilanceAreaActions.updateEditingVigilanceArea({
-          ampToAdd: vigilanceArea.linkedAMPs,
+          ampToAdd: vigilanceArea.linkedAMPs ?? [],
           geometry: vigilanceArea.geom,
-          regulatoryAreasToAdd: vigilanceArea.linkedRegulatoryAreas
+          regulatoryAreasToAdd: vigilanceArea.linkedRegulatoryAreas ?? []
         })
       )
     }

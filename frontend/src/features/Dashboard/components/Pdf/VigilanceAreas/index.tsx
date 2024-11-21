@@ -107,7 +107,7 @@ export function VigilanceAreas({
                   </View>
                 </View>
               )}
-              {vigilanceArea.links?.length > 0 && (
+              {vigilanceArea.links && vigilanceArea.links?.length > 0 && (
                 <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                   <View>
                     <Text style={[areaStyle.description, { width: 'auto' }]}>Liens utiles</Text>

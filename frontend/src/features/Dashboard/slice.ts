@@ -479,7 +479,7 @@ export const getFilteredVigilanceAreas = createSelector(
       const regulatoryThemesFilter = filters?.regulatoryThemes
       const periodFilter = filters?.vigilanceAreaPeriod
       const specificPeriodFilter = filters?.specificPeriod
-      const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas
+      const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas ?? []
 
       let filteredVigilanceAreasByThemes = vigilanceAreas
 

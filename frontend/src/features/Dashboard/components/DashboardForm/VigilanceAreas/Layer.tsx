@@ -16,7 +16,7 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 type RegulatoryLayerProps = {
   isPinned?: boolean
   isSelected: boolean
-  vigilanceArea: VigilanceArea.VigilanceArea
+  vigilanceArea: VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi
 }
 
 export function Layer({ isPinned = false, isSelected, vigilanceArea }: RegulatoryLayerProps) {

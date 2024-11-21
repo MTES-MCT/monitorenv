@@ -5,16 +5,9 @@ import {
   type AdministrativeResponseType,
   FormalNoticeEnum,
   InfractionTypeEnum,
-  type EnvActionControl,
-  type Infraction
+  type Infraction,
+  type NewInfraction
 } from '../../../../domain/entities/missions'
-
-// DELETE ME (23/07/2024): Workaround before Yup's release v1.0.0
-type TestContextExtended = Yup.TestContext & {
-  from: {
-    value: EnvActionControl
-  }[]
-}
 
 Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
   Yup.mixed().test({
@@ -28,15 +21,15 @@ Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
   })
 )
 
-export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
-  administrativeResponse: Yup.mixed<AdministrativeResponseType>().required(),
-  companyName: Yup.string().optional().nullable(),
-  controlledPersonIdentity: Yup.string().nullable(),
-  formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required(),
+export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object().shape({
+  administrativeResponse: Yup.mixed<AdministrativeResponseType>().optional(),
+  companyName: Yup.string().optional(),
+  controlledPersonIdentity: Yup.string().optional(),
+  formalNotice: Yup.mixed<FormalNoticeEnum>().oneOf(Object.values(FormalNoticeEnum)).optional(),
   id: Yup.string().required(),
-  imo: Yup.string().nullable(),
-  infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required(),
-  mmsi: Yup.string().nullable(),
+  imo: Yup.string().optional(),
+  infractionType: Yup.mixed<InfractionTypeEnum>().oneOf(Object.values(InfractionTypeEnum)).optional(),
+  mmsi: Yup.string().optional(),
   natinf: Yup.array()
     .of(Yup.string().ensure())
     .when('infractionType', {
@@ -45,6 +38,25 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
       then: schema => schema.compact().min(0)
     })
     .ensure(),
+  nbTarget: Yup.number().optional(),
+  observations: Yup.string().optional(),
+  registrationNumber: Yup.string().optional(),
+  relevantCourt: Yup.string().optional(),
+  toProcess: Yup.boolean().optional(),
+  vesselName: Yup.string().optional(),
+  vesselSize: Yup.number().optional(),
+  vesselType: Yup.mixed<VesselTypeEnum>().oneOf(Object.values(VesselTypeEnum)).optional()
+})
+
+export const CompletionInfractionSchema: Yup.Schema<Infraction> = NewInfractionSchema.shape({
+  administrativeResponse: Yup.mixed<AdministrativeResponseType>()
+    .oneOf(['SANCTION', 'REGULARIZATION', 'NONE'])
+    .required(),
+  formalNotice: Yup.mixed<FormalNoticeEnum>().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
+  id: Yup.string().required(),
+  infractionType: Yup.mixed<InfractionTypeEnum>()
+    .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
+    .required(),
   nbTarget: Yup.number()
     .min(1, 'le nombre minimum de cible est 1')
     .required('Le nombre de cibles est obligatoire')
@@ -52,9 +64,8 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
       message: 'Le nombre de cibles excède le nombre total de contrôles',
       test: (value, context) => {
         const currentInfractionId = (context.parent as Infraction).id
-
         if (value) {
-          const currentEnvActionControl = (context as TestContextExtended).from[1]
+          const currentEnvActionControl = context.from?.[1]
           if (currentEnvActionControl) {
             const { actionNumberOfControls, infractions } = currentEnvActionControl.value
             if (!actionNumberOfControls) {
@@ -73,21 +84,5 @@ export const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape(
         return true
       }
     }),
-  observations: Yup.string().nullable(),
-  registrationNumber: Yup.string().nullable(),
-  relevantCourt: Yup.string().nullable(),
-  toProcess: Yup.boolean().required(),
-  vesselName: Yup.string().nullable(),
-  vesselSize: Yup.number().nullable(),
-  // @ts-ignore
-  // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'
-  vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
-})
-
-export const CompletionInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
-  administrativeResponse: Yup.mixed<AdministrativeResponseType>()
-    .oneOf(['SANCTION', 'REGULARIZATION', 'NONE'])
-    .required(),
-  formalNotice: Yup.mixed().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
-  infractionType: Yup.mixed().oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT]).required()
+  toProcess: Yup.boolean().required()
 })

@@ -5,6 +5,7 @@ import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import type { ActionSource, ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
 import type { VesselTypeEnum } from './vesselType'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export type Reporting = {
   actionTaken: string | undefined
@@ -15,7 +16,7 @@ export type Reporting = {
   createdAt: string | undefined
   description: string | undefined
   detachedFromMissionAtUtc: string | undefined
-  geom: Record<string, any>[] | undefined
+  geom: GeoJSON.MultiPolygon | undefined
   hasNoUnitAvailable: boolean | undefined
   id: number | string
   isArchived: boolean

@@ -16,7 +16,7 @@ import { AmpsPanel } from '../../components/AmpsPanel'
 
 import type { AMP } from 'domain/entities/AMPs'
 
-export function Amps({ ampIds }: { ampIds: Array<number> }) {
+export function Amps({ ampIds }: { ampIds: number[] }) {
   const dispatch = useAppDispatch()
 
   const { data: ampLayers } = useGetAMPsQuery()

@@ -8,5 +8,5 @@ export function isVigilanceAreaPartOfTheme(
     return true
   }
 
-  return vigilanceArea.themes?.some(theme => themes.includes(theme))
+  return !!vigilanceArea.themes && vigilanceArea.themes.some(theme => themes.includes(theme))
 }
