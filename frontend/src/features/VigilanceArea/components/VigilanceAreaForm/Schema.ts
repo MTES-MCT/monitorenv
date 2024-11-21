@@ -2,45 +2,41 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { isEmpty } from 'lodash'
 import * as Yup from 'yup'
 
-const ZoneSchema = Yup.object().test({
-  message: 'Veuillez définir une zone de vigilance',
-  name: 'has-geom',
-  test: val => val && !isEmpty(val?.coordinates)
-})
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
-export const DraftSchema: Yup.SchemaOf<
-  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived'>
+export const DraftSchema: Yup.Schema<
+  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived' | 'seaFront'>
 > = Yup.object()
   .shape({
-    comments: Yup.string().nullable(),
+    comments: Yup.string().optional(),
     computedEndDate: Yup.string().nullable(),
     createdBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
-      .nullable(),
-    endDatePeriod: Yup.string().nullable(),
-    endingCondition: Yup.mixed().nullable(),
-    endingOccurrenceDate: Yup.string().nullable(),
-    endingOccurrencesNumber: Yup.number().nullable(),
-    frequency: Yup.mixed().nullable(),
-    geom: Yup.array().of(ZoneSchema).nullable(),
-    id: Yup.number().nullable(),
-    images: Yup.array().nullable(),
+      .optional(),
+    endDatePeriod: Yup.string().optional(),
+    endingCondition: Yup.mixed<VigilanceArea.EndingCondition>().optional(),
+    endingOccurrenceDate: Yup.string().optional(),
+    endingOccurrencesNumber: Yup.number().optional(),
+    frequency: Yup.mixed<VigilanceArea.Frequency>().optional(),
+    geom: Yup.mixed<GeoJSON.MultiPolygon>().optional(),
+    id: Yup.number().optional(),
+    images: Yup.array<VigilanceArea.ImagePropsForApi>().optional(),
     isArchived: Yup.boolean().required(),
     isDraft: Yup.boolean().required(),
-    linkedAMPs: Yup.array().nullable(),
-    linkedRegulatoryAreas: Yup.array().nullable(),
-    links: Yup.array().nullable(),
+    linkedAMPs: Yup.array().optional(),
+    linkedRegulatoryAreas: Yup.array().optional(),
+    links: Yup.array().optional(),
     name: Yup.string().required(),
-    source: Yup.string().nullable(),
-    startDatePeriod: Yup.string().nullable(),
-    themes: Yup.array().nullable(),
-    visibility: Yup.mixed().nullable()
+    source: Yup.string().optional(),
+    startDatePeriod: Yup.string().optional(),
+    themes: Yup.array().optional(),
+    visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
   })
   .required()
 
-export const PublishedSchema: Yup.SchemaOf<
-  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived'>
+export const PublishedSchema: Yup.Schema<
+  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived' | 'seaFront'>
 > = Yup.object()
   .shape({
     comments: Yup.string().required(),
@@ -50,7 +46,7 @@ export const PublishedSchema: Yup.SchemaOf<
       .max(3, 'Maximum 3 lettres pour le trigramme')
       .required(),
     endDatePeriod: Yup.string().required(),
-    endingCondition: Yup.mixed()
+    endingCondition: Yup.mixed<VigilanceArea.EndingCondition>()
       .oneOf(Object.values(VigilanceArea.EndingCondition))
       .when('frequency', {
         is: VigilanceArea.Frequency.NONE,
@@ -67,19 +63,26 @@ export const PublishedSchema: Yup.SchemaOf<
       otherwise: schema => schema.nullable(),
       then: schema => schema.nullable().required('Requis')
     }),
-    frequency: Yup.mixed().oneOf(Object.values(VigilanceArea.Frequency)).required(),
-    geom: Yup.array().of(ZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
-    id: Yup.number().nullable(),
-    images: Yup.array().nullable(),
+    frequency: Yup.mixed<VigilanceArea.Frequency>().oneOf(Object.values(VigilanceArea.Frequency)).required(),
+    geom: Yup.mixed<GeoJSON.MultiPolygon>()
+      .test({
+        message: 'Veuillez définir une zone de vigilance',
+        name: 'has-geom',
+        test: val => val && !isEmpty(val?.coordinates)
+      })
+      .required(),
+    id: Yup.number().optional(),
+    images: Yup.array<VigilanceArea.ImagePropsForApi>().optional(),
     isArchived: Yup.boolean().required(),
     isDraft: Yup.boolean().required(),
-    linkedAMPs: Yup.array().nullable(),
-    linkedRegulatoryAreas: Yup.array().nullable(),
-    links: Yup.array().nullable(),
+    linkedAMPs: Yup.array().optional(),
+    linkedRegulatoryAreas: Yup.array().optional(),
+    links: Yup.array().optional(),
     name: Yup.string().required(),
+    source: Yup.string().optional(),
     startDatePeriod: Yup.string().required(),
     themes: Yup.array().ensure().defined().min(1),
-    visibility: Yup.mixed().oneOf(Object.values(VigilanceArea.Visibility)).required()
+    visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })
   .required()
 

@@ -115,7 +115,9 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
             <AMPList isReadOnly linkedAMPs={values?.linkedAMPs} />
           </PanelSubPart>
         )}
-        {values.images.length > 0 && <PanelImages images={values.images} vigilanceAreaName={vigilanceArea?.name} />}
+        {values.images && values.images.length > 0 && (
+          <PanelImages images={values.images} vigilanceAreaName={vigilanceArea?.name} />
+        )}
 
         {vigilanceArea?.links && vigilanceArea?.links.length > 0 && <PanelLinks links={vigilanceArea.links} />}
         <PanelSource createdBy={vigilanceArea?.createdBy} source={vigilanceArea?.source} />

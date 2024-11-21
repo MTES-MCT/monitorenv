@@ -45,7 +45,7 @@ export function PhotoUploaderWithRef(_, ref) {
 
   useEffect(() => {
     const fetchImages = async () => {
-      const images = await getImages(values.images)
+      const images = await getImages(values.images ?? [])
       setImagesList(images)
       if (images.length === 5) {
         setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
@@ -122,7 +122,7 @@ export function PhotoUploaderWithRef(_, ref) {
         setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
       }
 
-      setFieldValue('images', [...values.images, ...tempImageList])
+      setFieldValue('images', [...(values.images ?? []), ...tempImageList])
       setImagesList([...imagesList, ...tempImageListForFront])
     } catch (error) {
       dispatch(
@@ -143,7 +143,7 @@ export function PhotoUploaderWithRef(_, ref) {
     }
 
     const newFileList = [...imagesList].filter((__, index) => index !== indexToRemove)
-    const newImageList = [...values.images].filter((__, index) => index !== indexToRemove)
+    const newImageList = [...(values.images ?? [])].filter((__, index) => index !== indexToRemove)
 
     setImagesList(newFileList)
     setFieldValue('images', newImageList)

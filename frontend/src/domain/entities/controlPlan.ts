@@ -35,9 +35,9 @@ export type ControlPlansTag = {
 }
 
 export type ControlPlansData = {
-  subThemeIds: number[]
-  tagIds: number[]
-  themeId: number | undefined
+  subThemeIds?: number[] | undefined
+  tagIds?: number[] | undefined
+  themeId?: number | undefined
 }
 
 export const CONTROL_PLAN_INIT = {

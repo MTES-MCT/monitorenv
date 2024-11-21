@@ -65,11 +65,12 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
   const regulatoryAreasFeatures = useMemo(() => {
-    if (!regulatoryLayers || selectedVigilanceArea?.linkedRegulatoryAreas.length === 0) {
+    const linkedRegulatoryAreas = selectedVigilanceArea?.linkedRegulatoryAreas ?? []
+    if (!regulatoryLayers || linkedRegulatoryAreas.length === 0) {
       return []
     }
 
-    return selectedVigilanceArea?.linkedRegulatoryAreas.reduce((feats: Feature[], regulatorylayerId) => {
+    return linkedRegulatoryAreas.reduce((feats: Feature[], regulatorylayerId) => {
       const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
       const isRegulatoryAreaShouldBeDisplayed =
         regulatoryAreaIdsToBeDisplayed?.includes(regulatorylayerId) &&
@@ -90,8 +91,8 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       return feats
     }, [])
   }, [
-    regulatoryLayers,
     selectedVigilanceArea?.linkedRegulatoryAreas,
+    regulatoryLayers,
     regulatoryAreaIdsToBeDisplayed,
     showedPinnedRegulatoryLayerIds
   ])
@@ -116,11 +117,12 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     !!(ampIdsToBeDisplayed && ampIdsToBeDisplayed?.length > 0) && !!selectedVigilanceAreaId && isLayerVisible
   const { data: ampLayers } = useGetAMPsQuery()
   const ampFeatures = useMemo(() => {
-    if (!ampLayers || selectedVigilanceArea?.linkedAMPs.length === 0) {
+    const linkedAMPs = selectedVigilanceArea?.linkedAMPs ?? []
+    if (!ampLayers || linkedAMPs.length === 0) {
       return []
     }
 
-    return selectedVigilanceArea?.linkedAMPs.reduce((feats: Feature[], AMPLayerId) => {
+    return linkedAMPs.reduce((feats: Feature[], AMPLayerId) => {
       const AMPlayer = ampLayers.entities[AMPLayerId]
       const isAMPShouldBeDisplayed =
         ampIdsToBeDisplayed?.includes(AMPLayerId) && !showedPinnedAMPLayerIds.includes(AMPLayerId)

@@ -33,8 +33,8 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = useMemo(
     () => [
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs))),
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas)))
+      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
+      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
     ],
     [vigilanceAreas]
   )

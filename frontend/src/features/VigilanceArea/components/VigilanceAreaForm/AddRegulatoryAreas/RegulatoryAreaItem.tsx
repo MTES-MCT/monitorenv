@@ -57,7 +57,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
     dispatch(vigilanceAreaActions.deleteRegulatoryAreasFromVigilanceArea(regulatoryAreaId))
     setFieldValue(
       'linkedRegulatoryAreas',
-      linkedRegulatoryAreas.filter(linkedregulatoryArea => linkedregulatoryArea !== regulatoryAreaId)
+      linkedRegulatoryAreas?.filter(linkedregulatoryArea => linkedregulatoryArea !== regulatoryAreaId)
     )
   }
 

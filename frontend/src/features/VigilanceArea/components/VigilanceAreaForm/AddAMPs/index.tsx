@@ -31,7 +31,7 @@ export function AddAMPs() {
         Ajouter une AMP en lien
       </Button>
 
-      <AMPList linkedAMPs={linkedAMPs} />
+      <AMPList linkedAMPs={linkedAMPs ?? []} />
     </div>
   )
 }

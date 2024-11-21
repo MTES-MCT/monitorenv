@@ -4,7 +4,7 @@ import { AMPItem } from './AMPItem'
 
 type AMPListProps = {
   isReadOnly?: boolean
-  linkedAMPs: Array<number>
+  linkedAMPs: number[]
 }
 export function AMPList({ isReadOnly = false, linkedAMPs }: AMPListProps) {
   const { data: AMPLayers } = useGetAMPsQuery()

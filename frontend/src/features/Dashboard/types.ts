@@ -17,7 +17,7 @@ export namespace Dashboard {
     inseeCode: string
     regulatoryAreas: RegulatoryLayerCompactFromAPI[]
     reportings: Reporting[]
-    vigilanceAreas: VigilanceArea.VigilanceArea[]
+    vigilanceAreas: VigilanceArea.VigilanceAreaFromApi[] | VigilanceArea.VigilanceAreaLayer[]
   }
   export interface ExtractedAreaFromApi {
     ampIds: number[]

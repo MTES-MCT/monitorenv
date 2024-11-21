@@ -1,26 +1,25 @@
-import _ from 'lodash'
 import * as Yup from 'yup'
 
-import { ClosedControlPlansSchema } from './ControlPlans'
+import { ClosedControlPlansSchema, NewControlPlansSchema } from './ControlPlans'
 import { CompletionInfractionSchema, NewInfractionSchema } from './Infraction'
-import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
+import { type EnvActionControl, type NewEnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { isCypress } from '../../../../utils/isCypress'
 import { HIDDEN_ERROR } from '../constants'
 
+import type { VehicleTypeEnum } from 'domain/entities/vehicleType'
+import type { GeoJSON } from 'domain/types/GeoJSON'
+
 const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
-const ControlPointSchema = Yup.object().test({
-  message: 'Point de contrôle requis',
-  name: 'has-geom',
-  test: val => val && !_.isEmpty(val?.coordinates)
-})
-
-export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
+export const getNewEnvActionControlSchema = (
+  ctx: any
+): Yup.Schema<Omit<NewEnvActionControl, 'actionEndDateTimeUtc' | 'completion' | 'reportingIds' | 'actionType'>> =>
   Yup.object()
     .shape({
+      actionNumberOfControls: Yup.number().optional(),
       actionStartDateTimeUtc: Yup.string()
-        .nullable()
+        .optional()
         .test({
           message: 'La date doit être postérieure à celle de début de mission',
           test: value => {
@@ -28,7 +27,7 @@ export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionCo
               return true
             }
 
-            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+            return value ? !(new Date(value) < new Date(ctx.from[0].value.startDateTimeUtc)) : true
           }
         })
         .test({
@@ -37,27 +36,35 @@ export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionCo
             if (!ctx.from) {
               return true
             }
-            if (!ctx.from[1].value.endDateTimeUtc) {
+            if (!ctx.from[0].value.endDateTimeUtc) {
               return true
             }
 
             return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
           }
         }),
-      actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
-      completedBy: Yup.string().nullable(),
+      actionTargetType: Yup.string<TargetTypeEnum>().optional(),
+      completedBy: Yup.string().optional(),
+      controlPlans: Yup.array().of(NewControlPlansSchema).optional(),
+      geom: Yup.mixed<GeoJSON.MultiPolygon | GeoJSON.MultiPoint>().optional(),
       id: Yup.string().required(),
-      infractions: Yup.array().of(NewInfractionSchema).ensure().required(),
+      infractions: Yup.array().of(NewInfractionSchema).ensure().optional(),
+      isAdministrativeControl: Yup.boolean().optional(),
+      isComplianceWithWaterRegulationsControl: Yup.boolean().optional(),
+      isSafetyEquipmentAndStandardsComplianceControl: Yup.boolean().optional(),
+      isSeafarersControl: Yup.boolean().optional(),
+      observations: Yup.string().optional(),
       openBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
-        .nullable()
-        .required(HIDDEN_ERROR)
+        .required(HIDDEN_ERROR),
+      vehicleType: Yup.string().optional()
     })
-    .nullable()
     .required()
 
-export const getCompletionEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
+export const getCompletionEnvActionControlSchema = (
+  ctx: any
+): Yup.Schema<Omit<EnvActionControl, 'actionEndDateTimeUtc' | 'completion' | 'reportingIds' | 'actionType'>> =>
   Yup.object()
     .shape({
       actionNumberOfControls: Yup.number().required('Requis'),
@@ -71,7 +78,7 @@ export const getCompletionEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvA
               return true
             }
 
-            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+            return value ? !(new Date(value) < new Date(ctx.from[0].value.startDateTimeUtc)) : true
           }
         })
         .test({
@@ -84,19 +91,18 @@ export const getCompletionEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvA
               return true
             }
 
-            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+            return value ? !(new Date(value) > new Date(ctx.from[0].value.endDateTimeUtc)) : true
           }
         }),
-      actionTargetType: Yup.string().nullable().required('Requis'),
-      actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
+      actionTargetType: Yup.string<TargetTypeEnum>().required('Requis'),
       completedBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
-        .nullable(),
+        .optional(),
       controlPlans: Yup.array().of(ClosedControlPlansSchema).ensure().required().min(1),
       geom: shouldUseAlternateValidationInTestEnvironment
-        ? Yup.object().nullable()
-        : Yup.array().of(ControlPointSchema).ensure().min(1, 'Point de contrôle requis'),
+        ? Yup.mixed<GeoJSON.MultiPolygon>().optional()
+        : Yup.mixed<GeoJSON.MultiPolygon>().required('Requis'),
       id: Yup.string().required(),
       infractions: Yup.array().of(CompletionInfractionSchema).ensure().required(),
       openBy: Yup.string()
@@ -104,12 +110,15 @@ export const getCompletionEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvA
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .nullable()
         .required(HIDDEN_ERROR),
-      vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
-        if (!actionTargetType || actionTargetType === TargetTypeEnum.VEHICLE) {
-          return schema.nullable().required('Requis')
-        }
+      vehicleType: Yup.string<VehicleTypeEnum>().test({
+        message: 'Type de véhicule requis',
+        test: (_, context) => {
+          if (context.parent.actionTargetType === TargetTypeEnum.VEHICLE || !context.parent.actionTargetType) {
+            return false
+          }
 
-        return schema.nullable()
+          return true
+        }
       })
     })
-    .nullable()
+    .required()

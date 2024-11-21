@@ -69,17 +69,17 @@ export function ControlForm({
     errors,
     setFieldValue,
     setValues,
-    values: { attachedReportings, endDateTimeUtc, envActions, startDateTimeUtc }
+    values: { attachedReportings, endDateTimeUtc, envActions = [], startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionControl>>()
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === currentActionId)
-  const currentAction = envActions[envActionIndex]
+  const currentAction = envActions?.[envActionIndex]
   const actionDate =
     envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
   const actualYearForThemes = customDayjs(actionDate).year()
-  const themeIds = useMemo(() => currentAction?.controlPlans.map(controlPlan => controlPlan.themeId), [currentAction])
+  const themeIds = useMemo(() => currentAction?.controlPlans?.map(controlPlan => controlPlan.themeId), [currentAction])
   const { themes } = useGetControlPlans()
   const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
 

@@ -1,5 +1,5 @@
 import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
-import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
+import { ReportingTargetTypeEnum, TargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
@@ -89,7 +89,7 @@ export function ReportingCard({
 
     const newControl = actionFactory({
       actionNumberOfControls: 1,
-      actionTargetType: action.targetType,
+      actionTargetType: action.targetType as unknown as TargetTypeEnum,
       actionType: ActionTypeEnum.CONTROL,
       reportingIds: [Number(action.id)],
       vehicleType: action.vehicleType,

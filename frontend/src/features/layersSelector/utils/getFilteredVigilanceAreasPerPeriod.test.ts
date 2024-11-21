@@ -13,6 +13,10 @@ describe('filterVigilanceAreas', () => {
     endingOccurrencesNumber: undefined,
     frequency: VigilanceArea.Frequency.ALL_MONTHS,
     id: 1,
+    isArchived: false,
+    isDraft: false,
+    name: 'Today',
+    seaFront: 'MED',
     startDatePeriod: `${customDayjs().format('YYYY-MM-DD')} 00:00:00.00000`
   }
   const quarter = {
@@ -23,6 +27,10 @@ describe('filterVigilanceAreas', () => {
     endingOccurrencesNumber: 3,
     frequency: VigilanceArea.Frequency.ALL_WEEKS,
     id: 2,
+    isArchived: false,
+    isDraft: false,
+    name: 'Quarter',
+    seaFront: 'MED',
     startDatePeriod: `${customDayjs().startOf('quarter').format('YYYY-MM-DD')} 00:00:00.00000`
   }
   const outsideFilteredDate = {
@@ -37,6 +45,10 @@ describe('filterVigilanceAreas', () => {
     endingOccurrencesNumber: 36,
     frequency: VigilanceArea.Frequency.ALL_WEEKS,
     id: 4,
+    isArchived: false,
+    isDraft: false,
+    name: 'OutsideFilteredDate',
+    seaFront: 'MED',
     startDatePeriod: `${customDayjs().add(1, 'year').add(4, 'months').format('YYYY-MM-DD')} 00:00:00.00000`
   }
   const year = {
@@ -47,6 +59,10 @@ describe('filterVigilanceAreas', () => {
     endingOccurrencesNumber: undefined,
     frequency: VigilanceArea.Frequency.ALL_YEARS,
     id: 3,
+    isArchived: false,
+    isDraft: false,
+    name: 'Year',
+    seaFront: 'MED',
     startDatePeriod: `${customDayjs().add(3, 'days').format('YYYY-MM-DD')} 00:00:00.00000`
   }
 

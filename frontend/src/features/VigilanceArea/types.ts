@@ -3,28 +3,53 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace VigilanceArea {
   export interface VigilanceArea {
-    comments: string | undefined
+    comments?: string | undefined
     computedEndDate?: string
-    createdBy: string | undefined
-    endDatePeriod: string | undefined
-    endingCondition: EndingCondition | undefined
+    createdBy?: string | undefined
+    endDatePeriod?: string | undefined
+    endingCondition?: EndingCondition | undefined
     endingOccurrenceDate?: string | undefined
     endingOccurrencesNumber?: number | undefined
-    frequency: Frequency | undefined
-    geom: GeoJSON.MultiPolygon | undefined
-    id: number
-    images: Array<ImagePropsForApi>
+    frequency?: Frequency | undefined
+    geom?: GeoJSON.MultiPolygon | undefined
+    id?: number
+    images?: Array<ImagePropsForApi> | undefined
     isArchived: boolean
     isDraft: boolean
-    linkedAMPs: Array<number>
-    linkedRegulatoryAreas: Array<number>
-    links: Array<Link>
+    linkedAMPs?: number[]
+    linkedRegulatoryAreas?: number[]
+    links?: Array<Link>
     name: string | undefined
     seaFront: string | undefined
-    source: string | undefined
-    startDatePeriod: string | undefined
-    themes: Array<string>
-    visibility: Visibility | undefined
+    source?: string | undefined
+    startDatePeriod?: string | undefined
+    themes?: Array<string>
+    visibility?: Visibility | undefined
+  }
+
+  export interface VigilanceAreaFromApi {
+    comments?: string | undefined
+    computedEndDate?: string
+    createdBy?: string | undefined
+    endDatePeriod?: string | undefined
+    endingCondition?: EndingCondition | undefined
+    endingOccurrenceDate?: string | undefined
+    endingOccurrencesNumber?: number | undefined
+    frequency?: Frequency | undefined
+    geom?: GeoJSON.MultiPolygon | undefined
+    id: number
+    images?: Array<ImagePropsForApi> | undefined
+    isArchived: boolean
+    isDraft: boolean
+    linkedAMPs?: number[]
+    linkedRegulatoryAreas?: number[]
+    links?: Array<Link>
+    name: string | undefined
+    seaFront: string | undefined
+    source?: string | undefined
+    startDatePeriod?: string | undefined
+    themes?: Array<string>
+    visibility?: Visibility | undefined
   }
 
   export interface Link {
@@ -96,7 +121,7 @@ export namespace VigilanceArea {
     layerId: number
   }
 
-  export type VigilanceAreaLayer = VigilanceArea.VigilanceArea & { bbox: number[] }
+  export type VigilanceAreaLayer = VigilanceArea.VigilanceArea & { bbox: number[]; id: number }
 
   export type ImageForFrontProps = {
     id?: string
