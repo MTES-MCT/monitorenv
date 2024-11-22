@@ -4,7 +4,7 @@ import { ClosedControlPlansSchema, NewControlPlansSchema } from './ControlPlans'
 import { type Awareness, type EnvActionSurveillance } from '../../../../domain/entities/missions'
 import { isCypress } from '../../../../utils/isCypress'
 import { HIDDEN_ERROR } from '../constants'
-import { actionEndDateValidation, actionStartDateValidation } from './getDatesValidation'
+import { actionEndDateValidation, actionStartDateValidation } from './ActionDates'
 
 import type { ControlPlansData } from 'domain/entities/controlPlan'
 import type { GeoJSON } from 'domain/types/GeoJSON'

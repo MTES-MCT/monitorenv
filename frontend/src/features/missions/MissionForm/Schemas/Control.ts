@@ -6,7 +6,7 @@ import { type EnvActionControl, type NewEnvActionControl } from '../../../../dom
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { isCypress } from '../../../../utils/isCypress'
 import { HIDDEN_ERROR } from '../constants'
-import { actionStartDateValidation } from './getDatesValidation'
+import { actionStartDateValidation } from './ActionDates'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -18,7 +18,7 @@ export const getNewEnvActionControlSchema = (
   Yup.object()
     .shape({
       actionNumberOfControls: Yup.number().optional(),
-      actionStartDateTimeUtc: actionStartDateValidation(ctx),
+      actionStartDateTimeUtc: actionStartDateValidation(ctx, true),
       actionTargetType: Yup.string<TargetTypeEnum>().optional(),
       completedBy: Yup.string().optional(),
       controlPlans: Yup.array().of(NewControlPlansSchema).optional(),

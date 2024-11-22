@@ -9,6 +9,7 @@ export function InfractionFormHeaderCompany({ infractionPath, isDisabled }: Infr
     <>
       <FormikTextInput
         disabled={isDisabled}
+        isErrorMessageHidden
         isUndefinedWhenDisabled
         label="Nom de la personne morale"
         name={`${infractionPath}.companyName`}
@@ -17,6 +18,7 @@ export function InfractionFormHeaderCompany({ infractionPath, isDisabled }: Infr
       <FormikTextInput
         data-cy="infraction-form-controlledPersonIdentity"
         disabled={isDisabled}
+        isErrorMessageHidden
         isUndefinedWhenDisabled
         label="Identité de la personne contrôlée"
         name={`${infractionPath}.controlledPersonIdentity`}

@@ -37,11 +37,11 @@ export const actionEndDateValidation = (ctx: any) =>
       }
     })
 
-export const actionStartDateValidation = (ctx: any) =>
+export const actionStartDateValidation = (ctx: any, isControlAction?: boolean) =>
   Yup.string()
     .optional()
     .test({
-      message: 'La date de début doit être postérieure à celle de début de mission',
+      message: `La date ${isControlAction ? '' : 'de début'} doit être postérieure à celle de début de mission`,
       test: value => {
         if (!ctx.from?.[0] || !value) {
           return true
@@ -51,7 +51,7 @@ export const actionStartDateValidation = (ctx: any) =>
       }
     })
     .test({
-      message: 'La date de début doit être antérieure à celle de fin de mission',
+      message: `La date ${isControlAction ? '' : 'de début'} doit être antérieure à celle de fin de mission`,
       test: value => {
         if (!ctx.from) {
           return true

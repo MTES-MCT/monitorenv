@@ -9,6 +9,7 @@ export function InfractionFormHeaderIndividual({ infractionPath, isDisabled }: I
     <FormikTextInput
       data-cy="infraction-form-controlledPersonIdentity"
       disabled={isDisabled}
+      isErrorMessageHidden
       isUndefinedWhenDisabled
       label="Identité de la personne contrôlée"
       name={`${infractionPath}.controlledPersonIdentity`}
