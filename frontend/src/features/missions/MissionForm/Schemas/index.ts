@@ -91,8 +91,8 @@ export const NewMissionSchema: Yup.ObjectSchema<
     endDateTimeUtc: Yup.string()
       .nullable()
       .test({
-        message: 'La date de début doit être antérieure à celle de fin de mission',
-        test: (value, context) => (value ? new Date(value) >= new Date(context.parent.startDateTimeUtc) : true)
+        message: 'La date de fin doit être postérieure à la date de début',
+        test: (value, context) => (value ? new Date(context.parent.startDateTimeUtc) < new Date(value) : true)
       })
       .required(HIDDEN_ERROR),
     envActions: Yup.array().of(NewEnvActionSchema).ensure(),
