@@ -2,7 +2,7 @@ import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
 export type LegacyControlUnit = {
   administration: string
-  contact?: string | undefined
+  contact?: string
   id: number
   isArchived: boolean
   name: string
@@ -11,7 +11,7 @@ export type LegacyControlUnit = {
 
 export type LegacyControlUnitForm = {
   administration: string
-  contact?: string | undefined
+  contact?: string
   id: number
   isArchived: boolean
   name: string

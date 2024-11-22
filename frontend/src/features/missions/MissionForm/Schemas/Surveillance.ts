@@ -24,7 +24,7 @@ export const getNewEnvActionSurveillanceSchema = (
               return true
             }
 
-            return value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
+            return value ? new Date(value) >= new Date(ctx.from[0].value.startDateTimeUtc) : true
           }
         })
         .test({
@@ -37,7 +37,7 @@ export const getNewEnvActionSurveillanceSchema = (
               return true
             }
 
-            return value ? !(new Date(value) > new Date(ctx.from[0].value.endDateTimeUtc)) : true
+            return value ? new Date(value) <= new Date(ctx.from[0].value.endDateTimeUtc) : true
           }
         })
         .min(Yup.ref('actionStartDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
@@ -51,7 +51,7 @@ export const getNewEnvActionSurveillanceSchema = (
               return true
             }
 
-            return value ? !(new Date(value) <= new Date(ctx.from[0].value.startDateTimeUtc)) : true
+            return value ? new Date(value) >= new Date(ctx.from[0].value.startDateTimeUtc) : true
           }
         })
         .test({
@@ -64,7 +64,7 @@ export const getNewEnvActionSurveillanceSchema = (
               return true
             }
 
-            return value ? !(new Date(value) > new Date(ctx.from[0].value.endDateTimeUtc)) : true
+            return value ? new Date(value) <= new Date(ctx.from[0].value.endDateTimeUtc) : true
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
