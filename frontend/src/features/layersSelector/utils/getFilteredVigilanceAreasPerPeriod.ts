@@ -86,33 +86,45 @@ export const getFilterVigilanceAreasPerPeriod = (
   vigilanceAreas: (VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi)[],
   periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
   vigilanceAreaSpecificPeriodFilter?: string[]
-): Array<VigilanceArea.VigilanceAreaFromApi> => {
+): VigilanceArea.VigilanceAreaFromApi[] => {
   const { endDate: endDateFilter, startDate: startDateFilter } = calculatePeriodBounds(
     periodFilter,
     vigilanceAreaSpecificPeriodFilter
   )
 
-  return (vigilanceAreas as Array<VigilanceArea.VigilanceAreaFromApi>).filter(vigilanceArea => {
-    if (!vigilanceArea?.startDatePeriod || !vigilanceArea?.endDatePeriod) {
+  return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaFromApi>) ?? []).filter(vigilanceArea => {
+    if (!vigilanceArea || !vigilanceArea.startDatePeriod || !vigilanceArea.endDatePeriod) {
       return false
     }
 
     const startDate = customDayjs(vigilanceArea.startDatePeriod).utc()
     const endDate = customDayjs(vigilanceArea.endDatePeriod).utc()
-    const computedEndDate = vigilanceArea.computedEndDate
-      ? customDayjs(vigilanceArea.computedEndDate).utc()
-      : endDateFilter
+
+    // in case there is no end of recurrence (because endingCondition is NEVER) we set a default end date to the end of the period filter
+    const computedEndDate = vigilanceArea.computedEndDate ? customDayjs(vigilanceArea.computedEndDate) : endDateFilter
 
     if (vigilanceArea.frequency === VigilanceArea.Frequency.NONE) {
       return isMatchForSingleOccurrence(startDate, endDate, startDateFilter, endDateFilter)
     }
 
-    return isMatchForRecurringOccurrence(
-      startDate,
-      computedEndDate,
-      startDateFilter,
-      endDateFilter,
-      vigilanceArea.frequency
-    )
+    if (
+      !!startDateFilter &&
+      !!endDateFilter &&
+      (startDateFilter?.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
+    ) {
+      return true
+    }
+
+    if (vigilanceArea.frequency) {
+      return isMatchForRecurringOccurrence(
+        startDate,
+        computedEndDate,
+        startDateFilter,
+        endDateFilter,
+        vigilanceArea.frequency
+      )
+    }
+
+    return false
   })
 }
