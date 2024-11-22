@@ -1,7 +1,6 @@
-ALTER TABLE prod.reglementation_env ADD COLUMN geometry_simplified geometry(MULTYPOLYGON,4326);
-UPDATE prod.reglementation_env SET geometry = ST_MakeValid(ST_CurveToLine(geometry));
-UPDATE prod.reglementation_env SET geometry_simplified = ST_SimplifyPreserveTopology(ST_CurveToLine(geometry), 0.0001);
-ALTER TABLE prod.reglementation_env ADD CONSTRAINT geometry_is_valid_check CHECK (st_isvalid(geometry));
+ALTER TABLE prod."REG_ENV_V3" ADD COLUMN geometry_simplified geometry(MULTYPOLYGON,4326);
+UPDATE prod."REG_ENV_V3" SET geometry_simplified = ST_SimplifyPreserveTopology(ST_CurveToLine(geometry), 0.0001);
+ALTER TABLE prod."REG_ENV_V3" ADD CONSTRAINT geometry_is_valid_check CHECK (st_isvalid(geometry));
 
 -- This trigger function
 --   * is triggered whenever a row in the local regulation database is inserted or modified
@@ -20,6 +19,6 @@ CREATE FUNCTION prod.simplify_geometry() RETURNS trigger AS $$
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER simplify_geometry
-    BEFORE INSERT OR UPDATE OF geom ON prod.reglementation_env
+    BEFORE INSERT OR UPDATE OF geom ON prod."REG_ENV_V3"
     FOR EACH ROW
     EXECUTE PROCEDURE prod.simplify_geometry();

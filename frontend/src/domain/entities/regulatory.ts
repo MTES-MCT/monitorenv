@@ -7,6 +7,7 @@ export type RegulatoryLayerWithMetadataFromAPI = {
   id: number
   layer_name: string
   ref_reg: string
+  simplify_geom: GeoJSON.MultiPolygon
   thematique: string
   type: string
   url: string
