@@ -109,9 +109,7 @@ export const NewMissionSchema: Yup.ObjectSchema<
   .required()
 
 const CompletionMissionSchema = NewMissionSchema.shape({
-  envActions: Yup.array()
-    .of(CompletionEnvActionSchema as any)
-    .nullable()
+  envActions: Yup.array().of(CompletionEnvActionSchema).nullable()
 })
 
 export const MissionSchema = Yup.lazy(value => {

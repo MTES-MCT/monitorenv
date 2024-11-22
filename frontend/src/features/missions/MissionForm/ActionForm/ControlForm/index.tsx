@@ -21,7 +21,7 @@ import {
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, type FormikErrors } from 'formik'
-import _ from 'lodash'
+import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -68,7 +68,6 @@ export function ControlForm({
   const {
     errors,
     setFieldValue,
-    setValues,
     values: { attachedReportings, endDateTimeUtc, envActions = [], startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionControl>>()
 
@@ -126,18 +125,19 @@ export function ControlForm({
     ) {
       return
     }
-    setValues(v => {
-      const w = _.cloneDeep(v)
-      _.set(w, `envActions[${envActionIndex}].vehicleType`, selectedVehicleType)
-      if (selectedVehicleType !== VehicleTypeEnum.VESSEL) {
-        _.update(w, `envActions[${envActionIndex}].infractions`, inf =>
-          inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
-        )
-      }
-
-      return w
-    })
+    setFieldValue(`envActions[${envActionIndex}].vehicleType`, selectedVehicleType)
+    if (
+      selectedVehicleType !== VehicleTypeEnum.VESSEL &&
+      currentAction?.infractions &&
+      currentAction?.infractions?.length > 0
+    ) {
+      setFieldValue(
+        `envActions[${envActionIndex}].infractions`,
+        currentAction.infractions?.map(infraction => omit(infraction, ['vesselSize', 'vesselType']))
+      )
+    }
   }
+
   const onTargetTypeChange = selectedTargetType => {
     if (
       envActions[envActionIndex]?.actionTargetType === selectedTargetType ||
@@ -145,19 +145,19 @@ export function ControlForm({
     ) {
       return
     }
-    setValues(v => {
-      const w = _.cloneDeep(v)
-      _.set(w, `envActions[${envActionIndex}].actionTargetType`, selectedTargetType)
 
-      if (selectedTargetType !== TargetTypeEnum.VEHICLE) {
-        _.set(w, `envActions[${envActionIndex}].vehicleType`, null)
-        _.update(w, `envActions[${envActionIndex}].infractions`, inf =>
-          inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
-        )
-      }
-
-      return w
-    })
+    setFieldValue(`envActions[${envActionIndex}].actionTargetType`, selectedTargetType)
+    if (
+      selectedTargetType !== TargetTypeEnum.VEHICLE &&
+      currentAction?.infractions &&
+      currentAction?.infractions?.length > 0
+    ) {
+      setFieldValue(`envActions[${envActionIndex}].vehicleType`, undefined)
+      setFieldValue(
+        `envActions[${envActionIndex}].infractions`,
+        currentAction.infractions?.map(infraction => omit(infraction, ['vesselSize', 'vesselType']))
+      )
+    }
   }
 
   const updateControlDate = (date: string | undefined) => {

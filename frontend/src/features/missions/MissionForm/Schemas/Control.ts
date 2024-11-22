@@ -33,8 +33,7 @@ export const getNewEnvActionControlSchema = (
       openBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
-        .required(HIDDEN_ERROR),
-      vehicleType: Yup.string().optional()
+        .required(HIDDEN_ERROR)
     })
     .required()
 
