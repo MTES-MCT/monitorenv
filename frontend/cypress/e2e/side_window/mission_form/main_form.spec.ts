@@ -345,14 +345,14 @@ context('Side Window > Mission Form > Main Form', () => {
                 detachedReportings: [],
                 endDateTimeUtc: response.body.endDateTimeUtc,
                 envActions: [],
-                facade: null,
-                geom: null,
+                facade: undefined,
+                geom: undefined,
                 hasMissionOrder: false,
                 id: missionId,
                 isUnderJdp: false,
                 missionSource: 'MONITORENV',
                 missionTypes: ['SEA'],
-                observationsCacem: null,
+                observationsCacem: undefined,
                 // Changed field
                 observationsCnsp: 'Encore une observation',
                 // Changed field
@@ -371,6 +371,7 @@ context('Side Window > Mission Form > Main Form', () => {
         '@updateMission',
         {
           body: {
+            completedBy: 'LTH',
             controlUnits: [
               {
                 administration: 'Marine Nationale',
@@ -381,8 +382,6 @@ context('Side Window > Mission Form > Main Form', () => {
                 resources: []
               }
             ],
-            // TODO : uncomment this field when Fish andRapportNav have deleted closedBy field
-            // completedBy: 'LTH',
             missionTypes: ['SEA', 'LAND'],
             observationsCnsp: 'Encore une observation',
             openBy: 'LTH'

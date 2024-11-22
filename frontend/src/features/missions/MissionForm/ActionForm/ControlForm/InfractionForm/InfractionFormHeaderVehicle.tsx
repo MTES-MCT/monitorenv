@@ -59,7 +59,13 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
             />
           </StyledVesselForm>
           <StyledVesselForm>
-            <FormikTextInput disabled={isDisabled} isUndefinedWhenDisabled label="IMO" name={`${infractionPath}.imo`} />
+            <FormikTextInput
+              disabled={isDisabled}
+              isErrorMessageHidden
+              isUndefinedWhenDisabled
+              label="IMO"
+              name={`${infractionPath}.imo`}
+            />
             <FormikTextInput
               data-cy="infraction-form-controlledPersonIdentity"
               disabled={isDisabled}

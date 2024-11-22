@@ -178,8 +178,8 @@ export function GeneralInformationsForm({
         </div>
 
         <StyledObservationsContainer>
-          <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
-          <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
+          <FormikTextarea isErrorMessageHidden label="CACEM : orientations, observations" name="observationsCacem" />
+          <FormikTextarea isErrorMessageHidden label="CNSP : orientations, observations" name="observationsCnsp" />
           <StyledAuthorContainer>
             <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
             <FormikTextInput isErrorMessageHidden label="Complété par" name="completedBy" />
