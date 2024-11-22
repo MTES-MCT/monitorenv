@@ -55,7 +55,7 @@ export function useMissionAndActionsCompletion() {
 
         return {
           ...actionsMissingFieldsCollection,
-          [action.id]: e.errors.length
+          [action.id]: e.errors?.length
         }
       }
     }, {})

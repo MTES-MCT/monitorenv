@@ -328,7 +328,7 @@ export type NewInfraction = {
   infractionType?: InfractionTypeEnum
   mmsi?: string
   natinf?: string[]
-  nbTarget?: number
+  nbTarget: number
   observations?: string
   registrationNumber?: string
   relevantCourt?: string

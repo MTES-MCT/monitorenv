@@ -89,7 +89,6 @@ export const NewMissionSchema: Yup.ObjectSchema<
       .optional(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.string()
-      .datetime()
       .nullable()
       .test({
         message: 'La date de début doit être antérieure à celle de fin de mission',
@@ -105,7 +104,7 @@ export const NewMissionSchema: Yup.ObjectSchema<
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
       .optional(),
-    startDateTimeUtc: Yup.string().datetime().required(HIDDEN_ERROR)
+    startDateTimeUtc: Yup.string().required(HIDDEN_ERROR)
   })
   .required()
 

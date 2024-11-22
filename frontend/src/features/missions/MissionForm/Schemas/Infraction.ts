@@ -25,10 +25,10 @@ export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object()
   administrativeResponse: Yup.mixed<AdministrativeResponseType>().optional(),
   companyName: Yup.string().optional(),
   controlledPersonIdentity: Yup.string().optional(),
-  formalNotice: Yup.mixed<FormalNoticeEnum>().oneOf(Object.values(FormalNoticeEnum)).optional(),
+  formalNotice: Yup.mixed<FormalNoticeEnum>().oneOf(Object.values(FormalNoticeEnum)).required(),
   id: Yup.string().required(),
   imo: Yup.string().optional(),
-  infractionType: Yup.mixed<InfractionTypeEnum>().oneOf(Object.values(InfractionTypeEnum)).optional(),
+  infractionType: Yup.mixed<InfractionTypeEnum>().oneOf(Object.values(InfractionTypeEnum)).required(),
   mmsi: Yup.string().optional(),
   natinf: Yup.array()
     .of(Yup.string().ensure())
@@ -38,25 +38,6 @@ export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object()
       then: schema => schema.compact().min(0)
     })
     .ensure(),
-  nbTarget: Yup.number().optional(),
-  observations: Yup.string().optional(),
-  registrationNumber: Yup.string().optional(),
-  relevantCourt: Yup.string().optional(),
-  toProcess: Yup.boolean().optional(),
-  vesselName: Yup.string().optional(),
-  vesselSize: Yup.number().optional(),
-  vesselType: Yup.mixed<VesselTypeEnum>().oneOf(Object.values(VesselTypeEnum)).optional()
-})
-
-export const CompletionInfractionSchema: Yup.Schema<Infraction> = NewInfractionSchema.shape({
-  administrativeResponse: Yup.mixed<AdministrativeResponseType>()
-    .oneOf(['SANCTION', 'REGULARIZATION', 'NONE'])
-    .required(),
-  formalNotice: Yup.mixed<FormalNoticeEnum>().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
-  id: Yup.string().required(),
-  infractionType: Yup.mixed<InfractionTypeEnum>()
-    .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
-    .required(),
   nbTarget: Yup.number()
     .min(1, 'le nombre minimum de cible est 1')
     .required('Le nombre de cibles est obligatoire')
@@ -84,5 +65,23 @@ export const CompletionInfractionSchema: Yup.Schema<Infraction> = NewInfractionS
         return true
       }
     }),
+  observations: Yup.string().optional(),
+  registrationNumber: Yup.string().optional(),
+  relevantCourt: Yup.string().optional(),
+  toProcess: Yup.boolean().optional(),
+  vesselName: Yup.string().optional(),
+  vesselSize: Yup.number().optional(),
+  vesselType: Yup.mixed<VesselTypeEnum>().oneOf(Object.values(VesselTypeEnum)).optional()
+})
+
+export const CompletionInfractionSchema: Yup.Schema<Infraction> = NewInfractionSchema.shape({
+  administrativeResponse: Yup.mixed<AdministrativeResponseType>()
+    .oneOf(['SANCTION', 'REGULARIZATION', 'NONE'])
+    .required(),
+  formalNotice: Yup.mixed<FormalNoticeEnum>().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required(),
+  id: Yup.string().required(),
+  infractionType: Yup.mixed<InfractionTypeEnum>()
+    .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
+    .required(),
   toProcess: Yup.boolean().required()
 })
