@@ -27,7 +27,7 @@ export const getNewEnvActionControlSchema = (
               return true
             }
 
-            return value ? !(new Date(value) < new Date(ctx.from[0].value.startDateTimeUtc)) : true
+            return value ? new Date(value) >= new Date(ctx.from[0].value.startDateTimeUtc) : true
           }
         })
         .test({
@@ -40,7 +40,7 @@ export const getNewEnvActionControlSchema = (
               return true
             }
 
-            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+            return value ? new Date(value) <= new Date(ctx.from[0].value.endDateTimeUtc) : true
           }
         }),
       actionTargetType: Yup.string<TargetTypeEnum>().optional(),
@@ -78,7 +78,7 @@ export const getCompletionEnvActionControlSchema = (
               return true
             }
 
-            return value ? !(new Date(value) < new Date(ctx.from[0].value.startDateTimeUtc)) : true
+            return value ? new Date(value) >= new Date(ctx.from[0].value.startDateTimeUtc) : true
           }
         })
         .test({
@@ -87,11 +87,11 @@ export const getCompletionEnvActionControlSchema = (
             if (!ctx.from) {
               return true
             }
-            if (!ctx.from[1].value.endDateTimeUtc) {
+            if (!ctx.from[0].value.endDateTimeUtc) {
               return true
             }
 
-            return value ? !(new Date(value) > new Date(ctx.from[0].value.endDateTimeUtc)) : true
+            return value ? new Date(value) <= new Date(ctx.from[0].value.endDateTimeUtc) : true
           }
         }),
       actionTargetType: Yup.string<TargetTypeEnum>().required('Requis'),

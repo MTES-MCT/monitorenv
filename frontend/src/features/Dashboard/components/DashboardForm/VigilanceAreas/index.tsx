@@ -19,7 +19,7 @@ type VigilanceAreasProps = {
   isSelectedAccordionOpen: boolean
   selectedVigilanceAreaIds: number[]
   setExpandedAccordion: () => void
-  vigilanceAreas: VigilanceArea.VigilanceAreaFromApi[]
+  vigilanceAreas: VigilanceArea.VigilanceAreaFromApi[] | VigilanceArea.VigilanceAreaLayer[]
 }
 export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
   (
