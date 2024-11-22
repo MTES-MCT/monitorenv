@@ -10,18 +10,19 @@ type VesselTypeSelectorProps = {
   style?: CSSProperties
 }
 export function VesselTypeSelector({ disabled = false, isLight = false, name, style }: VesselTypeSelectorProps) {
-  const vesselTypeFieldList = getOptionsFromLabelledEnum(vesselTypeLabel)
+  const vesselTypeOptions = getOptionsFromLabelledEnum(vesselTypeLabel)
 
   return (
     <FormikSelect
       block
       data-cy="vessel-type-selector"
       disabled={disabled}
+      isErrorMessageHidden
       isLight={isLight}
       isUndefinedWhenDisabled
       label="Type de navire"
       name={name}
-      options={vesselTypeFieldList}
+      options={vesselTypeOptions}
       searchable={false}
       style={style}
     />

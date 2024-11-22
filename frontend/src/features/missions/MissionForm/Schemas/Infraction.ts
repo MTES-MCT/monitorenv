@@ -9,18 +9,6 @@ import {
   type NewInfraction
 } from '../../../../domain/entities/missions'
 
-Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
-  Yup.mixed().test({
-    exclusive: true,
-    message,
-    name: 'oneOfOptional',
-    params: {},
-    test(value) {
-      return value == null ? true : arr.includes(value)
-    }
-  })
-)
-
 export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object().shape({
   administrativeResponse: Yup.mixed<AdministrativeResponseType>().optional(),
   companyName: Yup.string().optional(),
@@ -71,7 +59,7 @@ export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object()
   toProcess: Yup.boolean().optional(),
   vesselName: Yup.string().optional(),
   vesselSize: Yup.number().optional(),
-  vesselType: Yup.mixed<VesselTypeEnum>().oneOf(Object.values(VesselTypeEnum)).optional()
+  vesselType: Yup.string<VesselTypeEnum>().optional()
 })
 
 export const CompletionInfractionSchema: Yup.Schema<Infraction> = NewInfractionSchema.shape({

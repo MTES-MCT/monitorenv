@@ -250,7 +250,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
 
-    cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
+    cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
     cy.getDataCy('envaction-theme-selector').click({ force: true })
     cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
     cy.getDataCy('envaction-subtheme-selector').click({ force: true })

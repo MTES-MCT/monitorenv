@@ -22,6 +22,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
           <FormikTextInput
             data-cy="infraction-form-registrationNumber"
             disabled={isDisabled}
+            isErrorMessageHidden
             isUndefinedWhenDisabled
             label="Immatriculation"
             name={`${infractionPath}.registrationNumber`}
@@ -30,6 +31,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
           <FormikTextInput
             data-cy="infraction-form-controlledPersonIdentity"
             disabled={isDisabled}
+            isErrorMessageHidden
             isUndefinedWhenDisabled
             label="Identité de la personne contrôlée"
             name={`${infractionPath}.controlledPersonIdentity`}
@@ -42,6 +44,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
           <StyledVesselForm>
             <FormikTextInput
               disabled={isDisabled}
+              isErrorMessageHidden
               isUndefinedWhenDisabled
               label="MMSI"
               name={`${infractionPath}.mmsi`}
@@ -49,6 +52,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
             <FormikTextInput
               data-cy="infraction-form-vesselName"
               disabled={isDisabled}
+              isErrorMessageHidden
               isUndefinedWhenDisabled
               label="Nom du navire"
               name={`${infractionPath}.vesselName`}
@@ -59,6 +63,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
             <FormikTextInput
               data-cy="infraction-form-controlledPersonIdentity"
               disabled={isDisabled}
+              isErrorMessageHidden
               isUndefinedWhenDisabled
               label="Nom du capitaine"
               name={`${infractionPath}.controlledPersonIdentity`}
@@ -68,6 +73,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
             <FormikTextInput
               data-cy="infraction-form-registrationNumber"
               disabled={isDisabled}
+              isErrorMessageHidden
               isUndefinedWhenDisabled
               label="Immatriculation"
               name={`${infractionPath}.registrationNumber`}
@@ -75,6 +81,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
             <FormikNumberInput
               data-cy="infraction-form-vessel-size"
               disabled={isDisabled}
+              isErrorMessageHidden
               isUndefinedWhenDisabled
               label="Taille"
               name={`${infractionPath}.vesselSize`}
