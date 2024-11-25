@@ -2,6 +2,7 @@ DO
 $$
     DECLARE
     permanent character varying = 'permanent';
+    temporary character varying = 'temporaire';
     editor character varying = 'Alexis Pré';
     created_at character varying = '2021-10-14';
     BEGIN
@@ -45,7 +46,7 @@ $$
     temporalite,
     type)
     VALUES
-    (16,	'0106000020E6100000010000000103000000010000000500000042273891C27512C0C63B4834EC2A4840C5EB7E1BE87412C0957184E5D02A48407CA3ED053A6D12C0333953D1222B4840FE2601CAE86D12C02DA055A9382B484042273891C27512C0C63B4834EC2A4840', '', 'https://www.legifrance.gouv.fr/eli/decret/2011/7/8/EFIL1106625D/jo/texte', 'Granulats_Marins_Le_Minou','NAMO',	'Décret du 8 juillet 2011 accordant la concession de sables coquilliers dite « Concession du Minou » au large des côtes du département du Finistère à la société Quemeneur', 		'', 'CAMINO', '', '', 'Extraction granulats','2011-07-08', '20 ans', '2031-07-08','temporaire', 'Décret');
+    (16,	'0106000020E6100000010000000103000000010000000500000042273891C27512C0C63B4834EC2A4840C5EB7E1BE87412C0957184E5D02A48407CA3ED053A6D12C0333953D1222B4840FE2601CAE86D12C02DA055A9382B484042273891C27512C0C63B4834EC2A4840', '', 'https://www.legifrance.gouv.fr/eli/decret/2011/7/8/EFIL1106625D/jo/texte', 'Granulats_Marins_Le_Minou','NAMO',	'Décret du 8 juillet 2011 accordant la concession de sables coquilliers dite « Concession du Minou » au large des côtes du département du Finistère à la société Quemeneur', 		'', 'CAMINO', '', '', 'Extraction granulats','2011-07-08', '20 ans', '2031-07-08',temporary, 'Décret');
 
     INSERT INTO public.regulations_cacem
     (id,
@@ -66,7 +67,7 @@ $$
     temporalite,
     type)
     VALUES
-    (17,	'0106000020E610000001000000010300000001000000050000008F4568E7F23112C0B64707961C274840102400352C3312C02DC0D2382A27484058877C452F3312C0961FACF1512748405D7025C4F63112C09AC9FA63442748408F4568E7F23112C0B64707961C274840','Zone au sud de la cale', 'http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098','ZMEL_Cale_Querlen', 'NAMO','Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel','2021-11-02', editor, '','', 'Mouillage, PN', '2020-07-01','15 ans','2035-07-01','temporaire','Arrêté inter-préfectoral');
+    (17,	'0106000020E610000001000000010300000001000000050000008F4568E7F23112C0B64707961C274840102400352C3312C02DC0D2382A27484058877C452F3312C0961FACF1512748405D7025C4F63112C09AC9FA63442748408F4568E7F23112C0B64707961C274840','Zone au sud de la cale', 'http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098','ZMEL_Cale_Querlen', 'NAMO','Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel','2021-11-02', editor, '','', 'Mouillage, PN', '2020-07-01','15 ans','2035-07-01',temporary,'Arrêté inter-préfectoral');
 
     INSERT INTO public.regulations_cacem
     (id,
@@ -109,7 +110,7 @@ $$
     temporalite,
     type)
     VALUES
-    (160,'0106000020E6100000010000000103000000010000000C000000790D558C4ED911C0541F48DE393148404E9D47C5FFD511C0C498F4F7523048408B04AE861FD711C0F4D1F3B8B92F484004D149A58EDC11C0DFB76B53862F4840034A9E46B5DB11C073DBBE47FD2F48406286C61341DC11C0BCB1A030283048402C94F1947AE311C07CBF2C488E304840E2D92FE939E311C084921337B830484052F01472A5DE11C04969368FC33048408930348DDCD911C02F4FE78A5231484044D0E2D6EED811C06BF4C53945314840790D558C4ED911C0541F48DE39314840','Zone de dragage concernant 1''accès au quai sixième Sud et au quai multimoda', 'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf?arg=7593&cle=834037ab790f6a5b1f3c141f0374679e3c04dfec&file=pdf%2F2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf', 'Dragage_port_de_Brest', 'NAMO','Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest', created_at, editor, 'Valide (CL)',	'', 'Dragage', '2015-07-31','30 ans pour les travaux et 10 ans dragages',''	, 'temporaire',	'Arrêté préfectoral');
+    (160,'0106000020E6100000010000000103000000010000000C000000790D558C4ED911C0541F48DE393148404E9D47C5FFD511C0C498F4F7523048408B04AE861FD711C0F4D1F3B8B92F484004D149A58EDC11C0DFB76B53862F4840034A9E46B5DB11C073DBBE47FD2F48406286C61341DC11C0BCB1A030283048402C94F1947AE311C07CBF2C488E304840E2D92FE939E311C084921337B830484052F01472A5DE11C04969368FC33048408930348DDCD911C02F4FE78A5231484044D0E2D6EED811C06BF4C53945314840790D558C4ED911C0541F48DE39314840','Zone de dragage concernant 1''accès au quai sixième Sud et au quai multimoda', 'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf?arg=7593&cle=834037ab790f6a5b1f3c141f0374679e3c04dfec&file=pdf%2F2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf', 'Dragage_port_de_Brest', 'NAMO','Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest', created_at, editor, 'Valide (CL)',	'', 'Dragage', '2015-07-31','30 ans pour les travaux et 10 ans dragages',''	, temporary,	'Arrêté préfectoral');
 
 
     INSERT INTO public.regulations_cacem
@@ -131,7 +132,7 @@ $$
     temporalite,
     type)
     VALUES
-    (305,	'0106000020E6100000010000000103000000010000000600000056AB6382071313C00C022B87163148404EC5D987CF1013C00C022B87163148408FE4F21FD20F13C069F188F7093148408FE4F21FD20F13C070BFA248E430484056AB6382071313C070BFA248E430484056AB6382071313C00C022B8716314840','Reglementation_mouillage_anse_illien','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/aip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf?arg=7879&cle=84fe8cc602b2e2300ece27ca96f340a3e00f58a4&file=pdf%2Faip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf','ZMEL_anse_illien_Ploumoguer','NAMO','Arrêté inter-préfectoral N°2006-0303 du 30 mars 2006 autorisant l''association des plaisanciers et riverains d''Ilien à occuper une zone de mouillages pour l''accueil de navires de plaisance au lieu-dit "anse d''Ilien" sur le territoire de la commune de Ploumoguer','2021-11-06',editor,'','','Mouillage','2006-03-30', '15 ans', '2021-03-30', 'temporaire','Arrêté inter-préfectoral');
+    (305,	'0106000020E6100000010000000103000000010000000600000056AB6382071313C00C022B87163148404EC5D987CF1013C00C022B87163148408FE4F21FD20F13C069F188F7093148408FE4F21FD20F13C070BFA248E430484056AB6382071313C070BFA248E430484056AB6382071313C00C022B8716314840','Reglementation_mouillage_anse_illien','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/aip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf?arg=7879&cle=84fe8cc602b2e2300ece27ca96f340a3e00f58a4&file=pdf%2Faip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf','ZMEL_anse_illien_Ploumoguer','NAMO','Arrêté inter-préfectoral N°2006-0303 du 30 mars 2006 autorisant l''association des plaisanciers et riverains d''Ilien à occuper une zone de mouillages pour l''accueil de navires de plaisance au lieu-dit "anse d''Ilien" sur le territoire de la commune de Ploumoguer','2021-11-06',editor,'','','Mouillage','2006-03-30', '15 ans', '2021-03-30', temporary,'Arrêté inter-préfectoral');
 
     INSERT INTO public.regulations_cacem
     (id,
@@ -198,7 +199,7 @@ $$
     temporalite,
     type)
     VALUES
-    (359,'0106000020E6100000010000000103000000010000000F000000EBBCD75AA9C911C09A65AABB0D3148406EE987C734C911C0BB54B6590631484014AEEC2708CB11C0089DC6ACCD3048407BE3FFE961CB11C052D1FD41C9304840363A8CEEC5CC11C096067E54C330484036B286E695CE11C0CA332F87DD30484024B149230BCD11C0DB9CEF4C0D314840E486DF4DB7CC11C02B1ECD470831484043531B41CFCB11C0FFC64384243148405C8FC2F528CC11C0BB078D052A3148403C5D273FF3CB11C005E91846303148403231A715F0CC11C021CB82893F314840D1820651ADCC11C07CE3B55C473148409B45DE2868C911C07E7B8D1315314840EBBCD75AA9C911C09A65AABB0D314840','Zone de dragage concernant l''accès maritime au Polder 124','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf?arg=7593&cle=834037ab790f6a5b1f3c141f0374679e3c04dfec&file=pdf%2F2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf','Dragage_port_de_Brest','NAMO', 'Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest',created_at,editor,'Valide (CL)','','Dragage', '2015-07-31','30 ans pour les travaux et 10 ans dragages', '', 'temporaire', 'Arrêté préfectoral');
+    (359,'0106000020E6100000010000000103000000010000000F000000EBBCD75AA9C911C09A65AABB0D3148406EE987C734C911C0BB54B6590631484014AEEC2708CB11C0089DC6ACCD3048407BE3FFE961CB11C052D1FD41C9304840363A8CEEC5CC11C096067E54C330484036B286E695CE11C0CA332F87DD30484024B149230BCD11C0DB9CEF4C0D314840E486DF4DB7CC11C02B1ECD470831484043531B41CFCB11C0FFC64384243148405C8FC2F528CC11C0BB078D052A3148403C5D273FF3CB11C005E91846303148403231A715F0CC11C021CB82893F314840D1820651ADCC11C07CE3B55C473148409B45DE2868C911C07E7B8D1315314840EBBCD75AA9C911C09A65AABB0D314840','Zone de dragage concernant l''accès maritime au Polder 124','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf?arg=7593&cle=834037ab790f6a5b1f3c141f0374679e3c04dfec&file=pdf%2F2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf','Dragage_port_de_Brest','NAMO', 'Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest',created_at,editor,'Valide (CL)','','Dragage', '2015-07-31','30 ans pour les travaux et 10 ans dragages', '', temporary, 'Arrêté préfectoral');
     
     
     INSERT INTO public.regulations_cacem
@@ -220,7 +221,7 @@ $$
     temporalite,
     type)
     VALUES
-    (523,'0106000020E61000000100000001030000000100000007000000C83922FC691F12C0858E1AB73F2E4840345DFE148E1E12C047759E08632E48403CDA29BF131E12C0CCF0FB66672E4840C4E38C74521C12C0F74063E7432E4840F6EBF44B501C12C0395A33E53E2E484093AC724D1A1E12C01D5DC3F4252E4840C83922FC691F12C0858E1AB73F2E4840','Zone 1','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2012-342-0018_cle018e67.pdf?arg=7895&cle=44714cc87631312d51de5bad60a18337949b5072&file=pdf%2F2012-342-0018_cle018e67.pdf', 'ZMEL_maison_blanche', 'NAMO', 'Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest', '2021-11-09',editor,'', '', 'SAGE', 	'2013-01-01','15 ans', '2028-01-01', 'temporaire', 'Arrêté inter-préfectoral');
+    (523,'0106000020E61000000100000001030000000100000007000000C83922FC691F12C0858E1AB73F2E4840345DFE148E1E12C047759E08632E48403CDA29BF131E12C0CCF0FB66672E4840C4E38C74521C12C0F74063E7432E4840F6EBF44B501C12C0395A33E53E2E484093AC724D1A1E12C01D5DC3F4252E4840C83922FC691F12C0858E1AB73F2E4840','Zone 1','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2012-342-0018_cle018e67.pdf?arg=7895&cle=44714cc87631312d51de5bad60a18337949b5072&file=pdf%2F2012-342-0018_cle018e67.pdf', 'ZMEL_maison_blanche', 'NAMO', 'Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest', '2021-11-09',editor,'', '', 'SAGE', 	'2013-01-01','15 ans', '2028-01-01', temporary, 'Arrêté inter-préfectoral');
     
     
     INSERT INTO public.regulations_cacem
@@ -242,7 +243,7 @@ $$
     temporalite,
     type)
     VALUES
-    (522,'0106000020E610000001000000010300000001000000090000003AB463E6051E12C00E897C0C712E4840EAA84429ED1D12C07EF231E0762E484079B647EA1C1D12C05426E5B4812E4840C37A8F1DFC1C12C055B00F12812E48403A20503F4F1B12C030618301982E48404003408C261912C016A211516B2E4840A4FF2817C01B12C020D123A2462E48406EF4FCA5011C12C06B8A6A2E482E48403AB463E6051E12C00E897C0C712E4840','Zone 2','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2012-342-0018_cle018e67.pdf?arg=7895&cle=44714cc87631312d51de5bad60a18337949b5072&file=pdf%2F2012-342-0018_cle018e67.pdf'	,'ZMEL_maison_blanche','NAMO','Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest','2021-11-09',editor, '', '', 'Mouillage','2013-01-01','15 ans','2028-01-01', 'temporaire','Arrêté inter-préfectoral');
+    (522,'0106000020E610000001000000010300000001000000090000003AB463E6051E12C00E897C0C712E4840EAA84429ED1D12C07EF231E0762E484079B647EA1C1D12C05426E5B4812E4840C37A8F1DFC1C12C055B00F12812E48403A20503F4F1B12C030618301982E48404003408C261912C016A211516B2E4840A4FF2817C01B12C020D123A2462E48406EF4FCA5011C12C06B8A6A2E482E48403AB463E6051E12C00E897C0C712E4840','Zone 2','http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2012-342-0018_cle018e67.pdf?arg=7895&cle=44714cc87631312d51de5bad60a18337949b5072&file=pdf%2F2012-342-0018_cle018e67.pdf'	,'ZMEL_maison_blanche','NAMO','Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest','2021-11-09',editor, '', '', 'Mouillage','2013-01-01','15 ans','2028-01-01', temporary,'Arrêté inter-préfectoral');
     
     
     INSERT INTO public.regulations_cacem
@@ -287,7 +288,7 @@ $$
     temporalite,
     type)
     VALUES
-    (697,'0106000020E61000000100000001030000000100000005000000FEEA55BCF63312C0BD25582F0A274840E62E16E75B3312C0AA6C84AA2127484019F3D214263212C08075CE591327484031A51A8BBF3212C0B47A13E9FB264840FEEA55BCF63312C0BD25582F0A274840','Zone au nord de la cale','http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098', 'ZMEL_Cale_Querlen', 'NAMO', 'Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel', '2021-11-02',editor, '', '',	'Mouillage', '2020-07-01', '15 ans','2035-07-01','temporaire',	'Arrêté inter-préfectoral');
+    (697,'0106000020E61000000100000001030000000100000005000000FEEA55BCF63312C0BD25582F0A274840E62E16E75B3312C0AA6C84AA2127484019F3D214263212C08075CE591327484031A51A8BBF3212C0B47A13E9FB264840FEEA55BCF63312C0BD25582F0A274840','Zone au nord de la cale','http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098', 'ZMEL_Cale_Querlen', 'NAMO', 'Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel', '2021-11-02',editor, '', '',	'Mouillage', '2020-07-01', '15 ans','2035-07-01',temporary,	'Arrêté inter-préfectoral');
 
 END;
 $$
