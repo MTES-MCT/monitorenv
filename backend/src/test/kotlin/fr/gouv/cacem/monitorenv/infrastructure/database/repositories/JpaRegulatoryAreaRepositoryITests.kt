@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
-    @Autowired
-    private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
+    @Autowired private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
 
     @Test
     @Transactional
@@ -46,13 +45,10 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                     source = "",
                     observation = "",
                     thematique = "Mouillage, PN",
-                    echelle = "1:1000",
                     date = "2020-07-01",
                     duree_validite = "15 ans",
                     date_fin = "2035-07-01",
                     temporalite = "temporaire",
-                    objet = "",
-                    signataire = "",
                 ),
             )
 
@@ -73,7 +69,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.observation)
             .isEqualTo(searchedRegulatoryArea.observation)
         assertThat(requestedRegulatoryArea.thematique).isEqualTo(searchedRegulatoryArea.thematique)
-        assertThat(requestedRegulatoryArea.echelle).isEqualTo(searchedRegulatoryArea.echelle)
         assertThat(requestedRegulatoryArea.date).isEqualTo(searchedRegulatoryArea.date)
         assertThat(requestedRegulatoryArea.duree_validite)
             .isEqualTo(searchedRegulatoryArea.duree_validite)
@@ -82,8 +77,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             .isEqualTo(searchedRegulatoryArea.temporalite)
         assertThat(requestedRegulatoryArea.observation)
             .isEqualTo(searchedRegulatoryArea.observation)
-        assertThat(requestedRegulatoryArea.objet).isEqualTo(searchedRegulatoryArea.objet)
-        assertThat(requestedRegulatoryArea.signataire).isEqualTo(searchedRegulatoryArea.signataire)
     }
 
     @Test

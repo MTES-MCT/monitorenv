@@ -28,14 +28,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(value = [(RegulatoryAreas::class)])
 class RegulatoryAreasITests {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
+    @MockBean private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
 
-    @MockBean
-    private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
+    @MockBean private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
 
     @Test
     fun `Should get all regulatory Areas`() {
@@ -49,22 +46,21 @@ class RegulatoryAreasITests {
                 id = 17,
                 geom = Polygon,
                 entity_name = "Zone au sud de la cale",
-                url = "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
+                url =
+                    "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
                 layer_name = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
-                ref_reg = "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
+                ref_reg =
+                    "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
                 edition = "2021-11-02",
                 editeur = "Alexis Pré",
                 source = "",
                 observation = "",
                 thematique = "Mouillage",
-                echelle = "1:1000",
                 date = "2020-07-01",
                 duree_validite = "15 ans",
                 date_fin = "2035-07-01",
                 temporalite = "temporaire",
-                objet = "",
-                signataire = "",
             )
         given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
@@ -94,22 +90,21 @@ class RegulatoryAreasITests {
                 id = 17,
                 geom = Polygon,
                 entity_name = "Zone au sud de la cale",
-                url = "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
+                url =
+                    "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
                 layer_name = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
-                ref_reg = "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
+                ref_reg =
+                    "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
                 edition = "2021-11-02",
                 editeur = "Alexis Pré",
                 source = "",
                 observation = "",
                 thematique = "Mouillage",
-                echelle = "1:1000",
                 date = "2020-07-01",
                 duree_validite = "15 ans",
                 date_fin = "2035-07-01",
                 temporalite = "temporaire",
-                objet = "",
-                signataire = "",
             )
 
         given(getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
