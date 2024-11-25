@@ -28,30 +28,39 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(value = [(RegulatoryAreas::class)])
 class RegulatoryAreasITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
+    @MockBean
+    private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
 
-    @MockBean private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
+    @MockBean
+    private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
+
+    val WKTreader = WKTReader()
+
+    val multipolygonString =
+        "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+    val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
+
+    val url =
+        "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098"
+
+    val refReg =
+        "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel"
 
     @Test
     fun `Should get all regulatory Areas`() {
         // Given
-        val WKTreader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-        val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
         val regulatoryArea =
             RegulatoryAreaEntity(
                 id = 17,
                 geom = Polygon,
                 entity_name = "Zone au sud de la cale",
-                url =
-                    "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
+                url = url,
                 layer_name = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
-                ref_reg =
-                    "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
+                ref_reg = refReg,
                 edition = "2021-11-02",
                 editeur = "Alexis Pré",
                 source = "",
@@ -81,21 +90,15 @@ class RegulatoryAreasITests {
     @Test
     fun `Should get specific regulatory Area when requested by Id`() {
         // Given
-        val WKTreader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-        val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
         val regulatoryArea =
             RegulatoryAreaEntity(
                 id = 17,
                 geom = Polygon,
                 entity_name = "Zone au sud de la cale",
-                url =
-                    "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
+                url = url,
                 layer_name = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
-                ref_reg =
-                    "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
+                ref_reg = refReg,
                 edition = "2021-11-02",
                 editeur = "Alexis Pré",
                 source = "",
