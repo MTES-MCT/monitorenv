@@ -128,7 +128,7 @@ def extract_new_regulations(ids_to_update: set) -> pd.DataFrame:
 #         df_id_column="id",
 #     )
 
-
+@task(checkpoint=False)
 def load_new_regulations(new_regulations: pd.DataFrame):
     """Load the output of ``extract_rows_to_update`` task into ``regulations``
     table.
@@ -144,23 +144,23 @@ def load_new_regulations(new_regulations: pd.DataFrame):
         connection.execute(
             text(
                 """CREATE TEMP TABLE tmp_regulations_cacem(
-                 id serial,
-                 geom public.geometry(MultiPolygon,4326),
-                 entity_name character varying,
-                 url character varying,
-                 layer_name character varying,
-                 facade character varying,
-                 ref_reg character varying,
-                 edition character varying,
-                 editeur character varying,
-                 source character varying,
-                 observation character varying,
-                 thematique character varying,
-                 date character varying,
-                 duree_validite character varying,
-                 date_fin character varying,
-                 temporalite character varying,
-                 type character varying,
+                id serial,
+                geom public.geometry(MultiPolygon,4326),
+                entity_name character varying,
+                url character varying,
+                layer_name character varying,
+                facade character varying,
+                ref_reg character varying,
+                edition character varying,
+                editeur character varying,
+                source character varying,
+                observation character varying,
+                thematique character varying,
+                date character varying,
+                duree_validite character varying,
+                date_fin character varying,
+                temporalite character varying,
+                type character varying,
                 )
                 ON COMMIT DROP;"""
             )

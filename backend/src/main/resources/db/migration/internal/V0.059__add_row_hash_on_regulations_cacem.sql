@@ -14,6 +14,7 @@ UPDATE public.regulations_cacem SET row_hash = md5(
       COALESCE(duree_validite::text, '') ||
       COALESCE(temporalite::text, '') ||
       COALESCE(action::text, '') ||
+      COALESCE(objet::text, '') ||
       COALESCE(type::text, '') ||
       COALESCE(signataire::text, '') ||
       COALESCE(date::text, '') ||
