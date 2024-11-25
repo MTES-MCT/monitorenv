@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
-    @Autowired
-    private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
+    @Autowired private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
 
     @Test
     @Transactional

@@ -28,14 +28,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(value = [(RegulatoryAreas::class)])
 class RegulatoryAreasITests {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
+    @MockBean private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
 
-    @MockBean
-    private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
+    @MockBean private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
 
     val WKTreader = WKTReader()
 
