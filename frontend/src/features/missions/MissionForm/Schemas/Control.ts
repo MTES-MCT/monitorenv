@@ -10,7 +10,7 @@ import { actionStartDateValidation } from './ActionDates'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
-const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
+const isLocalOrCypressEnvironnment = !import.meta.env.PROD || isCypress()
 
 export const getNewEnvActionControlSchema = (
   ctx: any
@@ -24,7 +24,7 @@ export const getNewEnvActionControlSchema = (
       controlPlans: Yup.array().of(NewControlPlansSchema).optional(),
       geom: Yup.mixed<GeoJSON.MultiPolygon | GeoJSON.MultiPoint>().optional(),
       id: Yup.string().required(),
-      infractions: Yup.array().of(NewInfractionSchema).ensure().optional(),
+      infractions: Yup.array().of(NewInfractionSchema).ensure().default([]),
       isAdministrativeControl: Yup.boolean().optional(),
       isComplianceWithWaterRegulationsControl: Yup.boolean().optional(),
       isSafetyEquipmentAndStandardsComplianceControl: Yup.boolean().optional(),
@@ -50,7 +50,7 @@ export const getCompletionEnvActionControlSchema = (
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .optional(),
       controlPlans: Yup.array().of(ClosedControlPlansSchema).ensure().required().min(1),
-      geom: shouldUseAlternateValidationInTestEnvironment
+      geom: isLocalOrCypressEnvironnment
         ? Yup.mixed<GeoJSON.MultiPolygon>().optional()
         : Yup.mixed<GeoJSON.MultiPolygon>().required('Requis'),
       id: Yup.string().required(),
