@@ -40,7 +40,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorLayerWithName>
   ;(regulatoryPreviewVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV_PREVIEW.code
-
+  // TODO : to delete it's just for ci
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
     if (regulatoryLayersSearchResult || regulatoryLayers?.ids) {
