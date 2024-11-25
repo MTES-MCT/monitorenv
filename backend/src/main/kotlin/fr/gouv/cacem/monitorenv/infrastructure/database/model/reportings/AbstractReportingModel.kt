@@ -73,7 +73,7 @@ abstract class AbstractReportingModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     open val reportType: ReportingTypeEnum? = null,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     open val controlPlanTheme: ControlPlanThemeModel? = null,
     @OneToMany(
@@ -93,7 +93,7 @@ abstract class AbstractReportingModel(
     @Column(name = "is_archived", nullable = false) open val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) open val isDeleted: Boolean,
     @Column(name = "open_by") open val openBy: String? = null,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     open val mission: MissionModel? = null,
@@ -101,7 +101,7 @@ abstract class AbstractReportingModel(
     @Column(name = "detached_from_mission_at_utc")
     open val detachedFromMissionAtUtc: Instant? = null,
     @JdbcType(UUIDJdbcType::class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "attached_env_action_id",
         columnDefinition = "uuid",

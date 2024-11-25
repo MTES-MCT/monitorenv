@@ -4,16 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
-import jakarta.persistence.Entity
-import jakarta.persistence.NamedAttributeNode
-import jakarta.persistence.NamedEntityGraph
-import jakarta.persistence.NamedSubgraph
-import jakarta.persistence.Table
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
+import jakarta.persistence.*
 import org.hibernate.annotations.Formula
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
@@ -50,7 +42,7 @@ import java.time.Instant
                 name = "subgraph.reportingSources",
                 attributeNodes =
                     [
-                        NamedAttributeNode("controlUnit"),
+                        NamedAttributeNode("controlUnit", subgraph = "subgraph.controlUnit"),
                         NamedAttributeNode("semaphore"),
                     ],
             ),
@@ -93,6 +85,15 @@ import java.time.Instant
                     [
                         NamedAttributeNode("mission"),
                         NamedAttributeNode("unit"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.controlUnit",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("administration"),
+                        NamedAttributeNode("controlUnitResources"),
+                        NamedAttributeNode("controlUnitContacts"),
                     ],
             ),
         ],

@@ -21,11 +21,10 @@ interface IDBControlUnitRepository : JpaRepository<ControlUnitModel, Int> {
 
     @Query(
         value = """
-        SELECT *
-        FROM control_units
-        ORDER BY name ASC
+        SELECT controlUnit
+        FROM ControlUnitModel controlUnit
+        ORDER BY controlUnit.name
         """,
-        nativeQuery = true,
     )
     override fun findAll(): List<ControlUnitModel>
 }
