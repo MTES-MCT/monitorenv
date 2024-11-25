@@ -21,6 +21,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
     return (
       <Wrapper ref={ref}>
         <EditArea
+          dashboardKey={key}
           geometry={geometry}
           onValidate={geometryToSave => {
             dispatch(editDashboardArea(geometryToSave, key))

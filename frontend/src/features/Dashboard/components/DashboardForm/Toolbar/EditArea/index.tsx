@@ -1,3 +1,4 @@
+import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -13,10 +14,11 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Coordinate } from 'ol/coordinate'
 
 type EditAreaProps = {
+  dashboardKey: string
   geometry: GeoJSON.Geometry | undefined
   onValidate: (geometry: GeoJSON.Geometry) => void
 }
-export function EditArea({ geometry, onValidate }: EditAreaProps) {
+export function EditArea({ dashboardKey, geometry, onValidate }: EditAreaProps) {
   const [geometryToSave, setGeometryToSave] = useState<GeoJSON.Geometry | undefined>(undefined)
   const { geometry: geometryInProgress, interactionType } = useListenForDrawedGeometry(
     InteractionListener.DASHBOARD_ZONE
@@ -30,18 +32,20 @@ export function EditArea({ geometry, onValidate }: EditAreaProps) {
   }
 
   const handleEditArea = useCallback(() => {
-    dispatch(drawCircle(undefined, InteractionListener.DASHBOARD_ZONE))
-  }, [dispatch])
+    dispatch(drawCircle(geometry, InteractionListener.DASHBOARD_ZONE))
+  }, [dispatch, geometry])
 
   useEffect(() => {
     if (interactionType) {
       setGeometryToSave(geometryInProgress)
+      dispatch(dashboardActions.setDisplayGeometry({ key: dashboardKey, visible: false }))
     }
-  }, [dispatch, geometryInProgress, interactionType])
+  }, [dashboardKey, dispatch, geometryInProgress, interactionType])
 
   useEffect(() => {
     if (geometryToSave && (geometryToSave as GeoJSON.MultiPolygon).coordinates.length > 0 && !interactionType) {
       onValidate(geometryToSave)
+      dispatch(dashboardActions.setDisplayGeometry({ key: dashboardKey, visible: true }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [interactionType, geometryToSave])

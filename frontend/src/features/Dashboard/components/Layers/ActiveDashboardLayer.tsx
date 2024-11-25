@@ -30,6 +30,9 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const displayGeometry = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.displayGeometry : false
+  )
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [], {
@@ -168,7 +171,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
         }
       }
 
-      if (dashboard?.dashboard.geom) {
+      if (dashboard?.dashboard.geom && displayGeometry) {
         const dashboardAreaFeature = getFeature(dashboard.dashboard.geom)
         if (!dashboardAreaFeature) {
           return
@@ -192,7 +195,8 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     vigilanceAreas?.entities,
     reportings,
     dashboard?.dashboard.geom,
-    drawBorder
+    drawBorder,
+    displayGeometry
   ])
 
   useEffect(() => {

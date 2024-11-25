@@ -1,4 +1,4 @@
-import { type Coordinates, CoordinatesInput, IconButton, Icon, usePrevious } from '@mtes-mct/monitor-ui'
+import { type Coordinates, CoordinatesInput, Icon, IconButton, usePrevious } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
@@ -53,6 +53,7 @@ export function DrawModal() {
   const initialGeometry = useAppSelector(state => state.draw.initialGeometry)
   const interactionType = useAppSelector(state => state.draw.interactionType)
   const isGeometryValid = useAppSelector(state => state.draw.isGeometryValid)
+
   const listener = useAppSelector(state => state.draw.listener)
 
   const global = useAppSelector(state => state.global)
@@ -143,6 +144,11 @@ export function DrawModal() {
     dispatch(setGeometry(initialGeometry))
   }
 
+  const handleDelete = () => {
+    dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+    dispatch(setGeometry(undefined))
+  }
+
   const handleValidate = () => {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
@@ -209,6 +215,7 @@ export function DrawModal() {
       }
       isValidatedButtonDisabled={!isGeometryValid}
       onCancel={handleCancel}
+      onDelete={listener === InteractionListener.DASHBOARD_ZONE ? handleDelete : undefined}
       onReset={handleReset}
       onValidate={handleValidate}
       title={`${listener && titlePlaceholder[listener]}`}
