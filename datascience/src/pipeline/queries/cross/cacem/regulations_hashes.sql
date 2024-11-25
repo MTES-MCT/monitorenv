@@ -11,13 +11,9 @@ SELECT
         COALESCE(source::text, '') ||
         COALESCE("Observation"::text, '') ||
         COALESCE("Thematique"::text, '') ||
-        COALESCE("Echelle"::text, '') ||
         COALESCE(duree_validite::text, '') ||
         COALESCE(temporalite::text, '') ||
-        COALESCE("action"::text, '') ||
-        COALESCE(objet::text, '') ||
         COALESCE(type::text, '') ||
-        COALESCE(signataire::text, '') ||
         COALESCE(date::text, '') ||
         COALESCE(date_fin::text, '') ||
         COALESCE("Edition"::text, '') 

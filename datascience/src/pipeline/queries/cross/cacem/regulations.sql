@@ -10,13 +10,9 @@ SELECT
   source,
   "Observation" as observation,
   "Thematique" as thematique,
-  "Echelle" as echelle,
   duree_validite,
   temporalite,
-  "action",
-  objet,
   type,
-  signataire,
   date,
   date_fin,
   "Edition" as edition,
@@ -31,13 +27,9 @@ SELECT
         COALESCE(source::text, '') ||
         COALESCE("Observation"::text, '') ||
         COALESCE("Thematique"::text, '') ||
-        COALESCE("Echelle"::text, '') ||
         COALESCE(duree_validite::text, '') ||
         COALESCE(temporalite::text, '') ||
-        COALESCE("action"::text, '') ||
-        COALESCE(objet::text, '') ||
         COALESCE(type::text, '') ||
-        COALESCE(signataire::text, '') ||
         COALESCE(date::text, '') ||
         COALESCE(date_fin::text, '') ||
         COALESCE("Edition"::text, '') 
