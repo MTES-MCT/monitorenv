@@ -115,14 +115,14 @@ def new_regulations() -> pd.DataFrame:
 
 def test_load_new_regulations(new_regulations):
     load_new_regulations.run(new_regulations)
-    load_new_regulations = read_query(
+    loaded_new_regulations = read_query(
         "monitorenv_remote", 
         "SELECT id, geom, "
-            "mpa_oriname, des_desigfr, "
-            "mpa_type, ref_reg, "
-            "url_legicem, row_hash "
-            "FROM amp_cacem "
+            "entity_name, layer_name, "
+            "facade, ref_reg, "
+            "url, row_hash "
+            "FROM regulations_cacem "
             "ORDER BY id"
     )
 
-    pd.testing.assert_frame_equal(load_new_regulations, new_regulations)
+    pd.testing.assert_frame_equal(loaded_new_regulations, new_regulations)
