@@ -1,14 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "missions_control_units")
@@ -19,10 +12,10 @@ data class MissionControlUnitModel(
     val id: Int? = null,
     @Column(name = "contact")
     val contact: String?,
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     val mission: MissionModel,
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "control_unit_id")
     var unit: ControlUnitModel,
 ) {
@@ -36,8 +29,8 @@ data class MissionControlUnitModel(
                     id = legacyControlUnit.id,
                     administration = AdministrationModel(isArchived = false, name = legacyControlUnit.administration),
                     areaNote = null,
-                    controlUnitContacts = listOf(),
-                    controlUnitResources = listOf(),
+                    controlUnitContacts = LinkedHashSet(),
+                    controlUnitResources = LinkedHashSet(),
                     isArchived = legacyControlUnit.isArchived,
                     name = legacyControlUnit.name,
                     termsNote = null,

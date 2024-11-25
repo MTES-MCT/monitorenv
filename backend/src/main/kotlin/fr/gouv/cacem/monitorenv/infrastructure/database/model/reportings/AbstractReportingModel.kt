@@ -11,32 +11,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
+import jakarta.persistence.*
 import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.MappedSuperclass
-import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.Generated
-import org.hibernate.annotations.JdbcType
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.UpdateTimestamp
+import org.hibernate.annotations.*
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.hibernate.generator.EventType
 import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
@@ -92,7 +73,7 @@ abstract class AbstractReportingModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     open val reportType: ReportingTypeEnum? = null,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_plan_theme_id", nullable = true)
     open val controlPlanTheme: ControlPlanThemeModel? = null,
     @OneToMany(
@@ -112,7 +93,7 @@ abstract class AbstractReportingModel(
     @Column(name = "is_archived", nullable = false) open val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) open val isDeleted: Boolean,
     @Column(name = "open_by") open val openBy: String? = null,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     open val mission: MissionModel? = null,
@@ -120,7 +101,7 @@ abstract class AbstractReportingModel(
     @Column(name = "detached_from_mission_at_utc")
     open val detachedFromMissionAtUtc: Instant? = null,
     @JdbcType(UUIDJdbcType::class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "attached_env_action_id",
         columnDefinition = "uuid",
