@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
-    @Autowired private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
+    @Autowired
+    private lateinit var jpaRegulatoryAreasRepository: JpaRegulatoryAreaRepository
 
     @Test
     @Transactional
@@ -39,7 +40,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                     layer_name = "ZMEL_Cale_Querlen",
                     facade = "NAMO",
                     ref_reg =
-                        "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
+                        "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel",
                     edition = "2021-11-02",
                     editeur = "Alexis Pré",
                     source = "",
