@@ -40,14 +40,14 @@ const drawReducerSlice = createSlice({
       state.initialGeometry = undefined
     },
 
-    setGeometry(state, action: PayloadAction<GeoJSON.Geometry>) {
+    setGeometry(state, action: PayloadAction<GeoJSON.Geometry | undefined>) {
       state.geometry = action.payload
       state.isGeometryValid = isGeometryValid(action.payload)
     },
     /**
      * Save the initial geometry value from form if user want to reinitialize the geometry
      */
-    setInitialGeometry(state, action: PayloadAction<GeoJSON.Geometry>) {
+    setInitialGeometry(state, action: PayloadAction<GeoJSON.Geometry | undefined>) {
       state.initialGeometry = action.payload
     },
 

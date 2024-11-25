@@ -96,15 +96,18 @@ function isPolygonValid(polygon: Coordinate[][]) {
   return true
 }
 
-function arePolygonsValid(polygons: Coordinate[][][]) {
+function arePolygonsValid(polygons: Coordinate[][][] | undefined) {
   return reduce(polygons, (result, polygon) => result && isPolygonValid(polygon), true)
 }
 
-export function isGeometryValid(geometry: GeoJSON.Geometry) {
-  if (geometry && geometry.type === OLGeometryType.MULTIPOLYGON) {
+export function isGeometryValid(geometry: GeoJSON.Geometry | undefined) {
+  if (!geometry) {
+    return false
+  }
+  if (geometry.type === OLGeometryType.MULTIPOLYGON) {
     return !!geometry.coordinates.length && arePolygonsValid(geometry.coordinates as Coordinate[][][])
   }
-  if (geometry && geometry.type === OLGeometryType.POLYGON) {
+  if (geometry.type === OLGeometryType.POLYGON) {
     return isPolygonValid(geometry.coordinates as Coordinate[][])
   }
 

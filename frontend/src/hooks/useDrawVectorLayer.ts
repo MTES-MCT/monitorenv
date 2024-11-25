@@ -15,13 +15,7 @@ type VectorLayerWithName = VectorLayer & { name?: string }
 
 export function useDrawVectorLayer(geometry: any, layerName: string) {
   // Memoize the feature creation
-  const feature = useMemo(() => {
-    if (!geometry) {
-      return undefined
-    }
-
-    return getFeature(geometry)
-  }, [geometry])
+  const feature = useMemo(() => getFeature(geometry), [geometry])
 
   // Create the vector sources and layer references
   const vectorSourceRef = useRef(
