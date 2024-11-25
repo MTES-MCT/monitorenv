@@ -36,8 +36,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       const { infractions }: EnvActionControl = request.body.envActions.find(
         a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807'
       )
-      expect(infractions?.length).equal(2)
-      const duplicatedInfraction = infractions?.[1]
+      expect(infractions.length).equal(2)
+      const duplicatedInfraction = infractions[1]
 
       expect(duplicatedInfraction?.controlledPersonIdentity).equal('John Doe')
       expect(duplicatedInfraction?.formalNotice).equal('PENDING')

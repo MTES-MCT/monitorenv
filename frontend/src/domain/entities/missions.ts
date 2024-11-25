@@ -277,7 +277,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   completion: CompletionStatus
   controlPlans?: ControlPlansData[]
   geom?: GeoJSON.MultiPolygon | GeoJSON.MultiPoint
-  infractions?: Infraction[] | NewInfraction[]
+  infractions: Infraction[] | NewInfraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
