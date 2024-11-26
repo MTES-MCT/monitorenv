@@ -1,4 +1,5 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { undefine } from '@mtes-mct/monitor-ui'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
@@ -42,7 +43,8 @@ export function FormikSyncReportingFields({ reportingId }: FormikSyncReportingFo
         }
         // eslint-disable-next-line no-console
         console.log(`SSE: setting form key "${key}" to "${JSON.stringify(reportingEvent[key])}"`)
-        setFieldValue(key, reportingEvent[key])
+
+        setFieldValue(key, undefine(reportingEvent[key]))
         if (key === 'attachedMission') {
           dispatch(attachMissionToReportingSliceActions.setAttachedMission(reportingEvent.attachedMission))
         }

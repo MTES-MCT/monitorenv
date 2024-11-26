@@ -1,4 +1,5 @@
 import { attachReportingToMissionSliceActions } from '@features/missions/MissionForm/AttachReporting/slice'
+import { undefine } from '@mtes-mct/monitor-ui'
 import { setGeometry } from 'domain/shared_slices/Draw'
 
 import { getFutureDate } from './getFutureDate'
@@ -83,7 +84,7 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
         dispatch(
           attachReportingToMissionSliceActions.setAttachedReportings([
             {
-              ...reporting,
+              ...undefine(reporting),
               missionId
             }
           ])
