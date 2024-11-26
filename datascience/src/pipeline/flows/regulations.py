@@ -109,26 +109,6 @@ def extract_new_regulations(ids_to_update: set) -> pd.DataFrame:
         params={"ids": tuple(ids_to_update)},
     )
 
-
-# @task(checkpoint=False)
-# def load_new_regulations(new_regulations: pd.DataFrame):
-#     """Load the output of ``extract_rows_to_update`` task into ``regulations``
-#     table.
-
-#     Args:
-#         new_regulations (pd.DataFrame): output of ``extract_rows_to_update`` task.
-#     """
-#     load(
-#         new_regulations,
-#         table_name="regulations_cacem",
-#         schema="public",
-#         db_name="monitorenv_remote",
-#         logger=prefect.context.get("logger"),
-#         how="upsert",
-#         table_id_column="id",
-#         df_id_column="id",
-#     )
-
 @task(checkpoint=False)
 def load_new_regulations(new_regulations: pd.DataFrame):
     """Load the output of ``extract_rows_to_update`` task into ``regulations``
