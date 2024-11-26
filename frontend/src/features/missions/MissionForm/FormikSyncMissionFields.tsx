@@ -1,3 +1,4 @@
+import { undefine } from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
@@ -39,7 +40,7 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
         }
         // eslint-disable-next-line no-console
         console.log(`SSE: setting form key "${key}" to "${JSON.stringify(missionEvent[key])}"`)
-        setFieldValue(key, missionEvent[key])
+        setFieldValue(key, undefine(missionEvent[key]))
       })
 
       // we need to wait for the form to be updated before removing the mission event from the context
