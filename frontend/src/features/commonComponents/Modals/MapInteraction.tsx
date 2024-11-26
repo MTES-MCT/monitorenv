@@ -28,7 +28,7 @@ export function MapInteraction({
       <Panel>
         <Header>
           <Title>{title}</Title>
-          <IconButton Icon={Icon.Close} onClick={onCancel} />
+          <StyledIconButton Icon={Icon.Close} onClick={onCancel} />
         </Header>
 
         <Body>
@@ -75,6 +75,19 @@ const Title = styled.h1`
   font-size: 16px;
   font-weight: normal;
   line-height: 22px;
+`
+const StyledIconButton = styled(IconButton)`
+  &:hover,
+  &._hover {
+    background-color: ${p => p.theme.color.charcoal};
+    border: none;
+  }
+
+  &:active,
+  &._active {
+    background-color: ${p => p.theme.color.charcoal};
+    border: none;
+  }
 `
 
 const ButtonGroup = styled.div`

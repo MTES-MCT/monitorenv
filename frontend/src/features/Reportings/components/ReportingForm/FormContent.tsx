@@ -85,6 +85,8 @@ type FormContentProps = {
 export function FormContent({ reducedReportingsOnContext, selectedReporting }: FormContentProps) {
   const dispatch = useAppDispatch()
 
+  const openByRef = useRef<HTMLDivElement>(null)
+
   const scrollRef = useRef<HTMLDivElement>(null)
   const [scrollTop, setScrollTop] = useState(0)
   const { scrollPosition, setScrollPosition } = useReportingEventContext()
@@ -368,8 +370,9 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
 
         <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />
 
-        <StyledFormikTextInput isErrorMessageHidden isRequired label="Saisi par" maxLength={3} name="openBy" />
-
+        <div ref={openByRef}>
+          <StyledFormikTextInput isErrorMessageHidden isRequired label="Saisi par" maxLength={3} name="openBy" />
+        </div>
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
 
@@ -404,7 +407,10 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         onClose={closeReporting}
         onDelete={deleteCurrentReporting}
         onSave={saveAndQuit}
-        setMustIncreaseValidity={setMustIncreaseValidity}
+        setMustIncreaseValidity={value => {
+          setMustIncreaseValidity(value)
+          openByRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        }}
       />
     </StyledFormContainer>
   )
