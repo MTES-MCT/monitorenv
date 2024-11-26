@@ -65,11 +65,11 @@ export function ReportingCard({
               controlledPersonIdentity: target?.operatorName,
               registrationNumber: target?.externalReferenceNumber,
               ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
-                imo: target?.imo ?? undefined,
-                mmsi: target?.mmsi ?? undefined,
-                vesselName: target?.vesselName ?? undefined,
-                vesselSize: target?.size ?? undefined,
-                vesselType: target?.vesselType ?? undefined
+                imo: target?.imo,
+                mmsi: target?.mmsi,
+                vesselName: target?.vesselName,
+                vesselSize: target?.size,
+                vesselType: target?.vesselType
               })
             })
 
