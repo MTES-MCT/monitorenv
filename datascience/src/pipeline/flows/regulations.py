@@ -1,12 +1,13 @@
-from logging import Logger
 import pandas as pd
 import prefect
 from pathlib import Path
 from prefect import Flow, case, task
 from sqlalchemy import text
 from src.db_config import create_engine
-from src.pipeline.generic_tasks import delete_rows, extract, load
+from src.pipeline.generic_tasks import delete_rows, extract
+from src.pipeline.processing import prepare_df_for_loading
 from src.pipeline.utils import psql_insert_copy
+from src.read_query import read_query
 
 
 @task(checkpoint=False)
@@ -161,16 +162,10 @@ def load_new_regulations(new_regulations: pd.DataFrame):
                 date_fin character varying,
                 temporalite character varying,
                 type character varying,
-                )
+                row_hash text)
                 ON COMMIT DROP;"""
             )
         )
-
-        # a voir pour les geometries
-        # new_regulations = prepare_df_for_loading(
-        #     new_regulations,
-        #     logger,
-        # )
 
         columns_to_load = [
             "id",
@@ -189,6 +184,7 @@ def load_new_regulations(new_regulations: pd.DataFrame):
             "duree_validite",
             "temporalite",
             "type",
+            "row_hash"
         ]
 
         logger.info("Loading to temporary table")
@@ -201,29 +197,32 @@ def load_new_regulations(new_regulations: pd.DataFrame):
             method=psql_insert_copy,
         )
 
-        logger.info("Updating regulations_cacem from temporary table")
+        logger.info(f"Updating regulations_cacem from temporary table {len(new_regulations)}")
         connection.execute(
             text(
-                """UPDATE public.regulations_cacem reg
-                SET reg.geom = tmp.geom,
-                reg.entity_name = tmp.entity_name,
-                reg.url = tmp.url,
-                reg.layer_name = tmp.layer_name,
-                reg.facade = tmp.facade,
-                reg.ref_reg = tmp.ref_reg,
-                reg.edition = tmp.edition,
-                reg.editeur = tmp.editeur,
-                reg.source = tmp.source,
-                reg.observation = tmp.observation,
-                reg.thematique = tmp.thematique,
-                reg.date = tmp.date,
-                reg.duree_validite = tmp.duree_validite,
-                reg.temporalite = tmp.temporalite,
-                reg.type = tmp.type,
+                """UPDATE regulations_cacem reg
+                SET geom = tmp.geom,
+                entity_name = tmp.entity_name,
+                url = tmp.url,
+                layer_name = tmp.layer_name,
+                facade = tmp.facade,
+                ref_reg = tmp.ref_reg,
+                edition = tmp.edition,
+                editeur = tmp.editeur,
+                source = tmp.source,
+                observation = tmp.observation,
+                thematique = tmp.thematique,
+                date = tmp.date,
+                duree_validite = tmp.duree_validite,
+                temporalite = tmp.temporalite,
+                type = tmp.type,
+                row_hash = tmp.row_hash
                 FROM tmp_regulations_cacem tmp
-                where reg.id = tmp.id;"""
-            ),
+                where reg.id = tmp.id;
+                """
+            )
         )
+
 
 
 with Flow("Regulations") as flow:

@@ -1,6 +1,6 @@
 SELECT 
   id,
-  st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001)) geom,
+  st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.0001)) geom,
   entity_name,
   url,
   layer_name,
