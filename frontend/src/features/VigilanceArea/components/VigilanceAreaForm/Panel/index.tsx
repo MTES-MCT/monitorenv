@@ -5,6 +5,7 @@ import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigi
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useTracking } from '@hooks/useTracking'
 import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -30,6 +31,8 @@ import {
 
 export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: VigilanceArea.VigilanceArea | undefined }) {
   const dispatch = useAppDispatch()
+  const { trackPage } = useTracking()
+
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
@@ -82,6 +85,8 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
       }
     })
   }
+
+  trackPage(`/vigilance-areas/${vigilanceArea?.id}`)
 
   if (!vigilanceArea) {
     return null

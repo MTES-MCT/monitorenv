@@ -55,7 +55,11 @@ export function RegulatoryMetadata() {
               thematique={regulatoryMetadata?.thematique}
               type={regulatoryMetadata?.type}
             />
-            <RegulatorySummary regulatoryReference={regulatoryMetadata?.ref_reg} url={regulatoryMetadata?.url} />
+            <RegulatorySummary
+              regulatoryReference={regulatoryMetadata?.ref_reg}
+              type="REGULATORY"
+              url={regulatoryMetadata?.url}
+            />
           </Content>
         </>
       ) : (
