@@ -2,7 +2,7 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Textarea } from '@mtes-mct/monitor-ui'
 import { debounce } from 'lodash'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
@@ -19,14 +19,21 @@ export const Comments = forwardRef<HTMLDivElement, CommentsProps>(
     const dispatch = useAppDispatch()
     const [commentsValue, setCommentsValue] = useState(comments)
 
-    const onQuery = debounce((value: string | undefined) => {
-      dispatch(dashboardActions.setComments({ comments: value, key: dashboardKey }))
-    }, 500)
+    const onQuery = useMemo(
+      () =>
+        debounce((value: string | undefined) => {
+          dispatch(dashboardActions.setComments({ comments: value, key: dashboardKey }))
+        }, 500),
+      [dashboardKey, dispatch]
+    )
 
-    const updateComments = (value: string | undefined) => {
-      setCommentsValue(value)
-      onQuery(value)
-    }
+    const updateComments = useCallback(
+      (value: string | undefined) => {
+        setCommentsValue(value)
+        onQuery(value)
+      },
+      [onQuery]
+    )
 
     return (
       <Accordion
