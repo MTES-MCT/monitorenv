@@ -47,7 +47,12 @@ export function EnvActions({
         <ReportingHistory action={action} />
       ) : (
         <Card>
-          <ActionSummaryWrapper $hasError={hasError} $selected={selected} $type={action.actionType}>
+          <ActionSummaryWrapper
+            $hasError={hasError}
+            $reportingType={action.actionType === ActionTypeEnum.REPORTING ? action.reportType : undefined}
+            $selected={selected}
+            $type={action.actionType}
+          >
             <ContentContainer>
               {action.actionType === ActionTypeEnum.CONTROL && <ControlCard action={action} />}
               {action.actionType === ActionTypeEnum.SURVEILLANCE && <SurveillanceCard action={action} />}

@@ -407,9 +407,11 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         onClose={closeReporting}
         onDelete={deleteCurrentReporting}
         onSave={saveAndQuit}
-        setMustIncreaseValidity={value => {
-          setMustIncreaseValidity(value)
-          openByRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        setMustIncreaseValidity={hasValidityError => {
+          setMustIncreaseValidity(hasValidityError)
+          if (hasValidityError) {
+            openByRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+          }
         }}
       />
     </StyledFormContainer>
