@@ -1,4 +1,5 @@
 import { Icon, Tag } from '@mtes-mct/monitor-ui'
+import { ReportingTypeEnum } from 'domain/entities/reporting'
 import styled from 'styled-components'
 
 import { ActionTypeEnum } from '../../../../../domain/entities/missions'
@@ -27,7 +28,12 @@ export const TimeLine = styled.div<{ $isFishAction: boolean }>`
   ${p => p.$isFishAction && `padding-bottom: 20px;`}
 `
 
-export const ActionSummaryWrapper = styled.div<{ $hasError?: boolean; $selected?: boolean; $type?: string }>`
+export const ActionSummaryWrapper = styled.div<{
+  $hasError?: boolean
+  $reportingType?: ReportingTypeEnum
+  $selected?: boolean
+  $type?: string
+}>`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -43,6 +49,9 @@ export const ActionSummaryWrapper = styled.div<{ $hasError?: boolean; $selected?
   border-style: solid;
   padding: 16px;
   background: ${p => {
+    if (p.$reportingType && p.$reportingType === ReportingTypeEnum.OBSERVATION) {
+      return p.theme.color.blueGray25
+    }
     switch (p.$type) {
       case ActionTypeEnum.CONTROL:
         return p.theme.color.white
