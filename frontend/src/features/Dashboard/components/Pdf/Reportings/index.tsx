@@ -173,35 +173,37 @@ export function Reportings({
         <Text style={layoutStyle.selected}>{reportings.length} sélectionnée(s)</Text>
       </View>
       <View style={layoutStyle.cardWrapper}>
-        <View style={styles.legendCard}>
-          <View style={layoutStyle.row}>
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontWeight: 'bold' }}>Signalements en cours</Text>
-              <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
-                <Flag color={THEME.color.blueGray} />
-                <Text>Observation</Text>
+        {reportings.length > 0 && (
+          <View style={styles.legendCard}>
+            <View style={layoutStyle.row}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontWeight: 'bold' }}>Signalements en cours</Text>
+                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                  <Flag color={THEME.color.blueGray} />
+                  <Text>Observation</Text>
+                </View>
+                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                  <Flag color={THEME.color.maximumRed} /> <Text>Suspicion d&apos;infraction</Text>
+                </View>
+                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                  <Flag color={THEME.color.mediumSeaGreen} /> <Text>Rattaché à une mission</Text>
+                </View>
               </View>
-              <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
-                <Flag color={THEME.color.maximumRed} /> <Text>Suspicion d&apos;infraction</Text>
-              </View>
-              <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
-                <Flag color={THEME.color.mediumSeaGreen} /> <Text>Rattaché à une mission</Text>
-              </View>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontWeight: 'bold' }}>Signalements archivés</Text>
-              <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
-                <FlagArchivedObservation /> <Text>Observation</Text>
-              </View>
-              <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
-                <FlagArchivedInfraction /> <Text>Suspicion d&apos;infraction</Text>
-              </View>
-              <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
-                <FlagArchivedWithMission /> <Text>Rattaché à une mission</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontWeight: 'bold' }}>Signalements archivés</Text>
+                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                  <FlagArchivedObservation /> <Text>Observation</Text>
+                </View>
+                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                  <FlagArchivedInfraction /> <Text>Suspicion d&apos;infraction</Text>
+                </View>
+                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                  <FlagArchivedWithMission /> <Text>Rattaché à une mission</Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
+        )}
         {reportings.map(reporting => (
           <View key={reporting.id} style={[styles.reportingCard, { position: 'relative' }]}>
             <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>

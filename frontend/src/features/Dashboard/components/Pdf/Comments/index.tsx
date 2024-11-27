@@ -28,7 +28,13 @@ export function Comments({ comments }: { comments: string | undefined }) {
     <>
       <Text style={layoutStyle.title}>Commentaires</Text>
       <View style={{ flexDirection: 'row', gap: 10.5 }}>
-        {!!comments && getPrettyComments(comments).map(comment => <Text style={styles.comments}>{comment}</Text>)}
+        {!!comments &&
+          getPrettyComments(comments).map((comment, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <Text key={index} style={styles.comments}>
+              {comment}
+            </Text>
+          ))}
       </View>
     </>
   )
