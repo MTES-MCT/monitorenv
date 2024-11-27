@@ -3,6 +3,7 @@ import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
+import { useTracking } from '@hooks/useTracking'
 import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingSourceEnum, StatusFilterEnum } from 'domain/entities/reporting'
@@ -57,6 +58,8 @@ type SemaphoreCardProps = {
 
 export function SemaphoreCard({ feature, isSuperUser, selected = false }: SemaphoreCardProps) {
   const dispatch = useAppDispatch()
+
+  const { trackEvent } = useTracking()
 
   const displaySemaphoresLayer = useAppSelector(state => state.global.displaySemaphoresLayer)
   const hasMapInteraction = useHasMapInteraction()
@@ -121,6 +124,17 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
     )
   }
 
+  const goToLegicem = () => {
+    if (!isSuperUser) {
+      return
+    }
+    trackEvent({
+      action: 'SEMAPHORE_TO_LEGICEM',
+      category: 'MONITOR_EXT',
+      name: 'goToLegicemFromMonitorExt'
+    })
+  }
+
   if (!displaySemaphoresLayer || hasMapInteraction) {
     return null
   }
@@ -139,7 +153,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
         />
       </StyledHeader>
 
-      {isSuperUser && (
+      {isSuperUser ? (
         <StyledContactContainer>
           {phoneNumber && (
             <StyledContactLine>
@@ -186,7 +200,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
           {url && (
             <UrlContainer>
               <StyledIcon color={THEME.color.gunMetal} />
-              <UrlLink href={url} target="_blank">
+              <UrlLink href={url} onClick={goToLegicem} target="_blank">
                 Lien vers la fiche Légicem du sémaphore
               </UrlLink>
             </UrlContainer>
@@ -201,6 +215,15 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
             </StyledButton>
           </ButtonsContainer>
         </StyledContactContainer>
+      ) : (
+        url && (
+          <UrlContainer>
+            <StyledIcon color={THEME.color.gunMetal} />
+            <UrlLink href={url} onClick={goToLegicem} target="_blank">
+              Lien vers la fiche Légicem du sémaphore
+            </UrlLink>
+          </UrlContainer>
+        )
       )}
     </Wrapper>
   )

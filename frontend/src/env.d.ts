@@ -7,6 +7,8 @@ interface ImportMetaEnv {
   readonly FRONTEND_GEOSERVER_REMOTE_URL: string
   readonly FRONTEND_GOOGLEMAPS_API_KEY: string
   readonly FRONTEND_MAPBOX_KEY: string
+  readonly FRONTEND_MATOMO_ID: string
+  readonly FRONTEND_MATOMO_URL: string
   readonly FRONTEND_METABASE_URL: string
   readonly FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED: string
   readonly FRONTEND_MISSION_FORM_AUTO_UPDATE: string

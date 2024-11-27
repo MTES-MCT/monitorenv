@@ -3,6 +3,7 @@ import { CustomGlobalStyle } from '@components/CustomGlobalStyle'
 import { RequireAuth } from '@components/RequireAuth'
 import { ToastNotification } from '@components/ToastNotification'
 import { SideWindow } from '@features/SideWindow'
+import { useMatomo } from '@hooks/useMatomo'
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
 import { BackOfficePage } from '@pages/BackOfficePage'
 import { HomePage } from '@pages/HomePage'
@@ -23,6 +24,7 @@ import { CustomProvider as RsuiteCustomProvider } from 'rsuite'
 import { FR_FR_LOCALE } from './uiMonitor/locale_frFR'
 
 export function App() {
+  useMatomo()
   if (!isBrowserSupported()) {
     return <AlertUnsupportedBrowser />
   }
