@@ -125,9 +125,10 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
   }
 
   const goToLegicem = () => {
-    if (!isSuperUser) {
+    if (isSuperUser) {
       return
     }
+
     trackEvent({
       action: 'SEMAPHORE_TO_LEGICEM',
       category: 'MONITOR_EXT',
