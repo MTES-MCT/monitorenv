@@ -11,8 +11,9 @@ type RegulatorySummaryProps = {
 export function RegulatorySummary({ regulatoryReference, type, url }: RegulatorySummaryProps) {
   const { trackEvent } = useTracking()
 
-  const goToRegulatoryReference = () => {
+  const goToRegulatoryReference = e => {
     if (type === 'AMP') {
+      e.preventDefault()
       trackEvent({
         action: 'AMP_TO_LEGICEM',
         category: 'AMP',
