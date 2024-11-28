@@ -3,7 +3,7 @@ import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs, us
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
-import { forwardRef, useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 type ValidityProps = {
@@ -11,7 +11,7 @@ type ValidityProps = {
   reportingContext: ReportingContext
 }
 
-export const Validity = forwardRef<HTMLDivElement, ValidityProps>(({ mustIncreaseValidity, reportingContext }, ref) => {
+export function Validity({ mustIncreaseValidity, reportingContext }: ValidityProps) {
   const { newWindowContainerRef } = useNewWindow()
 
   const { values } = useFormikContext<Reporting>()
@@ -35,7 +35,7 @@ export const Validity = forwardRef<HTMLDivElement, ValidityProps>(({ mustIncreas
   )
 
   return (
-    <StyledValidityContainer ref={ref}>
+    <StyledValidityContainer>
       <div>
         <FormikDatePicker
           baseContainer={reportingContext === ReportingContext.SIDE_WINDOW ? newWindowContainerRef.current : undefined}
@@ -73,7 +73,7 @@ export const Validity = forwardRef<HTMLDivElement, ValidityProps>(({ mustIncreas
       )}
     </StyledValidityContainer>
   )
-})
+}
 
 const StyledFormikNumberInput = styled(FormikNumberInput)`
   max-width: 80px;
