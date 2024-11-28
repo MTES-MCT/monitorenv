@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import type { BookmarkType } from './Bookmark'
 
@@ -8,16 +8,20 @@ const createObserver = (root: HTMLElement | null, callback: IntersectionObserver
     threshold: 1
   })
 
-const observeElements = (observer: IntersectionObserver, elements: (HTMLElement | null)[]): (() => void) => {
+const observeElements = (
+  container: HTMLElement | null,
+  observer: IntersectionObserver | undefined,
+  elements: (HTMLElement | null)[]
+): (() => void) => {
   elements.forEach(element => {
-    if (element) {
+    if (element && container && observer) {
       observer.observe(element)
     }
   })
 
   return () => {
     elements.forEach(element => {
-      if (element) {
+      if (element && container && observer) {
         observer.unobserve(element)
       }
     })
@@ -25,26 +29,29 @@ const observeElements = (observer: IntersectionObserver, elements: (HTMLElement 
 }
 
 const checkVisibility = (
-  entries: IntersectionObserverEntry[],
-  state: BookmarkType,
+  entry: IntersectionObserverEntry,
   setState: React.Dispatch<React.SetStateAction<BookmarkType>>
 ) => {
-  entries.forEach(entry => {
-    const { boundingClientRect, isIntersecting, rootBounds } = entry
-    const isVisible = isIntersecting
-    let { orientation } = state
+  const { boundingClientRect, isIntersecting, rootBounds } = entry
+  const isVisible = isIntersecting
+  let orientation
+  console.log('on checke')
 
-    if (!isVisible) {
-      if (rootBounds) {
-        if (boundingClientRect.bottom < rootBounds.top) {
-          orientation = 'top'
-        } else if (boundingClientRect.top > rootBounds.bottom) {
-          orientation = 'bottom'
-        }
+  if (!isVisible) {
+    if (rootBounds) {
+      if (boundingClientRect.bottom < rootBounds.top) {
+        orientation = 'top'
+      } else if (boundingClientRect.top > rootBounds.bottom) {
+        orientation = 'bottom'
       }
     }
-    setState({ ...state, orientation, visible: !isVisible })
-  })
+  }
+
+  setState(prevState =>
+    prevState.orientation !== orientation || prevState.visible !== !isVisible
+      ? { orientation, ref: prevState.ref, title: prevState.title, visible: !isVisible }
+      : prevState
+  )
 }
 
 export const useObserver = (
@@ -52,24 +59,30 @@ export const useObserver = (
   observedElement: {
     ref: React.RefObject<HTMLElement>
     setState: React.Dispatch<React.SetStateAction<BookmarkType>>
-    state: BookmarkType
   }[]
 ) => {
-  useEffect(() => {
-    const observer = createObserver(containerRef.current, entries => {
-      observedElement.forEach(({ ref, setState, state }) => {
+  const callback = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      observedElement.forEach(({ ref, setState }) => {
         const targetEntry = entries.find(entry => entry.target === ref.current)
         if (targetEntry) {
-          checkVisibility([targetEntry], state, setState)
+          checkVisibility(targetEntry, setState)
         }
       })
-    })
+    },
+    [observedElement]
+  )
 
-    const cleanup = observeElements(
+  useEffect(() => {
+    let observer: IntersectionObserver | undefined
+    if (containerRef.current) {
+      observer = createObserver(containerRef.current, callback)
+    }
+
+    return observeElements(
+      containerRef.current,
       observer,
-      observedElement.map(config => config.ref.current)
+      observedElement.map(element => element.ref.current)
     )
-
-    return cleanup
-  }, [containerRef, observedElement])
+  }, [callback, containerRef, observedElement])
 }

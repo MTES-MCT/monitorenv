@@ -1,7 +1,7 @@
 import { getFilteredReportings, type DashboardType } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Bookmark, type BookmarkType } from '../Bookmark'
 import { Reportings } from '../Reportings'
@@ -21,6 +21,8 @@ export function SecondColumn({
   isSelectedAccordionOpen,
   onExpandedAccordionClick
 }: SecondColumnProps) {
+  console.log('pong')
+
   const [isMount, setIsMount] = useState<boolean>(false)
   const reportingFilters = useAppSelector(state => getReportingFilters(state.dashboardFilters, key))
   const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard, reportingFilters))
@@ -41,18 +43,23 @@ export function SecondColumn({
     visible: false
   })
 
-  const topBookmarks = [territorialPressionBookmark, reportingBookmark].filter(
-    bookmark => bookmark.visible && bookmark.orientation === 'top'
+  const topBookmarks = useMemo(
+    () =>
+      [territorialPressionBookmark, reportingBookmark].filter(
+        bookmark => bookmark.visible && bookmark.orientation === 'top'
+      ),
+    [reportingBookmark, territorialPressionBookmark]
   )
-  const bottomBookmarks = [territorialPressionBookmark].filter(
-    bookmark => bookmark.visible && bookmark.orientation === 'bottom'
+  const bottomBookmarks = useMemo(
+    () => [territorialPressionBookmark].filter(bookmark => bookmark.visible && bookmark.orientation === 'bottom'),
+    [territorialPressionBookmark]
   )
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
   useObserver(columnRef, [
-    { ref: territorialPressureRef, setState: setTerritorialPressionBookmark, state: territorialPressionBookmark },
-    { ref: reportingRef, setState: setReportingBookmark, state: reportingBookmark }
+    { ref: territorialPressureRef, setState: setTerritorialPressionBookmark },
+    { ref: reportingRef, setState: setReportingBookmark }
   ])
 
   useEffect(() => {

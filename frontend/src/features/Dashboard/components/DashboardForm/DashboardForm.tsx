@@ -5,7 +5,7 @@ import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled, { css } from 'styled-components'
 
@@ -42,27 +42,30 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
     undefined
   )
 
-  const handleAccordionClick = (type: Dashboard.Block) => {
-    switch (type) {
-      case Dashboard.Block.REGULATORY_AREAS:
-      case Dashboard.Block.AMP:
-      case Dashboard.Block.VIGILANCE_AREAS:
-        setExpandedAccordionFirstColumn(expandedAccordionFirstColumn === type ? undefined : type)
-        dispatch(dashboardActions.setDashboardPanel())
-        dispatch(dashboardActions.removeAllPreviewedItems())
-        break
-      case Dashboard.Block.TERRITORIAL_PRESSURE:
-      case Dashboard.Block.REPORTINGS:
-        setExpandedAccordionSecondColumn(expandedAccordionSecondColumn === type ? undefined : type)
-        break
-      case Dashboard.Block.CONTROL_UNITS:
-      case Dashboard.Block.COMMENTS:
-        setExpandedAccordionThirdColumn(expandedAccordionThirdColumn === type ? undefined : type)
-        break
-      default:
-        break
-    }
-  }
+  const handleAccordionClick = useCallback(
+    (type: Dashboard.Block) => {
+      switch (type) {
+        case Dashboard.Block.REGULATORY_AREAS:
+        case Dashboard.Block.AMP:
+        case Dashboard.Block.VIGILANCE_AREAS:
+          setExpandedAccordionFirstColumn(expandedAccordionFirstColumn === type ? undefined : type)
+          dispatch(dashboardActions.setDashboardPanel())
+          dispatch(dashboardActions.removeAllPreviewedItems())
+          break
+        case Dashboard.Block.TERRITORIAL_PRESSURE:
+        case Dashboard.Block.REPORTINGS:
+          setExpandedAccordionSecondColumn(expandedAccordionSecondColumn === type ? undefined : type)
+          break
+        case Dashboard.Block.CONTROL_UNITS:
+        case Dashboard.Block.COMMENTS:
+          setExpandedAccordionThirdColumn(expandedAccordionThirdColumn === type ? undefined : type)
+          break
+        default:
+          break
+      }
+    },
+    [dispatch, expandedAccordionFirstColumn, expandedAccordionSecondColumn, expandedAccordionThirdColumn]
+  )
 
   useEffect(() => {
     // remove openedPanel on mount
