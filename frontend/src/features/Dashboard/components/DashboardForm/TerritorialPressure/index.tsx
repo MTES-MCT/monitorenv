@@ -1,8 +1,9 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { Tooltip } from '@components/Tooltip'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Icon } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { forwardRef, useMemo, useRef, useState } from 'react'
+import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
@@ -20,11 +21,6 @@ type TerritorialPressureProps = {
 
 export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressureProps>(
   ({ isExpanded, setExpandedAccordion }, ref) => {
-    const tooltipRef = useRef<HTMLDivElement>(null)
-    const refLeftPosition = tooltipRef.current?.getBoundingClientRect().left ?? 0
-
-    const [isVisibleTooltip, setIsVisibleTooltip] = useState<boolean>(false)
-
     const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
     const currentYear = new Date().getFullYear()
@@ -66,25 +62,10 @@ export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressur
     const titleWithTooltip = (
       <TitleContainer>
         <span>Pression territoriale des contrôles et surveillances</span>
-        <>
-          <div ref={tooltipRef}>
-            <Icon.Info
-              aria-describedby="territorialPressureTooltip"
-              color={THEME.color.slateGray}
-              onBlur={() => setIsVisibleTooltip(false)}
-              onFocus={() => setIsVisibleTooltip(true)}
-              onMouseLeave={() => setIsVisibleTooltip(false)}
-              onMouseOver={() => setIsVisibleTooltip(true)}
-              tabIndex={0}
-            />
-          </div>
-          {isVisibleTooltip && (
-            <StyledTooltip $marginLeft={refLeftPosition} id="territorialPressureTooltip" role="tooltip">
-              Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones
-              REG, les AMP ou à l’échelle du département.
-            </StyledTooltip>
-          )}
-        </>
+        <Tooltip>
+          Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones REG,
+          les AMP ou à l’échelle du département.
+        </Tooltip>
       </TitleContainer>
     )
 
@@ -145,18 +126,4 @@ const LinksContainer = styled.div`
 const TitleContainer = styled.div`
   display: flex;
   gap: 8px;
-`
-
-const StyledTooltip = styled.p<{ $marginLeft: number }>`
-  background: ${p => p.theme.color.cultured};
-  border: ${p => p.theme.color.lightGray} 1px solid;
-  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
-  font-size: 11px;
-  font-weight: normal;
-  padding: 4px 8px;
-  position: absolute;
-  left: calc(${p => p.$marginLeft}px - 24px);
-  width: 310px;
-  pointer-events: none;
-  z-index: 2;
 `
