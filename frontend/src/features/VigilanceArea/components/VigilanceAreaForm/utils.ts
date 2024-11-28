@@ -13,6 +13,7 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     geom: undefined,
     images: [],
     isArchived: false,
+    isAtAllTimes: false,
     isDraft: true,
     linkedAMPs: [],
     linkedRegulatoryAreas: [],
@@ -22,7 +23,7 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     source: undefined,
     startDatePeriod: undefined,
     themes: [],
-    visibility: undefined
+    visibility: VigilanceArea.Visibility.PRIVATE
   }
 }
 

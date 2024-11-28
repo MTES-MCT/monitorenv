@@ -23,6 +23,7 @@ export const DraftSchema: Yup.Schema<
     id: Yup.number().optional(),
     images: Yup.array<VigilanceArea.ImagePropsForApi>().optional(),
     isArchived: Yup.boolean().required(),
+    isAtAllTimes: Yup.boolean().required(),
     isDraft: Yup.boolean().required(),
     linkedAMPs: Yup.array().optional(),
     linkedRegulatoryAreas: Yup.array().optional(),
@@ -45,12 +46,21 @@ export const PublishedSchema: Yup.Schema<
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
       .required(),
-    endDatePeriod: Yup.string().required(),
+    endDatePeriod: Yup.string().when('isAtAllTimes', {
+      is: false,
+      otherwise: schema => schema.nullable(),
+      then: schema => schema.nullable().required('Requis')
+    }),
     endingCondition: Yup.mixed<VigilanceArea.EndingCondition>()
       .oneOf(Object.values(VigilanceArea.EndingCondition))
       .when('frequency', {
         is: VigilanceArea.Frequency.NONE,
-        otherwise: schema => schema.oneOf(Object.values(VigilanceArea.EndingCondition)).required(),
+        otherwise: schema =>
+          schema.oneOf(Object.values(VigilanceArea.EndingCondition)).when('isAtAllTimes', {
+            is: false,
+            otherwise: endingConditionSchema => endingConditionSchema.nullable(),
+            then: endingConditionSchema => endingConditionSchema.nullable().required('Requis')
+          }),
         then: schema => schema.nullable()
       }),
     endingOccurrenceDate: Yup.string().when('endingCondition', {
@@ -63,7 +73,13 @@ export const PublishedSchema: Yup.Schema<
       otherwise: schema => schema.nullable(),
       then: schema => schema.nullable().required('Requis')
     }),
-    frequency: Yup.mixed<VigilanceArea.Frequency>().oneOf(Object.values(VigilanceArea.Frequency)).required(),
+    frequency: Yup.mixed<VigilanceArea.Frequency>()
+      .oneOf(Object.values(VigilanceArea.Frequency))
+      .when('isAtAllTimes', {
+        is: false,
+        otherwise: schema => schema.nullable(),
+        then: schema => schema.nullable().required('Requis')
+      }),
     geom: Yup.mixed<GeoJSON.MultiPolygon>()
       .test({
         message: 'Veuillez définir une zone de vigilance',
@@ -74,13 +90,18 @@ export const PublishedSchema: Yup.Schema<
     id: Yup.number().optional(),
     images: Yup.array<VigilanceArea.ImagePropsForApi>().optional(),
     isArchived: Yup.boolean().required(),
+    isAtAllTimes: Yup.boolean().required(),
     isDraft: Yup.boolean().required(),
     linkedAMPs: Yup.array().optional(),
     linkedRegulatoryAreas: Yup.array().optional(),
     links: Yup.array().optional(),
     name: Yup.string().required(),
     source: Yup.string().optional(),
-    startDatePeriod: Yup.string().required(),
+    startDatePeriod: Yup.string().when('isAtAllTimes', {
+      is: false,
+      otherwise: schema => schema.nullable(),
+      then: schema => schema.nullable().required('Requis')
+    }),
     themes: Yup.array().ensure().defined().min(1),
     visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })

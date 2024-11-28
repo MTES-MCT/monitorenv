@@ -104,8 +104,8 @@ class VigilanceAreasITests {
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
             themes = null,
             visibility = VisibilityEnum.PRIVATE,
-            createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
-            updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+            createdAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+            updatedAt = ZonedDateTime.parse("2026-12-31T23:59:59Z"),
             isAtAllTimes = false,
         )
 
@@ -134,8 +134,8 @@ class VigilanceAreasITests {
                 startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PUBLIC,
-                createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
-                updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                createdAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                updatedAt = ZonedDateTime.parse("2026-12-31T23:59:59Z"),
                 isAtAllTimes = true,
             )
         given(getAllVigilanceAreas.execute()).willReturn(listOf(vigilanceArea1, vigilanceArea2))
@@ -219,8 +219,8 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.images[1].mimeType", equalTo("image/png")))
             .andExpect(jsonPath("$.images[1].size", equalTo(2048)))
             .andExpect(jsonPath("$.images[1].content", equalTo("BAUG")))
-            .andExpect(jsonPath("$.createdAt", equalTo("2024-12-31T23:59:59Z")))
-            .andExpect(jsonPath("$.updatedAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.createdAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.updatedAt", equalTo("2026-12-31T23:59:59Z")))
     }
 
     @Test
@@ -261,8 +261,8 @@ class VigilanceAreasITests {
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PRIVATE,
-                createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
-                updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                createdAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                updatedAt = ZonedDateTime.parse("2026-12-31T23:59:59Z"),
                 isAtAllTimes = false,
             )
         given(createOrUpdateVigilanceArea.execute(vigilanceArea1)).willReturn(vigilanceArea1)
@@ -301,8 +301,8 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.images[1].mimeType", equalTo("image/png")))
             .andExpect(jsonPath("$.images[1].size", equalTo(2048)))
             .andExpect(jsonPath("$.images[1].content", equalTo("BAUG")))
-            .andExpect(jsonPath("$.createdAt", equalTo("2024-12-31T23:59:59Z")))
-            .andExpect(jsonPath("$.updatedAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.createdAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.updatedAt", equalTo("2026-12-31T23:59:59Z")))
             .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
     }
 
@@ -330,8 +330,8 @@ class VigilanceAreasITests {
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PRIVATE,
-                createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
-                updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                createdAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                updatedAt = ZonedDateTime.parse("2026-12-31T23:59:59Z"),
                 isAtAllTimes = false,
             )
 
@@ -367,8 +367,8 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
-            .andExpect(jsonPath("$.createdAt", equalTo("2024-12-31T23:59:59Z")))
-            .andExpect(jsonPath("$.updatedAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.createdAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.updatedAt", equalTo("2026-12-31T23:59:59Z")))
             .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
     }
 

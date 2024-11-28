@@ -5,6 +5,7 @@ export namespace VigilanceArea {
   export interface VigilanceArea {
     comments?: string
     computedEndDate?: string
+    createdAt?: string
     createdBy?: string
     endDatePeriod?: string
     endingCondition?: EndingCondition
@@ -15,6 +16,7 @@ export namespace VigilanceArea {
     id?: number
     images?: ImagePropsForApi[]
     isArchived: boolean
+    isAtAllTimes: boolean
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]
@@ -24,22 +26,25 @@ export namespace VigilanceArea {
     source?: string
     startDatePeriod?: string
     themes?: string[]
+    updatedAt?: string
     visibility?: Visibility
   }
 
   export interface VigilanceAreaFromApi {
     comments?: string
     computedEndDate?: string
+    createdAt?: string
     createdBy?: string
     endDatePeriod?: string
     endingCondition?: EndingCondition
     endingOccurrenceDate?: string
     endingOccurrencesNumber?: number
-    frequency: Frequency
+    frequency: Frequency | undefined
     geom?: GeoJSON.MultiPolygon
     id: number
     images?: ImagePropsForApi[]
     isArchived: boolean
+    isAtAllTimes: boolean
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]
@@ -49,6 +54,7 @@ export namespace VigilanceArea {
     source?: string
     startDatePeriod?: string
     themes?: string[]
+    updatedAt?: string
     visibility?: Visibility
   }
 

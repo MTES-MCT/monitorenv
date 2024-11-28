@@ -93,6 +93,10 @@ export const getFilterVigilanceAreasPerPeriod = (
   )
 
   return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaFromApi>) ?? []).filter(vigilanceArea => {
+    if (vigilanceArea.isAtAllTimes) {
+      return true
+    }
+
     if (!vigilanceArea || !vigilanceArea.startDatePeriod || !vigilanceArea.endDatePeriod) {
       return false
     }

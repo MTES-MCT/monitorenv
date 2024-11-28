@@ -2,6 +2,7 @@ import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import styled from 'styled-components'
 
 import {
   PanelDateItem,
@@ -21,31 +22,53 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
     : undefined
 
   return (
-    <PanelSubPart>
-      <PanelInlineItem>
-        <PanelInlineItemLabel $isInline>Période</PanelInlineItemLabel>
-        <PanelDateItem>
-          <PanelInlineItemValue>
-            {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
+    <>
+      <PanelSubPart>
+        <StyledUpsertDates>
+          {vigilanceArea?.createdAt &&
+            `Créée le ${customDayjs(vigilanceArea?.createdAt).utc().format('DD/MM/YY')}${
+              vigilanceArea?.updatedAt ? ', ' : '.'
+            }`}
+          {vigilanceArea?.updatedAt &&
+            `dernière modification le ${customDayjs(vigilanceArea?.updatedAt).utc().format('DD/MM/YY')}.`}
+        </StyledUpsertDates>
+        <PanelInlineItem>
+          <PanelInlineItemLabel $isInline>Période</PanelInlineItemLabel>
+          <PanelDateItem>
+            {vigilanceArea?.isAtAllTimes ? (
+              <PanelInlineItemValue>En tout temps</PanelInlineItemValue>
+            ) : (
+              <>
+                <PanelInlineItemValue>
+                  {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
+                </PanelInlineItemValue>
+                <PanelInlineItemValue>{frequencyText(vigilanceArea?.frequency)}</PanelInlineItemValue>
+                <StyledPanelInlineItemValue>
+                  {endingOccurenceText(vigilanceArea?.endingCondition, vigilanceArea?.computedEndDate)}
+                </StyledPanelInlineItemValue>
+              </>
+            )}
+          </PanelDateItem>
+        </PanelInlineItem>
+        <PanelInlineItem>
+          <PanelInlineItemLabel $isInline>Thématique</PanelInlineItemLabel>
+          <PanelInlineItemValue $maxLine={2} title={vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : ''}>
+            {vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}
           </PanelInlineItemValue>
-          <PanelInlineItemValue>{frequencyText(vigilanceArea?.frequency)}</PanelInlineItemValue>
-          <StyledPanelInlineItemValue>
-            {endingOccurenceText(vigilanceArea?.endingCondition, vigilanceArea?.computedEndDate)}
-          </StyledPanelInlineItemValue>
-        </PanelDateItem>
-      </PanelInlineItem>
-      <PanelInlineItem>
-        <PanelInlineItemLabel $isInline>Thématique</PanelInlineItemLabel>
-        <PanelInlineItemValue $maxLine={2} title={vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : ''}>
-          {vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}
-        </PanelInlineItemValue>
-      </PanelInlineItem>
-      <PanelInlineItem>
-        <PanelInlineItemLabel $isInline>Visibilité</PanelInlineItemLabel>
-        <PanelInlineItemValue>
-          {vigilanceArea?.visibility ? VigilanceArea.VisibilityLabel[vigilanceArea?.visibility] : EMPTY_VALUE}
-        </PanelInlineItemValue>
-      </PanelInlineItem>
-    </PanelSubPart>
+        </PanelInlineItem>
+        <PanelInlineItem>
+          <PanelInlineItemLabel $isInline>Visibilité</PanelInlineItemLabel>
+          <PanelInlineItemValue>
+            {vigilanceArea?.visibility ? VigilanceArea.VisibilityLabel[vigilanceArea?.visibility] : EMPTY_VALUE}
+          </PanelInlineItemValue>
+        </PanelInlineItem>
+      </PanelSubPart>
+    </>
   )
 }
+
+const StyledUpsertDates = styled.span`
+  font-style: italic;
+  color: ${p => p.theme.color.slateGray};
+  transform: translateY(-8px);
+`

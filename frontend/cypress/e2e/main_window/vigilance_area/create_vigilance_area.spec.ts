@@ -19,9 +19,10 @@ describe('Create Vigilance Area', () => {
     cy.clickButton('Arbre des couches')
     cy.getDataCy('my-vigilance-areas-layers').click()
     cy.clickButton('Créer une zone de vigilance')
+    // Visibility should be PRIVATE by default
+    cy.get('input[name="visibility"][value="PRIVATE"]').should('be.checked')
   })
   it('Should successfully create a vigilance area', () => {
-    // Fill in the form fields
     cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance')
 
     cy.fill('Période de validité', [startDate, endDate])
@@ -172,15 +173,7 @@ describe('Create Vigilance Area', () => {
     // Submit the form
     cy.clickButton('Enregistrer')
     cy.wait('@createVigilanceArea').then(() => {
-      cy.clickButton('Fermer la zone de vigilance')
-      cy.clickButton('Filtrer par type de zones')
-      cy.fill('Période de vigilance', 'En ce moment')
-      cy.getDataCy('vigilance-area-results-list-button').click()
-      cy.getDataCy('vigilance-area-result-zone').contains('Nouvelle zone de vigilance')
-
-      cy.get('span[title="Nouvelle zone de vigilance"]').click()
-      cy.clickButton('Supprimer')
-      cy.clickButton('Confirmer la suppression')
+      findAndDeleteVigilanceArea('Nouvelle zone de vigilance')
     })
   })
 
@@ -196,15 +189,32 @@ describe('Create Vigilance Area', () => {
     // Submit the form
     cy.clickButton('Enregistrer')
     cy.wait('@createVigilanceArea').then(() => {
-      cy.clickButton('Fermer la zone de vigilance')
-      cy.clickButton('Filtrer par type de zones')
-      cy.fill('Période de vigilance', 'En ce moment')
-      cy.getDataCy('vigilance-area-results-list-button').click()
-      cy.getDataCy('vigilance-area-result-zone').contains('Nouvelle zone de vigilance sans récurrence')
+      findAndDeleteVigilanceArea('Nouvelle zone de vigilance sans récurrence')
+    })
+  })
 
-      cy.get('span[title="Nouvelle zone de vigilance sans récurrence"]').click()
-      cy.clickButton('Supprimer')
-      cy.clickButton('Confirmer la suppression')
+  it('Should create an ongoing vigilance area without end and find it with period filter', () => {
+    // Fill in the form fields
+    cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance infini')
+
+    cy.fill('En tout temps', true)
+
+    // Submit the form
+    cy.clickButton('Enregistrer')
+    cy.wait('@createVigilanceArea').then(() => {
+      findAndDeleteVigilanceArea('Nouvelle zone de vigilance infini')
     })
   })
 })
+
+const findAndDeleteVigilanceArea = (name: string) => {
+  cy.clickButton('Fermer la zone de vigilance')
+  cy.clickButton('Filtrer par type de zones')
+  cy.fill('Période de vigilance', 'En ce moment')
+  cy.getDataCy('vigilance-area-results-list-button').click()
+  cy.getDataCy('vigilance-area-result-zone').contains(name)
+
+  cy.get(`span[title="${name}"]`).click()
+  cy.clickButton('Supprimer')
+  cy.clickButton('Confirmer la suppression')
+}
