@@ -32,7 +32,7 @@ const Button = styled.button`
   width: 25px !important;
   height: 25px !important;
 
-  :hover {
+  &:hover {
     background: none;
   }
 `

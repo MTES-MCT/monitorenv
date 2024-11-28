@@ -21,7 +21,7 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $withBorderBottom?: bool
   padding-left: 18px;
   text-align: left;
   user-select: none;
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
 `
@@ -63,7 +63,7 @@ const GroupWrapper = styled.li<{ $isOpen: boolean; $isPadded?: boolean }>`
   user-select: none;
   white-space: nowrap;
 
-  :hover {
+  &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
 

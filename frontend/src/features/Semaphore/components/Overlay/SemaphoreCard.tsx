@@ -250,7 +250,7 @@ const StyledContactLine = styled.div`
 const StyledCopyButton = styled(IconButton)`
   padding: 0px;
   .Element-IconBox {
-    :hover {
+    &:hover {
       color: ${p => p.theme.color.blueYonder};
     }
   }
