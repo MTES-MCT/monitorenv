@@ -4,8 +4,7 @@ import type { BookmarkType } from './Bookmark'
 
 const createObserver = (root: HTMLElement | null, callback: IntersectionObserverCallback): IntersectionObserver =>
   new IntersectionObserver(callback, {
-    root,
-    threshold: 1
+    root
   })
 
 const observeElements = (
