@@ -59,11 +59,11 @@ export function ThirdColumn({
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
-  useObserver(columnRef, [
-    { ref: controlUnitRef, setState: setControlUnitBookmark, state: controlUnitBookmark },
-    { ref: commentsRef, setState: setCommentsBookmark, state: commentsBookmark },
-    { ref: weatherRef, setState: setWeatherBookmark, state: weatherBookmark }
-  ])
+  // useObserver(columnRef, [
+  //   { ref: controlUnitRef, setState: setControlUnitBookmark, state: controlUnitBookmark },
+  //   { ref: commentsRef, setState: setCommentsBookmark, state: commentsBookmark },
+  //   { ref: weatherRef, setState: setWeatherBookmark, state: weatherBookmark }
+  // ])
 
   useEffect(() => {
     setIsMount(true)
