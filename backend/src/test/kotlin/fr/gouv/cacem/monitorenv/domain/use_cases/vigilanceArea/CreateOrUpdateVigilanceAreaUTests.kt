@@ -40,6 +40,9 @@ class CreateOrUpdateVigilanceAreaUTests {
                 isDeleted = false,
                 isDraft = true,
                 images = listOf(image),
+                createdAt = null,
+                updatedAt = null,
+                isAtAllTimes = false,
             )
 
         val expectedVigilanceArea = newVigilanceArea.copy(id = 0)

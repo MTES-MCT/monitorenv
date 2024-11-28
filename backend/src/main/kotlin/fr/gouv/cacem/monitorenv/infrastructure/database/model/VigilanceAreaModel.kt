@@ -3,9 +3,28 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.NamedAttributeNode
+import jakarta.persistence.NamedEntityGraph
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
+import jakarta.persistence.Table
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
@@ -16,6 +35,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
+import java.time.ZonedDateTime
 
 @Entity
 @NamedEntityGraph(
@@ -60,6 +80,7 @@ data class VigilanceAreaModel(
     var images: MutableList<VigilanceAreaImageModel> = mutableListOf(),
     @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
+    @Column(name = "is_at_all_times", nullable = false) val isAtAllTimes: Boolean,
     @Column(name = "is_draft") val isDraft: Boolean,
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
@@ -77,6 +98,8 @@ data class VigilanceAreaModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val visibility: VisibilityEnum? = null,
+    @Column(name = "created_at") var createdAt: ZonedDateTime?,
+    @Column(name = "updated_at") var updatedAt: ZonedDateTime?,
 ) {
     companion object {
         fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
@@ -92,6 +115,7 @@ data class VigilanceAreaModel(
                 endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
                 geom = vigilanceArea.geom,
                 isArchived = vigilanceArea.isArchived,
+                isAtAllTimes = vigilanceArea.isAtAllTimes,
                 isDeleted = vigilanceArea.isDeleted,
                 isDraft = vigilanceArea.isDraft,
                 links = vigilanceArea.links,
@@ -103,6 +127,8 @@ data class VigilanceAreaModel(
                 startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
                 themes = vigilanceArea.themes,
                 visibility = vigilanceArea.visibility,
+                createdAt = vigilanceArea.createdAt,
+                updatedAt = vigilanceArea.updatedAt,
             )
         }
     }
@@ -119,6 +145,7 @@ data class VigilanceAreaModel(
             frequency = frequency,
             endDatePeriod = endDatePeriod?.atZone(UTC),
             geom = geom,
+            isAtAllTimes = isAtAllTimes,
             isArchived = isArchived,
             isDeleted = isDeleted,
             isDraft = isDraft,
@@ -132,6 +159,18 @@ data class VigilanceAreaModel(
             startDatePeriod = startDatePeriod?.atZone(UTC),
             themes = themes,
             visibility = visibility,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
         )
+    }
+
+    @PrePersist
+    private fun prePersist() {
+        this.createdAt = ZonedDateTime.now()
+    }
+
+    @PreUpdate
+    private fun preUpdate() {
+        this.updatedAt = ZonedDateTime.now()
     }
 }

@@ -15,6 +15,7 @@ data class VigilanceAreaEntity(
     val images: List<ImageEntity>? = listOf(),
     val frequency: FrequencyEnum? = null,
     val geom: MultiPolygon? = null,
+    val isAtAllTimes: Boolean,
     val isArchived: Boolean,
     val isDeleted: Boolean,
     val isDraft: Boolean,
@@ -27,4 +28,6 @@ data class VigilanceAreaEntity(
     val startDatePeriod: ZonedDateTime? = null,
     val themes: List<String>? = null,
     val visibility: VisibilityEnum? = null,
+    val createdAt: ZonedDateTime?,
+    val updatedAt: ZonedDateTime?,
 )

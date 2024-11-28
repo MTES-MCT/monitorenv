@@ -1,6 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -15,6 +19,7 @@ data class VigilanceAreasDataOutput(
     val endingOccurrencesNumber: Int? = null,
     val frequency: FrequencyEnum? = null,
     val geom: MultiPolygon? = null,
+    val isAtAllTimes: Boolean,
     val isArchived: Boolean,
     val isDraft: Boolean,
     val links: List<LinkEntity>? = null,
@@ -40,6 +45,7 @@ data class VigilanceAreasDataOutput(
                 endingOccurrencesNumber = vigilanceArea.endingOccurrencesNumber,
                 frequency = vigilanceArea.frequency,
                 geom = vigilanceArea.geom,
+                isAtAllTimes = vigilanceArea.isAtAllTimes,
                 isArchived = vigilanceArea.isArchived,
                 isDraft = vigilanceArea.isDraft,
                 links = vigilanceArea.links,

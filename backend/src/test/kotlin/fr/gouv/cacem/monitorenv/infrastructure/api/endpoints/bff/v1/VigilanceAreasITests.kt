@@ -3,8 +3,16 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetTrigrams
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import org.hamcrest.Matchers.equalTo
@@ -20,7 +28,9 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
@@ -94,6 +104,9 @@ class VigilanceAreasITests {
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
             themes = null,
             visibility = VisibilityEnum.PRIVATE,
+            createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
+            updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+            isAtAllTimes = false,
         )
 
     @Test
@@ -121,6 +134,9 @@ class VigilanceAreasITests {
                 startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PUBLIC,
+                createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
+                updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                isAtAllTimes = true,
             )
         given(getAllVigilanceAreas.execute()).willReturn(listOf(vigilanceArea1, vigilanceArea2))
         // When
@@ -147,6 +163,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").doesNotExist())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
+            .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
             .andExpect(jsonPath("$[1].id", equalTo(2)))
             .andExpect(jsonPath("$[1].name", equalTo("Vigilance Area 2")))
             .andExpect(jsonPath("$[1].isDraft", equalTo(true)))
@@ -165,6 +182,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
             .andExpect(jsonPath("$[1].themes").doesNotExist())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
+            .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
     }
 
     @Test
@@ -201,6 +219,8 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.images[1].mimeType", equalTo("image/png")))
             .andExpect(jsonPath("$.images[1].size", equalTo(2048)))
             .andExpect(jsonPath("$.images[1].content", equalTo("BAUG")))
+            .andExpect(jsonPath("$.createdAt", equalTo("2024-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.updatedAt", equalTo("2025-12-31T23:59:59Z")))
     }
 
     @Test
@@ -241,6 +261,9 @@ class VigilanceAreasITests {
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PRIVATE,
+                createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
+                updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                isAtAllTimes = false,
             )
         given(createOrUpdateVigilanceArea.execute(vigilanceArea1)).willReturn(vigilanceArea1)
 
@@ -278,6 +301,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.images[1].mimeType", equalTo("image/png")))
             .andExpect(jsonPath("$.images[1].size", equalTo(2048)))
             .andExpect(jsonPath("$.images[1].content", equalTo("BAUG")))
+            .andExpect(jsonPath("$.createdAt", equalTo("2024-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.updatedAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
     }
 
     @Test
@@ -304,6 +330,9 @@ class VigilanceAreasITests {
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PRIVATE,
+                createdAt = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
+                updatedAt = ZonedDateTime.parse("2025-12-31T23:59:59Z"),
+                isAtAllTimes = false,
             )
 
         val updatedVigilanceArea =
@@ -338,7 +367,9 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
-            .andExpect(jsonPath("$.images").isEmpty())
+            .andExpect(jsonPath("$.createdAt", equalTo("2024-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.updatedAt", equalTo("2025-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
     }
 
     @Test

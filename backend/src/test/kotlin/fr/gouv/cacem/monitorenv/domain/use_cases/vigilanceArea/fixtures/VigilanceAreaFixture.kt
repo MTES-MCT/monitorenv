@@ -1,6 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import java.time.ZonedDateTime
 
 class VigilanceAreaFixture {
@@ -29,6 +34,9 @@ class VigilanceAreaFixture {
                 startDatePeriod = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
                 themes = listOf("AMP"),
                 visibility = VisibilityEnum.PUBLIC,
+                createdAt = null,
+                updatedAt = null,
+                isAtAllTimes = false,
             )
         }
 
@@ -80,6 +88,9 @@ class VigilanceAreaFixture {
                 startDatePeriod = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
                 themes = listOf("AMP"),
                 visibility = VisibilityEnum.PRIVATE,
+                createdAt = null,
+                updatedAt = null,
+                isAtAllTimes = false,
             )
         }
 
@@ -107,6 +118,9 @@ class VigilanceAreaFixture {
                 startDatePeriod = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
                 themes = listOf("AMP"),
                 visibility = VisibilityEnum.PRIVATE,
+                createdAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                updatedAt = ZonedDateTime.parse("2024-01-01T12:00:00Z"),
+                isAtAllTimes = false,
             )
         }
     }
