@@ -8,11 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -137,22 +133,26 @@ class JpaMissionRepository(
             return true
         }
 
-        return mission.envActions?.any { action ->
-            (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
-                listOf(
-                    infraction.imo,
-                    infraction.mmsi,
-                    infraction.registrationNumber,
-                    infraction.vesselName,
-                    infraction.companyName,
-                    infraction.controlledPersonIdentity,
-                ).any { field ->
-                    !field.isNullOrBlank() &&
-                        normalizeField(field)
-                            .contains(normalizeField(searchQuery), ignoreCase = true)
-                }
+        return mission.id?.toString()?.let {
+            normalizeField(it)
+                .contains(normalizeField(searchQuery), ignoreCase = true)
+        } == true ||
+            mission.envActions?.any { action ->
+                (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
+                    listOf(
+                        infraction.imo,
+                        infraction.mmsi,
+                        infraction.registrationNumber,
+                        infraction.vesselName,
+                        infraction.companyName,
+                        infraction.controlledPersonIdentity,
+                    ).any { field ->
+                        !field.isNullOrBlank() &&
+                            normalizeField(field)
+                                .contains(normalizeField(searchQuery), ignoreCase = true)
+                    }
+                } ?: false
             } ?: false
-        } ?: false
     }
 
     private fun normalizeField(input: String): String {
