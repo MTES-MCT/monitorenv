@@ -20,7 +20,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: true,
     header: () => 'N°',
     id: 'id',
-    size: 62 + legacyFirefoxOffset
+    size: 66 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.startDateTimeUtc,
@@ -69,7 +69,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 372 + legacyFirefoxOffset
+    size: 368 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.envActions,

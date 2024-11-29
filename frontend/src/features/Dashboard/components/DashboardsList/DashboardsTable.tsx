@@ -54,7 +54,7 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
   })
 
   const { rows } = table.getRowModel()
-  const rowVirtualizer = useTableVirtualizer({ estimateSize: 45, ref: tableContainerRef, rows })
+  const rowVirtualizer = useTableVirtualizer({ estimateSize: 30, ref: tableContainerRef, rows })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
