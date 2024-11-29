@@ -35,16 +35,19 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
-    @Autowired private val customQueryCountListener: CustomQueryCountListener? = null
+    @Autowired
+    private val customQueryCountListener: CustomQueryCountListener? = null
 
-    @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
+    @Autowired
+    private lateinit var jpaMissionRepository: JpaMissionRepository
 
-    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    @Autowired
+    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
@@ -341,6 +344,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageNumber = null,
                 pageSize = null,
                 searchQuery = "BAL",
+            )
+        assertThat(missions).hasSize(1)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+    }
+
+    @Test
+    @Transactional
+    fun `findAll Should return filtered missions when search query is an id`() {
+        // When
+        val missions =
+            jpaMissionRepository.findAllFullMissions(
+                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                missionTypes = null,
+                seaFronts = null,
+                missionStatuses = null,
+                pageNumber = null,
+                pageSize = null,
+                searchQuery = "53",
             )
         assertThat(missions).hasSize(1)
 
