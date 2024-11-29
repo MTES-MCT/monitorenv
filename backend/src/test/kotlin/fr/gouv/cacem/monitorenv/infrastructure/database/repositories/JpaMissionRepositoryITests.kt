@@ -40,14 +40,11 @@ import java.util.UUID
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
-    @Autowired
-    private val customQueryCountListener: CustomQueryCountListener? = null
+    @Autowired private val customQueryCountListener: CustomQueryCountListener? = null
 
-    @Autowired
-    private lateinit var jpaMissionRepository: JpaMissionRepository
+    @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
 
-    @Autowired
-    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
@@ -519,7 +516,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(existingMissions).hasSize(21)
 
         val noteObservations = "Quelqu'un aurait vu quelque chose quelque part à un certain moment."
-        val noteObservationsByUnit = "Une unité aurait vu quelque chose quelque part à un certain moment."
+        val noteObservationsByUnit =
+            "Une unité aurait vu quelque chose quelque part à un certain moment."
 
         val newMission =
             MissionEntity(
@@ -860,10 +858,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 observations = "This is an infraction",
                 registrationNumber = "REGISTRATION NUM",
                 companyName = "ACME inc.",
-                relevantCourt = "MARITIME_COURT",
                 infractionType = InfractionTypeEnum.WITHOUT_REPORT,
                 formalNotice = FormalNoticeEnum.NO,
-                toProcess = false,
                 controlledPersonIdentity = "Dick Hoover",
                 vesselType = VesselTypeEnum.FISHING,
                 vesselSize = 23,

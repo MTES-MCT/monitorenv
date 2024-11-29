@@ -118,6 +118,16 @@ export function ControlForm({
     [attachedReportings]
   )
 
+  const isGeomSameAsAttachedReportingGeom = useMemo(() => {
+    const attachedReporting = attachedReportings?.find(reporting => reporting.id === currentAction?.reportingIds[0])
+
+    return !!(
+      attachedReporting?.geom &&
+      currentAction?.geom &&
+      JSON.stringify(attachedReporting?.geom) === JSON.stringify(currentAction?.geom)
+    )
+  }, [attachedReportings, currentAction?.geom, currentAction?.reportingIds])
+
   const onVehicleTypeChange = selectedVehicleType => {
     if (
       envActions[envActionIndex]?.vehicleType === selectedVehicleType ||
@@ -375,7 +385,10 @@ export function ControlForm({
               <FieldError>{currentActionErrors?.actionStartDateTimeUtc}</FieldError>
             )}
         </div>
-        <MultiPointPicker actionIndex={envActionIndex} />
+        <MultiPointPicker
+          actionIndex={envActionIndex}
+          isGeomSameAsAttachedReportingGeom={isGeomSameAsAttachedReportingGeom}
+        />
 
         <Separator />
 

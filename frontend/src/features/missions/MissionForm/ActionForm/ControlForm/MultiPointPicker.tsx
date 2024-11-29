@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Label, Message } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { isEqual } from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -26,9 +26,10 @@ const CONTROL_INTERACTION_LISTENER = InteractionListener.CONTROL_POINT
 
 export type MultiPointPickerProps = {
   actionIndex: number
+  isGeomSameAsAttachedReportingGeom: boolean
 }
 
-export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
+export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeom }: MultiPointPickerProps) {
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
@@ -79,54 +80,59 @@ export function MultiPointPicker({ actionIndex }: MultiPointPickerProps) {
   )
 
   return (
-    <Field>
-      <Label $isRequired>Lieu du contrôle</Label>
+    <div>
+      <Field>
+        <Label $isRequired>Lieu du contrôle</Label>
 
-      <Button
-        accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
-        disabled={points.length > 0}
-        Icon={Icon.Plus}
-        isFullWidth
-        onClick={handleAddPoint}
-      >
-        Ajouter un point de contrôle
-      </Button>
+        <Button
+          accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
+          disabled={points.length > 0}
+          Icon={Icon.Plus}
+          isFullWidth
+          onClick={handleAddPoint}
+        >
+          Ajouter un point de contrôle
+        </Button>
 
-      <>
-        {points.map((coordinates, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <Row key={`zone-${index}`}>
-            <ZoneWrapper>
-              {formatCoordinates(coordinates, coordinatesFormat)}
-              {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
-              {/* eslint-disable jsx-a11y/anchor-is-valid */}
-              {/* eslint-disable jsx-a11y/click-events-have-key-events */}
-              {/* eslint-disable jsx-a11y/no-static-element-interactions */}
-              <Center onClick={() => handleCenterOnMap(coordinates as Coordinate)}>
-                <Icon.SelectRectangle />
-                Centrer sur la carte
-              </Center>
-            </ZoneWrapper>
+        <>
+          {points.map((coordinates, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <Row key={`zone-${index}`}>
+              <ZoneWrapper>
+                {formatCoordinates(coordinates, coordinatesFormat)}
+                {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
+                {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                {/* eslint-disable jsx-a11y/click-events-have-key-events */}
+                {/* eslint-disable jsx-a11y/no-static-element-interactions */}
+                <Center onClick={() => handleCenterOnMap(coordinates as Coordinate)}>
+                  <Icon.SelectRectangle />
+                  Centrer sur la carte
+                </Center>
+              </ZoneWrapper>
 
-            <>
-              <IconButton
-                accent={Accent.SECONDARY}
-                disabled={isAddingAControl}
-                Icon={Icon.Edit}
-                onClick={handleAddPoint}
-              />
-              <IconButton
-                accent={Accent.SECONDARY}
-                aria-label="Supprimer cette zone"
-                disabled={isAddingAControl}
-                Icon={Icon.Delete}
-                onClick={() => handleDeleteZone(index)}
-              />
-            </>
-          </Row>
-        ))}
-      </>
-    </Field>
+              <>
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  disabled={isAddingAControl}
+                  Icon={Icon.Edit}
+                  onClick={handleAddPoint}
+                />
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  aria-label="Supprimer cette zone"
+                  disabled={isAddingAControl}
+                  Icon={Icon.Delete}
+                  onClick={() => handleDeleteZone(index)}
+                />
+              </>
+            </Row>
+          ))}
+        </>
+      </Field>
+      {isGeomSameAsAttachedReportingGeom && (
+        <Message withoutIcon>Le point de contrôle a été automatiquement rempli avec le point de signalement.</Message>
+      )}
+    </div>
   )
 }
 

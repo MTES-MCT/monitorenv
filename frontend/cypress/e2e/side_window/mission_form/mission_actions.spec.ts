@@ -46,8 +46,6 @@ context('Side Window > Mission Form > Mission actions', () => {
       expect(duplicatedInfraction?.natinf?.length).equal(2)
       expect(duplicatedInfraction?.observations).equal("Pas d'observations")
       expect(duplicatedInfraction?.registrationNumber).equal('BALTIK')
-      expect(duplicatedInfraction?.relevantCourt).equal('LOCAL_COURT')
-      expect(duplicatedInfraction?.toProcess).equal(false)
       expect(duplicatedInfraction?.vesselSize).equal(45)
       expect(duplicatedInfraction?.vesselType).equal('COMMERCIAL')
       expect(duplicatedInfraction?.nbTarget).equal(1)
@@ -111,7 +109,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('envaction-theme-selector').eq(2).click({ force: true })
     cy.getDataCy('envaction-theme-element').eq(2).contains('Épave').click({ force: true })
 
-    cy.fill('La surveillance a donné lieu à des actions de sensibilisation', true)
+    cy.fill('La surveillance a donné lieu à des actions de prévention', true)
 
     cy.getDataCy('surveillance-awareness-select').click({ force: true }).within
 

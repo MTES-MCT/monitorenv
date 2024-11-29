@@ -16,7 +16,7 @@ export type Reporting = {
   createdAt: string | undefined
   description: string | undefined
   detachedFromMissionAtUtc: string | undefined
-  geom: GeoJSON.MultiPolygon | undefined
+  geom: GeoJSON.MultiPolygon | GeoJSON.MultiPoint | undefined
   hasNoUnitAvailable: boolean | undefined
   id: number | string
   isArchived: boolean

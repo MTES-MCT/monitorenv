@@ -1,14 +1,5 @@
 import { NewInfractionSchema } from '@features/missions/MissionForm/Schemas/Infraction'
-import {
-  Accent,
-  Button,
-  FormikCheckbox,
-  FormikMultiRadio,
-  FormikNumberInput,
-  FormikTextarea,
-  Icon,
-  THEME
-} from '@mtes-mct/monitor-ui'
+import { Accent, Button, FormikMultiRadio, FormikNumberInput, FormikTextarea, Icon, THEME } from '@mtes-mct/monitor-ui'
 import {
   administrativeResponseOptions,
   formalNoticeLabels,
@@ -24,7 +15,6 @@ import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
 import { InfractionFormHeaderIndividual } from './InfractionFormHeaderIndividual'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
-import { RelevantCourtSelector } from './RelevantCourtSelector'
 
 const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 const formalNoticeOptions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
@@ -110,11 +100,6 @@ export function InfractionForm({
 
       <NatinfSelector infractionPath={infractionPath} />
 
-      <FormColumnWithCheckbox>
-        <RelevantCourtSelector infractionPath={infractionPath} />
-        <FormikCheckbox inline label="A traiter" name={`${infractionPath}.toProcess`} />
-      </FormColumnWithCheckbox>
-
       <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
 
       <NbTargetWrapper>
@@ -164,15 +149,6 @@ const FormWrapper = styled.div`
   padding: 32px;
 `
 
-const FormColumnWithCheckbox = styled.div`
-  align-items: end;
-  display: flex;
-  gap: 16px;
-
-  > .Field-Checkbox {
-    padding-bottom: 12px;
-  }
-`
 const ButtonContainer = styled.div`
   display: flex;
   gap: 16px;

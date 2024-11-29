@@ -8,7 +8,7 @@ import { Circle, Icon, Style } from 'ol/style'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { MissionStatusEnum, MissionTypeEnum } from '../../../../domain/entities/missions'
+import { MissionStatusEnum, MissionTypeEnum } from '../../../domain/entities/missions'
 
 export const missionZoneStyle = new Style({
   fill: new Fill({

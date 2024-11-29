@@ -55,7 +55,6 @@ export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object()
     }),
   observations: Yup.string().optional(),
   registrationNumber: Yup.string().optional(),
-  relevantCourt: Yup.string().optional(),
   toProcess: Yup.boolean().optional(),
   vesselName: Yup.string().optional(),
   vesselSize: Yup.number().optional(),
