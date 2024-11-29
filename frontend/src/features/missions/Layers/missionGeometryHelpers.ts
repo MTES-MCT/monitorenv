@@ -85,7 +85,8 @@ const getActionProperties = (action: EnvActionControl | EnvActionSurveillance | 
 
 const getActionFeature = (
   action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl,
-  missionGeom: Geometry
+  missionGeom: Geometry,
+  isEditingSurveillanceZoneOrControlPoint: boolean
 ) => {
   const geoJSON = new GeoJSON()
   const actionProperties = getActionProperties(action)
@@ -104,7 +105,7 @@ const getActionFeature = (
   feature.setProperties({ ...actionProperties })
 
   if (action.actionType === ActionTypeEnum.CONTROL) {
-    feature.setStyle(selectedMissionControlStyle(feature, missionGeom))
+    feature.setStyle(selectedMissionControlStyle(feature, missionGeom, isEditingSurveillanceZoneOrControlPoint))
   }
 
   if (action.actionType === ActionTypeEnum.SURVEILLANCE) {
@@ -117,12 +118,12 @@ const getActionFeature = (
 const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActionSurveillance | NewEnvActionControl =>
   f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
 
-export const getActionsFeatures = mission => {
+export const getActionsFeatures = (mission, isEditingSurveillanceZoneOrControlPoint = false) => {
   const { envActions, geom: missionGeom } = mission
   if (envActions?.length && envActions?.length > 0) {
     return envActions
       .filter(isActionControlOrActionSurveillance)
-      .map(action => getActionFeature(action, missionGeom))
+      .map(action => getActionFeature(action, missionGeom, isEditingSurveillanceZoneOrControlPoint))
       .filter((f): f is Feature<Geometry> => !!f)
   }
 
