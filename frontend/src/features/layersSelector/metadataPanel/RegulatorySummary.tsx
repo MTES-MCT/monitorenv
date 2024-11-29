@@ -11,19 +11,18 @@ type RegulatorySummaryProps = {
 export function RegulatorySummary({ regulatoryReference, type, url }: RegulatorySummaryProps) {
   const { trackEvent } = useTracking()
 
-  const goToRegulatoryReference = e => {
+  const goToRegulatoryReference = () => {
     if (type === 'AMP') {
-      e.preventDefault()
       trackEvent({
-        action: 'AMP_TO_LEGICEM',
-        category: 'AMP',
-        name: 'goToLegicemFromAmp'
+        action: 'CLIC',
+        category: 'MONITOR EXT',
+        name: 'Lien Légicem depuis AMP'
       })
     } else if (type === 'REGULATORY') {
       trackEvent({
-        action: 'REGULATORY_TO_LEGICEM',
-        category: 'REGULATORY',
-        name: 'goToLegicemFromRegulatory'
+        action: 'CLIC',
+        category: 'MONITOR EXT',
+        name: 'Lien Légicem depuis Zone réglementaire'
       })
     }
   }

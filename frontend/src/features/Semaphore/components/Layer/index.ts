@@ -31,14 +31,14 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     [displaySemaphoresLayer, hasMapInteraction]
   )
 
-  const { data: semaphores } = useGetSemaphoresQuery()
-
-  const { reportings } = useGetFilteredReportingsQuery()
-
-  const semaphoresPoint = useMemo(() => getSemaphoresPoint(semaphores, reportings), [semaphores, reportings])
-
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+
+  const { data: semaphores } = useGetSemaphoresQuery()
+
+  const { reportings } = useGetFilteredReportingsQuery(!isSuperUser)
+
+  const semaphoresPoint = useMemo(() => getSemaphoresPoint(semaphores, reportings), [semaphores, reportings])
 
   const semaphoreVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const semaphoreVectorLayerRef = useRef(

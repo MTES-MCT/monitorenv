@@ -12,14 +12,15 @@ import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaP
 
 import type { VigilanceArea } from '../types'
 
-export const useGetFilteredVigilanceAreasQuery = () => {
+export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
   const { createdBy, seaFronts, searchQuery, status } = useAppSelector(state => state.vigilanceAreaFilters)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
 
   const { data, isError, isFetching, isLoading } = useGetVigilanceAreasQuery(undefined, {
-    pollingInterval: TWO_MINUTES
+    pollingInterval: TWO_MINUTES,
+    skip
   })
 
   const filteredVigilanceAreas = useMemo(() => {

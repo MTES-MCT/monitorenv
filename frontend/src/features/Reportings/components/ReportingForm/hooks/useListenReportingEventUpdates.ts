@@ -7,13 +7,16 @@ import { reportingEventListener } from '../sse'
 const REPORTING_UPDATES_URL = `/bff/reportings/sse`
 const REPORTING_UPDATE_EVENT = `REPORTING_UPDATE`
 
-export function useListenReportingEventUpdates() {
+export function useListenReportingEventUpdates(isSuperUser = true) {
   const isListeningToEvents = useAppSelector(state => state.reporting.isListeningToEvents)
   const eventSourceRef = useRef<EventSource>()
   const { contextReportingEvent, setReportingEventInContext } = useReportingEventContext()
   const listener = useRef(reportingEventListener(reporting => setReportingEventInContext(reporting)))
 
   useEffect(() => {
+    if (!isSuperUser) {
+      return eventSourceRef?.current?.close()
+    }
     eventSourceRef.current = new EventSource(REPORTING_UPDATES_URL)
 
     eventSourceRef.current?.addEventListener('open', () => {
@@ -24,7 +27,7 @@ export function useListenReportingEventUpdates() {
     return () => {
       eventSourceRef?.current?.close()
     }
-  }, [])
+  }, [isSuperUser])
 
   useEffect(() => {
     if (!isListeningToEvents) {

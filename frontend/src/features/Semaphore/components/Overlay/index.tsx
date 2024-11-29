@@ -22,7 +22,7 @@ const MARGINS = {
   ...SUPER_USER_MARGINS,
   yBottom: 10,
   yMiddle: 10,
-  yTop: -140
+  yTop: -70
 }
 
 type SemaphoreOverlayProps = BaseMapChildrenProps & {

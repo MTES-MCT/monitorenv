@@ -1,4 +1,3 @@
-import { useTracking } from '@hooks/useTracking'
 import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
@@ -15,7 +14,6 @@ import { getActiveMission } from './slice'
 import type { Mission as MissionType, NewMission } from '../../../domain/entities/missions'
 
 export function MissionFormWrapper() {
-  const { trackPage } = useTracking()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
 
   const selectedMission = useAppSelector(state => getActiveMission(state.missionForms))
@@ -39,8 +37,6 @@ export function MissionFormWrapper() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeMissionId])
-
-  trackPage(`/missions/${activeMissionId}`)
 
   if (!missionValues || missionValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>

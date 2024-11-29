@@ -41,7 +41,7 @@ export function HomePage() {
   const reportings = useAppSelector(state => state.reporting.reportings)
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
 
-  const reportingEvent = useListenReportingEventUpdates()
+  const reportingEvent = useListenReportingEventUpdates(isSuperUser)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => Object.values(selectedMissions).some(mission => mission.isFormDirty),

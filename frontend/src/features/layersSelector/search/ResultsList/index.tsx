@@ -68,7 +68,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   )
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery(!isSuperUser)
   const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
   const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
