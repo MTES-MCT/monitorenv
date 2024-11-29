@@ -1,3 +1,4 @@
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { useTracking } from '@hooks/useTracking'
 import styled from 'styled-components'
 
@@ -10,8 +11,14 @@ type RegulatorySummaryProps = {
 }
 export function RegulatorySummary({ regulatoryReference, type, url }: RegulatorySummaryProps) {
   const { trackEvent } = useTracking()
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser
 
   const goToRegulatoryReference = () => {
+    if (isSuperUser) {
+      return
+    }
+
     if (type === 'AMP') {
       trackEvent({
         action: 'CLIC',
