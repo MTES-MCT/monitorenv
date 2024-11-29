@@ -57,7 +57,7 @@ export const missionStyleFn = feature => {
   }
 }
 
-export const selectedMissionControlStyle = (feature, missionGeom) => [
+export const selectedMissionControlStyle = (feature, missionGeom, isEditingSurveillanceZoneOrControlPoint) => [
   // Close icon for controls
   new Style({
     geometry: () => {
@@ -147,6 +147,9 @@ export const selectedMissionControlStyle = (feature, missionGeom) => [
   }),
   new Style({
     geometry: () => {
+      if (isEditingSurveillanceZoneOrControlPoint) {
+        return undefined
+      }
       const extent = feature.getGeometry()?.getExtent()
       const controlCenter = extent && getCenter(extent)
 
