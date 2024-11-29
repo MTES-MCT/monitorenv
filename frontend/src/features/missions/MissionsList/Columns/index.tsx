@@ -15,12 +15,20 @@ import type { Row } from '@tanstack/react-table'
 
 export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => [
   {
+    accessorFn: row => row.id,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <span>{info.getValue()}</span>),
+    enableSorting: true,
+    header: () => 'N°',
+    id: 'id',
+    size: 62 + legacyFirefoxOffset
+  },
+  {
     accessorFn: row => row.startDateTimeUtc,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
-    size: 153 + legacyFirefoxOffset
+    size: 134 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.endDateTimeUtc,
@@ -28,7 +36,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
-    size: 153 + legacyFirefoxOffset
+    size: 134 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.facade,
@@ -36,7 +44,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 110 + legacyFirefoxOffset
+    size: 96 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.missionTypes,
@@ -44,7 +52,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
-    size: 136 + legacyFirefoxOffset
+    size: 96 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.controlUnits,
@@ -52,7 +60,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
-    size: 300 + legacyFirefoxOffset
+    size: 240 + legacyFirefoxOffset
   },
 
   {
@@ -61,14 +69,14 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 444 + legacyFirefoxOffset
+    size: 372 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.envActions,
     cell: info => (isFetching ? <StyledSkeletonRow /> : getNumberOfControlsCell(info.getValue())),
     header: () => 'Ctr.',
     id: 'envActions',
-    size: 75 + legacyFirefoxOffset,
+    size: 66 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => sortNumberOfControls(rowA, rowB, columnId)
   },
   {
@@ -76,7 +84,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellStatus row={row} />),
     header: () => 'Statut',
     id: 'status',
-    size: 121 + legacyFirefoxOffset,
+    size: 107 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
   },
   {
@@ -84,7 +92,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellCompletionStatus row={row} />),
     header: () => 'État données',
     id: 'completion',
-    size: 144 + legacyFirefoxOffset,
+    size: 127 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {
@@ -93,7 +101,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 56 + legacyFirefoxOffset
+    size: 52 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.id,
@@ -101,6 +109,6 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => '',
     id: 'edit',
-    size: 62 + legacyFirefoxOffset
+    size: 52 + legacyFirefoxOffset
   }
 ]
