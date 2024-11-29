@@ -119,7 +119,7 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(actual).to.deep.eq(['Épave', 'Rejet', 'Réserve naturelle'])
       })
       cy.get('div[role="option"]').contains('Épave').click() // id 105
-      cy.fill('Nb de personnes sensibilisées', 5)
+      cy.fill('Nb de personnes informées', 5)
     })
 
     // Then
