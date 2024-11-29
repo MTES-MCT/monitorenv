@@ -46,7 +46,7 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
 
   const { rows } = table.getRowModel()
 
-  const rowVirtualizer = useTableVirtualizer({ estimateSize: 45, ref: tableContainerRef, rows })
+  const rowVirtualizer = useTableVirtualizer({ estimateSize: 30, ref: tableContainerRef, rows })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 

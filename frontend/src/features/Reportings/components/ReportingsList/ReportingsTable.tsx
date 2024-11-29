@@ -58,7 +58,7 @@ export function ReportingsTable({
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { rows } = table.getRowModel()
-  const rowVirtualizer = useTableVirtualizer({ estimateSize: 48, ref: tableContainerRef, rows })
+  const rowVirtualizer = useTableVirtualizer({ estimateSize: 30, ref: tableContainerRef, rows })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
   const paddingTop = virtualRows.length > 0 ? Math.max(0, virtualRows[0]?.start ?? 0) : 0
