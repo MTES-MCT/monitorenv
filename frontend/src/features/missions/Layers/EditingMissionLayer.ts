@@ -54,7 +54,7 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
       zIndex: Layers.MISSION_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(editingMissionVectorLayerRef.current as VectorLayerWithName).name = Layers.MISSION_SELECTED.code
+  editingMissionVectorLayerRef.current.name = Layers.MISSION_SELECTED.code
 
   const editingMissionActionsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
     VectorSource<Feature<Geometry>>
@@ -66,7 +66,7 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
       zIndex: Layers.ACTIONS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(editingMissionActionsVectorLayerRef.current as VectorLayerWithName).name = Layers.ACTIONS.code
+  editingMissionActionsVectorLayerRef.current.name = Layers.ACTIONS.code
 
   const feature = editingMissionVectorSourceRef.current.getFeatureById(
     `${Layers.MISSION_SELECTED.code}:${activeMissionId}`

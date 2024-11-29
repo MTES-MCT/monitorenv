@@ -12,7 +12,8 @@ import {
   getMissionStatus,
   type Mission,
   type NewMission,
-  type NewEnvActionControl
+  type NewEnvActionControl,
+  type ControlOrSurveillance
 } from '../../../domain/entities/missions'
 import { getTotalOfControls, getTotalOfSurveillances } from '../utils'
 
@@ -73,7 +74,7 @@ const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
   }
 }
 
-const getActionProperties = (action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl) => {
+const getActionProperties = (action: ControlOrSurveillance) => {
   switch (action.actionType) {
     case ActionTypeEnum.CONTROL:
       return getActionControlProperties(action)
@@ -84,7 +85,7 @@ const getActionProperties = (action: EnvActionControl | EnvActionSurveillance | 
 }
 
 const getActionFeature = (
-  action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl,
+  action: ControlOrSurveillance,
   missionGeom: Geometry,
   isEditingSurveillanceZoneOrControlPoint: boolean
 ) => {
@@ -115,7 +116,7 @@ const getActionFeature = (
   return feature
 }
 
-const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActionSurveillance | NewEnvActionControl =>
+const isActionControlOrActionSurveillance = (f): f is ControlOrSurveillance =>
   f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
 
 export const getActionsFeatures = (mission, isEditingSurveillanceZoneOrControlPoint = false) => {

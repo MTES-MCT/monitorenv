@@ -100,7 +100,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       zIndex: Layers.MISSIONS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(missionVectorLayerRef.current as VectorLayerWithName).name = Layers.MISSIONS.code
+  missionVectorLayerRef.current.name = Layers.MISSIONS.code
 
   useEffect(() => {
     if (map) {
