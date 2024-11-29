@@ -10,7 +10,7 @@ import { subThemesFilterFunction } from '../../../domain/use_cases/reporting/fil
 import { themeFilterFunction } from '../../../domain/use_cases/reporting/filters/themeFilterFunction'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-export const useGetFilteredReportingsQuery = () => {
+export const useGetFilteredReportingsQuery = (skip = false) => {
   const {
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,
@@ -88,7 +88,7 @@ export const useGetFilteredReportingsQuery = () => {
       status: statusFilter,
       targetTypes: targetTypeFilter
     },
-    { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates }
+    { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates || skip }
   )
 
   const reportings = useMemo(() => {

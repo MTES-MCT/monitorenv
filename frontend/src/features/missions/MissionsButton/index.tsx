@@ -3,7 +3,6 @@ import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseBut
 import { SideWindowStatus, sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useTracking } from '@hooks/useTracking'
 import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { isMissionOrMissionsPage } from '@utils/routes'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
@@ -16,7 +15,6 @@ import { MissionFilterContext, MissionFilters } from '../components/Filters'
 
 export function MissionsMenu() {
   const dispatch = useAppDispatch()
-  const { trackEvent } = useTracking()
 
   const isSearchMissionsVisible = useAppSelector(state => state.global.isSearchMissionsVisible)
   const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
@@ -37,11 +35,6 @@ export function MissionsMenu() {
 
   const toggleMissionsMenu = e => {
     e.preventDefault()
-    trackEvent({
-      action: 'SHOW_OR_HIDE_MISSIONS',
-      category: 'MISSIONS',
-      name: 'MissionButton'
-    })
     dispatch(globalActions.hideSideButtons())
     dispatch(
       setDisplayedItems({
