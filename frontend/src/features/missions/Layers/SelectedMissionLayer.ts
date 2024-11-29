@@ -53,7 +53,7 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
       zIndex: Layers.MISSION_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(selectedMissionVectorLayerRef.current as VectorLayerWithName).name = Layers.MISSION_SELECTED.code
+  selectedMissionVectorLayerRef.current.name = Layers.MISSION_SELECTED.code
 
   const selectedMissionActionsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
     VectorSource<Feature<Geometry>>
@@ -66,7 +66,7 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
     })
   ) as MutableRefObject<VectorLayerWithName>
 
-  ;(selectedMissionActionsVectorLayerRef.current as VectorLayerWithName).name = Layers.ACTIONS.code
+  selectedMissionActionsVectorLayerRef.current.name = Layers.ACTIONS.code
 
   const overlayCoordinates = useAppSelector(state =>
     getOverlayCoordinates(state.global, `${Layers.MISSIONS.code}:${selectedMissionIdOnMap}`)

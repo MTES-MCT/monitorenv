@@ -21,7 +21,7 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
       zIndex: Layers.HOVERED_MISSION.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(hoveredMissionVectorLayerRef.current as VectorLayerWithName).name = Layers.HOVERED_MISSION.code
+  hoveredMissionVectorLayerRef.current.name = Layers.HOVERED_MISSION.code
 
   useEffect(() => {
     if (map) {
@@ -39,7 +39,7 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
   useEffect(() => {
     hoveredMissionVectorSourceRef.current?.clear(true)
     const feature = convertToFeature(currentFeatureOver)
-    if (feature && feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
+    if (feature?.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
       hoveredMissionVectorSourceRef.current?.addFeature(feature)
     }
   }, [currentFeatureOver])

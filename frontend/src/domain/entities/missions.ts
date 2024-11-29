@@ -292,7 +292,7 @@ export type Awareness = {
   themeId?: number
 }
 
-export type ControlOrSurveillance = EnvActionControl | EnvActionSurveillance
+export type ControlOrSurveillance = EnvActionControl | NewEnvActionControl | EnvActionSurveillance
 
 export type EnvActionNote = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE
