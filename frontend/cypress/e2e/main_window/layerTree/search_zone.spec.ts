@@ -20,6 +20,7 @@ context('LayerTree > Search zone', () => {
 
     // reset search by zone
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
+    cy.wait(500)
     cy.getDataCy('amp-results-list-button').contains('20 résultats')
     cy.get('#isAmpSearchResultsVisible').should('not.be.checked')
 

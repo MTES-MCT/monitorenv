@@ -3,8 +3,8 @@ import GeoJSON from 'ol/format/GeoJSON'
 import { type Geometry } from 'ol/geom'
 
 import { selectedMissionControlStyle, selectedMissionSurveillanceStyle } from './missions.style'
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
   type EnvActionControl,
@@ -13,8 +13,8 @@ import {
   type Mission,
   type NewMission,
   type NewEnvActionControl
-} from '../../../../domain/entities/missions'
-import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
+} from '../../../domain/entities/missions'
+import { getTotalOfControls, getTotalOfSurveillances } from '../utils'
 
 export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layername: string) => {
   const geoJSON = new GeoJSON()

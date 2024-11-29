@@ -59,30 +59,25 @@ import java.util.UUID
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Missions::class)])
 class MissionsITests {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
     @MockBean
     private lateinit var createOrUpdateMissionWithActionsAndAttachedReporting:
         CreateOrUpdateMissionWithActionsAndAttachedReporting
 
-    @MockBean
-    private lateinit var getFullMissions: GetFullMissions
+    @MockBean private lateinit var getFullMissions: GetFullMissions
 
     @MockBean
-    private lateinit var getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions
+    private lateinit var getFullMissionWithFishAndRapportNavActions:
+        GetFullMissionWithFishAndRapportNavActions
 
-    @MockBean
-    private lateinit var deleteMission: DeleteMission
+    @MockBean private lateinit var deleteMission: DeleteMission
 
-    @MockBean
-    private lateinit var canDeleteMission: CanDeleteMission
+    @MockBean private lateinit var canDeleteMission: CanDeleteMission
 
-    @MockBean
-    private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+    @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
     private val polygon =
         WKTReader()
@@ -172,12 +167,13 @@ class MissionsITests {
                     ),
             )
         // we test only if the route is called with the right arg
-        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(
-            Pair(
-                false,
-                expectedFirstMission,
-            ),
-        )
+        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId))
+            .willReturn(
+                Pair(
+                    false,
+                    expectedFirstMission,
+                ),
+            )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
@@ -431,12 +427,6 @@ class MissionsITests {
             )
             .andExpect(
                 jsonPath(
-                    "$[0].envActions[0].infractions[0].relevantCourt",
-                    equalTo("LOCAL_COURT"),
-                ),
-            )
-            .andExpect(
-                jsonPath(
                     "$[0].envActions[0].infractions[0].infractionType",
                     equalTo(InfractionTypeEnum.WAITING.toString()),
                 ),
@@ -447,7 +437,6 @@ class MissionsITests {
                     equalTo(FormalNoticeEnum.NO.toString()),
                 ),
             )
-            .andExpect(jsonPath("$[0].envActions[0].infractions[0].toProcess", equalTo(false)))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].controlledPersonIdentity",
@@ -585,12 +574,13 @@ class MissionsITests {
             )
 
         // we test only if the route is called with the right arg
-        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId)).willReturn(
-            Pair(
-                true,
-                expectedFirstMission,
-            ),
-        )
+        given(getFullMissionWithFishAndRapportNavActions.execute(requestedId))
+            .willReturn(
+                Pair(
+                    true,
+                    expectedFirstMission,
+                ),
+            )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
@@ -708,12 +698,6 @@ class MissionsITests {
             )
             .andExpect(
                 jsonPath(
-                    "$.envActions[0].infractions[0].relevantCourt",
-                    equalTo("LOCAL_COURT"),
-                ),
-            )
-            .andExpect(
-                jsonPath(
                     "$.envActions[0].infractions[0].infractionType",
                     equalTo(InfractionTypeEnum.WAITING.toString()),
                 ),
@@ -724,7 +708,6 @@ class MissionsITests {
                     equalTo(FormalNoticeEnum.NO.toString()),
                 ),
             )
-            .andExpect(jsonPath("$.envActions[0].infractions[0].toProcess", equalTo(false)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].controlledPersonIdentity",

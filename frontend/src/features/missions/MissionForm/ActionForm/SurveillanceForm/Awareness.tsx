@@ -30,26 +30,26 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
   return (
     <>
       <div>
-        <Label>Sensibilisation</Label>
+        <Label>Prévention</Label>
         <FormikCheckbox
           data-cy="surveillance-awareness"
           inline
           isLight
-          label="La surveillance a donné lieu à des actions de sensibilisation"
+          label="La surveillance a donné lieu à des actions de prévention"
           name={`${formPath}.awareness.isRisingAwareness`}
         />
       </div>
 
       {isRisingAwareness && (
         <AwarenessWrapper data-cy="surveillance-awareness-fields">
-          <NbPerson isLight label="Nb de personnes sensibilisées" name={`${formPath}.awareness.nbPerson`} />
+          <NbPerson isLight label="Nb de personnes informées" name={`${formPath}.awareness.nbPerson`} />
           <AwarenessTheme
             key={awarenessOptions.length}
             data-cy="surveillance-awareness-select"
             disabled={awarenessOptions.length === 1}
             isErrorMessageHidden
             isLight
-            label="Thématiques de sensibilisation"
+            label="Thématiques de prévention"
             name={`${formPath}.awareness.themeId`}
             options={awarenessOptions}
           />

@@ -197,25 +197,6 @@ export const missionSourceEnum = {
   }
 }
 
-export const relevantCourtEnum = {
-  JULIS: {
-    code: 'JULIS',
-    libelle: 'Juridictions littorales spécialisées (JULIS)'
-  },
-  LOCAL_COURT: {
-    code: 'LOCAL_COURT',
-    libelle: 'Parquet Local'
-  },
-  MARITIME_COURT: {
-    code: 'MARITIME_COURT',
-    libelle: 'Tribunal maritime'
-  },
-  PRE: {
-    code: 'PRE',
-    libelle: 'Pôle Régional Environnemental (PRE)'
-  }
-}
-
 export type ResourceUnit = {
   administration: string
 }
@@ -331,8 +312,6 @@ export type NewInfraction = {
   nbTarget: number
   observations?: string
   registrationNumber?: string
-  relevantCourt?: string
-  toProcess?: boolean
   vesselName?: string
   vesselSize?: number
   vesselType?: VesselTypeEnum

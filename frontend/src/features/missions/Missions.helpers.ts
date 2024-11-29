@@ -36,7 +36,6 @@ export const infractionFactory = (infraction?: Partial<Infraction>): NewInfracti
   natinf: [],
   nbTarget: 1,
   observations: '',
-  toProcess: false,
   ...infraction,
   id: uuidv4()
 })

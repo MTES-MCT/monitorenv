@@ -1,13 +1,14 @@
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
+import { InteractionListener } from 'domain/entities/map/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 
-import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
+import { getActionsFeatures, getMissionZoneFeature } from './missionGeometryHelpers'
 import { selectedMissionStyle } from './missions.style'
-import { hasAlreadyFeature } from '../utils'
+import { hasAlreadyFeature } from '../../map/layers/utils'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -20,6 +21,7 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
   const editingMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
   )
+
   const { displayMissionEditingLayer } = useAppSelector(state => state.global)
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
@@ -39,6 +41,9 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
     () => displayMissionEditingLayer && !isMissionAttachmentInProgress && hasNoMissionDuplication,
     [displayMissionEditingLayer, isMissionAttachmentInProgress, hasNoMissionDuplication]
   )
+  const listener = useAppSelector(state => state.draw.listener)
+  const isEditingSuveilalnceZoneOrControlPoint =
+    listener === InteractionListener.SURVEILLANCE_ZONE || listener === InteractionListener.CONTROL_POINT
 
   const editingMissionVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
   const editingMissionVectorLayerRef = useRef(
@@ -90,9 +95,9 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
   }, [map])
 
   useEffect(() => {
-    editingMissionVectorLayerRef.current?.setVisible(isLayerVisible)
+    editingMissionVectorLayerRef.current?.setVisible(isLayerVisible && !isEditingSuveilalnceZoneOrControlPoint)
     editingMissionActionsVectorLayerRef.current?.setVisible(isLayerVisible)
-  }, [isLayerVisible])
+  }, [isLayerVisible, isEditingSuveilalnceZoneOrControlPoint])
 
   useEffect(() => {
     editingMissionVectorSourceRef.current?.clear(true)

@@ -93,6 +93,10 @@ export function ReportingCard({
       actionType: ActionTypeEnum.CONTROL,
       reportingIds: [Number(action.id)],
       vehicleType: action.vehicleType,
+      ...(action.geom &&
+        action.geom.type === 'MultiPoint' && {
+          geom: action.geom
+        }),
       ...(action.themeId && {
         controlPlans: [
           {

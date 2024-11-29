@@ -9,8 +9,8 @@ import {
   FormikTextInput,
   FormikTextarea,
   MultiRadio,
-  THEME,
-  useNewWindow
+  useNewWindow,
+  Message
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
 import { useMemo } from 'react'
@@ -170,10 +170,10 @@ export function GeneralInformationsForm({
         <div>
           <MissionZonePicker />
           {values.isGeometryComputedFromControls && (
-            <ZoneComputedFromActions data-cy="mission-zone-computed-from-action">
+            <StyledMessage data-cy="mission-zone-computed-from-action" withoutIcon>
               Actuellement, la zone de mission est <b>automatiquement calculée</b> selon le point ou la zone de la
               dernière action rapportée par l’unité.
-            </ZoneComputedFromActions>
+            </StyledMessage>
           )}
         </div>
 
@@ -251,11 +251,11 @@ const StyledUnitsContainer = styled.div`
   flex-direction: column;
 `
 
-const ZoneComputedFromActions = styled.div`
+const StyledMessage = styled(Message)`
   margin-top: 8px;
-  color: ${THEME.color.blueYonder};
-  background: ${THEME.color.blueYonder25};
-  padding: 16px;
+  > div {
+    display: inline;
+  }
 `
 
 const StyledObservationsContainer = styled.div`

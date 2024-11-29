@@ -4,10 +4,10 @@ import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { missionZoneStyle } from './missions.style'
-import { Layers } from '../../../../domain/entities/layers/constants'
+import { Layers } from '../../../domain/entities/layers/constants'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from '../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../map/BaseMap'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
