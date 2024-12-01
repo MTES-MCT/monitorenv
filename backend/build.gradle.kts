@@ -80,7 +80,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test:6.3.4")
     testImplementation("org.testcontainers:testcontainers:1.20.3")
     testImplementation("org.testcontainers:postgresql:1.20.3")
-    testImplementation("io.ktor:ktor-client-mock-jvm:2.3.12")
+    testImplementation("io.ktor:ktor-client-mock-jvm:3.0.1")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.5")
