@@ -54,7 +54,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.1")
     implementation("org.n52.jackson:jackson-datatype-jts:1.2.10")
     implementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    implementation("org.flywaydb:flyway-core:10.21.0")
+    implementation("org.flywaydb:flyway-core:11.0.0")
     implementation("org.flywaydb:flyway-database-postgresql:10.21.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.21")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21")
