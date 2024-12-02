@@ -1,6 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -15,6 +19,7 @@ data class VigilanceAreaDataOutput(
     val endingOccurrencesNumber: Int? = null,
     val frequency: FrequencyEnum? = null,
     val geom: MultiPolygon? = null,
+    val isAtAllTimes: Boolean,
     val isArchived: Boolean,
     val isDraft: Boolean,
     val images: List<VigilanceAreaImageDataOutput> = mutableListOf(),
@@ -27,6 +32,8 @@ data class VigilanceAreaDataOutput(
     val startDatePeriod: ZonedDateTime? = null,
     val themes: List<String>? = null,
     val visibility: VisibilityEnum? = null,
+    val createdAt: ZonedDateTime?,
+    val updatedAt: ZonedDateTime?,
 ) {
     companion object {
         fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaDataOutput {
@@ -55,6 +62,9 @@ data class VigilanceAreaDataOutput(
                 startDatePeriod = vigilanceArea.startDatePeriod,
                 themes = vigilanceArea.themes,
                 visibility = vigilanceArea.visibility,
+                createdAt = vigilanceArea.createdAt,
+                updatedAt = vigilanceArea.updatedAt,
+                isAtAllTimes = vigilanceArea.isAtAllTimes,
             )
         }
     }

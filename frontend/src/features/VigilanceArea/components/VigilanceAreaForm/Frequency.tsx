@@ -9,7 +9,7 @@ export function Frequency() {
 
   const endingConditionOptions = getOptionsFromLabelledEnum(VigilanceArea.EndingConditionLabel)
 
-  const updateFrequency = nextFrequency => {
+  const updateFrequency = (nextFrequency: string | undefined) => {
     setFieldValue('frequency', nextFrequency)
     if (nextFrequency === VigilanceArea.Frequency.NONE) {
       setFieldValue('endingCondition', undefined)
@@ -18,7 +18,7 @@ export function Frequency() {
     }
   }
 
-  const updateEndingCondition = nextEndingCondition => {
+  const updateEndingCondition = (nextEndingCondition: string | undefined) => {
     setFieldValue('endingCondition', nextEndingCondition)
     if (nextEndingCondition === VigilanceArea.EndingCondition.NEVER) {
       setFieldValue('endingOccurrenceDate', undefined)
@@ -29,9 +29,11 @@ export function Frequency() {
   return (
     <>
       <Select
+        disabled={values.isAtAllTimes}
         error={errors.frequency}
         isErrorMessageHidden
         isRequired
+        isUndefinedWhenDisabled
         label="Récurrence"
         name="frequency"
         onChange={updateFrequency}
@@ -44,8 +46,10 @@ export function Frequency() {
         <FrequencyContainer>
           <Select
             data-cy="vigilance-area-ending-condition"
+            disabled={values.isAtAllTimes}
             isErrorMessageHidden
             isRequired
+            isUndefinedWhenDisabled
             label="Fin récurrence"
             name="endingCondition"
             onChange={updateEndingCondition}
@@ -56,9 +60,11 @@ export function Frequency() {
           {values.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && (
             <FormikNumberInput
               data-cy="vigilance-area-ending-occurence-number"
+              disabled={values.isAtAllTimes}
               isErrorMessageHidden
               isLabelHidden
               isRequired
+              isUndefinedWhenDisabled
               label="Nombre de fois"
               name="endingOccurrencesNumber"
               style={{ width: '115px' }}
@@ -67,11 +73,13 @@ export function Frequency() {
           {values.endingCondition === VigilanceArea.EndingCondition.END_DATE && (
             <StyledFormikDatePicker
               data-cy="vigilance-area-ending-occurence-date"
+              disabled={values.isAtAllTimes}
               isErrorMessageHidden
               isLabelHidden
               isRequired
               isRightAligned
               isStringDate
+              isUndefinedWhenDisabled
               label="Date de fin de récurrence"
               name="endingOccurrenceDate"
             />

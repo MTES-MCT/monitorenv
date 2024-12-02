@@ -1,4 +1,5 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { Tooltip } from '@components/Tooltip'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { ZonePicker } from '@features/commonComponents/ZonePicker'
@@ -13,11 +14,13 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CustomSearch,
   DateRangePicker,
+  FormikCheckbox,
   FormikMultiRadio,
   FormikMultiSelect,
   FormikTextarea,
   FormikTextInput,
   getOptionsFromLabelledEnum,
+  THEME,
   type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
@@ -126,11 +129,8 @@ export function Form() {
   }
 
   const setPeriod = (period: DateAsStringRange | undefined) => {
-    if (!period) {
-      return
-    }
-    setFieldValue('startDatePeriod', period[0])
-    setFieldValue('endDatePeriod', period[1])
+    setFieldValue('startDatePeriod', period ? period[0] : undefined)
+    setFieldValue('endDatePeriod', period ? period[1] : undefined)
   }
 
   return (
@@ -160,22 +160,27 @@ export function Form() {
           name="name"
           placeholder="Nom de la zone"
         />
-        <DateRangePicker
-          defaultValue={
-            values?.startDatePeriod && values?.endDatePeriod
-              ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
-              : undefined
-          }
-          error={formErrors.startDatePeriod ?? formErrors.endDatePeriod}
-          hasSingleCalendar
-          isCompact
-          isErrorMessageHidden
-          isRequired
-          isStringDate
-          label="Période de validité"
-          name="period"
-          onChange={setPeriod}
-        />
+        <DateWrapper>
+          <DateRangePicker
+            defaultValue={
+              values?.startDatePeriod && values?.endDatePeriod
+                ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
+                : undefined
+            }
+            disabled={values.isAtAllTimes}
+            error={formErrors.startDatePeriod ?? formErrors.endDatePeriod}
+            hasSingleCalendar
+            isCompact
+            isErrorMessageHidden
+            isRequired
+            isStringDate
+            isUndefinedWhenDisabled
+            label="Période de validité"
+            name="period"
+            onChange={setPeriod}
+          />
+          <FormikCheckbox label="En tout temps" name="isAtAllTimes" />
+        </DateWrapper>
         <Frequency />
         <FormikMultiSelect
           customSearch={regulatoryThemesCustomSearch}
@@ -216,7 +221,13 @@ export function Form() {
         <PhotoUploader ref={uploaderRef} />
         <Links />
         <Separator />
-        <InternText>Interne CACEM</InternText>
+        <TooltipWrapper>
+          <InternText>Interne CACEM</InternText>
+          <Tooltip color={THEME.color.maximumRed}>
+            Même si la visibilité de la zone de vigilance est publique, les infos de cette section &quot;Interne
+            CACEM&quot; ne seront pas visibles sur la version de MonitorEnv hors du centre
+          </Tooltip>
+        </TooltipWrapper>
         <StyledTrigramInput isErrorMessageHidden isRequired label="Créé par" name="createdBy" />
         <FormikTextarea
           label="Source de l'information"
@@ -246,10 +257,23 @@ const StyledForm = styled.div`
 `
 const InternText = styled.span`
   color: ${p => p.theme.color.maximumRed};
+  display: flex;
+  gap: 8px;
 `
 const Separator = styled.div`
   border-top: 1px solid ${p => p.theme.color.maximumRed};
 `
 const StyledTrigramInput = styled(FormikTextInput)`
   width: 126px;
+`
+
+const TooltipWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `

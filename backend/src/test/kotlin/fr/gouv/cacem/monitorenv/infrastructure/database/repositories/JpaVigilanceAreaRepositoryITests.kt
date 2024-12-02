@@ -2,7 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -94,6 +98,9 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = null,
                 visibility = VisibilityEnum.PRIVATE,
+                createdAt = null,
+                updatedAt = null,
+                isAtAllTimes = false,
             )
 
         // When
@@ -101,22 +108,25 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(savedVigilanceArea.id).isNotZero() // id should be generated after save
-        assertThat(vigilanceArea.comments).isEqualTo("Commentaires sur la zone de vigilance")
-        assertThat(vigilanceArea.createdBy).isEqualTo("ABC")
-        assertThat(vigilanceArea.endDatePeriod)
+        assertThat(savedVigilanceArea.comments).isEqualTo("Commentaires sur la zone de vigilance")
+        assertThat(savedVigilanceArea.createdBy).isEqualTo("ABC")
+        assertThat(savedVigilanceArea.endDatePeriod)
             .isEqualTo(ZonedDateTime.parse("2024-08-08T23:59:59Z"))
-        assertThat(vigilanceArea.endingCondition).isEqualTo(EndingConditionEnum.OCCURENCES_NUMBER)
-        assertThat(vigilanceArea.frequency).isEqualTo(FrequencyEnum.ALL_WEEKS)
-        assertThat(vigilanceArea.geom).isNull()
-        assertThat(vigilanceArea.isDeleted).isFalse()
-        assertThat(vigilanceArea.isDraft).isTrue()
-        assertThat(vigilanceArea.links).isNull()
-        assertThat(vigilanceArea.source).isEqualTo("Source de la zone de vigilance")
-        assertThat(vigilanceArea.name).isEqualTo("Nouvelle zone de vigilance")
-        assertThat(vigilanceArea.startDatePeriod)
+        assertThat(savedVigilanceArea.endingCondition).isEqualTo(EndingConditionEnum.OCCURENCES_NUMBER)
+        assertThat(savedVigilanceArea.frequency).isEqualTo(FrequencyEnum.ALL_WEEKS)
+        assertThat(savedVigilanceArea.geom).isNull()
+        assertThat(savedVigilanceArea.isDeleted).isFalse()
+        assertThat(savedVigilanceArea.isDraft).isTrue()
+        assertThat(savedVigilanceArea.links).isNull()
+        assertThat(savedVigilanceArea.source).isEqualTo("Source de la zone de vigilance")
+        assertThat(savedVigilanceArea.name).isEqualTo("Nouvelle zone de vigilance")
+        assertThat(savedVigilanceArea.startDatePeriod)
             .isEqualTo(ZonedDateTime.parse("2024-08-18T00:00:00Z"))
-        assertThat(vigilanceArea.themes).isNull()
-        assertThat(vigilanceArea.visibility).isEqualTo(VisibilityEnum.PRIVATE)
+        assertThat(savedVigilanceArea.themes).isNull()
+        assertThat(savedVigilanceArea.visibility).isEqualTo(VisibilityEnum.PRIVATE)
+        assertThat(savedVigilanceArea.createdAt).isNotNull()
+        assertThat(savedVigilanceArea.updatedAt).isNull()
+        assertThat(savedVigilanceArea.isAtAllTimes).isFalse()
     }
 
     @Test
@@ -149,6 +159,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.name).isEqualTo("Zone de vigilance mise à jour")
         assertThat(savedVigilanceArea.themes).isEqualTo(listOf("AMP", "PN"))
         assertThat(savedVigilanceArea.visibility).isEqualTo(VisibilityEnum.PRIVATE)
+        assertThat(savedVigilanceArea.updatedAt).isNotNull()
     }
 
     @Test

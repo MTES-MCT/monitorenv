@@ -157,7 +157,7 @@ open class ReportingModelJpa(
     override val withVHFAnswer: Boolean? = null,
     override val isInfractionProven: Boolean,
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
-    val validityEndTime: Instant? = null,
+    open val validityEndTime: Instant? = null,
 ) : AbstractReportingModel(
         id = id,
         reportingId = reportingId,

@@ -1,4 +1,5 @@
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+import { Tooltip } from '@components/Tooltip'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -16,11 +17,9 @@ import {
   CheckPicker,
   CustomSearch,
   DateRangePicker,
-  Icon,
-  SingleTag,
-  THEME
+  SingleTag
 } from '@mtes-mct/monitor-ui'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from './slice'
@@ -34,12 +33,6 @@ type LayerFiltersProps = {
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
-}
-
-enum TooltipTypeVisible {
-  AMP_THEMES = 'AMP_THEMES',
-  REGULATORY_THEMES = 'REGULATORY_THEMES',
-  VIGILANCE_AREA_PERIOD = 'VIGILANCE_AREA_PERIOD'
 }
 export function LayerFilters({
   ampTypes,
@@ -59,11 +52,6 @@ export function LayerFilters({
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
-
-  const [visibleTooltipType, setVisibleTooltipType] = useState<TooltipTypeVisible | undefined>(undefined)
-
-  const showTooltip = type => setVisibleTooltipType(type)
-  const hideTooltip = () => setVisibleTooltipType(undefined)
 
   const handleSetFilteredAmpTypes = nextAmpThemes => {
     setFilteredAmpTypes(nextAmpThemes ?? [])
@@ -89,23 +77,9 @@ export function LayerFilters({
       {!isLinkingAmpToVigilanceArea && (
         <SelectContainer>
           <RegulatoryThemesFilter style={{ flex: 1 }} />
-
-          <IconAndMessageWrapper>
-            <StyledIconAttention
-              aria-describedby="regulatoryThemesTooltip"
-              color={THEME.color.slateGray}
-              onBlur={() => hideTooltip()}
-              onFocus={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
-              onMouseLeave={() => hideTooltip()}
-              onMouseOver={() => showTooltip(TooltipTypeVisible.REGULATORY_THEMES)}
-              tabIndex={0}
-            />
-            {visibleTooltipType === TooltipTypeVisible.REGULATORY_THEMES && (
-              <StyledTooltip id="regulatoryThemesTooltip" role="tooltip">
-                Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
-              </StyledTooltip>
-            )}
-          </IconAndMessageWrapper>
+          <Tooltip>
+            Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
+          </Tooltip>
         </SelectContainer>
       )}
 
@@ -126,44 +100,16 @@ export function LayerFilters({
             }
             value={filteredAmpTypes}
           />
-          <IconAndMessageWrapper>
-            <StyledIconAttention
-              aria-describedby="ampThemesTooltip"
-              color={THEME.color.slateGray}
-              onBlur={() => hideTooltip()}
-              onFocus={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
-              onMouseLeave={() => hideTooltip()}
-              onMouseOver={() => showTooltip(TooltipTypeVisible.AMP_THEMES)}
-              tabIndex={0}
-            />
-            {visibleTooltipType === TooltipTypeVisible.AMP_THEMES && (
-              <StyledTooltip id="ampThemesTooltip" role="tooltip">
-                Ce champ est utilisé comme critère de recherche uniquement pour les AMP.
-              </StyledTooltip>
-            )}
-          </IconAndMessageWrapper>
+
+          <Tooltip>Ce champ est utilisé comme critère de recherche uniquement pour les AMP.</Tooltip>
         </SelectContainer>
       )}
 
       {isSuperUser && !isLinkingZonesToVigilanceArea && (
         <SelectContainer>
           <PeriodFilter style={{ flex: 1 }} />
-          <IconAndMessageWrapper>
-            <StyledIconAttention
-              aria-describedby="vigilanceAreaPeriodTooltip"
-              color={THEME.color.slateGray}
-              onBlur={() => hideTooltip()}
-              onFocus={() => showTooltip(TooltipTypeVisible.VIGILANCE_AREA_PERIOD)}
-              onMouseLeave={() => hideTooltip()}
-              onMouseOver={() => showTooltip(TooltipTypeVisible.VIGILANCE_AREA_PERIOD)}
-              tabIndex={0}
-            />
-            {visibleTooltipType === TooltipTypeVisible.VIGILANCE_AREA_PERIOD && (
-              <StyledTooltip id="vigilanceAreaPeriodTooltip" role="tooltip">
-                Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.
-              </StyledTooltip>
-            )}
-          </IconAndMessageWrapper>
+
+          <Tooltip>Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.</Tooltip>
         </SelectContainer>
       )}
       {filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && (
@@ -248,22 +194,4 @@ const SelectContainer = styled.div`
   align-items: end;
   display: flex;
   gap: 8px;
-`
-const IconAndMessageWrapper = styled.div`
-  position: relative;
-`
-
-const StyledTooltip = styled.p`
-  background: ${p => p.theme.color.cultured};
-  border: ${p => p.theme.color.lightGray} 1px solid;
-  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
-  font-size: 11px;
-  padding: 4px 8px;
-  position: absolute;
-  left: 29px;
-  top: -13px;
-  width: 310px;
-`
-const StyledIconAttention = styled(Icon.Info)`
-  cursor: pointer;
 `
