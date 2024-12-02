@@ -1,34 +1,8 @@
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
-import { flexRender, type Row } from '@tanstack/react-table'
-import React, { forwardRef } from 'react'
+import { flexRender } from '@tanstack/react-table'
+import { forwardRef } from 'react'
 import styled from 'styled-components'
-
-import type { VirtualItem } from '@tanstack/react-virtual'
-
-interface RowProps {
-  row: Row<any>
-  virtualRow: VirtualItem | undefined
-}
-
-const TableRow = React.memo(({ row, virtualRow }: RowProps) => (
-  <SimpleTable.BodyTr key={virtualRow?.key}>
-    {row?.getVisibleCells().map(cell => (
-      <SimpleTable.Td
-        key={cell.id}
-        $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
-        style={{
-          maxWidth: cell.column.getSize(),
-          minWidth: cell.column.getSize(),
-          padding: cell.column.id === 'geom' || cell.column.id === 'edit' ? '0px' : '10px 12px',
-          width: cell.column.getSize()
-        }}
-      >
-        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-      </SimpleTable.Td>
-    ))}
-  </SimpleTable.BodyTr>
-))
 
 export function TableWithRef({ rows, table, virtualRows }, ref) {
   return (
@@ -62,7 +36,24 @@ export function TableWithRef({ rows, table, virtualRows }, ref) {
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow?.index]
 
-            return <TableRow key={virtualRow?.key} row={row} virtualRow={virtualRow} />
+            return (
+              <SimpleTable.BodyTr key={virtualRow.key}>
+                {row?.getVisibleCells().map(cell => (
+                  <SimpleTable.Td
+                    key={cell.id}
+                    $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
+                    style={{
+                      maxWidth: cell.column.getSize(),
+                      minWidth: cell.column.getSize(),
+                      padding: cell.column.id === 'geom' || cell.column.id === 'edit' ? '0px' : '10px 12px',
+                      width: cell.column.getSize()
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </SimpleTable.Td>
+                ))}
+              </SimpleTable.BodyTr>
+            )
           })}
         </tbody>
       </SimpleTable.Table>
