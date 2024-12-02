@@ -63,7 +63,7 @@ export function VigilanceAreasTable({
           ))}
         </TableWithSelectableRows.Head>
         <tbody>
-          {virtualRows.map(virtualRow => {
+          {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow.index]
 
             return (
