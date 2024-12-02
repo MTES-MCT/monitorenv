@@ -93,7 +93,7 @@ export function ReportingsTable({
                 <td aria-label="empty-line-for-scroll" style={{ height: `${paddingTop}px` }} />
               </tr>
             )}
-            {virtualRows.map(virtualRow => {
+            {virtualRows?.map(virtualRow => {
               const row = rows[virtualRow.index]
 
               return (
