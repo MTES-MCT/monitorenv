@@ -13,7 +13,7 @@ export function useTableVirtualizer({ estimateSize, overscan = 50, ref, rows }: 
     estimateSize: () => estimateSize,
     getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
     getScrollElement: () => ref.current,
-    overscan: rows.length > 500 ? rows.length / 10 : overscan,
+    overscan,
     scrollPaddingEnd: 40,
     scrollPaddingStart: 40
   })
