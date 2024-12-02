@@ -2,7 +2,7 @@ import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurren
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { paths } from 'paths'
 import { useAuth } from 'react-oidc-context'
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router'
 
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
   const oidcConfig = getOIDCConfig()

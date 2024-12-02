@@ -15,7 +15,7 @@ import { MissionEventProvider } from 'context/mission/MissionEventContext'
 import { ReportingEventProvider } from 'context/reporting/ReportingEventContext'
 import { paths } from 'paths'
 import { Provider as ReduxProvider } from 'react-redux'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider as RsuiteCustomProvider } from 'rsuite'
@@ -44,7 +44,7 @@ export function App() {
           <PersistGate loading={undefined} persistor={persistor}>
             <MissionEventProvider>
               <ReportingEventProvider>
-                <Router>
+                <BrowserRouter>
                   <Routes>
                     <Route element={<Login />} path={paths.login} />
 
@@ -86,7 +86,7 @@ export function App() {
                       path={paths.home}
                     />
                   </Routes>
-                </Router>
+                </BrowserRouter>
               </ReportingEventProvider>
             </MissionEventProvider>
             <ToastNotification />
