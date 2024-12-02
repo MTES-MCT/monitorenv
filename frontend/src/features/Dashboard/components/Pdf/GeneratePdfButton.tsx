@@ -87,10 +87,22 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
   }
 
   return (
-    <StyledLinkButton disabled={pdf.loading} Icon={Icon.Document} onClick={handleDownload}>
+    <StyledLinkButton disabled={pdf.loading} Icon={pdf.loading ? Icon.Reset : Icon.Document} onClick={handleDownload}>
       {pdf.loading ? 'Chargement du brief' : 'Générer un brief'}
     </StyledLinkButton>
   )
 }
 
-const StyledLinkButton = styled(Button)``
+const StyledLinkButton = styled(Button)`
+  ${p =>
+    p.disabled &&
+    `@keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  > .Element-IconBox > svg {
+    animation: spin 2s linear infinite;
+    transform-origin: center;
+  }`}
+`
