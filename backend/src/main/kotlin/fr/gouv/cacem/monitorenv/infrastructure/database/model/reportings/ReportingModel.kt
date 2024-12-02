@@ -12,7 +12,7 @@ import java.time.Instant
 
 /**
  *
- * For native queries prupose only
+ * For native queries purpose only
  * For JPQL queries you should use [ReportingModelJpa]
  */
 @Entity

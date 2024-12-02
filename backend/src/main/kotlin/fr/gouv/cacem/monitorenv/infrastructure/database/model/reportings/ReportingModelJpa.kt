@@ -31,7 +31,7 @@ import java.time.Instant
             NamedAttributeNode("reportingSources", subgraph = "subgraph.reportingSources"),
             NamedAttributeNode(
                 "controlPlanSubThemes",
-                subgraph = "subgraph.controlPlanSubThemes",
+                subgraph = "subgraph.reportingControlPlanSubThemes",
             ),
             NamedAttributeNode(
                 "controlPlanTheme",
@@ -50,37 +50,18 @@ import java.time.Instant
                 name = "subgraph.reportingSources",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "controlUnit",
-                        ),
-                        NamedAttributeNode(
-                            "semaphore",
-                        ),
+                        NamedAttributeNode("controlUnit", subgraph = "subgraph.controlUnit"),
+                        NamedAttributeNode("semaphore"),
                     ],
             ),
             NamedSubgraph(
                 name = "subgraph.mission",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "envActions",
-                            subgraph = "subgraph.envActions",
-                        ),
-                        NamedAttributeNode(
-                            "controlUnits",
-                        ),
-                        NamedAttributeNode(
-                            "controlResources",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlPlanSubThemes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanSubTheme",
-                        ),
+                        NamedAttributeNode("attachedReportings"),
+                        NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
+                        NamedAttributeNode("controlUnits", subgraph = "subgraph.missionControlUnit"),
+                        NamedAttributeNode("controlResources"),
                     ],
             ),
             NamedSubgraph(
@@ -88,35 +69,15 @@ import java.time.Instant
                 attributeNodes =
                     [
                         NamedAttributeNode("controlPlanThemes"),
-                        NamedAttributeNode(
-                            "controlPlanSubThemes",
-                            subgraph =
-                                "subgraph.linkedControlPlanSubThemes",
-                        ),
-                        NamedAttributeNode(
-                            "controlPlanTags",
-                            subgraph = "subgraph.linkedControlPlanTags",
-                        ),
-                        NamedAttributeNode("attachedReporting"),
+                        NamedAttributeNode("controlPlanSubThemes"),
+                        NamedAttributeNode("controlPlanTags"),
                     ],
             ),
             NamedSubgraph(
-                name = "subgraph.linkedControlPlanSubThemes",
+                name = "subgraph.reportingControlPlanSubThemes",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "controlPlanSubTheme",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.linkedControlPlanTags",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanTag",
-                            subgraph = "subgraph.controlPlanTags",
-                        ),
+                        NamedAttributeNode("controlPlanSubTheme"),
                     ],
             ),
             NamedSubgraph(
@@ -124,6 +85,23 @@ import java.time.Instant
                 attributeNodes =
                     [
                         NamedAttributeNode("controlPlanTheme"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.missionControlUnit",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("mission"),
+                        NamedAttributeNode("unit"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.controlUnit",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("administration"),
+                        NamedAttributeNode("controlUnitResources"),
+                        NamedAttributeNode("controlUnitContacts"),
                     ],
             ),
         ],
@@ -157,7 +135,7 @@ open class ReportingModelJpa(
     override val withVHFAnswer: Boolean? = null,
     override val isInfractionProven: Boolean,
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
-    val validityEndTime: Instant? = null,
+    open val validityEndTime: Instant? = null,
 ) : AbstractReportingModel(
         id = id,
         reportingId = reportingId,
