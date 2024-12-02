@@ -23,6 +23,7 @@ export const initialDashboard: DashboardType = {
     vigilanceAreaIds: []
   },
   defaultName: '',
+  displayGeometry: true,
   extractedArea: undefined,
   isCancelEditModalOpen: false,
   isEditingTabName: false,
@@ -43,6 +44,7 @@ export type DashboardType = {
   ampIdsToDisplay: number[]
   dashboard: Dashboard.Dashboard
   defaultName: string | undefined
+  displayGeometry: boolean
   extractedArea?: Dashboard.ExtractedArea
   isCancelEditModalOpen: boolean
   isEditingTabName: boolean
@@ -289,6 +291,15 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         state.dashboards[id].openPanel = action.payload
       }
+    },
+    setDisplayGeometry(state, action: PayloadAction<{ key: string; visible: boolean }>) {
+      const id = action.payload.key
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].displayGeometry = action.payload.visible
     },
     setGeometry(state, action: PayloadAction<GeoJSON.Geometry | undefined>) {
       state.geometry = action.payload

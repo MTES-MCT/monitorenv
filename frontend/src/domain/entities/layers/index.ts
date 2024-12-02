@@ -49,7 +49,7 @@ export function addGeometryToMultiGeometryGeoJSON(
 
 export function keepOnlyInitialGeometriesOfMultiGeometry(
   multiGeometry: GeoJSONType.Geometry,
-  initialFeatureNumber: number
+  initialFeatureNumber?: number
 ): GeoJSONType.Geometry | undefined {
   const nextGeometry = new GeoJSON({
     featureProjection: OPENLAYERS_PROJECTION

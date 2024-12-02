@@ -1,7 +1,7 @@
 import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { paths } from 'paths'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 type UseQueryOptions = Parameters<typeof useGetCurrentUserAuthorizationQuery>[1]
 

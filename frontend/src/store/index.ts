@@ -3,7 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 
 import { homeReducers } from './reducers'
-import { monitorenvPrivateApi, monitorenvPublicApi, geoserverApi } from '../api/api'
+import { monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 
 const homeStore = configureStore({
   middleware: getDefaultMiddleware =>
@@ -15,7 +15,7 @@ const homeStore = configureStore({
         // TODO Replace all Redux state Dates by strings & Error by a strict-typed POJO.
         isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error
       }
-    }).concat(monitorenvPrivateApi.middleware, monitorenvPublicApi.middleware, geoserverApi.middleware),
+    }).concat(monitorenvPrivateApi.middleware, monitorenvPublicApi.middleware),
   reducer: combineReducers(homeReducers) as unknown as typeof homeReducers
 })
 

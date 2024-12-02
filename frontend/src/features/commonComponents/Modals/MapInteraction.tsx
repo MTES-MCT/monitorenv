@@ -6,6 +6,7 @@ type MapInteractionProps = {
   customTools?: React.ReactNode
   isValidatedButtonDisabled?: boolean
   onCancel?: () => void
+  onDelete?: () => void
   onReset: () => void
   onValidate: () => void
   resetButtonText?: string
@@ -17,6 +18,7 @@ export function MapInteraction({
   customTools = undefined,
   isValidatedButtonDisabled = false,
   onCancel,
+  onDelete,
   onReset,
   onValidate,
   resetButtonText = undefined,
@@ -28,7 +30,7 @@ export function MapInteraction({
       <Panel>
         <Header>
           <Title>{title}</Title>
-          <IconButton Icon={Icon.Close} onClick={onCancel} />
+          <StyledIconButton Icon={Icon.Close} onClick={onCancel} />
         </Header>
 
         <Body>
@@ -36,6 +38,11 @@ export function MapInteraction({
           <ButtonRow $withCustomTools={!!customTools}>
             {customTools}
             <ButtonGroup>
+              {!!onDelete && (
+                <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete}>
+                  Tout effacer
+                </DeleteButton>
+              )}
               <Button accent={Accent.SECONDARY} onClick={onReset}>
                 {resetButtonText ?? 'Réinitialiser'}
               </Button>
@@ -76,12 +83,23 @@ const Title = styled.h1`
   font-weight: normal;
   line-height: 22px;
 `
+const StyledIconButton = styled(IconButton)`
+  &:hover,
+  &._hover {
+    background-color: ${p => p.theme.color.charcoal};
+    border: none;
+  }
+
+  &:active,
+  &._active {
+    background-color: ${p => p.theme.color.charcoal};
+    border: none;
+  }
+`
 
 const ButtonGroup = styled.div`
-  display: inline-block;
-  & > :not(:last-child) {
-    margin-right: 16px;
-  }
+  display: flex;
+  gap: 16px;
 `
 
 const ValidateButton = styled(Button)`
@@ -100,4 +118,8 @@ const ButtonRow = styled.div<{ $withCustomTools: boolean }>`
 const Body = styled.div`
   padding: 24px;
   background-color: ${p => p.theme.color.white};
+`
+
+const DeleteButton = styled(Button)`
+  color: ${p => p.theme.color.maximumRed};
 `

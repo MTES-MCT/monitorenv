@@ -46,13 +46,14 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
   )
 
   useEffect(() => {
+    vectorSourceRef.current.clear(true)
+    drawVectorSourceRef.current.clear(true)
     if (isEmpty(feature) || !interactionType) {
       return undefined
     }
 
     resetModifyInteractions(map)
-    vectorSourceRef.current.clear(true)
-    drawVectorSourceRef.current.clear(true)
+
     vectorSourceRef.current.addFeature(feature)
     const modify = new Modify({
       source: vectorSourceRef.current

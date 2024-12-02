@@ -26,12 +26,18 @@ export function AttachMissionToReportingModal() {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
 
+  const cancel = () => {
+    dispatch(attachMissionToReportingSliceActions.setAttachedMission(initialAttachedMission))
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+  }
+
   if (!isMissionAttachmentInProgress) {
     return null
   }
 
   return (
     <MapInteraction
+      onCancel={cancel}
       onReset={resetMissionToAttach}
       onValidate={validateMissionToAttach}
       title="Vous êtes en train de lier ce signalement à une mission"

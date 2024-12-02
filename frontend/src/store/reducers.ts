@@ -7,7 +7,7 @@ import { reportingSliceReducer } from '@features/Reportings/slice'
 import { vigilanceAreaFiltersPersistedReducer } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { vigilanceAreaPersistedReducer } from '@features/VigilanceArea/slice'
 
-import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
+import { monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
 import { ampSlicePersistedReducer } from '../domain/shared_slices/Amp'
 import { drawReducer } from '../domain/shared_slices/Draw'
@@ -35,7 +35,6 @@ import { stationReducer } from '../features/Station/slice'
 
 // TODO Maybe add a specifc store for the backoffice (to make it lighter)?
 export const homeReducers = {
-  [geoserverApi.reducerPath]: geoserverApi.reducer,
   [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
   administrationTable: administrationTablePersistedReducer,

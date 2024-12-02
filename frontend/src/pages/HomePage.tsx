@@ -8,7 +8,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
-import { useBeforeUnload } from 'react-router-dom'
+import { useBeforeUnload } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 

@@ -10,6 +10,7 @@ type ValidityProps = {
   mustIncreaseValidity: boolean
   reportingContext: ReportingContext
 }
+
 export function Validity({ mustIncreaseValidity, reportingContext }: ValidityProps) {
   const { newWindowContainerRef } = useNewWindow()
 
