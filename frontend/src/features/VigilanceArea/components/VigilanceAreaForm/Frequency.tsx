@@ -1,11 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import {
-  FormikCheckbox,
-  FormikDatePicker,
-  FormikNumberInput,
-  getOptionsFromLabelledEnum,
-  Select
-} from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikNumberInput, getOptionsFromLabelledEnum, Select } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
@@ -34,7 +28,6 @@ export function Frequency() {
 
   return (
     <>
-      <FormikCheckbox label="En tout temps" name="isAtAllTimes" style={{ marginTop: '-8px' }} />
       <Select
         disabled={values.isAtAllTimes}
         error={errors.frequency}

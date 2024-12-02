@@ -14,6 +14,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CustomSearch,
   DateRangePicker,
+  FormikCheckbox,
   FormikMultiRadio,
   FormikMultiSelect,
   FormikTextarea,
@@ -128,11 +129,8 @@ export function Form() {
   }
 
   const setPeriod = (period: DateAsStringRange | undefined) => {
-    if (!period) {
-      return
-    }
-    setFieldValue('startDatePeriod', period[0])
-    setFieldValue('endDatePeriod', period[1])
+    setFieldValue('startDatePeriod', period ? period[0] : undefined)
+    setFieldValue('endDatePeriod', period ? period[1] : undefined)
   }
 
   return (
@@ -162,24 +160,27 @@ export function Form() {
           name="name"
           placeholder="Nom de la zone"
         />
-        <DateRangePicker
-          defaultValue={
-            values?.startDatePeriod && values?.endDatePeriod
-              ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
-              : undefined
-          }
-          disabled={values.isAtAllTimes}
-          error={formErrors.startDatePeriod ?? formErrors.endDatePeriod}
-          hasSingleCalendar
-          isCompact
-          isErrorMessageHidden
-          isRequired
-          isStringDate
-          isUndefinedWhenDisabled
-          label="Période de validité"
-          name="period"
-          onChange={setPeriod}
-        />
+        <DateWrapper>
+          <DateRangePicker
+            defaultValue={
+              values?.startDatePeriod && values?.endDatePeriod
+                ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
+                : undefined
+            }
+            disabled={values.isAtAllTimes}
+            error={formErrors.startDatePeriod ?? formErrors.endDatePeriod}
+            hasSingleCalendar
+            isCompact
+            isErrorMessageHidden
+            isRequired
+            isStringDate
+            isUndefinedWhenDisabled
+            label="Période de validité"
+            name="period"
+            onChange={setPeriod}
+          />
+          <FormikCheckbox label="En tout temps" name="isAtAllTimes" />
+        </DateWrapper>
         <Frequency />
         <FormikMultiSelect
           customSearch={regulatoryThemesCustomSearch}
@@ -268,5 +269,11 @@ const StyledTrigramInput = styled(FormikTextInput)`
 
 const TooltipWrapper = styled.div`
   display: flex;
+  gap: 8px;
+`
+
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 `
