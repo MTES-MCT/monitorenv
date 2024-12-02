@@ -2,58 +2,11 @@ import pandas as pd
 import prefect
 import pytest
 
-from src.pipeline.flows.regulations import (
-    load_new_regulations,
-    merge_hashes,
-    select_ids_to_delete,
-    select_ids_to_update,
-)
-from src.pipeline.generic_tasks import load
+
+from src.pipeline.flows.regulations import load_new_regulations, update_regulations
+from src.pipeline.generic_tasks import delete_rows, load
+from src.pipeline.shared_tasks.update_queries import merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update
 from src.read_query import read_query
-
-
-@pytest.fixture
-def local_hashes() -> pd.DataFrame:
-    return pd.DataFrame(
-        {
-            "id": [1, 2, 3, 4, 6],
-            "cacem_row_hash": [
-                "cacem_row_hash_1",
-                "cacem_row_hash_2",
-                "cacem_row_hash_3",
-                "cacem_row_hash_4_new",
-                "cacem_row_hash_6",
-            ],
-        }
-    )
-
-
-@pytest.fixture
-def remote_hashes() -> pd.DataFrame:
-    return pd.DataFrame(
-        {
-            "id": [1, 2, 3, 4, 5],
-            "monitorenv_row_hash": [
-                "cacem_row_hash_1",
-                "cacem_row_hash_2",
-                "cacem_row_hash_3",
-                "cacem_row_hash_4",
-                "cacem_row_hash_5",
-            ],
-        }
-    )
-
-
-def test_select_ids_to_delete(remote_hashes, local_hashes):
-    hashes = merge_hashes.run(local_hashes, remote_hashes)
-    ids_to_delete = select_ids_to_delete.run(hashes)
-    assert ids_to_delete == {5}
-
-
-def test_select_ids_to_upsert(remote_hashes, local_hashes):
-    hashes = merge_hashes.run(local_hashes, remote_hashes)
-    ids_to_upsert = select_ids_to_update.run(hashes)
-    assert ids_to_upsert == {4, 6}
 
 import pandas as pd
 import pytest
@@ -141,19 +94,10 @@ def old_regulations() -> pd.DataFrame:
         types=["Arrêté préfectoral", "Décret", "Arrêté inter-préfectoral", None]
     )
 
-def test_load_new_regulations(new_regulations, old_regulations):
-    load(
-        old_regulations,
-        table_name="regulations_cacem",
-        schema="public",
-        db_name="monitorenv_remote",
-        logger=prefect.context.get("logger"),
-        how="upsert",
-        table_id_column="id",
-        df_id_column="id",
-    )
-    load_new_regulations.run(new_regulations)
-    loaded_new_regulations = read_query(
+
+def test_load_new_regulations(old_regulations):
+    load_new_regulations.run(old_regulations)
+    loaded_regulations = read_query(
         "monitorenv_remote", 
         """SELECT 
             id, geom, entity_name, layer_name, facade,
@@ -163,4 +107,19 @@ def test_load_new_regulations(new_regulations, old_regulations):
             FROM public.regulations_cacem
             ORDER BY id"""
     )
-    pd.testing.assert_frame_equal(loaded_new_regulations, new_regulations)
+    pd.testing.assert_frame_equal(loaded_regulations, old_regulations)
+
+
+def test_update_new_regulations(new_regulations):
+    update_regulations.run(new_regulations)
+    updated_regulations = read_query(
+        "monitorenv_remote", 
+        """SELECT 
+            id, geom, entity_name, layer_name, facade,
+            ref_reg, url, row_hash, edition, editeur,
+            source, observation, thematique, date, 
+            duree_validite, temporalite, type
+            FROM public.regulations_cacem
+            ORDER BY id"""
+    )
+    pd.testing.assert_frame_equal(updated_regulations, new_regulations)
