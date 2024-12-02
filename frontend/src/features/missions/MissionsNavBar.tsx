@@ -1,7 +1,7 @@
 import { NavBar } from '@components/NavBar'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
-import { generatePath } from 'react-router-dom'
+import { generatePath } from 'react-router'
 import { Nav } from 'rsuite'
 import styled from 'styled-components'
 
