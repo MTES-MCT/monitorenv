@@ -4,8 +4,9 @@ from pathlib import Path
 from prefect import Flow, case, task
 from sqlalchemy import text
 from src.db_config import create_engine
-from src.pipeline.generic_tasks import delete_rows, extract
+from src.pipeline.generic_tasks import delete_rows, extract, load
 from src.pipeline.processing import prepare_df_for_loading
+from src.pipeline.shared_tasks.update_queries import delete_required, insert_required, merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update, update_required
 from src.pipeline.utils import psql_insert_copy
 from src.read_query import read_query
 
@@ -36,58 +37,6 @@ def extract_remote_hashes() -> pd.DataFrame:
         query_filepath="monitorenv/regulations_hashes.sql",
     )
 
-
-@task(checkpoint=False)
-def merge_hashes(
-    local_hashes: pd.DataFrame, remote_hashes: pd.DataFrame
-) -> pd.DataFrame:
-    return pd.merge(local_hashes, remote_hashes, on="id", how="outer")
-
-
-@task(checkpoint=False)
-def select_ids_to_update(hashes: pd.DataFrame) -> set:
-    ids_to_update = set(
-        hashes.loc[
-            (hashes.cacem_row_hash.notnull())
-            & (hashes.cacem_row_hash != hashes.monitorenv_row_hash),
-            "id",
-        ]
-    )
-
-    return ids_to_update
-
-
-@task(checkpoint=False)
-def select_ids_to_delete(hashes: pd.DataFrame) -> set:
-    return set(hashes.loc[hashes.cacem_row_hash.isna(), "id"])
-
-
-@task(checkpoint=False)
-def update_required(ids_to_update: set) -> bool:
-    logger = prefect.context.get("logger")
-    n = len(ids_to_update)
-    if n > 0:
-        logger.info(f"Found {n} row(s) to add or update.")
-        res = True
-    else:
-        logger.info("No row to add or update was found.")
-        res = False
-    return res
-
-
-@task(checkpoint=False)
-def delete_required(ids_to_delete: set) -> bool:
-    logger = prefect.context.get("logger")
-    n = len(ids_to_delete)
-    if n > 0:
-        logger.info(f"Found {n} row(s) to delete.")
-        res = True
-    else:
-        logger.info("No row to delete was found.")
-        res = False
-    return res
-
-
 @task(checkpoint=False)
 def delete(ids_to_delete: set):
     logger = prefect.context.get("logger")
@@ -110,7 +59,7 @@ def extract_new_regulations(ids_to_update: set) -> pd.DataFrame:
     )
 
 @task(checkpoint=False)
-def load_new_regulations(new_regulations: pd.DataFrame):
+def update_regulations(new_regulations: pd.DataFrame):
     """Load the output of ``extract_rows_to_update`` task into ``regulations``
     table.
 
@@ -204,21 +153,48 @@ def load_new_regulations(new_regulations: pd.DataFrame):
         )
 
 
+@task(checkpoint=False)
+def load_new_regulations(new_amp: pd.DataFrame):
+    """Load the output of ``extract_new_regulations`` task into ``regulations_cacem``
+    table.
+
+    Args:
+        new_amp (pd.DataFrame): output of ``extract_new_regulations`` task.
+    """
+    load(
+        new_amp,
+        table_name="regulations_cacem",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="append",
+        table_id_column="id",
+        df_id_column="id",
+    )
+
 
 with Flow("Regulations") as flow:
     local_hashes = extract_local_hashes()
     remote_hashes = extract_remote_hashes()
-    hashes = merge_hashes(local_hashes, remote_hashes)
+    outer_hashes = merge_hashes(local_hashes, remote_hashes)
+    inner_merged = merge_hashes(local_hashes, remote_hashes, "inner")
 
-    ids_to_delete = select_ids_to_delete(hashes)
+    ids_to_delete = select_ids_to_delete(outer_hashes)
     cond_delete = delete_required(ids_to_delete)
     with case(cond_delete, True):
         delete(ids_to_delete)
 
-    ids_to_update = select_ids_to_update(hashes)
+    ids_to_update = select_ids_to_update(inner_merged)
     cond_update = update_required(ids_to_update)
     with case(cond_update, True):
         new_regulations = extract_new_regulations(ids_to_update)
+        update_regulations(new_regulations)
+    
+    ids_to_insert = select_ids_to_insert(outer_hashes)
+    cond_insert = insert_required(ids_to_insert)
+    with case(cond_insert, True):
+        new_regulations = extract_new_regulations(ids_to_insert)
         load_new_regulations(new_regulations)
+
 
 flow.file_name = Path(__file__).name
