@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { InfractionCard } from './InfractionCard'
 import { InfractionForm } from './InfractionForm/InfractionForm'
 import { infractionFactory } from '../../../Missions.helpers'
-import { missionFormsActions } from '../../slice'
+import { getActiveMission, missionFormsActions } from '../../slice'
 
 import type { Infraction } from '../../../../../domain/entities/missions'
 
@@ -16,11 +16,7 @@ export function InfractionsForm({ canAddInfraction, envActionIndex, form, push, 
 
   const infractions: Array<Infraction> = form?.values.envActions[envActionIndex]?.infractions ?? []
 
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-
-  const selectedMission = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
-  )
+  const selectedMission = useAppSelector(state => getActiveMission(state.missionForms))
 
   const activeInfractionId = selectedMission?.activeAction?.activeInfractionId
 

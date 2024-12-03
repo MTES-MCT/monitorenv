@@ -11,6 +11,7 @@ import {
   type EnvActionSurveillance,
   FormalNoticeEnum,
   type Infraction,
+  InfractionSeizureEnum,
   InfractionTypeEnum,
   type Mission,
   MissionSourceEnum,
@@ -36,6 +37,7 @@ export const infractionFactory = (infraction?: Partial<Infraction>): NewInfracti
   natinf: [],
   nbTarget: 1,
   observations: '',
+  seizure: InfractionSeizureEnum.NONE,
   ...infraction,
   id: uuidv4()
 })
@@ -201,6 +203,8 @@ export const getControlInfractionsTags = (actionNumberOfControls: number, infrac
     ?.filter(inf => inf.administrativeResponse === 'REGULARIZATION')
     .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
 
+  const seizures = infractions?.filter(inf => inf.seizure === InfractionSeizureEnum.YES)
+
   return {
     infractionsWithoutReport,
     infractionsWithReport,
@@ -209,6 +213,7 @@ export const getControlInfractionsTags = (actionNumberOfControls: number, infrac
     ras,
     regulAdmin,
     sanctionAdmin,
+    seizures,
     totalInfractions
   }
 }

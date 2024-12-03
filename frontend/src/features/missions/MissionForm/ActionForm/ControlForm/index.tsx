@@ -393,11 +393,12 @@ export function ControlForm({
               <FieldError>{currentActionErrors?.actionStartDateTimeUtc}</FieldError>
             )}
         </div>
-        <MultiPointPicker
-          actionIndex={envActionIndex}
-          isGeomSameAsAttachedReportingGeom={isGeomSameAsAttachedReportingGeom}
-        />
-
+        <div>
+          <MultiPointPicker
+            actionIndex={envActionIndex}
+            isGeomSameAsAttachedReportingGeom={isGeomSameAsAttachedReportingGeom}
+          />
+        </div>
         <Separator />
 
         <ActionSummary>

@@ -7,7 +7,7 @@ import { missionSourceEnum, type NewMission } from '../../../../domain/entities/
 import { cancelCreateAndRedirectToFilteredList } from '../../../../domain/use_cases/missions/cancelCreateAndRedirectToFilteredList'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { missionFormsActions } from '../slice'
+import { getActiveMission, missionFormsActions } from '../slice'
 
 export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitIndex: number }) {
   const dispatch = useAppDispatch()
@@ -15,10 +15,8 @@ export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitInd
   const { values } = useFormikContext<Partial<NewMission>>()
   const [unitField] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
 
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const engagedControlUnit = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
-  )
+  const activeMission = useAppSelector(state => getActiveMission(state.missionForms))
+  const engagedControlUnit = activeMission?.engagedControlUnit
 
   const message = useMemo(() => {
     if (!engagedControlUnit) {

@@ -6,7 +6,8 @@ import {
   FormalNoticeEnum,
   InfractionTypeEnum,
   type Infraction,
-  type NewInfraction
+  type NewInfraction,
+  InfractionSeizureEnum
 } from '../../../../domain/entities/missions'
 
 export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object().shape({
@@ -55,7 +56,7 @@ export const NewInfractionSchema: Yup.ObjectSchema<NewInfraction> = Yup.object()
     }),
   observations: Yup.string().optional(),
   registrationNumber: Yup.string().optional(),
-  toProcess: Yup.boolean().optional(),
+  seizure: Yup.mixed<InfractionSeizureEnum>().optional(),
   vesselName: Yup.string().optional(),
   vesselSize: Yup.number().optional(),
   vesselType: Yup.string<VesselTypeEnum>().optional()
@@ -70,5 +71,7 @@ export const CompletionInfractionSchema: Yup.Schema<Infraction> = NewInfractionS
   infractionType: Yup.mixed<InfractionTypeEnum>()
     .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
     .required(),
-  toProcess: Yup.boolean().required()
+  seizure: Yup.mixed<InfractionSeizureEnum>()
+    .oneOf([InfractionSeizureEnum.YES, InfractionSeizureEnum.NO, InfractionSeizureEnum.PENDING])
+    .required()
 })

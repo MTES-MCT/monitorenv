@@ -9,6 +9,7 @@ import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 import { getActionsFeatures, getMissionZoneFeature } from './missionGeometryHelpers'
 import { selectedMissionStyle } from './missions.style'
 import { hasAlreadyFeature } from '../../map/layers/utils'
+import { getActiveMission } from '../MissionForm/slice'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -18,9 +19,7 @@ import type { Geometry } from 'ol/geom'
 export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
-  const editingMission = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
-  )
+  const editingMission = useAppSelector(state => getActiveMission(state.missionForms)?.missionForm)
 
   const { displayMissionEditingLayer } = useAppSelector(state => state.global)
   const isMissionAttachmentInProgress = useAppSelector(

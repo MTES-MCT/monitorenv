@@ -1,10 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
 
 class TestUtils {
     companion object {
@@ -25,6 +22,7 @@ class TestUtils {
                     vesselName = "Vessel Name",
                     mmsi = "123456789",
                     imo = "987654321",
+                    seizure = SeizureTypeEnum.NO,
                 ),
             )
         }

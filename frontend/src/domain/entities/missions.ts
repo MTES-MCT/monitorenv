@@ -88,6 +88,33 @@ export enum InfractionTypeEnum {
   WITH_REPORT = 'WITH_REPORT'
 }
 
+export const infractionSeizureLabels = {
+  YES: {
+    code: 'YES',
+    libelle: 'Oui'
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  NO: {
+    code: 'NO',
+    libelle: 'Non'
+  },
+  PENDING: {
+    code: 'PENDING',
+    libelle: 'En attente'
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  NONE: {
+    code: 'NONE',
+    libelle: 'Aucune'
+  }
+}
+export enum InfractionSeizureEnum {
+  NO = 'NO',
+  NONE = 'NONE',
+  PENDING = 'PENDING',
+  YES = 'YES'
+}
+
 export const infractionTypeLabels = {
   WITH_REPORT: {
     code: 'WITH_REPORT',
@@ -312,6 +339,7 @@ export type NewInfraction = {
   nbTarget: number
   observations?: string
   registrationNumber?: string
+  seizure?: InfractionSeizureEnum
   vesselName?: string
   vesselSize?: number
   vesselType?: VesselTypeEnum
@@ -321,6 +349,7 @@ export type Infraction = NewInfraction & {
   formalNotice: FormalNoticeEnum
   infractionType: InfractionTypeEnum
   nbTarget: number
+  seizure: InfractionSeizureEnum
 }
 
 export type EnvActionForTimeline = EnvAction & {

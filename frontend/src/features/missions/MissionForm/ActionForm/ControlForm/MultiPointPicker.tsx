@@ -80,7 +80,7 @@ export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeo
   )
 
   return (
-    <div>
+    <>
       <Field>
         <Label $isRequired>Lieu du contrôle</Label>
 
@@ -132,7 +132,7 @@ export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeo
       {isGeomSameAsAttachedReportingGeom && (
         <Message withoutIcon>Le point de contrôle a été automatiquement rempli avec le point de signalement.</Message>
       )}
-    </div>
+    </>
   )
 }
 
