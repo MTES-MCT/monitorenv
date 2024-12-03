@@ -13,8 +13,7 @@ import type { HomeAppThunk } from '@store/index'
 export const deleteTab =
   (path: string, forceQuitAndRedirectToList = false): HomeAppThunk =>
   async (dispatch, getState) => {
-    const { missions } = getState().missionForms
-    const { activeMissionId } = getState().missionForms
+    const { activeMissionId, missions } = getState().missionForms
     const { selectedMissionIdOnMap } = getState().mission
 
     const routeParams = getMissionPageRoute(path)
@@ -33,15 +32,15 @@ export const deleteTab =
       return
     }
 
+    await dispatch(missionFormsActions.deleteSelectedMission(idToDelete))
+
     if (idToDelete === selectedMissionIdOnMap) {
-      await dispatch(missionActions.resetSelectedMissionIdOnMap())
+      dispatch(missionActions.resetSelectedMissionIdOnMap())
     }
 
     if (idToDelete === activeMissionId) {
       await dispatch(attachReportingToMissionSliceActions.resetAttachReportingState())
     }
-
-    await dispatch(missionFormsActions.deleteSelectedMission(idToDelete))
 
     const arrayOfMissions: MissionInStateType[] = Object.values(missions)
     const missionToDeleteIndex = arrayOfMissions.findIndex(mission => mission?.missionForm?.id === idToDelete)
