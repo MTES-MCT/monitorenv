@@ -121,6 +121,14 @@ export function ControlForm({
   const isGeomSameAsAttachedReportingGeom = useMemo(() => {
     const attachedReporting = attachedReportings?.find(reporting => reporting.id === currentAction?.reportingIds[0])
 
+    if (
+      attachedReporting?.geom?.type &&
+      currentAction?.geom?.type &&
+      attachedReporting?.geom?.type !== currentAction?.geom?.type
+    ) {
+      return false
+    }
+
     return !!(
       attachedReporting?.geom &&
       currentAction?.geom &&
