@@ -116,8 +116,8 @@ const getActionFeature = (
   return feature
 }
 
-const isActionControlOrActionSurveillance = (f): f is ControlOrSurveillance =>
-  f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
+const isActionControlOrActionSurveillance = (feature): feature is ControlOrSurveillance =>
+  feature.actionType === ActionTypeEnum.CONTROL || feature.actionType === ActionTypeEnum.SURVEILLANCE
 
 export const getActionsFeatures = (mission, isEditingSurveillanceZoneOrControlPoint = false) => {
   const { envActions, geom: missionGeom } = mission
