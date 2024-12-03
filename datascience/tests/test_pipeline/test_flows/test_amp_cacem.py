@@ -1,7 +1,9 @@
 import pandas as pd
+import prefect
 import pytest
 
 from src.pipeline.flows.amp_cacem import load_new_amps, update_amps
+from src.pipeline.generic_tasks import delete_rows, load
 from src.read_query import read_query
 
 
@@ -122,7 +124,7 @@ def new_amp() -> pd.DataFrame:
     )
 
 
-def test_load_new_amps(old_amp):
+def test_load_new_amps(reset_test_data, old_amp):
     load_new_amps.run(old_amp)
     loaded_amps = read_query(
         "monitorenv_remote", 
@@ -136,7 +138,16 @@ def test_load_new_amps(old_amp):
     pd.testing.assert_frame_equal(loaded_amps, old_amp)
 
 
-def test_update_new_amps(new_amp):
+def test_update_new_amps(reset_test_data, new_amp, old_amp):
+    load(
+        old_amp,
+        table_name="amp_cacem",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="append",
+    )
+
     update_amps.run(new_amp)
     updated_amps = read_query(
         "monitorenv_remote", 

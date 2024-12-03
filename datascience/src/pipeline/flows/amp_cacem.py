@@ -144,8 +144,6 @@ def load_new_amps(new_amp: pd.DataFrame):
         db_name="monitorenv_remote",
         logger=prefect.context.get("logger"),
         how="append",
-        table_id_column="id",
-        df_id_column="id",
     )
 
 
