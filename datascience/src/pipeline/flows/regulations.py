@@ -154,7 +154,7 @@ def update_regulations(new_regulations: pd.DataFrame):
 
 
 @task(checkpoint=False)
-def load_new_regulations(new_amp: pd.DataFrame):
+def load_new_regulations(new_regulations: pd.DataFrame):
     """Load the output of ``extract_new_regulations`` task into ``regulations_cacem``
     table.
 
@@ -162,14 +162,12 @@ def load_new_regulations(new_amp: pd.DataFrame):
         new_amp (pd.DataFrame): output of ``extract_new_regulations`` task.
     """
     load(
-        new_amp,
+        new_regulations,
         table_name="regulations_cacem",
         schema="public",
         db_name="monitorenv_remote",
         logger=prefect.context.get("logger"),
         how="append",
-        table_id_column="id",
-        df_id_column="id",
     )
 
 

@@ -1,0 +1,1 @@
+DELETE FROM amp_cacem;
