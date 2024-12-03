@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
-import { missionFormsActions } from '../slice'
+import { getActiveMission, missionFormsActions } from '../slice'
 import { getIsMissionFormValid } from '../utils'
 
 import type { Mission } from 'domain/entities/missions'
@@ -13,12 +13,8 @@ export function useSyncFormValuesWithRedux(isAutoSaveEnabled: boolean) {
   const dispatch = useAppDispatch()
   const { dirty, values } = useFormikContext<Mission>()
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const activeMission = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
-  )
-  const engagedControlUnit = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
-  )
+  const activeMission = useAppSelector(state => getActiveMission(state.missionForms))
+  const engagedControlUnit = activeMission?.engagedControlUnit
 
   const dispatchFormUpdate = useDebouncedCallback(async (newValues: Mission) => {
     if (!newValues || newValues.id !== activeMissionId) {

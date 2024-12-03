@@ -1,3 +1,4 @@
+import { getActiveMission } from '@features/missions/MissionForm/slice'
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
 import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -38,10 +39,8 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   const missionListener = useAppSelector(state => state.draw.listener)
   // Attached reportings to active mission
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const attachedReportingsToActiveMission = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm.attachedReportings : undefined
-  )
+  const activeMission = useAppSelector(state => getActiveMission(state.missionForms))
+  const attachedReportingsToActiveMission = activeMission?.missionForm.attachedReportings
 
   const attachedReportingsToActiveMissionFeature = useMemo(() => {
     if (!attachedReportingsToActiveMission || attachedReportingsToActiveMission?.length === 0) {

@@ -11,6 +11,7 @@ import { Layers } from '../../../domain/entities/layers/constants'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useHasMapInteraction } from '../../../hooks/useHasMapInteraction'
+import { getActiveMission } from '../MissionForm/slice'
 import { missionActions } from '../slice'
 
 import type { BaseMapChildrenProps } from '../../map/BaseMap'
@@ -48,10 +49,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [missionAttachedToReporting])
 
   // active mission
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const activeMission = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
-  )
+  const activeMission = useAppSelector(state => getActiveMission(state.missionForms)?.missionForm)
   const activeMissionFeature = useMemo(() => {
     if (!activeMission) {
       return []

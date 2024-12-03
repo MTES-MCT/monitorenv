@@ -3,12 +3,12 @@ import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { ControlUnitSelector } from './ControlUnitSelector'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { controlUnitFactory } from '../../Missions.helpers'
+import { getActiveMission } from '../slice'
 
 export function ControlUnitsForm({ form, push, remove }) {
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-  const engagedControlUnit = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId]?.engagedControlUnit : undefined
-  )
+  const activeMission = useAppSelector(state => getActiveMission(state.missionForms))
+  const engagedControlUnit = activeMission?.engagedControlUnit
+
   const handleAddControlUnit = () => {
     push(controlUnitFactory())
   }

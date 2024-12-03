@@ -152,6 +152,12 @@ const missionFormsSlice = createSlice({
   }
 })
 
+export const getActiveMission = createSelector(
+  (state: MissionFormsState) => state.activeMissionId,
+  (state: MissionFormsState) => state.missions,
+  (activeMissionId, missions) => (activeMissionId ? missions[activeMissionId] : undefined)
+)
+
 export const getNumberOfInfractionTarget = createSelector(
   (state: MissionFormsState) => {
     if (state.activeMissionId) {

@@ -10,7 +10,8 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
     med,
     ras,
     regulAdmin,
-    sanctionAdmin
+    sanctionAdmin,
+    seizures
   } = getControlInfractionsTags(actionNumberOfControls, infractions)
 
   return (
@@ -24,6 +25,7 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
       {med > 0 && <Tag accent={Accent.PRIMARY}>{med} MED</Tag>}
       {sanctionAdmin > 0 && <Tag accent={Accent.PRIMARY}>{sanctionAdmin} SANCT. ADMIN</Tag>}
       {regulAdmin > 0 && <Tag accent={Accent.PRIMARY}>{regulAdmin} RÉGUL. ADMIN</Tag>}
+      {seizures.length > 0 && <Tag accent={Accent.PRIMARY}>{seizures.length} APPR./SAISIE</Tag>}
     </TagGroup>
   )
 }

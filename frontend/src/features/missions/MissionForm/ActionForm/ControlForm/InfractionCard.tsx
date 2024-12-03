@@ -1,9 +1,9 @@
-import { Accent, Button, Icon, IconButton, Tag } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Tag } from '@mtes-mct/monitor-ui'
 import {
   type EnvActionControl,
   FormalNoticeEnum,
   type Infraction,
-  InfractionTypeEnum,
+  InfractionSeizureEnum,
   infractionTypeLabels
 } from 'domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from 'domain/entities/targetType'
@@ -22,25 +22,26 @@ export function InfractionCard({
   setCurrentInfractionIndex
 }) {
   const infractionPath = `envActions.${envActionIndex}.infractions.${currentInfractionIndex}`
-  const [, meta] = useField<Infraction>(infractionPath)
+  const [infraction, meta] = useField<Infraction>(infractionPath)
+  const {
+    companyName,
+    controlledPersonIdentity,
+    formalNotice,
+    imo,
+    infractionType,
+    mmsi,
+    natinf,
+    nbTarget,
+    registrationNumber,
+    seizure,
+    vesselName,
+    vesselSize
+  } = infraction.value
+
   const [targetTypeField] = useField<EnvActionControl['actionTargetType']>(
     `envActions.${envActionIndex}.actionTargetType`
   )
   const [vehicleTypeField] = useField<VehicleTypeEnum>(`envActions.${envActionIndex}.vehicleType`)
-  const [mmsi] = useField<Infraction['mmsi']>(`${infractionPath}.mmsi`)
-  const [imo] = useField<Infraction['imo']>(`${infractionPath}.imo`)
-  const [registrationNumber] = useField<Infraction['registrationNumber']>(`${infractionPath}.registrationNumber`)
-  const [companyName] = useField<Infraction['companyName']>(`${infractionPath}.companyName`)
-  const [vesselName] = useField<Infraction['vesselName']>(`${infractionPath}.vesselName`)
-  const [vesselSize] = useField<Infraction['vesselSize']>(`${infractionPath}.vesselSize`)
-
-  const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(
-    `${infractionPath}.controlledPersonIdentity`
-  )
-  const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
-  const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
-  const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
-  const [nbTarget] = useField<Infraction['nbTarget']>(`${infractionPath}.nbTarget`)
 
   const displayIdentification = () => {
     const defaultIdentification = () => {
@@ -48,15 +49,15 @@ export function InfractionCard({
         return 'Cible non renseignée'
       }
       const targetType = TargetTypeLabels[targetTypeField.value].toLowerCase()
-      if (nbTarget.value > 1) {
-        return `${nbTarget.value}
+      if (nbTarget > 1) {
+        return `${nbTarget}
           ${targetType
             .split(' ')
             .map((word: string) => `${word}s`)
             .join(' ')}`
       }
 
-      return `${nbTarget.value} ${targetType}`
+      return `${nbTarget} ${targetType}`
     }
     const identification: string[] = [defaultIdentification()]
 
@@ -71,24 +72,24 @@ export function InfractionCard({
     }
 
     const addVehicleIdentification = () => {
-      addToIdentification(registrationNumber.value)
+      addToIdentification(registrationNumber)
     }
 
     const addVesselIdentification = () => {
-      addToIdentification(vesselName.value)
+      addToIdentification(vesselName)
 
-      if (mmsi.value) {
-        identification.push(mmsi.value)
-      } else if (imo.value) {
-        identification.push(imo.value)
-      } else if (registrationNumber.value) {
-        identification.push(registrationNumber.value)
-      } else if (controlledPersonIdentity.value) {
-        identification.push(controlledPersonIdentity.value)
+      if (mmsi) {
+        identification.push(mmsi)
+      } else if (imo) {
+        identification.push(imo)
+      } else if (registrationNumber) {
+        identification.push(registrationNumber)
+      } else if (controlledPersonIdentity) {
+        identification.push(controlledPersonIdentity)
       } else {
         addDefaultVehicleIdentification()
       }
-      addToIdentification(vesselSize.value)
+      addToIdentification(vesselSize)
     }
 
     switch (targetTypeField.value) {
@@ -109,12 +110,12 @@ export function InfractionCard({
         break
 
       case TargetTypeEnum.COMPANY:
-        addToIdentification(companyName.value)
-        addToIdentification(controlledPersonIdentity.value)
+        addToIdentification(companyName)
+        addToIdentification(controlledPersonIdentity)
         break
 
       case TargetTypeEnum.INDIVIDUAL:
-        addToIdentification(controlledPersonIdentity.value)
+        addToIdentification(controlledPersonIdentity)
         break
 
       default:
@@ -125,7 +126,7 @@ export function InfractionCard({
   }
 
   let libelleInfractionType
-  switch (infractionType?.value) {
+  switch (infractionType) {
     case undefined:
       libelleInfractionType = 'PV : -'
       break
@@ -148,16 +149,15 @@ export function InfractionCard({
         </Identification>
         <SummaryDetails>
           <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
-          {formalNotice?.value === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
+          {formalNotice === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
           <Info accent={Accent.PRIMARY}>
-            {natinf.value?.length ?? '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}
+            {natinf?.length ?? '0'} NATINF {natinf?.length && `: ${natinf?.join(', ')}`}
           </Info>
+          {seizure === InfractionSeizureEnum.YES && <Info accent={Accent.PRIMARY}>1 APPR./SAISIE</Info>}
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
-        <Button accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={setCurrentInfractionIndex}>
-          Editer
-        </Button>
+        <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={setCurrentInfractionIndex} />
 
         <>
           <IconButton

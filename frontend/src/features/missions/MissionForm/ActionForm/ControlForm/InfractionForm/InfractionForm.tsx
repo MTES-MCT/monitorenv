@@ -3,6 +3,7 @@ import { Accent, Button, FormikMultiRadio, FormikNumberInput, FormikTextarea, Ic
 import {
   administrativeResponseOptions,
   formalNoticeLabels,
+  infractionSeizureLabels,
   infractionTypeLabels,
   type Infraction
 } from 'domain/entities/missions'
@@ -18,6 +19,7 @@ import { NatinfSelector } from './NatinfSelector'
 
 const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 const formalNoticeOptions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
+const infractionSeizureOptions = Object.values(infractionSeizureLabels).map(o => ({ label: o.libelle, value: o.code }))
 
 type InfractionFormProps = {
   currentInfractionIndex: number
@@ -87,6 +89,15 @@ export function InfractionForm({
         label="Réponse administrative"
         name={`${infractionPath}.administrativeResponse`}
         options={administrativeResponseOptions}
+      />
+
+      <FormikMultiRadio
+        isErrorMessageHidden
+        isInline
+        isRequired
+        label="Appréhension/saisie"
+        name={`${infractionPath}.seizure`}
+        options={infractionSeizureOptions}
       />
 
       <FormikMultiRadio

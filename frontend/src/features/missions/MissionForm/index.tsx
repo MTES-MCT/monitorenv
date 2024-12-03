@@ -9,15 +9,15 @@ import { MissionSchema } from './Schemas'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isNewMission } from '../../../utils/isNewMission'
 import { missionFactory } from '../Missions.helpers'
+import { getActiveMission } from './slice'
 
 import type { Mission as MissionType, NewMission } from '../../../domain/entities/missions'
 
 export function MissionFormWrapper() {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
 
-  const selectedMission = useAppSelector(state =>
-    activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
-  )
+  const selectedMission = useAppSelector(state => getActiveMission(state.missionForms))
+
   const engagedControlUnit = selectedMission?.engagedControlUnit
 
   const activeAction = selectedMission?.activeAction

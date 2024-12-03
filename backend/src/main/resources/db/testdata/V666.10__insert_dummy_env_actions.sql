@@ -29,7 +29,8 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
                    "infractionType": "WITH_REPORT",
                    "administrativeResponse": "REGULARIZATION",
                    "registrationNumber": null,
-                   "controlledPersonIdentity": null
+                   "controlledPersonIdentity": null,
+                   "seizure": "NONE"
                }
            ],
            "vehicleType": null,
@@ -64,7 +65,8 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
                    "infractionType": "WAITING",
                    "administrativeResponse": "PENDING",
                    "registrationNumber": null,
-                   "controlledPersonIdentity": "M DURAND"
+                   "controlledPersonIdentity": "M DURAND",
+                    "seizure": "YES"
                }
            ],
            "vehicleType": null,
@@ -96,7 +98,8 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
                    "infractionType": "WITH_REPORT",
                    "administrativeResponse": "PENDING",
                    "registrationNumber": "BALTIK",
-                   "controlledPersonIdentity": "John Doe"
+                   "controlledPersonIdentity": "John Doe",
+                    "seizure": "NO"
                }
            ],
            "vehicleType": "VESSEL",

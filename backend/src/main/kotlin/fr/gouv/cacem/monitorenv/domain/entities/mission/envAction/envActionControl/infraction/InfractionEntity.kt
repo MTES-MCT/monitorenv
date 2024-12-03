@@ -16,6 +16,7 @@ data class InfractionEntity(
     val mmsi: String? = null,
     val nbTarget: Int = 1,
     val controlledPersonIdentity: String? = null,
+    val seizure: SeizureTypeEnum,
     val vesselName: String? = null,
     val vesselSize: Number? = null,
     val vesselType: VesselTypeEnum? = null,
