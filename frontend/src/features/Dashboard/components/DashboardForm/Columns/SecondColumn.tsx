@@ -21,8 +21,6 @@ export function SecondColumn({
   isSelectedAccordionOpen,
   onExpandedAccordionClick
 }: SecondColumnProps) {
-  console.log('pong')
-
   const [isMount, setIsMount] = useState<boolean>(false)
   const reportingFilters = useAppSelector(state => getReportingFilters(state.dashboardFilters, key))
   const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard, reportingFilters))
