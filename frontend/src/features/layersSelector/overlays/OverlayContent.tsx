@@ -7,9 +7,10 @@ import {
   vigilanceAreaActions
 } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { Accent, customDayjs, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
@@ -51,6 +52,14 @@ function isAmpLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
     type === MonitorEnvLayers.AMP_PREVIEW ||
     type === MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA ||
     type === Dashboard.Layer.DASHBOARD_AMP
+  )
+}
+
+function isVigilanceAreaLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
+  return (
+    type === MonitorEnvLayers.VIGILANCE_AREA ||
+    type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
+    type === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
   )
 }
 
@@ -131,42 +140,68 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
           const isAMP = isAmpLayer(item.layerType)
 
+          const isVigilanceArea = isVigilanceAreaLayer(item.layerType)
+
+          let vigilanceAreaPeriod = ''
+          if (isVigilanceArea && 'startDatePeriod' in item.properties) {
+            vigilanceAreaPeriod = `${[
+              `${
+                item.properties.startDatePeriod
+                  ? `Du ${customDayjs(item.properties.startDatePeriod).utc().format('DD/MM/YYYY')}`
+                  : ''
+              }  
+            ${
+              item.properties?.endDatePeriod
+                ? `au ${customDayjs(item.properties.endDatePeriod).utc().format('DD/MM/YYYY')}`
+                : ''
+            }`,
+              frequencyText(item.properties.frequency, false),
+              endingOccurenceText(item.properties.endingCondition, item.properties.computedEndDate, false)
+            ]
+              .filter(Boolean)
+              .join(', ')}`
+          }
+
           const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
 
           return (
             <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
-              <LayerLegend
-                isArchived={isArchived}
-                layerType={item.layerType}
-                legendKey={legendKey}
-                size={Size.NORMAL}
-                type={legendType}
-              />
+              <Wrapper>
+                <LayerLegend
+                  isArchived={isArchived}
+                  layerType={item.layerType}
+                  legendKey={legendKey}
+                  size={Size.NORMAL}
+                  type={legendType}
+                />
 
-              <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
-              <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || ''}</Name>
-              {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
-                <IconButton
-                  accent={Accent.TERTIARY}
-                  disabled={regulatoryAreasToAdd.includes(id)}
-                  Icon={Icon.Plus}
-                  onClick={e => addRegulatoryToVigilanceArea(e, id)}
-                  size={Size.SMALL}
-                  title={`Ajouter la zone réglementaire ${name}`}
-                />
-              )}
-              {isLinkingAmpToVigilanceArea && isAMP && (
-                <IconButton
-                  accent={Accent.TERTIARY}
-                  disabled={ampToAdd.includes(id)}
-                  Icon={Icon.Plus}
-                  onClick={e => addAMPToVigilanceArea(e, id)}
-                  size={Size.SMALL}
-                  title={`Ajouter l'AMP ${name}`}
-                />
-              )}
-              {items.length > 1 && <Tooltip Icon={Icon.Calendar}>Coucou les loulous</Tooltip>}
-              {items.length === 1 && <></>}
+                <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
+                {getTitle(name) && <Name title={getTitle(name)}>{` / ${getTitle(name)}`}</Name>}
+                {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
+                  <IconButton
+                    accent={Accent.TERTIARY}
+                    disabled={regulatoryAreasToAdd.includes(id)}
+                    Icon={Icon.Plus}
+                    onClick={e => addRegulatoryToVigilanceArea(e, id)}
+                    size={Size.SMALL}
+                    title={`Ajouter la zone réglementaire ${name}`}
+                  />
+                )}
+                {isLinkingAmpToVigilanceArea && isAMP && (
+                  <IconButton
+                    accent={Accent.TERTIARY}
+                    disabled={ampToAdd.includes(id)}
+                    Icon={Icon.Plus}
+                    onClick={e => addAMPToVigilanceArea(e, id)}
+                    size={Size.SMALL}
+                    title={`Ajouter l'AMP ${name}`}
+                  />
+                )}
+                {items.length > 1 && isVigilanceArea && (
+                  <StyledTooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</StyledTooltip>
+                )}
+              </Wrapper>
+              {items.length === 1 && isVigilanceArea && <Period>{vigilanceAreaPeriod}</Period>}
             </LayerItem>
           )
         })}
@@ -184,8 +219,7 @@ const Layerlist = styled.ul`
 
 const LayerItem = styled.li<{ $isSelected: boolean }>`
   display: flex;
-  align-items: center;
-  height: 32px;
+  flex-direction: column;
   padding: 7px 8px 8px 8px;
   background-color: ${p => (p.$isSelected ? p.theme.color.blueYonder25 : p.theme.color.white)};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
@@ -210,4 +244,19 @@ const Name = styled.span`
   white-space: nowrap;
   font: normal normal normal 13px/18px Marianne;
   flex: 1;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const Period = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
+  padding-left: 24px;
+`
+
+const StyledTooltip = styled(Tooltip)`
+  display: flex;
 `

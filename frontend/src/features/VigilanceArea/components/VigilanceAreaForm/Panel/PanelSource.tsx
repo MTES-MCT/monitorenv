@@ -8,13 +8,13 @@ import { PanelInlineItem, PanelInlineItemLabel, PanelInlineItemValue, PanelInter
 export function PanelSource({ createdBy, source }: { createdBy: string | undefined; source: string | undefined }) {
   return (
     <PanelSubPart>
-      <TooltipWrapper>
+      <Wrapper>
         <PanelInternText>Section interne CACEM</PanelInternText>
         <Tooltip color={THEME.color.maximumRed}>
           Même si la visibilité de la zone de vigilance est publique, les infos de cette section &quot;Interne
           CACEM&quot; ne seront pas visibles sur la version de MonitorEnv utilisée hors du centre.
         </Tooltip>
-      </TooltipWrapper>
+      </Wrapper>
       <PanelInlineItem>
         <PanelInlineItemLabel>Créé par</PanelInlineItemLabel>
         <PanelInlineItemValue>{createdBy ?? EMPTY_VALUE}</PanelInlineItemValue>
@@ -31,7 +31,7 @@ export function PanelSource({ createdBy, source }: { createdBy: string | undefin
   )
 }
 
-const TooltipWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   gap: 8px;
 `

@@ -2,32 +2,51 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import { VigilanceArea } from './types'
 
-export const endingOccurenceText = (endingCondition?: VigilanceArea.EndingCondition, computedEndDate?: string) => {
+export const endingOccurenceText = (
+  endingCondition?: VigilanceArea.EndingCondition,
+  computedEndDate?: string,
+  capitalize = true
+) => {
   if (!endingCondition) {
     return ''
   }
 
   if (endingCondition === VigilanceArea.EndingCondition.NEVER) {
-    return 'Pas de fin de récurrence'
+    const text = 'pas de fin de récurrence'
+
+    return capitalize ? capitalizeFirstLetter(text) : text
   }
 
   if (!computedEndDate) {
     return ''
   }
 
-  return `Fin le ${customDayjs(computedEndDate).utc().format('DD/MM/YYYY')}`
+  const text = `fin le ${customDayjs(computedEndDate).utc().format('DD/MM/YYYY')}`
+
+  return capitalize ? capitalizeFirstLetter(text) : text
 }
 
-export const frequencyText = (frequency?: VigilanceArea.Frequency) => {
+export const frequencyText = (frequency?: VigilanceArea.Frequency, capitalize = true) => {
   switch (frequency) {
-    case VigilanceArea.Frequency.ALL_YEARS:
-      return 'Se répète tous les ans'
-    case VigilanceArea.Frequency.ALL_MONTHS:
-      return 'Se répète tous les mois'
-    case VigilanceArea.Frequency.ALL_WEEKS:
-      return 'Se répète toutes les semaines'
+    case VigilanceArea.Frequency.ALL_YEARS: {
+      const text = 'se répète tous les ans'
+
+      return capitalize ? capitalizeFirstLetter(text) : text
+    }
+    case VigilanceArea.Frequency.ALL_MONTHS: {
+      const text = 'se répète tous les mois'
+
+      return capitalize ? capitalizeFirstLetter(text) : text
+    }
+    case VigilanceArea.Frequency.ALL_WEEKS: {
+      const text = 'se répète toutes les semaines'
+
+      return capitalize ? capitalizeFirstLetter(text) : text
+    }
     case VigilanceArea.Frequency.NONE:
     default:
       return ''
   }
 }
+
+const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
