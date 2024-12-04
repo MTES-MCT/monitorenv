@@ -259,4 +259,5 @@ const Period = styled.span`
 
 const StyledTooltip = styled(Tooltip)`
   display: flex;
+  margin-left: auto;
 `
