@@ -5,7 +5,7 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 
-export const getTitle = name => (name ? `${name?.replace(/[_]/g, ' ')}` : '')
+export const getTitle = (name?: string | undefined | null) => (name ? `${name?.replace(/[_]/g, ' ')}` : '')
 
 type GenericLayerType = AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties
 

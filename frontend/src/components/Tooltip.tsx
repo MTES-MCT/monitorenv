@@ -6,12 +6,14 @@ import styled from 'styled-components'
 type TooltipType = {
   Icon?: FunctionComponent<IconProps>
   children: ReactNode
+  className?: string
   color?: string
   isSideWindow?: boolean
 }
 
 export function Tooltip({
   children,
+  className,
   color = THEME.color.slateGray,
   Icon = IconUi.Info,
   isSideWindow = false
@@ -26,7 +28,7 @@ export function Tooltip({
 
   return (
     <>
-      <div ref={ref}>
+      <div ref={ref} className={className}>
         <Icon
           aria-describedby={id}
           color={color}

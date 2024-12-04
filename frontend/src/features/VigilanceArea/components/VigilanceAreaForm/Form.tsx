@@ -221,13 +221,13 @@ export function Form() {
         <PhotoUploader ref={uploaderRef} />
         <Links />
         <Separator />
-        <TooltipWrapper>
+        <Wrapper>
           <InternText>Interne CACEM</InternText>
           <Tooltip color={THEME.color.maximumRed}>
             Même si la visibilité de la zone de vigilance est publique, les infos de cette section &quot;Interne
             CACEM&quot; ne seront pas visibles sur la version de MonitorEnv hors du centre
           </Tooltip>
-        </TooltipWrapper>
+        </Wrapper>
         <StyledTrigramInput isErrorMessageHidden isRequired label="Créé par" name="createdBy" />
         <FormikTextarea
           label="Source de l'information"
@@ -267,7 +267,7 @@ const StyledTrigramInput = styled(FormikTextInput)`
   width: 126px;
 `
 
-const TooltipWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   gap: 8px;
 `
