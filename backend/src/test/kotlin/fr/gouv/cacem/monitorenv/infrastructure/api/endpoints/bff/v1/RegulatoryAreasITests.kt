@@ -37,28 +37,16 @@ class RegulatoryAreasITests {
     @MockBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
 
-    val WKTreader = WKTReader()
+    private val wktReader = WKTReader()
 
-    val multipolygonString =
+    private val multipolygonString =
         "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-    val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
+    private val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-    val url =
-        "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098"
+    private val url =
+        "https://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098"
 
-    val refReg =
-        "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel"
-
-    val WKTreader = WKTReader()
-
-    val multipolygonString =
-        "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-    val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
-
-    val url =
-        "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098"
-
-    val refReg =
+    private val refReg =
         "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel"
 
     @Test
@@ -67,7 +55,7 @@ class RegulatoryAreasITests {
         val regulatoryArea =
             RegulatoryAreaEntity(
                 id = 17,
-                geom = Polygon,
+                geom = polygon,
                 entity_name = "Zone au sud de la cale",
                 url = url,
                 layer_name = "ZMEL_Cale_Querlen",
@@ -105,7 +93,7 @@ class RegulatoryAreasITests {
         val regulatoryArea =
             RegulatoryAreaEntity(
                 id = 17,
-                geom = Polygon,
+                geom = polygon,
                 entity_name = "Zone au sud de la cale",
                 url = url,
                 layer_name = "ZMEL_Cale_Querlen",
