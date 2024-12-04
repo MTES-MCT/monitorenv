@@ -1,3 +1,4 @@
+import { Tooltip } from '@components/Tooltip'
 import { Dashboard } from '@features/Dashboard/types'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -141,6 +142,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
                 size={Size.NORMAL}
                 type={legendType}
               />
+
               <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
               <Name title={getTitle(name) || ''}>&nbsp;/ {getTitle(name) || ''}</Name>
               {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
@@ -163,6 +165,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   title={`Ajouter l'AMP ${name}`}
                 />
               )}
+              {items.length > 1 && <Tooltip Icon={Icon.Calendar}>Coucou les loulous</Tooltip>}
+              {items.length === 1 && <></>}
             </LayerItem>
           )
         })}
