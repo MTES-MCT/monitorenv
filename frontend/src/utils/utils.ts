@@ -54,7 +54,7 @@ const vigilanceAreaColors = [
   THEME.color.apricot,
   THEME.color.melon,
   THEME.color.paleDogwood,
-  THEME.color.seashell
+  THEME.color.champagnePink
 ]
 
 /**
