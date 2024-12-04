@@ -28,7 +28,7 @@ export function Tooltip({
 
   return (
     <>
-      <div ref={ref} className={className}>
+      <Wrapper ref={ref} className={className}>
         <Icon
           aria-describedby={id}
           color={color}
@@ -39,7 +39,7 @@ export function Tooltip({
           style={{ cursor: 'pointer' }}
           tabIndex={0}
         />
-      </div>
+      </Wrapper>
 
       {isVisible &&
         createPortal(
@@ -65,4 +65,10 @@ const StyledTooltip = styled.p<{ $left: number; $top: number }>`
   max-width: 310px;
   pointer-events: none;
   z-index: 2;
+`
+
+const Wrapper = styled.div`
+  > span:hover {
+    color: ${p => p.theme.color.blueYonder};
+  }
 `
