@@ -1,53 +1,35 @@
-import { useCallback, useEffect } from 'react'
+import { debounce } from 'lodash'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import type { BookmarkType } from './Bookmark'
 
-const createObserver = (root: HTMLElement | null, callback: IntersectionObserverCallback): IntersectionObserver =>
-  new IntersectionObserver(callback, {
-    root
-  })
-
-const observeElements = (
-  container: HTMLElement | null,
-  observer: IntersectionObserver | undefined,
-  elements: (HTMLElement | null)[]
-): (() => void) => {
-  elements.forEach(element => {
-    if (element && container && observer) {
-      observer.observe(element)
-    }
-  })
-
-  return () => {
-    elements.forEach(element => {
-      if (element && container && observer) {
-        observer.unobserve(element)
-      }
-    })
-  }
-}
-
+// Fonction pour vérifier la visibilité par rapport au conteneur
 const checkVisibility = (
-  entry: IntersectionObserverEntry,
+  container: HTMLElement | null,
+  element: HTMLElement | null,
   setState: React.Dispatch<React.SetStateAction<BookmarkType>>
 ) => {
-  const { boundingClientRect, isIntersecting, rootBounds } = entry
-  const isVisible = isIntersecting
-  let orientation
-  console.log('on checke')
+  if (!container || !element) {
+    return
+  }
+
+  const containerRect = container.getBoundingClientRect()
+  const elementRect = element.getBoundingClientRect()
+
+  const isVisible = elementRect.top >= containerRect.top && elementRect.bottom <= containerRect.bottom
+
+  let orientation: 'top' | 'bottom' | undefined
 
   if (!isVisible) {
-    if (rootBounds) {
-      if (boundingClientRect.bottom < rootBounds.top) {
-        orientation = 'top'
-      } else if (boundingClientRect.top > rootBounds.bottom) {
-        orientation = 'bottom'
-      }
+    if (elementRect.bottom < containerRect.top) {
+      orientation = 'top'
+    } else if (elementRect.top > containerRect.bottom) {
+      orientation = 'bottom'
     }
   }
 
   setState(prevState =>
-    prevState.orientation !== orientation || prevState.visible !== !isVisible
+    prevState.orientation !== orientation || prevState.visible !== isVisible
       ? { orientation, ref: prevState.ref, title: prevState.title, visible: !isVisible }
       : prevState
   )
@@ -55,33 +37,41 @@ const checkVisibility = (
 
 export const useObserver = (
   containerRef: React.RefObject<HTMLElement>,
-  observedElement: {
+  observedElements: {
     ref: React.RefObject<HTMLElement>
     setState: React.Dispatch<React.SetStateAction<BookmarkType>>
   }[]
 ) => {
-  const callback = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      observedElement.forEach(({ ref, setState }) => {
-        const targetEntry = entries.find(entry => entry.target === ref.current)
-        if (targetEntry) {
-          checkVisibility(targetEntry, setState)
+  const debouncedHandleVisibility = useMemo(
+    () =>
+      debounce(() => {
+        if (!containerRef.current) {
+          return
         }
-      })
-    },
-    [observedElement]
+
+        observedElements.forEach(({ ref, setState }) => {
+          checkVisibility(containerRef.current, ref.current, setState)
+        })
+      }, 100),
+    [containerRef, observedElements]
   )
+  const handleVisibility = useCallback(() => {
+    debouncedHandleVisibility()
+  }, [debouncedHandleVisibility])
 
   useEffect(() => {
-    let observer: IntersectionObserver | undefined
-    if (containerRef.current) {
-      observer = createObserver(containerRef.current, callback)
+    const container = containerRef.current
+
+    if (!container) {
+      return undefined
     }
 
-    return observeElements(
-      containerRef.current,
-      observer,
-      observedElement.map(element => element.ref.current)
-    )
-  }, [callback, containerRef, observedElement])
+    container.addEventListener('scroll', handleVisibility)
+    container.addEventListener('resize', handleVisibility)
+
+    return () => {
+      container.removeEventListener('scroll', handleVisibility)
+      container.removeEventListener('resize', handleVisibility)
+    }
+  }, [containerRef, handleVisibility])
 }
