@@ -62,7 +62,7 @@ export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressur
     const titleWithTooltip = (
       <TitleContainer>
         <span>Pression territoriale des contrôles et surveillances</span>
-        <Tooltip>
+        <Tooltip isSideWindow>
           Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones REG,
           les AMP ou à l’échelle du département.
         </Tooltip>
