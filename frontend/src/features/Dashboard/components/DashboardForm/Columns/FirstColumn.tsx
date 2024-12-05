@@ -14,7 +14,7 @@ import { RegulatoryAreas } from '../RegulatoryAreas'
 import { VigilanceAreas } from '../VigilanceAreas'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
-import { useObserver } from '../useObserver'
+import { useObserverAccordion } from '../useObserverAccordion'
 
 import type { DashboardFilters } from '../slice'
 
@@ -66,7 +66,7 @@ export function FirstColumn({
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
-  useObserver(columnRef, [
+  useObserverAccordion(columnRef, [
     { ref: regulatoryAreaRef, setState: setRegBookmark },
     { ref: ampRef, setState: setAmpBookmark },
     { ref: vigilanceAreaRef, setState: setVigilanceBookmark }

@@ -7,9 +7,9 @@ import { Bookmark, type BookmarkType } from '../Bookmark'
 import { Reportings } from '../Reportings'
 import { getReportingFilters } from '../slice'
 import { TerritorialPressure } from '../TerritorialPressure'
-import { useObserver } from '../useObserver'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
+import { useObserverAccordion } from '../useObserverAccordion'
 
 type SecondColumnProps = {
   dashboardForm: [string, DashboardType]
@@ -55,7 +55,7 @@ export function SecondColumn({
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
-  useObserver(columnRef, [
+  useObserverAccordion(columnRef, [
     { ref: territorialPressureRef, setState: setTerritorialPressionBookmark },
     { ref: reportingRef, setState: setReportingBookmark }
   ])
