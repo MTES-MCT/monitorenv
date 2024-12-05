@@ -7,11 +7,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Comments } from '../Comments'
 import { ControlUnits } from '../ControlUnits'
-import { useObserver } from '../useObserver'
 import { Weather } from '../Weather'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
 import { type BookmarkType, Bookmark } from '../Bookmark'
+import { useObserverAccordion } from '../useObserverAccordion'
 
 type ThirdColumnProps = {
   dashboardForm: [string, DashboardType]
@@ -59,7 +59,7 @@ export function ThirdColumn({
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
-  useObserver(columnRef, [
+  useObserverAccordion(columnRef, [
     { ref: controlUnitRef, setState: setControlUnitBookmark },
     { ref: commentsRef, setState: setCommentsBookmark },
     { ref: weatherRef, setState: setWeatherBookmark }

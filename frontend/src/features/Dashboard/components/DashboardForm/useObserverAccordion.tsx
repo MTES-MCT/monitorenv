@@ -1,9 +1,8 @@
 import { debounce } from 'lodash'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import type { BookmarkType } from './Bookmark'
 
-// Fonction pour vérifier la visibilité par rapport au conteneur
 const checkVisibility = (
   container: HTMLElement | null,
   element: HTMLElement | null,
@@ -35,7 +34,7 @@ const checkVisibility = (
   )
 }
 
-export const useObserver = (
+export const useObserverAccordion = (
   containerRef: React.RefObject<HTMLElement>,
   observedElements: {
     ref: React.RefObject<HTMLElement>
@@ -52,12 +51,9 @@ export const useObserver = (
         observedElements.forEach(({ ref, setState }) => {
           checkVisibility(containerRef.current, ref.current, setState)
         })
-      }, 100),
+      }, 200),
     [containerRef, observedElements]
   )
-  const handleVisibility = useCallback(() => {
-    debouncedHandleVisibility()
-  }, [debouncedHandleVisibility])
 
   useEffect(() => {
     const container = containerRef.current
@@ -66,12 +62,24 @@ export const useObserver = (
       return undefined
     }
 
-    container.addEventListener('scroll', handleVisibility)
-    container.addEventListener('resize', handleVisibility)
+    observedElements
+      // find the wrapper of the selected item and attached callback when transition ends (open / close accordion)
+      .map(observedElement => observedElement.ref.current?.nextElementSibling?.nextElementSibling)
+      .forEach(selectedItems => {
+        selectedItems?.addEventListener('transitionend', debouncedHandleVisibility)
+      })
+
+    container.addEventListener('scroll', debouncedHandleVisibility)
+    container.addEventListener('resize', debouncedHandleVisibility)
 
     return () => {
-      container.removeEventListener('scroll', handleVisibility)
-      container.removeEventListener('resize', handleVisibility)
+      container.removeEventListener('scroll', debouncedHandleVisibility)
+      container.removeEventListener('resize', debouncedHandleVisibility)
+      observedElements
+        .map(observedElement => observedElement.ref.current?.nextElementSibling?.nextElementSibling)
+        .forEach(selectedItems => {
+          selectedItems?.removeEventListener('transitionend', debouncedHandleVisibility)
+        })
     }
-  }, [containerRef, handleVisibility])
+  }, [containerRef, debouncedHandleVisibility, observedElements])
 }
