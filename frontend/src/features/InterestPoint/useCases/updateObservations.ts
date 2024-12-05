@@ -7,11 +7,8 @@ export const updateObservationsAction =
     const { currentInterestPoint }: InterestPointState = getState().interestPoint
 
     if (currentInterestPoint?.observations !== observations) {
-      const updatedObservations = observations === undefined ? null : observations
       const { observations: currentObservations, ...currentInterestPointWithoutObservations } = currentInterestPoint
 
-      dispatch(
-        updateCurrentInterestPoint({ observations: updatedObservations, ...currentInterestPointWithoutObservations })
-      )
+      dispatch(updateCurrentInterestPoint({ observations, ...currentInterestPointWithoutObservations }))
     }
   }

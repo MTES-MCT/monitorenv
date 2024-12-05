@@ -6,16 +6,6 @@ import type { GeoJSON as GeoJSONType } from '../../types/GeoJSON'
 import type { MultiPoint, Point, MultiPolygon, Polygon } from 'ol/geom'
 import type Geometry from 'ol/geom/Geometry'
 
-/**
- *
- * @param {Object} layer
- * @param { String } layer.type
- * @param { String | null } layer.topic
- * @param { String | null } layer.zone
- * @returns String
- */
-export const getLayerNameNormalized = layer => [layer.type, layer.topic, layer.zone].filter(Boolean).join(':')
-
 export function convertToGeoJSONGeometryObject(feature: Geometry): GeoJSONType.Geometry {
   const format = new GeoJSON()
 

@@ -7,7 +7,7 @@ export function formatDateLabel(dateLabel: string) {
   )
 }
 
-export function getDateAsLocalizedStringExpanded(date: string | undefined | null) {
+export function getDateAsLocalizedStringExpanded(date: string | undefined) {
   if (!date || date.trim() === '') {
     return undefined
   }
@@ -20,7 +20,7 @@ export function getDateAsLocalizedStringExpanded(date: string | undefined | null
   )
 }
 
-export function getDateAsLocalizedStringCompact(date: string | undefined | null, withUtc = false) {
+export function getDateAsLocalizedStringCompact(date: string | undefined, withUtc = false) {
   if (!date || date.trim() === '') {
     return undefined
   }

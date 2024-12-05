@@ -7,10 +7,8 @@ export const updateNameAction =
     const { currentInterestPoint }: InterestPointState = getState().interestPoint
 
     if (currentInterestPoint?.name !== name) {
-      const updatedName = name === undefined ? null : name
-
       const { name: currentName, ...currentInterestPointWithoutName } = currentInterestPoint
 
-      dispatch(updateCurrentInterestPoint({ name: updatedName, ...currentInterestPointWithoutName }))
+      dispatch(updateCurrentInterestPoint({ name, ...currentInterestPointWithoutName }))
     }
   }
