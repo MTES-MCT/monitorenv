@@ -124,4 +124,8 @@ USER monitorenv
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
-CMD exec java -jar "monitorenv-${VERSION}.jar"
+CMD exec java -Dhttp.proxyHost=${MONITORENV_HTTP_PROXY_HOST} -Dhttp.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
+              -Dhttps.proxyHost=${MONITORENV_HTTP_PROXY_HOST} -Dhttps.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
+              -Dhttp.nonProxyHosts=${MONITORENV_HTTP_PROXY_PORT} -Dhttps.nonProxyHosts=${MONITORENV_HTTP_PROXY_PORT} \
+              -Dspring.config.additional-location="/home/monitorfish/configurations/" \
+              -jar "monitorenv-${VERSION}.jar"
