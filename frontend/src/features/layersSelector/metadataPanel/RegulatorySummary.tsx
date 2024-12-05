@@ -21,14 +21,14 @@ export function RegulatorySummary({ regulatoryReference, type, url }: Regulatory
 
     if (type === 'AMP') {
       trackEvent({
-        action: 'CLIC',
-        category: 'MONITOR EXT',
+        action: 'Redirection lien Légicem',
+        category: 'COUCHES CARTO – AMP',
         name: 'Lien Légicem depuis AMP'
       })
     } else if (type === 'REGULATORY') {
       trackEvent({
-        action: 'CLIC',
-        category: 'MONITOR EXT',
+        action: 'Redirection lien Légicem',
+        category: 'COUCHES CARTO – ZONES REG',
         name: 'Lien Légicem depuis Zone réglementaire'
       })
     }
