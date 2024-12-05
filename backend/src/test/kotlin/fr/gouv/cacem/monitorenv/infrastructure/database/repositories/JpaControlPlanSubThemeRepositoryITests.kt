@@ -9,7 +9,7 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
     private lateinit var jpaControlPlanSubThemeRepository: JpaControlPlanSubThemeRepository
 
     @Test
-    fun `findAll Should return all control plan subthemes `() {
+    fun `findAll Should return all control plan subthemes for all years`() {
         // When
         val requestedControlPlanSubThemes = jpaControlPlanSubThemeRepository.findAll()
         // Then
