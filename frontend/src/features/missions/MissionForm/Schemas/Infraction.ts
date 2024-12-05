@@ -72,6 +72,6 @@ export const CompletionInfractionSchema: Yup.Schema<Infraction> = NewInfractionS
     .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
     .required(),
   seizure: Yup.mixed<InfractionSeizureEnum>()
-    .oneOf([InfractionSeizureEnum.YES, InfractionSeizureEnum.NO, InfractionSeizureEnum.PENDING])
+    .oneOf([InfractionSeizureEnum.YES, InfractionSeizureEnum.NO, InfractionSeizureEnum.NONE])
     .required()
 })
