@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
+import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -7,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedExcept
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.*
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
+import io.sentry.Sentry
 import org.locationtech.jts.io.ParseException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,7 +24,7 @@ import java.util.regex.Pattern
 
 @RestControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
-class ControllersExceptionHandler {
+class ControllersExceptionHandler(val sentryConfig: SentryConfig) {
     private val logger: Logger = LoggerFactory.getLogger(ControllersExceptionHandler::class.java)
 
     // -------------------------------------------------------------------------
@@ -87,6 +89,10 @@ class ControllersExceptionHandler {
     fun handleIllegalArgumentException(e: Exception): ApiError {
         logger.error(e.message, e)
 
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return ApiError(IllegalArgumentException(e.message.toString(), e))
     }
 
@@ -97,6 +103,10 @@ class ControllersExceptionHandler {
     fun handleNoSuchElementException(e: Exception): ApiError {
         logger.error(e.message, e)
 
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return ApiError(NoSuchElementException(e.message.toString(), e))
     }
 
@@ -106,6 +116,10 @@ class ControllersExceptionHandler {
     fun handleNoParameter(e: MissingServletRequestParameterException): MissingParameterApiError {
         logger.error(e.message, e)
 
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
     }
 
@@ -113,6 +127,10 @@ class ControllersExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ReportingAlreadyAttachedException::class)
     fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return ApiError(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED.name)
     }
 
