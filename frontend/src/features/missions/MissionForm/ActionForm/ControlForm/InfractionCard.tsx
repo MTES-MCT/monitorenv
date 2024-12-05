@@ -157,7 +157,7 @@ export function InfractionCard({
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
-        <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={setCurrentInfractionIndex} />
+        <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={setCurrentInfractionIndex} title="Editer" />
 
         <>
           <IconButton
