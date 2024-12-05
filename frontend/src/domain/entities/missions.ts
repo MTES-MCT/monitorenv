@@ -98,14 +98,13 @@ export const infractionSeizureLabels = {
     code: 'NO',
     libelle: 'Non'
   },
-  PENDING: {
-    code: 'PENDING',
-    libelle: 'En attente'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   NONE: {
     code: 'NONE',
     libelle: 'Aucune'
+  },
+  PENDING: {
+    code: 'PENDING',
+    libelle: 'En attente'
   }
 }
 export enum InfractionSeizureEnum {
@@ -157,8 +156,8 @@ export type AdministrativeResponseType = 'SANCTION' | 'REGULARIZATION' | 'PENDIN
 export const administrativeResponseOptions: { label: string; value: AdministrativeResponseType }[] = [
   { label: 'Sanction', value: 'SANCTION' },
   { label: 'Régularisation', value: 'REGULARIZATION' },
-  { label: 'En attente', value: 'PENDING' },
-  { label: 'Aucune', value: 'NONE' }
+  { label: 'Aucune', value: 'NONE' },
+  { label: 'En attente', value: 'PENDING' }
 ]
 
 export const hasMissionOrderLabels = {
