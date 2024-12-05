@@ -11,7 +11,7 @@ export function useMatomo() {
       return
     }
 
-    const normalizedMatomoUrl = matomoUrl[matomoUrl.length - 1] !== '/' ? `${matomoUrl}/` : matomoUrl
+    const normalizedMatomoUrl = matomoUrl.endsWith('/') ? matomoUrl : `${matomoUrl}/`
 
     if (typeof window === 'undefined') {
       return
@@ -33,7 +33,7 @@ export function useMatomo() {
     scriptElement.defer = true
     scriptElement.src = `${normalizedMatomoUrl}matomo.js`
 
-    if (scripts && scripts.parentNode) {
+    if (scripts?.parentNode) {
       scripts.parentNode.insertBefore(scriptElement, scripts)
     }
   }, [matomoSiteId, matomoUrl, isMatomoActivated])
