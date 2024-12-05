@@ -13,7 +13,10 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
         // When
         val requestedControlPlanSubThemes = jpaControlPlanSubThemeRepository.findAll()
         // Then
-        assertThat(requestedControlPlanSubThemes.size).isEqualTo(218)
+        assertThat(requestedControlPlanSubThemes.size).isEqualTo(239)
+
+        // 2023
+        assertThat(requestedControlPlanSubThemes[5].year).isEqualTo(2023)
         assertThat(requestedControlPlanSubThemes[5].id).isEqualTo(6)
         assertThat(requestedControlPlanSubThemes[5].themeId).isEqualTo(4)
         assertThat(requestedControlPlanSubThemes[5].subTheme)
@@ -21,7 +24,23 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
                 "Atteinte aux biens culturels",
             )
 
-        assertThat(requestedControlPlanSubThemes[5].year).isEqualTo(2023)
+        // 2024
+        assertThat(requestedControlPlanSubThemes[100].year).isEqualTo(2024)
+        assertThat(requestedControlPlanSubThemes[100].id).isEqualTo(117)
+        assertThat(requestedControlPlanSubThemes[100].themeId).isEqualTo(103)
+        assertThat(requestedControlPlanSubThemes[100].subTheme)
+            .isEqualTo(
+                "Destruction, capture, arrachage d'espèces protégées",
+            )
+
+        // 2025
+        assertThat(requestedControlPlanSubThemes[200].year).isEqualTo(2025)
+        assertThat(requestedControlPlanSubThemes[200].id).isEqualTo(217)
+        assertThat(requestedControlPlanSubThemes[200].themeId).isEqualTo(107)
+        assertThat(requestedControlPlanSubThemes[200].subTheme)
+            .isEqualTo(
+                "Autre (Culture marine)",
+            )
     }
 
     @Test

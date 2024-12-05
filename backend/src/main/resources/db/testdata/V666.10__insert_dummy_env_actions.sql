@@ -164,8 +164,8 @@ VALUES ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 100),
 
 INSERT INTO public.env_actions_control_plan_sub_themes(env_action_id, subtheme_id)
 VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 214),
-       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 231),
        ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 232),
+       ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 233),
        ('475d2887-5344-46cd-903b-8cb5e42f9a9c', 214),
        ('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 182),
        ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 178),
