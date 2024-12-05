@@ -55,7 +55,7 @@ export function ListLayerGroup({ groupName, isSelected = false, layerIds, select
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}amp-result-group`}
           title={groupName}
         >
-          {getTitle(groupName) ?? ''}
+          {getTitle(groupName)}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>

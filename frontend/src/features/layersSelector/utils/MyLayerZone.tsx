@@ -29,7 +29,7 @@ type MyLayerZoneProps = {
   removeZone: () => void
   showLayer: () => void
   toggleZoneMetadata?: () => void
-  type: string | null
+  type: string | undefined
 }
 
 export function MyLayerZone({

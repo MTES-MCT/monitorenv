@@ -13,10 +13,10 @@ export type InterestPoint = {
 }
 
 export type NewInterestPoint = {
-  coordinates: Coordinate | null
+  coordinates: Coordinate | undefined
   feature?: Feature<LineString>
-  name: string | null
-  observations: string | null
+  name: string | undefined
+  observations: string | undefined
   uuid: string
 }
 

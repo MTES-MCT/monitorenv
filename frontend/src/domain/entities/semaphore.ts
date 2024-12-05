@@ -1,15 +1,15 @@
 import type { InteractionType } from './map/constants'
 
 export type Semaphore = {
-  administration: string | undefined | null
-  base: string | undefined | null
-  department: string | undefined | null
-  email: string | undefined | null
-  facade: string | undefined | null
+  administration: string | undefined
+  base: string | undefined
+  department: string | undefined
+  email: string | undefined
+  facade: string | undefined
   geom: { coordinates: number[]; type: InteractionType.POINT }
   id: number
   name: string
-  phoneNumber: string | undefined | null
-  unit: string | undefined | null
-  url: string | undefined | null
+  phoneNumber: string | undefined
+  unit: string | undefined
+  url: string | undefined
 }

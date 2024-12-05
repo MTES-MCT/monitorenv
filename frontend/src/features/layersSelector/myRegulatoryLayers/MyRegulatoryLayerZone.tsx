@@ -28,7 +28,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
 
   const handleRemoveZone = () => dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
 
-  const displayedName = getTitle(regulatoryZone?.entity_name) ?? 'AUNCUN NOM'
+  const displayedName = getTitle(regulatoryZone?.entity_name) || 'AUCUN NOM'
 
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {

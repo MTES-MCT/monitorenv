@@ -12,7 +12,7 @@ export interface InterestPointState {
   isEditing: boolean
 }
 
-const newInterestPoint = () => ({ coordinates: null, name: null, observations: null, uuid: uuidv4() })
+const newInterestPoint = () => ({ coordinates: undefined, name: undefined, observations: undefined, uuid: uuidv4() })
 
 const INITIAL_STATE: InterestPointState = {
   currentInterestPoint: newInterestPoint(),
