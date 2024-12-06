@@ -11,10 +11,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Amps } from '../Amps'
 import { Bookmark, type BookmarkType } from '../Bookmark'
 import { RegulatoryAreas } from '../RegulatoryAreas'
+import { useObserver } from '../useObserver'
 import { VigilanceAreas } from '../VigilanceAreas'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
-import { useObserver } from '../useObserver'
 
 import type { DashboardFilters } from '../slice'
 
@@ -30,8 +30,6 @@ export function FirstColumn({
   isSelectedAccordionOpen,
   onExpandedAccordionClick
 }: FirstColumnProps) {
-  // console.log('ding')
-
   const [isMount, setIsMount] = useState<boolean>(false)
   const columnRef = useRef<HTMLDivElement>(null)
   const regulatoryAreaRef = useRef<HTMLDivElement>(null)
@@ -67,9 +65,9 @@ export function FirstColumn({
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
   useObserver(columnRef, [
-    { ref: regulatoryAreaRef, setState: setRegBookmark },
-    { ref: ampRef, setState: setAmpBookmark },
-    { ref: vigilanceAreaRef, setState: setVigilanceBookmark }
+    { ref: regulatoryAreaRef, setState: setRegBookmark, state: regBookmark },
+    { ref: ampRef, setState: setAmpBookmark, state: ampBookmark },
+    { ref: vigilanceAreaRef, setState: setVigilanceBookmark, state: vigilanceBookmark }
   ])
 
   useEffect(() => {

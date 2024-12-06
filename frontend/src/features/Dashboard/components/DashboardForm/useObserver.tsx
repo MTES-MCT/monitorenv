@@ -1,77 +1,75 @@
-import { debounce } from 'lodash'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 
 import type { BookmarkType } from './Bookmark'
 
-// Fonction pour vérifier la visibilité par rapport au conteneur
+const createObserver = (root: HTMLElement | null, callback: IntersectionObserverCallback): IntersectionObserver =>
+  new IntersectionObserver(callback, {
+    root,
+    threshold: 1
+  })
+
+const observeElements = (observer: IntersectionObserver, elements: (HTMLElement | null)[]): (() => void) => {
+  elements.forEach(element => {
+    if (element) {
+      observer.observe(element)
+    }
+  })
+
+  return () => {
+    elements.forEach(element => {
+      if (element) {
+        observer.unobserve(element)
+      }
+    })
+  }
+}
+
 const checkVisibility = (
-  container: HTMLElement | null,
-  element: HTMLElement | null,
+  entries: IntersectionObserverEntry[],
+  state: BookmarkType,
   setState: React.Dispatch<React.SetStateAction<BookmarkType>>
 ) => {
-  if (!container || !element) {
-    return
-  }
+  entries.forEach(entry => {
+    const { boundingClientRect, isIntersecting, rootBounds } = entry
+    const isVisible = isIntersecting
+    let { orientation } = state
 
-  const containerRect = container.getBoundingClientRect()
-  const elementRect = element.getBoundingClientRect()
-
-  const isVisible = elementRect.top >= containerRect.top && elementRect.bottom <= containerRect.bottom
-
-  let orientation: 'top' | 'bottom' | undefined
-
-  if (!isVisible) {
-    if (elementRect.bottom < containerRect.top) {
-      orientation = 'top'
-    } else if (elementRect.top > containerRect.bottom) {
-      orientation = 'bottom'
+    if (!isVisible) {
+      if (rootBounds) {
+        if (boundingClientRect.bottom < rootBounds.top) {
+          orientation = 'top'
+        } else if (boundingClientRect.top > rootBounds.bottom) {
+          orientation = 'bottom'
+        }
+      }
     }
-  }
-
-  setState(prevState =>
-    prevState.orientation !== orientation || prevState.visible !== isVisible
-      ? { orientation, ref: prevState.ref, title: prevState.title, visible: !isVisible }
-      : prevState
-  )
+    setState({ ...state, orientation, visible: !isVisible })
+  })
 }
 
 export const useObserver = (
   containerRef: React.RefObject<HTMLElement>,
-  observedElements: {
+  observedElement: {
     ref: React.RefObject<HTMLElement>
     setState: React.Dispatch<React.SetStateAction<BookmarkType>>
+    state: BookmarkType
   }[]
 ) => {
-  const debouncedHandleVisibility = useMemo(
-    () =>
-      debounce(() => {
-        if (!containerRef.current) {
-          return
-        }
-
-        observedElements.forEach(({ ref, setState }) => {
-          checkVisibility(containerRef.current, ref.current, setState)
-        })
-      }, 100),
-    [containerRef, observedElements]
-  )
-  const handleVisibility = useCallback(() => {
-    debouncedHandleVisibility()
-  }, [debouncedHandleVisibility])
-
   useEffect(() => {
-    const container = containerRef.current
+    const observer = createObserver(containerRef.current, entries => {
+      observedElement.forEach(({ ref, setState, state }) => {
+        const targetEntry = entries.find(entry => entry.target === ref.current)
+        if (targetEntry) {
+          checkVisibility([targetEntry], state, setState)
+        }
+      })
+    })
 
-    if (!container) {
-      return undefined
-    }
+    const cleanup = observeElements(
+      observer,
+      observedElement.map(config => config.ref.current)
+    )
 
-    container.addEventListener('scroll', handleVisibility)
-    container.addEventListener('resize', handleVisibility)
-
-    return () => {
-      container.removeEventListener('scroll', handleVisibility)
-      container.removeEventListener('resize', handleVisibility)
-    }
-  }, [containerRef, handleVisibility])
+    return cleanup
+  }, [containerRef, observedElement])
 }
