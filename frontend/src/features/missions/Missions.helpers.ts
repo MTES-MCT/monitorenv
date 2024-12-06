@@ -37,7 +37,7 @@ export const infractionFactory = (infraction?: Partial<Infraction>): NewInfracti
   natinf: [],
   nbTarget: 1,
   observations: '',
-  seizure: InfractionSeizureEnum.NONE,
+  seizure: InfractionSeizureEnum.PENDING,
   ...infraction,
   id: uuidv4()
 })

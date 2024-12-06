@@ -53,7 +53,7 @@ export function ThirdColumn({
   const topBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'top'
   )
-  const bottomBookmarks = [commentsBookmark, weatherBookmark].filter(
+  const bottomBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'bottom'
   )
 

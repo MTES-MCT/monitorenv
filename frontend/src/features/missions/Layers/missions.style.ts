@@ -162,6 +162,10 @@ export const selectedMissionControlStyle = (feature, missionGeom, isEditingSurve
       const missionExtent = formattedMissionGeometry?.getExtent()
       const missionCenter = missionExtent && getCenter(missionExtent)
 
+      if (!missionCenter || !controlCenter) {
+        return undefined
+      }
+
       return new LineString([missionCenter, controlCenter])
     },
     stroke: new Stroke({
