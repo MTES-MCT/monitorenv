@@ -11,7 +11,9 @@ export function RegulatoryAreasThemesCell({ themeIds }: { themeIds: number[] }) 
     return '-'
   }
 
-  const regulatoryAreasThemes = themeIds.map(themeId => getTitle(regulatoryAreas.entities[themeId]?.layer_name))
+  const regulatoryAreasThemes = themeIds
+    .map(themeId => getTitle(regulatoryAreas.entities[themeId]?.layer_name))
+    .join(', ')
 
-  return <span>{regulatoryAreasThemes.join(', ')}</span>
+  return <span title={regulatoryAreasThemes}>{regulatoryAreasThemes}</span>
 }
