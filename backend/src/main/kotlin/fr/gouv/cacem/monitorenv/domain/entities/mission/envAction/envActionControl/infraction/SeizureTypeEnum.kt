@@ -3,6 +3,5 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionCont
 enum class SeizureTypeEnum {
     YES,
     NO,
-    PENDING,
-    NONE,
+    PENDING
 }

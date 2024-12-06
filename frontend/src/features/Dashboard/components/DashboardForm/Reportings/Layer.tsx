@@ -46,8 +46,6 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
       dispatch(dashboardActions.setSelectedReporting(undefined))
     } else {
       dispatch(dashboardActions.addItems({ itemIds: [+reporting.id], type: Dashboard.Block.REPORTINGS }))
-
-      focus(e)
     }
   }
 

@@ -74,6 +74,15 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 6')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 7')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
+
+    // Filter "Spécific Period"
+    cy.clickButton('Filtrer par type de zones')
+    cy.fill('Période de vigilance', 'Période spécifique')
+    cy.fill('Période spécifique', [
+      [2021, 1, 1],
+      [2022, 3, 3]
+    ])
+    cy.getDataCy('vigilance-area-results-list-button').contains('0 résultat')
   })
   it('Result list should be displayed by default but not checked and total should be visible', () => {
     cy.getDataCy('vigilance-area-results-list-button').contains('5 résultats')

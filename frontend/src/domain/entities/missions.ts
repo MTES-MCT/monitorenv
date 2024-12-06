@@ -98,10 +98,6 @@ export const infractionSeizureLabels = {
     code: 'NO',
     libelle: 'Non'
   },
-  NONE: {
-    code: 'NONE',
-    libelle: 'Aucune'
-  },
   PENDING: {
     code: 'PENDING',
     libelle: 'En attente'
@@ -109,7 +105,6 @@ export const infractionSeizureLabels = {
 }
 export enum InfractionSeizureEnum {
   NO = 'NO',
-  NONE = 'NONE',
   PENDING = 'PENDING',
   YES = 'YES'
 }

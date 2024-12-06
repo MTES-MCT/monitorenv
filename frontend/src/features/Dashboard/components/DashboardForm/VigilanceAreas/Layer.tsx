@@ -34,13 +34,6 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Vigilance
       dispatch(dashboardActions.removeItems(payload))
     } else {
       dispatch(dashboardActions.addItems(payload))
-
-      const feature = getFeature(vigilanceArea.geom)
-
-      const extent = feature?.getGeometry()?.getExtent()
-      if (extent) {
-        dispatch(setFitToExtent(extent))
-      }
     }
   }
 
