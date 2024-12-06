@@ -13,7 +13,7 @@ function isWithinPeriod(date: Dayjs, startDate: Dayjs, endDate: Dayjs) {
 function calculatePeriodBounds(
   periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
   specificPeriodFilter?: string[]
-): { endDate: Dayjs; startDate: Dayjs } {
+): { endDate: Dayjs | undefined; startDate: Dayjs | undefined } {
   const now = customDayjs()
 
   if (specificPeriodFilter) {
@@ -33,7 +33,8 @@ function calculatePeriodBounds(
     case VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS:
       return { endDate: now.utc().add(3, 'months').endOf('day'), startDate: now.utc().startOf('day') }
     default:
-      throw new Error('Invalid period')
+      // case where the specific period is chosen but no date is provided
+      return { endDate: undefined, startDate: undefined }
   }
 }
 
@@ -91,6 +92,10 @@ export const getFilterVigilanceAreasPerPeriod = (
     periodFilter,
     vigilanceAreaSpecificPeriodFilter
   )
+
+  if (!endDateFilter || !startDateFilter) {
+    return []
+  }
 
   return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaFromApi>) ?? []).filter(vigilanceArea => {
     if (vigilanceArea.isAtAllTimes) {

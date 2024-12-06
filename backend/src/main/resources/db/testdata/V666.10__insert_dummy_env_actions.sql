@@ -30,7 +30,7 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
                    "administrativeResponse": "REGULARIZATION",
                    "registrationNumber": null,
                    "controlledPersonIdentity": null,
-                   "seizure": "NONE"
+                   "seizure": "NO"
                }
            ],
            "vehicleType": null,

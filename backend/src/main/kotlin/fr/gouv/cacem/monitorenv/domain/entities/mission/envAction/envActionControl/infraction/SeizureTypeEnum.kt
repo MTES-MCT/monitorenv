@@ -4,5 +4,4 @@ enum class SeizureTypeEnum {
     YES,
     NO,
     PENDING,
-    NONE,
 }

@@ -87,13 +87,15 @@ const StyledIconButton = styled(IconButton)`
   &:hover,
   &._hover {
     background-color: ${p => p.theme.color.charcoal};
-    border: none;
+    color: ${p => p.theme.color.gainsboro};
+    border-color: ${p => p.theme.color.charcoal};
   }
 
   &:active,
   &._active {
     background-color: ${p => p.theme.color.charcoal};
-    border: none;
+    color: ${p => p.theme.color.gainsboro};
+    border-color: ${p => p.theme.color.charcoal};
   }
 `
 

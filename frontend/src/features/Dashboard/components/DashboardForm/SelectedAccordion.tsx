@@ -56,10 +56,12 @@ const AccordionContainer = styled.div`
   box-shadow: 0px 3px 6px #70778540;
   padding-bottom: 4px;
 `
+
 const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform 0.3s;
 `
+
 const AccordionHeader = styled.header`
   align-items: center;
   color: ${p => p.theme.color.charcoal};
@@ -81,8 +83,9 @@ const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
-  overflow-x: hidden;
-  transition: 0.5s max-height;
+  overflow: hidden;
+  transition: ${({ $isExpanded }) => ($isExpanded ? '0.5s max-height ease-in' : '0.3s max-height ease-out')};
+
   & > :last-child {
     border-bottom: none;
   }
