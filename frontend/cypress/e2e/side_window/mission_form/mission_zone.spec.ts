@@ -47,18 +47,16 @@ context('Side Window > Mission Form > Mission zone', () => {
     cy.clickButton('Ajouter')
     cy.wait(250)
     cy.clickButton('Ajouter une surveillance')
-    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
-    cy.wait(250)
     cy.clickButton('Ajouter une zone de surveillance')
-    cy.wait(250)
-
     dispatch(setGeometry(surveillanceGeometry))
+    cy.wait(250)
+    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.wait(250)
   })
 
   it('Should add a surveillance and computed mission zone with surveillance zone', () => {
     cy.wait(400)
-    cy.intercept('PUT', '/bff/v1/missions/*').as('createMission')
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
     cy.getDataCy('mission-zone-computed-from-action').should('exist')
 
@@ -92,7 +90,7 @@ context('Side Window > Mission Form > Mission zone', () => {
 
     // Check geom values
     cy.waitForLastRequest(
-      '@createMission',
+      '@updateMission',
       {
         body: {
           envActions: [
@@ -125,7 +123,7 @@ context('Side Window > Mission Form > Mission zone', () => {
 
   it('Should add multiples actions and computed mission zone with the zone or point of the most recent action.', () => {
     cy.wait(400)
-    cy.intercept('PUT', '/bff/v1/missions/*').as('createMission')
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
     cy.getDataCy('mission-zone-computed-from-action').should('exist')
 
@@ -227,7 +225,7 @@ context('Side Window > Mission Form > Mission zone', () => {
 
     // Check geom values
     cy.waitForLastRequest(
-      '@createMission',
+      '@updateMission',
       {
         body: {
           envActions: [
