@@ -37,14 +37,11 @@ import java.util.*
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
-    @Autowired
-    private val customQueryCountListener: CustomQueryCountListener? = null
+    @Autowired private val customQueryCountListener: CustomQueryCountListener? = null
 
-    @Autowired
-    private lateinit var jpaMissionRepository: JpaMissionRepository
+    @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
 
-    @Autowired
-    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
@@ -887,7 +884,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 vesselName = "Vessel Name",
                 mmsi = "123456789",
                 imo = "987654321",
-                seizure = SeizureTypeEnum.NONE,
+                seizure = SeizureTypeEnum.NO,
             )
         val controlAction =
             EnvActionControlEntity(
