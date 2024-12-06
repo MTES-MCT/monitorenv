@@ -1,35 +1,53 @@
-import { debounce } from 'lodash'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import type { BookmarkType } from './Bookmark'
 
-// Fonction pour vérifier la visibilité par rapport au conteneur
-const checkVisibility = (
+const createObserver = (root: HTMLElement | null, callback: IntersectionObserverCallback): IntersectionObserver =>
+  new IntersectionObserver(callback, {
+    root
+  })
+
+const observeElements = (
   container: HTMLElement | null,
-  element: HTMLElement | null,
+  observer: IntersectionObserver | undefined,
+  elements: (HTMLElement | null)[]
+): (() => void) => {
+  elements.forEach(element => {
+    if (element && container && observer) {
+      observer.observe(element)
+    }
+  })
+
+  return () => {
+    elements.forEach(element => {
+      if (element && container && observer) {
+        observer.unobserve(element)
+      }
+    })
+  }
+}
+
+const checkVisibility = (
+  entry: IntersectionObserverEntry,
   setState: React.Dispatch<React.SetStateAction<BookmarkType>>
 ) => {
-  if (!container || !element) {
-    return
-  }
-
-  const containerRect = container.getBoundingClientRect()
-  const elementRect = element.getBoundingClientRect()
-
-  const isVisible = elementRect.top >= containerRect.top && elementRect.bottom <= containerRect.bottom
-
-  let orientation: 'top' | 'bottom' | undefined
+  const { boundingClientRect, isIntersecting, rootBounds } = entry
+  const isVisible = isIntersecting
+  let orientation
+  console.log('on checke')
 
   if (!isVisible) {
-    if (elementRect.bottom < containerRect.top) {
-      orientation = 'top'
-    } else if (elementRect.top > containerRect.bottom) {
-      orientation = 'bottom'
+    if (rootBounds) {
+      if (boundingClientRect.bottom < rootBounds.top) {
+        orientation = 'top'
+      } else if (boundingClientRect.top > rootBounds.bottom) {
+        orientation = 'bottom'
+      }
     }
   }
 
   setState(prevState =>
-    prevState.orientation !== orientation || prevState.visible !== isVisible
+    prevState.orientation !== orientation || prevState.visible !== !isVisible
       ? { orientation, ref: prevState.ref, title: prevState.title, visible: !isVisible }
       : prevState
   )
@@ -37,41 +55,33 @@ const checkVisibility = (
 
 export const useObserver = (
   containerRef: React.RefObject<HTMLElement>,
-  observedElements: {
+  observedElement: {
     ref: React.RefObject<HTMLElement>
     setState: React.Dispatch<React.SetStateAction<BookmarkType>>
   }[]
 ) => {
-  const debouncedHandleVisibility = useMemo(
-    () =>
-      debounce(() => {
-        if (!containerRef.current) {
-          return
+  const callback = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      observedElement.forEach(({ ref, setState }) => {
+        const targetEntry = entries.find(entry => entry.target === ref.current)
+        if (targetEntry) {
+          checkVisibility(targetEntry, setState)
         }
-
-        observedElements.forEach(({ ref, setState }) => {
-          checkVisibility(containerRef.current, ref.current, setState)
-        })
-      }, 100),
-    [containerRef, observedElements]
+      })
+    },
+    [observedElement]
   )
-  const handleVisibility = useCallback(() => {
-    debouncedHandleVisibility()
-  }, [debouncedHandleVisibility])
 
   useEffect(() => {
-    const container = containerRef.current
-
-    if (!container) {
-      return undefined
+    let observer: IntersectionObserver | undefined
+    if (containerRef.current) {
+      observer = createObserver(containerRef.current, callback)
     }
 
-    container.addEventListener('scroll', handleVisibility)
-    container.addEventListener('resize', handleVisibility)
-
-    return () => {
-      container.removeEventListener('scroll', handleVisibility)
-      container.removeEventListener('resize', handleVisibility)
-    }
-  }, [containerRef, handleVisibility])
+    return observeElements(
+      containerRef.current,
+      observer,
+      observedElement.map(element => element.ref.current)
+    )
+  }, [callback, containerRef, observedElement])
 }
