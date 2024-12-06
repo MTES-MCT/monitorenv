@@ -142,9 +142,6 @@ export function OverlayContent({ items }: OverlayContentProps) {
           const isVigilanceArea = isVigilanceAreaLayer(item.layerType)
 
           let vigilanceAreaPeriod = ''
-          if (isVigilanceArea && (item.properties as VigilanceArea.VigilanceAreaProperties).isAtAllTimes) {
-            vigilanceAreaPeriod = 'En tout temps'
-          }
           if (isVigilanceArea) {
             if ((item.properties as VigilanceArea.VigilanceAreaProperties).isAtAllTimes) {
               vigilanceAreaPeriod = 'En tout temps'
