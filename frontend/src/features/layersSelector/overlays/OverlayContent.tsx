@@ -136,30 +136,36 @@ export function OverlayContent({ items }: OverlayContentProps) {
           const legendKey = getLegendKey(item.properties, item.layerType)
           const isSelected =
             (id === layerId && !!layerType && item.layerType.includes(layerType)) || selectedVigilanceAreaId === id
+
           const isRegulatory = isRegulatoryLayer(item.layerType)
-
           const isAMP = isAmpLayer(item.layerType)
-
           const isVigilanceArea = isVigilanceAreaLayer(item.layerType)
 
           let vigilanceAreaPeriod = ''
-          if (isVigilanceArea && 'startDatePeriod' in item.properties) {
-            vigilanceAreaPeriod = `${[
-              `${
-                item.properties.startDatePeriod
-                  ? `Du ${customDayjs(item.properties.startDatePeriod).utc().format('DD/MM/YYYY')}`
-                  : ''
-              }  
+          if (isVigilanceArea && (item.properties as VigilanceArea.VigilanceAreaProperties).isAtAllTimes) {
+            vigilanceAreaPeriod = 'En tout temps'
+          }
+          if (isVigilanceArea) {
+            if ((item.properties as VigilanceArea.VigilanceAreaProperties).isAtAllTimes) {
+              vigilanceAreaPeriod = 'En tout temps'
+            } else if ('startDatePeriod' in item.properties) {
+              vigilanceAreaPeriod = `${[
+                `${
+                  item.properties.startDatePeriod
+                    ? `Du ${customDayjs(item.properties.startDatePeriod).utc().format('DD/MM/YYYY')}`
+                    : ''
+                }  
             ${
               item.properties?.endDatePeriod
                 ? `au ${customDayjs(item.properties.endDatePeriod).utc().format('DD/MM/YYYY')}`
                 : ''
             }`,
-              frequencyText(item.properties.frequency, false),
-              endingOccurenceText(item.properties.endingCondition, item.properties.computedEndDate, false)
-            ]
-              .filter(Boolean)
-              .join(', ')}`
+                frequencyText(item.properties.frequency, false),
+                endingOccurenceText(item.properties.endingCondition, item.properties.computedEndDate, false)
+              ]
+                .filter(Boolean)
+                .join(', ')}`
+            }
           }
 
           const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
