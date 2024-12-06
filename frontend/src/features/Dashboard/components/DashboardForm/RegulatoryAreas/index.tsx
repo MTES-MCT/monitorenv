@@ -30,7 +30,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
       isExpanded,
       isSelectedAccordionOpen,
       regulatoryAreas,
-      selectedRegulatoryAreaIds: selectedRegulatoryAreas,
+      selectedRegulatoryAreaIds,
       setExpandedAccordion
     },
     ref
@@ -43,7 +43,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
       selectFromResult: ({ data }) => ({
         selectedRegulatoryAreasByLayerName: groupBy(
-          Object.values(data?.entities ?? []).filter(regulatory => selectedRegulatoryAreas.includes(regulatory.id)),
+          Object.values(data?.entities ?? []).filter(regulatory => selectedRegulatoryAreaIds.includes(regulatory.id)),
           regulatory => regulatory.layer_name
         )
       })
@@ -79,7 +79,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
                   key={layerGroupName}
                   groupName={layerGroupName}
                   layerIds={layersId}
-                  selectedRegulatoryAreaIds={selectedRegulatoryAreas}
+                  selectedRegulatoryAreaIds={selectedRegulatoryAreaIds}
                 />
               )
             })}
@@ -87,12 +87,12 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
         </Accordion>
         <SelectedAccordion
           isExpanded={isExpandedSelectedAccordion}
-          isReadOnly={selectedRegulatoryAreas.length === 0}
+          isReadOnly={selectedRegulatoryAreaIds.length === 0}
           setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-          title={`${selectedRegulatoryAreas.length} ${pluralize('zone', selectedRegulatoryAreas.length)} ${pluralize(
-            'sélectionnée',
-            selectedRegulatoryAreas.length
-          )}`}
+          title={`${selectedRegulatoryAreaIds.length} ${pluralize(
+            'zone',
+            selectedRegulatoryAreaIds.length
+          )} ${pluralize('sélectionnée', selectedRegulatoryAreaIds.length)}`}
         >
           {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
             const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
@@ -103,7 +103,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
                 groupName={layerGroupName}
                 isSelected
                 layerIds={layersId}
-                selectedRegulatoryAreaIds={selectedRegulatoryAreas}
+                selectedRegulatoryAreaIds={selectedRegulatoryAreaIds}
               />
             )
           })}

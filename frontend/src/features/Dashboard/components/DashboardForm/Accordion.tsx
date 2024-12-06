@@ -69,9 +69,8 @@ const HeaderSeparator = styled.div`
 const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
   font-size: 13px;
-
   max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
+  overflow: hidden;
   transition: ${({ $isExpanded }) => ($isExpanded ? '0.5s max-height ease-in' : '0.3s max-height ease-out')};
 `

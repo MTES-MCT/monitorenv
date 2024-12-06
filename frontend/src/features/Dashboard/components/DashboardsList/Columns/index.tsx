@@ -20,7 +20,7 @@ export const Columns = (
 ) => [
   {
     accessorFn: row => row.seaFront,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue()),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
@@ -28,7 +28,7 @@ export const Columns = (
   },
   {
     accessorFn: row => row.name,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue()),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
     enableSorting: true,
     header: () => 'Nom',
     id: 'name',
