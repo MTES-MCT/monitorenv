@@ -4,6 +4,7 @@ export type RegulatoryLayerWithMetadataFromAPI = {
   entity_name: string
   facade: string
   geom: GeoJSON.MultiPolygon
+  geometry_simplified: GeoJSON.MultiPolygon
   id: number
   layer_name: string
   ref_reg: string
@@ -15,6 +16,7 @@ export type RegulatoryLayerWithMetadataFromAPI = {
 export type RegulatoryLayerCompactFromAPI = {
   entity_name: string
   geom: GeoJSON.MultiPolygon
+  geometry_simplified: GeoJSON.MultiPolygon
   id: number
   layer_name: string
   ref_reg: string
