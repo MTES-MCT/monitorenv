@@ -5,6 +5,7 @@ import org.locationtech.jts.geom.MultiPolygon
 data class RegulatoryAreaEntity(
     val id: Int,
     val geom: MultiPolygon? = null,
+    val geometry_simplified: MultiPolygon? = null,
     val entity_name: String? = null,
     val url: String? = null,
     val layer_name: String? = null,

@@ -48,7 +48,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       regulatoryFeatures = regulatoryAreasToDisplay?.reduce((regulatorylayers, id) => {
         const layer = regulatoryLayers?.entities[id]
 
-        if (layer && layer.geom) {
+        if (layer && layer.geometry_simplified) {
           const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
 
           if (feature) {

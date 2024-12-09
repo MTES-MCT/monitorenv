@@ -2,7 +2,7 @@ import { getFeature } from '@utils/getFeature'
 import { getArea } from 'ol/sphere'
 
 export function getRegulatoryFeature({ code, layer }) {
-  const feature = getFeature(layer.geom)
+  const feature = getFeature(layer.geometry_simplified)
   if (!feature) {
     return undefined
   }
