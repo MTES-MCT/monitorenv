@@ -35,7 +35,7 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       zIndex: Layers.DASHBOARDS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(dashboardsVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARDS.code
+  dashboardsVectorLayerRef.current.name = Layers.DASHBOARDS.code
   useEffect(() => {
     if (map) {
       map.getLayers().push(dashboardsVectorLayerRef.current)
