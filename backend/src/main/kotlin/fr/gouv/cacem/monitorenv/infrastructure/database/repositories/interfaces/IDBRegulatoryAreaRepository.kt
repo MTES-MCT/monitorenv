@@ -10,7 +10,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         value =
             """
             SELECT r.id FROM RegulatoryAreaModel r
-            WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), st_setsrid(:geometry, 4326))
+            WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), ST_Buffer(st_setsrid(:geometry, 4326), 0))
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
