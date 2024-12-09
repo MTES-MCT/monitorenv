@@ -54,6 +54,7 @@ export const ButtonDown = styled(Button)`
   flex-direction: row-reverse;
   justify-content: space-between;
   gap: 24px;
+  border: 1px solid ${p => p.theme.color.gainsboro};
 `
 
 export const ButtonUp = styled(ButtonDown)`
@@ -71,12 +72,12 @@ export const Wrapper = styled.div<{ $left: number }>`
   font-style: italic;
   margin-left: ${({ $left }) => `${$left}`};
   transform: translateX(-100%);
-  margin-top: -24px;
+  margin-top: -16px;
   position: fixed;
   box-shadow: 0px 3px 6px ${p => p.theme.color.gainsboro};
   z-index: 1000;
 `
 
 export const BottomWrapper = styled(Wrapper)`
-  bottom: 66px;
+  bottom: 74px;
 `
