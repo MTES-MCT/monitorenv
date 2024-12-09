@@ -7,7 +7,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { usePDF } from '@react-pdf/renderer'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Brief } from './Brief'
@@ -19,6 +19,7 @@ type GeneratePdfButtonProps = {
 }
 
 export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
+  const [isGenerating, setIsGenerating] = useState(false)
   const { subThemes, themes } = useGetControlPlans()
 
   const controlUnits = useAppSelector(state => getControlUnitsByIds(state, dashboard.controlUnitIds))
@@ -43,7 +44,6 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
 
-  // Mémoriser la structure du brief
   const brief: Dashboard.Brief = useMemo(
     () => ({
       allLinkedAMPs,
@@ -77,18 +77,30 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const [pdf, update] = usePDF({ document: <Brief brief={brief} /> })
 
-  useEffect(() => update(<Brief brief={brief} />), [brief, update])
-
   const handleDownload = () => {
-    const link = document.createElement('a')
-    link.href = pdf.url ?? `${dashboard.name}.pdf`
-    link.download = `${dashboard.name}.pdf`
-    link.click()
+    setIsGenerating(true)
+
+    update(<Brief brief={brief} />)
   }
 
+  useEffect(() => {
+    if (isGenerating && !pdf.loading && pdf.blob && pdf.url) {
+      setIsGenerating(false)
+
+      const link = document.createElement('a')
+      link.href = pdf.url
+      link.download = `${dashboard.name}.pdf`
+      link.click()
+    }
+  }, [isGenerating, pdf.loading, pdf.blob, pdf.url, dashboard.name])
+
   return (
-    <StyledLinkButton disabled={pdf.loading} Icon={pdf.loading ? Icon.Reset : Icon.Document} onClick={handleDownload}>
-      {pdf.loading ? 'Chargement du brief' : 'Générer un brief'}
+    <StyledLinkButton
+      disabled={pdf.loading || isGenerating}
+      Icon={pdf.loading || isGenerating ? Icon.Reset : Icon.Document}
+      onClick={handleDownload}
+    >
+      {pdf.loading || isGenerating ? 'Chargement du brief' : 'Générer un brief'}
     </StyledLinkButton>
   )
 }

@@ -23,7 +23,7 @@ export const Comments = forwardRef<HTMLDivElement, CommentsProps>(
       () =>
         debounce((value: string | undefined) => {
           dispatch(dashboardActions.setComments({ comments: value, key: dashboardKey }))
-        }, 500),
+        }, 200),
       [dashboardKey, dispatch]
     )
 
