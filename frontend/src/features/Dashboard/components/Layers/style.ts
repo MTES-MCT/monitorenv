@@ -4,8 +4,14 @@ import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrat
 import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 
-export const getDashboardStyle = feature => {
-  const featureType = feature.getId().split(':')[0]
+import type { FeatureLike } from 'ol/Feature'
+
+export const getDashboardStyle = (feature: FeatureLike) => {
+  const featureId = String(feature.getId())
+  if (!featureId) {
+    return undefined
+  }
+  const featureType = featureId.split(':')[0]
 
   if (featureType === Dashboard.Layer.DASHBOARD_REGULATORY_AREAS) {
     return getRegulatoryLayerStyle(feature)
