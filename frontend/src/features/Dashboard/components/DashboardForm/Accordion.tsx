@@ -70,7 +70,7 @@ const AccordionContent = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   font-size: 13px;
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
+  max-height: ${({ $isExpanded }) => ($isExpanded ? '100%' : '0px')};
   overflow: hidden;
   transition: ${({ $isExpanded }) => ($isExpanded ? '0.5s max-height ease-in' : '0.3s max-height ease-out')};
 `
