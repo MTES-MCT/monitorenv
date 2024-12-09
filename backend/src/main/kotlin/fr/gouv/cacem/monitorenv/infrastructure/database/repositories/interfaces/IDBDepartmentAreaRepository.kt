@@ -7,7 +7,8 @@ import org.springframework.data.repository.CrudRepository
 
 interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int> {
     @Query(
-        value = """
+        value =
+            """
         SELECT *
         FROM departments_areas
         WHERE insee_dep = :inseeCode
@@ -19,7 +20,7 @@ interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int>
     @Query(
         """
         WITH geom AS (
-            SELECT st_setsrid(:geometry, 4326) AS geom
+            SELECT ST_Buffer(ST_SetSRID(:geometry, 4326), 0) AS geom
         ),
 
         departments_intersection_areas AS (
