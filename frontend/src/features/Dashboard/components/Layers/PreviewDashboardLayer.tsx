@@ -4,18 +4,16 @@ import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getDashboardById } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
-import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
-import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
-import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
-import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useRef } from 'react'
+
+import { getDashboardStyle } from './style'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -52,10 +50,11 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: previewLayersVectorSourceRef.current,
+      style: feature => getDashboardStyle(feature),
       zIndex: Layers.DASHBOARD_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(previewLayersVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARD_PREVIEW.code
+  previewLayersVectorLayerRef.current.name = Layers.DASHBOARD_PREVIEW.code
 
   useEffect(() => {
     if (map) {
@@ -81,7 +80,6 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
               }
 
               drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
-              feature.setStyle(getRegulatoryLayerStyle(feature))
               feats.push(feature)
             }
 
@@ -106,7 +104,6 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
                 return feats
               }
               drawBorder(layerId, feature, Dashboard.Block.AMP)
-              feature.setStyle(getAMPLayerStyle(feature))
               feats.push(feature)
             }
 
@@ -123,7 +120,6 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getVigilanceAreaZoneFeature(layer, Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS)
             feature.set('isSelected', true)
-            feature.setStyle(getVigilanceAreaLayerStyle(feature))
 
             previewLayersVectorSourceRef.current.addFeature(feature)
           }
@@ -135,7 +131,6 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
             dashboard.reportingToDisplay,
             Dashboard.featuresCode.DASHBOARD_REPORTINGS
           )
-          feature.setStyle(editingReportingStyleFn)
           previewLayersVectorSourceRef.current.addFeature(feature)
         }
       }

@@ -1,13 +1,9 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
-import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
-import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { measurementStyle, measurementStyleWithCenter } from '@features/map/layers/styles/measurement.style'
 import { overlayStroke } from '@features/map/overlays/style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
-import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
-import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -19,6 +15,8 @@ import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useRef, type MutableRefObject, useEffect } from 'react'
+
+import { getDashboardStyle } from './style'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -34,10 +32,11 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: dashboardDatasVectorSourceRef.current,
+      style: feature => getDashboardStyle(feature),
       zIndex: Layers.DASHBOARDS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(dashboardDatasVectorLayerRef.current as VectorLayerWithName).name = Layers.DASHBOARDS.code
+  dashboardDatasVectorLayerRef.current.name = Layers.DASHBOARDS.code
 
   useEffect(() => {
     if (map) {
@@ -83,7 +82,6 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       feats.push(feat)
       selectedDashboardOnMap.reportings.forEach(reporting => {
         const reportingFeature = getReportingZoneFeature(reporting, Dashboard.featuresCode.DASHBOARD_REPORTINGS)
-        reportingFeature.setStyle(editingReportingStyleFn)
 
         feats.push(reportingFeature)
       })
@@ -97,8 +95,6 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
           return feats
         }
 
-        ampFeature.setStyle(getAMPLayerStyle(ampFeature))
-
         return feats.push(ampFeature)
       })
       selectedDashboardOnMap.regulatoryAreas.forEach(regulatoryArea => {
@@ -110,8 +106,6 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
           return feats
         }
 
-        regulatoryAreaFeature.setStyle(getRegulatoryLayerStyle(regulatoryAreaFeature))
-
         return feats.push(regulatoryAreaFeature)
       })
       selectedDashboardOnMap.vigilanceAreas.forEach(vigilanceArea => {
@@ -119,7 +113,6 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
           vigilanceArea,
           Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS
         )
-        vigilanceAreaFeature.setStyle(getVigilanceAreaLayerStyle(vigilanceAreaFeature))
 
         feats.push(vigilanceAreaFeature)
       })
