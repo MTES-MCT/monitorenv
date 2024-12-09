@@ -79,8 +79,8 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   }
 
   const hasFilters = !!(
-    (filters?.regulatoryThemes && filters?.regulatoryThemes.length > 0) ??
-    (filters?.amps && filters?.amps.length > 0) ??
+    (filters?.regulatoryThemes && filters?.regulatoryThemes.length > 0) ||
+    (filters?.amps && filters?.amps.length > 0) ||
     filters?.vigilanceAreaPeriod
   )
 
@@ -135,7 +135,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
           Prévisualiser la sélection
         </StyledButton>
       </FiltersContainer>
-      {(hasFilters || filters?.specificPeriod) && (
+      {(hasFilters || filters?.vigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) && (
         <TagsContainer data-cy="dashboard-filter-tags">
           {filters?.vigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && (
             <CustomPeriodContainer>
@@ -189,8 +189,10 @@ const FiltersContainer = styled.div`
 const TagsContainer = styled.div`
   align-items: end;
   display: flex;
-  flex: 0 1 50%;
   gap: 16px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 100%;
 `
 
 const StyledButton = styled.button`
