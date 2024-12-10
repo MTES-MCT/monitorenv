@@ -114,6 +114,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
 )
 
 const StyledLayerList = styled(LayerSelector.LayerList)`
+  overflow: hidden;
   height: auto;
 `
 const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`

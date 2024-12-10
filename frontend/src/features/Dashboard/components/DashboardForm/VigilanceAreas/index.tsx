@@ -96,6 +96,7 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
 
 const StyledLayerList = styled(LayerSelector.LayerList)`
   height: auto;
+  overflow: hidden;
 `
 const StyledPanel = styled(Panel)<{ $marginLeft: number }>`
   left: ${p =>

@@ -32,7 +32,7 @@ export function Accordion({ children, isExpanded, name, setExpandedAccordion, ti
       </AccordionHeader>
       <HeaderSeparator />
       <AccordionContent $isExpanded={isExpanded} id={`${name ?? title}-accordion`}>
-        {children}
+        <Wrapper>{children}</Wrapper>
       </AccordionContent>
     </AccordionContainer>
   )
@@ -67,10 +67,13 @@ const HeaderSeparator = styled.div`
   padding: -24px;
 `
 const AccordionContent = styled.div<{ $isExpanded: boolean }>`
-  display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '100%' : '0px')};
+  display: grid;
+  grid-template-rows: ${({ $isExpanded }) => ($isExpanded ? '1fr' : '0fr')};
+  transition: ${({ $isExpanded }) =>
+    $isExpanded ? '0.5s grid-template-rows ease-in' : '0.3s grid-template-rows ease-out'};
+`
+
+const Wrapper = styled.div`
+  height: auto;
   overflow: hidden;
-  transition: ${({ $isExpanded }) => ($isExpanded ? '0.5s max-height ease-in' : '0.3s max-height ease-out')};
 `

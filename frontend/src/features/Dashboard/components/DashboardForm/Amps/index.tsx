@@ -99,6 +99,7 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
 )
 
 const StyledLayerList = styled(LayerSelector.LayerList)`
+  overflow: hidden;
   height: auto;
 `
 
