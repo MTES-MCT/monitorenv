@@ -45,9 +45,8 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
     let regulatoryFeatures: Feature[] = []
     if (regulatoryLayers?.entities) {
       const isolatedLayerTypeIsRegulatory = (isolatedLayer?.type.search('REGULATORY') ?? -1) > -1
-      const regulatoryExcludedLayers = excludedLayers
-        ?.filter(layer => layer.type.search('REGULATORY') > -1)
-        .map(layer => layer.id)
+      const regulatoryExcludedLayers =
+        excludedLayers?.filter(layer => layer.type.search('REGULATORY') > -1).map(layer => layer.id) ?? []
 
       let featuresToDisplay = regulatoryExcludedLayers ?? []
       if (isolatedLayerTypeIsRegulatory && isolatedLayer?.id) {
@@ -58,9 +57,11 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
         const layer = regulatorylayer ? regulatoryLayers.entities[regulatorylayer] : undefined
         if (layer) {
           const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV.code, layer })
+          const featureIsFilled =
+            isolatedLayerTypeIsRegulatory && isolatedLayer?.id === regulatorylayer && isolatedLayer?.isFilled
 
           if (feature) {
-            feature.setStyle(getIsolateRegulatoryLayerStyle(feature, regulatoryExcludedLayers))
+            feature.setStyle(getIsolateRegulatoryLayerStyle(feature, regulatoryExcludedLayers, featureIsFilled))
             feats.push(feature)
           }
         }
@@ -77,9 +78,8 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
 
     if (ampLayers?.entities) {
       const isolatedLayerTypeIsAmp = (isolatedLayer?.type.search('AMP') ?? -1) > -1
-      const ampExcludedLayers = excludedLayers
-        ?.filter(layer => (layer.type.search('AMP') ?? -1) > -1)
-        .map(layer => layer.id)
+      const ampExcludedLayers =
+        excludedLayers?.filter(layer => (layer.type.search('AMP') ?? -1) > -1).map(layer => layer.id) ?? []
       let featuresToDisplay = ampExcludedLayers ?? []
       if (isolatedLayerTypeIsAmp && isolatedLayer?.id) {
         featuresToDisplay = [...featuresToDisplay, isolatedLayer.id]
@@ -90,9 +90,10 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
 
         if (layer && layer.geom) {
           const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
+          const featureIsFilled = isolatedLayerTypeIsAmp && isolatedLayer?.id === id && isolatedLayer?.isFilled
 
           if (feature) {
-            feature.setStyle(getIsolateAMPLayerStyle(feature, ampExcludedLayers))
+            feature.setStyle(getIsolateAMPLayerStyle(feature, ampExcludedLayers, featureIsFilled))
             amplayers.push(feature)
           }
         }
@@ -121,8 +122,9 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
         const layer = id ? vigilanceAreas?.entities[id] : undefined
         if (layer && layer.geom) {
           const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
+          const featureIsFilled = isolatedLayerIsVigilanceArea && isolatedLayer?.id === id && isolatedLayer?.isFilled
           if (feature) {
-            feature.setStyle(getIsolatedVigilanceAreaLayerStyle(feature, vigilanceAreasExcludedLayers))
+            feature.setStyle(getIsolatedVigilanceAreaLayerStyle(feature, vigilanceAreasExcludedLayers, featureIsFilled))
             vigilanceAreasLayers.push(feature)
           }
         }

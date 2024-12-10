@@ -68,6 +68,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const excludedLayers = useAppSelector(state => state.map.excludedLayers)
 
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
@@ -117,7 +118,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
     dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([id]))
   }
 
-  const isolateLayer = (e, id, type) => {
+  const isolateLayer = (e, id: number, type: RegulatoryOrAMPOrViglanceAreaLayerType) => {
     e.stopPropagation()
 
     if (isolatedLayer?.id === id) {
@@ -128,11 +129,30 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
     const layerToIsolate = {
       id,
+      isFilled: true,
       type
     }
-    const excludedLayers =
+    const newExcludedLayers =
       items?.map(item => ({ id: item.properties.id, type: item.layerType })).filter(item => item.id !== id) ?? []
-    dispatch(mapActions.setIsolateMode({ excludedLayers, isolatedLayer: layerToIsolate }))
+    dispatch(mapActions.setIsolateMode({ excludedLayers: newExcludedLayers, isolatedLayer: layerToIsolate }))
+  }
+
+  const updateFillingMode = e => {
+    e.stopPropagation()
+
+    if (!isolatedLayer) {
+      return
+    }
+
+    dispatch(
+      mapActions.setIsolateMode({
+        excludedLayers: excludedLayers ?? [],
+        isolatedLayer: {
+          ...isolatedLayer,
+          isFilled: !isolatedLayer.isFilled
+        }
+      })
+    )
   }
 
   return (
@@ -207,37 +227,51 @@ export function OverlayContent({ items }: OverlayContentProps) {
                 {getTitle(name) && (
                   <Name $isDisabled={isDisabled} title={getTitle(name)}>{` / ${getTitle(name)}`}</Name>
                 )}
-                {items.length > 1 && isVigilanceArea && (
-                  <StyledTooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</StyledTooltip>
-                )}
-                {items.length > 1 && (
-                  <StyledIconButton
-                    accent={Accent.TERTIARY}
-                    color={isolatedLayer?.id === id ? THEME.color.blueGray : THEME.color.charcoal}
-                    Icon={Icon.FocusZones}
-                    onClick={e => isolateLayer(e, id, item.layerType)}
-                  />
-                )}
-                {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
-                  <IconButton
-                    accent={Accent.TERTIARY}
-                    disabled={regulatoryAreasToAdd.includes(id)}
-                    Icon={Icon.Plus}
-                    onClick={e => addRegulatoryToVigilanceArea(e, id)}
-                    size={Size.SMALL}
-                    title={`Ajouter la zone réglementaire ${name}`}
-                  />
-                )}
-                {isLinkingAmpToVigilanceArea && isAMP && (
-                  <IconButton
-                    accent={Accent.TERTIARY}
-                    disabled={ampToAdd.includes(id)}
-                    Icon={Icon.Plus}
-                    onClick={e => addAMPToVigilanceArea(e, id)}
-                    size={Size.SMALL}
-                    title={`Ajouter l'AMP ${name}`}
-                  />
-                )}
+                <ButtonContainer>
+                  {items.length > 1 && isVigilanceArea && <Tooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</Tooltip>}
+                  {items.length > 1 && (
+                    <>
+                      {isolatedLayer?.id === id && (
+                        <StyledIconButton
+                          accent={Accent.TERTIARY}
+                          color={
+                            isolatedLayer?.id === id && isolatedLayer?.isFilled
+                              ? THEME.color.charcoal
+                              : THEME.color.blueGray
+                          }
+                          Icon={Icon.Stroke}
+                          onClick={updateFillingMode}
+                        />
+                      )}
+                      <StyledIconButton
+                        accent={Accent.TERTIARY}
+                        color={isolatedLayer?.id === id ? THEME.color.blueGray : THEME.color.charcoal}
+                        Icon={Icon.FocusZones}
+                        onClick={e => isolateLayer(e, id, item.layerType)}
+                      />
+                    </>
+                  )}
+                  {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
+                    <IconButton
+                      accent={Accent.TERTIARY}
+                      disabled={regulatoryAreasToAdd.includes(id)}
+                      Icon={Icon.Plus}
+                      onClick={e => addRegulatoryToVigilanceArea(e, id)}
+                      size={Size.SMALL}
+                      title={`Ajouter la zone réglementaire ${name}`}
+                    />
+                  )}
+                  {isLinkingAmpToVigilanceArea && isAMP && (
+                    <IconButton
+                      accent={Accent.TERTIARY}
+                      disabled={ampToAdd.includes(id)}
+                      Icon={Icon.Plus}
+                      onClick={e => addAMPToVigilanceArea(e, id)}
+                      size={Size.SMALL}
+                      title={`Ajouter l'AMP ${name}`}
+                    />
+                  )}
+                </ButtonContainer>
               </Wrapper>
               {items.length === 1 && isVigilanceArea && <Period>{vigilanceAreaPeriod}</Period>}
             </LayerItem>
@@ -288,21 +322,24 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
 `
-
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 12px;
+  line-height: 0;
+  margin-left: auto;
+`
 const Period = styled.span`
   color: ${p => p.theme.color.slateGray};
   font-size: 13px;
   padding-left: 24px;
 `
 
-const StyledTooltip = styled(Tooltip)`
-  display: flex;
-  margin-left: auto;
-`
-
 const StyledIconButton = styled(IconButton)`
-  > svg {
-    height: 18px;
-    width: 18px;
+  padding: 0;
+  > span {
+    > svg {
+      height: 18px;
+      width: 18px;
+    }
   }
 `

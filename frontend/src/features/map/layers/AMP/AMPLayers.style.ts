@@ -4,10 +4,10 @@ import { Fill, Stroke, Style } from 'ol/style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
-const getStyle = (color: string, metadataIsShowed: boolean | undefined, isLayerFilled: boolean = false) =>
+const getStyle = (color: string, metadataIsShowed: boolean | undefined, isLayerFilled: boolean = true) =>
   new Style({
     fill: new Fill({
-      color: isLayerFilled ? 'transparent' : getColorWithAlpha(color, 0.7)
+      color: isLayerFilled ? getColorWithAlpha(color, 0.7) : 'transparent'
     }),
     stroke: new Stroke({
       color: getColorWithAlpha(THEME.color.darkGoldenrod, 1),
@@ -31,9 +31,9 @@ export const getAMPLayerStyle = feature => {
   return style
 }
 
-export const getIsolateAMPLayerStyle = (feature, excludeLayerIds) => {
+export const getIsolateAMPLayerStyle = (feature, excludeLayerIds: number[], isFilled: boolean) => {
   const colorWithAlpha = getAMPColorWithAlpha(feature.get('designation'), feature.get('name'))
-  const isLayerFilled = excludeLayerIds.includes(feature.get('id'))
+  const isLayerFilled = !excludeLayerIds.includes(feature.get('id'))
 
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), isLayerFilled)
+  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), isLayerFilled && isFilled)
 }
