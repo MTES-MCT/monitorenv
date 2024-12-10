@@ -20,8 +20,18 @@ export function Comments({ comments }: { comments: string | undefined }) {
     const breakPointDot = uglyComments.lastIndexOf('.', middle)
     const breakPointBreakline = uglyComments.lastIndexOf('\n', middle)
     const breakPoint = Math.max(breakPointDot, breakPointBreakline)
+    const prettyComments: string[] = []
+    const firstParagraph = uglyComments.slice(0, breakPoint + 1)
+    const secondParagraph = uglyComments.slice(breakPoint + 1)
 
-    return [uglyComments.slice(0, breakPoint + 1), uglyComments.slice(breakPoint + 1)]
+    if (firstParagraph) {
+      prettyComments.push(firstParagraph)
+    }
+    if (secondParagraph) {
+      prettyComments.push(secondParagraph)
+    }
+
+    return prettyComments
   }
 
   return (

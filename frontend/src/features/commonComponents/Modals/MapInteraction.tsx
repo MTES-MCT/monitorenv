@@ -46,7 +46,11 @@ export function MapInteraction({
               <Button accent={Accent.SECONDARY} onClick={onReset}>
                 {resetButtonText ?? 'Réinitialiser'}
               </Button>
-              <ValidateButton disabled={isValidatedButtonDisabled} onClick={onValidate}>
+              <ValidateButton
+                disabled={isValidatedButtonDisabled}
+                onClick={onValidate}
+                title={isValidatedButtonDisabled ? 'Veuillez tracer au moins une zone' : ''}
+              >
                 {validateButtonText}
               </ValidateButton>
             </ButtonGroup>
@@ -108,7 +112,7 @@ const ValidateButton = styled(Button)`
   background: ${p => p.theme.color.mediumSeaGreen};
   border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   color: ${p => p.theme.color.white};
-  &:hover {
+  &:not(:disabled):hover {
     background: ${p => p.theme.color.mediumSeaGreen};
     border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   }
