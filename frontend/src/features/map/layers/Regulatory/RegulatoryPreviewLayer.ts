@@ -23,6 +23,9 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const excludedLayers = useAppSelector(state => state.map.excludedLayers)
+
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
@@ -39,13 +42,27 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       style: getRegulatoryLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(regulatoryPreviewVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV_PREVIEW.code
+  regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
 
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
     if (regulatoryLayersSearchResult || regulatoryLayers?.ids) {
       const regulatoryAreasToDisplay = regulatoryLayersSearchResult ?? regulatoryLayers?.ids ?? []
-      regulatoryFeatures = regulatoryAreasToDisplay?.reduce((regulatorylayers, id) => {
+
+      const isolatedLayerTypeIsRegulatory = (isolatedLayer?.type.search('REGULATORY') ?? -1) > -1
+      const regulatoryExcludedLayers = excludedLayers
+        ?.filter(layer => layer.type.search('REGULATORY') > -1)
+        .map(layer => layer.id)
+
+      const featuresToDisplay = regulatoryAreasToDisplay.filter(id => {
+        if (isolatedLayerTypeIsRegulatory && id === isolatedLayer?.id) {
+          return false
+        }
+
+        return !regulatoryExcludedLayers?.map(excludeLayerId => excludeLayerId).includes(id)
+      })
+
+      regulatoryFeatures = featuresToDisplay?.reduce((regulatorylayers, id) => {
         const layer = regulatoryLayers?.entities[id]
 
         if (layer && layer.geom) {
@@ -63,7 +80,14 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     return regulatoryFeatures
-  }, [regulatoryLayers, regulatoryMetadataLayerId, regulatoryLayersSearchResult])
+  }, [
+    regulatoryLayersSearchResult,
+    regulatoryLayers?.ids,
+    regulatoryLayers?.entities,
+    isolatedLayer,
+    excludedLayers,
+    regulatoryMetadataLayerId
+  ])
 
   useEffect(() => {
     regulatoryPreviewVectorSourceRef.current?.clear(true)

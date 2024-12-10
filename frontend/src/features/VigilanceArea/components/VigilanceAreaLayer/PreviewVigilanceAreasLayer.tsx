@@ -23,6 +23,9 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible && isLayersSidebarVisible
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const excludedLayers = useAppSelector(state => state.map.excludedLayers)
+
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
@@ -41,7 +44,21 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     let features: Feature[] = []
     if (vigilanceAreaSearchResult ?? vigilanceAreas) {
       const vigilanceAreasToDisplay = vigilanceAreaSearchResult ?? vigilanceAreas?.ids ?? []
-      features = vigilanceAreasToDisplay.reduce((amplayers, id) => {
+
+      const isolatedLayerIsVigilanceArea = (isolatedLayer?.type.search('VIGILANCE_AREA') ?? -1) > -1
+      const regulatoryExcludedLayers = excludedLayers
+        ?.filter(layer => layer.type.search('VIGILANCE_AREA') > -1)
+        .map(layer => layer.id)
+
+      const featuresToDisplay = vigilanceAreasToDisplay.filter(id => {
+        if (isolatedLayerIsVigilanceArea && id === isolatedLayer?.id) {
+          return false
+        }
+
+        return !regulatoryExcludedLayers?.map(excludeLayerId => excludeLayerId).includes(id)
+      })
+
+      features = featuresToDisplay.reduce((amplayers, id) => {
         const layer = vigilanceAreas?.entities[id]
 
         if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
@@ -55,7 +72,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     }
 
     return features
-  }, [vigilanceAreaSearchResult, vigilanceAreas])
+  }, [excludedLayers, isolatedLayer?.id, isolatedLayer?.type, vigilanceAreaSearchResult, vigilanceAreas])
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)

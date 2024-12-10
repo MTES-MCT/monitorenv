@@ -3,6 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
 import { type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
+import { mapActions } from 'domain/shared_slices/Map'
 import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import styled from 'styled-components'
 
@@ -23,6 +24,7 @@ export function PinnedOverlay({
 
   const close = () => {
     dispatch(closeAreaOverlay())
+    dispatch(mapActions.setIsolateMode({ excludedLayers: [], isolatedLayer: undefined }))
   }
 
   // component should not be called if items.length < 2
