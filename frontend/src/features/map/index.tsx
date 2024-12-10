@@ -22,6 +22,7 @@ import { AdministrativeLayers } from './layers/AdministrativeLayers'
 import { AMPLayers } from './layers/AMP'
 import { AMPPreviewLayer } from './layers/AMP/AMPPreviewLayer'
 import { DrawLayer } from './layers/DrawLayer'
+import { IsolationLayer } from './layers/IsolationLayer'
 import { MapLayer } from './layers/MapLayer'
 import { MeasurementLayer } from './layers/MeasurementLayer'
 import { ActionOverlay } from './overlays/actions'
@@ -85,6 +86,8 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <RegulatoryPreviewLayer />
         {/* @ts-ignore */}
+        <IsolationLayer />
+        {/* @ts-ignore */}
         <AdministrativeLayers />
         {/* @ts-ignore */}
         <SearchExtentLayer />
@@ -133,6 +136,8 @@ export function Map({ isSuperUser }) {
       <RegulatoryLayers />
       {/* @ts-ignore */}
       <RegulatoryPreviewLayer />
+      {/* @ts-ignore */}
+      <IsolationLayer />
       {/* @ts-ignore */}
       <AdministrativeLayers />
       {/* @ts-ignore */}

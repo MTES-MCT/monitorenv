@@ -10,10 +10,11 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, customDayjs, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { Accent, customDayjs, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
+import { mapActions } from 'domain/shared_slices/Map'
 import styled from 'styled-components'
 
 import { getGroupName, getLegendKey, getLegendType, getName, getTitle } from '../../../domain/entities/layers/utils'
@@ -66,6 +67,8 @@ function isVigilanceAreaLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
 export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
@@ -114,6 +117,24 @@ export function OverlayContent({ items }: OverlayContentProps) {
     dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([id]))
   }
 
+  const isolateLayer = (e, id, type) => {
+    e.stopPropagation()
+
+    if (isolatedLayer?.id === id) {
+      dispatch(mapActions.setIsolateMode({ excludedLayers: [], isolatedLayer: undefined }))
+
+      return
+    }
+
+    const layerToIsolate = {
+      id,
+      type
+    }
+    const excludedLayers =
+      items?.map(item => ({ id: item.properties.id, type: item.layerType })).filter(item => item.id !== id) ?? []
+    dispatch(mapActions.setIsolateMode({ excludedLayers, isolatedLayer: layerToIsolate }))
+  }
+
   return (
     <Layerlist>
       {items
@@ -140,6 +161,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
           const isRegulatory = isRegulatoryLayer(item.layerType)
           const isAMP = isAmpLayer(item.layerType)
           const isVigilanceArea = isVigilanceAreaLayer(item.layerType)
+
+          const isDisabled = id !== isolatedLayer?.id && !!isolatedLayer?.id
 
           let vigilanceAreaPeriod = ''
           if (isVigilanceArea) {
@@ -171,15 +194,30 @@ export function OverlayContent({ items }: OverlayContentProps) {
             <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
               <Wrapper>
                 <LayerLegend
-                  isArchived={isArchived}
+                  isDisabled={isArchived || isDisabled}
                   layerType={item.layerType}
                   legendKey={legendKey}
                   size={Size.NORMAL}
                   type={legendType}
                 />
 
-                <GroupName title={getTitle(groupName)}>{getTitle(groupName)} </GroupName>
-                {getTitle(name) && <Name title={getTitle(name)}>{` / ${getTitle(name)}`}</Name>}
+                <GroupName $isDisabled={isDisabled} title={getTitle(groupName)}>
+                  {getTitle(groupName)}
+                </GroupName>
+                {getTitle(name) && (
+                  <Name $isDisabled={isDisabled} title={getTitle(name)}>{` / ${getTitle(name)}`}</Name>
+                )}
+                {items.length > 1 && isVigilanceArea && (
+                  <StyledTooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</StyledTooltip>
+                )}
+                {items.length > 1 && (
+                  <StyledIconButton
+                    accent={Accent.TERTIARY}
+                    color={isolatedLayer?.id === id ? THEME.color.blueGray : THEME.color.charcoal}
+                    Icon={Icon.FocusZones}
+                    onClick={e => isolateLayer(e, id, item.layerType)}
+                  />
+                )}
                 {isLinkingRegulatoryToVigilanceArea && isRegulatory && (
                   <IconButton
                     accent={Accent.TERTIARY}
@@ -200,9 +238,6 @@ export function OverlayContent({ items }: OverlayContentProps) {
                     title={`Ajouter l'AMP ${name}`}
                   />
                 )}
-                {items.length > 1 && isVigilanceArea && (
-                  <StyledTooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</StyledTooltip>
-                )}
               </Wrapper>
               {items.length === 1 && isVigilanceArea && <Period>{vigilanceAreaPeriod}</Period>}
             </LayerItem>
@@ -216,7 +251,7 @@ const Layerlist = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-  max-height: 320px;
+  max-height: 470px;
   overflow-y: auto;
 `
 
@@ -230,8 +265,8 @@ const LayerItem = styled.li<{ $isSelected: boolean }>`
 
 // using average width of 7px per character to approximate min-width
 // more precise calculation would require measuring text width with access to the dom
-const GroupName = styled.span`
-  color: ${p => p.theme.color.gunMetal};
+const GroupName = styled.span<{ $isDisabled: boolean }>`
+  color: ${p => (p.$isDisabled ? p.theme.color.lightGray : p.theme.color.gunMetal)};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -240,8 +275,8 @@ const GroupName = styled.span`
   margin-left: 8px;
 `
 
-const Name = styled.span`
-  color: ${p => p.theme.color.gunMetal};
+const Name = styled.span<{ $isDisabled: boolean }>`
+  color: ${p => (p.$isDisabled ? p.theme.color.lightGray : p.theme.color.gunMetal)};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -263,4 +298,11 @@ const Period = styled.span`
 const StyledTooltip = styled(Tooltip)`
   display: flex;
   margin-left: auto;
+`
+
+const StyledIconButton = styled(IconButton)`
+  > svg {
+    height: 18px;
+    width: 18px;
+  }
 `

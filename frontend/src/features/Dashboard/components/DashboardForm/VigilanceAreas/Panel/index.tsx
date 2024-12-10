@@ -42,7 +42,7 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
       <Header $isEditing>
         <TitleContainer>
           <LayerLegend
-            isArchived={vigilanceArea?.isArchived}
+            isDisabled={vigilanceArea?.isArchived}
             layerType={MonitorEnvLayers.VIGILANCE_AREA}
             legendKey={vigilanceArea?.comments ?? 'aucun nom'}
             size={Size.NORMAL}

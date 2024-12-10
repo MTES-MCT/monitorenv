@@ -75,7 +75,7 @@ export function MyVigilanceAreaLayerZone({
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown} $withBorderBottom>
       <LayerLegend
-        isArchived={layer?.isArchived}
+        isDisabled={layer?.isArchived}
         layerType={MonitorEnvLayers.VIGILANCE_AREA}
         legendKey={layer?.comments ?? 'aucun nom'}
         type={layer?.name ?? 'aucun nom'}

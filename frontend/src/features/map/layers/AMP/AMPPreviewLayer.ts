@@ -24,6 +24,9 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const excludedLayers = useAppSelector(state => state.map.excludedLayers)
+
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)
 
@@ -46,7 +49,18 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     if (ampsSearchResult || ampLayers?.entities) {
       const ampsToDisplay = ampsSearchResult ?? ampLayers?.ids ?? []
 
-      ampFeatures = ampsToDisplay.reduce((amplayers, id) => {
+      const isolatedLayerTypeIsAmp = (isolatedLayer?.type?.search('AMP') ?? -1) > -1
+      const ampExcludedLayers = excludedLayers?.filter(layer => layer.type.search('AMP') > -1).map(layer => layer.id)
+
+      const featuresToDisplay = ampsToDisplay.filter(id => {
+        if (isolatedLayerTypeIsAmp && id === isolatedLayer?.id) {
+          return false
+        }
+
+        return !ampExcludedLayers?.map(excludeLayerId => excludeLayerId).includes(id)
+      })
+
+      ampFeatures = featuresToDisplay.reduce((amplayers, id) => {
         if (showedAmpLayerIds.includes(id)) {
           return amplayers
         }
@@ -67,7 +81,16 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     return ampFeatures
-  }, [ampLayers?.entities, ampLayers?.ids, ampMetadataLayerId, ampsSearchResult, showedAmpLayerIds])
+  }, [
+    ampLayers?.entities,
+    ampLayers?.ids,
+    ampMetadataLayerId,
+    ampsSearchResult,
+    excludedLayers,
+    isolatedLayer?.id,
+    isolatedLayer?.type,
+    showedAmpLayerIds
+  ])
 
   useEffect(() => {
     ampPreviewVectorSourceRef.current?.clear(true)

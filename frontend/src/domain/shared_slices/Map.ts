@@ -1,17 +1,24 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import { BaseLayer } from '../entities/layers/constants'
+import { BaseLayer, type RegulatoryOrAMPOrViglanceAreaLayerType } from '../entities/layers/constants'
 import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
 import type { Extent } from 'ol/extent'
 
+type LayerType = {
+  id: number | undefined
+  type: RegulatoryOrAMPOrViglanceAreaLayerType
+}
+
 type MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat
   currentMapExtentTracker?: number[]
   distanceUnit: DistanceUnit
+  excludedLayers?: LayerType[]
   fitToExtent?: Extent
   isAreaSelected: boolean
+  isolatedLayer: LayerType | undefined
   selectedBaseLayer: string
   zoomToCenter?: Coordinate
 }
@@ -19,8 +26,10 @@ const initialState: MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
   currentMapExtentTracker: undefined,
   distanceUnit: DistanceUnit.NAUTICAL,
+  excludedLayers: [],
   fitToExtent: undefined,
   isAreaSelected: false,
+  isolatedLayer: undefined,
   selectedBaseLayer: BaseLayer.LIGHT,
   zoomToCenter: undefined
 }
@@ -74,6 +83,13 @@ const mapSlice = createSlice({
     setIsAreaSelected(state, action) {
       state.isAreaSelected = action.payload
     },
+    setIsolateMode(
+      state,
+      action: PayloadAction<{ excludedLayers: LayerType[]; isolatedLayer: LayerType | undefined }>
+    ) {
+      state.isolatedLayer = action.payload.isolatedLayer
+      state.excludedLayers = action.payload.excludedLayers
+    },
     setZoomToCenter(state, action) {
       state.zoomToCenter = action.payload
     }
@@ -89,5 +105,6 @@ export const {
   setCurrentMapExtentTracker,
   setDistanceUnit,
   setFitToExtent,
+  setIsolateMode,
   setZoomToCenter
 } = mapActions
