@@ -1,7 +1,6 @@
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { forwardRef, useEffect, useState } from 'react'
-import styled from 'styled-components'
 
 import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
@@ -37,7 +36,7 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
           title="Signalements"
           titleRef={ref}
         >
-          <StyledFilters $isExpanded={isExpanded} />
+          <Filters />
           {reportings?.map(reporting => (
             <Layer key={reporting.id} isPinned={selectedReportingIds.includes(+reporting.id)} reporting={reporting} />
           ))}
@@ -59,10 +58,3 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
     )
   }
 )
-
-const StyledFilters = styled(Filters)<{ $isExpanded: boolean }>`
-  visibility: ${({ $isExpanded }) => ($isExpanded ? 'visible' : 'hidden')};
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
-  transition: ${({ $isExpanded }) =>
-    $isExpanded ? '0.5s max-height ease-in, 0.5s visibility' : '0.3s max-height ease-out, 0.3s visibility'};
-`
