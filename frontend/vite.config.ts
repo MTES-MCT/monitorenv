@@ -2,41 +2,47 @@
 import importMetaEnv from '@import-meta-env/unplugin'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import svgr from 'vite-plugin-svgr'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 // eslint-disable-next-line import/no-default-export
-export default defineConfig({
-  build: {
-    outDir: './build',
-    sourcemap: true
-  },
+export default defineConfig(({ mode }) => {
+  // @see https://vite.dev/config/#using-environment-variables-in-config
+  const env = loadEnv(mode, process.cwd(), '')
 
-  plugins: [
-    react(),
-    viteTsconfigPaths(),
-    svgr(),
-    importMetaEnv.vite({
-      env: './.env',
-      example: './.env.frontend.example'
-    }),
-    sentryVitePlugin({
-      org: 'betagouv',
-      project: 'monitorenv',
-      url: 'https://sentry.incubateur.net/'
-    })
-  ],
+  return {
+    build: {
+      outDir: './build',
+      sourcemap: true
+    },
 
-  server: {
-    port: 3000,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8880'
-      },
-      '/bff': {
-        target: 'http://localhost:8880'
+    plugins: [
+      react(),
+      viteTsconfigPaths(),
+      svgr(),
+      importMetaEnv.vite({
+        env: './.env',
+        example: './.env.frontend.example'
+      }),
+      sentryVitePlugin({
+        org: 'betagouv',
+        project: 'monitorenv',
+        url: 'https://sentry.incubateur.net/',
+        authToken: env.FRONTEND_SENTRY_AUTH_TOKEN
+      })
+    ],
+
+    server: {
+      port: 3000,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8880'
+        },
+        '/bff': {
+          target: 'http://localhost:8880'
+        }
       }
     }
   }
