@@ -6,7 +6,7 @@ import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
 import type { Coordinate } from 'ol/coordinate'
 import type { Extent } from 'ol/extent'
 
-type LayerType = {
+export type IsolatedLayerType = {
   id: number
   isFilled: boolean
   type: RegulatoryOrAMPOrViglanceAreaLayerType
@@ -16,10 +16,10 @@ type MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat
   currentMapExtentTracker?: number[]
   distanceUnit: DistanceUnit
-  excludedLayers?: Omit<LayerType, 'isFilled'>[]
+  excludedLayers?: Omit<IsolatedLayerType, 'isFilled'>[]
   fitToExtent?: Extent
   isAreaSelected: boolean
-  isolatedLayer: LayerType | undefined
+  isolatedLayer: IsolatedLayerType | undefined
   selectedBaseLayer: string
   zoomToCenter?: Coordinate
 }
@@ -86,7 +86,10 @@ const mapSlice = createSlice({
     },
     setIsolateMode(
       state,
-      action: PayloadAction<{ excludedLayers: Omit<LayerType, 'isFilled'>[]; isolatedLayer: LayerType | undefined }>
+      action: PayloadAction<{
+        excludedLayers: Omit<IsolatedLayerType, 'isFilled'>[]
+        isolatedLayer: IsolatedLayerType | undefined
+      }>
     ) {
       state.isolatedLayer = action.payload.isolatedLayer
       state.excludedLayers = action.payload.excludedLayers

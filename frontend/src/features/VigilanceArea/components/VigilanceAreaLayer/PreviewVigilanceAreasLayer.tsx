@@ -1,3 +1,4 @@
+import { getIsolatedLayerIsVigilanceArea, getVigilanceAreaExcludedLayers } from '@features/map/layers/utils'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
@@ -45,17 +46,15 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     if (vigilanceAreaSearchResult ?? vigilanceAreas) {
       const vigilanceAreasToDisplay = vigilanceAreaSearchResult ?? vigilanceAreas?.ids ?? []
 
-      const isolatedLayerIsVigilanceArea = (isolatedLayer?.type.search('VIGILANCE_AREA') ?? -1) > -1
-      const regulatoryExcludedLayers = excludedLayers
-        ?.filter(layer => layer.type.search('VIGILANCE_AREA') > -1)
-        .map(layer => layer.id)
+      const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
+      const vigilanceAreasExcludedLayers = getVigilanceAreaExcludedLayers(excludedLayers)
 
       const featuresToDisplay = vigilanceAreasToDisplay.filter(id => {
         if (isolatedLayerIsVigilanceArea && id === isolatedLayer?.id) {
           return false
         }
 
-        return !regulatoryExcludedLayers?.map(excludeLayerId => excludeLayerId).includes(id)
+        return !vigilanceAreasExcludedLayers?.map(excludeLayerId => excludeLayerId).includes(id)
       })
 
       features = featuresToDisplay.reduce((amplayers, id) => {
@@ -72,7 +71,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     }
 
     return features
-  }, [excludedLayers, isolatedLayer?.id, isolatedLayer?.type, vigilanceAreaSearchResult, vigilanceAreas])
+  }, [excludedLayers, isolatedLayer, vigilanceAreaSearchResult, vigilanceAreas])
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
