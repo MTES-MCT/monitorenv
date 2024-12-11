@@ -1,5 +1,5 @@
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from 'domain/entities/map/constants'
 import {
   ActionTypeEnum,
   type EnvActionControl,

@@ -1,7 +1,8 @@
+import { OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import Feature, { type FeatureLike } from 'ol/Feature'
 import { GeoJSON } from 'ol/format'
 
-import { OPENLAYERS_PROJECTION, type InteractionListener, type InteractionType } from '../entities/map/constants'
+import { type InteractionListener, type InteractionType } from '../entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
 import type { Geometry } from 'ol/geom'

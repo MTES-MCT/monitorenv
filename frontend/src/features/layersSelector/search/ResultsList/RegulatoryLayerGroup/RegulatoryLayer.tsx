@@ -1,5 +1,5 @@
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -7,7 +7,6 @@ import Highlighter from 'react-highlight-words'
 
 import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import {
   addRegulatoryZonesToMyLayers,

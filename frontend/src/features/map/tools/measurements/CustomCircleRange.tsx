@@ -1,16 +1,10 @@
-import { coordinatesAreDistinct, getCoordinates } from '@mtes-mct/monitor-ui'
+import { coordinatesAreDistinct, getCoordinates, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
-import {
-  CoordinatesFormat,
-  DistanceUnit,
-  MeasurementType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from '../../../../domain/entities/map/constants'
+import { CoordinatesFormat, DistanceUnit, MeasurementType } from '../../../../domain/entities/map/constants'
 import { setIsMapToolVisible } from '../../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import {

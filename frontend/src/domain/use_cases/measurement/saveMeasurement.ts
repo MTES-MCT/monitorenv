@@ -1,9 +1,10 @@
+import { OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import GeoJSON from 'ol/format/GeoJSON'
 import Circle from 'ol/geom/Circle'
 import { fromCircle } from 'ol/geom/Polygon'
 import { batch } from 'react-redux'
 
-import { DistanceUnit, OPENLAYERS_PROJECTION } from '../../entities/map/constants'
+import { DistanceUnit } from '../../entities/map/constants'
 import { addMeasurementDrawed, resetCircleMeasurementInDrawing } from '../../shared_slices/Measurement'
 
 export const saveMeasurement = (feature, measurement) => (dispatch, getState) => {
