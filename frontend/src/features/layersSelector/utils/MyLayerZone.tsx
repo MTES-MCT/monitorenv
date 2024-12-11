@@ -4,7 +4,7 @@ import {
   vigilanceAreaActions
 } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { IconButton, Accent, Size, Icon, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import styled from 'styled-components'
@@ -12,7 +12,6 @@ import styled from 'styled-components'
 import { LayerLegend } from './LayerLegend.style'
 import { LayerSelector } from './LayerSelector.style'
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 

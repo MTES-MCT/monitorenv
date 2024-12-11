@@ -1,7 +1,8 @@
 import { describe, expect, it } from '@jest/globals'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 
 import { getCoordinates } from './coordinates'
-import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map/constants'
+import { CoordinatesFormat } from '../domain/entities/map/constants'
 
 describe('coordinates', () => {
   it('getCoordinates Should get DMS coordinates for a dummy lon/lat', async () => {

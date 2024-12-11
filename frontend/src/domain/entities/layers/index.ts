@@ -1,6 +1,7 @@
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { GeoJSON } from 'ol/format'
 
-import { OLGeometryType, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../map/constants'
+import { OLGeometryType } from '../map/constants'
 
 import type { GeoJSON as GeoJSONType } from '../../types/GeoJSON'
 import type { MultiPoint, Point, MultiPolygon, Polygon } from 'ol/geom'

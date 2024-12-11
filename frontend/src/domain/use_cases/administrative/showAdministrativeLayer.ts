@@ -1,3 +1,4 @@
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import GeoJSON from 'ol/format/GeoJSON'
 import VectorImageLayer from 'ol/layer/VectorImage'
@@ -8,7 +9,6 @@ import { getAdministrativeZoneFromAPI } from '../../../api/administrativeLayersA
 import { getAdministrativeLayersStyle } from '../../../features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { administrativeLayers } from '../../entities/administrativeLayers'
 import { LayerType } from '../../entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../entities/map/constants'
 
 const IRRETRIEVABLE_FEATURES_EVENT = 'IRRETRIEVABLE_FEATURES'
 

@@ -1,10 +1,10 @@
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import { type Geometry } from 'ol/geom'
 
 import { selectedMissionControlStyle, selectedMissionSurveillanceStyle } from './missions.style'
 import { Layers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
   type EnvActionControl,
