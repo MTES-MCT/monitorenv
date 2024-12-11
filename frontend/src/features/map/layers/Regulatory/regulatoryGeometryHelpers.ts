@@ -1,7 +1,12 @@
 import { getFeature } from '@utils/getFeature'
 import { getArea } from 'ol/sphere'
 
-export function getRegulatoryFeature({ code, layer }) {
+type RegulatoryFeatureType = {
+  code: string
+  isFilled?: boolean
+  layer: any
+}
+export function getRegulatoryFeature({ code, isFilled = true, layer }: RegulatoryFeatureType) {
   const feature = getFeature(layer.geom)
   if (!feature) {
     return undefined
@@ -12,6 +17,7 @@ export function getRegulatoryFeature({ code, layer }) {
 
   feature.setProperties({
     area,
+    isFilled,
     layerId: layer.id,
     ...layer
   })

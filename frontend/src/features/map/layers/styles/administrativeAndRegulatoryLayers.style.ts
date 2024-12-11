@@ -176,10 +176,10 @@ export const getAdministrativeLayersStyle = (code: String) => {
 export const getRegulatoryLayerStyle = feature => {
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entity_name'))
 
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'))
+  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'))
 }
 
-const getStyle = (color, metadataIsShowed, isLayerFilled = true) =>
+const getStyle = (color, metadataIsShowed, isLayerFilled) =>
   new Style({
     fill: new Fill({
       color: isLayerFilled ? color : 'transparent'
@@ -200,11 +200,4 @@ export const getRegulatoryEnvColorWithAlpha = (
   }
 
   return getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`), 0.6)
-}
-
-export const getIsolateRegulatoryLayerStyle = (feature, excludeLayerIds: number[], isFilled: boolean) => {
-  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entity_name'))
-  const isLayerFilled = !excludeLayerIds.includes(feature.get('id'))
-
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), isLayerFilled && isFilled)
 }
