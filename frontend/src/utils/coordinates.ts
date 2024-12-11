@@ -1,6 +1,6 @@
-import { getCoordinates } from '@mtes-mct/monitor-ui'
+import { getCoordinates, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 
-import { CoordinatesFormat, WSG84_PROJECTION } from '../domain/entities/map/constants'
+import { CoordinatesFormat } from '../domain/entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
 

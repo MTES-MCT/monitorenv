@@ -1,6 +1,14 @@
 import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
-import { Accent, getCoordinates, Icon, IconButton, Size, usePrevious } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  getCoordinates,
+  Icon,
+  IconButton,
+  Size,
+  usePrevious,
+  OPENLAYERS_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
@@ -8,7 +16,6 @@ import { getLength } from 'ol/sphere'
 import { createRef, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 

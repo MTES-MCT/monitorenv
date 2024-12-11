@@ -1,12 +1,8 @@
-import { MultiRadio, getCoordinates, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { MultiRadio, getCoordinates, getOptionsFromLabelledEnum, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import {
-  CoordinatesFormat,
-  CoordinatesFormatLabel,
-  OPENLAYERS_PROJECTION
-} from '../../../domain/entities/map/constants'
+import { CoordinatesFormat, CoordinatesFormatLabel } from '../../../domain/entities/map/constants'
 import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'

@@ -1,4 +1,4 @@
-import { MultiRadio } from '@mtes-mct/monitor-ui'
+import { MultiRadio, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import {
   getGeoJSONFromFeature,
   getGeoJSONFromFeatureList,
@@ -33,7 +33,7 @@ import {
   SelectableLayers0To7,
   SelectableLayers7To26
 } from '../../domain/entities/layers/constants'
-import { DistanceUnit, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
+import { DistanceUnit } from '../../domain/entities/map/constants'
 import { setDistanceUnit } from '../../domain/shared_slices/Map'
 import { updateMeasurementsWithNewDistanceUnit } from '../../domain/use_cases/map/updateMeasurementsWithNewDistanceUnit'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
