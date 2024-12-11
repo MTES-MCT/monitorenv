@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository
 interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int> {
     @Query(
         value =
-        """
+            """
         SELECT *
         FROM departments_areas
         WHERE insee_dep = :inseeCode

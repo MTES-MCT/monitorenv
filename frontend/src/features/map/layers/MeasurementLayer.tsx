@@ -1,3 +1,4 @@
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { getCenter } from 'ol/extent'
 import Feature from 'ol/Feature'
@@ -15,7 +16,7 @@ import { useCallback, useEffect, useRef } from 'react'
 
 import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 import { Layers } from '../../../domain/entities/layers/constants'
-import { DistanceUnit, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
+import { DistanceUnit } from '../../../domain/entities/map/constants'
 import {
   removeMeasurementDrawed,
   resetMeasurementTypeToAdd,

@@ -1,11 +1,10 @@
-import { Accent, Icon, IconButton, Search, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Search, Size, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
 import styled from 'styled-components'
 
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
