@@ -30,8 +30,6 @@ export function FirstColumn({
   isSelectedAccordionOpen,
   onExpandedAccordionClick
 }: FirstColumnProps) {
-  // console.log('ding')
-
   const [isMount, setIsMount] = useState<boolean>(false)
   const columnRef = useRef<HTMLDivElement>(null)
   const regulatoryAreaRef = useRef<HTMLDivElement>(null)
