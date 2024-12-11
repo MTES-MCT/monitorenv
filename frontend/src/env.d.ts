@@ -19,6 +19,7 @@ interface ImportMetaEnv {
   readonly FRONTEND_OIDC_REDIRECT_URI: string
   readonly FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED: string
   readonly FRONTEND_REPORTING_FORM_AUTO_UPDATE: string
+  readonly FRONTEND_SENTRY_AUTH_TOKEN: string
   readonly FRONTEND_SENTRY_DSN: string
   readonly FRONTEND_SENTRY_ENV: string
   readonly FRONTEND_SENTRY_TRACING_ORIGIN: string
