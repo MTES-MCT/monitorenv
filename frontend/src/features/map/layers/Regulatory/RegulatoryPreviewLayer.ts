@@ -10,6 +10,7 @@ import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
+import { getIsolatedLayerIsRegulatoryArea, getRegulatoryExcludedLayers } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -49,10 +50,8 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     if (regulatoryLayersSearchResult || regulatoryLayers?.ids) {
       const regulatoryAreasToDisplay = regulatoryLayersSearchResult ?? regulatoryLayers?.ids ?? []
 
-      const isolatedLayerTypeIsRegulatory = (isolatedLayer?.type.search('REGULATORY') ?? -1) > -1
-      const regulatoryExcludedLayers = excludedLayers
-        ?.filter(layer => layer.type.search('REGULATORY') > -1)
-        .map(layer => layer.id)
+      const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
+      const regulatoryExcludedLayers = getRegulatoryExcludedLayers(excludedLayers)
 
       const featuresToDisplay = regulatoryAreasToDisplay.filter(id => {
         if (isolatedLayerTypeIsRegulatory && id === isolatedLayer?.id) {

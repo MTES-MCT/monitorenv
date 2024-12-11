@@ -10,6 +10,14 @@ import { getAMPFeature } from './AMP/AMPGeometryHelpers'
 import { getIsolateAMPLayerStyle } from './AMP/AMPLayers.style'
 import { getRegulatoryFeature } from './Regulatory/regulatoryGeometryHelpers'
 import { getIsolateRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
+import {
+  getAmpExcludedLayers,
+  getIsolatedLayerIsAmp,
+  getIsolatedLayerIsRegulatoryArea,
+  getIsolatedLayerIsVigilanceArea,
+  getRegulatoryExcludedLayers,
+  getVigilanceAreaExcludedLayers
+} from './utils'
 import { useGetRegulatoryLayersQuery } from '../../../api/regulatoryLayersAPI'
 import { TWO_MINUTES } from '../../../constants'
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -44,9 +52,8 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
     if (regulatoryLayers?.entities) {
-      const isolatedLayerTypeIsRegulatory = (isolatedLayer?.type.search('REGULATORY') ?? -1) > -1
-      const regulatoryExcludedLayers =
-        excludedLayers?.filter(layer => layer.type.search('REGULATORY') > -1).map(layer => layer.id) ?? []
+      const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
+      const regulatoryExcludedLayers = getRegulatoryExcludedLayers(excludedLayers)
 
       let featuresToDisplay = regulatoryExcludedLayers ?? []
       if (isolatedLayerTypeIsRegulatory && isolatedLayer?.id) {
@@ -77,9 +84,9 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
     let ampFeatures: Feature[] = []
 
     if (ampLayers?.entities) {
-      const isolatedLayerTypeIsAmp = (isolatedLayer?.type.search('AMP') ?? -1) > -1
-      const ampExcludedLayers =
-        excludedLayers?.filter(layer => (layer.type.search('AMP') ?? -1) > -1).map(layer => layer.id) ?? []
+      const isolatedLayerTypeIsAmp = getIsolatedLayerIsAmp(isolatedLayer)
+      const ampExcludedLayers = getAmpExcludedLayers(excludedLayers)
+
       let featuresToDisplay = ampExcludedLayers ?? []
       if (isolatedLayerTypeIsAmp && isolatedLayer?.id) {
         featuresToDisplay = [...featuresToDisplay, isolatedLayer.id]
@@ -88,7 +95,7 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
       ampFeatures = featuresToDisplay.reduce((amplayers, id) => {
         const layer = id ? ampLayers?.entities[id] : undefined
 
-        if (layer && layer.geom) {
+        if (layer?.geom) {
           const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
           const featureIsFilled = isolatedLayerTypeIsAmp && isolatedLayer?.id === id && isolatedLayer?.isFilled
 
@@ -107,12 +114,9 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
 
   const vigilanceAreasLayersFeatures = useMemo(() => {
     let vigilanceAreasFeatures: Feature[] = []
-    // console.log('vigilanceAreas?.entities', vigilanceAreas?.entities)
     if (vigilanceAreas?.entities) {
-      const isolatedLayerIsVigilanceArea = (isolatedLayer?.type.search('VIGILANCE_AREA') ?? -1) > -1
-      const vigilanceAreasExcludedLayers = excludedLayers
-        ?.filter(layer => (layer.type.search('VIGILANCE_AREA') ?? -1) > -1)
-        .map(layer => layer.id)
+      const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
+      const vigilanceAreasExcludedLayers = getVigilanceAreaExcludedLayers(excludedLayers)
 
       let featuresToDisplay = vigilanceAreasExcludedLayers ?? []
       if (isolatedLayerIsVigilanceArea && isolatedLayer?.id) {
@@ -120,7 +124,7 @@ export function IsolationLayer({ map }: BaseMapChildrenProps) {
       }
       vigilanceAreasFeatures = featuresToDisplay.reduce((vigilanceAreasLayers, id) => {
         const layer = id ? vigilanceAreas?.entities[id] : undefined
-        if (layer && layer.geom) {
+        if (layer?.geom) {
           const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
           const featureIsFilled = isolatedLayerIsVigilanceArea && isolatedLayer?.id === id && isolatedLayer?.isFilled
           if (feature) {

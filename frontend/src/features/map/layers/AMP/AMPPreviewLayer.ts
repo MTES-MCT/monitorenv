@@ -10,6 +10,7 @@ import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getAmpExcludedLayers, getIsolatedLayerIsAmp } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -49,8 +50,8 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     if (ampsSearchResult || ampLayers?.entities) {
       const ampsToDisplay = ampsSearchResult ?? ampLayers?.ids ?? []
 
-      const isolatedLayerTypeIsAmp = (isolatedLayer?.type?.search('AMP') ?? -1) > -1
-      const ampExcludedLayers = excludedLayers?.filter(layer => layer.type.search('AMP') > -1).map(layer => layer.id)
+      const isolatedLayerTypeIsAmp = getIsolatedLayerIsAmp(isolatedLayer)
+      const ampExcludedLayers = getAmpExcludedLayers(excludedLayers)
 
       const featuresToDisplay = ampsToDisplay.filter(id => {
         if (isolatedLayerTypeIsAmp && id === isolatedLayer?.id) {
@@ -87,8 +88,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     ampMetadataLayerId,
     ampsSearchResult,
     excludedLayers,
-    isolatedLayer?.id,
-    isolatedLayer?.type,
+    isolatedLayer,
     showedAmpLayerIds
   ])
 
