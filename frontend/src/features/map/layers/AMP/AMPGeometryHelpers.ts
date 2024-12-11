@@ -1,7 +1,7 @@
 import { getFeature } from '@utils/getFeature'
 import { getArea } from 'ol/sphere'
 
-export function getAMPFeature({ code, layer }) {
+export function getAMPFeature({ code, isFilled = true, layer }) {
   const feature = getFeature(layer.geom)
   if (!feature) {
     return undefined
@@ -13,6 +13,7 @@ export function getAMPFeature({ code, layer }) {
 
   feature.setProperties({
     area,
+    isFilled,
     layerId: layer.id,
     ...layer
   })

@@ -1,4 +1,4 @@
-import { getIsolatedLayerIsVigilanceArea, getVigilanceAreaExcludedLayers } from '@features/map/layers/utils'
+import { getIsolatedLayerIsVigilanceArea } from '@features/map/layers/utils'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
@@ -25,9 +25,10 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible && isLayersSidebarVisible
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const excludedLayers = useAppSelector(state => state.map.excludedLayers)
+  const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
+  const areLayersFilled = isolatedLayer === undefined
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
@@ -46,32 +47,23 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     if (vigilanceAreaSearchResult ?? vigilanceAreas) {
       const vigilanceAreasToDisplay = vigilanceAreaSearchResult ?? vigilanceAreas?.ids ?? []
 
-      const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
-      const vigilanceAreasExcludedLayers = getVigilanceAreaExcludedLayers(excludedLayers)
-
-      const featuresToDisplay = vigilanceAreasToDisplay.filter(id => {
-        if (isolatedLayerIsVigilanceArea && id === isolatedLayer?.id) {
-          return false
-        }
-
-        return !vigilanceAreasExcludedLayers?.map(excludeLayerId => excludeLayerId).includes(id)
-      })
-
-      features = featuresToDisplay.reduce((amplayers, id) => {
+      features = vigilanceAreasToDisplay.reduce((layers, id) => {
         const layer = vigilanceAreas?.entities[id]
 
         if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-          const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA_PREVIEW.code)
-
-          amplayers.push(feature)
+          const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA_PREVIEW.code, false, areLayersFilled)
+          if (isolatedLayerIsVigilanceArea && isolatedLayer?.id === id) {
+            feature.set('isFilled', true)
+          }
+          layers.push(feature)
         }
 
-        return amplayers
+        return layers
       }, [] as Feature[])
     }
 
     return features
-  }, [excludedLayers, isolatedLayer, vigilanceAreaSearchResult, vigilanceAreas])
+  }, [areLayersFilled, isolatedLayer?.id, isolatedLayerIsVigilanceArea, vigilanceAreaSearchResult, vigilanceAreas])
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
