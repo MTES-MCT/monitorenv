@@ -9,9 +9,9 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
     @Query(
         """
         WITH geom AS (
-            SELECT st_setsrid(:geometry, 4326) AS geom
+            SELECT st_setsrid(ST_Union(:geometry), 4326) AS geom
         ),
-        
+
         facades_intersection_areas AS (
             SELECT
                 facade,
@@ -30,7 +30,7 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
             ON ST_Intersects(geom.geom, facade_areas_subdivided.geometry)
             GROUP BY facade
         )
-        
+
         SELECT facade
         FROM facades_intersection_areas
         ORDER BY intersection_area DESC
