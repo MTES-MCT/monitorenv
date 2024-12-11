@@ -27,7 +27,7 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
       query: id => `/v1/regulatory/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_LAYER_ERROR_MESSAGE, response),
       transformResponse: (response: RegulatoryLayerWithMetadataFromAPI) => {
-        const bbox = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
+        const bbox = boundingExtent(response.geometry_simplified.coordinates.flat().flat() as Coordinate[])
 
         return {
           ...response,
@@ -42,7 +42,7 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
         RegulatoryLayersAdapter.setAll(
           regulatoryLayersInitialState,
           response.map(regulatoryLayer => {
-            const bbox = boundingExtent(regulatoryLayer.geom.coordinates.flat().flat() as Coordinate[])
+            const bbox = boundingExtent(regulatoryLayer.geometry_simplified.coordinates.flat().flat() as Coordinate[])
 
             return {
               ...regulatoryLayer,
