@@ -1,5 +1,5 @@
 import { overlayStroke } from '@features/map/overlays/style'
-import { THEME } from '@mtes-mct/monitor-ui'
+import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { uniq } from 'lodash/fp'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
@@ -7,7 +7,6 @@ import { Fill, Icon, Style, Text } from 'ol/style'
 import CircleStyle from 'ol/style/Circle'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 
 import type { Station } from '../../../../domain/entities/station'
 import type { StyleFunction } from 'ol/style/Style'

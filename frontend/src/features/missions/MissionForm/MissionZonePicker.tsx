@@ -1,4 +1,13 @@
-import { Accent, Button, Icon, IconButton, Label, THEME } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  Icon,
+  IconButton,
+  Label,
+  THEME,
+  OPENLAYERS_PROJECTION,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -7,12 +16,7 @@ import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import {
-  InteractionListener,
-  OLGeometryType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from '../../../domain/entities/map/constants'
+import { InteractionListener, OLGeometryType } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { drawPolygon } from '../../../domain/use_cases/draw/drawGeometry'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'

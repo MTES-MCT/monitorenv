@@ -1,7 +1,6 @@
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
-
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 
 import type { AtLeast } from '../../../../../types'
 import type { Reporting } from 'domain/entities/reporting'

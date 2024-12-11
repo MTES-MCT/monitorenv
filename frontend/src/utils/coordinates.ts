@@ -1,7 +1,8 @@
+import { WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transform } from 'ol/proj'
 
 import { isNumeric } from './isNumeric'
-import { CoordinatesFormat, WSG84_PROJECTION } from '../domain/entities/map/constants'
+import { CoordinatesFormat } from '../domain/entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
 

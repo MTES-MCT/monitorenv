@@ -37,7 +37,7 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
         value =
             """
             SELECT vigilanceArea.id FROM VigilanceAreaModel vigilanceArea
-            WHERE ST_INTERSECTS(st_setsrid(vigilanceArea.geom, 4326), st_setsrid(:geometry, 4326))
+            WHERE ST_INTERSECTS(st_setsrid(vigilanceArea.geom, 4326), ST_Buffer(st_setsrid(:geometry, 4326), 0))
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>

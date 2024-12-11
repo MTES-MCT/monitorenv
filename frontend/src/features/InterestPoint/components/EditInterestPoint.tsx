@@ -9,11 +9,11 @@ import {
   Icon,
   MapMenuDialog,
   OPENLAYERS_PROJECTION,
+  WSG84_PROJECTION,
   TextInput,
   Textarea,
   getCoordinates
 } from '@mtes-mct/monitor-ui'
-import { WSG84_PROJECTION } from 'domain/entities/map/constants'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { boundingExtent } from 'ol/extent'
