@@ -66,7 +66,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
 
             if (isolatedLayerTypeIsRegulatory && isolatedLayer?.id === id) {
-              feature.set('isFilled', true)
+              feature.set('isFilled', isolatedLayer.isFilled)
             }
             regulatorylayers.push(feature)
           }
@@ -84,7 +84,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     areLayersFilled,
     regulatoryMetadataLayerId,
     isolatedLayerTypeIsRegulatory,
-    isolatedLayer?.id
+    isolatedLayer
   ])
 
   useEffect(() => {

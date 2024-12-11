@@ -64,9 +64,8 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
             const metadataIsShowed = layer.id === ampMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
             if (isolatedLayerTypeIsAmp && isolatedLayer?.id === id) {
-              feature.set('isFilled', true)
+              feature.set('isFilled', isolatedLayer.isFilled)
             }
-
             amplayers.push(feature)
           }
         }
@@ -82,7 +81,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     ampMetadataLayerId,
     ampsSearchResult,
     areLayersFilled,
-    isolatedLayer?.id,
+    isolatedLayer,
     isolatedLayerTypeIsAmp,
     showedAmpLayerIds
   ])

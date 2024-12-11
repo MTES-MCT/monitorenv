@@ -24,7 +24,7 @@ export function PinnedOverlay({
 
   const close = () => {
     dispatch(closeAreaOverlay())
-    dispatch(mapActions.setIsolateMode({ excludedLayers: [], isolatedLayer: undefined }))
+    dispatch(mapActions.setIsolateMode({ isolatedLayer: undefined }))
   }
 
   // component should not be called if items.length < 2

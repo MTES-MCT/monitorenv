@@ -16,7 +16,6 @@ type MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat
   currentMapExtentTracker?: number[]
   distanceUnit: DistanceUnit
-  excludedLayers?: Omit<IsolatedLayerType, 'isFilled'>[]
   fitToExtent?: Extent
   isAreaSelected: boolean
   isolatedLayer: IsolatedLayerType | undefined
@@ -27,7 +26,6 @@ const initialState: MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
   currentMapExtentTracker: undefined,
   distanceUnit: DistanceUnit.NAUTICAL,
-  excludedLayers: [],
   fitToExtent: undefined,
   isAreaSelected: false,
   isolatedLayer: undefined,
@@ -87,12 +85,10 @@ const mapSlice = createSlice({
     setIsolateMode(
       state,
       action: PayloadAction<{
-        excludedLayers: Omit<IsolatedLayerType, 'isFilled'>[]
         isolatedLayer: IsolatedLayerType | undefined
       }>
     ) {
       state.isolatedLayer = action.payload.isolatedLayer
-      state.excludedLayers = action.payload.excludedLayers
     },
     setZoomToCenter(state, action) {
       state.zoomToCenter = action.payload
