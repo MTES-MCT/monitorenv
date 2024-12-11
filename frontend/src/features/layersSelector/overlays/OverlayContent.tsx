@@ -68,7 +68,6 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const excludedLayers = useAppSelector(state => state.map.excludedLayers)
 
   const { layerId, layerType } = useAppSelector(state => getDisplayedMetadataLayerIdAndType(state))
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
@@ -122,19 +121,20 @@ export function OverlayContent({ items }: OverlayContentProps) {
     e.stopPropagation()
 
     if (isolatedLayer?.id === id) {
-      dispatch(mapActions.setIsolateMode({ excludedLayers: [], isolatedLayer: undefined }))
+      dispatch(mapActions.setIsolateMode({ isolatedLayer: undefined }))
 
       return
     }
 
-    const layerToIsolate = {
-      id,
-      isFilled: true,
-      type
-    }
-    const newExcludedLayers =
-      items?.map(item => ({ id: item.properties.id, type: item.layerType })).filter(item => item.id !== id) ?? []
-    dispatch(mapActions.setIsolateMode({ excludedLayers: newExcludedLayers, isolatedLayer: layerToIsolate }))
+    dispatch(
+      mapActions.setIsolateMode({
+        isolatedLayer: {
+          id,
+          isFilled: true,
+          type
+        }
+      })
+    )
   }
 
   const updateFillingMode = e => {
@@ -146,7 +146,6 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
     dispatch(
       mapActions.setIsolateMode({
-        excludedLayers: excludedLayers ?? [],
         isolatedLayer: {
           ...isolatedLayer,
           isFilled: !isolatedLayer.isFilled
