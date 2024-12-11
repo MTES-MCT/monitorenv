@@ -1,8 +1,7 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { Tooltip } from '@components/Tooltip'
+import { getActiveDashboardId, getFilteredAmps, getFilteredRegulatoryAreas } from '@features/Dashboard/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon } from '@mtes-mct/monitor-ui'
-import { groupBy } from 'lodash'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -21,34 +20,32 @@ type TerritorialPressureProps = {
 
 export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressureProps>(
   ({ isExpanded, setExpandedAccordion }, ref) => {
-    const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+    const activeDashboardId = useAppSelector(state => getActiveDashboardId(state.dashboard))
 
     const currentYear = new Date().getFullYear()
     const dateRange = `${currentYear}-01-01~${currentYear}-12-31`
+    const filters = useAppSelector(state =>
+      activeDashboardId ? state.dashboardFilters?.dashboards[activeDashboardId]?.filters : undefined
+    )
 
     // Regulatory Areas link
-    const regulatoryAreas = useAppSelector(state =>
-      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.regulatoryAreas : []
+    const filteredRegulatoryAreas = useAppSelector(state =>
+      getFilteredRegulatoryAreas(state.dashboard, filters?.regulatoryThemes)
     )
-    const regulatoryAreaIds = regulatoryAreas?.map(area => area.id)
-    const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-    const regulatoryLayersByLayerName = Object.keys(
-      groupBy(regulatoryAreaIds, r => regulatoryLayers?.entities[r]?.layer_name)
-    )
-    const mappedLinks = regulatoryLayersByLayerName.join("&groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=")
+    const regulatoryAreaIds = filteredRegulatoryAreas?.map(area => area.id)
     const formattedRegulatoryAreaLink = useMemo(
       () =>
-        regulatoryLayersByLayerName
-          ? `groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=${mappedLinks}&ann%25C3%25A9e=${currentYear}`
+        regulatoryAreaIds
+          ? `groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires= &id=${regulatoryAreaIds.join(
+              '&id='
+            )}&ann%25C3%25A9e=${currentYear}`
           : '',
-      [regulatoryLayersByLayerName, mappedLinks, currentYear]
+      [regulatoryAreaIds, currentYear]
     )
 
     // AMP link
-    const amps = useAppSelector(state =>
-      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.extractedArea?.amps : []
-    )
-    const ampsByName = amps?.map(amp => amp.id)
+    const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard, filters?.amps))
+    const ampsByName = filteredAmps?.map(amp => amp.id)
     const formattedAmpLink = useMemo(
       () => (ampsByName ? `id=${ampsByName.join('&id=')}&intervalle_de_dates=${dateRange}&amp=` : ''),
       [ampsByName, dateRange]
@@ -78,7 +75,7 @@ export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressur
         titleRef={ref}
       >
         <LinksContainer>
-          {regulatoryAreas && regulatoryAreas.length > 0 && (
+          {filteredRegulatoryAreas && filteredRegulatoryAreas.length > 0 && (
             <a
               href={`${METABASE_URL}${REGULATORY_AREA_LINK}${formattedRegulatoryAreaLink}`}
               rel="external noreferrer"
@@ -88,7 +85,7 @@ export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressur
               <Icon.ExternalLink size={16} />
             </a>
           )}
-          {amps && amps.length > 0 && (
+          {filteredAmps && filteredAmps.length > 0 && (
             <a href={`${METABASE_URL}${AMP_LINK}${formattedAmpLink}`} rel="external noreferrer" target="_blank">
               <span>Pression zones AMP</span>
               <Icon.ExternalLink size={16} />
