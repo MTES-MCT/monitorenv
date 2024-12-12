@@ -1,10 +1,16 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import { BaseLayer } from '../entities/layers/constants'
+import { BaseLayer, type RegulatoryOrAMPOrViglanceAreaLayerType } from '../entities/layers/constants'
 import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
 import type { Extent } from 'ol/extent'
+
+export type IsolatedLayerType = {
+  id: number
+  isFilled: boolean
+  type: RegulatoryOrAMPOrViglanceAreaLayerType
+}
 
 type MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat
@@ -12,6 +18,7 @@ type MapSliceStateType = {
   distanceUnit: DistanceUnit
   fitToExtent?: Extent
   isAreaSelected: boolean
+  isolatedLayer: IsolatedLayerType | undefined
   selectedBaseLayer: string
   zoomToCenter?: Coordinate
 }
@@ -21,6 +28,7 @@ const initialState: MapSliceStateType = {
   distanceUnit: DistanceUnit.NAUTICAL,
   fitToExtent: undefined,
   isAreaSelected: false,
+  isolatedLayer: undefined,
   selectedBaseLayer: BaseLayer.LIGHT,
   zoomToCenter: undefined
 }
@@ -74,6 +82,9 @@ const mapSlice = createSlice({
     setIsAreaSelected(state, action) {
       state.isAreaSelected = action.payload
     },
+    setIsolateMode(state, action: PayloadAction<IsolatedLayerType | undefined>) {
+      state.isolatedLayer = action.payload
+    },
     setZoomToCenter(state, action) {
       state.zoomToCenter = action.payload
     }
@@ -89,5 +100,6 @@ export const {
   setCurrentMapExtentTracker,
   setDistanceUnit,
   setFitToExtent,
+  setIsolateMode,
   setZoomToCenter
 } = mapActions

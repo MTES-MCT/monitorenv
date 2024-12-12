@@ -9,7 +9,8 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 export const getVigilanceAreaZoneFeature = (
   vigilanceArea: VigilanceArea.VigilanceArea,
   layername: string,
-  isSelected?: boolean
+  isSelected?: boolean,
+  isFilled?: boolean
 ) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(vigilanceArea.geom, {
@@ -25,6 +26,7 @@ export const getVigilanceAreaZoneFeature = (
   feature.setProperties({
     area,
     ...vigilanceArea,
+    isFilled,
     isSelected
   })
 
@@ -47,6 +49,7 @@ export const getFormattedGeomForFeature = (geom, vigilanceArea) => {
   feature.setProperties({
     area,
     ...vigilanceArea,
+    isFilled: true,
     ...(vigilanceArea && { isSelected: true })
   })
 

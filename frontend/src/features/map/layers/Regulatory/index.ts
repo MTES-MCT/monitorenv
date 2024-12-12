@@ -34,7 +34,7 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
       style: getRegulatoryLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(regulatoryVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV.code
+  regulatoryVectorLayerRef.current.name = Layers.REGULATORY_ENV.code
 
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []

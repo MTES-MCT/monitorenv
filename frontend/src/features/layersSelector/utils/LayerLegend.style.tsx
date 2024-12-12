@@ -11,13 +11,13 @@ import { getAMPColorWithAlpha } from '../../map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
 export function LayerLegend({
-  isArchived = false,
+  isDisabled = false,
   layerType,
   legendKey,
   size = Size.SMALL,
   type
 }: {
-  isArchived?: boolean
+  isDisabled?: boolean
   layerType: RegulatoryOrAMPOrViglanceAreaLayerType
   legendKey?: string | null
   size?: Size
@@ -28,16 +28,16 @@ export function LayerLegend({
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
     case Dashboard.Layer.DASHBOARD_AMP:
-      return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, legendKey)} />
+      return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, legendKey, isDisabled)} />
     case MonitorEnvLayers.REGULATORY_ENV:
     case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
     case MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA:
     case Dashboard.Layer.DASHBOARD_REGULATORY_AREAS:
-      return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey)} />
+      return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey, isDisabled)} />
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
     case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
-      return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isArchived)} />
+      return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isDisabled)} />
     default:
       return <Rectangle $size={size} />
   }

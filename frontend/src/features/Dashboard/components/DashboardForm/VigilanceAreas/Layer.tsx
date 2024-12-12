@@ -70,7 +70,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Vigilance
     >
       <NameContainer>
         <LayerLegend
-          isArchived={vigilanceArea?.isArchived}
+          isDisabled={vigilanceArea?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
           legendKey={vigilanceArea?.comments ?? 'aucun nom'}
           type={vigilanceArea?.name ?? 'aucun nom'}

@@ -176,13 +176,13 @@ export const getAdministrativeLayersStyle = (code: String) => {
 export const getRegulatoryLayerStyle = feature => {
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entity_name'))
 
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'))
+  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'))
 }
 
-const getStyle = (color, metadataIsShowed) =>
+const getStyle = (color, metadataIsShowed, isLayerFilled) =>
   new Style({
     fill: new Fill({
-      color
+      color: isLayerFilled ? color : 'transparent'
     }),
     stroke: new Stroke({
       color: getColorWithAlpha(THEME.color.charcoal, 0.7),
@@ -190,5 +190,14 @@ const getStyle = (color, metadataIsShowed) =>
     })
   })
 
-export const getRegulatoryEnvColorWithAlpha = (type: string | null = '', name: string | null = '') =>
-  getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`), 0.6)
+export const getRegulatoryEnvColorWithAlpha = (
+  type: string | null = '',
+  name: string | null = '',
+  isDisabled = false
+) => {
+  if (isDisabled) {
+    return THEME.color.white
+  }
+
+  return getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`), 0.6)
+}

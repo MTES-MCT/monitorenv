@@ -1,5 +1,6 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -10,6 +11,7 @@ import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getIsolatedLayerIsAmp } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -17,18 +19,22 @@ import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
+export function AMPPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const isolatedLayerTypeIsAmp = getIsolatedLayerIsAmp(isolatedLayer)
+
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)
 
   const isLayerVisible = isLayersSidebarVisible && isAmpSearchResultsVisible && !isLinkingRegulatoryToVigilanceArea
 
+  const areLayersFilled = isolatedLayer === undefined
   const ampPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampPreviewVectorLayerRef = useRef(
     new VectorLayer({
@@ -38,7 +44,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
       style: getAMPLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(ampPreviewVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_PREVIEW.code
+  ampPreviewVectorLayerRef.current.name = Layers.AMP_PREVIEW.code
 
   const ampLayersFeatures = useMemo(() => {
     let ampFeatures: Feature[] = []
@@ -53,11 +59,14 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
         const layer = ampLayers?.entities[id]
 
         if (layer && layer.geom) {
-          const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, layer })
+          const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, isFilled: areLayersFilled, layer })
 
           if (feature) {
             const metadataIsShowed = layer.id === ampMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+            if (isolatedLayerTypeIsAmp && isolatedLayer?.id === id) {
+              feature.set('isFilled', isolatedLayer.isFilled)
+            }
             amplayers.push(feature)
           }
         }
@@ -67,14 +76,45 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     return ampFeatures
-  }, [ampLayers?.entities, ampLayers?.ids, ampMetadataLayerId, ampsSearchResult, showedAmpLayerIds])
+  }, [
+    ampLayers?.entities,
+    ampLayers?.ids,
+    ampMetadataLayerId,
+    ampsSearchResult,
+    areLayersFilled,
+    isolatedLayer,
+    isolatedLayerTypeIsAmp,
+    showedAmpLayerIds
+  ])
 
   useEffect(() => {
-    ampPreviewVectorSourceRef.current?.clear(true)
+    const vectorSource = ampPreviewVectorSourceRef.current
+    vectorSource.clear(true)
+
+    const feature = convertToFeature(currentFeatureOver)
+
     if (ampLayersFeatures) {
-      ampPreviewVectorSourceRef.current?.addFeatures(ampLayersFeatures)
+      const isHoveredFeature = feature?.getId()?.toString()?.includes(Layers.AMP_PREVIEW.code)
+
+      if (feature && isHoveredFeature && !areLayersFilled) {
+        feature.set('isFilled', true)
+
+        // Exclude the current feature and re-add it with updated properties
+        const filteredFeatures = ampLayersFeatures.filter(f => f.getId() !== feature?.getId()) ?? []
+        vectorSource.addFeatures([...filteredFeatures, feature])
+
+        return
+      }
+
+      vectorSource.addFeatures(ampLayersFeatures)
+
+      return
     }
-  }, [ampLayersFeatures])
+
+    if (feature) {
+      vectorSource.addFeature(feature)
+    }
+  }, [ampLayersFeatures, areLayersFilled, currentFeatureOver])
 
   useEffect(() => {
     ampPreviewVectorLayerRef.current?.setVisible(isLayerVisible)

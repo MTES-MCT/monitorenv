@@ -1,5 +1,6 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
+import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -10,6 +11,7 @@ import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
+import { getIsolatedLayerIsRegulatoryArea } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -17,17 +19,21 @@ import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
+export function RegulatoryPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
 
+  const areLayersFilled = isolatedLayer === undefined
   const regulatoryPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
     VectorSource<Feature<Geometry>>
   >
@@ -39,21 +45,30 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       style: getRegulatoryLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(regulatoryPreviewVectorLayerRef.current as VectorLayerWithName).name = Layers.REGULATORY_ENV_PREVIEW.code
+  regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
 
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
     if (regulatoryLayersSearchResult || regulatoryLayers?.ids) {
       const regulatoryAreasToDisplay = regulatoryLayersSearchResult ?? regulatoryLayers?.ids ?? []
+
       regulatoryFeatures = regulatoryAreasToDisplay?.reduce((regulatorylayers, id) => {
         const layer = regulatoryLayers?.entities[id]
 
         if (layer && layer.geom) {
-          const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV_PREVIEW.code, layer })
+          const feature = getRegulatoryFeature({
+            code: Layers.REGULATORY_ENV_PREVIEW.code,
+            isFilled: areLayersFilled,
+            layer
+          })
 
           if (feature) {
             const metadataIsShowed = layer.id === regulatoryMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+
+            if (isolatedLayerTypeIsRegulatory && isolatedLayer?.id === id) {
+              feature.set('isFilled', isolatedLayer.isFilled)
+            }
             regulatorylayers.push(feature)
           }
         }
@@ -63,14 +78,44 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     return regulatoryFeatures
-  }, [regulatoryLayers, regulatoryMetadataLayerId, regulatoryLayersSearchResult])
+  }, [
+    regulatoryLayersSearchResult,
+    regulatoryLayers?.ids,
+    regulatoryLayers?.entities,
+    areLayersFilled,
+    regulatoryMetadataLayerId,
+    isolatedLayerTypeIsRegulatory,
+    isolatedLayer
+  ])
 
   useEffect(() => {
-    regulatoryPreviewVectorSourceRef.current?.clear(true)
+    const vectorSource = regulatoryPreviewVectorSourceRef.current
+    vectorSource.clear(true)
+
+    const feature = convertToFeature(currentFeatureOver)
+
     if (regulatoryLayersFeatures) {
-      regulatoryPreviewVectorSourceRef.current?.addFeatures(regulatoryLayersFeatures)
+      const isHoveredFeature = feature?.getId()?.toString()?.includes(Layers.REGULATORY_ENV_PREVIEW.code)
+
+      if (feature && isHoveredFeature && !areLayersFilled) {
+        feature.set('isFilled', true)
+
+        // Exclude the current feature and re-add it with updated properties
+        const filteredFeatures = regulatoryLayersFeatures.filter(f => f.getId() !== feature?.getId()) ?? []
+        vectorSource.addFeatures([...filteredFeatures, feature])
+
+        return
+      }
+
+      vectorSource.addFeatures(regulatoryLayersFeatures)
+
+      return
     }
-  }, [regulatoryLayersFeatures])
+
+    if (feature) {
+      vectorSource.addFeature(feature)
+    }
+  }, [regulatoryLayersFeatures, areLayersFilled, currentFeatureOver])
 
   useEffect(() => {
     if (map) {

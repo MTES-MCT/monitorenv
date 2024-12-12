@@ -86,7 +86,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
       <Header $isEditing={!!vigilanceAreaId}>
         <TitleContainer>
           <LayerLegend
-            isArchived={vigilanceArea?.isArchived}
+            isDisabled={vigilanceArea?.isArchived}
             layerType={MonitorEnvLayers.VIGILANCE_AREA}
             legendKey={vigilanceArea?.comments ?? 'aucun nom'}
             size={Size.NORMAL}

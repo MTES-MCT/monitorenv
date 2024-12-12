@@ -4,10 +4,10 @@ import { Fill, Stroke, Style } from 'ol/style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
-const getStyle = (color: string, isSelected: boolean | undefined) =>
+const getStyle = (color: string, isSelected: boolean | undefined, isFilled: boolean = true) =>
   new Style({
     fill: new Fill({
-      color: getColorWithAlpha(color, 0.5)
+      color: isFilled ? getColorWithAlpha(color, 0.5) : 'transparent'
     }),
     stroke: new Stroke({
       color: getColorWithAlpha(THEME.color.rufous, 1),
@@ -32,7 +32,5 @@ export const getVigilanceAreaLayerStyle = feature => {
 
   const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('name'), feature.get('comments'), isArchived)
 
-  const style = getStyle(colorWithAlpha, feature.get('isSelected'))
-
-  return style
+  return getStyle(colorWithAlpha, feature.get('isSelected'), feature.get('isFilled'))
 }
