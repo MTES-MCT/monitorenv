@@ -1,5 +1,6 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { getTitle } from 'domain/entities/layers/utils'
+import { uniq } from 'lodash'
 
 export function RegulatoryAreasThemesCell({ themeIds }: { themeIds: number[] }) {
   const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
@@ -11,9 +12,9 @@ export function RegulatoryAreasThemesCell({ themeIds }: { themeIds: number[] }) 
     return '-'
   }
 
-  const regulatoryAreasThemes = themeIds
-    .map(themeId => getTitle(regulatoryAreas.entities[themeId]?.layer_name))
-    .join(', ')
+  const regulatoryAreasThemes = uniq(
+    themeIds.map(themeId => getTitle(regulatoryAreas.entities[themeId]?.layer_name))
+  ).join(', ')
 
   return <span title={regulatoryAreasThemes}>{regulatoryAreasThemes}</span>
 }

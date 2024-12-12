@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 export function TableWithRef({ rows, table, virtualRows }, ref) {
   return (
-    <StyledDasboardsContainer ref={ref}>
+    <StyledDashboardsContainer ref={ref}>
       <SimpleTable.Table>
         <SimpleTable.Head>
           {table.getHeaderGroups().map(headerGroup => (
@@ -57,13 +57,13 @@ export function TableWithRef({ rows, table, virtualRows }, ref) {
           })}
         </tbody>
       </SimpleTable.Table>
-    </StyledDasboardsContainer>
+    </StyledDashboardsContainer>
   )
 }
 
 export const Table = forwardRef(TableWithRef)
 
-const StyledDasboardsContainer = styled.div`
+const StyledDashboardsContainer = styled.div`
   overflow: auto;
   width: fit-content;
   // scroll width (~15px) + 4px

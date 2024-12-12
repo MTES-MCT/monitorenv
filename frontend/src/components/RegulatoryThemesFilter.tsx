@@ -4,7 +4,7 @@ import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/sli
 import { OptionValue } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckPicker, CustomSearch, type Option } from '@mtes-mct/monitor-ui'
+import { CheckPicker, CustomSearch } from '@mtes-mct/monitor-ui'
 import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { useMemo } from 'react'
 
@@ -14,10 +14,7 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
 
-  const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemes as Array<Option<string>>, ['label']),
-    [regulatoryThemes]
-  )
+  const regulatoryThemesCustomSearch = useMemo(() => new CustomSearch(regulatoryThemes, ['label']), [regulatoryThemes])
 
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)

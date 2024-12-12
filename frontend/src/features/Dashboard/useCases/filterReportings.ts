@@ -1,43 +1,43 @@
 import { customDayjs, type DateAsStringRange } from '@mtes-mct/monitor-ui'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { getReportingStatus, ReportingStatusEnum, StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
 
 export function filterReportings(
   reporting: Reporting,
-  filters: { dateRange: ReportingDateRangeEnum; period?: DateAsStringRange; status: StatusFilterEnum[] }
+  filters: { dateRange: DateRangeEnum; period?: DateAsStringRange; status: StatusFilterEnum[] }
 ) {
   let shouldBeFiltered = false
   const createdAt = customDayjs(reporting.createdAt).utc()
   switch (filters.dateRange) {
-    case ReportingDateRangeEnum.DAY: {
+    case DateRangeEnum.DAY: {
       const now = customDayjs().utc()
       const lastTwentyFourHours = now.subtract(24, 'hour')
 
       shouldBeFiltered = createdAt.isBetween(now, lastTwentyFourHours)
       break
     }
-    case ReportingDateRangeEnum.WEEK: {
+    case DateRangeEnum.WEEK: {
       const endOfDay = customDayjs().utc().endOf('day')
       const lastWeek = endOfDay.subtract(1, 'week')
 
       shouldBeFiltered = createdAt.isBetween(endOfDay, lastWeek)
       break
     }
-    case ReportingDateRangeEnum.MONTH: {
+    case DateRangeEnum.MONTH: {
       const endOfDay = customDayjs().utc().endOf('day')
       const lastThirtyDays = endOfDay.subtract(30, 'day')
 
       shouldBeFiltered = createdAt.isBetween(endOfDay, lastThirtyDays)
       break
     }
-    case ReportingDateRangeEnum.YEAR: {
+    case DateRangeEnum.YEAR: {
       const endOfDay = customDayjs().utc().endOf('day')
       const lastThirtyDays = endOfDay.subtract(1, 'year')
 
       shouldBeFiltered = createdAt.isBetween(endOfDay, lastThirtyDays)
       break
     }
-    case ReportingDateRangeEnum.CUSTOM: {
+    case DateRangeEnum.CUSTOM: {
       if (!filters.period) {
         shouldBeFiltered = true
         break

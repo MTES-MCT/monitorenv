@@ -14,7 +14,6 @@ import {
   SingleTag,
   THEME,
   type DateAsStringRange,
-  type Option,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
@@ -36,12 +35,12 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
   const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(extractedArea?.regulatoryAreas ?? [])
   const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemesAsOption as Array<Option<string>>, ['label']),
+    () => new CustomSearch(regulatoryThemesAsOption, ['label']),
     [regulatoryThemesAsOption]
   )
 
   const ampsAsOptions = useMemo(() => getAmpsAsOptions(extractedArea?.amps ?? []), [extractedArea?.amps])
-  const AMPCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions as Array<Option>, ['label']), [ampsAsOptions])
+  const AMPCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions, ['label']), [ampsAsOptions])
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 

@@ -1,5 +1,5 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { filter } from 'lodash'
 import { useMemo } from 'react'
 
@@ -44,27 +44,27 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
     let startedAfterDate = startedAfter ?? undefined
     const startedBeforeDate = startedBefore ?? undefined
     switch (periodFilter) {
-      case ReportingDateRangeEnum.DAY:
+      case DateRangeEnum.DAY:
         // to prevent refeteching every second we don't send seconds in query
         startedAfterDate = `${customDayjs().utc().subtract(24, 'hour').format('YYYY-MM-DDTHH:mm')}:00.000Z`
 
         break
 
-      case ReportingDateRangeEnum.WEEK:
+      case DateRangeEnum.WEEK:
         startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString()
 
         break
 
-      case ReportingDateRangeEnum.MONTH:
+      case DateRangeEnum.MONTH:
         startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(30, 'day').toISOString()
 
         break
-      case ReportingDateRangeEnum.YEAR:
+      case DateRangeEnum.YEAR:
         startedAfterDate = customDayjs().utc().startOf('year').toISOString()
 
         break
 
-      case ReportingDateRangeEnum.CUSTOM:
+      case DateRangeEnum.CUSTOM:
       default:
         break
     }
@@ -72,8 +72,7 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
     return { startedAfterDate, startedBeforeDate }
   }, [startedAfter, startedBefore, periodFilter])
 
-  const hasCustomPeriodWithoutDates =
-    periodFilter === ReportingDateRangeEnum.CUSTOM && (!startedAfter || !startedBefore)
+  const hasCustomPeriodWithoutDates = periodFilter === DateRangeEnum.CUSTOM && (!startedAfter || !startedBefore)
 
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters

@@ -12,7 +12,7 @@ import {
   type DateAsStringRange,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
-import { ReportingDateRangeEnum, ReportingDateRangeLabels } from 'domain/entities/dateRange'
+import { DateRangeEnum, ReportingDateRangeLabels } from 'domain/entities/dateRange'
 import { StatusFilterEnum, StatusFilterLabels } from 'domain/entities/reporting'
 import { forwardRef, type ComponentProps } from 'react'
 import styled from 'styled-components'
@@ -48,7 +48,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
     if (dateRange) {
       dispatch(
         dashboardFiltersActions.setReportingFilters({
-          filters: { dateRange: dateRange as ReportingDateRangeEnum },
+          filters: { dateRange: dateRange as DateRangeEnum },
           id: dashboardId
         })
       )
@@ -79,7 +79,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
       {...props}
       ref={ref}
       $hasChildren={filteredReportings.length > 1}
-      $hasPeriodFilter={reportingFilters.dateRange === ReportingDateRangeEnum.CUSTOM}
+      $hasPeriodFilter={reportingFilters.dateRange === DateRangeEnum.CUSTOM}
     >
       <StyledDatesWrapper $hasChildren={filteredReportings.length > 1}>
         <DateRangeSelect
@@ -93,7 +93,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
           placeholder="Date de signalement depuis"
           value={reportingFilters.dateRange}
         />
-        {reportingFilters.dateRange === ReportingDateRangeEnum.CUSTOM && (
+        {reportingFilters.dateRange === DateRangeEnum.CUSTOM && (
           <CustomPeriodContainer>
             <DateRangePicker
               key="dateRange"
@@ -127,7 +127,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
 const Wrapper = styled.div<{ $hasChildren: boolean; $hasPeriodFilter: boolean }>`
   padding: 16px 24px;
   ${({ $hasChildren, $hasPeriodFilter }) => $hasPeriodFilter && !$hasChildren && 'padding-bottom: 58px;'}
-  ${({ $hasChildren }) => $hasChildren && 'display: flex; justify-content: space-between;'}
+  ${({ $hasChildren }) => ($hasChildren ? 'display: flex; justify-content: space-between;' : 'display: flow-root;')}
 `
 const StatusWrapper = styled.fieldset`
   border: none;

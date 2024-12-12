@@ -27,8 +27,7 @@ export enum SeaFrontLabel {
   UNKNOWN = 'Façade non renseignée'
 }
 
-// TODO Replace this object with `SeaFrontLabel`.
-export const seaFrontLabels = {
+export const SeaFrontLabels = {
   GUADELOUPE: {
     label: 'Guadeloupe',
     value: 'Guadeloupe'

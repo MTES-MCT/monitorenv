@@ -14,7 +14,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Checkbox, CheckPicker } from '@mtes-mct/monitor-ui'
-import { seaFrontLabels } from 'domain/entities/seaFrontType'
+import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import styled from 'styled-components'
 
 import { FilterTags } from './FiltersTag'
@@ -44,7 +44,7 @@ export function VigilanceAreasFilters() {
     status: statusFilter
   } = useAppSelector(state => state.vigilanceAreaFilters)
 
-  const seaFrontsAsOptions = Object.values(seaFrontLabels)
+  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
 
   const hasFilters =
     seaFrontFilter?.length > 0 ||
@@ -54,15 +54,15 @@ export function VigilanceAreasFilters() {
     filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS ||
     filteredRegulatoryThemes?.length > 0
 
-  const updateSeaFrontFilter = selectedSeaFronts => {
-    dispatch(vigilanceAreaFiltersActions.setSeaFronts(selectedSeaFronts))
+  const updateSeaFrontFilter = (selectedSeaFronts: string[] | undefined) => {
+    dispatch(vigilanceAreaFiltersActions.setSeaFronts(selectedSeaFronts ?? []))
   }
 
-  const updateCreatedByFilter = selectedCreatedBy => {
-    dispatch(vigilanceAreaFiltersActions.setCreatedBy(selectedCreatedBy))
+  const updateCreatedByFilter = (selectedCreatedBy: string[] | undefined) => {
+    dispatch(vigilanceAreaFiltersActions.setCreatedBy(selectedCreatedBy ?? []))
   }
 
-  const updateStatusFilter = (checked, status) => {
+  const updateStatusFilter = (checked: boolean | undefined, status: VigilanceArea.Status) => {
     const filter = [...statusFilter]
 
     if (checked) {
@@ -148,7 +148,7 @@ export function VigilanceAreasFilters() {
         </>
       </FilterContainer>
       {(hasCustomPeriodFilter || hasFilters) && (
-        <TagsContainer $withTopMargin={false}>
+        <TagsContainer>
           {hasCustomPeriodFilter && (
             <CustomPeriodContainer>
               <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>

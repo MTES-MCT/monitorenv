@@ -4,7 +4,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingSourceEnum, StatusFilterEnum } from 'domain/entities/reporting'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { removeOverlayStroke, ReportingContext } from 'domain/shared_slices/Global'
@@ -99,7 +99,7 @@ export function SemaphoreCard({ feature, isSuperUser, selected = false }: Semaph
     dispatch(
       reportingsFiltersActions.updateFilters({
         key: ReportingsFiltersEnum.PERIOD_FILTER,
-        value: ReportingDateRangeEnum.MONTH
+        value: DateRangeEnum.MONTH
       })
     )
     dispatch(
