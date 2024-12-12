@@ -13,9 +13,9 @@ import {
   type Option
 } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
-import { DATE_RANGE_LABEL, type DateRangeEnum } from 'domain/entities/dateRange'
+import { dateRangeOptions, type DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'
-import { seaFrontLabels } from 'domain/entities/seaFrontType'
+import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { useMemo, useRef, type MutableRefObject } from 'react'
 
@@ -76,25 +76,22 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const controlUnitsAsOptions = useMemo(() => {
     const activeControlUnits = (legacyControlUnits ?? []).filter(isNotArchived)
     const selectableControlUnits = activeControlUnits?.filter(activeControlUnit =>
-      selectedAdministrationNames?.length
-        ? selectedAdministrationNames.includes(activeControlUnit.administration)
-        : true
+      selectedAdministrationNames?.includes(activeControlUnit.administration)
     )
 
     return getOptionsFromIdAndName(selectableControlUnits) ?? []
   }, [legacyControlUnits, selectedAdministrationNames])
 
-  const dateRangesAsOptions = Object.values(DATE_RANGE_LABEL) as Option<DateRangeEnum>[]
   const missionStatusesAsOptions = getOptionsFromLabelledEnum(MissionStatusLabel)
   const missionTypesAsOptions = getOptionsFromLabelledEnum(MissionTypeLabel)
-  const seaFrontsAsOptions = Object.values(seaFrontLabels)
+  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const completionStatusAsOptions = getOptionsFromLabelledEnum(FrontCompletionStatusLabel)
 
   const optionsList = {
     administrations: activeAdministrations,
     completion: completionStatusAsOptions,
     controlUnits: controlUnitsAsOptions,
-    dates: dateRangesAsOptions,
+    dates: dateRangeOptions,
     seaFronts: seaFrontsAsOptions,
     status: missionStatusesAsOptions,
     themes: themesAsOptionsPerPeriod,

@@ -9,7 +9,7 @@ import {
   useNewWindow,
   type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -32,7 +32,7 @@ type TableReportingsFiltersProps = {
     filterValues: string[]
   ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
-  updatePeriodFilter: (value: ReportingDateRangeEnum) => void
+  updatePeriodFilter: (value: DateRangeEnum) => void
   updateSimpleFilter: (value: string, filter: ReportingsFiltersEnum) => void
   updateSourceTypeFilter: (value: string[]) => void
   updateThemeFilter: (value: number[]) => void
@@ -106,7 +106,7 @@ export function TableReportingsFiltersWithRef(
     [subThemesOptions]
   )
 
-  const isCustomPeriodVisible = periodFilter === ReportingDateRangeEnum.CUSTOM
+  const isCustomPeriodVisible = periodFilter === DateRangeEnum.CUSTOM
 
   return (
     <>

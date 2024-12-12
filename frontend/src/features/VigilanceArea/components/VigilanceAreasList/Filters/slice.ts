@@ -1,5 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -25,16 +25,16 @@ export const vigilanceAreaFiltersSlice = createSlice({
   name: 'vigilanceAreaFilters',
   reducers: {
     resetFilters: () => INITIAL_STATE,
-    setCreatedBy: (state, action) => {
+    setCreatedBy: (state, action: PayloadAction<string[]>) => {
       state.createdBy = action.payload
     },
-    setSeaFronts: (state, action) => {
+    setSeaFronts: (state, action: PayloadAction<string[]>) => {
       state.seaFronts = action.payload
     },
-    setSearchQueryFilter: (state, action) => {
+    setSearchQueryFilter: (state, action: PayloadAction<string | undefined>) => {
       state.searchQuery = action.payload
     },
-    setStatus: (state, action) => {
+    setStatus: (state, action: PayloadAction<VigilanceArea.Status[]>) => {
       state.status = action.payload
     },
     updateFilters: (state, action) => {

@@ -14,9 +14,8 @@ export function ReinitializeFiltersButton({ onClick }: ReinitializeFiltersButton
   )
 }
 
-const ResetFiltersButton = styled.div`
+const ResetFiltersButton = styled.button`
   align-items: end;
-  cursor: pointer;
   display: flex;
   gap: 4px;
   margin-bottom: 8px;
@@ -24,4 +23,6 @@ const ResetFiltersButton = styled.div`
   > span {
     font-size: 13px;
   }
+  padding: 0;
+  background: transparent;
 `

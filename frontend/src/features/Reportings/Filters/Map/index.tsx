@@ -1,6 +1,6 @@
 import { CustomPeriodContainer } from '@components/style'
 import { CheckPicker, DateRangePicker, Checkbox, SingleTag, type DateAsStringRange } from '@mtes-mct/monitor-ui'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
@@ -27,7 +27,7 @@ type MapReportingsFiltersProps = {
     filterValues: string[]
   ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
-  updatePeriodFilter: (value: ReportingDateRangeEnum) => void
+  updatePeriodFilter: (value: DateRangeEnum) => void
   updateSimpleFilter: (value: string, filter: ReportingsFiltersEnum) => void
   updateSourceTypeFilter: (value: string[]) => void
 }
@@ -123,7 +123,7 @@ export function MapReportingsFiltersWithRef(
           placeholder="Date de signalement depuis"
           value={periodFilter}
         />
-        {periodFilter === ReportingDateRangeEnum.CUSTOM && (
+        {periodFilter === DateRangeEnum.CUSTOM && (
           <StyledCustomPeriodContainer>
             <DateRangePicker
               key="dateRange"

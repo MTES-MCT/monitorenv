@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import { customDayjs, type DateAsStringRange } from '@mtes-mct/monitor-ui'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ControlStatusEnum, ReportingTypeEnum, StatusFilterEnum, type Reporting } from 'domain/entities/reporting'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 
@@ -18,7 +18,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(true)
     })
 
     it('should return false when reporting is not within the day', async () => {
@@ -28,7 +28,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(false)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(false)
     })
 
     it('should return true when reporting is within the week', async () => {
@@ -38,7 +38,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.WEEK, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.WEEK, status })).toEqual(true)
     })
 
     it('should return false when reporting is not within the week', async () => {
@@ -48,7 +48,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.WEEK, status })).toEqual(false)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.WEEK, status })).toEqual(false)
     })
     it('should return true when reporting is within the month', async () => {
       // Given
@@ -57,7 +57,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.MONTH, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.MONTH, status })).toEqual(true)
     })
 
     it('should return false when reporting is not within the month', async () => {
@@ -67,7 +67,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.MONTH, status })).toEqual(false)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.MONTH, status })).toEqual(false)
     })
     it('should return true when reporting is within the year', async () => {
       // Given
@@ -76,7 +76,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.YEAR, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.YEAR, status })).toEqual(true)
     })
 
     it('should return false when reporting is not within the year', async () => {
@@ -86,7 +86,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.YEAR, status })).toEqual(false)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.YEAR, status })).toEqual(false)
     })
 
     it('should return true when reporting is within the specific period', async () => {
@@ -100,7 +100,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.CUSTOM, period, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.CUSTOM, period, status })).toEqual(true)
     })
 
     it('should return false when reporting is not within the specific period', async () => {
@@ -114,7 +114,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.CUSTOM, period, status })).toEqual(false)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.CUSTOM, period, status })).toEqual(false)
     })
   })
   describe('in progress reporting', () => {
@@ -127,7 +127,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(true)
     })
 
     it('should return false when reporting is in progress and out of validity time', async () => {
@@ -138,7 +138,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(false)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(false)
     })
   })
   describe('archived reporting', () => {
@@ -151,7 +151,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(true)
     })
 
     it('should return true when reporting is archived and out of validity time', async () => {
@@ -163,7 +163,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(true)
     })
   })
 
@@ -177,7 +177,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(true)
     })
 
     it('should return true when reporting is archived and in progress and out of (archived) validity time', async () => {
@@ -189,7 +189,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(true)
     })
     it('should return true when reporting is archived and in progress and out of (in progress) validity time', async () => {
       // Given
@@ -200,7 +200,7 @@ describe('filterReportings', () => {
       })
 
       // When & then
-      expect(filterReportings(reporting, { dateRange: ReportingDateRangeEnum.DAY, status })).toEqual(true)
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status })).toEqual(true)
     })
   })
 })

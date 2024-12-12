@@ -39,7 +39,7 @@ export const CustomPeriodLabel = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-size: 13px;
 `
-export const TagsContainer = styled.div<{ $withTopMargin: boolean }>`
+export const TagsContainer = styled.div<{ $withTopMargin?: boolean }>`
   align-items: end;
   display: flex;
   flex-direction: row;

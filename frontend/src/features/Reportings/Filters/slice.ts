@@ -1,6 +1,6 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice } from '@reduxjs/toolkit'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { StatusFilterEnum } from 'domain/entities/reporting'
 import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
@@ -54,7 +54,7 @@ const initialState: ReportingsFiltersSliceType = {
   hasFilters: false,
   isAttachedToMissionFilter: false,
   isUnattachedToMissionFilter: false,
-  periodFilter: ReportingDateRangeEnum.MONTH,
+  periodFilter: DateRangeEnum.MONTH,
   seaFrontFilter: undefined,
   searchQueryFilter: undefined,
   sourceFilter: undefined,
