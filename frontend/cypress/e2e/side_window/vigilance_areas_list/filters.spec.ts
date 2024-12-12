@@ -6,7 +6,7 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
   })
 
   afterEach(() => {
-    cy.getDataCy('reinitialize-filters').scrollIntoView().click()
+    cy.clickButton('Réinitialiser les filtres')
   })
 
   const verifyVigilanceAreaRows = (expectedText: string) => {

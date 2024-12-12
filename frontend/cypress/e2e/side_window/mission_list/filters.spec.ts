@@ -9,7 +9,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   afterEach(() => {
-    cy.getDataCy('reinitialize-filters').scrollIntoView().click()
+    cy.clickButton('Réinitialiser les filtres')
   })
 
   it('Should filter missions for the current week', () => {

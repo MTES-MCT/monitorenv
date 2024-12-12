@@ -7,7 +7,7 @@ interface ReinitializeFiltersButtonProps {
 
 export function ReinitializeFiltersButton({ onClick }: ReinitializeFiltersButtonProps) {
   return (
-    <ResetFiltersButton data-cy="reinitialize-filters" onClick={onClick}>
+    <ResetFiltersButton onClick={onClick}>
       <Icon.Reset size={14} />
       <span>Réinitialiser les filtres</span>
     </ResetFiltersButton>
