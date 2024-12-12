@@ -26,6 +26,8 @@ import type { Geometry } from 'ol/geom'
 export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const displayGeometry = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.displayGeometry : false
@@ -85,6 +87,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
               const feature = getRegulatoryFeature({
                 code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
+                isolatedLayer,
                 layer
               })
               if (!feature) {
@@ -113,7 +116,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
             const layer = ampLayers.entities[layerId]
 
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
+              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, isolatedLayer, layer })
 
               if (!feature) {
                 return feats
@@ -140,7 +143,11 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
           const features = vigilanceAreaLayersIds.reduce((feats: Feature[], layerId) => {
             const layer = vigilanceAreas.entities[layerId]
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-              const feature = getVigilanceAreaZoneFeature(layer, Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS)
+              const feature = getVigilanceAreaZoneFeature(
+                layer,
+                Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS,
+                isolatedLayer
+              )
               feats.push(feature)
             }
 
@@ -190,7 +197,8 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     reportings,
     dashboard?.dashboard.geom,
     drawBorder,
-    displayGeometry
+    displayGeometry,
+    isolatedLayer
   ])
 
   useEffect(() => {

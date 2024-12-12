@@ -1,8 +1,6 @@
-import { getIsolatedLayerIsVigilanceArea } from '@features/map/layers/utils'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
-import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -15,7 +13,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
-export function PreviewVigilanceAreasLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const displayVigilanceAreaLayer = useAppSelector(state => state.global.displayVigilanceAreaLayer)
 
   const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
@@ -26,10 +24,8 @@ export function PreviewVigilanceAreasLayer({ currentFeatureOver, map }: BaseMapC
   const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible && isLayersSidebarVisible
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
-  const areLayersFilled = isolatedLayer === undefined
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
@@ -41,7 +37,7 @@ export function PreviewVigilanceAreasLayer({ currentFeatureOver, map }: BaseMapC
       zIndex: Layers.VIGILANCE_AREA_PREVIEW.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA_PREVIEW.code
+  vectorLayerRef.current.name = Layers.VIGILANCE_AREA_PREVIEW.code
 
   const vigilanceAreasFeatures = useMemo(() => {
     let features: Feature[] = []
@@ -52,10 +48,8 @@ export function PreviewVigilanceAreasLayer({ currentFeatureOver, map }: BaseMapC
         const layer = vigilanceAreas?.entities[id]
 
         if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-          const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA_PREVIEW.code, false, areLayersFilled)
-          if (isolatedLayerIsVigilanceArea && isolatedLayer?.id === id) {
-            feature.set('isFilled', isolatedLayer.isFilled)
-          }
+          const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA_PREVIEW.code, isolatedLayer)
+
           layers.push(feature)
         }
 
@@ -64,36 +58,14 @@ export function PreviewVigilanceAreasLayer({ currentFeatureOver, map }: BaseMapC
     }
 
     return features
-  }, [areLayersFilled, isolatedLayer, isolatedLayerIsVigilanceArea, vigilanceAreaSearchResult, vigilanceAreas])
+  }, [isolatedLayer, vigilanceAreaSearchResult, vigilanceAreas])
 
   useEffect(() => {
-    const vectorSource = vectorSourceRef.current
-    vectorSource.clear(true)
-
-    const feature = convertToFeature(currentFeatureOver)
-
+    vectorSourceRef.current?.clear(true)
     if (vigilanceAreasFeatures) {
-      const isHoveredFeature = feature?.getId()?.toString()?.includes(Layers.VIGILANCE_AREA_PREVIEW.code)
-
-      if (feature && isHoveredFeature && !areLayersFilled) {
-        feature.set('isFilled', true)
-
-        // Exclude the current feature and re-add it with updated properties
-        const filteredFeatures = vigilanceAreasFeatures.filter(f => f.getId() !== feature?.getId()) ?? []
-        vectorSource.addFeatures([...filteredFeatures, feature])
-
-        return
-      }
-
-      vectorSource.addFeatures(vigilanceAreasFeatures)
-
-      return
+      vectorSourceRef.current?.addFeatures(vigilanceAreasFeatures)
     }
-
-    if (feature) {
-      vectorSource.addFeature(feature)
-    }
-  }, [vigilanceAreasFeatures, areLayersFilled, currentFeatureOver])
+  }, [vigilanceAreasFeatures])
 
   useEffect(() => {
     if (map) {

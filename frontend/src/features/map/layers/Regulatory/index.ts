@@ -9,7 +9,6 @@ import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
-import { getIsolatedLayerIsRegulatoryArea } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -27,8 +26,6 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const isLayerVisible = !isLinkingAMPToVigilanceArea
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
-  const areLayersFilled = isolatedLayer === undefined
 
   const regulatoryVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const regulatoryVectorLayerRef = useRef(
@@ -50,15 +47,12 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
         if (regulatorylayer) {
           const feature = getRegulatoryFeature({
             code: Layers.REGULATORY_ENV.code,
-            isFilled: areLayersFilled,
+            isolatedLayer,
             layer: regulatorylayer
           })
           if (feature) {
             const metadataIsShowed = regulatorylayer.id === regulatoryMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
-            if (isolatedLayerTypeIsRegulatory && isolatedLayer?.id === regulatorylayerId) {
-              feature.set('isFilled', isolatedLayer?.isFilled)
-            }
             feats.push(feature)
           }
         }
@@ -68,15 +62,7 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
     }
 
     return regulatoryFeatures
-  }, [
-    regulatoryLayers?.entities,
-    showedRegulatoryLayerIds,
-    areLayersFilled,
-    regulatoryMetadataLayerId,
-    isolatedLayerTypeIsRegulatory,
-    isolatedLayer?.id,
-    isolatedLayer?.isFilled
-  ])
+  }, [regulatoryLayers?.entities, showedRegulatoryLayerIds, regulatoryMetadataLayerId, isolatedLayer])
 
   useEffect(() => {
     regulatoryVectorSourceRef.current?.clear(true)

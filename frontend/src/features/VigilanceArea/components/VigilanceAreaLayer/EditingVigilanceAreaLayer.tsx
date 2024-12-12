@@ -26,6 +26,8 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const ampToAdd = useAppSelector(state => state.vigilanceArea.ampToAdd)
   const vigilanceAreaGeom = useAppSelector(state => state.vigilanceArea.geometry)
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+
   const isLayerVisible = !!editingVigilanceAreaId
 
   // Vigilance Area
@@ -42,11 +44,11 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     }
 
     if (editingVigilanceArea) {
-      return getVigilanceAreaZoneFeature(editingVigilanceArea, Layers.VIGILANCE_AREA.code, true)
+      return getVigilanceAreaZoneFeature(editingVigilanceArea, Layers.VIGILANCE_AREA.code, isolatedLayer, true)
     }
 
     return undefined
-  }, [editingVigilanceArea, vigilanceAreaGeom])
+  }, [editingVigilanceArea, vigilanceAreaGeom, isolatedLayer])
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
@@ -72,6 +74,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       if (regulatorylayer) {
         const feature = getRegulatoryFeature({
           code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
+          isolatedLayer,
           layer: regulatorylayer
         })
         if (!feature) {
@@ -83,7 +86,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       return feats
     }, [])
-  }, [regulatoryLayers, regulatoryAreasToAdd])
+  }, [regulatoryLayers, regulatoryAreasToAdd, isolatedLayer])
 
   const regulatoryAreasVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const regulatoryAreasVectorLayerRef = useRef(
@@ -111,6 +114,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
         if (ampLayer) {
           const feature = getAMPFeature({
             code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
+            isolatedLayer,
             layer: ampLayer
           })
           if (!feature) {
@@ -125,7 +129,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       []
     )
-  }, [ampLayers, ampToAdd])
+  }, [ampLayers, ampToAdd, isolatedLayer])
 
   const ampVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampVectorLayerRef = useRef(

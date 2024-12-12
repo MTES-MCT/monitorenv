@@ -1,12 +1,16 @@
 import { getFeature } from '@utils/getFeature'
 import { getArea } from 'ol/sphere'
 
+import { getIsolatedLayerIsRegulatoryArea } from '../utils'
+
+import type { IsolatedLayerType } from 'domain/shared_slices/Map'
+
 type RegulatoryFeatureType = {
   code: string
-  isFilled?: boolean
+  isolatedLayer: IsolatedLayerType | undefined
   layer: any
 }
-export function getRegulatoryFeature({ code, isFilled = true, layer }: RegulatoryFeatureType) {
+export function getRegulatoryFeature({ code, isolatedLayer, layer }: RegulatoryFeatureType) {
   const feature = getFeature(layer.geom)
   if (!feature) {
     return undefined
@@ -15,9 +19,14 @@ export function getRegulatoryFeature({ code, isFilled = true, layer }: Regulator
   const area = geometry && getArea(geometry)
   feature.setId(`${code}:${layer.id}`)
 
+  const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
+  const isLayerFilled = isolatedLayer
+    ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === layer.id && isolatedLayer?.isFilled
+    : true
+
   feature.setProperties({
     area,
-    isFilled,
+    isFilled: isLayerFilled,
     layerId: layer.id,
     ...layer
   })

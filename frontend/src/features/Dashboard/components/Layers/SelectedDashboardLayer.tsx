@@ -27,6 +27,8 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
   const { displayDashboardLayer } = useAppSelector(state => state.global)
   const selectedDashboardOnMap = useAppSelector(state => state.dashboard.selectedDashboardOnMap)
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+
   const dashboardDatasVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const dashboardDatasVectorLayerRef = useRef(
     new VectorLayer({
@@ -88,6 +90,7 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       selectedDashboardOnMap.amps.forEach(amp => {
         const ampFeature = getAMPFeature({
           code: Dashboard.featuresCode.DASHBOARD_AMP,
+          isolatedLayer,
           layer: amp
         })
 
@@ -100,6 +103,7 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       selectedDashboardOnMap.regulatoryAreas.forEach(regulatoryArea => {
         const regulatoryAreaFeature = getRegulatoryFeature({
           code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
+          isolatedLayer,
           layer: regulatoryArea
         })
         if (!regulatoryAreaFeature) {
@@ -111,7 +115,8 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       selectedDashboardOnMap.vigilanceAreas.forEach(vigilanceArea => {
         const vigilanceAreaFeature = getVigilanceAreaZoneFeature(
           vigilanceArea,
-          Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS
+          Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS,
+          isolatedLayer
         )
 
         feats.push(vigilanceAreaFeature)
@@ -119,5 +124,5 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
 
       dashboardDatasVectorSourceRef.current?.addFeatures(feats)
     }
-  }, [dispatch, selectedDashboardOnMap])
+  }, [dispatch, selectedDashboardOnMap, isolatedLayer])
 }
