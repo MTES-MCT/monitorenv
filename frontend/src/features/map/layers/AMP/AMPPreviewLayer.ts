@@ -28,13 +28,13 @@ export function AMPPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProp
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
   const isolatedLayerTypeIsAmp = getIsolatedLayerIsAmp(isolatedLayer)
+  const areLayersFilled = isolatedLayer === undefined
 
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)
 
   const isLayerVisible = isLayersSidebarVisible && isAmpSearchResultsVisible && !isLinkingRegulatoryToVigilanceArea
 
-  const areLayersFilled = isolatedLayer === undefined
   const ampPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampPreviewVectorLayerRef = useRef(
     new VectorLayer({
