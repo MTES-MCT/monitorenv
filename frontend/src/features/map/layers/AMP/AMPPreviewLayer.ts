@@ -73,11 +73,10 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   }, [ampLayers?.entities, ampLayers?.ids, ampMetadataLayerId, ampsSearchResult, isolatedLayer, showedAmpLayerIds])
 
   useEffect(() => {
-    const vectorSource = ampPreviewVectorSourceRef.current
-    vectorSource.clear(true)
+    ampPreviewVectorSourceRef.current?.clear(true)
 
     if (ampLayersFeatures) {
-      vectorSource.addFeatures(ampLayersFeatures)
+      ampPreviewVectorSourceRef.current?.addFeatures(ampLayersFeatures)
     }
   }, [ampLayersFeatures])
 

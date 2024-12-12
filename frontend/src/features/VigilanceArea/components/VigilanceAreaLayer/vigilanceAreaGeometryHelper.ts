@@ -1,4 +1,3 @@
-import { getIsolatedLayerIsVigilanceArea } from '@features/map/layers/utils'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -14,8 +13,6 @@ export const getVigilanceAreaZoneFeature = (
   isolatedLayer: IsolatedLayerType | undefined,
   isSelected?: boolean
 ) => {
-  const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
-
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(vigilanceArea.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -27,6 +24,7 @@ export const getVigilanceAreaZoneFeature = (
     geometry
   })
 
+  const isolatedLayerIsVigilanceArea = isolatedLayer?.type.includes('VIGILANCE_AREA') ?? false
   const isLayerFilled = isolatedLayer
     ? isolatedLayerIsVigilanceArea && isolatedLayer?.id === vigilanceArea.id && isolatedLayer?.isFilled
     : true
