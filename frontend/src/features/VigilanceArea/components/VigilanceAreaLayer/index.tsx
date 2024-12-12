@@ -1,4 +1,5 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { getIsolatedLayerIsVigilanceArea } from '@features/map/layers/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -18,6 +19,10 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const displayVigilanceAreaLayer = useAppSelector(state => state.global.displayVigilanceAreaLayer)
 
   const myVigilanceAreaIdsDisplayed = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIdsDisplayed)
+
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
+  const areLayersFilled = isolatedLayer === undefined
 
   const isLayerVisible = displayVigilanceAreaLayer
 
@@ -43,8 +48,10 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
         const features = myVigilanceAreaIdsDisplayed.reduce((feats: Feature[], layerId) => {
           const layer = vigilanceAreas.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code)
-
+            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code, false, areLayersFilled)
+            if (isolatedLayerIsVigilanceArea && isolatedLayer?.id === layerId) {
+              feature.set('isFilled', isolatedLayer.isFilled)
+            }
             feats.push(feature)
           }
 
@@ -54,7 +61,15 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
         vectorSourceRef.current.addFeatures(features)
       }
     }
-  }, [map, myVigilanceAreaIdsDisplayed, vigilanceAreas?.entities])
+  }, [
+    areLayersFilled,
+    isolatedLayer?.id,
+    isolatedLayer?.isFilled,
+    isolatedLayerIsVigilanceArea,
+    map,
+    myVigilanceAreaIdsDisplayed,
+    vigilanceAreas?.entities
+  ])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

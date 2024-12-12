@@ -9,6 +9,7 @@ import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
+import { getIsolatedLayerIsRegulatoryArea } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -24,6 +25,10 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLayerVisible = !isLinkingAMPToVigilanceArea
+
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
+  const areLayersFilled = isolatedLayer === undefined
 
   const regulatoryVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const regulatoryVectorLayerRef = useRef(
@@ -43,10 +48,17 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
       regulatoryFeatures = showedRegulatoryLayerIds.reduce((feats: Feature[], regulatorylayerId) => {
         const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
         if (regulatorylayer) {
-          const feature = getRegulatoryFeature({ code: Layers.REGULATORY_ENV.code, layer: regulatorylayer })
+          const feature = getRegulatoryFeature({
+            code: Layers.REGULATORY_ENV.code,
+            isFilled: areLayersFilled,
+            layer: regulatorylayer
+          })
           if (feature) {
             const metadataIsShowed = regulatorylayer.id === regulatoryMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+            if (isolatedLayerTypeIsRegulatory && isolatedLayer?.id === regulatorylayerId) {
+              feature.set('isFilled', isolatedLayer?.isFilled)
+            }
             feats.push(feature)
           }
         }
@@ -56,7 +68,15 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
     }
 
     return regulatoryFeatures
-  }, [regulatoryLayers, showedRegulatoryLayerIds, regulatoryMetadataLayerId])
+  }, [
+    regulatoryLayers?.entities,
+    showedRegulatoryLayerIds,
+    areLayersFilled,
+    regulatoryMetadataLayerId,
+    isolatedLayerTypeIsRegulatory,
+    isolatedLayer?.id,
+    isolatedLayer?.isFilled
+  ])
 
   useEffect(() => {
     regulatoryVectorSourceRef.current?.clear(true)

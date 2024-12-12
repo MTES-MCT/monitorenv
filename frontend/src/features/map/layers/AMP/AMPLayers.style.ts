@@ -10,7 +10,7 @@ const getStyle = (color: string, metadataIsShowed: boolean | undefined, isFilled
       color: isFilled ? getColorWithAlpha(color, 0.7) : 'transparent'
     }),
     stroke: new Stroke({
-      color: getColorWithAlpha(THEME.color.darkGoldenrod, 1),
+      color: metadataIsShowed ? getColorWithAlpha('#F3CB00', 1) : getColorWithAlpha(THEME.color.darkGoldenrod, 1),
       width: metadataIsShowed ? 3 : 1
     })
   })

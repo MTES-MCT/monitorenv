@@ -185,7 +185,7 @@ const getStyle = (color, metadataIsShowed, isLayerFilled) =>
       color: isLayerFilled ? color : 'transparent'
     }),
     stroke: new Stroke({
-      color: getColorWithAlpha(THEME.color.charcoal, 0.7),
+      color: metadataIsShowed ? getColorWithAlpha('#85FBFD', 0.7) : getColorWithAlpha(THEME.color.charcoal, 0.7),
       width: metadataIsShowed ? 3 : 1
     })
   })

@@ -9,6 +9,7 @@ import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getIsolatedLayerIsAmp } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -20,6 +21,10 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 export function AMPLayers({ map }: BaseMapChildrenProps) {
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const showedAmpMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
+
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const isolatedLayerTypeIsAmp = getIsolatedLayerIsAmp(isolatedLayer)
+  const areLayersFilled = isolatedLayer === undefined
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLayerVisible = !isLinkingRegulatoryToVigilanceArea
@@ -44,10 +49,13 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
       ampFeatures = showedAmpLayerIds.reduce((feats: Feature[], ampLayerId) => {
         const ampLayer = ampLayers.entities[ampLayerId]
         if (ampLayer) {
-          const feature = getAMPFeature({ code: Layers.AMP.code, layer: ampLayer })
+          const feature = getAMPFeature({ code: Layers.AMP.code, isFilled: areLayersFilled, layer: ampLayer })
           if (feature) {
             const metadataIsShowed = ampLayer.id === showedAmpMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+            if (isolatedLayerTypeIsAmp && isolatedLayer?.id === ampLayerId) {
+              feature.set('isFilled', isolatedLayer.isFilled)
+            }
             feats.push(feature)
           }
         }
@@ -57,7 +65,15 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
     }
 
     return ampFeatures
-  }, [ampLayers?.entities, showedAmpLayerIds, showedAmpMetadataLayerId])
+  }, [
+    ampLayers?.entities,
+    areLayersFilled,
+    isolatedLayer?.id,
+    isolatedLayer?.isFilled,
+    isolatedLayerTypeIsAmp,
+    showedAmpLayerIds,
+    showedAmpMetadataLayerId
+  ])
 
   useEffect(() => {
     ampVectorSourceRef.current?.clear(true)

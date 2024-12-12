@@ -10,7 +10,7 @@ const getStyle = (color: string, isSelected: boolean | undefined, isFilled: bool
       color: isFilled ? getColorWithAlpha(color, 0.5) : 'transparent'
     }),
     stroke: new Stroke({
-      color: getColorWithAlpha(THEME.color.rufous, 1),
+      color: isSelected ? getColorWithAlpha('#FF4433', 1) : getColorWithAlpha(THEME.color.rufous, 1),
       width: isSelected ? 3 : 1
     })
   })
