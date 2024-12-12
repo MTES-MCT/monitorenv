@@ -1,10 +1,11 @@
 import { getIsLinkingZonesToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
+import { IconButton, Icon, Size, Accent, useClickOutsideEffect } from '@mtes-mct/monitor-ui'
 import { type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { mapActions } from 'domain/shared_slices/Map'
 import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
+import { useRef } from 'react'
 import styled from 'styled-components'
 
 import { OverlayContent } from './OverlayContent'
@@ -18,13 +19,19 @@ export function PinnedOverlay({
 }: {
   items: OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryLayerCompactProperties>[]
 }) {
+  const ref = useRef<HTMLDivElement>(null)
   const dispatch = useAppDispatch()
+  const exitIsolationMode = () => {
+    dispatch(mapActions.setIsolateMode(undefined))
+  }
+
+  useClickOutsideEffect(ref, exitIsolationMode, document)
 
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const close = () => {
     dispatch(closeAreaOverlay())
-    dispatch(mapActions.setIsolateMode({ isolatedLayer: undefined }))
+    dispatch(mapActions.setIsolateMode(undefined))
   }
 
   // component should not be called if items.length < 2
@@ -34,7 +41,7 @@ export function PinnedOverlay({
   }
 
   return (
-    <Card>
+    <Card ref={ref}>
       <Header>
         {items.length > 1 ? <>{items.length} zones superposées sur ce point </> : 'Zone sélectionnée'}
         <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={close} size={Size.SMALL} />

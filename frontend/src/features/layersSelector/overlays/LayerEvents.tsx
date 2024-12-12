@@ -112,7 +112,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
     }
 
     if (numberOfClickedFeatures === 1) {
-      dispatch(mapActions.setIsolateMode({ isolatedLayer: undefined }))
+      dispatch(mapActions.setIsolateMode(undefined))
       if (clickedAmpFeatures && clickedAmpFeatures.length === 1) {
         dispatch(closeAreaOverlay())
         const currentFeature = convertToFeature(clickedAmpFeatures[0])

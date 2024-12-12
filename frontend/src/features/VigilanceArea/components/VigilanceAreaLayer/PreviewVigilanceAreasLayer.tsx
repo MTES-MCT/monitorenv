@@ -2,6 +2,7 @@ import { getIsolatedLayerIsVigilanceArea } from '@features/map/layers/utils'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
+import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -14,7 +15,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
-export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
+export function PreviewVigilanceAreasLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const displayVigilanceAreaLayer = useAppSelector(state => state.global.displayVigilanceAreaLayer)
 
   const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
@@ -66,11 +67,33 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   }, [areLayersFilled, isolatedLayer, isolatedLayerIsVigilanceArea, vigilanceAreaSearchResult, vigilanceAreas])
 
   useEffect(() => {
-    vectorSourceRef.current?.clear(true)
+    const vectorSource = vectorSourceRef.current
+    vectorSource.clear(true)
+
+    const feature = convertToFeature(currentFeatureOver)
+
     if (vigilanceAreasFeatures) {
-      vectorSourceRef.current?.addFeatures(vigilanceAreasFeatures)
+      const isHoveredFeature = feature?.getId()?.toString()?.includes(Layers.VIGILANCE_AREA_PREVIEW.code)
+
+      if (feature && isHoveredFeature && !areLayersFilled) {
+        feature.set('isFilled', true)
+
+        // Exclude the current feature and re-add it with updated properties
+        const filteredFeatures = vigilanceAreasFeatures.filter(f => f.getId() !== feature?.getId()) ?? []
+        vectorSource.addFeatures([...filteredFeatures, feature])
+
+        return
+      }
+
+      vectorSource.addFeatures(vigilanceAreasFeatures)
+
+      return
     }
-  }, [vigilanceAreasFeatures])
+
+    if (feature) {
+      vectorSource.addFeature(feature)
+    }
+  }, [vigilanceAreasFeatures, areLayersFilled, currentFeatureOver])
 
   useEffect(() => {
     if (map) {

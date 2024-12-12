@@ -40,7 +40,6 @@ export enum MonitorEnvLayers {
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
-  ISOLATED_LAYERS = 'ISOLATED_LAYERS',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
   MARPOL = 'MARPOL',
   MEASUREMENT = 'MEASUREMENT',
@@ -197,10 +196,6 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.REGULATORY_ENV_PREVIEW]: {
     code: MonitorEnvLayers.REGULATORY_ENV_PREVIEW,
     name: '',
-    zIndex: 950
-  },
-  [MonitorEnvLayers.ISOLATED_LAYERS]: {
-    code: MonitorEnvLayers.ISOLATED_LAYERS,
     zIndex: 950
   },
   [MonitorEnvLayers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING]: {
