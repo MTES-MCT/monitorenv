@@ -13,6 +13,7 @@ import { DrawDashboard } from './DrawDashboard'
 import { dashboardActions } from '../slice'
 import { closeDrawDashboard } from '../useCases/closeDrawDashboard'
 import { resetDrawing } from '../useCases/resetDrawing'
+import { Filters } from './DashboardsList/Filters'
 
 export function DashboardMenuButton() {
   const dispatch = useAppDispatch()
@@ -75,6 +76,7 @@ export function DashboardMenuButton() {
             <StyledDrawDashboard onCancel={cancel} />
           ) : (
             <MapMenuDialog.Footer>
+              <Filters orientation="column" />
               <Button Icon={Icon.Plus} isFullWidth onClick={openDrawModal}>
                 Créer un tableau de bord
               </Button>

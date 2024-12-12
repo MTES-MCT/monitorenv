@@ -1,5 +1,5 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { ReportingDateRangeEnum } from 'domain/entities/dateRange'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { StatusFilterEnum } from 'domain/entities/reporting'
 import { set } from 'lodash'
 import { persistReducer } from 'redux-persist'
@@ -14,7 +14,7 @@ const persistConfig = {
 }
 
 export type ReportingFilters = {
-  dateRange: ReportingDateRangeEnum
+  dateRange: DateRangeEnum
   period?: DateAsStringRange
   status: StatusFilterEnum[]
 }
@@ -34,6 +34,14 @@ export type DashboardFilters = {
   vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
 }
 
+export type DashboardsListFilters = {
+  controlUnits: number[]
+  regulatoryThemes: string[]
+  seaFronts: string[]
+  specificPeriod?: DateAsStringRange
+  updatedAt: DateRangeEnum
+}
+
 export type DashboardFiltersType = {
   controlUnitFilters: ControlUnitFilters
   filters: DashboardFilters
@@ -44,9 +52,20 @@ type DashboardFiltersState = {
   dashboards: {
     [key: string]: DashboardFiltersType
   }
+  filters: DashboardsListFilters
 }
+
+export const INITIAL_LIST_FILTERS_STATE: DashboardsListFilters = {
+  controlUnits: [],
+  regulatoryThemes: [],
+  seaFronts: [],
+  specificPeriod: undefined,
+  updatedAt: DateRangeEnum.MONTH
+}
+
 const INITIAL_STATE: DashboardFiltersState = {
-  dashboards: {}
+  dashboards: {},
+  filters: INITIAL_LIST_FILTERS_STATE
 }
 export const dashboardFiltersSlice = createSlice({
   initialState: INITIAL_STATE,
@@ -58,7 +77,7 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         reportingFilters: {
-          dateRange: ReportingDateRangeEnum.MONTH,
+          dateRange: DateRangeEnum.MONTH,
           status: [StatusFilterEnum.IN_PROGRESS]
         }
       }
@@ -77,6 +96,9 @@ export const dashboardFiltersSlice = createSlice({
       if (state.dashboards[id]) {
         state.dashboards[id].filters = {}
       }
+    },
+    resetFilters(state) {
+      state.filters = INITIAL_LIST_FILTERS_STATE
     },
     setControlUnitsFilters(
       state,
@@ -103,7 +125,7 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         reportingFilters: {
-          dateRange: ReportingDateRangeEnum.MONTH,
+          dateRange: DateRangeEnum.MONTH,
           status: [StatusFilterEnum.IN_PROGRESS]
         }
       }
@@ -117,6 +139,9 @@ export const dashboardFiltersSlice = createSlice({
         state.dashboards[id].filters = { ...state.dashboards[id].filters, ...filters }
       }
     },
+    setListFilters(state, action: PayloadAction<Partial<DashboardsListFilters>>) {
+      state.filters = { ...state.filters, ...action.payload }
+    },
     setReportingFilters(state, action: PayloadAction<{ filters: Partial<ReportingFilters>; id: string | undefined }>) {
       const { filters, id } = action.payload
       if (!id) {
@@ -126,6 +151,15 @@ export const dashboardFiltersSlice = createSlice({
         const { reportingFilters } = state.dashboards[id]
         state.dashboards[id].reportingFilters = { ...reportingFilters, ...filters }
       }
+    },
+    updateFilters: (
+      state,
+      action: PayloadAction<{
+        key: keyof DashboardsListFilters
+        value: any
+      }>
+    ) => {
+      state.filters[action.payload.key] = action.payload.value
     }
   }
 })

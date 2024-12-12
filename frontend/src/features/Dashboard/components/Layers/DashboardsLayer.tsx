@@ -1,4 +1,4 @@
-import { useGetDashboardsQuery } from '@api/dashboardsAPI'
+import { useGetFilteredDashboardsQuery } from '@features/Dashboard/hooks/useGetFilteredDashboardsQuery'
 import { selectDashboardOnMap } from '@features/Dashboard/useCases/selectDashboardOnMap'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -24,7 +24,7 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = displayDashboardLayer && !hasMapInteraction
 
-  const { data: dashboards } = useGetDashboardsQuery()
+  const { dashboards } = useGetFilteredDashboardsQuery()
 
   const dashboardsVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const dashboardsVectorLayerRef = useRef(

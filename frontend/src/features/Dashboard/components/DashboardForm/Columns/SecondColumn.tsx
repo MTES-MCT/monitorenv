@@ -1,3 +1,4 @@
+import { useObserverAccordion } from '@features/Dashboard/hooks/useObserverAccordion'
 import { getFilteredReportings, type DashboardType } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -9,7 +10,6 @@ import { getReportingFilters } from '../slice'
 import { TerritorialPressure } from '../TerritorialPressure'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
-import { useObserverAccordion } from '../useObserverAccordion'
 
 type SecondColumnProps = {
   dashboardForm: [string, DashboardType]
