@@ -10,7 +10,7 @@ context('Reportings', () => {
     cy.wait('@getReportings')
   })
   afterEach(() => {
-    cy.getDataCy('reinitialize-filters').click({ force: true })
+    cy.clickButton('Réinitialiser les filtres')
   })
 
   it('Should filter reportings for the last seven days', () => {

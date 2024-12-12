@@ -75,8 +75,9 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
 
   const controlUnitsAsOptions = useMemo(() => {
     const activeControlUnits = (legacyControlUnits ?? []).filter(isNotArchived)
-    const selectableControlUnits = activeControlUnits?.filter(activeControlUnit =>
-      selectedAdministrationNames?.includes(activeControlUnit.administration)
+    const selectableControlUnits = activeControlUnits?.filter(
+      activeControlUnit =>
+        !selectedAdministrationNames?.length || selectedAdministrationNames?.includes(activeControlUnit.administration)
     )
 
     return getOptionsFromIdAndName(selectableControlUnits) ?? []

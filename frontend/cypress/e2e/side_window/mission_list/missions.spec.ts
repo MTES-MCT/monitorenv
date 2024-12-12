@@ -33,7 +33,7 @@ context('Missions', () => {
     cy.getDataCy('edit-mission-48').should('not.exist')
 
     cy.log('Initialize filters')
-    cy.getDataCy('reinitialize-filters').click()
+    cy.clickButton('Réinitialiser les filtres')
     cy.getDataCy('edit-mission-48').scrollIntoView().should('exist')
 
     cy.log('Units should be filtered')

@@ -152,7 +152,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
     cy.contains('Unité DREAL Pays-de-La-Loire').should('be.visible')
 
-    cy.getDataCy('reinitialize-filters').scrollIntoView().click()
+    cy.clickButton('Réinitialiser les filtres')
   })
 
   it('Should open the current mission of the unit', () => {
