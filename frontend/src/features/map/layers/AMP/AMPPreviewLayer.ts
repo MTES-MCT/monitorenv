@@ -1,6 +1,5 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
-import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -11,7 +10,6 @@ import { getAMPLayerStyle } from './AMPLayers.style'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { getIsolatedLayerIsAmp } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -19,7 +17,7 @@ import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function AMPPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
@@ -27,8 +25,6 @@ export function AMPPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProp
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const isolatedLayerTypeIsAmp = getIsolatedLayerIsAmp(isolatedLayer)
-  const areLayersFilled = isolatedLayer === undefined
 
   const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global)
@@ -59,14 +55,12 @@ export function AMPPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProp
         const layer = ampLayers?.entities[id]
 
         if (layer && layer.geom) {
-          const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, isFilled: areLayersFilled, layer })
+          const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, isolatedLayer, layer })
 
           if (feature) {
             const metadataIsShowed = layer.id === ampMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
-            if (isolatedLayerTypeIsAmp && isolatedLayer?.id === id) {
-              feature.set('isFilled', isolatedLayer.isFilled)
-            }
+
             amplayers.push(feature)
           }
         }
@@ -76,45 +70,16 @@ export function AMPPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProp
     }
 
     return ampFeatures
-  }, [
-    ampLayers?.entities,
-    ampLayers?.ids,
-    ampMetadataLayerId,
-    ampsSearchResult,
-    areLayersFilled,
-    isolatedLayer,
-    isolatedLayerTypeIsAmp,
-    showedAmpLayerIds
-  ])
+  }, [ampLayers?.entities, ampLayers?.ids, ampMetadataLayerId, ampsSearchResult, isolatedLayer, showedAmpLayerIds])
 
   useEffect(() => {
     const vectorSource = ampPreviewVectorSourceRef.current
     vectorSource.clear(true)
 
-    const feature = convertToFeature(currentFeatureOver)
-
     if (ampLayersFeatures) {
-      const isHoveredFeature = feature?.getId()?.toString()?.includes(Layers.AMP_PREVIEW.code)
-
-      if (feature && isHoveredFeature && !areLayersFilled) {
-        feature.set('isFilled', true)
-
-        // Exclude the current feature and re-add it with updated properties
-        const filteredFeatures = ampLayersFeatures.filter(f => f.getId() !== feature?.getId()) ?? []
-        vectorSource.addFeatures([...filteredFeatures, feature])
-
-        return
-      }
-
       vectorSource.addFeatures(ampLayersFeatures)
-
-      return
     }
-
-    if (feature) {
-      vectorSource.addFeature(feature)
-    }
-  }, [ampLayersFeatures, areLayersFilled, currentFeatureOver])
+  }, [ampLayersFeatures])
 
   useEffect(() => {
     ampPreviewVectorLayerRef.current?.setVisible(isLayerVisible)

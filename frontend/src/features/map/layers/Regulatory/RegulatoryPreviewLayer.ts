@@ -10,7 +10,6 @@ import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
-import { getIsolatedLayerIsRegulatoryArea } from '../utils'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -25,8 +24,6 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
-  const areLayersFilled = isolatedLayer === undefined
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
@@ -57,7 +54,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
         if (layer && layer.geom) {
           const feature = getRegulatoryFeature({
             code: Layers.REGULATORY_ENV_PREVIEW.code,
-            isFilled: areLayersFilled,
+            isolatedLayer,
             layer
           })
 
@@ -65,9 +62,6 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
             const metadataIsShowed = layer.id === regulatoryMetadataLayerId
             feature.set(metadataIsShowedPropertyName, metadataIsShowed)
 
-            if (isolatedLayerTypeIsRegulatory && isolatedLayer?.id === id) {
-              feature.set('isFilled', isolatedLayer.isFilled)
-            }
             regulatorylayers.push(feature)
           }
         }
@@ -81,9 +75,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     regulatoryLayersSearchResult,
     regulatoryLayers?.ids,
     regulatoryLayers?.entities,
-    areLayersFilled,
     regulatoryMetadataLayerId,
-    isolatedLayerTypeIsRegulatory,
     isolatedLayer
   ])
 

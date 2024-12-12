@@ -23,6 +23,8 @@ import type { Geometry } from 'ol/geom'
 export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
   const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
@@ -73,6 +75,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
               const feature = getRegulatoryFeature({
                 code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
+                isolatedLayer,
                 layer
               })
               if (!feature) {
@@ -99,7 +102,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
           const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
             const layer = ampLayers.entities[layerId]
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, layer })
+              const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, isolatedLayer, layer })
               if (!feature) {
                 return feats
               }
@@ -118,7 +121,11 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         if (vigilanceAreas?.entities && openPanelIsVigilanceArea) {
           const layer = vigilanceAreas.entities[openPanel?.id]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getVigilanceAreaZoneFeature(layer, Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS)
+            const feature = getVigilanceAreaZoneFeature(
+              layer,
+              Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS,
+              isolatedLayer
+            )
             feature.set('isSelected', true)
 
             previewLayersVectorSourceRef.current.addFeature(feature)
@@ -135,7 +142,16 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         }
       }
     }
-  }, [ampLayers?.entities, dashboard, drawBorder, map, openPanel, regulatoryLayers?.entities, vigilanceAreas?.entities])
+  }, [
+    ampLayers?.entities,
+    dashboard,
+    drawBorder,
+    map,
+    openPanel,
+    regulatoryLayers?.entities,
+    vigilanceAreas?.entities,
+    isolatedLayer
+  ])
 
   useEffect(() => {
     map.getLayers().push(previewLayersVectorLayerRef.current)

@@ -30,16 +30,18 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     skip: !selectedVigilanceAreaId
   })
 
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+
   const isLayerVisible = !!selectedVigilanceAreaId && selectedVigilanceAreaId !== editingVigilanceAreaId
 
   // Vigilance Area
   const vigilanceAreasFeature = useMemo(() => {
     if (selectedVigilanceArea) {
-      return getVigilanceAreaZoneFeature(selectedVigilanceArea, Layers.VIGILANCE_AREA.code, true)
+      return getVigilanceAreaZoneFeature(selectedVigilanceArea, Layers.VIGILANCE_AREA.code, isolatedLayer, true)
     }
 
     return undefined
-  }, [selectedVigilanceArea])
+  }, [selectedVigilanceArea, isolatedLayer])
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
@@ -79,6 +81,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       if (regulatorylayer && isRegulatoryAreaShouldBeDisplayed) {
         const feature = getRegulatoryFeature({
           code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
+          isolatedLayer,
           layer: regulatorylayer
         })
 
@@ -94,7 +97,8 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     selectedVigilanceArea?.linkedRegulatoryAreas,
     regulatoryLayers,
     regulatoryAreaIdsToBeDisplayed,
-    showedPinnedRegulatoryLayerIds
+    showedPinnedRegulatoryLayerIds,
+    isolatedLayer
   ])
 
   const regulatoryAreasVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
@@ -130,6 +134,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       if (AMPlayer && isAMPShouldBeDisplayed) {
         const feature = getAMPFeature({
           code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
+          isolatedLayer,
           layer: AMPlayer
         })
         if (!feature) {
@@ -140,7 +145,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       return feats
     }, [])
-  }, [ampLayers, selectedVigilanceArea?.linkedAMPs, ampIdsToBeDisplayed, showedPinnedAMPLayerIds])
+  }, [ampLayers, selectedVigilanceArea?.linkedAMPs, ampIdsToBeDisplayed, showedPinnedAMPLayerIds, isolatedLayer])
 
   const ampVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampVectorLayerRef = useRef(

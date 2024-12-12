@@ -48,10 +48,8 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
         const features = myVigilanceAreaIdsDisplayed.reduce((feats: Feature[], layerId) => {
           const layer = vigilanceAreas.entities[layerId]
           if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
-            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code, false, areLayersFilled)
-            if (isolatedLayerIsVigilanceArea && isolatedLayer?.id === layerId) {
-              feature.set('isFilled', isolatedLayer.isFilled)
-            }
+            const feature = getVigilanceAreaZoneFeature(layer, Layers.VIGILANCE_AREA.code, isolatedLayer)
+
             feats.push(feature)
           }
 
@@ -63,8 +61,7 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     }
   }, [
     areLayersFilled,
-    isolatedLayer?.id,
-    isolatedLayer?.isFilled,
+    isolatedLayer,
     isolatedLayerIsVigilanceArea,
     map,
     myVigilanceAreaIdsDisplayed,
