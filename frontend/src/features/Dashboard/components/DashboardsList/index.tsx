@@ -1,24 +1,20 @@
-import { useGetDashboardsQuery } from '@api/dashboardsAPI'
 import { TotalResults } from '@components/Table/style'
+import { useGetFilteredDashboardsQuery } from '@features/Dashboard/hooks/useGetFilteredDashboardsQuery'
 import { SideWindowContent } from '@features/SideWindow/style'
 import styled from 'styled-components'
 
 import { DashboardsTable } from './DashboardsTable'
-import { TWO_MINUTES } from '../../../../constants'
+import { Filters } from './Filters'
 
 export function DashboardsList() {
-  const {
-    data: dashboards,
-    isError,
-    isFetching,
-    isLoading
-  } = useGetDashboardsQuery(undefined, { pollingInterval: TWO_MINUTES })
+  const { dashboards, isError, isFetching, isLoading } = useGetFilteredDashboardsQuery()
 
   return (
     <SideWindowContent>
       <StyledHeader>
         <Title>Tableaux de bord</Title>
       </StyledHeader>
+      <Filters />
       <StyledTotalResults>
         {dashboards?.length ?? '0'} Tableau{dashboards && dashboards.length > 1 ? 'x' : ''}
       </StyledTotalResults>

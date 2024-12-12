@@ -1,5 +1,6 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useObserverAccordion } from '@features/Dashboard/hooks/useObserverAccordion'
 import { type DashboardType } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { isNotArchived } from '@utils/isNotArchived'
@@ -11,7 +12,6 @@ import { Weather } from '../Weather'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
 import { type BookmarkType, Bookmark } from '../Bookmark'
-import { useObserverAccordion } from '../useObserverAccordion'
 
 type ThirdColumnProps = {
   dashboardForm: [string, DashboardType]

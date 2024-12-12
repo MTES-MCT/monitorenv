@@ -1,7 +1,7 @@
 import { debounce } from 'lodash'
 import { useEffect, useMemo } from 'react'
 
-import type { BookmarkType } from './Bookmark'
+import type { BookmarkType } from '../components/DashboardForm/Bookmark'
 
 const checkVisibility = (
   container: HTMLElement | null,

@@ -1,3 +1,4 @@
+import { useObserverAccordion } from '@features/Dashboard/hooks/useObserverAccordion'
 import {
   getFilteredAmps,
   getFilteredRegulatoryAreas,
@@ -14,7 +15,6 @@ import { RegulatoryAreas } from '../RegulatoryAreas'
 import { VigilanceAreas } from '../VigilanceAreas'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
-import { useObserverAccordion } from '../useObserverAccordion'
 
 import type { DashboardFilters } from '../slice'
 
