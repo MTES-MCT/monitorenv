@@ -1,5 +1,6 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
+import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -18,7 +19,7 @@ import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
+export function RegulatoryPreviewLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
@@ -88,11 +89,33 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   ])
 
   useEffect(() => {
-    regulatoryPreviewVectorSourceRef.current?.clear(true)
+    const vectorSource = regulatoryPreviewVectorSourceRef.current
+    vectorSource.clear(true)
+
+    const feature = convertToFeature(currentFeatureOver)
+
     if (regulatoryLayersFeatures) {
-      regulatoryPreviewVectorSourceRef.current?.addFeatures(regulatoryLayersFeatures)
+      const isHoveredFeature = feature?.getId()?.toString()?.includes(Layers.REGULATORY_ENV_PREVIEW.code)
+
+      if (feature && isHoveredFeature && !areLayersFilled) {
+        feature.set('isFilled', true)
+
+        // Exclude the current feature and re-add it with updated properties
+        const filteredFeatures = regulatoryLayersFeatures.filter(f => f.getId() !== feature?.getId()) ?? []
+        vectorSource.addFeatures([...filteredFeatures, feature])
+
+        return
+      }
+
+      vectorSource.addFeatures(regulatoryLayersFeatures)
+
+      return
     }
-  }, [regulatoryLayersFeatures])
+
+    if (feature) {
+      vectorSource.addFeature(feature)
+    }
+  }, [regulatoryLayersFeatures, areLayersFilled, currentFeatureOver])
 
   useEffect(() => {
     if (map) {

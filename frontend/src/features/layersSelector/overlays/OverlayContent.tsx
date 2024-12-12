@@ -121,18 +121,16 @@ export function OverlayContent({ items }: OverlayContentProps) {
     e.stopPropagation()
 
     if (isolatedLayer?.id === id) {
-      dispatch(mapActions.setIsolateMode({ isolatedLayer: undefined }))
+      dispatch(mapActions.setIsolateMode(undefined))
 
       return
     }
 
     dispatch(
       mapActions.setIsolateMode({
-        isolatedLayer: {
-          id,
-          isFilled: true,
-          type
-        }
+        id,
+        isFilled: true,
+        type
       })
     )
   }
@@ -146,10 +144,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
     dispatch(
       mapActions.setIsolateMode({
-        isolatedLayer: {
-          ...isolatedLayer,
-          isFilled: !isolatedLayer.isFilled
-        }
+        ...isolatedLayer,
+        isFilled: !isolatedLayer.isFilled
       })
     )
   }

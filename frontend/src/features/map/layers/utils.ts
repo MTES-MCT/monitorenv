@@ -6,11 +6,11 @@ export const hasAlreadyFeature = (
   layersId: string[]
 ) => layersId.some(layerId => typeof currentFeatureOver?.id === 'string' && currentFeatureOver.id.includes(layerId))
 
-export const getIsolatedLayerIsRegulatoryArea = (isolatedLayer: IsolatedLayerType | undefined) =>
-  (isolatedLayer?.type.search('REGULATORY') ?? -1) > -1
+export const getIsolatedLayerIsRegulatoryArea = (isolatedLayer: IsolatedLayerType | undefined): boolean =>
+  isolatedLayer?.type.includes('REGULATORY') ?? false
 
-export const getIsolatedLayerIsAmp = (isolatedLayer: IsolatedLayerType | undefined) =>
-  (isolatedLayer?.type.search('AMP') ?? -1) > -1
+export const getIsolatedLayerIsAmp = (isolatedLayer: IsolatedLayerType | undefined): boolean =>
+  isolatedLayer?.type.includes('AMP') ?? false
 
-export const getIsolatedLayerIsVigilanceArea = (isolatedLayer: IsolatedLayerType | undefined) =>
-  (isolatedLayer?.type.search('VIGILANCE_AREA') ?? -1) > -1
+export const getIsolatedLayerIsVigilanceArea = (isolatedLayer: IsolatedLayerType | undefined): boolean =>
+  isolatedLayer?.type.includes('VIGILANCE_AREA') ?? false

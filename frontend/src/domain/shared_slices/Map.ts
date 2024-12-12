@@ -82,13 +82,8 @@ const mapSlice = createSlice({
     setIsAreaSelected(state, action) {
       state.isAreaSelected = action.payload
     },
-    setIsolateMode(
-      state,
-      action: PayloadAction<{
-        isolatedLayer: IsolatedLayerType | undefined
-      }>
-    ) {
-      state.isolatedLayer = action.payload.isolatedLayer
+    setIsolateMode(state, action: PayloadAction<IsolatedLayerType | undefined>) {
+      state.isolatedLayer = action.payload
     },
     setZoomToCenter(state, action) {
       state.zoomToCenter = action.payload
