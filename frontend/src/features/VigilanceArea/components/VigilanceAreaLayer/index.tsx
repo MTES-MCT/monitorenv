@@ -1,5 +1,4 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { getIsolatedLayerIsVigilanceArea } from '@features/map/layers/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -21,8 +20,6 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const myVigilanceAreaIdsDisplayed = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIdsDisplayed)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const isolatedLayerIsVigilanceArea = getIsolatedLayerIsVigilanceArea(isolatedLayer)
-  const areLayersFilled = isolatedLayer === undefined
 
   const isLayerVisible = displayVigilanceAreaLayer
 
@@ -38,7 +35,7 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.VIGILANCE_AREA.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
+  vectorLayerRef.current.name = Layers.VIGILANCE_AREA.code
 
   useEffect(() => {
     if (map) {
@@ -59,14 +56,7 @@ export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
         vectorSourceRef.current.addFeatures(features)
       }
     }
-  }, [
-    areLayersFilled,
-    isolatedLayer,
-    isolatedLayerIsVigilanceArea,
-    map,
-    myVigilanceAreaIdsDisplayed,
-    vigilanceAreas?.entities
-  ])
+  }, [isolatedLayer, map, myVigilanceAreaIdsDisplayed, vigilanceAreas?.entities])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

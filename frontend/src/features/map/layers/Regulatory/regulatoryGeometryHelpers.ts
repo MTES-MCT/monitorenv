@@ -1,8 +1,6 @@
 import { getFeature } from '@utils/getFeature'
 import { getArea } from 'ol/sphere'
 
-import { getIsolatedLayerIsRegulatoryArea } from '../utils'
-
 import type { IsolatedLayerType } from 'domain/shared_slices/Map'
 
 type RegulatoryFeatureType = {
@@ -19,7 +17,7 @@ export function getRegulatoryFeature({ code, isolatedLayer, layer }: RegulatoryF
   const area = geometry && getArea(geometry)
   feature.setId(`${code}:${layer.id}`)
 
-  const isolatedLayerTypeIsRegulatory = getIsolatedLayerIsRegulatoryArea(isolatedLayer)
+  const isolatedLayerTypeIsRegulatory = isolatedLayer?.type.includes('REGULATORY') ?? false
   const isLayerFilled = isolatedLayer
     ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === layer.id && isolatedLayer?.isFilled
     : true
