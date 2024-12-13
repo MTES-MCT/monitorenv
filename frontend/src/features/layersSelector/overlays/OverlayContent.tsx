@@ -64,6 +64,24 @@ function isVigilanceAreaLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
   )
 }
 
+function computeVigilanceAreaPeriod(properties: VigilanceArea.VigilanceAreaProperties) {
+  if (properties.isAtAllTimes) {
+    return 'En tout temps'
+  }
+  if (properties.startDatePeriod) {
+    return `${[
+      `${properties.startDatePeriod ? `Du ${customDayjs(properties.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''}  
+      ${properties?.endDatePeriod ? `au ${customDayjs(properties.endDatePeriod).utc().format('DD/MM/YYYY')}` : ''}`,
+      frequencyText(properties.frequency, false),
+      endingOccurenceText(properties.endingCondition, properties.computedEndDate, false)
+    ]
+      .filter(Boolean)
+      .join(', ')}`
+  }
+
+  return ''
+}
+
 export function OverlayContent({ items }: OverlayContentProps) {
   const dispatch = useAppDispatch()
 
@@ -185,31 +203,13 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
           const isDisabled = id !== isolatedLayer?.id && !!isolatedLayer?.id
 
-          let vigilanceAreaPeriod = ''
-          if (isVigilanceArea) {
-            if ((item.properties as VigilanceArea.VigilanceAreaProperties).isAtAllTimes) {
-              vigilanceAreaPeriod = 'En tout temps'
-            } else if ('startDatePeriod' in item.properties) {
-              vigilanceAreaPeriod = `${[
-                `${
-                  item.properties.startDatePeriod
-                    ? `Du ${customDayjs(item.properties.startDatePeriod).utc().format('DD/MM/YYYY')}`
-                    : ''
-                }  
-            ${
-              item.properties?.endDatePeriod
-                ? `au ${customDayjs(item.properties.endDatePeriod).utc().format('DD/MM/YYYY')}`
-                : ''
-            }`,
-                frequencyText(item.properties.frequency, false),
-                endingOccurenceText(item.properties.endingCondition, item.properties.computedEndDate, false)
-              ]
-                .filter(Boolean)
-                .join(', ')}`
-            }
-          }
+          const vigilanceAreaPeriod = isVigilanceArea
+            ? computeVigilanceAreaPeriod(item.properties as VigilanceArea.VigilanceAreaProperties)
+            : ''
 
           const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
+
+          const isIsolatedLayerFilled = isolatedLayer?.id === id && isolatedLayer?.isFilled
 
           return (
             <LayerItem
@@ -234,24 +234,16 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   <Name $isDisabled={isDisabled} title={getTitle(name)}>{` / ${getTitle(name)}`}</Name>
                 )}
                 <ButtonContainer>
-                  {items.length > 1 && isVigilanceArea && (
-                    <StyledTooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</StyledTooltip>
-                  )}
                   {items.length > 1 && (
                     <>
+                      {isVigilanceArea && <StyledTooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</StyledTooltip>}
                       {isolatedLayer?.id === id && (
                         <StyledIconButton
                           accent={Accent.TERTIARY}
-                          color={
-                            isolatedLayer?.id === id && isolatedLayer?.isFilled
-                              ? THEME.color.charcoal
-                              : THEME.color.blueGray
-                          }
+                          color={isIsolatedLayerFilled ? THEME.color.charcoal : THEME.color.blueGray}
                           Icon={Icon.Stroke}
                           onClick={updateFillingMode}
-                          title={`${
-                            isolatedLayer?.id === id && isolatedLayer?.isFilled ? 'Masquer ' : 'Afficher '
-                          }le remplissage de la couche`}
+                          title={`${isIsolatedLayerFilled ? 'Masquer ' : 'Afficher '}le remplissage de la couche`}
                         />
                       )}
                       <StyledIconButton
