@@ -1,7 +1,7 @@
 import { getIsLinkingZonesToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { IconButton, Icon, Size, Accent, useClickOutsideEffect } from '@mtes-mct/monitor-ui'
+import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
 import { type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { mapActions } from 'domain/shared_slices/Map'
 import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
@@ -9,6 +9,7 @@ import { useRef } from 'react'
 import styled from 'styled-components'
 
 import { OverlayContent } from './OverlayContent'
+import { useClickOutsideWithNoMove } from './useClickOutsideWithNoMove'
 
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
@@ -20,12 +21,15 @@ export function PinnedOverlay({
   items: OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryLayerCompactProperties>[]
 }) {
   const ref = useRef<HTMLDivElement>(null)
+
   const dispatch = useAppDispatch()
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+
   const exitIsolationMode = () => {
     dispatch(mapActions.setIsolateMode(undefined))
   }
 
-  useClickOutsideEffect(ref, exitIsolationMode, document)
+  useClickOutsideWithNoMove(ref, exitIsolationMode, isolatedLayer !== undefined)
 
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
@@ -35,7 +39,7 @@ export function PinnedOverlay({
   }
 
   // component should not be called if items.length < 2
-  // or if user is linking a regulatory area to a vigilance area
+  // or if user is linking a regulatory area / amp to a vigilance area
   if (items.length < 2 && !isLinkingZonesToVigilanceArea) {
     return null
   }
