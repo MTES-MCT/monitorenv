@@ -79,33 +79,38 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const handleClick = (type, id) => () => {
-    if (isAmpLayer(type)) {
-      dispatch(openAMPMetadataPanel(id))
-      dispatch(layerSidebarActions.toggleAmpResults(true))
+  const handleClick =
+    (type: RegulatoryOrAMPOrViglanceAreaLayerType, id: number, isDisabled: boolean = false) =>
+    () => {
+      if (isDisabled) {
+        return
+      }
+      if (isAmpLayer(type)) {
+        dispatch(openAMPMetadataPanel(id))
+        dispatch(layerSidebarActions.toggleAmpResults(true))
 
-      if (editingVigilanceAreaId) {
-        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+        if (editingVigilanceAreaId) {
+          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+        }
+      }
+      if (isRegulatoryLayer(type)) {
+        dispatch(openRegulatoryMetadataPanel(id))
+        dispatch(layerSidebarActions.toggleRegulatoryResults(true))
+
+        if (editingVigilanceAreaId) {
+          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+        }
+      }
+      if (
+        type === MonitorEnvLayers.VIGILANCE_AREA ||
+        type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
+        type === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
+      ) {
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
+        dispatch(closeMetadataPanel())
+        dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
       }
     }
-    if (isRegulatoryLayer(type)) {
-      dispatch(openRegulatoryMetadataPanel(id))
-      dispatch(layerSidebarActions.toggleRegulatoryResults(true))
-
-      if (editingVigilanceAreaId) {
-        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
-      }
-    }
-    if (
-      type === MonitorEnvLayers.VIGILANCE_AREA ||
-      type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
-      type === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
-    ) {
-      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
-      dispatch(closeMetadataPanel())
-      dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
-    }
-  }
 
   const addRegulatoryToVigilanceArea = (e, id) => {
     e.stopPropagation()
@@ -133,6 +138,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
         type
       })
     )
+    handleClick(type, id)()
   }
 
   const updateFillingMode = e => {
@@ -206,7 +212,12 @@ export function OverlayContent({ items }: OverlayContentProps) {
           const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
 
           return (
-            <LayerItem key={id} $isSelected={isSelected} onClick={handleClick(item.layerType, id)}>
+            <LayerItem
+              key={id}
+              $isSelected={isSelected}
+              $withMargin={items.length === 1}
+              onClick={handleClick(item.layerType, id, isDisabled)}
+            >
               <Wrapper>
                 <LayerLegend
                   isDisabled={isArchived || isDisabled}
@@ -223,7 +234,9 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   <Name $isDisabled={isDisabled} title={getTitle(name)}>{` / ${getTitle(name)}`}</Name>
                 )}
                 <ButtonContainer>
-                  {items.length > 1 && isVigilanceArea && <Tooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</Tooltip>}
+                  {items.length > 1 && isVigilanceArea && (
+                    <StyledTooltip Icon={Icon.Calendar}>{vigilanceAreaPeriod}</StyledTooltip>
+                  )}
                   {items.length > 1 && (
                     <>
                       {isolatedLayer?.id === id && (
@@ -236,6 +249,9 @@ export function OverlayContent({ items }: OverlayContentProps) {
                           }
                           Icon={Icon.Stroke}
                           onClick={updateFillingMode}
+                          title={`${
+                            isolatedLayer?.id === id && isolatedLayer?.isFilled ? 'Masquer ' : 'Afficher '
+                          }le remplissage de la couche`}
                         />
                       )}
                       <StyledIconButton
@@ -243,6 +259,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
                         color={isolatedLayer?.id === id ? THEME.color.blueGray : THEME.color.charcoal}
                         Icon={Icon.FocusZones}
                         onClick={e => isolateLayer(e, id, item.layerType)}
+                        title="Isoler la couche"
                       />
                     </>
                   )}
@@ -284,10 +301,10 @@ const Layerlist = styled.ul`
   overflow-y: auto;
 `
 
-const LayerItem = styled.li<{ $isSelected: boolean }>`
+const LayerItem = styled.li<{ $isSelected: boolean; $withMargin: boolean }>`
   display: flex;
   flex-direction: column;
-  padding: 7px 8px 8px 8px;
+  padding: ${p => (p.$withMargin ? '7px 8px 8px 8px' : '0px 2px 0px 8px')};
   background-color: ${p => (p.$isSelected ? p.theme.color.blueYonder25 : p.theme.color.white)};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
@@ -317,9 +334,13 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
 `
+
+const StyledTooltip = styled(Tooltip)`
+  margin: auto;
+  padding: 6px;
+`
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 12px;
   line-height: 0;
   margin-left: auto;
 `
@@ -330,7 +351,7 @@ const Period = styled.span`
 `
 
 const StyledIconButton = styled(IconButton)`
-  padding: 0;
+  padding: 6px;
   > span {
     > svg {
       height: 18px;
