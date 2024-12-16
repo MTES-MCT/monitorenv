@@ -6,7 +6,7 @@ import { InteractionType } from 'domain/entities/map/constants'
 import { type Reporting } from 'domain/entities/reporting'
 
 import { Dashboard } from './types'
-import { filterReportings } from './useCases/filterReportings'
+import { filterReportings } from './useCases/filters/filterReportings'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
