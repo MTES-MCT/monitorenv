@@ -166,7 +166,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               options={themes ?? []}
               placeholder="Thématique"
               popupWidth={300}
-              renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
+              renderValue={() => selectedThemes && <OptionValue>{`Thème (${selectedThemes.length})`}</OptionValue>}
               style={tagPickerStyle}
               value={selectedThemes}
             />
@@ -187,14 +187,14 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               data-cy="select-completion-statuses-filter"
               isLabelHidden
               isTransparent
-              label="Etat des données"
+              label="État des données"
               name="completion"
               onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.COMPLETION_STATUS_FILTER)}
               options={completion ?? []}
-              placeholder="Etat des données"
+              placeholder="État des données"
               renderValue={() =>
                 selectedCompletionStatus && (
-                  <OptionValue>{`Etat des données (${selectedCompletionStatus.length})`}</OptionValue>
+                  <OptionValue>{`État des données (${selectedCompletionStatus.length})`}</OptionValue>
                 )
               }
               style={tagPickerStyle}

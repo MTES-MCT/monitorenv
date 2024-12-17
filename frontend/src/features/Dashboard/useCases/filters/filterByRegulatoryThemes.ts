@@ -14,5 +14,5 @@ export function filterByRegulatoryThemes(
     dashboard.regulatoryAreaIds?.includes(regulatoryArea.id)
   )
 
-  return filteredRegulatoryAreas.some(reg => regulatoryThemes.includes(reg.layer_name))
+  return filteredRegulatoryAreas.some(reg => regulatoryThemes.includes(reg.thematique))
 }

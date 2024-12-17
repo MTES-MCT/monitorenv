@@ -222,14 +222,14 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
           <CheckPicker
             isLabelHidden
             isTransparent
-            label="Etat des données"
+            label="État des données"
             name="completion"
             onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.COMPLETION_STATUS_FILTER)}
             options={completion ?? []}
-            placeholder="Etat des données"
+            placeholder="État des données"
             renderValue={() =>
               selectedCompletionStatus && (
-                <OptionValue>{`Etat des données (${selectedCompletionStatus.length})`}</OptionValue>
+                <OptionValue>{`État des données (${selectedCompletionStatus.length})`}</OptionValue>
               )
             }
             value={selectedCompletionStatus}
@@ -259,7 +259,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             options={themes ?? []}
             placeholder="Thématique"
             popupWidth={300}
-            renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
+            renderValue={() => selectedThemes && <OptionValue>{`Thème (${selectedThemes.length})`}</OptionValue>}
             value={selectedThemes}
           />
           {selectedThemes &&
