@@ -76,22 +76,22 @@ export const useClickOutsideWithNoMove = (
     if (!isActive) {
       return () => {
         setTimeout(() => {
-          globalContainer.removeEventListener('mousedown', onMouseDown as any)
-          globalContainer.removeEventListener('mousemove', onMouseMove as any)
-          globalContainer.removeEventListener('mouseup', onMouseUp as any)
+          globalContainer.removeEventListener('mousedown', onMouseDown)
+          globalContainer.removeEventListener('mousemove', onMouseMove)
+          globalContainer.removeEventListener('mouseup', onMouseUp)
         }, 200)
       }
     }
 
-    globalContainer.addEventListener('mousedown', onMouseDown as any)
-    globalContainer.addEventListener('mousemove', onMouseMove as any)
-    globalContainer.addEventListener('mouseup', onMouseUp as any)
+    globalContainer.addEventListener('mousedown', onMouseDown)
+    globalContainer.addEventListener('mousemove', onMouseMove)
+    globalContainer.addEventListener('mouseup', onMouseUp)
 
     return () => {
       setTimeout(() => {
-        globalContainer.removeEventListener('mousedown', onMouseDown as any)
-        globalContainer.removeEventListener('mousemove', onMouseMove as any)
-        globalContainer.removeEventListener('mouseup', onMouseUp as any)
+        globalContainer.removeEventListener('mousedown', onMouseDown)
+        globalContainer.removeEventListener('mousemove', onMouseMove)
+        globalContainer.removeEventListener('mouseup', onMouseUp)
       }, 200)
     }
   }, [onMouseDown, onMouseMove, onMouseUp, isActive])

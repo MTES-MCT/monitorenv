@@ -15,7 +15,7 @@ export function RegulatoryAreas({ regulatoryAreas }: { regulatoryAreas: Regulato
       </View>
       <View style={layoutStyle.cardWrapper}>
         {regulatoryAreas.map(regulatoryArea => (
-          <View key={regulatoryArea.id} style={areaStyle.card}>
+          <View key={regulatoryArea.id} style={areaStyle.card} wrap={false}>
             <View style={areaStyle.header}>
               <Text> {getTitle(regulatoryArea.layer_name)}</Text>
             </View>

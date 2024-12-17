@@ -79,21 +79,21 @@ export function AreaTable({
         <View style={layoutStyle.row}>
           <View style={{ flex: 1 }}>
             {regulatoryAreas.map(regulatoryArea => (
-              <Text key={regulatoryArea.id} style={styles.cell}>
+              <Text key={regulatoryArea.id} style={styles.cell} wrap={false}>
                 {regulatoryArea.entity_name || 'AUCUN NOM'}
               </Text>
             ))}
           </View>
           <View style={{ flex: 1 }}>
             {amps.map(amp => (
-              <Text key={amp.id} style={styles.cell}>
+              <Text key={amp.id} style={styles.cell} wrap={false}>
                 {amp.name}
               </Text>
             ))}
           </View>
           <View style={{ flex: 1 }}>
             {vigilanceAreas.map(vigilanceArea => (
-              <Text key={vigilanceArea.id} style={styles.cell}>
+              <Text key={vigilanceArea.id} style={styles.cell} wrap={false}>
                 {vigilanceArea.name}
               </Text>
             ))}

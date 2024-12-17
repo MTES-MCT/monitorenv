@@ -15,7 +15,7 @@ export function Amps({ amps }: { amps: AMPFromAPI[] }) {
       </View>
       <View style={layoutStyle.cardWrapper}>
         {amps.map(amp => (
-          <View key={amp.id} style={areaStyle.card}>
+          <View key={amp.id} style={areaStyle.card} wrap={false}>
             <View style={areaStyle.header}>
               <Text> {getTitle(amp.name)}</Text>
             </View>
