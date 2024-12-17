@@ -39,13 +39,13 @@ export function Brief({ brief }: BriefProps) {
         <View style={layoutStyle.section}>
           <AreaTable amps={brief.amps} regulatoryAreas={brief.regulatoryAreas} vigilanceAreas={brief.vigilanceAreas} />
         </View>
-        <View style={layoutStyle.section} wrap={false}>
+        <View style={layoutStyle.section}>
           <RegulatoryAreas regulatoryAreas={brief.regulatoryAreas} />
         </View>
-        <View style={layoutStyle.section} wrap={false}>
+        <View style={layoutStyle.section}>
           <Amps amps={brief.amps} />
         </View>
-        <View style={layoutStyle.section} wrap={false}>
+        <View style={layoutStyle.section}>
           <VigilanceAreas
             linkedAMPs={brief.allLinkedAMPs}
             linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}

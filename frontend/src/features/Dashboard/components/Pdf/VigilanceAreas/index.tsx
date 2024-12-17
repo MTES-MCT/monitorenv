@@ -39,7 +39,7 @@ export function VigilanceAreas({
           )
 
           return (
-            <View key={vigilanceArea.id} style={areaStyle.card}>
+            <View key={vigilanceArea.id} style={areaStyle.card} wrap={false}>
               <View style={areaStyle.header}>
                 <Text> {vigilanceArea.name}</Text>
               </View>
