@@ -40,7 +40,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by completion status', () => {
-    cy.fill('Etat des données', ['Complétées'])
+    cy.fill('État des données', ['Complétées'])
 
     cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Données complétées')
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)

@@ -15,11 +15,12 @@ import {
   type DateAsStringRange,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
+import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
-import { isArray, isEqual, uniq } from 'lodash'
+import { isArray, isEqual } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -62,18 +63,9 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     [activeControlUnitsOptions]
   )
 
-  const { data: allRegulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
-  const regulatoryThemesOptions = useMemo(
-    () =>
-      uniq(Object.values(allRegulatoryLayers?.entities ?? []).map(regulatoryLayer => regulatoryLayer.layer_name))
-        .sort()
-        .map(layerName => ({
-          label: getTitle(layerName),
-          value: layerName
-        })),
-    [allRegulatoryLayers]
-  )
+  const regulatoryThemesOptions = getRegulatoryThemesAsOptions(regulatoryLayers ?? [])
 
   const regulatoryThemesCustomSearch = useMemo(
     () => new CustomSearch(regulatoryThemesOptions, ['label']),
@@ -155,23 +147,8 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
   )
 
   return (
-    <Wrapper>
+    <Wrapper $orientation={orientation}>
       <FiltersContainer $orientation={orientation}>
-        <FilterWrapper $orientation={orientation}>
-          <StyledSelect
-            isCleanable={false}
-            isLabelHidden
-            isTransparent
-            label="Date de mise à jour"
-            name="updatedAt"
-            onChange={updateUpdatedAtFilter}
-            options={dateRangeOptions}
-            placeholder="Date de mise à jour"
-            style={{ width: 180 }}
-            value={updatedAt}
-          />
-          {orientation === 'column' && specificPeriodDatePicker}
-        </FilterWrapper>
         <FilterWrapper $orientation={orientation}>
           <CheckPicker
             isLabelHidden
@@ -186,6 +163,21 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
             value={seaFronts}
           />
           {orientation === 'column' && seaFrontTags}
+        </FilterWrapper>
+        <FilterWrapper $orientation={orientation}>
+          <StyledSelect
+            isCleanable={false}
+            isLabelHidden
+            isTransparent
+            label="Période de mise à jour"
+            name="updatedAt"
+            onChange={updateUpdatedAtFilter}
+            options={dateRangeOptions}
+            placeholder="Période de mise à jour"
+            style={{ width: 180 }}
+            value={updatedAt}
+          />
+          {orientation === 'column' && specificPeriodDatePicker}
         </FilterWrapper>
         <FilterWrapper $orientation={orientation}>
           <CheckPicker
@@ -227,19 +219,19 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
         </FilterWrapper>
       </FiltersContainer>
       <TagsContainer>
-        {orientation === 'row' && [specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryThemesTags]}
+        {orientation === 'row' && [seaFrontTags, specificPeriodDatePicker, controlUnitTags, regulatoryThemesTags]}
 
-        {hasFilters && <ReinitializeFiltersButton onClick={resetFilter} />}
+        {orientation === 'row' && hasFilters && <ReinitializeFiltersButton onClick={resetFilter} />}
       </TagsContainer>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $orientation: Orientation }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 12px 4px;
+  ${p => p.$orientation === 'column' && 'padding: 12px 4px;'}
 `
 
 const FiltersContainer = styled.div<{ $orientation: Orientation }>`
@@ -247,7 +239,7 @@ const FiltersContainer = styled.div<{ $orientation: Orientation }>`
   display: flex;
   flex-wrap: wrap;
 
-  ${p => (p.$orientation === 'column' ? 'gap: 8px;' : 'gap: 16px;')}
+  ${p => p.$orientation === 'row' && 'gap: 16px;'}
 `
 
 const FilterWrapper = styled.div<{ $orientation: Orientation }>`
