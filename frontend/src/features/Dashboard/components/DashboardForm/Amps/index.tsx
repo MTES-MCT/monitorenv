@@ -12,6 +12,7 @@ import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
+import { SelectedLayerList } from '../style'
 
 import type { AMP, AMPFromAPI } from 'domain/entities/AMPs'
 
@@ -79,19 +80,21 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
             selectedAmpIds.length
           )}`}
         >
-          {Object.entries(selectedAmpByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-            const layersId = layerIdsInGroup.map((layerId: AMP) => layerId.id)
+          <SelectedLayerList>
+            {Object.entries(selectedAmpByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+              const layersId = layerIdsInGroup.map((layerId: AMP) => layerId.id)
 
-            return (
-              <ListLayerGroup
-                key={layerGroupName}
-                groupName={layerGroupName}
-                isSelected
-                layerIds={layersId}
-                selectedAmpIds={selectedAmpIds}
-              />
-            )
-          })}
+              return (
+                <ListLayerGroup
+                  key={layerGroupName}
+                  groupName={layerGroupName}
+                  isSelected
+                  layerIds={layersId}
+                  selectedAmpIds={selectedAmpIds}
+                />
+              )
+            })}
+          </SelectedLayerList>
         </SelectedAccordion>
       </div>
     )

@@ -21,7 +21,6 @@ export function MapToolButton({ dataCy, icon, isHidden, isOpen, onClick, style, 
     <StyledMapToolButton
       $healthcheckTextWarning={!!healthcheckTextWarning}
       $isHidden={isHidden}
-      $isOpen={isOpen}
       className={isOpen ? '_active' : undefined}
       data-cy={dataCy}
       Icon={icon}
@@ -37,7 +36,6 @@ export function MapToolButton({ dataCy, icon, isHidden, isOpen, onClick, style, 
 const StyledMapToolButton = styled(IconButton)<{
   $healthcheckTextWarning: boolean
   $isHidden: boolean
-  $isOpen: boolean
 }>`
   padding: 6px;
   transition: all 0.3s;

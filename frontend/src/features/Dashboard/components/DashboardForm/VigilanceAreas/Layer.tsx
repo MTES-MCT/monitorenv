@@ -20,7 +20,7 @@ type VigilanceAreaLayerProps = {
   vigilanceArea: VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi
 }
 
-export function Layer({ isPinned = false, isSelected, vigilanceArea }: VigilanceAreaLayerProps) {
+export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: VigilanceAreaLayerProps) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
 
@@ -51,7 +51,6 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Vigilance
       })
     )
 
-    dispatch(dashboardActions.setDashboardPanel({ id: vigilanceArea.id, type: Dashboard.Block.VIGILANCE_AREAS }))
     const feature = getFeature(vigilanceArea.geom)
 
     const extent = feature?.getGeometry()?.getExtent()
@@ -106,7 +105,7 @@ export function Layer({ isPinned = false, isSelected, vigilanceArea }: Vigilance
   )
 }
 
-const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
+const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadataIsShown: boolean }>`
   background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : p.theme.color.white)};
   justify-content: space-between;
   padding-left: 24px;
@@ -117,8 +116,6 @@ const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
     `
         padding-left: 20px;
         padding-right: 20px;
-        margin-left: 4px;
-        margin-right: 4px;
     `}
 `
 const NameContainer = styled.div`

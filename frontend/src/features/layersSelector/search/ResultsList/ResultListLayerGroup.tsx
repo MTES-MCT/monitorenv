@@ -116,7 +116,7 @@ export function ResultListLayerGroup({
           )}
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>
-      <LayerSelector.SubGroup isOpen={forceZonesAreOpen || zonesAreOpen} length={layerIds?.length}>
+      <LayerSelector.SubGroup $isOpen={forceZonesAreOpen || zonesAreOpen} $length={layerIds?.length}>
         {layerType === MonitorEnvLayers.REGULATORY_ENV &&
           layerIds?.map(layerId => <RegulatoryLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
         {layerType === MonitorEnvLayers.AMP &&

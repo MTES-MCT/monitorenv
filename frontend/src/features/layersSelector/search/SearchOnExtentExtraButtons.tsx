@@ -110,12 +110,12 @@ export function SearchOnExtentExtraButtons({
         title="Définir la zone de recherche et afficher les tracés"
       />
       <ExtraButtonsWrapper
-        allowResetResults={allowResetResults}
-        isVisible={isVisible}
-        shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
+        $allowResetResults={allowResetResults}
+        $isVisible={isVisible}
+        $shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
       >
         <ReloadSearch
-          $active={shouldReloadSearchOnExtent}
+          $isActive={shouldReloadSearchOnExtent}
           accent={Accent.PRIMARY}
           Icon={Icon.Search}
           onClick={handleReloadSearch}
@@ -142,8 +142,8 @@ const SearchOnExtentButton = styled(IconButton)`
   left: 355px;
 `
 
-const ReloadSearch = styled(Button)<{ $active: boolean }>`
-  display: ${p => (p.$active ? 'inline-flex' : 'none')};
+const ReloadSearch = styled(Button)<{ $isActive: boolean }>`
+  display: ${p => (p.$isActive ? 'inline-flex' : 'none')};
   margin-right: 8px;
 `
 const ResetSearch = styled(Button)<{ $allowResetResults: boolean }>`
@@ -152,21 +152,20 @@ const ResetSearch = styled(Button)<{ $allowResetResults: boolean }>`
 `
 
 const ExtraButtonsWrapper = styled.div<{
-  allowResetResults: boolean
-  isVisible: boolean
-  shouldReloadSearchOnExtent: boolean
+  $allowResetResults: boolean
+  $isVisible: boolean
+  $shouldReloadSearchOnExtent: boolean
 }>`
-  display: ${p => (p.isVisible ? 'flex' : 'none')};
+  display: ${p => (p.$isVisible ? 'flex' : 'none')};
   position: fixed;
   top: 15px;
   left: ${p => {
-    if (p.shouldReloadSearchOnExtent || p.allowResetResults) {
+    if (p.$shouldReloadSearchOnExtent || p.$allowResetResults) {
       return `calc(
-        50% - ((${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0px'}) / 2)
+        50% - ((${p.$shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.$allowResetResults ? '285px' : '0px'}) / 2)
       )`
     }
 
     return '-400px'
   }}};
-  width: calc(${p => `${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0px'}`});
 `

@@ -1,5 +1,3 @@
-// import styled from 'styled-components'
-
 import { Accent, Button, ControlUnit, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'

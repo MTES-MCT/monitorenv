@@ -19,30 +19,31 @@ import styled from 'styled-components'
 
 import { dashboardFiltersActions, getReportingFilters } from '../slice'
 
-export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...props }, ref) => {
-  const dispatch = useAppDispatch()
-  const dashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+export const Filters = forwardRef<HTMLDivElement, { isExpanded: boolean } & ComponentProps<'div'>>(
+  ({ isExpanded }, ref) => {
+    const dispatch = useAppDispatch()
+    const dashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
-  const reportingFilters = useAppSelector(state => getReportingFilters(state.dashboardFilters, dashboardId))
-  const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard, reportingFilters)) ?? []
+    const reportingFilters = useAppSelector(state => getReportingFilters(state.dashboardFilters, dashboardId))
+    const filteredReportings = useAppSelector(state => getFilteredReportings(state.dashboard, reportingFilters)) ?? []
 
-  const { newWindowContainerRef } = useNewWindow()
+    const { newWindowContainerRef } = useNewWindow()
 
-  const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
-  const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
+    const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
+    const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
 
-  if (!reportingFilters) {
-    return null
-  }
+    if (!reportingFilters) {
+      return null
+    }
 
-  const setCustomPeriodFilter = (date: DateAsStringRange | undefined) => {
-    dispatch(
-      dashboardFiltersActions.setReportingFilters({
-        filters: { period: date },
-        id: dashboardId
-      })
-    )
-  }
+    const setCustomPeriodFilter = (date: DateAsStringRange | undefined) => {
+      dispatch(
+        dashboardFiltersActions.setReportingFilters({
+          filters: { period: date },
+          id: dashboardId
+        })
+      )
+    }
 
   const setPeriodFilter = (dateRange: OptionValueType | undefined) => {
     if (dateRange) {
@@ -55,23 +56,23 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
     }
   }
 
-  const setStatusFilter = (statusOption: Option<string>, isChecked: boolean | undefined) => {
-    if (isChecked) {
-      dispatch(
-        dashboardFiltersActions.setReportingFilters({
-          filters: { status: [...reportingFilters.status, statusOption.value as StatusFilterEnum] },
-          id: dashboardId
-        })
-      )
-    } else {
-      dispatch(
-        dashboardFiltersActions.setReportingFilters({
-          filters: { status: reportingFilters.status.filter(status => status !== statusOption.value) },
-          id: dashboardId
-        })
-      )
+    const setStatusFilter = (statusOption: Option<string>, isChecked: boolean | undefined) => {
+      if (isChecked) {
+        dispatch(
+          dashboardFiltersActions.setReportingFilters({
+            filters: { status: [...reportingFilters.status, statusOption.value as StatusFilterEnum] },
+            id: dashboardId
+          })
+        )
+      } else {
+        dispatch(
+          dashboardFiltersActions.setReportingFilters({
+            filters: { status: reportingFilters.status.filter(status => status !== statusOption.value) },
+            id: dashboardId
+          })
+        )
+      }
     }
-  }
 
   return (
     <Wrapper
@@ -109,20 +110,21 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
         )}
       </StyledDatesWrapper>
 
-      <StatusWrapper>
-        {statusOptions.map(statusOption => (
-          <Checkbox
-            key={statusOption.label}
-            checked={reportingFilters.status.includes(statusOption.value as StatusFilterEnum)}
-            label={statusOption.label}
-            name={statusOption.label}
-            onChange={isChecked => setStatusFilter(statusOption, isChecked)}
-          />
-        ))}
-      </StatusWrapper>
-    </Wrapper>
-  )
-})
+        <StatusWrapper>
+          {statusOptions.map(statusOption => (
+            <Checkbox
+              key={statusOption.label}
+              checked={reportingFilters.status.includes(statusOption.value as StatusFilterEnum)}
+              label={statusOption.label}
+              name={statusOption.label}
+              onChange={isChecked => setStatusFilter(statusOption, isChecked)}
+            />
+          ))}
+        </StatusWrapper>
+      </Wrapper>
+    )
+  }
+)
 
 const Wrapper = styled.div<{ $hasChildren: boolean; $hasPeriodFilter: boolean }>`
   padding: 16px 24px;
@@ -134,14 +136,14 @@ const StatusWrapper = styled.fieldset`
   display: flex;
   gap: 16px;
   float: right;
+  padding-bottom: 16px;
 `
 
-const StyledDatesWrapper = styled.div<{ $hasChildren: boolean }>`
+const StyledDatesWrapper = styled.div<{ $hasChildren: boolean; $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  ${({ $hasChildren }) => !$hasChildren && 'position: absolute;'}
-  z-index: 1;
+  ${p => !p.$hasChildren && p.$isExpanded && 'position: absolute; z-index: 1;'}
 `
 
 const DateRangeSelect = styled(StyledSelect)`

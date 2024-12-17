@@ -275,7 +275,6 @@ const StyledTooltip = styled(Tooltip)`
   }
 `
 // TODO delete when Monitor-ui component have good padding
-
 const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: column;

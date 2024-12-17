@@ -102,7 +102,7 @@ export function MyLayerGroup({
           )}
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>
-      <LayerSelector.GroupList isOpen={zonesAreOpen} length={layers?.length}>
+      <LayerSelector.GroupList $isOpen={zonesAreOpen} $length={layers?.length}>
         {children}
       </LayerSelector.GroupList>
     </>

@@ -12,6 +12,7 @@ import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { ListLayerGroup } from './ListLayerGroup'
 import { RegulatoryPanel } from './Panel'
+import { SelectedLayerList } from '../style'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
@@ -67,7 +68,6 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
         >
           <StyledLayerList
             $baseLayersLength={Object.values(regulatoryAreasByLayerName).length}
-            $maxHeight={100}
             $showBaseLayers={isExpanded}
             data-cy="dashboard-regulatory-areas-list"
           >
@@ -94,19 +94,21 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
             selectedRegulatoryAreaIds.length
           )} ${pluralize('sélectionnée', selectedRegulatoryAreaIds.length)}`}
         >
-          {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-            const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
+          <SelectedLayerList>
+            {Object.entries(selectedRegulatoryAreasByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
+              const layersId = layerIdsInGroup.map((layerId: any) => layerId.id)
 
-            return (
-              <ListLayerGroup
-                key={layerGroupName}
-                groupName={layerGroupName}
-                isSelected
-                layerIds={layersId}
-                selectedRegulatoryAreaIds={selectedRegulatoryAreaIds}
-              />
-            )
-          })}
+              return (
+                <ListLayerGroup
+                  key={layerGroupName}
+                  groupName={layerGroupName}
+                  isSelected
+                  layerIds={layersId}
+                  selectedRegulatoryAreaIds={selectedRegulatoryAreaIds}
+                />
+              )
+            })}
+          </SelectedLayerList>
         </SelectedAccordion>
       </div>
     )
@@ -116,7 +118,9 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
 const StyledLayerList = styled(LayerSelector.LayerList)`
   overflow: hidden;
   height: auto;
+  max-height: 100%;
 `
+
 const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`
   left: ${p =>
     `calc(

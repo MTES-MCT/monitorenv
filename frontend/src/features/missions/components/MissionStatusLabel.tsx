@@ -7,14 +7,14 @@ export function MissionStatusLabel({ missionStatus }) {
   switch (missionStatus) {
     case missionStatusLabels.PENDING.code:
       return (
-        <StatusWrapper color={missionStatusLabels.PENDING.color}>
+        <StatusWrapper $color={missionStatusLabels.PENDING.color}>
           <Icon.Clock color={missionStatusLabels.PENDING.color} />
           {missionStatusLabels.PENDING.libelle}
         </StatusWrapper>
       )
     case missionStatusLabels.ENDED.code:
       return (
-        <StatusWrapper color={missionStatusLabels.ENDED.color}>
+        <StatusWrapper $color={missionStatusLabels.ENDED.color}>
           <Icon.Confirm color={missionStatusLabels.ENDED.color} />
           {missionStatusLabels.ENDED.libelle}
         </StatusWrapper>
@@ -22,7 +22,7 @@ export function MissionStatusLabel({ missionStatus }) {
 
     case missionStatusLabels.UPCOMING.code:
       return (
-        <StatusWrapper color={missionStatusLabels.UPCOMING.color}>
+        <StatusWrapper $color={missionStatusLabels.UPCOMING.color}>
           <Icon.ClockDashed color={missionStatusLabels.UPCOMING.color} />
           {missionStatusLabels.UPCOMING.libelle}
         </StatusWrapper>
@@ -32,8 +32,8 @@ export function MissionStatusLabel({ missionStatus }) {
       return null
   }
 }
-const StatusWrapper = styled.div<{ color: string; smallMargin?: boolean }>`
-  color: ${p => p.color};
+const StatusWrapper = styled.div<{ $color: string }>`
+  color: ${p => p.$color};
   font-weight: 500;
   display: flex;
   align-items: center;

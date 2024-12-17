@@ -40,10 +40,6 @@ const Row = styled.span<{ $isGrouped: boolean }>`
   display: flex;
   user-select: none;
   font-weight: 500;
-  width: 100%;
-  width: -moz-available;
-  width: -webkit-fill-available;
-  width: stretch;
 
   &:hover {
     background: ${p => p.theme.color.blueYonder25};

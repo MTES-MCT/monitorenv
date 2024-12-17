@@ -35,15 +35,10 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
     onEdit(controlUnitContact.id)
   }, [controlUnitContact.id, onEdit])
 
-  const hasLongName = !!(
-    (ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name]?.length ||
-      controlUnitContact.name?.length) >= 33
-  )
-
   return (
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
-      <Left $hasLongName={hasLongName}>
-        <NameAndContactContainer $hasLongName={hasLongName}>
+      <Left>
+        <NameAndContactContainer>
           <Name
             title={ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
           >
@@ -85,7 +80,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Left = styled.div<{ $hasLongName: boolean }>`
+const Left = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -97,7 +92,7 @@ const Right = styled.div`
     padding: 0px;
   }
 `
-const NameAndContactContainer = styled.p<{ $hasLongName: boolean }>`
+const NameAndContactContainer = styled.p`
   align-items: end;
   column-gap: 8px;
   display: flex;

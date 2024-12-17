@@ -90,7 +90,6 @@ const Header = styled.header`
 
 const Content = styled.div`
   color: ${p => p.theme.color.lightGray};
-
   overflow-y: auto;
   max-height: 72vh;
 `

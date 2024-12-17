@@ -151,7 +151,7 @@ const TargetNumber = styled.span`
 `
 
 const CancelTarget = styled.div`
-  color: ${THEME.color.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
   align-self: flex-end;
   display: flex;
   cursor: pointer;

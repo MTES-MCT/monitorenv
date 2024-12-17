@@ -3,13 +3,11 @@ import styled from 'styled-components'
 import { MapComponentStyle } from '../../commonStyles/MapComponent.style'
 
 export const MapToolBox = styled(MapComponentStyle)<{
-  healthcheckTextWarning: boolean
-  isHidden?: boolean
-  isOpen: boolean
+  $isOpen: boolean
 }>`
   background: ${p => p.theme.color.white};
-  margin-right: ${p => (p.isOpen ? '36px' : '-420px')};
-  opacity: ${p => (p.isOpen ? '1' : '0')};
+  margin-right: ${p => (p.$isOpen ? '36px' : '-420px')};
+  opacity: ${p => (p.$isOpen ? '1' : '0')};
   right: 10px;
   border-radius: 2px;
   position: absolute;

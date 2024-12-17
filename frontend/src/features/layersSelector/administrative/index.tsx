@@ -27,7 +27,7 @@ export function AdministrativeLayers() {
         <ChevronIcon $isOpen={administrativeZonesIsOpen} $right />
       </LayerSelector.Wrapper>
       {administrativeLayers && administrativeLayers.length ? (
-        <ZonesList showZones={administrativeZonesIsOpen} zonesLength={administrativeLayers.length}>
+        <ZonesList $showZones={administrativeZonesIsOpen} $zonesLength={administrativeLayers.length}>
           {administrativeLayers.map(layers => {
             if (layers.length === 1 && layers[0]) {
               return (
@@ -45,12 +45,12 @@ export function AdministrativeLayers() {
   )
 }
 
-const ZonesList = styled.ul<{ showZones: boolean; zonesLength: number }>`
+const ZonesList = styled.ul<{ $showZones: boolean; $zonesLength: number }>`
   margin: 0;
   padding: 0;
   overflow: hidden;
   max-height: 50vh;
-  height: ${p => (p.showZones && p.zonesLength ? 37 * p.zonesLength : 0)}px;
+  height: ${p => (p.$showZones && p.$zonesLength ? 37 * p.$zonesLength : 0)}px;
   background: ${p => p.theme.color.white};
   transition: 0.5s all;
   overflow-y: auto;

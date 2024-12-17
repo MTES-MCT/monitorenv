@@ -69,8 +69,8 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
         title="Arbre des couches"
       />
       <Sidebar
-        isLayersSidebarVisible={isLayersSidebarVisible}
-        isVisible={
+        $isLayersSidebarVisible={isLayersSidebarVisible}
+        $isVisible={
           (displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)) || mainVigilanceAreaFormOpen
         }
       >
@@ -88,9 +88,9 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
         </Layers>
 
         <MetadataPanelShifter
-          isLayersSidebarVisible={isLayersSidebarVisible}
-          isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
-          metadataPanelIsOpen={metadataPanelIsOpen || !!selectedVigilanceAreaId}
+          $isLayersSidebarVisible={isLayersSidebarVisible}
+          $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+          $metadataPanelIsOpen={metadataPanelIsOpen || !!selectedVigilanceAreaId}
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
@@ -106,8 +106,8 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
 
         {isSuperUser && (
           <VigilanceAreaPanelShifter
-            isLayersSidebarVisible={isLayersSidebarVisible}
-            isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+            $isLayersSidebarVisible={isLayersSidebarVisible}
+            $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
           >
             {mainVigilanceAreaFormOpen && (
               <VigilanceAreaForm
@@ -140,22 +140,22 @@ const Container = styled.div`
 `
 
 const MetadataPanelShifter = styled.div<{
-  isLayersSidebarVisible: boolean
-  isVigilanceAreaFormOpen: boolean
-  metadataPanelIsOpen: boolean
+  $isLayersSidebarVisible: boolean
+  $isVigilanceAreaFormOpen: boolean
+  $metadataPanelIsOpen: boolean
 }>`
   position: absolute;
   left: ${p => {
-    if (p.metadataPanelIsOpen) {
-      if (p.isLayersSidebarVisible) {
-        if (p.isVigilanceAreaFormOpen) {
+    if (p.$metadataPanelIsOpen) {
+      if (p.$isLayersSidebarVisible) {
+        if (p.$isVigilanceAreaFormOpen) {
           return '773'
         }
 
         return '355'
       }
 
-      if (p.isVigilanceAreaFormOpen) {
+      if (p.$isVigilanceAreaFormOpen) {
         return '828'
       }
 
@@ -165,20 +165,20 @@ const MetadataPanelShifter = styled.div<{
     return '-455'
   }}px;
   top: 45px;
-  opacity: ${props => (props.metadataPanelIsOpen ? 1 : 0)};
+  opacity: ${props => (props.$metadataPanelIsOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   transition: 0.5s all;
   z-index: -1;
 `
 
 const VigilanceAreaPanelShifter = styled.div<{
-  isLayersSidebarVisible: boolean
-  isVigilanceAreaFormOpen: boolean
+  $isLayersSidebarVisible: boolean
+  $isVigilanceAreaFormOpen: boolean
 }>`
   position: absolute;
   left: ${p => {
-    if (p.isVigilanceAreaFormOpen) {
-      if (p.isLayersSidebarVisible) {
+    if (p.$isVigilanceAreaFormOpen) {
+      if (p.$isLayersSidebarVisible) {
         return '355'
       }
 
@@ -188,15 +188,15 @@ const VigilanceAreaPanelShifter = styled.div<{
     return '-455'
   }}px;
   top: 45px;
-  opacity: ${props => (props.isVigilanceAreaFormOpen ? 1 : 0)};
+  opacity: ${p => (p.$isVigilanceAreaFormOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   transition: 0.5s all;
   z-index: -1;
 `
 
-const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean }>`
-  margin-left: ${props => (props.isLayersSidebarVisible ? 0 : '-455px')};
-  opacity: ${props => (props.isVisible ? 1 : 0)};
+const Sidebar = styled.div<{ $isLayersSidebarVisible: boolean; $isVisible: boolean }>`
+  margin-left: ${p => (p.$isLayersSidebarVisible ? 0 : '-455px')};
+  opacity: ${p => (p.$isVisible ? 1 : 0)};
   top: 0px;
   left: 46px;
   z-index: 1;

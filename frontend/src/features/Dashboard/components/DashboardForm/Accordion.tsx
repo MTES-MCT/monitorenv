@@ -74,6 +74,8 @@ const AccordionContent = styled.div<{ $isExpanded: boolean }>`
 `
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   height: auto;
   overflow: hidden;
 `
