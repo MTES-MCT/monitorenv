@@ -19,7 +19,10 @@ function MissionStatus({ mission }) {
 
   return (
     <div>
-      <StyledStatus borderColor={missionStatusLabels[status]?.borderColor} color={missionStatusLabels[status]?.color} />
+      <StyledStatus
+        $borderColor={missionStatusLabels[status]?.borderColor}
+        $color={missionStatusLabels[status]?.color}
+      />
     </div>
   )
 }
@@ -89,12 +92,12 @@ export function MissionsNavBar() {
   )
 }
 
-export const StyledStatus = styled.div<{ borderColor: string | undefined; color: string }>`
+export const StyledStatus = styled.div<{ $borderColor: string | undefined; $color: string }>`
   height: 12px;
   width: 12px;
   margin-right: 5px;
-  background-color: ${p => p.color};
+  background-color: ${p => p.$color};
   border-radius: 50%;
   display: flex;
-  border: ${p => (p.borderColor ? `1px solid ${p.borderColor}` : '0px')};
+  border: ${p => (p.$borderColor ? `1px solid ${p.$borderColor}` : '0px')};
 `

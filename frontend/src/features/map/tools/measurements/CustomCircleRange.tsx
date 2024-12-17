@@ -117,8 +117,8 @@ export function CustomCircleRange() {
 
   return (
     <Wrapper
-      healthcheckTextWarning={!!healthcheckTextWarning}
-      isOpen={measurementTypeToAdd === MeasurementType.CIRCLE_RANGE}
+      $healthcheckTextWarning={!!healthcheckTextWarning}
+      $isOpen={measurementTypeToAdd === MeasurementType.CIRCLE_RANGE}
     >
       <Header>Définir une valeur</Header>
       <Body>

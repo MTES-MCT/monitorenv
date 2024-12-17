@@ -75,7 +75,7 @@ export function MyVigilanceAreas() {
         )}
 
         {myVigilanceAreasIsOpen && (
-          <ButtonContainer $withPaddingBottom={myVigilanceAreaIds.length > 0 || draftVigilanceAreas.length > 0}>
+          <ButtonContainer>
             <Button
               accent={Accent.SECONDARY}
               Icon={Icon.Plus}
@@ -92,7 +92,7 @@ export function MyVigilanceAreas() {
   )
 }
 
-const ButtonContainer = styled.div<{ $withPaddingBottom: boolean }>`
+const ButtonContainer = styled.div`
   background-color: ${p => p.theme.color.white};
   padding: 8px 16px 8px 16px;
 `

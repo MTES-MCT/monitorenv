@@ -12,6 +12,7 @@ import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { Layer } from './Layer'
 import { Panel } from './Panel'
+import { SelectedLayerList } from '../style'
 
 type VigilanceAreasProps = {
   columnWidth: number
@@ -85,9 +86,11 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
             selectedVigilanceAreaIds.length
           )}`}
         >
-          {selectedVigilanceAreas?.map(vigilanceArea => (
-            <Layer key={vigilanceArea.id} isSelected vigilanceArea={vigilanceArea} />
-          ))}
+          <SelectedLayerList>
+            {selectedVigilanceAreas?.map(vigilanceArea => (
+              <Layer key={vigilanceArea.id} isSelected vigilanceArea={vigilanceArea} />
+            ))}
+          </SelectedLayerList>
         </SelectedAccordion>
       </div>
     )

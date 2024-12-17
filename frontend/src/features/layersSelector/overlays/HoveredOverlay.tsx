@@ -25,7 +25,7 @@ export function HoveredOverlay({
   const [x, y] = pixel
 
   return (
-    <Menu x={x} y={y}>
+    <Menu $x={x} $y={y}>
       <OverlayContent items={items?.slice(0, 3)} />
       {items?.length > 1 && (
         <Footer>
@@ -40,10 +40,10 @@ export function HoveredOverlay({
   )
 }
 
-const Menu = styled.div<{ x: number | undefined; y: number | undefined }>`
+const Menu = styled.div<{ $x: number | undefined; $y: number | undefined }>`
   position: absolute;
-  top: ${p => String(p.y)}px;
-  left: ${p => String(p.x)}px;
+  top: ${p => String(p.$y)}px;
+  left: ${p => String(p.$x)}px;
   width: 440px;
   box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
   pointer-events: none;

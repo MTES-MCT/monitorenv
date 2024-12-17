@@ -107,7 +107,7 @@ const Row = styled.div`
   }
 `
 
-const ZoneWrapper = styled.div<{ isLight?: boolean }>`
+const ZoneWrapper = styled.div`
   background-color: ${p => p.theme.color.gainsboro};
   display: flex;
   flex-grow: 1;

@@ -91,18 +91,18 @@ const GroupName = styled.span`
   padding-right: 8px;
 `
 
-const GroupList = styled.li<{ isOpen: boolean; length: number }>`
-  height: ${p => (p.isOpen && p.length ? p.length * LAYER_SELECTOR_ROW_HEIGHT : 0)}px;
+const GroupList = styled.li<{ $isOpen: boolean; $length: number }>`
+  height: ${p => (p.$isOpen && p.$length ? p.$length * LAYER_SELECTOR_ROW_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;
-  border-bottom: ${p => (p.isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
+  border-bottom: ${p => (p.$isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
 `
 
-const SubGroup = styled.div<{ isOpen: boolean; length: number }>`
-  height: ${props => (props.isOpen && props.length ? props.length * LAYER_SELECTOR_ROW_HEIGHT : 0)}px;
+const SubGroup = styled.div<{ $isOpen: boolean; $length: number }>`
+  height: ${props => (props.$isOpen && props.$length ? props.$length * LAYER_SELECTOR_ROW_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;
-  border-bottom: ${p => (p.isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
+  border-bottom: ${p => (p.$isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
 `
 
 const LayerList = styled.ul<{ $baseLayersLength: number; $maxHeight?: number; $showBaseLayers: boolean }>`

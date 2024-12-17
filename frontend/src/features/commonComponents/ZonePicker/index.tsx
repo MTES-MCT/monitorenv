@@ -1,15 +1,6 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
-import {
-  Accent,
-  Button,
-  Icon,
-  IconButton,
-  Label,
-  OPENLAYERS_PROJECTION,
-  THEME,
-  WSG84_PROJECTION
-} from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Label, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useField } from 'formik'
@@ -150,7 +141,7 @@ const Row = styled.div`
 `
 
 const ZoneWrapper = styled.div`
-  background-color: ${THEME.color.gainsboro};
+  background-color: ${p => p.theme.color.gainsboro};
   display: flex;
   flex-grow: 1;
   font-size: 13px;

@@ -1,7 +1,7 @@
 import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { drawCircle } from 'domain/use_cases/draw/drawGeometry'
@@ -90,7 +90,7 @@ const Row = styled.div`
 `
 
 const ZoneWrapper = styled.div`
-  background-color: ${THEME.color.gainsboro};
+  background-color: ${p => p.theme.color.gainsboro};
   display: flex;
   gap: 14px;
 

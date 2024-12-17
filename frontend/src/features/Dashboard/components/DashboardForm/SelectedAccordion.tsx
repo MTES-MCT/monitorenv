@@ -45,7 +45,7 @@ export function SelectedAccordion({
         )}
       </AccordionHeader>
       <AccordionContent $isExpanded={isExpanded} className={className} id={`selected-${title}-accordion`}>
-        {children}
+        <Wrapper>{children}</Wrapper>
       </AccordionContent>
     </AccordionContainer>
   )
@@ -80,13 +80,18 @@ const Title = styled.span`
 `
 
 const AccordionContent = styled.div<{ $isExpanded: boolean }>`
-  display: flex;
-  flex-direction: column;
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '100vh' : '0px')};
-  overflow: hidden;
-  transition: ${({ $isExpanded }) => ($isExpanded ? '0.5s max-height ease-in' : '0.3s max-height ease-out')};
+  display: grid;
+  grid-template-rows: ${({ $isExpanded }) => ($isExpanded ? '1fr' : '0fr')};
+  transition: ${({ $isExpanded }) =>
+    $isExpanded ? '0.5s grid-template-rows ease-in' : '0.3s grid-template-rows ease-out'};
 
   & > :last-child {
     border-bottom: none;
   }
+`
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: hidden;
 `

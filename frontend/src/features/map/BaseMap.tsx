@@ -212,7 +212,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
       )}
 
       <StyledDistanceUnitContainer ref={wrapperRef}>
-        <DistanceUnitsTypeSelection isOpen={unitsSelectionIsOpen}>
+        <DistanceUnitsTypeSelection $isOpen={unitsSelectionIsOpen}>
           <Header onClick={() => setUnitsSelectionIsOpen(false)}>Unités des distances</Header>
           <MultiRadio
             isInline
@@ -258,7 +258,7 @@ const Header = styled.div`
   cursor: pointer;
 `
 
-const DistanceUnitsTypeSelection = styled.div<{ isOpen: boolean }>`
+const DistanceUnitsTypeSelection = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   bottom: 40px;
   left: 283px;
@@ -271,9 +271,9 @@ const DistanceUnitsTypeSelection = styled.div<{ isOpen: boolean }>`
   text-align: center;
   background-color: ${p => p.theme.color.white};
   width: 191px;
-  opacity: ${props => (props.isOpen ? 1 : 0)};
-  visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
-  height: ${props => (props.isOpen ? 69 : 0)}px;
+  opacity: ${props => (props.$isOpen ? 1 : 0)};
+  visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
+  height: ${props => (props.$isOpen ? 69 : 0)}px;
   transition: all 0.5s;
   > fieldset {
     flex-grow: 2;

@@ -34,7 +34,7 @@ export function ControlCard({ feature }: { feature: any }) {
           ) : (
             <StyledGrayText>(cible non renseignée)</StyledGrayText>
           )}
-          <Bullet color={infractions.length > 0 ? THEME.color.maximumRed : THEME.color.mediumSeaGreen} />
+          <Bullet $color={infractions.length > 0 ? THEME.color.maximumRed : THEME.color.mediumSeaGreen} />
         </Accented>
       </StyledControlThemes>
       {infractions && (
@@ -74,11 +74,11 @@ const Accented = styled.div`
   font-weight: 500;
 `
 
-const Bullet = styled.div<{ color: string }>`
+const Bullet = styled.div<{ $color: string }>`
   border-radius: 50%;
   width: 10px;
   height: 10px;
-  background-color: ${p => p.color};
+  background-color: ${p => p.$color};
 `
 
 const StyledGrayText = styled.p`

@@ -18,7 +18,6 @@ export function getReportType(reportType: string) {
 
 const StyledTypeContainer = styled.div`
   align-items: baseline;
-  color: ${p => p.color};
   display: flex;
   font-weight: 500;
   gap: 4px;

@@ -96,7 +96,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   return (
     <StyledLinkButton
-      disabled={pdf.loading || isGenerating}
+      $isDisabled={pdf.loading || isGenerating}
       Icon={pdf.loading || isGenerating ? Icon.Reset : Icon.Document}
       onClick={handleDownload}
     >
@@ -105,9 +105,9 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
   )
 }
 
-const StyledLinkButton = styled(Button)`
+const StyledLinkButton = styled(Button)<{ $isDisabled: boolean }>`
   ${p =>
-    p.disabled &&
+    p.$isDisabled &&
     `@keyframes spin {
     to {
       transform: rotate(360deg);

@@ -152,7 +152,7 @@ export function ReportingCard({
           {targetDetailsText && <StyledBoldText>{targetDetailsText}</StyledBoldText>}
           <StyledGrayText>
             <StyledBullet
-              color={
+              $color={
                 reportType === ReportingTypeEnum.INFRACTION_SUSPICION ? THEME.color.maximumRed : THEME.color.blueGray
               }
             />
@@ -256,9 +256,9 @@ const StyledGrayText = styled.span`
   display: flex;
   align-items: baseline;
 `
-const StyledBullet = styled.div<{ color: string }>`
+const StyledBullet = styled.div<{ $color: string }>`
   border-radius: 50%;
-  background-color: ${p => p.color};
+  background-color: ${p => p.$color};
   width: 10px;
   height: 10px;
   margin-right: 6px;

@@ -75,7 +75,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
 
   return (
     <div ref={wrapperRef}>
-      <CoordinatesTypeSelection isOpen={coordinatesSelectionIsOpen}>
+      <CoordinatesTypeSelection $isOpen={coordinatesSelectionIsOpen}>
         <Header data-cy="coordinates-selection" onClick={() => setCoordinatesSelectionIsOpen(false)}>
           Unités des coordonnées
         </Header>
@@ -123,7 +123,7 @@ const Header = styled.header`
   border-top-right-radius: 2px;
 `
 
-const CoordinatesTypeSelection = styled.span<{ isOpen: boolean }>`
+const CoordinatesTypeSelection = styled.span<{ $isOpen: boolean }>`
   position: absolute;
   bottom: 40px;
   left: 40px;
@@ -133,9 +133,9 @@ const CoordinatesTypeSelection = styled.span<{ isOpen: boolean }>`
   text-align: center;
   background-color: ${p => p.theme.color.white};
   width: 234px;
-  opacity: ${props => (props.isOpen ? 1 : 0)};
-  visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
-  height: ${props => (props.isOpen ? 69 : 0)}px;
+  opacity: ${props => (props.$isOpen ? 1 : 0)};
+  visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
+  height: ${props => (props.$isOpen ? 69 : 0)}px;
   transition: all 0.5s;
   overflow: hidden;
 `

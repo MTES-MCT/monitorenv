@@ -73,7 +73,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
             $reportingContext={reporting.context}
             $reportingFormVisibility={reportingFormVisibility.visibility}
           >
-            <Separator $visible={isSeparatorVisible} />
+            <Separator $isVisible={isSeparatorVisible} />
             <Header
               isExpanded
               reduceOrCollapseReporting={() => reduceOrCollapseReporting(reducedReporting)}
@@ -86,12 +86,12 @@ export function Reportings({ context }: { context: ReportingContext }) {
   )
 }
 
-const Separator = styled.div<{ $visible: boolean }>`
+const Separator = styled.div<{ $isVisible: boolean }>`
   height: 2px;
   width: 100%;
   background-color: white;
   position: absolute;
-  display: ${p => (p.$visible ? 'block' : 'none')};
+  display: ${p => (p.$isVisible ? 'block' : 'none')};
 `
 
 const StyledContainer = styled.div<{

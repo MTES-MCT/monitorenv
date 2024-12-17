@@ -87,7 +87,7 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
         {polygons.map((polygonCoordinates, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <Row key={`zone-${index}`}>
-            <ZoneWrapper isLight>
+            <ZoneWrapper>
               Polygone dessiné {index + 1}
               {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
               {/* eslint-disable jsx-a11y/anchor-is-valid */}
@@ -145,10 +145,8 @@ const Row = styled.div`
   }
 `
 
-const ZoneWrapper = styled.div<{
-  isLight: boolean | undefined
-}>`
-  background-color: ${p => (p.isLight ? p.theme.color.white : p.theme.color.gainsboro)};
+const ZoneWrapper = styled.div`
+  background-color: ${p => p.theme.color.white};
   display: flex;
   flex-grow: 1;
   font-size: 13px;

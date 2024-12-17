@@ -118,7 +118,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
   )
 }
 
-const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
+const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadataIsShown: boolean }>`
   background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : p.theme.color.white)};
   padding-left: 24px;
   padding-right: 24px;
@@ -127,7 +127,6 @@ const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean }>`
     `
         padding-left: 20px;
         padding-right: 20px;
-        margin-left: 4px;
-        margin-right: 4px;
+       
     `}
 `

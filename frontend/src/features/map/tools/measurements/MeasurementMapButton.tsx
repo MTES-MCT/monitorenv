@@ -85,7 +85,7 @@ export function MeasurementMapButton() {
         title="Mesurer une distance"
       />
 
-      <MeasurementOptions ref={wrapperRef} healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
+      <MeasurementOptions ref={wrapperRef} $healthcheckTextWarning={!!healthcheckTextWarning} $isOpen={isOpen}>
         <MeasurementItem
           className="_active"
           data-cy="measurement-multiline"
@@ -115,14 +115,12 @@ const MeasurementItem = styled(IconButton)`
 `
 
 const MeasurementOptions = styled(MapComponentStyle)<{
-  healthcheckTextWarning: boolean
-  isHidden?: boolean
-  isOpen: boolean
+  $isOpen: boolean
 }>`
   border-radius: 2px;
   display: inline-block;
-  margin-right: ${p => (p.isOpen ? '36px' : '-200px')};
-  opacity: ${p => (p.isOpen ? '1' : '0')};
+  margin-right: ${p => (p.$isOpen ? '36px' : '-200px')};
+  opacity: ${p => (p.$isOpen ? '1' : '0')};
   position: absolute;
   right: 10px;
   transition: all 0.5s;

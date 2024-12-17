@@ -80,7 +80,7 @@ export function ListLayerGroup({ groupName, isSelected = false, layerIds, select
           )}
         </LayerSelector.IconGroup>
       </StyledGroupWrapper>
-      <LayerSelector.SubGroup isOpen={zonesAreOpen} length={layerIds?.length}>
+      <LayerSelector.SubGroup $isOpen={zonesAreOpen} $length={layerIds?.length}>
         {layerIds?.map(layerId => (
           <Layer key={layerId} isPinned={selectedAmpIds.includes(layerId)} isSelected={isSelected} layerId={layerId} />
         ))}
@@ -99,7 +99,5 @@ const StyledGroupWrapper = styled(LayerSelector.GroupWrapper)<{ $isSelected: boo
     `
         padding-left: 20px;
         padding-right: 20px;
-        margin-left: 4px;
-        margin-right: 4px;
     `}
 `
