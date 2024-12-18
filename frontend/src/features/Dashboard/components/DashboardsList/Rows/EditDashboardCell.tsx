@@ -15,7 +15,7 @@ export function EditDashboardCell({ id }: { id: number }) {
       data-cy={`edit-dashboard-${id}`}
       Icon={Icon.Edit}
       onClick={edit}
-      title="Editer le dashboard"
+      title="Éditer le tableau de bord"
     />
   )
 }

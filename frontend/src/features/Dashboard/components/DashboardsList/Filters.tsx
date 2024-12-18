@@ -219,7 +219,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
         </FilterWrapper>
       </FiltersContainer>
       <TagsContainer>
-        {orientation === 'row' && [seaFrontTags, specificPeriodDatePicker, controlUnitTags, regulatoryThemesTags]}
+        {orientation === 'row' && [specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryThemesTags]}
 
         {orientation === 'row' && hasFilters && <ReinitializeFiltersButton onClick={resetFilter} />}
       </TagsContainer>
