@@ -6,7 +6,7 @@ export const LAYER_SELECTOR_ROW_HEIGHT = 36
 const IconGroup = styled.span`
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  align-items: stretch;
   flex: 0;
 `
 
