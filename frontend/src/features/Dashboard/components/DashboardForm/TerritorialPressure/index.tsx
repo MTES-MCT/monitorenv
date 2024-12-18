@@ -36,7 +36,7 @@ export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressur
     const formattedRegulatoryAreaLink = useMemo(
       () =>
         regulatoryAreaIds
-          ? `groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires= &id=${regulatoryAreaIds.join(
+          ? `groupe_d'entit%25C3%25A9-r%25C3%25A9glementaires=&id=${regulatoryAreaIds.join(
               '&id='
             )}&ann%25C3%25A9e=${currentYear}`
           : '',
