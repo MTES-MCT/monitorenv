@@ -15,7 +15,7 @@ export enum MapInteractionListenerEnum {
 export const updateMapInteractionListeners = (listener: MapInteractionListenerEnum) => dispatch => {
   switch (listener) {
     case MapInteractionListenerEnum.DRAW_ZONE_OR_POINT:
-      openDrawLayerModal(dispatch, true)
+      openDrawLayerModal(dispatch)
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(false))
       dispatch(closeAreaOverlay())
@@ -39,6 +39,11 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
 
     case MapInteractionListenerEnum.NONE:
     default:
+      dispatch(
+        setDisplayedItems({
+          displayInterestPointLayer: true
+        })
+      )
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(false))
       dispatch(resetLayoutToDefault())
@@ -47,13 +52,14 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
   }
 }
 
-const openDrawLayerModal = (dispatch, displayLayersSidebar = true) => {
+const openDrawLayerModal = (dispatch, hideSidebarAndInterestPoint = true) => {
   dispatch(
     setDisplayedItems({
       displayDashboard: false,
       displayDrawModal: true,
       displayInterestPoint: false,
-      displayLayersSidebar,
+      displayInterestPointLayer: hideSidebarAndInterestPoint,
+      displayLayersSidebar: hideSidebarAndInterestPoint,
       displayLocateOnMap: true,
       displayMeasurement: false,
       displayMissionMenuButton: false,
