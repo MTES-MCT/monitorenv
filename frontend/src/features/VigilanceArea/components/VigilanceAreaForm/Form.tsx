@@ -125,7 +125,7 @@ export function Form() {
     dispatch(vigilanceAreaActions.setGeometry(values.geom))
     dispatch(vigilanceAreaActions.setInitialGeometry(values.geom))
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.DRAW))
-    dispatch(displayOrHideOtherLayers({ display: false }))
+    dispatch(displayOrHideOtherLayers({ display: false, withInterestPoint: true }))
   }
 
   const setPeriod = (period: DateAsStringRange | undefined) => {

@@ -198,6 +198,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
     } else {
       await dispatch(reportingActions.deleteSelectedReporting(selectedReporting?.id))
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
       dispatch(
         setReportingFormVisibility({
           context: reportingContext,
