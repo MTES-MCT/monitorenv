@@ -4,11 +4,12 @@ import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import type { HomeAppThunk } from '@store/index'
 
 export const displayOrHideOtherLayers =
-  ({ display }: { display: boolean }): HomeAppThunk =>
+  ({ display, withInterestPoint = display }: { display: boolean; withInterestPoint?: boolean }): HomeAppThunk =>
   dispatch => {
     dispatch(
       setDisplayedItems({
-        displayInterestPointLayer: display,
+        displayDashboardLayer: display,
+        displayInterestPointLayer: withInterestPoint ?? display,
         displayMissionEditingLayer: display,
         displayMissionSelectedLayer: display,
         displayMissionsLayer: display,

@@ -1,6 +1,10 @@
 import { dashboardActions } from '@features/Dashboard/slice'
 import { reportingActions } from '@features/Reportings/slice'
 import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from 'domain/use_cases/map/updateMapInteractionListeners'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { SideWindow } from '.'
@@ -59,6 +63,7 @@ export function SideWindowLauncher() {
     dispatch(missionFormsActions.resetMissions())
     dispatch(dashboardActions.resetDashboards())
 
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     if (reportingFormVisibility.context === ReportingContext.SIDE_WINDOW) {
       dispatch(setReportingFormVisibility({ context: ReportingContext.MAP, visibility: VisibilityState.NONE }))
     }
