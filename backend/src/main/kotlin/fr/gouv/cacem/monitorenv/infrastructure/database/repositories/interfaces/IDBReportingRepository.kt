@@ -199,7 +199,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
             """
         SELECT r.id FROM ReportingModel r
-        WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), st_setsrid(:geometry, 4326))
+        WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), st_buffer(st_setsrid(:geometry, 4326), 0))
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>

@@ -1,4 +1,12 @@
-import { type Coordinates, CoordinatesInput, Icon, IconButton, usePrevious } from '@mtes-mct/monitor-ui'
+import {
+  type Coordinates,
+  CoordinatesInput,
+  Icon,
+  IconButton,
+  usePrevious,
+  OPENLAYERS_PROJECTION,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
@@ -6,13 +14,7 @@ import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import {
-  InteractionListener,
-  InteractionType,
-  OLGeometryType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from '../../../domain/entities/map/constants'
+import { InteractionListener, InteractionType, OLGeometryType } from '../../../domain/entities/map/constants'
 import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
 import { VisibilityState } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
