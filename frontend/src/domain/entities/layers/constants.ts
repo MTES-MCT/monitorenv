@@ -281,7 +281,7 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     zIndex: 1400
   },
   [MonitorEnvLayers.DRAW_DASHBOARD]: {
-    code: MonitorEnvLayers.DASHBOARD,
+    code: MonitorEnvLayers.DRAW_DASHBOARD,
     zIndex: 1300
   },
   [MonitorEnvLayers.DASHBOARD]: {
