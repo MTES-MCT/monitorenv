@@ -48,6 +48,7 @@ export namespace Dashboard {
     amps: AMPFromAPI[]
     comments?: string
     controlUnits: ControlUnit.ControlUnit[]
+    images: string[] | undefined
     name: string
     regulatoryAreas: RegulatoryLayerWithMetadata[]
     reportings: Reporting[]

@@ -2,7 +2,7 @@
 
 // TODO (04/11/2024) : use monitor-ui fonts instead of imported/duplicated ones
 
-import { Document, Page, View } from '@react-pdf/renderer'
+import { Document, Image, Page, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
 import { Comments } from './Comments'
@@ -52,6 +52,8 @@ export function Brief({ brief }: BriefProps) {
             vigilanceAreas={brief.vigilanceAreas}
           />
         </View>
+        {/* eslint-disable-next-line react/no-array-index-key */}
+        {brief.images && brief.images.map((image, index) => <Image key={index} src={image} />)}
       </Page>
     </Document>
   )
