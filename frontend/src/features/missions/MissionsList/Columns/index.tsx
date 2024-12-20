@@ -44,7 +44,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 96 + legacyFirefoxOffset
+    size: 106 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.missionTypes,
@@ -52,7 +52,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
-    size: 96 + legacyFirefoxOffset
+    size: 106 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.controlUnits,
@@ -60,7 +60,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
-    size: 240 + legacyFirefoxOffset
+    size: 312 + legacyFirefoxOffset
   },
 
   {
@@ -69,7 +69,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 368 + legacyFirefoxOffset
+    size: 482 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.envActions,

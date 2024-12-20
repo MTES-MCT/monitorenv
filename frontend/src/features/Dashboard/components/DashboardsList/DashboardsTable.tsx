@@ -58,5 +58,14 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
-  return <Table ref={tableContainerRef} rows={rows} table={table} virtualRows={virtualRows} />
+  return (
+    <Table
+      ref={tableContainerRef}
+      columnsLength={columns.length}
+      rows={rows}
+      rowVirtualizer={rowVirtualizer}
+      table={table}
+      virtualRows={virtualRows}
+    />
+  )
 }

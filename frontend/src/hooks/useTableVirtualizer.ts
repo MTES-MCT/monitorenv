@@ -7,13 +7,14 @@ type UseTableVirtualizerProps = {
   ref: React.RefObject<HTMLDivElement>
   rows: any[]
 }
-export function useTableVirtualizer({ estimateSize, overscan = 50, ref, rows }: UseTableVirtualizerProps) {
+
+export function useTableVirtualizer({ estimateSize, ref, rows }: UseTableVirtualizerProps) {
   return useVirtualizer({
     count: rows.length,
     estimateSize: () => estimateSize,
     getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
     getScrollElement: () => ref.current,
-    overscan,
+    overscan: 5,
     scrollPaddingEnd: 40,
     scrollPaddingStart: 40
   })
