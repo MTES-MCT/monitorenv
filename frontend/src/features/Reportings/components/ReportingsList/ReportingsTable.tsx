@@ -1,3 +1,7 @@
+import {
+  getPaddingValuesForVirtualizeTable,
+  PaddingForVirtualizeTable
+} from '@components/Table/PaddingForVirtualizeTable'
 import { TableContainer } from '@components/Table/style'
 import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
@@ -7,7 +11,6 @@ import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, type RowSelectionState, type SortingState } from '@tanstack/react-table'
-import { notUndefined } from '@tanstack/react-virtual'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
 import { useMemo, useRef, useState } from 'react'
@@ -68,13 +71,8 @@ export function ReportingsTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [table, rowSelection]
   )
-  const [before, after] =
-    virtualRows.length > 0
-      ? [
-          notUndefined(virtualRows[0]).start - rowVirtualizer.options.scrollMargin,
-          rowVirtualizer.getTotalSize() - notUndefined(virtualRows[virtualRows.length - 1]).end
-        ]
-      : [0, 0]
+
+  const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   const resetSelection = () => {
     table.resetRowSelection(true)
@@ -94,11 +92,7 @@ export function ReportingsTable({
               <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
             ))}
           </TableWithSelectableRows.Head>
-          {before > 0 && (
-            <tr>
-              <td aria-label="padding before" colSpan={columns.length} style={{ height: before }} />
-            </tr>
-          )}
+          {before > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={before} name="before" />}
           <tbody>
             {virtualRows?.map(virtualRow => {
               const row = rows[virtualRow.index]
@@ -130,11 +124,7 @@ export function ReportingsTable({
               )
             })}
           </tbody>
-          {after > 0 && (
-            <tr>
-              <td aria-label="padding after" colSpan={columns.length} style={{ height: after }} />
-            </tr>
-          )}
+          {after > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={after} name="after" />}
         </StyledTable>
       </TableContainer>
     </>

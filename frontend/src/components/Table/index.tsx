@@ -1,20 +1,14 @@
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender } from '@tanstack/react-table'
-import { notUndefined } from '@tanstack/react-virtual'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
+import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from './PaddingForVirtualizeTable'
 import { TableContainer } from './style'
 
 export function TableWithRef({ columnsLength, rows, rowVirtualizer, table, virtualRows }, ref) {
-  const [before, after] =
-    virtualRows.length > 0
-      ? [
-          notUndefined(virtualRows[0]).start - rowVirtualizer.options.scrollMargin,
-          rowVirtualizer.getTotalSize() - notUndefined(virtualRows[virtualRows.length - 1]).end
-        ]
-      : [0, 0]
+  const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   return (
     <TableContainer ref={ref}>
@@ -43,11 +37,7 @@ export function TableWithRef({ columnsLength, rows, rowVirtualizer, table, virtu
             </tr>
           ))}
         </SimpleTable.Head>
-        {before > 0 && (
-          <tr>
-            <td aria-label="padding before" colSpan={columnsLength} style={{ height: before }} />
-          </tr>
-        )}
+        {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
         <tbody>
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow?.index]
@@ -75,11 +65,7 @@ export function TableWithRef({ columnsLength, rows, rowVirtualizer, table, virtu
             )
           })}
         </tbody>
-        {after > 0 && (
-          <tr>
-            <td aria-label="padding after" colSpan={columnsLength} style={{ height: after }} />
-          </tr>
-        )}
+        {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
       </SimpleTable.Table>
     </TableContainer>
   )
