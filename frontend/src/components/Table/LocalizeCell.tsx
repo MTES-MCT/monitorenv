@@ -19,13 +19,9 @@ export function LocalizeCell({ geom }: { geom: any }) {
     }
   }
 
-  return <StyledIconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToMission} />
+  return <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToMission} />
 }
 
-const StyledIconButton = styled(IconButton)`
-  display: inherit;
-  margin: auto;
-`
 const StyledEmptyContainer = styled.div`
   height: 32px;
   display: flex;

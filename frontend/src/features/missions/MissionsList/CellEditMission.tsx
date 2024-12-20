@@ -20,6 +20,5 @@ export function CellEditMission({ id }: { id: number }) {
 }
 
 const StyledIconButton = styled(IconButton)`
-  display: inherit;
   margin: auto;
 `
