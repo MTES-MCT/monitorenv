@@ -1,18 +1,29 @@
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender } from '@tanstack/react-table'
+import { notUndefined } from '@tanstack/react-virtual'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
-export function TableWithRef({ rows, table, virtualRows }, ref) {
+import { TableContainer } from './style'
+
+export function TableWithRef({ columnsLength, rows, rowVirtualizer, table, virtualRows }, ref) {
+  const [before, after] =
+    virtualRows.length > 0
+      ? [
+          notUndefined(virtualRows[0]).start - rowVirtualizer.options.scrollMargin,
+          rowVirtualizer.getTotalSize() - notUndefined(virtualRows[virtualRows.length - 1]).end
+        ]
+      : [0, 0]
+
   return (
-    <StyledDashboardsContainer ref={ref}>
+    <TableContainer ref={ref}>
       <SimpleTable.Table>
         <SimpleTable.Head>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <SimpleTable.Th key={header.id} $width={header.column.getSize()}>
+                <SimpleTable.Th key={header.id} $width={header.getSize()}>
                   {header.isPlaceholder ? undefined : (
                     <SimpleTable.SortContainer
                       className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
@@ -32,12 +43,21 @@ export function TableWithRef({ rows, table, virtualRows }, ref) {
             </tr>
           ))}
         </SimpleTable.Head>
+        {before > 0 && (
+          <tr>
+            <td aria-label="padding before" colSpan={columnsLength} style={{ height: before }} />
+          </tr>
+        )}
         <tbody>
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow?.index]
 
             return (
-              <SimpleTable.BodyTr key={virtualRow.key}>
+              <SimpleTable.BodyTr
+                key={row?.id}
+                ref={rowVirtualizer.measureElement} // measure dynamic row height
+                data-index={virtualRow.index} // needed for dynamic row height measurement
+              >
                 {row?.getVisibleCells().map(cell => (
                   <SimpleTable.Td
                     key={cell.id}
@@ -45,7 +65,6 @@ export function TableWithRef({ rows, table, virtualRows }, ref) {
                     style={{
                       maxWidth: cell.column.getSize(),
                       minWidth: cell.column.getSize(),
-                      padding: cell.column.id === 'geom' || cell.column.id === 'edit' ? '0px' : '10px 12px',
                       width: cell.column.getSize()
                     }}
                   >
@@ -56,19 +75,18 @@ export function TableWithRef({ rows, table, virtualRows }, ref) {
             )
           })}
         </tbody>
+        {after > 0 && (
+          <tr>
+            <td aria-label="padding after" colSpan={columnsLength} style={{ height: after }} />
+          </tr>
+        )}
       </SimpleTable.Table>
-    </StyledDashboardsContainer>
+    </TableContainer>
   )
 }
 
 export const Table = forwardRef(TableWithRef)
 
-const StyledDashboardsContainer = styled.div`
-  overflow: auto;
-  width: fit-content;
-  // scroll width (~15px) + 4px
-  padding-right: 19px;
-`
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;
   margin-right: 0px;

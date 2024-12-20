@@ -46,11 +46,22 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
 
   const { rows } = table.getRowModel()
 
-  const overscan = useMemo(() => (missions.length > 500 ? 500 : 50), [missions])
-
-  const rowVirtualizer = useTableVirtualizer({ estimateSize: 30, overscan, ref: tableContainerRef, rows })
+  const rowVirtualizer = useTableVirtualizer({
+    estimateSize: 30,
+    ref: tableContainerRef,
+    rows
+  })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
-  return <Table ref={tableContainerRef} rows={rows} table={table} virtualRows={virtualRows} />
+  return (
+    <Table
+      ref={tableContainerRef}
+      columnsLength={columns.length}
+      rows={rows}
+      rowVirtualizer={rowVirtualizer}
+      table={table}
+      virtualRows={virtualRows}
+    />
+  )
 }
