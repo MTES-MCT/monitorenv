@@ -177,7 +177,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.wait(500)
 
-    cy.clickButton('Fermer Mission Terre – DML 2A')
+    cy.clickButton('Fermer 38 - Mission Terre – DML 2A')
     cy.wait(500)
   })
 
@@ -503,8 +503,10 @@ context('Side Window > Mission Form > Main Form', () => {
     visitSideWindow()
     cy.fill('Période', 'Un mois')
     cy.wait(500)
-    cy.getDataCy('edit-mission-27').scrollIntoView().click({ force: true })
-    cy.get('.Component-Banner').contains('euillez compléter ou corriger les éléments en rouge')
+    cy.getDataCy('edit-mission-27')
+      .scrollIntoView({ offset: { left: 300, top: -100 } })
+      .click({ force: true })
+    cy.get('.Component-Banner').contains('Veuillez compléter ou corriger les éléments en rouge')
   })
 
   it('Should display text in timeline if data has been added to the mission by the control unit in RapportNav. ', () => {
