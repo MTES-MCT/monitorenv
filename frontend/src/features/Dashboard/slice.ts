@@ -12,6 +12,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
   ampIdsToDisplay: [],
+  briefImages: [],
   dashboard: {
     ampIds: [],
     controlUnitIds: [],
@@ -27,6 +28,7 @@ export const initialDashboard: DashboardType = {
   extractedArea: undefined,
   isCancelEditModalOpen: false,
   isEditingTabName: false,
+  isGeneratingBrief: 'waiting',
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
   reportingToDisplay: undefined,
@@ -42,12 +44,14 @@ type OpenPanel = {
 
 export type DashboardType = {
   ampIdsToDisplay: number[]
+  briefImages: string[]
   dashboard: Dashboard.Dashboard
   defaultName: string | undefined
   displayGeometry: boolean
   extractedArea?: Dashboard.ExtractedArea
   isCancelEditModalOpen: boolean
   isEditingTabName: boolean
+  isGeneratingBrief: 'waiting' | 'loading' | 'imagesToUpdate' | 'ready'
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
@@ -272,6 +276,17 @@ export const dashboardSlice = createSlice({
     setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
       state.activeDashboardId = action.payload
     },
+    setBriefImages(state, action: PayloadAction<string[]>) {
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        state.dashboards[id].briefImages = action.payload
+      }
+    },
     setComments(state, action: PayloadAction<{ comments: string | undefined; key: string }>) {
       const id = action.payload.key
 
@@ -331,6 +346,17 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].isEditingTabName = action.payload.isEditing
+    },
+    setIsGeneratingBrief(state, action: PayloadAction<'waiting' | 'loading' | 'imagesToUpdate' | 'ready'>) {
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        state.dashboards[id].isGeneratingBrief = action.payload
+      }
     },
     setName(state, action: PayloadAction<{ key: string; name: string }>) {
       const id = action.payload.key
