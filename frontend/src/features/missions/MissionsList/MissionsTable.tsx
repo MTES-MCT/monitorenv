@@ -7,6 +7,7 @@ import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
 import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
+import styled from 'styled-components'
 
 import { Columns } from './Columns'
 
@@ -55,8 +56,9 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
   const virtualRows = rowVirtualizer.getVirtualItems()
 
   return (
-    <Table
+    <StyledTable
       ref={tableContainerRef}
+      className="missions-table"
       columnsLength={columns.length}
       rows={rows}
       rowVirtualizer={rowVirtualizer}
@@ -65,3 +67,11 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
     />
   )
 }
+
+const StyledTable = styled(Table)`
+  > table > tbody {
+    > tr > td:nth-child(11) {
+      padding: 0;
+    }
+  }
+`

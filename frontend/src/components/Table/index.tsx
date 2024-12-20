@@ -7,11 +7,11 @@ import styled from 'styled-components'
 import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from './PaddingForVirtualizeTable'
 import { TableContainer } from './style'
 
-export function TableWithRef({ columnsLength, rows, rowVirtualizer, table, virtualRows }, ref) {
+export function TableWithRef({ className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }, ref) {
   const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   return (
-    <TableContainer ref={ref}>
+    <TableContainer ref={ref} className={className}>
       <SimpleTable.Table>
         <SimpleTable.Head>
           {table.getHeaderGroups().map(headerGroup => (
