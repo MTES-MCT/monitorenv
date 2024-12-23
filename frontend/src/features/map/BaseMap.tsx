@@ -126,55 +126,38 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     }
   }, [])
 
-  const handleMouseOverFeature = useMemo(() => {
-    let animationFrameId: number // Stocke l'ID de l'animation pour annulation
-
-    // La fonction throttle, intégrant le requestAnimationFrame
-    const throttledFunction = throttle((event, current_map) => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId)
-      } // Annule la frame précédente
-
-      animationFrameId = requestAnimationFrame(() => {
-        if (!event || !current_map) {
-          return
-        }
-
-        const zoomLevel = current_map.getView().getZoom()
-        if (!zoomLevel) {
-          return
-        }
-
-        const priorityLayersOrder = zoomLevel < 7 ? HoverableLayers0To7 : HoverableLayers7To26
-        const priorityLayerNames = new Set(priorityLayersOrder.flat())
-
-        const features = current_map.getFeaturesAtPixel(event.pixel, {
-          hitTolerance: HIT_PIXEL_TO_TOLERANCE,
-          layerFilter: layer => {
-            const layerName = (layer as VectorLayerWithName).name ?? layer.get('name')
-
-            return priorityLayerNames.has(layerName)
+  const handleMouseOverFeature = useMemo(
+    () =>
+      throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
+        if (event && current_map) {
+          const zoomLevel = current_map.getView().getZoom()
+          if (!zoomLevel) {
+            return
           }
-        })
 
-        if (!features || features.length === 0) {
-          setCurrentFeatureListOver(undefined)
-          setCurrentFeatureOver(undefined)
-          setPixel(undefined)
+          const priorityLayersOrder = zoomLevel < 7 ? HoverableLayers0To7 : HoverableLayers7To26
 
-          return
+          const features = current_map.getFeaturesAtPixel(event.pixel, {
+            hitTolerance: HIT_PIXEL_TO_TOLERANCE,
+            layerFilter: layer => {
+              const typedLayer = layer as VectorLayerWithName
+
+              const layerName = typedLayer.name ?? typedLayer.get('name')
+
+              return !!layerName && priorityLayersOrder.flat().includes(layerName)
+            }
+          })
+          const priorityFeatures = getHighestPriorityFeatures(features, priorityLayersOrder)
+
+          setCurrentFeatureListOver(getGeoJSONFromFeatureList(priorityFeatures))
+
+          setCurrentFeatureOver(getGeoJSONFromFeature(priorityFeatures?.[0]))
+
+          setPixel(event.pixel)
         }
-
-        const priorityFeatures = getHighestPriorityFeatures(features, priorityLayersOrder)
-
-        setCurrentFeatureListOver(getGeoJSONFromFeatureList(priorityFeatures))
-        setCurrentFeatureOver(getGeoJSONFromFeature(priorityFeatures[0]))
-        setPixel(event.pixel)
-      })
-    }, 50)
-
-    return throttledFunction
-  }, [])
+      }, 50),
+    []
+  )
 
   const control = useRef<ScaleLine>()
 
