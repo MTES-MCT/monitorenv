@@ -36,6 +36,7 @@ export enum MonitorEnvLayers {
   DRAW_DASHBOARD = 'DRAW_DASHBOARD',
   DRAW_VIGILANCE_AREA = 'DRAW_VIGILANCE_AREA',
   EEZ = 'EEZ',
+  EXPORT_PDF = 'EXPORT_PDF',
   FACADES = 'FACADES',
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
@@ -298,6 +299,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.AREA_ICON]: {
     code: MonitorEnvLayers.AREA_ICON,
+    zIndex: 1500
+  },
+  [MonitorEnvLayers.EXPORT_PDF]: {
+    code: MonitorEnvLayers.EXPORT_PDF,
     zIndex: 1500
   }
 }

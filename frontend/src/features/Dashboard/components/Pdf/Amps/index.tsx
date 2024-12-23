@@ -1,12 +1,15 @@
+import { Dashboard } from '@features/Dashboard/types'
 import { THEME } from '@mtes-mct/monitor-ui'
-import { Link, Text, View } from '@react-pdf/renderer'
+import { Image, Link, Text, View } from '@react-pdf/renderer'
 import { getTitle } from 'domain/entities/layers/utils'
 
 import { areaStyle, layoutStyle } from '../style'
+import { getImage } from '../utils'
 
+import type { ExportImageType } from '../../Layers/ExportLayer'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 
-export function Amps({ amps }: { amps: AMPFromAPI[] }) {
+export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImageType[] }) {
   return (
     <>
       <View style={layoutStyle.header}>
@@ -14,41 +17,47 @@ export function Amps({ amps }: { amps: AMPFromAPI[] }) {
         <Text style={layoutStyle.selected}>{amps.length} sélectionnée(s)</Text>
       </View>
       <View style={layoutStyle.cardWrapper}>
-        {amps.map(amp => (
-          <View key={amp.id} style={areaStyle.card} wrap={false}>
-            <View style={areaStyle.header}>
-              <Text> {getTitle(amp.name)}</Text>
-            </View>
-            <View style={areaStyle.content}>
-              <View style={[layoutStyle.row]}>
-                <View style={areaStyle.description}>
-                  <Text>Nature d&apos;AMP</Text>
+        {amps.map(amp => {
+          const image = getImage(images, Dashboard.Layer.DASHBOARD_AMP, amp.id)
+
+          return (
+            <View key={amp.id} style={areaStyle.wrapper} wrap={false}>
+              <View style={areaStyle.card}>
+                <View style={areaStyle.header}>
+                  <Text> {getTitle(amp.name)}</Text>
                 </View>
-                <View style={areaStyle.details}>
-                  <Text>{amp.designation || '-'}</Text>
-                </View>
-              </View>
-            </View>
-            {amp.url_legicem && (
-              <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
-                <View>
-                  <Text style={[areaStyle.description, { width: 'auto' }]}>Résumé réglementaire sur Légicem</Text>
-                </View>
-                <View style={(layoutStyle.row, { fontSize: 5.5, marginTop: 3.4, position: 'relative' })}>
-                  <View style={{ fontSize: 10, left: 3, position: 'absolute', top: -3 }}>
-                    <Text>→</Text>
-                  </View>
-                  <View style={{ paddingLeft: 18 }}>
-                    {/*  eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <Link src={amp.url_legicem}>
-                      <Text>{amp.ref_reg}</Text>
-                    </Link>
+                <View style={areaStyle.content}>
+                  <View style={[layoutStyle.row]}>
+                    <View style={areaStyle.description}>
+                      <Text>Nature d&apos;AMP</Text>
+                    </View>
+                    <View style={areaStyle.details}>
+                      <Text>{amp.designation || '-'}</Text>
+                    </View>
                   </View>
                 </View>
+                {amp.url_legicem && (
+                  <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
+                    <View>
+                      <Text style={[areaStyle.description, { width: 'auto' }]}>Résumé réglementaire sur Légicem</Text>
+                    </View>
+                    <View style={(layoutStyle.row, { fontSize: 5.5, marginTop: 3.4, position: 'relative' })}>
+                      <View style={{ fontSize: 10, left: 3, position: 'absolute', top: -3 }}>
+                        <Text>→</Text>
+                      </View>
+                      <View style={{ paddingLeft: 18 }}>
+                        <Link href={amp.url_legicem}>
+                          <Text>{amp.ref_reg}</Text>
+                        </Link>
+                      </View>
+                    </View>
+                  </View>
+                )}
               </View>
-            )}
-          </View>
-        ))}
+              {image && <Image src={image} />}
+            </View>
+          )
+        })}
       </View>
     </>
   )

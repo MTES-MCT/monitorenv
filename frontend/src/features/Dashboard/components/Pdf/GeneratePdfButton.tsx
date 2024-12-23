@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Brief } from './Brief'
-import { ExportLayer2 } from '../Layers/ExportLayer2'
+import { ExportLayer, type ExportImageType } from '../Layers/ExportLayer'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
@@ -89,17 +89,10 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
     setShouldLoadImage(true)
   }
 
-  const updateBrief = (imagesToUpdate: string[]) => {
+  const updateBrief = (imagesToUpdate: ExportImageType[]) => {
     update(<Brief brief={{ ...brief, images: imagesToUpdate }} />)
     setShouldLoadImage(false)
   }
-
-  // useEffect(() => {
-  //   if (isGeneratingBrief === 'imagesToUpdate' && !pdf.loading && pdf.blob && pdf.url) {
-  //     dispatch(dashboardActions.setIsGeneratingBrief('ready'))
-  //     setIsGenerating(true)
-  //   }
-  // }, [brief, dispatch, images, isGeneratingBrief, pdf.blob, pdf.loading, pdf.url])
 
   useEffect(() => {
     if (isGenerating && !shouldLoadImage && !pdf.loading && pdf.blob && pdf.url) {
@@ -109,14 +102,15 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       link.href = pdf.url
       link.download = `${dashboard.name}.pdf`
       link.click()
+      link.remove()
     }
   }, [dashboard.name, dispatch, isGenerating, pdf.blob, pdf.loading, pdf.url, shouldLoadImage])
 
   return (
     <>
-      <ExportLayer2 onImagesReady={updateBrief} shouldLoadImage={shouldLoadImage} />
+      <ExportLayer onImagesReady={updateBrief} shouldLoadImages={shouldLoadImage} />
       <StyledLinkButton
-        $isDisabled={isGenerating}
+        disabled={isGenerating}
         Icon={isGenerating ? Icon.Reset : Icon.Document}
         onClick={handleDownload}
       >
@@ -126,9 +120,9 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
   )
 }
 
-const StyledLinkButton = styled(Button)<{ $isDisabled: boolean }>`
+const StyledLinkButton = styled(Button)<{ disabled: boolean }>`
   ${p =>
-    p.$isDisabled &&
+    p.disabled &&
     `@keyframes spin {
     to {
       transform: rotate(360deg);

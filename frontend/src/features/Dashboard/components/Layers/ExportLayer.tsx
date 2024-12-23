@@ -1,10 +1,21 @@
-import { dashboardActions } from '@features/Dashboard/slice'
-import { CENTERED_ON_FRANCE, type BaseMapChildrenProps } from '@features/map/BaseMap'
-import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { getDashboardById } from '@features/Dashboard/slice'
+import { Dashboard } from '@features/Dashboard/types'
+import { CENTERED_ON_FRANCE } from '@features/map/BaseMap'
+import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
+import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
+import { measurementStyle, measurementStyleWithCenter } from '@features/map/layers/styles/measurement.style'
+import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
+import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature, View } from 'ol'
+import { createEmpty, extend, type Extent } from 'ol/extent'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import OpenLayerMap from 'ol/Map'
@@ -13,14 +24,14 @@ import { XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef, type MutableRefObject } from 'react'
 
-import { wait } from '../../../../../puppeteer/e2e/utils'
+import { getDashboardStyle } from './style'
 
 import type { VectorLayerWithName } from 'domain/types/layer'
+import type { Geometry } from 'ol/geom'
 
 const initialMap = new OpenLayerMap({
   layers: [
     new TileLayer({
-      className: Layers.BASE_LAYER.code,
       source: new XYZ({
         crossOrigin: 'anonymous',
         maxZoom: 19,
@@ -40,39 +51,67 @@ const initialMap = new OpenLayerMap({
   })
 })
 
-export function ExportLayer({ map }: BaseMapChildrenProps) {
-  const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
+export type ExportImageType = {
+  featureId: string | number | undefined
+  image: string
+}
 
-  const dispatch = useAppDispatch()
+type ExportLayerProps = {
+  onImagesReady: (images: ExportImageType[]) => void
+  shouldLoadImages: boolean
+}
+export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProps) {
+  const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
-  const isGeneratingBrief = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.isGeneratingBrief : false
-  )
+  const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
+  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [], {
+    skip: !dashboard
+  })
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
+  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
-  const zoomToFeature = (feature: Feature) => {
-    const inMemoryMap = mapRef.current
-    const geometry = feature.getGeometry()
+  const activeDashboard = dashboard?.dashboard
 
-    if (!geometry || !inMemoryMap) {
-      return
-    }
+  const layersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
+  const layersVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      renderOrder: (a, b) => b.get('area') - a.get('area'),
+      source: layersVectorSourceRef.current,
+      style: feature => getDashboardStyle(feature),
+      zIndex: Layers.DASHBOARD.zIndex
+    })
+  ) as React.MutableRefObject<VectorLayerWithName>
+  layersVectorLayerRef.current.name = Layers.EXPORT_PDF.code
 
-    const extent = geometry.getExtent()
-    const view = inMemoryMap.getView()
+  const zoomToFeatures = async (features: Feature[]) =>
+    new Promise<void>(resolve => {
+      const inMemoryMap = mapRef.current
+      const extent = combineExtent(features)
+      if (!extent || !inMemoryMap) {
+        return
+      }
 
-    // Zoom et centrage avec animation
-    view.fit(extent)
-  }
+      const view = inMemoryMap.getView()
+
+      view.fit(extent, { padding: [10, 10, 10, 10] })
+
+      // admission of weakness...
+      setTimeout(() => {
+        resolve()
+      }, 300)
+    })
 
   useEffect(() => {
     const hiddenDiv = document.createElement('div')
     hiddenDiv.style.width = '800px'
     hiddenDiv.style.height = '600px'
-    hiddenDiv.style.position = 'absolute' // Hors du flux DOM visible
-    hiddenDiv.style.visibility = 'hidden' // Invisible mais dans le DOM
-    document.body.appendChild(hiddenDiv) // Nécessaire pour permettre le rendu
+    hiddenDiv.style.position = 'absolute'
+    hiddenDiv.style.visibility = 'hidden'
+    document.body.appendChild(hiddenDiv)
 
     const memoryMap = initialMap
 
@@ -85,152 +124,200 @@ export function ExportLayer({ map }: BaseMapChildrenProps) {
   }, [])
 
   useEffect(() => {
-    if (mapRef.current && isGeneratingBrief === 'loading') {
-      // console.log('and again')
+    if (mapRef.current) {
+      mapRef.current.getLayers().push(layersVectorLayerRef.current)
+    }
 
-      mapRef.current.renderSync()
+    return () => {
+      if (mapRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        mapRef.current.removeLayer(layersVectorLayerRef.current)
+      }
+    }
+  }, [])
 
-      const dashboardFeatures = map
-        .getLayers()
-        .getArray()
-        .find((layer): layer is VectorLayerWithName => 'name' in layer && layer.name === Layers.DASHBOARD.code)
-        ?.getSource()
-        ?.getFeatures()
+  useEffect(() => {
+    function extractRegulatoryAreaFeatures(allFeatures: Feature<Geometry>[]) {
+      if (regulatoryLayers?.entities) {
+        const regulatoryLayersIds = activeDashboard?.regulatoryAreaIds
+        regulatoryLayersIds?.forEach(layerId => {
+          const layer = regulatoryLayers.entities[layerId]
 
-      mapRef.current.renderSync()
-
-      // dashboardFeatures?.forEach(feat => console.log(feat.getProperties()))
-
-      const layerVector = new VectorLayer({
-        source: new VectorSource({
-          features: dashboardFeatures
+          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            const feature = getRegulatoryFeature({
+              code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
+              isolatedLayer: undefined,
+              layer
+            })
+            if (feature) {
+              allFeatures.push(feature)
+            }
+          }
         })
-      }) as VectorLayerWithName
+      }
+    }
 
-      mapRef.current.renderSync()
+    function extractAMPFeatures(allFeatures: Feature<Geometry>[]) {
+      if (ampLayers?.entities) {
+        const ampLayerIds = activeDashboard?.ampIds
 
-      layerVector.name = 'EXPORT_PDF'
+        ampLayerIds?.forEach(layerId => {
+          const layer = ampLayers.entities[layerId]
 
-      mapRef.current.getLayers().push(layerVector)
+          if (layer?.geom && layer?.geom?.coordinates.length > 0) {
+            const feature = getAMPFeature({
+              code: Dashboard.featuresCode.DASHBOARD_AMP,
+              isolatedLayer: undefined,
+              layer
+            })
 
-      mapRef.current.renderSync()
+            if (feature) {
+              allFeatures.push(feature)
+            }
+          }
+        })
+      }
+    }
 
+    function extractReportingFeatures(allFeatures: Feature<Geometry>[]) {
+      if (reportings) {
+        Object.values(reportings?.entities ?? []).forEach(reporting => {
+          if (reporting.geom) {
+            const feature = getReportingZoneFeature(reporting, Dashboard.featuresCode.DASHBOARD_REPORTINGS)
+            allFeatures.push(feature)
+          }
+        })
+      }
+    }
+
+    function extractVigilanceAreaFeatures(allFeatures: Feature<Geometry>[]) {
+      if (vigilanceAreas?.entities) {
+        const vigilanceAreaLayersIds = activeDashboard?.vigilanceAreaIds
+        vigilanceAreaLayersIds?.forEach(layerId => {
+          const layer = vigilanceAreas.entities[layerId]
+          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            const feature = getVigilanceAreaZoneFeature(
+              layer,
+              Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS,
+              undefined
+            )
+            if (feature) {
+              allFeatures.push(feature)
+            }
+          }
+        })
+      }
+    }
+
+    if (mapRef.current && shouldLoadImages) {
       // Exporter le canvas en image
-      const allImages: string[] = []
+      const allImages: ExportImageType[] = []
+      const allFeatures: Feature[] = []
       const mapCanvas = mapRef.current.getViewport().querySelector('canvas')!
       const mapContext = mapCanvas.getContext('2d')
+      let dashboardAreaFeature: Feature | undefined
 
-      mapRef.current.renderSync()
+      layersVectorSourceRef.current.clear(true)
 
-      const feature = mapRef.current
-        .getLayers()
-        .getArray()
-        .find((layer): layer is VectorLayerWithName => 'name' in layer && layer.name === 'EXPORT_PDF')
-        ?.getSource()
-        ?.getFeatureById('testgeo')!
-      // mapRef.current.getView().fit(feature?.getGeometry()?.getExtent()!)
-      zoomToFeature(feature) // Attendre la fin du zoom
+      if (activeDashboard) {
+        extractRegulatoryAreaFeatures(allFeatures)
 
-      mapRef.current
-        .getViewport()
-        .querySelectorAll('canvas')
-        .forEach(canvas => {
-          allImages.push(canvas.toDataURL('image/png'))
-          // mapContext?.drawImage(canvas, 0, 0)
-        })
+        extractAMPFeatures(allFeatures)
 
-      // dispatch(dashboardActions.setBriefImages([mapCanvas.toDataURL('image/png')]))
-      dispatch(dashboardActions.setBriefImages(allImages))
-      dispatch(dashboardActions.setIsGeneratingBrief('imagesToUpdate'))
+        extractVigilanceAreaFeatures(allFeatures)
+
+        extractReportingFeatures(allFeatures)
+      }
+
+      // TODO: Wait for designer review (shall we had the dashboard geometry to exported images?)
+      if (dashboard?.dashboard.geom) {
+        dashboardAreaFeature = getFeature(dashboard.dashboard.geom)
+        if (!dashboardAreaFeature) {
+          return
+        }
+        dashboardAreaFeature?.setStyle([measurementStyle, measurementStyleWithCenter])
+      }
+
+      const generateImages = async () => {
+        if (!mapRef.current || allFeatures.length === 0) {
+          onImagesReady([])
+        }
+
+        layersVectorSourceRef.current.clear(true)
+
+        if (dashboardAreaFeature) {
+          // TODO: Wait for designer review (shall we had the dashboard geometry to exported images?)
+          layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
+
+          // eslint-disable-next-line no-restricted-syntax
+          layersVectorSourceRef.current.addFeatures(allFeatures)
+
+          await zoomToFeatures([dashboardAreaFeature])
+
+          mapRef.current
+            ?.getTargetElement()
+            .querySelectorAll('canvas')
+            .forEach(canvas => {
+              mapContext?.drawImage(canvas, 0, 0)
+            })
+          allImages.push({
+            featureId: 'WHOLE_DASHBOARD',
+            image: mapCanvas.toDataURL('image/png')
+          })
+        }
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const feature of allFeatures) {
+          mapContext?.reset()
+          layersVectorSourceRef.current.clear(true)
+          layersVectorSourceRef.current.addFeature(feature)
+
+          // TODO: Wait for designer review (shall we had the dashboard geometry to exported images?)
+          // layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
+          // eslint-disable-next-line no-await-in-loop
+          await zoomToFeatures([feature])
+
+          mapRef.current
+            ?.getTargetElement()
+            .querySelectorAll('canvas')
+            .forEach(canvas => {
+              mapContext?.drawImage(canvas, 0, 0)
+              allImages.push({
+                featureId: feature.getId(),
+                image: mapCanvas.toDataURL('image/png')
+              })
+            })
+        }
+
+        onImagesReady(allImages)
+      }
+
+      generateImages()
     }
-  }, [dispatch, isGeneratingBrief, map])
-
-  // useEffect(() => {
-  //   if (isGeneratingBrief === 'loading') {
-  //     const activeDashboardSource = map
-  //       .getLayers()
-  //       .getArray()
-  //       .find((layer): layer is VectorLayerWithName => 'name' in layer && layer.name === Layers.DASHBOARD.code)
-  //       ?.getSource()
-  //     const memoryMap = new OpenLayerMap({
-  //       layers: [
-  //         new TileLayer({
-  //           source: new XYZ({
-  //             crossOrigin: 'anonymous',
-  //             maxZoom: 19,
-  //             urls: ['a', 'b', 'c', 'd'].map(
-  //               subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
-  //             )
-  //           }),
-  //           zIndex: 0
-  //         }),
-  //         new VectorLayer({
-  //           source: new VectorSource({
-  //             features: activeDashboardSource?.getFeatures()
-  //           })
-  //         })
-  //       ],
-  //       target: undefined
-  //     })
-
-  //     memoryMap.renderSync()
-
-  //     // Zoom sur la région spécifique
-  //     // map.getView().fit(targetExtent, { size: [800, 600] }) // Taille arbitraire du canvas
-
-  //     // Forcer le rendu et récupérer le canvas
-  //     const canvas = memoryMap.getViewport().querySelector('canvas')
-  //     if (canvas) {
-  //       dispatch(dashboardActions.setBriefImages([canvas.toDataURL('image/png')]))
-  //       dispatch(dashboardActions.setIsGeneratingBrief('ready'))
-  //     }
-
-  //     // Déclencher le rendu forcé
-
-  //     // return () => {
-  //     //   // inmemoryMap.setTarget(undefined) // Nettoyer la carte
-  //     // }
-  //   }
-
-  //   // return undefined
-  // }, [dispatch, isGeneratingBrief, map])
-
-  // useEffect(() => {
-  //   if (isGeneratingBrief === 'loading') {
-  //     const width = Math.round((297 * 72) / 25.4)
-  //     const height = Math.round((210 * 72) / 25.4)
-  //     const mapCanvas = document.createElement('canvas')
-  //     mapCanvas.width = width
-  //     mapCanvas.height = height
-  //     const mapContext = mapCanvas.getContext('2d')
-  //     const allCanvas = map.getViewport().querySelectorAll('canvas')
-  //     const activeDashboardSource = map
-  //       .getLayers()
-  //       .getArray()
-  //       .find((layer): layer is VectorLayerWithName => 'name' in layer && layer.name === Layers.DASHBOARD.code)
-  //       ?.getSource()
-
-  //     if (activeDashboardSource) {
-  //       activeDashboardSource.forEachFeature(feature => {
-  //         const extent = feature.getGeometry()?.getExtent()
-  //         const center = extent && getCenter(extent)
-  //         const centerLatLon = center && transform(center, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-
-  //         if (centerLatLon) {
-  //           dispatch(setFitToExtent(extent))
-  //         }
-  //       })
-
-  //       // if (allCanvas) {
-  //       //   allCanvas.forEach(canvas => {
-  //       //     mapContext?.drawImage(canvas, 0, 0)
-  //       //   })
-  //       dispatch(dashboardActions.setBriefImages([mapCanvas.toDataURL('image/png')]))
-  //       dispatch(dashboardActions.setIsGeneratingBrief('ready'))
-  //       // }
-  //     }
-  //   }
-  // }, [map, isGeneratingBrief, dispatch])
+  }, [
+    activeDashboard,
+    ampLayers?.entities,
+    dashboard?.dashboard.geom,
+    onImagesReady,
+    regulatoryLayers?.entities,
+    reportings,
+    shouldLoadImages,
+    vigilanceAreas?.entities
+  ])
 
   return null
+}
+
+function combineExtent(features: Feature[]): Extent {
+  const combinedExtent = createEmpty()
+
+  // Étendre l'étendue pour inclure chaque feature
+  features.forEach(feature => {
+    const geometry = feature.getGeometry()
+    if (geometry) {
+      extend(combinedExtent, geometry.getExtent())
+    }
+  })
+
+  return combinedExtent
 }

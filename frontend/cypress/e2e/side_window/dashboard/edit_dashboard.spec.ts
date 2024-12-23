@@ -31,7 +31,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
 
     cy.intercept('PUT', `/bff/v1/dashboards`).as('saveDashboard')
 
-    cy.clickButton('Enregistrer le tableau')
+    cy.clickButton('Enregistrer le tableau', { withoutScroll: true })
 
     cy.wait('@saveDashboard').then(interception => {
       if (!interception.response) {

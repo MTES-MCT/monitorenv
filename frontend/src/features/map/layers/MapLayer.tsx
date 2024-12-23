@@ -18,7 +18,6 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
       new TileLayer({
         className: Layers.BASE_LAYER.code,
         source: new XYZ({
-          crossOrigin: 'anonymous',
           maxZoom: 19,
           urls: ['a', 'b', 'c', 'd'].map(
             subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
@@ -31,8 +30,7 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
         className: Layers.BASE_LAYER.code,
         source: new OSM({
           attributions:
-            '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
-          crossOrigin: 'anonymous'
+            '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         }),
         zIndex: 0
       }),
@@ -40,7 +38,6 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
       new TileLayer({
         className: Layers.BASE_LAYER.code,
         source: new XYZ({
-          crossOrigin: 'anonymous',
           maxZoom: 19,
           url: `https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=${
             import.meta.env.FRONTEND_MAPBOX_KEY
@@ -52,7 +49,6 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
       new TileLayer({
         className: Layers.BASE_LAYER.code,
         source: new TileWMS({
-          crossOrigin: 'anonymous',
           params: { LAYERS: 'RASTER_MARINE_3857_WMSR', TILED: true },
           serverType: 'geoserver',
           // Countries have transparency, so do not fade tiles:
