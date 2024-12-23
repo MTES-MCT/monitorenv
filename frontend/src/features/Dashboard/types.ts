@@ -1,3 +1,4 @@
+import type { ExportImageType } from './components/Layers/ExportLayer'
 import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
 import type {
   RegulatoryLayerCompact,
@@ -48,7 +49,7 @@ export namespace Dashboard {
     amps: AMPFromAPI[]
     comments?: string
     controlUnits: ControlUnit.ControlUnit[]
-    images: string[] | undefined
+    images: ExportImageType[] | undefined
     name: string
     regulatoryAreas: RegulatoryLayerWithMetadata[]
     reportings: Reporting[]

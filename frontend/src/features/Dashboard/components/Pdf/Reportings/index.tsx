@@ -1,11 +1,14 @@
+import { Dashboard } from '@features/Dashboard/types'
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { THEME } from '@mtes-mct/monitor-ui'
-import { G, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
+import { G, Image, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
 
-import { layoutStyle } from '../style'
+import { areaStyle, layoutStyle } from '../style'
+import { getImage } from '../utils'
 
+import type { ExportImageType } from '../../Layers/ExportLayer'
 import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 
 const styles = StyleSheet.create({
@@ -16,8 +19,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontSize: 6.8,
     padding: '6 3',
-    width: '31.5%'
+    width: '100%'
   },
+  legendLabel: { ...layoutStyle.row, fontSize: 6.2, gap: 4 },
   reportingCard: {
     borderColor: THEME.color.gainsboro,
     borderRadius: 1,
@@ -158,10 +162,12 @@ const reportingStatusFlag = (reporting: Reporting) => {
 }
 
 export function Reportings({
+  images,
   reportings,
   subThemes,
   themes
 }: {
+  images: ExportImageType[]
   reportings: Reporting[]
   subThemes: ControlPlansSubThemeCollection
   themes: ControlPlansThemeCollection
@@ -176,54 +182,67 @@ export function Reportings({
         {reportings.length > 0 && (
           <View style={styles.legendCard}>
             <View style={layoutStyle.row}>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontWeight: 'bold' }}>Signalements en cours</Text>
-                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+              <View style={{ marginRight: 16 }}>
+                <View style={styles.legendLabel}>
+                  <Flag color={THEME.color.slateGray} />
+                  <Text style={{ fontWeight: 'bold' }}>Signalements en cours</Text>
+                </View>
+                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
                   <Flag color={THEME.color.blueGray} />
                   <Text>Observation</Text>
                 </View>
-                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
                   <Flag color={THEME.color.maximumRed} /> <Text>Suspicion d&apos;infraction</Text>
                 </View>
-                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
                   <Flag color={THEME.color.mediumSeaGreen} /> <Text>Rattaché à une mission</Text>
                 </View>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontWeight: 'bold' }}>Signalements archivés</Text>
-                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+              <View>
+                <View style={styles.legendLabel}>
+                  <FlagArchived />
+                  <Text style={{ fontWeight: 'bold' }}>Signalements archivés</Text>
+                </View>
+                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
                   <FlagArchivedObservation /> <Text>Observation</Text>
                 </View>
-                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
                   <FlagArchivedInfraction /> <Text>Suspicion d&apos;infraction</Text>
                 </View>
-                <View style={[layoutStyle.row, { fontSize: 6.2, marginTop: 6 }]}>
+                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
                   <FlagArchivedWithMission /> <Text>Rattaché à une mission</Text>
                 </View>
               </View>
             </View>
           </View>
         )}
-        {reportings.map(reporting => (
-          <View key={reporting.id} style={[styles.reportingCard, { position: 'relative' }]}>
-            <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>
-            <Text>
-              S. {getFormattedReportingId(reporting.reportingId)} -{' '}
-              {reporting.reportingSources?.map(source => source.displayedSource).join(', ')}
-            </Text>
-            <Text style={styles.reportingTarget}>{getTargetText(reporting)}</Text>
-            {reporting.createdAt && (
-              <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
-            )}
-            {!!reporting.themeId && (
-              <Text>
-                {themes[reporting.themeId]?.theme} /{' '}
-                {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
-              </Text>
-            )}
-            <Text style={layoutStyle.regular}>{reporting.description}</Text>
-          </View>
-        ))}
+        {reportings.map(reporting => {
+          const image = getImage(images, Dashboard.Layer.DASHBOARD_REPORTINGS, +reporting.id)
+
+          return (
+            <View style={areaStyle.wrapper} wrap={false}>
+              <View key={reporting.id} style={[styles.reportingCard, { position: 'relative' }]}>
+                <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>
+                <Text>
+                  S. {getFormattedReportingId(reporting.reportingId)} -{' '}
+                  {reporting.reportingSources?.map(source => source.displayedSource).join(', ')}
+                </Text>
+                <Text style={styles.reportingTarget}>{getTargetText(reporting)}</Text>
+                {reporting.createdAt && (
+                  <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
+                )}
+                {!!reporting.themeId && (
+                  <Text>
+                    {themes[reporting.themeId]?.theme} /{' '}
+                    {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
+                  </Text>
+                )}
+                <Text style={layoutStyle.regular}>{reporting.description}</Text>
+              </View>
+              {image && <Image src={image} />}
+            </View>
+          )
+        })}
       </View>
     </>
   )
