@@ -13,13 +13,13 @@ import type { HomeAppThunk } from '@store/index'
 export const DELETE_DASHBOARD_ERROR_MESSAGE = "Nous n'avons pas pu supprimer le tableau de bord"
 
 export const deleteDashboard =
-  (dashboard: Dashboard.Dashboard): HomeAppThunk =>
+  (key: string, dashboard: Dashboard.Dashboard): HomeAppThunk =>
   async dispatch => {
     const { id } = dashboard
     if (dashboard.createdAt) {
       try {
         await dispatch(dashboardsAPI.endpoints.delete.initiate(id))
-        dispatch(dashboardFiltersActions.deleteDashboardFilters({ id }))
+        dispatch(dashboardFiltersActions.deleteDashboardFilters({ id: key }))
       } catch (error) {
         dispatch(
           addSideWindowBanner({
@@ -32,5 +32,5 @@ export const deleteDashboard =
         )
       }
     }
-    dispatch(closeTab(generatePath(sideWindowPaths.DASHBOARD, { id })))
+    dispatch(closeTab(generatePath(sideWindowPaths.DASHBOARD, { id: key })))
   }
