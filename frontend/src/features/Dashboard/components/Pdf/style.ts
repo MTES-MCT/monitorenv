@@ -72,7 +72,6 @@ export const layoutStyle = StyleSheet.create({
     fontStyle: 'italic'
   },
   page: {
-    color: THEME.color.gunMetal,
     fontFamily: 'Mariane',
     fontWeight: 'normal',
     padding: '20 22'
@@ -120,6 +119,12 @@ export const areaStyle = StyleSheet.create({
   header: {
     backgroundColor: THEME.color.gainsboro,
     minHeight: 12.4,
-    padding: '2 14'
+    padding: '2'
+  },
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 6,
+    width: '100%'
   }
 })

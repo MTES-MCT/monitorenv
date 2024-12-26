@@ -3,6 +3,7 @@ import { getControlUnitsByIds } from '@api/controlUnitsAPI'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
@@ -11,6 +12,7 @@ import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Brief } from './Brief'
+import { ExportLayer, type ExportImageType } from '../Layers/ExportLayer'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
@@ -19,7 +21,11 @@ type GeneratePdfButtonProps = {
 }
 
 export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
+  const dispatch = useAppDispatch()
+
   const [isGenerating, setIsGenerating] = useState(false)
+  const [shouldLoadImage, setShouldLoadImage] = useState(false)
+
   const { subThemes, themes } = useGetControlPlans()
 
   const controlUnits = useAppSelector(state => getControlUnitsByIds(state, dashboard.controlUnitIds))
@@ -51,6 +57,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       amps,
       comments: dashboard.comments,
       controlUnits,
+      images: [],
       name: dashboard.name,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
@@ -60,6 +67,8 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       vigilanceAreas
     }),
     [
+      allLinkedAMPs,
+      allLinkedRegulatoryAreas,
       amps,
       dashboard.comments,
       dashboard.name,
@@ -69,9 +78,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       reportings?.entities,
       subThemes,
       themes,
-      allLinkedAMPs,
-      vigilanceAreas,
-      allLinkedRegulatoryAreas
+      vigilanceAreas
     ]
   )
 
@@ -79,35 +86,43 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const handleDownload = () => {
     setIsGenerating(true)
+    setShouldLoadImage(true)
+  }
 
-    update(<Brief brief={brief} />)
+  const updateBrief = (imagesToUpdate: ExportImageType[]) => {
+    update(<Brief brief={{ ...brief, images: imagesToUpdate }} />)
+    setShouldLoadImage(false)
   }
 
   useEffect(() => {
-    if (isGenerating && !pdf.loading && pdf.blob && pdf.url) {
+    if (isGenerating && !shouldLoadImage && !pdf.loading && pdf.blob && pdf.url) {
       setIsGenerating(false)
 
       const link = document.createElement('a')
       link.href = pdf.url
       link.download = `${dashboard.name}.pdf`
       link.click()
+      link.remove()
     }
-  }, [isGenerating, pdf.loading, pdf.blob, pdf.url, dashboard.name])
+  }, [dashboard.name, dispatch, isGenerating, pdf.blob, pdf.loading, pdf.url, shouldLoadImage])
 
   return (
-    <StyledLinkButton
-      $isDisabled={pdf.loading || isGenerating}
-      Icon={pdf.loading || isGenerating ? Icon.Reset : Icon.Document}
-      onClick={handleDownload}
-    >
-      {pdf.loading || isGenerating ? 'Chargement du brief' : 'Générer un brief'}
-    </StyledLinkButton>
+    <>
+      <ExportLayer onImagesReady={updateBrief} shouldLoadImages={shouldLoadImage} />
+      <StyledLinkButton
+        disabled={isGenerating}
+        Icon={isGenerating ? Icon.Reset : Icon.Document}
+        onClick={handleDownload}
+      >
+        {isGenerating ? 'Chargement du brief' : 'Générer un brief'}
+      </StyledLinkButton>
+    </>
   )
 }
 
-const StyledLinkButton = styled(Button)<{ $isDisabled: boolean }>`
+const StyledLinkButton = styled(Button)<{ disabled: boolean }>`
   ${p =>
-    p.$isDisabled &&
+    p.disabled &&
     `@keyframes spin {
     to {
       transform: rotate(360deg);

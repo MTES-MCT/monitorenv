@@ -1,7 +1,3 @@
-/* eslint-disable import/no-absolute-path */
-
-// TODO (04/11/2024) : use monitor-ui fonts instead of imported/duplicated ones
-
 import { Document, Page, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
@@ -34,19 +30,30 @@ export function Brief({ brief }: BriefProps) {
           <Comments comments={brief.comments} />
         </View>
         <View style={layoutStyle.section}>
-          <Reportings reportings={brief.reportings} subThemes={brief.subThemes} themes={brief.themes} />
+          <Reportings
+            images={brief.images ?? []}
+            reportings={brief.reportings}
+            subThemes={brief.subThemes}
+            themes={brief.themes}
+          />
         </View>
         <View style={layoutStyle.section}>
-          <AreaTable amps={brief.amps} regulatoryAreas={brief.regulatoryAreas} vigilanceAreas={brief.vigilanceAreas} />
+          <AreaTable
+            amps={brief.amps}
+            image={brief.images?.find(image => image.featureId === 'WHOLE_DASHBOARD')}
+            regulatoryAreas={brief.regulatoryAreas}
+            vigilanceAreas={brief.vigilanceAreas}
+          />
         </View>
         <View style={layoutStyle.section}>
-          <RegulatoryAreas regulatoryAreas={brief.regulatoryAreas} />
+          <RegulatoryAreas images={brief.images ?? []} regulatoryAreas={brief.regulatoryAreas} />
         </View>
         <View style={layoutStyle.section}>
-          <Amps amps={brief.amps} />
+          <Amps amps={brief.amps} images={brief.images ?? []} />
         </View>
         <View style={layoutStyle.section}>
           <VigilanceAreas
+            images={brief.images ?? []}
             linkedAMPs={brief.allLinkedAMPs}
             linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
             vigilanceAreas={brief.vigilanceAreas}

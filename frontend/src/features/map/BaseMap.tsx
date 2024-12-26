@@ -51,7 +51,7 @@ export type BaseMapChildrenProps = {
   pixel: number[] | undefined
 }
 
-const CENTERED_ON_FRANCE = [2.99049, 46.82801]
+export const CENTERED_ON_FRANCE = [2.99049, 46.82801]
 const initialMap = new OpenLayerMap({
   controls: defaultControls().extend([
     new Zoom({
@@ -197,7 +197,6 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   return (
     <MapWrapper>
       <MapContainer ref={mapElement} />
-
       {Children.map(
         children,
         child =>
