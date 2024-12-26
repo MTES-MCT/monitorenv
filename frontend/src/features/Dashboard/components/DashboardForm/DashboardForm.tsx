@@ -134,7 +134,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
               onExpandedAccordionClick={handleAccordionClick}
             />
           </Container>
-          <Footer dashboard={dashboard.dashboard} defaultName={dashboard.defaultName} />
+          <Footer dashboardForm={[key, dashboard]} />
         </>
       )}
     </>

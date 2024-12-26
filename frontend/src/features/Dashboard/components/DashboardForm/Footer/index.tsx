@@ -7,36 +7,35 @@ import styled from 'styled-components'
 
 import { GeneratePdfButton } from '../../Pdf/GeneratePdfButton'
 
-import type { Dashboard } from '@features/Dashboard/types'
+import type { DashboardType } from '@features/Dashboard/slice'
 
 type FooterProps = {
-  dashboard: Dashboard.Dashboard
-  defaultName: string | undefined
+  dashboardForm: [string, DashboardType]
 }
 
-export function Footer({ dashboard, defaultName }: FooterProps) {
+export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   const dispatch = useAppDispatch()
 
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [updatedName, setUpdatedName] = useState<string | undefined>(dashboard.name)
+  const [updatedName, setUpdatedName] = useState<string | undefined>(dashboard.dashboard.name)
 
   const save = () => {
-    dispatch(saveDashboard({ ...dashboard, name: updatedName ?? dashboard.name }))
+    dispatch(saveDashboard({ ...dashboard.dashboard, name: updatedName ?? dashboard.dashboard.name }))
     setIsSaveDialogOpen(false)
   }
 
   const handleSave = () => {
-    const hasDefaultName = defaultName === dashboard.name && !dashboard.createdAt
+    const hasDefaultName = dashboard.defaultName === dashboard.dashboard.name && !dashboard.dashboard.createdAt
     if (hasDefaultName) {
       setIsSaveDialogOpen(true)
     } else {
-      dispatch(saveDashboard({ ...dashboard }))
+      dispatch(saveDashboard({ ...dashboard.dashboard }))
     }
   }
 
   const confirmDelete = () => {
-    dispatch(deleteDashboard(dashboard))
+    dispatch(deleteDashboard(key, dashboard.dashboard))
 
     setIsDeleteDialogOpen(false)
   }
@@ -92,7 +91,7 @@ export function Footer({ dashboard, defaultName }: FooterProps) {
         </DeleteButton>
 
         <ButtonsWrapper>
-          <GeneratePdfButton dashboard={dashboard} />
+          <GeneratePdfButton dashboard={dashboard.dashboard} />
 
           <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>
             Enregistrer le tableau
