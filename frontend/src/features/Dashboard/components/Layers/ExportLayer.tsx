@@ -215,6 +215,7 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
       const allFeatures: Feature[] = []
       const mapCanvas = mapRef.current.getViewport().querySelector('canvas')!
       const mapContext = mapCanvas.getContext('2d')
+      mapContext?.save()
       let dashboardAreaFeature: Feature | undefined
 
       layersVectorSourceRef.current.clear(true)
@@ -268,7 +269,7 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
 
         // eslint-disable-next-line no-restricted-syntax
         for (const feature of allFeatures) {
-          mapContext?.reset()
+          mapContext?.restore()
           layersVectorSourceRef.current.clear(true)
           layersVectorSourceRef.current.addFeature(feature)
 
