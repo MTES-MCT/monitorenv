@@ -6,7 +6,7 @@ export function filterByUpdatedAt(
   date: string | undefined,
   specificPeriod: DateAsStringRange | undefined
 ): boolean {
-  if (!dateRange) {
+  if (!dateRange || !date) {
     return true
   }
   const now = customDayjs().utc()
