@@ -502,10 +502,9 @@ context('Side Window > Mission Form > Main Form', () => {
   it('Should display missing fields banner if mission is ended and has missing fields', () => {
     visitSideWindow()
     cy.fill('Période', 'Un mois')
-    cy.wait(1000)
-    cy.getDataCy('edit-mission-27')
-      .scrollIntoView({ offset: { left: 300, top: -100 } })
-      .click({ force: true })
+    cy.wait(500)
+    cy.get('.missions-table').scrollTo('bottom')
+    cy.getDataCy('edit-mission-27').click({ force: true })
     cy.get('.Component-Banner').contains('Veuillez compléter ou corriger les éléments en rouge')
   })
 
