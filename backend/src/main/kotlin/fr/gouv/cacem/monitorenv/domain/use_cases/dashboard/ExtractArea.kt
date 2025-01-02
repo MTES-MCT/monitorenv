@@ -18,7 +18,7 @@ class ExtractArea(
     private val ampRepository: IAMPRepository,
     private val vigilanceAreaRepository: IVigilanceAreaRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(DeleteDashboard::class.java)
+    private val logger = LoggerFactory.getLogger(ExtractArea::class.java)
 
     fun execute(geometry: Geometry): ExtractedAreaEntity {
         logger.info("GET extracted area")
