@@ -21,7 +21,7 @@ class CreateOrUpdateReporting(
 
     @Throws(IllegalArgumentException::class)
     fun execute(reporting: ReportingEntity): ReportingDTO {
-        logger.info("Create or update reporting: $reporting.id")
+        logger.info("Attempt to CREATE or UPDATE reporting ${reporting.id}")
         reporting.validate()
 
         val reportingToSaveIsAttachedToMission =
@@ -58,6 +58,7 @@ class CreateOrUpdateReporting(
                     seaFront = seaFront,
                 ),
             )
+        logger.info("Reporting ${savedReporting.reporting.id} created or updated")
 
         logger.info("Sending CREATE/UPDATE event for reporting id ${savedReporting.reporting.id}.")
         eventPublisher.publishEvent(

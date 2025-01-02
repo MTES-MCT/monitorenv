@@ -10,9 +10,9 @@ class GetDepartmentAreas(private val departmentAreaRepository: IDepartmentAreaRe
     private val logger = LoggerFactory.getLogger(GetDepartmentAreas::class.java)
 
     fun execute(): List<DepartmentAreaEntity> {
+        logger.info("Attempt to GET all department areas")
         val departmentAreas = departmentAreaRepository.findAll()
-
-        logger.info("Found ${departmentAreas.size} departmentAreas.")
+        logger.info("Found ${departmentAreas.size} department areas")
 
         return departmentAreas
     }

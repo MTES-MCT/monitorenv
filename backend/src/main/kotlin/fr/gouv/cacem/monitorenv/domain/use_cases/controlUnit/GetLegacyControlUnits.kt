@@ -10,6 +10,8 @@ class GetLegacyControlUnits(private val controlUnitRepository: IControlUnitRepos
     private val logger = LoggerFactory.getLogger(GetLegacyControlUnits::class.java)
 
     fun execute(): List<LegacyControlUnitEntity> {
+        logger.info("Attempt to GET all legacy control units")
+
         val controlUnits = controlUnitRepository.findAll()
         val controlUnitsWithActiveControlUnitResources =
             controlUnits.map { controlUnit ->
@@ -20,7 +22,7 @@ class GetLegacyControlUnits(private val controlUnitRepository: IControlUnitRepos
                         },
                 )
             }
-        logger.info("Found ${controlUnitsWithActiveControlUnitResources.size} control units.")
+        logger.info("Found ${controlUnitsWithActiveControlUnitResources.size} legacy control units")
 
         return controlUnitsWithActiveControlUnitResources.map { it.toLegacyControlUnit() }
     }

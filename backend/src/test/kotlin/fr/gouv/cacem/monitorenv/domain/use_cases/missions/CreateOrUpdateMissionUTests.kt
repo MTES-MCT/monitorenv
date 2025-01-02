@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -25,12 +23,15 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateMissionUTests {
     @Mock
     private val missionRepository: IMissionRepository = mock()
@@ -45,7 +46,7 @@ class CreateOrUpdateMissionUTests {
     private val applicationEventPublisher: ApplicationEventPublisher = mock()
 
     @Test
-    fun `should return the mission to update with computed facade and observationsByUnit`() {
+    fun `should return the mission to update with computed facade and observationsByUnit`(log: CapturedOutput) {
         // Given
         val wktReader = WKTReader()
 
@@ -169,6 +170,8 @@ class CreateOrUpdateMissionUTests {
                 },
             )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE mission ${missionToUpdate.id}")
+        assertThat(log.out).contains("Mission ${missionToUpdate.id} created or updated")
     }
 
     @Test

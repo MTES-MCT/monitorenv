@@ -10,15 +10,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetControlUnitContactsUTests {
     @Mock
     private val controlUnitContactRepository: IControlUnitContactRepository = mock()
 
     @Test
-    fun `execute should return all control unit contacts`() {
+    fun `execute should return all control unit contacts`(log: CapturedOutput) {
         val controlUnitContacts =
             listOf(
                 FullControlUnitContactDTO(
@@ -73,5 +76,7 @@ class GetControlUnitContactsUTests {
 
         assertThat(result).isEqualTo(controlUnitContacts)
         assertThat(result.size).isEqualTo(2)
+        assertThat(log.out).contains("Attempt to GET all control unit contacts")
+        assertThat(log.out).contains("Found ${result.size} control unit contacts")
     }
 }

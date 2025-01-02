@@ -9,15 +9,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetAdministrationByIdUTests {
     @Mock
     private val administrationRepository: IAdministrationRepository = mock()
 
     @Test
-    fun `execute should return an administration by its ID`() {
+    fun `execute should return an administration by its ID`(log: CapturedOutput) {
         val administrationId = 1
         val fullAdministration =
             FullAdministrationDTO(
@@ -35,5 +38,6 @@ class GetAdministrationByIdUTests {
         val result = GetAdministrationById(administrationRepository).execute(administrationId)
 
         assertThat(result).isEqualTo(fullAdministration)
+        assertThat(log.out).contains("GET administration $administrationId")
     }
 }

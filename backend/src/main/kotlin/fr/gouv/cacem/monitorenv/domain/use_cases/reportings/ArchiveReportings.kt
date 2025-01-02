@@ -11,11 +11,9 @@ class ArchiveReportings(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(ArchiveReportings::class.java)
 
-    @Throws(IllegalArgumentException::class)
     fun execute(ids: List<Int>) {
-        logger.info("Archive reportings: $ids")
-
-        require(ids.isNotEmpty()) { "No reportings to archive" }
-        return reportingRepository.archiveReportings(ids)
+        logger.info("Attempt to ARCHIVE reportings $ids")
+        reportingRepository.archiveReportings(ids)
+        logger.info("reportings $ids archived")
     }
 }

@@ -10,15 +10,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetControlUnitByIdUTests {
     @Mock
     private val controlUnitRepository: IControlUnitRepository = mock()
 
     @Test
-    fun `execute should return a control unit by its ID`() {
+    fun `execute should return a control unit by its ID`(log: CapturedOutput) {
         val controlUnitId = 1
         val fullControlUnit =
             FullControlUnitDTO(
@@ -48,5 +51,6 @@ class GetControlUnitByIdUTests {
         val result = GetControlUnitById(controlUnitRepository).execute(controlUnitId)
 
         assertThat(result).isEqualTo(fullControlUnit)
+        assertThat(log.out).contains("GET control unit $controlUnitId")
     }
 }

@@ -9,11 +9,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class ArchiveAdministrationUTests {
     @Mock
     private val administrationRepository: IAdministrationRepository = mock()
@@ -22,7 +25,7 @@ class ArchiveAdministrationUTests {
     private val canArchiveAdministration: CanArchiveAdministration = mock()
 
     @Test
-    fun `execute should archive when canArchive returns true`() {
+    fun `execute should archive when canArchive returns true`(log: CapturedOutput) {
         val administrationId = 1
 
         given(canArchiveAdministration.execute(administrationId)).willReturn(true)
@@ -30,6 +33,9 @@ class ArchiveAdministrationUTests {
         ArchiveAdministration(administrationRepository, canArchiveAdministration).execute(administrationId)
 
         verify(administrationRepository).archiveById(administrationId)
+
+        assertThat(log.out).contains("Attempt to ARCHIVE administration $administrationId")
+        assertThat(log.out).contains("Administration $administrationId archived")
     }
 
     @Test

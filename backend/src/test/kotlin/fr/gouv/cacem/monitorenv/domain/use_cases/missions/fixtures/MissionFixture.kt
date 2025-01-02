@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import java.time.ZonedDateTime
 import kotlin.random.Random
 
@@ -28,6 +29,13 @@ class MissionFixture {
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
             )
+        }
+
+        fun aMissionDTO(
+            missionEntity: MissionEntity = aMissionEntity(),
+            attachedReportingIds: List<Int> = listOf(),
+        ): MissionDTO {
+            return MissionDTO(mission = missionEntity, attachedReportingIds = attachedReportingIds)
         }
     }
 }

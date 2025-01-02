@@ -6,13 +6,17 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import org.slf4j.LoggerFactory
 
 @UseCase
 class CreateOrUpdateControlUnitContact(
     private val controlUnitRepository: IControlUnitRepository,
     private val controlUnitContactRepository: IControlUnitContactRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(CreateOrUpdateControlUnitContact::class.java)
+
     fun execute(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
+        logger.info("Attempt to CREATE or UPDATE control unit contact ${controlUnitContact.id}")
         val validControlUnitContact = validateSubscriptions(controlUnitContact)
         validatePhone(validControlUnitContact)
 
@@ -28,6 +32,8 @@ class CreateOrUpdateControlUnitContact(
                 createdOrUpdatedControlUnitContact.id,
             )
         }
+        logger.info("Control unit contact ${createdOrUpdatedControlUnitContact.id} created or updated")
+
         return createdOrUpdatedControlUnitContact
     }
 

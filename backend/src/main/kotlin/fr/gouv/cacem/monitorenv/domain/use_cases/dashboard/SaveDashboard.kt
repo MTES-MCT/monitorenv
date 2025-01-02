@@ -16,9 +16,12 @@ class SaveDashboard(
     private val logger = LoggerFactory.getLogger(SaveDashboard::class.java)
 
     fun execute(dashboard: DashboardEntity): DashboardEntity {
+        logger.info("Attempt to CREATE or UPDATE dashboard ${dashboard.id}")
         try {
             val seaFront = facadeAreasRepository.findFacadeFromGeometry(dashboard.geom)
-            return dashboardRepository.save(dashboard.copy(seaFront = seaFront))
+            val savedDashboard = dashboardRepository.save(dashboard.copy(seaFront = seaFront))
+            logger.info("Dashboard ${savedDashboard.id} created or updated")
+            return savedDashboard
         } catch (e: Exception) {
             val errorMessage = "dashboard ${dashboard.id} couldn't be saved"
             logger.error(errorMessage, e)

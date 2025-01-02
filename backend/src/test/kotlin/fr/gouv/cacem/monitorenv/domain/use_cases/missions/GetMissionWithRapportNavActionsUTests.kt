@@ -7,8 +7,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class GetMissionWithRapportNavActionsUTests {
     private val getMission: GetMission = mock()
 
@@ -18,7 +22,7 @@ class GetMissionWithRapportNavActionsUTests {
         GetMissionWithRapportNavActions(getMission, rapportNavMissionActionsRepository)
 
     @Test
-    fun `execute should return mission with rapportNavActions`() {
+    fun `execute should return mission with rapportNavActions`(log: CapturedOutput) {
         val missionId = 10
 
         val missionEntity = aMissionEntity()
@@ -37,6 +41,7 @@ class GetMissionWithRapportNavActionsUTests {
         val result = getMissionWithRapportNavActions.execute(missionId)
 
         assertThat(result).isEqualTo(mission.copy(hasRapportNavActions = rapportNavActions))
+        assertThat(log.out).contains("GET mission $missionId with rapportNavActions")
     }
 
     @Test

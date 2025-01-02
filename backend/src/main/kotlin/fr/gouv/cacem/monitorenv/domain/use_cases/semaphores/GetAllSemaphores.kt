@@ -10,8 +10,10 @@ class GetAllSemaphores(private val semaphoreRepository: ISemaphoreRepository) {
     private val logger = LoggerFactory.getLogger(GetAllSemaphores::class.java)
 
     fun execute(): List<SemaphoreEntity> {
+        logger.info("Attempt to GET all semaphores")
         val semaphores = semaphoreRepository.findAll()
-        logger.info("Found ${semaphores.size} semaphore(s)")
+        logger.info("Found ${semaphores.size} semaphores")
+
         return semaphores
     }
 }

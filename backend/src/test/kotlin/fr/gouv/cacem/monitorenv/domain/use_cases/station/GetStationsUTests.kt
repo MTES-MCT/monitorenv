@@ -9,15 +9,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetStationsUTests {
     @Mock
     private val stationRepository: IStationRepository = mock()
 
     @Test
-    fun `execute should return all stations`() {
+    fun `execute should return all stations`(log: CapturedOutput) {
         val stations =
             listOf(
                 FullStationDTO(
@@ -48,5 +51,7 @@ class GetStationsUTests {
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result).isEqualTo(stations)
+        assertThat(log.out).contains("Attempt to GET all stations")
+        assertThat(log.out).contains("Found ${result.size} stations")
     }
 }

@@ -47,6 +47,7 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
             """
             SELECT DISTINCT vigilanceArea.createdBy FROM VigilanceAreaModel vigilanceArea
             WHERE vigilanceArea.createdBy IS NOT NULL
+            ORDER BY vigilanceArea.createdBy
         """,
     )
     fun findAllTrigrams(): List<String>

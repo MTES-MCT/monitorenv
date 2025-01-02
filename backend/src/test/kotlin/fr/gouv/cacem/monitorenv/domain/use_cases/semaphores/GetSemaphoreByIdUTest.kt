@@ -11,22 +11,22 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
-class GetAllSemaphoresUTest {
+class GetSemaphoreByIdUTest {
     private val semaphoreRepository: ISemaphoreRepository = mock()
-    private val getAllSemaphores = GetAllSemaphores(semaphoreRepository)
+    private val getSemaphoreById = GetSemaphoreById(semaphoreRepository)
 
     @Test
     fun `execute should get all semaphores`(log: CapturedOutput) {
         // Given
-        val expectedSemaphores = listOf(aSemaphore(1), aSemaphore(2))
-        given(semaphoreRepository.findAll()).willReturn(expectedSemaphores)
+        val id = 1
+        val expectedSemaphore = aSemaphore(id)
+        given(semaphoreRepository.findById(id)).willReturn(expectedSemaphore)
 
         // When
-        val semaphores = getAllSemaphores.execute()
+        val semaphores = getSemaphoreById.execute(id)
 
         // Then
-        assertThat(semaphores).isEqualTo(expectedSemaphores)
-        assertThat(log.out).contains("Attempt to GET all semaphores")
-        assertThat(log.out).contains("Found ${semaphores.size} semaphores")
+        assertThat(semaphores).isEqualTo(expectedSemaphore)
+        assertThat(log.out).contains("GET semaphore $id")
     }
 }

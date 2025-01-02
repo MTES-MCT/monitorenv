@@ -10,9 +10,13 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFix
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import java.util.UUID
 
+@ExtendWith(OutputCaptureExtension::class)
 class SaveDashboardUTest {
     private val dashboardRepository: IDashboardRepository = mock()
     private val facadeAreasRepository: IFacadeAreasRepository = mock()
@@ -20,7 +24,7 @@ class SaveDashboardUTest {
     private val saveDashboard = SaveDashboard(dashboardRepository, facadeAreasRepository)
 
     @Test
-    fun `execute should find its sea front then save dashboard and return saved dashboard`() {
+    fun `execute should find its sea front then save dashboard and return saved dashboard`(log: CapturedOutput) {
         // Given
         val dashboard = aDashboard()
         val id = UUID.randomUUID()
@@ -36,6 +40,9 @@ class SaveDashboardUTest {
         assertThat(savedDashboard.id).isEqualTo(id)
         verify(dashboardRepository).save(dashboardWithFacade)
         verify(facadeAreasRepository).findFacadeFromGeometry(dashboard.geom)
+
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE dashboard ${dashboard.id}")
+        assertThat(log.out).contains("Dashboard ${savedDashboard.id} created or updated")
     }
 
     @Test

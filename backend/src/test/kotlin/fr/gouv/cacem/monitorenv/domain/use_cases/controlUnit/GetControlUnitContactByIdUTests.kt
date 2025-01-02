@@ -10,15 +10,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetControlUnitContactByIdUTests {
     @Mock
     private val controlUnitContactRepository: IControlUnitContactRepository = mock()
 
     @Test
-    fun `execute should return a control unit contact by its ID`() {
+    fun `execute should return a control unit contact by its ID`(log: CapturedOutput) {
         val controlUnitContactId = 1
         val fullControlUnitContact =
             FullControlUnitContactDTO(
@@ -49,5 +52,6 @@ class GetControlUnitContactByIdUTests {
         val result = GetControlUnitContactById(controlUnitContactRepository).execute(controlUnitContactId)
 
         assertThat(result).isEqualTo(fullControlUnitContact)
+        assertThat(log.out).contains("GET control unit contact $controlUnitContactId")
     }
 }

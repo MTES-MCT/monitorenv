@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.authorization
 
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.domain.entities.authorization.UserAuthorization
+import fr.gouv.cacem.monitorenv.domain.hash
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.JpaUserAuthorizationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -9,30 +10,38 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetIsAuthorizedUserUTests {
     @Mock
     private val userAuthorizationRepository: JpaUserAuthorizationRepository = mock()
 
     @Test
-    fun `execute Should return true When the user is found and super-user When the path is super-user protected`() {
+    fun `execute Should return true When the user is found and super-user When the path is super-user protected`(
+        log: CapturedOutput,
+    ) {
         given(userAuthorizationRepository.findByHashedEmail(any()))
             .willReturn(
                 UserAuthorization("58GE5S8VXE871FGGd2", true),
             )
 
         // When
+        val email = "test@test.com"
+        val hashedEmail = hash(email)
         val isAuthorized =
             GetIsAuthorizedUser(userAuthorizationRepository)
                 .execute(
-                    "test",
+                    email,
                     true,
                 )
 
         // Then
         assertThat(isAuthorized).isTrue
+        assertThat(log.out).contains("Is user $hashedEmail AUTHORIZED")
     }
 
     @Test

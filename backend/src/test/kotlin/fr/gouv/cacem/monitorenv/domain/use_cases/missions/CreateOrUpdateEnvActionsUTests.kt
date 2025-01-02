@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -26,11 +24,14 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrPatchEnvActionsUTests {
     @Mock
     private val departmentRepository: IDepartmentAreaRepository = mock()
@@ -45,7 +46,9 @@ class CreateOrPatchEnvActionsUTests {
     private val postgisFunctionRepository: IPostgisFunctionRepository = mock()
 
     @Test
-    fun `should return the mission to update with computed facade and department info for envActions`() {
+    fun `should return the mission to update with computed facade and department info for envActions`(
+        log: CapturedOutput,
+    ) {
         // Given
         val wktReader = WKTReader()
 
@@ -202,5 +205,11 @@ class CreateOrPatchEnvActionsUTests {
                 },
             )
         assertThat(createdMission).isEqualTo(expectedUpdatedMission)
+        assertThat(log.out).contains(
+            "Attempt to CREATE or UPDATE mission ${missionToUpdate.id} with envActions ${envActions.map { it.id }}",
+        )
+        assertThat(log.out).contains(
+            "Mission ${missionToUpdate.id} with envActions ${envActions.map { it.id }} created or updated",
+        )
     }
 }

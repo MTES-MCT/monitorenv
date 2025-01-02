@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory
 class DeleteReporting(private val reportingRepository: IReportingRepository) {
     private val logger: Logger = LoggerFactory.getLogger(DeleteReporting::class.java)
 
-    @Throws(IllegalArgumentException::class)
-    fun execute(id: Int?) {
-        logger.info("Delete reporting: $id")
-
-        require(id != null) { "No reporting to delete" }
+    fun execute(id: Int) {
+        logger.info("Attempt to DELETE reporting $id")
         reportingRepository.delete(id)
+        logger.info("reporting $id deleted")
     }
 }

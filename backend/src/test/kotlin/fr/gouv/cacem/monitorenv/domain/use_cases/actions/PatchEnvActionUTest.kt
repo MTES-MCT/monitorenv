@@ -12,10 +12,15 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixtu
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 
+@ExtendWith(OutputCaptureExtension::class)
 class PatchEnvActionUTest {
     private val envActionRepository: IEnvActionRepository = mock()
     private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
@@ -23,7 +28,7 @@ class PatchEnvActionUTest {
     private val objectMapper: ObjectMapper = ObjectMapper()
 
     @Test
-    fun `execute() should return the patched entity`() {
+    fun `execute() should return the patched entity`(log: CapturedOutput) {
         // Given
         val id = UUID.randomUUID()
         val today = ZonedDateTime.now()
@@ -59,6 +64,8 @@ class PatchEnvActionUTest {
         assertThat(savedEnvAction.actionEndDateTimeUtc).isEqualTo(envActionPatched.actionEndDateTimeUtc)
         assertThat(savedEnvAction.observationsByUnit).isEqualTo(envActionPatched.observationsByUnit)
         verify(envActionRepository).save(envActionPatched)
+        assertThat(log.out).contains("Attempt to PATCH envaction $id")
+        assertThat(log.out).contains("envaction $id patched")
     }
 
     @Test

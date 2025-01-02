@@ -26,7 +26,7 @@ class DeleteMission(
     ) {
         require(missionId != null) { "No mission to delete" }
 
-        logger.info("Delete mission $missionId")
+        logger.info("Attempt to delete mission $missionId")
 
         val missionToDelete = getFullMission.execute(missionId)
 
@@ -73,6 +73,7 @@ class DeleteMission(
             )
         }
 
-        return missionRepository.delete(missionId)
+        missionRepository.delete(missionId)
+        logger.info("Mission $missionId deleted")
     }
 }

@@ -7,10 +7,15 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingSourceRepository
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class DeleteControlUnitUTests {
     private val controlUnitRepository: IControlUnitRepository = mock()
 
@@ -32,7 +37,7 @@ class DeleteControlUnitUTests {
         )
 
     @Test
-    fun `execute should delete control unit when canDeleteControlUnit returns true`() {
+    fun `execute should delete control unit when canDeleteControlUnit returns true`(log: CapturedOutput) {
         val controlUnitId = 1
 
         given(canDeleteControlUnit.execute(controlUnitId)).willReturn(true)
@@ -40,6 +45,8 @@ class DeleteControlUnitUTests {
         deleteControlUnit.execute(controlUnitId)
 
         verify(controlUnitRepository).deleteById(controlUnitId)
+        assertThat(log.out).contains("Attempt to DELETE control unit $controlUnitId")
+        assertThat(log.out).contains("Control unit $controlUnitId deleted")
     }
 
     @Test

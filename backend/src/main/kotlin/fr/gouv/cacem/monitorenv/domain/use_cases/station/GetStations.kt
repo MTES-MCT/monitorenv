@@ -10,9 +10,10 @@ class GetStations(private val stationRepository: IStationRepository) {
     private val logger = LoggerFactory.getLogger(GetStations::class.java)
 
     fun execute(): List<FullStationDTO> {
+        logger.info("Attempt to GET all stations")
         val fullStations = stationRepository.findAll()
 
-        logger.info("Found ${fullStations.size} stations.")
+        logger.info("Found ${fullStations.size} stations")
 
         return fullStations
     }

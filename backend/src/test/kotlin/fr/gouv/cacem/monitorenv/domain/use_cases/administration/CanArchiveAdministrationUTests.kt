@@ -10,15 +10,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CanArchiveAdministrationUTests {
     @Mock
     private val administrationRepository: IAdministrationRepository = mock()
 
     @Test
-    fun `execute should return true when all control units are archived`() {
+    fun `execute should return true when all control units are archived`(log: CapturedOutput) {
         val administrationId = 1
         val fullAdministration =
             FullAdministrationDTO(
@@ -47,6 +50,7 @@ class CanArchiveAdministrationUTests {
         val result = CanArchiveAdministration(administrationRepository).execute(administrationId)
 
         assertThat(result).isTrue
+        assertThat(log.out).contains("Can administration $administrationId be archived")
     }
 
     @Test
