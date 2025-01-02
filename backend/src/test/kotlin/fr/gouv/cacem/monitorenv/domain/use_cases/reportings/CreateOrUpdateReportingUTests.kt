@@ -28,11 +28,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateReportingUTests {
     @MockBean
     private lateinit var reportingRepository: IReportingRepository
@@ -56,7 +59,7 @@ class CreateOrUpdateReportingUTests {
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @Test
-    fun `should return new or updated reporting`() {
+    fun `should return new or updated reporting`(log: CapturedOutput) {
         // Given
         val aReportingWithSemaphore = aReporting(reportingSources = listOf(aReportingSourceSemaphore()))
         val reportingWithSemaphoreDTO =
@@ -136,6 +139,8 @@ class CreateOrUpdateReportingUTests {
         // Then
         verify(reportingRepository, times(1)).save(aReportingWithControlUnit)
         assertThat(createdReportingWithControlUnit).isEqualTo(reportingWithControlUnitDTO)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE reporting ${aReportingWithControlUnit.id}")
+        assertThat(log.out).contains("Reporting ${createdReportingWithControlUnit.reporting.id} created or updated")
     }
 
     @Test

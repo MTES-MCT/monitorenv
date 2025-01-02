@@ -18,12 +18,14 @@ class GetControlPlans(
     private val logger = LoggerFactory.getLogger(GetControlPlans::class.java)
 
     fun execute(): ControlPlanThemes {
+        logger.info("Attempt to GET all control plans")
         val controlPlanThemes = controlPlanThemeRepository.findAll()
         val controlPlanSubThemes = controlPlanSubThemeRepository.findAll()
         val controlPlanTags = controlPlanTagRepository.findAll()
         logger.info(
-            "Found ${controlPlanThemes.size} control plan themes, ${controlPlanSubThemes.size} subthemes, and ${controlPlanTags.size} tags ",
+            "Found ${controlPlanThemes.size} control plan themes, ${controlPlanSubThemes.size} control plan subthemes and ${controlPlanTags.size} control plan tags",
         )
+
         return Triple(controlPlanThemes, controlPlanSubThemes, controlPlanTags)
     }
 }

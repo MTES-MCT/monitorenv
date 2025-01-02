@@ -21,7 +21,7 @@ class CanDeleteMission(
         missionId: Int,
         source: MissionSourceEnum,
     ): CanDeleteMissionResponse {
-        logger.info("Check if mission $missionId can be deleted")
+        logger.info("Can mission $missionId be deleted")
 
         if (source == MissionSourceEnum.MONITORFISH) {
             return canMonitorFishDeleteMission(missionId)
@@ -85,9 +85,7 @@ class CanDeleteMission(
                 )
             }
 
-            if (fishActions.isNotEmpty() &&
-                !rapportNavActions.containsActionsAddedByUnit
-            ) {
+            if (fishActions.isNotEmpty()) {
                 return CanDeleteMissionResponse(
                     canDelete = false,
                     sources = listOf(MissionSourceEnum.MONITORFISH),

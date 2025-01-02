@@ -3,14 +3,18 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @UseCase
 class GetReportingById(
     private val reportingRepository: IReportingRepository,
 ) {
-    fun execute(id: Int): ReportingDTO {
-        val reporting = reportingRepository.findById(id)
+    private val logger: Logger = LoggerFactory.getLogger(DeleteReportings::class.java)
 
-        return reporting
+    fun execute(id: Int): ReportingDTO {
+        logger.info("GET reporting $id")
+
+        return reportingRepository.findById(id)
     }
 }

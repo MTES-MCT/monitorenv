@@ -27,13 +27,13 @@ import jakarta.persistence.NamedEntityGraph
 import jakarta.persistence.NamedSubgraph
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
-import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
@@ -198,8 +198,7 @@ class MissionModel(
     val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
     @Column(name = "completed_by") val completedBy: String? = null,
     @Column(name = "created_at_utc", updatable = false)
-    @CreationTimestamp
-    val createdAtUtc: Instant? = null,
+    var createdAtUtc: Instant?,
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -234,7 +233,7 @@ class MissionModel(
     @Column(name = "observations_cnsp") val observationsCnsp: String? = null,
     @Column(name = "open_by") val openBy: String? = null,
     @Column(name = "start_datetime_utc") val startDateTimeUtc: Instant,
-    @Column(name = "updated_at_utc") @UpdateTimestamp val updatedAtUtc: Instant? = null,
+    @Column(name = "updated_at_utc") var updatedAtUtc: Instant?,
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val mappedControlUnits =
@@ -369,6 +368,8 @@ class MissionModel(
                     observationsCnsp = mission.observationsCnsp,
                     openBy = mission.openBy,
                     startDateTimeUtc = mission.startDateTimeUtc.toInstant(),
+                    createdAtUtc = mission.createdAtUtc?.toInstant(),
+                    updatedAtUtc = mission.updatedAtUtc?.toInstant(),
                 )
 
             mission.envActions?.map {
@@ -422,4 +423,14 @@ class MissionModel(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
+    @PrePersist
+    private fun prePersist() {
+        this.createdAtUtc = Instant.now()
+    }
+
+    @PreUpdate
+    private fun preUpdate() {
+        this.updatedAtUtc = Instant.now()
+    }
 }

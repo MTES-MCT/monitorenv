@@ -9,9 +9,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CanDeleteControlUnitUTests {
     @MockBean
     private lateinit var missionRepository: IMissionRepository
@@ -20,7 +23,9 @@ class CanDeleteControlUnitUTests {
     private lateinit var reportingRepository: IReportingRepository
 
     @Test
-    fun `execute should return TRUE there are neither missions nor reportings attached to this control unit`() {
+    fun `execute should return TRUE there are neither missions nor reportings attached to this control unit`(
+        log: CapturedOutput,
+    ) {
         val controlUnitId = 1
 
         given(missionRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
@@ -30,6 +35,7 @@ class CanDeleteControlUnitUTests {
             CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)
 
         assertThat(result).isTrue()
+        assertThat(log.out).contains("Can control unit $controlUnitId be deleted")
     }
 
     @Test

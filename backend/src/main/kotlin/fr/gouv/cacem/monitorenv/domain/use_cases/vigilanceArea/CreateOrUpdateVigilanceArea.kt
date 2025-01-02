@@ -17,15 +17,18 @@ class CreateOrUpdateVigilanceArea(
     private val logger = LoggerFactory.getLogger(SaveDashboard::class.java)
 
     fun execute(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity {
+        logger.info("Attempt to CREATE or UPDATE vigilance area ${vigilanceArea.id}")
         try {
             val seaFront =
                 vigilanceArea.geom?.let { nonNullGeom ->
                     facadeAreasRepository.findFacadeFromGeometry(nonNullGeom)
                 }
 
-            return vigilanceAreaRepository.save(vigilanceArea.copy(seaFront = seaFront))
+            val savedVigilanceArea = vigilanceAreaRepository.save(vigilanceArea.copy(seaFront = seaFront))
+            logger.info("Vigilance area ${savedVigilanceArea.id} created or updated")
+            return savedVigilanceArea
         } catch (e: Exception) {
-            val errorMessage = "dashboard ${vigilanceArea.id} couldn't be saved"
+            val errorMessage = "vigilance area ${vigilanceArea.id} couldn't be saved"
             logger.error(errorMessage, e)
             throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, message = errorMessage)
         }

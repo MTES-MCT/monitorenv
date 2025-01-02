@@ -23,7 +23,7 @@ interface IDBControlUnitRepository : JpaRepository<ControlUnitModel, Int> {
         value = """
         SELECT *
         FROM control_units
-        ORDER BY name ASC
+        ORDER BY name
         """,
         nativeQuery = true,
     )

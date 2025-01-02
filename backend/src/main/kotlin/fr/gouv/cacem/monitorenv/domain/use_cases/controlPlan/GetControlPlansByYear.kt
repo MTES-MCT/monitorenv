@@ -18,10 +18,14 @@ class GetControlPlansByYear(
     private val logger = LoggerFactory.getLogger(GetControlPlansByYear::class.java)
 
     fun execute(year: Int): ControlPlanByYear {
+        logger.info("Attempt to GET all control plans for year $year")
         val controlPlanThemes = controlPlanThemeRepository.findByYear(year)
         val controlPlanSubThemes = controlPlanSubThemeRepository.findByYear(year)
         val controlPlanTags = controlPlanTagRepository.findByYear(year)
-        logger.info("Found ${controlPlanSubThemes.size} control plan subthemes for year $year")
+        logger.info(
+            "Found ${controlPlanThemes.size} control plan themes, ${controlPlanSubThemes.size} control plan subthemes and ${controlPlanTags.size} control plan tags for year $year",
+        )
+
         return Triple(controlPlanThemes, controlPlanSubThemes, controlPlanTags)
     }
 }

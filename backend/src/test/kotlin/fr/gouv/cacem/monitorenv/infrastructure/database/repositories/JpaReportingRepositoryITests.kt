@@ -18,6 +18,7 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
+import java.time.Year
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -430,7 +431,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(reportingDTO.reporting.id).isEqualTo(12)
-        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2400001)
+
+        val currentYear = Year.now().value.toString()
+        val reportingId = (currentYear.substring(currentYear.length - 2) + "00001").toLong()
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(reportingId)
         assertThat(reportingDTO.reporting.reportingSources[0].sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
         assertThat(reportingDTO.reporting.reportingSources[0].semaphoreId).isEqualTo(21)
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)

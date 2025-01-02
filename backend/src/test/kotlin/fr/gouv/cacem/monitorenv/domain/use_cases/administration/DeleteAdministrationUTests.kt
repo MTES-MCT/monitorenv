@@ -4,13 +4,17 @@ import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class DeleteAdministrationUTests {
     @MockBean
     private lateinit var administrationRepository: IAdministrationRepository
@@ -19,7 +23,7 @@ class DeleteAdministrationUTests {
     private lateinit var canDeleteAdministration: CanDeleteAdministration
 
     @Test
-    fun `execute should delete when canDeleteAdministration returns true`() {
+    fun `execute should delete when canDeleteAdministration returns true`(log: CapturedOutput) {
         val administrationId = 1
 
         given(canDeleteAdministration.execute(administrationId)).willReturn(true)
@@ -27,6 +31,8 @@ class DeleteAdministrationUTests {
         DeleteAdministration(administrationRepository, canDeleteAdministration).execute(administrationId)
 
         verify(administrationRepository).deleteById(administrationId)
+        assertThat(log.out).contains("Attempt to DELETE administration $administrationId")
+        assertThat(log.out).contains("Administration $administrationId deleted")
     }
 
     @Test

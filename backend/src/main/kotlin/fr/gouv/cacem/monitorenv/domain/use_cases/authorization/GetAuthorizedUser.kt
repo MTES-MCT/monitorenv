@@ -14,10 +14,12 @@ class GetAuthorizedUser(
 
     fun execute(email: String): UserAuthorization {
         val hashedEmail = hash(email)
+        logger.info("Attempt to GET user $hashedEmail")
 
         val userAuthorization = userAuthorizationRepository.findByHashedEmail(hashedEmail)
 
         if (userAuthorization != null) {
+            logger.info("Found user $hashedEmail")
             return userAuthorization
         }
 

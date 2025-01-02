@@ -9,8 +9,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class GetFullMissionWithFishAndRapportNavActionsUTest {
     private val getFullMission: GetFullMission = mock()
 
@@ -26,7 +30,9 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         )
 
     @Test
-    fun `execute should return that api succeeded and a mission with fish and rapportnav information`() {
+    fun `execute should return that api succeeded and a mission with fish and rapportnav information`(
+        log: CapturedOutput,
+    ) {
         // Given
         val missionId = 100
 
@@ -47,6 +53,8 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         assertThat(fullMission.second.mission).isEqualTo(missionFromDatabase.mission)
         assertThat(fullMission.second.fishActions).isEqualTo(fishActions)
         assertThat(fullMission.second.hasRapportNavActions?.containsActionsAddedByUnit).isEqualTo(true)
+
+        assertThat(log.out).contains("GET full mission $missionId with fish and rapport nav action")
     }
 
     @Test

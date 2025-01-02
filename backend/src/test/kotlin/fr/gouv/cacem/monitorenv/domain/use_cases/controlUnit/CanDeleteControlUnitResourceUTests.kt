@@ -8,15 +8,19 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CanDeleteControlUnitResourceUTests {
-    @MockBean private lateinit var missionRepository: IMissionRepository
+    @MockBean
+    private lateinit var missionRepository: IMissionRepository
 
     @Test
-    fun `execute should return true when missions are empty`() {
+    fun `execute should return true when missions are empty`(log: CapturedOutput) {
         val controlUnitResourceId = 1
 
         given(missionRepository.findByControlUnitResourceId(controlUnitResourceId))
@@ -25,6 +29,7 @@ class CanDeleteControlUnitResourceUTests {
         val result = CanDeleteControlUnitResource(missionRepository).execute(controlUnitResourceId)
 
         assertThat(result).isTrue
+        assertThat(log.out).contains("Can control unit resource $controlUnitResourceId be deleted")
     }
 
     @Test

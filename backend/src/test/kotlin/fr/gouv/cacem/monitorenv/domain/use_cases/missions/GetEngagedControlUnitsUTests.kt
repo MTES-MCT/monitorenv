@@ -11,16 +11,19 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetEngagedControlUnitsUTests {
     @MockBean
     private lateinit var getFullMissions: GetFullMissions
 
     @Test
-    fun `execute() should return engaged control units`() {
+    fun `execute() should return engaged control units`(log: CapturedOutput) {
         val firstControlUnit =
             LegacyControlUnitEntity(
                 id = 123,
@@ -105,5 +108,7 @@ class GetEngagedControlUnitsUTests {
         assertThat(controlUnits.first().first.name).isEqualTo("Control Unit Name")
         assertThat(controlUnits.first().second.first()).isEqualTo(MissionSourceEnum.MONITORENV)
         assertThat(controlUnits.first().second.last()).isEqualTo(MissionSourceEnum.MONITORFISH)
+        assertThat(log.out).contains("Attempt to GET all engaged control units")
+        assertThat(log.out).contains("Found ${controlUnits.size} engaged control unit")
     }
 }

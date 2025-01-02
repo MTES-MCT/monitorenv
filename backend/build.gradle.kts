@@ -83,11 +83,14 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock-jvm:3.0.1")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.5")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.5") {
+        exclude(group = "junit", module = "junit")
+    }
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.2")
     testImplementation("org.testcontainers:junit-jupiter:1.20.3")
     testImplementation("net.java.dev.jna:jna:5.15.0")
     testImplementation("net.ttddyy:datasource-proxy:1.10.1")
+    testImplementation("io.mockk:mockk:1.13.14")
 }
 
 group = "fr.gouv.cacem"

@@ -10,8 +10,8 @@ class DeleteVigilanceArea(private val vigilanceAreaRepository: IVigilanceAreaRep
     private val logger: Logger = LoggerFactory.getLogger(DeleteVigilanceArea::class.java)
 
     fun execute(id: Int) {
-        logger.info("Delete vigilance area: $id")
-
+        logger.info("Attempt to DELETE vigilance area $id")
         vigilanceAreaRepository.delete(id)
+        logger.info("Vigilance area $id deleted")
     }
 }

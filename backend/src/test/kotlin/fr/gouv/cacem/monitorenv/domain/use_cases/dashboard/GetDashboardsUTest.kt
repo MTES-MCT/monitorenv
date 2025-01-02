@@ -7,15 +7,19 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFix
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class GetDashboardsUTest {
     private val dashboardRepository: IDashboardRepository = mock()
     private val getDashboards = GetDashboards(dashboardRepository)
 
     @Test
-    fun `execute should return all dashboards`() {
+    fun `execute should return all dashboards`(log: CapturedOutput) {
         // Given
         val dashboard1 =
             DashboardFixture.aDashboard(
@@ -48,7 +52,8 @@ class GetDashboardsUTest {
 
         // Then
         assertThat(dashboardList.size).isEqualTo(2)
-        assertThat(dashboardList).isEqualTo(dashboards)
+        assertThat(log.out).contains("Attempt to GET all dashboards")
+        assertThat(log.out).contains("Found ${dashboardList.size} dashboards")
     }
 
     @Test

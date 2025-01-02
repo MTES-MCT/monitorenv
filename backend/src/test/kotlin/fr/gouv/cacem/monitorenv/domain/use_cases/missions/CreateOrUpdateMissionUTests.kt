@@ -24,12 +24,15 @@ import org.locationtech.jts.geom.MultiPoint
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateMissionUTests {
     @MockBean
     private lateinit var missionRepository: IMissionRepository
@@ -44,7 +47,7 @@ class CreateOrUpdateMissionUTests {
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @Test
-    fun `should return the mission to update with computed facade and observationsByUnit`() {
+    fun `should return the mission to update with computed facade and observationsByUnit`(log: CapturedOutput) {
         // Given
         val wktReader = WKTReader()
 
@@ -168,6 +171,8 @@ class CreateOrUpdateMissionUTests {
                 },
             )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE mission ${missionToUpdate.id}")
+        assertThat(log.out).contains("Mission ${missionToUpdate.id} created or updated")
     }
 
     @Test

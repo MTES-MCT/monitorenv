@@ -7,15 +7,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetDepartmentAreasUTests {
     @MockBean
     private lateinit var departmentAreaRepository: IDepartmentAreaRepository
 
     @Test
-    fun `execute should return all department areas`() {
+    fun `execute should return all department areas`(log: CapturedOutput) {
         val departmentAreas =
             listOf(
                 DepartmentAreaEntity(
@@ -34,7 +37,8 @@ class GetDepartmentAreasUTests {
 
         val result = GetDepartmentAreas(departmentAreaRepository).execute()
 
-        assertThat(result.size).isEqualTo(2)
         assertThat(result).isEqualTo(departmentAreas)
+        assertThat(log.out).contains("Attempt to GET all department areas")
+        assertThat(log.out).contains("Found ${result.size} department areas")
     }
 }

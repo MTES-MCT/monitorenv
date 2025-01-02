@@ -25,6 +25,7 @@ class GetIsAuthorizedUser(
          * protected, reject
          */
         val hashedEmail = hash(email)
+        logger.info("Is user $hashedEmail AUTHORIZED")
         return userAuthorizationRepository.findByHashedEmail(hashedEmail)?.isSuperUser ?: false
     }
 }

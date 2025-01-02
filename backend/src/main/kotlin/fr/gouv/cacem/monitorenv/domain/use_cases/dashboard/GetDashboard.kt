@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import org.slf4j.LoggerFactory
-import java.util.*
+import java.util.UUID
 
 @UseCase
 class GetDashboard(
@@ -15,6 +15,7 @@ class GetDashboard(
     private val logger = LoggerFactory.getLogger(GetDashboard::class.java)
 
     fun execute(id: UUID): DashboardEntity {
+        logger.info("GET dashboard $id")
         val dashboard = dashboardRepository.findById(id)
 
         if (dashboard == null) {

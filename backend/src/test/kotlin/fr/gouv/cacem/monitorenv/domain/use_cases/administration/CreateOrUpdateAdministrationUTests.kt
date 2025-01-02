@@ -9,15 +9,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateAdministrationUTests {
     @MockBean
     private lateinit var administrationRepository: IAdministrationRepository
 
     @Test
-    fun `execute should return save result`() {
+    fun `execute should return save result`(log: CapturedOutput) {
         val newAdministration =
             AdministrationEntity(
                 isArchived = false,
@@ -32,5 +35,7 @@ class CreateOrUpdateAdministrationUTests {
 
         verify(administrationRepository, times(1)).save(newAdministration)
         assertThat(result).isEqualTo(expectedAdministration)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE administration ${newAdministration.id}")
+        assertThat(log.out).contains("Created or updated administration ${result.id}")
     }
 }
