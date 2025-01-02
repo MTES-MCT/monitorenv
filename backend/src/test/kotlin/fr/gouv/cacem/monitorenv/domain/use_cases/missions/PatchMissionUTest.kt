@@ -12,18 +12,22 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixtur
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
 import kotlin.random.Random
 
+@ExtendWith(OutputCaptureExtension::class)
 class PatchMissionUTest {
     private val missionRepository: IMissionRepository = mock()
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
     private val patchMission: PatchMission = PatchMission(missionRepository, patchEntity)
 
     @Test
-    fun `execute() should return the patched entity`() {
+    fun `execute() should return the patched entity`(log: CapturedOutput) {
         // Given
         val id = Random.nextInt()
         val today = ZonedDateTime.now()
@@ -56,6 +60,8 @@ class PatchMissionUTest {
         assertThat(savedMission.mission.startDateTimeUtc).isEqualTo(missionPatched.startDateTimeUtc)
         assertThat(savedMission.mission.endDateTimeUtc).isEqualTo(missionPatched.endDateTimeUtc)
         verify(missionRepository).save(missionPatched)
+        assertThat(log.out).contains("Attempt to PATCH mission $id")
+        assertThat(log.out).contains("Mission $id patched")
     }
 
     @Test
@@ -75,6 +81,6 @@ class PatchMissionUTest {
         val exception =
             assertThrows<BackendUsageException> { patchMission.execute(id, patchableMission) }
 
-        assertThat(exception.message).isEqualTo("mission $id not found")
+        assertThat(exception.message).isEqualTo("Mission $id not found")
     }
 }

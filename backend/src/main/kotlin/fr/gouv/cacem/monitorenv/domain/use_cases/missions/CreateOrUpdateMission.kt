@@ -20,6 +20,8 @@ class CreateOrUpdateMission(
 
     @Throws(IllegalArgumentException::class)
     fun execute(mission: MissionEntity): MissionEntity {
+        logger.info("Attempt to CREATE or UPDATE mission ${mission.id}")
+
         val normalizedMission =
             mission.geom?.let { nonNullGeom ->
                 mission.copy(geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom))
@@ -39,6 +41,7 @@ class CreateOrUpdateMission(
             )
         val savedMission = missionRepository.save(missionToSave)
 
+        logger.info("Mission ${savedMission.mission.id} created or updated")
         if (savedMission.mission.id == null) {
             throw IllegalArgumentException("Mission id is null")
         }

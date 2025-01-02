@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSource
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
+import java.util.UUID
 
 class ReportingFixture {
     companion object {
@@ -19,6 +20,7 @@ class ReportingFixture {
             reportingSources: List<ReportingSourceEntity> = listOf(),
             missionId: Int? = null,
             attachedToMissionAtUtc: ZonedDateTime? = null,
+            attachedEnvActionId: UUID? = null,
         ): ReportingEntity {
             val wktReader = WKTReader()
 
@@ -49,12 +51,17 @@ class ReportingFixture {
                 isInfractionProven = true,
                 missionId = missionId,
                 attachedToMissionAtUtc = attachedToMissionAtUtc,
+                attachedEnvActionId = attachedEnvActionId,
             )
         }
 
-        fun aReportingDTO(id: Int? = 1): ReportingDTO {
+        fun aReportingDTO(
+            id: Int? = 1,
+            attachedEnvActionId: UUID? = null,
+            reporting: ReportingEntity = aReporting(id, attachedEnvActionId = attachedEnvActionId),
+        ): ReportingDTO {
             return ReportingDTO(
-                reporting = aReporting(id),
+                reporting = reporting,
                 reportingSources =
                     listOf(
                         ReportingSourceDTO(

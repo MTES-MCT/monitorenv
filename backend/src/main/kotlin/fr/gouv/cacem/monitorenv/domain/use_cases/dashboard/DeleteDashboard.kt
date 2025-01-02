@@ -12,8 +12,8 @@ class DeleteDashboard(
     private val logger = LoggerFactory.getLogger(DeleteDashboard::class.java)
 
     fun execute(id: UUID) {
+        logger.info("Attempt to DELETE dashboard $id")
         dashboardRepository.delete(id)
-
-        logger.info("Deleted Dashboard: $id")
+        logger.info("Dashboard $id deleted")
     }
 }

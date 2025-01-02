@@ -19,9 +19,12 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateControlUnitContactUTests {
     @Mock
     private val controlUnitRepository: IControlUnitRepository = mock()
@@ -30,7 +33,7 @@ class CreateOrUpdateControlUnitContactUTests {
     private val controlUnitContactRepository: IControlUnitContactRepository = mock()
 
     @Test
-    fun `execute should return the expected result`() {
+    fun `execute should return the expected result`(log: CapturedOutput) {
         // Given
         val newControlUnitContact =
             ControlUnitContactEntity(
@@ -82,6 +85,8 @@ class CreateOrUpdateControlUnitContactUTests {
 
         BDDMockito.verify(controlUnitRepository).findById(repositoryOutputMock.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(newControlUnitContact)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE control unit contact ${newControlUnitContact.id}")
+        assertThat(log.out).contains("Control unit contact ${result.id} created or updated")
     }
 
     @Test

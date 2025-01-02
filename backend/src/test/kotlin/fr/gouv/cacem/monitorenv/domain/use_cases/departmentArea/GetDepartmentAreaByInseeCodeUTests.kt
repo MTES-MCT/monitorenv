@@ -8,15 +8,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetDepartmentAreaByInseeCodeUTests {
     @Mock
     private val departmentAreaRepository: IDepartmentAreaRepository = mock()
 
     @Test
-    fun `execute should return a department area by its INSEE Code`() {
+    fun `execute should return a department area by its INSEE Code`(log: CapturedOutput) {
         val departmentAreaId = "1"
         val departmentArea =
             DepartmentAreaEntity(
@@ -30,5 +33,6 @@ class GetDepartmentAreaByInseeCodeUTests {
         val result = GetDepartmentAreaByInseeCode(departmentAreaRepository).execute(departmentAreaId)
 
         assertThat(result).isEqualTo(departmentArea)
+        assertThat(log.out).contains("GET department area from insee code $departmentAreaId")
     }
 }

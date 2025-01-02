@@ -9,15 +9,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetAdministrationsUTests {
     @Mock
     private val administrationRepository: IAdministrationRepository = mock()
 
     @Test
-    fun `execute should return all administrations`() {
+    fun `execute should return all administrations`(log: CapturedOutput) {
         val fullAdministrations =
             listOf(
                 FullAdministrationDTO(
@@ -46,5 +49,7 @@ class GetAdministrationsUTests {
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result).isEqualTo(fullAdministrations)
+        assertThat(log.out).contains("Attempt to GET all administrations")
+        assertThat(log.out).contains("Found ${result.size} administrations")
     }
 }

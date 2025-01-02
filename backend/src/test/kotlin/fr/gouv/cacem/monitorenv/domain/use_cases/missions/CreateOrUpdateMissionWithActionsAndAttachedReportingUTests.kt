@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.*
@@ -21,11 +19,14 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Mock
     private val createOrUpdateMission: CreateOrUpdateMission = mock()
@@ -52,7 +53,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
     @Test
-    fun `should attach mission to specified reportings`() {
+    fun `should attach mission to specified reportings`(log: CapturedOutput) {
         // Given
         val missionToCreate =
             MissionEntity(
@@ -115,6 +116,16 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         // Then
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
+        assertThat(
+            log.out,
+        ).contains(
+            "Attempt to CREATE or UPDATE mission: ${missionToCreate.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: []",
+        )
+        assertThat(
+            log.out,
+        ).contains(
+            "Mission: ${missionToCreate.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: [] created or updated",
+        )
     }
 
     @Test
@@ -155,7 +166,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     }
 
     @Test
-    fun `Should attach action to reporting`() {
+    fun `Should attach action to reporting`(log: CapturedOutput) {
         // Given
         val envActionControl =
             EnvActionControlEntity(
@@ -243,6 +254,20 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 envActionAttachedToReportingIds.second,
             )
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
+        assertThat(log.out).contains(
+            "Attempt to CREATE or UPDATE mission: ${missionToCreate.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: ${
+                listOf(
+                    envActionAttachedToReportingIds,
+                )
+            }",
+        )
+        assertThat(log.out).contains(
+            "Mission: ${missionToCreate.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: ${
+                listOf(
+                    envActionAttachedToReportingIds,
+                )
+            } created or updated",
+        )
     }
 
     @Test

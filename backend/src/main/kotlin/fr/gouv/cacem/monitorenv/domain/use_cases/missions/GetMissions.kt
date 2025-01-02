@@ -26,6 +26,8 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         startedBeforeDateTime: ZonedDateTime? = null,
         searchQuery: String? = null,
     ): List<MissionEntity> {
+        logger.info("Attempt to GET all missions")
+
         val missions: List<MissionEntity> =
             missionRepository.findAll(
                 controlUnitIds = controlUnitIds,
@@ -47,7 +49,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
                 searchQuery = searchQuery,
             )
 
-        logger.info("Found ${missions.size} mission(s)")
+        logger.info("Found ${missions.size} missions")
 
         return missions
     }

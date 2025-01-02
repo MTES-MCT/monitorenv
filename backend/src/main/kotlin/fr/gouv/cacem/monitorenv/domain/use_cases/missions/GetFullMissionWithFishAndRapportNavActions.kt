@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import org.slf4j.LoggerFactory
 
 @UseCase
 class GetFullMissionWithFishAndRapportNavActions(
@@ -11,7 +12,10 @@ class GetFullMissionWithFishAndRapportNavActions(
     private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository,
     private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(GetFullMissionWithFishAndRapportNavActions::class.java)
+
     fun execute(missionId: Int): Pair<Boolean, MissionDTO> {
+        logger.info("GET full mission $missionId with fish and rapport nav action")
         getFullMission.execute(missionId).let {
             try {
                 val fishActions = monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)

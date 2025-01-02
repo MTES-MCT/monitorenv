@@ -88,6 +88,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.20.4")
     testImplementation("net.java.dev.jna:jna:5.16.0")
     testImplementation("net.ttddyy:datasource-proxy:1.10.1")
+    testImplementation("io.mockk:mockk:1.13.14")
 }
 
 group = "fr.gouv.cacem"

@@ -10,15 +10,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CanDeleteAdministrationUTests {
     @Mock
     private val administrationRepository: IAdministrationRepository = mock()
 
     @Test
-    fun `execute should return true when control units are empty`() {
+    fun `execute should return true when control units are empty`(log: CapturedOutput) {
         val administrationId = 1
         val fullAdministration =
             FullAdministrationDTO(
@@ -36,6 +39,7 @@ class CanDeleteAdministrationUTests {
         val result = CanDeleteAdministration(administrationRepository).execute(administrationId)
 
         assertThat(result).isTrue
+        assertThat(log.out).contains("Can administration $administrationId be deleted")
     }
 
     @Test

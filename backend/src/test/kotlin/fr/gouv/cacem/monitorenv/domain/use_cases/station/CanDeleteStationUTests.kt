@@ -11,15 +11,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CanDeleteStationUTests {
     @Mock
     private val stationRepository: IStationRepository = mock()
 
     @Test
-    fun `execute should return true when control unit resources are empty`() {
+    fun `execute should return true when control unit resources are empty`(log: CapturedOutput) {
         val stationId = 1
         val fullStation =
             FullStationDTO(
@@ -37,7 +40,8 @@ class CanDeleteStationUTests {
 
         val result = CanDeleteStation(stationRepository).execute(stationId)
 
-        assertThat(result).isTrue
+        assertThat(result).isTrue()
+        assertThat(log.out).contains("Can station $stationId be deleted")
     }
 
     @Test

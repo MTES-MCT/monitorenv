@@ -14,6 +14,8 @@ class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
     private val logger = LoggerFactory.getLogger(GetEngagedControlUnits::class.java)
 
     fun execute(): List<ControlUnitToMissionSources> {
+        logger.info("Attempt to GET all engaged control units")
+
         val openedMissions =
             getFullMissions.execute(
                 startedAfterDateTime = ZonedDateTime.now().minusMonths(2),
@@ -54,7 +56,7 @@ class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
                     Pair(controlUnit, missionSources)
                 }
 
-        logger.info("Found ${controlUnitToMissionSources.size} engaged control unit(s).")
+        logger.info("Found ${controlUnitToMissionSources.size} engaged control units")
 
         return controlUnitToMissionSources
     }

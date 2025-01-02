@@ -28,6 +28,8 @@ class GetReportings(
         isAttachedToMission: Boolean?,
         searchQuery: String?,
     ): List<ReportingDTO> {
+        logger.info("Attempt to get reportings with criteria")
+        val now = ZonedDateTime.now()
         val reports =
             reportingRepository.findAll(
                 reportingType = reportingType,
@@ -35,7 +37,7 @@ class GetReportings(
                 sourcesType = sourcesType,
                 startedAfter =
                     startedAfterDateTime?.toInstant()
-                        ?: ZonedDateTime.now().minusDays(30).toInstant(),
+                        ?: now.minusDays(30).toInstant(),
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 status = status,
                 targetTypes = targetTypes,
@@ -44,10 +46,7 @@ class GetReportings(
                 pageSize = pageSize,
                 searchQuery = searchQuery,
             )
-
-        logger.info(
-            "Found ${reports.size} reporting(s)",
-        )
+        logger.info("Found ${reports.size} reportings with criteria")
 
         return reports
     }

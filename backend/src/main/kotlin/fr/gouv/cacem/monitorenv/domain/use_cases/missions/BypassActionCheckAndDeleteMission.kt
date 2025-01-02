@@ -5,6 +5,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
@@ -13,7 +14,10 @@ class BypassActionCheckAndDeleteMission(
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(BypassActionCheckAndDeleteMission::class.java)
+
     fun execute(missionId: Int) {
+        logger.info("Attempt to DELETE mission $missionId without checking actions")
         val missionToDelete = getFullMission.execute(missionId)
         missionToDelete.attachedReportingIds?.let { attachedReportingIds ->
             if (attachedReportingIds.isNotEmpty()) {
@@ -37,7 +41,8 @@ class BypassActionCheckAndDeleteMission(
                     reportingRepository.save(detachedReporting)
                 }
             }
-            return missionRepository.delete(missionId)
+            missionRepository.delete(missionId)
+            logger.info("Mission $missionId deleted")
         }
     }
 }

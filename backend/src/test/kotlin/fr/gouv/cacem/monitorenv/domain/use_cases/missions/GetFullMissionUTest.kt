@@ -9,9 +9,13 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixtur
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import kotlin.random.Random
 
+@ExtendWith(OutputCaptureExtension::class)
 class GetFullMissionUTest {
     private val missionRepository: IMissionRepository = mock()
     private val getFullMission: GetFullMission = GetFullMission(missionRepository)
@@ -31,7 +35,7 @@ class GetFullMissionUTest {
     }
 
     @Test
-    fun `execute should return a mission`() {
+    fun `execute should return a mission`(log: CapturedOutput) {
         // Given
         val missionId = Random.nextInt()
         val missionFromDatabase = MissionDTO(MissionFixture.aMissionEntity())
@@ -42,5 +46,6 @@ class GetFullMissionUTest {
 
         // Then
         assertThat(mission).isEqualTo(missionFromDatabase)
+        assertThat(log.out).contains("GET full mission $missionId")
     }
 }

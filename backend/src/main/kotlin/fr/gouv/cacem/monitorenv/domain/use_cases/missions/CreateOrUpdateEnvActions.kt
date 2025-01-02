@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import org.slf4j.LoggerFactory
 
 @UseCase
 class CreateOrUpdateEnvActions(
@@ -19,11 +20,14 @@ class CreateOrUpdateEnvActions(
     private val missionRepository: IMissionRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(CreateOrUpdateEnvActions::class.java)
+
     @Throws(IllegalArgumentException::class)
     fun execute(
         mission: MissionEntity,
         envActions: List<EnvActionEntity>?,
     ): MissionEntity {
+        logger.info("Attempt to CREATE or UPDATE mission ${mission.id} with envActions ${envActions?.map { it.id }}")
         val envActionsToSave =
             envActions?.map {
                 when (it.actionType) {
@@ -79,6 +83,10 @@ class CreateOrUpdateEnvActions(
                 envActions = envActionsToSave,
             )
         val savedMission = missionRepository.save(missionToSave)
+
+        logger.info(
+            "Mission ${savedMission.mission.id} with envActions ${envActions?.map { it.id }} created or updated",
+        )
 
         if (savedMission.mission.id == null) {
             throw IllegalArgumentException("Mission id is null")

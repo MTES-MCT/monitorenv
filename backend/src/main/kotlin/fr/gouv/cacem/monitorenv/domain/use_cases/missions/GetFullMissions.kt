@@ -24,6 +24,7 @@ class GetFullMissions(
         seaFronts: List<String>?,
         searchQuery: String?,
     ): List<MissionDTO> {
+        logger.info("Attempt to GET all full missions")
         val missions =
             missionRepository.findAllFullMissions(
                 startedAfter =
@@ -43,7 +44,7 @@ class GetFullMissions(
                 searchQuery = searchQuery,
             )
 
-        logger.info("Found ${missions.size} mission(s)")
+        logger.info("Found ${missions.size} full mission(s)")
 
         return missions
     }

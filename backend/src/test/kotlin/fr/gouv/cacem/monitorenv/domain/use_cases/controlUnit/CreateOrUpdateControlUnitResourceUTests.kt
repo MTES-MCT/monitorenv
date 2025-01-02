@@ -11,15 +11,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateControlUnitResourceUTests {
     @Mock
     private val controlUnitResourceRepository: IControlUnitResourceRepository = mock()
 
     @Test
-    fun `execute should return save() result`() {
+    fun `execute should return save() result`(log: CapturedOutput) {
         val newControlUnitResource =
             ControlUnitResourceEntity(
                 controlUnitId = 3,
@@ -39,5 +42,7 @@ class CreateOrUpdateControlUnitResourceUTests {
 
         verify(controlUnitResourceRepository, times(1)).save(newControlUnitResource)
         assertThat(result).isEqualTo(expectedControlUnitResource)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE control unit resource ${newControlUnitResource.id}")
+        assertThat(log.out).contains("Control unit resource ${result.id} created or updated")
     }
 }
