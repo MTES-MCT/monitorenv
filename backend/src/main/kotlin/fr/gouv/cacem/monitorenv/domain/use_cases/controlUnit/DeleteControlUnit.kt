@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingSourceRepository
+import org.slf4j.LoggerFactory
 
 @UseCase
 class DeleteControlUnit(
@@ -15,7 +16,10 @@ class DeleteControlUnit(
     private val reportingRepository: IReportingRepository,
     private val reportingSourceRepository: IReportingSourceRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(DeleteControlUnit::class.java)
+
     fun execute(controlUnitId: Int) {
+        logger.info("Attempt to DELETE control unit $controlUnitId")
         if (!canDeleteControlUnit.execute(controlUnitId)) {
             throw CouldNotDeleteException(
                 "Cannot delete control unit  (ID=$controlUnitId) due to existing relationships.",
@@ -44,6 +48,7 @@ class DeleteControlUnit(
             }
         }
 
-        return controlUnitRepository.deleteById(controlUnitId)
+        controlUnitRepository.deleteById(controlUnitId)
+        logger.info("Control unit $controlUnitId deleted")
     }
 }

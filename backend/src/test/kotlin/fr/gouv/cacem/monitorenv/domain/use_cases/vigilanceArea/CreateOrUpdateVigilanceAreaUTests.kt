@@ -8,9 +8,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateVigilanceAreaUTests {
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
 
@@ -23,7 +27,7 @@ class CreateOrUpdateVigilanceAreaUTests {
         )
 
     @Test
-    fun `execute should return save() result`() {
+    fun `execute should return save() result`(log: CapturedOutput) {
         val image =
             ImageEntity(
                 id = 1,
@@ -52,6 +56,8 @@ class CreateOrUpdateVigilanceAreaUTests {
         val result = createOrUpdateVigilanceArea.execute(newVigilanceArea)
 
         verify(vigilanceAreaRepository, times(1)).save(newVigilanceArea)
-        Assertions.assertThat(result).isEqualTo(expectedVigilanceArea)
+        assertThat(result).isEqualTo(expectedVigilanceArea)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE vigilance area ${newVigilanceArea.id}")
+        assertThat(log.out).contains("Vigilance area ${result.id} created or updated")
     }
 }

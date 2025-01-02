@@ -10,7 +10,7 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
-class ArchiveOutdatedVigilanceAreasTest {
+class ArchiveOutdatedVigilanceAreasUTest {
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
     private val archiveOutdatedVigilanceAreas = ArchiveOutdatedVigilanceAreas(vigilanceAreaRepository)
 
@@ -24,6 +24,6 @@ class ArchiveOutdatedVigilanceAreasTest {
 
         // Then
         assertThat(log.out).contains("Attempt to ARCHIVE vigilance areas")
-        assertThat(log.out).contains("Archived 2 vigilance areas")
+        assertThat(log.out).contains("2 vigilance areas archived")
     }
 }

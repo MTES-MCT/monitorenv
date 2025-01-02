@@ -10,8 +10,8 @@ class GetControlUnits(private val controlUnitRepository: IControlUnitRepository)
     private val logger = LoggerFactory.getLogger(GetControlUnits::class.java)
 
     fun execute(): List<FullControlUnitDTO> {
+        logger.info("Attempt to GET all control units")
         val fullControlUnits = controlUnitRepository.findAll()
-
         logger.info("Found ${fullControlUnits.size} control units.")
 
         return fullControlUnits

@@ -9,10 +9,14 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.Mockito.mock
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class ExtractAreaUTest {
     private val departementAreaRepository: IDepartmentAreaRepository = mock()
     private val reportingRepository: IReportingRepository = mock()
@@ -30,7 +34,7 @@ class ExtractAreaUTest {
         )
 
     @Test
-    fun `execute should return an ExtractedAreaEntity that does not intersect a different area`() {
+    fun `execute should return an ExtractedAreaEntity that does not intersect a different area`(log: CapturedOutput) {
         // Given
         val wktReader = WKTReader()
 
@@ -59,6 +63,7 @@ class ExtractAreaUTest {
         assertThat(extractedAreaEntity.regulatoryAreaIds).isEmpty()
         assertThat(extractedAreaEntity.ampIds).isEmpty()
         assertThat(extractedAreaEntity.vigilanceAreaIds).isEmpty()
+        assertThat(log.out).contains("GET extracted area")
     }
 
     @Test

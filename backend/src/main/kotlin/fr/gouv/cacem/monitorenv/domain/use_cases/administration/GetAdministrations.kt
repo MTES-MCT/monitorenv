@@ -10,6 +10,7 @@ class GetAdministrations(private val administrationRepository: IAdministrationRe
     private val logger = LoggerFactory.getLogger(GetAdministrations::class.java)
 
     fun execute(): List<FullAdministrationDTO> {
+        logger.info("Attempt to GET all administrations")
         val fullAdministrations = administrationRepository.findAll()
 
         logger.info("Found ${fullAdministrations.size} administrations.")

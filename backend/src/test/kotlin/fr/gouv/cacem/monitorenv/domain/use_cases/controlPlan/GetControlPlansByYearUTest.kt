@@ -8,17 +8,30 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanSubThemeReposito
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanTagRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanThemeRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetControlPlansByYearUTest {
-    @MockBean private lateinit var controlPlanSubThemeRepository: IControlPlanSubThemeRepository
+    @MockBean
+    private lateinit var controlPlanSubThemeRepository: IControlPlanSubThemeRepository
+
+    @MockBean
     private lateinit var controlPlanThemeRepository: IControlPlanThemeRepository
+
+    @MockBean
     private lateinit var controlPlanTagRepository: IControlPlanTagRepository
 
-    fun `execute should return all ControlPlanThemes, ControlPlanSubThemes and ControlPlanTags for the given year`() {
+    @Test
+    fun `execute should return all ControlPlanThemes, ControlPlanSubThemes and ControlPlanTags for the given year`(
+        log: CapturedOutput,
+    ) {
+        val year = 2023
         val controlPlanThemes =
             listOf(
                 ControlPlanThemeEntity(
@@ -36,13 +49,13 @@ class GetControlPlansByYearUTest {
                     id = 1,
                     themeId = 1,
                     subTheme = "ControlPlanSubTheme Name",
-                    year = 2023,
+                    year = year,
                 ),
                 ControlPlanSubThemeEntity(
                     id = 2,
                     themeId = 1,
                     subTheme = "ControlPlanSubTheme Name 2",
-                    year = 2023,
+                    year = year,
                 ),
             )
         val controlPlanTags =
@@ -59,9 +72,9 @@ class GetControlPlansByYearUTest {
                 ),
             )
 
-        given(controlPlanThemeRepository.findByYear(2023)).willReturn(controlPlanThemes)
-        given(controlPlanSubThemeRepository.findByYear(2023)).willReturn(controlPlanSubThemes)
-        given(controlPlanTagRepository.findByYear(2023)).willReturn(controlPlanTags)
+        given(controlPlanThemeRepository.findByYear(year)).willReturn(controlPlanThemes)
+        given(controlPlanSubThemeRepository.findByYear(year)).willReturn(controlPlanSubThemes)
+        given(controlPlanTagRepository.findByYear(year)).willReturn(controlPlanTags)
 
         val result =
             GetControlPlansByYear(
@@ -69,9 +82,16 @@ class GetControlPlansByYearUTest {
                 controlPlanSubThemeRepository = controlPlanSubThemeRepository,
                 controlPlanTagRepository = controlPlanTagRepository,
             )
-                .execute(2023)
+                .execute(year)
 
-        assertThat(result.first.size).isEqualTo(2)
-        assertThat(result).isEqualTo(controlPlanSubThemes)
+        assertThat(result.first).isEqualTo(controlPlanThemes)
+        assertThat(result.second).isEqualTo(controlPlanSubThemes)
+        assertThat(result.third).isEqualTo(controlPlanTags)
+        assertThat(log.out).contains("Attempt to GET all control plans for year $year")
+        assertThat(
+            log.out,
+        ).contains(
+            "Found ${controlPlanThemes.size} control plan themes, ${controlPlanSubThemes.size} control plan subthemes and ${controlPlanTags.size} control plan tags for year $year",
+        )
     }
 }

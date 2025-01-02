@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.locationtech.jts.geom.Geometry
+import org.slf4j.LoggerFactory
 
 @UseCase
 class ExtractArea(
@@ -17,7 +18,10 @@ class ExtractArea(
     private val ampRepository: IAMPRepository,
     private val vigilanceAreaRepository: IVigilanceAreaRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(DeleteDashboard::class.java)
+
     fun execute(geometry: Geometry): ExtractedAreaEntity {
+        logger.info("GET extracted area")
         val inseeCode = departmentAreaRepository.findDepartmentFromGeometry(geometry = geometry)
         val reportings = reportingRepository.findAllIdsByGeometry(geometry = geometry)
         val regulatoryAreas = regulatoryAreaRepository.findAllIdsByGeometry(geometry = geometry)

@@ -4,16 +4,20 @@ import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
-import java.util.*
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
+import java.util.UUID
 
+@ExtendWith(OutputCaptureExtension::class)
 class GetDashboardUTest {
     private val dashboardRepository: IDashboardRepository = Mockito.mock()
     private val getDashboard = GetDashboard(dashboardRepository)
 
     @Test
-    fun `execute should return a dashboard`() {
+    fun `execute should return a dashboard`(log: CapturedOutput) {
         // Given
         val id = UUID.randomUUID()
         val dashboard =
@@ -34,5 +38,7 @@ class GetDashboardUTest {
 
         // Then
         assertThat(dashboardResult).isEqualTo(dashboard)
+
+        assertThat(log.out).contains("GET dashboard ${dashboard.id}")
     }
 }

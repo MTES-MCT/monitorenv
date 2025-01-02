@@ -10,22 +10,21 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
-class DeleteReportingUTest {
-
+class DeleteReportingsUTest {
     private val reportingRepository: IReportingRepository = mock()
-    private val deleteReporting = DeleteReporting(reportingRepository)
+    private val deleteReportings = DeleteReportings(reportingRepository)
 
     @Test
     fun `execute should delete reporting`(log: CapturedOutput) {
         // Given
-        val id = 1
+        val ids = listOf(1, 2)
 
         // When
-        deleteReporting.execute(id)
+        deleteReportings.execute(ids)
 
         // Then
-        verify(reportingRepository).delete(id)
-        assertThat(log.out).contains("Attempt to DELETE reportings $id")
-        assertThat(log.out).contains("reportings $id deleted")
+        verify(reportingRepository).deleteReportings(ids)
+        assertThat(log.out).contains("Attempt to DELETE reportings $ids")
+        assertThat(log.out).contains("reportings $ids deleted")
     }
 }

@@ -18,7 +18,11 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFi
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class DeleteMissionUTests {
     private val getFullMission: GetFullMission = mock()
 
@@ -32,7 +36,7 @@ class DeleteMissionUTests {
         DeleteMission(getFullMission, missionRepository, reportingRepository, canDeleteMission)
 
     @Test
-    fun `execute Should detach reporting attached to mission and action attached to reporting`() {
+    fun `execute Should detach reporting attached to mission and action attached to reporting`(log: CapturedOutput) {
         val missionId = 100
         val reporting = aReporting()
         val missionToDelete = aMissionEntity()
@@ -68,6 +72,8 @@ class DeleteMissionUTests {
         }
 
         verify(missionRepository).delete(missionId)
+        assertThat(log.out).contains("Attempt to delete mission $missionId")
+        assertThat(log.out).contains("Mission $missionId deleted")
     }
 
     @Test

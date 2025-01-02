@@ -1,26 +1,35 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CanDeleteMissionUTests {
-    @MockBean private lateinit var missionRepository: IMissionRepository
+    @MockBean
+    private lateinit var missionRepository: IMissionRepository
 
     @MockBean
     private lateinit var monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository
@@ -29,7 +38,9 @@ class CanDeleteMissionUTests {
     private lateinit var rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository
 
     @Test
-    fun `execute Should return true when haven't Env Actions and RapportNav Actions and request come from Fish`() {
+    fun `execute Should return true when haven't Env Actions and RapportNav Actions and request come from Fish`(
+        log: CapturedOutput,
+    ) {
         val missionId = 57
 
         given(missionRepository.findById(missionId))
@@ -66,11 +77,14 @@ class CanDeleteMissionUTests {
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
 
-        Assertions.assertThat(result).isEqualTo(CanDeleteMissionResponse(true, listOf()))
+        assertThat(result).isEqualTo(CanDeleteMissionResponse(true, listOf()))
+        assertThat(log.out).contains("Can mission $missionId be deleted")
     }
 
     @Test
-    fun `execute Should return a list when have Env Actions but no RapportNav Actions and request come from Fish`() {
+    fun `execute Should return a list when have Env Actions but no RapportNav Actions and request come from Fish`(
+        log: CapturedOutput,
+    ) {
         val missionId = 34
 
         val wktReader = WKTReader()
@@ -117,8 +131,8 @@ class CanDeleteMissionUTests {
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
 
-        Assertions.assertThat(result)
-            .isEqualTo(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV)))
+        assertThat(result).isEqualTo(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV)))
+        assertThat(log.out).contains("Can mission $missionId be deleted")
     }
 
     @Test
@@ -169,10 +183,9 @@ class CanDeleteMissionUTests {
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
 
-        Assertions.assertThat(result)
-            .isEqualTo(
-                CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.RAPPORT_NAV)),
-            )
+        assertThat(result).isEqualTo(
+            CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.RAPPORT_NAV)),
+        )
     }
 
     @Test
@@ -217,7 +230,7 @@ class CanDeleteMissionUTests {
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
 
-        Assertions.assertThat(result).isEqualTo(CanDeleteMissionResponse(true, listOf()))
+        assertThat(result).isEqualTo(CanDeleteMissionResponse(true, listOf()))
     }
 
     @Test
@@ -277,7 +290,7 @@ class CanDeleteMissionUTests {
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
 
-        Assertions.assertThat(result).isEqualTo(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORFISH)))
+        assertThat(result).isEqualTo(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORFISH)))
     }
 
     @Test
@@ -347,9 +360,8 @@ class CanDeleteMissionUTests {
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
 
-        Assertions.assertThat(result)
-            .isEqualTo(
-                CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORFISH, MissionSourceEnum.RAPPORT_NAV)),
-            )
+        assertThat(result).isEqualTo(
+            CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORFISH, MissionSourceEnum.RAPPORT_NAV)),
+        )
     }
 }

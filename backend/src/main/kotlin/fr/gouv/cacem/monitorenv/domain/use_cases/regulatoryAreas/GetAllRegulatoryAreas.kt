@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
@@ -12,8 +10,9 @@ class GetAllRegulatoryAreas(private val regulatoryAreaRepository: IRegulatoryAre
     private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
 
     fun execute(): List<RegulatoryAreaEntity> {
+        logger.info("Attempt to GET all regulatory areas")
         val regulatoryAreas = regulatoryAreaRepository.findAll()
-        logger.info("Found ${regulatoryAreas.size} regulatory areas ")
+        logger.info("Found ${regulatoryAreas.size} regulatory areas")
 
         return regulatoryAreas
     }

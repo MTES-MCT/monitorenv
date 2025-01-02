@@ -11,15 +11,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetControlUnitResourceByIdUTests {
     @MockBean
     private lateinit var controlUnitResourceRepository: IControlUnitResourceRepository
 
     @Test
-    fun `execute should return a control unit resource by its ID`() {
+    fun `execute should return a control unit resource by its ID`(log: CapturedOutput) {
         val controlUnitResourceId = 1
         val fullControlUnitResource =
             FullControlUnitResourceDTO(
@@ -58,5 +61,6 @@ class GetControlUnitResourceByIdUTests {
         val result = GetControlUnitResourceById(controlUnitResourceRepository).execute(controlUnitResourceId)
 
         assertThat(result).isEqualTo(fullControlUnitResource)
+        assertThat(log.out).contains("GET control unit resource $controlUnitResourceId")
     }
 }

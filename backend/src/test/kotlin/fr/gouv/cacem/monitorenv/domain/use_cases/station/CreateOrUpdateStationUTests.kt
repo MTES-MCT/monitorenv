@@ -9,15 +9,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateStationUTests {
     @MockBean
     private lateinit var stationRepository: IStationRepository
 
     @Test
-    fun `execute should return save() result`() {
+    fun `execute should return save() result`(log: CapturedOutput) {
         val newStation =
             StationEntity(
                 latitude = 0.0,
@@ -33,5 +36,7 @@ class CreateOrUpdateStationUTests {
 
         verify(stationRepository, times(1)).save(newStation)
         assertThat(result).isEqualTo(expectedStation)
+        assertThat(log.out).contains("Attempt to CREATE or UPDATE station ${newStation.id}")
+        assertThat(log.out).contains("Station ${result.id} created or updated")
     }
 }

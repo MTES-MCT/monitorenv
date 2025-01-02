@@ -12,8 +12,8 @@ class GetRegulatoryAreaById(private val regulatoryAreaRepository: IRegulatoryAre
     private val logger = LoggerFactory.getLogger(GetRegulatoryAreaById::class.java)
 
     fun execute(regulatoryAreaId: Int): RegulatoryAreaEntity {
-        val regulatoryArea = regulatoryAreaRepository.findById(regulatoryAreaId)
+        logger.info("GET regulatory area $regulatoryAreaId")
 
-        return regulatoryArea
+        return regulatoryAreaRepository.findById(regulatoryAreaId)
     }
 }

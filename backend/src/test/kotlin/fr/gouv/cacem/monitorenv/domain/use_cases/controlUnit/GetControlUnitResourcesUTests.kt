@@ -11,15 +11,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetControlUnitResourcesUTests {
     @MockBean
     private lateinit var controlUnitResourceRepository: IControlUnitResourceRepository
 
     @Test
-    fun `execute should return all control unit resources`() {
+    fun `execute should return all control unit resources`(log: CapturedOutput) {
         val controlUnitResources =
             listOf(
                 FullControlUnitResourceDTO(
@@ -90,5 +93,7 @@ class GetControlUnitResourcesUTests {
 
         assertThat(result).isEqualTo(controlUnitResources)
         assertThat(result.size).isEqualTo(2)
+        assertThat(log.out).contains("Attempt to GET all control unit resources")
+        assertThat(log.out).contains("Found ${result.size} control unit resources")
     }
 }

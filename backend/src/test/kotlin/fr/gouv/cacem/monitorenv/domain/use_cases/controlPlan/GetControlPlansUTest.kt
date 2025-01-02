@@ -8,18 +8,27 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanSubThemeReposito
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanTagRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanThemeRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
+@ExtendWith(OutputCaptureExtension::class)
 class GetControlPlansUTest {
     @MockBean
     private lateinit var controlPlanSubThemeRepository: IControlPlanSubThemeRepository
+
+    @MockBean
     private lateinit var controlPlanThemeRepository: IControlPlanThemeRepository
+
+    @MockBean
     private lateinit var controlPlanTagRepository: IControlPlanTagRepository
 
-    fun `execute should return all ControlPlanThemes, ControlPlanSubThemes and ControlPlanTags`() {
+    @Test
+    fun `execute should return all ControlPlanThemes, ControlPlanSubThemes and ControlPlanTags`(log: CapturedOutput) {
         val controlPlanThemes =
             listOf(
                 ControlPlanThemeEntity(
@@ -71,7 +80,14 @@ class GetControlPlansUTest {
                 controlPlanTagRepository = controlPlanTagRepository,
             ).execute()
 
-        assertThat(result.first.size).isEqualTo(2)
-        assertThat(result).isEqualTo(controlPlanSubThemes)
+        assertThat(result.first).isEqualTo(controlPlanThemes)
+        assertThat(result.second).isEqualTo(controlPlanSubThemes)
+        assertThat(result.third).isEqualTo(controlPlanTags)
+        assertThat(log.out).contains("Attempt to GET all control plans")
+        assertThat(
+            log.out,
+        ).contains(
+            "Found ${controlPlanThemes.size} control plan themes, ${controlPlanSubThemes.size} control plan subthemes and ${controlPlanTags.size} control plan tags",
+        )
     }
 }

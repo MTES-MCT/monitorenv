@@ -30,7 +30,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
     ): Pair<Boolean, MissionDTO> {
         logger.info(
-            "Create or update mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds",
+            "Attempt to CREATE or UPDATE mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds",
         )
         if (mission.id != null) {
             reportingRepository.detachDanglingEnvActions(
@@ -65,7 +65,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
             reportingRepository.attachEnvActionsToReportings(it.first, it.second)
         }
 
-        return getFullMissionWithFishAndRapportNavActions.execute(savedMission.id)
+        val missionDTO = getFullMissionWithFishAndRapportNavActions.execute(savedMission.id)
+        logger.info(
+            "Mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds created or updated",
+        )
+        return missionDTO
     }
 
     private fun getListOfEnvActionIds(

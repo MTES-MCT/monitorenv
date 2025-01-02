@@ -14,7 +14,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
@@ -32,16 +36,19 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaMissionRepositoryITests : AbstractDBTests() {
-    @Autowired private val customQueryCountListener: CustomQueryCountListener? = null
+    @Autowired
+    private val customQueryCountListener: CustomQueryCountListener? = null
 
-    @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
+    @Autowired
+    private lateinit var jpaMissionRepository: JpaMissionRepository
 
-    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    @Autowired
+    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
@@ -618,7 +625,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.mission.createdAtUtc)
             .isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(newMissionCreated.mission.updatedAtUtc)
-            .isAfter(ZonedDateTime.now().minusMinutes(1))
+            .isNull()
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10121)
         assertThat(newMissionCreated.mission.controlUnits.first().name)
@@ -778,7 +785,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         val updatedMission = jpaMissionRepository.save(nextMission!!)
 
-        assertThat(updatedMission.mission.createdAtUtc).isNull()
+        assertThat(updatedMission.mission.createdAtUtc).isNotNull()
         assertThat(updatedMission.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(updatedMission.mission.controlUnits).hasSize(2)
         assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)

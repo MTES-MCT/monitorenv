@@ -9,10 +9,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixtu
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verifyNoInteractions
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import kotlin.random.Random
 
+@ExtendWith(OutputCaptureExtension::class)
 class GetMissionAndSourceActionUTest {
     private val getMission: GetMission = mock()
 
@@ -24,7 +28,7 @@ class GetMissionAndSourceActionUTest {
         GetMissionAndSourceAction(getMission, apiFishMissionActionsRepository, apiRapportNavMissionActionsRepository)
 
     @Test
-    fun `execute should return only the mission if source is not MONITORFISH or RAPPORTNAV`() {
+    fun `execute should return only the mission if source is not MONITORFISH or RAPPORTNAV`(log: CapturedOutput) {
         // Given
         val missionId = Random.nextInt()
         val source = null
@@ -40,6 +44,8 @@ class GetMissionAndSourceActionUTest {
         assertThat(mission.mission).isEqualTo(missionFromDatabase)
         assertThat(mission.fishActions).isEmpty()
         assertThat(mission.hasRapportNavActions).isNull()
+
+        assertThat(log.out).contains("GET mission $missionId and source action")
     }
 
     @Test
