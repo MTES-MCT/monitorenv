@@ -30,8 +30,6 @@ export async function populateExtractAreaFromApi(
     reportingsAPI.endpoints.getReportingsByIds.initiate(extractedAreaFromApi.reportingIds)
   )
 
-  // console.log('extractedAreaFromApi', extractedAreaFromApi)
-
   return {
     ...extractedAreaFromApi,
     amps: Object.values(ampLayers?.entities ?? []).filter(amp => extractedAreaFromApi.ampIds.includes(amp.id)),
