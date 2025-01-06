@@ -102,6 +102,9 @@ export const areaStyle = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 1,
     fontSize: 5.5,
+    left: 10,
+    position: 'absolute',
+    top: 10,
     width: '30%'
   },
   content: {
@@ -125,6 +128,7 @@ export const areaStyle = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 6,
+    position: 'relative',
     width: '100%'
   }
 })

@@ -22,6 +22,15 @@ export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImage
 
           return (
             <View key={amp.id} style={areaStyle.wrapper} wrap={false}>
+              {image && (
+                <Image
+                  src={image}
+                  style={{
+                    height: '100%',
+                    width: '100%'
+                  }}
+                />
+              )}
               <View style={areaStyle.card}>
                 <View style={areaStyle.header}>
                   <Text> {getTitle(amp.name)}</Text>
@@ -54,7 +63,6 @@ export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImage
                   </View>
                 )}
               </View>
-              {image && <Image src={image} />}
             </View>
           )
         })}

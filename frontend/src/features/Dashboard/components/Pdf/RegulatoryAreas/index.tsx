@@ -28,6 +28,15 @@ export function RegulatoryAreas({
 
           return (
             <View key={regulatoryArea.id} style={areaStyle.wrapper} wrap={false}>
+              {image && (
+                <Image
+                  src={image}
+                  style={{
+                    height: '100%',
+                    width: '100%'
+                  }}
+                />
+              )}
               <View style={areaStyle.card}>
                 <View style={areaStyle.header}>
                   <Text> {getTitle(regulatoryArea.layer_name)}</Text>
@@ -80,7 +89,6 @@ export function RegulatoryAreas({
                   </View>
                 </View>
               </View>
-              {image && <Image src={image} />}
             </View>
           )
         })}
