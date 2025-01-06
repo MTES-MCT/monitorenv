@@ -7,16 +7,17 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IStationRepository
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class DeleteStationUTests {
-    @MockBean
-    private lateinit var stationRepository: IStationRepository
+    @Mock
+    private val stationRepository: IStationRepository = mock()
 
-    @MockBean
-    private lateinit var canDeleteStation: CanDeleteStation
+    @Mock
+    private val canDeleteStation: CanDeleteStation = mock()
 
     @Test
     fun `execute should delete when canDeleteStation returns true`() {

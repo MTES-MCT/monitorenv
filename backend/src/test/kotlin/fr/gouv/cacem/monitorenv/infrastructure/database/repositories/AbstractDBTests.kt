@@ -1,10 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.MonitorEnvApplication
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.log.CustomAuthenticationEntryPoint
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.TestPropertySource
@@ -24,9 +21,6 @@ import java.time.temporal.ChronoUnit
     properties = ["monitorenv.scheduling.enabled=false"],
 )
 abstract class AbstractDBTests {
-    @MockBean private lateinit var jwtDecoder: JwtDecoder
-
-    @MockBean private lateinit var customAuthenticationEntryPoint: CustomAuthenticationEntryPoint
 
     companion object {
         @JvmStatic
@@ -58,14 +52,14 @@ abstract class AbstractDBTests {
             println(toStringConsumer.toUtf8String())
 
             return "jdbc:postgresql://" +
-                container.host +
-                ":" +
-                container
-                    .getMappedPort(
-                        PostgreSQLContainer.POSTGRESQL_PORT,
-                    )
-                    .toString() +
-                "/testdb?user=postgres&password=postgres"
+                    container.host +
+                    ":" +
+                    container
+                        .getMappedPort(
+                            PostgreSQLContainer.POSTGRESQL_PORT,
+                        )
+                        .toString() +
+                    "/testdb?user=postgres&password=postgres"
         }
     }
 }

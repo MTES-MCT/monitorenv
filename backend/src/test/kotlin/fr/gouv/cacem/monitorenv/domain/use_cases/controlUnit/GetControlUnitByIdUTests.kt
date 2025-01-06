@@ -8,13 +8,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetControlUnitByIdUTests {
-    @MockBean
-    private lateinit var controlUnitRepository: IControlUnitRepository
+    @Mock
+    private val controlUnitRepository: IControlUnitRepository = mock()
 
     @Test
     fun `execute should return a control unit by its ID`() {
@@ -22,21 +23,21 @@ class GetControlUnitByIdUTests {
         val fullControlUnit =
             FullControlUnitDTO(
                 administration =
-                    AdministrationEntity(
-                        id = 0,
-                        name = "Administration Name",
-                        isArchived = false,
-                    ),
+                AdministrationEntity(
+                    id = 0,
+                    name = "Administration Name",
+                    isArchived = false,
+                ),
                 controlUnit =
-                    ControlUnitEntity(
-                        id = 1,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Control Unit Name",
-                        termsNote = null,
-                    ),
+                ControlUnitEntity(
+                    id = 1,
+                    administrationId = 0,
+                    areaNote = null,
+                    departmentAreaInseeCode = null,
+                    isArchived = false,
+                    name = "Control Unit Name",
+                    termsNote = null,
+                ),
                 departmentArea = null,
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),

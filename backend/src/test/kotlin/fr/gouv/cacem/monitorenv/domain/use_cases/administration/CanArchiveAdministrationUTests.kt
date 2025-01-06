@@ -8,13 +8,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdminis
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class CanArchiveAdministrationUTests {
-    @MockBean
-    private lateinit var administrationRepository: IAdministrationRepository
+    @Mock
+    private val administrationRepository: IAdministrationRepository = mock()
 
     @Test
     fun `execute should return true when all control units are archived`() {
@@ -22,23 +23,23 @@ class CanArchiveAdministrationUTests {
         val fullAdministration =
             FullAdministrationDTO(
                 administration =
-                    AdministrationEntity(
-                        id = 1,
-                        name = "Administration Name",
-                        isArchived = false,
-                    ),
+                AdministrationEntity(
+                    id = 1,
+                    name = "Administration Name",
+                    isArchived = false,
+                ),
                 controlUnits =
-                    listOf(
-                        ControlUnitEntity(
-                            id = 0,
-                            administrationId = 1,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = true,
-                            name = "Control Unit Name",
-                            termsNote = null,
-                        ),
+                listOf(
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 1,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = true,
+                        name = "Control Unit Name",
+                        termsNote = null,
                     ),
+                ),
             )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
@@ -54,23 +55,23 @@ class CanArchiveAdministrationUTests {
         val fullAdministration =
             FullAdministrationDTO(
                 administration =
-                    AdministrationEntity(
-                        id = 1,
-                        name = "Administration Name",
-                        isArchived = false,
-                    ),
+                AdministrationEntity(
+                    id = 1,
+                    name = "Administration Name",
+                    isArchived = false,
+                ),
                 controlUnits =
-                    listOf(
-                        ControlUnitEntity(
-                            id = 0,
-                            administrationId = 1,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Control Unit Name",
-                            termsNote = null,
-                        ),
+                listOf(
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 1,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
                     ),
+                ),
             )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)

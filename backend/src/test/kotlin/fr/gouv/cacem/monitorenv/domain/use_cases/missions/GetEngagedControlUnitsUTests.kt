@@ -10,14 +10,15 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class GetEngagedControlUnitsUTests {
-    @MockBean
-    private lateinit var getFullMissions: GetFullMissions
+    @Mock
+    private val getFullMissions: GetFullMissions = mock()
 
     @Test
     fun `execute() should return engaged control units`() {
@@ -40,44 +41,44 @@ class GetEngagedControlUnitsUTests {
         val firstMission =
             MissionDTO(
                 mission =
-                    MissionEntity(
-                        id = 10,
-                        controlUnits = listOf(firstControlUnit),
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "Outre-Mer",
-                        geom = null,
-                        observationsCacem = null,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        endDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                    ),
+                MissionEntity(
+                    id = 10,
+                    controlUnits = listOf(firstControlUnit),
+                    missionTypes = listOf(MissionTypeEnum.LAND),
+                    facade = "Outre-Mer",
+                    geom = null,
+                    observationsCacem = null,
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORENV,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
             )
         val secondMission =
             MissionDTO(
                 mission =
-                    MissionEntity(
-                        id = 10,
-                        controlUnits = listOf(secondControlUnit),
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "Outre-Mer",
-                        geom = null,
-                        observationsCacem = null,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        endDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORFISH,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                    ),
+                MissionEntity(
+                    id = 10,
+                    controlUnits = listOf(secondControlUnit),
+                    missionTypes = listOf(MissionTypeEnum.LAND),
+                    facade = "Outre-Mer",
+                    geom = null,
+                    observationsCacem = null,
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORFISH,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
             )
 
         given(

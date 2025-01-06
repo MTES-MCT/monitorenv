@@ -1,7 +1,12 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
@@ -13,20 +18,22 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 class CanDeleteMissionUTests {
-    @MockBean private lateinit var missionRepository: IMissionRepository
+    @Mock
+    private val missionRepository: IMissionRepository = mock()
 
-    @MockBean
-    private lateinit var monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository
+    @Mock
+    private val monitorFishMissionActionsRepository: IMonitorFishMissionActionsRepository = mock()
 
-    @MockBean
-    private lateinit var rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository
+    @Mock
+    private val rapportNavMissionActionsRepository: IRapportNavMissionActionsRepository = mock()
 
     @Test
     fun `execute Should return true when haven't Env Actions and RapportNav Actions and request come from Fish`() {

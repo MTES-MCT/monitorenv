@@ -19,12 +19,13 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixtur
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -42,14 +43,14 @@ class MissionsITest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var patchMission: PatchMission
+    @MockitoBean
+    private val patchMission: PatchMission = mock()
 
-    @MockBean
-    private lateinit var deleteMission: DeleteMission
+    @MockitoBean
+    private val deleteMission: DeleteMission = mock()
 
-    @MockBean
-    private lateinit var getMissionAndSourceAction: GetMissionAndSourceAction
+    @MockitoBean
+    private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
 
     @Test
     fun `Should delete mission with api v2`() {

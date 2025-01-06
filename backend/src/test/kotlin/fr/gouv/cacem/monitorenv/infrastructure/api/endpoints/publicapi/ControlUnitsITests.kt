@@ -6,7 +6,12 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.ArchiveControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CanDeleteControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitById
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2.ControlUnits
@@ -14,14 +19,18 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -33,23 +42,23 @@ class ControlUnitsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var archiveControlUnit: ArchiveControlUnit
+    @MockitoBean
+    private val archiveControlUnit: ArchiveControlUnit = mock()
 
-    @MockBean
-    private lateinit var canDeleteControlUnit: CanDeleteControlUnit
+    @MockitoBean
+    private val canDeleteControlUnit: CanDeleteControlUnit = mock()
 
-    @MockBean
-    private lateinit var createOrUpdateControlUnit: CreateOrUpdateControlUnit
+    @MockitoBean
+    private val createOrUpdateControlUnit: CreateOrUpdateControlUnit = mock()
 
-    @MockBean
-    private lateinit var deleteControlUnit: DeleteControlUnit
+    @MockitoBean
+    private val deleteControlUnit: DeleteControlUnit = mock()
 
-    @MockBean
-    private lateinit var getControlUnitById: GetControlUnitById
+    @MockitoBean
+    private val getControlUnitById: GetControlUnitById = mock()
 
-    @MockBean
-    private lateinit var getControlUnits: GetControlUnits
+    @MockitoBean
+    private val getControlUnits: GetControlUnits = mock()
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -136,21 +145,21 @@ class ControlUnitsITests {
         val expectedFullControlUnit =
             FullControlUnitDTO(
                 administration =
-                    AdministrationEntity(
-                        id = 0,
-                        isArchived = false,
-                        name = "Administration Name",
-                    ),
+                AdministrationEntity(
+                    id = 0,
+                    isArchived = false,
+                    name = "Administration Name",
+                ),
                 controlUnit =
-                    ControlUnitEntity(
-                        id = 1,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Unit Name",
-                        termsNote = null,
-                    ),
+                ControlUnitEntity(
+                    id = 1,
+                    administrationId = 0,
+                    areaNote = null,
+                    departmentAreaInseeCode = null,
+                    isArchived = false,
+                    name = "Unit Name",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )
@@ -171,41 +180,41 @@ class ControlUnitsITests {
             listOf(
                 FullControlUnitDTO(
                     administration =
-                        AdministrationEntity(
-                            id = 0,
-                            isArchived = false,
-                            name = "Administration Name",
-                        ),
+                    AdministrationEntity(
+                        id = 0,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                     controlUnit =
-                        ControlUnitEntity(
-                            id = 1,
-                            administrationId = 0,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Unit Name",
-                            termsNote = null,
-                        ),
+                    ControlUnitEntity(
+                        id = 1,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                     controlUnitContacts = listOf(),
                     controlUnitResources = listOf(),
                 ),
                 FullControlUnitDTO(
                     administration =
-                        AdministrationEntity(
-                            id = 0,
-                            isArchived = false,
-                            name = "Administration Name",
-                        ),
+                    AdministrationEntity(
+                        id = 0,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                     controlUnit =
-                        ControlUnitEntity(
-                            id = 2,
-                            administrationId = 0,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Unit Name 2",
-                            termsNote = null,
-                        ),
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name 2",
+                        termsNote = null,
+                    ),
                     controlUnitContacts = listOf(),
                     controlUnitResources = listOf(),
                 ),

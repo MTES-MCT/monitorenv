@@ -8,16 +8,17 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class CanDeleteControlUnitUTests {
-    @MockBean
-    private lateinit var missionRepository: IMissionRepository
+    @Mock
+    private val missionRepository: IMissionRepository = mock()
 
-    @MockBean
-    private lateinit var reportingRepository: IReportingRepository
+    @Mock
+    private val reportingRepository: IReportingRepository = mock()
 
     @Test
     fun `execute should return TRUE there are neither missions nor reportings attached to this control unit`() {

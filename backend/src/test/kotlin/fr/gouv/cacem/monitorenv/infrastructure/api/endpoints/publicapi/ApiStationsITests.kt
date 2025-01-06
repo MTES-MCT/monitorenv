@@ -5,7 +5,11 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.station.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.CanDeleteStation
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.CreateOrUpdateStation
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.DeleteStation
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStationById
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStations
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateStationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiStationsController
@@ -13,14 +17,18 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -32,20 +40,20 @@ class ApiStationsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var canDeleteStation: CanDeleteStation
+    @MockitoBean
+    private val canDeleteStation: CanDeleteStation = mock()
 
-    @MockBean
-    private lateinit var createOrUpdateStation: CreateOrUpdateStation
+    @MockitoBean
+    private val createOrUpdateStation: CreateOrUpdateStation = mock()
 
-    @MockBean
-    private lateinit var deleteStation: DeleteStation
+    @MockitoBean
+    private val deleteStation: DeleteStation = mock()
 
-    @MockBean
-    private lateinit var getStationById: GetStationById
+    @MockitoBean
+    private val getStationById: GetStationById = mock()
 
-    @MockBean
-    private lateinit var getstations: GetStations
+    @MockitoBean
+    private val getstations: GetStations = mock()
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -111,12 +119,12 @@ class ApiStationsITests {
             FullStationDTO(
                 controlUnitResources = listOf(),
                 station =
-                    StationEntity(
-                        id = 1,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name",
-                    ),
+                StationEntity(
+                    id = 1,
+                    latitude = 0.0,
+                    longitude = 0.0,
+                    name = "Station Name",
+                ),
             )
 
         val requestedId = 1
@@ -136,22 +144,22 @@ class ApiStationsITests {
                 FullStationDTO(
                     controlUnitResources = listOf(),
                     station =
-                        StationEntity(
-                            id = 1,
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            name = "Station Name",
-                        ),
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
                 ),
                 FullStationDTO(
                     controlUnitResources = listOf(),
                     station =
-                        StationEntity(
-                            id = 2,
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            name = "Station Name 2",
-                        ),
+                    StationEntity(
+                        id = 2,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name 2",
+                    ),
                 ),
             )
 

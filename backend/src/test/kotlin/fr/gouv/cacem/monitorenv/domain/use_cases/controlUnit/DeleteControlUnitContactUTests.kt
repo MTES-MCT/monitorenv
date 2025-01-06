@@ -4,13 +4,14 @@ import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class DeleteControlUnitContactUTests {
-    @MockBean
-    private lateinit var controlUnitContactRepository: IControlUnitContactRepository
+    @Mock
+    private val controlUnitContactRepository: IControlUnitContactRepository = mock()
 
     @Test
     fun `execute should delete control unit contact by its ID`() {

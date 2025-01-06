@@ -7,13 +7,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetStationsUTests {
-    @MockBean
-    private lateinit var stationRepository: IStationRepository
+    @Mock
+    private val stationRepository: IStationRepository = mock()
 
     @Test
     fun `execute should return all stations`() {
@@ -21,22 +22,22 @@ class GetStationsUTests {
             listOf(
                 FullStationDTO(
                     station =
-                        StationEntity(
-                            id = 1,
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            name = "Station Name",
-                        ),
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
                     controlUnitResources = listOf(),
                 ),
                 FullStationDTO(
                     station =
-                        StationEntity(
-                            id = 2,
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            name = "Station Name 2",
-                        ),
+                    StationEntity(
+                        id = 2,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name 2",
+                    ),
                     controlUnitResources = listOf(),
                 ),
             )

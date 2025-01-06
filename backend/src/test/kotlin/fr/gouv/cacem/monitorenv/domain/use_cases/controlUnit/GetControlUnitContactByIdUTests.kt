@@ -8,13 +8,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetControlUnitContactByIdUTests {
-    @MockBean
-    private lateinit var controlUnitContactRepository: IControlUnitContactRepository
+    @Mock
+    private val controlUnitContactRepository: IControlUnitContactRepository = mock()
 
     @Test
     fun `execute should return a control unit contact by its ID`() {
@@ -22,25 +23,25 @@ class GetControlUnitContactByIdUTests {
         val fullControlUnitContact =
             FullControlUnitContactDTO(
                 controlUnit =
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Control Unit Name",
-                        termsNote = null,
-                    ),
+                ControlUnitEntity(
+                    id = 0,
+                    administrationId = 0,
+                    areaNote = null,
+                    departmentAreaInseeCode = null,
+                    isArchived = false,
+                    name = "Control Unit Name",
+                    termsNote = null,
+                ),
                 controlUnitContact =
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 0,
-                        email = null,
-                        name = "Control Unit Contact Name",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        phone = null,
-                    ),
+                ControlUnitContactEntity(
+                    id = 1,
+                    controlUnitId = 0,
+                    email = null,
+                    name = "Control Unit Contact Name",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
+                    phone = null,
+                ),
             )
 
         given(controlUnitContactRepository.findById(controlUnitContactId)).willReturn(fullControlUnitContact)

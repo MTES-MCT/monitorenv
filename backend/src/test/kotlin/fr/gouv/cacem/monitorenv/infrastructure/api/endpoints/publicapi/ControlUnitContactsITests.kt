@@ -16,14 +16,19 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
@@ -37,17 +42,17 @@ class ControlUnitContactsITests {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    @MockBean
-    private lateinit var createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact
+    @MockitoBean
+    private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact = mock()
 
-    @MockBean
-    private lateinit var deleteControlUnitContact: DeleteControlUnitContact
+    @MockitoBean
+    private val deleteControlUnitContact: DeleteControlUnitContact = mock()
 
-    @MockBean
-    private lateinit var getControlUnitContactById: GetControlUnitContactById
+    @MockitoBean
+    private val getControlUnitContactById: GetControlUnitContactById = mock()
 
-    @MockBean
-    private lateinit var getControlUnitContacts: GetControlUnitContacts
+    @MockitoBean
+    private val getControlUnitContacts: GetControlUnitContacts = mock()
 
     @Test
     fun `createV1 should create a contact`() {
@@ -159,25 +164,25 @@ class ControlUnitContactsITests {
         val useCaseOutputMock =
             FullControlUnitContactDTO(
                 controlUnit =
-                    ControlUnitEntity(
-                        id = 2,
-                        administrationId = 3,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Unit Name",
-                        termsNote = null,
-                    ),
+                ControlUnitEntity(
+                    id = 2,
+                    administrationId = 3,
+                    areaNote = null,
+                    departmentAreaInseeCode = null,
+                    isArchived = false,
+                    name = "Unit Name",
+                    termsNote = null,
+                ),
                 controlUnitContact =
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 2,
-                        email = "bob@example.org",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        name = "Contact Name",
-                        phone = "0033123456789",
-                    ),
+                ControlUnitContactEntity(
+                    id = 1,
+                    controlUnitId = 2,
+                    email = "bob@example.org",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
+                    name = "Contact Name",
+                    phone = "0033123456789",
+                ),
             )
         given(getControlUnitContactById.execute(requestedId)).willReturn(useCaseOutputMock)
 
@@ -197,47 +202,47 @@ class ControlUnitContactsITests {
             listOf(
                 FullControlUnitContactDTO(
                     controlUnit =
-                        ControlUnitEntity(
-                            id = 2,
-                            administrationId = 3,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Unit Name",
-                            termsNote = null,
-                        ),
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 3,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                     controlUnitContact =
-                        ControlUnitContactEntity(
-                            id = 1,
-                            controlUnitId = 2,
-                            email = "bob@example.org",
-                            isEmailSubscriptionContact = false,
-                            isSmsSubscriptionContact = false,
-                            name = "Contact Name",
-                            phone = "0033123456789",
-                        ),
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 2,
+                        email = "bob@example.org",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = false,
+                        name = "Contact Name",
+                        phone = "0033123456789",
+                    ),
                 ),
                 FullControlUnitContactDTO(
                     controlUnit =
-                        ControlUnitEntity(
-                            id = 5,
-                            administrationId = 6,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Unit Name",
-                            termsNote = null,
-                        ),
+                    ControlUnitEntity(
+                        id = 5,
+                        administrationId = 6,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                     controlUnitContact =
-                        ControlUnitContactEntity(
-                            id = 4,
-                            controlUnitId = 5,
-                            email = "bob@example.org",
-                            isEmailSubscriptionContact = false,
-                            isSmsSubscriptionContact = false,
-                            name = "Contact Name 2",
-                            phone = "0033123456789",
-                        ),
+                    ControlUnitContactEntity(
+                        id = 4,
+                        controlUnitId = 5,
+                        email = "bob@example.org",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = false,
+                        name = "Contact Name 2",
+                        phone = "0033123456789",
+                    ),
                 ),
             )
         given(getControlUnitContacts.execute()).willReturn(useCaseOutputMock)
@@ -265,25 +270,25 @@ class ControlUnitContactsITests {
         val firstUseCaseOutputMock =
             FullControlUnitContactDTO(
                 controlUnit =
-                    ControlUnitEntity(
-                        id = 2,
-                        administrationId = 3,
-                        areaNote = "Area Note",
-                        departmentAreaInseeCode = "12345",
-                        isArchived = false,
-                        name = "Unit Name",
-                        termsNote = "Terms Note",
-                    ),
+                ControlUnitEntity(
+                    id = 2,
+                    administrationId = 3,
+                    areaNote = "Area Note",
+                    departmentAreaInseeCode = "12345",
+                    isArchived = false,
+                    name = "Unit Name",
+                    termsNote = "Terms Note",
+                ),
                 controlUnitContact =
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 2,
-                        email = "bob@example.org",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        name = "Contact Name",
-                        phone = "0033123456789",
-                    ),
+                ControlUnitContactEntity(
+                    id = 1,
+                    controlUnitId = 2,
+                    email = "bob@example.org",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
+                    name = "Contact Name",
+                    phone = "0033123456789",
+                ),
             )
         given(getControlUnitContactById.execute(requestedId))
             .willReturn(firstUseCaseOutputMock)
@@ -332,25 +337,25 @@ class ControlUnitContactsITests {
         val firstUseCaseOutputMock =
             FullControlUnitContactDTO(
                 controlUnit =
-                    ControlUnitEntity(
-                        id = 2,
-                        administrationId = 3,
-                        areaNote = "Area Note",
-                        departmentAreaInseeCode = "12345",
-                        isArchived = false,
-                        name = "Unit Name",
-                        termsNote = "Terms Note",
-                    ),
+                ControlUnitEntity(
+                    id = 2,
+                    administrationId = 3,
+                    areaNote = "Area Note",
+                    departmentAreaInseeCode = "12345",
+                    isArchived = false,
+                    name = "Unit Name",
+                    termsNote = "Terms Note",
+                ),
                 controlUnitContact =
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 2,
-                        email = "bob@example.org",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        name = "Contact Name",
-                        phone = "0033123456789",
-                    ),
+                ControlUnitContactEntity(
+                    id = 1,
+                    controlUnitId = 2,
+                    email = "bob@example.org",
+                    isEmailSubscriptionContact = false,
+                    isSmsSubscriptionContact = false,
+                    name = "Contact Name",
+                    phone = "0033123456789",
+                ),
             )
         given(getControlUnitContactById.execute(requestedId))
             .willReturn(firstUseCaseOutputMock)

@@ -5,7 +5,13 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.ArchiveAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CanArchiveAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CanDeleteAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CreateOrUpdateAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.DeleteAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrationById
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Administrations
@@ -13,14 +19,18 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -32,26 +42,26 @@ class AdministrationsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var archiveAdministration: ArchiveAdministration
+    @MockitoBean
+    private val archiveAdministration: ArchiveAdministration = mock()
 
-    @MockBean
-    private lateinit var canArchiveAdministration: CanArchiveAdministration
+    @MockitoBean
+    private val canArchiveAdministration: CanArchiveAdministration = mock()
 
-    @MockBean
-    private lateinit var canDeleteAdministration: CanDeleteAdministration
+    @MockitoBean
+    private val canDeleteAdministration: CanDeleteAdministration = mock()
 
-    @MockBean
-    private lateinit var createOrUpdateAdministration: CreateOrUpdateAdministration
+    @MockitoBean
+    private val createOrUpdateAdministration: CreateOrUpdateAdministration = mock()
 
-    @MockBean
-    private lateinit var deleteAdministration: DeleteAdministration
+    @MockitoBean
+    private val deleteAdministration: DeleteAdministration = mock()
 
-    @MockBean
-    private lateinit var getAdministrationById: GetAdministrationById
+    @MockitoBean
+    private val getAdministrationById: GetAdministrationById = mock()
 
-    @MockBean
-    private lateinit var getAdministrations: GetAdministrations
+    @MockitoBean
+    private val getAdministrations: GetAdministrations = mock()
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -140,11 +150,11 @@ class AdministrationsITests {
         val expectedFullAdministration =
             FullAdministrationDTO(
                 administration =
-                    AdministrationEntity(
-                        id = 1,
-                        isArchived = false,
-                        name = "Administration Name",
-                    ),
+                AdministrationEntity(
+                    id = 1,
+                    isArchived = false,
+                    name = "Administration Name",
+                ),
                 controlUnits = listOf(),
             )
 
@@ -164,20 +174,20 @@ class AdministrationsITests {
             listOf(
                 FullAdministrationDTO(
                     administration =
-                        AdministrationEntity(
-                            id = 1,
-                            isArchived = false,
-                            name = "Administration Name",
-                        ),
+                    AdministrationEntity(
+                        id = 1,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                     controlUnits = listOf(),
                 ),
                 FullAdministrationDTO(
                     administration =
-                        AdministrationEntity(
-                            id = 2,
-                            isArchived = false,
-                            name = "Administration Name 2",
-                        ),
+                    AdministrationEntity(
+                        id = 2,
+                        isArchived = false,
+                        name = "Administration Name 2",
+                    ),
                     controlUnits = listOf(),
                 ),
             )

@@ -8,7 +8,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.ArchiveControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CanDeleteControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ControlUnitResources
@@ -16,14 +21,18 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -35,23 +44,23 @@ class ControlUnitResourcesITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var archiveControlUnitResource: ArchiveControlUnitResource
+    @MockitoBean
+    private val archiveControlUnitResource: ArchiveControlUnitResource = mock()
 
-    @MockBean
-    private lateinit var canDeleteControlUnitResource: CanDeleteControlUnitResource
+    @MockitoBean
+    private val canDeleteControlUnitResource: CanDeleteControlUnitResource = mock()
 
-    @MockBean
-    private lateinit var createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource
+    @MockitoBean
+    private val createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource = mock()
 
-    @MockBean
-    private lateinit var deleteControlUnitResource: DeleteControlUnitResource
+    @MockitoBean
+    private val deleteControlUnitResource: DeleteControlUnitResource = mock()
 
-    @MockBean
-    private lateinit var getControlUnitResourceById: GetControlUnitResourceById
+    @MockitoBean
+    private val getControlUnitResourceById: GetControlUnitResourceById = mock()
 
-    @MockBean
-    private lateinit var getControlUnitResources: GetControlUnitResources
+    @MockitoBean
+    private val getControlUnitResources: GetControlUnitResources = mock()
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -137,33 +146,33 @@ class ControlUnitResourcesITests {
         val expectedFullControlUnitResource =
             FullControlUnitResourceDTO(
                 controlUnit =
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Control Unit Name",
-                        termsNote = null,
-                    ),
+                ControlUnitEntity(
+                    id = 0,
+                    administrationId = 0,
+                    areaNote = null,
+                    departmentAreaInseeCode = null,
+                    isArchived = false,
+                    name = "Control Unit Name",
+                    termsNote = null,
+                ),
                 controlUnitResource =
-                    ControlUnitResourceEntity(
-                        id = 1,
-                        controlUnitId = 0,
-                        isArchived = false,
-                        name = "Resource Name",
-                        note = null,
-                        photo = null,
-                        stationId = 0,
-                        type = ControlUnitResourceType.BARGE,
-                    ),
+                ControlUnitResourceEntity(
+                    id = 1,
+                    controlUnitId = 0,
+                    isArchived = false,
+                    name = "Resource Name",
+                    note = null,
+                    photo = null,
+                    stationId = 0,
+                    type = ControlUnitResourceType.BARGE,
+                ),
                 station =
-                    StationEntity(
-                        id = 0,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Control Unit Name",
-                    ),
+                StationEntity(
+                    id = 0,
+                    latitude = 0.0,
+                    longitude = 0.0,
+                    name = "Control Unit Name",
+                ),
             )
 
         val requestedId = 1
@@ -182,63 +191,63 @@ class ControlUnitResourcesITests {
             listOf(
                 FullControlUnitResourceDTO(
                     controlUnit =
-                        ControlUnitEntity(
-                            id = 0,
-                            administrationId = 0,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Unit Name",
-                            termsNote = null,
-                        ),
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                     controlUnitResource =
-                        ControlUnitResourceEntity(
-                            id = 1,
-                            controlUnitId = 3,
-                            isArchived = false,
-                            name = "Resource Name",
-                            note = null,
-                            photo = null,
-                            stationId = 0,
-                            type = ControlUnitResourceType.BARGE,
-                        ),
+                    ControlUnitResourceEntity(
+                        id = 1,
+                        controlUnitId = 3,
+                        isArchived = false,
+                        name = "Resource Name",
+                        note = null,
+                        photo = null,
+                        stationId = 0,
+                        type = ControlUnitResourceType.BARGE,
+                    ),
                     station =
-                        StationEntity(
-                            id = 0,
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            name = "Station Name",
-                        ),
+                    StationEntity(
+                        id = 0,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
                 ),
                 FullControlUnitResourceDTO(
                     controlUnit =
-                        ControlUnitEntity(
-                            id = 0,
-                            administrationId = 0,
-                            areaNote = null,
-                            departmentAreaInseeCode = null,
-                            isArchived = false,
-                            name = "Unit Name",
-                            termsNote = null,
-                        ),
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                     controlUnitResource =
-                        ControlUnitResourceEntity(
-                            id = 2,
-                            controlUnitId = 0,
-                            isArchived = false,
-                            name = "Resource Name 2",
-                            note = null,
-                            photo = null,
-                            stationId = 0,
-                            type = ControlUnitResourceType.BARGE,
-                        ),
+                    ControlUnitResourceEntity(
+                        id = 2,
+                        controlUnitId = 0,
+                        isArchived = false,
+                        name = "Resource Name 2",
+                        note = null,
+                        photo = null,
+                        stationId = 0,
+                        type = ControlUnitResourceType.BARGE,
+                    ),
                     station =
-                        StationEntity(
-                            id = 0,
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            name = "Station Name",
-                        ),
+                    StationEntity(
+                        id = 0,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
                 ),
             )
 
