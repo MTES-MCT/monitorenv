@@ -261,11 +261,11 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     // select sub-theme and prefill theme
     cy.getDataCy('envaction-subtheme-selector').eq(0).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(0).contains("Découverte d'une épave maritime").click({ force: true }) // id 128
+    cy.getDataCy('envaction-theme-element').eq(0).contains("Découverte d'une épave maritime").click({ force: true }) // id 206
     cy.getDataCy('envaction-theme-element').eq(0).contains('Épave') // id 105
     // add another sub-theme
     cy.getDataCy('envaction-subtheme-selector').eq(0).click({ force: true })
-    cy.getDataCy('envaction-theme-element').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
+    cy.getDataCy('envaction-theme-element').eq(0).contains('Autre (Épave)').click({ force: true }) // id 209
     cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('surveillance-completed-by').type('ABC', { force: true })
@@ -286,7 +286,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('envaction-theme-selector').click({ force: true })
     cy.getDataCy('envaction-theme-element').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
     cy.getDataCy('envaction-subtheme-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element').contains('Pêche embarquée').click({ force: true }) // id 173
+    cy.getDataCy('envaction-theme-element').contains('Pêche embarquée').click({ force: true }) // id 231
     cy.getDataCy('envaction-theme-element').click('topLeft', { force: true })
 
     cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
@@ -304,15 +304,15 @@ context('Side Window > Mission Form > Mission actions', () => {
       const controlPlans = control.controlPlans[0]
       expect(controlPlans.themeId).equal(112)
       expect(controlPlans.subThemeIds.length).equal(1)
-      expect(controlPlans.subThemeIds[0]).equal(173)
+      expect(controlPlans.subThemeIds[0]).equal(231)
 
       // surveillance
       const surveillance: EnvActionSurveillance = envActions.find(a => a.actionType === 'SURVEILLANCE')
       const surveillanceControlPlans = surveillance.controlPlans?.[0]
       expect(surveillanceControlPlans?.themeId).equal(105)
       expect(surveillanceControlPlans?.subThemeIds?.length).equal(2)
-      expect(surveillanceControlPlans?.subThemeIds?.[0]).equal(128)
-      expect(surveillanceControlPlans?.subThemeIds?.[1]).equal(131)
+      expect(surveillanceControlPlans?.subThemeIds?.[0]).equal(206)
+      expect(surveillanceControlPlans?.subThemeIds?.[1]).equal(209)
 
       const id = response && response.body.id
       // update mission date to 2023

@@ -74,7 +74,7 @@ context('Reportings', () => {
           }
         ],
         reportType: 'OBSERVATION',
-        subThemeIds: [108],
+        subThemeIds: [186],
         targetDetails: [],
         targetType: 'COMPANY',
         themeId: 102,

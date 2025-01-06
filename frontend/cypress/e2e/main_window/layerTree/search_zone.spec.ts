@@ -15,7 +15,7 @@ context('LayerTree > Search zone', () => {
     cy.getDataCy('regulatory-result-list-button').contains('0 résultat')
     cy.get('#isRegulatorySearchResultsVisible').should('be.checked')
 
-    cy.getDataCy('vigilance-area-results-list-button').contains('3 résultats')
+    cy.getDataCy('vigilance-area-results-list-button').contains('2 résultats')
     cy.get('#isVigilanceAreaSearchResultsVisible').should('be.checked')
 
     // reset search by zone
@@ -27,7 +27,7 @@ context('LayerTree > Search zone', () => {
     cy.getDataCy('regulatory-result-list-button').contains('13 résultats')
     cy.get('#isRegulatorySearchResultsVisible').should('not.be.checked')
 
-    cy.getDataCy('vigilance-area-results-list-button').contains('5 résultats')
+    cy.getDataCy('vigilance-area-results-list-button').contains('4 résultats')
     cy.get('#isVigilanceAreaSearchResultsVisible').should('not.be.checked')
   })
 })

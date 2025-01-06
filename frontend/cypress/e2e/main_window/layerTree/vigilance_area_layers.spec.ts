@@ -50,7 +50,6 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 2')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 6')
-    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
 
     // Filter "Current quarter"
     cy.clickButton('Filtrer par type de zones')
@@ -58,9 +57,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-results-list-button').click()
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 3')
-    // cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 5')
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 7')
-    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 8')
 
     // Filter "Current year"
     cy.clickButton('Filtrer par type de zones')
@@ -85,11 +82,11 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-results-list-button').contains('0 résultat')
   })
   it('Result list should be displayed by default but not checked and total should be visible', () => {
-    cy.getDataCy('vigilance-area-results-list-button').contains('5 résultats')
+    cy.getDataCy('vigilance-area-results-list-button').contains('4 résultats')
 
     cy.get('#isVigilanceAreaSearchResultsVisible').should('not.be.checked')
     cy.getDataCy('vigilance-area-results-list-button').click()
-    cy.getDataCy('vigilance-area-result-list').children().should('have.length', 5)
+    cy.getDataCy('vigilance-area-result-list').children().should('have.length', 4)
     cy.get('#isVigilanceAreaSearchResultsVisible').should('be.checked')
   })
 })
