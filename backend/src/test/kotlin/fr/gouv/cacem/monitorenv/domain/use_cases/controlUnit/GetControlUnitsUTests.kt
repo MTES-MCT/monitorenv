@@ -23,42 +23,42 @@ class GetControlUnitsUTests {
             listOf(
                 FullControlUnitDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 0,
-                        name = "Admin 1",
-                        isArchived = false,
-                    ),
+                        AdministrationEntity(
+                            id = 0,
+                            name = "Admin 1",
+                            isArchived = false,
+                        ),
                     controlUnit =
-                    ControlUnitEntity(
-                        id = 1,
-                        administrationId = 0,
-                        areaNote = "Area 1",
-                        departmentAreaInseeCode = "A1",
-                        isArchived = false,
-                        name = "CU 1",
-                        termsNote = "Terms 1",
-                    ),
+                        ControlUnitEntity(
+                            id = 1,
+                            administrationId = 0,
+                            areaNote = "Area 1",
+                            departmentAreaInseeCode = "A1",
+                            isArchived = false,
+                            name = "CU 1",
+                            termsNote = "Terms 1",
+                        ),
                     departmentArea = null,
                     controlUnitContacts = listOf(),
                     controlUnitResources = listOf(),
                 ),
                 FullControlUnitDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 1,
-                        name = "Admin 2",
-                        isArchived = false,
-                    ),
+                        AdministrationEntity(
+                            id = 1,
+                            name = "Admin 2",
+                            isArchived = false,
+                        ),
                     controlUnit =
-                    ControlUnitEntity(
-                        id = 2,
-                        administrationId = 1,
-                        areaNote = "Area 2",
-                        departmentAreaInseeCode = "A2",
-                        isArchived = false,
-                        name = "CU 2",
-                        termsNote = "Terms 2",
-                    ),
+                        ControlUnitEntity(
+                            id = 2,
+                            administrationId = 1,
+                            areaNote = "Area 2",
+                            departmentAreaInseeCode = "A2",
+                            isArchived = false,
+                            name = "CU 2",
+                            termsNote = "Terms 2",
+                        ),
                     departmentArea = null,
                     controlUnitContacts = listOf(),
                     controlUnitResources = listOf(),

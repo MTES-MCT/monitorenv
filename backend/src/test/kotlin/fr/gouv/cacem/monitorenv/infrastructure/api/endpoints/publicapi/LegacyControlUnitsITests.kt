@@ -40,13 +40,13 @@ class LegacyControlUnitsITests {
                 isArchived = false,
                 name = "DF 123",
                 resources =
-                listOf(
-                    LegacyControlUnitResourceEntity(
-                        id = 0,
-                        controlUnitId = 4,
-                        name = "Vedette",
+                    listOf(
+                        LegacyControlUnitResourceEntity(
+                            id = 0,
+                            controlUnitId = 4,
+                            name = "Vedette",
+                        ),
                     ),
-                ),
             )
         given(getLegacyControlUnits.execute()).willReturn(listOf(controlUnit))
 

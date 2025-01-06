@@ -74,18 +74,18 @@ class CreateOrUpdateMissionUTests {
             listOf(
                 EnvActionControlEntity(
                     id =
-                    UUID.fromString(
-                        "33310163-4e22-4d3d-b585-dac4431eb4b5",
-                    ),
+                        UUID.fromString(
+                            "33310163-4e22-4d3d-b585-dac4431eb4b5",
+                        ),
                     geom = point,
                     facade = "La Face Ade",
                     department = "Quequ'part",
                 ),
                 EnvActionSurveillanceEntity(
                     id =
-                    UUID.fromString(
-                        "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
-                    ),
+                        UUID.fromString(
+                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                        ),
                     geom = polygon,
                     facade = "La Face Ade",
                     department = "Quequ'part",
@@ -93,11 +93,11 @@ class CreateOrUpdateMissionUTests {
                 ),
                 EnvActionNoteEntity(
                     id =
-                    UUID.fromString(
-                        "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
-                    ),
+                        UUID.fromString(
+                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                        ),
                     observations =
-                    "Quelqu'un aurait vu quelque chose quelque part à un certain moment.",
+                        "Quelqu'un aurait vu quelque chose quelque part à un certain moment.",
                 ),
             )
 
@@ -131,11 +131,11 @@ class CreateOrUpdateMissionUTests {
             missionRepository.save(
                 argThat {
                     this ==
-                            missionToUpdate.copy(
-                                facade = "La Face Ade",
-                                envActions = existingEnvActions,
-                                observationsByUnit = "observations",
-                            )
+                        missionToUpdate.copy(
+                            facade = "La Face Ade",
+                            envActions = existingEnvActions,
+                            observationsByUnit = "observations",
+                        )
                 },
             ),
         )
@@ -161,11 +161,11 @@ class CreateOrUpdateMissionUTests {
             .save(
                 argThat {
                     this ==
-                            missionToUpdate.copy(
-                                facade = "La Face Ade",
-                                envActions = existingEnvActions,
-                                observationsByUnit = "observations",
-                            )
+                        missionToUpdate.copy(
+                            facade = "La Face Ade",
+                            envActions = existingEnvActions,
+                            observationsByUnit = "observations",
+                        )
                 },
             )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)

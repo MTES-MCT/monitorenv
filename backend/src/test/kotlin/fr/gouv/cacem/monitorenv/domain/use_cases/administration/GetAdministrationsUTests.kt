@@ -22,20 +22,20 @@ class GetAdministrationsUTests {
             listOf(
                 FullAdministrationDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 1,
-                        name = "Administration Name",
-                        isArchived = false,
-                    ),
+                        AdministrationEntity(
+                            id = 1,
+                            name = "Administration Name",
+                            isArchived = false,
+                        ),
                     controlUnits = listOf(),
                 ),
                 FullAdministrationDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 2,
-                        name = "Administration Name 2",
-                        isArchived = false,
-                    ),
+                        AdministrationEntity(
+                            id = 2,
+                            name = "Administration Name 2",
+                            isArchived = false,
+                        ),
                     controlUnits = listOf(),
                 ),
             )

@@ -23,23 +23,23 @@ class CanArchiveAdministrationUTests {
         val fullAdministration =
             FullAdministrationDTO(
                 administration =
-                AdministrationEntity(
-                    id = 1,
-                    name = "Administration Name",
-                    isArchived = false,
-                ),
-                controlUnits =
-                listOf(
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 1,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = true,
-                        name = "Control Unit Name",
-                        termsNote = null,
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
+                        isArchived = false,
                     ),
-                ),
+                controlUnits =
+                    listOf(
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 1,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = true,
+                            name = "Control Unit Name",
+                            termsNote = null,
+                        ),
+                    ),
             )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
@@ -55,23 +55,23 @@ class CanArchiveAdministrationUTests {
         val fullAdministration =
             FullAdministrationDTO(
                 administration =
-                AdministrationEntity(
-                    id = 1,
-                    name = "Administration Name",
-                    isArchived = false,
-                ),
-                controlUnits =
-                listOf(
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 1,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
                         isArchived = false,
-                        name = "Control Unit Name",
-                        termsNote = null,
                     ),
-                ),
+                controlUnits =
+                    listOf(
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 1,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Control Unit Name",
+                            termsNote = null,
+                        ),
+                    ),
             )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)

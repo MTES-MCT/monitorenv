@@ -41,44 +41,44 @@ class GetEngagedControlUnitsUTests {
         val firstMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    controlUnits = listOf(firstControlUnit),
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    observationsCacem = null,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 10,
+                        controlUnits = listOf(firstControlUnit),
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "Outre-Mer",
+                        geom = null,
+                        observationsCacem = null,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
         val secondMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    controlUnits = listOf(secondControlUnit),
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    observationsCacem = null,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORFISH,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 10,
+                        controlUnits = listOf(secondControlUnit),
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "Outre-Mer",
+                        geom = null,
+                        observationsCacem = null,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORFISH,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
 
         given(

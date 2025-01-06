@@ -23,25 +23,25 @@ class GetControlUnitContactByIdUTests {
         val fullControlUnitContact =
             FullControlUnitContactDTO(
                 controlUnit =
-                ControlUnitEntity(
-                    id = 0,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Control Unit Name",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
+                    ),
                 controlUnitContact =
-                ControlUnitContactEntity(
-                    id = 1,
-                    controlUnitId = 0,
-                    email = null,
-                    name = "Control Unit Contact Name",
-                    isEmailSubscriptionContact = false,
-                    isSmsSubscriptionContact = false,
-                    phone = null,
-                ),
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 0,
+                        email = null,
+                        name = "Control Unit Contact Name",
+                        isEmailSubscriptionContact = false,
+                        isSmsSubscriptionContact = false,
+                        phone = null,
+                    ),
             )
 
         given(controlUnitContactRepository.findById(controlUnitContactId)).willReturn(fullControlUnitContact)

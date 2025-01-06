@@ -24,12 +24,12 @@ class CanDeleteStationUTests {
         val fullStation =
             FullStationDTO(
                 station =
-                StationEntity(
-                    id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
-                ),
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
                 controlUnitResources = listOf(),
             )
 
@@ -46,25 +46,25 @@ class CanDeleteStationUTests {
         val fullStation =
             FullStationDTO(
                 station =
-                StationEntity(
-                    id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
-                ),
-                controlUnitResources =
-                listOf(
-                    ControlUnitResourceEntity(
-                        id = 0,
-                        stationId = 1,
-                        controlUnitId = 0,
-                        isArchived = false,
-                        name = "Control Unit Resource Name",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE,
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
                     ),
-                ),
+                controlUnitResources =
+                    listOf(
+                        ControlUnitResourceEntity(
+                            id = 0,
+                            stationId = 1,
+                            controlUnitId = 0,
+                            isArchived = false,
+                            name = "Control Unit Resource Name",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                    ),
             )
 
         given(stationRepository.findById(stationId)).willReturn(fullStation)

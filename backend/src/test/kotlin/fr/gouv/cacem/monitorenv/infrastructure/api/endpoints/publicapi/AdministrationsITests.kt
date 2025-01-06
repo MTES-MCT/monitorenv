@@ -150,11 +150,11 @@ class AdministrationsITests {
         val expectedFullAdministration =
             FullAdministrationDTO(
                 administration =
-                AdministrationEntity(
-                    id = 1,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
+                    AdministrationEntity(
+                        id = 1,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                 controlUnits = listOf(),
             )
 
@@ -174,20 +174,20 @@ class AdministrationsITests {
             listOf(
                 FullAdministrationDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 1,
-                        isArchived = false,
-                        name = "Administration Name",
-                    ),
+                        AdministrationEntity(
+                            id = 1,
+                            isArchived = false,
+                            name = "Administration Name",
+                        ),
                     controlUnits = listOf(),
                 ),
                 FullAdministrationDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 2,
-                        isArchived = false,
-                        name = "Administration Name 2",
-                    ),
+                        AdministrationEntity(
+                            id = 2,
+                            isArchived = false,
+                            name = "Administration Name 2",
+                        ),
                     controlUnits = listOf(),
                 ),
             )

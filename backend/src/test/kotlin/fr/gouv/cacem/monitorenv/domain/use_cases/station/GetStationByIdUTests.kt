@@ -22,12 +22,12 @@ class GetStationByIdUTests {
         val fullStation =
             FullStationDTO(
                 station =
-                StationEntity(
-                    id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
-                ),
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
                 controlUnitResources = listOf(),
             )
 
