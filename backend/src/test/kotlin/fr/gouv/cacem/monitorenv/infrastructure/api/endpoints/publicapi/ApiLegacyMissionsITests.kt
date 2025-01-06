@@ -233,17 +233,17 @@ class ApiLegacyMissionsITests {
         val expectedFirstMission =
             MissionDTO(
                 mission =
-                MissionEntity(
-                    id = 10,
-                    missionTypes = listOf(MissionTypeEnum.SEA),
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORFISH,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 10,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORFISH,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
 
         // we test only if the route is called with the right arg
@@ -382,22 +382,22 @@ class ApiLegacyMissionsITests {
         val updateMissionEvent =
             UpdateMissionEvent(
                 mission =
-                MissionEntity(
-                    id = 132,
-                    missionTypes = listOf(MissionTypeEnum.SEA),
-                    facade = "Outre-Mer",
-                    geom = polygon,
-                    observationsCnsp = null,
-                    startDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc =
-                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORFISH,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    MissionEntity(
+                        id = 132,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        facade = "Outre-Mer",
+                        geom = polygon,
+                        observationsCnsp = null,
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORFISH,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
             )
 
         // When we send an event from another thread

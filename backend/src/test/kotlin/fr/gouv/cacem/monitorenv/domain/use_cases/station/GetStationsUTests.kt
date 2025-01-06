@@ -22,22 +22,22 @@ class GetStationsUTests {
             listOf(
                 FullStationDTO(
                     station =
-                    StationEntity(
-                        id = 1,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name",
-                    ),
+                        StationEntity(
+                            id = 1,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
                     controlUnitResources = listOf(),
                 ),
                 FullStationDTO(
                     station =
-                    StationEntity(
-                        id = 2,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name 2",
-                    ),
+                        StationEntity(
+                            id = 2,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name 2",
+                        ),
                     controlUnitResources = listOf(),
                 ),
             )

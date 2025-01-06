@@ -145,21 +145,21 @@ class ControlUnitsITests {
         val expectedFullControlUnit =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 0,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
+                    AdministrationEntity(
+                        id = 0,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                 controlUnit =
-                ControlUnitEntity(
-                    id = 1,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 1,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )
@@ -180,41 +180,41 @@ class ControlUnitsITests {
             listOf(
                 FullControlUnitDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 0,
-                        isArchived = false,
-                        name = "Administration Name",
-                    ),
+                        AdministrationEntity(
+                            id = 0,
+                            isArchived = false,
+                            name = "Administration Name",
+                        ),
                     controlUnit =
-                    ControlUnitEntity(
-                        id = 1,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Unit Name",
-                        termsNote = null,
-                    ),
+                        ControlUnitEntity(
+                            id = 1,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
                     controlUnitContacts = listOf(),
                     controlUnitResources = listOf(),
                 ),
                 FullControlUnitDTO(
                     administration =
-                    AdministrationEntity(
-                        id = 0,
-                        isArchived = false,
-                        name = "Administration Name",
-                    ),
+                        AdministrationEntity(
+                            id = 0,
+                            isArchived = false,
+                            name = "Administration Name",
+                        ),
                     controlUnit =
-                    ControlUnitEntity(
-                        id = 2,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Unit Name 2",
-                        termsNote = null,
-                    ),
+                        ControlUnitEntity(
+                            id = 2,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name 2",
+                            termsNote = null,
+                        ),
                     controlUnitContacts = listOf(),
                     controlUnitResources = listOf(),
                 ),

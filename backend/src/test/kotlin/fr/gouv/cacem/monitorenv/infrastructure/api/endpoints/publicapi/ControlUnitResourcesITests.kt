@@ -146,33 +146,33 @@ class ControlUnitResourcesITests {
         val expectedFullControlUnitResource =
             FullControlUnitResourceDTO(
                 controlUnit =
-                ControlUnitEntity(
-                    id = 0,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Control Unit Name",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 0,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
+                    ),
                 controlUnitResource =
-                ControlUnitResourceEntity(
-                    id = 1,
-                    controlUnitId = 0,
-                    isArchived = false,
-                    name = "Resource Name",
-                    note = null,
-                    photo = null,
-                    stationId = 0,
-                    type = ControlUnitResourceType.BARGE,
-                ),
+                    ControlUnitResourceEntity(
+                        id = 1,
+                        controlUnitId = 0,
+                        isArchived = false,
+                        name = "Resource Name",
+                        note = null,
+                        photo = null,
+                        stationId = 0,
+                        type = ControlUnitResourceType.BARGE,
+                    ),
                 station =
-                StationEntity(
-                    id = 0,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Control Unit Name",
-                ),
+                    StationEntity(
+                        id = 0,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Control Unit Name",
+                    ),
             )
 
         val requestedId = 1
@@ -191,63 +191,63 @@ class ControlUnitResourcesITests {
             listOf(
                 FullControlUnitResourceDTO(
                     controlUnit =
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Unit Name",
-                        termsNote = null,
-                    ),
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
                     controlUnitResource =
-                    ControlUnitResourceEntity(
-                        id = 1,
-                        controlUnitId = 3,
-                        isArchived = false,
-                        name = "Resource Name",
-                        note = null,
-                        photo = null,
-                        stationId = 0,
-                        type = ControlUnitResourceType.BARGE,
-                    ),
+                        ControlUnitResourceEntity(
+                            id = 1,
+                            controlUnitId = 3,
+                            isArchived = false,
+                            name = "Resource Name",
+                            note = null,
+                            photo = null,
+                            stationId = 0,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
                     station =
-                    StationEntity(
-                        id = 0,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name",
-                    ),
+                        StationEntity(
+                            id = 0,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
                 ),
                 FullControlUnitResourceDTO(
                     controlUnit =
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Unit Name",
-                        termsNote = null,
-                    ),
+                        ControlUnitEntity(
+                            id = 0,
+                            administrationId = 0,
+                            areaNote = null,
+                            departmentAreaInseeCode = null,
+                            isArchived = false,
+                            name = "Unit Name",
+                            termsNote = null,
+                        ),
                     controlUnitResource =
-                    ControlUnitResourceEntity(
-                        id = 2,
-                        controlUnitId = 0,
-                        isArchived = false,
-                        name = "Resource Name 2",
-                        note = null,
-                        photo = null,
-                        stationId = 0,
-                        type = ControlUnitResourceType.BARGE,
-                    ),
+                        ControlUnitResourceEntity(
+                            id = 2,
+                            controlUnitId = 0,
+                            isArchived = false,
+                            name = "Resource Name 2",
+                            note = null,
+                            photo = null,
+                            stationId = 0,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
                     station =
-                    StationEntity(
-                        id = 0,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name",
-                    ),
+                        StationEntity(
+                            id = 0,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
                 ),
             )
 

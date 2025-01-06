@@ -119,12 +119,12 @@ class ApiStationsITests {
             FullStationDTO(
                 controlUnitResources = listOf(),
                 station =
-                StationEntity(
-                    id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Station Name",
-                ),
+                    StationEntity(
+                        id = 1,
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        name = "Station Name",
+                    ),
             )
 
         val requestedId = 1
@@ -144,22 +144,22 @@ class ApiStationsITests {
                 FullStationDTO(
                     controlUnitResources = listOf(),
                     station =
-                    StationEntity(
-                        id = 1,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name",
-                    ),
+                        StationEntity(
+                            id = 1,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name",
+                        ),
                 ),
                 FullStationDTO(
                     controlUnitResources = listOf(),
                     station =
-                    StationEntity(
-                        id = 2,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name 2",
-                    ),
+                        StationEntity(
+                            id = 2,
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            name = "Station Name 2",
+                        ),
                 ),
             )
 

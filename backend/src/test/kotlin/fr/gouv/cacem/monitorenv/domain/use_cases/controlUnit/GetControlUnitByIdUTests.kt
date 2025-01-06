@@ -23,21 +23,21 @@ class GetControlUnitByIdUTests {
         val fullControlUnit =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 0,
-                    name = "Administration Name",
-                    isArchived = false,
-                ),
+                    AdministrationEntity(
+                        id = 0,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
                 controlUnit =
-                ControlUnitEntity(
-                    id = 1,
-                    administrationId = 0,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Control Unit Name",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 1,
+                        administrationId = 0,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Control Unit Name",
+                        termsNote = null,
+                    ),
                 departmentArea = null,
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),

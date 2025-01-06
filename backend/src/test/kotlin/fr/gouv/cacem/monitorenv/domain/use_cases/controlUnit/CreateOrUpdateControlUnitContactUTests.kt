@@ -45,21 +45,21 @@ class CreateOrUpdateControlUnitContactUTests {
         val controlUnitDTO =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 6,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
+                    AdministrationEntity(
+                        id = 6,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                 controlUnit =
-                ControlUnitEntity(
-                    id = 2,
-                    administrationId = 6,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 6,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )
@@ -101,30 +101,30 @@ class CreateOrUpdateControlUnitContactUTests {
         val firstRepositoryOutputMock =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 3,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
-                controlUnit =
-                ControlUnitEntity(
-                    id = 2,
-                    administrationId = 3,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
-                controlUnitContacts =
-                listOf(
-                    updatedControlUnitContact.copy(
-                        email = "bob@example.org",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        phone = "0033123456789",
+                    AdministrationEntity(
+                        id = 3,
+                        isArchived = false,
+                        name = "Administration Name",
                     ),
-                ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 3,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitContacts =
+                    listOf(
+                        updatedControlUnitContact.copy(
+                            email = "bob@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            phone = "0033123456789",
+                        ),
+                    ),
                 controlUnitResources = listOf(),
             )
         given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
@@ -171,60 +171,60 @@ class CreateOrUpdateControlUnitContactUTests {
         val firstRepositoryOutputMock =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 6,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
+                    AdministrationEntity(
+                        id = 6,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                 controlUnit =
-                ControlUnitEntity(
-                    id = 5,
-                    administrationId = 6,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 5,
+                        administrationId = 6,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                 controlUnitContacts =
-                listOf(
-                    ControlUnitContactEntity(
-                        id = updatedControlUnitContact.id,
-                        controlUnitId = 5,
-                        email = "contact1@example.org",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        name = "Contact 1",
-                        phone = null,
+                    listOf(
+                        ControlUnitContactEntity(
+                            id = updatedControlUnitContact.id,
+                            controlUnitId = 5,
+                            email = "contact1@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 1",
+                            phone = null,
+                        ),
+                        ControlUnitContactEntity(
+                            id = 2,
+                            controlUnitId = 5,
+                            email = "contact2@example.org",
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 2",
+                            phone = null,
+                        ),
+                        ControlUnitContactEntity(
+                            id = 3,
+                            controlUnitId = 5,
+                            email = "contact3@example.org",
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 3",
+                            phone = null,
+                        ),
+                        ControlUnitContactEntity(
+                            id = 4,
+                            controlUnitId = 5,
+                            email = "contact3@example.org",
+                            isEmailSubscriptionContact = false,
+                            isSmsSubscriptionContact = false,
+                            name = "Contact 3",
+                            phone = null,
+                        ),
                     ),
-                    ControlUnitContactEntity(
-                        id = 2,
-                        controlUnitId = 5,
-                        email = "contact2@example.org",
-                        isEmailSubscriptionContact = true,
-                        isSmsSubscriptionContact = false,
-                        name = "Contact 2",
-                        phone = null,
-                    ),
-                    ControlUnitContactEntity(
-                        id = 3,
-                        controlUnitId = 5,
-                        email = "contact3@example.org",
-                        isEmailSubscriptionContact = true,
-                        isSmsSubscriptionContact = false,
-                        name = "Contact 3",
-                        phone = null,
-                    ),
-                    ControlUnitContactEntity(
-                        id = 4,
-                        controlUnitId = 5,
-                        email = "contact3@example.org",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        name = "Contact 3",
-                        phone = null,
-                    ),
-                ),
                 controlUnitResources = listOf(),
             )
         given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
@@ -281,33 +281,33 @@ class CreateOrUpdateControlUnitContactUTests {
         val controlUnit =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 6,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
-                controlUnit =
-                ControlUnitEntity(
-                    id = 5,
-                    administrationId = 6,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
-                controlUnitContacts =
-                listOf(
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 5,
-                        email = "contact1@example.org",
-                        isEmailSubscriptionContact = true,
-                        isSmsSubscriptionContact = true,
-                        name = "Contact 1",
-                        phone = null,
+                    AdministrationEntity(
+                        id = 6,
+                        isArchived = false,
+                        name = "Administration Name",
                     ),
-                ),
+                controlUnit =
+                    ControlUnitEntity(
+                        id = 5,
+                        administrationId = 6,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
+                controlUnitContacts =
+                    listOf(
+                        ControlUnitContactEntity(
+                            id = 1,
+                            controlUnitId = 5,
+                            email = "contact1@example.org",
+                            isEmailSubscriptionContact = true,
+                            isSmsSubscriptionContact = true,
+                            name = "Contact 1",
+                            phone = null,
+                        ),
+                    ),
                 controlUnitResources = listOf(),
             )
         given(controlUnitRepository.findById(newControlUnitContact.controlUnitId))
@@ -379,21 +379,21 @@ class CreateOrUpdateControlUnitContactUTests {
         val controlUnitDTO =
             FullControlUnitDTO(
                 administration =
-                AdministrationEntity(
-                    id = 6,
-                    isArchived = false,
-                    name = "Administration Name",
-                ),
+                    AdministrationEntity(
+                        id = 6,
+                        isArchived = false,
+                        name = "Administration Name",
+                    ),
                 controlUnit =
-                ControlUnitEntity(
-                    id = 2,
-                    administrationId = 6,
-                    areaNote = null,
-                    departmentAreaInseeCode = null,
-                    isArchived = false,
-                    name = "Unit Name",
-                    termsNote = null,
-                ),
+                    ControlUnitEntity(
+                        id = 2,
+                        administrationId = 6,
+                        areaNote = null,
+                        departmentAreaInseeCode = null,
+                        isArchived = false,
+                        name = "Unit Name",
+                        termsNote = null,
+                    ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )

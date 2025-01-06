@@ -22,11 +22,11 @@ class GetAdministrationByIdUTests {
         val fullAdministration =
             FullAdministrationDTO(
                 administration =
-                AdministrationEntity(
-                    id = 1,
-                    name = "Administration Name",
-                    isArchived = false,
-                ),
+                    AdministrationEntity(
+                        id = 1,
+                        name = "Administration Name",
+                        isArchived = false,
+                    ),
                 controlUnits = listOf(),
             )
 

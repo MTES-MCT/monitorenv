@@ -21,7 +21,6 @@ import java.time.temporal.ChronoUnit
     properties = ["monitorenv.scheduling.enabled=false"],
 )
 abstract class AbstractDBTests {
-
     companion object {
         @JvmStatic
         val container: GenericContainer<Nothing> =
@@ -52,14 +51,14 @@ abstract class AbstractDBTests {
             println(toStringConsumer.toUtf8String())
 
             return "jdbc:postgresql://" +
-                    container.host +
-                    ":" +
-                    container
-                        .getMappedPort(
-                            PostgreSQLContainer.POSTGRESQL_PORT,
-                        )
-                        .toString() +
-                    "/testdb?user=postgres&password=postgres"
+                container.host +
+                ":" +
+                container
+                    .getMappedPort(
+                        PostgreSQLContainer.POSTGRESQL_PORT,
+                    )
+                    .toString() +
+                "/testdb?user=postgres&password=postgres"
         }
     }
 }
