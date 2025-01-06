@@ -12,5 +12,3 @@ export function getImage(images: ExportImageType[], type: Dashboard.Layer, id: n
     return imageType === Dashboard.featuresCode[type] && imageId && id === +imageId
   })?.image
 }
-
-// Dashboard.featuresCode[Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS]

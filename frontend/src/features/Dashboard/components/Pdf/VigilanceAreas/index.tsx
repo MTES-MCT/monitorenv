@@ -47,6 +47,15 @@ export function VigilanceAreas({
 
           return (
             <View key={vigilanceArea.id} style={areaStyle.wrapper} wrap={false}>
+              {image && (
+                <Image
+                  src={image}
+                  style={{
+                    height: '100%',
+                    width: '100%'
+                  }}
+                />
+              )}
               <View style={areaStyle.card}>
                 <View style={areaStyle.header}>
                   <Text> {vigilanceArea.name}</Text>
@@ -128,7 +137,6 @@ export function VigilanceAreas({
                   </View>
                 )}
               </View>
-              {image && <Image src={image} />}
             </View>
           )
         })}

@@ -97,7 +97,7 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
 
       const view = inMemoryMap.getView()
 
-      view.fit(extent, { padding: [10, 10, 10, 10] })
+      view.fit(extent, { padding: [10, 10, 10, 150] })
 
       // admission of weakness...
       setTimeout(() => {
