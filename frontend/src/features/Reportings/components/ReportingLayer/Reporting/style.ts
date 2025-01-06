@@ -9,6 +9,8 @@ import { OLGeometryType } from '../../../../../domain/entities/map/constants'
 import { ReportingStatusEnum, ReportingTypeEnum, getReportingStatus } from '../../../../../domain/entities/reporting'
 import { getColorWithAlpha } from '../../../../../utils/utils'
 
+import type { FeatureLike } from 'ol/Feature'
+
 const reportingStyleFactory = (color, src?: string | undefined) =>
   new Style({
     geometry: feature => {
@@ -119,7 +121,7 @@ export const hoveredReportingStyleFn = feature => {
   }
 }
 
-export const selectedReportingStyleFn = feature => {
+export const selectedReportingStyleFn = (feature: FeatureLike) => {
   const status = getReportingStatus({
     createdAt: feature.get('createdAt'),
     isArchived: feature.get('isArchived'),
@@ -154,7 +156,7 @@ export const selectedReportingStyleFn = feature => {
   }
 }
 
-export const reportingPinStyleFn = feature => {
+export const reportingPinStyleFn = (feature: FeatureLike) => {
   const status = getReportingStatus({
     createdAt: feature.get('createdAt'),
     isArchived: feature.get('isArchived'),
@@ -188,7 +190,7 @@ export const reportingPinStyleFn = feature => {
   }
 }
 
-const reportingToMissionLinkStyle = feature =>
+const reportingToMissionLinkStyle = (feature: FeatureLike) =>
   new Style({
     geometry: () => {
       const missionId = feature.get('missionId')
@@ -249,9 +251,13 @@ const attachedMissionCircleStyle = new Style({
   })
 })
 
-export const editingReportingStyleFn = feature => [
-  reportingPinStyleFn(feature),
-  ...selectedReportingStyleFn(feature),
-  reportingToMissionLinkStyle(feature),
-  attachedMissionCircleStyle
-]
+export const editingReportingStyleFn = (feature: FeatureLike, { withLinkedMissions = true } = {}) => {
+  const reportingStyles = [reportingPinStyleFn(feature), ...selectedReportingStyleFn(feature)]
+
+  if (withLinkedMissions) {
+    reportingStyles.push(reportingToMissionLinkStyle(feature))
+    reportingStyles.push(attachedMissionCircleStyle)
+  }
+
+  return reportingStyles
+}

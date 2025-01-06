@@ -26,7 +26,7 @@ export const getDashboardStyle = (feature: FeatureLike) => {
   }
 
   if (featureType === Dashboard.Layer.DASHBOARD_REPORTINGS) {
-    return editingReportingStyleFn(feature)
+    return editingReportingStyleFn(feature, { withLinkedMissions: false })
   }
 
   return undefined
