@@ -398,7 +398,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 reportingSources =
                 listOf(
                     ReportingSourceEntity(
-                        id = UUID.randomUUID(),
+                        id = null,
                         sourceType = SourceTypeEnum.SEMAPHORE,
                         semaphoreId = 21,
                         controlUnitId = null,
@@ -474,7 +474,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 reportingSources =
                 listOf(
                     ReportingSourceEntity(
-                        id = UUID.randomUUID(),
+                        id = null,
                         reportingId = null,
                         sourceType = SourceTypeEnum.SEMAPHORE,
                         semaphoreId = 23,
