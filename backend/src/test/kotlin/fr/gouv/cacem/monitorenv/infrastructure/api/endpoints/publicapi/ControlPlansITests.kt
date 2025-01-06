@@ -11,11 +11,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlansByYe
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ControlPlans
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -28,11 +29,11 @@ class ControlPlansITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
-    private lateinit var getControlPlansByYear: GetControlPlansByYear
+    @MockitoBean
+    private val getControlPlansByYear: GetControlPlansByYear = mock()
 
-    @MockBean
-    private lateinit var getControlPlans: GetControlPlans
+    @MockitoBean
+    private val getControlPlans: GetControlPlans = mock()
 
     @Test
     fun `Should get all control plan themes`() {

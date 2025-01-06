@@ -7,16 +7,17 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class DeleteAdministrationUTests {
-    @MockBean
-    private lateinit var administrationRepository: IAdministrationRepository
+    @Mock
+    private val administrationRepository: IAdministrationRepository = mock()
 
-    @MockBean
-    private lateinit var canDeleteAdministration: CanDeleteAdministration
+    @Mock
+    private val canDeleteAdministration: CanDeleteAdministration = mock()
 
     @Test
     fun `execute should delete when canDeleteAdministration returns true`() {

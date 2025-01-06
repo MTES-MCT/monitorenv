@@ -9,13 +9,14 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceReposito
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateControlUnitResourceUTests {
-    @MockBean
-    private lateinit var controlUnitResourceRepository: IControlUnitResourceRepository
+    @Mock
+    private val controlUnitResourceRepository: IControlUnitResourceRepository = mock()
 
     @Test
     fun `execute should return save() result`() {

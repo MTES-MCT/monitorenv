@@ -23,7 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPoint
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
@@ -31,17 +32,17 @@ import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionUTests {
-    @MockBean
-    private lateinit var missionRepository: IMissionRepository
+    @Mock
+    private val missionRepository: IMissionRepository = mock()
 
-    @MockBean
-    private lateinit var facadeAreasRepository: IFacadeAreasRepository
+    @Mock
+    private val facadeAreasRepository: IFacadeAreasRepository = mock()
 
-    @MockBean
-    private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
+    @Mock
+    private val postgisFunctionRepository: IPostgisFunctionRepository = mock()
 
-    @MockBean
-    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @Mock
+    private val applicationEventPublisher: ApplicationEventPublisher = mock()
 
     @Test
     fun `should return the mission to update with computed facade and observationsByUnit`() {
@@ -73,18 +74,18 @@ class CreateOrUpdateMissionUTests {
             listOf(
                 EnvActionControlEntity(
                     id =
-                        UUID.fromString(
-                            "33310163-4e22-4d3d-b585-dac4431eb4b5",
-                        ),
+                    UUID.fromString(
+                        "33310163-4e22-4d3d-b585-dac4431eb4b5",
+                    ),
                     geom = point,
                     facade = "La Face Ade",
                     department = "Quequ'part",
                 ),
                 EnvActionSurveillanceEntity(
                     id =
-                        UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
-                        ),
+                    UUID.fromString(
+                        "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                    ),
                     geom = polygon,
                     facade = "La Face Ade",
                     department = "Quequ'part",
@@ -92,11 +93,11 @@ class CreateOrUpdateMissionUTests {
                 ),
                 EnvActionNoteEntity(
                     id =
-                        UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
-                        ),
+                    UUID.fromString(
+                        "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                    ),
                     observations =
-                        "Quelqu'un aurait vu quelque chose quelque part à un certain moment.",
+                    "Quelqu'un aurait vu quelque chose quelque part à un certain moment.",
                 ),
             )
 
@@ -130,11 +131,11 @@ class CreateOrUpdateMissionUTests {
             missionRepository.save(
                 argThat {
                     this ==
-                        missionToUpdate.copy(
-                            facade = "La Face Ade",
-                            envActions = existingEnvActions,
-                            observationsByUnit = "observations",
-                        )
+                            missionToUpdate.copy(
+                                facade = "La Face Ade",
+                                envActions = existingEnvActions,
+                                observationsByUnit = "observations",
+                            )
                 },
             ),
         )
@@ -160,11 +161,11 @@ class CreateOrUpdateMissionUTests {
             .save(
                 argThat {
                     this ==
-                        missionToUpdate.copy(
-                            facade = "La Face Ade",
-                            envActions = existingEnvActions,
-                            observationsByUnit = "observations",
-                        )
+                            missionToUpdate.copy(
+                                facade = "La Face Ade",
+                                envActions = existingEnvActions,
+                                observationsByUnit = "observations",
+                            )
                 },
             )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)

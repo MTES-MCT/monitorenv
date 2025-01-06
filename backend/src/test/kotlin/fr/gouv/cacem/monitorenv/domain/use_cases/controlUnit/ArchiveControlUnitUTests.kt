@@ -4,13 +4,14 @@ import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class ArchiveControlUnitUTests {
-    @MockBean
-    private lateinit var controlUnitRepository: IControlUnitRepository
+    @Mock
+    private val controlUnitRepository: IControlUnitRepository = mock()
 
     @Test
     fun `execute should archive a control unit by its ID`() {

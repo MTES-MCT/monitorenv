@@ -9,14 +9,20 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanTagRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanThemeRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class GetControlPlansByYearUTest {
-    @MockBean private lateinit var controlPlanSubThemeRepository: IControlPlanSubThemeRepository
-    private lateinit var controlPlanThemeRepository: IControlPlanThemeRepository
-    private lateinit var controlPlanTagRepository: IControlPlanTagRepository
+    @Mock
+    private val controlPlanSubThemeRepository: IControlPlanSubThemeRepository = mock()
+
+    @Mock
+    private val controlPlanThemeRepository: IControlPlanThemeRepository = mock()
+
+    @Mock
+    private val controlPlanTagRepository: IControlPlanTagRepository = mock()
 
     fun `execute should return all ControlPlanThemes, ControlPlanSubThemes and ControlPlanTags for the given year`() {
         val controlPlanThemes =

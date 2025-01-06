@@ -7,16 +7,17 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceReposito
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 class DeleteControlUnitResourceUTests {
-    @MockBean
-    private lateinit var controlUnitResourceRepository: IControlUnitResourceRepository
+    @Mock
+    private val controlUnitResourceRepository: IControlUnitResourceRepository = mock()
 
-    @MockBean
-    private lateinit var canDeleteControlUnitResource: CanDeleteControlUnitResource
+    @Mock
+    private val canDeleteControlUnitResource: CanDeleteControlUnitResource = mock()
 
     @Test
     fun `execute should delete control unit resource when canDeleteControlUnitResource returns true`() {

@@ -30,13 +30,14 @@ import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verify
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -52,28 +53,38 @@ import java.time.ZonedDateTime
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [LegacyMissions::class, SSEMission::class])
 class ApiLegacyMissionsITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var createOrUpdateMission: CreateOrUpdateMission
+    @MockitoBean
+    private lateinit var createOrUpdateMission: CreateOrUpdateMission
 
-    @MockBean private lateinit var getMissions: GetMissions
+    @MockitoBean
+    private val getMissions: GetMissions = mock()
 
-    @MockBean private lateinit var getMissionWithRapportNavActions: GetMissionWithRapportNavActions
+    @MockitoBean
+    private val getMissionWithRapportNavActions: GetMissionWithRapportNavActions = mock()
 
-    @MockBean
-    private lateinit var bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission
+    @MockitoBean
+    private val bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission = mock()
 
-    @MockBean private lateinit var canDeleteMission: CanDeleteMission
+    @MockitoBean
+    private val canDeleteMission: CanDeleteMission = mock()
 
-    @MockBean private lateinit var getMissionsByIds: GetMissionsByIds
+    @MockitoBean
+    private val getMissionsByIds: GetMissionsByIds = mock()
 
-    @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+    @MockitoBean
+    private val getEngagedControlUnits: GetEngagedControlUnits = mock()
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-    @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
-    @Autowired private lateinit var sseMissionController: SSEMission
+    @Autowired
+    private lateinit var sseMissionController: SSEMission
 
     @Test
     fun `Should create a new mission`() {
@@ -222,17 +233,17 @@ class ApiLegacyMissionsITests {
         val expectedFirstMission =
             MissionDTO(
                 mission =
-                    MissionEntity(
-                        id = 10,
-                        missionTypes = listOf(MissionTypeEnum.SEA),
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORFISH,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                    ),
+                MissionEntity(
+                    id = 10,
+                    missionTypes = listOf(MissionTypeEnum.SEA),
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORFISH,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
             )
 
         // we test only if the route is called with the right arg
@@ -371,22 +382,22 @@ class ApiLegacyMissionsITests {
         val updateMissionEvent =
             UpdateMissionEvent(
                 mission =
-                    MissionEntity(
-                        id = 132,
-                        missionTypes = listOf(MissionTypeEnum.SEA),
-                        facade = "Outre-Mer",
-                        geom = polygon,
-                        observationsCnsp = null,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        endDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORFISH,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                    ),
+                MissionEntity(
+                    id = 132,
+                    missionTypes = listOf(MissionTypeEnum.SEA),
+                    facade = "Outre-Mer",
+                    geom = polygon,
+                    observationsCnsp = null,
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORFISH,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
             )
 
         // When we send an event from another thread

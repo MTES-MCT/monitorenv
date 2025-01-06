@@ -12,15 +12,15 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
 class DeleteControlUnitUTests {
-    private var controlUnitRepository: IControlUnitRepository = mock()
+    private val controlUnitRepository: IControlUnitRepository = mock()
 
-    private var canDeleteControlUnit: CanDeleteControlUnit = mock()
+    private val canDeleteControlUnit: CanDeleteControlUnit = mock()
 
-    private var missionRepository: IMissionRepository = mock()
+    private val missionRepository: IMissionRepository = mock()
 
-    private var reportingRepository: IReportingRepository = mock()
+    private val reportingRepository: IReportingRepository = mock()
 
-    private var reportingsSourceRepository: IReportingSourceRepository = mock()
+    private val reportingsSourceRepository: IReportingSourceRepository = mock()
 
     private val deleteControlUnit: DeleteControlUnit =
         DeleteControlUnit(
