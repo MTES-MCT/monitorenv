@@ -135,6 +135,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     <>
       {updatedAt === DateRangeEnum.CUSTOM && (
         <DateRangePicker
+          key="dashboard-specificPeriod-filter"
           defaultValue={specificPeriod}
           isLabelHidden={orientation === 'column'}
           isStringDate
