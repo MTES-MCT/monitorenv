@@ -37,8 +37,9 @@ export function TableWithRef({ className = '', columnsLength, rows, rowVirtualiz
             </tr>
           ))}
         </SimpleTable.Head>
-        {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
+
         <tbody>
+          {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow?.index]
 
@@ -64,8 +65,8 @@ export function TableWithRef({ className = '', columnsLength, rows, rowVirtualiz
               </SimpleTable.BodyTr>
             )
           })}
+          {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
         </tbody>
-        {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
       </SimpleTable.Table>
     </TableContainer>
   )
