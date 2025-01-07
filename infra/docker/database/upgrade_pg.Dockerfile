@@ -7,6 +7,11 @@ ARG FROM_PG_MAJOR
 ARG TO_PG_MAJOR
 ARG POSTGIS_VERSION
 
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends wget ca-certificates
+RUN wget -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
+
+RUN sed -i 's/ "$TO_PG_MAJOR"//' /etc/apt/sources.list.d/pgdg.list
 RUN sed -i 's/apt/apt-archive/' /etc/apt/sources.list.d/pgdg.list
 RUN sed -i 's/pgdg/pgdg-archive/' /etc/apt/sources.list.d/pgdg.list
 
@@ -37,10 +42,10 @@ ENTRYPOINT ["docker-upgrade"]
 CMD ["pg_upgrade"]
 
 # Install PostGIS extension in both versions of Postgres
-RUN apt update
+RUN apt-get update
 RUN \
     POSTGIS_MAJOR=$(echo $POSTGIS_VERSION | cut -c1) && \
-    apt install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
         postgresql-$FROM_PG_MAJOR-postgis-$POSTGIS_MAJOR=$POSTGIS_VERSION* \
         postgresql-$FROM_PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
         postgresql-$TO_PG_MAJOR-postgis-$POSTGIS_MAJOR=$POSTGIS_VERSION* \
