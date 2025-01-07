@@ -134,7 +134,7 @@ jobs:
           context: .
           load: true
           builder: ${{ steps.buildx.outputs.name }}
-          file: infra/docker/database/upgrade_pg.dockerfile
+          file: infra/docker/database/upgrade_pg.Dockerfile
           push: false
           tags: ${{ env.IMAGE_TAG }}
           build-args: |
