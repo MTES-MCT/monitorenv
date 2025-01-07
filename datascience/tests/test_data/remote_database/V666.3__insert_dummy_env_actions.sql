@@ -13,14 +13,14 @@ INSERT INTO public.env_actions (
 
 INSERT INTO env_actions_control_plan_themes (
     env_action_id, theme_id) VALUES 
-    ('dfb9710a-2217-4f98-94dc-283d3b7bbaae', 2),
+    ('dfb9710a-2217-4f98-94dc-283d3b7bbaae', 1),
     ('88713755-3966-4ca4-ae18-10cab6249485', 107),
-    ('88713755-3966-4ca4-ae18-10cab6249485', 11),
-    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 2);
+    ('88713755-3966-4ca4-ae18-10cab6249485', 14),
+    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 1);
 
 INSERT INTO env_actions_control_plan_sub_themes (
     env_action_id, subtheme_id) VALUES 
     ('88713755-3966-4ca4-ae18-10cab6249485', 143),
-    ('88713755-3966-4ca4-ae18-10cab6249485', 57),
-    ('88713755-3966-4ca4-ae18-10cab6249485', 58),
-    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 34);
+    ('88713755-3966-4ca4-ae18-10cab6249485', 54),
+    ('88713755-3966-4ca4-ae18-10cab6249485', 56),
+    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 33);
