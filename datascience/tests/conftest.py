@@ -132,7 +132,7 @@ def start_remote_database_container(
     client = create_docker_client
     print("Starting database container")
     remote_database_container = client.containers.run(
-        "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2",
+        "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg17-postgis3.5.1",
         environment={
             "POSTGRES_PASSWORD": os.environ["MONITORENV_REMOTE_DB_PWD"],
             "POSTGRES_USER": os.environ["MONITORENV_REMOTE_DB_USER"],
@@ -199,7 +199,7 @@ def create_tables(set_environment_variables, start_remote_database_container):
             raise Exception(
                 f"Error running migration {m.path.name}. Error message is: {result.output}"
             )
-        
+
 
 @pytest.fixture()
 def create_cacem_tables(create_tables):
@@ -211,6 +211,7 @@ def create_cacem_tables(create_tables):
         for s in cacem_data_scripts:
             print(f"{s.major}.{s.minor}.{s.patch}: {s.path.name}")
             connection.execute(text(s.script))
+
 
 @pytest.fixture()
 def reset_test_data(create_tables):
