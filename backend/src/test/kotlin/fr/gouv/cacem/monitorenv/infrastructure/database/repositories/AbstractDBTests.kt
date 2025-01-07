@@ -25,7 +25,7 @@ abstract class AbstractDBTests {
         @JvmStatic
         val container: GenericContainer<Nothing> =
             GenericContainer<Nothing>(
-                "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2",
+                "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg17-postgis3.5.1",
             )
                 .apply {
                     withExposedPorts(5432)
