@@ -17,6 +17,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
     private val reportingRepository: IReportingRepository,
     private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions,
+    private val getFullMission: GetFullMission,
 ) {
     private val logger =
         LoggerFactory.getLogger(
@@ -63,6 +64,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
         reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.id)
         envActionsAttachedToReportingIds.forEach {
             reportingRepository.attachEnvActionsToReportings(it.first, it.second)
+        }
+
+        if (mission.id == null) {
+            val newMission = getFullMission.execute(savedMission.id)
+            return Pair(true, newMission.copy(fishActions = listOf(), hasRapportNavActions = null))
         }
 
         return getFullMissionWithFishAndRapportNavActions.execute(savedMission.id)
