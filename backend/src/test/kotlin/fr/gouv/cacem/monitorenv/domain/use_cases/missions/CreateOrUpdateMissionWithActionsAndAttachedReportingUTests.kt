@@ -2,10 +2,7 @@
 
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -26,7 +23,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
@@ -45,17 +42,21 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Mock
     private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions = mock()
 
+    @Mock
+    private val getFullMission: GetFullMission = mock()
+
+    val wktReader = WKTReader()
+
+    val multipolygonString =
+        "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+    val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
     @Test
     fun `should attach mission to specified reportings`() {
         // Given
-        val wktReader = WKTReader()
-
-        val multipolygonString =
-            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-
         val missionToCreate =
             MissionEntity(
+                id = 100,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 facade = "Outre-Mer",
                 geom = polygon,
@@ -103,6 +104,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
+                getFullMission = getFullMission,
             )
                 .execute(
                     mission = missionToCreate,
@@ -117,12 +119,6 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
     @Test
     fun `execute should throw ReportingAlreadyAttachedException when try to attach reporting that has already be attached`() {
-        val wktReader = WKTReader()
-
-        val multipolygonString =
-            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-
         val missionToCreate =
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.LAND),
@@ -147,6 +143,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
+                getFullMission = getFullMission,
             )
                 .execute(
                     mission = missionToCreate,
@@ -160,11 +157,6 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Test
     fun `Should attach action to reporting`() {
         // Given
-        val wktReader = WKTReader()
-
-        val multipolygonString =
-            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
         val envActionControl =
             EnvActionControlEntity(
                 id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
@@ -224,6 +216,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
+                getFullMission = getFullMission,
             )
                 .execute(
                     mission = missionToCreate,
@@ -255,11 +248,6 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Test
     fun `Should return status 206 if fish api doesn't responds`() {
         // Given
-        val wktReader = WKTReader()
-
-        val multipolygonString =
-            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
         val envActionControl =
             EnvActionControlEntity(
                 id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
@@ -313,6 +301,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 createOrUpdateEnvActions = createOrUpdateEnvActions,
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
+                getFullMission = getFullMission,
             )
                 .execute(
                     mission = missionToCreate,
@@ -322,6 +311,68 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
         // Then
         assertThat(fishResponds).isFalse()
+        assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
+    }
+    
+    @Test
+    fun `Should create a mission doesn't call getFullMissionWithFishAndRapportNavActions`() {
+        val missionToCreate =
+            MissionEntity(
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                facade = "Outre-Mer",
+                geom = polygon,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                envActions = listOf(),
+            )
+
+        val expectedCreatedMission =
+            MissionDTO(
+                mission =
+                    MissionEntity(
+                        id = 100,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        facade = "Outre-Mer",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        endDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                        isDeleted = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        hasMissionOrder = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                    ),
+            )
+
+        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(missionRepository.save(anyOrNull()))
+            .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
+        given(getFullMission.execute(100)).willReturn(expectedCreatedMission)
+
+        // When
+        val (fishResponds, createdMissionDTO) =
+            CreateOrUpdateMissionWithActionsAndAttachedReporting(
+                createOrUpdateMission = createOrUpdateMission,
+                createOrUpdateEnvActions = createOrUpdateEnvActions,
+                reportingRepository = reportingRepository,
+                getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
+                getFullMission = getFullMission,
+            )
+                .execute(
+                    mission = missionToCreate,
+                    attachedReportingIds = listOf(),
+                    envActionsAttachedToReportingIds = listOf(),
+                )
+
+        // Then
+        verifyNoMoreInteractions(getFullMissionWithFishAndRapportNavActions)
+        assertThat(fishResponds).isTrue()
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
     }
 }
