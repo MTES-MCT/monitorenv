@@ -19,7 +19,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
         val foundFullStations = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.station.id) }
 
         assertThat(foundFullStations).hasSize(3)
-
         assertThat(foundFullStations[0]).isEqualTo(
             FullStationDTO(
                 station =

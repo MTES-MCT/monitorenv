@@ -978,11 +978,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 controlPlans =
-                    listOf(
-                        EnvActionControlPlanEntity(
-                            subThemeIds = listOf(48),
-                            themeId = 1,
-                        ),
+                listOf(
+                    EnvActionControlPlanEntity(
+                        subThemeIds = listOf(47),
+                        themeId = 2,
                     ),
                 missionId = id,
                 completion = ActionCompletionEnum.TO_COMPLETE,
@@ -1058,15 +1057,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val nextControlPlans =
             listOf(
                 EnvActionControlPlanEntity(
-                    subThemeIds = listOf(53, 34),
-                    themeId = 2,
+                    subThemeIds = listOf(57, 33),
+                    themeId = 1,
                 ),
                 EnvActionControlPlanEntity(
                     tagIds = listOf(1, 2, 3),
-                    themeId = 11,
+                    themeId = 14,
                 ),
                 EnvActionControlPlanEntity(
-                    themeId = 17,
+                    themeId = 10,
                 ),
             )
         val nextMission =
@@ -1091,7 +1090,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 ?.controlPlans
         assertThat(updatedControlPlan?.size).isEqualTo(3)
         assertThat(updatedControlPlan?.get(0)?.subThemeIds?.size).isEqualTo(2)
-        assertThat(updatedControlPlan?.get(0)?.subThemeIds?.get(0)).isEqualTo(53)
+        assertThat(updatedControlPlan?.get(0)?.subThemeIds?.get(0)).isEqualTo(57)
         assertThat(updatedControlPlan?.get(1)?.tagIds?.size).isEqualTo(3)
         assertThat(updatedControlPlan?.get(1)?.tagIds?.get(0)).isEqualTo(1)
     }

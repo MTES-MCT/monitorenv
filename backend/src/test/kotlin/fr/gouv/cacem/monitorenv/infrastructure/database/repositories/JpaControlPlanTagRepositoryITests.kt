@@ -14,7 +14,7 @@ class JpaControlPlanTagRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(requestedControlPlanTags.size).isEqualTo(17)
         assertThat(requestedControlPlanTags[5].id).isEqualTo(6)
-        assertThat(requestedControlPlanTags[5].themeId).isEqualTo(11)
+        assertThat(requestedControlPlanTags[5].themeId).isEqualTo(14)
         assertThat(requestedControlPlanTags[5].tag)
             .isEqualTo(
                 "Mammifères marins",
