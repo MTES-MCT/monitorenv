@@ -85,6 +85,7 @@ ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
 
 # Copy files for the back
 COPY --from=buildBack /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
+COPY infra/configurations /home/monitorenv/configurations/
 
 USER monitorenv
 
