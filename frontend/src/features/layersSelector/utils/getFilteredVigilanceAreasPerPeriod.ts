@@ -6,8 +6,12 @@ import type { Dayjs } from 'dayjs'
 
 customDayjs.extend(isBetween)
 
-function isWithinPeriod(date: Dayjs, startDate: Dayjs, endDate: Dayjs) {
-  return (date.isAfter(startDate) && date.isBefore(endDate)) || date.isSame(startDate) || date.isSame(endDate)
+function isWithinPeriod(date: Dayjs, startDateFilter: Dayjs, endDateFilter: Dayjs) {
+  return (
+    (date.isAfter(startDateFilter) && date.isBefore(endDateFilter)) ||
+    date.isSame(startDateFilter) ||
+    date.isSame(endDateFilter)
+  )
 }
 
 function calculatePeriodBounds(
@@ -66,6 +70,13 @@ function isMatchForRecurringOccurrence(
       return true
     }
 
+    if (
+      startDateFilter.isBetween(startDate, occurrenceDate) ||
+      endDateFilter.isBetween(computedEndDate, occurrenceDate)
+    ) {
+      return true
+    }
+
     switch (frequency) {
       case VigilanceArea.Frequency.ALL_WEEKS:
         occurrenceDate = occurrenceDate.add(7, 'day')
@@ -111,7 +122,9 @@ export const getFilterVigilanceAreasPerPeriod = (
     const endDate = customDayjs(vigilanceArea.endDatePeriod).utc()
 
     // in case there is no end of recurrence (because endingCondition is NEVER) we set a default end date to the end of the period filter
-    const computedEndDate = vigilanceArea.computedEndDate ? customDayjs(vigilanceArea.computedEndDate) : endDateFilter
+    const computedEndDate = vigilanceArea.computedEndDate
+      ? customDayjs(vigilanceArea.computedEndDate)
+      : endDateFilter.add(1, 'year')
 
     if (vigilanceArea.frequency === VigilanceArea.Frequency.NONE) {
       return isMatchForSingleOccurrence(startDate, endDate, startDateFilter, endDateFilter)
@@ -120,9 +133,7 @@ export const getFilterVigilanceAreasPerPeriod = (
     if (
       !!startDateFilter &&
       !!endDateFilter &&
-      (startDateFilter?.isBetween(startDate, endDate) ||
-        endDateFilter.isBetween(startDate, endDate) ||
-        computedEndDate.isSame(endDateFilter))
+      (startDateFilter?.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
     ) {
       return true
     }

@@ -121,7 +121,7 @@ describe('filterVigilanceAreas', () => {
     const vigilanceAreaOneCompleteYear = {
       computedEndDate: undefined,
       createdAt: undefined,
-      endDatePeriod: '2024-01-01 23:59:59.99999',
+      endDatePeriod: '2024-12-31 23:59:59.99999',
       endingCondition: VigilanceArea.EndingCondition.NEVER,
       endingOccurrenceDate: undefined,
       endingOccurrencesNumber: undefined,
@@ -132,7 +132,7 @@ describe('filterVigilanceAreas', () => {
       isDraft: false,
       name: 'Today',
       seaFront: 'MED',
-      startDatePeriod: '2024-12_31 00:00:00.00000',
+      startDatePeriod: '2024-01-01 00:00:00.00000',
       updatedAt: undefined
     }
     const result = getFilterVigilanceAreasPerPeriod(
