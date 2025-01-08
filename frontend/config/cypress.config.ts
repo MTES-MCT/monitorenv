@@ -4,12 +4,10 @@ import initCypressMousePositionPlugin from 'cypress-mouse-position/plugin.js'
 import { initPlugin } from 'cypress-plugin-snapshots/plugin.js'
 
 const IS_CI = Boolean(process.env.CI)
-const WEBAPP_PORT = IS_CI ? 8880 : 3000
-const WEBAPP_HOST = 'localhost'
 
 export default defineConfig({
   e2e: {
-    baseUrl: `http://${WEBAPP_HOST}:${WEBAPP_PORT}`,
+    baseUrl: `http://${IS_CI ? '0.0.0.0:8880' : 'localhost:3000'}`,
     // We do that to avoid e2e logs pollution with useless `GET /security-state-staging/intermediates/` lines.
     // Despite the name, this also applies to Firefox.
     chromeWebSecurity: false,
