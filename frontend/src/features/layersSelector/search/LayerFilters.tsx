@@ -115,7 +115,6 @@ export function LayerFilters({
       {filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && (
         <DateRangePicker
           key="dateRange"
-          data-cy="datepicker-missionStartedAfter"
           defaultValue={
             vigilanceAreaSpecificPeriodFilter ? (vigilanceAreaSpecificPeriodFilter as DateAsStringRange) : undefined
           }
