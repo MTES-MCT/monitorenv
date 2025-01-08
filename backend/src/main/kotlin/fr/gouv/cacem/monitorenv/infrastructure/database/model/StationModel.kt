@@ -63,7 +63,7 @@ data class StationModel(
 
         return FullStationDTO(
             station = toStation(),
-            controlUnitResources = controlUnitResourceModels.map { it.toControlUnitResource() },
+            controlUnitResources = controlUnitResourceModels.map { it.toControlUnitResource() }.sortedBy { it.id },
         )
     }
 

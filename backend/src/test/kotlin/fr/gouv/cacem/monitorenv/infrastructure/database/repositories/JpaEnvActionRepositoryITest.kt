@@ -61,7 +61,7 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
                 missionId = 38,
                 controlPlans =
                     listOf(
-                        EnvActionControlPlanEntity(themeId = 9, subThemeIds = listOf(51), tagIds = listOf()),
+                        EnvActionControlPlanEntity(themeId = 11, subThemeIds = listOf(51), tagIds = listOf()),
                     ),
             )
 
