@@ -20,26 +20,45 @@ import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
-import { XYZ } from 'ol/source'
+import { ImageTile } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
+import { createXYZ } from 'ol/tilegrid'
 import { useEffect, useRef, type MutableRefObject } from 'react'
 
 import { getDashboardStyle } from './style'
 
 import type { VectorLayerWithName } from 'domain/types/layer'
+import type { ImageLike } from 'ol/DataTile'
 import type { Geometry } from 'ol/geom'
+
+function loadImage(src: string) {
+  return new Promise<ImageLike>((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.addEventListener('load', () => resolve(img))
+    img.addEventListener('error', () => reject(new Error('load failed')))
+    img.src = src
+  })
+}
 
 const initialMap = new OpenLayerMap({
   layers: [
     new TileLayer({
-      source: new XYZ({
-        crossOrigin: 'anonymous',
-        maxZoom: 19,
-        urls: ['a', 'b', 'c', 'd'].map(
-          subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
-        )
-      }),
-      zIndex: 0
+      source: new ImageTile({
+        async loader(z, x, y) {
+          const subdomains = ['a', 'b', 'c', 'd']
+          const subdomain = subdomains[Math.abs(x + y) % subdomains.length]
+          const url = `https://${subdomain}.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png`
+          const image = await loadImage(url)
+
+          return image
+        },
+        tileGrid: createXYZ({
+          maxZoom: 19,
+          minZoom: 3,
+          tileSize: 256
+        })
+      })
     })
   ],
 
@@ -60,6 +79,60 @@ type ExportLayerProps = {
   onImagesReady: (images: ExportImageType[]) => void
   shouldLoadImages: boolean
 }
+// const waitForTilesAfterZoom = async (map: Map) =>
+//   new Promise<void>(resolve => {
+//     const source = map
+//       .getAllLayers()
+//       .map(layer => layer.getSource && layer.getSource()) // Vérifie si getSource existe
+//       .find(s => s instanceof XYZ)
+
+//     if (!source) {
+//       resolve()
+
+//       return
+//     }
+
+//     let loadingCount = 0
+
+//     const handleTileLoadStart = () => {
+//       console.log('loading tile')
+
+//       loadingCount += 1
+//     }
+
+//     const handleTileLoadEnd = () => {
+//       loadingCount = Math.max(loadingCount - 1, 0) // Éviter des compteurs négatifs
+//       if (loadingCount === 0) {
+//         cleanup()
+//         resolve()
+//       }
+//     }
+
+//     const cleanup = () => {
+//       source.un('tileloadstart', handleTileLoadStart)
+//       source.un('tileloadend', handleTileLoadEnd)
+//       source.un('tileloaderror', handleTileLoadEnd)
+//     }
+
+//     const onMoveEnd = () => {
+//       source.on('tileloadstart', handleTileLoadStart)
+//       source.on('tileloadend', handleTileLoadEnd)
+//       source.on('tileloaderror', handleTileLoadEnd)
+
+//       if (loadingCount === 0) {
+//         handleTileLoadEnd()
+//       }
+//     }
+
+//     // const view = map.getView()
+//     // view.on('change:resolution', onMoveEnd)
+//     map.on('moveend', onMoveEnd)
+
+//     if (!map.getView().getAnimating() && !map.getView().getInteracting()) {
+//       onMoveEnd()
+//     }
+//   })
+
 export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProps) {
   const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
 
@@ -97,12 +170,14 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
 
       const view = inMemoryMap.getView()
 
-      view.fit(extent, { padding: [10, 10, 10, 150] })
-
-      // admission of weakness...
-      setTimeout(() => {
-        resolve()
-      }, 300)
+      view.fit(extent, {
+        callback: () => {
+          setTimeout(() => {
+            resolve()
+          }, 300)
+        },
+        padding: [10, 10, 10, 150]
+      })
     })
 
   useEffect(() => {
@@ -250,7 +325,6 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
           // TODO: Wait for designer review (shall we had the dashboard geometry to exported images?)
           layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
 
-          // eslint-disable-next-line no-restricted-syntax
           layersVectorSourceRef.current.addFeatures(allFeatures)
 
           await zoomToFeatures([dashboardAreaFeature])
@@ -277,6 +351,8 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
           // layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
           // eslint-disable-next-line no-await-in-loop
           await zoomToFeatures([feature])
+          // eslint-disable-next-line no-await-in-loop
+          // await waitForTilesAfterZoom(mapRef.current!)
 
           mapRef.current
             ?.getTargetElement()

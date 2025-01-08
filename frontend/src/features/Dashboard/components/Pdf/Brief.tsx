@@ -30,14 +30,6 @@ export function Brief({ brief }: BriefProps) {
           <Comments comments={brief.comments} />
         </View>
         <View style={layoutStyle.section}>
-          <Reportings
-            images={brief.images ?? []}
-            reportings={brief.reportings}
-            subThemes={brief.subThemes}
-            themes={brief.themes}
-          />
-        </View>
-        <View style={layoutStyle.section}>
           <AreaTable
             amps={brief.amps}
             image={brief.images?.find(image => image.featureId === 'WHOLE_DASHBOARD')}
@@ -45,18 +37,38 @@ export function Brief({ brief }: BriefProps) {
             vigilanceAreas={brief.vigilanceAreas}
           />
         </View>
+      </Page>
+      <Page style={layoutStyle.page}>
+        <Headings name={brief.name} />
         <View style={layoutStyle.section}>
           <RegulatoryAreas images={brief.images ?? []} regulatoryAreas={brief.regulatoryAreas} />
         </View>
+      </Page>
+      <Page style={layoutStyle.page}>
+        <Headings name={brief.name} />
         <View style={layoutStyle.section}>
           <Amps amps={brief.amps} images={brief.images ?? []} />
         </View>
+      </Page>
+      <Page style={layoutStyle.page}>
+        <Headings name={brief.name} />
         <View style={layoutStyle.section}>
           <VigilanceAreas
             images={brief.images ?? []}
             linkedAMPs={brief.allLinkedAMPs}
             linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
             vigilanceAreas={brief.vigilanceAreas}
+          />
+        </View>
+      </Page>
+      <Page style={layoutStyle.page}>
+        <Headings name={brief.name} />
+        <View style={layoutStyle.section}>
+          <Reportings
+            images={brief.images ?? []}
+            reportings={brief.reportings}
+            subThemes={brief.subThemes}
+            themes={brief.themes}
           />
         </View>
       </Page>
