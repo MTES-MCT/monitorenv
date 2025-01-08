@@ -117,4 +117,28 @@ describe('filterVigilanceAreas', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS)
     expect(result).toEqual([today, quarter, year, infinite])
   })
+  it('filters areas with vigilance area one complete year', () => {
+    const vigilanceAreaOneCompleteYear = {
+      computedEndDate: undefined,
+      createdAt: undefined,
+      endDatePeriod: '2024-01-01 23:59:59.99999',
+      endingCondition: VigilanceArea.EndingCondition.NEVER,
+      endingOccurrenceDate: undefined,
+      endingOccurrencesNumber: undefined,
+      frequency: VigilanceArea.Frequency.ALL_YEARS,
+      id: 1,
+      isArchived: false,
+      isAtAllTimes: false,
+      isDraft: false,
+      name: 'Today',
+      seaFront: 'MED',
+      startDatePeriod: '2024-12_31 00:00:00.00000',
+      updatedAt: undefined
+    }
+    const result = getFilterVigilanceAreasPerPeriod(
+      [vigilanceAreaOneCompleteYear],
+      VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT
+    )
+    expect(result).toEqual([vigilanceAreaOneCompleteYear])
+  })
 })

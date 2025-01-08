@@ -65,6 +65,7 @@ function isMatchForRecurringOccurrence(
     if (isWithinPeriod(occurrenceDate, startDateFilter, endDateFilter)) {
       return true
     }
+
     switch (frequency) {
       case VigilanceArea.Frequency.ALL_WEEKS:
         occurrenceDate = occurrenceDate.add(7, 'day')
@@ -119,7 +120,9 @@ export const getFilterVigilanceAreasPerPeriod = (
     if (
       !!startDateFilter &&
       !!endDateFilter &&
-      (startDateFilter?.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
+      (startDateFilter?.isBetween(startDate, endDate) ||
+        endDateFilter.isBetween(startDate, endDate) ||
+        computedEndDate.isSame(endDateFilter))
     ) {
       return true
     }
