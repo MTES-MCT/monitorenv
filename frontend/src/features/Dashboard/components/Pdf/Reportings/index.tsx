@@ -1,6 +1,6 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
-import { THEME } from '@mtes-mct/monitor-ui'
+import { getCoordinates, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { G, Image, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
@@ -220,8 +220,8 @@ export function Reportings({
           const image = getImage(images, Dashboard.Layer.DASHBOARD_REPORTINGS, +reporting.id)
 
           return (
-            <View style={areaStyle.wrapper} wrap={false}>
-              <View key={reporting.id} style={[styles.reportingCard, { position: 'relative' }]}>
+            <View key={reporting.id} style={areaStyle.wrapper} wrap={false}>
+              <View style={[styles.reportingCard, { position: 'relative' }]}>
                 <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>
                 <Text>
                   S. {getFormattedReportingId(reporting.reportingId)} -{' '}
@@ -238,6 +238,9 @@ export function Reportings({
                   </Text>
                 )}
                 <Text style={layoutStyle.regular}>{reporting.description}</Text>
+                <Text style={layoutStyle.regular}>
+                  {getCoordinates(reporting.geom?.coordinates, WSG84_PROJECTION, 'DMS')}
+                </Text>
               </View>
               {image && <Image src={image} />}
             </View>
