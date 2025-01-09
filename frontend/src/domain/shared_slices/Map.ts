@@ -1,10 +1,18 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 import { BaseLayer, type RegulatoryOrAMPOrViglanceAreaLayerType } from '../entities/layers/constants'
 import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
 import type { Extent } from 'ol/extent'
+
+const persistConfig = {
+  key: 'map',
+  storage,
+  whitelist: ['selectedBaseLayer']
+}
 
 export type IsolatedLayerType = {
   id: number
@@ -92,7 +100,7 @@ const mapSlice = createSlice({
 })
 
 export const mapActions = mapSlice.actions
-export const mapSliceReducer = mapSlice.reducer
+export const mapSliceReducer = persistReducer(persistConfig, mapSlice.reducer)
 
 export const {
   selectBaseLayer,
