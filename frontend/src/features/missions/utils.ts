@@ -1,4 +1,5 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { missionTypeEnum, type Mission, type NewMission } from 'domain/entities/missions'
 import { sum } from 'lodash'
 
 import {
@@ -66,4 +67,42 @@ export function getIsMissionEnded(missionEndDate: string | undefined): boolean {
   const now = customDayjs()
 
   return !!missionEndDate && now.isAfter(missionEndDate)
+}
+
+export function getMissionTitle(isNewMission: boolean, values?: Partial<Mission> | Partial<NewMission>) {
+  return isNewMission
+    ? `Nouvelle mission ${
+        values?.controlUnits && values?.controlUnits.length > 0 && values?.controlUnits[0]?.name ? '-' : ''
+      } ${values?.controlUnits?.map(controlUnit => controlUnit.name).join(', ')}`
+    : `${values?.id} - Mission ${
+        values?.missionTypes &&
+        values?.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
+      } – ${values?.controlUnits?.map(controlUnit => controlUnit.name?.replace('(historique)', '')).join(', ')}`
+}
+
+export function getIdTyped(id: string | undefined) {
+  if (!id) {
+    return undefined
+  }
+
+  return id.includes('new-') ? id : Number(id)
+}
+
+/**
+ * format mission types to a string
+ */
+export function humanizeMissionTypes(missionTypes: string[] | undefined): string {
+  if (!missionTypes) {
+    return ''
+  }
+  const firstMissionTypeIndex = missionTypes[0]
+  if (missionTypes.length === 1 && firstMissionTypeIndex) {
+    return missionTypeEnum[firstMissionTypeIndex]?.libelle
+  }
+
+  return missionTypes.map(missionType => missionTypeEnum[missionType]?.libelle).toString()
+}
+
+export function isMissionNew(id: string | number | undefined) {
+  return id?.toString().includes('new') ?? false
 }

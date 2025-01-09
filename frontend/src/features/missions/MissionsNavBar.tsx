@@ -5,14 +5,13 @@ import { generatePath } from 'react-router'
 import { Nav } from 'rsuite'
 import styled from 'styled-components'
 
+import { isMissionNew, getMissionTitle } from './utils'
 import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { deleteTab } from '../../domain/use_cases/missions/deleteTab'
 import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { getMissionTitle } from '../../utils/getMissionTitle'
-import { isNewMission } from '../../utils/isNewMission'
 
 function MissionStatus({ mission }) {
   const status = getMissionStatus(mission)
@@ -41,7 +40,7 @@ export function MissionsNavBar() {
 
     const openMissions = Object.values(selectedMissions)?.map(selectedMission => {
       const { missionForm } = selectedMission
-      const missionIsNewMission = isNewMission(missionForm?.id)
+      const missionIsNewMission = isMissionNew(missionForm?.id)
       const close = nextPath => {
         if (!nextPath) {
           return

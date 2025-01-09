@@ -1,9 +1,9 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { globalActions } from 'domain/shared_slices/Global'
-import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
 
 import { SearchSemaphores } from './SearchSemaphores'
 

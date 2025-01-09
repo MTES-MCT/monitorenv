@@ -1,5 +1,6 @@
 import { StyledMapMenuDialogContainer } from '@components/style'
 import { ReportingFilterContext, ReportingsFilters } from '@features/Reportings/Filters'
+import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -7,7 +8,6 @@ import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
-import { addReporting } from 'domain/use_cases/reporting/addReporting'
 
 export function SearchReportings() {
   const dispatch = useAppDispatch()

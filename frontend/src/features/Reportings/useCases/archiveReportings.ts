@@ -1,7 +1,7 @@
 import { reportingActions } from '@features/Reportings/slice'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setToast } from '../../shared_slices/Global'
+import { setToast } from '../../../domain/shared_slices/Global'
 
 export const archiveReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
   const { reportings } = getState().reporting

@@ -1,3 +1,4 @@
+import { isMissionNew } from '@features/missions/utils'
 import {
   Accent,
   type ControlUnit,
@@ -20,7 +21,6 @@ import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnit
 import { useGetEngagedControlUnitsQuery } from '../../../../api/missionsAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { isNewMission } from '../../../../utils/isNewMission'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 import { getMissionPageRoute } from '../../../../utils/routes'
 import { missionFormsActions } from '../slice'
@@ -46,7 +46,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
 
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
   const routeParams = getMissionPageRoute(currentPath)
-  const missionIsNewMission = isNewMission(routeParams?.params?.id)
+  const missionIsNewMission = isMissionNew(routeParams?.params?.id)
 
   const {
     data: controlUnitsData,

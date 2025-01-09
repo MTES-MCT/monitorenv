@@ -1,9 +1,9 @@
+import { closeReporting } from '@features/Reportings/useCases/closeReporting'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { ReportingStatusEnum, getReportingStatus, type Reporting } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
-import { closeReporting } from 'domain/use_cases/reporting/closeReporting'
 
 import { Title } from './FormComponents/Title'
 import {

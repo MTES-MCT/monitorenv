@@ -1,9 +1,9 @@
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
+import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
+import { mainWindowActions } from '../../MainWindow/slice'
 
 export const editReportingInLocalStore =
   (reportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {

@@ -1,12 +1,12 @@
 import { DialogButton, DialogSeparator, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { globalActions, setDisplayedItems } from 'domain/shared_slices/Global'
-import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
 import styled from 'styled-components'
 
 import { DrawDashboard } from './DrawDashboard'

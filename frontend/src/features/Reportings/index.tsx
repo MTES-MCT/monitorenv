@@ -4,9 +4,9 @@ import styled from 'styled-components'
 
 import { ReportingFormWithContext } from './components/ReportingForm'
 import { Header } from './components/ReportingForm/Header'
+import { reduceOrCollapseReportingForm } from './useCases/reduceOrCollapseReportingForm'
+import { switchReporting } from './useCases/switchReporting'
 import { hideSideButtons, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
-import { reduceOrCollapseReportingForm } from '../../domain/use_cases/reporting/reduceOrCollapseReportingForm'
-import { switchReporting } from '../../domain/use_cases/reporting/switchReporting'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 

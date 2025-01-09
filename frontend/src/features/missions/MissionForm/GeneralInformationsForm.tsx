@@ -31,10 +31,9 @@ import {
   FrontCompletionStatus
 } from '../../../domain/entities/missions'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getMissionTitle } from '../../../utils/getMissionTitle'
-import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MissionStatusTag } from '../components/MissionStatusTag'
+import { isMissionNew, getMissionTitle } from '../utils'
 
 export function GeneralInformationsForm({
   missionCompletion = undefined
@@ -51,7 +50,7 @@ export function GeneralInformationsForm({
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
 
   const routeParams = getMissionPageRoute(currentPath)
-  const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
+  const missionIsNewMission = useMemo(() => isMissionNew(routeParams?.params?.id), [routeParams?.params?.id])
 
   const title = useMemo(() => getMissionTitle(missionIsNewMission, values), [missionIsNewMission, values])
 

@@ -16,6 +16,9 @@ import {
   StyledThemeContainer,
   StyledToggle
 } from '@features/Reportings/style'
+import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
+import { reduceOrCollapseReportingForm } from '@features/Reportings/useCases/reduceOrCollapseReportingForm'
+import { saveReporting } from '@features/Reportings/useCases/saveReporting'
 import { createNewReportingSource, isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -47,9 +50,6 @@ import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
 } from 'domain/use_cases/map/updateMapInteractionListeners'
-import { deleteReporting } from 'domain/use_cases/reporting/deleteReporting'
-import { reduceOrCollapseReportingForm } from 'domain/use_cases/reporting/reduceOrCollapseReportingForm'
-import { saveReporting } from 'domain/use_cases/reporting/saveReporting'
 import { FieldArray, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
