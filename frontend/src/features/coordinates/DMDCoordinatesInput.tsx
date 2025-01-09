@@ -1,10 +1,10 @@
+import { getCoordinates } from '@mtes-mct/monitor-ui'
 import { useEffect, useState } from 'react'
 import { dmsToDecimal } from 'react-coordinate-input'
 import { IMaskInput } from 'react-imask'
 import styled from 'styled-components'
 
 import { CoordinatesFormat, WSG84_PROJECTION } from '../../domain/entities/map/constants'
-import { getCoordinates } from '../../utils/coordinates'
 import { isNumeric } from '../../utils/isNumeric'
 
 type DMDCoordinatesInputProps = {

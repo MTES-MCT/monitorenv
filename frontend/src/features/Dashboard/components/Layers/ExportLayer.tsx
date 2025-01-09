@@ -79,59 +79,6 @@ type ExportLayerProps = {
   onImagesReady: (images: ExportImageType[]) => void
   shouldLoadImages: boolean
 }
-// const waitForTilesAfterZoom = async (map: Map) =>
-//   new Promise<void>(resolve => {
-//     const source = map
-//       .getAllLayers()
-//       .map(layer => layer.getSource && layer.getSource()) // Vérifie si getSource existe
-//       .find(s => s instanceof XYZ)
-
-//     if (!source) {
-//       resolve()
-
-//       return
-//     }
-
-//     let loadingCount = 0
-
-//     const handleTileLoadStart = () => {
-//       console.log('loading tile')
-
-//       loadingCount += 1
-//     }
-
-//     const handleTileLoadEnd = () => {
-//       loadingCount = Math.max(loadingCount - 1, 0) // Éviter des compteurs négatifs
-//       if (loadingCount === 0) {
-//         cleanup()
-//         resolve()
-//       }
-//     }
-
-//     const cleanup = () => {
-//       source.un('tileloadstart', handleTileLoadStart)
-//       source.un('tileloadend', handleTileLoadEnd)
-//       source.un('tileloaderror', handleTileLoadEnd)
-//     }
-
-//     const onMoveEnd = () => {
-//       source.on('tileloadstart', handleTileLoadStart)
-//       source.on('tileloadend', handleTileLoadEnd)
-//       source.on('tileloaderror', handleTileLoadEnd)
-
-//       if (loadingCount === 0) {
-//         handleTileLoadEnd()
-//       }
-//     }
-
-//     // const view = map.getView()
-//     // view.on('change:resolution', onMoveEnd)
-//     map.on('moveend', onMoveEnd)
-
-//     if (!map.getView().getAnimating() && !map.getView().getInteracting()) {
-//       onMoveEnd()
-//     }
-//   })
 
 export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProps) {
   const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
@@ -155,7 +102,7 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: layersVectorSourceRef.current,
       style: feature => getDashboardStyle(feature),
-      zIndex: Layers.DASHBOARD.zIndex
+      zIndex: Layers.EXPORT_PDF.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
   layersVectorLayerRef.current.name = Layers.EXPORT_PDF.code
@@ -176,14 +123,14 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
             resolve()
           }, 300)
         },
-        padding: [10, 10, 10, 150]
+        padding: [30, 30, 30, 200]
       })
     })
 
   useEffect(() => {
     const hiddenDiv = document.createElement('div')
-    hiddenDiv.style.width = '800px'
-    hiddenDiv.style.height = '600px'
+    hiddenDiv.style.width = '1920px'
+    hiddenDiv.style.height = '1080px'
     hiddenDiv.style.position = 'absolute'
     hiddenDiv.style.visibility = 'hidden'
     document.body.appendChild(hiddenDiv)
@@ -218,7 +165,7 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
         regulatoryLayersIds?.forEach(layerId => {
           const layer = regulatoryLayers.entities[layerId]
 
-          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+          if (layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getRegulatoryFeature({
               code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
               isolatedLayer: undefined,
@@ -270,7 +217,7 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
         const vigilanceAreaLayersIds = activeDashboard?.vigilanceAreaIds
         vigilanceAreaLayersIds?.forEach(layerId => {
           const layer = vigilanceAreas.entities[layerId]
-          if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+          if (layer?.geom && layer?.geom?.coordinates.length > 0) {
             const feature = getVigilanceAreaZoneFeature(
               layer,
               Dashboard.featuresCode.DASHBOARD_VIGILANCE_AREAS,
@@ -301,11 +248,8 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
         extractAMPFeatures(allFeatures)
 
         extractVigilanceAreaFeatures(allFeatures)
-
-        extractReportingFeatures(allFeatures)
       }
 
-      // TODO: Wait for designer review (shall we had the dashboard geometry to exported images?)
       if (dashboard?.dashboard.geom) {
         dashboardAreaFeature = getFeature(dashboard.dashboard.geom)
         if (!dashboardAreaFeature) {
@@ -319,15 +263,36 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
           onImagesReady([])
         }
 
-        layersVectorSourceRef.current.clear(true)
-
         if (dashboardAreaFeature) {
-          // TODO: Wait for designer review (shall we had the dashboard geometry to exported images?)
-          layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
+          // eslint-disable-next-line no-restricted-syntax
+          for (const feature of allFeatures) {
+            mapContext?.restore()
+            layersVectorSourceRef.current.clear(true)
+            layersVectorSourceRef.current.addFeature(feature)
 
-          layersVectorSourceRef.current.addFeatures(allFeatures)
+            layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
+            // eslint-disable-next-line no-await-in-loop
+            await zoomToFeatures([dashboardAreaFeature, feature])
 
-          await zoomToFeatures([dashboardAreaFeature])
+            mapRef.current
+              ?.getTargetElement()
+              .querySelectorAll('canvas')
+              .forEach(canvas => {
+                mapContext?.drawImage(canvas, 0, 0)
+                allImages.push({
+                  featureId: feature.getId(),
+                  image: mapCanvas.toDataURL('image/png')
+                })
+              })
+          }
+
+          extractReportingFeatures(allFeatures)
+
+          layersVectorSourceRef.current.clear(true)
+
+          layersVectorSourceRef.current.addFeatures([...allFeatures, dashboardAreaFeature])
+
+          await zoomToFeatures([...allFeatures, dashboardAreaFeature])
 
           mapRef.current
             ?.getTargetElement()
@@ -339,31 +304,6 @@ export function ExportLayer({ onImagesReady, shouldLoadImages }: ExportLayerProp
             featureId: 'WHOLE_DASHBOARD',
             image: mapCanvas.toDataURL('image/png')
           })
-        }
-
-        // eslint-disable-next-line no-restricted-syntax
-        for (const feature of allFeatures) {
-          mapContext?.restore()
-          layersVectorSourceRef.current.clear(true)
-          layersVectorSourceRef.current.addFeature(feature)
-
-          // TODO: Wait for designer review (shall we had the dashboard geometry to exported images?)
-          // layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
-          // eslint-disable-next-line no-await-in-loop
-          await zoomToFeatures([feature])
-          // eslint-disable-next-line no-await-in-loop
-          // await waitForTilesAfterZoom(mapRef.current!)
-
-          mapRef.current
-            ?.getTargetElement()
-            .querySelectorAll('canvas')
-            .forEach(canvas => {
-              mapContext?.drawImage(canvas, 0, 0)
-              allImages.push({
-                featureId: feature.getId(),
-                image: mapCanvas.toDataURL('image/png')
-              })
-            })
         }
 
         onImagesReady(allImages)

@@ -38,40 +38,43 @@ export function Brief({ brief }: BriefProps) {
           />
         </View>
       </Page>
-      <Page style={layoutStyle.page}>
-        <Headings name={brief.name} />
-        <View style={layoutStyle.section}>
-          <RegulatoryAreas images={brief.images ?? []} regulatoryAreas={brief.regulatoryAreas} />
-        </View>
-      </Page>
-      <Page style={layoutStyle.page}>
-        <Headings name={brief.name} />
-        <View style={layoutStyle.section}>
-          <Amps amps={brief.amps} images={brief.images ?? []} />
-        </View>
-      </Page>
-      <Page style={layoutStyle.page}>
-        <Headings name={brief.name} />
-        <View style={layoutStyle.section}>
-          <VigilanceAreas
-            images={brief.images ?? []}
-            linkedAMPs={brief.allLinkedAMPs}
-            linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
-            vigilanceAreas={brief.vigilanceAreas}
-          />
-        </View>
-      </Page>
-      <Page style={layoutStyle.page}>
-        <Headings name={brief.name} />
-        <View style={layoutStyle.section}>
-          <Reportings
-            images={brief.images ?? []}
-            reportings={brief.reportings}
-            subThemes={brief.subThemes}
-            themes={brief.themes}
-          />
-        </View>
-      </Page>
+      {brief.regulatoryAreas.length > 0 && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <RegulatoryAreas images={brief.images ?? []} regulatoryAreas={brief.regulatoryAreas} />
+          </View>
+        </Page>
+      )}
+      {brief.amps.length > 0 && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <Amps amps={brief.amps} images={brief.images ?? []} />
+          </View>
+        </Page>
+      )}
+      {brief.vigilanceAreas.length > 0 && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <VigilanceAreas
+              images={brief.images ?? []}
+              linkedAMPs={brief.allLinkedAMPs}
+              linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
+              vigilanceAreas={brief.vigilanceAreas}
+            />
+          </View>
+        </Page>
+      )}
+      {brief.reportings.length > 0 && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <Reportings reportings={brief.reportings} subThemes={brief.subThemes} themes={brief.themes} />
+          </View>
+        </Page>
+      )}
     </Document>
   )
 }

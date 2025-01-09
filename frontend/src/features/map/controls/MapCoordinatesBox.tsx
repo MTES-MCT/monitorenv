@@ -1,4 +1,4 @@
-import { MultiRadio, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { MultiRadio, getCoordinates, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -11,7 +11,6 @@ import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
-import { getCoordinates } from '../../../utils/coordinates'
 
 import type { BaseMapChildrenProps } from '../BaseMap'
 import type { Coordinate } from 'ol/coordinate'

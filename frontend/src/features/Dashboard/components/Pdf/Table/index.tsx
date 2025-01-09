@@ -103,7 +103,7 @@ export function AreaTable({
           </View>
         </View>
       </View>
-      {image && <Image src={image.image} />}
+      {image && <Image src={image.image} style={{ marginTop: 4.3 }} />}
     </>
   )
 }

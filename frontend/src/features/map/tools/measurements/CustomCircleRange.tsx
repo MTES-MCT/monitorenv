@@ -1,3 +1,4 @@
+import { coordinatesAreDistinct, getCoordinates } from '@mtes-mct/monitor-ui'
 import { boundingExtent } from 'ol/extent'
 import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo } from 'react'
@@ -20,7 +21,6 @@ import {
 } from '../../../../domain/shared_slices/Measurement'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordinates'
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
 
