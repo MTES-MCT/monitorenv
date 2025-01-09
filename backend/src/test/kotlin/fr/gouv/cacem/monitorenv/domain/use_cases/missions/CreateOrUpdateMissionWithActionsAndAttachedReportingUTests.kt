@@ -313,7 +313,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         assertThat(fishResponds).isFalse()
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
     }
-    
+
     @Test
     fun `Should create a mission doesn't call getFullMissionWithFishAndRapportNavActions`() {
         val missionToCreate =
