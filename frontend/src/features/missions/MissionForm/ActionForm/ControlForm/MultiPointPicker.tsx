@@ -1,4 +1,5 @@
 import { Accent, Button, Icon, IconButton, Label, Message } from '@mtes-mct/monitor-ui'
+import { formatCoordinates } from '@utils/coordinates'
 import { useField } from 'formik'
 import { isEqual } from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -18,7 +19,6 @@ import { drawPoint } from '../../../../../domain/use_cases/draw/drawGeometry'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../../../../hooks/useListenForDrawing'
-import { formatCoordinates } from '../../../../../utils/coordinates'
 
 import type { Coordinate } from 'ol/coordinate'
 

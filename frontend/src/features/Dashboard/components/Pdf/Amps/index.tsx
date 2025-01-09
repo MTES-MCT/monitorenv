@@ -26,7 +26,8 @@ export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImage
                 <Image
                   src={image}
                   style={{
-                    height: '100%',
+                    height: 350,
+                    objectFit: 'cover',
                     width: '100%'
                   }}
                 />

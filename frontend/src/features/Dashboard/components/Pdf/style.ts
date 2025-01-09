@@ -116,7 +116,7 @@ export const areaStyle = StyleSheet.create({
     width: '30%'
   },
   details: {
-    color: THEME.color.charcoal,
+    color: THEME.color.gunMetal,
     width: '70%'
   },
   header: {

@@ -51,7 +51,8 @@ export function VigilanceAreas({
                 <Image
                   src={image}
                   style={{
-                    height: '100%',
+                    height: 350,
+                    objectFit: 'cover',
                     width: '100%'
                   }}
                 />

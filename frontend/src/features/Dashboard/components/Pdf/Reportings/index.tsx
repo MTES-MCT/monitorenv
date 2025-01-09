@@ -1,17 +1,23 @@
-import { Dashboard } from '@features/Dashboard/types'
-import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
-import { getCoordinates, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { G, Image, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
+import { getFormattedReportingId } from '@features/Reportings/utils'
+import { THEME } from '@mtes-mct/monitor-ui'
+import { G, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
+import { formatCoordinates } from '@utils/coordinates'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
+import { CoordinatesFormat } from 'domain/entities/map/constants'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
+import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
+import { vehicleTypeLabels } from 'domain/entities/vehicleType'
+import { vesselTypeLabel } from 'domain/entities/vesselType'
+import { Fragment } from 'react/jsx-runtime'
 
 import { areaStyle, layoutStyle } from '../style'
-import { getImage } from '../utils'
 
-import type { ExportImageType } from '../../Layers/ExportLayer'
 import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
+import type { Coordinate } from 'ol/coordinate'
 
 const styles = StyleSheet.create({
+  description: { ...areaStyle.description, width: '50%' },
+  details: { ...areaStyle.details, fontWeight: 'bold' },
   legendCard: {
     borderColor: THEME.color.gainsboro,
     borderRadius: 1,
@@ -27,23 +33,23 @@ const styles = StyleSheet.create({
     borderRadius: 1,
     borderStyle: 'solid',
     borderWidth: 1,
-    fontSize: 6.8,
-    fontWeight: 'bold',
+    fontSize: 6.2,
+    gap: 3.7,
     padding: '6 14',
     width: '31.5%'
   },
   reportingDate: {
     color: THEME.color.slateGray,
     fontSize: 5.5,
-    fontWeight: 'normal',
-    marginBottom: 3.7,
-    marginTop: 3.1
+    fontWeight: 'normal'
   },
   reportingHeader: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    fontSize: 6.8,
+    fontWeight: 'bold'
   },
-  reportingTarget: {
-    fontSize: 6.2
+  separator: {
+    borderTop: `1 solid ${THEME.color.gainsboro}`
   }
 })
 
@@ -109,22 +115,6 @@ function Flag({ color }: { color: string }) {
   )
 }
 
-const getTargetText = (reporting: Reporting) => {
-  const targetName = getTargetName({
-    target: reporting.targetDetails?.[0],
-    targetType: reporting.targetType,
-    vehicleType: reporting.vehicleType
-  })
-
-  const targetDetails = getTargetDetailsSubText({
-    target: reporting.targetDetails?.[0],
-    targetType: reporting.targetType,
-    vehicleType: reporting.vehicleType
-  })
-
-  return `${targetName} ${targetDetails ? `(${targetDetails})` : ''}`.trim()
-}
-
 const reportingStatusFlag = (reporting: Reporting) => {
   const reportingStatus = getReportingStatus({ ...reporting })
 
@@ -162,12 +152,10 @@ const reportingStatusFlag = (reporting: Reporting) => {
 }
 
 export function Reportings({
-  images,
   reportings,
   subThemes,
   themes
 }: {
-  images: ExportImageType[]
   reportings: Reporting[]
   subThemes: ControlPlansSubThemeCollection
   themes: ControlPlansThemeCollection
@@ -216,36 +204,121 @@ export function Reportings({
             </View>
           </View>
         )}
-        {reportings.map(reporting => {
-          const image = getImage(images, Dashboard.Layer.DASHBOARD_REPORTINGS, +reporting.id)
-
-          return (
-            <View key={reporting.id} style={areaStyle.wrapper} wrap={false}>
-              <View style={[styles.reportingCard, { position: 'relative' }]}>
-                <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>
-                <Text>
-                  S. {getFormattedReportingId(reporting.reportingId)} -{' '}
-                  {reporting.reportingSources?.map(source => source.displayedSource).join(', ')}
-                </Text>
-                <Text style={styles.reportingTarget}>{getTargetText(reporting)}</Text>
-                {reporting.createdAt && (
-                  <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
-                )}
-                {!!reporting.themeId && (
+        {reportings.map(reporting => (
+          <View key={reporting.id} style={[styles.reportingCard, { position: 'relative' }]}>
+            <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>
+            <Text>S. {getFormattedReportingId(reporting.reportingId)}</Text>
+            {reporting.createdAt && (
+              <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
+            )}
+            {!!reporting.themeId && (
+              <View style={layoutStyle.row}>
+                <Text style={{ fontWeight: 'bold' }}>{themes[reporting.themeId]?.theme} /</Text>
+                <Text> {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')}</Text>
+              </View>
+            )}
+            <View style={[layoutStyle.row, { rowGap: 2 }]}>
+              <View style={styles.description}>
+                <Text>Localisation</Text>
+              </View>
+              <View style={styles.details}>
+                {reporting.geom?.coordinates && reporting.geom?.coordinates.length > 0 && (
                   <Text>
-                    {themes[reporting.themeId]?.theme} /{' '}
-                    {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
+                    {
+                      formatCoordinates(
+                        reporting.geom.coordinates[0] as Coordinate,
+                        CoordinatesFormat.DEGREES_MINUTES_SECONDS
+                      )
+                        .replace(/\u2032/g, "'") // Replace prime by quote
+                        .replace(/\u2033/g, '"') // Replace doubleprime by doublequote
+                    }
                   </Text>
                 )}
-                <Text style={layoutStyle.regular}>{reporting.description}</Text>
-                <Text style={layoutStyle.regular}>
-                  {getCoordinates(reporting.geom?.coordinates, WSG84_PROJECTION, 'DMS')}
-                </Text>
               </View>
-              {image && <Image src={image} />}
             </View>
-          )
-        })}
+
+            <View style={styles.separator} />
+            <View style={[layoutStyle.row, { rowGap: 2 }]}>
+              <View style={styles.description}>
+                <Text>Source</Text>
+              </View>
+              <View style={styles.details}>
+                <Text>{reporting.reportingSources?.map(source => source.displayedSource).join(', ')}</Text>
+              </View>
+            </View>
+            {reporting.targetDetails.map(target => (
+              <Fragment key={target.mmsi}>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>Type de cible</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{reporting.targetType ? ReportingTargetTypeLabels[reporting.targetType] : '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>Type de véhicule</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{reporting.vehicleType ? vehicleTypeLabels[reporting.vehicleType].label : '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>MMSI</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{target.mmsi ?? '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>IMO</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{target.imo ?? '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>Nom du capitaine</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{target.operatorName ?? '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>Immatriculation</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{target.externalReferenceNumber ?? '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>Taille</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{target.size ? `${target.size} m` : '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>Type de navire</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{target.vesselType ? vesselTypeLabel[target.vesselType] : '-'}</Text>
+                  </View>
+                </View>
+                <View style={styles.separator} />
+              </Fragment>
+            ))}
+            <Text style={[styles.description, { width: 'auto' }]}>Description du signalement</Text>
+            <Text>{reporting.description}</Text>
+          </View>
+        ))}
       </View>
     </>
   )
