@@ -11,7 +11,7 @@ export const archiveReportings = (ids: number[], resetSelectionFn: () => void) =
     if ('error' in response) {
       throw Error("Erreur à l'archivage des signalements")
     } else {
-      ids.map(id => {
+      ids.forEach(id => {
         if (reportings[id]) {
           dispatch(
             reportingActions.setReporting({
@@ -23,8 +23,6 @@ export const archiveReportings = (ids: number[], resetSelectionFn: () => void) =
             })
           )
         }
-
-        return undefined
       })
       dispatch(
         setToast({

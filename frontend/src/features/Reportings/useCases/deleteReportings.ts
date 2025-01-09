@@ -32,7 +32,7 @@ export const deleteReportings = (ids: number[], resetSelectionFn: () => void) =>
         )
       }
 
-      ids.map(id => dispatch(reportingActions.deleteSelectedReporting(id)))
+      ids.forEach(id => dispatch(reportingActions.deleteSelectedReporting(id)))
 
       dispatch(
         setToast({
