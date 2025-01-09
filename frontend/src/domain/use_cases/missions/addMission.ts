@@ -1,3 +1,4 @@
+import { isMissionNew } from '@features/missions/utils'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { chain } from 'lodash'
 import { generatePath } from 'react-router'
@@ -6,7 +7,6 @@ import { attachReportingToMissionSliceActions } from '../../../features/missions
 import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
 import { missionFactory } from '../../../features/missions/Missions.helpers'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { isNewMission } from '../../../utils/isNewMission'
 import { sideWindowPaths } from '../../entities/sideWindow'
 
 import type { HomeAppThunk } from '../../../store'
@@ -24,7 +24,7 @@ export const addMission =
     const { missions = {} } = getState().missionForms
 
     const maxNewMissionId = chain(missions)
-      .filter(newMission => isNewMission(newMission.missionForm.id))
+      .filter(newMission => isMissionNew(newMission.missionForm.id))
       .maxBy(filteredNewMission => Number(String(filteredNewMission.missionForm.id).split('new-')[1]))
       .value()
 

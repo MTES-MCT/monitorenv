@@ -1,14 +1,22 @@
+import { mainWindowActions } from '@features/MainWindow/slice'
 import { reportingActions } from '@features/Reportings/slice'
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { isNewReporting } from '../../../features/Reportings/utils'
-import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
-import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
-import { addMission } from '../missions/addMission'
+import {
+  ReportingContext,
+  setReportingFormVisibility,
+  setToast,
+  VisibilityState
+} from '../../../domain/shared_slices/Global'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from '../../../domain/use_cases/map/updateMapInteractionListeners'
+import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { isNewReporting } from '../utils'
 
-import type { Reporting } from '../../entities/reporting'
+import type { Reporting } from '../../../domain/entities/reporting'
 
 export const createMissionFromReporting = (values: Reporting | Partial<Reporting>) => async (dispatch, getState) => {
   const {

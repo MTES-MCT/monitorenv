@@ -1,3 +1,4 @@
+import { isMissionNew } from '@features/missions/utils'
 import { reportingActions } from '@features/Reportings/slice'
 import omit from 'lodash/omit'
 import { generatePath } from 'react-router'
@@ -7,7 +8,6 @@ import { ApiErrorCode } from '../../../api/types'
 import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
 import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
@@ -30,7 +30,7 @@ export const saveMission =
       'fishActions'
     ])
     const routeParams = getMissionPageRoute(currentPath)
-    const missionIsNewMission = isNewMission(routeParams?.params?.id)
+    const missionIsNewMission = isMissionNew(routeParams?.params?.id)
     await dispatch(missionFormsActions.setIsListeningToEvents(false))
 
     const newOrNextMissionData = missionIsNewMission ? { ...valuesToSave, id: undefined } : valuesToSave

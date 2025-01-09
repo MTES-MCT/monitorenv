@@ -1,8 +1,8 @@
 import { TotalResults } from '@components/Table/style'
+import { archiveReportings } from '@features/Reportings/useCases/archiveReportings'
+import { deleteReportings } from '@features/Reportings/useCases/deleteReportings'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, pluralize } from '@mtes-mct/monitor-ui'
-import { archiveReportings } from 'domain/use_cases/reporting/archiveReportings'
-import { deleteReportings } from 'domain/use_cases/reporting/deleteReportings'
 import styled from 'styled-components'
 
 export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds, totalReportings }) {

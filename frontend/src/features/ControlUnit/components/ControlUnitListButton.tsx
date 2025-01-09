@@ -3,10 +3,10 @@ import { useCallback } from 'react'
 
 import { ControlUnitListDialog } from './ControlUnitListDialog'
 import { globalActions } from '../../../domain/shared_slices/Global'
-import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
+import { reduceReportingFormOnMap } from '../../Reportings/useCases/reduceReportingFormOnMap'
 
 export function ControlUnitListButton() {
   const dispatch = useAppDispatch()

@@ -1,11 +1,13 @@
+import { reportingActions } from '@features/Reportings/slice'
 import { StyledButton, ButtonWithWiteBg, StyledDeleteButton, StyledFooter } from '@features/Reportings/style'
+import { reopenReporting } from '@features/Reportings/useCases/reopenReporting'
+import { saveReporting } from '@features/Reportings/useCases/saveReporting'
 import { getTimeLeft, isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
-import { reopenReporting } from 'domain/use_cases/reporting/reopenReporting'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 
@@ -59,9 +61,12 @@ export function Footer({
   const handleArchive = async () => {
     validateForm().then(async errors => {
       if (!isEmpty(errors)) {
+        dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
+
         return
       }
-      setFieldValue('isArchived', true)
+
+      dispatch(saveReporting({ ...values, isArchived: true }, reportingContext, true))
     })
   }
 

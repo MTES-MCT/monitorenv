@@ -1,3 +1,4 @@
+import { editReportingInLocalStore } from '@features/Reportings/useCases/editReportingInLocalStore'
 import {
   getFormattedReportingId,
   getTargetDetailsSubText,
@@ -12,7 +13,6 @@ import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
-import { editReportingInLocalStore } from 'domain/use_cases/reporting/editReportingInLocalStore'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 

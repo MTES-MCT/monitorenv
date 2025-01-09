@@ -1,11 +1,11 @@
 import { ReportingsFilters } from '@features/Reportings/Filters'
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
+import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { ReportingContext } from 'domain/shared_slices/Global'
-import { addReporting } from 'domain/use_cases/reporting/addReporting'
 import styled from 'styled-components'
 
 import { ReportingsTable } from './ReportingsTable'

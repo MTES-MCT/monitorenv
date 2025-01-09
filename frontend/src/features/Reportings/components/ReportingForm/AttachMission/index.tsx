@@ -1,3 +1,4 @@
+import { createMissionFromReporting } from '@features/Reportings/useCases/createMissionFromReporting'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
@@ -7,7 +8,6 @@ import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
 } from 'domain/use_cases/map/updateMapInteractionListeners'
-import { createMissionFromReporting } from 'domain/use_cases/reporting/createMissionFromReporting'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect } from 'react'

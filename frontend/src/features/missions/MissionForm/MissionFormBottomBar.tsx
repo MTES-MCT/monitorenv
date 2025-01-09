@@ -1,11 +1,11 @@
 import { Icon, Button, Accent, customDayjs, humanizePastDate } from '@mtes-mct/monitor-ui'
-import { isNewMission } from '@utils/isNewMission'
 import { useFormikContext } from 'formik'
 import { useMemo, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 import { MissionSourceEnum, missionSourceEnum, type Mission } from '../../../domain/entities/missions'
 import { AutoSaveTag } from '../../commonComponents/AutoSaveTag'
+import { isMissionNew } from '../utils'
 
 type MissionFormBottomBarProps = {
   isAutoSaveEnabled: boolean
@@ -21,7 +21,7 @@ export function MissionFormBottomBar({
   onSaveMission
 }: MissionFormBottomBarProps) {
   const { values } = useFormikContext<Mission>()
-  const missionIsNewMission = useMemo(() => isNewMission(values?.id), [values?.id])
+  const missionIsNewMission = useMemo(() => isMissionNew(values?.id), [values?.id])
   const allowEditMission =
     values?.missionSource === undefined ||
     values?.missionSource === MissionSourceEnum.MONITORENV ||

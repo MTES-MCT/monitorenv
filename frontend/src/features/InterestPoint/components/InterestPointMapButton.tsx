@@ -6,9 +6,9 @@ import {
   removeUnsavedInterestPoint,
   startDrawingInterestPoint
 } from '@features/InterestPoint/slice'
+import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
-import { reduceReportingFormOnMap } from 'domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { MapToolType } from '../../../domain/entities/map/constants'

@@ -1,14 +1,17 @@
 import { reportingActions } from '@features/Reportings/slice'
+import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from 'domain/use_cases/map/updateMapInteractionListeners'
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { ApiErrorCode } from '../../../api/types'
-import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { isNewReporting } from '../../../features/Reportings/utils'
-import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
+import { mainWindowActions } from '../../MainWindow/slice'
+import { isNewReporting } from '../utils'
 
-import type { Reporting } from '../../entities/reporting'
+import type { Reporting } from '../../../domain/entities/reporting'
 
 export const saveReporting =
   (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext, quitAfterSave = false) =>

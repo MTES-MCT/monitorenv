@@ -1,9 +1,12 @@
+import { mainWindowActions } from '@features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
 
-import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
+import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from '../../../domain/use_cases/map/updateMapInteractionListeners'
 
 export const closeReporting =
   (reportingIdToClose: number | string, reportingContextToClose: ReportingContext) => async (dispatch, getState) => {

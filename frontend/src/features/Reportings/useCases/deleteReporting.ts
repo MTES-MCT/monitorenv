@@ -1,9 +1,17 @@
+import { mainWindowActions } from '@features/MainWindow/slice'
 import { reportingActions } from '@features/Reportings/slice'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
-import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
+import {
+  ReportingContext,
+  setReportingFormVisibility,
+  setToast,
+  VisibilityState
+} from '../../../domain/shared_slices/Global'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from '../../../domain/use_cases/map/updateMapInteractionListeners'
 
 export const deleteReporting = (id: number | string | undefined) => async (dispatch, getState) => {
   const { reportings, selectedReportingIdOnMap } = getState().reporting

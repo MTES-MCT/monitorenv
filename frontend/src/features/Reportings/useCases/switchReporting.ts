@@ -1,8 +1,8 @@
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
+import { setReportingFormVisibility, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 
-import { mainWindowActions } from '../../../features/MainWindow/slice'
-import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
+import { mainWindowActions } from '../../MainWindow/slice'
 
 export const switchReporting =
   (nextReportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {

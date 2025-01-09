@@ -1,9 +1,9 @@
 import { reportingActions } from '@features/Reportings/slice'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setToast } from '../../shared_slices/Global'
+import { setToast } from '../../../domain/shared_slices/Global'
 
-import type { Reporting } from '../../entities/reporting'
+import type { Reporting } from '../../../domain/entities/reporting'
 
 export const archiveReportingFromTable = (id: number) => async (dispatch, getState) => {
   const {
