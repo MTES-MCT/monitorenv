@@ -73,7 +73,7 @@ dev-restore-db:
 	sh ./infra/scripts/restore_dev_db.sh
 
 dev-erase-db:
-	docker compose down --remove-orphans -v
+	docker compose -p monitorenv down --remove-orphans -v
 
 dev-clean-build-env:
 	rm -rf $(shell pwd)/backend/build
@@ -165,6 +165,34 @@ endif
 .PHONY: restart-app
 restart-app:
 	docker compose --profile production up -d --build --pull always
+
+################################################################################
+# Database upgrade
+
+print_pg_conf_files:
+	docker run --rm -i \
+		-v $(DB_DATA_VOLUME_NAME):/var/lib/postgresql/data \
+		debian:buster \
+		bash < infra/database_upgrade/print_pg_conf_files.sh;
+
+check-database-extensions-versions:
+	docker exec -i monitorenv_database bash < infra/database_upgrade/check_extensions_versions.sh
+
+update-database-extensions:
+	docker exec -i monitorenv_database bash < infra/database_upgrade/update_postgis.sh
+
+upgrade-postgres-11-to-15:
+	docker run --rm \
+		-v $(PG_11_DATA_VOLUME_NAME):/var/lib/postgresql/11/data \
+		-v $(PG_15_DATA_VOLUME_NAME):/var/lib/postgresql/15/data \
+		ghcr.io/mtes-mct/monitorenv/monitorenv-database-upgrade:pg11_to_pg15-postgis3.3.2;
+
+fix_pg_hba:
+	docker run --rm \
+		-v $(DB_DATA_VOLUME_NAME):/var/lib/postgresql/data \
+		debian:buster \
+		bash -c 'echo "host all all all md5" >> /var/lib/postgresql/data/pg_hba.conf';
+
 
 # ALIASES
 .PHONY: dev
