@@ -115,14 +115,14 @@ CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
 SELECT setval('reportings_2023_seq', (SELECT max(id) FROM reportings), true);
 
 INSERT INTO public.reportings_control_plan_sub_themes
-VALUES (1, 62);
+VALUES (1, 63);
 INSERT INTO public.reportings_control_plan_sub_themes
 VALUES (1, 27);
 INSERT INTO public.reportings_control_plan_sub_themes
-VALUES (2, 82);
+VALUES (2, 83);
 INSERT INTO public.reportings_control_plan_sub_themes
-VALUES (3, 82);
+VALUES (3, 83);
 INSERT INTO public.reportings_control_plan_sub_themes
-VALUES (4, 25);
+VALUES (4, 24);
 INSERT INTO public.reportings_control_plan_sub_themes
-VALUES (6, 82);
+VALUES (6, 83);
