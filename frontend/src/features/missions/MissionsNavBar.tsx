@@ -5,7 +5,7 @@ import { generatePath } from 'react-router'
 import { Nav } from 'rsuite'
 import styled from 'styled-components'
 
-import { isMissionNew, getMissionTitle } from './utils'
+import { isMissionNew, getMissionTitle, getNewMissionTitle } from './utils'
 import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { deleteTab } from '../../domain/use_cases/missions/deleteTab'
@@ -50,11 +50,13 @@ export function MissionsNavBar() {
 
       const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionForm.id })
 
+      const title = missionIsNewMission ? getNewMissionTitle(missionForm) : getMissionTitle(missionForm)
+
       return {
         icon: !missionIsNewMission ? <MissionStatus mission={missionForm} /> : undefined,
         label: (
           <>
-            <span>{getMissionTitle(missionIsNewMission, missionForm)}</span>
+            <span>{title}</span>
             <IconButton
               accent={Accent.TERTIARY}
               color={THEME.color.slateGray}
@@ -62,7 +64,7 @@ export function MissionsNavBar() {
               onClick={() => close(nextPath)}
               size={Size.SMALL}
               style={{ marginLeft: 'auto' }}
-              title={`Fermer ${getMissionTitle(missionIsNewMission, missionForm)}`}
+              title={`Fermer ${title}`}
             />
           </>
         ),
