@@ -978,10 +978,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 controlPlans =
-                listOf(
-                    EnvActionControlPlanEntity(
-                        subThemeIds = listOf(47),
-                        themeId = 2,
+                    listOf(
+                        EnvActionControlPlanEntity(
+                            subThemeIds = listOf(47),
+                            themeId = 2,
+                        ),
                     ),
                 missionId = id,
                 completion = ActionCompletionEnum.TO_COMPLETE,
