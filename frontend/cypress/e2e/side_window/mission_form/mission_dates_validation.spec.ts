@@ -37,12 +37,14 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
-    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('envaction-theme-selector').click()
     cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
     cy.getDataCy('envaction-subtheme-selector').click({ force: true })
     cy.getDataCy('envaction-theme-element').contains('Destruction').click({ force: true })
     cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
+
+    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
+    cy.wait(250)
 
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
     cy.getDataCy('surveillance-start-date-time')
@@ -95,7 +97,6 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
-    cy.getDataCy('surveillance-open-by').type('ABC')
     cy.getDataCy('envaction-theme-selector').click({ force: true })
     cy.getDataCy('envaction-theme-element').contains('Mouillage individuel').click()
     cy.getDataCy('envaction-subtheme-selector').click({ force: true })
@@ -104,8 +105,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.getDataCy('envaction-theme-element').contains('Drone').click({ force: true })
     cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
 
-    cy.getDataCy('action-card').eq(0).click()
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
+
+    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
+    cy.wait(250)
 
     const dateBeforeStartDateMissionInString = getUtcDateInMultipleFormats()
       .asDayjsUtcDate.subtract(5, 'day')
@@ -120,11 +123,13 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.fill('Date et heure de début de surveillance', dateBeforeStartDateMission)
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être postérieure à celle de début de mission')
+    cy.wait(200)
 
     // Start date of surveillance is after end date of mission
     cy.fill('Date et heure de début de surveillance', dateAfterEndDateMission)
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être antérieure à celle de fin de mission')
+    cy.wait(200)
 
     // Valid start date of surveillance
     const validSurveillanceStartDate = getFutureDate(1, 'day')
@@ -134,16 +139,19 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.fill('Date et heure de fin de surveillance', dateBeforeStartDateMission)
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à celle de début de mission')
+    cy.wait(200)
 
     // End date of surveillance is after end date of mission
     cy.fill('Date et heure de fin de surveillance', dateAfterEndDateMission)
-    cy.wait(250)
+    cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
+    cy.wait(200)
 
     // Valid end date of surveillance
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     const validSurveillanceEndDate = getFutureDate(4, 'day')
     cy.fill('Date et heure de fin de surveillance', validSurveillanceEndDate)
+    cy.wait(250)
 
     // Then
     cy.waitForLastRequest(
@@ -200,7 +208,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
-    cy.getDataCy('surveillance-open-by').type('ABC')
+    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
 
     cy.waitForLastRequest(
@@ -251,6 +259,8 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter des contrôles')
 
     cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
+    cy.wait(250)
+
     cy.getDataCy('envaction-theme-selector').click({ force: true })
     cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
     cy.getDataCy('envaction-subtheme-selector').click({ force: true })
