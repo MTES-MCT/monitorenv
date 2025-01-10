@@ -69,7 +69,7 @@ services:
         max-size: "1024m"
 
   db:
-    image: ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2
+    image: ghcr.io/mtes-mct/monitorenv/monitorenv-database:${DB_VERSION}
     container_name: monitorenv_database
     user: ":${MONITORENV_LOGS_AND_BACKUPS_GID}"
     environment:
@@ -184,7 +184,9 @@ networks:
 
 volumes:
   db-data:
+    name: ${DB_DATA_VOLUME_NAME}
     driver: local
+    external: true
   geoserver-data:
     driver: local
   geoserver-settings:
