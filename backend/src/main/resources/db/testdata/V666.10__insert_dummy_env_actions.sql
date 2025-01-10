@@ -157,7 +157,7 @@ VALUES ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 100),
        ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 100),
        ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 112),
        ('e2257638-ddef-4611-960c-7675a3254c38', 107),
-       ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 12),
+       ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 15),
        ('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 101),
        ('5865b619-3280-4c67-94ca-9f15da7d5aa7', 3)
 ;
@@ -173,10 +173,10 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 214),
        ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 195),
        ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 196),
        ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 180),
-       ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 42),
+       ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 44),
        ('5865b619-3280-4c67-94ca-9f15da7d5aa7', 5)
 ;
 
 INSERT INTO public.env_actions_control_plan_tags(env_action_id, tag_id)
 VALUES ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 11),
-       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 15);
+       ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 18);
