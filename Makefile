@@ -187,6 +187,12 @@ upgrade-postgres-11-to-15:
 		-v $(PG_15_DATA_VOLUME_NAME):/var/lib/postgresql/15/data \
 		ghcr.io/mtes-mct/monitorenv/monitorenv-database-upgrade:pg11_to_pg15-postgis3.3.2;
 
+upgrade-postgres-15-to-17:
+	docker run --rm \
+		-v $(PG_15_DATA_VOLUME_NAME):/var/lib/postgresql/15/data \
+		-v $(PG_17_DATA_VOLUME_NAME):/var/lib/postgresql/17/data \
+		ghcr.io/mtes-mct/monitorenv/monitorenv-database-upgrade:pg15_to_pg17-postgis3.5.1;
+
 fix_pg_hba:
 	docker run --rm \
 		-v $(DB_DATA_VOLUME_NAME):/var/lib/postgresql/data \
