@@ -185,8 +185,6 @@ networks:
 volumes:
   db-data:
     name: ${DB_DATA_VOLUME_NAME}
-    driver: local
-    external: true
   geoserver-data:
     driver: local
   geoserver-settings:
