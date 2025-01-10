@@ -33,7 +33,7 @@ import {
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MissionStatusTag } from '../components/MissionStatusTag'
-import { isMissionNew, getMissionTitle } from '../utils'
+import { isMissionNew, getMissionTitle, getNewMissionTitle } from '../utils'
 
 export function GeneralInformationsForm({
   missionCompletion = undefined
@@ -52,7 +52,10 @@ export function GeneralInformationsForm({
   const routeParams = getMissionPageRoute(currentPath)
   const missionIsNewMission = useMemo(() => isMissionNew(routeParams?.params?.id), [routeParams?.params?.id])
 
-  const title = useMemo(() => getMissionTitle(missionIsNewMission, values), [missionIsNewMission, values])
+  const title = useMemo(
+    () => (missionIsNewMission ? getNewMissionTitle(values) : getMissionTitle(values)),
+    [missionIsNewMission, values]
+  )
 
   const missionIsFromMonitorFish =
     values.missionSource === MissionSourceEnum.MONITORFISH || values.missionSource === MissionSourceEnum.POSEIDON_CNSP

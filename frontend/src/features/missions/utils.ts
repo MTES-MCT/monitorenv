@@ -69,15 +69,25 @@ export function getIsMissionEnded(missionEndDate: string | undefined): boolean {
   return !!missionEndDate && now.isAfter(missionEndDate)
 }
 
-export function getMissionTitle(isNewMission: boolean, values?: Partial<Mission> | Partial<NewMission>) {
-  return isNewMission
-    ? `Nouvelle mission ${
-        values?.controlUnits && values?.controlUnits.length > 0 && values?.controlUnits[0]?.name ? '-' : ''
-      } ${values?.controlUnits?.map(controlUnit => controlUnit.name).join(', ')}`
-    : `${values?.id} - Mission ${
-        values?.missionTypes &&
-        values?.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
-      } – ${values?.controlUnits?.map(controlUnit => controlUnit.name?.replace('(historique)', '')).join(', ')}`
+export function getNewMissionTitle(values?: Partial<Mission> | Partial<NewMission>) {
+  const hasControlUnitName = values?.controlUnits && values?.controlUnits.length > 0 && values?.controlUnits[0]?.name
+
+  if (!hasControlUnitName) {
+    return `Nouvelle mission`
+  }
+
+  return `Nouvelle mission - ${values?.controlUnits?.map(controlUnit => controlUnit.name).join(' - ')}`
+}
+
+export function getMissionTitle(values?: Partial<Mission> | Partial<NewMission>) {
+  const missionTypes =
+    values?.missionTypes && values?.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
+
+  const controlUnitsNames = values?.controlUnits
+    ?.map(controlUnit => controlUnit.name?.replace('(historique)', ''))
+    .join(' - ')
+
+  return `${values?.id} - Mission ${missionTypes} – ${controlUnitsNames}`
 }
 
 export function getIdTyped(id: string | undefined) {
