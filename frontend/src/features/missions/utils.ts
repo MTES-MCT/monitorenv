@@ -80,8 +80,7 @@ export function getNewMissionTitle(values?: Partial<Mission> | Partial<NewMissio
 }
 
 export function getMissionTitle(values?: Partial<Mission> | Partial<NewMission>) {
-  const missionTypes =
-    values?.missionTypes && values?.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
+  const missionTypes = values?.missionTypes?.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
 
   const controlUnitsNames = values?.controlUnits
     ?.map(controlUnit => controlUnit.name?.replace('(historique)', ''))

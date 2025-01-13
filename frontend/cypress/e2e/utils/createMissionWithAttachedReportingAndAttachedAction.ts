@@ -92,6 +92,9 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
 
         cy.clickButton('Ajouter un contrôle')
 
+        const controlEndDate = getFutureDate(2, 'day')
+        cy.fill('Date et heure du contrôle (UTC)', controlEndDate)
+
         cy.getDataCy('control-open-by').scrollIntoView().type('ABC')
         cy.wait(250)
 
