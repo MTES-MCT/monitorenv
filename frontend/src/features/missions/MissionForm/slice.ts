@@ -7,7 +7,7 @@ import type { AtLeast } from '../../../types'
 export type MissionInStateType = {
   activeAction?: SelectedActionType
   displayCreatedMissionBanner?: boolean
-  engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
+  engagedControlUnit?: ControlUnit.EngagedControlUnit
   isFormDirty: boolean
   missionForm: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>
 }
