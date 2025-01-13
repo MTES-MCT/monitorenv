@@ -34,6 +34,7 @@ import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
+import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
@@ -233,7 +234,7 @@ class MissionModel(
     @Column(name = "observations_cnsp") val observationsCnsp: String? = null,
     @Column(name = "open_by") val openBy: String? = null,
     @Column(name = "start_datetime_utc") val startDateTimeUtc: Instant,
-    @Column(name = "updated_at_utc") var updatedAtUtc: Instant?,
+    @Column(name = "updated_at_utc") @UpdateTimestamp var updatedAtUtc: Instant?,
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val mappedControlUnits =

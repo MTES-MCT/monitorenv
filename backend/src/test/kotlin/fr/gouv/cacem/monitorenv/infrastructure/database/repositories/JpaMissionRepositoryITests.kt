@@ -63,7 +63,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-                MultiPolygon
+            MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     @Test
@@ -452,21 +452,21 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                             LegacyControlUnitResourceEntity(
                                                 id = 3,
                                                 controlUnitId =
-                                                    10002,
+                                                10002,
                                                 name =
                                                     "Semi-rigide 1",
                                             ),
                                             LegacyControlUnitResourceEntity(
                                                 id = 4,
                                                 controlUnitId =
-                                                    10002,
+                                                10002,
                                                 name =
                                                     "Semi-rigide 2",
                                             ),
                                             LegacyControlUnitResourceEntity(
                                                 id = 5,
                                                 controlUnitId =
-                                                    10002,
+                                                10002,
                                                 name =
                                                     "Voiture",
                                             ),
@@ -577,7 +577,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             isAdministrativeControl = true,
                             isComplianceWithWaterRegulationsControl = true,
                             isSafetyEquipmentAndStandardsComplianceControl =
-                                true,
+                            true,
                             isSeafarersControl = true,
                         ),
                         EnvActionSurveillanceEntity(
@@ -629,7 +629,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.mission.createdAtUtc)
             .isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(newMissionCreated.mission.updatedAtUtc)
-            .isNull()
+            .isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10121)
         assertThat(newMissionCreated.mission.controlUnits.first().name)
@@ -694,32 +694,32 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 createdAtUtc = null,
                 updatedAtUtc = null,
             )
-        jpaMissionRepository.save(newMission)
+        val createdMission = jpaMissionRepository.save(newMission)
 
         // When
-        val newMissionUpdated =
+        val updatedMission =
             jpaMissionRepository.save(
-                newMission.copy(
+                createdMission.mission.copy(
                     controlUnits =
                         listOf(
                             LegacyControlUnitEntity(
                                 id = 10002,
                                 name = "DML 2A",
-                                administration = "DIRM / DM",
+                                administration = "DDTM",
                                 isArchived = false,
                                 resources =
                                     listOf(
                                         LegacyControlUnitResourceEntity(
                                             id = 3,
                                             controlUnitId =
-                                                10002,
+                                            10002,
                                             name =
                                                 "Semi-rigide 1",
                                         ),
                                         LegacyControlUnitResourceEntity(
                                             id = 5,
                                             controlUnitId =
-                                                10002,
+                                            10002,
                                             name = "Voiture",
                                         ),
                                     ),
@@ -729,21 +729,21 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
 
         // Then
-        assertThat(newMissionUpdated.mission.controlUnits).hasSize(1)
-        assertThat(newMissionUpdated.mission.controlUnits.first().id).isEqualTo(10002)
-        assertThat(newMissionUpdated.mission.controlUnits.first().name).isEqualTo("DML 2A")
-        assertThat(newMissionUpdated.mission.controlUnits.first().administration)
-            .isEqualTo("DIRM / DM")
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources).hasSize(2)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().id).isEqualTo(3)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().controlUnitId)
+        assertThat(updatedMission.mission.controlUnits).hasSize(1)
+        assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)
+        assertThat(updatedMission.mission.controlUnits.first().name).isEqualTo("DML 2A")
+        assertThat(updatedMission.mission.controlUnits.first().administration)
+            .isEqualTo("DDTM")
+        assertThat(updatedMission.mission.controlUnits.first().resources).hasSize(2)
+        assertThat(updatedMission.mission.controlUnits.first().resources.first().id).isEqualTo(3)
+        assertThat(updatedMission.mission.controlUnits.first().resources.first().controlUnitId)
             .isEqualTo(10002)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().name)
+        assertThat(updatedMission.mission.controlUnits.first().resources.first().name)
             .isEqualTo("Semi-rigide 1")
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().id).isEqualTo(5)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().controlUnitId)
+        assertThat(updatedMission.mission.controlUnits.first().resources.last().id).isEqualTo(5)
+        assertThat(updatedMission.mission.controlUnits.first().resources.last().controlUnitId)
             .isEqualTo(10002)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name)
+        assertThat(updatedMission.mission.controlUnits.first().resources.last().name)
             .isEqualTo("Voiture")
     }
 
