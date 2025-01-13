@@ -13,7 +13,7 @@ import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
 } from '../../../domain/use_cases/map/updateMapInteractionListeners'
-import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { addMission } from '../../Mission/useCases/addMission'
 import { isNewReporting } from '../utils'
 
 import type { Reporting } from '../../../domain/entities/reporting'

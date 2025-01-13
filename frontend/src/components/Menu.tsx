@@ -3,7 +3,7 @@ import { ControlUnitListButton } from '@features/ControlUnit/components/ControlU
 import { DashboardMenuButton } from '@features/Dashboard/components/MenuButton'
 import { InterestPointMapButton } from '@features/InterestPoint/components/InterestPointMapButton'
 import { MeasurementMapButton } from '@features/map/tools/measurements/MeasurementMapButton'
-import { MissionsMenu } from '@features/missions/MissionsButton'
+import { MissionsMenu } from '@features/Mission/components/MissionsButton'
 import { ReportingsButton } from '@features/Reportings/components/ReportingsButton'
 import { SearchSemaphoreButton } from '@features/Semaphore/components/SearchSemaphoreButton'
 import { useAppSelector } from '@hooks/useAppSelector'

@@ -1,4 +1,4 @@
-import { attachReportingToMissionSliceActions } from '@features/missions/MissionForm/AttachReporting/slice'
+import { attachReportingToMissionSliceActions } from '@features/Mission/components/MissionForm/AttachReporting/slice'
 import { getFormattedReportingId } from '@features/Reportings/utils'
 
 import { createMissionWithAttachedReportingAndAttachedAction } from '../../utils/createMissionWithAttachedReportingAndAttachedAction'
