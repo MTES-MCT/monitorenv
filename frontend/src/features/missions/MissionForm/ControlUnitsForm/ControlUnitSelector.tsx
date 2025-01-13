@@ -1,6 +1,9 @@
+import { useGetStationsQuery } from '@api/stationsAPI'
+import { centerOnStation } from '@features/ControlUnit/useCases/centerOnStation'
 import { isMissionNew } from '@features/missions/utils'
 import {
   Accent,
+  Button,
   type ControlUnit,
   CustomSearch,
   FormikTextInput,
@@ -8,8 +11,10 @@ import {
   Icon,
   IconButton,
   MultiSelect,
-  Select
+  Select,
+  Size
 } from '@mtes-mct/monitor-ui'
+import { globalActions } from 'domain/shared_slices/Global'
 import { useField } from 'formik'
 import { uniq, uniqBy } from 'lodash'
 import { useMemo } from 'react'
@@ -23,15 +28,26 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 import { getMissionPageRoute } from '../../../../utils/routes'
-import { missionFormsActions } from '../slice'
+import { getActiveMission, missionFormsActions } from '../slice'
 
 type ControlUnitSelectorProps = {
   controlUnitIndex: number
+  onAddControlUnit: () => void
   removeControlUnit: () => void
+  totalControlUnits: number
 }
 
-export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: ControlUnitSelectorProps) {
+export function ControlUnitSelector({
+  controlUnitIndex,
+  onAddControlUnit,
+  removeControlUnit,
+  totalControlUnits
+}: ControlUnitSelectorProps) {
   const dispatch = useAppDispatch()
+  const { data: bases } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+
+  const activeMission = useAppSelector(state => getActiveMission(state.missionForms))
+  const engagedControlUnit = activeMission?.engagedControlUnit
 
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
@@ -155,6 +171,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
       }
     }
   }
+
   const handleResourceChange = (nextControlUnitResourceIds: number[] | undefined) => {
     if (!nextControlUnitResourceIds) {
       resourcesHelpers.setValue([])
@@ -169,6 +186,25 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
     resourcesHelpers.setValue(nextControlUnitResources)
   }
 
+  const zoomOnStation = () => {
+    const selectedControlUnit = controlUnitsData?.find(controlUnit => controlUnit.id === unitField.value)
+    const stations = uniqBy(
+      bases?.filter(base =>
+        selectedControlUnit?.resources?.some(resource => base.controlUnitResourceIds.includes(resource.id))
+      ),
+      'id'
+    )
+    if (!selectedControlUnit) {
+      return
+    }
+    dispatch(
+      globalActions.setDisplayedItems({
+        displayStationLayer: true
+      })
+    )
+    dispatch(centerOnStation(stations))
+  }
+
   const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
   if (isError) {
@@ -180,23 +216,23 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
   }
 
   return (
-    <ControlUnitWrapper>
-      <RessourceUnitWrapper>
-        <Select
-          data-cy="add-control-administration"
-          error={administrationMeta.error}
-          isErrorMessageHidden
-          isRequired
-          label={`Administration ${resourceUnitIndexDisplayed}`}
-          name={administrationField.name}
-          onChange={handleAdministrationChange}
-          options={administrationsAsOption}
-          searchable={administrationsAsOption.length > 10}
-          style={{ flex: 1 }}
-          value={administrationField.value}
-        />
+    <RessourceUnitWrapper>
+      <Select
+        data-cy="add-control-administration"
+        error={administrationMeta.error}
+        isErrorMessageHidden
+        isRequired
+        label={`Administration ${resourceUnitIndexDisplayed}`}
+        name={administrationField.name}
+        onChange={handleAdministrationChange}
+        options={administrationsAsOption}
+        searchable={administrationsAsOption.length > 10}
+        style={{ flex: 1 }}
+        value={administrationField.value}
+      />
 
-        <div>
+      <div>
+        <SelectAndZoomContainer>
           <Select
             key={unitList.length}
             customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
@@ -212,51 +248,87 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }: Con
             style={{ flex: 1 }}
             value={unitField.value}
           />
-          {missionIsNewMission && <ControlUnitWarningMessage controlUnitIndex={controlUnitIndex} />}
-        </div>
+          <StyledIconButton
+            accent={Accent.SECONDARY}
+            disabled={resourcesAsOption?.length === 0 || !unitField.value}
+            Icon={Icon.FocusZones}
+            onClick={zoomOnStation}
+            title={
+              resourcesAsOption?.length === 0 || !unitField.value
+                ? 'Cette unité n’a pas de moyens, donc pas de bases'
+                : 'Centrer la carte sur les bases de l’unité'
+            }
+          />
+        </SelectAndZoomContainer>
+        {missionIsNewMission && <ControlUnitWarningMessage controlUnitIndex={controlUnitIndex} />}
+      </div>
 
-        <MultiSelect
-          cleanable={false}
-          data-cy="add-control-unit-resource"
-          disabled={!unitField.value}
-          label={`Moyen(s) ${resourceUnitIndexDisplayed}`}
-          name={resourcesField.name}
-          onChange={handleResourceChange}
-          options={resourcesAsOption ?? []}
-          style={{ flex: 1 }}
-          value={resourcesField.value.map(resource => resource.id)}
-        />
+      <MultiSelect
+        cleanable={false}
+        data-cy="add-control-unit-resource"
+        disabled={!unitField.value}
+        label={`Moyen(s) ${resourceUnitIndexDisplayed}`}
+        name={resourcesField.name}
+        onChange={handleResourceChange}
+        options={resourcesAsOption ?? []}
+        style={{ flex: 1 }}
+        value={resourcesField.value.map(resource => resource.id)}
+      />
 
-        <FormikTextInput
-          data-cy="control-unit-contact"
-          isErrorMessageHidden
-          label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
-          name={`controlUnits.${controlUnitIndex}.contact`}
-        />
-      </RessourceUnitWrapper>
-      {controlUnitIndex > 0 && (
-        <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeControlUnit} />
-      )}
-    </ControlUnitWrapper>
+      <FormikTextInput
+        data-cy="control-unit-contact"
+        isErrorMessageHidden
+        label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
+        name={`controlUnits.${controlUnitIndex}.contact`}
+      />
+      <Buttonscontainer>
+        {controlUnitIndex > 0 && (
+          <StyledButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeControlUnit} size={Size.SMALL}>
+            Supprimer l&apos;unité
+          </StyledButton>
+        )}
+        {totalControlUnits === controlUnitIndex + 1 && (
+          <Button
+            accent={Accent.SECONDARY}
+            data-cy="add-other-control-unit"
+            disabled={!!engagedControlUnit}
+            Icon={Icon.Plus}
+            onClick={onAddControlUnit}
+            size={Size.SMALL}
+          >
+            Ajouter une autre unité
+          </Button>
+        )}
+      </Buttonscontainer>
+    </RessourceUnitWrapper>
   )
 }
 
 const RessourceUnitWrapper = styled.div`
-  margin-bottom: 14px;
   display: flex;
   flex-direction: column;
   flex: 1;
   gap: 4px;
+  margin-bottom: 14px;
 `
 
-const ControlUnitWrapper = styled.div`
+const StyledButton = styled(Button)`
+  svg {
+    color: ${p => p.theme.color.maximumRed};
+  }
+`
+
+const Buttonscontainer = styled.div`
   display: flex;
-  flex-direction: row;
-  flex: 1;
+  gap: 8px;
+  margin-top: 8px;
+`
+
+const SelectAndZoomContainer = styled.div`
+  display: flex;
   gap: 8px;
 `
 
-const DeleteButton = styled(IconButton)`
-  align-self: start;
-  margin-top: 20px;
+const StyledIconButton = styled(IconButton)`
+  align-self: end;
 `
