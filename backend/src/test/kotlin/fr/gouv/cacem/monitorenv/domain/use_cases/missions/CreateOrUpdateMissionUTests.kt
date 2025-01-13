@@ -134,11 +134,11 @@ class CreateOrUpdateMissionUTests {
             missionRepository.save(
                 argThat {
                     this ==
-                            missionToUpdate.copy(
-                                facade = "La Face Ade",
-                                envActions = existingEnvActions,
-                                observationsByUnit = "observations",
-                            )
+                        missionToUpdate.copy(
+                            facade = "La Face Ade",
+                            envActions = existingEnvActions,
+                            observationsByUnit = "observations",
+                        )
                 },
             ),
         )
@@ -164,11 +164,11 @@ class CreateOrUpdateMissionUTests {
             .save(
                 argThat {
                     this ==
-                            missionToUpdate.copy(
-                                facade = "La Face Ade",
-                                envActions = existingEnvActions,
-                                observationsByUnit = "observations",
-                            )
+                        missionToUpdate.copy(
+                            facade = "La Face Ade",
+                            envActions = existingEnvActions,
+                            observationsByUnit = "observations",
+                        )
                 },
             )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
@@ -200,7 +200,7 @@ class CreateOrUpdateMissionUTests {
             MissionEntity(
                 id = 100,
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                createdAtUtc = null,
+                createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 updatedAtUtc = ZonedDateTime.now(),
                 facade = "La Face Ade",
                 hasMissionOrder = false,

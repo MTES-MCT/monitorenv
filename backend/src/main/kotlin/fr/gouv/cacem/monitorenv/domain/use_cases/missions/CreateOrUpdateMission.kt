@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
@@ -51,12 +51,6 @@ class CreateOrUpdateMission(
             UpdateMissionEvent(savedMission.mission),
         )
 
-        /**
-         * TODO When doing an update, the `createdAtUtc` field is returned as null.
-         * To fix this, we return the stored `createdAtUtc`
-         */
-        return savedMission.mission.copy(
-            createdAtUtc = savedMission.mission.createdAtUtc ?: storedMission?.createdAtUtc,
-        )
+        return savedMission.mission
     }
 }

@@ -184,28 +184,28 @@ class CreateOrPatchEnvActionsUTests {
             .save(
                 argThat {
                     this ==
-                            missionToUpdate.copy(
-                                envActions =
-                                    missionToUpdate.envActions?.map {
-                                        when (it) {
-                                            is EnvActionControlEntity ->
-                                                it.copy(
-                                                    facade = "La Face Ade",
-                                                    department =
-                                                        "Quequ'part",
-                                                )
+                        missionToUpdate.copy(
+                            envActions =
+                                missionToUpdate.envActions?.map {
+                                    when (it) {
+                                        is EnvActionControlEntity ->
+                                            it.copy(
+                                                facade = "La Face Ade",
+                                                department =
+                                                    "Quequ'part",
+                                            )
 
-                                            is EnvActionSurveillanceEntity ->
-                                                it.copy(
-                                                    facade = "La Face Ade",
-                                                    department =
-                                                        "Quequ'part",
-                                                )
+                                        is EnvActionSurveillanceEntity ->
+                                            it.copy(
+                                                facade = "La Face Ade",
+                                                department =
+                                                    "Quequ'part",
+                                            )
 
-                                            else -> it
-                                        }
-                                    },
-                            )
+                                        else -> it
+                                    }
+                                },
+                        )
                 },
             )
         assertThat(createdMission).isEqualTo(expectedUpdatedMission)

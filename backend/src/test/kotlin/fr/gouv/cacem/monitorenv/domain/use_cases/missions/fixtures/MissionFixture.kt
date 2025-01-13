@@ -32,7 +32,7 @@ class MissionFixture {
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
                 updatedAtUtc = null,
-                createdAtUtc = null
+                createdAtUtc = null,
             )
         }
 

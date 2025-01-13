@@ -58,7 +58,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                    monitorFishMissionActionsRepository,
+                monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
@@ -75,13 +75,14 @@ class CanDeleteMissionUTests {
         given(missionRepository.findById(missionId))
             .willReturn(
                 aMissionEntity(
-                    envActions = listOf(
-                        anEnvAction(
-                            mapper = ObjectMapper(),
-                            id = UUID.randomUUID()
-                        )
-                    )
-                )
+                    envActions =
+                        listOf(
+                            anEnvAction(
+                                mapper = ObjectMapper(),
+                                id = UUID.randomUUID(),
+                            ),
+                        ),
+                ),
             )
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId))
             .willReturn(
@@ -95,7 +96,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                    monitorFishMissionActionsRepository,
+                monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
@@ -111,13 +112,14 @@ class CanDeleteMissionUTests {
         given(missionRepository.findById(missionId))
             .willReturn(
                 aMissionEntity(
-                    envActions = listOf(
-                        anEnvAction(
-                            mapper = ObjectMapper(),
-                            id = UUID.randomUUID()
-                        )
-                    )
-                )
+                    envActions =
+                        listOf(
+                            anEnvAction(
+                                mapper = ObjectMapper(),
+                                id = UUID.randomUUID(),
+                            ),
+                        ),
+                ),
             )
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId))
             .willReturn(
@@ -131,7 +133,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                    monitorFishMissionActionsRepository,
+                monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
@@ -163,7 +165,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                    monitorFishMissionActionsRepository,
+                monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
@@ -208,7 +210,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                    monitorFishMissionActionsRepository,
+                monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
@@ -263,7 +265,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                    monitorFishMissionActionsRepository,
+                monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
