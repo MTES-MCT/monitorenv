@@ -1,11 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
@@ -13,6 +12,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMis
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,7 +24,6 @@ import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.ZonedDateTime
 import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
@@ -45,22 +45,7 @@ class CanDeleteMissionUTests {
         val missionId = 57
 
         given(missionRepository.findById(missionId))
-            .willReturn(
-                MissionEntity(
-                    id = 57,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(),
-                ),
-            )
+            .willReturn(aMissionEntity())
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId))
             .willReturn(
                 RapportNavMissionActionEntity(
@@ -73,7 +58,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                monitorFishMissionActionsRepository,
+                    monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
@@ -87,33 +72,16 @@ class CanDeleteMissionUTests {
         log: CapturedOutput,
     ) {
         val missionId = 34
-
-        val wktReader = WKTReader()
-
-        val multipolygonString =
-            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val envActionControl =
-            EnvActionControlEntity(
-                id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
-                geom = polygon,
-            )
         given(missionRepository.findById(missionId))
             .willReturn(
-                MissionEntity(
-                    id = 34,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(envActionControl),
-                ),
+                aMissionEntity(
+                    envActions = listOf(
+                        anEnvAction(
+                            mapper = ObjectMapper(),
+                            id = UUID.randomUUID()
+                        )
+                    )
+                )
             )
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId))
             .willReturn(
@@ -127,7 +95,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                monitorFishMissionActionsRepository,
+                    monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
@@ -140,32 +108,16 @@ class CanDeleteMissionUTests {
     fun `execute Should return a list when have Env actions and RapportNav actions and request come from Fish`() {
         val missionId = 53
 
-        val wktReader = WKTReader()
-
-        val multipolygonString =
-            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val envActionControl =
-            EnvActionControlEntity(
-                id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
-                geom = polygon,
-            )
         given(missionRepository.findById(missionId))
             .willReturn(
-                MissionEntity(
-                    id = 53,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(envActionControl),
-                ),
+                aMissionEntity(
+                    envActions = listOf(
+                        anEnvAction(
+                            mapper = ObjectMapper(),
+                            id = UUID.randomUUID()
+                        )
+                    )
+                )
             )
         given(rapportNavMissionActionsRepository.findRapportNavMissionActionsById(missionId))
             .willReturn(
@@ -179,7 +131,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                monitorFishMissionActionsRepository,
+                    monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORFISH)
@@ -194,22 +146,7 @@ class CanDeleteMissionUTests {
         val missionId = 57
 
         given(missionRepository.findById(missionId))
-            .willReturn(
-                MissionEntity(
-                    id = 57,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(),
-                ),
-            )
+            .willReturn(aMissionEntity())
 
         given(monitorFishMissionActionsRepository.findFishMissionActionsById(missionId))
             .willReturn(listOf())
@@ -226,7 +163,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                monitorFishMissionActionsRepository,
+                    monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
@@ -239,22 +176,7 @@ class CanDeleteMissionUTests {
         val missionId = 57
 
         given(missionRepository.findById(missionId))
-            .willReturn(
-                MissionEntity(
-                    id = 57,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(),
-                ),
-            )
+            .willReturn(aMissionEntity())
 
         given(monitorFishMissionActionsRepository.findFishMissionActionsById(missionId))
             .willReturn(
@@ -286,7 +208,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                monitorFishMissionActionsRepository,
+                    monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)
@@ -309,22 +231,7 @@ class CanDeleteMissionUTests {
                 geom = polygon,
             )
         given(missionRepository.findById(missionId))
-            .willReturn(
-                MissionEntity(
-                    id = 53,
-                    missionTypes = listOf(MissionTypeEnum.LAND),
-                    facade = "Outre-Mer",
-                    geom = null,
-                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                    isDeleted = false,
-                    missionSource = MissionSourceEnum.MONITORENV,
-                    hasMissionOrder = false,
-                    isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                    envActions = listOf(envActionControl),
-                ),
-            )
+            .willReturn(aMissionEntity())
 
         given(monitorFishMissionActionsRepository.findFishMissionActionsById(missionId))
             .willReturn(
@@ -356,7 +263,7 @@ class CanDeleteMissionUTests {
             CanDeleteMission(
                 missionRepository = missionRepository,
                 monitorFishMissionActionsRepository =
-                monitorFishMissionActionsRepository,
+                    monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
             )
                 .execute(missionId, MissionSourceEnum.MONITORENV)

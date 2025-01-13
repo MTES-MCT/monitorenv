@@ -27,7 +27,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.context.ApplicationEventPublisher
@@ -37,26 +38,26 @@ import java.time.ZonedDateTime
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateReportingUTests {
-    @MockBean
-    private lateinit var reportingRepository: IReportingRepository
+    @Mock
+    private val reportingRepository: IReportingRepository = mock()
 
-    @MockBean
-    private lateinit var controlUnitRepository: IControlUnitRepository
+    @Mock
+    private val controlUnitRepository: IControlUnitRepository = mock()
 
-    @MockBean
-    private lateinit var semaphoreRepository: ISemaphoreRepository
+    @Mock
+    private val semaphoreRepository: ISemaphoreRepository = mock()
 
-    @MockBean
-    private lateinit var facadeRepository: IFacadeAreasRepository
+    @Mock
+    private val facadeRepository: IFacadeAreasRepository = mock()
 
-    @MockBean
-    private lateinit var missionRepository: IMissionRepository
+    @Mock
+    private val missionRepository: IMissionRepository = mock()
 
-    @MockBean
-    private lateinit var postgisFunctionRepository: IPostgisFunctionRepository
+    @Mock
+    private val postgisFunctionRepository: IPostgisFunctionRepository = mock()
 
-    @MockBean
-    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    @Mock
+    private val applicationEventPublisher: ApplicationEventPublisher = mock()
 
     @Test
     fun `should return new or updated reporting`(log: CapturedOutput) {

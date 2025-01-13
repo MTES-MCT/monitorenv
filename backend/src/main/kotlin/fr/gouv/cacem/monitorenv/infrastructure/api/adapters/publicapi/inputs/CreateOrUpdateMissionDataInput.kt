@@ -23,6 +23,8 @@ data class CreateOrUpdateMissionDataInput(
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
     val isGeometryComputedFromControls: Boolean,
+    val createdAtUtc: ZonedDateTime?,
+    val updatedAtUtc: ZonedDateTime?,
 ) {
     fun toMissionEntity(): MissionEntity {
         return MissionEntity(
@@ -42,6 +44,8 @@ data class CreateOrUpdateMissionDataInput(
             hasMissionOrder = this.hasMissionOrder,
             isUnderJdp = this.isUnderJdp,
             isGeometryComputedFromControls = this.isGeometryComputedFromControls,
+            createdAtUtc = createdAtUtc,
+            updatedAtUtc = updatedAtUtc,
         )
     }
 }

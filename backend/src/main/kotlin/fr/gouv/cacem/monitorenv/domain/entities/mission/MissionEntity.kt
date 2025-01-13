@@ -22,8 +22,8 @@ data class MissionEntity(
     var startDateTimeUtc: ZonedDateTime,
     @Patchable
     var endDateTimeUtc: ZonedDateTime? = null,
-    val createdAtUtc: ZonedDateTime? = null,
-    val updatedAtUtc: ZonedDateTime? = null,
+    val createdAtUtc: ZonedDateTime?,
+    val updatedAtUtc: ZonedDateTime?,
     val envActions: List<EnvActionEntity>? = listOf(),
     val isDeleted: Boolean,
     val isGeometryComputedFromControls: Boolean,

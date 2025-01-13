@@ -60,6 +60,8 @@ class GetEngagedControlUnitsUTests {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
         val secondMission =
@@ -81,6 +83,8 @@ class GetEngagedControlUnitsUTests {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
 

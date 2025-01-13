@@ -37,10 +37,10 @@ import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -62,25 +62,25 @@ class ReportingsITests {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    @MockBean
+    @MockitoBean
     private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
 
-    @MockBean
+    @MockitoBean
     private lateinit var getReportings: GetReportings
 
-    @MockBean
+    @MockitoBean
     private lateinit var getReportingById: GetReportingById
 
-    @MockBean
+    @MockitoBean
     private lateinit var getReportingsByIds: GetReportingsByIds
 
-    @MockBean
+    @MockitoBean
     private lateinit var deleteReporting: DeleteReporting
 
-    @MockBean
+    @MockitoBean
     private lateinit var deleteReportings: DeleteReportings
 
-    @MockBean
+    @MockitoBean
     private lateinit var archiveReportings: ArchiveReportings
 
     @Autowired
@@ -142,7 +142,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                            Point,
+                                                Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -276,7 +276,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                            Point,
+                                                Point,
                                 ),
                             controlUnit = null,
                         ),

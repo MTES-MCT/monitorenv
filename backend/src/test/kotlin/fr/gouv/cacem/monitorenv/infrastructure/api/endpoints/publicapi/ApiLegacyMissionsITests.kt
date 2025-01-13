@@ -123,6 +123,8 @@ class ApiLegacyMissionsITests {
                 hasMissionOrder = true,
                 isUnderJdp = true,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         val requestBody = objectMapper.writeValueAsString(newMissionRequest)
         given(
@@ -166,6 +168,8 @@ class ApiLegacyMissionsITests {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         given(
             getMissions.execute(
@@ -212,6 +216,8 @@ class ApiLegacyMissionsITests {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         given(
             getMissionsByIds.execute(any()),
@@ -243,6 +249,8 @@ class ApiLegacyMissionsITests {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
 
@@ -272,6 +280,8 @@ class ApiLegacyMissionsITests {
                 hasMissionOrder = true,
                 isUnderJdp = true,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         val requestBody =
@@ -285,6 +295,8 @@ class ApiLegacyMissionsITests {
                 hasMissionOrder = true,
                 isUnderJdp = true,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         given(
             createOrUpdateMission.execute(
@@ -397,6 +409,8 @@ class ApiLegacyMissionsITests {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
 

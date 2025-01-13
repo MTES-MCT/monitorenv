@@ -131,6 +131,8 @@ class CreateOrPatchEnvActionsUTests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         val expectedUpdatedMission =
@@ -147,6 +149,8 @@ class CreateOrPatchEnvActionsUTests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         given(postgisFunctionRepository.normalizeGeometry(point)).willReturn(point)
@@ -180,28 +184,28 @@ class CreateOrPatchEnvActionsUTests {
             .save(
                 argThat {
                     this ==
-                        missionToUpdate.copy(
-                            envActions =
-                                missionToUpdate.envActions?.map {
-                                    when (it) {
-                                        is EnvActionControlEntity ->
-                                            it.copy(
-                                                facade = "La Face Ade",
-                                                department =
-                                                    "Quequ'part",
-                                            )
+                            missionToUpdate.copy(
+                                envActions =
+                                    missionToUpdate.envActions?.map {
+                                        when (it) {
+                                            is EnvActionControlEntity ->
+                                                it.copy(
+                                                    facade = "La Face Ade",
+                                                    department =
+                                                        "Quequ'part",
+                                                )
 
-                                        is EnvActionSurveillanceEntity ->
-                                            it.copy(
-                                                facade = "La Face Ade",
-                                                department =
-                                                    "Quequ'part",
-                                            )
+                                            is EnvActionSurveillanceEntity ->
+                                                it.copy(
+                                                    facade = "La Face Ade",
+                                                    department =
+                                                        "Quequ'part",
+                                                )
 
-                                        else -> it
-                                    }
-                                },
-                        )
+                                            else -> it
+                                        }
+                                    },
+                            )
                 },
             )
         assertThat(createdMission).isEqualTo(expectedUpdatedMission)

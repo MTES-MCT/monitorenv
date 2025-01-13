@@ -50,7 +50,8 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
     cy.fill('Unité 1', 'Cross Etel')
-    cy.wait(200)
+    cy.wait(500)
+
     cy.getDataCy('add-control-administration').contains('DIRM / DM')
     cy.getDataCy('add-control-unit').contains('Cross Etel')
 
@@ -73,7 +74,32 @@ context('Side Window > Mission Form > Main Form', () => {
     )
       .its('response.statusCode')
       .should('eq', 200)
+
     cy.get('div').contains('Mission créée par le')
+
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
+    cy.wait(3000)
+
+    cy.get('[name="missionTypes2"]').click({ force: true })
+    cy.waitForLastRequest(
+      '@updateMission',
+      {
+        body: {
+          controlUnits: [
+            {
+              administration: 'DIRM / DM',
+              id: 10011,
+              name: 'Cross Etel'
+            }
+          ],
+          missionTypes: ['SEA', 'LAND', 'AIR']
+        }
+      },
+      1
+    )
+
+    cy.wait(3000)
+
     cy.get('div').contains('Dernière modification enregistrée')
     cy.get('.Component-Banner').contains('La mission a bien été créée')
     cy.clickButton('Supprimer la mission')

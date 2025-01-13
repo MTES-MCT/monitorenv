@@ -24,9 +24,9 @@ import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -46,19 +46,19 @@ class VigilanceAreasITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
+    @MockitoBean
     private lateinit var getAllVigilanceAreas: GetVigilanceAreas
 
-    @MockBean
+    @MockitoBean
     private lateinit var getVigilanceAreaById: GetVigilanceAreaById
 
-    @MockBean
+    @MockitoBean
     private lateinit var createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea
 
-    @MockBean
+    @MockitoBean
     private lateinit var deleteVigilanceArea: DeleteVigilanceArea
 
-    @MockBean
+    @MockitoBean
     private lateinit var getTrigrams: GetTrigrams
 
     @Autowired
@@ -69,7 +69,7 @@ class VigilanceAreasITests {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-            MultiPolygon
+                MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     private val vigilanceArea1 =
