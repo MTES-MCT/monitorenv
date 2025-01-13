@@ -5,7 +5,8 @@ import { Accent, Button, Dialog, Icon, TextInput, THEME } from '@mtes-mct/monito
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { GeneratePdfButton } from '../../Pdf/GeneratePdfButton'
+import { GeneratePdfButton as GeneratePdfWithoutImagesButton } from '../../Pdf/v1/GeneratePdfButton'
+import { GeneratePdfButton } from '../../Pdf/v2/GeneratePdfButton'
 
 import type { DashboardType } from '@features/Dashboard/slice'
 
@@ -14,6 +15,7 @@ type FooterProps = {
 }
 
 export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
+  const isBriefWithImagesEnabled = import.meta.env.FRONTEND_DASHBOARD_BRIEF_IMAGES_ENABLED === 'true'
   const dispatch = useAppDispatch()
 
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false)
@@ -91,7 +93,11 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
         </DeleteButton>
 
         <ButtonsWrapper>
-          <GeneratePdfButton dashboard={dashboard.dashboard} />
+          {isBriefWithImagesEnabled ? (
+            <GeneratePdfButton dashboard={dashboard.dashboard} />
+          ) : (
+            <GeneratePdfWithoutImagesButton dashboard={dashboard.dashboard} />
+          )}
 
           <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>
             Enregistrer le tableau
