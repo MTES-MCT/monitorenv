@@ -1,23 +1,13 @@
+import { centerOnStation } from '@features/ControlUnit/useCases/centerOnStation'
 import { Accent, type ControlUnit, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
-import { property, uniqBy } from 'lodash/fp'
-import { createEmpty, extend } from 'ol/extent'
-import { fromLonLat } from 'ol/proj'
 import styled from 'styled-components'
 
-import { Layers } from '../../../../domain/entities/layers/constants'
 import { globalActions } from '../../../../domain/shared_slices/Global'
-import { mapActions } from '../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { FrontendError } from '../../../../libs/FrontendError'
 import { mainWindowActions } from '../../../MainWindow/slice'
-import { stationActions } from '../../../Station/slice'
-import {
-  addBufferToExtent,
-  displayBaseNamesFromControlUnit,
-  displayControlUnitResourcesFromControlUnit
-} from '../../utils'
+import { displayBaseNamesFromControlUnit, displayControlUnitResourcesFromControlUnit } from '../../utils'
 import { controlUnitDialogActions } from '../ControlUnitDialog/slice'
 
 export type ItemProps = {
@@ -28,42 +18,8 @@ export function Item({ controlUnit }: ItemProps) {
   const displayBaseLayer = useAppSelector(store => store.global.displayStationLayer)
 
   const center = () => {
-    const highlightedStations = uniqBy(
-      property('id'),
-      controlUnit.controlUnitResources.map(({ station }) => station)
-    )
-
-    const highlightedStationFeatureIds = highlightedStations.map(station => `${Layers.STATIONS.code}:${station.id}`)
-
-    if (highlightedStations.length === 1) {
-      const station = highlightedStations[0]
-      if (!station) {
-        throw new FrontendError('`station` is undefined.')
-      }
-
-      const baseCoordinate = fromLonLat([station.longitude, station.latitude])
-
-      dispatch(mapActions.setZoomToCenter(baseCoordinate))
-    } else {
-      const highlightedStationsExtent = createEmpty()
-      highlightedStations.forEach(station => {
-        const stationCoordinate = fromLonLat([station.longitude, station.latitude])
-        const stationExtent = [
-          stationCoordinate[0],
-          stationCoordinate[1],
-          stationCoordinate[0],
-          stationCoordinate[1]
-        ] as number[]
-
-        extend(highlightedStationsExtent, stationExtent)
-      })
-
-      const bufferedHighlightedStationsExtent = addBufferToExtent(highlightedStationsExtent, 0.5)
-
-      dispatch(mapActions.setFitToExtent(bufferedHighlightedStationsExtent))
-    }
-
-    dispatch(stationActions.hightlightFeatureIds(highlightedStationFeatureIds))
+    const stationsToHighlight = controlUnit.controlUnitResources.map(({ station }) => station)
+    dispatch(centerOnStation(stationsToHighlight))
   }
 
   const edit = () => {
