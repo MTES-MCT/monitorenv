@@ -13,7 +13,7 @@ import { ReportingContext, VisibilityState, setReportingFormVisibility } from '.
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { mainWindowActions } from '../MainWindow/slice'
-import { missionFormsActions } from '../missions/MissionForm/slice'
+import { missionFormsActions } from '../Mission/components/MissionForm/slice'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()

@@ -6,8 +6,8 @@ import type { DetachedReportingForTimeline, Reporting, ReportingForTimeline } fr
 import type { SeaFrontEnum } from './seaFrontType'
 import type { TargetTypeEnum } from './targetType'
 import type { VesselTypeEnum } from './vesselType'
-import type { FishMissionAction } from '@features/missions/fishActions.types'
-import type { RapportNavMissionAction } from '@features/missions/rapportNavActions.types'
+import type { FishMissionAction } from '@features/Mission/fishActions.types'
+import type { RapportNavMissionAction } from '@features/Mission/rapportNavActions.types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const CIRCULAR_ZONE_RADIUS = 2000

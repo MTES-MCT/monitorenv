@@ -1,4 +1,4 @@
-import { getActiveMission } from '@features/missions/MissionForm/slice'
+import { getActiveMission } from '@features/Mission/components/MissionForm/slice'
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
 import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'

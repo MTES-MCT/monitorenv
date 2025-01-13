@@ -1,4 +1,4 @@
-import { ControlInfractionsTags } from '@features/missions/components/ControlInfractionsTags'
+import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
 import { THEME, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 

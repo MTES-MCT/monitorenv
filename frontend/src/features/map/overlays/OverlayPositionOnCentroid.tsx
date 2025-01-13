@@ -1,5 +1,5 @@
 import { dashboardActions } from '@features/Dashboard/slice'
-import { missionActions } from '@features/missions/slice'
+import { missionActions } from '@features/Mission/slice'
 import { reportingActions } from '@features/Reportings/slice'
 import { Layers } from 'domain/entities/layers/constants'
 import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'

@@ -1,4 +1,4 @@
-import { attachReportingToMissionSliceActions } from '@features/missions/MissionForm/AttachReporting/slice'
+import { attachReportingToMissionSliceActions } from '@features/Mission/components/MissionForm/AttachReporting/slice'
 import { undefine } from '@mtes-mct/monitor-ui'
 import { setGeometry } from 'domain/shared_slices/Draw'
 

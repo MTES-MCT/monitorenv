@@ -92,8 +92,9 @@ export function ReportingsTable({
               <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
             ))}
           </TableWithSelectableRows.Head>
-          {before > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={before} name="before" />}
+
           <tbody>
+            {before > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={before} name="before" />}
             {virtualRows?.map(virtualRow => {
               const row = rows[virtualRow.index]
 
@@ -123,8 +124,8 @@ export function ReportingsTable({
                 </TableWithSelectableRows.BodyTr>
               )
             })}
+            {after > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={after} name="after" />}
           </tbody>
-          {after > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={after} name="after" />}
         </StyledTable>
       </TableContainer>
     </>

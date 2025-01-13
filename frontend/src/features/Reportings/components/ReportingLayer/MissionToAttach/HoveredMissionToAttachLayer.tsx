@@ -1,10 +1,10 @@
+import { missionZoneStyle } from '@features/Mission/components/Layers/missions.style'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../../../domain/entities/layers/constants'
-import { missionZoneStyle } from '../../../../missions/Layers/missions.style'
 
 import type { VectorLayerWithName } from '../../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
