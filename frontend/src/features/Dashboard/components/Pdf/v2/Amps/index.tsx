@@ -6,7 +6,7 @@ import { getTitle } from 'domain/entities/layers/utils'
 import { areaStyle, layoutStyle } from '../style'
 import { getImage } from '../utils'
 
-import type { ExportImageType } from '../../Layers/ExportLayer'
+import type { ExportImageType } from '../../../Layers/ExportLayer'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 
 export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImageType[] }) {
