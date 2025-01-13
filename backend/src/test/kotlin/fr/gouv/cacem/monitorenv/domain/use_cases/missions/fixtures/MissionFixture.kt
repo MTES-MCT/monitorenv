@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import java.time.ZonedDateTime
 import kotlin.random.Random
@@ -14,11 +15,13 @@ class MissionFixture {
             startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc: ZonedDateTime? = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             observationsByUnit: String? = null,
+            envActions: List<EnvActionEntity> = listOf(),
         ): MissionEntity {
             return MissionEntity(
                 id = id,
                 observationsByUnit = observationsByUnit,
                 missionTypes = listOf(MissionTypeEnum.LAND),
+                envActions = envActions,
                 facade = "Outre-Mer",
                 geom = null,
                 startDateTimeUtc = startDateTimeUtc,
@@ -28,6 +31,8 @@ class MissionFixture {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                updatedAtUtc = null,
+                createdAtUtc = null
             )
         }
 

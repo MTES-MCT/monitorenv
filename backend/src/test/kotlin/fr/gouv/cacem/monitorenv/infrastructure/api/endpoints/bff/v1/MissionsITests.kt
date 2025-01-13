@@ -41,9 +41,9 @@ import org.mockito.BDDMockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -59,32 +59,38 @@ import java.util.UUID
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Missions::class)])
 class MissionsITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockBean
+    @MockitoBean
     private lateinit var createOrUpdateMissionWithActionsAndAttachedReporting:
-        CreateOrUpdateMissionWithActionsAndAttachedReporting
+            CreateOrUpdateMissionWithActionsAndAttachedReporting
 
-    @MockBean private lateinit var getFullMissions: GetFullMissions
+    @MockitoBean
+    private lateinit var getFullMissions: GetFullMissions
 
-    @MockBean
+    @MockitoBean
     private lateinit var getFullMissionWithFishAndRapportNavActions:
-        GetFullMissionWithFishAndRapportNavActions
+            GetFullMissionWithFishAndRapportNavActions
 
-    @MockBean private lateinit var deleteMission: DeleteMission
+    @MockitoBean
+    private lateinit var deleteMission: DeleteMission
 
-    @MockBean private lateinit var canDeleteMission: CanDeleteMission
+    @MockitoBean
+    private lateinit var canDeleteMission: CanDeleteMission
 
-    @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+    @MockitoBean
+    private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     private val polygon =
         WKTReader()
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-            MultiPolygon
+                MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     @Test
@@ -123,6 +129,8 @@ class MissionsITests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(),
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
         given(
@@ -164,6 +172,8 @@ class MissionsITests {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
         // we test only if the route is called with the right arg
@@ -234,7 +244,7 @@ class MissionsITests {
                                             LegacyControlUnitResourceEntity(
                                                 id = 2,
                                                 controlUnitId =
-                                                1,
+                                                    1,
                                                 name =
                                                     "Ressource 2",
                                             ),
@@ -258,6 +268,8 @@ class MissionsITests {
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
                         envActions = listOf(controlEnvAction),
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
                 attachedReportingIds = listOf(1),
                 attachedReportings =
@@ -509,7 +521,7 @@ class MissionsITests {
                                             LegacyControlUnitResourceEntity(
                                                 id = 2,
                                                 controlUnitId =
-                                                1,
+                                                    1,
                                                 name =
                                                     "Ressource 2",
                                             ),
@@ -533,6 +545,8 @@ class MissionsITests {
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
                         envActions = listOf(controlEnvAction),
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
                 attachedReportingIds = listOf(1),
                 attachedReportings =
@@ -747,6 +761,8 @@ class MissionsITests {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
         val envAction =
@@ -772,12 +788,14 @@ class MissionsITests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(1),
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         val envActionsAttachedToReportingIds =
             listOf(
                 Pair(UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"), listOf(1)),
             ) as
-                List<EnvActionAttachedToReportingIds>
+                    List<EnvActionAttachedToReportingIds>
         given(
             createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = requestBody.toMissionEntity(),

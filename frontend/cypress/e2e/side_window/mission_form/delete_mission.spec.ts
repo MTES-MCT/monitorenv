@@ -11,8 +11,8 @@ context('Side Window > Mission Form > Delete Mission', () => {
 
   it('A mission should be deleted if no action created in MonitorFish', () => {
     // Given
-    visitSideWindow()
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+    visitSideWindow()
     cy.wait('@getMissions')
     cy.wait(600) // a first render with 0 missions is likely to happen
     cy.getDataCy('Missions-numberOfDisplayedMissions').then($el => {

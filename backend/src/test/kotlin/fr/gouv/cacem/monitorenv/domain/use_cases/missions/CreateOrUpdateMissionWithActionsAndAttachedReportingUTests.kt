@@ -1,6 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -11,6 +15,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTOWithAttachedMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -23,7 +28,7 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -55,39 +60,12 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Test
     fun `should attach mission to specified reportings`(log: CapturedOutput) {
         // Given
-        val missionToCreate =
-            MissionEntity(
-                id = 100,
-                missionTypes = listOf(MissionTypeEnum.LAND),
-                facade = "Outre-Mer",
-                geom = polygon,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-            )
+        val missionToCreate = aMissionEntity()
         val attachedReportingIds = listOf(1, 2, 3)
 
         val expectedCreatedMission =
             MissionDTO(
-                mission =
-                    MissionEntity(
-                        id = 100,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "Outre-Mer",
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        endDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                    ),
+                mission = aMissionEntity(),
                 attachedReportingIds = attachedReportingIds,
             )
 
@@ -130,19 +108,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
     @Test
     fun `execute should throw ReportingAlreadyAttachedException when try to attach reporting that has already be attached`() {
-        val missionToCreate =
-            MissionEntity(
-                missionTypes = listOf(MissionTypeEnum.LAND),
-                facade = "Outre-Mer",
-                geom = polygon,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-            )
+        val missionToCreate = aMissionEntity()
         val attachedReportingIds = listOf(5)
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(reportingRepository.findById(5)).willReturn(getReportingDTOWithAttachedMission(5))
@@ -188,6 +154,8 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
                 envActions = listOf(envActionControl),
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         val attachedReportingIds = listOf(1, 2, 3)
 
@@ -207,6 +175,8 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
                 attachedReportingIds = attachedReportingIds,
             )
@@ -273,46 +243,9 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Test
     fun `Should return status 206 if fish api doesn't responds`() {
         // Given
-        val envActionControl =
-            EnvActionControlEntity(
-                id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
-                geom = polygon,
-            )
+        val missionToCreate = aMissionEntity(id = 100)
 
-        val missionToCreate =
-            MissionEntity(
-                id = 100,
-                missionTypes = listOf(MissionTypeEnum.LAND),
-                facade = "Outre-Mer",
-                geom = polygon,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-                envActions = listOf(envActionControl),
-            )
-
-        val expectedCreatedMission =
-            MissionDTO(
-                mission =
-                    MissionEntity(
-                        id = 100,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "Outre-Mer",
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        endDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                    ),
-            )
+        val expectedCreatedMission = MissionDTO(mission = aMissionEntity())
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
@@ -341,39 +274,9 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
     @Test
     fun `Should create a mission doesn't call getFullMissionWithFishAndRapportNavActions`() {
-        val missionToCreate =
-            MissionEntity(
-                missionTypes = listOf(MissionTypeEnum.LAND),
-                facade = "Outre-Mer",
-                geom = polygon,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-                envActions = listOf(),
-            )
+        val missionToCreate = aMissionEntity(id = null)
 
-        val expectedCreatedMission =
-            MissionDTO(
-                mission =
-                    MissionEntity(
-                        id = 100,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "Outre-Mer",
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        endDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                    ),
-            )
+        val expectedCreatedMission = MissionDTO(aMissionEntity(100))
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(missionRepository.save(anyOrNull()))

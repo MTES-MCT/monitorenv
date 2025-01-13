@@ -28,10 +28,13 @@ data class CreateOrUpdateMissionDataInput(
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
     val isGeometryComputedFromControls: Boolean,
-) {
+    val createdAtUtc: ZonedDateTime?,
+    val updatedAtUtc: ZonedDateTime?,
+
+    ) {
     fun toMissionEntity(): MissionEntity {
-        val hasMissionOrder = this.hasMissionOrder ?: false
-        val isUnderJdp = this.isUnderJdp ?: false
+        val hasMissionOrder = this.hasMissionOrder == true
+        val isUnderJdp = this.isUnderJdp == true
 
         return MissionEntity(
             id = this.id,
@@ -51,6 +54,8 @@ data class CreateOrUpdateMissionDataInput(
             observationsCnsp = this.observationsCnsp,
             openBy = this.openBy,
             startDateTimeUtc = this.startDateTimeUtc,
+            createdAtUtc = createdAtUtc,
+            updatedAtUtc = updatedAtUtc,
         )
     }
 
@@ -58,7 +63,7 @@ data class CreateOrUpdateMissionDataInput(
         return this.envActions
             ?.filter {
                 it.actionType == ActionTypeEnum.SURVEILLANCE ||
-                    it.actionType == ActionTypeEnum.CONTROL
+                        it.actionType == ActionTypeEnum.CONTROL
             }
             ?.map { Pair(it.id, it.reportingIds.get()) }
             ?: listOf()

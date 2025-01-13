@@ -69,6 +69,8 @@ class CreateOrUpdateMissionUTests {
                 isDeleted = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         val existingEnvActions =
@@ -132,11 +134,11 @@ class CreateOrUpdateMissionUTests {
             missionRepository.save(
                 argThat {
                     this ==
-                        missionToUpdate.copy(
-                            facade = "La Face Ade",
-                            envActions = existingEnvActions,
-                            observationsByUnit = "observations",
-                        )
+                            missionToUpdate.copy(
+                                facade = "La Face Ade",
+                                envActions = existingEnvActions,
+                                observationsByUnit = "observations",
+                            )
                 },
             ),
         )
@@ -162,11 +164,11 @@ class CreateOrUpdateMissionUTests {
             .save(
                 argThat {
                     this ==
-                        missionToUpdate.copy(
-                            facade = "La Face Ade",
-                            envActions = existingEnvActions,
-                            observationsByUnit = "observations",
-                        )
+                            missionToUpdate.copy(
+                                facade = "La Face Ade",
+                                envActions = existingEnvActions,
+                                observationsByUnit = "observations",
+                            )
                 },
             )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
@@ -190,6 +192,8 @@ class CreateOrUpdateMissionUTests {
                 isDeleted = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         val returnedSavedMission =

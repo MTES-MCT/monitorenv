@@ -63,7 +63,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-            MultiPolygon
+                MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     @Test
@@ -452,21 +452,21 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                             LegacyControlUnitResourceEntity(
                                                 id = 3,
                                                 controlUnitId =
-                                                10002,
+                                                    10002,
                                                 name =
                                                     "Semi-rigide 1",
                                             ),
                                             LegacyControlUnitResourceEntity(
                                                 id = 4,
                                                 controlUnitId =
-                                                10002,
+                                                    10002,
                                                 name =
                                                     "Semi-rigide 2",
                                             ),
                                             LegacyControlUnitResourceEntity(
                                                 id = 5,
                                                 controlUnitId =
-                                                10002,
+                                                    10002,
                                                 name =
                                                     "Voiture",
                                             ),
@@ -474,6 +474,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 ),
                             ),
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
         val mission = jpaMissionRepository.findFullMissionById(10)
@@ -575,7 +577,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             isAdministrativeControl = true,
                             isComplianceWithWaterRegulationsControl = true,
                             isSafetyEquipmentAndStandardsComplianceControl =
-                            true,
+                                true,
                             isSeafarersControl = true,
                         ),
                         EnvActionSurveillanceEntity(
@@ -616,6 +618,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ),
                 isGeometryComputedFromControls = false,
                 observationsByUnit = noteObservationsByUnit,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         // When
@@ -687,6 +691,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         jpaMissionRepository.save(newMission)
 
@@ -706,14 +712,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                         LegacyControlUnitResourceEntity(
                                             id = 3,
                                             controlUnitId =
-                                            10002,
+                                                10002,
                                             name =
                                                 "Semi-rigide 1",
                                         ),
                                         LegacyControlUnitResourceEntity(
                                             id = 5,
                                             controlUnitId =
-                                            10002,
+                                                10002,
                                             name = "Voiture",
                                         ),
                                     ),
@@ -818,6 +824,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         // When
@@ -849,6 +857,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
 
         // When
@@ -928,6 +938,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         val expectedUpdatedMission =
             MissionDTO(
@@ -951,6 +963,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         hasMissionOrder = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        createdAtUtc = null,
+                        updatedAtUtc = null,
                     ),
             )
         // When
@@ -1005,6 +1019,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
             )
         val expectedUpdatedMission =
             MissionDTO(
