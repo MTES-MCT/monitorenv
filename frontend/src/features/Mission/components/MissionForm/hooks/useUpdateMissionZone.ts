@@ -17,6 +17,8 @@ import { MultiPolygon } from 'ol/geom'
 import Polygon, { circular } from 'ol/geom/Polygon'
 import { useEffect, useMemo, useState } from 'react'
 
+import type { GeoJSON } from 'domain/types/GeoJSON'
+
 function computeCircleZone(coordinates) {
   const circleGeometry = new Feature({
     geometry: circular(coordinates, CIRCULAR_ZONE_RADIUS, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
@@ -77,33 +79,48 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
       (!values.isGeometryComputedFromControls && values.geom && values.geom.coordinates.length > 0)
 
     const updateMissionZoneGeometry = () => {
-      if (firstActionWithDate?.geom && !isEqual(firstActionWithDate.geom, actionGeom)) {
-        // for control action we need to compute a circle for mission zone
-        if (firstActionWithDate.actionType === ActionTypeEnum.CONTROL) {
-          const { coordinates } = firstActionWithDate.geom
-          if (coordinates.length > 0) {
-            const circleZone = computeCircleZone(coordinates[0])
+      if (!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) {
+        return
+      }
 
-            if (isEqual(values.geom, circleZone)) {
-              return
-            }
-            setFieldValue('geom', circleZone)
-          }
+      // for control action we need to compute a circle for mission zone
+      const updateGeometryForControlAction = () => {
+        const { coordinates } = firstActionWithDate.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
+
+        if (coordinates.length === 0) {
+          return
         }
 
-        if (firstActionWithDate.actionType === ActionTypeEnum.SURVEILLANCE) {
-          if (isEqual(values.geom, firstActionWithDate.geom)) {
-            return
-          }
+        const circleZone = computeCircleZone(coordinates[0])
+        if (!isEqual(values.geom, circleZone)) {
+          setFieldValue('geom', circleZone)
+        }
+      }
+
+      const updateGeometryForSurveillanceAction = () => {
+        if (!isEqual(values.geom, firstActionWithDate.geom)) {
           setFieldValue('geom', firstActionWithDate.geom)
         }
-
-        if (!values.isGeometryComputedFromControls) {
-          setFieldValue('isGeometryComputedFromControls', true)
-        }
-        setActionGeom(firstActionWithDate.geom)
       }
+
+      // Handle geometry update based on action type
+      switch (firstActionWithDate.actionType) {
+        case ActionTypeEnum.CONTROL:
+          updateGeometryForControlAction()
+          break
+        case ActionTypeEnum.SURVEILLANCE:
+          updateGeometryForSurveillanceAction()
+          break
+        default:
+          break
+      }
+
+      if (!values.isGeometryComputedFromControls) {
+        setFieldValue('isGeometryComputedFromControls', true)
+      }
+      setActionGeom(firstActionWithDate.geom)
     }
+
     clearManualZoneIfDeleted()
     if (cleanMissionZoneIfNoActions()) {
       return

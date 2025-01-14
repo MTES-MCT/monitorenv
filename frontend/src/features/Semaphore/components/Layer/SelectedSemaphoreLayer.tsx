@@ -58,7 +58,7 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.SEMAPHORES.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(selectedSemaphoreVectorLayerRef.current as VectorLayerWithName).name = Layers.SEMAPHORES.code
+  selectedSemaphoreVectorLayerRef.current.name = Layers.SEMAPHORES.code
 
   const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
 

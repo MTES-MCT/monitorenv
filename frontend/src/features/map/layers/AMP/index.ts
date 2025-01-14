@@ -37,7 +37,7 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
       style: getAMPLayerStyle
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(ampVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP.code
+  ampVectorLayerRef.current.name = Layers.AMP.code
 
   const ampLayersFeatures = useMemo(() => {
     let ampFeatures: Feature[] = []

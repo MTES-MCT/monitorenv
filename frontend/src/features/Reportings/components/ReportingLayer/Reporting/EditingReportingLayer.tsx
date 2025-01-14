@@ -66,7 +66,7 @@ export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildr
       zIndex: Layers.REPORTING_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(editingReportingVectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_SELECTED.code
+  editingReportingVectorLayerRef.current.name = Layers.REPORTING_SELECTED.code
 
   const feature = editingReportingVectorSourceRef.current.getFeatureById(
     `${Layers.REPORTING_SELECTED.code}:${activeReportingId}`

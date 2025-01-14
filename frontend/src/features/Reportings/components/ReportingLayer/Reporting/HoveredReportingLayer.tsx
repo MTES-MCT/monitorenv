@@ -20,7 +20,7 @@ export function HoveredReportingLayer({ currentFeatureOver, map }: BaseMapChildr
       zIndex: Layers.REPORTINGS.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_SELECTED.code
+  vectorLayerRef.current.name = Layers.REPORTING_SELECTED.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

@@ -53,7 +53,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorLayerWithName>
 
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
+  vectorLayerRef.current.name = Layers.VIGILANCE_AREA.code
 
   // Regulatory Areas Layers
   const regulatoryAreaIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.regulatoryAreaIdsToBeDisplayed)
@@ -110,8 +110,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(regulatoryAreasVectorLayerRef.current as VectorLayerWithName).name =
-    Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
+  regulatoryAreasVectorLayerRef.current.name = Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
 
   // AMP Layer
   const ampIdsToBeDisplayed = useAppSelector(state => state.vigilanceArea.ampIdsToBeDisplayed)
@@ -156,7 +155,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.AMP_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(ampVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_LINKED_TO_VIGILANCE_AREA.code
+  ampVectorLayerRef.current.name = Layers.AMP_LINKED_TO_VIGILANCE_AREA.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

@@ -122,7 +122,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     })
   ) as React.MutableRefObject<VectorLayerWithName>
 
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTINGS.code
+  vectorLayerRef.current.name = Layers.REPORTINGS.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

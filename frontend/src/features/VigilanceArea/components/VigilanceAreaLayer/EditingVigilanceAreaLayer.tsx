@@ -60,7 +60,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorLayerWithName>
 
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.VIGILANCE_AREA.code
+  vectorLayerRef.current.name = Layers.VIGILANCE_AREA.code
 
   // Regulatory Areas Layers
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
@@ -97,8 +97,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(regulatoryAreasVectorLayerRef.current as VectorLayerWithName).name =
-    Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
+  regulatoryAreasVectorLayerRef.current.name = Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
 
   // AMP Layer
   const { data: ampLayers } = useGetAMPsQuery()
@@ -140,7 +139,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       zIndex: Layers.AMP_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(ampVectorLayerRef.current as VectorLayerWithName).name = Layers.AMP_LINKED_TO_VIGILANCE_AREA.code
+  ampVectorLayerRef.current.name = Layers.AMP_LINKED_TO_VIGILANCE_AREA.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
