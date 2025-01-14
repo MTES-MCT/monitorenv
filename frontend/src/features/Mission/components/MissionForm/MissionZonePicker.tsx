@@ -1,19 +1,12 @@
 import { Accent, Button, Icon, IconButton, Label, THEME } from '@mtes-mct/monitor-ui'
+import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
-import { boundingExtent } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import {
-  InteractionListener,
-  OLGeometryType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from '../../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../../domain/shared_slices/Map'
+import { InteractionListener, OLGeometryType } from '../../../../domain/entities/map/constants'
 import { drawPolygon } from '../../../../domain/use_cases/draw/drawGeometry'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -49,13 +42,7 @@ export function MissionZonePicker() {
   }, [geometry, helpers, value])
 
   const handleCenterOnMap = (coordinates: Coordinate[][]) => {
-    const firstRing = coordinates[0]
-    if (!firstRing) {
-      return
-    }
-
-    const extent = transformExtent(boundingExtent(firstRing), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-    dispatch(setFitToExtent(extent))
+    dispatch(centerOnMapFromZonePicker(coordinates[0]))
   }
 
   const handleAddZone = useCallback(() => {
