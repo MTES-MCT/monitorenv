@@ -55,7 +55,7 @@ dev-run-keycloak:
 
 dev-run-infra:
 	@echo "Preparing database"
-	docker compose up -d db
+	docker compose -f docker-compose.yml -f docker-compose-test.yml up -d db
 	@echo "Waiting for TimescaleDB to be ready to accept connections"
 	@while [ -z "$$(docker logs monitorenv_database 2>&1 | grep -o "database system is ready to accept connections")" ]; \
 	do \
@@ -135,7 +135,7 @@ docker-push-app:
 test-init-infra-env:
 	npm i @import-meta-env/prepare@0.1.13 && npx import-meta-env-prepare -u -x ./.env.infra.example -p ./.env.test.defaults
 test-run-infra-for-frontend:
-	export MONITORENV_VERSION=$(VERSION) && docker compose --profile=test up -d
+	export MONITORENV_VERSION=$(VERSION) && docker compose --profile=test -f docker-compose.yml -f docker-compose-test.yml up -d
 test: test-back
 	cd frontend && CI=true npm run test:unit
 
