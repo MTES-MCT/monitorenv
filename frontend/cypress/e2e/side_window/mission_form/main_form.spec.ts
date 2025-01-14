@@ -155,6 +155,8 @@ context('Side Window > Mission Form > Main Form', () => {
         })
       })
       cy.get(`*[data-cy="edit-mission-${id}"]`).scrollIntoView().click({ force: true })
+      cy.clickButton('Supprimer la mission')
+      cy.get('*[name="delete-mission-modal-confirm"]').click()
     })
   })
 
