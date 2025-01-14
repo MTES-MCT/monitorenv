@@ -1,5 +1,5 @@
 import { Accent, Button, Icon, IconButton, Label, THEME } from '@mtes-mct/monitor-ui'
-import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { remove } from 'ramda'
@@ -42,7 +42,7 @@ export function MissionZonePicker() {
   }, [geometry, helpers, value])
 
   const handleCenterOnMap = (coordinates: Coordinate[][]) => {
-    dispatch(centerOnMapFromZonePicker(coordinates[0]))
+    dispatch(centerOnMap(coordinates[0]))
   }
 
   const handleAddZone = useCallback(() => {

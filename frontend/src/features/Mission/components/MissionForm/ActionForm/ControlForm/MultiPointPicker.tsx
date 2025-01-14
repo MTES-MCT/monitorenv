@@ -1,6 +1,6 @@
 import { Accent, Button, Icon, IconButton, Label, Message } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
-import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
 import { isEqual } from 'lodash'
 import { remove } from 'ramda'
@@ -49,7 +49,7 @@ export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeo
   }, [geometry, setValue, value])
 
   const handleCenterOnMap = coordinates => {
-    dispatch(centerOnMapFromZonePicker([coordinates]))
+    dispatch(centerOnMap([coordinates]))
   }
 
   const handleAddPoint = useCallback(() => {
