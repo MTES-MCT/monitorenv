@@ -5,7 +5,7 @@ import { transformExtent } from 'ol/proj'
 
 import type { HomeAppDispatch, HomeAppThunk } from '@store/index'
 
-export const centerOnMapFromZonePicker =
+export const centerOnMap =
   (coordinates): HomeAppThunk =>
   async (dispatch: HomeAppDispatch) => {
     if (!coordinates || !coordinates.length) {

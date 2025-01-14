@@ -5,7 +5,7 @@ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { drawPoint } from 'domain/use_cases/draw/drawGeometry'
-import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -33,7 +33,7 @@ export function PointPicker() {
 
   const handleCenterOnMap = () => {
     const { coordinates } = value
-    dispatch(centerOnMapFromZonePicker([coordinates[0]]))
+    dispatch(centerOnMap([coordinates[0]]))
   }
 
   const handleAddPoint = useCallback(() => {

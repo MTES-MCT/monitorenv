@@ -2,7 +2,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
 import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
-import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
 import { isEqual } from 'lodash'
 import { useEffect, useMemo } from 'react'
@@ -47,7 +47,7 @@ export function ZonePicker({
   }, [value])
 
   const handleCenterOnMap = (coordinates: Coordinate[][]) => {
-    dispatch(centerOnMapFromZonePicker(coordinates[0]))
+    dispatch(centerOnMap(coordinates[0]))
   }
 
   useEffect(() => {

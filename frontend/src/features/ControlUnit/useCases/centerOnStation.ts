@@ -7,37 +7,40 @@ import { fromLonLat } from 'ol/proj'
 
 import { addBufferToExtent } from '../utils'
 
+import type { HomeAppThunk } from '@store/index'
 import type { Station } from 'domain/entities/station'
 
-export const centerOnStation = (stations: Station.Station[] | Station.StationData[]) => dispatch => {
-  const highlightedStationFeatureIds = stations.map(station => `${Layers.STATIONS.code}:${station.id}`)
-  if (stations.length === 1) {
-    const station = stations[0]
-    if (!station) {
-      throw new FrontendError('`station` is undefined.')
+export const centerOnStation =
+  (stations: Station.Station[] | Station.StationData[]): HomeAppThunk =>
+  dispatch => {
+    const highlightedStationFeatureIds = stations.map(station => `${Layers.STATIONS.code}:${station.id}`)
+    if (stations.length === 1) {
+      const station = stations[0]
+      if (!station) {
+        throw new FrontendError('`station` is undefined.')
+      }
+
+      const baseCoordinate = fromLonLat([station.longitude, station.latitude])
+
+      dispatch(mapActions.setZoomToCenter(baseCoordinate))
+    } else {
+      const highlightedStationsExtent = createEmpty()
+      stations.forEach(station => {
+        const stationCoordinate = fromLonLat([station.longitude, station.latitude])
+        const stationExtent = [
+          stationCoordinate[0],
+          stationCoordinate[1],
+          stationCoordinate[0],
+          stationCoordinate[1]
+        ] as number[]
+
+        extend(highlightedStationsExtent, stationExtent)
+      })
+
+      const bufferedHighlightedStationsExtent = addBufferToExtent(highlightedStationsExtent, 0.5)
+
+      dispatch(mapActions.setFitToExtent(bufferedHighlightedStationsExtent))
     }
 
-    const baseCoordinate = fromLonLat([station.longitude, station.latitude])
-
-    dispatch(mapActions.setZoomToCenter(baseCoordinate))
-  } else {
-    const highlightedStationsExtent = createEmpty()
-    stations.forEach(station => {
-      const stationCoordinate = fromLonLat([station.longitude, station.latitude])
-      const stationExtent = [
-        stationCoordinate[0],
-        stationCoordinate[1],
-        stationCoordinate[0],
-        stationCoordinate[1]
-      ] as number[]
-
-      extend(highlightedStationsExtent, stationExtent)
-    })
-
-    const bufferedHighlightedStationsExtent = addBufferToExtent(highlightedStationsExtent, 0.5)
-
-    dispatch(mapActions.setFitToExtent(bufferedHighlightedStationsExtent))
+    dispatch(stationActions.hightlightFeatureIds(highlightedStationFeatureIds))
   }
-
-  dispatch(stationActions.hightlightFeatureIds(highlightedStationFeatureIds))
-}

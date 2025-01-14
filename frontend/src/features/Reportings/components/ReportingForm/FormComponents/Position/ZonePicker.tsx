@@ -4,7 +4,7 @@ import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
-import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -29,7 +29,7 @@ export function ZonePicker() {
     const firstPolygon = value?.coordinates[0]
     const firstRing = firstPolygon?.[0]
 
-    dispatch(centerOnMapFromZonePicker(firstRing))
+    dispatch(centerOnMap(firstRing))
   }
 
   const handleAddZone = useCallback(() => {

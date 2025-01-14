@@ -1,5 +1,5 @@
 import { Accent, Button, Icon, IconButton, Label, TextInput } from '@mtes-mct/monitor-ui'
-import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import styled from 'styled-components'
 
 import { OLGeometryType } from '../../../../../../domain/entities/map/constants'
@@ -21,7 +21,7 @@ export function Location({ geom }) {
     const coordinatesToCenter: Coordinate[] =
       geom.type === OLGeometryType.MULTIPOLYGON ? geom.coordinates[0][0] : [geom.coordinates[0]]
 
-    dispatch(centerOnMapFromZonePicker(coordinatesToCenter))
+    dispatch(centerOnMap(coordinatesToCenter))
   }
 
   return (

@@ -4,7 +4,7 @@ import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
 import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
-import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { remove } from 'ramda'
@@ -43,7 +43,7 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
   }, [geometry, helpers, value])
 
   const handleCenterOnMap = (coordinates: Coordinate[][]) => {
-    dispatch(centerOnMapFromZonePicker(coordinates[0]))
+    dispatch(centerOnMap(coordinates[0]))
   }
 
   const handleAddZone = useCallback(() => {
