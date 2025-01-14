@@ -46,7 +46,6 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
         reportings?.entities,
         (features, reporting) => {
           if (
-            reporting &&
             reporting.geom &&
             reporting.isControlRequired &&
             (!reporting.missionId || (reporting.missionId && reporting.detachedFromMissionAtUtc))
@@ -100,7 +99,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
 
   useEffect(() => {
     const feature = convertToFeature(mapClickEvent?.feature)
-    if (feature && feature.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
+    if (feature?.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
       const { id } = feature.getProperties()
       dispatch(attachReportingFromMap(id))
     }

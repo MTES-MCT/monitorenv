@@ -28,10 +28,9 @@ export const addMission =
       .maxBy(filteredNewMission => Number(String(filteredNewMission.missionForm.id).split('new-')[1]))
       .value()
 
-    const id: string =
-      maxNewMissionId && maxNewMissionId.missionForm.id
-        ? `new-${Number(String(maxNewMissionId.missionForm.id).split('new-')[1]) + 1}`
-        : 'new-1'
+    const id: string = maxNewMissionId?.missionForm.id
+      ? `new-${Number(String(maxNewMissionId.missionForm.id).split('new-')[1]) + 1}`
+      : 'new-1'
 
     const initialMission: any = { id }
     if (initialControlUnit) {

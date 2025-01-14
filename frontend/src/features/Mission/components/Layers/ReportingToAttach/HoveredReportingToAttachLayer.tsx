@@ -33,7 +33,7 @@ export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseM
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
     const feature = convertToFeature(currentFeatureOver)
-    if (feature && feature.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
+    if (feature?.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
       vectorSourceRef.current?.addFeature(feature)
     }
   }, [currentFeatureOver])

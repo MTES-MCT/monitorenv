@@ -57,6 +57,8 @@ import {
 } from '../style'
 import { ActionTheme } from '../Themes/ActionTheme'
 
+import type { Reporting } from 'domain/entities/reporting'
+
 export function ControlForm({
   currentActionId,
   removeControlAction
@@ -112,9 +114,7 @@ export function ControlForm({
   )
 
   const areAllReportingsAttachedToAnAction = useMemo(
-    () =>
-      attachedReportings &&
-      attachedReportings.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
+    () => attachedReportings?.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
     [attachedReportings]
   )
 
@@ -213,92 +213,108 @@ export function ControlForm({
     }
   }
 
-  const selectReporting = (reportingId: OptionValueType | undefined) => {
-    if (!reportingId) {
-      return
-    }
-    setFieldValue(`envActions[${envActionIndex}].reportingIds`, [reportingId])
-
+  const detachReportingFromOtherActions = (reportingId: OptionValueType) => {
     const reportingToDetachIndex = attachedReportings?.findIndex(
       reporting => reporting.attachedEnvActionId === currentAction?.id && reporting.id !== reportingId
     )
     if (reportingToDetachIndex !== -1) {
       setFieldValue(`attachedReportings[${reportingToDetachIndex}].attachedEnvActionId`, undefined)
     }
+  }
+
+  const updateInfractions = (reporting: Reporting) => {
+    const newInfraction = {
+      companyName: undefined,
+      controlledPersonIdentity: undefined,
+      imo: undefined,
+      mmsi: undefined,
+      registrationNumber: undefined,
+      vesselName: undefined,
+      vesselSize: undefined,
+      vesselType: undefined
+    }
+    const updatedInfractions = reporting.targetDetails.map(target => {
+      switch (reporting.targetType) {
+        case ReportingTargetTypeEnum.VEHICLE:
+          return {
+            controlledPersonIdentity: target?.operatorName,
+            registrationNumber: target?.externalReferenceNumber,
+            ...(reporting.vehicleType === VehicleTypeEnum.VESSEL && {
+              imo: target?.imo,
+              mmsi: target?.mmsi,
+              vesselName: target?.vesselName,
+              vesselSize: target?.size,
+              vesselType: target?.vesselType
+            })
+          }
+
+        case ReportingTargetTypeEnum.COMPANY:
+          return {
+            ...newInfraction,
+            companyName: target?.operatorName,
+            controlledPersonIdentity: target?.vesselName
+          }
+
+        case ReportingTargetTypeEnum.INDIVIDUAL:
+          return {
+            ...newInfraction,
+            controlledPersonIdentity: target?.vesselName
+          }
+
+        case ReportingTargetTypeEnum.OTHER:
+        default:
+          return newInfraction
+      }
+    })
+
+    // if one infraction is already present, we only update vessel informations
+    if (currentAction?.infractions?.length === 1) {
+      setFieldValue(`envActions[${envActionIndex}].infractions[0]`, {
+        ...currentAction.infractions[0],
+        ...updatedInfractions[0]
+      })
+    }
+
+    // if multiple infractions are present, we delete all of them and create new one
+    if (currentAction?.infractions?.length && currentAction?.infractions?.length > 1) {
+      setFieldValue(`envActions[${envActionIndex}].infractions`, updatedInfractions)
+    }
+  }
+
+  const attachReportingToAction = (reportingToAttachIndex: number) => {
+    setFieldValue(`attachedReportings[${reportingToAttachIndex}].attachedEnvActionId`, currentAction?.id)
+
+    const reporting = attachedReportings[reportingToAttachIndex]
+    if (!reporting) {
+      return
+    }
+
+    // prefill infractions with the reporting details
+    updateInfractions(reporting)
+
+    setFieldValue(`envActions[${envActionIndex}].controlPlans`, [
+      { subThemeIds: reporting?.subThemeIds, tagIds: [], themeId: reporting?.themeId }
+    ])
+
+    const updatedVehicleType =
+      reporting.targetType === ReportingTargetTypeEnum.VEHICLE ? reporting.vehicleType : undefined
+    setFieldValue(`envActions[${envActionIndex}].vehicleType`, updatedVehicleType)
+
+    const updatedTargetType = reporting.targetType === ReportingTargetTypeEnum.OTHER ? undefined : reporting.targetType
+    setFieldValue(`envActions[${envActionIndex}].actionTargetType`, updatedTargetType)
+  }
+
+  const selectReporting = (reportingId: OptionValueType | undefined) => {
+    if (!reportingId) {
+      return
+    }
+    setFieldValue(`envActions[${envActionIndex}].reportingIds`, [reportingId])
+
+    detachReportingFromOtherActions(reportingId)
 
     const reportingToAttachIndex = attachedReportings?.findIndex(reporting => reporting.id === reportingId)
     if (reportingToAttachIndex !== -1) {
-      setFieldValue(`attachedReportings[${reportingToAttachIndex}].attachedEnvActionId`, currentAction?.id)
-      // prefill infractions with the reporting details
-      const reporting = attachedReportings[reportingToAttachIndex]
-
-      if (reporting) {
-        const newInfraction = {
-          companyName: undefined,
-          controlledPersonIdentity: undefined,
-          imo: undefined,
-          mmsi: undefined,
-          registrationNumber: undefined,
-          vesselName: undefined,
-          vesselSize: undefined,
-          vesselType: undefined
-        }
-        const updatedInfractions = reporting.targetDetails.map(target => {
-          switch (reporting.targetType) {
-            case ReportingTargetTypeEnum.VEHICLE:
-              return {
-                controlledPersonIdentity: target?.operatorName,
-                registrationNumber: target?.externalReferenceNumber,
-                ...(reporting.vehicleType === VehicleTypeEnum.VESSEL && {
-                  imo: target?.imo,
-                  mmsi: target?.mmsi,
-                  vesselName: target?.vesselName,
-                  vesselSize: target?.size,
-                  vesselType: target?.vesselType
-                })
-              }
-
-            case ReportingTargetTypeEnum.COMPANY:
-              return {
-                ...newInfraction,
-                companyName: target?.operatorName,
-                controlledPersonIdentity: target?.vesselName
-              }
-
-            case ReportingTargetTypeEnum.INDIVIDUAL:
-              return {
-                ...newInfraction,
-                controlledPersonIdentity: target?.vesselName
-              }
-
-            case ReportingTargetTypeEnum.OTHER:
-            default:
-              return newInfraction
-          }
-        })
-
-        const updatedVehicleType =
-          reporting.targetType === ReportingTargetTypeEnum.VEHICLE ? reporting.vehicleType : undefined
-        const updatedTargetType =
-          reporting.targetType === ReportingTargetTypeEnum.OTHER ? undefined : reporting.targetType
-
-        if (currentAction?.infractions?.length === 1) {
-          setFieldValue(`envActions[${envActionIndex}].infractions[0]`, {
-            ...currentAction.infractions[0],
-            ...updatedInfractions[0]
-          })
-        }
-
-        if (currentAction?.infractions?.length && currentAction?.infractions?.length > 1) {
-          setFieldValue(`envActions[${envActionIndex}].infractions`, updatedInfractions)
-        }
-
-        setFieldValue(`envActions[${envActionIndex}].controlPlans`, [
-          { subThemeIds: reporting?.subThemeIds, tagIds: [], themeId: reporting?.themeId }
-        ])
-        setFieldValue(`envActions[${envActionIndex}].vehicleType`, updatedVehicleType)
-        setFieldValue(`envActions[${envActionIndex}].actionTargetType`, updatedTargetType)
-      }
+      attachReportingToAction(reportingToAttachIndex)
     }
   }
 

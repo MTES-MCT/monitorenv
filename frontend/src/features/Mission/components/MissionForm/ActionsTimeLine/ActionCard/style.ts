@@ -28,6 +28,36 @@ export const TimeLine = styled.div<{ $isFishAction: boolean }>`
   ${p => p.$isFishAction && `padding-bottom: 20px;`}
 `
 
+const getBorderColor = p => {
+  if (p.$hasError) {
+    return p.theme.color.maximumRed
+  }
+  if (p.$selected) {
+    return p.theme.color.blueGray
+  }
+
+  return p.theme.color.lightGray
+}
+
+const getBackgroundColor = p => {
+  if (p.$reportingType === ReportingTypeEnum.OBSERVATION) {
+    return p.theme.color.blueGray25
+  }
+
+  switch (p.$type) {
+    case ActionTypeEnum.CONTROL:
+      return p.theme.color.white
+    case ActionTypeEnum.SURVEILLANCE:
+      return p.theme.color.gainsboro
+    case ActionTypeEnum.NOTE:
+      return p.theme.color.blueYonder25
+    case ActionTypeEnum.REPORTING:
+      return p.theme.color.maximumRed15
+    default:
+      return p.theme.color.white
+  }
+}
+
 export const ActionSummaryWrapper = styled.div<{
   $hasError?: boolean
   $reportingType?: ReportingTypeEnum
@@ -38,33 +68,11 @@ export const ActionSummaryWrapper = styled.div<{
   justify-content: space-between;
   flex-direction: column;
   gap: 8px;
-  border-color: ${p =>
-    // eslint-disable-next-line no-nested-ternary
-    p.$hasError
-      ? `${p.theme.color.maximumRed}`
-      : p.$selected
-      ? `${p.theme.color.blueGray}`
-      : `${p.theme.color.lightGray}`};
+  border-color: ${p => getBorderColor(p)};
   border-size: ${p => (p.$selected ? `3px` : `1px`)};
   border-style: solid;
   padding: 16px;
-  background: ${p => {
-    if (p.$reportingType && p.$reportingType === ReportingTypeEnum.OBSERVATION) {
-      return p.theme.color.blueGray25
-    }
-    switch (p.$type) {
-      case ActionTypeEnum.CONTROL:
-        return p.theme.color.white
-      case ActionTypeEnum.SURVEILLANCE:
-        return p.theme.color.gainsboro
-      case ActionTypeEnum.NOTE:
-        return p.theme.color.blueYonder25
-      case ActionTypeEnum.REPORTING:
-        return p.theme.color.maximumRed15
-      default:
-        return p.theme.color.white
-    }
-  }};
+  background: ${p => getBackgroundColor(p)};
 `
 
 export const ContentContainer = styled.div`

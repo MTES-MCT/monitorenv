@@ -128,16 +128,12 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   }
 
   const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
-    dispatch(
-      updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: date && date[0] ? date[0] : undefined })
-    )
-    dispatch(
-      updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: date && date[1] ? date[1] : undefined })
-    )
+    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: date?.[0] ? date[0] : undefined }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: date?.[1] ? date[1] : undefined }))
 
     // if we change the year, we reset the theme and subtheme filters
     const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : customDayjs().get('year')
-    const newFilterYear = date && date[0] ? customDayjs(date[0]).get('year') : undefined
+    const newFilterYear = date?.[0] ? customDayjs(date[0]).get('year') : undefined
     if (newFilterYear && newFilterYear !== actuelFilterYear) {
       dispatch(updateFilters({ key: MissionFiltersEnum.THEME_FILTER, value: undefined }))
     }
