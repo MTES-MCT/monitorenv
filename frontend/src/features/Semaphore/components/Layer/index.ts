@@ -49,7 +49,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       zIndex: Layers.SEMAPHORES.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(semaphoreVectorLayerRef.current as VectorLayerWithName).name = Layers.SEMAPHORES.code
+  semaphoreVectorLayerRef.current.name = Layers.SEMAPHORES.code
 
   useEffect(() => {
     if (map) {

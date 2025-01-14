@@ -44,7 +44,7 @@ export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChild
       zIndex: Layers.REPORTING_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(selectedReportingVectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_SELECTED.code
+  selectedReportingVectorLayerRef.current.name = Layers.REPORTING_SELECTED.code
 
   const overlayCoordinates = useAppSelector(state =>
     getOverlayCoordinates(state.global, `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`)

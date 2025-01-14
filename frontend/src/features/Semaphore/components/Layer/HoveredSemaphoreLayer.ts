@@ -23,7 +23,7 @@ export function HoveredSemaphoreLayer({ currentFeatureOver, map }: BaseMapChildr
       zIndex: Layers.SEMAPHORES.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(hoveredSemaphoreVectorLayerRef.current as VectorLayerWithName).name = Layers.SEMAPHORES.code
+  hoveredSemaphoreVectorLayerRef.current.name = Layers.SEMAPHORES.code
 
   useEffect(() => {
     if (map) {

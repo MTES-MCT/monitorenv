@@ -75,7 +75,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
       zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_TO_ATTACH_ON_MISSION.code
+  vectorLayerRef.current.name = Layers.REPORTING_TO_ATTACH_ON_MISSION.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

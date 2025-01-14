@@ -12,7 +12,7 @@ import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getFeatureStyle, getStationPointFeature } from './utils'
 
@@ -28,8 +28,8 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       style: getFeatureStyle,
       zIndex: Layers.STATIONS.zIndex
     })
-  )
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.STATIONS.code
+  ) as MutableRefObject<VectorLayerWithName>
+  vectorLayerRef.current.name = Layers.STATIONS.code
 
   const dispatch = useAppDispatch()
   const displayStationLayer = useAppSelector(state => state.global.displayStationLayer)

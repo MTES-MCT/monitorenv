@@ -19,7 +19,7 @@ export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseM
       zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
-  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION.code
+  vectorLayerRef.current.name = Layers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION.code
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

@@ -39,8 +39,7 @@ export function SelectedMissionToAttachLayer({ currentFeatureOver, map }: BaseMa
     })
   ) as MutableRefObject<VectorLayerWithName>
 
-  ;(selectedAttachedMissionVectorLayerRef.current as VectorLayerWithName).name =
-    Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code
+  selectedAttachedMissionVectorLayerRef.current.name = Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code
 
   useEffect(() => {
     map.getLayers().push(selectedAttachedMissionVectorLayerRef.current)
