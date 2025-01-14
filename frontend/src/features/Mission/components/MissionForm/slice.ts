@@ -17,8 +17,8 @@ type SelectedMissionType = {
 }
 
 type SelectedActionType = {
-  activeInfractionId?: string | undefined
-  id?: string | undefined
+  activeInfractionId?: string
+  id?: string
 }
 
 type MissionFormsState = {
@@ -176,9 +176,7 @@ export const getNumberOfInfractionTarget = createSelector(
   },
 
   (selectedInfraction: Infraction[] | NewInfraction[] | undefined) =>
-    (selectedInfraction &&
-      selectedInfraction.reduce((sumNbTarget, infraction) => sumNbTarget + (infraction?.nbTarget ?? 0), 0)) ||
-    0
+    selectedInfraction?.reduce((sumNbTarget, infraction) => sumNbTarget + (infraction?.nbTarget ?? 0), 0) ?? 0
 )
 
 export const missionFormsActions = missionFormsSlice.actions

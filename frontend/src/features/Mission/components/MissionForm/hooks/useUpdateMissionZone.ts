@@ -47,61 +47,77 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
 
   useEffect(() => {
     // if user has added a zone manually and deleted it
-    if (!values.isGeometryComputedFromControls && actionGeom && values.geom?.coordinates.length === 0) {
-      setActionGeom(undefined)
+    const clearManualZoneIfDeleted = () => {
+      if (!values.isGeometryComputedFromControls && actionGeom && values.geom?.coordinates.length === 0) {
+        setActionGeom(undefined)
+      }
     }
 
     // if no action in mission, we clean the mission zone if it was computed from actions
-    if (filteredEnvActions.length === 0 && values.fishActions.length === 0 && values.isGeometryComputedFromControls) {
-      setFieldValue('geom', undefined)
-      setFieldValue('isGeometryComputedFromControls', false)
-      setActionGeom(undefined)
+    const cleanMissionZoneIfNoActions = () => {
+      if (filteredEnvActions.length === 0 && values.fishActions.length === 0 && values.isGeometryComputedFromControls) {
+        setFieldValue('geom', undefined)
+        setFieldValue('isGeometryComputedFromControls', false)
+        setActionGeom(undefined)
 
-      return
+        return true
+      }
+
+      return false
     }
+
     // As a action from Fish is newer, we do not update the mission location
-    if (sortedActions[0]?.actionSource === ActionSource.MONITORFISH) {
-      return
-    }
+    const skipIfFromMonitorFish = () => sortedActions[0]?.actionSource === ActionSource.MONITORFISH
 
-    if (firstActionWithDate?.geom?.coordinates.length === 0) {
-      return
-    }
+    const skipIfNoCoordinates = () => firstActionWithDate?.geom?.coordinates.length === 0
 
     // no need to update geom if we are in mission zone listener or if user add manually a zone
-    if (
+    const skipIfNotListeningOrManual = () =>
       listener === InteractionListener.MISSION_ZONE ||
       (!values.isGeometryComputedFromControls && values.geom && values.geom.coordinates.length > 0)
-    ) {
-      return
-    }
 
-    if (firstActionWithDate?.geom && !isEqual(firstActionWithDate.geom, actionGeom)) {
-      // for control action we need to compute a circle for mission zone
-      if (firstActionWithDate.actionType === ActionTypeEnum.CONTROL) {
-        const { coordinates } = firstActionWithDate.geom
-        if (coordinates.length > 0) {
-          const circleZone = computeCircleZone(coordinates[0])
+    const updateMissionZoneGeometry = () => {
+      if (firstActionWithDate?.geom && !isEqual(firstActionWithDate.geom, actionGeom)) {
+        // for control action we need to compute a circle for mission zone
+        if (firstActionWithDate.actionType === ActionTypeEnum.CONTROL) {
+          const { coordinates } = firstActionWithDate.geom
+          if (coordinates.length > 0) {
+            const circleZone = computeCircleZone(coordinates[0])
 
-          if (isEqual(values.geom, circleZone)) {
+            if (isEqual(values.geom, circleZone)) {
+              return
+            }
+            setFieldValue('geom', circleZone)
+          }
+        }
+
+        if (firstActionWithDate.actionType === ActionTypeEnum.SURVEILLANCE) {
+          if (isEqual(values.geom, firstActionWithDate.geom)) {
             return
           }
-          setFieldValue('geom', circleZone)
+          setFieldValue('geom', firstActionWithDate.geom)
         }
-      }
 
-      if (firstActionWithDate.actionType === ActionTypeEnum.SURVEILLANCE) {
-        if (isEqual(values.geom, firstActionWithDate.geom)) {
-          return
+        if (!values.isGeometryComputedFromControls) {
+          setFieldValue('isGeometryComputedFromControls', true)
         }
-        setFieldValue('geom', firstActionWithDate.geom)
+        setActionGeom(firstActionWithDate.geom)
       }
-
-      if (!values.isGeometryComputedFromControls) {
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
-      setActionGeom(firstActionWithDate.geom)
     }
+    clearManualZoneIfDeleted()
+    if (cleanMissionZoneIfNoActions()) {
+      return
+    }
+    if (skipIfFromMonitorFish()) {
+      return
+    }
+    if (skipIfNoCoordinates()) {
+      return
+    }
+    if (skipIfNotListeningOrManual()) {
+      return
+    }
+    updateMissionZoneGeometry()
   }, [
     values.isGeometryComputedFromControls,
     values.geom,

@@ -45,7 +45,9 @@ export function ReportingCard({
       vehicleType: action.vehicleType
     })
 
-    return `${targetName} ${targetDetails ? `(${targetDetails})` : ''}`
+    const targetDetailsText = targetDetails ? `(${targetDetails})` : ''
+
+    return `${targetName} ${targetDetailsText}`
   }, [action.targetDetails, action.targetType, action.vehicleType])
 
   const addAttachedControl = e => {
@@ -148,7 +150,7 @@ export function ReportingCard({
         {action.themeId && (
           <>
             <Accented>{themes[action.themeId]?.theme}</Accented>
-            {action.themeId && ' -'}{' '}
+            {!!action.themeId && ' -'}{' '}
           </>
         )}
         {action.description ?? 'Aucune description'}

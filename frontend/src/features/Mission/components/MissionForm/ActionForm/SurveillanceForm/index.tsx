@@ -114,9 +114,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
   )
 
   const areAllReportingsAttachedToAnAction = useMemo(
-    () =>
-      attachedReportings &&
-      attachedReportings.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
+    () => attachedReportings?.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
     [attachedReportings]
   )
 
@@ -138,7 +136,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
     setFieldValue(`envActions[${envActionIndex}].reportingIds`, nextReportingIds ?? [])
 
     attachedReportings.map((reporting, index) => {
-      if (nextReportingIds && nextReportingIds.includes(reporting.id)) {
+      if (nextReportingIds?.includes(reporting.id)) {
         return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, currentAction?.id)
       }
 

@@ -34,7 +34,7 @@ export function ReportingForm({
 
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
-  const reporting = values?.attachedReportings && values.attachedReportings[reportingActionIndex]
+  const reporting = values?.attachedReportings?.[reportingActionIndex]
 
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
 
