@@ -1,19 +1,8 @@
-import {
-  Accent,
-  Button,
-  Icon,
-  IconButton,
-  Label,
-  OPENLAYERS_PROJECTION,
-  TextInput,
-  WSG84_PROJECTION
-} from '@mtes-mct/monitor-ui'
-import { boundingExtent } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
+import { Accent, Button, Icon, IconButton, Label, TextInput } from '@mtes-mct/monitor-ui'
+import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
 import styled from 'styled-components'
 
 import { OLGeometryType } from '../../../../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../../hooks/useAppSelector'
 import { formatCoordinates } from '../../../../../../utils/coordinates'
@@ -32,12 +21,7 @@ export function Location({ geom }) {
     const coordinatesToCenter: Coordinate[] =
       geom.type === OLGeometryType.MULTIPOLYGON ? geom.coordinates[0][0] : [geom.coordinates[0]]
 
-    if (!coordinatesToCenter) {
-      return
-    }
-
-    const extent = transformExtent(boundingExtent(coordinatesToCenter), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-    dispatch(setFitToExtent(extent))
+    dispatch(centerOnMapFromZonePicker(coordinatesToCenter))
   }
 
   return (

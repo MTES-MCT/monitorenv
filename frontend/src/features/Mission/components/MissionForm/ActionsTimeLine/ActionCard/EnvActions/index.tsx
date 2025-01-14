@@ -61,32 +61,30 @@ export function EnvActions({
                 <ReportingCard action={action} setCurrentActionId={setCurrentActionId} />
               )}
               {action.actionType !== ActionTypeEnum.REPORTING && (
-                <>
-                  <ButtonsWrapper>
-                    <ActionButtons>
-                      <IconButton
-                        accent={Accent.TERTIARY}
-                        Icon={Icon.Duplicate}
-                        onClick={duplicateAction}
-                        title="dupliquer"
-                      />
-                      <IconButton
-                        accent={Accent.TERTIARY}
-                        color={THEME.color.maximumRed}
-                        data-cy={`actioncard-delete-button-${action.id}`}
-                        Icon={Icon.Delete}
-                        onClick={removeAction}
-                        title="supprimer"
-                      />
-                    </ActionButtons>
-                    {action.actionType === ActionTypeEnum.CONTROL && action.formattedReportingId && (
-                      <StyledTag
-                        data-cy="control-attached-reporting-tag"
-                        Icon={Icon.Link}
-                      >{`Signalement ${action.formattedReportingId}`}</StyledTag>
-                    )}
-                  </ButtonsWrapper>
-                </>
+                <ButtonsWrapper>
+                  <ActionButtons>
+                    <IconButton
+                      accent={Accent.TERTIARY}
+                      Icon={Icon.Duplicate}
+                      onClick={duplicateAction}
+                      title="dupliquer"
+                    />
+                    <IconButton
+                      accent={Accent.TERTIARY}
+                      color={THEME.color.maximumRed}
+                      data-cy={`actioncard-delete-button-${action.id}`}
+                      Icon={Icon.Delete}
+                      onClick={removeAction}
+                      title="supprimer"
+                    />
+                  </ActionButtons>
+                  {action.actionType === ActionTypeEnum.CONTROL && action.formattedReportingId && (
+                    <StyledTag
+                      data-cy="control-attached-reporting-tag"
+                      Icon={Icon.Link}
+                    >{`Signalement ${action.formattedReportingId}`}</StyledTag>
+                  )}
+                </ButtonsWrapper>
               )}
             </ContentContainer>
             {action.actionType === ActionTypeEnum.SURVEILLANCE && action.formattedReportingIds.length > 0 && (

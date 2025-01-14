@@ -1,20 +1,13 @@
 import { Accent, Button, Icon, IconButton, Label, Message } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
+import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
 import { useField } from 'formik'
 import { isEqual } from 'lodash'
-import { boundingExtent } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import {
-  InteractionListener,
-  OLGeometryType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from '../../../../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../../../../domain/shared_slices/Map'
+import { InteractionListener, OLGeometryType } from '../../../../../../domain/entities/map/constants'
 import { drawPoint } from '../../../../../../domain/use_cases/draw/drawGeometry'
 import { useAppDispatch } from '../../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../../hooks/useAppSelector'
@@ -56,12 +49,7 @@ export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeo
   }, [geometry, setValue, value])
 
   const handleCenterOnMap = coordinates => {
-    if (!coordinates) {
-      return
-    }
-
-    const extent = transformExtent(boundingExtent([coordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-    dispatch(setFitToExtent(extent))
+    dispatch(centerOnMapFromZonePicker([coordinates]))
   }
 
   const handleAddPoint = useCallback(() => {

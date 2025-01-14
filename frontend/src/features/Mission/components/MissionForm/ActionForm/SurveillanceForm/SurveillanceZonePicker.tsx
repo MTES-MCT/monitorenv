@@ -1,14 +1,12 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
-import { Accent, Button, Icon, IconButton, Label, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
-import { setFitToExtent } from 'domain/shared_slices/Map'
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
+import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
 import { useField } from 'formik'
 import _ from 'lodash'
-import { boundingExtent } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
@@ -45,13 +43,7 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
   }, [geometry, helpers, value])
 
   const handleCenterOnMap = (coordinates: Coordinate[][]) => {
-    const firstRing = coordinates[0]
-    if (!firstRing) {
-      return
-    }
-
-    const extent = transformExtent(boundingExtent(firstRing), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-    dispatch(setFitToExtent(extent))
+    dispatch(centerOnMapFromZonePicker(coordinates[0]))
   }
 
   const handleAddZone = useCallback(() => {

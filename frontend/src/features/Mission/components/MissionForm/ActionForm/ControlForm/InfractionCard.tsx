@@ -61,7 +61,7 @@ export function InfractionCard({
     }
     const identification: string[] = [defaultIdentification()]
 
-    const addToIdentification = (identity: string | Number | null | undefined) => {
+    const addToIdentification = (identity: string | number | null | undefined) => {
       if (identity) {
         identification.push(String(identity))
       }

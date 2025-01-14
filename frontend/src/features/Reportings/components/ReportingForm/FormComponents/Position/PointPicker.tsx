@@ -3,18 +3,11 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
-import {
-  InteractionListener,
-  OLGeometryType,
-  OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
-} from 'domain/entities/map/constants'
-import { setFitToExtent } from 'domain/shared_slices/Map'
+import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { drawPoint } from 'domain/use_cases/draw/drawGeometry'
+import { centerOnMapFromZonePicker } from 'domain/use_cases/map/centerOnMapFromZonePicker'
 import { useField } from 'formik'
 import _ from 'lodash'
-import { boundingExtent } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -40,11 +33,7 @@ export function PointPicker() {
 
   const handleCenterOnMap = () => {
     const { coordinates } = value
-    if (!coordinates || !coordinates.length) {
-      return
-    }
-    const extent = transformExtent(boundingExtent([coordinates[0]]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-    dispatch(setFitToExtent(extent))
+    dispatch(centerOnMapFromZonePicker([coordinates[0]]))
   }
 
   const handleAddPoint = useCallback(() => {

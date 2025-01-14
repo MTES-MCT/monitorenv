@@ -89,7 +89,7 @@ export function ControlForm({
   const { actionNumberOfControls, actionTargetType, reportingIds, vehicleType } = currentAction ?? {}
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length === 1)
 
-  const currentActionErrors = (errors.envActions ? errors.envActions[envActionIndex] : undefined) as
+  const currentActionErrors = (errors.envActions?.[envActionIndex] ?? undefined) as
     | FormikErrors<EnvActionControl>
     | undefined
 
