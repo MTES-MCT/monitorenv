@@ -6,10 +6,18 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnu
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import java.time.ZonedDateTime
 import java.util.UUID
+import kotlin.random.Random
 
 class EnvActionFixture {
     companion object {
@@ -44,6 +52,49 @@ class EnvActionFixture {
                 value = "{}",
             )
         }
+
+        fun anEnvActionControl(
+            startTime: ZonedDateTime? = null,
+            endTime: ZonedDateTime? = null,
+            openBy: String = "MPE",
+            infractions: List<InfractionEntity> = listOf(),
+            actionNumberOfControls: Int? = infractions.size,
+        ): EnvActionControlEntity {
+            return EnvActionControlEntity(
+                id = UUID.randomUUID(),
+                actionStartDateTimeUtc = startTime,
+                actionEndDateTimeUtc = endTime,
+                openBy = openBy,
+                infractions = infractions,
+                actionNumberOfControls = actionNumberOfControls,
+            )
+        }
+
+        fun anEnvActionSurveillance(
+            startTime: ZonedDateTime? = null,
+            endTime: ZonedDateTime? = null,
+            openBy: String? = null,
+        ): EnvActionSurveillanceEntity {
+            return EnvActionSurveillanceEntity(
+                id = UUID.randomUUID(),
+                actionStartDateTimeUtc = startTime,
+                actionEndDateTimeUtc = endTime,
+                openBy = openBy,
+                awareness = null,
+            )
+        }
+
+        fun anInfraction(
+            infractionType: InfractionTypeEnum = InfractionTypeEnum.WAITING,
+            nbTarget: Int = 1,
+        ) = InfractionEntity(
+            id = Random.nextInt().toString(),
+            administrativeResponse = AdministrativeResponseEnum.NONE,
+            infractionType = infractionType,
+            formalNotice = FormalNoticeEnum.NO,
+            seizure = SeizureTypeEnum.NO,
+            nbTarget = nbTarget,
+        )
 
         fun aMonitorFishAction(missionId: Int): MonitorFishMissionActionEntity {
             return MonitorFishMissionActionEntity(

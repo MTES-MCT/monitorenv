@@ -49,7 +49,6 @@ class PatchMissionUTest {
             )
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
-        patchEntity.execute(missionFromDatabase, patchableMission)
         given(missionRepository.save(missionPatched)).willReturn(MissionDetailsDTO(missionPatched))
 
         // When

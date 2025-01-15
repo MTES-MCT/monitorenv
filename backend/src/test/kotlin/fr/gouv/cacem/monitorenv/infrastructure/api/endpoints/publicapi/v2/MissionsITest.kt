@@ -74,9 +74,9 @@ class MissionsITest {
         val patchedMission =
             aMissionEntity(
                 id = id,
-                observationsByUnit = observationsByUnit,
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
+                observationsByUnit = observationsByUnit,
             )
         val patchableMissionEntity =
             PatchableMissionEntity(

@@ -11,6 +11,8 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
+import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionValidator
 import org.slf4j.LoggerFactory
 
 @UseCase
@@ -24,6 +26,7 @@ class CreateOrUpdateEnvActions(
 
     @Throws(IllegalArgumentException::class)
     fun execute(
+        @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
         mission: MissionEntity,
         envActions: List<EnvActionEntity>?,
     ): MissionEntity {
