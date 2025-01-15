@@ -91,7 +91,7 @@ class EnvActionModel(
     @OrderBy("id")
     val attachedReporting: MutableSet<ReportingModel>? = LinkedHashSet(),
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "envAction",
@@ -109,7 +109,7 @@ class EnvActionModel(
     @OrderBy("orderIndex")
     val controlPlanSubThemes: MutableSet<EnvActionsControlPlanSubThemeModel>? = LinkedHashSet(),
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         mappedBy = "envAction",

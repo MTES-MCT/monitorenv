@@ -6,7 +6,7 @@ ARG GITHUB_SHA=NO_COMMIT
 ARG VERSION=NO_VERSION
 
 ########################################
-# Build monitorenv backend with maven #
+# Build monitorenv backend with gradle #
 ########################################
 FROM gradle:8.4-jdk17 as buildBack
 

@@ -6,12 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import jakarta.persistence.*
+import jakarta.persistence.Table
+import org.hibernate.annotations.*
 import org.hibernate.annotations.Cache
-import org.hibernate.annotations.CacheConcurrencyStrategy
-import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
 @Entity
@@ -24,7 +21,7 @@ data class ControlUnitModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "administration_id", nullable = false)
     @JsonBackReference
     val administration: AdministrationModel,
@@ -33,11 +30,11 @@ data class ControlUnitModel(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
     @Fetch(FetchMode.SUBSELECT)
-    val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
+    val controlUnitContacts: MutableSet<ControlUnitContactModel>? = LinkedHashSet(),
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
     @Fetch(FetchMode.SUBSELECT)
-    val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
+    val controlUnitResources: MutableSet<ControlUnitResourceModel>? = LinkedHashSet(),
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_area_insee_dep")
     @JsonBackReference
@@ -64,8 +61,8 @@ data class ControlUnitModel(
             controlUnit: ControlUnitEntity,
             administrationModel: AdministrationModel,
             departmentAreaModel: DepartmentAreaModel? = null,
-            controlUnitContactModels: List<ControlUnitContactModel>? = null,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
+            controlUnitContactModels: MutableSet<ControlUnitContactModel>? = null,
+            controlUnitResourceModels: MutableSet<ControlUnitResourceModel>? = null,
         ): ControlUnitModel {
             return ControlUnitModel(
                 id = controlUnit.id,
@@ -118,4 +115,27 @@ data class ControlUnitModel(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id , administrationId = ${administration.id} , areaNote = $areaNote , departmentAreaInseeCode = ${departmentArea?.inseeCode} , isArchived = $isArchived, name = $name , termsNote = $termsNote)"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ControlUnitModel
+
+        if (id != other.id) return false
+        if (administration != other.administration) return false
+        if (areaNote != other.areaNote) return false
+        if (controlUnitContacts != other.controlUnitContacts) return false
+        if (controlUnitResources != other.controlUnitResources) return false
+        if (departmentArea != other.departmentArea) return false
+        if (isArchived != other.isArchived) return false
+        if (name != other.name) return false
+        if (termsNote != other.termsNote) return false
+        if (createdAtUtc != other.createdAtUtc) return false
+        if (updatedAtUtc != other.updatedAtUtc) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }
