@@ -60,7 +60,7 @@ data class CreateOrUpdateMissionDataInput(
         return this.envActions
             ?.filter {
                 it.actionType == ActionTypeEnum.SURVEILLANCE ||
-                        it.actionType == ActionTypeEnum.CONTROL
+                    it.actionType == ActionTypeEnum.CONTROL
             }
             ?.map { Pair(it.id, it.reportingIds.get()) }
             ?: listOf()
