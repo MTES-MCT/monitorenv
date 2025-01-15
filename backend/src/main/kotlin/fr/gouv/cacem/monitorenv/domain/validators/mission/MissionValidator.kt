@@ -1,0 +1,150 @@
+package fr.gouv.cacem.monitorenv.domain.validators.mission
+
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
+import fr.gouv.cacem.monitorenv.domain.validators.Validator
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
+import java.time.ZonedDateTime
+
+private const val NB_CHAR_MAX = 3
+
+@Component
+class MissionValidator : Validator<MissionEntity> {
+    private val logger = LoggerFactory.getLogger(MissionValidator::class.java)
+
+    override fun validate(mission: MissionEntity) {
+        logger.info("Validating mission: ${mission.id}")
+        val isMissionEnded = mission.endDateTimeUtc != null && ZonedDateTime.now().isAfter(mission.endDateTimeUtc)
+
+        validateOngoingMission(mission)
+    }
+
+    private fun validateOngoingMission(mission: MissionEntity) {
+        if (mission.startDateTimeUtc.isAfter(mission.endDateTimeUtc)) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La date de fin doit être postérieure à la date de début",
+            )
+        }
+        if (mission.missionTypes.isEmpty()) {
+            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Le type de mission est requis")
+        }
+
+        if (mission.controlUnits.isEmpty()) {
+            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Une unité de contrôle est requise")
+        }
+
+        if (mission.completedBy !== null && mission.completedBy.length != NB_CHAR_MAX) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le trigramme \"complété par\" doit avoir 3 lettres",
+            )
+        }
+        if (mission.openBy !== null && mission.openBy.length != NB_CHAR_MAX) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le trigramme \"ouvert par\" doit avoir 3 lettres",
+            )
+        }
+        validateEnvAction(mission)
+    }
+
+    private fun validateEnvAction(mission: MissionEntity) {
+        mission.envActions?.forEach { envAction ->
+            if (envAction is EnvActionControlEntity) {
+                validateControl(envAction, mission)
+            }
+
+            if (envAction is EnvActionSurveillanceEntity) {
+                validateSurveillance(envAction, mission)
+            }
+        }
+    }
+
+    private fun validateControl(
+        control: EnvActionControlEntity,
+        mission: MissionEntity,
+    ) {
+        validateEnvAction(control, mission)
+
+        val sumOfNbTarget = control.infractions?.sumOf { infraction -> infraction.nbTarget }
+        if (sumOfNbTarget != null) {
+            if (control.actionNumberOfControls == null || sumOfNbTarget > control.actionNumberOfControls) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "Le nombre de cibles excède le nombre total de contrôles",
+                )
+            }
+        }
+        control.infractions?.forEach { infraction ->
+            if (infraction.infractionType !== InfractionTypeEnum.WAITING && infraction.natinf?.isEmpty() == true) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "Une infraction doit avoir une natinf si le type d'infraction n'est pas \"En attente\"",
+                )
+            }
+            if (infraction.nbTarget < 1) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "le nombre minimum de cible est 1",
+                )
+            }
+        }
+    }
+
+    private fun validateSurveillance(
+        surveillance: EnvActionSurveillanceEntity,
+        mission: MissionEntity,
+    ) {
+        validateEnvAction(surveillance, mission)
+
+        if (surveillance.completedBy !== null && surveillance.completedBy.length != NB_CHAR_MAX) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le trigramme \"complété par\" doit avoir 3 lettres",
+            )
+        }
+    }
+
+    private fun validateEnvAction(
+        envAction: EnvActionEntity,
+        mission: MissionEntity,
+    ) {
+        if (envAction.actionStartDateTimeUtc?.isBefore(mission.startDateTimeUtc) == true) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La date de début du contrôle doit être postérieure à celle du début de mission",
+            )
+        }
+        if (envAction.actionStartDateTimeUtc?.isAfter(mission.endDateTimeUtc) == true) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La date de début du contrôle doit être antérieure à celle de fin de mission",
+            )
+        }
+        if (envAction.actionEndDateTimeUtc?.isAfter(mission.endDateTimeUtc) == true) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La date de fin du contrôle doit être antérieure à celle de fin de mission",
+            )
+        }
+        if (envAction.actionEndDateTimeUtc?.isBefore(mission.startDateTimeUtc) == true) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La date de fin du contrôle doit être postérieure à celle du début de mission",
+            )
+        }
+        if (envAction.openBy?.length != NB_CHAR_MAX) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le trigramme \"ouvert par\" doit avoir 3 lettres",
+            )
+        }
+    }
+}

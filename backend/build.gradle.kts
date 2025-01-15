@@ -2,12 +2,12 @@ plugins {
     `java-library`
     `maven-publish`
     id("org.springframework.boot") version "3.4.1"
-    id("org.jetbrains.kotlin.plugin.spring") version "2.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
     kotlin("jvm") version "2.1.0"
-    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.0"
+    kotlin("plugin.spring") version "2.1.0"
+    kotlin("plugin.allopen") version "2.1.0"
     kotlin("plugin.noarg") version "2.1.0"
     kotlin("plugin.jpa") version "2.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
     kotlin("plugin.serialization") version "2.1.0"
 }
 

@@ -3,13 +3,15 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
+import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionValidator
 import org.slf4j.LoggerFactory
-import java.util.*
+import java.util.UUID
 
 @UseCase
 class CreateOrUpdateMissionWithActionsAndAttachedReporting(
@@ -26,6 +28,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
 
     @Throws(IllegalArgumentException::class)
     fun execute(
+        @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
         mission: MissionEntity,
         attachedReportingIds: List<Int>,
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
