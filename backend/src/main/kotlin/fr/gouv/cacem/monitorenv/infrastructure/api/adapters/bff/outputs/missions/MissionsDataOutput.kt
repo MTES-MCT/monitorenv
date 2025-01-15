@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.mission
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
@@ -28,7 +28,7 @@ data class MissionsDataOutput(
     val isGeometryComputedFromControls: Boolean,
 ) {
     companion object {
-        fun fromMissionDTO(dto: MissionDTO): MissionsDataOutput {
+        fun fromMissionDTO(dto: MissionsDTO): MissionsDataOutput {
             requireNotNull(dto.mission.id) { "a mission must have an id" }
 
             return MissionsDataOutput(
@@ -47,8 +47,7 @@ data class MissionsDataOutput(
                     dto.mission.envActions?.map {
                         EnvActionDataOutput.fromEnvActionEntity(
                             envActionEntity = it,
-                            envActionsAttachedToReportingIds =
-                                dto.envActionsAttachedToReportingIds,
+                            listOf(),
                         )
                     },
                 missionSource = dto.mission.missionSource,

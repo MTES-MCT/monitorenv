@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
 import java.time.Instant
 
 interface IMissionRepository {
@@ -26,7 +27,7 @@ interface IMissionRepository {
         startedAfter: Instant,
         startedBefore: Instant?,
         searchQuery: String?,
-    ): List<MissionDTO>
+    ): List<MissionsDTO>
 
     fun findAll(
         controlUnitIds: List<Int>? = null,

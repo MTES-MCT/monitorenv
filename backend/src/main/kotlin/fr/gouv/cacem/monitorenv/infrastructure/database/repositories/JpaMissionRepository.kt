@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.apache.commons.lang3.StringUtils
@@ -47,7 +48,7 @@ class JpaMissionRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
         searchQuery: String?,
-    ): List<MissionDTO> {
+    ): List<MissionsDTO> {
         val pageable =
             if (pageNumber != null && pageSize != null) {
                 PageRequest.of(pageNumber, pageSize)
@@ -66,7 +67,7 @@ class JpaMissionRepository(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
         )
-            .map { it.toMissionDTO(mapper) }.filter { findBySearchQuery(it.mission, searchQuery) }
+            .map { it.toMissionsDTO(mapper) }.filter { findBySearchQuery(it.mission, searchQuery) }
     }
 
     @Transactional

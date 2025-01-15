@@ -20,14 +20,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
@@ -45,52 +41,43 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Missions::class)])
 class MissionsITests {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
     @MockitoBean
     private lateinit var createOrUpdateMissionWithActionsAndAttachedReporting:
-            CreateOrUpdateMissionWithActionsAndAttachedReporting
+        CreateOrUpdateMissionWithActionsAndAttachedReporting
 
-    @MockitoBean
-    private lateinit var getFullMissions: GetFullMissions
+    @MockitoBean private lateinit var getFullMissions: GetFullMissions
 
     @MockitoBean
     private lateinit var getFullMissionWithFishAndRapportNavActions:
-            GetFullMissionWithFishAndRapportNavActions
+        GetFullMissionWithFishAndRapportNavActions
 
-    @MockitoBean
-    private lateinit var deleteMission: DeleteMission
+    @MockitoBean private lateinit var deleteMission: DeleteMission
 
-    @MockitoBean
-    private lateinit var canDeleteMission: CanDeleteMission
+    @MockitoBean private lateinit var canDeleteMission: CanDeleteMission
 
-    @MockitoBean
-    private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+    @MockitoBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
     private val polygon =
         WKTReader()
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-                MultiPolygon
+            MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     @Test
@@ -226,7 +213,7 @@ class MissionsITests {
             )
 
         val expectedFirstMission =
-            MissionDTO(
+            MissionsDTO(
                 mission =
                     MissionEntity(
                         id = 10,
@@ -242,7 +229,7 @@ class MissionsITests {
                                             LegacyControlUnitResourceEntity(
                                                 id = 2,
                                                 controlUnitId =
-                                                    1,
+                                                1,
                                                 name =
                                                     "Ressource 2",
                                             ),
@@ -270,42 +257,6 @@ class MissionsITests {
                         updatedAtUtc = null,
                     ),
                 attachedReportingIds = listOf(1),
-                attachedReportings =
-                    listOf(
-                        ReportingDTO(
-                            reporting =
-                                ReportingEntity(
-                                    id = 1,
-                                    reportingId = 2300001,
-                                    reportingSources = listOf(),
-                                    targetType = TargetTypeEnum.VEHICLE,
-                                    vehicleType =
-                                        VehicleTypeEnum
-                                            .VEHICLE_LAND,
-                                    geom = polygon,
-                                    seaFront = "SeaFront",
-                                    description = "Description",
-                                    reportType =
-                                        ReportingTypeEnum
-                                            .INFRACTION_SUSPICION,
-                                    themeId = 12,
-                                    subThemeIds = listOf(82),
-                                    actionTaken = "ActionTaken",
-                                    isControlRequired = true,
-                                    hasNoUnitAvailable = true,
-                                    createdAt =
-                                        ZonedDateTime.parse(
-                                            "2022-01-15T04:50:09Z",
-                                        ),
-                                    validityTime = 4,
-                                    isArchived = false,
-                                    isDeleted = false,
-                                    openBy = "OpenBy",
-                                    isInfractionProven = true,
-                                ),
-                            reportingSources = listOf(),
-                        ),
-                    ),
             )
         given(
             getFullMissions.execute(
@@ -519,7 +470,7 @@ class MissionsITests {
                                             LegacyControlUnitResourceEntity(
                                                 id = 2,
                                                 controlUnitId =
-                                                    1,
+                                                1,
                                                 name =
                                                     "Ressource 2",
                                             ),
@@ -791,7 +742,7 @@ class MissionsITests {
             listOf(
                 Pair(UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"), listOf(1)),
             ) as
-                    List<EnvActionAttachedToReportingIds>
+                List<EnvActionAttachedToReportingIds>
         given(
             createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = requestBody.toMissionEntity(),

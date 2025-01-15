@@ -11,21 +11,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.Basic
+import jakarta.persistence.*
 import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.NamedAttributeNode
-import jakarta.persistence.NamedEntityGraph
-import jakarta.persistence.NamedSubgraph
-import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
@@ -198,8 +187,7 @@ class MissionModel(
     @OrderBy("id")
     val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
     @Column(name = "completed_by") val completedBy: String? = null,
-    @Column(name = "created_at_utc", updatable = false)
-    var createdAtUtc: Instant?,
+    @Column(name = "created_at_utc", updatable = false) var createdAtUtc: Instant?,
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -339,6 +327,52 @@ class MissionModel(
                     ?.map { it.id as Int }
                     ?: listOf(),
             envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
+        )
+    }
+
+    private fun toMissionsEntity(objectMapper: ObjectMapper): MissionEntity {
+        val mappedControlUnits =
+            controlUnits?.map { missionControlUnitModel ->
+                missionControlUnitModel
+                    .unit
+                    .toLegacyControlUnit()
+                    .copy(
+                        contact = missionControlUnitModel.contact,
+                    )
+            }
+
+        return MissionEntity(
+            id = id,
+            completedBy = completedBy,
+            controlUnits = mappedControlUnits ?: emptyList(),
+            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
+            createdAtUtc = createdAtUtc?.atZone(UTC),
+            updatedAtUtc = updatedAtUtc?.atZone(UTC),
+            envActions = envActions?.map { it.toActionEntity(objectMapper) },
+            facade = facade,
+            geom = geom,
+            hasMissionOrder = hasMissionOrder,
+            isDeleted = isDeleted,
+            isGeometryComputedFromControls = isGeometryComputedFromControls,
+            isUnderJdp = isUnderJdp,
+            missionSource = missionSource,
+            missionTypes = missionTypes,
+            observationsByUnit = observationsByUnit,
+            observationsCacem = observationsCacem,
+            observationsCnsp = observationsCnsp,
+            openBy = openBy,
+            startDateTimeUtc = startDateTimeUtc.atZone(UTC),
+        )
+    }
+
+    fun toMissionsDTO(objectMapper: ObjectMapper): MissionsDTO {
+        return MissionsDTO(
+            mission = this.toMissionsEntity(objectMapper),
+            attachedReportingIds =
+                this.attachedReportings
+                    ?.filter { it.detachedFromMissionAtUtc == null }
+                    ?.map { it.id as Int }
+                    ?: listOf(),
         )
     }
 
