@@ -1,0 +1,1 @@
+ALTER TYPE mission_source_type ADD VALUE 'RAPPORT_NAV';
