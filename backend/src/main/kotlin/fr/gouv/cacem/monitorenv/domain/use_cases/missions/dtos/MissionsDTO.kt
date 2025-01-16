@@ -4,5 +4,5 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 
 data class MissionsDTO(
     val mission: MissionEntity,
-    val attachedReportingIds: List<Int>? = listOf(),
+    val attachedReportingIds: List<Int>,
 )
