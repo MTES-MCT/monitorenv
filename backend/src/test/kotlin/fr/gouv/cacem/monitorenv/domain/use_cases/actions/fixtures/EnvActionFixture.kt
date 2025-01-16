@@ -79,7 +79,7 @@ class EnvActionFixture {
         fun anEnvActionSurveillance(
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,
-            openBy: String? = null,
+            openBy: String? = "CDA",
         ): EnvActionSurveillanceEntity {
             return EnvActionSurveillanceEntity(
                 id = UUID.randomUUID(),

@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.validators.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
@@ -87,14 +88,13 @@ class MissionValidator : Validator<MissionEntity> {
         }
 
         val sumOfNbTarget = control.infractions?.sumOf { infraction -> infraction.nbTarget }
-        if (sumOfNbTarget != null) {
-            if (control.actionNumberOfControls == null || sumOfNbTarget > control.actionNumberOfControls) {
-                throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "Le nombre de cibles excède le nombre total de contrôles",
-                )
-            }
+        if (sumOfNbTarget != 0 && sumOfNbTarget != null && (control.actionNumberOfControls != null && sumOfNbTarget > control.actionNumberOfControls)) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le nombre de cibles excède le nombre total de contrôles",
+            )
         }
+
 
         control.infractions?.forEach { infraction ->
             if (infraction.infractionType !== InfractionTypeEnum.WAITING && infraction.natinf?.isEmpty() == true) {
@@ -130,28 +130,33 @@ class MissionValidator : Validator<MissionEntity> {
         envAction: EnvActionEntity,
         mission: MissionEntity,
     ) {
-        if (envAction.actionStartDateTimeUtc?.isBefore(mission.startDateTimeUtc) == true) {
+        val actionType = if (envAction.actionType === ActionTypeEnum.CONTROL) "du contrôle" else "de la surveillance"
+        if (envAction.actionStartDateTimeUtc?.isAfter(mission.startDateTimeUtc) == false
+            && envAction.actionStartDateTimeUtc?.isEqual(mission.startDateTimeUtc) == false
+        ) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La date de début du contrôle doit être postérieure à celle du début de mission",
+                "La date de début $actionType doit être postérieure à celle du début de mission",
             )
         }
         if (envAction.actionStartDateTimeUtc?.isAfter(mission.endDateTimeUtc) == true) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La date de début du contrôle doit être antérieure à celle de fin de mission",
+                "La date de début $actionType doit être antérieure à celle de fin de mission",
             )
         }
-        if (envAction.actionEndDateTimeUtc?.isAfter(mission.endDateTimeUtc) == true) {
+        if (envAction.actionEndDateTimeUtc?.isBefore(mission.endDateTimeUtc) == false &&
+            envAction.actionEndDateTimeUtc?.isEqual(mission.endDateTimeUtc) == false
+        ) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La date de fin du contrôle doit être antérieure à celle de fin de mission",
+                "La date de fin $actionType doit être antérieure à celle de fin de mission",
             )
         }
         if (envAction.actionEndDateTimeUtc?.isBefore(mission.startDateTimeUtc) == true) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La date de fin du contrôle doit être postérieure à celle du début de mission",
+                "La date de fin $actionType doit être postérieure à celle du début de mission",
             )
         }
         if (envAction.openBy?.length != NB_CHAR_MAX) {
