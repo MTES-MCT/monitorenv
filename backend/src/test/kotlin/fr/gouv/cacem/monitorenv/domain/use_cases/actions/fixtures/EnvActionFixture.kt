@@ -1,11 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
@@ -59,6 +61,8 @@ class EnvActionFixture {
             openBy: String = "MPE",
             infractions: List<InfractionEntity> = listOf(),
             actionNumberOfControls: Int? = infractions.size,
+            actionTargetTypeEnum: ActionTargetTypeEnum? = null,
+            vehicleTypeEnum: VehicleTypeEnum? = null,
         ): EnvActionControlEntity {
             return EnvActionControlEntity(
                 id = UUID.randomUUID(),
@@ -67,6 +71,8 @@ class EnvActionFixture {
                 openBy = openBy,
                 infractions = infractions,
                 actionNumberOfControls = actionNumberOfControls,
+                actionTargetType = actionTargetTypeEnum,
+                vehicleType = vehicleTypeEnum
             )
         }
 

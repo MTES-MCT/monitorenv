@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.validators.mission
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvActionControl
@@ -159,6 +160,30 @@ class MissionValidatorUTest {
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(assertThrows.message).isEqualTo("Le trigramme \"ouvert par\" doit avoir 3 lettres")
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a control actionTargetType as VEHICULE without vehiculeType when mission has ended`(
+    ) {
+        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val anEnvActionControl = anEnvActionControl(actionTargetTypeEnum = ActionTargetTypeEnum.VEHICLE)
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envAction = listOf(anEnvActionControl))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(assertThrows.message).isEqualTo("Le type de véhicule est obligatoire")
+    }
+
+
+    @ParameterizedTest
+    @EnumSource(value = ActionTargetTypeEnum::class, names = ["VEHICLE"], mode = EnumSource.Mode.EXCLUDE)
+    fun `validate should pass if there is a control actionTargetType as targetType other than VEHICLE without vehiculeType when mission has ended`(
+        targetType: ActionTargetTypeEnum,
+    ) {
+        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val anEnvActionControl = anEnvActionControl(actionTargetTypeEnum = targetType)
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envAction = listOf(anEnvActionControl))
+
+        missionValidator.validate(mission)
     }
 
     @Test
