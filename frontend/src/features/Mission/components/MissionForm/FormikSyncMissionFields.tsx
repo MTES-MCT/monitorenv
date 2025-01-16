@@ -3,7 +3,7 @@ import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
 import { omit } from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 
@@ -19,7 +19,6 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
   const { setFieldValue, values } = useFormikContext<Mission>()
   const { getMissionEventById, setMissionEventInContext } = useMissionEventContext()
   const missionEvent = getMissionEventById(missionId)
-  const [isUpdateEnded, setIsUpdateEnded] = useState(false)
 
   useEffect(
     () => {
@@ -32,7 +31,6 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
         omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
       )
 
-      setIsUpdateEnded(false)
       /**
        * We iterate and use `setFieldValue` on each diff key to avoid a global re-render of the <MissionForm/> component
        */
@@ -45,19 +43,16 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
         setFieldValue(key, undefine(missionEvent[key]))
       })
 
-      setIsUpdateEnded(true)
+      // we need to wait for the form to be updated before removing the mission event from the context
+      setTimeout(() => {
+        setMissionEventInContext(undefined)
+      }, 500)
     },
 
     // We don't want to trigger infinite re-renders since `setFieldValue` changes after each rendering
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [missionEvent]
   )
-
-  useEffect(() => {
-    if (isUpdateEnded) {
-      setMissionEventInContext(undefined)
-    }
-  }, [isUpdateEnded, setMissionEventInContext])
 
   return <></>
 }

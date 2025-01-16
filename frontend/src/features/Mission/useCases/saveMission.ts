@@ -33,6 +33,7 @@ export const saveMission =
     ])
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isMissionNew(routeParams?.params?.id)
+    await dispatch(missionFormsActions.setIsListeningToEvents(false))
 
     const newOrNextMissionData = missionIsNewMission ? { ...valuesToSave, id: undefined } : valuesToSave
     const upsertMission = missionIsNewMission
@@ -78,6 +79,10 @@ export const saveMission =
             })
           )
         }
+
+        setTimeout(async () => {
+          await dispatch(missionFormsActions.setIsListeningToEvents(true))
+        }, 500)
 
         if (reopen || !quitAfterSave) {
           return

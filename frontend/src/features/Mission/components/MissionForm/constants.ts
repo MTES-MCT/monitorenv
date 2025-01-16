@@ -18,6 +18,8 @@ export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [
   ...MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES,
   'facade',
   // We do not update this field as it is not used by the form
+  'updatedAtUtc',
+  // We do not update this field as it is not used by the form
   'createdAtUtc'
 ]
 

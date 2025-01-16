@@ -73,8 +73,6 @@ class CreateOrUpdateMissionDataInputUTests {
                 attachedReportingIds = listOf(),
                 envActions = listOf(envActionControl, envActionSurveillance, envActionNote),
                 isGeometryComputedFromControls = false,
-                createdAtUtc = null,
-                updatedAtUtc = null,
             )
 
         // when
