@@ -72,7 +72,7 @@ class EnvActionFixture {
                 infractions = infractions,
                 actionNumberOfControls = actionNumberOfControls,
                 actionTargetType = actionTargetTypeEnum,
-                vehicleType = vehicleTypeEnum
+                vehicleType = vehicleTypeEnum,
             )
         }
 
