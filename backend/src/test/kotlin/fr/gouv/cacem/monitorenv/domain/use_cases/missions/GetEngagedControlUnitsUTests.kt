@@ -63,6 +63,7 @@ class GetEngagedControlUnitsUTests {
                         createdAtUtc = null,
                         updatedAtUtc = null,
                     ),
+                attachedReportingIds = listOf(),
             )
         val secondMission =
             MissionsDTO(
@@ -86,6 +87,7 @@ class GetEngagedControlUnitsUTests {
                         createdAtUtc = null,
                         updatedAtUtc = null,
                     ),
+                attachedReportingIds = listOf(),
             )
 
         given(
