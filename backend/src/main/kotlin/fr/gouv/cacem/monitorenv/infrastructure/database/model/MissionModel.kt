@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -224,23 +225,10 @@ class MissionModel(
     @Column(name = "start_datetime_utc") val startDateTimeUtc: Instant,
     @Column(name = "updated_at_utc") @UpdateTimestamp var updatedAtUtc: Instant?,
 ) {
-    fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
-        val mappedControlUnits =
-            controlUnits?.map { missionControlUnitModel ->
-                val mappedControlUnitResources =
-                    controlResources?.map { it.toLegacyControlUnitResource() }?.filter {
-                        it.controlUnitId == missionControlUnitModel.unit.id
-                    }
-
-                missionControlUnitModel
-                    .unit
-                    .toLegacyControlUnit()
-                    .copy(
-                        contact = missionControlUnitModel.contact,
-                        resources = mappedControlUnitResources?.toList() ?: emptyList(),
-                    )
-            }
-
+    private fun buildMissionEntity(
+        mappedControlUnits: List<LegacyControlUnitEntity>? = null,
+        objectMapper: ObjectMapper,
+    ): MissionEntity {
         return MissionEntity(
             id = id,
             completedBy = completedBy,
@@ -263,6 +251,26 @@ class MissionModel(
             openBy = openBy,
             startDateTimeUtc = startDateTimeUtc.atZone(UTC),
         )
+    }
+
+    fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
+        val mappedControlUnits =
+            controlUnits?.map { missionControlUnitModel ->
+                val mappedControlUnitResources =
+                    controlResources?.map { it.toLegacyControlUnitResource() }?.filter {
+                        it.controlUnitId == missionControlUnitModel.unit.id
+                    }
+
+                missionControlUnitModel
+                    .unit
+                    .toLegacyControlUnit()
+                    .copy(
+                        contact = missionControlUnitModel.contact,
+                        resources = mappedControlUnitResources?.toList() ?: emptyList(),
+                    )
+            }
+
+        return buildMissionEntity(mappedControlUnits, objectMapper)
     }
 
     fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
@@ -341,28 +349,7 @@ class MissionModel(
                     )
             }
 
-        return MissionEntity(
-            id = id,
-            completedBy = completedBy,
-            controlUnits = mappedControlUnits ?: emptyList(),
-            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
-            createdAtUtc = createdAtUtc?.atZone(UTC),
-            updatedAtUtc = updatedAtUtc?.atZone(UTC),
-            envActions = envActions?.map { it.toActionEntity(objectMapper) },
-            facade = facade,
-            geom = geom,
-            hasMissionOrder = hasMissionOrder,
-            isDeleted = isDeleted,
-            isGeometryComputedFromControls = isGeometryComputedFromControls,
-            isUnderJdp = isUnderJdp,
-            missionSource = missionSource,
-            missionTypes = missionTypes,
-            observationsByUnit = observationsByUnit,
-            observationsCacem = observationsCacem,
-            observationsCnsp = observationsCnsp,
-            openBy = openBy,
-            startDateTimeUtc = startDateTimeUtc.atZone(UTC),
-        )
+        return buildMissionEntity(mappedControlUnits, objectMapper)
     }
 
     fun toMissionsDTO(objectMapper: ObjectMapper): MissionsDTO {
