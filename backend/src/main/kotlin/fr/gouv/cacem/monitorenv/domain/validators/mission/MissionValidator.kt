@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.validators.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
@@ -20,12 +21,11 @@ class MissionValidator : Validator<MissionEntity> {
 
     override fun validate(mission: MissionEntity) {
         logger.info("Validating mission: ${mission.id}")
-        val isMissionEnded = mission.endDateTimeUtc != null && ZonedDateTime.now().isAfter(mission.endDateTimeUtc)
 
-        validateOngoingMission(mission)
+        validateMission(mission)
     }
 
-    private fun validateOngoingMission(mission: MissionEntity) {
+    private fun validateMission(mission: MissionEntity) {
         if (mission.startDateTimeUtc.isAfter(mission.endDateTimeUtc)) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
@@ -52,13 +52,16 @@ class MissionValidator : Validator<MissionEntity> {
                 "Le trigramme \"ouvert par\" doit avoir 3 lettres",
             )
         }
-        validateEnvAction(mission)
+        validateEnvActions(mission)
     }
 
-    private fun validateEnvAction(mission: MissionEntity) {
+    private fun validateEnvActions(mission: MissionEntity) {
+        val isMissionEnded =
+            mission.endDateTimeUtc != null && (mission.endDateTimeUtc?.isAfter(ZonedDateTime.now()) == true)
+
         mission.envActions?.forEach { envAction ->
             if (envAction is EnvActionControlEntity) {
-                validateControl(envAction, mission)
+                validateControl(envAction, mission, isMissionEnded)
             }
 
             if (envAction is EnvActionSurveillanceEntity) {
@@ -70,8 +73,18 @@ class MissionValidator : Validator<MissionEntity> {
     private fun validateControl(
         control: EnvActionControlEntity,
         mission: MissionEntity,
+        isMissionEnded: Boolean
     ) {
         validateEnvAction(control, mission)
+
+        if (isMissionEnded) {
+            if (control.vehicleType === null && control.actionTargetType === ActionTargetTypeEnum.VEHICLE) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "Le type de véhicule est obligatoire",
+                )
+            }
+        }
 
         val sumOfNbTarget = control.infractions?.sumOf { infraction -> infraction.nbTarget }
         if (sumOfNbTarget != null) {
@@ -82,6 +95,7 @@ class MissionValidator : Validator<MissionEntity> {
                 )
             }
         }
+
         control.infractions?.forEach { infraction ->
             if (infraction.infractionType !== InfractionTypeEnum.WAITING && infraction.natinf?.isEmpty() == true) {
                 throw BackendUsageException(
