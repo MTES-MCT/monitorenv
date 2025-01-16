@@ -74,17 +74,15 @@ class MissionValidator : Validator<MissionEntity> {
     private fun validateControl(
         control: EnvActionControlEntity,
         mission: MissionEntity,
-        isMissionEnded: Boolean
+        isMissionEnded: Boolean,
     ) {
         validateEnvAction(control, mission)
 
-        if (isMissionEnded) {
-            if (control.vehicleType === null && control.actionTargetType === ActionTargetTypeEnum.VEHICLE) {
-                throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "Le type de véhicule est obligatoire",
-                )
-            }
+        if (isMissionEnded && control.vehicleType === null && control.actionTargetType === ActionTargetTypeEnum.VEHICLE) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le type de véhicule est obligatoire",
+            )
         }
 
         val sumOfNbTarget = control.infractions?.sumOf { infraction -> infraction.nbTarget }
@@ -94,7 +92,6 @@ class MissionValidator : Validator<MissionEntity> {
                 "Le nombre de cibles excède le nombre total de contrôles",
             )
         }
-
 
         control.infractions?.forEach { infraction ->
             if (infraction.infractionType !== InfractionTypeEnum.WAITING && infraction.natinf?.isEmpty() == true) {
@@ -131,8 +128,8 @@ class MissionValidator : Validator<MissionEntity> {
         mission: MissionEntity,
     ) {
         val actionType = if (envAction.actionType === ActionTypeEnum.CONTROL) "du contrôle" else "de la surveillance"
-        if (envAction.actionStartDateTimeUtc?.isAfter(mission.startDateTimeUtc) == false
-            && envAction.actionStartDateTimeUtc?.isEqual(mission.startDateTimeUtc) == false
+        if (envAction.actionStartDateTimeUtc?.isAfter(mission.startDateTimeUtc) == false &&
+            envAction.actionStartDateTimeUtc?.isEqual(mission.startDateTimeUtc) == false
         ) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,

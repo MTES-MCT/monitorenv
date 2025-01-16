@@ -47,7 +47,6 @@ class MissionValidatorUTest {
         assertThat(assertThrows.message).isEqualTo("Le type de mission est requis")
     }
 
-
     @ParameterizedTest
     @ValueSource(strings = ["A", "AA", "AAAA"])
     fun `validate should throw an exception if openBy is not a trigram`(openBy: String) {
@@ -70,7 +69,7 @@ class MissionValidatorUTest {
     fun `validate should throw an exception if there is a control with a start date before mission starting date`() {
         val startDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
         val anEnvActionControl = anEnvActionControl(startTime = startDateTimeUtc.minusSeconds(1))
-        val mission = aMissionEntity(startDateTimeUtc = startDateTimeUtc, envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(startDateTimeUtc = startDateTimeUtc, envActions = listOf(anEnvActionControl))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(
@@ -87,7 +86,7 @@ class MissionValidatorUTest {
             aMissionEntity(
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
-                envAction = listOf(anEnvActionControl),
+                envActions = listOf(anEnvActionControl),
             )
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
@@ -105,7 +104,7 @@ class MissionValidatorUTest {
             aMissionEntity(
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
-                envAction = listOf(anEnvActionControl),
+                envActions = listOf(anEnvActionControl),
             )
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
@@ -120,11 +119,12 @@ class MissionValidatorUTest {
         val endDateTimeUtc = ZonedDateTime.parse("2021-03-04T00:00:00.000Z")
 
         val anEnvActionControl = anEnvActionControl(endTime = startDateTimeUtc.minusSeconds(1))
-        val mission = aMissionEntity(
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = endDateTimeUtc,
-            envAction = listOf(anEnvActionControl)
-        )
+        val mission =
+            aMissionEntity(
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = endDateTimeUtc,
+                envActions = listOf(anEnvActionControl),
+            )
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(
@@ -137,11 +137,12 @@ class MissionValidatorUTest {
         val startDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
         val endDateTimeUtc = ZonedDateTime.parse("2021-03-04T00:00:00.000Z")
         val anEnvActionControl = anEnvActionControl(startTime = startDateTimeUtc, endTime = endDateTimeUtc)
-        val mission = aMissionEntity(
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = endDateTimeUtc,
-            envAction = listOf(anEnvActionControl)
-        )
+        val mission =
+            aMissionEntity(
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = endDateTimeUtc,
+                envActions = listOf(anEnvActionControl),
+            )
 
         missionValidator.validate(mission)
     }
@@ -152,7 +153,7 @@ class MissionValidatorUTest {
         infractionType: InfractionTypeEnum,
     ) {
         val anEnvActionControl = anEnvActionControl(infractions = listOf(anInfraction(infractionType = infractionType)))
-        val mission = aMissionEntity(envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(envActions = listOf(anEnvActionControl))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(
@@ -163,7 +164,7 @@ class MissionValidatorUTest {
     @Test
     fun `validate should throw an exception if there is a control with infraction and nbTarget is less than 1`() {
         val anEnvActionControl = anEnvActionControl(infractions = listOf(anInfraction(nbTarget = 0)))
-        val mission = aMissionEntity(envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(envActions = listOf(anEnvActionControl))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(assertThrows.message).isEqualTo("le nombre minimum de cible est 1")
@@ -176,7 +177,7 @@ class MissionValidatorUTest {
                 actionNumberOfControls = 10,
                 infractions = listOf(anInfraction(nbTarget = 10), anInfraction(nbTarget = 5)),
             )
-        val mission = aMissionEntity(envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(envActions = listOf(anEnvActionControl))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(assertThrows.message).isEqualTo("Le nombre de cibles excède le nombre total de contrôles")
@@ -189,7 +190,7 @@ class MissionValidatorUTest {
                 actionNumberOfControls = 2,
                 infractions = listOf(anInfraction(nbTarget = 1)),
             )
-        val mission = aMissionEntity(envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(envActions = listOf(anEnvActionControl))
 
         missionValidator.validate(mission)
     }
@@ -198,7 +199,7 @@ class MissionValidatorUTest {
     fun `validate should pass if there is a control with infractionType = WAITING that doesnt have a NATINF`() {
         val anEnvActionControl =
             anEnvActionControl(infractions = listOf(anInfraction(infractionType = InfractionTypeEnum.WAITING)))
-        val mission = aMissionEntity(envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(envActions = listOf(anEnvActionControl))
 
         missionValidator.validate(mission)
     }
@@ -207,23 +208,21 @@ class MissionValidatorUTest {
     @ValueSource(strings = ["A", "AA", "AAAA"])
     fun `validate should throw an exception if there is a control with openBy is not a trigram`(openBy: String) {
         val anEnvActionControl = anEnvActionControl(openBy = openBy)
-        val mission = aMissionEntity(envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(envActions = listOf(anEnvActionControl))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(assertThrows.message).isEqualTo("Le trigramme \"ouvert par\" doit avoir 3 lettres")
     }
 
     @Test
-    fun `validate should throw an exception if there is a control actionTargetType as VEHICULE without vehiculeType when mission has ended`(
-    ) {
+    fun `validate should throw an exception if there is a control actionTargetType as VEHICULE without vehiculeType when mission has ended`() {
         val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
         val anEnvActionControl = anEnvActionControl(actionTargetTypeEnum = ActionTargetTypeEnum.VEHICLE)
-        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(assertThrows.message).isEqualTo("Le type de véhicule est obligatoire")
     }
-
 
     @ParameterizedTest
     @EnumSource(value = ActionTargetTypeEnum::class, names = ["VEHICLE"], mode = EnumSource.Mode.EXCLUDE)
@@ -232,7 +231,7 @@ class MissionValidatorUTest {
     ) {
         val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
         val anEnvActionControl = anEnvActionControl(actionTargetTypeEnum = targetType)
-        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envAction = listOf(anEnvActionControl))
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
 
         missionValidator.validate(mission)
     }
@@ -241,7 +240,7 @@ class MissionValidatorUTest {
     fun `validate should throw an exception if there is a surveillance with a start date before mission starting date`() {
         val startDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
         val anEnvActionSurveillance = anEnvActionSurveillance(startTime = startDateTimeUtc.minusSeconds(1))
-        val mission = aMissionEntity(startDateTimeUtc = startDateTimeUtc, envAction = listOf(anEnvActionSurveillance))
+        val mission = aMissionEntity(startDateTimeUtc = startDateTimeUtc, envActions = listOf(anEnvActionSurveillance))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(
@@ -258,7 +257,7 @@ class MissionValidatorUTest {
             aMissionEntity(
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
-                envAction = listOf(anEnvActionSurveillance),
+                envActions = listOf(anEnvActionSurveillance),
             )
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
@@ -276,7 +275,7 @@ class MissionValidatorUTest {
             aMissionEntity(
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
-                envAction = listOf(anEnvActionSurveillance),
+                envActions = listOf(anEnvActionSurveillance),
             )
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
@@ -291,11 +290,12 @@ class MissionValidatorUTest {
         val endDateTimeUtc = ZonedDateTime.parse("2021-03-04T00:00:00.000Z")
 
         val anEnvActionSurveillance = anEnvActionSurveillance(endTime = startDateTimeUtc.minusSeconds(1))
-        val mission = aMissionEntity(
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = endDateTimeUtc,
-            envAction = listOf(anEnvActionSurveillance)
-        )
+        val mission =
+            aMissionEntity(
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = endDateTimeUtc,
+                envActions = listOf(anEnvActionSurveillance),
+            )
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(
@@ -308,11 +308,12 @@ class MissionValidatorUTest {
         val startDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
         val endDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
         val anEnvActionSurveillance = anEnvActionSurveillance(startTime = startDateTimeUtc, endTime = endDateTimeUtc)
-        val mission = aMissionEntity(
-            startDateTimeUtc = startDateTimeUtc,
-            endDateTimeUtc = endDateTimeUtc,
-            envAction = listOf(anEnvActionSurveillance)
-        )
+        val mission =
+            aMissionEntity(
+                startDateTimeUtc = startDateTimeUtc,
+                endDateTimeUtc = endDateTimeUtc,
+                envActions = listOf(anEnvActionSurveillance),
+            )
 
         missionValidator.validate(mission)
     }

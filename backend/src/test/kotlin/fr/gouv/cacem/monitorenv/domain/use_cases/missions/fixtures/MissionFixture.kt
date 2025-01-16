@@ -21,7 +21,7 @@ class MissionFixture {
             missionTypes: List<MissionTypeEnum> = listOf(MissionTypeEnum.LAND),
             openBy: String? = null,
             completedBy: String? = null,
-            envAction: List<EnvActionEntity> = emptyList(),
+            envActions: List<EnvActionEntity> = emptyList(),
         ): MissionEntity {
             return MissionEntity(
                 id = id,
@@ -41,7 +41,7 @@ class MissionFixture {
                 isGeometryComputedFromControls = false,
                 updatedAtUtc = null,
                 createdAtUtc = null,
-                envActions = envAction,
+                envActions = envActions,
             )
         }
 
