@@ -78,15 +78,15 @@ context('Side Window > Mission Form > Mission zone', () => {
       type: 'MultiPolygon'
     }
     dispatch(setGeometry(geometry))
+    cy.wait(500)
     cy.getDataCy('mission-zone-computed-from-action').should('not.exist')
 
     // close manually the draw modal
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-    cy.wait(500)
+    cy.wait(200)
     cy.clickButton('Supprimer cette zone de mission')
     cy.wait(500)
     cy.getDataCy('mission-zone-computed-from-action').should('exist')
-    cy.wait(500)
 
     // Check geom values
     cy.waitForLastRequest(
