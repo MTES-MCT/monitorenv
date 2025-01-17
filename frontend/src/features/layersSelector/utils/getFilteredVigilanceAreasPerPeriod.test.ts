@@ -5,6 +5,23 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getFilterVigilanceAreasPerPeriod } from './getFilteredVigilanceAreasPerPeriod'
 
 describe('filterVigilanceAreas', () => {
+  const todayMin2Days = {
+    computedEndDate: undefined,
+    createdAt: undefined,
+    endDatePeriod: `${customDayjs().subtract(11, 'day').format('YYYY-MM-DD')} 23:59:59.99999`,
+    endingCondition: VigilanceArea.EndingCondition.NEVER,
+    endingOccurrenceDate: undefined,
+    endingOccurrencesNumber: undefined,
+    frequency: VigilanceArea.Frequency.ALL_WEEKS,
+    id: 1,
+    isArchived: false,
+    isAtAllTimes: false,
+    isDraft: false,
+    name: 'todayMin2Days',
+    seaFront: 'MED',
+    startDatePeriod: `${customDayjs().subtract(12, 'day').format('YYYY-MM-DD')} 00:00:00.00000`,
+    updatedAt: undefined
+  }
   const today = {
     computedEndDate: `${customDayjs().add(1, 'year').format('YYYY-MM-DD')} 23:59:59.99999`,
     createdAt: undefined,
@@ -13,7 +30,7 @@ describe('filterVigilanceAreas', () => {
     endingOccurrenceDate: `${customDayjs().add(1, 'year').format('YYYY-MM-DD')} 23:59:59.00000`,
     endingOccurrencesNumber: undefined,
     frequency: VigilanceArea.Frequency.ALL_MONTHS,
-    id: 1,
+    id: 2,
     isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
@@ -23,14 +40,14 @@ describe('filterVigilanceAreas', () => {
     updatedAt: undefined
   }
   const quarter = {
-    computedEndDate: `${customDayjs().startOf('quarter').add(3, 'weeks').format('YYYY-MM-DD')} 23:59:59.99999`,
+    computedEndDate: `${customDayjs().endOf('quarter').add(3, 'weeks').format('YYYY-MM-DD')} 23:59:59.99999`,
     createdAt: undefined,
-    endDatePeriod: `${customDayjs().endOf('quarter').format('YYYY-MM-DD')} 00:00:00.00000`,
+    endDatePeriod: `${customDayjs().endOf('quarter').format('YYYY-MM-DD')} 23:59:59.99999`,
     endingCondition: VigilanceArea.EndingCondition.OCCURENCES_NUMBER,
     endingOccurrenceDate: undefined,
     endingOccurrencesNumber: 3,
     frequency: VigilanceArea.Frequency.ALL_WEEKS,
-    id: 2,
+    id: 3,
     isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
@@ -68,13 +85,30 @@ describe('filterVigilanceAreas', () => {
     endingOccurrenceDate: undefined,
     endingOccurrencesNumber: undefined,
     frequency: VigilanceArea.Frequency.ALL_YEARS,
-    id: 3,
+    id: 5,
     isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
     name: 'Year',
     seaFront: 'MED',
     startDatePeriod: `${customDayjs().add(3, 'days').format('YYYY-MM-DD')} 00:00:00.00000`,
+    updatedAt: undefined
+  }
+  const allYear = {
+    computedEndDate: undefined,
+    createdAt: undefined,
+    endDatePeriod: `${customDayjs('12/31/2024').format('YYYY-MM-DD')} 23:59:59.99999`,
+    endingCondition: VigilanceArea.EndingCondition.NEVER,
+    endingOccurrenceDate: undefined,
+    endingOccurrencesNumber: undefined,
+    frequency: VigilanceArea.Frequency.ALL_YEARS,
+    id: 6,
+    isArchived: false,
+    isAtAllTimes: false,
+    isDraft: false,
+    name: 'allYear',
+    seaFront: 'MED',
+    startDatePeriod: `${customDayjs('01/01/2024').format('YYYY-MM-DD')} 00:00:00.00000`,
     updatedAt: undefined
   }
 
@@ -86,7 +120,7 @@ describe('filterVigilanceAreas', () => {
     endingOccurrenceDate: undefined,
     endingOccurrencesNumber: undefined,
     frequency: undefined,
-    id: 5,
+    id: 7,
     isArchived: false,
     isAtAllTimes: true,
     isDraft: false,
@@ -96,26 +130,26 @@ describe('filterVigilanceAreas', () => {
     updatedAt: undefined
   }
 
-  const areas = [today, quarter, year, outsideFilteredDate, infinite]
+  const areas = [todayMin2Days, today, quarter, year, allYear, outsideFilteredDate, infinite]
 
   it('filters areas for today', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT)
-    expect(result).toEqual([today, quarter, infinite])
+    expect(result).toEqual([today, quarter, allYear, infinite])
   })
 
   it('filters areas within current quarter', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER)
-    expect(result).toEqual([today, quarter, year, infinite])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within current year', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_YEAR)
-    expect(result).toEqual([today, quarter, year, infinite])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within next three months', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS)
-    expect(result).toEqual([today, quarter, year, infinite])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
   it('filters areas with vigilance area one complete year', () => {
     const vigilanceAreaOneCompleteYear = {
