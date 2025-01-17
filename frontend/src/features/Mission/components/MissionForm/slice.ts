@@ -1,4 +1,4 @@
-import { type ControlUnit } from '@mtes-mct/monitor-ui'
+import { undefine, type ControlUnit } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { Infraction, Mission, NewInfraction, NewMission } from '../../../../domain/entities/missions'
@@ -144,7 +144,7 @@ const missionFormsSlice = createSlice({
           missionForm: {
             // We keep all data not received from the Mission event (see MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES)
             ...mission.missionForm,
-            ...action.payload
+            ...undefine(action.payload)
           } as Mission
         }
       }
