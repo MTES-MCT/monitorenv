@@ -8,17 +8,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Geometry
 import org.springframework.dao.DataIntegrityViolationException
@@ -29,7 +24,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 @Repository
 class JpaReportingRepository(
@@ -89,7 +84,7 @@ class JpaReportingRepository(
         targetTypes: List<TargetTypeEnum>?,
         isAttachedToMission: Boolean?,
         searchQuery: String?,
-    ): List<ReportingDTO> {
+    ): List<ReportingsDTO> {
         val pageable =
             if (pageNumber != null && pageSize != null) {
                 PageRequest.of(pageNumber, pageSize)
@@ -107,7 +102,7 @@ class JpaReportingRepository(
             targetTypes = targetTypes,
             isAttachedToMission = isAttachedToMission,
         )
-            .map { it.toReportingDTO(mapper) }.filter { findBySearchQuery(it.reporting, searchQuery) }
+            .map { it.toReportingsDTO(mapper) }.filter { findBySearchQuery(it.reporting, searchQuery) }
     }
 
     private fun findBySearchQuery(

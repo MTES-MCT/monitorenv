@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingsDTO
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
@@ -24,7 +24,7 @@ class GetReportingsUTest {
     fun `execute should retrieve all reportings with given criteria`(log: CapturedOutput) {
         // Given
         val now = ZonedDateTime.now()
-        val reportings = listOf(aReportingDTO(id = 1), aReportingDTO(id = 2), aReportingDTO(id = 3))
+        val reportings = listOf(aReportingsDTO(id = 1), aReportingsDTO(id = 2), aReportingsDTO(id = 3))
         given(
             reportingRepository.findAll(
                 pageNumber = null,
@@ -68,7 +68,7 @@ class GetReportingsUTest {
         log: CapturedOutput,
     ) {
         // Given
-        val reportings = listOf(aReportingDTO(id = 1), aReportingDTO(id = 2), aReportingDTO(id = 3))
+        val reportings = listOf(aReportingsDTO(id = 1), aReportingsDTO(id = 2), aReportingsDTO(id = 3))
 
         val now = ZonedDateTime.now()
         mockkStatic(ZonedDateTime::class)

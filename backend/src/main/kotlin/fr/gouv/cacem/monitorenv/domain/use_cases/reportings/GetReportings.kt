@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
@@ -27,7 +27,7 @@ class GetReportings(
         targetTypes: List<TargetTypeEnum>?,
         isAttachedToMission: Boolean?,
         searchQuery: String?,
-    ): List<ReportingDTO> {
+    ): List<ReportingsDTO> {
         logger.info("Attempt to get reportings with criteria")
         val now = ZonedDateTime.now()
         val reports =

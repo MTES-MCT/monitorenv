@@ -48,7 +48,7 @@ class JpaReportingSourceRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(reportingSourceDTO.reportingSource.id).isNotNull()
-        assertThat(reportingSourceDTO.controlUnit?.controlUnit?.id).isEqualTo(reportingSourceEntity.controlUnitId)
+        assertThat(reportingSourceDTO.controlUnit?.id).isEqualTo(reportingSourceEntity.controlUnitId)
         assertThat(reportingSourceDTO.semaphore).isNull()
     }
 
