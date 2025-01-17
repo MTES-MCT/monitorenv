@@ -118,7 +118,7 @@ data class MissionDataOutput(
                 detachedReportingIds = dto.detachedReportingIds,
                 detachedReportings =
                     dto.detachedReportings?.map {
-                        MissionDetachedReportingDataOutput.fromReporting(it.reporting)
+                        MissionDetachedReportingDataOutput.fromReporting(it)
                     },
                 isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
                 hasRapportNavActions =
