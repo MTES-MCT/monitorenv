@@ -27,7 +27,10 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
             """
         UPDATE vigilance_areas
         SET is_archived = TRUE
-        WHERE computed_end_date IS NOT NULL AND computed_end_date < NOW() AND is_archived IS FALSE
+        WHERE computed_end_date IS NOT NULL
+            AND computed_end_date < NOW()
+            AND is_archived IS FALSE
+            AND is_at_all_times IS FALSE
     """,
         nativeQuery = true,
     )
