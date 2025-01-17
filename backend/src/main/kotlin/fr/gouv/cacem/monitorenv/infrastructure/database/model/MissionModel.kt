@@ -326,7 +326,7 @@ class MissionModel(
             detachedReportings =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc != null }
-                    ?.map { it.toReportingDTO(objectMapper) }
+                    ?.map { it.toReporting() }
                     ?: listOf(),
             detachedReportingIds =
                 this.attachedReportings
