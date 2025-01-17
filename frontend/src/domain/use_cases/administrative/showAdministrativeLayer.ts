@@ -1,5 +1,5 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import _ from 'lodash'
+import { find, flatten } from 'lodash'
 import GeoJSON from 'ol/format/GeoJSON'
 import VectorImageLayer from 'ol/layer/VectorImage'
 import { bbox as bboxStrategy } from 'ol/loadingstrategy'
@@ -10,6 +10,9 @@ import { getAdministrativeLayersStyle } from '../../../features/map/layers/style
 import { administrativeLayers } from '../../entities/administrativeLayers'
 import { LayerType } from '../../entities/layers/constants'
 
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
+
 const IRRETRIEVABLE_FEATURES_EVENT = 'IRRETRIEVABLE_FEATURES'
 
 const setIrretrievableFeaturesEvent = error => ({
@@ -19,7 +22,7 @@ const setIrretrievableFeaturesEvent = error => ({
 
 export const getAdministrativeVectorLayer = layerId => {
   // TODO Type these `any`.
-  const layerDefinition: any = _.find(_.flatten(administrativeLayers as any), (l: any) => l.code === layerId)
+  const layerDefinition: any = find(flatten(administrativeLayers as any), (l: any) => l.code === layerId)
   const code = layerDefinition?.groupCode || layerDefinition?.code
   const zone = layerDefinition?.groupCode ? layerDefinition?.code : undefined
   const layer = new VectorImageLayer({
@@ -30,13 +33,7 @@ export const getAdministrativeVectorLayer = layerId => {
       type: LayerType.ADMINISTRATIVE
     },
     source: getAdministrativeVectorSourceBBOXStrategy(code, zone),
-    style: getAdministrativeLayersStyle(code),
-    // TODO TS tells this prop doesn't exist, does it?
-    // `updateWhileAnimating` & `updateWhileInteracting` don't exist
-    // => https://github.com/openlayers/openlayers/issues/11250#issuecomment-654150900 (interesting thread by the way)
-    // @ts-ignore
-    updateWhileAnimating: true,
-    updateWhileInteracting: true
+    style: getAdministrativeLayersStyle(code)
   })
 
   return layer
@@ -58,8 +55,9 @@ function getAdministrativeVectorSourceBBOXStrategy(code, subZone) {
       getAdministrativeZoneFromAPI(code, extent, subZone)
         .then(administrativeZone => {
           vectorSource.clear(true)
-          // TODO Type this `any`.
-          vectorSource.addFeatures(vectorSource.getFormat()?.readFeatures(administrativeZone) as any)
+          const features: Feature<Geometry>[] = vectorSource.getFormat()?.readFeatures(administrativeZone) ?? []
+
+          vectorSource.addFeatures(features)
         })
         .catch(e => {
           // TODO Type this `any`.
