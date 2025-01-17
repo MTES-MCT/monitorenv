@@ -5,22 +5,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.JdbcType
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "reportings_source")
@@ -61,7 +50,7 @@ class ReportingSourceModel(
         ReportingSourceDTO(
             reportingSource = this.toReportingSource(),
             semaphore = semaphore?.toSemaphore(),
-            controlUnit = controlUnit?.toFullControlUnit(),
+            controlUnit = controlUnit?.toControlUnit(),
         )
 
     override fun equals(other: Any?): Boolean {

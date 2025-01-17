@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.*
@@ -142,6 +143,23 @@ abstract class AbstractReportingModel(
             withVHFAnswer = withVHFAnswer,
             isInfractionProven = isInfractionProven,
         )
+
+    fun toReportingsDTO(objectMapper: ObjectMapper): ReportingsDTO {
+        val reporting = this.toReporting()
+        return ReportingsDTO(
+            reporting = reporting,
+            reportingSources = reportingSources.map { it.toReportingSourceDTO() },
+            attachedMission =
+                if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
+                ) {
+                    mission?.toMissionEntityWithoutControlUnit(
+                        objectMapper,
+                    )
+                } else {
+                    null
+                },
+        )
+    }
 
     fun toReportingDTO(objectMapper: ObjectMapper): ReportingDTO {
         val reporting = this.toReporting()

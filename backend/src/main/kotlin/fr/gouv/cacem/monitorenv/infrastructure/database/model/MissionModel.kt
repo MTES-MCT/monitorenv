@@ -15,11 +15,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import jakarta.persistence.*
-import jakarta.persistence.CascadeType
-import jakarta.persistence.OrderBy
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
-import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -271,6 +266,10 @@ class MissionModel(
             }
 
         return buildMissionEntity(mappedControlUnits, objectMapper)
+    }
+
+    fun toMissionEntityWithoutControlUnit(objectMapper: ObjectMapper): MissionEntity {
+        return buildMissionEntity(null, objectMapper)
     }
 
     fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {

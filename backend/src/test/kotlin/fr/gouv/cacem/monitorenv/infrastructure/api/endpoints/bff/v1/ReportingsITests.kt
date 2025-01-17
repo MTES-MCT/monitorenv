@@ -11,15 +11,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.ArchiveReportings
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
@@ -42,10 +37,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -326,7 +318,7 @@ class ReportingsITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingDTO(
+            ReportingsDTO(
                 reporting =
                     ReportingEntity(
                         id = 1,
