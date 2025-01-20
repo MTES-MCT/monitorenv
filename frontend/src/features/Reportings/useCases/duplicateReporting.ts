@@ -29,6 +29,11 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
         id,
         isArchived: false,
         openBy: undefined,
+        reportingId: undefined,
+        reportingSources: reportingResponse.reportingSources.map(reportingSource => ({
+          ...reportingSource,
+          id: undefined
+        })),
         updatedAtUtc: undefined
       })
     }
