@@ -66,7 +66,7 @@ class MissionValidator : Validator<MissionEntity> {
             }
 
             if (envAction is EnvActionSurveillanceEntity) {
-                validateSurveillance(envAction, mission)
+                validateSurveillance(envAction, mission, isMissionEnded)
             }
         }
     }
@@ -78,11 +78,14 @@ class MissionValidator : Validator<MissionEntity> {
     ) {
         validateEnvAction(control, mission)
 
-        if (isMissionEnded && control.vehicleType === null && control.actionTargetType === ActionTargetTypeEnum.VEHICLE) {
-            throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "Le type de véhicule est obligatoire",
-            )
+        if (isMissionEnded) {
+            if (control.vehicleType === null && control.actionTargetType === ActionTargetTypeEnum.VEHICLE) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "Le type de véhicule est obligatoire",
+                )
+            }
+            validateControlPlan(control)
         }
 
         val sumOfNbTarget = control.infractions?.sumOf { infraction -> infraction.nbTarget }
@@ -112,6 +115,7 @@ class MissionValidator : Validator<MissionEntity> {
     private fun validateSurveillance(
         surveillance: EnvActionSurveillanceEntity,
         mission: MissionEntity,
+        isMissionEnded: Boolean,
     ) {
         validateEnvAction(surveillance, mission)
 
@@ -120,6 +124,9 @@ class MissionValidator : Validator<MissionEntity> {
                 BackendUsageErrorCode.UNVALID_PROPERTY,
                 "Le trigramme \"complété par\" doit avoir 3 lettres",
             )
+        }
+        if (isMissionEnded) {
+            validateControlPlan(surveillance)
         }
     }
 
@@ -161,6 +168,26 @@ class MissionValidator : Validator<MissionEntity> {
                 BackendUsageErrorCode.UNVALID_PROPERTY,
                 "Le trigramme \"ouvert par\" doit avoir 3 lettres",
             )
+        }
+
+
+    }
+
+    private fun validateControlPlan(envAction: EnvActionEntity) {
+        if (envAction.controlPlans?.isEmpty() == true) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le plan de contrôle est obligatoire",
+            )
+        } else {
+            envAction.controlPlans?.forEach { controlPlan ->
+                if (controlPlan.subThemeIds?.isEmpty() == true) {
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
+                        "Le sous-thème du plan de contrôle est obligatoire",
+                    )
+                }
+            }
         }
     }
 }

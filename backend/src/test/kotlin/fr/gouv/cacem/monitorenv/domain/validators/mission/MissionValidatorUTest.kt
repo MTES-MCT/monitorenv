@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.validators.mission
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -215,6 +216,27 @@ class MissionValidatorUTest {
     }
 
     @Test
+    fun `validate should throw an exception if there is a control without control plans when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val anEnvActionControl = anEnvActionControl(controlPlans = listOf())
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(assertThrows.message).isEqualTo("Le plan de contrôle est obligatoire")
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a control with control plan without subtheme when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val anEnvActionControl =
+            anEnvActionControl(controlPlans = listOf(EnvActionControlPlanEntity(subThemeIds = listOf())))
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(assertThrows.message).isEqualTo("Le sous-thème du plan de contrôle est obligatoire")
+    }
+
+    @Test
     fun `validate should throw an exception if there is a control actionTargetType as VEHICULE without vehiculeType when mission has ended`() {
         val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
         val anEnvActionControl = anEnvActionControl(actionTargetTypeEnum = ActionTargetTypeEnum.VEHICLE)
@@ -316,6 +338,27 @@ class MissionValidatorUTest {
             )
 
         missionValidator.validate(mission)
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a surveillance without control plans when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val anEnvActionSurveillance = anEnvActionSurveillance(controlPlans = listOf())
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionSurveillance))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(assertThrows.message).isEqualTo("Le plan de contrôle est obligatoire")
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a surveillance with control plan without subtheme when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val anEnvActionSurveillance =
+            anEnvActionSurveillance(controlPlans = listOf(EnvActionControlPlanEntity(subThemeIds = listOf())))
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionSurveillance))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(assertThrows.message).isEqualTo("Le sous-thème du plan de contrôle est obligatoire")
     }
 
     @Test
