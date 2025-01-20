@@ -1,4 +1,5 @@
 import { useGetStationsQuery } from '@api/stationsAPI'
+import { controlUnitListDialogActions } from '@features/ControlUnit/components/ControlUnitListDialog/slice'
 import { centerOnStation } from '@features/ControlUnit/useCases/centerOnStation'
 import { isMissionNew } from '@features/Mission/utils'
 import {
@@ -186,7 +187,7 @@ export function ControlUnitSelector({
     resourcesHelpers.setValue(nextControlUnitResources)
   }
 
-  const zoomOnStation = () => {
+  const zoomOnStation = async () => {
     const selectedControlUnit = controlUnitsData?.find(controlUnit => controlUnit.id === unitField.value)
     const stations = uniqBy(
       bases?.filter(base =>
@@ -197,11 +198,13 @@ export function ControlUnitSelector({
     if (!selectedControlUnit) {
       return
     }
+
     dispatch(
       globalActions.setDisplayedItems({
         displayStationLayer: true
       })
     )
+    await dispatch(controlUnitListDialogActions.resetFilters())
     dispatch(centerOnStation(stations))
   }
 
