@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -190,6 +191,20 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         // Then
         val archivedVigilanceArea = jpaVigilanceAreaRepository.findById(5)
         assertThat(archivedVigilanceArea?.isArchived).isEqualTo(true)
+    }
+
+    @Test
+    @Transactional
+    fun `archive should not archive limitless vigilance areas`() {
+        // Given
+        val limitlessVigilanceArea =
+            VigilanceAreaFixture.aVigilanceAreaEntity().copy(id = null, isAtAllTimes = true)
+        val savedVigilanceArea = jpaVigilanceAreaRepository.save(limitlessVigilanceArea)
+        // When
+        jpaVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
+        // Then
+        val archivedVigilanceArea = jpaVigilanceAreaRepository.findById(savedVigilanceArea.id!!)
+        assertThat(archivedVigilanceArea?.isArchived).isEqualTo(false)
     }
 
     @Test
