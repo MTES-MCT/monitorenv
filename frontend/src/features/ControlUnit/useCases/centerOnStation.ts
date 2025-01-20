@@ -10,6 +10,8 @@ import { addBufferToExtent } from '../utils'
 import type { HomeAppThunk } from '@store/index'
 import type { Station } from 'domain/entities/station'
 
+const FIVE_SECONDS = 5000
+
 export const centerOnStation =
   (stations: Station.Station[] | Station.StationData[]): HomeAppThunk =>
   dispatch => {
@@ -43,4 +45,8 @@ export const centerOnStation =
     }
 
     dispatch(stationActions.hightlightFeatureIds(highlightedStationFeatureIds))
+
+    setTimeout(() => {
+      dispatch(stationActions.hightlightFeatureIds([]))
+    }, FIVE_SECONDS)
   }

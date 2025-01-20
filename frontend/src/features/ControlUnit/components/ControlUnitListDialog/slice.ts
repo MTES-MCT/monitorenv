@@ -22,6 +22,9 @@ const controlUnitListDialogSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'controlUnitListDialog',
   reducers: {
+    resetFilters() {
+      return INITIAL_STATE
+    },
     setFilter(
       state,
       action: PayloadAction<{
