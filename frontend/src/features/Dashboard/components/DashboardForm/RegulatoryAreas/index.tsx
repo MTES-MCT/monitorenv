@@ -1,7 +1,6 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
@@ -12,7 +11,7 @@ import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { ListLayerGroup } from './ListLayerGroup'
 import { RegulatoryPanel } from './Panel'
-import { SelectedLayerList } from '../style'
+import { SelectedLayerList, StyledLayerList } from '../style'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
@@ -114,12 +113,6 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     )
   }
 )
-
-const StyledLayerList = styled(LayerSelector.LayerList)`
-  overflow: hidden;
-  height: auto;
-  max-height: 100%;
-`
 
 const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`
   left: ${p =>

@@ -1,7 +1,6 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
@@ -12,7 +11,7 @@ import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
-import { SelectedLayerList } from '../style'
+import { SelectedLayerList, StyledLayerList } from '../style'
 
 import type { AMP, AMPFromAPI } from 'domain/entities/AMPs'
 
@@ -100,11 +99,6 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
     )
   }
 )
-
-const StyledLayerList = styled(LayerSelector.LayerList)`
-  overflow: hidden;
-  height: auto;
-`
 
 const StyledPanel = styled(AmpPanel)<{ $marginLeft?: number }>`
   left: ${p =>
