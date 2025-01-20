@@ -83,7 +83,8 @@ class EnvActionFixture {
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,
             openBy: String? = "CDA",
-            controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
+            controlPlans: List<EnvActionControlPlanEntity>? =
+                listOf(EnvActionControlPlanEntity(subThemeIds = listOf(1))),
         ): EnvActionSurveillanceEntity {
             return EnvActionSurveillanceEntity(
                 id = UUID.randomUUID(),

@@ -217,7 +217,7 @@ class MissionValidatorUTest {
 
     @Test
     fun `validate should throw an exception if there is a control without control plans when mission has ended`() {
-        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
         val anEnvActionControl = anEnvActionControl(controlPlans = listOf())
         val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
 
@@ -227,7 +227,7 @@ class MissionValidatorUTest {
 
     @Test
     fun `validate should throw an exception if there is a control with control plan without subtheme when mission has ended`() {
-        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
         val anEnvActionControl =
             anEnvActionControl(controlPlans = listOf(EnvActionControlPlanEntity(subThemeIds = listOf())))
         val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
@@ -238,7 +238,7 @@ class MissionValidatorUTest {
 
     @Test
     fun `validate should throw an exception if there is a control actionTargetType as VEHICULE without vehiculeType when mission has ended`() {
-        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
         val anEnvActionControl = anEnvActionControl(actionTargetTypeEnum = ActionTargetTypeEnum.VEHICLE)
         val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
 
@@ -251,7 +251,7 @@ class MissionValidatorUTest {
     fun `validate should pass if there is a control actionTargetType as targetType other than VEHICLE without vehiculeType when mission has ended`(
         targetType: ActionTargetTypeEnum,
     ) {
-        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
         val anEnvActionControl = anEnvActionControl(actionTargetTypeEnum = targetType)
         val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
 
@@ -342,7 +342,7 @@ class MissionValidatorUTest {
 
     @Test
     fun `validate should throw an exception if there is a surveillance without control plans when mission has ended`() {
-        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
         val anEnvActionSurveillance = anEnvActionSurveillance(controlPlans = listOf())
         val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionSurveillance))
 
@@ -352,7 +352,7 @@ class MissionValidatorUTest {
 
     @Test
     fun `validate should throw an exception if there is a surveillance with control plan without subtheme when mission has ended`() {
-        val endDateTimeUtc = ZonedDateTime.now().plusSeconds(1)
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
         val anEnvActionSurveillance =
             anEnvActionSurveillance(controlPlans = listOf(EnvActionControlPlanEntity(subThemeIds = listOf())))
         val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionSurveillance))

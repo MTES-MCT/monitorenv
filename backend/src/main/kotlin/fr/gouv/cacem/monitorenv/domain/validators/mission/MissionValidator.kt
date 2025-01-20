@@ -58,7 +58,7 @@ class MissionValidator : Validator<MissionEntity> {
 
     private fun validateEnvActions(mission: MissionEntity) {
         val isMissionEnded =
-            mission.endDateTimeUtc != null && (mission.endDateTimeUtc?.isAfter(ZonedDateTime.now()) == true)
+            mission.endDateTimeUtc != null && ZonedDateTime.now().isAfter(mission.endDateTimeUtc)
 
         mission.envActions?.forEach { envAction ->
             if (envAction is EnvActionControlEntity) {
