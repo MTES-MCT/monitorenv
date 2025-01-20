@@ -169,8 +169,6 @@ class MissionValidator : Validator<MissionEntity> {
                 "Le trigramme \"ouvert par\" doit avoir 3 lettres",
             )
         }
-
-
     }
 
     private fun validateControlPlan(envAction: EnvActionEntity) {
