@@ -82,7 +82,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
     ]
   )
 
-  const [pdf, update] = usePDF({ document: <Brief brief={brief} /> })
+  const [pdf, update] = usePDF()
 
   const handleDownload = () => {
     setIsGenerating(true)
