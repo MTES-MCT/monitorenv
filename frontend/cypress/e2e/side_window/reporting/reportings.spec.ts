@@ -39,12 +39,23 @@ context('Reportings', () => {
 
     cy.fill('Saisi par', 'CDA')
 
-    cy.wait('@createReporting').then(({ response }) => {
+    cy.wait('@createReporting').then(({ request, response }) => {
+      const reportingRequest: Reporting = request.body
+      expect(reportingRequest.reportingSources[0]?.id).equal(null)
+      expect(reportingRequest.id).equal(null)
+      expect(reportingRequest.reportingId).equal(null)
+
       const reporting: Reporting = response?.body
       expect(reporting.reportingSources[0]?.sourceName).equal('Reporting dupliqué')
+      expect(reporting.reportingSources[0]?.id).not.equal(null)
       expect(reporting.description).equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
       expect(reporting.reportType).equal('OBSERVATION')
       expect(reporting.openBy).equal('CDA')
+
+      // clean
+      cy.wait(250)
+      cy.clickButton('Supprimer le signalement')
+      cy.clickButton('Confirmer la suppression')
     })
   })
 
@@ -60,6 +71,7 @@ context('Reportings', () => {
       expect(response && response.statusCode).equal(204)
     })
   })
+
   it('Multiples reportings can be opened or created and saved in store', () => {
     cy.getDataCy('status-filter-Archivés').click()
 

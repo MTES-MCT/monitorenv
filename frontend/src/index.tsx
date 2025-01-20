@@ -1,5 +1,6 @@
 import { browserTracingIntegration } from '@sentry/browser'
 import { init } from '@sentry/react'
+import { isCypress } from '@utils/isCypress'
 import { measureScrollbarWidth } from '@utils/styleHelpers'
 import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { isEmpty } from 'lodash'
@@ -39,11 +40,20 @@ const root = createRoot(container)
 
 const { oidcConfig } = getOIDCConfig()
 
-root.render(
-  <StrictMode>
-    {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+if (isCypress()) {
+  root.render(
+    // eslint-disable-next-line react/jsx-props-no-spreading
     <AuthProvider {...oidcConfig}>
       <App />
     </AuthProvider>
-  </StrictMode>
-)
+  )
+} else {
+  root.render(
+    <StrictMode>
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+      <AuthProvider {...oidcConfig}>
+        <App />
+      </AuthProvider>
+    </StrictMode>
+  )
+}
