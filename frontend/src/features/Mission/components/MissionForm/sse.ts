@@ -1,9 +1,11 @@
+import { undefine } from '@mtes-mct/monitor-ui'
+
 import { isMissionAutoUpdateEnabled } from './utils'
 
 import type { Mission } from '../../../../domain/entities/missions'
 
 export const missionEventListener = (callback: (mission: Mission) => void) => (event: MessageEvent) => {
-  const mission = JSON.parse(event.data) as Mission
+  const mission = undefine(JSON.parse(event.data)) as Mission
 
   // eslint-disable-next-line no-console
   console.log(`SSE: received a mission update.`)
