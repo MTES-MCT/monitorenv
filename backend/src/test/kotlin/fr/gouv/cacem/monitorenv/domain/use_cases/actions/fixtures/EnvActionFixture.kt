@@ -63,6 +63,8 @@ class EnvActionFixture {
             actionNumberOfControls: Int? = infractions.size,
             actionTargetTypeEnum: ActionTargetTypeEnum? = null,
             vehicleTypeEnum: VehicleTypeEnum? = null,
+            controlPlans: List<EnvActionControlPlanEntity>? =
+                listOf(EnvActionControlPlanEntity(subThemeIds = listOf(1))),
         ): EnvActionControlEntity {
             return EnvActionControlEntity(
                 id = UUID.randomUUID(),
@@ -73,6 +75,7 @@ class EnvActionFixture {
                 actionNumberOfControls = actionNumberOfControls,
                 actionTargetType = actionTargetTypeEnum,
                 vehicleType = vehicleTypeEnum,
+                controlPlans = controlPlans,
             )
         }
 
@@ -80,6 +83,7 @@ class EnvActionFixture {
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,
             openBy: String? = "CDA",
+            controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
         ): EnvActionSurveillanceEntity {
             return EnvActionSurveillanceEntity(
                 id = UUID.randomUUID(),
@@ -87,6 +91,7 @@ class EnvActionFixture {
                 actionEndDateTimeUtc = endTime,
                 openBy = openBy,
                 awareness = null,
+                controlPlans = controlPlans,
             )
         }
 

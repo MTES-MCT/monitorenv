@@ -14,10 +14,12 @@ class ReportingFixture {
     companion object {
         fun aReporting(
             id: Int? = null,
-            reportingSources: List<ReportingSourceEntity> = listOf(),
+            reportingSources: List<ReportingSourceEntity> = listOf(aReportingSourceSemaphore()),
             missionId: Int? = null,
             attachedToMissionAtUtc: ZonedDateTime? = null,
             attachedEnvActionId: UUID? = null,
+            validityTime: Int = 10,
+            openBy: String = "CDA",
         ): ReportingEntity {
             val wktReader = WKTReader()
 
@@ -40,11 +42,11 @@ class ReportingFixture {
                 isControlRequired = true,
                 hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                validityTime = 10,
+                validityTime = validityTime,
                 isArchived = false,
                 isDeleted = false,
                 updatedAtUtc = ZonedDateTime.now(),
-                openBy = "CDA",
+                openBy = openBy,
                 isInfractionProven = true,
                 missionId = missionId,
                 attachedToMissionAtUtc = attachedToMissionAtUtc,
@@ -113,6 +115,20 @@ class ReportingFixture {
                 semaphoreId = null,
                 controlUnitId = controlUnitId,
                 sourceName = null,
+            )
+        }
+
+        fun aReportingSourceOther(
+            reportingId: Int? = null,
+            sourceName: String = "test",
+        ): ReportingSourceEntity {
+            return ReportingSourceEntity(
+                id = null,
+                reportingId = reportingId,
+                sourceType = SourceTypeEnum.OTHER,
+                semaphoreId = null,
+                controlUnitId = null,
+                sourceName = sourceName,
             )
         }
     }

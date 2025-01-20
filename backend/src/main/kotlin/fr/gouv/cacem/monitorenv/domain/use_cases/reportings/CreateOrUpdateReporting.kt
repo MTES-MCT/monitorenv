@@ -6,6 +6,8 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedExcept
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
+import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
+import fr.gouv.cacem.monitorenv.domain.validators.reporting.ReportingValidator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
@@ -20,7 +22,10 @@ class CreateOrUpdateReporting(
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
     @Throws(IllegalArgumentException::class)
-    fun execute(reporting: ReportingEntity): ReportingDetailsDTO {
+    fun execute(
+        @UseCaseValidation<ReportingEntity>(validator = ReportingValidator::class)
+        reporting: ReportingEntity,
+    ): ReportingDetailsDTO {
         logger.info("Attempt to CREATE or UPDATE reporting ${reporting.id}")
         reporting.validate()
 
