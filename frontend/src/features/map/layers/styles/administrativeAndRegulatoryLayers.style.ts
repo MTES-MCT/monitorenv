@@ -114,7 +114,6 @@ export const getAdministrativeLayersStyle = (code: String) => {
               fill: new Fill({ color: THEME.color.gunMetal }),
               font: '16px Marianne',
               overflow: true,
-              repeat: 1,
               stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
               text: `${feature.get(Layers.DEPARTMENTS.zoneFieldKey) ?? ''}`
             })
