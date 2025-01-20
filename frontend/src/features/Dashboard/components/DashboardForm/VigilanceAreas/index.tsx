@@ -1,7 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
@@ -12,7 +11,7 @@ import { Accordion } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { Layer } from './Layer'
 import { Panel } from './Panel'
-import { SelectedLayerList } from '../style'
+import { SelectedLayerList, StyledLayerList } from '../style'
 
 type VigilanceAreasProps = {
   columnWidth: number
@@ -63,7 +62,6 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
         >
           <StyledLayerList
             $baseLayersLength={vigilanceAreas.length}
-            $maxHeight={100}
             $showBaseLayers={isExpanded}
             data-cy="dashboard-vigilance-areas-list"
           >
@@ -97,10 +95,6 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
   }
 )
 
-const StyledLayerList = styled(LayerSelector.LayerList)`
-  height: auto;
-  overflow: hidden;
-`
 const StyledPanel = styled(Panel)<{ $marginLeft: number }>`
   left: ${p =>
     `calc(
