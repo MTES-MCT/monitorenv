@@ -5,7 +5,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -79,6 +82,12 @@ class MissionValidator : Validator<MissionEntity> {
         validateEnvAction(control, mission)
 
         if (isMissionEnded) {
+            if (control.geom === null) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "La géométrie du contrôle est obligatoire",
+                )
+            }
             if (control.vehicleType === null && control.actionTargetType === ActionTargetTypeEnum.VEHICLE) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
@@ -109,6 +118,32 @@ class MissionValidator : Validator<MissionEntity> {
                     "le nombre minimum de cible est 1",
                 )
             }
+            if (isMissionEnded) {
+                if (infraction.infractionType === InfractionTypeEnum.WAITING) {
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
+                        "Le type d'infraction ne peut pas être \"en attente\"",
+                    )
+                }
+                if (infraction.seizure === SeizureTypeEnum.PENDING) {
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
+                        "L'appréhension/saisie ne peut pas être \"en attente\"",
+                    )
+                }
+                if (infraction.administrativeResponse === AdministrativeResponseEnum.PENDING) {
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
+                        "La réponse administrative ne peut pas être \"en attente\"",
+                    )
+                }
+                if (infraction.formalNotice === FormalNoticeEnum.PENDING) {
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
+                        "La mise en demeure ne peut pas être \"en attente\"",
+                    )
+                }
+            }
         }
     }
 
@@ -119,10 +154,29 @@ class MissionValidator : Validator<MissionEntity> {
     ) {
         validateEnvAction(surveillance, mission)
 
+        if (surveillance.geom === null) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La géométrie de la surveillance est obligatoire",
+            )
+        }
         if (surveillance.completedBy !== null && surveillance.completedBy.length != NB_CHAR_MAX) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
                 "Le trigramme \"complété par\" doit avoir 3 lettres",
+            )
+        }
+        if (surveillance.actionEndDateTimeUtc?.isAfter(mission.endDateTimeUtc) == true
+        ) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La date de fin de la surveillance doit être antérieure à celle de fin de mission",
+            )
+        }
+        if (surveillance.actionEndDateTimeUtc?.isBefore(mission.startDateTimeUtc) == true) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La date de fin de la surveillance doit être postérieure à celle du début de mission",
             )
         }
         if (isMissionEnded) {
@@ -135,9 +189,7 @@ class MissionValidator : Validator<MissionEntity> {
         mission: MissionEntity,
     ) {
         val actionType = if (envAction.actionType === ActionTypeEnum.CONTROL) "du contrôle" else "de la surveillance"
-        if (envAction.actionStartDateTimeUtc?.isAfter(mission.startDateTimeUtc) == false &&
-            envAction.actionStartDateTimeUtc?.isEqual(mission.startDateTimeUtc) == false
-        ) {
+        if (envAction.actionStartDateTimeUtc?.isBefore(mission.startDateTimeUtc) == true) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
                 "La date de début $actionType doit être postérieure à celle du début de mission",
@@ -147,20 +199,6 @@ class MissionValidator : Validator<MissionEntity> {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
                 "La date de début $actionType doit être antérieure à celle de fin de mission",
-            )
-        }
-        if (envAction.actionEndDateTimeUtc?.isBefore(mission.endDateTimeUtc) == false &&
-            envAction.actionEndDateTimeUtc?.isEqual(mission.endDateTimeUtc) == false
-        ) {
-            throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La date de fin $actionType doit être antérieure à celle de fin de mission",
-            )
-        }
-        if (envAction.actionEndDateTimeUtc?.isBefore(mission.startDateTimeUtc) == true) {
-            throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La date de fin $actionType doit être postérieure à celle du début de mission",
             )
         }
         if (envAction.openBy?.length != NB_CHAR_MAX) {

@@ -20,6 +20,10 @@ class ReportingFixture {
             attachedEnvActionId: UUID? = null,
             validityTime: Int = 10,
             openBy: String = "CDA",
+            targetType: TargetTypeEnum? = TargetTypeEnum.VEHICLE,
+            description: String? = "description",
+            themeId: Int? = 1,
+            subThemeIds: List<Int>? = listOf(10, 11),
         ): ReportingEntity {
             val wktReader = WKTReader()
 
@@ -29,15 +33,15 @@ class ReportingFixture {
 
             return ReportingEntity(
                 id = id,
-                targetType = TargetTypeEnum.VEHICLE,
+                targetType = targetType,
                 reportingSources = reportingSources,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
                 seaFront = "Facade 1",
-                description = "description",
+                description = description,
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                themeId = 1,
-                subThemeIds = listOf(10, 11),
+                themeId = themeId,
+                subThemeIds = subThemeIds,
                 actionTaken = "actions effectuées ",
                 isControlRequired = true,
                 hasNoUnitAvailable = true,

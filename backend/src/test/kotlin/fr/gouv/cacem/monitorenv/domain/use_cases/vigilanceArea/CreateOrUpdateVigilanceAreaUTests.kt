@@ -47,6 +47,7 @@ class CreateOrUpdateVigilanceAreaUTests {
                 createdAt = null,
                 updatedAt = null,
                 isAtAllTimes = false,
+                name = "test_name",
             )
 
         val expectedVigilanceArea = newVigilanceArea.copy(id = 0)

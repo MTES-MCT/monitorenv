@@ -6,7 +6,15 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
+
+private val polygon =
+    WKTReader()
+        .read(
+            "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+        ) as MultiPolygon
 
 class VigilanceAreaFixture {
     companion object {
@@ -21,10 +29,12 @@ class VigilanceAreaFixture {
             endCondition: EndingConditionEnum = EndingConditionEnum.OCCURENCES_NUMBER,
             endingOccurrencesNumber: Int? = 2,
             isAtAllTimes: Boolean = false,
+            geom: MultiPolygon? = polygon,
+            comments: String? = "Basic area comments",
         ): VigilanceAreaEntity {
             return VigilanceAreaEntity(
                 id = 1,
-                comments = "Basic area comments",
+                comments = comments,
                 computedEndDate = ZonedDateTime.parse("2024-01-25T00:00:00Z"),
                 createdBy = createdBy,
                 endDatePeriod = endDate,
@@ -33,7 +43,7 @@ class VigilanceAreaFixture {
                 endingOccurrencesNumber = endingOccurrencesNumber,
                 images = null,
                 frequency = frequency,
-                geom = null,
+                geom = geom,
                 isArchived = false,
                 isDeleted = false,
                 isDraft = isDraft,

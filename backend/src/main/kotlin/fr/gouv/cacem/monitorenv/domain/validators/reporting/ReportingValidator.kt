@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.validators.reporting
 
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.validators.Validator
@@ -64,6 +65,13 @@ class ReportingValidator : Validator<ReportingEntity> {
                     }
                 }
             }
+        }
+
+        if (reporting.targetType === TargetTypeEnum.OTHER && reporting.description === null) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La description de la cible est obligatoire",
+            )
         }
     }
 }

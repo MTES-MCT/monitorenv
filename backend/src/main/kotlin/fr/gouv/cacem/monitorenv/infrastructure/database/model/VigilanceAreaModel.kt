@@ -89,7 +89,7 @@ data class VigilanceAreaModel(
     val linkedAMPs: List<Int>? = listOf(),
     @Column(name = "linked_regulatory_areas", columnDefinition = "int[]")
     val linkedRegulatoryAreas: List<Int>? = listOf(),
-    @Column(name = "name") val name: String? = null,
+    @Column(name = "name", nullable = false) val name: String,
     @Column(name = "start_date_period") val startDatePeriod: Instant? = null,
     @Column(name = "sea_front") val seaFront: String? = null,
     @Column(name = "source") val source: String? = null,
