@@ -16,7 +16,7 @@ data class CreateOrUpdateReportingDataInput(
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
-    val geom: Geometry? = null,
+    val geom: Geometry,
     val description: String? = null,
     val reportType: ReportingTypeEnum,
     val themeId: Int,
