@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMis
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.aMonitorFishAction
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -36,7 +36,7 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         // Given
         val missionId = 100
 
-        val missionFromDatabase = MissionDTO(mission = MissionFixture.aMissionEntity())
+        val missionFromDatabase = MissionDetailsDTO(mission = MissionFixture.aMissionEntity())
         given(getFullMission.execute(missionId)).willReturn(missionFromDatabase)
 
         val fishActions = listOf(aMonitorFishAction(missionId))
@@ -62,7 +62,7 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         // Given
         val missionId = 100
 
-        val missionFromDatabase = MissionDTO(mission = MissionFixture.aMissionEntity())
+        val missionFromDatabase = MissionDetailsDTO(mission = MissionFixture.aMissionEntity())
         given(getFullMission.execute(missionId)).willReturn(missionFromDatabase)
 
         val fishActions = listOf(aMonitorFishAction(missionId))
@@ -86,7 +86,7 @@ class GetFullMissionWithFishAndRapportNavActionsUTest {
         // Given
         val missionId = 100
 
-        val missionFromDatabase = MissionDTO(mission = MissionFixture.aMissionEntity())
+        val missionFromDatabase = MissionDetailsDTO(mission = MissionFixture.aMissionEntity())
         given(getFullMission.execute(missionId)).willReturn(missionFromDatabase)
 
         given(monitorFishMissionActionsRepository.findFishMissionActionsById(missionId)).willThrow(

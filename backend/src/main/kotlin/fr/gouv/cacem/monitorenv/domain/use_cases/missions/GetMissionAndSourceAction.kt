@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMonitorFishMissionActionsRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IRapportNavMissionActionsRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import org.slf4j.LoggerFactory
 
 @UseCase
@@ -18,11 +18,11 @@ class GetMissionAndSourceAction(
     fun execute(
         missionId: Int,
         source: MissionSourceEnum?,
-    ): MissionDTO {
+    ): MissionDetailsDTO {
         logger.info("GET mission $missionId and source action")
         getMission.execute(missionId).let {
             when (source) {
-                MissionSourceEnum.MONITORFISH -> return MissionDTO(
+                MissionSourceEnum.MONITORFISH -> return MissionDetailsDTO(
                     it,
                     hasRapportNavActions =
                         apiRapportNavMissionActionsRepository.findRapportNavMissionActionsById(
@@ -30,12 +30,12 @@ class GetMissionAndSourceAction(
                         ),
                 )
 
-                MissionSourceEnum.RAPPORT_NAV -> return MissionDTO(
+                MissionSourceEnum.RAPPORT_NAV -> return MissionDetailsDTO(
                     it,
                     fishActions = apiFishMissionActionsRepository.findFishMissionActionsById(missionId),
                 )
 
-                else -> return MissionDTO(it)
+                else -> return MissionDetailsDTO(it)
             }
         }
     }

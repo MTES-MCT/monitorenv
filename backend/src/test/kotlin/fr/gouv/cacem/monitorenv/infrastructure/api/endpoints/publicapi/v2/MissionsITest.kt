@@ -14,7 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixtu
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionAndSourceAction
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.PatchMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -27,13 +27,11 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.Optional
+import java.util.*
 import kotlin.random.Random
 
 @Import(SentryConfig::class, MapperConfiguration::class)
@@ -88,7 +86,7 @@ class MissionsITest {
             )
 
         given(patchMission.execute(id, patchableMissionEntity))
-            .willReturn(MissionDTO(mission = patchedMission))
+            .willReturn(MissionDetailsDTO(mission = patchedMission))
 
         // When
         mockMvc.perform(
@@ -183,7 +181,7 @@ class MissionsITest {
         val mission = aMissionEntity()
         given(getMissionAndSourceAction.execute(id, source))
             .willReturn(
-                MissionDTO(
+                MissionDetailsDTO(
                     mission,
                     hasRapportNavActions = RapportNavMissionActionEntity(1, true),
                 ),
@@ -211,7 +209,7 @@ class MissionsITest {
         val mission = aMissionEntity()
         given(getMissionAndSourceAction.execute(id, source))
             .willReturn(
-                MissionDTO(
+                MissionDetailsDTO(
                     mission,
                     fishActions = listOf(aMonitorFishAction(id)),
                 ),
@@ -238,7 +236,7 @@ class MissionsITest {
         val mission = aMissionEntity()
         given(getMissionAndSourceAction.execute(id, null))
             .willReturn(
-                MissionDTO(
+                MissionDetailsDTO(
                     mission,
                 ),
             )

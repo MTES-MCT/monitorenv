@@ -6,8 +6,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.apache.commons.lang3.StringUtils
@@ -48,7 +48,7 @@ class JpaMissionRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
         searchQuery: String?,
-    ): List<MissionsDTO> {
+    ): List<MissionListDTO> {
         val pageable =
             if (pageNumber != null && pageSize != null) {
                 PageRequest.of(pageNumber, pageSize)
@@ -67,7 +67,7 @@ class JpaMissionRepository(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
         )
-            .map { it.toMissionsDTO(mapper) }.filter { findBySearchQuery(it.mission, searchQuery) }
+            .map { it.toMissionListDTO(mapper) }.filter { findBySearchQuery(it.mission, searchQuery) }
     }
 
     @Transactional
@@ -161,7 +161,7 @@ class JpaMissionRepository(
     }
 
     @Transactional
-    override fun findFullMissionById(missionId: Int): MissionDTO? {
+    override fun findFullMissionById(missionId: Int): MissionDetailsDTO? {
         return dbMissionRepository.findByIdOrNull(missionId)?.toMissionDTO(mapper)
     }
 
@@ -171,7 +171,7 @@ class JpaMissionRepository(
     }
 
     @Transactional
-    override fun save(mission: MissionEntity): MissionDTO {
+    override fun save(mission: MissionEntity): MissionDetailsDTO {
         // Extract all control units resources unique control unit resource IDs
         val uniqueControlUnitResourceIds =
             mission.controlUnits

@@ -3,8 +3,8 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import java.time.Instant
 
 interface IMissionRepository {
@@ -12,7 +12,7 @@ interface IMissionRepository {
 
     fun delete(missionId: Int)
 
-    fun findFullMissionById(missionId: Int): MissionDTO?
+    fun findFullMissionById(missionId: Int): MissionDetailsDTO?
 
     fun findById(missionId: Int): MissionEntity?
 
@@ -27,7 +27,7 @@ interface IMissionRepository {
         startedAfter: Instant,
         startedBefore: Instant?,
         searchQuery: String?,
-    ): List<MissionsDTO>
+    ): List<MissionListDTO>
 
     fun findAll(
         controlUnitIds: List<Int>? = null,
@@ -48,5 +48,5 @@ interface IMissionRepository {
 
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity>
 
-    fun save(mission: MissionEntity): MissionDTO
+    fun save(mission: MissionEntity): MissionDetailsDTO
 }

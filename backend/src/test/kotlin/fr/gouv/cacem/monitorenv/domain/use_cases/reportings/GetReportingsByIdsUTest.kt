@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDetailsDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,7 +20,8 @@ class GetReportingsByIdsUTest {
     fun `execute should retrieve reportings that match ids`(log: CapturedOutput) {
         // Given
         val ids = listOf(1, 2, 3)
-        val reportings = listOf(aReportingDTO(id = 1), aReportingDTO(id = 2), aReportingDTO(id = 3))
+        val reportings =
+            listOf(aReportingDetailsDTO(id = 1), aReportingDetailsDTO(id = 2), aReportingDetailsDTO(id = 3))
         given(reportingRepository.findAllById(ids)).willReturn(reportings)
 
         // When

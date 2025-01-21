@@ -7,14 +7,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
 import java.util.UUID
 
 object TestUtils {
-    fun getReportingDTO(id: Int): ReportingDTO {
+    fun getReportingDTO(id: Int): ReportingDetailsDTO {
         val polygon =
             WKTReader()
                 .read(
@@ -30,7 +30,7 @@ object TestUtils {
                 controlUnitId = null,
                 sourceName = null,
             )
-        return ReportingDTO(
+        return ReportingDetailsDTO(
             reporting =
                 ReportingEntity(
                     id = id,
@@ -75,7 +75,7 @@ object TestUtils {
         )
     }
 
-    fun getReportingDTOWithAttachedMission(id: Int): ReportingDTO {
+    fun getReportingDTOWithAttachedMission(id: Int): ReportingDetailsDTO {
         val polygon =
             WKTReader()
                 .read(
@@ -90,7 +90,7 @@ object TestUtils {
                 controlUnitId = null,
                 sourceName = null,
             )
-        return ReportingDTO(
+        return ReportingDetailsDTO(
             reporting =
                 ReportingEntity(
                     id = id,

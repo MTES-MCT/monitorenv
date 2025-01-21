@@ -10,8 +10,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.*
@@ -144,9 +144,9 @@ abstract class AbstractReportingModel(
             isInfractionProven = isInfractionProven,
         )
 
-    fun toReportingsDTO(objectMapper: ObjectMapper): ReportingsDTO {
+    fun toReportingListDTO(objectMapper: ObjectMapper): ReportingListDTO {
         val reporting = this.toReporting()
-        return ReportingsDTO(
+        return ReportingListDTO(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             attachedMission =
@@ -161,9 +161,9 @@ abstract class AbstractReportingModel(
         )
     }
 
-    fun toReportingDTO(objectMapper: ObjectMapper): ReportingDTO {
+    fun toReportingDetailsDTO(objectMapper: ObjectMapper): ReportingDetailsDTO {
         val reporting = this.toReporting()
-        return ReportingDTO(
+        return ReportingDetailsDTO(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             attachedMission =

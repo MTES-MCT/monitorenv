@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
 import org.locationtech.jts.geom.Geometry
@@ -37,7 +37,7 @@ data class MissionAttachedReportingDataOutput(
     val missionId: Int? = null,
 ) {
     companion object {
-        fun fromReportingDTO(dto: ReportingDTO): MissionAttachedReportingDataOutput {
+        fun fromReportingDTO(dto: ReportingDetailsDTO): MissionAttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return MissionAttachedReportingDataOutput(
                 id = dto.reporting.id,

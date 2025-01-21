@@ -1,10 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -14,7 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTOWithAttachedMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -28,7 +24,7 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -64,14 +60,14 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         val attachedReportingIds = listOf(1, 2, 3)
 
         val expectedCreatedMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission = aMissionEntity(),
                 attachedReportingIds = attachedReportingIds,
             )
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
+            .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
@@ -160,7 +156,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         val attachedReportingIds = listOf(1, 2, 3)
 
         val expectedCreatedMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = 100,
@@ -184,7 +180,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
+            .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
@@ -245,11 +241,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         // Given
         val missionToCreate = aMissionEntity(id = 100)
 
-        val expectedCreatedMission = MissionDTO(mission = aMissionEntity())
+        val expectedCreatedMission = MissionDetailsDTO(mission = aMissionEntity())
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
+            .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(false, expectedCreatedMission))
 
         // When
@@ -276,11 +272,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     fun `Should create a mission doesn't call getFullMissionWithFishAndRapportNavActions`() {
         val missionToCreate = aMissionEntity(id = null)
 
-        val expectedCreatedMission = MissionDTO(aMissionEntity(100))
+        val expectedCreatedMission = MissionDetailsDTO(aMissionEntity(100))
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
+            .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(getFullMission.execute(100)).willReturn(expectedCreatedMission)
 
         // When

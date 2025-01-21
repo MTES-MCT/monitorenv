@@ -7,8 +7,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
@@ -62,13 +62,13 @@ class JpaReportingRepository(
     }
 
     // FIXME (25/07/2024) : passer par le findByIdOrNull et refacto
-    override fun findById(reportingId: Int): ReportingDTO {
-        return dbReportingRepository.findById(reportingId).get().toReportingDTO(mapper)
+    override fun findById(reportingId: Int): ReportingDetailsDTO {
+        return dbReportingRepository.findById(reportingId).get().toReportingDetailsDTO(mapper)
     }
 
     @Transactional
-    override fun findAllById(reportingId: List<Int>): List<ReportingDTO> {
-        return dbReportingRepository.findAllById(reportingId).map { it.toReportingDTO(mapper) }
+    override fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO> {
+        return dbReportingRepository.findAllById(reportingId).map { it.toReportingDetailsDTO(mapper) }
     }
 
     @Transactional
@@ -84,7 +84,7 @@ class JpaReportingRepository(
         targetTypes: List<TargetTypeEnum>?,
         isAttachedToMission: Boolean?,
         searchQuery: String?,
-    ): List<ReportingsDTO> {
+    ): List<ReportingListDTO> {
         val pageable =
             if (pageNumber != null && pageSize != null) {
                 PageRequest.of(pageNumber, pageSize)
@@ -102,7 +102,7 @@ class JpaReportingRepository(
             targetTypes = targetTypes,
             isAttachedToMission = isAttachedToMission,
         )
-            .map { it.toReportingsDTO(mapper) }.filter { findBySearchQuery(it.reporting, searchQuery) }
+            .map { it.toReportingListDTO(mapper) }.filter { findBySearchQuery(it.reporting, searchQuery) }
     }
 
     private fun findBySearchQuery(
@@ -138,13 +138,13 @@ class JpaReportingRepository(
         return dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting() }
     }
 
-    override fun findByMissionId(missionId: Int): List<ReportingDTO> {
-        return dbReportingRepository.findByMissionId(missionId).map { it.toReportingDTO(mapper) }
+    override fun findByMissionId(missionId: Int): List<ReportingDetailsDTO> {
+        return dbReportingRepository.findByMissionId(missionId).map { it.toReportingDetailsDTO(mapper) }
     }
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    override fun save(reporting: ReportingEntity): ReportingDTO {
+    override fun save(reporting: ReportingEntity): ReportingDetailsDTO {
         return try {
             val missionReference =
                 if (reporting.missionId != null) {
@@ -232,7 +232,7 @@ class JpaReportingRepository(
                 )
             }
 
-            dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
+            dbReportingRepository.saveAndFlush(reportingModel).toReportingDetailsDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(
                 "Invalid reference to semaphore, control unit or mission: not found in referential",

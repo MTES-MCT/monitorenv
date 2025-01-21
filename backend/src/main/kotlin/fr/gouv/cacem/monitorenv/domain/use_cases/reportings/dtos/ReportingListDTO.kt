@@ -4,11 +4,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ControlStatusEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 
-data class ReportingDTO(
+data class ReportingListDTO(
     val reporting: ReportingEntity,
     val reportingSources: List<ReportingSourceDTO>,
     val attachedMission: MissionEntity? = null,
-    val detachedMission: MissionEntity? = null,
 ) {
     val controlStatus: ControlStatusEnum?
         get() = getControlStatus(reporting, attachedMission)

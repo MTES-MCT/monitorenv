@@ -12,12 +12,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
@@ -90,7 +90,7 @@ class ReportingsITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingDTO(
+            ReportingDetailsDTO(
                 reporting =
                     ReportingEntity(
                         id = 1,
@@ -225,7 +225,7 @@ class ReportingsITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingDTO(
+            ReportingDetailsDTO(
                 reporting =
                     ReportingEntity(
                         id = 1,
@@ -318,7 +318,7 @@ class ReportingsITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingsDTO(
+            ReportingListDTO(
                 reporting =
                     ReportingEntity(
                         id = 1,
@@ -380,7 +380,7 @@ class ReportingsITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val updatedReporting =
-            ReportingDTO(
+            ReportingDetailsDTO(
                 reporting =
                     ReportingEntity(
                         id = 1,
@@ -532,9 +532,9 @@ class ReportingsITests {
         val ids = listOf(1, 2, 3)
         given(getReportingsByIds.execute(ids)).willReturn(
             listOf(
-                aReportingDTO(1),
-                aReportingDTO(2),
-                aReportingDTO(3),
+                aReportingDetailsDTO(1),
+                aReportingDetailsDTO(2),
+                aReportingDetailsDTO(3),
             ),
         )
         // When
@@ -561,7 +561,7 @@ class ReportingsITests {
                 )
         val updateReportingEvent =
             UpdateReportingEvent(
-                ReportingDTO(
+                ReportingDetailsDTO(
                     reporting =
                         ReportingEntity(
                             id = 1,

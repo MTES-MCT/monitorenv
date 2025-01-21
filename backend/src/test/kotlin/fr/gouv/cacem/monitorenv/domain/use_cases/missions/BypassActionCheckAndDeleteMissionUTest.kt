@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDetailsDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,7 +14,7 @@ import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(OutputCaptureExtension::class)
 class BypassActionCheckAndDeleteMissionUTest {
@@ -30,16 +30,16 @@ class BypassActionCheckAndDeleteMissionUTest {
         val missionId = 1
         val attachedReportingIds = listOf(1)
         given(getFullMission.execute(missionId)).willReturn(
-            MissionFixture.aMissionDTO(attachedReportingIds = attachedReportingIds),
+            MissionFixture.aMissionDetailsDTO(attachedReportingIds = attachedReportingIds),
         )
         val attachedEnvActionId = UUID.randomUUID()
-        val aReportingDTO = aReportingDTO(id = 1, attachedEnvActionId = attachedEnvActionId)
-        given(reportingRepository.findById(attachedReportingIds[0])).willReturn(aReportingDTO)
+        val aReportingDetailsDTO = aReportingDetailsDTO(id = 1, attachedEnvActionId = attachedEnvActionId)
+        given(reportingRepository.findById(attachedReportingIds[0])).willReturn(aReportingDetailsDTO)
         val detachedFromMissionAtUtc = ZonedDateTime.now()
         val savedReporting =
-            aReportingDTO(
+            aReportingDetailsDTO(
                 reporting =
-                    aReportingDTO.reporting.copy(
+                    aReportingDetailsDTO.reporting.copy(
                         detachedFromMissionAtUtc = detachedFromMissionAtUtc,
                         attachedEnvActionId = null,
                     ),

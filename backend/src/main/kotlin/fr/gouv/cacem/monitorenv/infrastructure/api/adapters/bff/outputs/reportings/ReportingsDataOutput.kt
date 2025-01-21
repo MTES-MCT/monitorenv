@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ControlStatusEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -41,7 +41,7 @@ data class ReportingsDataOutput(
     val isInfractionProven: Boolean,
 ) {
     companion object {
-        fun fromReportingDTO(dto: ReportingsDTO): ReportingsDataOutput {
+        fun fromReportingDTO(dto: ReportingListDTO): ReportingsDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingsDataOutput(
                 id = dto.reporting.id,

@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionControlDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionNoteDataOutput
@@ -44,7 +44,7 @@ data class MissionDataOutput(
     val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
 ) {
     companion object {
-        fun fromMissionDTO(dto: MissionDTO): MissionDataOutput {
+        fun fromMissionDTO(dto: MissionDetailsDTO): MissionDataOutput {
             requireNotNull(dto.mission.id) { "a mission must have an id" }
 
             return MissionDataOutput(

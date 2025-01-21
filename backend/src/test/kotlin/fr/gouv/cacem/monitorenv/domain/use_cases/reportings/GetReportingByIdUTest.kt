@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDetailsDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,7 +20,7 @@ class GetReportingByIdUTest {
     fun `execute should get reporting with given id`(log: CapturedOutput) {
         // Given
         val id = 1
-        val expectedReportingDTO = aReportingDTO(id = id)
+        val expectedReportingDTO = aReportingDetailsDTO(id = id)
         given(reportingRepository.findById(id)).willReturn(expectedReportingDTO)
 
         // When
