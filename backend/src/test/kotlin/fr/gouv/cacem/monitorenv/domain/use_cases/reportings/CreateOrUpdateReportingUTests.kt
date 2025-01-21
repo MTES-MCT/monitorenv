@@ -16,7 +16,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceSemaphore
@@ -64,11 +64,14 @@ class CreateOrUpdateReportingUTests {
         // Given
         val aReportingWithSemaphore = aReporting(reportingSources = listOf(aReportingSourceSemaphore()))
         val reportingWithSemaphoreDTO =
-            ReportingDTO(reporting = aReporting(reportingSources = listOf(aReportingSourceControlUnit())), listOf())
+            ReportingDetailsDTO(
+                reporting = aReporting(reportingSources = listOf(aReportingSourceControlUnit())),
+                listOf(),
+            )
 
         val aReportingWithControlUnit = aReporting(reportingSources = listOf(aReportingSourceControlUnit()))
         val reportingWithControlUnitDTO =
-            ReportingDTO(reporting = aReportingWithControlUnit, reportingSources = listOf())
+            ReportingDetailsDTO(reporting = aReportingWithControlUnit, reportingSources = listOf())
 
         val wktReader = WKTReader()
         val point = wktReader.read("POINT(-2.7335 47.6078)") as Point
@@ -322,7 +325,7 @@ class CreateOrUpdateReportingUTests {
             aReporting(id = 1, missionId = 1, attachedToMissionAtUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"))
 
         given(reportingRepository.findById(reportingWithNewAttachedMission.id!!))
-            .willReturn(ReportingDTO(reporting = aReporting(id = 2, missionId = 2), reportingSources = listOf()))
+            .willReturn(ReportingDetailsDTO(reporting = aReporting(id = 2, missionId = 2), reportingSources = listOf()))
 
         // Then
         assertThatThrownBy {

@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -42,7 +42,7 @@ class GetEngagedControlUnitsUTests {
                 name = "Control Unit Name",
             )
         val firstMission =
-            MissionsDTO(
+            MissionListDTO(
                 mission =
                     MissionEntity(
                         id = 10,
@@ -66,7 +66,7 @@ class GetEngagedControlUnitsUTests {
                 attachedReportingIds = listOf(),
             )
         val secondMission =
-            MissionsDTO(
+            MissionListDTO(
                 mission =
                     MissionEntity(
                         id = 10,

@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
@@ -33,7 +33,7 @@ data class MissionWithFishAndRapportNavActionsDataOutput(
     val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
 ) : MissionOutput {
     companion object {
-        fun fromMissionDTO(missionDto: MissionDTO): MissionWithFishAndRapportNavActionsDataOutput {
+        fun fromMissionDTO(missionDto: MissionDetailsDTO): MissionWithFishAndRapportNavActionsDataOutput {
             requireNotNull(missionDto.mission.id) { "a mission must have an id" }
 
             return MissionWithFishAndRapportNavActionsDataOutput(

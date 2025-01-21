@@ -1,10 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.argThat
-import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -14,7 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurve
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,7 +24,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -142,7 +138,7 @@ class CreateOrUpdateMissionUTests {
                 },
             ),
         )
-            .willReturn(MissionDTO(mission = expectedCreatedMission))
+            .willReturn(MissionDetailsDTO(mission = expectedCreatedMission))
 
         // When
         val createdMission =
@@ -216,7 +212,7 @@ class CreateOrUpdateMissionUTests {
         given(missionRepository.findById(100))
             .willReturn(missionToUpdate.copy(createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")))
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDTO(mission = returnedSavedMission))
+            .willReturn(MissionDetailsDTO(mission = returnedSavedMission))
 
         // When
         val createdMission =

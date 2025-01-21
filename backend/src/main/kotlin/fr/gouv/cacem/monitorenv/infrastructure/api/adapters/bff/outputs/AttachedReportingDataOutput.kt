@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
 import org.locationtech.jts.geom.Geometry
@@ -38,7 +38,7 @@ data class AttachedReportingDataOutput(
     val withVHFAnswer: Boolean? = null,
 ) {
     companion object {
-        fun fromReportingDTO(dto: ReportingDTO): AttachedReportingDataOutput {
+        fun fromReportingDTO(dto: ReportingDetailsDTO): AttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return AttachedReportingDataOutput(
                 id = dto.reporting.id,

@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
@@ -62,7 +62,7 @@ data class MissionWithRapportNavActionsDataOutput(
             )
         }
 
-        fun fromMissionDTO(missionDto: MissionDTO): MissionWithRapportNavActionsDataOutput {
+        fun fromMissionDTO(missionDto: MissionDetailsDTO): MissionWithRapportNavActionsDataOutput {
             requireNotNull(missionDto.mission.id) { "a mission must have an id" }
 
             return MissionWithRapportNavActionsDataOutput(

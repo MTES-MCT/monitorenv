@@ -22,9 +22,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
@@ -52,25 +52,31 @@ import java.util.*
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(Missions::class)])
 class MissionsITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
     @MockitoBean
     private lateinit var createOrUpdateMissionWithActionsAndAttachedReporting:
         CreateOrUpdateMissionWithActionsAndAttachedReporting
 
-    @MockitoBean private lateinit var getFullMissions: GetFullMissions
+    @MockitoBean
+    private lateinit var getFullMissions: GetFullMissions
 
     @MockitoBean
     private lateinit var getFullMissionWithFishAndRapportNavActions:
         GetFullMissionWithFishAndRapportNavActions
 
-    @MockitoBean private lateinit var deleteMission: DeleteMission
+    @MockitoBean
+    private lateinit var deleteMission: DeleteMission
 
-    @MockitoBean private lateinit var canDeleteMission: CanDeleteMission
+    @MockitoBean
+    private lateinit var canDeleteMission: CanDeleteMission
 
-    @MockitoBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+    @MockitoBean
+    private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     private val polygon =
         WKTReader()
@@ -84,7 +90,7 @@ class MissionsITests {
     fun `Should create a new mission`() {
         // Given
         val expectedNewMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = 10,
@@ -145,7 +151,7 @@ class MissionsITests {
         val requestedId = 0
 
         val expectedFirstMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = 10,
@@ -213,7 +219,7 @@ class MissionsITests {
             )
 
         val expectedFirstMission =
-            MissionsDTO(
+            MissionListDTO(
                 mission =
                     MissionEntity(
                         id = 10,
@@ -454,7 +460,7 @@ class MissionsITests {
             )
 
         val expectedFirstMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = 10,
@@ -500,7 +506,7 @@ class MissionsITests {
                 attachedReportingIds = listOf(1),
                 attachedReportings =
                     listOf(
-                        ReportingDTO(
+                        ReportingDetailsDTO(
                             reporting =
                                 ReportingEntity(
                                     id = 1,
@@ -697,7 +703,7 @@ class MissionsITests {
     fun `update mission should return updated mission`() {
         // Given
         val expectedUpdatedMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = 14,

@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -38,7 +38,7 @@ class GetFullMissionUTest {
     fun `execute should return a mission`(log: CapturedOutput) {
         // Given
         val missionId = Random.nextInt()
-        val missionFromDatabase = MissionDTO(MissionFixture.aMissionEntity())
+        val missionFromDatabase = MissionDetailsDTO(MissionFixture.aMissionEntity())
         given(missionRepository.findFullMissionById(missionId)).willReturn(missionFromDatabase)
 
         // When

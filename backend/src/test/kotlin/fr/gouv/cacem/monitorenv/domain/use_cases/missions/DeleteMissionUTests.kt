@@ -11,9 +11,9 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
@@ -46,20 +46,20 @@ class DeleteMissionUTests {
             .willReturn(CanDeleteMissionResponse(true, listOf()))
         given(getFullMission.execute(missionId))
             .willReturn(
-                MissionDTO(
+                MissionDetailsDTO(
                     mission = missionToDelete,
                     attachedReportingIds = listOf(1),
                 ),
             )
         given(reportingRepository.findById(1)).willReturn(
-            ReportingDTO(
+            ReportingDetailsDTO(
                 reporting = reporting,
                 reportingSources = listOf(),
             ),
         )
         given(reportingRepository.save(expectedUpdatedReporting))
             .willReturn(
-                ReportingDTO(reporting = expectedUpdatedReporting, reportingSources = listOf()),
+                ReportingDetailsDTO(reporting = expectedUpdatedReporting, reportingSources = listOf()),
             )
 
         deleteMission.execute(missionId, MissionSourceEnum.MONITORFISH)
@@ -86,7 +86,7 @@ class DeleteMissionUTests {
             .willReturn(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV)))
         given(getFullMission.execute(missionId))
             .willReturn(
-                MissionDTO(
+                MissionDetailsDTO(
                     mission = missionToDelete,
                     attachedReportingIds = null,
                 ),
@@ -121,7 +121,7 @@ class DeleteMissionUTests {
             .willReturn(CanDeleteMissionResponse(true, listOf()))
         given(getFullMission.execute(missionId))
             .willReturn(
-                MissionDTO(
+                MissionDetailsDTO(
                     mission = missionToDelete,
                     attachedReportingIds = listOf(),
                 ),

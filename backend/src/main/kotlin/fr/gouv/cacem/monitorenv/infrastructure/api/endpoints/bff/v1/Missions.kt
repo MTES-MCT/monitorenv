@@ -129,7 +129,7 @@ class Missions(
                 seaFronts = seaFronts,
                 searchQuery = searchQuery,
             )
-        return missions.map { MissionsDataOutput.fromMissionDTO(it) }
+        return missions.map { MissionsDataOutput.fromMissionListDTO(it) }
     }
 
     // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity

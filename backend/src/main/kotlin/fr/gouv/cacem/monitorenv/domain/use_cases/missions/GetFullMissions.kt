@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
@@ -23,7 +23,9 @@ class GetFullMissions(
         pageSize: Int?,
         seaFronts: List<String>?,
         searchQuery: String?,
-    ): List<MissionsDTO> {
+    ): List<MissionListDTO> {
+        logger.info("Attempt to GET all full missions")
+
         val missions =
             missionRepository.findAllFullMissions(
                 startedAfter =

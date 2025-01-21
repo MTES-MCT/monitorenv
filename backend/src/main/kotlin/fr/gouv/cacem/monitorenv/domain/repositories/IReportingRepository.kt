@@ -4,8 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
 import java.util.*
@@ -48,17 +48,17 @@ interface IReportingRepository {
         targetTypes: List<TargetTypeEnum>?,
         isAttachedToMission: Boolean?,
         searchQuery: String?,
-    ): List<ReportingsDTO>
+    ): List<ReportingListDTO>
 
     fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity>
 
-    fun findByMissionId(missionId: Int): List<ReportingDTO>
+    fun findByMissionId(missionId: Int): List<ReportingDetailsDTO>
 
-    fun findById(reportingId: Int): ReportingDTO
+    fun findById(reportingId: Int): ReportingDetailsDTO
 
-    fun findAllById(reportingId: List<Int>): List<ReportingDTO>
+    fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO>
 
-    fun save(reporting: ReportingEntity): ReportingDTO
+    fun save(reporting: ReportingEntity): ReportingDetailsDTO
 
     fun findAllIdsByGeometry(geometry: Geometry): List<Int>
 }

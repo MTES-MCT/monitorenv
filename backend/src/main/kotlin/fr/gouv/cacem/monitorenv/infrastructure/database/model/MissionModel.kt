@@ -11,8 +11,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import jakarta.persistence.*
 import org.hibernate.Hibernate
@@ -272,7 +272,7 @@ class MissionModel(
         return buildMissionEntity(null, objectMapper)
     }
 
-    fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
+    fun toMissionDTO(objectMapper: ObjectMapper): MissionDetailsDTO {
         val envActionsAttachedToReportingIds =
             attachedReportings?.filter { it.attachedEnvAction != null }?.fold(
                 mutableListOf<EnvActionAttachedToReportingIds>(),
@@ -311,7 +311,7 @@ class MissionModel(
                 return@fold listOfActionsAttached
             }
                 ?: listOf()
-        return MissionDTO(
+        return MissionDetailsDTO(
             mission = this.toMissionEntity(objectMapper),
             attachedReportingIds =
                 this.attachedReportings
@@ -321,7 +321,7 @@ class MissionModel(
             attachedReportings =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc == null }
-                    ?.map { it.toReportingDTO(objectMapper) }
+                    ?.map { it.toReportingDetailsDTO(objectMapper) }
                     ?: listOf(),
             detachedReportings =
                 this.attachedReportings
@@ -351,8 +351,8 @@ class MissionModel(
         return buildMissionEntity(mappedControlUnits, objectMapper)
     }
 
-    fun toMissionsDTO(objectMapper: ObjectMapper): MissionsDTO {
-        return MissionsDTO(
+    fun toMissionListDTO(objectMapper: ObjectMapper): MissionListDTO {
+        return MissionListDTO(
             mission = this.toMissionsEntity(objectMapper),
             attachedReportingIds =
                 this.attachedReportings

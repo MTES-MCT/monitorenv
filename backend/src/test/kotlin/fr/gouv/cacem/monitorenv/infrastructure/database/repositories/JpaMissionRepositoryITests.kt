@@ -14,13 +14,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.BeforeEach
@@ -36,7 +32,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
@@ -421,7 +417,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findById Should return specified mission`() {
         // When
         val firstMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = 10,
@@ -942,7 +938,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 updatedAtUtc = null,
             )
         val expectedUpdatedMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = id,
@@ -1023,7 +1019,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 updatedAtUtc = null,
             )
         val expectedUpdatedMission =
-            MissionDTO(
+            MissionDetailsDTO(
                 mission =
                     MissionEntity(
                         id = id,

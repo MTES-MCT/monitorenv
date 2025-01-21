@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -29,7 +29,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
         mission: MissionEntity,
         attachedReportingIds: List<Int>,
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
-    ): Pair<Boolean, MissionDTO> {
+    ): Pair<Boolean, MissionDetailsDTO> {
         logger.info(
             "Attempt to CREATE or UPDATE mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds",
         )

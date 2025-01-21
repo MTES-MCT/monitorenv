@@ -2,9 +2,9 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingsDTO
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
@@ -52,12 +52,12 @@ class ReportingFixture {
             )
         }
 
-        fun aReportingDTO(
+        fun aReportingDetailsDTO(
             id: Int? = 1,
             attachedEnvActionId: UUID? = null,
             reporting: ReportingEntity = aReporting(id, attachedEnvActionId = attachedEnvActionId),
-        ): ReportingDTO {
-            return ReportingDTO(
+        ): ReportingDetailsDTO {
+            return ReportingDetailsDTO(
                 reporting = reporting,
                 reportingSources =
                     listOf(
@@ -70,12 +70,12 @@ class ReportingFixture {
             )
         }
 
-        fun aReportingsDTO(
+        fun aReportingListDTO(
             id: Int? = 1,
             attachedEnvActionId: UUID? = null,
             reporting: ReportingEntity = aReporting(id, attachedEnvActionId = attachedEnvActionId),
-        ): ReportingsDTO {
-            return ReportingsDTO(
+        ): ReportingListDTO {
+            return ReportingListDTO(
                 reporting = reporting,
                 reportingSources =
                     listOf(

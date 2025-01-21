@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,7 +17,7 @@ import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import java.time.ZonedDateTime
-import java.util.Optional
+import java.util.*
 import kotlin.random.Random
 
 @ExtendWith(OutputCaptureExtension::class)
@@ -50,7 +50,7 @@ class PatchMissionUTest {
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
         patchEntity.execute(missionFromDatabase, patchableMission)
-        given(missionRepository.save(missionPatched)).willReturn(MissionDTO(missionPatched))
+        given(missionRepository.save(missionPatched)).willReturn(MissionDetailsDTO(missionPatched))
 
         // When
         val savedMission = patchMission.execute(id, patchableMission)
