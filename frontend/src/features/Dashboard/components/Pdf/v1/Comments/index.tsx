@@ -16,22 +16,35 @@ export function Comments({ comments }: { comments: string | undefined }) {
     if (uglyComments.length < THRESHOLD) {
       return [uglyComments]
     }
-    const middle = Math.floor(uglyComments.length / 2)
-    const breakPointDot = uglyComments.lastIndexOf('.', middle)
-    const breakPointBreakline = uglyComments.lastIndexOf('\n', middle)
-    const breakPoint = Math.max(breakPointDot, breakPointBreakline)
-    const prettyComments: string[] = []
-    const firstParagraph = uglyComments.slice(0, breakPoint + 1)
-    const secondParagraph = uglyComments.slice(breakPoint + 1)
+    const closeToMiddle = Math.floor(uglyComments.length * (3 / 5))
 
-    if (firstParagraph) {
-      prettyComments.push(firstParagraph)
-    }
-    if (secondParagraph) {
-      prettyComments.push(secondParagraph)
+    // Chercher les points de rupture logiques proches du milieu
+    const punctuations = ['.', '!', '?', ';', ',', ':', '\n', '\r']
+    let breakPoint = -1
+
+    punctuations.forEach(ponctuation => {
+      const lastBeforeMiddle = uglyComments.lastIndexOf(ponctuation, closeToMiddle)
+      if (lastBeforeMiddle > breakPoint) {
+        breakPoint = lastBeforeMiddle
+      }
+    })
+
+    // if no punctuation find the word in the middle
+    if (breakPoint === -1) {
+      const commentWordByWord = uglyComments.split(' ')
+
+      const middleWordIndex = Math.floor(commentWordByWord.length / 2)
+
+      return [
+        commentWordByWord.slice(0, middleWordIndex + 1).join(' '),
+        commentWordByWord.slice(middleWordIndex + 1).join(' ')
+      ].filter(Boolean)
     }
 
-    return prettyComments
+    const firstParagraph = uglyComments.slice(0, breakPoint + 1).trim()
+    const secondParagraph = uglyComments.slice(breakPoint + 1).trim()
+
+    return [firstParagraph, secondParagraph].filter(Boolean)
   }
 
   return (
