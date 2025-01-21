@@ -15,7 +15,7 @@ class MissionFixture {
         fun aMissionEntity(
             id: Int? = Random.nextInt(),
             startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            endDateTimeUtc: ZonedDateTime? = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            endDateTimeUtc: ZonedDateTime? = ZonedDateTime.now().plusDays(1),
             controlUnits: List<LegacyControlUnitEntity> = listOf(aLegacyControlUnit()),
             observationsByUnit: String? = null,
             missionTypes: List<MissionTypeEnum> = listOf(MissionTypeEnum.LAND),

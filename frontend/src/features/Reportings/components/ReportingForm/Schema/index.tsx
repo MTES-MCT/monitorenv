@@ -53,7 +53,7 @@ export const ReportingSchema: Yup.Schema<
 > = Yup.object()
   .shape({
     actionTaken: Yup.string().optional(),
-    createdAt: Yup.string().optional().required('Veuillez définir la date de signalement'),
+    createdAt: Yup.string().required('Veuillez définir la date de signalement'),
     description: Yup.string().when('targetType', {
       is: ReportingTargetTypeEnum.OTHER,
       otherwise: schema => schema.optional(),
@@ -72,7 +72,6 @@ export const ReportingSchema: Yup.Schema<
     openBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le trigramme')
       .max(3, 'Maximum 3 lettres pour le trigramme')
-      .nullable()
       .required('Requis'),
     reportingSources: Yup.array().of(ReportingSourceSchema).min(1).required(),
     reportType: Yup.mixed<ReportingTypeEnum>()
@@ -97,9 +96,8 @@ export const ReportingSchema: Yup.Schema<
       )
       .optional(),
     targetType: Yup.string<ReportingTargetTypeEnum>().optional(),
-    themeId: Yup.number().nullable().required('Veuillez définir la thématique du signalement'),
+    themeId: Yup.number().required('Veuillez définir la thématique du signalement'),
     validityTime: Yup.number()
-      .nullable()
       .required('Veuillez définir la durée de validité du signalement')
       .min(1, 'Veuillez définir une durée de validité supérieure à 0'),
     vehicleType: Yup.string().optional(),

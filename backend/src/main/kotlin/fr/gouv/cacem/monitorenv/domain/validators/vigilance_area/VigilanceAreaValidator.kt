@@ -19,6 +19,18 @@ class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
         logger.info("Validating vigilance area: ${vigilanceArea.id}")
 
         if (!vigilanceArea.isDraft) {
+            if (vigilanceArea.geom === null) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "La géométrie est obligatoire",
+                )
+            }
+            if (vigilanceArea.comments === null) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "Un commentaire est obligatoire",
+                )
+            }
             if (vigilanceArea.createdBy !== null && vigilanceArea.createdBy.length != NB_CHAR_MAX) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,

@@ -2,7 +2,10 @@ package fr.gouv.cacem.monitorenv.domain.validators.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvActionControl
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvActionSurveillance
@@ -79,65 +82,10 @@ class MissionValidatorUTest {
     }
 
     @Test
-    fun `validate should throw an exception if there is a control with a start date after mission ending date`() {
-        val startDateTimeUtc = ZonedDateTime.parse("2019-03-04T00:00:00.000Z")
-        val endDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
-        val anEnvActionControl = anEnvActionControl(endTime = endDateTimeUtc.plusSeconds(1))
-        val mission =
-            aMissionEntity(
-                startDateTimeUtc = startDateTimeUtc,
-                endDateTimeUtc = endDateTimeUtc,
-                envActions = listOf(anEnvActionControl),
-            )
-
-        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
-        assertThat(
-            assertThrows.message,
-        ).isEqualTo("La date de fin du contrôle doit être antérieure à celle de fin de mission")
-    }
-
-    @Test
-    fun `validate should throw an exception if there is a control with an end date after mission ending date`() {
-        val startDateTimeUtc = ZonedDateTime.parse("2019-03-04T00:00:00.000Z")
-        val endDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
-        val anEnvActionControl = anEnvActionControl(endTime = endDateTimeUtc.plusSeconds(1))
-        val mission =
-            aMissionEntity(
-                startDateTimeUtc = startDateTimeUtc,
-                endDateTimeUtc = endDateTimeUtc,
-                envActions = listOf(anEnvActionControl),
-            )
-
-        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
-        assertThat(
-            assertThrows.message,
-        ).isEqualTo("La date de fin du contrôle doit être antérieure à celle de fin de mission")
-    }
-
-    @Test
-    fun `validate should throw an exception if there is a control with an end date before mission starting date`() {
+    fun `validate should pass if there is a control with the same start date as mission's`() {
         val startDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
         val endDateTimeUtc = ZonedDateTime.parse("2021-03-04T00:00:00.000Z")
-
-        val anEnvActionControl = anEnvActionControl(endTime = startDateTimeUtc.minusSeconds(1))
-        val mission =
-            aMissionEntity(
-                startDateTimeUtc = startDateTimeUtc,
-                endDateTimeUtc = endDateTimeUtc,
-                envActions = listOf(anEnvActionControl),
-            )
-
-        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
-        assertThat(
-            assertThrows.message,
-        ).isEqualTo("La date de fin du contrôle doit être postérieure à celle du début de mission")
-    }
-
-    @Test
-    fun `validate should pass if there is a control with an date equal to mission's`() {
-        val startDateTimeUtc = ZonedDateTime.parse("2020-03-04T00:00:00.000Z")
-        val endDateTimeUtc = ZonedDateTime.parse("2021-03-04T00:00:00.000Z")
-        val anEnvActionControl = anEnvActionControl(startTime = startDateTimeUtc, endTime = endDateTimeUtc)
+        val anEnvActionControl = anEnvActionControl(startTime = startDateTimeUtc)
         val mission =
             aMissionEntity(
                 startDateTimeUtc = startDateTimeUtc,
@@ -148,18 +96,87 @@ class MissionValidatorUTest {
         missionValidator.validate(mission)
     }
 
+    @Test
+    fun `validate should pass if there is a control without geometry when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
+        val anEnvActionControl = anEnvActionControl(geom = null)
+        val mission =
+            aMissionEntity(
+                endDateTimeUtc = endDateTimeUtc,
+                envActions = listOf(anEnvActionControl),
+            )
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(assertThrows.message).isEqualTo("La géométrie du contrôle est obligatoire")
+    }
+
     @ParameterizedTest
     @EnumSource(value = InfractionTypeEnum::class, names = ["WAITING"], mode = EnumSource.Mode.EXCLUDE)
     fun `validate should throw an exception if there is a control with infractionType other than WAITING that doesnt have a NATINF`(
         infractionType: InfractionTypeEnum,
     ) {
-        val anEnvActionControl = anEnvActionControl(infractions = listOf(anInfraction(infractionType = infractionType)))
+        val anEnvActionControl =
+            anEnvActionControl(infractions = listOf(anInfraction(infractionType = infractionType, natinf = listOf())))
         val mission = aMissionEntity(envActions = listOf(anEnvActionControl))
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
         assertThat(
             assertThrows.message,
         ).isEqualTo("Une infraction doit avoir une natinf si le type d'infraction n'est pas \"En attente\"")
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a control with infractionType is WAITING when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
+        val anEnvActionControl =
+            anEnvActionControl(infractions = listOf(anInfraction(infractionType = InfractionTypeEnum.WAITING)))
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(
+            assertThrows.message,
+        ).isEqualTo("Le type d'infraction ne peut pas être \"en attente\"")
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a control with administrativeResponse is WAITING when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
+        val anEnvActionControl =
+            anEnvActionControl(
+                infractions = listOf(anInfraction(administrativeResponse = AdministrativeResponseEnum.PENDING)),
+            )
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(
+            assertThrows.message,
+        ).isEqualTo("La réponse administrative ne peut pas être \"en attente\"")
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a control with seizure is PENDING when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
+        val anEnvActionControl =
+            anEnvActionControl(infractions = listOf(anInfraction(seizure = SeizureTypeEnum.PENDING)))
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(
+            assertThrows.message,
+        ).isEqualTo("L'appréhension/saisie ne peut pas être \"en attente\"")
+    }
+
+    @Test
+    fun `validate should throw an exception if there is a control with formalNotice is PENDING when mission has ended`() {
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
+        val anEnvActionControl =
+            anEnvActionControl(infractions = listOf(anInfraction(formalNotice = FormalNoticeEnum.PENDING)))
+        val mission = aMissionEntity(endDateTimeUtc = endDateTimeUtc, envActions = listOf(anEnvActionControl))
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(
+            assertThrows.message,
+        ).isEqualTo("La mise en demeure ne peut pas être \"en attente\"")
     }
 
     @Test
@@ -338,6 +355,20 @@ class MissionValidatorUTest {
             )
 
         missionValidator.validate(mission)
+    }
+
+    @Test
+    fun `validate should pass if there is a surveillance without geometry`() {
+        val endDateTimeUtc = ZonedDateTime.now().minusSeconds(1)
+        val anEnvActionSurveillance = anEnvActionSurveillance(geom = null)
+        val mission =
+            aMissionEntity(
+                endDateTimeUtc = endDateTimeUtc,
+                envActions = listOf(anEnvActionSurveillance),
+            )
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { missionValidator.validate(mission) }
+        assertThat(assertThrows.message).isEqualTo("La géométrie de la surveillance est obligatoire")
     }
 
     @Test

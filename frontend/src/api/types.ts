@@ -4,13 +4,23 @@ export enum ApiErrorCode {
   /** Thrown when attempting to attach a mission to a reporting that has already a mission attached. */
   CHILD_ALREADY_ATTACHED = 'CHILD_ALREADY_ATTACHED',
 
+  /** Thrown when attempting to find an entity that has does not exist. */
+  ENTITY_NOT_FOUND = 'ENTITY_NOT_FOUND',
+
+  /** Thrown when an entity could not be saved. */
+  ENTITY_NOT_SAVED = 'ENTITY_NOT_SAVED',
+
   /** Thrown when attempting to delete a mission that has actions created by other applications. */
   EXISTING_MISSION_ACTION = 'EXISTING_MISSION_ACTION',
 
+  // TO_DELETE ?
   FOREIGN_KEY_CONSTRAINT = 'FOREIGN_KEY_CONSTRAINT',
 
   /** Thrown when attempting to archive an entity linked to non-archived child(ren). */
-  UNARCHIVED_CHILD = 'UNARCHIVED_CHILD'
+  UNARCHIVED_CHILD = 'UNARCHIVED_CHILD',
+
+  /** Thrown when an entity contain an unvalid property. */
+  UNVALID_PROPERTY = 'UNVALID_PROPERTY'
 }
 
 export interface BackendApiErrorResponse {

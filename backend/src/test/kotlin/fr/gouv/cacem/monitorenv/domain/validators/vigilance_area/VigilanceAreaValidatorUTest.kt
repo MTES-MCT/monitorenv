@@ -92,6 +92,24 @@ class VigilanceAreaValidatorUTest {
     }
 
     @Test
+    fun `validate should throw an exception if geometry is null when it is published`() {
+        val vigilanceArea = aVigilanceAreaEntity(geom = null, isDraft = false)
+
+        val assertThrows =
+            assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
+        assertThat(assertThrows.message).isEqualTo("La géométrie est obligatoire")
+    }
+
+    @Test
+    fun `validate should throw an exception if comments are null when it is published`() {
+        val vigilanceArea = aVigilanceAreaEntity(comments = null, isDraft = false)
+
+        val assertThrows =
+            assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
+        assertThat(assertThrows.message).isEqualTo("Un commentaire est obligatoire")
+    }
+
+    @Test
     fun `validate should throw an exception if frequency is null when it is published and it is not limitless`() {
         val vigilanceArea = aVigilanceAreaEntity(frequency = null, isDraft = false)
 

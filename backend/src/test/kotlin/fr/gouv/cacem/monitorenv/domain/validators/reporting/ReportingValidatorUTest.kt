@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.validators.reporting
 
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceControlUnit
@@ -61,6 +62,14 @@ class ReportingValidatorUTest {
 
         val assertThrows = assertThrows(BackendUsageException::class.java) { reportingValidator.validate(reporting) }
         assertThat(assertThrows.message).isEqualTo("La validité du signalement doit être supérieur à 0")
+    }
+
+    @Test
+    fun `validate should throw an exception if targetType is OTHER without description`() {
+        val reporting = aReporting(targetType = TargetTypeEnum.OTHER, description = null)
+
+        val assertThrows = assertThrows(BackendUsageException::class.java) { reportingValidator.validate(reporting) }
+        assertThat(assertThrows.message).isEqualTo("La description de la cible est obligatoire")
     }
 
     @Test
