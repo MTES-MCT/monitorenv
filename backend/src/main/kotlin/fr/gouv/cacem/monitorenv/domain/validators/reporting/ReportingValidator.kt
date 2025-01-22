@@ -24,12 +24,6 @@ class ReportingValidator : Validator<ReportingEntity> {
                 "Le trigramme \"ouvert par\" doit avoir 3 lettres",
             )
         }
-        if (reporting.reportingSources.isEmpty()) {
-            throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "Une source du signalement est obligatoire",
-            )
-        }
         if (reporting.validityTime == 0) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
@@ -42,13 +36,30 @@ class ReportingValidator : Validator<ReportingEntity> {
                 "Un sous-thème est obligatoire",
             )
         }
+        if (reporting.targetType === TargetTypeEnum.OTHER && reporting.description === null) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La description de la cible est obligatoire",
+            )
+        }
+        validateReportingSources(reporting)
+    }
+
+    private fun validateReportingSources(reporting: ReportingEntity) {
+        if (reporting.reportingSources.isEmpty()) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Une source du signalement est obligatoire",
+            )
+        }
         reporting.reportingSources.forEach { source ->
+            val errorMessage = "La source du signalement est invalide"
             when (source.sourceType) {
                 SourceTypeEnum.SEMAPHORE -> {
                     if (source.semaphoreId === null || source.controlUnitId !== null || source.sourceName !== null) {
                         throw BackendUsageException(
                             BackendUsageErrorCode.UNVALID_PROPERTY,
-                            "La source du signalement est invalide",
+                            errorMessage,
                         )
                     }
                 }
@@ -57,7 +68,7 @@ class ReportingValidator : Validator<ReportingEntity> {
                     if (source.semaphoreId !== null || source.controlUnitId === null || source.sourceName !== null) {
                         throw BackendUsageException(
                             BackendUsageErrorCode.UNVALID_PROPERTY,
-                            "La source du signalement est invalide",
+                            errorMessage,
                         )
                     }
                 }
@@ -66,18 +77,11 @@ class ReportingValidator : Validator<ReportingEntity> {
                     if (source.semaphoreId !== null || source.controlUnitId !== null || source.sourceName === null) {
                         throw BackendUsageException(
                             BackendUsageErrorCode.UNVALID_PROPERTY,
-                            "La source du signalement est invalide",
+                            errorMessage,
                         )
                     }
                 }
             }
-        }
-
-        if (reporting.targetType === TargetTypeEnum.OTHER && reporting.description === null) {
-            throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La description de la cible est obligatoire",
-            )
         }
     }
 }

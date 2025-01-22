@@ -97,6 +97,13 @@ class MissionValidator : Validator<MissionEntity> {
             validateControlPlan(control)
         }
 
+        validateInfractions(control, isMissionEnded)
+    }
+
+    private fun validateInfractions(
+        control: EnvActionControlEntity,
+        isMissionEnded: Boolean,
+    ) {
         val sumOfNbTarget = control.infractions?.sumOf { infraction -> infraction.nbTarget }
         if (sumOfNbTarget != 0 && sumOfNbTarget != null && (control.actionNumberOfControls != null && sumOfNbTarget > control.actionNumberOfControls)) {
             throw BackendUsageException(

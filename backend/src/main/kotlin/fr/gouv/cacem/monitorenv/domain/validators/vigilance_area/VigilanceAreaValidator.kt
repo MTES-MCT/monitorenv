@@ -19,64 +19,68 @@ class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
         logger.info("Validating vigilance area: ${vigilanceArea.id}")
 
         if (!vigilanceArea.isDraft) {
-            if (vigilanceArea.geom === null) {
+            validatePublishedVigilanceArea(vigilanceArea)
+        }
+    }
+
+    private fun validatePublishedVigilanceArea(vigilanceArea: VigilanceAreaEntity) {
+        if (vigilanceArea.geom === null) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "La géométrie est obligatoire",
+            )
+        }
+        if (vigilanceArea.comments === null) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Un commentaire est obligatoire",
+            )
+        }
+        if (vigilanceArea.createdBy !== null && vigilanceArea.createdBy.length != NB_CHAR_MAX) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Le trigramme \"créé par\" doit avoir 3 lettres",
+            )
+        }
+        if (vigilanceArea.themes?.isEmpty() == true) {
+            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Un thème est obligatoire")
+        }
+        if (!vigilanceArea.isAtAllTimes) {
+            if (vigilanceArea.startDatePeriod === null) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "La géométrie est obligatoire",
+                    "La date de début est obligatoire",
                 )
             }
-            if (vigilanceArea.comments === null) {
+            if (vigilanceArea.endDatePeriod === null) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "Un commentaire est obligatoire",
+                    "La date de fin est obligatoire",
                 )
             }
-            if (vigilanceArea.createdBy !== null && vigilanceArea.createdBy.length != NB_CHAR_MAX) {
+            if (vigilanceArea.frequency === null) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "Le trigramme \"créé par\" doit avoir 3 lettres",
+                    "La fréquence est obligatoire",
                 )
             }
-            if (vigilanceArea.themes?.isEmpty() == true) {
-                throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Un thème est obligatoire")
+            if (vigilanceArea.frequency !== FrequencyEnum.NONE && vigilanceArea.endingCondition === null) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "La condition de fin est obligatoire",
+                )
             }
-            if (!vigilanceArea.isAtAllTimes) {
-                if (vigilanceArea.startDatePeriod === null) {
-                    throw BackendUsageException(
-                        BackendUsageErrorCode.UNVALID_PROPERTY,
-                        "La date de début est obligatoire",
-                    )
-                }
-                if (vigilanceArea.endDatePeriod === null) {
-                    throw BackendUsageException(
-                        BackendUsageErrorCode.UNVALID_PROPERTY,
-                        "La date de fin est obligatoire",
-                    )
-                }
-                if (vigilanceArea.frequency === null) {
-                    throw BackendUsageException(
-                        BackendUsageErrorCode.UNVALID_PROPERTY,
-                        "La fréquence est obligatoire",
-                    )
-                }
-                if (vigilanceArea.frequency !== FrequencyEnum.NONE && vigilanceArea.endingCondition === null) {
-                    throw BackendUsageException(
-                        BackendUsageErrorCode.UNVALID_PROPERTY,
-                        "La condition de fin est obligatoire",
-                    )
-                }
-                if (vigilanceArea.endingCondition === EndingConditionEnum.END_DATE && vigilanceArea.endingOccurrenceDate === null) {
-                    throw BackendUsageException(
-                        BackendUsageErrorCode.UNVALID_PROPERTY,
-                        "La date de fin de l'occurence est obligatoire",
-                    )
-                }
-                if (vigilanceArea.endingCondition === EndingConditionEnum.OCCURENCES_NUMBER && (vigilanceArea.endingOccurrencesNumber === null || vigilanceArea.endingOccurrencesNumber == 0)) {
-                    throw BackendUsageException(
-                        BackendUsageErrorCode.UNVALID_PROPERTY,
-                        "Le nombre d'occurence est obligatoire",
-                    )
-                }
+            if (vigilanceArea.endingCondition === EndingConditionEnum.END_DATE && vigilanceArea.endingOccurrenceDate === null) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "La date de fin de l'occurence est obligatoire",
+                )
+            }
+            if (vigilanceArea.endingCondition === EndingConditionEnum.OCCURENCES_NUMBER && (vigilanceArea.endingOccurrencesNumber === null || vigilanceArea.endingOccurrencesNumber == 0)) {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "Le nombre d'occurence est obligatoire",
+                )
             }
         }
     }
