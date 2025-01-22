@@ -82,7 +82,7 @@ context('Side Window > Dashboard List > Filter Bar', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'Interdiction VNM Molene')
+      cy.wrap(row).should('contain', 'Mixte')
     })
 
     cy.clickButton('Réinitialiser les filtres')
