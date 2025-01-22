@@ -59,20 +59,11 @@ const semaphoreCircleStyle = new Style({
 
 export const getSemaphoreStyle = (feature, isSuperUser) => {
   const isSemaphoreHighlighted = feature.get('isHighlighted')
-  let semaphoreStyle = new Style({
+  const semaphoreStyle = new Style({
     image: new Icon({
-      color: THEME.color.charcoal,
-      src: 'semaphore.svg'
+      src: `icons/semaphore_border${isSemaphoreHighlighted ? '_highlighted' : ''}.svg`
     })
   })
-  if (isSemaphoreHighlighted) {
-    semaphoreStyle = new Style({
-      image: new Icon({
-        color: THEME.color.blueGray,
-        src: 'semaphore.svg'
-      })
-    })
-  }
 
   if (isSuperUser) {
     return [overlayStroke, semaphoreStyle, semaphoreCircleStyle]
