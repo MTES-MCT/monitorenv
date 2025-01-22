@@ -72,7 +72,7 @@ export const Columns = (
     accessorFn: row => row.regulatoryAreaIds,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <RegulatoryAreasThemesCell themeIds={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Thématiques',
+    header: () => 'Thématiques reg. des zones sélectionnées',
     id: 'regulatoryAreaIds',
     size: 365 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<Dashboard.Dashboard>, rowB: Row<Dashboard.Dashboard>, columnId: string) => {
