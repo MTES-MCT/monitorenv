@@ -16,8 +16,10 @@ import {
 import { getMissionPageRoute } from '../../../utils/routes'
 import { missionActions } from '../slice'
 
+import type { HomeAppThunk } from '@store/index'
+
 export const saveMission =
-  (values, reopen = false, quitAfterSave = false) =>
+  (values, reopen = false, quitAfterSave = false): HomeAppThunk =>
   async (dispatch, getState) => {
     const {
       reporting: { reportings },
@@ -98,12 +100,15 @@ export const saveMission =
           missionUpdated,
           reportings
         })
-      } else {
-        if (response.error?.data?.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
+      } else if ('data' in response.error) {
+        if (response.error.data?.code === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
           throw Error('Le signalement est déjà rattaché à une mission')
         }
-        throw Error('Erreur à la création ou à la modification de la mission')
+        if (response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {
+          throw Error('Une propriété est invalide')
+        }
       }
+      throw Error('Erreur à la création ou à la modification de la mission')
     } catch (error) {
       dispatch(setToast({ containerId: 'sideWindow', message: error }))
     }

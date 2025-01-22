@@ -1,3 +1,4 @@
+import { ApiErrorCode } from '@api/types'
 import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { customDayjs, Level } from '@mtes-mct/monitor-ui'
@@ -59,6 +60,8 @@ export const saveVigilanceArea =
             })
           )
         }
+      } else if ('data' in response.error && response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {
+        throw Error('Une propriété est invalide')
       }
     } catch (error) {
       dispatch(

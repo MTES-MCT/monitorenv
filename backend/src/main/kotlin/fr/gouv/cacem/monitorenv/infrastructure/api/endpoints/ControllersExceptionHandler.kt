@@ -50,7 +50,7 @@ class ControllersExceptionHandler(val sentryConfig: SentryConfig) {
     @ExceptionHandler(BackendUsageException::class)
     fun handleBackendUsageException(e: BackendUsageException): BackendUsageErrorDataOutput {
         logger.error(e.message)
-        return BackendUsageErrorDataOutput(code = e.code, data = e.data, message = e.message)
+        return BackendUsageErrorDataOutput(code = e.code, data = e.data, message = null)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

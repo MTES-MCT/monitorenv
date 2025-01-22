@@ -1,6 +1,7 @@
 import { type EntityState, createEntityAdapter } from '@reduxjs/toolkit'
 
 import { monitorenvPrivateApi } from './api'
+import { ApiErrorCode } from './types'
 import { getQueryString } from '../utils/getQueryStringFormatted'
 
 import type { Reporting } from '../domain/entities/reporting'
@@ -96,7 +97,12 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
         body: { id, ...patch },
         method: 'PUT',
         url: `/v1/reportings/${id}`
-      })
+      }),
+      transformErrorResponse: response => {
+        if (response.data.type === ApiErrorCode.UNVALID_PROPERTY) {
+          throw new Error('coucou les loulous')
+        }
+      }
     })
   })
 })
