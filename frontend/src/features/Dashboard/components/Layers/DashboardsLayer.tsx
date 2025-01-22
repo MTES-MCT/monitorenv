@@ -3,7 +3,7 @@ import { selectDashboardOnMap } from '@features/Dashboard/useCases/selectDashboa
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
-import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
@@ -90,8 +90,7 @@ const dashboardIcon = () => [
       return center && new Point(center)
     },
     image: new Icon({
-      color: THEME.color.charcoal,
-      src: `icons/Bullseye.svg`
+      src: 'icons/bullseye_border.svg'
     })
   })
 ]
