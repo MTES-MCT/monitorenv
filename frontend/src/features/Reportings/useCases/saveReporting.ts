@@ -12,9 +12,10 @@ import { mainWindowActions } from '../../MainWindow/slice'
 import { isNewReporting } from '../utils'
 
 import type { Reporting } from '../../../domain/entities/reporting'
+import type { HomeAppThunk } from '@store/index'
 
 export const saveReporting =
-  (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext, quitAfterSave = false) =>
+  (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext, quitAfterSave = false): HomeAppThunk =>
   async dispatch => {
     const valuesToSave = omit(values, ['attachedMission'])
     const reportingIsNew = isNewReporting(values.id)
@@ -26,12 +27,12 @@ export const saveReporting =
     await dispatch(reportingActions.setIsListeningToEvents(false))
     try {
       const response = await dispatch(endpoint.initiate(newOrNextReportingData))
-      if ('data' in response) {
+      if (response.data) {
         if (reportingIsNew) {
           const newReporting = {
             context: reportingContext,
             isFormDirty: false,
-            reporting: response.data
+            reporting: { ...response.data, id: response.data.id! }
           }
 
           dispatch(
@@ -43,7 +44,7 @@ export const saveReporting =
             reportingActions.setReporting({
               context: reportingContext,
               isFormDirty: false,
-              reporting: response.data
+              reporting: { ...response.data, id: response.data.id! }
             })
           )
         }
@@ -67,12 +68,15 @@ export const saveReporting =
         )
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(reportingActions.deleteSelectedReporting(values.id))
-      } else {
-        if (response.error.data?.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
+      } else if ('data' in response.error) {
+        if (response.error.data?.code === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
           throw Error('Le signalement est déjà rattaché à une mission')
         }
-        throw Error('Erreur à la création ou à la modification du signalement')
+        if (response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {
+          throw Error('Une propriété est invalide')
+        }
       }
+      throw Error('Erreur à la création ou à la modification du signalement')
     } catch (error) {
       dispatch(setToast({ containerId: reportingContext, message: error }))
     }

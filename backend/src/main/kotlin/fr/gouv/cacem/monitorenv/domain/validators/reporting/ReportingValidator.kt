@@ -18,7 +18,7 @@ class ReportingValidator : Validator<ReportingEntity> {
     override fun validate(reporting: ReportingEntity) {
         logger.info("Validating reporting: ${reporting.id}")
 
-        if (reporting.openBy !== null && reporting.openBy.length != NB_CHAR_MAX) {
+        if (reporting.openBy?.length != NB_CHAR_MAX == true) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
                 "Le trigramme \"ouvert par\" doit avoir 3 lettres",
@@ -34,6 +34,12 @@ class ReportingValidator : Validator<ReportingEntity> {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
                 "La validité du signalement doit être supérieur à 0",
+            )
+        }
+        if (reporting.subThemeIds?.isEmpty() == true) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                "Un sous-thème est obligatoire",
             )
         }
         reporting.reportingSources.forEach { source ->
