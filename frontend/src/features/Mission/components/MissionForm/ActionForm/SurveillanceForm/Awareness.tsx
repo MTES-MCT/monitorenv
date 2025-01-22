@@ -1,4 +1,4 @@
-import { FormikCheckbox, FormikNumberInput, FormikSelect, Label } from '@mtes-mct/monitor-ui'
+import { Checkbox, FormikNumberInput, FormikSelect, Label } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
@@ -22,21 +22,28 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
     if (controlPlans.value.length === 1 && isRisingAwareness) {
       setFieldValue(`${formPath}.awareness.themeId`, controlPlans.value[0]?.themeId)
     }
-    if (!isRisingAwareness) {
+  }, [controlPlans.value, formPath, isRisingAwareness, setFieldValue])
+
+  const updateIsRisingAwareness = (isChecked: boolean | undefined) => {
+    if (isChecked) {
+      setFieldValue(`${formPath}.awareness`, { isRisingAwareness: true })
+    } else {
       setFieldValue(`${formPath}.awareness`, undefined)
     }
-  }, [controlPlans.value, formPath, isRisingAwareness, setFieldValue])
+  }
 
   return (
     <>
       <div>
         <Label>Prévention</Label>
-        <FormikCheckbox
+        <Checkbox
+          checked={isRisingAwareness}
           data-cy="surveillance-awareness"
           inline
           isLight
           label="La surveillance a donné lieu à des actions de prévention"
           name={`${formPath}.awareness.isRisingAwareness`}
+          onChange={updateIsRisingAwareness}
         />
       </div>
 

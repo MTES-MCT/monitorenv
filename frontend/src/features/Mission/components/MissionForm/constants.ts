@@ -11,7 +11,8 @@ export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
   // `envActions` is included but `reportingIds` is missing
   'envActions',
   'fishActions',
-  'hasRapportNavActions'
+  'hasRapportNavActions',
+  'observationsByUnit'
 ]
 
 export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [
