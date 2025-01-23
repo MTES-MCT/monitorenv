@@ -1,12 +1,17 @@
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
+import { dashboardActions } from '@features/Dashboard/slice'
+import { Dashboard } from '@features/Dashboard/types'
+import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
+import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { Filters } from './Filters'
 import { Layer } from './Layer'
+import { ToggleSelectAll } from '../ToggleSelectAll'
 
 import type { Reporting } from 'domain/entities/reporting'
 
@@ -19,6 +24,7 @@ type ReportingsProps = {
 }
 export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
   ({ isExpanded, isSelectedAccordionOpen, reportings, selectedReportingIds, setExpandedAccordion }, ref) => {
+    const dispatch = useAppDispatch()
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
     useEffect(() => {
@@ -29,12 +35,40 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
 
     const { data: selectedReportings } = useGetReportingsByIdsQuery(selectedReportingIds)
 
+    const selectionState = useMemo(
+      () =>
+        getSelectionState(
+          selectedReportingIds,
+          reportings.map(reporting => +reporting.id)
+        ),
+      [selectedReportingIds, reportings]
+    )
+
     return (
       <div>
         <Accordion
           isExpanded={isExpanded}
           setExpandedAccordion={setExpandedAccordion}
-          title="Signalements"
+          title={
+            <TitleContainer>
+              <Title>Signalements</Title>
+              {reportings.length !== 0 && (
+                <ToggleSelectAll
+                  onSelection={() =>
+                    handleSelection({
+                      allIds: reportings.map(reporting => +reporting.id),
+                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                      selectedIds: selectedReportingIds,
+                      selectionState,
+                      type: Dashboard.Block.REPORTINGS
+                    })
+                  }
+                  selectionState={selectionState}
+                />
+              )}
+            </TitleContainer>
+          }
           titleRef={ref}
         >
           <StyledFilters $isExpanded={isExpanded} />

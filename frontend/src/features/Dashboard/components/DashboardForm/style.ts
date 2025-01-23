@@ -7,6 +7,13 @@ export const SelectedLayerList = styled.ul`
   max-height: 100%;
   color: ${p => p.theme.color.slateGray};
 `
+export const SelectedPinButton = styled.button`
+  background-color: ${p => p.theme.color.white};
+  color: ${p => p.theme.color.slateGray};
+  display: flex;
+  gap: 4px;
+  text-decoration: underline;
+`
 
 export const StyledLayerList = styled(LayerSelector.LayerList)`
   overflow: hidden;

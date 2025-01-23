@@ -1,17 +1,20 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { getOpenedPanel } from '@features/Dashboard/slice'
+import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
+import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { SelectedLayerList, StyledLayerList } from '../style'
+import { ToggleSelectAll } from '../ToggleSelectAll'
 import { Layer } from './Layer'
 import { Panel } from './Panel'
-import { SelectedLayerList, StyledLayerList } from '../style'
 
 type VigilanceAreasProps = {
   columnWidth: number
@@ -33,6 +36,7 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
     },
     ref
   ) => {
+    const dispatch = useAppDispatch()
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
@@ -50,6 +54,15 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
       }
     }, [isSelectedAccordionOpen])
 
+    const selectionState = useMemo(
+      () =>
+        getSelectionState(
+          selectedVigilanceAreaIds,
+          vigilanceAreas.map(amp => amp.id)
+        ),
+      [selectedVigilanceAreaIds, vigilanceAreas]
+    )
+
     return (
       <div>
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
@@ -57,7 +70,26 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
         <Accordion
           isExpanded={isExpanded}
           setExpandedAccordion={setExpandedAccordion}
-          title="Zones de vigilance"
+          title={
+            <TitleContainer>
+              <Title>Zones de vigilance</Title>
+              {vigilanceAreas.length !== 0 && (
+                <ToggleSelectAll
+                  onSelection={() =>
+                    handleSelection({
+                      allIds: vigilanceAreas.map(vigilanceArea => vigilanceArea.id),
+                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                      selectedIds: selectedVigilanceAreaIds,
+                      selectionState,
+                      type: Dashboard.Block.VIGILANCE_AREAS
+                    })
+                  }
+                  selectionState={selectionState}
+                />
+              )}
+            </TitleContainer>
+          }
           titleRef={ref}
         >
           <StyledLayerList

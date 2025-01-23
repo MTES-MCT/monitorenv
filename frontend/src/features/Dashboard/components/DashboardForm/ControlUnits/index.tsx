@@ -17,10 +17,10 @@ import { isNotArchived } from '@utils/isNotArchived'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { Item } from './Item'
-import { SelectedControlUnits } from './SelectedControlUnits'
 import { Accordion } from '../Accordion'
 import { dashboardFiltersActions } from '../slice'
+import { Item } from './Item'
+import { SelectedControlUnits } from './SelectedControlUnits'
 
 type ControlUnitsProps = {
   controlUnits: ControlUnit.ControlUnit[]
@@ -36,6 +36,10 @@ export const ControlUnits = forwardRef<HTMLDivElement, ControlUnitsProps>(
     const filters = useAppSelector(state =>
       activeDashboardId ? state.dashboardFilters.dashboards[activeDashboardId]?.controlUnitFilters : undefined
     )
+    const selectedControlUnitIds = useAppSelector(state =>
+      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.dashboard.controlUnitIds : []
+    )
+    const selectedControlUnits = controlUnits.filter(controlUnit => selectedControlUnitIds?.includes(controlUnit.id))
 
     const controlUnitResults = useMemo(() => {
       if (!filters) {
@@ -162,7 +166,10 @@ export const ControlUnits = forwardRef<HTMLDivElement, ControlUnitsProps>(
             </ResultList>
           </Wrapper>
         </Accordion>
-        <SelectedControlUnits controlUnits={controlUnits} isSelectedAccordionOpen={isSelectedAccordionOpen} />
+        <SelectedControlUnits
+          isSelectedAccordionOpen={isSelectedAccordionOpen}
+          selectedControlUnits={selectedControlUnits}
+        />
       </div>
     )
   }
