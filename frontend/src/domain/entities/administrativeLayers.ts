@@ -1,6 +1,7 @@
 import { Layers } from './layers/constants'
 
 export const administrativeLayers = [
+  [Layers.THREE_HUNDRED_METERS],
   [Layers.THREE_MILES],
   [Layers.SIX_MILES],
   [Layers.TWELVE_MILES],

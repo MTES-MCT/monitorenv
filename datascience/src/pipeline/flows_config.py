@@ -32,6 +32,7 @@ from src.pipeline.flows import (
     regulations,
     remove_broken_missions_resources_links,
     semaphores,
+    three_hundred_meters_areas,
     update_departments_and_facades,
 )
 
@@ -97,6 +98,7 @@ flows_to_register = [
     regulations.flow,
     remove_broken_missions_resources_links.flow,
     semaphores.flow,
+    three_hundred_meters_areas.flow,
     update_departments_and_facades.flow,
 ]
 
