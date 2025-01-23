@@ -24,8 +24,11 @@ class CreateOrUpdateMission(
 
         val normalizedMission =
             mission.geom?.let { nonNullGeom ->
-                mission.copy(geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom))
-            } ?: mission
+                mission.copy(
+                    geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom),
+                )
+            }
+                ?: mission
 
         val facade =
             normalizedMission.geom?.let { nonNullGeom ->
@@ -47,9 +50,14 @@ class CreateOrUpdateMission(
         }
 
         logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
-        eventPublisher.publishEvent(
-            UpdateMissionEvent(savedMission.mission),
-        )
+
+        try {
+            eventPublisher.publishEvent(
+                UpdateMissionEvent(savedMission.mission),
+            )
+        } catch (e: Exception) {
+            logger.warn("Failed to send event for mission id ${savedMission.mission.id}.", e)
+        }
 
         return savedMission.mission
     }
