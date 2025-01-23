@@ -1,17 +1,19 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { getOpenedPanel } from '@features/Dashboard/slice'
+import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
+import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { SelectedLayerList, StyledLayerList } from '../style'
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
-import { SelectedLayerList, StyledLayerList } from '../style'
 
 import type { AMP, AMPFromAPI } from 'domain/entities/AMPs'
 
@@ -25,6 +27,7 @@ type AmpsProps = {
 }
 export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
   ({ amps, columnWidth, isExpanded, isSelectedAccordionOpen, selectedAmpIds, setExpandedAccordion }, ref) => {
+    const dispatch = useAppDispatch()
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
 
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
@@ -46,10 +49,43 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
       }
     }, [isSelectedAccordionOpen])
 
+    const selectionState = useMemo(
+      () =>
+        getSelectionState(
+          selectedAmpIds,
+          amps.map(amp => amp.id)
+        ),
+      [amps, selectedAmpIds]
+    )
+
     return (
       <div>
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
-        <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Zones AMP" titleRef={ref}>
+        <Accordion
+          isExpanded={isExpanded}
+          setExpandedAccordion={setExpandedAccordion}
+          title={
+            <TitleContainer>
+              <Title>Zones AMP</Title>
+              {amps.length !== 0 && (
+                <ToggleSelectAll
+                  onSelection={() =>
+                    handleSelection({
+                      allIds: amps.map(amp => amp.id),
+                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                      selectedIds: selectedAmpIds,
+                      selectionState,
+                      type: Dashboard.Block.AMP
+                    })
+                  }
+                  selectionState={selectionState}
+                />
+              )}
+            </TitleContainer>
+          }
+          titleRef={ref}
+        >
           <StyledLayerList
             $baseLayersLength={Object.values(ampsByLayerName).length}
             $maxHeight={100}

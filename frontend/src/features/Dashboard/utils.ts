@@ -3,7 +3,9 @@ import { regulatoryLayersAPI } from '@api/regulatoryLayersAPI'
 import { reportingsAPI } from '@api/reportingsAPI'
 import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { isCypress } from '@utils/isCypress'
+import { difference } from 'lodash'
 
+import type { SelectionState } from './components/DashboardForm/ToggleSelectAll'
 import type { Dashboard } from './types'
 import type { HomeRootState } from '@store/index'
 import type { Action } from 'redux'
@@ -40,5 +42,42 @@ export async function populateExtractAreaFromApi(
     vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
       extractedAreaFromApi.vigilanceAreaIds.includes(vigilanceArea.id)
     )
+  }
+}
+
+export function getSelectionState(selectedIds: number[], allIds: number[]) {
+  if (
+    selectedIds.length > 0 &&
+    selectedIds.length >= allIds.length &&
+    selectedIds.every(selectedId => allIds.includes(selectedId))
+  ) {
+    return 'ALL'
+  }
+
+  if (selectedIds.some(selectedId => allIds.includes(selectedId))) {
+    return 'PARTIAL'
+  }
+
+  return 'NONE'
+}
+
+type SelectionParams = {
+  allIds: number[]
+  onRemove: (payload: { itemIds: number[]; type: Dashboard.Block }) => void
+  onSelect: (payload: { itemIds: number[]; type: Dashboard.Block }) => void
+  selectedIds: number[]
+  selectionState: SelectionState
+  type: Dashboard.Block
+}
+
+export function handleSelection({ allIds, onRemove, onSelect, selectedIds, selectionState, type }: SelectionParams) {
+  const itemIds = selectionState === 'ALL' ? selectedIds : difference(allIds, selectedIds)
+
+  const payload = { itemIds, type }
+
+  if (selectionState === 'ALL') {
+    onRemove(payload)
+  } else {
+    onSelect(payload)
   }
 }

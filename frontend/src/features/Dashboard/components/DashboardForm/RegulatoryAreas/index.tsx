@@ -1,17 +1,20 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
-import { getOpenedPanel } from '@features/Dashboard/slice'
+import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { groupBy } from 'lodash'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
+import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { SelectedLayerList, StyledLayerList } from '../style'
+import { ToggleSelectAll } from '../ToggleSelectAll'
 import { ListLayerGroup } from './ListLayerGroup'
 import { RegulatoryPanel } from './Panel'
-import { SelectedLayerList, StyledLayerList } from '../style'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
@@ -35,6 +38,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     },
     ref
   ) => {
+    const dispatch = useAppDispatch()
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
@@ -55,6 +59,15 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
       }
     }, [isSelectedAccordionOpen])
 
+    const selectionState = useMemo(
+      () =>
+        getSelectionState(
+          selectedRegulatoryAreaIds,
+          regulatoryAreas.map(amp => amp.id)
+        ),
+      [regulatoryAreas, selectedRegulatoryAreaIds]
+    )
+
     return (
       <div>
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
@@ -62,7 +75,26 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
         <Accordion
           isExpanded={isExpanded}
           setExpandedAccordion={setExpandedAccordion}
-          title="Zones réglementaires"
+          title={
+            <TitleContainer>
+              <Title>Zones réglementaires</Title>
+              {regulatoryAreas.length !== 0 && (
+                <ToggleSelectAll
+                  onSelection={() =>
+                    handleSelection({
+                      allIds: regulatoryAreas.map(amp => amp.id),
+                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                      selectedIds: selectedRegulatoryAreaIds,
+                      selectionState,
+                      type: Dashboard.Block.REGULATORY_AREAS
+                    })
+                  }
+                  selectionState={selectionState}
+                />
+              )}
+            </TitleContainer>
+          }
           titleRef={ref}
         >
           <StyledLayerList

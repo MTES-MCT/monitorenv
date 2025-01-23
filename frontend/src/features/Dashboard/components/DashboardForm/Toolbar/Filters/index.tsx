@@ -17,6 +17,7 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { dashboardFiltersActions } from '../../slice'
+import { SelectedPinButton } from '../../style'
 
 type FiltersProps = {
   dashboard: DashboardType
@@ -101,10 +102,10 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
           value={filters?.amps}
         />
       </div>
-      <StyledButton onClick={showSelectedItems} type="button">
+      <SelectedPinButton onClick={showSelectedItems} type="button">
         <Icon.Pin color={THEME.color.slateGray} />
         Prévisualiser la sélection
-      </StyledButton>
+      </SelectedPinButton>
     </FiltersContainer>
   )
 }
@@ -124,12 +125,4 @@ const FiltersContainer = styled.div`
     display: flex;
     gap: 16px;
   }
-`
-
-const StyledButton = styled.button`
-  background-color: ${p => p.theme.color.white};
-  color: ${p => p.theme.color.slateGray};
-  display: flex;
-  gap: 4px;
-  text-decoration: underline;
 `

@@ -7,7 +7,7 @@ type AccordionProps = {
   isExpanded: boolean
   name?: string
   setExpandedAccordion: () => void
-  title: string | ReactNode
+  title: ReactNode
   titleRef?: ForwardedRef<HTMLDivElement>
 }
 
@@ -20,9 +20,7 @@ export function Accordion({ children, isExpanded, name, setExpandedAccordion, ti
         aria-expanded={isExpanded}
         onClick={setExpandedAccordion}
       >
-        <TitleContainer>
-          <Title>{title}</Title>
-        </TitleContainer>
+        {title}
         <StyledIconButton
           $isExpanded={isExpanded}
           accent={Accent.TERTIARY}
@@ -38,26 +36,26 @@ export function Accordion({ children, isExpanded, name, setExpandedAccordion, ti
   )
 }
 
-const AccordionContainer = styled.div`
+export const AccordionContainer = styled.div`
   box-shadow: 0px 3px 6px #70778540;
   width: 100%;
 `
-const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
+export const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
   transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform 0.3s;
 `
-const AccordionHeader = styled.header`
+export const AccordionHeader = styled.header`
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   padding: 21px 24px;
 `
-const TitleContainer = styled.div`
+export const TitleContainer = styled.div`
   align-items: center;
   display: flex;
   gap: 16px;
 `
-const Title = styled.h2`
+export const Title = styled.h2`
   font-size: 16px;
   font-weight: 700;
 `
