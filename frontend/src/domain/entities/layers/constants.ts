@@ -61,6 +61,7 @@ export enum MonitorEnvLayers {
   STATIONS = 'STATIONS',
   STRAIGHT_BASELINE = 'STRAIGHT_BASELINE',
   TERRITORIAL_SEAS = 'TERRITORIAL_SEAS',
+  THREE_HUNDRED_METERS = 'THREE_HUNDRED_METERS',
   THREE_MILES = 'THREE_MILES',
   TRANSVERSAL_SEA_LIMIT_AREAS = 'TRANSVERSAL_SEA_LIMIT_AREAS',
   TWELVE_MILES = 'TWELVE_MILES',
@@ -132,6 +133,11 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.TRANSVERSAL_SEA_LIMIT_AREAS]: {
     code: 'transversal_sea_limit_areas',
     name: 'Limites transversales de mer',
+    type: LayerType.ADMINISTRATIVE
+  },
+  [MonitorEnvLayers.THREE_HUNDRED_METERS]: {
+    code: 'three_hundred_meters_areas',
+    name: '300 mètres (hors estuaires)',
     type: LayerType.ADMINISTRATIVE
   },
   [MonitorEnvLayers.THREE_MILES]: {

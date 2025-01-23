@@ -71,6 +71,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
             text: `${feature.get(Layers.MARPOL.subZoneFieldKey) ? feature.get(Layers.MARPOL.subZoneFieldKey) : ''}`
           })
         })
+    case Layers.THREE_HUNDRED_METERS.code:
     case Layers.THREE_MILES.code:
     case Layers.SIX_MILES.code:
     case Layers.TWELVE_MILES.code:
