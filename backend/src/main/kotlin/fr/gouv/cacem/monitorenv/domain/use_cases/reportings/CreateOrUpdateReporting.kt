@@ -61,9 +61,14 @@ class CreateOrUpdateReporting(
         logger.info("Reporting ${savedReporting.reporting.id} created or updated")
 
         logger.info("Sending CREATE/UPDATE event for reporting id ${savedReporting.reporting.id}.")
-        eventPublisher.publishEvent(
-            UpdateReportingEvent(savedReporting),
-        )
+
+        try {
+            eventPublisher.publishEvent(
+                UpdateReportingEvent(savedReporting),
+            )
+        } catch (e: Exception) {
+            logger.warn("Failed to send event for reporting id ${savedReporting.reporting.id}.", e)
+        }
 
         return savedReporting
     }
