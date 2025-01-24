@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -228,5 +229,63 @@ class CreateOrUpdateMissionUTests {
 
         // Then
         assertThat(createdMission.createdAtUtc).isEqualTo(ZonedDateTime.parse("2022-01-23T20:29:03Z"))
+    }
+
+    @Test
+    fun `should return the saved mission even if publish throw an exception`() {
+        // Given
+        val missionToUpdate =
+            MissionEntity(
+                id = 10,
+                createdAtUtc = ZonedDateTime.parse("2025-01-01T20:29:03Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2025-01-25T20:29:03Z"),
+                facade = "Outre-Mer",
+                geom = null,
+                hasMissionOrder = false,
+                isDeleted = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                startDateTimeUtc = ZonedDateTime.parse("2025-01-23T04:50:09Z"),
+                updatedAtUtc = null,
+            )
+
+        val returnedSavedMission =
+            MissionEntity(
+                id = 10,
+                createdAtUtc = ZonedDateTime.parse("2025-01-01T20:29:03Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2025-01-25T20:29:03Z"),
+                facade = "Outre-Mer",
+                geom = null,
+                hasMissionOrder = false,
+                isDeleted = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.LAND, MissionTypeEnum.SEA),
+                startDateTimeUtc = ZonedDateTime.parse("2025-01-23T04:50:09Z"),
+                updatedAtUtc = ZonedDateTime.parse("2025-01-10T22:00:03Z"),
+            )
+
+        given(missionRepository.save(anyOrNull()))
+            .willReturn(MissionDetailsDTO(mission = returnedSavedMission))
+        given(applicationEventPublisher.publishEvent(UpdateMissionEvent(returnedSavedMission))).willThrow(
+            RuntimeException("Failed to send event"),
+        )
+        // When
+        val createdMission =
+            CreateOrUpdateMission(
+                missionRepository = missionRepository,
+                facadeRepository = facadeAreasRepository,
+                eventPublisher = applicationEventPublisher,
+                postgisFunctionRepository = postgisFunctionRepository,
+            )
+                .execute(
+                    missionToUpdate,
+                )
+
+        // Then
+        assertThat(createdMission).isEqualTo(returnedSavedMission)
     }
 }

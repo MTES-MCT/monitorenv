@@ -49,14 +49,15 @@ class CreateOrUpdateMission(
             throw IllegalArgumentException("Mission id is null")
         }
 
-        logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
-
-        try {
-            eventPublisher.publishEvent(
-                UpdateMissionEvent(savedMission.mission),
-            )
-        } catch (e: Exception) {
-            logger.warn("Failed to send event for mission id ${savedMission.mission.id}.", e)
+        if (mission.id != null) {
+            try {
+                logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
+                eventPublisher.publishEvent(
+                    UpdateMissionEvent(savedMission.mission),
+                )
+            } catch (e: Exception) {
+                logger.warn("Failed to send event for mission id ${savedMission.mission.id}.", e)
+            }
         }
 
         return savedMission.mission
