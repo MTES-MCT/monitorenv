@@ -15,7 +15,6 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, NewWindowContext, SideMenu, type NewWindowContextValue } from '@mtes-mct/monitor-ui'
 import {
-  getDashboardPageRoute,
   isDashboardPage,
   isDashboardsPage,
   isMissionOrMissionsPage,
@@ -79,28 +78,34 @@ export function SideWindow() {
     dispatch(reportingActions.updateUnactiveReporting(omit(reportingEvent, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)))
   }, [dispatch, reportingEvent])
 
+  useEffect(() => {
+    const isCurrentPathIsMissionPage = isMissionPage(currentPath)
+    if (!isCurrentPathIsMissionPage) {
+      dispatch(missionFormsActions.resetActiveMissionId())
+
+      return
+    }
+
+    const isCurrentPathDashboard = isDashboardPage(currentPath)
+    if (!isCurrentPathDashboard) {
+      dispatch(dashboardActions.setActiveDashboardId(undefined))
+    }
+  }, [currentPath, dispatch])
+
   const navigate = (nextPath: string) => {
     if (!nextPath) {
       return
     }
+
+    dispatch(sideWindowActions.removeBanners())
+
     const isCurrentPathIsMissionPage = isMissionPage(currentPath)
     if (isCurrentPathIsMissionPage) {
       dispatch(switchTab(nextPath))
 
       return
     }
-
-    const isCurrentPathDashboard = isDashboardPage(currentPath)
-
-    if (isCurrentPathDashboard) {
-      const id = getDashboardPageRoute(currentPath)?.params.id
-      if (!id) {
-        dispatch(dashboardActions.setActiveDashboardId(undefined))
-      }
-    }
-
     dispatch(sideWindowActions.setCurrentPath(nextPath))
-    dispatch(sideWindowActions.removeBanners())
   }
 
   const newWindowContextProviderValue: NewWindowContextValue = useMemo(
