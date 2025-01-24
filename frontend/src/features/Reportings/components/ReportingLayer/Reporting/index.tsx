@@ -4,6 +4,7 @@ import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
+import { InteractionListener } from 'domain/entities/map/constants'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import { reduce } from 'lodash'
@@ -37,7 +38,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     state => state.attachReportingToMission.isReportingAttachmentInProgress
   )
 
-  const missionListener = useAppSelector(state => state.draw.listener)
+  const drawListener = useAppSelector(state => state.draw.listener)
   // Attached reportings to active mission
   const activeMission = useAppSelector(state => getActiveMission(state.missionForms))
   const attachedReportingsToActiveMission = activeMission?.missionForm.attachedReportings
@@ -84,7 +85,11 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const reportingsPointOrZone = useMemo(() => {
     // if user edits a mission with attached reportings and draw a zone or a point on map
     // we want to display only the attached reportings
-    if (missionListener) {
+    if (
+      drawListener === InteractionListener.MISSION_ZONE ||
+      drawListener === InteractionListener.SURVEILLANCE_ZONE ||
+      drawListener === InteractionListener.CONTROL_POINT
+    ) {
       return [...attachedReportingsToActiveMissionFeature]
     }
 
@@ -100,7 +105,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     attachedReportingsToActiveMission,
     attachedReportingsToActiveMissionFeature,
     reportingsFromApiFeatures,
-    missionListener
+    drawListener
   ])
 
   const hasMapListener = isMissionAttachmentInProgress || isReportingAttachmentInProgress

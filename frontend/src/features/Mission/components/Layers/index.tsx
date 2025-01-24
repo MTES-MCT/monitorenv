@@ -21,7 +21,7 @@ import type { Geometry } from 'ol/geom'
 
 export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const { displayMissionsLayer } = useAppSelector(state => state.global)
+  const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
   const { missions } = useGetFilteredMissionsQuery()
 
   // mission attached to active reporting
