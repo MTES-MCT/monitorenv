@@ -271,7 +271,7 @@ class CreateOrUpdateMissionUTests {
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDetailsDTO(mission = returnedSavedMission))
         given(applicationEventPublisher.publishEvent(UpdateMissionEvent(returnedSavedMission))).willThrow(
-            RuntimeException("Failed to send event"),
+            Exception("Failed to send event"),
         )
         // When
         val createdMission =

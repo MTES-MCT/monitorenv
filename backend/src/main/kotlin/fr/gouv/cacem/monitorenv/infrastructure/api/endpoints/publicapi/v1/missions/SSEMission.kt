@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEv
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionWithRapportNavActionsDataOutput
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
@@ -52,6 +53,7 @@ class SSEMission {
     /**
      * This method listen for `MissionEvent` to send to the frontend listeners
      */
+    @Async
     @EventListener(UpdateMissionEvent::class)
     fun handleUpdateMissionEvent(event: UpdateMissionEvent) {
         logger.info("SSE: Received mission event for mission ${event.mission.id}.")
@@ -74,6 +76,7 @@ class SSEMission {
 
                     return@map sseEmitter
                 } catch (e: Exception) {
+                    logger.info("Error when send mission event with id ${event.mission.id} : $e")
                     sseEmitter.completeWithError(e)
 
                     return@map sseEmitter

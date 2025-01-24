@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReporti
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
@@ -42,6 +43,7 @@ class SSEReporting {
     }
 
     /** This method listen for `ReportingEvent` to send to the frontend listeners */
+    @Async
     @EventListener(UpdateReportingEvent::class)
     fun handleUpdateReportingEvent(event: UpdateReportingEvent) {
         logger.info("SSE: Received reporting event for reporting ${event.reporting.reporting.id}.")
@@ -65,6 +67,7 @@ class SSEReporting {
 
                     return@map sseEmitter
                 } catch (e: Exception) {
+                    logger.info("Error when send reporting event with id ${event.reporting.reporting.id} : $e")
                     sseEmitter.completeWithError(e)
 
                     return@map sseEmitter

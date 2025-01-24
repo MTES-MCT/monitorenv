@@ -48,21 +48,17 @@ class CreateOrUpdateMission(
             )
         val savedMission = missionRepository.save(missionToSave)
 
-        logger.info("Mission ${savedMission.mission.id} created or updated")
         if (savedMission.mission.id == null) {
             throw IllegalArgumentException("Mission id is null")
         }
 
         if (mission.id != null) {
-            try {
-                logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
-                eventPublisher.publishEvent(
-                    UpdateMissionEvent(savedMission.mission),
-                )
-            } catch (e: Exception) {
-                logger.warn("Failed to send event for mission id ${savedMission.mission.id}.", e)
-            }
+            logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
+            eventPublisher.publishEvent(
+                UpdateMissionEvent(savedMission.mission),
+            )
         }
+        logger.info("Mission ${savedMission.mission.id} created or updated")
 
         return savedMission.mission
     }
