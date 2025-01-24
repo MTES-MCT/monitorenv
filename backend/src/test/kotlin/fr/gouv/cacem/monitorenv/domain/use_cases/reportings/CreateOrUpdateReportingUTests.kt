@@ -9,14 +9,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
-import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceSemaphore
@@ -338,5 +335,54 @@ class CreateOrUpdateReportingUTests {
                 .execute(reportingWithNewAttachedMission)
         }
             .isInstanceOf(ReportingAlreadyAttachedException::class.java)
+    }
+
+    @Test
+    fun `execute should return the saved reporting even if publish throw an exception`() {
+        // Given
+        val reportingSource =
+            ReportingSourceEntity(
+                id = null,
+                sourceType = SourceTypeEnum.OTHER,
+                sourceName = "an anonymous source",
+                reportingId = 10,
+                semaphoreId = null,
+                controlUnitId = null,
+            )
+        val aReporting = aReporting(reportingSources = listOf(reportingSource), id = 10)
+        val reportingDTO =
+            ReportingDetailsDTO(
+                reporting = aReporting.copy(seaFront = "Facade 1"),
+                reportingSources =
+                    listOf(
+                        ReportingSourceDTO(
+                            reportingSource = reportingSource,
+                            semaphore = null,
+                            controlUnit = null,
+                        ),
+                    ),
+            )
+
+        given(postgisFunctionRepository.normalizeGeometry(aReporting.geom!!)).willReturn(
+            aReporting.geom,
+        )
+        given(facadeRepository.findFacadeFromGeometry(aReporting.geom!!)).willReturn("Facade 1")
+        given(reportingRepository.save(aReporting))
+            .willReturn(reportingDTO)
+        given(applicationEventPublisher.publishEvent(UpdateReportingEvent(reportingDTO))).willThrow(
+            RuntimeException("Failed to send event"),
+        )
+
+        // When
+        val updatedReporting =
+            CreateOrUpdateReporting(
+                reportingRepository = reportingRepository,
+                facadeRepository = facadeRepository,
+                postgisFunctionRepository = postgisFunctionRepository,
+                eventPublisher = applicationEventPublisher,
+            ).execute(aReporting)
+
+        // Then
+        assertThat(updatedReporting.reporting).isEqualTo(aReporting)
     }
 }
