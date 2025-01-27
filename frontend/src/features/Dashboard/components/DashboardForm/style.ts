@@ -1,5 +1,4 @@
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
-import { THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const SelectedLayerList = styled.ul`
@@ -12,7 +11,7 @@ export const SelectedLayerList = styled.ul`
 export const ResultNumber = styled.small`
   font-size: 13px;
   font-weight: regular;
-  color: ${THEME.color.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 
 export const StyledLayerList = styled(LayerSelector.LayerList)`
