@@ -1,7 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -11,10 +10,11 @@ import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
-import { SelectedLayerList, StyledLayerList } from '../style'
-import { ToggleSelectAll } from '../ToggleSelectAll'
+import { ResultNumber, SelectedLayerList, StyledLayerList } from '../style'
+import { StyledToggleSelectAll } from '../ToggleSelectAll'
 import { Layer } from './Layer'
 import { Panel } from './Panel'
+import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
 
 type VigilanceAreasProps = {
   columnWidth: number
@@ -73,11 +73,18 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
           title={
             <TitleContainer>
               <Title>Zones de vigilance</Title>
-              {vigilanceAreas.length !== 0 && (
-                <ToggleSelectAll
+              <ResultNumber>{`(${vigilanceAreas.length} ${pluralize(
+                'résultat',
+                vigilanceAreas.length
+              )})`}</ResultNumber>
+              {(vigilanceAreas.length !== 0 || selectedVigilanceAreaIds.length !== 0) && (
+                <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
-                      allIds: vigilanceAreas.map(vigilanceArea => vigilanceArea.id),
+                      allIds: vigilanceAreas.map(
+                        (vigilanceArea: VigilanceArea.VigilanceAreaFromApi | VigilanceArea.VigilanceAreaLayer) =>
+                          vigilanceArea.id
+                      ),
                       onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
                       onSelect: payload => dispatch(dashboardActions.addItems(payload)),
                       selectedIds: selectedVigilanceAreaIds,

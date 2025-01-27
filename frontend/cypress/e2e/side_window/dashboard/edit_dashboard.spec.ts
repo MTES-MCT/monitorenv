@@ -110,4 +110,31 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // Selected controlUnits should be visible
     cy.getDataCy('dashboard-control-unit-accordion-10002').contains('DML 2A - DDTM').should('be.visible')
   })
+
+  it('Should select/deselect all in each bloc', () => {
+    const id = 'e1e99b92-1e61-4f9f-9cbf-8cfae2395d41'
+    cy.getDataCy(`edit-dashboard-${id}`).click({ force: true })
+
+    cy.intercept('GET', `/bff/v1/dashboards/${id}`).as('editDashboard')
+
+    // Tab should be visible
+    cy.getDataCy('dashboard-1').contains('Dashboard 1')
+
+    cy.wait(250)
+
+    // from partially selection to fully selected
+    cy.get('h2').contains('Zones réglementaires').parent().clickButton('Tout sélectionner', { withoutScroll: true })
+    // no button if there is no area
+    cy.get('h2').contains('Zones AMP').parent().get('Tout sélectionner').should('not.exist')
+    cy.get('h2').contains('Zones de vigilance').parent().clickButton('Tout désélectionner', { withoutScroll: true })
+    cy.get('h2').contains('Signalements').parent().clickButton('Tout sélectionner', { withoutScroll: true })
+
+    cy.clickButton('Prévisualiser la sélection', { withoutScroll: true })
+    cy.wait(250)
+    // because result list have a separator so we need to multiply the results by 2
+    cy.getDataCy('dashboard-selected-regulatory-result-group').should('have.length', 9)
+    cy.getDataCy('dashboard-selected-amp-result-group').should('not.exist')
+    cy.get('[data-cy^="dashboard-selected-vigilance-areas-zone-"]').should('not.exist')
+    cy.get('[data-cy^="dashboard-selected-reporting-"]').should('have.length', 3)
+  })
 })

@@ -1,4 +1,5 @@
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const SelectedLayerList = styled.ul`
@@ -7,12 +8,11 @@ export const SelectedLayerList = styled.ul`
   max-height: 100%;
   color: ${p => p.theme.color.slateGray};
 `
-export const SelectedPinButton = styled.button`
-  background-color: ${p => p.theme.color.white};
-  color: ${p => p.theme.color.slateGray};
-  display: flex;
-  gap: 4px;
-  text-decoration: underline;
+
+export const ResultNumber = styled.small`
+  font-size: 13px;
+  font-weight: regular;
+  color: ${THEME.color.slateGray};
 `
 
 export const StyledLayerList = styled(LayerSelector.LayerList)`

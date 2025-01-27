@@ -1,7 +1,6 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
@@ -11,10 +10,11 @@ import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
-import { SelectedLayerList, StyledLayerList } from '../style'
-import { ToggleSelectAll } from '../ToggleSelectAll'
+import { ResultNumber, SelectedLayerList, StyledLayerList } from '../style'
 import { ListLayerGroup } from './ListLayerGroup'
 import { RegulatoryPanel } from './Panel'
+import { StyledToggleSelectAll } from '../ToggleSelectAll'
+import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
 
 import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
@@ -78,8 +78,12 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
           title={
             <TitleContainer>
               <Title>Zones réglementaires</Title>
-              {regulatoryAreas.length !== 0 && (
-                <ToggleSelectAll
+              <ResultNumber>{`(${regulatoryAreas.length} ${pluralize(
+                'résultat',
+                regulatoryAreas.length
+              )})`}</ResultNumber>
+              {(regulatoryAreas.length !== 0 || selectedRegulatoryAreaIds.length !== 0) && (
+                <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
                       allIds: regulatoryAreas.map(amp => amp.id),

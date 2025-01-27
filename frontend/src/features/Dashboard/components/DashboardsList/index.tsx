@@ -14,7 +14,7 @@ export function DashboardsList() {
       <StyledHeader>
         <Title>Tableaux de bord</Title>
       </StyledHeader>
-      <Filters />
+      <Filters key="dashboard-filters-list" />
       <StyledTotalResults>
         {dashboards?.length ?? '0'} Tableau{dashboards && dashboards.length > 1 ? 'x' : ''}
       </StyledTotalResults>

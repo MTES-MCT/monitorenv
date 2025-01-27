@@ -5,7 +5,7 @@ import { Icon } from '@mtes-mct/monitor-ui'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
+import { Accordion, Title } from '../Accordion'
 
 // Id like 199, 216, 197 can be changes if dashboards in metabase changes
 const AMP_LINK = '/dashboard/199-effort-de-surveillance-et-de-controle-en-amp?'
@@ -58,7 +58,7 @@ export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressur
 
     const titleWithTooltip = (
       <TitleContainer>
-        <span>Pression territoriale des contrôles et surveillances</span>
+        <Title>Pression territoriale des contrôles et surveillances</Title>
         <Tooltip isSideWindow>
           Les liens suivants envoient vers des tableaux Metabase montrant la pression territoriale sur les zones REG,
           les AMP ou à l’échelle du département.

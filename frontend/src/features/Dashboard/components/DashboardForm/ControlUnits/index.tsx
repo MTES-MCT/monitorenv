@@ -17,7 +17,7 @@ import { isNotArchived } from '@utils/isNotArchived'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
+import { Accordion, Title, TitleContainer } from '../Accordion'
 import { dashboardFiltersActions } from '../slice'
 import { Item } from './Item'
 import { SelectedControlUnits } from './SelectedControlUnits'
@@ -109,7 +109,16 @@ export const ControlUnits = forwardRef<HTMLDivElement, ControlUnitsProps>(
 
     return (
       <div>
-        <Accordion isExpanded={isExpanded} setExpandedAccordion={setExpandedAccordion} title="Unités" titleRef={ref}>
+        <Accordion
+          isExpanded={isExpanded}
+          setExpandedAccordion={setExpandedAccordion}
+          title={
+            <TitleContainer>
+              <Title>Unités</Title>
+            </TitleContainer>
+          }
+          titleRef={ref}
+        >
           <Wrapper $hasChildren={hasChildren}>
             <StyledTextInput
               Icon={Icon.Search}

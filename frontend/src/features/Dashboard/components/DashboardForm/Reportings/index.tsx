@@ -1,7 +1,6 @@
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
@@ -9,9 +8,11 @@ import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
+import { ResultNumber } from '../style'
 import { Filters } from './Filters'
 import { Layer } from './Layer'
-import { ToggleSelectAll } from '../ToggleSelectAll'
+import { StyledToggleSelectAll } from '../ToggleSelectAll'
+import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
 
 import type { Reporting } from 'domain/entities/reporting'
 
@@ -52,8 +53,9 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
           title={
             <TitleContainer>
               <Title>Signalements</Title>
-              {reportings.length !== 0 && (
-                <ToggleSelectAll
+              <ResultNumber>{`(${reportings.length} ${pluralize('résultat', reportings.length)})`}</ResultNumber>
+              {(reportings.length !== 0 || selectedReportingIds.length !== 0) && (
+                <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
                       allIds: reportings.map(reporting => +reporting.id),

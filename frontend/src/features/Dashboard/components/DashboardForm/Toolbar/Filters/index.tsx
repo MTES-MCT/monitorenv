@@ -17,7 +17,7 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { dashboardFiltersActions } from '../../slice'
-import { SelectedPinButton } from '../../style'
+import { SelectedPinButton } from '../../ToggleSelectAll/style'
 
 type FiltersProps = {
   dashboard: DashboardType
