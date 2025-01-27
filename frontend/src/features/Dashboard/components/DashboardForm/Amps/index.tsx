@@ -1,7 +1,6 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { getSelectionState, handleSelection } from '@features/Dashboard/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
@@ -11,9 +10,11 @@ import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
-import { SelectedLayerList, StyledLayerList } from '../style'
+import { ResultNumber, SelectedLayerList, StyledLayerList } from '../style'
+import { StyledToggleSelectAll } from '../ToggleSelectAll'
 import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
+import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
 
 import type { AMP, AMPFromAPI } from 'domain/entities/AMPs'
 
@@ -67,8 +68,9 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
           title={
             <TitleContainer>
               <Title>Zones AMP</Title>
-              {amps.length !== 0 && (
-                <ToggleSelectAll
+              <ResultNumber>{`(${amps.length} ${pluralize('résultat', amps.length)})`}</ResultNumber>
+              {(amps.length !== 0 || selectedAmpIds.length !== 0) && (
+                <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
                       allIds: amps.map(amp => amp.id),

@@ -53,7 +53,7 @@ export const AccordionHeader = styled.header`
 export const TitleContainer = styled.div`
   align-items: center;
   display: flex;
-  gap: 16px;
+  gap: 10px;
 `
 export const Title = styled.h2`
   font-size: 16px;

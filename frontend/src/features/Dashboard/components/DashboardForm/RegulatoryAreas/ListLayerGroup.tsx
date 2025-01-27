@@ -11,6 +11,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import { Layer } from './Layer'
+import { getPinIcon, getSelectionState } from '../ToggleSelectAll/utils'
 
 type ResultListLayerGroupProps = {
   groupName: string
@@ -29,13 +30,13 @@ export function ListLayerGroup({
 
   const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
   const zonesSelected = intersection(selectedRegulatoryAreaIds, layerIds)
-  const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
+  const topicSelectionState = getSelectionState(zonesSelected, layerIds)
 
   const handleCheckAllZones = e => {
     e.stopPropagation()
     const payload = { itemIds: layerIds, type: Dashboard.Block.REGULATORY_AREAS }
 
-    if (allTopicZonesAreChecked) {
+    if (topicSelectionState === 'ALL') {
       dispatch(dashboardActions.removeItems(payload))
     } else {
       dispatch(dashboardActions.addItems(payload))
@@ -73,14 +74,7 @@ export function ListLayerGroup({
               title="Supprimer la/les zone(s)"
             />
           ) : (
-            <IconButton
-              accent={Accent.TERTIARY}
-              aria-label="Sélectionner la/les zone(s)"
-              color={allTopicZonesAreChecked ? THEME.color.blueGray : THEME.color.slateGray}
-              Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
-              onClick={handleCheckAllZones}
-              title="Sélectionner la/les zone(s)"
-            />
+            getPinIcon(topicSelectionState, handleCheckAllZones)
           )}
         </LayerSelector.IconGroup>
       </StyledGroupWrapper>

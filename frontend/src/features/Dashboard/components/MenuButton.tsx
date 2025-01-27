@@ -76,7 +76,7 @@ export function DashboardMenuButton() {
             <StyledDrawDashboard onCancel={cancel} />
           ) : (
             <MapMenuDialog.Footer>
-              <Filters orientation="column" />
+              <Filters key="dashboard-filters-menu" orientation="column" />
               <Button Icon={Icon.Plus} isFullWidth onClick={openDrawModal}>
                 Créer un tableau de bord
               </Button>

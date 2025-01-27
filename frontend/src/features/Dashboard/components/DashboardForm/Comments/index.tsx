@@ -5,7 +5,7 @@ import { debounce } from 'lodash'
 import { forwardRef, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Accordion } from '../Accordion'
+import { Accordion, Title, TitleContainer } from '../Accordion'
 
 type CommentsProps = {
   comments: string | undefined
@@ -39,7 +39,11 @@ export const Comments = forwardRef<HTMLDivElement, CommentsProps>(
       <Accordion
         isExpanded={isExpanded}
         setExpandedAccordion={setExpandedAccordion}
-        title="Commentaires"
+        title={
+          <TitleContainer>
+            <Title>Commentaires</Title>
+          </TitleContainer>
+        }
         titleRef={ref}
       >
         <StyledTextarea
