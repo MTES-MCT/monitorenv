@@ -22,6 +22,9 @@ import { SelectedPinButton } from '../../ToggleSelectAll/style'
 type FiltersProps = {
   dashboard: DashboardType
 }
+
+const ALL_REGULATOY_AREAS = 'ALL_REGULATOY_AREAS'
+
 export function DashboardFilters({ dashboard }: FiltersProps) {
   const dispatch = useAppDispatch()
   const { extractedArea } = dashboard
@@ -41,6 +44,37 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
   const setFilteredRegulatoryThemes = (value: string[] | undefined) => {
+    if (filters?.regulatoryThemes?.includes(ALL_REGULATOY_AREAS) && !value?.includes(ALL_REGULATOY_AREAS)) {
+      dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: [] }, id }))
+
+      return
+    }
+
+    if (value?.includes('ALL')) {
+      // Delete one item when 'ALL_REGULATOY_AREAS' is selected
+      if (
+        filters?.regulatoryThemes &&
+        filters?.regulatoryThemes.length > 0 &&
+        filters?.regulatoryThemes.length > value?.length
+      ) {
+        const filtersWithoutAll = value?.filter(filter => filter !== ALL_REGULATOY_AREAS)
+        dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: filtersWithoutAll }, id }))
+
+        return
+      }
+
+      // Select all
+      const allRegulatoryAreasIds = regulatoryThemesAsOption.map(regulatory => regulatory.value)
+      dispatch(
+        dashboardFiltersActions.setFilters({
+          filters: { regulatoryThemes: [ALL_REGULATOY_AREAS, ...allRegulatoryAreasIds] },
+          id
+        })
+      )
+
+      return
+    }
+
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: value }, id }))
   }
 
@@ -67,7 +101,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
           label="Thématique réglementaire"
           name="regulatoryThemes"
           onChange={setFilteredRegulatoryThemes}
-          options={regulatoryThemesAsOption}
+          options={[{ label: 'Tout sélectionner', value: ALL_REGULATOY_AREAS }, ...regulatoryThemesAsOption]}
           placeholder="Thématique réglementaire"
           renderValue={() =>
             filters?.regulatoryThemes && (

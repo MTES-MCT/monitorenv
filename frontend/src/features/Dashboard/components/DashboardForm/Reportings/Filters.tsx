@@ -10,10 +10,11 @@ import {
   useNewWindow,
   type Option,
   type DateAsStringRange,
-  type OptionValueType
+  type OptionValueType,
+  Select
 } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum, ReportingDateRangeLabels } from 'domain/entities/dateRange'
-import { StatusFilterEnum, StatusFilterLabels } from 'domain/entities/reporting'
+import { ReportingTypeLabels, StatusFilterEnum, StatusFilterLabels } from 'domain/entities/reporting'
 import { forwardRef, type ComponentProps } from 'react'
 import styled from 'styled-components'
 
@@ -30,6 +31,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
 
   const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
   const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
+  const typeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 
   if (!reportingFilters) {
     return null
@@ -48,7 +50,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
     if (dateRange) {
       dispatch(
         dashboardFiltersActions.setReportingFilters({
-          filters: { dateRange: dateRange as DateRangeEnum },
+          filters: { dateRange: dateRange as DateRangeEnum, period: undefined },
           id: dashboardId
         })
       )
@@ -73,6 +75,15 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
     }
   }
 
+  const setTypeFilter = (type: string | undefined) => {
+    dispatch(
+      dashboardFiltersActions.setReportingFilters({
+        filters: { type },
+        id: dashboardId
+      })
+    )
+  }
+
   return (
     <Wrapper
       // eslint-disable-next-line react/jsx-props-no-spreading
@@ -81,7 +92,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
       $hasChildren={filteredReportings.length > 1}
       $hasPeriodFilter={reportingFilters.dateRange === DateRangeEnum.CUSTOM}
     >
-      <StyledDatesWrapper $hasChildren={filteredReportings.length > 1}>
+      <DateAndTypeWrapper $hasChildren={filteredReportings.length > 1}>
         <DateRangeSelect
           cleanable={false}
           isLabelHidden
@@ -93,6 +104,18 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
           placeholder="Date de signalement depuis"
           value={reportingFilters.dateRange}
         />
+        <Select
+          isLabelHidden
+          isTransparent
+          label="Type de signalement"
+          name="Type"
+          onChange={setTypeFilter}
+          options={typeOptions}
+          placeholder="Type de signalement"
+          value={reportingFilters.type}
+        />
+      </DateAndTypeWrapper>
+      <SpecificDateAndStatusWrapper $hasChildren={filteredReportings.length > 0}>
         {reportingFilters.dateRange === DateRangeEnum.CUSTOM && (
           <CustomPeriodContainer>
             <DateRangePicker
@@ -107,19 +130,19 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
             />
           </CustomPeriodContainer>
         )}
-      </StyledDatesWrapper>
 
-      <StatusWrapper>
-        {statusOptions.map(statusOption => (
-          <Checkbox
-            key={statusOption.label}
-            checked={reportingFilters.status.includes(statusOption.value as StatusFilterEnum)}
-            label={statusOption.label}
-            name={statusOption.label}
-            onChange={isChecked => setStatusFilter(statusOption, isChecked)}
-          />
-        ))}
-      </StatusWrapper>
+        <StatusWrapper>
+          {statusOptions.map(statusOption => (
+            <Checkbox
+              key={statusOption.label}
+              checked={reportingFilters.status.includes(statusOption.value as StatusFilterEnum)}
+              label={statusOption.label}
+              name={statusOption.label}
+              onChange={isChecked => setStatusFilter(statusOption, isChecked)}
+            />
+          ))}
+        </StatusWrapper>
+      </SpecificDateAndStatusWrapper>
     </Wrapper>
   )
 })
@@ -127,7 +150,10 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
 const Wrapper = styled.div<{ $hasChildren: boolean; $hasPeriodFilter: boolean }>`
   padding: 16px 24px;
   ${({ $hasChildren, $hasPeriodFilter }) => $hasPeriodFilter && !$hasChildren && 'padding-bottom: 58px;'}
-  ${({ $hasChildren }) => ($hasChildren ? 'display: flex; justify-content: space-between;' : 'display: flow-root;')}
+  ${({ $hasChildren }) =>
+    $hasChildren
+      ? 'display: flex; flex-direction: column; gap: 16px; justify-content: space-between;'
+      : 'display: flow-root;'}
 `
 const StatusWrapper = styled.fieldset`
   border: none;
@@ -136,13 +162,22 @@ const StatusWrapper = styled.fieldset`
   float: right;
   padding-bottom: 16px;
 `
-
-const StyledDatesWrapper = styled.div<{ $hasChildren: boolean }>`
+const DateAndTypeWrapper = styled.div<{ $hasChildren: boolean }>`
   display: flex;
-  flex-direction: column;
   gap: 16px;
   ${p => !p.$hasChildren && 'position: absolute;'}
-  z-index: 1;
+  z-index: 2;
+`
+
+const SpecificDateAndStatusWrapper = styled.div<{ $hasChildren: boolean }>`
+  display: flex;
+  gap: 16px;
+  ${p => !p.$hasChildren && 'position: relative; top: 40px;'}
+
+  > fieldset {
+    padding-bottom: 0px;
+    padding-left: 0px;
+  }
 `
 
 const DateRangeSelect = styled(StyledSelect)`
