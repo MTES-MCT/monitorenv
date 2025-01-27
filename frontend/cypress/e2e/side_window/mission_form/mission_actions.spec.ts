@@ -1,10 +1,29 @@
 /// <reference types="cypress" />
 
+import { setGeometry } from 'domain/shared_slices/Draw'
+
 import { createPendingMission } from '../../utils/createPendingMission'
 import { getFutureDate } from '../../utils/getFutureDate'
 
 import type { EnvActionControl, EnvActionSurveillance, Infraction } from 'domain/entities/missions'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
+export const dispatch = action => cy.window().its('store').invoke('dispatch', action)
+
+export const surveillanceGeometry: GeoJSON.Geometry = {
+  coordinates: [
+    [
+      [
+        [-5.445293386230469, 49.204467319852114],
+        [-6.05778117919922, 48.85600950618519],
+        [-5.67154308105469, 48.29540491855175],
+        [-5.010646779785157, 48.68245162584054],
+        [-5.445293386230469, 49.204467319852114]
+      ]
+    ]
+  ],
+  type: 'MultiPolygon'
+}
 context('Side Window > Mission Form > Mission actions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -215,13 +234,16 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
     cy.wait(500)
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
+    cy.clickButton('Ajouter une zone de surveillance')
+    dispatch(setGeometry(surveillanceGeometry))
     cy.get('[id="envActions[0].observations"]').type('Obs.', {
       force: true
     })
 
     cy.getDataCy('surveillance-open-by').type('ABC')
     cy.getDataCy('surveillance-completed-by').type('ABC')
+
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
     cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
@@ -256,6 +278,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
+    cy.clickButton('Ajouter une zone de surveillance')
+    dispatch(setGeometry(surveillanceGeometry))
 
     cy.getDataCy('action-missing-fields-text').contains('3 champs nécessaires aux statistiques à compléter')
 
@@ -280,6 +304,14 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton('Ajouter des contrôles')
     cy.wait(250)
     cy.getDataCy('action-missing-fields-text').contains('7 champs nécessaires aux statistiques à compléter')
+    cy.clickButton('Ajouter un point de contrôle')
+    cy.wait(200)
+
+    const controlGeometry: GeoJSON.Geometry = {
+      coordinates: [[-1.84589767, 46.66739394]],
+      type: 'MultiPoint'
+    }
+    dispatch(setGeometry(controlGeometry))
 
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
