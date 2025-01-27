@@ -67,7 +67,7 @@ class SSEReporting {
 
                     return@map sseEmitter
                 } catch (e: Exception) {
-                    logger.info("Error when send reporting event with id ${event.reporting.reporting.id} : $e")
+                    logger.info("Error when sending reporting event with id ${event.reporting.reporting.id} : $e")
                     sseEmitter.completeWithError(e)
 
                     return@map sseEmitter

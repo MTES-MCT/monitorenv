@@ -11,14 +11,15 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
 import java.time.ZonedDateTime
 
 @Component
-class SSEMission {
+class SSEMission(private val sseEmitterFactory: () -> SseEmitter = { SseEmitter(TWENTY_FOUR_HOURS) }) {
     private val logger = LoggerFactory.getLogger(SSEMission::class.java)
     val mutexLock = Any()
 
     private val MISSION_UPDATE_EVENT_NAME = "MISSION_UPDATE"
-    private val TWENTY_FOUR_HOURS = (24 * 60 * 60 * 1000).toLong()
 
     companion object {
+        private const val TWENTY_FOUR_HOURS = (24 * 60 * 60 * 1000).toLong()
+
         /**
          * This is used to store the SSE listeners
          */
@@ -30,7 +31,7 @@ class SSEMission {
      */
     fun registerListener(): SseEmitter {
         logger.info("Adding new SSE listener of mission updates at ${ZonedDateTime.now()}.")
-        val sseEmitter = SseEmitter(TWENTY_FOUR_HOURS)
+        val sseEmitter = sseEmitterFactory()
 
         synchronized(mutexLock) {
             sseStore.add(sseEmitter)
@@ -76,7 +77,7 @@ class SSEMission {
 
                     return@map sseEmitter
                 } catch (e: Exception) {
-                    logger.info("Error when send mission event with id ${event.mission.id} : $e")
+                    logger.info("Error when sending mission event with id ${event.mission.id} : $e")
                     sseEmitter.completeWithError(e)
 
                     return@map sseEmitter
