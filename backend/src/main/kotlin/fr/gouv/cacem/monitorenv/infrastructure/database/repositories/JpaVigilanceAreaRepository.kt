@@ -49,6 +49,7 @@ class JpaVigilanceAreaRepository(
     @Transactional
     override fun findAll(): List<VigilanceAreaEntity> {
         return dbVigilanceAreaRepository.findAllByIsDeletedIsFalse().map { it.toVigilanceAreaEntity() }
+            .sortedBy { it.name?.lowercase() }
     }
 
     override fun findAllIdsByGeometry(geometry: Geometry): List<Int> {

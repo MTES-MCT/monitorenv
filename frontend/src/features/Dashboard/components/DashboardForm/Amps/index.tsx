@@ -33,12 +33,17 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
 
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-    const ampsByLayerName = groupBy(amps, r => r.name)
+    const ampsByLayerName = groupBy(
+      [...amps].sort((a, b) => a.name.localeCompare(b.name)),
+      r => r.name
+    )
 
     const { selectedAmpByLayerName } = useGetAMPsQuery(undefined, {
       selectFromResult: ({ data }) => ({
         selectedAmpByLayerName: groupBy(
-          Object.values(data?.entities ?? []).filter(amp => selectedAmpIds.includes(amp.id)),
+          Object.values(data?.entities ?? [])
+            .filter(amp => selectedAmpIds.includes(amp.id))
+            .sort((a, b) => a.name.localeCompare(b.name)),
           amp => amp.name
         )
       })
