@@ -42,12 +42,17 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-    const regulatoryAreasByLayerName = groupBy(regulatoryAreas, r => r.layer_name)
+    const regulatoryAreasByLayerName = groupBy(
+      [...regulatoryAreas].sort((a, b) => a?.layer_name.localeCompare(b?.layer_name)) ?? [],
+      regulatory => regulatory.layer_name
+    )
 
     const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
       selectFromResult: ({ data }) => ({
         selectedRegulatoryAreasByLayerName: groupBy(
-          Object.values(data?.entities ?? []).filter(regulatory => selectedRegulatoryAreaIds.includes(regulatory.id)),
+          Object.values(data?.entities ?? [])
+            .filter(regulatory => selectedRegulatoryAreaIds.includes(regulatory.id))
+            .sort((a, b) => a.layer_name.localeCompare(b.layer_name)),
           regulatory => regulatory.layer_name
         )
       })

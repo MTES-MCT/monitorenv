@@ -49,7 +49,7 @@ export namespace VigilanceArea {
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]
     links?: Link[]
-    name: string | undefined
+    name: string
     seaFront: string | undefined
     source?: string
     startDatePeriod?: string

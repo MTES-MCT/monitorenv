@@ -40,11 +40,13 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
+    const sortedVigilanecAreas = [...vigilanceAreas].sort((a, b) => a.name.localeCompare(b.name))
+
     const { selectedVigilanceAreas } = useGetVigilanceAreasQuery(undefined, {
       selectFromResult: ({ data }) => ({
-        selectedVigilanceAreas: Object.values(data?.entities ?? []).filter(vigilanceArea =>
-          selectedVigilanceAreaIds.includes(vigilanceArea.id)
-        )
+        selectedVigilanceAreas: Object.values(data?.entities ?? [])
+          .filter(vigilanceArea => selectedVigilanceAreaIds.includes(vigilanceArea.id))
+          .sort((a, b) => a.name.localeCompare(b.name))
       })
     })
 
@@ -100,11 +102,11 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
           titleRef={ref}
         >
           <StyledLayerList
-            $baseLayersLength={vigilanceAreas.length}
+            $baseLayersLength={sortedVigilanecAreas.length}
             $showBaseLayers={isExpanded}
             data-cy="dashboard-vigilance-areas-list"
           >
-            {vigilanceAreas.map(vigilanceArea => (
+            {sortedVigilanecAreas.map(vigilanceArea => (
               <Layer
                 key={vigilanceArea.id}
                 isPinned={selectedVigilanceAreaIds.includes(vigilanceArea.id)}
