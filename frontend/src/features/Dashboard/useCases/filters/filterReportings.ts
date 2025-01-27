@@ -4,7 +4,12 @@ import { getReportingStatus, ReportingStatusEnum, StatusFilterEnum, type Reporti
 
 export function filterReportings(
   reporting: Reporting,
-  filters: { dateRange: DateRangeEnum; period?: DateAsStringRange; status: StatusFilterEnum[] }
+  filters: {
+    dateRange: DateRangeEnum
+    period?: DateAsStringRange
+    status: StatusFilterEnum[]
+    type: string | undefined
+  }
 ) {
   let shouldBeFiltered = false
   const createdAt = customDayjs(reporting.createdAt).utc()
@@ -51,6 +56,11 @@ export function filterReportings(
       break
     }
   }
+
+  if (filters.type) {
+    shouldBeFiltered = shouldBeFiltered && reporting.reportType === filters.type
+  }
+
   // No filter if both checkbox are checked
   if (filters.status.length !== 1) {
     return shouldBeFiltered

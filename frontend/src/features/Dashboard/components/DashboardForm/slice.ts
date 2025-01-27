@@ -1,6 +1,6 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { StatusFilterEnum } from 'domain/entities/reporting'
+import { ReportingTypeLabels, StatusFilterEnum } from 'domain/entities/reporting'
 import { set } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -17,6 +17,7 @@ export type ReportingFilters = {
   dateRange: DateRangeEnum
   period?: DateAsStringRange
   status: StatusFilterEnum[]
+  type?: string
 }
 
 export type ControlUnitFilters = {
@@ -78,7 +79,8 @@ export const dashboardFiltersSlice = createSlice({
         filters: {},
         reportingFilters: {
           dateRange: DateRangeEnum.MONTH,
-          status: [StatusFilterEnum.IN_PROGRESS]
+          status: [StatusFilterEnum.IN_PROGRESS],
+          type: ReportingTypeLabels.INFRACTION_SUSPICION
         }
       }
     },
