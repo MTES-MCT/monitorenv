@@ -1,8 +1,28 @@
 /// <reference types="cypress" />
 
+import { setGeometry } from 'domain/shared_slices/Draw'
+
 import { getFutureDate } from '../../utils/getFutureDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
+import type { GeoJSON } from 'domain/types/GeoJSON'
+
+const dispatch = action => cy.window().its('store').invoke('dispatch', action)
+
+const surveillanceGeometry: GeoJSON.Geometry = {
+  coordinates: [
+    [
+      [
+        [-5.445293386230469, 49.204467319852114],
+        [-6.05778117919922, 48.85600950618519],
+        [-5.67154308105469, 48.29540491855175],
+        [-5.010646779785157, 48.68245162584054],
+        [-5.445293386230469, 49.204467319852114]
+      ]
+    ]
+  ],
+  type: 'MultiPolygon'
+}
 context('Side Window > Mission Form > Mission dates', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -37,6 +57,8 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
+    cy.clickButton('Ajouter une zone de surveillance')
+    dispatch(setGeometry(surveillanceGeometry))
     cy.getDataCy('envaction-theme-selector').click()
     cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
     cy.getDataCy('envaction-subtheme-selector').click({ force: true })
@@ -207,6 +229,9 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.wait(200)
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
+
+    cy.clickButton('Ajouter une zone de surveillance')
+    dispatch(setGeometry(surveillanceGeometry))
 
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
