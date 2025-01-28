@@ -1,6 +1,6 @@
 import { ArchiveModal } from '@features/commonComponents/Modals/Archive'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
-import { archiveReportingFromTable } from '@features/Reportings/useCases/archiveReporting'
+import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
 import { duplicateReporting } from '@features/Reportings/useCases/duplicateReporting'
 import { editReportingInLocalStore } from '@features/Reportings/useCases/editReportingInLocalStore'
@@ -40,7 +40,7 @@ export function ButtonsGroupRow({ id }) {
         return setIsArchiveModalOpen(true)
       }
 
-      return dispatch(archiveReportingFromTable(id))
+      return dispatch(archiveReporting(id))
     }
 
     return setIsDeleteModalOpen(true)
@@ -57,7 +57,7 @@ export function ButtonsGroupRow({ id }) {
     setIsArchiveModalOpen(false)
   }
 
-  const confirmArchiveReporting = () => dispatch(archiveReportingFromTable(id))
+  const confirmArchiveReporting = () => dispatch(archiveReporting(id))
 
   return (
     <>
