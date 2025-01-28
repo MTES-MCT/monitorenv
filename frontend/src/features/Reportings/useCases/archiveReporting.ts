@@ -1,41 +1,68 @@
 import { reportingActions } from '@features/Reportings/slice'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setToast } from '../../../domain/shared_slices/Global'
+import {
+  ReportingContext,
+  setReportingFormVisibility,
+  setToast,
+  VisibilityState
+} from '../../../domain/shared_slices/Global'
 
-import type { Reporting } from '../../../domain/entities/reporting'
+import type { HomeAppThunk } from '@store/index'
 
-export const archiveReportingFromTable = (id: number) => async (dispatch, getState) => {
-  const {
-    reporting: { activeReportingId, reportings }
-  } = getState()
-  try {
-    const isReportingExistInLocalStore = reportings[id] || undefined
-    let reportingToArchive = isReportingExistInLocalStore ? reportings[id].reporting : undefined
+export const archiveReporting =
+  (
+    id: number,
+    context: ReportingContext = ReportingContext.SIDE_WINDOW,
+    closeReporting: boolean = false
+  ): HomeAppThunk =>
+  async (dispatch, getState) => {
+    const {
+      reporting: { reportings }
+    } = getState()
+    try {
+      const isReportingExistInLocalStore = reportings[id]
+      const archiveResponse = await dispatch(reportingsAPI.endpoints.archiveReportings.initiate({ ids: [id] }))
 
-    if (id !== activeReportingId || !reportingToArchive) {
-      const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
-      reportingToArchive = reporting
-    }
+      if ('error' in archiveResponse) {
+        throw Error("Erreur à l'archivage du signalement")
+      } else {
+        if (closeReporting) {
+          dispatch(reportingActions.deleteSelectedReporting(id))
+          dispatch(
+            setToast({
+              containerId: context === ReportingContext.MAP ? 'map' : 'sideWindow',
+              message: 'Le signalement a bien été archivé',
+              type: 'success'
+            })
+          )
 
-    const response = await dispatch(
-      reportingsAPI.endpoints.updateReporting.initiate({ ...(reportingToArchive as Reporting), isArchived: true })
-    )
-    if ('error' in response) {
-      throw Error("Erreur à l'archivage du signalement")
-    } else {
-      dispatch(
-        setToast({
-          containerId: 'sideWindow',
-          message: 'Le signalement a bien été archivé',
-          type: 'success'
-        })
-      )
-      if (isReportingExistInLocalStore) {
-        dispatch(reportingActions.setReporting({ ...reportings[id].reporting, reporting: response.data }))
+          dispatch(
+            setReportingFormVisibility({
+              context,
+              visibility: VisibilityState.NONE
+            })
+          )
+
+          return
+        }
+
+        dispatch(
+          setToast({
+            containerId: 'sideWindow',
+            message: 'Le signalement a bien été archivé',
+            type: 'success'
+          })
+        )
+        if (isReportingExistInLocalStore) {
+          const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
+
+          if (reporting && reportings[id]) {
+            dispatch(reportingActions.setReporting({ ...reportings[id], reporting }))
+          }
+        }
       }
+    } catch (error) {
+      dispatch(setToast({ containerId: 'sideWindow', message: error }))
     }
-  } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: error }))
   }
-}

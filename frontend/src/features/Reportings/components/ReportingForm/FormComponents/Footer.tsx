@@ -1,7 +1,6 @@
-import { reportingActions } from '@features/Reportings/slice'
 import { StyledButton, ButtonWithWiteBg, StyledDeleteButton, StyledFooter } from '@features/Reportings/style'
+import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { reopenReporting } from '@features/Reportings/useCases/reopenReporting'
-import { saveReporting } from '@features/Reportings/useCases/saveReporting'
 import { getTimeLeft, isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -10,6 +9,7 @@ import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
+import { useEffect, useState } from 'react'
 
 type ReportingFooterProps = {
   isAutoSaveEnabled: boolean
@@ -35,6 +35,19 @@ export function Footer({
 
   const reportingStatus = getReportingStatus(values)
 
+  const [isFormValid, setIsFormValid] = useState(false)
+
+  useEffect(() => {
+    const checkFormValidity = async () => {
+      const validateFormResult = await validateForm()
+      setIsFormValid(isEmpty(validateFormResult))
+    }
+
+    checkFormValidity()
+    // we need to ccke values change to update the form validity
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values])
+
   const handleReopen = () => {
     const endOfValidity = getLocalizedDayjs(values?.createdAt ?? customDayjs().toISOString()).add(
       values?.validityTime ?? 0,
@@ -59,15 +72,10 @@ export function Footer({
   }
 
   const handleArchive = async () => {
-    validateForm().then(async errors => {
-      if (!isEmpty(errors)) {
-        dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
-
-        return
-      }
-
-      dispatch(saveReporting({ ...values, isArchived: true }, reportingContext, true))
-    })
+    if (!values.id) {
+      return
+    }
+    dispatch(archiveReporting(Number(values.id), reportingContext, true))
   }
 
   if (isNewReporting(values.id)) {
@@ -96,7 +104,7 @@ export function Footer({
             Rouvrir le signalement
           </StyledButton>
         ) : (
-          <StyledButton Icon={Icon.Archive} onClick={handleArchive}>
+          <StyledButton disabled={!isFormValid} Icon={Icon.Archive} onClick={handleArchive}>
             Archiver
           </StyledButton>
         )}

@@ -14,14 +14,13 @@ context('Reportings', () => {
   })
 
   it('Reportings should be archived in Reportings Table', () => {
-    cy.intercept('PUT', '/bff/v1/reportings/5').as('archiveReporting')
+    cy.intercept('PUT', '/bff/v1/reportings/archive').as('archiveReporting')
     cy.getDataCy('status-filter-Archivés').click()
     cy.getDataCy('more-actions-reporting-5').scrollIntoView().click({ force: true })
     cy.getDataCy('archive-reporting-5').scrollIntoView().click({ force: true })
 
     cy.wait('@archiveReporting').then(({ response }) => {
-      expect(response && response.body.id).equal(5)
-      expect(response && response.body.isArchived).equal(true)
+      expect(response && response.statusCode).equal(204)
     })
   })
 
