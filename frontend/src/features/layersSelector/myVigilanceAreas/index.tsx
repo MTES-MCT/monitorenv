@@ -1,9 +1,11 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
+import { sideWindowActions } from '@features/SideWindow/slice'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
 
@@ -27,6 +29,10 @@ export function MyVigilanceAreas() {
 
   const createVigilanceArea = () => {
     dispatch(vigilanceAreaActions.createVigilanceArea())
+  }
+
+  const gotToVigilanceAreasList = () => {
+    dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.VIGILANCE_AREAS))
   }
 
   return (
@@ -76,14 +82,17 @@ export function MyVigilanceAreas() {
 
         {myVigilanceAreasIsOpen && (
           <ButtonContainer>
+            <Button Icon={Icon.Plus} isFullWidth onClick={createVigilanceArea} title="Créer une zone de vigilance">
+              Créer une zone de vigilance
+            </Button>
             <Button
               accent={Accent.SECONDARY}
-              Icon={Icon.Plus}
+              Icon={Icon.Expand}
               isFullWidth
-              onClick={createVigilanceArea}
-              title="Créer une zone de vigilance"
+              onClick={gotToVigilanceAreasList}
+              title="Voir la vue détaillée des zones de vigilance"
             >
-              Créer une zone de vigilance
+              Voir la vue détaillée des zones de vigilance
             </Button>
           </ButtonContainer>
         )}
@@ -94,6 +103,9 @@ export function MyVigilanceAreas() {
 
 const ButtonContainer = styled.div`
   background-color: ${p => p.theme.color.white};
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 8px 16px 8px 16px;
 `
 
