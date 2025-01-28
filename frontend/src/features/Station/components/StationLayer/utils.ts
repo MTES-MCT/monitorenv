@@ -17,7 +17,7 @@ export const getFeatureStyle = ((feature: Feature) => {
   const iconStyle = new Style({
     image: new Icon({
       displacement: [0, 19],
-      src: `/icons/station-layer-icon${featureProps.isHighlighted ? '-highlighted' : ''}.svg`
+      src: `/icons/station_border${featureProps.isHighlighted ? '_highlighted' : ''}.svg`
     })
   })
 
