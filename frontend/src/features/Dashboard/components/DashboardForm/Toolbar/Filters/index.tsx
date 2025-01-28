@@ -3,6 +3,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
+  Checkbox,
   CheckPicker,
   CustomSearch,
   getOptionsFromLabelledEnum,
@@ -23,8 +24,6 @@ type FiltersProps = {
   dashboard: DashboardType
 }
 
-const ALL_REGULATOY_AREAS = 'ALL_REGULATOY_AREAS'
-
 export function DashboardFilters({ dashboard }: FiltersProps) {
   const dispatch = useAppDispatch()
   const { extractedArea } = dashboard
@@ -44,39 +43,43 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
   const setFilteredRegulatoryThemes = (value: string[] | undefined) => {
-    if (filters?.regulatoryThemes?.includes(ALL_REGULATOY_AREAS) && !value?.includes(ALL_REGULATOY_AREAS)) {
-      dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: [] }, id }))
-
-      return
-    }
-
-    if (value?.includes('ALL')) {
-      // Delete one item when 'ALL_REGULATOY_AREAS' is selected
-      if (
-        filters?.regulatoryThemes &&
-        filters?.regulatoryThemes.length > 0 &&
-        filters?.regulatoryThemes.length > value?.length
-      ) {
-        const filtersWithoutAll = value?.filter(filter => filter !== ALL_REGULATOY_AREAS)
-        dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: filtersWithoutAll }, id }))
-
-        return
-      }
-
-      // Select all
-      const allRegulatoryAreasIds = regulatoryThemesAsOption.map(regulatory => regulatory.value)
-      dispatch(
-        dashboardFiltersActions.setFilters({
-          filters: { regulatoryThemes: [ALL_REGULATOY_AREAS, ...allRegulatoryAreasIds] },
-          id
-        })
-      )
-
-      return
-    }
-
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: value }, id }))
   }
+
+  const areAllRegulatoryChecked = useMemo(
+    () => filters?.regulatoryThemes?.length === regulatoryThemesAsOption?.length,
+    [filters?.regulatoryThemes, regulatoryThemesAsOption]
+  )
+
+  const indeterminate = useMemo(
+    () => filters?.regulatoryThemes && filters.regulatoryThemes.length > 0 && !areAllRegulatoryChecked,
+    [filters?.regulatoryThemes, areAllRegulatoryChecked]
+  )
+
+  const checkAll = () => {
+    if (areAllRegulatoryChecked) {
+      dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: undefined }, id }))
+
+      return
+    }
+    const allRegulatoryAreasIds = regulatoryThemesAsOption.map(regulatory => regulatory.value)
+
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: allRegulatoryAreasIds }, id }))
+  }
+  const renderExtraFooter = () => (
+    <SelectAllRegulatoryAreasContainer>
+      <Checkbox
+        checked={areAllRegulatoryChecked}
+        indeterminate={indeterminate}
+        inline
+        label="Tout sélectionner"
+        name="selectAll"
+        onChange={checkAll}
+      >
+        Check all
+      </Checkbox>
+    </SelectAllRegulatoryAreasContainer>
+  )
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
     dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
@@ -101,8 +104,9 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
           label="Thématique réglementaire"
           name="regulatoryThemes"
           onChange={setFilteredRegulatoryThemes}
-          options={[{ label: 'Tout sélectionner', value: ALL_REGULATOY_AREAS }, ...regulatoryThemesAsOption]}
+          options={regulatoryThemesAsOption}
           placeholder="Thématique réglementaire"
+          renderExtraFooter={renderExtraFooter}
           renderValue={() =>
             filters?.regulatoryThemes && (
               <OptionValue>{`Thématique réglementaire (${filters?.regulatoryThemes.length})`}</OptionValue>
@@ -159,4 +163,9 @@ const FiltersContainer = styled.div`
     display: flex;
     gap: 16px;
   }
+`
+
+const SelectAllRegulatoryAreasContainer = styled.div`
+  border-top: 1px solid ${p => p.theme.color.lightGray};
+  padding: 8px;
 `

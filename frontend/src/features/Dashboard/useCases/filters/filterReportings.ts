@@ -37,7 +37,7 @@ export function filterReportings(
     }
     case DateRangeEnum.YEAR: {
       const endOfDay = customDayjs().utc().endOf('day')
-      const lastThirtyDays = endOfDay.subtract(1, 'year')
+      const lastThirtyDays = customDayjs().utc().startOf('year').toISOString()
 
       shouldBeFiltered = createdAt.isBetween(endOfDay, lastThirtyDays)
       break
