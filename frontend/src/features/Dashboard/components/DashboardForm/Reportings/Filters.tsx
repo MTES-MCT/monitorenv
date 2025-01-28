@@ -1,4 +1,3 @@
-import { CustomPeriodContainer } from '@components/style'
 import { getFilteredReportings } from '@features/Dashboard/slice'
 import { StyledSelect } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -92,7 +91,10 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
       $hasChildren={filteredReportings.length > 1}
       $hasPeriodFilter={reportingFilters.dateRange === DateRangeEnum.CUSTOM}
     >
-      <DateAndTypeWrapper $hasChildren={filteredReportings.length > 1}>
+      <FirstLine
+        $hasChildren={filteredReportings.length > 1}
+        $hasPeriodFilter={reportingFilters.dateRange === DateRangeEnum.CUSTOM}
+      >
         <DateRangeSelect
           cleanable={false}
           isLabelHidden
@@ -102,6 +104,7 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
           onChange={setPeriodFilter}
           options={dateRangeOptions}
           placeholder="Date de signalement depuis"
+          style={{ width: '160px' }}
           value={reportingFilters.dateRange}
         />
         <Select
@@ -112,74 +115,61 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
           onChange={setTypeFilter}
           options={typeOptions}
           placeholder="Type de signalement"
+          style={{ width: '160px' }}
           value={reportingFilters.type}
         />
-      </DateAndTypeWrapper>
-      <SpecificDateAndStatusWrapper $hasChildren={filteredReportings.length > 0}>
-        {reportingFilters.dateRange === DateRangeEnum.CUSTOM && (
-          <CustomPeriodContainer>
-            <DateRangePicker
-              key="dateRange"
-              baseContainer={newWindowContainerRef.current}
-              defaultValue={reportingFilters.period}
-              isLabelHidden
-              isStringDate
-              label="Période spécifique"
-              name="dateRange"
-              onChange={setCustomPeriodFilter}
-            />
-          </CustomPeriodContainer>
-        )}
 
-        <StatusWrapper>
-          {statusOptions.map(statusOption => (
-            <Checkbox
-              key={statusOption.label}
-              checked={reportingFilters.status.includes(statusOption.value as StatusFilterEnum)}
-              label={statusOption.label}
-              name={statusOption.label}
-              onChange={isChecked => setStatusFilter(statusOption, isChecked)}
-            />
-          ))}
-        </StatusWrapper>
-      </SpecificDateAndStatusWrapper>
+        {statusOptions.map(statusOption => (
+          <StyledCheckbox
+            key={statusOption.label}
+            checked={reportingFilters.status.includes(statusOption.value as StatusFilterEnum)}
+            label={statusOption.label}
+            name={statusOption.label}
+            onChange={isChecked => setStatusFilter(statusOption, isChecked)}
+          />
+        ))}
+      </FirstLine>
+
+      {reportingFilters.dateRange === DateRangeEnum.CUSTOM && (
+        <SecondLine $hasChildren={filteredReportings.length > 1}>
+          <DateRangePicker
+            key="dateRange"
+            baseContainer={newWindowContainerRef.current}
+            defaultValue={reportingFilters.period}
+            isLabelHidden
+            isStringDate
+            label="Période spécifique"
+            name="dateRange"
+            onChange={setCustomPeriodFilter}
+          />
+        </SecondLine>
+      )}
     </Wrapper>
   )
 })
 
 const Wrapper = styled.div<{ $hasChildren: boolean; $hasPeriodFilter: boolean }>`
   padding: 16px 24px;
-  ${({ $hasChildren, $hasPeriodFilter }) => $hasPeriodFilter && !$hasChildren && 'padding-bottom: 58px;'}
+  ${({ $hasChildren, $hasPeriodFilter }) => $hasPeriodFilter && !$hasChildren && 'padding-bottom: 84px;'}
   ${({ $hasChildren }) =>
-    $hasChildren
-      ? 'display: flex; flex-direction: column; gap: 16px; justify-content: space-between;'
-      : 'display: flow-root;'}
-`
-const StatusWrapper = styled.fieldset`
-  border: none;
-  display: flex;
-  gap: 16px;
-  float: right;
-  padding-bottom: 16px;
-`
-const DateAndTypeWrapper = styled.div<{ $hasChildren: boolean }>`
-  display: flex;
-  gap: 16px;
-  ${p => !p.$hasChildren && 'position: absolute;'}
-  z-index: 2;
+    $hasChildren ? 'display: flex; flex-direction: column; justify-content: space-between;' : 'display: flow-root;'}
 `
 
-const SpecificDateAndStatusWrapper = styled.div<{ $hasChildren: boolean }>`
+const FirstLine = styled.div<{ $hasChildren: boolean; $hasPeriodFilter: boolean }>`
   display: flex;
-  gap: 16px;
-  ${p => !p.$hasChildren && 'position: relative; top: 40px;'}
+  flex-wrap: wrap;
+  gap: 10px;
+  ${p => !p.$hasChildren && 'position: absolute; z-index: 2;'}
+  ${p => !p.$hasChildren && !p.$hasPeriodFilter && 'margin-bottom: 10px;'}
+`
 
-  > fieldset {
-    padding-bottom: 0px;
-    padding-left: 0px;
-  }
+const SecondLine = styled.div<{ $hasChildren: boolean }>`
+  ${p => (p.$hasChildren ? 'margin-top: 10px;' : 'position: absolute; margin-top: 40px; z-index: 1;')}
 `
 
 const DateRangeSelect = styled(StyledSelect)`
   width: 200px;
+`
+const StyledCheckbox = styled(Checkbox)`
+  justify-content: center;
 `

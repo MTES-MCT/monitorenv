@@ -8,9 +8,9 @@ import { filterReportings } from './filterReportings'
 
 describe('filterReportings', () => {
   const today = customDayjs().utc()
-  const type = ReportingTypeEnum.INFRACTION_SUSPICION
 
   describe('date range', () => {
+    const type = undefined
     const status = [StatusFilterEnum.IN_PROGRESS]
     it('should return true when reporting is within the day', async () => {
       // Given
@@ -119,6 +119,7 @@ describe('filterReportings', () => {
     })
   })
   describe('in progress reporting', () => {
+    const type = undefined
     const status = [StatusFilterEnum.IN_PROGRESS]
     it('should return true when reporting is in progress and within validity time', async () => {
       // Given
@@ -143,6 +144,7 @@ describe('filterReportings', () => {
     })
   })
   describe('archived reporting', () => {
+    const type = undefined
     const status = [StatusFilterEnum.ARCHIVED]
     it('should return true when reporting is archived and within validity time', async () => {
       // Given
@@ -169,6 +171,7 @@ describe('filterReportings', () => {
   })
 
   describe('archived and in progress', () => {
+    const type = undefined
     const status = [StatusFilterEnum.ARCHIVED, StatusFilterEnum.IN_PROGRESS]
     it('should return true when reporting is archived and in progress', async () => {
       // Given
@@ -202,6 +205,55 @@ describe('filterReportings', () => {
 
       // When & then
       expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status, type })).toEqual(true)
+    })
+  })
+
+  describe('observation and infraction', () => {
+    const status = [StatusFilterEnum.ARCHIVED, StatusFilterEnum.IN_PROGRESS]
+    it('should return true when reporting is an observation', async () => {
+      // Given
+      const type = ReportingTypeEnum.OBSERVATION
+      const reporting: Reporting = aReporting({
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        reportType: ReportingTypeEnum.OBSERVATION
+      })
+
+      // When & then
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status, type })).toEqual(true)
+    })
+    it('should return false when reporting is not observation', async () => {
+      // Given
+      const type = ReportingTypeEnum.OBSERVATION
+      const reporting: Reporting = aReporting({
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        reportType: ReportingTypeEnum.INFRACTION_SUSPICION
+      })
+
+      // When & then
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status, type })).toEqual(false)
+    })
+
+    it('should return true when reporting is an infraction', async () => {
+      // Given
+      const type = ReportingTypeEnum.INFRACTION_SUSPICION
+      const reporting: Reporting = aReporting({
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        reportType: ReportingTypeEnum.INFRACTION_SUSPICION
+      })
+
+      // When & then
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status, type })).toEqual(true)
+    })
+    it('should return false when reporting is an observation', async () => {
+      // Given
+      const type = ReportingTypeEnum.INFRACTION_SUSPICION
+      const reporting: Reporting = aReporting({
+        createdAt: `${today.format('YYYY-MM-DDTHH:mm')}:00.000Z`,
+        reportType: ReportingTypeEnum.OBSERVATION
+      })
+
+      // When & then
+      expect(filterReportings(reporting, { dateRange: DateRangeEnum.DAY, status, type })).toEqual(false)
     })
   })
 })
