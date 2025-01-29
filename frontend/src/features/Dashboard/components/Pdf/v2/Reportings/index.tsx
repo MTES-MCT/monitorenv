@@ -212,7 +212,7 @@ export function Reportings({
               <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
             )}
             {!!reporting.themeId && (
-              <View style={layoutStyle.row}>
+              <View style={(layoutStyle.row, { flexWrap: 'wrap' })}>
                 <Text style={{ fontWeight: 'bold' }}>{themes[reporting.themeId]?.theme} /</Text>
                 <Text> {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')}</Text>
               </View>
