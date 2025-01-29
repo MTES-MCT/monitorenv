@@ -16,15 +16,18 @@ import { VigilanceAreas } from './VigilanceAreas'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
-type BriefProps = {
+export type BriefProps = {
+  author?: string
   brief: Dashboard.Brief
+  description?: string
+  title?: string
 }
 
 registerFonts()
 
-export function Brief({ brief }: BriefProps) {
+export function Brief({ author, brief, description, title }: BriefProps) {
   return (
-    <Document>
+    <Document author={author} subject={description} title={title}>
       <Page style={layoutStyle.page}>
         <Headings name={brief.name} />
         <View style={layoutStyle.section}>
