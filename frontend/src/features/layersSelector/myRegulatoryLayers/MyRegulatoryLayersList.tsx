@@ -24,7 +24,10 @@ export function RegulatoryLayersList() {
     )
   }
 
-  const layersByLayersName = groupBy(selectedRegulatoryLayers, r => r?.layer_name)
+  const layersByLayersName = groupBy(
+    selectedRegulatoryLayers.sort((a, b) => a?.layerName?.localeCompare(b?.layerName)),
+    r => r?.layerName
+  )
 
   return (
     <LayerSelector.LayerList

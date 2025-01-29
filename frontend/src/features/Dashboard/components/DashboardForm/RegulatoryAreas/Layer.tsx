@@ -82,15 +82,15 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
     >
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
-        legendKey={layer?.entity_name ?? 'aucun'}
+        legendKey={layer?.entityName ?? 'aucun'}
         type={layer?.thematique ?? 'aucun'}
       />
       <LayerSelector.Name
         $withLargeWidth
         data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}
-        title={layer?.entity_name}
+        title={layer?.entityName}
       >
-        {layer?.entity_name ?? 'AUCUN NOM'}
+        {layer?.entityName ?? 'AUCUN NOM'}
       </LayerSelector.Name>
 
       <LayerSelector.IconGroup>

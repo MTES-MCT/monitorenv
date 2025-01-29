@@ -29,7 +29,7 @@ export function Amps({ amps }: { amps: AMPFromAPI[] }) {
                 </View>
               </View>
             </View>
-            {amp.url_legicem && (
+            {amp.urlLegicem && (
               <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                 <View>
                   <Text style={[areaStyle.description, { width: 'auto' }]}>Résumé réglementaire sur Légicem</Text>
@@ -39,8 +39,8 @@ export function Amps({ amps }: { amps: AMPFromAPI[] }) {
                     <Text>→</Text>
                   </View>
                   <View style={{ paddingLeft: 18 }}>
-                    <Link href={amp.url_legicem}>
-                      <Text>{amp.ref_reg}</Text>
+                    <Link href={amp.urlLegicem}>
+                      <Text>{amp.refReg}</Text>
                     </Link>
                   </View>
                 </View>

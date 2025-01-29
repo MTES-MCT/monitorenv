@@ -57,7 +57,12 @@ export function ResultList({ searchedText }: ResultListProps) {
     !regulatoryLayersSearchResult && areRegulatoryResultsOpen
       ? regulatoryLayers?.ids
       : regulatoryLayersSearchResult ?? [],
-    r => regulatoryLayers?.entities[r]?.layer_name
+    r => regulatoryLayers?.entities[r]?.layerName
+  )
+  const sortedRegulatoryResultsByLayerName = Object.fromEntries(
+    Object.entries(regulatoryLayersByLayerName).sort(([layerNameA], [layerNameB]) =>
+      layerNameA.localeCompare(layerNameB)
+    )
   )
   const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
@@ -66,10 +71,21 @@ export function ResultList({ searchedText }: ResultListProps) {
     !ampsSearchResult && areAmpsResultsOpen ? amps?.ids : ampsSearchResult ?? [],
     a => amps?.entities[a]?.name
   )
+  const sortedAmpResultsByName = Object.fromEntries(
+    Object.entries(ampResultsByAMPName).sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+  )
+
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery(!isSuperUser)
-  const vigilanceAreasIds = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
+
+  const vigilanceAreasResults =
+    !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? []
+  const sortedVigilanceAreasResultsByName = vigilanceAreasResults
+    .map(id => vigilanceAreas.entities[id])
+    .filter(vigilanceArea => !!vigilanceArea)
+    .sort((vigilanceAreaA, vigilanceAreaB) => (vigilanceAreaA?.name ?? '').localeCompare(vigilanceAreaB?.name ?? ''))
+
   const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
   const toggleRegulatory = () => {
@@ -138,7 +154,7 @@ export function ResultList({ searchedText }: ResultListProps) {
             </Title>
           </Header>
           <SubList $isExpanded={areRegulatoryResultsOpen} data-cy="regulatory-result-list">
-            {Object.entries(regulatoryLayersByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
+            {Object.entries(sortedRegulatoryResultsByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
               <RegulatoryLayerGroup
                 key={layerGroupName}
                 groupName={layerGroupName}
@@ -167,7 +183,7 @@ export function ResultList({ searchedText }: ResultListProps) {
             </Title>
           </HeaderAMP>
           <SubListAMP $isExpanded={areAmpsResultsOpen} data-cy="amp-result-list">
-            {Object.entries(ampResultsByAMPName).map(([ampName, ampIdsInGroup]) => (
+            {Object.entries(sortedAmpResultsByName).map(([ampName, ampIdsInGroup]) => (
               <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
             ))}
           </SubListAMP>
@@ -191,8 +207,8 @@ export function ResultList({ searchedText }: ResultListProps) {
             </Title>
           </Header>
           <SubList $isExpanded={areMyVigilanceAreasOpen} data-cy="vigilance-area-result-list">
-            {vigilanceAreasIds?.map(id => (
-              <VigilanceAreaLayer key={id} layerId={id} searchedText={searchedText} />
+            {sortedVigilanceAreasResultsByName?.map(vigilanceArea => (
+              <VigilanceAreaLayer key={vigilanceArea.id} layer={vigilanceArea} searchedText={searchedText} />
             ))}
           </SubList>
         </>

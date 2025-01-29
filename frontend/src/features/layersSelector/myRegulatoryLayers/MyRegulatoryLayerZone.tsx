@@ -28,7 +28,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
 
   const handleRemoveZone = () => dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
 
-  const displayedName = getTitle(regulatoryZone?.entity_name) || 'AUCUN NOM'
+  const displayedName = getTitle(regulatoryZone?.entityName) || 'AUCUN NOM'
 
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {
@@ -42,13 +42,13 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
     <MyLayerZone
       bbox={regulatoryZone.bbox}
       displayedName={displayedName}
-      hasMetadata={!!regulatoryZone?.entity_name}
+      hasMetadata={!!regulatoryZone?.entityName}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}
       id={regulatoryZone.id}
       layerType={MonitorEnvLayers.REGULATORY_ENV}
       layerZoneIsShowed={regulatoryZoneIsShowed}
       metadataIsShown={metadataIsShown}
-      name={regulatoryZone.entity_name}
+      name={regulatoryZone.entityName}
       removeZone={handleRemoveZone}
       showLayer={() => dispatch(showRegulatoryLayer(regulatoryZone.id))}
       toggleZoneMetadata={toggleRegulatoryZoneMetadata}

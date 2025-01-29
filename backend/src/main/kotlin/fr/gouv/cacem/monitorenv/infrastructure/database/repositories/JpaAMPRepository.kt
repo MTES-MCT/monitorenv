@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 class JpaAMPRepository(private val dbAMPRepository: IDBAMPRepository) :
     IAMPRepository {
     override fun findAll(): List<AMPEntity> {
-        return dbAMPRepository.findAll().map { it.toAMP() }.sortedBy { it.name.lowercase() }
+        return dbAMPRepository.findAllByOrderByName().map { it.toAMP() }
     }
 
     override fun count(): Long {

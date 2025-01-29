@@ -17,7 +17,7 @@ export function RegulatoryAreas({ regulatoryAreas }: { regulatoryAreas: Regulato
         {regulatoryAreas.map(regulatoryArea => (
           <View key={regulatoryArea.id} style={areaStyle.card} wrap={false}>
             <View style={areaStyle.header}>
-              <Text> {getTitle(regulatoryArea.layer_name)}</Text>
+              <Text> {getTitle(regulatoryArea.layerName)}</Text>
             </View>
             <View style={areaStyle.content}>
               <View style={[layoutStyle.row, { rowGap: 2 }]}>
@@ -25,7 +25,7 @@ export function RegulatoryAreas({ regulatoryAreas }: { regulatoryAreas: Regulato
                   <Text>Entité</Text>
                 </View>
                 <View style={areaStyle.details}>
-                  <Text>{regulatoryArea.entity_name || 'AUCUN NOM'}</Text>
+                  <Text>{regulatoryArea.entityName || 'AUCUN NOM'}</Text>
                 </View>
               </View>
               <View style={layoutStyle.row}>
@@ -62,7 +62,7 @@ export function RegulatoryAreas({ regulatoryAreas }: { regulatoryAreas: Regulato
                   <Text>→</Text>
                 </View>
                 <View style={{ paddingLeft: 18 }}>
-                  <Link href={regulatoryArea.url}>{regulatoryArea.ref_reg}</Link>
+                  <Link href={regulatoryArea.url}>{regulatoryArea.refReg}</Link>
                 </View>
               </View>
             </View>

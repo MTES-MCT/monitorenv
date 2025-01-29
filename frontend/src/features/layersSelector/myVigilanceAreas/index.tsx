@@ -16,9 +16,9 @@ export function MyVigilanceAreas() {
   const dispatch = useAppDispatch()
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
 
-  const draftVigilanceAreas = Object.values(vigilanceAreas?.entities ?? {})?.filter(
-    vigilanceArea => vigilanceArea?.isDraft
-  )
+  const draftVigilanceAreas = Object.values(vigilanceAreas?.entities ?? {})
+    ?.filter(vigilanceArea => vigilanceArea?.isDraft)
+    .sort((a, b) => a?.name?.localeCompare(b?.name))
 
   const myVigilanceAreasIsOpen = useAppSelector(state => state.layerSidebar.myVigilanceAreasIsOpen)
   const myVigilanceAreaIds = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIds)
@@ -49,18 +49,23 @@ export function MyVigilanceAreas() {
       </LayerSelector.Wrapper>
 
       <>
-        <LayerSelector.LayerList
-          $baseLayersLength={myVigilanceAreaIds.length}
-          $maxHeight={draftVigilanceAreas.length > 3 ? 24 : undefined}
-          $showBaseLayers={myVigilanceAreasIsOpen}
-          data-cy="my-vigilance-area-zones-list"
-        >
-          {myVigilanceAreaIds.length === 0 ? (
-            <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
-          ) : (
-            myVigilanceAreaIds.map(id => <MyVigilanceAreaLayerZone key={id} layerId={id} pinnedVigilanceArea />)
-          )}
-        </LayerSelector.LayerList>
+        {myVigilanceAreasIsOpen && myVigilanceAreaIds.length === 0 && (
+          <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
+        )}
+
+        {myVigilanceAreasIsOpen && myVigilanceAreaIds.length > 0 && (
+          <LayerSelector.LayerList
+            $baseLayersLength={myVigilanceAreaIds.length}
+            $maxHeight={draftVigilanceAreas.length > 3 ? 24 : undefined}
+            $showBaseLayers={myVigilanceAreasIsOpen}
+            data-cy="my-vigilance-area-zones-list"
+          >
+            {myVigilanceAreaIds.map(id => (
+              <MyVigilanceAreaLayerZone key={id} layerId={id} pinnedVigilanceArea />
+            ))}
+          </LayerSelector.LayerList>
+        )}
+
         {myVigilanceAreasIsOpen && draftVigilanceAreas.length > 0 && (
           <>
             <DraftVigilanceAreaTitle>Zones non publiées</DraftVigilanceAreaTitle>

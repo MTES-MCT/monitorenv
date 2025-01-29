@@ -20,7 +20,14 @@ export function AMPLayersList() {
     () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((layer): layer is AMP => !!layer),
     [amps, selectedAmpLayerIds]
   )
-  const layersByLayersName = useMemo(() => groupBy(selectedAmps, r => r?.name), [selectedAmps])
+  const layersByLayersName = useMemo(
+    () =>
+      groupBy(
+        selectedAmps.sort((a, b) => a?.name?.localeCompare(b?.name)),
+        r => r?.name
+      ),
+    [selectedAmps]
+  )
   const layersLength = Object.keys(layersByLayersName).length
 
   if (isEmpty(selectedAmpLayerIds)) {

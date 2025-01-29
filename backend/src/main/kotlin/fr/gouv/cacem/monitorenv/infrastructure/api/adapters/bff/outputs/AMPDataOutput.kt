@@ -8,9 +8,9 @@ data class AMPDataOutput(
     val designation: String,
     val geom: MultiPolygon,
     val name: String,
-    val ref_reg: String? = null,
+    val refReg: String? = null,
     val type: String? = null,
-    val url_legicem: String? = null,
+    val urlLegicem: String? = null,
 ) {
     companion object {
         fun fromAMPEntity(amp: AMPEntity) =
@@ -19,9 +19,9 @@ data class AMPDataOutput(
                 designation = amp.designation,
                 geom = amp.geom,
                 name = amp.name,
-                ref_reg = amp.ref_reg,
+                refReg = amp.refReg,
                 type = amp.type,
-                url_legicem = amp.url_legicem,
+                urlLegicem = amp.urlLegicem,
             )
     }
 }

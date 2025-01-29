@@ -97,7 +97,7 @@ export const getFilterVigilanceAreasPerPeriod = (
   vigilanceAreas: (VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi)[],
   periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
   vigilanceAreaSpecificPeriodFilter?: string[]
-): VigilanceArea.VigilanceAreaFromApi[] => {
+): VigilanceArea.VigilanceAreaLayer[] => {
   const { endDate: endDateFilter, startDate: startDateFilter } = calculatePeriodBounds(
     periodFilter,
     vigilanceAreaSpecificPeriodFilter
@@ -107,7 +107,7 @@ export const getFilterVigilanceAreasPerPeriod = (
     return []
   }
 
-  return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaFromApi>) ?? []).filter(vigilanceArea => {
+  return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaLayer>) ?? []).filter(vigilanceArea => {
     if (vigilanceArea.isAtAllTimes) {
       return true
     }

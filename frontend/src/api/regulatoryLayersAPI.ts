@@ -80,7 +80,7 @@ export const getRegulatoryLayersIdsGroupedByName = createSelector(
     const regulatoryLayersIds = regulatoryLayers?.data?.ids
     if (regulatoryLayersIds && regulatoryLayersEntities) {
       return regulatoryLayersIds?.reduce((acc, layerId) => {
-        const name = regulatoryLayersEntities[layerId]?.layer_name
+        const name = regulatoryLayersEntities[layerId]?.layerName
         if (name) {
           acc[name] = [...(acc[name] ?? []), layerId]
         }

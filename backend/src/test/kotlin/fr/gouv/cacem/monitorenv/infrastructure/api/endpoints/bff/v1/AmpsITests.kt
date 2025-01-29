@@ -42,9 +42,9 @@ class AmpsITests {
                 designation = "ma designation",
                 geom = polygon,
                 name = "mon nom",
-                ref_reg = "ma ref reg",
+                refReg = "ma ref reg",
                 type = "mon type",
-                url_legicem = "mon url legicem",
+                urlLegicem = "mon url legicem",
             )
         given(getAllAMPs.execute()).willReturn(listOf(amp))
 
@@ -56,8 +56,8 @@ class AmpsITests {
             .andExpect(jsonPath("$[0].designation", equalTo(amp.designation)))
             .andExpect(jsonPath("$[0].geom").exists())
             .andExpect(jsonPath("$[0].name", equalTo(amp.name)))
-            .andExpect(jsonPath("$[0].ref_reg", equalTo(amp.ref_reg)))
+            .andExpect(jsonPath("$[0].refReg", equalTo(amp.refReg)))
             .andExpect(jsonPath("$[0].type", equalTo(amp.type)))
-            .andExpect(jsonPath("$[0].url_legicem", equalTo(amp.url_legicem)))
+            .andExpect(jsonPath("$[0].urlLegicem", equalTo(amp.urlLegicem)))
     }
 }

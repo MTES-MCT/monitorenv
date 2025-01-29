@@ -5,11 +5,11 @@ import org.locationtech.jts.geom.MultiPolygon
 
 data class RegulatoryAreaWithMetadataDataOutput(
     val id: Int,
-    val entity_name: String? = null,
+    val entityName: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
-    val layer_name: String? = null,
-    val ref_reg: String? = null,
+    val layerName: String? = null,
+    val refReg: String? = null,
     val thematique: String? = null,
     val type: String? = null,
     val url: String? = null,
@@ -18,11 +18,11 @@ data class RegulatoryAreaWithMetadataDataOutput(
         fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
             RegulatoryAreaWithMetadataDataOutput(
                 id = regulatoryArea.id,
-                entity_name = regulatoryArea.entity_name,
+                entityName = regulatoryArea.entityName,
                 facade = regulatoryArea.facade,
                 geom = regulatoryArea.geom,
-                layer_name = regulatoryArea.layer_name,
-                ref_reg = regulatoryArea.ref_reg,
+                layerName = regulatoryArea.layerName,
+                refReg = regulatoryArea.refReg,
                 thematique = regulatoryArea.thematique,
                 type = regulatoryArea.type,
                 url = regulatoryArea.url,

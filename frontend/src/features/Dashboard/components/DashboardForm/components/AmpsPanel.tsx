@@ -53,7 +53,7 @@ export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: 
                   </Body>
                 </Fields>
               </Zone>
-              <RegulatorySummary regulatoryReference={ampMetadata?.ref_reg} url={ampMetadata?.url_legicem} />
+              <RegulatorySummary regulatoryReference={ampMetadata?.refReg} url={ampMetadata?.urlLegicem} />
             </Content>
           </>
         ) : (

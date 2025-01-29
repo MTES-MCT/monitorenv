@@ -56,19 +56,19 @@ class RegulatoryAreasITests {
             RegulatoryAreaEntity(
                 id = 17,
                 geom = polygon,
-                entity_name = "Zone au sud de la cale",
+                entityName = "Zone au sud de la cale",
                 url = url,
-                layer_name = "ZMEL_Cale_Querlen",
+                layerName = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
-                ref_reg = refReg,
+                refReg = refReg,
                 edition = "2021-11-02",
                 editeur = "Alexis Pré",
                 source = "",
                 observation = "",
                 thematique = "Mouillage",
                 date = "2020-07-01",
-                duree_validite = "15 ans",
-                date_fin = "2035-07-01",
+                dureeValidite = "15 ans",
+                dateFin = "2035-07-01",
                 temporalite = "temporaire",
             )
         given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
@@ -79,9 +79,9 @@ class RegulatoryAreasITests {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(regulatoryArea.id)))
-            .andExpect(jsonPath("$[0].entity_name", equalTo(regulatoryArea.entity_name)))
-            .andExpect(jsonPath("$[0].layer_name", equalTo(regulatoryArea.layer_name)))
-            .andExpect(jsonPath("$[0].ref_reg", equalTo(regulatoryArea.ref_reg)))
+            .andExpect(jsonPath("$[0].entityName", equalTo(regulatoryArea.entityName)))
+            .andExpect(jsonPath("$[0].layerName", equalTo(regulatoryArea.layerName)))
+            .andExpect(jsonPath("$[0].refReg", equalTo(regulatoryArea.refReg)))
             .andExpect(jsonPath("$[0].thematique", equalTo(regulatoryArea.thematique)))
             .andExpect(jsonPath("$[0].type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
@@ -94,19 +94,19 @@ class RegulatoryAreasITests {
             RegulatoryAreaEntity(
                 id = 17,
                 geom = polygon,
-                entity_name = "Zone au sud de la cale",
+                entityName = "Zone au sud de la cale",
                 url = url,
-                layer_name = "ZMEL_Cale_Querlen",
+                layerName = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
-                ref_reg = refReg,
+                refReg = refReg,
                 edition = "2021-11-02",
                 editeur = "Alexis Pré",
                 source = "",
                 observation = "",
                 thematique = "Mouillage",
                 date = "2020-07-01",
-                duree_validite = "15 ans",
-                date_fin = "2035-07-01",
+                dureeValidite = "15 ans",
+                dateFin = "2035-07-01",
                 temporalite = "temporaire",
             )
 
@@ -117,11 +117,11 @@ class RegulatoryAreasITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(regulatoryArea.id)))
-            .andExpect(jsonPath("$.entity_name", equalTo(regulatoryArea.entity_name)))
+            .andExpect(jsonPath("$.entityName", equalTo(regulatoryArea.entityName)))
             .andExpect(jsonPath("$.facade", equalTo(regulatoryArea.facade)))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
-            .andExpect(jsonPath("$.layer_name", equalTo(regulatoryArea.layer_name)))
-            .andExpect(jsonPath("$.ref_reg", equalTo(regulatoryArea.ref_reg)))
+            .andExpect(jsonPath("$.layerName", equalTo(regulatoryArea.layerName)))
+            .andExpect(jsonPath("$.refReg", equalTo(regulatoryArea.refReg)))
             .andExpect(jsonPath("$.thematique", equalTo(regulatoryArea.thematique)))
             .andExpect(jsonPath("$.type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))

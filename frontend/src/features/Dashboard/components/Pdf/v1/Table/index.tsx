@@ -80,7 +80,7 @@ export function AreaTable({
           <View style={{ flex: 1 }}>
             {regulatoryAreas.map(regulatoryArea => (
               <Text key={regulatoryArea.id} style={styles.cell} wrap={false}>
-                {regulatoryArea.entity_name || 'AUCUN NOM'}
+                {regulatoryArea.entityName || 'AUCUN NOM'}
               </Text>
             ))}
           </View>

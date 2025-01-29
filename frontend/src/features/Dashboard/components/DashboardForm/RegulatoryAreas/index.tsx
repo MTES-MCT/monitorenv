@@ -43,8 +43,8 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
     const regulatoryAreasByLayerName = groupBy(
-      [...regulatoryAreas].sort((a, b) => a?.layer_name.localeCompare(b?.layer_name)) ?? [],
-      regulatory => regulatory.layer_name
+      [...regulatoryAreas].sort((a, b) => a?.layerName.localeCompare(b?.layerName)) ?? [],
+      regulatory => regulatory.layerName
     )
 
     const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
@@ -52,8 +52,8 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
         selectedRegulatoryAreasByLayerName: groupBy(
           Object.values(data?.entities ?? [])
             .filter(regulatory => selectedRegulatoryAreaIds.includes(regulatory.id))
-            .sort((a, b) => a.layer_name.localeCompare(b.layer_name)),
-          regulatory => regulatory.layer_name
+            .sort((a, b) => a.layerName.localeCompare(b.layerName)),
+          regulatory => regulatory.layerName
         )
       })
     })

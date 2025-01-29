@@ -1,13 +1,13 @@
 import { Body, Key, Value, Fields, Field, Zone, NoValue } from '../MetadataPanel.style'
 
-export function Identification({ entity_name, facade, thematique, type }) {
+export function Identification({ entityName, facade, thematique, type }) {
   return (
     <Zone>
       <Fields>
         <Body>
           <Field>
             <Key>Entité</Key>
-            <Value data-cy="regulatory-layers-metadata-lawtype">{entity_name || <NoValue>-</NoValue>}</Value>
+            <Value data-cy="regulatory-layers-metadata-lawtype">{entityName || <NoValue>-</NoValue>}</Value>
           </Field>
           <Field>
             <Key>Ensemble reg.</Key>

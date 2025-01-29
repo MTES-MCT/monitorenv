@@ -7,7 +7,7 @@ data class AMPEntity(
     val designation: String,
     val geom: MultiPolygon,
     val name: String,
-    val ref_reg: String? = null,
+    val refReg: String? = null,
     val type: String? = null,
-    val url_legicem: String? = null,
+    val urlLegicem: String? = null,
 )

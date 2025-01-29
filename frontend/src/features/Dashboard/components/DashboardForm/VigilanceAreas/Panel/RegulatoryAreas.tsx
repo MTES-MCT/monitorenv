@@ -85,10 +85,10 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
               <Name>
                 <LayerLegend
                   layerType={MonitorEnvLayers.REGULATORY_ENV}
-                  legendKey={regulatoryArea?.entity_name ?? 'aucun'}
+                  legendKey={regulatoryArea?.entityName ?? 'aucun'}
                   type={regulatoryArea?.thematique ?? 'aucun'}
                 />
-                <span title={regulatoryArea?.entity_name}>{regulatoryArea?.entity_name}</span>
+                <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
               </Name>
 
               <ButtonsContainer>

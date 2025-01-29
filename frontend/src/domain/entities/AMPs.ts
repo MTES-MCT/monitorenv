@@ -6,9 +6,9 @@ export type AMPFromAPI = {
   geom: GeoJSON.MultiPolygon
   id: number
   name: string
-  ref_reg: string | undefined
+  refReg: string | undefined
   type: string | undefined
-  url_legicem: string | undefined
+  urlLegicem: string | undefined
 }
 export type AMP = AMPFromAPI & { bbox: Extent }
 

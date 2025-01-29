@@ -62,12 +62,16 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       vigilanceAreasBySearchQuery = customSearch.find(searchQuery)
     }
 
-    return {
-      entities: vigilanceAreasBySearchQuery.reduce((acc, vigilanceArea) => {
+    const entities = vigilanceAreasBySearchQuery
+      .sort((a, b) => a?.name?.localeCompare(b?.name))
+      .reduce((acc, vigilanceArea) => {
         acc[vigilanceArea.id] = vigilanceArea
 
         return acc
-      }, {} as Record<string, VigilanceArea.VigilanceArea>),
+      }, {} as Record<string, VigilanceArea.VigilanceAreaLayer>)
+
+    return {
+      entities,
       ids: vigilanceAreasBySearchQuery.map(vigilanceArea => vigilanceArea.id)
     }
   }, [
