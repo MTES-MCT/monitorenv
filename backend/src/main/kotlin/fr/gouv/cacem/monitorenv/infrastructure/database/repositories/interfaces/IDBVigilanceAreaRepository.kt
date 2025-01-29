@@ -19,7 +19,7 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
     )
     fun delete(id: Int)
 
-    fun findAllByIsDeletedIsFalse(): List<VigilanceAreaModel>
+    fun findAllByIsDeletedFalseOrderByName(): List<VigilanceAreaModel>
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(

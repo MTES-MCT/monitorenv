@@ -30,22 +30,22 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
             <Header>
               <LayerLegend
                 layerType={MonitorEnvLayers.REGULATORY_ENV}
-                legendKey={regulatoryMetadata?.entity_name}
+                legendKey={regulatoryMetadata?.entityName}
                 type={regulatoryMetadata?.thematique}
               />
-              <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
-                {getTitle(regulatoryMetadata?.layer_name)}
+              <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layerName)}>
+                {getTitle(regulatoryMetadata?.layerName)}
               </RegulatoryZoneName>
               <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onClose} />
             </Header>
             <Content>
               <Identification
-                entity_name={regulatoryMetadata?.entity_name}
+                entityName={regulatoryMetadata?.entityName}
                 facade={regulatoryMetadata?.facade}
                 thematique={regulatoryMetadata?.thematique}
                 type={regulatoryMetadata?.type}
               />
-              <RegulatorySummary regulatoryReference={regulatoryMetadata?.ref_reg} url={regulatoryMetadata?.url} />
+              <RegulatorySummary regulatoryReference={regulatoryMetadata?.refReg} url={regulatoryMetadata?.url} />
             </Content>
           </>
         ) : (

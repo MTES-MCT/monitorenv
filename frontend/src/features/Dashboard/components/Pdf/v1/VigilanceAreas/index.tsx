@@ -89,7 +89,7 @@ export function VigilanceAreas({
                     <Text style={[areaStyle.description, { width: 'auto' }]}>Réglementations en lien</Text>
                     {regulatoryAreas.map(linkedRegulatoryArea => (
                       <Text key={linkedRegulatoryArea.id} style={[areaStyle.details, { width: 'auto' }]}>
-                        {linkedRegulatoryArea.entity_name}
+                        {linkedRegulatoryArea.entityName}
                       </Text>
                     ))}
                   </View>

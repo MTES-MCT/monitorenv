@@ -25,7 +25,7 @@ export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMP
     return (layer as AMPProperties | VigilanceArea.VigilanceAreaProperties)?.name
   }
 
-  return (layer as RegulatoryLayerCompactProperties).layer_name
+  return (layer as RegulatoryLayerCompactProperties).layerName
 }
 
 export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
@@ -42,7 +42,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
       return (layer as VigilanceArea.VigilanceAreaProperties)?.themes?.join(', ')
 
     default:
-      return (layer as RegulatoryLayerCompactProperties).entity_name
+      return (layer as RegulatoryLayerCompactProperties).entityName
   }
 }
 
@@ -60,7 +60,7 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
       return (layer as VigilanceArea.VigilanceAreaProperties).comments
 
     default:
-      return (layer as RegulatoryLayerCompactProperties).entity_name
+      return (layer as RegulatoryLayerCompactProperties).entityName
   }
 }
 

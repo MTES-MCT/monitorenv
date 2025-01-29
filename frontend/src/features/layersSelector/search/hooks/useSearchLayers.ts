@@ -29,7 +29,7 @@ export function useSearchLayers() {
     const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
       ignoreLocation: true,
       includeScore: false,
-      keys: ['layer_name', 'entity_name', 'ref_reg', 'type', 'thematique'],
+      keys: ['layerName', 'entityName', 'refReg', 'type', 'thematique'],
       minMatchCharLength: 2,
       threshold: 0.2
     })
@@ -134,9 +134,9 @@ export function useSearchLayers() {
           const filterWithTextExpression = shouldSearchByText
             ? {
                 $or: [
-                  { $path: ['layer_name'], $val: searchedText },
-                  { $path: ['entity_name'], $val: searchedText },
-                  { $path: ['ref_reg'], $val: searchedText },
+                  { $path: ['layerName'], $val: searchedText },
+                  { $path: ['entityName'], $val: searchedText },
+                  { $path: ['refReg'], $val: searchedText },
                   { $path: ['type'], $val: searchedText }
                 ]
               }

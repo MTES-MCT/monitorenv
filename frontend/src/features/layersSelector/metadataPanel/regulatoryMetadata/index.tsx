@@ -35,11 +35,11 @@ export function RegulatoryMetadata() {
           <Header data-cy="regulatory-metadata-header">
             <LayerLegend
               layerType={MonitorEnvLayers.REGULATORY_ENV}
-              legendKey={regulatoryMetadata?.entity_name}
+              legendKey={regulatoryMetadata?.entityName}
               type={regulatoryMetadata?.thematique}
             />
-            <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
-              {getTitle(regulatoryMetadata?.layer_name)}
+            <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layerName)}>
+              {getTitle(regulatoryMetadata?.layerName)}
             </RegulatoryZoneName>
             <IconButton
               accent={Accent.TERTIARY}
@@ -50,13 +50,13 @@ export function RegulatoryMetadata() {
           </Header>
           <Content>
             <Identification
-              entity_name={regulatoryMetadata?.entity_name}
+              entityName={regulatoryMetadata?.entityName}
               facade={regulatoryMetadata?.facade}
               thematique={regulatoryMetadata?.thematique}
               type={regulatoryMetadata?.type}
             />
             <RegulatorySummary
-              regulatoryReference={regulatoryMetadata?.ref_reg}
+              regulatoryReference={regulatoryMetadata?.refReg}
               type="REGULATORY"
               url={regulatoryMetadata?.url}
             />

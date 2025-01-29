@@ -96,17 +96,17 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
     >
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
-        legendKey={layer?.entity_name ?? 'aucun'}
+        legendKey={layer?.entityName ?? 'aucun'}
         type={layer?.thematique ?? 'aucun'}
       />
-      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entity_name}>
+      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entityName}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={layer?.entity_name ?? ''}
+          textToHighlight={layer?.entityName ?? ''}
         />
-        {!layer?.entity_name && 'AUCUN NOM'}
+        {!layer?.entityName && 'AUCUN NOM'}
       </LayerSelector.Name>
       <LayerSelector.IconGroup>
         {isLinkingRegulatoryToVigilanceArea ? (

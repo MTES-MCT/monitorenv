@@ -1,23 +1,23 @@
 import type { GeoJSON } from '../types/GeoJSON'
 
 export type RegulatoryLayerWithMetadataFromAPI = {
-  entity_name: string
+  entityName: string
   facade: string
   geom: GeoJSON.MultiPolygon
   id: number
-  layer_name: string
-  ref_reg: string
+  layerName: string
+  refReg: string
   thematique: string
   type: string
   url: string
 }
 
 export type RegulatoryLayerCompactFromAPI = {
-  entity_name: string
+  entityName: string
   geom: GeoJSON.MultiPolygon
   id: number
-  layer_name: string
-  ref_reg: string
+  layerName: string
+  refReg: string
   thematique: string
   type: string
 }

@@ -15,4 +15,6 @@ interface IDBAMPRepository : JpaRepository<AMPModel, Int> {
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
+
+    fun findAllByOrderByName(): List<AMPModel>
 }

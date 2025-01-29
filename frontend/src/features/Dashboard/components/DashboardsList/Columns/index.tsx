@@ -79,8 +79,8 @@ export const Columns = (
       const themeIdA = rowA.original[columnId][0]
       const themeIdB = rowB.original[columnId][0]
 
-      const themeA: string = regulatoryAreas?.[themeIdA]?.layer_name ?? ''
-      const themeB: string = regulatoryAreas?.[themeIdB]?.layer_name ?? ''
+      const themeA: string = regulatoryAreas?.[themeIdA]?.layerName ?? ''
+      const themeB: string = regulatoryAreas?.[themeIdB]?.layerName ?? ''
 
       return themeA?.localeCompare(themeB)
     }

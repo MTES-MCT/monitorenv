@@ -1,4 +1,3 @@
-import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
@@ -13,26 +12,23 @@ import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
+import type { VigilanceArea } from '@features/VigilanceArea/types'
+
 type RegulatoryLayerProps = {
-  layerId: number
+  layer: VigilanceArea.VigilanceAreaLayer
   searchedText: string
 }
 
-export function VigilanceAreaLayer({ layerId, searchedText }: RegulatoryLayerProps) {
+export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
   const myVigilanceAreaIds = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIds)
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
 
+  const layerId = layer?.id
   const isZoneSelected = myVigilanceAreaIds.includes(layerId)
   const metadataIsShown = layerId === selectedVigilanceAreaId
-
-  const { layer } = useGetVigilanceAreasQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.data?.entities[layerId]
-    })
-  })
 
   const handleSelectZone = e => {
     e.stopPropagation()

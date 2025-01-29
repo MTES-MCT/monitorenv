@@ -14,4 +14,6 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
+
+    fun findAllByOrderByLayerName(): List<RegulatoryAreaModel>
 }

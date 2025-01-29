@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository
 class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository) :
     IRegulatoryAreaRepository {
     override fun findAll(): List<RegulatoryAreaEntity> {
-        return dbRegulatoryAreaRepository.findAll().map { it.toRegulatoryArea() }
-            .sortedBy { it.layer_name?.lowercase() }
+        return dbRegulatoryAreaRepository.findAllByOrderByLayerName().map { it.toRegulatoryArea() }
     }
 
     override fun findById(id: Int): RegulatoryAreaEntity {

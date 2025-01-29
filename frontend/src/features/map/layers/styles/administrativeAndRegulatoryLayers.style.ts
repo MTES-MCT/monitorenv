@@ -186,7 +186,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
 }
 
 export const getRegulatoryLayerStyle = feature => {
-  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entity_name'))
+  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entityName'))
 
   return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'))
 }

@@ -119,6 +119,7 @@ const LayerList = styled.ul<{ $baseLayersLength: number; $maxHeight?: number; $s
 `
 
 const NoLayerSelected = styled.div`
+  background: ${p => p.theme.color.white};
   color: ${p => p.theme.color.slateGray};
   padding: 16px 8px 16px;
   text-align: center;

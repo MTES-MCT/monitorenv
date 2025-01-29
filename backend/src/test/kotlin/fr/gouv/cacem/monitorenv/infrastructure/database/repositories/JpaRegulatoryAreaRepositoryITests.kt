@@ -34,12 +34,12 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 RegulatoryAreaEntity(
                     id = 17,
                     geom = polygon,
-                    entity_name = "Zone au sud de la cale",
+                    entityName = "Zone au sud de la cale",
                     url =
                         "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
-                    layer_name = "ZMEL_Cale_Querlen",
+                    layerName = "ZMEL_Cale_Querlen",
                     facade = "NAMO",
-                    ref_reg =
+                    refReg =
                         "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel",
                     edition = "2021-11-02",
                     editeur = "Alexis Pré",
@@ -47,8 +47,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                     observation = "",
                     thematique = "Mouillage, PN",
                     date = "2020-07-01",
-                    duree_validite = "15 ans",
-                    date_fin = "2035-07-01",
+                    dureeValidite = "15 ans",
+                    dateFin = "2035-07-01",
                     temporalite = "temporaire",
                 ),
             )
@@ -58,12 +58,12 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(requestedRegulatoryArea.id).isEqualTo(searchedRegulatoryArea.id)
         assertThat(requestedRegulatoryArea.geom).isEqualTo(searchedRegulatoryArea.geom)
-        assertThat(requestedRegulatoryArea.entity_name)
-            .isEqualTo(searchedRegulatoryArea.entity_name)
+        assertThat(requestedRegulatoryArea.entityName)
+            .isEqualTo(searchedRegulatoryArea.entityName)
         assertThat(requestedRegulatoryArea.url).isEqualTo(searchedRegulatoryArea.url)
-        assertThat(requestedRegulatoryArea.layer_name).isEqualTo(searchedRegulatoryArea.layer_name)
+        assertThat(requestedRegulatoryArea.layerName).isEqualTo(searchedRegulatoryArea.layerName)
         assertThat(requestedRegulatoryArea.facade).isEqualTo(searchedRegulatoryArea.facade)
-        assertThat(requestedRegulatoryArea.ref_reg).isEqualTo(searchedRegulatoryArea.ref_reg)
+        assertThat(requestedRegulatoryArea.refReg).isEqualTo(searchedRegulatoryArea.refReg)
         assertThat(requestedRegulatoryArea.edition).isEqualTo(searchedRegulatoryArea.edition)
         assertThat(requestedRegulatoryArea.editeur).isEqualTo(searchedRegulatoryArea.editeur)
         assertThat(requestedRegulatoryArea.source).isEqualTo(searchedRegulatoryArea.source)
@@ -71,9 +71,9 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             .isEqualTo(searchedRegulatoryArea.observation)
         assertThat(requestedRegulatoryArea.thematique).isEqualTo(searchedRegulatoryArea.thematique)
         assertThat(requestedRegulatoryArea.date).isEqualTo(searchedRegulatoryArea.date)
-        assertThat(requestedRegulatoryArea.duree_validite)
-            .isEqualTo(searchedRegulatoryArea.duree_validite)
-        assertThat(requestedRegulatoryArea.date_fin).isEqualTo(searchedRegulatoryArea.date_fin)
+        assertThat(requestedRegulatoryArea.dureeValidite)
+            .isEqualTo(searchedRegulatoryArea.dureeValidite)
+        assertThat(requestedRegulatoryArea.dateFin).isEqualTo(searchedRegulatoryArea.dateFin)
         assertThat(requestedRegulatoryArea.temporalite)
             .isEqualTo(searchedRegulatoryArea.temporalite)
         assertThat(requestedRegulatoryArea.observation)
