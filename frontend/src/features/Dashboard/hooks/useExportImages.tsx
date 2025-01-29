@@ -140,8 +140,8 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
 
   useEffect(() => {
     const hiddenDiv = document.createElement('div')
-    hiddenDiv.style.width = '1920px'
-    hiddenDiv.style.height = '1080px'
+    hiddenDiv.style.width = '960px'
+    hiddenDiv.style.height = '540px'
     hiddenDiv.style.position = 'absolute'
     hiddenDiv.style.visibility = 'hidden'
     document.body.appendChild(hiddenDiv)
