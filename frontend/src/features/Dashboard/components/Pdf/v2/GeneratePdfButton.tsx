@@ -8,9 +8,9 @@ import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
 import { useExportImages } from '../../../hooks/useExportImages'
+import { renderPDF } from '../renderPdf'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
@@ -90,9 +90,8 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       if (brief.images && !loading && shouldTriggerExport) {
         setIsOpening(true)
 
-        const monitorEnvWorker = await MonitorEnvWebWorker
-
-        const url = await monitorEnvWorker.renderPDFInWorker({ brief })
+        const blob = await renderPDF({ brief })
+        const url = URL.createObjectURL(blob)
 
         if (url) {
           const link = document.createElement('a')
