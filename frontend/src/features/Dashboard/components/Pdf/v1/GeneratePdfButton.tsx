@@ -6,11 +6,9 @@ import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
-import { usePDF } from '@react-pdf/renderer'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-
-import { Brief } from './Brief'
+import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
@@ -19,7 +17,9 @@ type GeneratePdfButtonProps = {
 }
 
 export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [shouldTriggerExport, setShouldTriggerExport] = useState(false)
+  const [isOpening, setIsOpening] = useState(false)
+
   const { subThemes, themes } = useGetControlPlans()
 
   const controlUnits = useAppSelector(state => getControlUnitsByIds(state, dashboard.controlUnitIds))
@@ -61,6 +61,8 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       vigilanceAreas
     }),
     [
+      allLinkedAMPs,
+      allLinkedRegulatoryAreas,
       amps,
       dashboard.comments,
       dashboard.name,
@@ -70,39 +72,52 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       reportings?.entities,
       subThemes,
       themes,
-      allLinkedAMPs,
-      vigilanceAreas,
-      allLinkedRegulatoryAreas
+      vigilanceAreas
     ]
   )
 
-  const [pdf, update] = usePDF()
-
-  const handleDownload = () => {
-    setIsGenerating(true)
-
-    update(<Brief brief={brief} />)
+  const handleDownload = async () => {
+    setShouldTriggerExport(true)
   }
 
   useEffect(() => {
-    if (isGenerating && !pdf.loading && pdf.blob && pdf.url) {
-      setIsGenerating(false)
+    const renderPdf = async () => {
+      if (shouldTriggerExport) {
+        setIsOpening(true)
 
-      const link = document.createElement('a')
-      link.href = pdf.url
-      link.download = `${dashboard.name}.pdf`
-      link.click()
+        const monitorEnvWorker = await MonitorEnvWebWorker
+
+        const url = await monitorEnvWorker.renderPDFInWorkerV1({ brief })
+
+        if (url) {
+          const link = document.createElement('a')
+          link.href = url
+          link.download = `${dashboard.name}.pdf`
+          link.click()
+          link.remove()
+          URL.revokeObjectURL(url)
+        }
+        setShouldTriggerExport(false)
+        setIsOpening(false)
+      }
     }
-  }, [isGenerating, pdf.loading, pdf.blob, pdf.url, dashboard.name])
+    renderPdf()
+  }, [brief, dashboard.name, shouldTriggerExport])
+
+  const getLoadingText = () => {
+    if (isOpening) {
+      return 'Chargement du brief'
+    }
+
+    return 'Générer un brief'
+  }
 
   return (
-    <StyledLinkButton
-      disabled={pdf.loading || isGenerating}
-      Icon={pdf.loading || isGenerating ? Icon.Reset : Icon.Document}
-      onClick={handleDownload}
-    >
-      {pdf.loading || isGenerating ? 'Chargement du brief' : 'Générer un brief'}
-    </StyledLinkButton>
+    <>
+      <StyledLinkButton disabled={isOpening} Icon={isOpening ? Icon.Reset : Icon.Document} onClick={handleDownload}>
+        {getLoadingText()}
+      </StyledLinkButton>
+    </>
   )
 }
 

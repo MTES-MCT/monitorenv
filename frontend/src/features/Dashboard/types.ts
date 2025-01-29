@@ -1,4 +1,4 @@
-import type { ExportImageType } from './components/Layers/ExportLayer'
+import type { ExportImageType } from './hooks/useExportImages'
 import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
 import type {
   RegulatoryLayerCompact,

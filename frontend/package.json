@@ -37,6 +37,7 @@
     "@tanstack/react-table": "8.20.6",
     "@tanstack/react-virtual": "3.11.2",
     "classnames": "2.5.1",
+    "comlink": "4.4.2",
     "compressorjs": "1.2.1",
     "dayjs": "1.11.13",
     "deep-object-diff": "1.1.9",

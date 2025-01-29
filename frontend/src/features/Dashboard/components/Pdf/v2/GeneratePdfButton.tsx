@@ -3,16 +3,14 @@ import { getControlUnitsByIds } from '@api/controlUnitsAPI'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
-import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
-import { usePDF } from '@react-pdf/renderer'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { MonitorEnvWebWorker } from 'workers/MonitorEnvWebWorker'
 
-import { Brief } from './Brief'
-import { ExportLayer, type ExportImageType } from '../../Layers/ExportLayer'
+import { useExportImages } from '../../../hooks/useExportImages'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
@@ -21,10 +19,8 @@ type GeneratePdfButtonProps = {
 }
 
 export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
-  const dispatch = useAppDispatch()
-
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [shouldLoadImage, setShouldLoadImage] = useState(false)
+  const [shouldTriggerExport, setShouldTriggerExport] = useState(false)
+  const [isOpening, setIsOpening] = useState(false)
 
   const { subThemes, themes } = useGetControlPlans()
 
@@ -50,6 +46,8 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
 
+  const { images, loading } = useExportImages({ triggerExport: shouldTriggerExport })
+
   const brief: Dashboard.Brief = useMemo(
     () => ({
       allLinkedAMPs,
@@ -57,7 +55,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       amps,
       comments: dashboard.comments,
       controlUnits,
-      images: [],
+      images,
       name: dashboard.name,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
@@ -74,6 +72,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       dashboard.name,
       dashboard.updatedAt,
       controlUnits,
+      images,
       regulatoryAreas,
       reportings?.entities,
       subThemes,
@@ -82,39 +81,53 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
     ]
   )
 
-  const [pdf, update] = usePDF()
-
-  const handleDownload = () => {
-    setIsGenerating(true)
-    setShouldLoadImage(true)
-  }
-
-  const updateBrief = (imagesToUpdate: ExportImageType[]) => {
-    update(<Brief brief={{ ...brief, images: imagesToUpdate }} />)
-    setShouldLoadImage(false)
+  const handleDownload = async () => {
+    setShouldTriggerExport(true)
   }
 
   useEffect(() => {
-    if (isGenerating && !shouldLoadImage && !pdf.loading && pdf.blob && pdf.url) {
-      setIsGenerating(false)
+    const renderPdf = async () => {
+      if (brief.images && !loading && shouldTriggerExport) {
+        setIsOpening(true)
 
-      const link = document.createElement('a')
-      link.href = pdf.url
-      link.download = `${dashboard.name}.pdf`
-      link.click()
-      link.remove()
+        const monitorEnvWorker = await MonitorEnvWebWorker
+
+        const url = await monitorEnvWorker.renderPDFInWorker({ brief })
+
+        if (url) {
+          const link = document.createElement('a')
+          link.href = url
+          link.download = `${dashboard.name}.pdf`
+          link.click()
+          link.remove()
+          URL.revokeObjectURL(url)
+        }
+        setShouldTriggerExport(false)
+        setIsOpening(false)
+      }
     }
-  }, [dashboard.name, dispatch, isGenerating, pdf.blob, pdf.loading, pdf.url, shouldLoadImage])
+    renderPdf()
+  }, [brief, dashboard.name, loading, shouldTriggerExport])
+
+  const getLoadingText = () => {
+    if (loading) {
+      return 'Chargement des images'
+    }
+    if (isOpening) {
+      return 'Chargement du brief'
+    }
+
+    return 'Générer un brief'
+  }
 
   return (
     <>
-      <ExportLayer onImagesReady={updateBrief} shouldLoadImages={shouldLoadImage} />
       <StyledLinkButton
-        disabled={isGenerating}
-        Icon={isGenerating ? Icon.Reset : Icon.Document}
+        disabled={loading || isOpening}
+        Icon={loading || isOpening ? Icon.Reset : Icon.Document}
         onClick={handleDownload}
       >
-        {isGenerating ? 'Chargement du brief' : 'Générer un brief'}
+        {getLoadingText()}
       </StyledLinkButton>
     </>
   )
