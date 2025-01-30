@@ -1,8 +1,9 @@
 import { THEME } from '@mtes-mct/monitor-ui'
-import { StyleSheet, Text, View } from '@react-pdf/renderer'
+import { StyleSheet, Text, View, Image } from '@react-pdf/renderer'
 
 import { layoutStyle } from '../style'
 
+import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
@@ -45,10 +46,12 @@ const styles = StyleSheet.create({
 
 export function AreaTable({
   amps,
+  image,
   regulatoryAreas,
   vigilanceAreas
 }: {
   amps: AMPFromAPI[]
+  image: ExportImageType | undefined
   regulatoryAreas: RegulatoryLayerWithMetadata[]
   vigilanceAreas: VigilanceArea.VigilanceArea[]
 }) {
@@ -100,6 +103,7 @@ export function AreaTable({
           </View>
         </View>
       </View>
+      {image && <Image src={image.image} style={{ marginTop: 4.3 }} />}
     </>
   )
 }

@@ -3,6 +3,7 @@ import { getControlUnitsByIds } from '@api/controlUnitsAPI'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
+import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
@@ -45,6 +46,8 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
 
+  const { images, loading } = useExportImages({ triggerExport: shouldTriggerExport })
+
   const brief: Dashboard.Brief = useMemo(
     () => ({
       allLinkedAMPs,
@@ -52,7 +55,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       amps,
       comments: dashboard.comments,
       controlUnits,
-      images: [],
+      images,
       name: dashboard.name,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
@@ -69,6 +72,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       dashboard.name,
       dashboard.updatedAt,
       controlUnits,
+      images,
       regulatoryAreas,
       reportings?.entities,
       subThemes,
@@ -83,7 +87,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   useEffect(() => {
     const renderPdf = async () => {
-      if (shouldTriggerExport) {
+      if (brief.images && !loading && shouldTriggerExport) {
         setIsOpening(true)
 
         const blob = await renderPDFV1({ brief })
@@ -102,7 +106,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       }
     }
     renderPdf()
-  }, [brief, dashboard.name, shouldTriggerExport])
+  }, [brief, dashboard.name, loading, shouldTriggerExport])
 
   const getLoadingText = () => {
     if (isOpening) {
