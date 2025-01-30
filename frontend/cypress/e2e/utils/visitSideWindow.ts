@@ -9,7 +9,6 @@ export function visitSideWindow(isAutoSaveEnabled = 'true') {
       Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', isAutoSaveEnabled)
       Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
       Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
-      Cypress.env('CYPRESS_FRONTEND_DASHBOARD_ENABLED', 'true')
       Cypress.env('CYPRESS_FRONTEND_DASHBOARD_BRIEF_IMAGES_ENABLED', 'true')
     }
   })

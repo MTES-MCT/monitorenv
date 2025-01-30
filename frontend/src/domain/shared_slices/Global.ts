@@ -1,7 +1,6 @@
 // TODO This slice should disappear in favor of `features/MainWindow/slice.ts` and "Map" feature should have its own slice.
 // TODO "Map" feature should have its own slice where we would transfer the related `display...` props.
 
-import { isDashboardEnabled } from '@features/Dashboard/utils'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
@@ -102,7 +101,7 @@ const initialState: GlobalStateType = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayInterestPoint: true,
-  displayDashboard: isDashboardEnabled(),
+  displayDashboard: true,
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
   displayRightMenuControlUnitListButton: true,
@@ -116,7 +115,7 @@ const initialState: GlobalStateType = {
   displayInterestPointLayer: true,
   displayReportingToAttachLayer: true,
   displayVigilanceAreaLayer: true,
-  displayDashboardLayer: isDashboardEnabled(),
+  displayDashboardLayer: false,
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
@@ -195,8 +194,8 @@ const globalSlice = createSlice({
       state.displayReportingsOverlay = true
       state.displayRightMenuControlUnitListButton = true
       state.displaySearchSemaphoreButton = true
-      state.displayDashboard = isDashboardEnabled()
-      state.displayDashboardLayer = isDashboardEnabled()
+      state.displayDashboard = true
+      state.displayDashboardLayer = false
     },
 
     setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {

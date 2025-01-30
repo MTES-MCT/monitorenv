@@ -3,7 +3,6 @@
 
 interface ImportMetaEnv {
   readonly FRONTEND_DASHBOARD_BRIEF_IMAGES_ENABLED: string
-  readonly FRONTEND_DASHBOARD_ENABLED: string
   readonly FRONTEND_GEOSERVER_NAMESPACE: string
   readonly FRONTEND_GEOSERVER_REMOTE_URL: string
   readonly FRONTEND_GOOGLEMAPS_API_KEY: string

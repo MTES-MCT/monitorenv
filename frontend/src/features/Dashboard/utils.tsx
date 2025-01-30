@@ -5,7 +5,6 @@ import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
-import { isCypress } from '@utils/isCypress'
 
 import { Dashboard } from './types'
 
@@ -17,11 +16,6 @@ import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 import type { Feature } from 'ol'
 import type { Action } from 'redux'
 import type { ThunkDispatch } from 'redux-thunk'
-
-export const isDashboardEnabled = () =>
-  isCypress()
-    ? window.Cypress.env('CYPRESS_FRONTEND_DASHBOARD_ENABLED') === 'true'
-    : import.meta.env.FRONTEND_DASHBOARD_ENABLED === 'true'
 
 export const getPopulatedExtractedArea = async (
   extractedAreaFromApi: Dashboard.ExtractedAreaFromApi,
