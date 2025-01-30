@@ -32,6 +32,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.wait(250)
     getBaseLayerSnapShot()
 
+    cy.getDataCy('my-vigilance-areas-layers').click()
     cy.clickButton('Cacher la zone')
     cy.wait(250)
     getBaseLayerSnapShot()
@@ -41,7 +42,7 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.clickButton('Supprimer la zone de ma sélection')
     cy.wait(250)
     getBaseLayerSnapShot()
-    cy.getDataCy('my-vigilance-area-zones-list').contains('Aucune zone sélectionnée')
+    cy.getDataCy('my-vigilance-area-no-result').should('be.visible')
   })
 
   it('A vigilance area should be searched per period', () => {
