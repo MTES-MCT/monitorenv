@@ -15,7 +15,7 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export function VigilanceAreasLayer({ map }: BaseMapChildrenProps) {
-  const displayVigilanceAreaLayer = useAppSelector(state => state.global.displayVigilanceAreaLayer)
+  const displayVigilanceAreaLayer = useAppSelector(state => state.global.layers.displayVigilanceAreaLayer)
 
   const myVigilanceAreaIdsDisplayed = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIdsDisplayed)
 

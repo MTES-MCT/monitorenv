@@ -9,12 +9,12 @@ import { SearchSemaphores } from './SearchSemaphores'
 
 export function SearchSemaphoreButton() {
   const dispatch = useAppDispatch()
-  const isSearchSemaphoreVisible = useAppSelector(state => state.global.isSearchSemaphoreVisible)
+  const isSearchSemaphoreVisible = useAppSelector(state => state.global.visibility.isSearchSemaphoreVisible)
 
   const openOrCloseSearchSemaphore = () => {
     dispatch(globalActions.hideSideButtons())
     dispatch(reduceReportingFormOnMap())
-    dispatch(globalActions.setDisplayedItems({ isSearchSemaphoreVisible: !isSearchSemaphoreVisible }))
+    dispatch(globalActions.setDisplayedItems({ visibility: { isSearchSemaphoreVisible: !isSearchSemaphoreVisible } }))
   }
 
   return (

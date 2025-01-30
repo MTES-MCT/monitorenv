@@ -14,7 +14,7 @@ import type { ReportingType } from './slice'
 
 export function Reportings({ context }: { context: ReportingContext }) {
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
-  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+  const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportings = useAppSelector(state => state.reporting.reportings)
   const reportingContext = useAppSelector(state =>

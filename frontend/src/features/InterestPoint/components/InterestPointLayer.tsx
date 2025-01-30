@@ -33,7 +33,7 @@ export const MIN_ZOOM = 7
 
 export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const displayInterestPointLayer = useAppSelector(state => state.global.displayInterestPointLayer)
+  const displayInterestPointLayer = useAppSelector(state => state.global.layers.displayInterestPointLayer)
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
 
@@ -118,8 +118,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
               const { feature, ...interestPointWithoutFeature } = interestPoint
               nextFeature.setProperties(interestPointWithoutFeature)
 
-              // FIXME Remove this cast.
-              feats.push(nextFeature as Feature<LineString>)
+              feats.push(nextFeature)
 
               return feats
             }
@@ -134,8 +133,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
           }).readFeature(currentInterestPoint.feature) as Feature<LineString>
           currentFeatureToDraw.setProperties(currentInterestPointWithoutFeature)
 
-          // FIXME Remove this cast.
-          features.push(currentFeatureToDraw as Feature<LineString>)
+          features.push(currentFeatureToDraw)
         }
         vectorSourceRef.current.clear()
         vectorSourceRef.current.addFeatures(features)

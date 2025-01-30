@@ -27,7 +27,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
-  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
+  const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
 
   const regulatoryPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<

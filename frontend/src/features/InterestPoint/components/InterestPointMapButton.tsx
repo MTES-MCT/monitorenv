@@ -19,7 +19,7 @@ import { useEscapeKey } from '../../../hooks/useEscapeKey'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
-  const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
+  const isMapToolVisible = useAppSelector(state => state.global.visibility.isMapToolVisible)
 
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
 

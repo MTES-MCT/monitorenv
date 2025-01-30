@@ -23,7 +23,7 @@ export function SideWindowLauncher() {
   const reportings = useAppSelector(state => state.reporting.reportings)
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
   const sideWindow = useAppSelector(state => state.sideWindow)
-  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+  const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
 
   const reportingsOpenOnSideWindow = useMemo(
     () => Object.values(reportings).filter(reporting => reporting.context === ReportingContext.SIDE_WINDOW),

@@ -16,8 +16,8 @@ import { MissionFilterContext, MissionFilters } from '../Filters'
 export function MissionsMenu() {
   const dispatch = useAppDispatch()
 
-  const isSearchMissionsVisible = useAppSelector(state => state.global.isSearchMissionsVisible)
-  const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
+  const isSearchMissionsVisible = useAppSelector(state => state.global.visibility.isSearchMissionsVisible)
+  const displayMissionsLayer = useAppSelector(state => state.global.layers.displayMissionsLayer)
   const sideWindow = useAppSelector(state => state.sideWindow)
 
   const isMissionButtonIsActive = useMemo(
@@ -30,7 +30,7 @@ export function MissionsMenu() {
   }
 
   const toggleMissionsLayer = () => {
-    dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
+    dispatch(setDisplayedItems({ layers: { displayMissionsLayer: !displayMissionsLayer } }))
   }
 
   const toggleMissionsMenu = e => {
@@ -38,7 +38,7 @@ export function MissionsMenu() {
     dispatch(globalActions.hideSideButtons())
     dispatch(
       setDisplayedItems({
-        isSearchMissionsVisible: !isSearchMissionsVisible
+        visibility: { isSearchMissionsVisible: !isSearchMissionsVisible }
       })
     )
     dispatch(reduceReportingFormOnMap())

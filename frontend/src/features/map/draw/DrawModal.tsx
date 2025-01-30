@@ -116,12 +116,12 @@ export function DrawModal() {
   // Close DrawModal when closing reporting form
   useEffect(() => {
     if (
-      global.reportingFormVisibility.visibility === VisibilityState.NONE &&
+      global.visibility.reportingFormVisibility.visibility === VisibilityState.NONE &&
       listener === InteractionListener.REPORTING_ZONE
     ) {
       dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     }
-  }, [dispatch, global.reportingFormVisibility, listener, sideWindow.status])
+  }, [dispatch, global.visibility.reportingFormVisibility, listener, sideWindow.status])
 
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
@@ -230,7 +230,7 @@ export function DrawModal() {
             defaultValue={undefined}
             isLabelHidden
             isLight
-            label="Coordonées"
+            label="Coordonnées"
             name="coordinates"
             onChange={handleSelectCoordinates}
           />

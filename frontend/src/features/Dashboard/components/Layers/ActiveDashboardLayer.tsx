@@ -24,7 +24,7 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
-  const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+  const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 

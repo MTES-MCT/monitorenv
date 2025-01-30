@@ -32,10 +32,10 @@ export function HomePage() {
 
   const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
-  const displayDrawModal = useAppSelector(state => state.global.displayDrawModal)
-  const displayLocateOnMap = useAppSelector(state => state.global.displayLocateOnMap)
+  const displayDrawModal = useAppSelector(state => state.global.menus.displayDrawModal)
+  const displayLocateOnMap = useAppSelector(state => state.global.menus.displayLocateOnMap)
 
-  const isControlUnitDialogVisible = useAppSelector(state => state.global.isControlUnitDialogVisible)
+  const isControlUnitDialogVisible = useAppSelector(state => state.global.visibility.isControlUnitDialogVisible)
 
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const reportings = useAppSelector(state => state.reporting.reportings)

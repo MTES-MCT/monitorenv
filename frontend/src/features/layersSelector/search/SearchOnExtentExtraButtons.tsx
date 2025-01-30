@@ -27,8 +27,8 @@ export function SearchOnExtentExtraButtons({
   debouncedSearchLayers
 }: SearchOnExtentExtraButtonsProps) {
   const dispatch = useAppDispatch()
-  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
-  const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
+  const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
+  const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
   const currentMapExtentTracker = useAppSelector(state => state.map.currentMapExtentTracker)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)

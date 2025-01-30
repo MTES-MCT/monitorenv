@@ -40,7 +40,7 @@ export function ControlUnitDialog() {
   const close = useCallback(() => {
     dispatch(
       globalActions.setDisplayedItems({
-        isControlUnitDialogVisible: false
+        visibility: { isControlUnitDialogVisible: false }
       })
     )
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
@@ -75,12 +75,10 @@ export function ControlUnitDialog() {
   const backToList = () => {
     dispatch(
       globalActions.setDisplayedItems({
-        isControlUnitDialogVisible: false,
-        isControlUnitListDialogVisible: true
+        visibility: { isControlUnitDialogVisible: false, isControlUnitListDialogVisible: true }
       })
     )
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
-    dispatch(globalActions.setDisplayedItems({ isControlUnitListDialogVisible: true }))
   }
 
   if (!controlUnit) {

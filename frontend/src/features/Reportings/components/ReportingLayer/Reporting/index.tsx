@@ -22,7 +22,7 @@ import type { Geometry } from 'ol/geom'
 
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
+  const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
 
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const editingReporting = useAppSelector(state =>

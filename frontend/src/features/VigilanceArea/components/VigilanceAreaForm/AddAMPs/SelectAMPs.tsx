@@ -1,12 +1,12 @@
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
-import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 
-import { AMPList } from './AMPList'
 import { SubFormBody, SubFormHeader, SubFormHelpText, SubFormTitle, ValidateButton } from '../style'
+import { AMPList } from './AMPList'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
@@ -18,7 +18,7 @@ export function SelectAMP({ onCancel }: { onCancel: () => void }) {
   const handleValidate = () => {
     setFieldValue('linkedAMPs', ampToAdd)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
-    dispatch(displayOrHideOtherLayers({ display: true }))
+    dispatch(restorePreviousDisplayedItems())
   }
 
   return (

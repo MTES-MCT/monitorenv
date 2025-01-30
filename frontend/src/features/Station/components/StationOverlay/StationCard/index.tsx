@@ -20,7 +20,7 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
   const [controlUnits, setControlUnits] = useState<ControlUnit.ControlUnit[]>([])
 
   const dispatch = useAppDispatch()
-  const global = useAppSelector(state => state.global)
+  const displayStationLayer = useAppSelector(state => state.global.layers.displayStationLayer)
   const hasMapInteraction = useHasMapInteraction()
 
   const featureProperties = feature.getProperties() as {
@@ -64,7 +64,7 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
     updateControlUnits()
   }, [updateControlUnits])
 
-  if (!global.displayStationLayer || !featureProperties.station || hasMapInteraction) {
+  if (!displayStationLayer || !featureProperties.station || hasMapInteraction) {
     return null
   }
 

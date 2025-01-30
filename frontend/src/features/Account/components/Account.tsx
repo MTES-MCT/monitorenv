@@ -9,7 +9,7 @@ import { useAuth } from 'react-oidc-context'
 
 export function Account() {
   const dispatch = useAppDispatch()
-  const isAccountVisible = useAppSelector(state => state.global.isAccountDialogVisible)
+  const isAccountVisible = useAppSelector(state => state.global.visibility.isAccountDialogVisible)
   const auth = useAuth()
 
   const oidcConfig = getOIDCConfig()
@@ -19,7 +19,7 @@ export function Account() {
   }
   const toggle = () => {
     dispatch(globalActions.hideSideButtons())
-    dispatch(globalActions.setDisplayedItems({ isAccountDialogVisible: !isAccountVisible }))
+    dispatch(globalActions.setDisplayedItems({ visibility: { isAccountDialogVisible: !isAccountVisible } }))
   }
 
   if (!oidcConfig.IS_OIDC_ENABLED) {

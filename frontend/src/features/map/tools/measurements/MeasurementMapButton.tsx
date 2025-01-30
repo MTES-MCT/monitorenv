@@ -18,9 +18,9 @@ import { MapToolButton } from '../MapToolButton'
 export function MeasurementMapButton() {
   const dispatch = useAppDispatch()
   const measurementTypeToAdd = useAppSelector(state => state.measurement.measurementTypeToAdd)
-  const displayMeasurement = useAppSelector(state => state.global.displayMeasurement)
+  const displayMeasurement = useAppSelector(state => state.global.menus.displayMeasurement)
   const healthcheckTextWarning = useAppSelector(state => state.global.healthcheckTextWarning)
-  const isMapToolVisible = useAppSelector(state => state.global.isMapToolVisible)
+  const isMapToolVisible = useAppSelector(state => state.global.visibility.isMapToolVisible)
 
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT_MENU, [isMapToolVisible])
   const isMeasurementToolOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT, [isMapToolVisible])

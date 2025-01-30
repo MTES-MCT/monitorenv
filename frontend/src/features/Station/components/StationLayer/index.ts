@@ -32,7 +32,7 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   vectorLayerRef.current.name = Layers.STATIONS.code
 
   const dispatch = useAppDispatch()
-  const displayStationLayer = useAppSelector(state => state.global.displayStationLayer)
+  const displayStationLayer = useAppSelector(state => state.global.layers.displayStationLayer)
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const highlightedFeatureIds = useAppSelector(state => state.station.highlightedFeatureIds)
   const selectedFeatureId = useAppSelector(state => state.station.selectedFeatureId)

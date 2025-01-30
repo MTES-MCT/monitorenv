@@ -14,16 +14,16 @@ type MenuProps = {
 }
 
 export function Menu({ isSuperUser }: MenuProps) {
-  const displaySearchSemaphoreButton = useAppSelector(state => state.global.displaySearchSemaphoreButton)
+  const displaySearchSemaphoreButton = useAppSelector(state => state.global.menus.displaySearchSemaphoreButton)
 
-  const displayInterestPoint = useAppSelector(state => state.global.displayInterestPoint)
-  const displayMeasurement = useAppSelector(state => state.global.displayMeasurement)
-  const displayMissionMenuButton = useAppSelector(state => state.global.displayMissionMenuButton)
-  const displayReportingsButton = useAppSelector(state => state.global.displayReportingsButton)
-  const displayAccountButton = useAppSelector(state => state.global.displayAccountButton)
-  const displayDashboard = useAppSelector(state => state.global.displayDashboard)
+  const displayInterestPoint = useAppSelector(state => state.global.menus.displayInterestPoint)
+  const displayMeasurement = useAppSelector(state => state.global.menus.displayMeasurement)
+  const displayMissionMenuButton = useAppSelector(state => state.global.menus.displayMissionMenuButton)
+  const displayReportingsButton = useAppSelector(state => state.global.menus.displayReportingsButton)
+  const displayAccountButton = useAppSelector(state => state.global.menus.displayAccountButton)
+  const displayDashboard = useAppSelector(state => state.global.menus.displayDashboard)
   const isRightMenuControlUnitListButtonVisible = useAppSelector(
-    state => state.global.displayRightMenuControlUnitListButton
+    state => state.global.menus.displayRightMenuControlUnitListButton
   )
   const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)

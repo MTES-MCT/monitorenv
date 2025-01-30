@@ -5,7 +5,7 @@ import { mainWindowActions } from '../../MainWindow/slice'
 import type { HomeAppThunk } from '../../../store'
 
 export const reduceReportingFormOnMap = (): HomeAppThunk => (dispatch, getState) => {
-  const { reportingFormVisibility } = getState().global
+  const { reportingFormVisibility } = getState().global.visibility
   if (
     reportingFormVisibility.context === ReportingContext.MAP &&
     reportingFormVisibility.visibility !== VisibilityState.NONE

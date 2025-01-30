@@ -30,8 +30,8 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
-  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
-  const displayReportingsOverlay = useAppSelector(state => state.global.displayReportingsOverlay)
+  const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
+  const displayReportingsOverlay = useAppSelector(state => state.global.layers.displayReportingsOverlay)
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
 

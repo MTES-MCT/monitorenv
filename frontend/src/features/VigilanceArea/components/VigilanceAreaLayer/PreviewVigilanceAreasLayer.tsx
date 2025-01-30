@@ -14,13 +14,13 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
-  const displayVigilanceAreaLayer = useAppSelector(state => state.global.displayVigilanceAreaLayer)
+  const displayVigilanceAreaLayer = useAppSelector(state => state.global.layers.displayVigilanceAreaLayer)
 
   const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
   )
-  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
+  const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible && isLayersSidebarVisible
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)

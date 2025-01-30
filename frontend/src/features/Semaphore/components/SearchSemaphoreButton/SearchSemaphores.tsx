@@ -16,7 +16,7 @@ import type { Semaphore } from 'domain/entities/semaphore'
 export function SearchSemaphores() {
   const dispatch = useAppDispatch()
 
-  const displaySemaphoresLayer = useAppSelector(state => state.global.displaySemaphoresLayer)
+  const displaySemaphoresLayer = useAppSelector(state => state.global.layers.displaySemaphoresLayer)
   const semaphoresResearchHistory = useAppSelector(state => state.semaphoresSlice.semaphoresResearchHistory)
   const { data } = useGetSemaphoresQuery()
 
@@ -41,12 +41,12 @@ export function SearchSemaphores() {
   const setSemaphoreVisibilityOnMap = () => {
     dispatch(
       setDisplayedItems({
-        displaySemaphoresLayer: !displaySemaphoresLayer
+        layers: { displaySemaphoresLayer: !displaySemaphoresLayer }
       })
     )
   }
   const closeSearchSemaphore = () => {
-    dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false }))
+    dispatch(setDisplayedItems({ visibility: { isSearchSemaphoreVisible: false } }))
   }
 
   const handleQuerySemaphore = () => {
