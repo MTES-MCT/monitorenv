@@ -2,7 +2,6 @@ import { DashboardForms } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
 import { dashboardActions } from '@features/Dashboard/slice'
-import { isDashboardEnabled } from '@features/Dashboard/utils'
 import { MissionFormWrapper } from '@features/Mission/components/MissionForm'
 import { Missions } from '@features/Mission/components/MissionsList'
 import { switchTab } from '@features/Mission/useCases/switchTab'
@@ -27,10 +26,6 @@ import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import { StyleSheetManager } from 'styled-components'
 
-import { BannerStack } from './components/BannerStack'
-import { Route } from './Route'
-import { sideWindowActions } from './slice'
-import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext } from '../../domain/shared_slices/Global'
@@ -39,6 +34,10 @@ import { useListenMissionEventUpdates } from '../Mission/components/MissionForm/
 import { missionFormsActions } from '../Mission/components/MissionForm/slice'
 import { MissionsNavBar } from '../Mission/MissionsNavBar'
 import { Reportings } from '../Reportings'
+import { BannerStack } from './components/BannerStack'
+import { Route } from './Route'
+import { sideWindowActions } from './slice'
+import { StyledRouteContainer, Wrapper } from './style'
 
 export function SideWindow() {
   const dispatch = useAppDispatch()
@@ -148,14 +147,13 @@ export function SideWindow() {
                     onClick={() => navigate(generatePath(sideWindowPaths.VIGILANCE_AREAS))}
                     title="Zones de vigilance"
                   />
-                  {isDashboardEnabled() && (
-                    <SideMenu.Button
-                      Icon={Icon.Bullseye}
-                      isActive={isDashboardsButtonIsActive}
-                      onClick={() => navigate(generatePath(sideWindowPaths.DASHBOARDS))}
-                      title="Tableaux de bord"
-                    />
-                  )}
+
+                  <SideMenu.Button
+                    Icon={Icon.Bullseye}
+                    isActive={isDashboardsButtonIsActive}
+                    onClick={() => navigate(generatePath(sideWindowPaths.DASHBOARDS))}
+                    title="Tableaux de bord"
+                  />
                 </SideMenu>
 
                 <StyledRouteContainer>
