@@ -7,13 +7,13 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { convertToFeature } from 'domain/types/map'
 import { Feature } from 'ol'
-import { getCenter } from 'ol/extent'
 import { GeoJSON as OLGeoJSON } from 'ol/format'
-import { Point, type Geometry } from 'ol/geom'
+import { type Geometry } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { Icon, Style } from 'ol/style'
 import { useEffect, useRef, type MutableRefObject } from 'react'
+
+import { dashboardIcon } from './style'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -80,17 +80,3 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     }
   }, [dispatch, mapClickEvent])
 }
-
-const dashboardIcon = () => [
-  new Style({
-    geometry: feature => {
-      const extent = feature?.getGeometry()?.getExtent()
-      const center = extent && getCenter(extent)
-
-      return center && new Point(center)
-    },
-    image: new Icon({
-      src: 'icons/bullseye_border.svg'
-    })
-  })
-]

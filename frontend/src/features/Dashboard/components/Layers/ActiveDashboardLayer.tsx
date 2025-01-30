@@ -16,7 +16,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useRef } from 'react'
 
-import { getDashboardStyle } from './style'
+import { dashboardIcon, getDashboardStyle } from './style'
 import { Dashboard } from '../../types'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
@@ -24,8 +24,6 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
-  const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
-
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
@@ -44,7 +42,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const openPanel = dashboard?.openPanel
   const activeDashboard = dashboard?.dashboard
 
-  const isLayerVisible = displayDashboardLayer && !!dashboard
+  const isLayerVisible = !!dashboard
 
   const metadataLayerId = useAppSelector(state => state.layersMetadata.metadataLayerId)
   const drawBorder = useCallback(
@@ -177,7 +175,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
         if (!dashboardAreaFeature) {
           return
         }
-        dashboardAreaFeature?.setStyle([measurementStyle, measurementStyleWithCenter])
+        dashboardAreaFeature?.setStyle([measurementStyle, measurementStyleWithCenter, dashboardIcon()])
 
         layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
       }

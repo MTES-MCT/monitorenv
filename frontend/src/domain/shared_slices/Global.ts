@@ -32,111 +32,109 @@ type OverlayCoordinates = {
   name: string
 }
 
-/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 type GlobalStateType = {
-  menus: {
-    displayAccountButton: boolean
-    displayMissionMenuButton: boolean
-    displayDrawModal: boolean
-    displayLayersSidebar: boolean
-    displayLocateOnMap: boolean
-    displayMeasurement: boolean
-    displayInterestPoint: boolean
-    displayDashboard: boolean
-    displaySearchSemaphoreButton: boolean
-    displayReportingsButton: boolean
-    displayRightMenuControlUnitListButton: boolean
-  }
-  visibility: {
-    isDashboardDialogVisible: boolean
-    isSearchMissionsVisible: boolean
-    isLayersSidebarVisible: boolean
-    isAccountDialogVisible: boolean
-    isControlUnitDialogVisible: boolean
-    isControlUnitListDialogVisible: boolean
-    isSearchSemaphoreVisible: boolean
-    isSearchReportingsVisible: boolean
-    reportingFormVisibility: ReportingFormVisibilityProps
-    isMapToolVisible?: MapToolType
-  }
+  healthcheckTextWarning?: string
   layers: {
+    displayDashboardLayer: boolean
+    displayInterestPointLayer: boolean
     displayMissionEditingLayer: boolean
-    displayMissionsLayer: boolean
     displayMissionSelectedLayer: boolean
     displayMissionToAttachLayer: boolean
-    displayInterestPointLayer: boolean
-    displayReportingToAttachLayer: boolean
-    displayVigilanceAreaLayer: boolean
-    displayDashboardLayer: boolean
-
-    displayReportingsLayer: boolean
-    displayReportingsOverlay: boolean
+    displayMissionsLayer: boolean
     displayReportingEditingLayer: boolean
     displayReportingSelectedLayer: boolean
 
-    displayStationLayer: boolean
-    isLayersSidebarVisible: boolean
+    displayReportingToAttachLayer: boolean
+    displayReportingsLayer: boolean
+    displayReportingsOverlay: boolean
     displaySemaphoresLayer: boolean
+
+    displayStationLayer: boolean
+    displayVigilanceAreaLayer: boolean
+    isLayersSidebarVisible: boolean
   }
-  healthcheckTextWarning?: string
-  overlayCoordinates: OverlayCoordinates[]
-  toast?: Toast
+  menus: {
+    displayAccountButton: boolean
+    displayDashboard: boolean
+    displayDrawModal: boolean
+    displayInterestPoint: boolean
+    displayLayersSidebar: boolean
+    displayLocateOnMap: boolean
+    displayMeasurement: boolean
+    displayMissionMenuButton: boolean
+    displayReportingsButton: boolean
+    displayRightMenuControlUnitListButton: boolean
+    displaySearchSemaphoreButton: boolean
+  }
   openedOverlayId?: string
+  overlayCoordinates: OverlayCoordinates[]
   previousDisplayedItems: Record<string, any>
+  toast?: Toast
+  visibility: {
+    isAccountDialogVisible: boolean
+    isControlUnitDialogVisible: boolean
+    isControlUnitListDialogVisible: boolean
+    isDashboardDialogVisible: boolean
+    isLayersSidebarVisible: boolean
+    isMapToolVisible?: MapToolType
+    isSearchMissionsVisible: boolean
+    isSearchReportingsVisible: boolean
+    isSearchSemaphoreVisible: boolean
+    reportingFormVisibility: ReportingFormVisibilityProps
+  }
 }
 const initialState: GlobalStateType = {
+  layers: {
+    displayDashboardLayer: false,
+    displayInterestPointLayer: true,
+    displayMissionEditingLayer: true,
+    displayMissionSelectedLayer: true,
+    displayMissionsLayer: true,
+    displayMissionToAttachLayer: true,
+    displayReportingEditingLayer: true,
+    displayReportingSelectedLayer: true,
+
+    displayReportingsLayer: true,
+    displayReportingsOverlay: true,
+    displayReportingToAttachLayer: true,
+    displaySemaphoresLayer: true,
+
+    displayStationLayer: false,
+    displayVigilanceAreaLayer: true,
+    isLayersSidebarVisible: true
+  },
   menus: {
     displayAccountButton: true,
-    displayMissionMenuButton: true,
+    displayDashboard: true,
     displayDrawModal: false,
+    displayInterestPoint: true,
     displayLayersSidebar: true,
     displayLocateOnMap: true,
     displayMeasurement: true,
-    displayInterestPoint: true,
-    displayDashboard: true,
-    displaySearchSemaphoreButton: true,
+    displayMissionMenuButton: true,
     displayReportingsButton: true,
-    displayRightMenuControlUnitListButton: true
+    displayRightMenuControlUnitListButton: true,
+    displaySearchSemaphoreButton: true
   },
+  overlayCoordinates: [],
+
+  previousDisplayedItems: {},
+
   visibility: {
-    isDashboardDialogVisible: false,
-    isSearchMissionsVisible: false,
-    isLayersSidebarVisible: false,
     isAccountDialogVisible: false,
     isControlUnitDialogVisible: false,
     isControlUnitListDialogVisible: false,
-    isSearchSemaphoreVisible: false,
+    isDashboardDialogVisible: false,
+    isLayersSidebarVisible: false,
+    isSearchMissionsVisible: false,
     isSearchReportingsVisible: false,
+    isSearchSemaphoreVisible: false,
     reportingFormVisibility: {
       context: ReportingContext.MAP,
       visibility: VisibilityState.NONE
     }
-  },
-  layers: {
-    displayMissionEditingLayer: true,
-    displayMissionsLayer: true,
-    displayMissionSelectedLayer: true,
-    displayMissionToAttachLayer: true,
-    displayInterestPointLayer: true,
-    displayReportingToAttachLayer: true,
-    displayVigilanceAreaLayer: true,
-    displayDashboardLayer: false,
-
-    displayReportingsLayer: true,
-    displayReportingsOverlay: true,
-    displayReportingEditingLayer: true,
-    displayReportingSelectedLayer: true,
-
-    displayStationLayer: false,
-    isLayersSidebarVisible: true,
-    displaySemaphoresLayer: true
-  },
-
-  overlayCoordinates: [],
-
-  previousDisplayedItems: {}
+  }
 }
-/* eslint-enable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 
 const globalSlice = createSlice({
   initialState,
