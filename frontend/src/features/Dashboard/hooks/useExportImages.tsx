@@ -171,15 +171,15 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
         return allImages
       }
 
-      dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
-      layersVectorSourceRef.current.addFeature(dashboardFeature)
-
       if (isBriefWithImagesEnabled) {
         // eslint-disable-next-line no-restricted-syntax
         for (const feature of features) {
           mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
           layersVectorSourceRef.current.clear()
           layersVectorSourceRef.current.addFeature(feature)
+
+          dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
+          layersVectorSourceRef.current.addFeature(dashboardFeature)
 
           // eslint-disable-next-line no-await-in-loop
           await zoomToFeatures([dashboardFeature, feature])
@@ -195,6 +195,9 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
               })
             })
         }
+      } else {
+        dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
+        layersVectorSourceRef.current.addFeature(dashboardFeature)
       }
 
       extractReportingFeatures(features)
