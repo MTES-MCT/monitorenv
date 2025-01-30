@@ -24,7 +24,7 @@ const OPTIONS = {
 export function ReportingToAttachOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
 
-  const displayReportingToAttachLayer = useAppSelector(state => state.global.displayReportingToAttachLayer)
+  const displayReportingToAttachLayer = useAppSelector(state => state.global.layers.displayReportingToAttachLayer)
 
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
 

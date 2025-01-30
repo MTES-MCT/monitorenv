@@ -58,7 +58,7 @@ type SemaphoreCardProps = {
 export function SemaphoreCard({ feature, isSuperUser, selected = false }: SemaphoreCardProps) {
   const dispatch = useAppDispatch()
 
-  const displaySemaphoresLayer = useAppSelector(state => state.global.displaySemaphoresLayer)
+  const displaySemaphoresLayer = useAppSelector(state => state.global.layers.displaySemaphoresLayer)
   const hasMapInteraction = useHasMapInteraction()
 
   const { email, id, name, phoneNumber, unit, url } = feature.getProperties()

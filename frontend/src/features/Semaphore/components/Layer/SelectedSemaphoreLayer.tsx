@@ -19,7 +19,7 @@ import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
-  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
+  const { displaySemaphoresLayer } = useAppSelector(state => state.global.layers)
   const isSemaphoreHighlighted = useAppSelector(state => state.semaphoresSlice.isSemaphoreHighlighted)
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)

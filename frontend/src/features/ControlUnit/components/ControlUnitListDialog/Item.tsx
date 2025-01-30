@@ -15,7 +15,7 @@ export type ItemProps = {
 }
 export function Item({ controlUnit }: ItemProps) {
   const dispatch = useAppDispatch()
-  const displayBaseLayer = useAppSelector(store => store.global.displayStationLayer)
+  const displayBaseLayer = useAppSelector(store => store.global.layers.displayStationLayer)
 
   const center = () => {
     const stationsToHighlight = controlUnit.controlUnitResources.map(({ station }) => station)
@@ -26,8 +26,10 @@ export function Item({ controlUnit }: ItemProps) {
     dispatch(controlUnitDialogActions.setControlUnitId(controlUnit.id))
     dispatch(
       globalActions.setDisplayedItems({
-        isControlUnitDialogVisible: true,
-        isControlUnitListDialogVisible: false
+        visibility: {
+          isControlUnitDialogVisible: true,
+          isControlUnitListDialogVisible: false
+        }
       })
     )
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))

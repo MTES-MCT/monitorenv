@@ -24,7 +24,7 @@ import type { Geometry } from 'ol/geom'
 
 export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const { displayDashboardLayer } = useAppSelector(state => state.global)
+  const { displayDashboardLayer } = useAppSelector(state => state.global.layers)
   const selectedDashboardOnMap = useAppSelector(state => state.dashboard.selectedDashboardOnMap)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)

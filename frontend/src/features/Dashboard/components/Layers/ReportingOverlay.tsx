@@ -25,7 +25,7 @@ const OPTIONS = {
 export function DashboardReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
-  const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+  const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
 
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)

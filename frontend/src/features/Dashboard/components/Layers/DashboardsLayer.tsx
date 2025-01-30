@@ -20,7 +20,7 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 
 export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+  const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = displayDashboardLayer && !hasMapInteraction
 

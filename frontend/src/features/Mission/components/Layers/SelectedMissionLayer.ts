@@ -18,7 +18,7 @@ import type { Geometry } from 'ol/geom'
 export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
-  const displayMissionSelectedLayer = useAppSelector(state => state.global.displayMissionSelectedLayer)
+  const displayMissionSelectedLayer = useAppSelector(state => state.global.layers.displayMissionSelectedLayer)
 
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({

@@ -201,7 +201,7 @@ export function ControlUnitSelector({
 
     dispatch(
       globalActions.setDisplayedItems({
-        displayStationLayer: true
+        layers: { displayStationLayer: true }
       })
     )
     await dispatch(controlUnitListDialogActions.resetFilters())

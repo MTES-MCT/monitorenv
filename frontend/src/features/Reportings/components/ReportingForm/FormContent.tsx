@@ -91,7 +91,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
   const [scrollTop, setScrollTop] = useState(0)
   const { scrollPosition, setScrollPosition } = useReportingEventContext()
 
-  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+  const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext =

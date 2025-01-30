@@ -27,8 +27,8 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
-  const isLayersSidebarVisible = useAppSelector(state => state.global.isLayersSidebarVisible)
-  const displayLayersSidebar = useAppSelector(state => state.global.displayLayersSidebar)
+  const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
+  const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
 
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
@@ -51,7 +51,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
     if (isLayersSidebarVisible) {
       dispatch(closeMetadataPanel())
     }
-    dispatch(setDisplayedItems({ isLayersSidebarVisible: !isLayersSidebarVisible }))
+    dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
     dispatch(layerSidebarActions.toggleRegFilters(true))
   }
 

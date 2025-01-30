@@ -9,12 +9,12 @@ import { SearchReportings } from './SearchReportings'
 
 export function ReportingsButton() {
   const dispatch = useAppDispatch()
-  const isSearchReportingsVisible = useAppSelector(state => state.global.isSearchReportingsVisible)
+  const isSearchReportingsVisible = useAppSelector(state => state.global.visibility.isSearchReportingsVisible)
 
   const toggleSearchReportings = () => {
     dispatch(globalActions.hideSideButtons())
     dispatch(reduceReportingFormOnMap())
-    dispatch(globalActions.setDisplayedItems({ isSearchReportingsVisible: !isSearchReportingsVisible }))
+    dispatch(globalActions.setDisplayedItems({ visibility: { isSearchReportingsVisible: !isSearchReportingsVisible } }))
   }
 
   return (

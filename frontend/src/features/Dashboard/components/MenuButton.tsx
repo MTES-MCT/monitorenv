@@ -17,8 +17,8 @@ import { Filters } from './DashboardsList/Filters'
 
 export function DashboardMenuButton() {
   const dispatch = useAppDispatch()
-  const isDashboardDialogVisible = useAppSelector(state => state.global.isDashboardDialogVisible)
-  const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+  const isDashboardDialogVisible = useAppSelector(state => state.global.visibility.isDashboardDialogVisible)
+  const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
 
   const isDrawing = useAppSelector(state => state.dashboard.isDrawing)
 
@@ -28,7 +28,7 @@ export function DashboardMenuButton() {
     dispatch(globalActions.hideSideButtons())
     dispatch(
       setDisplayedItems({
-        isDashboardDialogVisible: !isDashboardDialogVisible
+        visibility: { isDashboardDialogVisible: !isDashboardDialogVisible }
       })
     )
     dispatch(reduceReportingFormOnMap())
@@ -56,7 +56,7 @@ export function DashboardMenuButton() {
   }
 
   const handleDashboardsVisibility = () => {
-    dispatch(globalActions.setDisplayedItems({ displayDashboardLayer: !displayDashboardLayer }))
+    dispatch(globalActions.setDisplayedItems({ layers: { displayDashboardLayer: !displayDashboardLayer } }))
   }
 
   return (

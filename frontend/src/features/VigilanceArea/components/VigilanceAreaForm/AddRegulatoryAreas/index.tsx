@@ -1,6 +1,6 @@
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
+import { hideLayers } from '@features/VigilanceArea/useCases/hideLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
@@ -15,7 +15,7 @@ export function AddRegulatoryAreas() {
   const dispatch = useAppDispatch()
   const addRegulatory = () => {
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.ADD_REGULATORY))
-    dispatch(displayOrHideOtherLayers({ display: false }))
+    dispatch(hideLayers())
   }
 
   return (

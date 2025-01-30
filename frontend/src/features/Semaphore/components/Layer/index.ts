@@ -22,7 +22,7 @@ import type { Geometry } from 'ol/geom'
 
 export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
+  const { displaySemaphoresLayer } = useAppSelector(state => state.global.layers)
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
   const hasMapInteraction = useHasMapInteraction()

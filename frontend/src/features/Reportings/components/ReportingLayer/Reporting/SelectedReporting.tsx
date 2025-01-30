@@ -16,7 +16,7 @@ import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
-  const displayReportingSelectedLayer = useAppSelector(state => state.global.displayReportingSelectedLayer)
+  const displayReportingSelectedLayer = useAppSelector(state => state.global.layers.displayReportingSelectedLayer)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedReporting: selectedReportingIdOnMap && data?.entities[selectedReportingIdOnMap]

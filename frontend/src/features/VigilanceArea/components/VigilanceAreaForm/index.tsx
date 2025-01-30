@@ -2,12 +2,12 @@ import { useGetVigilanceAreaQuery } from '@api/vigilanceAreasAPI'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
-import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
+import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
 import { Formik } from 'formik'
 import { noop } from 'lodash'
 import { useEffect } from 'react'
@@ -55,7 +55,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
 
   const onCancelSubForm = () => {
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
-    dispatch(displayOrHideOtherLayers({ display: true }))
+    dispatch(restorePreviousDisplayedItems())
   }
 
   useEffect(() => {

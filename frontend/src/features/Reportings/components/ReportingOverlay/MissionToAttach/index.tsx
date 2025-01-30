@@ -18,7 +18,7 @@ const OPTIONS = {
 }
 
 export function MissionToAttachOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
-  const displayMissionToAttachLayer = useAppSelector(state => state.global.displayMissionToAttachLayer)
+  const displayMissionToAttachLayer = useAppSelector(state => state.global.layers.displayMissionToAttachLayer)
   const feature = convertToFeature(currentFeatureOver)
   const currentfeatureId = feature?.getId()
   const displayHoveredFeature =

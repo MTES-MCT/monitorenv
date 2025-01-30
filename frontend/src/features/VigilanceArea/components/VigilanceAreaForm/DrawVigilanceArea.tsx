@@ -1,10 +1,10 @@
 import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, FieldError, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { InteractionType } from 'domain/entities/map/constants'
+import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
@@ -27,7 +27,7 @@ export function DrawVigilanceArea({ onCancel }: { onCancel: () => void }) {
     setFieldValue('geom', geometry)
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.FORM))
     dispatch(vigilanceAreaActions.setInitialGeometry(undefined))
-    dispatch(displayOrHideOtherLayers({ display: true }))
+    dispatch(restorePreviousDisplayedItems())
   }
 
   const reinitialize = () => {

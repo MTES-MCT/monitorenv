@@ -43,7 +43,7 @@ export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
   const [isEyeOpen, setIsEyeOpen] = useState(true)
 
   useEffect(() => {
-    dispatch(setDisplayedItems({ displayInterestPointLayer: isEyeOpen }))
+    dispatch(setDisplayedItems({ layers: { displayInterestPointLayer: isEyeOpen } }))
     if (isEyeOpen) {
       dispatch(startDrawingInterestPoint())
     } else {

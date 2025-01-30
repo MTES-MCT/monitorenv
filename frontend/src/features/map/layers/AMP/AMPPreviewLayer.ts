@@ -27,7 +27,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
   const { data: ampLayers } = useGetAMPsQuery()
-  const { isLayersSidebarVisible } = useAppSelector(state => state.global)
+  const { isLayersSidebarVisible } = useAppSelector(state => state.global.visibility)
 
   const isLayerVisible = isLayersSidebarVisible && isAmpSearchResultsVisible && !isLinkingRegulatoryToVigilanceArea
 

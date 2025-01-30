@@ -19,8 +19,7 @@ export function Item({ controlUnit, onClose, stationId }: ItemProps) {
     dispatch(controlUnitDialogActions.setControlUnitId(controlUnit.id))
     dispatch(
       globalActions.setDisplayedItems({
-        isControlUnitDialogVisible: true,
-        isControlUnitListDialogVisible: false
+        visibility: { isControlUnitDialogVisible: true, isControlUnitListDialogVisible: false }
       })
     )
     dispatch(closeAllOverlays())

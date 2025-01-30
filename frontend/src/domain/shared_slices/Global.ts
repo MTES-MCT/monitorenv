@@ -34,124 +34,107 @@ type OverlayCoordinates = {
 
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 type GlobalStateType = {
-  // state entry for every component /menu displayed on map whose visibility should be controlled
-  displayAccountButton: boolean
-  displayMissionMenuButton: boolean
-  displayDrawModal: boolean
-  displayLayersSidebar: boolean
-  displayLocateOnMap: boolean
-  displayMeasurement: boolean
-  displayInterestPoint: boolean
-  displayDashboard: boolean
-  displaySearchSemaphoreButton: boolean
-  displayReportingsButton: boolean
-  displayRightMenuControlUnitListButton: boolean
+  menus: {
+    displayAccountButton: boolean
+    displayMissionMenuButton: boolean
+    displayDrawModal: boolean
+    displayLayersSidebar: boolean
+    displayLocateOnMap: boolean
+    displayMeasurement: boolean
+    displayInterestPoint: boolean
+    displayDashboard: boolean
+    displaySearchSemaphoreButton: boolean
+    displayReportingsButton: boolean
+    displayRightMenuControlUnitListButton: boolean
+  }
+  visibility: {
+    isDashboardDialogVisible: boolean
+    isSearchMissionsVisible: boolean
+    isLayersSidebarVisible: boolean
+    isAccountDialogVisible: boolean
+    isControlUnitDialogVisible: boolean
+    isControlUnitListDialogVisible: boolean
+    isSearchSemaphoreVisible: boolean
+    isSearchReportingsVisible: boolean
+    reportingFormVisibility: ReportingFormVisibilityProps
+    isMapToolVisible?: MapToolType
+  }
+  layers: {
+    displayMissionEditingLayer: boolean
+    displayMissionsLayer: boolean
+    displayMissionSelectedLayer: boolean
+    displayMissionToAttachLayer: boolean
+    displayInterestPointLayer: boolean
+    displayReportingToAttachLayer: boolean
+    displayVigilanceAreaLayer: boolean
+    displayDashboardLayer: boolean
 
-  // state entry for every layer whose visibility should be controlled
-  isSearchMissionsVisible: boolean
-  displayMissionEditingLayer: boolean
-  displayMissionsLayer: boolean
-  displayMissionSelectedLayer: boolean
-  displayMissionToAttachLayer: boolean
-  displayInterestPointLayer: boolean
-  displayReportingToAttachLayer: boolean
-  displayVigilanceAreaLayer: boolean
-  displayDashboardLayer: boolean
+    displayReportingsLayer: boolean
+    displayReportingsOverlay: boolean
+    displayReportingEditingLayer: boolean
+    displayReportingSelectedLayer: boolean
 
-  // state entry for other children components whom visibility is already handled by parent components
-
-  isAccountDialogVisible: boolean
-
-  isControlUnitDialogVisible: boolean
-  isControlUnitListDialogVisible: boolean
-
-  isSearchSemaphoreVisible: boolean
-  displaySemaphoresLayer: boolean
-
-  isSearchReportingsVisible: boolean
-  reportingFormVisibility: ReportingFormVisibilityProps
-
-  displayReportingsLayer: boolean
-  displayReportingsOverlay: boolean
-  displayReportingEditingLayer: boolean
-  displayReportingSelectedLayer: boolean
-
-  displayStationLayer: boolean
-
-  isDashboardDialogVisible: boolean
-
-  isLayersSidebarVisible: boolean
-
-  isMapToolVisible?: MapToolType
-
+    displayStationLayer: boolean
+    isLayersSidebarVisible: boolean
+    displaySemaphoresLayer: boolean
+  }
   healthcheckTextWarning?: string
-
   overlayCoordinates: OverlayCoordinates[]
-
   toast?: Toast
-
   openedOverlayId?: string
+  previousDisplayedItems: Record<string, any>
 }
 const initialState: GlobalStateType = {
-  // state entry for every component /menu displayed on map whose visibility should be controlled
-  displayAccountButton: true,
-  displayMissionMenuButton: true,
-  displayDrawModal: false,
-  displayLayersSidebar: true,
-  displayLocateOnMap: true,
-  displayMeasurement: true,
-  displayInterestPoint: true,
-  displayDashboard: true,
-  displaySearchSemaphoreButton: true,
-  displayReportingsButton: true,
-  displayRightMenuControlUnitListButton: true,
-
-  // state entry for every layer whose visibility should be controlled
-  isSearchMissionsVisible: false,
-  displayMissionsLayer: true,
-  displayMissionEditingLayer: true,
-  displayMissionSelectedLayer: true,
-  displayMissionToAttachLayer: true,
-  displayInterestPointLayer: true,
-  displayReportingToAttachLayer: true,
-  displayVigilanceAreaLayer: true,
-  displayDashboardLayer: false,
-
-  // state entry for other children components whom visibility is already handled by parent components
-  isLayersSidebarVisible: false,
-
-  // TODO Use `MainWindowDialog` or `MainWindowConfirmationModal`.
-  isAccountDialogVisible: false,
-
-  isControlUnitDialogVisible: false,
-  isControlUnitListDialogVisible: false,
-
-  isSearchSemaphoreVisible: false,
-  displaySemaphoresLayer: true,
-
-  isSearchReportingsVisible: false,
-  reportingFormVisibility: {
-    context: ReportingContext.MAP,
-    visibility: VisibilityState.NONE
+  menus: {
+    displayAccountButton: true,
+    displayMissionMenuButton: true,
+    displayDrawModal: false,
+    displayLayersSidebar: true,
+    displayLocateOnMap: true,
+    displayMeasurement: true,
+    displayInterestPoint: true,
+    displayDashboard: true,
+    displaySearchSemaphoreButton: true,
+    displayReportingsButton: true,
+    displayRightMenuControlUnitListButton: true
   },
-  displayReportingsLayer: true,
-  displayReportingsOverlay: true,
-  displayReportingEditingLayer: true,
-  displayReportingSelectedLayer: true,
+  visibility: {
+    isDashboardDialogVisible: false,
+    isSearchMissionsVisible: false,
+    isLayersSidebarVisible: false,
+    isAccountDialogVisible: false,
+    isControlUnitDialogVisible: false,
+    isControlUnitListDialogVisible: false,
+    isSearchSemaphoreVisible: false,
+    isSearchReportingsVisible: false,
+    reportingFormVisibility: {
+      context: ReportingContext.MAP,
+      visibility: VisibilityState.NONE
+    }
+  },
+  layers: {
+    displayMissionEditingLayer: true,
+    displayMissionsLayer: true,
+    displayMissionSelectedLayer: true,
+    displayMissionToAttachLayer: true,
+    displayInterestPointLayer: true,
+    displayReportingToAttachLayer: true,
+    displayVigilanceAreaLayer: true,
+    displayDashboardLayer: false,
 
-  displayStationLayer: false,
+    displayReportingsLayer: true,
+    displayReportingsOverlay: true,
+    displayReportingEditingLayer: true,
+    displayReportingSelectedLayer: true,
 
-  isDashboardDialogVisible: false,
-
-  isMapToolVisible: undefined,
-
-  healthcheckTextWarning: undefined,
+    displayStationLayer: false,
+    isLayersSidebarVisible: true,
+    displaySemaphoresLayer: true
+  },
 
   overlayCoordinates: [],
 
-  toast: undefined,
-
-  openedOverlayId: undefined
+  previousDisplayedItems: {}
 }
 /* eslint-enable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 
@@ -165,14 +148,14 @@ const globalSlice = createSlice({
 
     // TODO Rename to `hideAllDialogs`.
     hideSideButtons(state) {
-      state.isAccountDialogVisible = false
-      state.isControlUnitDialogVisible = false
-      state.isControlUnitListDialogVisible = false
-      state.isSearchReportingsVisible = false
-      state.isSearchSemaphoreVisible = false
-      state.isSearchMissionsVisible = false
-      state.isMapToolVisible = undefined
-      state.isDashboardDialogVisible = false
+      state.visibility.isAccountDialogVisible = false
+      state.visibility.isControlUnitDialogVisible = false
+      state.visibility.isControlUnitListDialogVisible = false
+      state.visibility.isSearchReportingsVisible = false
+      state.visibility.isSearchSemaphoreVisible = false
+      state.visibility.isSearchMissionsVisible = false
+      state.visibility.isMapToolVisible = undefined
+      state.visibility.isDashboardDialogVisible = false
     },
 
     removeOverlayStroke(state) {
@@ -183,23 +166,24 @@ const globalSlice = createSlice({
       state.toast = undefined
     },
 
-    resetLayoutToDefault(state) {
-      state.displayDrawModal = false
-      state.displayInterestPoint = true
-      state.displayLayersSidebar = true
-      state.displayLocateOnMap = true
-      state.displayMeasurement = true
-      state.displayMissionMenuButton = true
-      state.displayReportingsButton = true
-      state.displayReportingsOverlay = true
-      state.displayRightMenuControlUnitListButton = true
-      state.displaySearchSemaphoreButton = true
-      state.displayDashboard = true
-      state.displayDashboardLayer = false
+    restorePreviousDisplayedItems(state) {
+      state.layers = state.previousDisplayedItems.layers
+      state.menus = state.previousDisplayedItems.menus
+      state.visibility = state.previousDisplayedItems.visibility
     },
+    setDisplayedItems(
+      state,
+      action: PayloadAction<{
+        layers?: Partial<GlobalStateType['layers']>
+        menus?: Partial<GlobalStateType['menus']>
+        visibility?: Partial<GlobalStateType['visibility']>
+      }>
+    ) {
+      state.previousDisplayedItems = { layers: state.layers, menus: state.menus, visibility: state.visibility }
 
-    setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
-      return { ...state, ...action.payload }
+      state.layers = { ...state.layers, ...(action.payload.layers ?? {}) }
+      state.menus = { ...state.menus, ...(action.payload.menus ?? {}) }
+      state.visibility = { ...state.visibility, ...(action.payload.visibility ?? {}) }
     },
 
     /**
@@ -215,7 +199,7 @@ const globalSlice = createSlice({
      * Set the map tool opened
      */
     setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
-      state.isMapToolVisible = action.payload
+      state.visibility.isMapToolVisible = action.payload
     },
     setOpenedOverlay(state, action: PayloadAction<string>) {
       const featureId = action.payload
@@ -232,7 +216,7 @@ const globalSlice = createSlice({
     },
 
     setReportingFormVisibility(state, action) {
-      state.reportingFormVisibility = action.payload
+      state.visibility.reportingFormVisibility = action.payload
     },
 
     setToast(state, action: PayloadAction<Toast>) {
@@ -246,7 +230,7 @@ export const {
   hideSideButtons,
   removeOverlayStroke,
   removeToast,
-  resetLayoutToDefault,
+  restorePreviousDisplayedItems,
   setDisplayedItems,
   setHealthcheckTextWarning,
   setIsMapToolVisible,

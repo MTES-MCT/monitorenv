@@ -1,9 +1,9 @@
 import { ValidateButton } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
-import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, FieldError, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { InteractionType } from 'domain/entities/map/constants'
+import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
@@ -27,7 +27,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
       dispatch(createDashboard(geometry))
     }
     dispatch(dashboardActions.setInitialGeometry(undefined))
-    dispatch(displayOrHideOtherLayers({ display: true }))
+    dispatch(restorePreviousDisplayedItems())
   }
 
   const reset = () => {

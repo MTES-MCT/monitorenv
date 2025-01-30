@@ -27,7 +27,7 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
 
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
-  const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+  const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
 
   const selectedDashboardOnMap = useAppSelector(state => state.dashboard.selectedDashboardOnMap)
 

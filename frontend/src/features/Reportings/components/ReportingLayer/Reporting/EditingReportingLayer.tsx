@@ -16,8 +16,8 @@ export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildr
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
-  const displayReportingEditingLayer = useAppSelector(state => state.global.displayReportingEditingLayer)
-  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+  const displayReportingEditingLayer = useAppSelector(state => state.global.layers.displayReportingEditingLayer)
+  const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
 
   const editingReporting = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined

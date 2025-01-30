@@ -111,7 +111,7 @@ export function Source({ index, push, remove }: SourceProps) {
   const zoomToSemaphore = (semaphoreId: number) => {
     dispatch(
       setDisplayedItems({
-        displaySemaphoresLayer: true
+        layers: { displaySemaphoresLayer: true }
       })
     )
     dispatch(setSelectedSemaphore(semaphoreId))

@@ -21,7 +21,7 @@ import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
-  const displayDashboardLayer = useAppSelector(state => state.global.displayDashboardLayer)
+  const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 

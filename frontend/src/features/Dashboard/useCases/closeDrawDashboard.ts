@@ -9,6 +9,6 @@ export const closeDrawDashboard = (): HomeAppThunk => dispatch => {
 
   function closeMenuDialog() {
     dispatch(dashboardActions.setIsDrawing(false))
-    dispatch(globalActions.setDisplayedItems({ isDashboardDialogVisible: false }))
+    dispatch(globalActions.setDisplayedItems({ visibility: { isDashboardDialogVisible: false } }))
   }
 }

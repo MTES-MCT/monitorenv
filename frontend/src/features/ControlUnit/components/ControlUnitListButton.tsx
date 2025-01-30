@@ -10,12 +10,16 @@ import { reduceReportingFormOnMap } from '../../Reportings/useCases/reduceReport
 
 export function ControlUnitListButton() {
   const dispatch = useAppDispatch()
-  const isControlUnitListDialogVisible = useAppSelector(state => state.global.isControlUnitListDialogVisible)
+  const isControlUnitListDialogVisible = useAppSelector(state => state.global.visibility.isControlUnitListDialogVisible)
 
   const toggleDialog = useCallback(() => {
     dispatch(globalActions.hideSideButtons())
     dispatch(reduceReportingFormOnMap())
-    dispatch(globalActions.setDisplayedItems({ isControlUnitListDialogVisible: !isControlUnitListDialogVisible }))
+    dispatch(
+      globalActions.setDisplayedItems({
+        visibility: { isControlUnitListDialogVisible: !isControlUnitListDialogVisible }
+      })
+    )
   }, [dispatch, isControlUnitListDialogVisible])
 
   return (

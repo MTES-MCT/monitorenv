@@ -7,7 +7,7 @@ import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
-import { displayOrHideOtherLayers } from '@features/VigilanceArea/useCases/displayOrHideOtherLayers'
+import { hideLayers } from '@features/VigilanceArea/useCases/hideLayers'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -125,7 +125,7 @@ export function Form() {
     dispatch(vigilanceAreaActions.setGeometry(values.geom))
     dispatch(vigilanceAreaActions.setInitialGeometry(values.geom))
     dispatch(vigilanceAreaActions.setFormTypeOpen(VigilanceAreaFormTypeOpen.DRAW))
-    dispatch(displayOrHideOtherLayers({ display: false, withInterestPoint: true }))
+    dispatch(hideLayers({ keepInterestPoint: true }))
   }
 
   const setPeriod = (period: DateAsStringRange | undefined) => {

@@ -11,18 +11,18 @@ import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 
 export function SearchReportings() {
   const dispatch = useAppDispatch()
-  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
+  const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
 
   const closeSearchReportings = () => {
-    dispatch(setDisplayedItems({ isSearchReportingsVisible: false }))
+    dispatch(setDisplayedItems({ visibility: { isSearchReportingsVisible: false } }))
   }
 
   const setReportingsVisibilityOnMap = () => {
-    dispatch(setDisplayedItems({ displayReportingsLayer: !displayReportingsLayer }))
+    dispatch(setDisplayedItems({ layers: { displayReportingsLayer: !displayReportingsLayer } }))
   }
 
   const createReporting = () => {
-    dispatch(setDisplayedItems({ isSearchReportingsVisible: false }))
+    dispatch(setDisplayedItems({ visibility: { isSearchReportingsVisible: false } }))
     dispatch(addReporting(ReportingContext.MAP))
     dispatch(closeAllOverlays())
   }

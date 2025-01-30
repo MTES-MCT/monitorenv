@@ -3,7 +3,7 @@ import { attachMissionToReportingSliceActions } from '@features/Reportings/compo
 import { closeAreaOverlay } from './closeAreaOverlay'
 import { attachReportingToMissionSliceActions } from '../../../features/Mission/components/MissionForm/AttachReporting/slice'
 import { resetInteraction } from '../../shared_slices/Draw'
-import { setDisplayedItems, resetLayoutToDefault } from '../../shared_slices/Global'
+import { restorePreviousDisplayedItems, setDisplayedItems } from '../../shared_slices/Global'
 
 export enum MapInteractionListenerEnum {
   ATTACH_MISSION = 'ATTACH_MISSION',
@@ -39,14 +39,9 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
 
     case MapInteractionListenerEnum.NONE:
     default:
-      dispatch(
-        setDisplayedItems({
-          displayInterestPointLayer: true
-        })
-      )
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(false))
-      dispatch(resetLayoutToDefault())
+      dispatch(restorePreviousDisplayedItems())
       dispatch(resetInteraction())
       break
   }
@@ -55,18 +50,22 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
 const openDrawLayerModal = (dispatch, hideSidebarAndInterestPoint = true) => {
   dispatch(
     setDisplayedItems({
-      displayDashboard: false,
-      displayDrawModal: true,
-      displayInterestPoint: false,
-      displayInterestPointLayer: hideSidebarAndInterestPoint,
-      displayLayersSidebar: hideSidebarAndInterestPoint,
-      displayLocateOnMap: true,
-      displayMeasurement: false,
-      displayMissionMenuButton: false,
-      displayReportingsButton: false,
-      displayReportingsOverlay: false,
-      displayRightMenuControlUnitListButton: false,
-      displaySearchSemaphoreButton: false
+      layers: {
+        displayInterestPointLayer: hideSidebarAndInterestPoint,
+        displayReportingsOverlay: false
+      },
+      menus: {
+        displayDashboard: false,
+        displayDrawModal: true,
+        displayInterestPoint: false,
+        displayLayersSidebar: hideSidebarAndInterestPoint,
+        displayLocateOnMap: true,
+        displayMeasurement: false,
+        displayMissionMenuButton: false,
+        displayReportingsButton: false,
+        displayRightMenuControlUnitListButton: false,
+        displaySearchSemaphoreButton: false
+      }
     })
   )
 }

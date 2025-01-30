@@ -21,7 +21,7 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const editingMission = useAppSelector(state => getActiveMission(state.missionForms)?.missionForm)
 
-  const { displayMissionEditingLayer } = useAppSelector(state => state.global)
+  const { displayMissionEditingLayer } = useAppSelector(state => state.global.layers)
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
