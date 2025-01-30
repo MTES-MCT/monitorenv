@@ -8,7 +8,10 @@ type AMPListProps = {
 }
 export function AMPList({ isReadOnly = false, linkedAMPs }: AMPListProps) {
   const { data: AMPLayers } = useGetAMPsQuery()
-  const linkAMPLayers = linkedAMPs.map(ampId => AMPLayers?.entities[ampId])
+  const linkAMPLayers = linkedAMPs
+    .map(ampId => AMPLayers?.entities[ampId])
+    .filter(amp => !!amp)
+    .sort((a, b) => a?.name.localeCompare(b?.name))
 
   return (
     <>

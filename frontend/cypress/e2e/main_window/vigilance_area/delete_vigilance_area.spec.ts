@@ -35,6 +35,7 @@ describe('Create Vigilance Area', () => {
       cy.wait(250)
       cy.getDataCy('my-vigilance-areas-layers').click({ force: true })
       cy.clickButton('Effacer les résultats de la recherche')
+      cy.getDataCy('my-vigilance-areas-layers').click()
       cy.clickButton('Afficher la zone de vigilance')
 
       cy.get('span[title="Ma zone de vigilance à supprimer"]')

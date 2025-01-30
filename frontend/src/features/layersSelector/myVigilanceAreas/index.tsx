@@ -50,7 +50,9 @@ export function MyVigilanceAreas() {
 
       <>
         {myVigilanceAreasIsOpen && myVigilanceAreaIds.length === 0 && (
-          <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
+          <LayerSelector.NoLayerSelected data-cy="my-vigilance-area-no-result">
+            Aucune zone sélectionnée
+          </LayerSelector.NoLayerSelected>
         )}
 
         {myVigilanceAreasIsOpen && myVigilanceAreaIds.length > 0 && (

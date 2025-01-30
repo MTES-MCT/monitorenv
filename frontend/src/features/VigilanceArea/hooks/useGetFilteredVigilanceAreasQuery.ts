@@ -62,7 +62,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       vigilanceAreasBySearchQuery = customSearch.find(searchQuery)
     }
 
-    const sortedVigilanceAreas = vigilanceAreasBySearchQuery.sort((a, b) => a?.name?.localeCompare(b?.name))
+    const sortedVigilanceAreas = [...vigilanceAreasBySearchQuery].sort((a, b) => a?.name?.localeCompare(b?.name))
     const vigilanceAreasEntities = sortedVigilanceAreas.reduce((acc, vigilanceArea) => {
       acc[vigilanceArea.id] = vigilanceArea
 

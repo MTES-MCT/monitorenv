@@ -8,7 +8,10 @@ type RegulatoryAreasProps = {
 }
 export function RegulatoryAreas({ isReadOnly = false, linkedRegulatoryAreas }: RegulatoryAreasProps) {
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryAreas = linkedRegulatoryAreas?.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
+  const regulatoryAreas = linkedRegulatoryAreas
+    ?.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
+    .filter(regulatoryArea => !!regulatoryArea)
+    .sort((a, b) => a?.entityName.localeCompare(b?.entityName))
 
   return (
     <>
