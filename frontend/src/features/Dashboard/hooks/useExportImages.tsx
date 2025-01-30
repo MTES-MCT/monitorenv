@@ -29,6 +29,8 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { ImageLike } from 'ol/DataTile'
 import type { Geometry } from 'ol/geom'
 
+const resolution = { height: '780px', width: '1280px' }
+
 function loadImage(src: string) {
   return new Promise<ImageLike>((resolve, reject) => {
     const img = new Image()
@@ -140,8 +142,8 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
 
   useEffect(() => {
     const hiddenDiv = document.createElement('div')
-    hiddenDiv.style.width = '960px'
-    hiddenDiv.style.height = '540px'
+    hiddenDiv.style.width = resolution.width
+    hiddenDiv.style.height = resolution.height
     hiddenDiv.style.position = 'absolute'
     hiddenDiv.style.visibility = 'hidden'
     document.body.appendChild(hiddenDiv)
