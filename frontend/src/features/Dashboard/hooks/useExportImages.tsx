@@ -80,6 +80,8 @@ type ExportLayerProps = {
 }
 
 export function useExportImages({ triggerExport }: ExportLayerProps) {
+  const isBriefWithImagesEnabled = import.meta.env.FRONTEND_DASHBOARD_BRIEF_IMAGES_ENABLED === 'true'
+
   const [images, setImages] = useState<ExportImageType[]>()
   const [loading, setLoading] = useState(false)
   const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
@@ -169,29 +171,32 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
         return allImages
       }
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const feature of features) {
-        mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
-        layersVectorSourceRef.current.clear()
-        layersVectorSourceRef.current.addFeature(feature)
+      dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
+      layersVectorSourceRef.current.addFeature(dashboardFeature)
 
-        dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
-        layersVectorSourceRef.current.addFeature(dashboardFeature)
+      if (isBriefWithImagesEnabled) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const feature of features) {
+          mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
+          layersVectorSourceRef.current.clear()
+          layersVectorSourceRef.current.addFeature(feature)
 
-        // eslint-disable-next-line no-await-in-loop
-        await zoomToFeatures([dashboardFeature, feature])
+          // eslint-disable-next-line no-await-in-loop
+          await zoomToFeatures([dashboardFeature, feature])
 
-        mapRef.current
-          .getViewport()
-          .querySelectorAll('canvas')
-          .forEach(canvas => {
-            mapContext.drawImage(canvas, 0, 0)
-            allImages.push({
-              featureId: feature.getId(),
-              image: mapCanvas.toDataURL('image/png')
+          mapRef.current
+            .getViewport()
+            .querySelectorAll('canvas')
+            .forEach(canvas => {
+              mapContext.drawImage(canvas, 0, 0)
+              allImages.push({
+                featureId: feature.getId(),
+                image: mapCanvas.toDataURL('image/png')
+              })
             })
-          })
+        }
       }
+
       extractReportingFeatures(features)
 
       layersVectorSourceRef.current.clear(true)
@@ -213,7 +218,7 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
 
       return allImages
     },
-    [extractReportingFeatures]
+    [extractReportingFeatures, isBriefWithImagesEnabled]
   )
 
   useEffect(() => {
@@ -242,6 +247,7 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
     const generateImages = async () => {
       setLoading(true)
       const allImages = await exportImages(features, dashboardFeature)
+
       setImages(allImages)
       setLoading(false)
     }
