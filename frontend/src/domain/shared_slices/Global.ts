@@ -178,7 +178,10 @@ const globalSlice = createSlice({
     restorePreviousDisplayedItems(state) {
       state.layers = state.previousDisplayedItems.layers
       state.menus = state.previousDisplayedItems.menus
-      state.visibility = state.previousDisplayedItems.visibility
+      state.visibility = {
+        ...state.previousDisplayedItems.visibility,
+        reportingFormVisibility: state.visibility.reportingFormVisibility
+      }
     },
     setDisplayedItems(
       state,
