@@ -101,7 +101,7 @@ export const areaStyle = StyleSheet.create({
     borderRadius: 1,
     borderStyle: 'solid',
     borderWidth: 1,
-    fontSize: 5.5,
+    fontSize: 6.8,
     left: 10,
     position: 'absolute',
     top: 10,

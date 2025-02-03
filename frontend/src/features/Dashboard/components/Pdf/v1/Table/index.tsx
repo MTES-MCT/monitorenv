@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
   },
   table: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingBottom: 36
   },
   vigilanceArea: {
     backgroundColor: '#D6DF64',
@@ -63,6 +64,7 @@ export function AreaTable({
           {amps.length + regulatoryAreas.length + vigilanceAreas.length} sélectionnée(s)
         </Text>
       </View>
+
       <View style={styles.table}>
         <View style={styles.headers}>
           <View style={[styles.regulatoryArea, styles.header]}>
@@ -103,7 +105,7 @@ export function AreaTable({
           </View>
         </View>
       </View>
-      {image && <Image src={image.image} style={{ marginTop: 4.3 }} />}
+      {image && <Image src={image.image} />}
     </>
   )
 }
