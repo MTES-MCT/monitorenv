@@ -81,8 +81,6 @@ export function SideWindow() {
     const isCurrentPathIsMissionPage = isMissionPage(currentPath)
     if (!isCurrentPathIsMissionPage) {
       dispatch(missionFormsActions.resetActiveMissionId())
-
-      return
     }
 
     const isCurrentPathDashboard = isDashboardPage(currentPath)

@@ -1,4 +1,5 @@
 import { dashboardActions } from '@features/Dashboard/slice'
+import { missionActions } from '@features/Mission/slice'
 import { reportingActions } from '@features/Reportings/slice'
 import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
 import {
@@ -20,6 +21,8 @@ export function SideWindowLauncher() {
   const { forceUpdate } = useForceUpdate()
 
   const missions = useAppSelector(state => state.missionForms.missions)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const reportings = useAppSelector(state => state.reporting.reportings)
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
   const sideWindow = useAppSelector(state => state.sideWindow)
@@ -60,7 +63,11 @@ export function SideWindowLauncher() {
     dispatch(sideWindowActions.close())
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
     dispatch(reportingActions.resetReportingsOnSideWindow(reportingsOpenOnSideWindow))
+    if (activeMissionId === selectedMissionIdOnMap) {
+      dispatch(missionActions.resetSelectedMissionIdOnMap())
+    }
     dispatch(missionFormsActions.resetMissions())
+
     dispatch(dashboardActions.resetDashboards())
 
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))

@@ -83,57 +83,68 @@ type GlobalStateType = {
     reportingFormVisibility: ReportingFormVisibilityProps
   }
 }
+
+const initialMenuState = {
+  displayAccountButton: true,
+  displayDashboard: true,
+  displayDrawModal: false,
+  displayInterestPoint: true,
+  displayLayersSidebar: true,
+  displayLocateOnMap: true,
+  displayMeasurement: true,
+  displayMissionMenuButton: true,
+  displayReportingsButton: true,
+  displayRightMenuControlUnitListButton: true,
+  displaySearchSemaphoreButton: true
+}
+
+const initialLayers = {
+  displayDashboardLayer: false,
+  displayInterestPointLayer: true,
+  displayMissionEditingLayer: true,
+  displayMissionSelectedLayer: true,
+  displayMissionsLayer: true,
+  displayMissionToAttachLayer: true,
+  displayReportingEditingLayer: true,
+  displayReportingSelectedLayer: true,
+
+  displayReportingsLayer: true,
+  displayReportingsOverlay: true,
+  displayReportingToAttachLayer: true,
+  displaySemaphoresLayer: true,
+
+  displayStationLayer: false,
+  displayVigilanceAreaLayer: true,
+  isLayersSidebarVisible: true
+}
+
+const initialVisibility = {
+  isAccountDialogVisible: false,
+  isControlUnitDialogVisible: false,
+  isControlUnitListDialogVisible: false,
+  isDashboardDialogVisible: false,
+  isLayersSidebarVisible: false,
+  isSearchMissionsVisible: false,
+  isSearchReportingsVisible: false,
+  isSearchSemaphoreVisible: false,
+  reportingFormVisibility: {
+    context: ReportingContext.MAP,
+    visibility: VisibilityState.NONE
+  }
+}
+
 const initialState: GlobalStateType = {
-  layers: {
-    displayDashboardLayer: false,
-    displayInterestPointLayer: true,
-    displayMissionEditingLayer: true,
-    displayMissionSelectedLayer: true,
-    displayMissionsLayer: true,
-    displayMissionToAttachLayer: true,
-    displayReportingEditingLayer: true,
-    displayReportingSelectedLayer: true,
-
-    displayReportingsLayer: true,
-    displayReportingsOverlay: true,
-    displayReportingToAttachLayer: true,
-    displaySemaphoresLayer: true,
-
-    displayStationLayer: false,
-    displayVigilanceAreaLayer: true,
-    isLayersSidebarVisible: true
-  },
-  menus: {
-    displayAccountButton: true,
-    displayDashboard: true,
-    displayDrawModal: false,
-    displayInterestPoint: true,
-    displayLayersSidebar: true,
-    displayLocateOnMap: true,
-    displayMeasurement: true,
-    displayMissionMenuButton: true,
-    displayReportingsButton: true,
-    displayRightMenuControlUnitListButton: true,
-    displaySearchSemaphoreButton: true
-  },
+  layers: initialLayers,
+  menus: initialMenuState,
   overlayCoordinates: [],
 
-  previousDisplayedItems: {},
+  previousDisplayedItems: {
+    layers: initialLayers,
+    menus: initialMenuState,
+    visibility: initialVisibility
+  },
 
-  visibility: {
-    isAccountDialogVisible: false,
-    isControlUnitDialogVisible: false,
-    isControlUnitListDialogVisible: false,
-    isDashboardDialogVisible: false,
-    isLayersSidebarVisible: false,
-    isSearchMissionsVisible: false,
-    isSearchReportingsVisible: false,
-    isSearchSemaphoreVisible: false,
-    reportingFormVisibility: {
-      context: ReportingContext.MAP,
-      visibility: VisibilityState.NONE
-    }
-  }
+  visibility: initialVisibility
 }
 
 const globalSlice = createSlice({

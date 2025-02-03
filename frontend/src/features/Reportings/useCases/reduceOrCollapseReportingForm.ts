@@ -3,7 +3,7 @@ import { setReportingFormVisibility, ReportingContext, VisibilityState } from 'd
 import { mainWindowActions } from '../../MainWindow/slice'
 
 export const reduceOrCollapseReportingForm = (reportingContext: ReportingContext) => (dispatch, getState) => {
-  const { reportingFormVisibility } = getState().global
+  const { reportingFormVisibility } = getState().global.visibility
   const newVisibility =
     reportingFormVisibility.visibility === VisibilityState.VISIBLE ? VisibilityState.REDUCED : VisibilityState.VISIBLE
   dispatch(
