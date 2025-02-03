@@ -9,11 +9,12 @@ export function OtherControlTypesForm({ currentActionIndex }: { currentActionInd
     values: { controlUnits }
   } = useFormikContext<Mission>()
 
-  const currentControlUnitIsPAM = controlUnits.some(controlUnit =>
-    ControlUnit.PAMControlUnitIds.includes(controlUnit.id)
+  const currentControlUnitIsPAMOrULAM = controlUnits?.some(
+    controlUnit =>
+      ControlUnit.PAMControlUnitIds.includes(controlUnit.id) || ControlUnit.ULAMControlUnitIds.includes(controlUnit.id)
   )
 
-  if (!currentControlUnitIsPAM) {
+  if (!currentControlUnitIsPAMOrULAM) {
     return null
   }
 
