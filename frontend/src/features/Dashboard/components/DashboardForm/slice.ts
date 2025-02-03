@@ -1,6 +1,6 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { ReportingTypeLabels, StatusFilterEnum } from 'domain/entities/reporting'
+import { ReportingTypeEnum, StatusFilterEnum } from 'domain/entities/reporting'
 import { set } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -80,7 +80,7 @@ export const dashboardFiltersSlice = createSlice({
         reportingFilters: {
           dateRange: DateRangeEnum.MONTH,
           status: [StatusFilterEnum.IN_PROGRESS],
-          type: ReportingTypeLabels.INFRACTION_SUSPICION
+          type: ReportingTypeEnum.INFRACTION_SUSPICION
         }
       }
     },
