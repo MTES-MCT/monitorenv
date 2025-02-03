@@ -60,7 +60,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 7,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: layersVectorSourceRef.current,
-      style: feature => getDashboardStyle(feature),
+      style: getDashboardStyle,
       zIndex: Layers.DASHBOARD.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
@@ -175,6 +175,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
         if (!dashboardAreaFeature) {
           return
         }
+        dashboardAreaFeature.setId(`${Layers.DASHBOARDS.code}:${activeDashboardId}`)
         dashboardAreaFeature?.setStyle([measurementStyle, measurementStyleWithCenter, dashboardIcon()])
 
         layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
@@ -182,6 +183,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     }
   }, [
     activeDashboard,
+    activeDashboardId,
     ampLayers?.entities,
     activeDashboard?.ampIds,
     activeDashboard?.regulatoryAreaIds,
