@@ -9,30 +9,32 @@ export const useUpdateOtherControlTypes = () => {
     values: { controlUnits, envActions }
   } = useFormikContext<Mission>()
 
-  const currentControlUnitIsPAM = controlUnits?.some(controlUnit =>
-    ControlUnit.PAMControlUnitIds.includes(controlUnit.id)
+  const currentControlUnitIsPAMOrULAM = controlUnits?.some(
+    controlUnit =>
+      ControlUnit.PAMControlUnitIds.includes(controlUnit.id) || ControlUnit.ULAMControlUnitIds.includes(controlUnit.id)
   )
-  const previousControlUnitIsPAM = usePrevious(currentControlUnitIsPAM)
+
+  const previousControlUnitIsPAM = usePrevious(currentControlUnitIsPAMOrULAM)
 
   // if control unit is not changed, do nothing
   if (previousControlUnitIsPAM === undefined) {
     return
   }
 
-  if (previousControlUnitIsPAM && !currentControlUnitIsPAM) {
+  if (previousControlUnitIsPAM && !currentControlUnitIsPAMOrULAM) {
     envActions.forEach((action, index) => {
       if (action.actionType === ActionTypeEnum.CONTROL) {
         // to prevent multiple form update (control Unit and envActions)
         setTimeout(() => {
-          setFieldValue(`envActions[${index}].isAdministrativeControl`, null, false)
-          setFieldValue(`envActions[${index}].isComplianceWithWaterRegulationsControl`, null, false)
-          setFieldValue(`envActions[${index}].isSafetyEquipmentAndStandardsComplianceControl`, null, false)
-          setFieldValue(`envActions[${index}].isSeafarersControl`, null, false)
+          setFieldValue(`envActions[${index}].isAdministrativeControl`, undefined, false)
+          setFieldValue(`envActions[${index}].isComplianceWithWaterRegulationsControl`, undefined, false)
+          setFieldValue(`envActions[${index}].isSafetyEquipmentAndStandardsComplianceControl`, undefined, false)
+          setFieldValue(`envActions[${index}].isSeafarersControl`, undefined, false)
         }, 100)
       }
     })
   }
-  if (!previousControlUnitIsPAM && currentControlUnitIsPAM) {
+  if (!previousControlUnitIsPAM && currentControlUnitIsPAMOrULAM) {
     envActions.forEach((action, index) => {
       if (action.actionType === ActionTypeEnum.CONTROL) {
         // to prevent multiple form update (control Unit and envActions)

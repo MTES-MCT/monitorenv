@@ -39,7 +39,8 @@ VALUES
 INSERT INTO public.control_units(
     id, administration_id,                    name) VALUES
     (         10121,              1009,     'PAM Jeanne Barret'),
-    (         10080,              1009,            'PAM Themis');
+    (         10080,              1009,            'PAM Themis'),
+    (         10176,              1005,            'ULAM 35');
 
 
 SELECT setval('control_units_id_seq', (SELECT max(id) FROM control_units), true);
