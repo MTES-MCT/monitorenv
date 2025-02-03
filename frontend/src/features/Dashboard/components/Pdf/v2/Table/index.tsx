@@ -64,6 +64,7 @@ export function AreaTable({
           {amps.length + regulatoryAreas.length + vigilanceAreas.length} sélectionnée(s)
         </Text>
       </View>
+      {image && <Image src={image.image} />}
       <View style={styles.table}>
         <View style={styles.headers}>
           <View style={[styles.regulatoryArea, styles.header]}>
@@ -104,7 +105,6 @@ export function AreaTable({
           </View>
         </View>
       </View>
-      {image && <Image src={image.image} />}
     </>
   )
 }

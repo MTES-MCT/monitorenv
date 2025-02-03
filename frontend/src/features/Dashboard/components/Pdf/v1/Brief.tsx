@@ -33,9 +33,6 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           <Comments comments={brief.comments} />
         </View>
         <View style={layoutStyle.section}>
-          <Reportings reportings={brief.reportings} subThemes={brief.subThemes} themes={brief.themes} />
-        </View>
-        <View style={layoutStyle.section}>
           <AreaTable
             amps={brief.amps}
             image={brief.images?.find(image => image.featureId === 'WHOLE_DASHBOARD')}
@@ -69,6 +66,14 @@ export function Brief({ author, brief, description, title }: BriefProps) {
               linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
               vigilanceAreas={brief.vigilanceAreas}
             />
+          </View>
+        </Page>
+      )}
+      {brief.reportings.length > 0 && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <Reportings reportings={brief.reportings} subThemes={brief.subThemes} themes={brief.themes} />
           </View>
         </Page>
       )}

@@ -10,8 +10,8 @@ import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
 const styles = StyleSheet.create({
   amp: {
-    backgroundColor: '#C58F7E',
-    color: THEME.color.white
+    backgroundColor: '#D6DF64',
+    color: THEME.color.charcoal
   },
   cell: {
     border: `1 solid ${THEME.color.blueGray25}`,
@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
   table: {
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: 36
+    paddingTop: 36
   },
   vigilanceArea: {
-    backgroundColor: '#D6DF64',
-    color: THEME.color.charcoal
+    backgroundColor: '#C58F7E',
+    color: THEME.color.white
   }
 })
 
@@ -64,6 +64,8 @@ export function AreaTable({
           {amps.length + regulatoryAreas.length + vigilanceAreas.length} sélectionnée(s)
         </Text>
       </View>
+
+      {image && <Image src={image.image} />}
 
       <View style={styles.table}>
         <View style={styles.headers}>
@@ -105,7 +107,6 @@ export function AreaTable({
           </View>
         </View>
       </View>
-      {image && <Image src={image.image} />}
     </>
   )
 }
