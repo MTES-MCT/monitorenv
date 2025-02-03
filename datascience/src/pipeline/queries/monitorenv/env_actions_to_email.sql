@@ -10,16 +10,37 @@ WITH actions_to_export AS (
         action_department,
         infraction,
         number_of_controls,
-        surveillance_duration
+        surveillance_duration,
+        CASE
+            WHEN action_type = 'SURVEILLANCE' AND action_end_datetime_utc < :min_datetime_utc THEN true
+            WHEN action_type = 'CONTROL' AND action_start_datetime_utc < :min_datetime_utc THEN true
+            ELSE false
+        END AS is_late_update
     FROM analytics_actions
     WHERE (
             action_type = 'SURVEILLANCE'
-            AND action_end_datetime_utc >= :min_datetime_utc
-            AND action_end_datetime_utc < :max_datetime_utc
+            AND (
+                    (
+                    action_end_datetime_utc >= :min_datetime_utc AND 
+                    action_end_datetime_utc < :max_datetime_utc
+                    ) OR (
+                        action_end_datetime_utc < :min_datetime_utc AND
+                        mission_updated_at_utc >= :min_datetime_utc AND
+                        mission_updated_at_utc < :max_datetime_utc 
+                    )
+            )
         ) OR (
             action_type = 'CONTROL'
-            AND action_start_datetime_utc >= :min_datetime_utc
-            AND action_start_datetime_utc < :max_datetime_utc
+            AND (
+                    (
+                    action_start_datetime_utc >= :min_datetime_utc AND 
+                    action_start_datetime_utc < :max_datetime_utc
+                    ) OR (
+                        action_start_datetime_utc < :min_datetime_utc AND
+                        mission_updated_at_utc >= :min_datetime_utc AND
+                        mission_updated_at_utc < :max_datetime_utc 
+                    )
+            )
         )
 ),
 
@@ -32,8 +53,7 @@ controls_average_positions AS (
     FROM analytics_actions
     WHERE
         action_type = 'CONTROL'
-        AND action_start_datetime_utc >= :min_datetime_utc
-        AND action_start_datetime_utc < :max_datetime_utc
+        AND id IN (SELECT id FROM actions_to_export)
         AND latitude IS NOT NULL
         AND longitude IS NOT NULL
     GROUP BY id

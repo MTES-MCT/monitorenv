@@ -29,7 +29,9 @@ class ControlUnitActions:
     control_unit: ControlUnit
     period: Period
     controls: pd.DataFrame
+    late_controls: pd.DataFrame
     surveillances: pd.DataFrame
+    late_surveillances: pd.DataFrame
 
 
 @dataclass

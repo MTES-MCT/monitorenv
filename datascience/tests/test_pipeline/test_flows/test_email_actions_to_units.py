@@ -59,7 +59,7 @@ def expected_env_actions() -> pd.DataFrame:
             "action_start_datetime_utc": [
                 datetime(
                     year=2022,
-                    month=11,
+                    month=6,
                     day=28,
                     hour=13,
                     minute=59,
@@ -106,7 +106,7 @@ def expected_env_actions() -> pd.DataFrame:
             "action_end_datetime_utc": [
                 datetime(
                     year=2022,
-                    month=12,
+                    month=7,
                     day=5,
                     hour=19,
                     minute=59,
@@ -160,6 +160,7 @@ def expected_env_actions() -> pd.DataFrame:
             "infraction": [None, False, False, None, None],
             "number_of_controls": [None, 0.0, 0.0, None, None],
             "surveillance_duration": [174.0, None, None, 3.0, 3.0],
+            "is_late_update": [True, False, False, False, False],
             "themes": [
                 {
                     "Culture marine": ["Implantation"],
@@ -285,6 +286,58 @@ def sample_control_unit_actions() -> ControlUnitActions:
                 "latitude": [None, None],
             }
         ),
+        late_controls=pd.DataFrame(
+            {
+                "id": [UUID("394a0c7e-e8df-4a90-bb5a-35594a0db694")],
+                "action_start_datetime_utc": [
+                    datetime(2022, 11, 24, 20, 31, 41, 719000)
+                ],
+                "action_end_datetime_utc": [pd.NaT],
+                "mission_type": ["SEA"],
+                "action_type": ["CONTROL"],
+                "control_unit_id": [10019],
+                "action_facade": ["Hors façade"],
+                "action_department": ["Hors département"],
+                "infraction": [False],
+                "number_of_controls": [0.0],
+                "surveillance_duration": [None],
+                "themes": [{"Aucun thème": ["Aucun sous-thème"]}],
+                "longitude": [-1.0193],
+                "latitude": [28.12065],
+            }
+        ),
+        late_surveillances=pd.DataFrame(
+            {
+                "id": [
+                    UUID("a1e11c27-faab-49f6-bc2e-d7ffa0864ca2"),
+                ],
+                "action_start_datetime_utc": [
+                    datetime(2022, 11, 28, 13, 59, 20, 176000),
+                ],
+                "action_end_datetime_utc": [
+                    datetime(2022, 12, 5, 19, 59, 20, 176000),
+                ],
+                "mission_type": ["SEA"],
+                "action_type": ["SURVEILLANCE"],
+                "control_unit_id": [10019],
+                "action_facade": ["Hors façade"],
+                "action_department": ["Hors département"],
+                "infraction": [None],
+                "number_of_controls": [None],
+                "surveillance_duration": [54.0],
+                "themes": [
+                    {
+                        "Culture marine": ["Implantation"],
+                        "Police des espèces protégées et de leurs habitats (faune et flore)": [
+                            "Dérogations concernant les espèces protégées",
+                            "Détention d'espèces protégées",
+                        ],
+                    },
+                ],
+                "longitude": [None],
+                "latitude": [None],
+            }
+        ),
     )
 
 
@@ -296,6 +349,10 @@ def sample_control_unit_actions_without_actions(
         sample_control_unit_actions,
         controls=sample_control_unit_actions.controls.head(0),
         surveillances=sample_control_unit_actions.surveillances.head(0),
+        late_controls=sample_control_unit_actions.late_controls.head(0),
+        late_surveillances=sample_control_unit_actions.late_surveillances.head(
+            0
+        ),
     )
 
 
@@ -496,7 +553,11 @@ def test_to_control_unit_actions(expected_env_actions, expected_control_units):
     )
     pd.testing.assert_frame_equal(
         control_unit_actions[1].surveillances,
-        expected_env_actions.iloc[[0, 4]].reset_index(drop=True),
+        expected_env_actions.iloc[[4]].reset_index(drop=True),
+    )
+    pd.testing.assert_frame_equal(
+        control_unit_actions[1].late_surveillances,
+        expected_env_actions.iloc[[0]].reset_index(drop=True),
     )
 
 
@@ -644,7 +705,11 @@ def test_send_env_actions_email(
         )
         assert msg.number_of_actions == len(
             sample_control_unit_actions.controls
-        ) + len(sample_control_unit_actions.surveillances)
+        ) + len(sample_control_unit_actions.surveillances) + len(
+            sample_control_unit_actions.late_controls
+        ) + len(
+            sample_control_unit_actions.late_surveillances
+        )
         assert msg.success == success
         assert msg.error_code == error_code
         assert msg.error_message == error_message

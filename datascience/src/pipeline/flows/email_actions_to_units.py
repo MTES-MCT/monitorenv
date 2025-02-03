@@ -130,10 +130,22 @@ def to_control_unit_actions(
             controls=env_actions[
                 (env_actions.action_type == EnvActionType.CONTROL.value)
                 & (env_actions.control_unit_id == control_unit.control_unit_id)
+                & (~env_actions.is_late_update)
+            ].reset_index(drop=True),
+            late_controls=env_actions[
+                (env_actions.action_type == EnvActionType.CONTROL.value)
+                & (env_actions.control_unit_id == control_unit.control_unit_id)
+                & (env_actions.is_late_update)
             ].reset_index(drop=True),
             surveillances=env_actions[
                 (env_actions.action_type == EnvActionType.SURVEILLANCE.value)
                 & (env_actions.control_unit_id == control_unit.control_unit_id)
+                & (~env_actions.is_late_update)
+            ].reset_index(drop=True),
+            late_surveillances=env_actions[
+                (env_actions.action_type == EnvActionType.SURVEILLANCE.value)
+                & (env_actions.control_unit_id == control_unit.control_unit_id)
+                & (env_actions.is_late_update)
             ].reset_index(drop=True),
         )
         for control_unit in control_units
@@ -168,9 +180,8 @@ def render(
 
         return ", ".join(formatted_themes)
 
-    if len(control_unit_actions.controls) > 0:
-
-        controls = control_unit_actions.controls.copy(deep=True)
+    def render_controls(controls: pd.DataFrame) -> str:
+        controls = controls.copy(deep=True)
 
         controls["number_of_controls"] = controls.number_of_controls.fillna(
             0
@@ -200,13 +211,10 @@ def render(
 
         controls = controls[columns.keys()].rename(columns=columns)
         controls = controls.to_html(index=False, border=1)
+        return controls
 
-    else:
-        controls = "Aucun"
-
-    if len(control_unit_actions.surveillances) > 0:
-
-        surveillances = control_unit_actions.surveillances.copy(deep=True)
+    def render_surveillances(surveillances: pd.DataFrame) -> str:
+        surveillances = surveillances.copy(deep=True)
         surveillances[
             "action_start_datetime_utc"
         ] = surveillances.action_start_datetime_utc.map(
@@ -234,13 +242,38 @@ def render(
 
         surveillances = surveillances[columns.keys()].rename(columns=columns)
         surveillances = surveillances.to_html(index=False, border=1)
+        return surveillances
+
+    if len(control_unit_actions.controls) > 0:
+        controls = render_controls(control_unit_actions.controls)
+    else:
+        controls = "Aucun"
+
+    if len(control_unit_actions.surveillances) > 0:
+        surveillances = render_surveillances(
+            control_unit_actions.surveillances
+        )
     else:
         surveillances = "Aucune"
+
+    if len(control_unit_actions.late_controls) > 0:
+        late_controls = render_controls(control_unit_actions.late_controls)
+    else:
+        late_controls = "Aucun"
+
+    if len(control_unit_actions.late_surveillances) > 0:
+        late_surveillances = render_surveillances(
+            control_unit_actions.late_surveillances
+        )
+    else:
+        late_surveillances = "Aucune"
 
     html = template.render(
         control_unit_name=control_unit_actions.control_unit.control_unit_name,
         controls=controls,
+        late_controls=late_controls,
         surveillances=surveillances,
+        late_surveillances=late_surveillances,
         from_date=control_unit_actions.period.start.strftime(
             "%d/%m/%Y %H:%M UTC"
         ),
@@ -398,7 +431,9 @@ def send_env_actions_email(
                 actions_min_datetime_utc=actions.period.start,
                 actions_max_datetime_utc=actions.period.end,
                 number_of_actions=len(actions.controls)
-                + len(actions.surveillances),
+                + len(actions.surveillances)
+                + len(actions.late_controls)
+                + len(actions.late_surveillances),
                 success=success,
                 error_code=error_code,
                 error_message=error_message,
