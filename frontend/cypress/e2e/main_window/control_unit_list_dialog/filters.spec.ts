@@ -10,7 +10,7 @@ context('Main Window > Control Unit List Dialog > Filters', () => {
   })
 
   it('Should show all control units by default', () => {
-    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 31)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 32)
 
     cy.contains('A636 Maïto').should('exist')
     cy.contains('SML 50').should('exist')
