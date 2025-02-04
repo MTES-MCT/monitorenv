@@ -14,14 +14,14 @@ export const useUpdateOtherControlTypes = () => {
       ControlUnit.PAMControlUnitIds.includes(controlUnit.id) || ControlUnit.ULAMControlUnitIds.includes(controlUnit.id)
   )
 
-  const previousControlUnitIsPAM = usePrevious(currentControlUnitIsPAMOrULAM)
+  const previousControlUnitIsPAMOrULAM = usePrevious(currentControlUnitIsPAMOrULAM)
 
   // if control unit is not changed, do nothing
-  if (previousControlUnitIsPAM === undefined) {
+  if (previousControlUnitIsPAMOrULAM === undefined) {
     return
   }
 
-  if (previousControlUnitIsPAM && !currentControlUnitIsPAMOrULAM) {
+  if (previousControlUnitIsPAMOrULAM && !currentControlUnitIsPAMOrULAM) {
     envActions.forEach((action, index) => {
       if (action.actionType === ActionTypeEnum.CONTROL) {
         // to prevent multiple form update (control Unit and envActions)
@@ -34,7 +34,7 @@ export const useUpdateOtherControlTypes = () => {
       }
     })
   }
-  if (!previousControlUnitIsPAM && currentControlUnitIsPAMOrULAM) {
+  if (!previousControlUnitIsPAMOrULAM && currentControlUnitIsPAMOrULAM) {
     envActions.forEach((action, index) => {
       if (action.actionType === ActionTypeEnum.CONTROL) {
         // to prevent multiple form update (control Unit and envActions)
