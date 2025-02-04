@@ -150,9 +150,12 @@ export const Filters = forwardRef<HTMLDivElement, ComponentProps<'div'>>(({ ...p
 
 const Wrapper = styled.div<{ $hasChildren: boolean; $hasPeriodFilter: boolean }>`
   padding: 16px 24px;
-  ${({ $hasChildren, $hasPeriodFilter }) => $hasPeriodFilter && !$hasChildren && 'padding-bottom: 84px;'}
+
   ${({ $hasChildren }) =>
-    $hasChildren ? 'display: flex; flex-direction: column; justify-content: space-between;' : 'display: flow-root;'}
+    $hasChildren
+      ? 'display: flex; flex-direction: column; justify-content: space-between;'
+      : 'display: flow-root;  padding-bottom: 48px;'}
+  ${({ $hasChildren, $hasPeriodFilter }) => $hasPeriodFilter && !$hasChildren && 'padding-bottom: 84px;'}
 `
 
 const FirstLine = styled.div<{ $hasChildren: boolean; $hasPeriodFilter: boolean }>`
