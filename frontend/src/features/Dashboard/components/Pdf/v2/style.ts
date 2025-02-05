@@ -120,9 +120,18 @@ export const areaStyle = StyleSheet.create({
     width: '70%'
   },
   header: {
+    alignItems: 'center',
     backgroundColor: THEME.color.gainsboro,
+    flexDirection: 'row',
     minHeight: 12.4,
-    padding: '2'
+    padding: 2
+  },
+  layerLegend: {
+    border: `0.5 solid ${THEME.color.slateGray}`,
+    flexDirection: 'row',
+    height: 8,
+    marginRight: 2,
+    width: 8
   },
   wrapper: {
     display: 'flex',
