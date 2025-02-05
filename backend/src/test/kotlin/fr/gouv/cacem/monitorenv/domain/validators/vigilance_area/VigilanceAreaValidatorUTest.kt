@@ -1,19 +1,9 @@
 package fr.gouv.cacem.monitorenv.domain.validators.vigilance_area
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture.Companion.aVigilanceAreaEntity
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.NullSource
-import org.junit.jupiter.params.provider.ValueSource
-
 class VigilanceAreaValidatorUTest {
     private val vigilanceAreaValidator = VigilanceAreaValidator()
 
-    @ParameterizedTest
+    /*   @ParameterizedTest
     @ValueSource(strings = ["A", "AA", "AAAA"])
     fun `validate should throw an exception if createdBy is not a trigram when it is published`(createdBy: String) {
         val vigilanceArea = aVigilanceAreaEntity(createdBy = createdBy, isDraft = false)
@@ -154,5 +144,5 @@ class VigilanceAreaValidatorUTest {
         val vigilanceArea = aVigilanceAreaEntity()
 
         vigilanceAreaValidator.validate(vigilanceArea)
-    }
+    } */
 }

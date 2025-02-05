@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
+// import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionValidator
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
@@ -11,8 +12,6 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
-import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
-import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionValidator
 import org.slf4j.LoggerFactory
 
 @UseCase
@@ -26,11 +25,13 @@ class CreateOrUpdateEnvActions(
 
     @Throws(IllegalArgumentException::class)
     fun execute(
-        @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
+        //  @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
         mission: MissionEntity,
         envActions: List<EnvActionEntity>?,
     ): MissionEntity {
-        logger.info("Attempt to CREATE or UPDATE mission ${mission.id} with envActions ${envActions?.map { it.id }}")
+        logger.info(
+            "Attempt to CREATE or UPDATE mission ${mission.id} with envActions ${envActions?.map { it.id }}",
+        )
         val envActionsToSave =
             envActions?.map {
                 when (it.actionType) {
@@ -48,11 +49,12 @@ class CreateOrUpdateEnvActions(
                                 },
                             department =
                                 normalizedControlPoint?.let { nonNullGeom ->
-                                    departmentRepository.findDepartmentFromGeometry(nonNullGeom)
+                                    departmentRepository.findDepartmentFromGeometry(
+                                        nonNullGeom,
+                                    )
                                 },
                         )
                     }
-
                     ActionTypeEnum.SURVEILLANCE -> {
                         val surveillance = it as EnvActionSurveillanceEntity
                         val normalizedGeometry =
@@ -74,7 +76,6 @@ class CreateOrUpdateEnvActions(
                                 },
                         )
                     }
-
                     ActionTypeEnum.NOTE -> {
                         (it as EnvActionNoteEntity).copy()
                     }

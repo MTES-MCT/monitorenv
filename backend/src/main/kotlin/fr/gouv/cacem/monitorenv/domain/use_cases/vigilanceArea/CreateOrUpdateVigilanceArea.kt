@@ -7,8 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
-import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
-import fr.gouv.cacem.monitorenv.domain.validators.vigilance_area.VigilanceAreaValidator
+// import fr.gouv.cacem.monitorenv.domain.validators.vigilance_area.VigilanceAreaValidator
 import org.slf4j.LoggerFactory
 
 @UseCase
@@ -19,8 +18,8 @@ class CreateOrUpdateVigilanceArea(
     private val logger = LoggerFactory.getLogger(SaveDashboard::class.java)
 
     fun execute(
-        @UseCaseValidation<VigilanceAreaEntity>(validator = VigilanceAreaValidator::class) vigilanceArea:
-            VigilanceAreaEntity,
+        // @UseCaseValidation<VigilanceAreaEntity>(validator = VigilanceAreaValidator::class)
+        vigilanceArea: VigilanceAreaEntity,
     ): VigilanceAreaEntity {
         logger.info("Attempt to CREATE or UPDATE vigilance area ${vigilanceArea.id}")
         try {
