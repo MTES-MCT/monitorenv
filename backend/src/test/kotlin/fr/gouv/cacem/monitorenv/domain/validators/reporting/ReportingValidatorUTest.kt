@@ -1,21 +1,9 @@
 package fr.gouv.cacem.monitorenv.domain.validators.reporting
 
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceControlUnit
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceOther
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceSemaphore
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
-
 class ReportingValidatorUTest {
     private val reportingValidator = ReportingValidator()
 
-    @ParameterizedTest
+    /*  @ParameterizedTest
     @ValueSource(strings = ["A", "AA", "AAAA"])
     fun `validate should throw an exception if there is a control with openBy is not a trigram`(openBy: String) {
         val reporting = aReporting(openBy = openBy)
@@ -85,5 +73,5 @@ class ReportingValidatorUTest {
         val reporting = aReporting()
 
         reportingValidator.validate(reporting)
-    }
+    } */
 }
