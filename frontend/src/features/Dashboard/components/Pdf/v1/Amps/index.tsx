@@ -1,3 +1,4 @@
+import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Link, Text, View } from '@react-pdf/renderer'
 import { getTitle } from 'domain/entities/layers/utils'
@@ -17,6 +18,14 @@ export function Amps({ amps }: { amps: AMPFromAPI[] }) {
         {amps.map(amp => (
           <View key={amp.id} style={areaStyle.card} wrap={false}>
             <View style={areaStyle.header}>
+              <View
+                style={[
+                  areaStyle.layerLegend,
+                  {
+                    backgroundColor: getAMPColorWithAlpha(amp.type, amp.name)
+                  }
+                ]}
+              />
               <Text> {getTitle(amp.name)}</Text>
             </View>
             <View style={areaStyle.content}>

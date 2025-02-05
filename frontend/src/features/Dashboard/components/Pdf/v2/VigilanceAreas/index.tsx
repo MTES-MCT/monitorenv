@@ -1,4 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
@@ -59,6 +60,14 @@ export function VigilanceAreas({
               )}
               <View style={areaStyle.card}>
                 <View style={areaStyle.header}>
+                  <View
+                    style={[
+                      areaStyle.layerLegend,
+                      {
+                        backgroundColor: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments)
+                      }
+                    ]}
+                  />
                   <Text> {vigilanceArea.name}</Text>
                 </View>
                 <View style={areaStyle.content}>
