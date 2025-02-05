@@ -166,44 +166,43 @@ export function Reportings({
         <Text style={layoutStyle.title}>Signalements</Text>
         <Text style={layoutStyle.selected}>{reportings.length} sélectionnée(s)</Text>
       </View>
+
       <View style={layoutStyle.cardWrapper}>
-        {reportings.length > 0 && (
-          <View style={styles.legendCard}>
-            <View style={layoutStyle.row}>
-              <View style={{ marginRight: 16 }}>
-                <View style={styles.legendLabel}>
-                  <Flag color={THEME.color.slateGray} />
-                  <Text style={{ fontWeight: 'bold' }}>Signalements en cours</Text>
-                </View>
-                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
-                  <Flag color={THEME.color.blueGray} />
-                  <Text>Observation</Text>
-                </View>
-                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
-                  <Flag color={THEME.color.maximumRed} /> <Text>Suspicion d&apos;infraction</Text>
-                </View>
-                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
-                  <Flag color={THEME.color.mediumSeaGreen} /> <Text>Rattaché à une mission</Text>
-                </View>
+        <View style={styles.legendCard}>
+          <View style={layoutStyle.row}>
+            <View style={{ marginRight: 16 }}>
+              <View style={styles.legendLabel}>
+                <Flag color={THEME.color.slateGray} />
+                <Text style={{ fontWeight: 'bold' }}>Signalements en cours</Text>
               </View>
-              <View>
-                <View style={styles.legendLabel}>
-                  <FlagArchived />
-                  <Text style={{ fontWeight: 'bold' }}>Signalements archivés</Text>
-                </View>
-                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
-                  <FlagArchivedObservation /> <Text>Observation</Text>
-                </View>
-                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
-                  <FlagArchivedInfraction /> <Text>Suspicion d&apos;infraction</Text>
-                </View>
-                <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
-                  <FlagArchivedWithMission /> <Text>Rattaché à une mission</Text>
-                </View>
+              <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
+                <Flag color={THEME.color.blueGray} />
+                <Text>Observation</Text>
+              </View>
+              <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
+                <Flag color={THEME.color.maximumRed} /> <Text>Suspicion d&apos;infraction</Text>
+              </View>
+              <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
+                <Flag color={THEME.color.mediumSeaGreen} /> <Text>Rattaché à une mission</Text>
+              </View>
+            </View>
+            <View>
+              <View style={styles.legendLabel}>
+                <FlagArchived />
+                <Text style={{ fontWeight: 'bold' }}>Signalements archivés</Text>
+              </View>
+              <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
+                <FlagArchivedObservation /> <Text>Observation</Text>
+              </View>
+              <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
+                <FlagArchivedInfraction /> <Text>Suspicion d&apos;infraction</Text>
+              </View>
+              <View style={[styles.legendLabel, { marginLeft: 6, marginTop: 6 }]}>
+                <FlagArchivedWithMission /> <Text>Rattaché à une mission</Text>
               </View>
             </View>
           </View>
-        )}
+        </View>
         {reportings.map(reporting => (
           <View key={reporting.id} style={[styles.reportingCard, { position: 'relative' }]}>
             <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>

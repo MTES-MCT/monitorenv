@@ -84,7 +84,7 @@ export function AreaTable({
   vigilanceAreas: VigilanceArea.VigilanceArea[]
 }) {
   const groupedRegulatoryAreas = groupBy(
-    regulatoryAreas.sort((a, b) => a.layerName.localeCompare(b.layerName)),
+    [...regulatoryAreas].sort((a, b) => a.layerName.localeCompare(b.layerName)),
     regulatory => regulatory.layerName
   )
 
