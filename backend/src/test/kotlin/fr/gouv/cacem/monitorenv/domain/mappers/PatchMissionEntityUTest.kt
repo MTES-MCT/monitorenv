@@ -70,7 +70,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = null,
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
-                isUnderJdp = false
+                isUnderJdp = false,
             )
 
         // When
@@ -153,7 +153,6 @@ class PatchMissionEntityUTest {
         assertThat(missionEntity.endDateTimeUtc).isNull()
     }
 
-
     @Test
     fun `execute() should return mission with with isUnderJdp turned false`() {
         // Given
@@ -181,7 +180,7 @@ class PatchMissionEntityUTest {
         val isUnderJdp = true
         val missionEntity =
             MissionFixture.aMissionEntity(
-                isUnderJdp = isUnderJdp
+                isUnderJdp = isUnderJdp,
             )
         val patchableMissionEntity =
             PatchableMissionEntity(
@@ -212,7 +211,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When
@@ -233,7 +232,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When
@@ -272,7 +271,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When
@@ -293,7 +292,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When

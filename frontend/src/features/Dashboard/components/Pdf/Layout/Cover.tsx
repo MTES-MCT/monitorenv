@@ -63,10 +63,10 @@ const styles = StyleSheet.create({
 })
 
 export function Cover({ brief }: { brief: Dashboard.Brief }) {
-  const legicemId = import.meta.env.FRONTEND_LEGICEM_ID
-  const legicemPassword = import.meta.env.FRONTEND_LEGICEM_PASSWORD
-  const monitorEnvExtId = import.meta.env.FRONTEND_MONITORENVEXT_ID
-  const monitorEnvExtPassword = import.meta.env.FRONTEND_MONITORENVEXT_PASSWORD
+  const legicemId = import.meta.env.MONITORENV_LEGICEM_ID
+  const legicemPassword = import.meta.env.MONITORENV_LEGICEM_PASSWORD
+  const monitorEnvExtId = import.meta.env.MONITORENV_EXT_ID
+  const monitorEnvExtPassword = import.meta.env.MONITORENV_EXT_PASSWORD
 
   return (
     <>

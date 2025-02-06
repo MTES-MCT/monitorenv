@@ -106,7 +106,7 @@ function FlagArchived() {
   )
 }
 
-function Flag({ color }: { color: string }) {
+export function Flag({ color }: { color: string }) {
   return (
     <Svg height="8.4" viewBox="0 0 20 20" width="8.4">
       <Rect fill="none" height="20" width="20" />
@@ -115,7 +115,7 @@ function Flag({ color }: { color: string }) {
   )
 }
 
-const reportingStatusFlag = (reporting: Reporting) => {
+export const reportingStatusFlag = (reporting: Reporting) => {
   const reportingStatus = getReportingStatus({ ...reporting })
 
   if (reporting.attachedMission && reportingStatus !== ReportingStatusEnum.ARCHIVED) {

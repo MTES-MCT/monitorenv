@@ -42,20 +42,15 @@ import kotlin.random.Random
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [Missions::class])
 class MissionsITest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockitoBean
-    private val patchMission: PatchMission = mock()
+    @MockitoBean private val patchMission: PatchMission = mock()
 
-    @MockitoBean
-    private val deleteMission: DeleteMission = mock()
+    @MockitoBean private val deleteMission: DeleteMission = mock()
 
-    @MockitoBean
-    private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
+    @MockitoBean private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
     @Test
     fun `Should delete mission with api v2`() {
@@ -151,8 +146,7 @@ class MissionsITest {
                     "$.controlUnits[0].resources[0].id",
                     equalTo(patchedMission.controlUnits[0].resources[0].id),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.isUnderJdp",
                     equalTo(patchedMission.isUnderJdp),

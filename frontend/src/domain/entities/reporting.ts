@@ -170,7 +170,7 @@ export const getReportingStatus = ({
   isArchived?: boolean
   reportType?: ReportingTypeEnum
   validityTime?: number | undefined
-}) => {
+}): ReportingStatusEnum => {
   const endOfValidity = dayjs(createdAt)
     .add(validityTime ?? 0, 'hour')
     .toISOString()

@@ -14,6 +14,7 @@ import type { ImageApi, ImageFront, Link } from '@components/Form/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
 import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
+import type { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace Dashboard {
@@ -144,5 +145,87 @@ export namespace Dashboard {
     [BaseLayer.OSM]: 'Open Street Map (défaut)',
     [BaseLayer.SATELLITE]: 'Satellite',
     [BaseLayer.SHOM]: 'Carte marine (SHOM)'
+  }
+
+  // Editable Brief
+  export type EditableBriefExport = {
+    amps: AmpForEditableBrief[]
+    dashboard: Dashboard
+    image?: ExportImageType
+    regulatoryAreas: RegulatoryAreaForEditableBrief[]
+    reportings: ReportingForEditableBrief[]
+    vigilanceAreas: VigilanceAreaForEditableBrief[]
+  }
+
+  export type TargetDetailsForEditableBrief = {
+    externalReferenceNumber?: string
+    imo?: string
+    mmsi?: string
+    operatorName?: string
+    size?: string
+    vesselName?: string
+    vesselType?: string
+  }
+
+  type ReportingForEditableBrief = {
+    createdAt: string | undefined
+    iconColor: string
+    id: number | string
+    isArchived: boolean
+    localization: string
+    reportType: string
+    reportingId: string
+    reportingSources: string
+    subThemes: string
+    targetDetails: TargetDetailsForEditableBrief[]
+    targetType: ReportingTargetTypeEnum
+    theme: string | undefined
+    vehicleType: string | undefined
+  }
+
+  type VigilanceAreaForEditableBrief = {
+    color: string
+    comments?: string
+    endDatePeriod?: string
+    endingOccurenceDate: string
+    frequency: string
+    id: number
+    image?: ExportImageType
+    linkedAMPs?: string
+    linkedRegulatoryAreas?: string
+    links?: Link[]
+    name: string
+    startDatePeriod?: string
+    themes?: string
+    visibility?: string
+  }
+
+  type AmpForEditableBrief = {
+    color: string
+    designation: string
+    id: number
+    image?: ExportImageType
+    name: string
+    refReg?: string
+    type?: string
+    url?: string
+  }
+
+  type RegulatoryAreaForEditableBrief = {
+    color: string
+    entityName: string
+    facade: string
+    id: number
+    image?: ExportImageType
+    layerName: string
+    refReg: string
+    thematique: string
+    type: string
+    url: string
+  }
+
+  export type BriefFileExport = {
+    fileContent: string
+    fileName: string
   }
 }

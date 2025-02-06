@@ -37,10 +37,14 @@ class JpaControlUnitRepository(
     override fun findAll(): List<FullControlUnitDTO> = dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
 
     @Transactional
-    override fun findById(controlUnitId: Int): FullControlUnitDTO =
+    override fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO =
         dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
 
     @CacheEvict(value = ["control_units"], allEntries = true)
+    @Transactional
+    override fun findById(controlUnitId: Int): ControlUnitEntity =
+        dbControlUnitRepository.findById(controlUnitId).get().toControlUnit()
+
     @Transactional
     override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity =
         try {

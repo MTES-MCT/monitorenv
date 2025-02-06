@@ -20,13 +20,13 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `archiveById() should archive a control unit by its ID`() {
-        val beforeFullControlUnit = jpaControlUnitRepository.findById(10000)
+        val beforeFullControlUnit = jpaControlUnitRepository.findFullControlUnitById(10000)
 
         assertThat(beforeFullControlUnit.controlUnit.isArchived).isFalse()
 
         jpaControlUnitRepository.archiveById(10000)
 
-        val afterFullControlUnit = jpaControlUnitRepository.findById(10000)
+        val afterFullControlUnit = jpaControlUnitRepository.findFullControlUnitById(10000)
 
         assertThat(afterFullControlUnit.controlUnit.isArchived).isTrue()
     }
@@ -282,7 +282,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a control unit by its ID`() {
-        val foundFullControlUnit = jpaControlUnitRepository.findById(10000)
+        val foundFullControlUnit = jpaControlUnitRepository.findFullControlUnitById(10000)
 
         assertThat(foundFullControlUnit)
             .isEqualTo(
