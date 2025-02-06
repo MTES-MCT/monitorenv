@@ -55,7 +55,7 @@ dependencies {
     implementation("org.n52.jackson:jackson-datatype-jts:1.2.10")
     implementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     implementation("org.flywaydb:flyway-core:11.3.1")
-    implementation("org.flywaydb:flyway-database-postgresql:10.21.0")
+    implementation("org.flywaydb:flyway-database-postgresql:11.3.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10")
     implementation("org.springframework.boot:spring-boot-configuration-processor:3.4.2")
