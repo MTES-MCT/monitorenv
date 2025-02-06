@@ -102,7 +102,7 @@ export function AreaTable({
         <Text style={layoutStyle.title}>Zones</Text>
         <Text style={layoutStyle.selected}>{totalSelected} sélectionnée(s)</Text>
       </View>
-      {image && <Image src={image.image} style={{ paddingBottom: 36 }} />}
+      {image && <Image src={image.image} style={{ paddingBottom: 12 }} />}
 
       <View break style={[styles.table, { height: tableHeight }]}>
         <View style={[styles.regulatoryArea, styles.headers]}>
