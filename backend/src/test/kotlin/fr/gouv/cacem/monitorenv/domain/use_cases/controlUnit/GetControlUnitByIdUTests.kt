@@ -46,7 +46,7 @@ class GetControlUnitByIdUTests {
                 controlUnitResources = listOf(),
             )
 
-        given(controlUnitRepository.findById(controlUnitId)).willReturn(fullControlUnit)
+        given(controlUnitRepository.findFullControlUnitById(controlUnitId)).willReturn(fullControlUnit)
 
         val result = GetControlUnitById(controlUnitRepository).execute(controlUnitId)
 

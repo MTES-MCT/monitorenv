@@ -20,8 +20,14 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
         method: 'DELETE',
         url: `/v1/dashboards/${id}`
       }),
-
       transformErrorResponse: response => new FrontendApiError(DELETE_DASHBOARD_ERROR_MESSAGE, response)
+    }),
+    exportBrief: build.mutation<Dashboard.BriefFileExport, Dashboard.EditableBriefExport>({
+      query: brief => ({
+        body: brief,
+        method: 'POST',
+        url: `/v1/dashboards/export-brief`
+      })
     }),
     getDashboard: build.query<Dashboard.DashboardFromApi, string>({
       providesTags: (_, __, id) => [{ id, type: 'Dashboards' }],
