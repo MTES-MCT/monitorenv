@@ -5,6 +5,7 @@ import { Accent, Button, Dialog, Icon, TextInput, THEME } from '@mtes-mct/monito
 import { useState } from 'react'
 import styled from 'styled-components'
 
+import { GenerateEditableDocButton } from './GenerateEditableDocButton'
 import { GeneratePdfButton } from '../../Pdf/GeneratePdfButton'
 
 import type { DashboardType } from '@features/Dashboard/slice'
@@ -91,6 +92,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
         </DeleteButton>
 
         <ButtonsWrapper>
+          <GenerateEditableDocButton dashboard={dashboard.dashboard} />
           <GeneratePdfButton dashboard={dashboard.dashboard} />
           <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>
             Enregistrer le tableau
