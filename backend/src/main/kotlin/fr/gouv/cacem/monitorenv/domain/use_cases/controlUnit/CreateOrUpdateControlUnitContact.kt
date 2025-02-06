@@ -41,7 +41,7 @@ class CreateOrUpdateControlUnitContact(
         controlUnitId: Int,
         controlUnitContactId: Int,
     ) {
-        val fullControlUnit = controlUnitRepository.findById(controlUnitId)
+        val fullControlUnit = controlUnitRepository.findFullControlUnitById(controlUnitId)
         val otherContactsWithEmailSubscription =
             fullControlUnit.controlUnitContacts
                 // Filter and not find in the spirit of defensive programming
