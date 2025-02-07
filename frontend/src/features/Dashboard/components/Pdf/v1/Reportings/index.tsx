@@ -320,8 +320,6 @@ export function Reportings({
                 <View style={styles.separator} />
               </Fragment>
             ))}
-            <Text style={[styles.description, { width: 'auto' }]}>Description du signalement</Text>
-            <Text>{reporting.description}</Text>
           </View>
         ))}
       </View>
