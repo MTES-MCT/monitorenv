@@ -125,7 +125,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
           key={regulatoryTheme}
           onDelete={() => onDeleteTag(regulatoryTheme, 'regulatoryThemes', regulatoryThemes)}
         >
-          {String(`Thématique ${getTitle(regulatoryTheme)}`)}
+          {String(`${orientation === 'row' ? 'Thématique ' : ''}${getTitle(regulatoryTheme)}`)}
         </SingleTag>
       ))}
     </>

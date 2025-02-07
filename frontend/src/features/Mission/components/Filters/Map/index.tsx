@@ -269,7 +269,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={theme}
                 onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
               >
-                {`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`}
+                {`${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`}
               </SingleTag>
             ))}
         </StyledBloc>
