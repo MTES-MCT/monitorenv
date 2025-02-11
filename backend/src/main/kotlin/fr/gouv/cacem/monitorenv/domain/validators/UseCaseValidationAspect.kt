@@ -4,27 +4,24 @@ import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.reflect.MethodSignature
+import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 
 @Component
 @Aspect
-class UseCaseValidationAspect {
+class UseCaseValidationAspect(private val applicationContext: ApplicationContext) {
     @Before("execution(* fr.gouv.cacem.monitorenv.domain.use_cases..*.execute(..))")
     fun before(joinPoint: JoinPoint) {
         val method = (joinPoint.signature as MethodSignature).method
 
-        // Parcourir les paramètres de la méthode
         method.parameters.forEachIndexed { index, parameter ->
             val annotation = parameter.getAnnotation(UseCaseValidation::class.java)
             if (annotation != null) {
-                // Récupérer l'argument associé à ce paramètre
                 val arg = joinPoint.args[index]
 
-                // Instancier et exécuter le validateur spécifié dans l'annotation
-                val validator =
-                    annotation.validator.objectInstance
-                        ?: annotation.validator.java.getDeclaredConstructor().newInstance()
-                (validator as Validator<Any>).validate(arg) // Valide l'objet
+                // Récupérer le validateur depuis le contexte Spring
+                val validator = applicationContext.getBean(annotation.validator.java) as Validator<Any>
+                validator.validate(arg)
             }
         }
     }
