@@ -15,8 +15,6 @@ import { areaStyle, layoutStyle } from '../style'
 import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 import type { Coordinate } from 'ol/coordinate'
 
-const REPORTING_INDEXS_BREAK = [6, 15, 24, 33]
-
 const styles = StyleSheet.create({
   description: { ...areaStyle.description, width: '50%' },
   details: { ...areaStyle.details, fontWeight: 'bold' },
@@ -205,12 +203,8 @@ export function Reportings({
             </View>
           </View>
         </View>
-        {reportings.map((reporting, index) => (
-          <View
-            key={reporting.id}
-            break={REPORTING_INDEXS_BREAK.includes(index)}
-            style={[styles.reportingCard, { position: 'relative' }]}
-          >
+        {reportings.map(reporting => (
+          <View key={reporting.id} style={[styles.reportingCard, { position: 'relative' }]} wrap={false}>
             <View style={{ left: 3, position: 'absolute', top: 9 }}>{reportingStatusFlag(reporting)}</View>
             <Text>S. {getFormattedReportingId(reporting.reportingId)}</Text>
             {reporting.createdAt && (
@@ -317,7 +311,6 @@ export function Reportings({
                     <Text>{target.vesselType ? vesselTypeLabel[target.vesselType] : '-'}</Text>
                   </View>
                 </View>
-                <View style={styles.separator} />
               </Fragment>
             ))}
           </View>
