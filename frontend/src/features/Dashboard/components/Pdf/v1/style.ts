@@ -7,6 +7,8 @@ import MarianeRegular from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Regular.w
 import MarianeRegularItalic from '@mtes-mct/monitor-ui/assets/fonts/Marianne-Regular_Italic.woff2'
 import { Font, StyleSheet } from '@react-pdf/renderer'
 
+// Note: in order to convert pixels to pt you must multiply by approximately 0.31. Ex: 20px * 0.31 = 6.2pt
+
 export const registerFonts = () => {
   Font.register({
     family: 'Mariane',
