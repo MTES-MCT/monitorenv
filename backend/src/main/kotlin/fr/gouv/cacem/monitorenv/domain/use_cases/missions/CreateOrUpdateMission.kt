@@ -1,12 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-// import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionValidator
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
+import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
+import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionValidator
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 
@@ -21,7 +22,7 @@ class CreateOrUpdateMission(
 
     @Throws(IllegalArgumentException::class)
     fun execute(
-        // @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
+        @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
         mission: MissionEntity,
     ): MissionEntity {
         logger.info("Attempt to CREATE or UPDATE mission ${mission.id}")

@@ -25,7 +25,6 @@ class CreateOrUpdateEnvActions(
 
     @Throws(IllegalArgumentException::class)
     fun execute(
-        //  @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
         mission: MissionEntity,
         envActions: List<EnvActionEntity>?,
     ): MissionEntity {
@@ -55,6 +54,7 @@ class CreateOrUpdateEnvActions(
                                 },
                         )
                     }
+
                     ActionTypeEnum.SURVEILLANCE -> {
                         val surveillance = it as EnvActionSurveillanceEntity
                         val normalizedGeometry =
@@ -76,6 +76,7 @@ class CreateOrUpdateEnvActions(
                                 },
                         )
                     }
+
                     ActionTypeEnum.NOTE -> {
                         (it as EnvActionNoteEntity).copy()
                     }
