@@ -8,6 +8,7 @@ import java.time.ZonedDateTime
 
 data class MissionEntity(
     val id: Int? = null,
+    @Patchable
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val openBy: String? = null,

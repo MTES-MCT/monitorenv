@@ -7,4 +7,5 @@ data class PatchableMissionEntity(
     val observationsByUnit: Optional<String>?,
     val startDateTimeUtc: ZonedDateTime?,
     val endDateTimeUtc: Optional<ZonedDateTime>?,
+    val missionTypes: List<MissionTypeEnum>?,
 )
