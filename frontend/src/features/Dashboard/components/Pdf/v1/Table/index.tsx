@@ -27,31 +27,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     fontSize: 6.8,
     height: cellHeight,
-    padding: '4.3 12',
-    width: 185
+    padding: '4.3 12'
   },
   header: {
     flex: 1,
     flexDirection: 'row',
+    height: cellHeight,
     justifyContent: 'space-between',
-    padding: '3 12'
+    padding: '4.3 12'
   },
   headers: {
     flexDirection: 'row',
     fontSize: 6.8,
-    fontWeight: 'bold',
-    height: cellHeight,
-    justifyContent: 'space-between',
-    padding: '4.3 12',
-    width: 185
+    fontWeight: 'bold'
   },
   layerGroup: {
     border: `0.5 solid ${THEME.color.blueGray25}`,
     fontSize: 6.8,
     fontWeight: 'bold',
     height: cellHeight,
-    padding: '4.3 12',
-    width: 185
+    padding: '4.3 12'
   },
   layerLegend: {
     border: `0.5 solid ${THEME.color.slateGray}`,
@@ -65,9 +60,7 @@ const styles = StyleSheet.create({
   },
   table: {
     display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    width: '100%'
+    flexDirection: 'column'
   },
   vigilanceArea: {
     backgroundColor: '#C58F7E',
@@ -90,98 +83,87 @@ export function AreaTable({
     [...regulatoryAreas].sort((a, b) => a.layerName.localeCompare(b.layerName)),
     regulatory => regulatory.layerName
   )
-
-  const groupedAmps = groupBy(
-    [...amps].sort((a, b) => a.name.localeCompare(b.name)),
-    r => r.name
-  )
-
-  const nbHeader = 3
-  const nbColumn =
-    (amps.length > 0 ? 1 : 0) + (regulatoryAreas.length > 0 ? 1 : 0) + (vigilanceAreas.length > 0 ? 1 : 0)
-
   const totalSelected = amps.length + regulatoryAreas.length + vigilanceAreas.length
-
-  const nbCell = totalSelected + Object.keys(groupedAmps).length + Object.keys(groupedRegulatoryAreas).length + nbHeader
-  const tableHeight = (nbCell * (cellHeight + 2)) / nbColumn
 
   return (
     <>
       {image && <Image src={image.image} style={{ marginBottom: 6.2 }} />}
 
-      <View break>
-        <View style={layoutStyle.header}>
-          <Text style={layoutStyle.title}>Zones</Text>
-          <Text style={layoutStyle.selected}>{totalSelected} sélectionnée(s)</Text>
-        </View>
-
-        <View style={[styles.table, { height: tableHeight }]}>
-          <View style={[styles.regulatoryArea, styles.headers]}>
+      <View style={layoutStyle.header}>
+        <Text style={layoutStyle.title}>Zones</Text>
+        <Text style={layoutStyle.selected}>{totalSelected} sélectionnée(s)</Text>
+      </View>
+      <View style={styles.table}>
+        <View style={styles.headers}>
+          <View style={[styles.regulatoryArea, styles.header]}>
             <Text>Zones réglementaires</Text>
             <Text>{regulatoryAreas.length} sélectionnée(s)</Text>
           </View>
-
-          {Object.entries(groupedRegulatoryAreas).map(([groupName, layers]) => (
-            <Fragment key={groupName}>
-              <Text style={styles.layerGroup}>{getTitle(groupName)}</Text>
-              {layers.map(layer => (
-                <View key={layer.id} style={styles.cell}>
-                  <View
-                    style={[
-                      styles.layerLegend,
-                      {
-                        backgroundColor: getRegulatoryEnvColorWithAlpha(layer.thematique, layer.entityName)
-                      }
-                    ]}
-                  />
-                  <Text>{layer.entityName || 'AUCUN NOM'}</Text>
-                </View>
-              ))}
-            </Fragment>
-          ))}
-
-          <View style={[styles.amp, styles.headers]}>
-            <Text>Zones AMP</Text>
+          <View style={[styles.amp, styles.header]}>
+            <Text>Aires Marines Protégées</Text>
             <Text>{amps.length} sélectionnée(s)</Text>
           </View>
-
-          {Object.entries(groupedAmps).map(([groupName, layers]) => (
-            <Fragment key={groupName}>
-              <Text style={styles.layerGroup}>{getTitle(groupName)}</Text>
-              {layers.map(layer => (
-                <View key={layer.id} style={styles.cell}>
-                  <View
-                    style={[
-                      styles.layerLegend,
-                      {
-                        backgroundColor: getAMPColorWithAlpha(layer.type, layer.name)
-                      }
-                    ]}
-                  />
-                  <Text>{layer.name || 'AUCUN NOM'}</Text>
-                </View>
-              ))}
-            </Fragment>
-          ))}
-
-          <View style={[styles.vigilanceArea, styles.headers]}>
+          <View style={[styles.vigilanceArea, styles.header]}>
             <Text>Zones de vigilance</Text>
             <Text>{vigilanceAreas.length} sélectionnée(s)</Text>
           </View>
+        </View>
 
-          {vigilanceAreas.map(vigilanceArea => (
-            <View key={vigilanceArea.id} style={styles.cell}>
-              <View
-                style={[
-                  styles.layerLegend,
-                  {
-                    backgroundColor: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments)
-                  }
-                ]}
-              />
-              <Text>{vigilanceArea.name}</Text>
-            </View>
-          ))}
+        <View style={layoutStyle.row}>
+          <View style={{ flex: 1 }}>
+            {Object.entries(groupedRegulatoryAreas).map(([groupName, layers]) => (
+              <Fragment key={groupName}>
+                <Text style={styles.layerGroup} wrap={false}>
+                  {getTitle(groupName)}
+                </Text>
+                {layers.map(layer => (
+                  <View key={layer.id} style={styles.cell} wrap={false}>
+                    <View
+                      style={[
+                        styles.layerLegend,
+                        {
+                          backgroundColor: getRegulatoryEnvColorWithAlpha(layer.thematique, layer.entityName)
+                        }
+                      ]}
+                    />
+                    <Text>{layer.entityName || 'AUCUN NOM'}</Text>
+                  </View>
+                ))}
+              </Fragment>
+            ))}
+          </View>
+          <View style={{ flex: 1 }}>
+            {amps.map(amp => (
+              <View key={amp.id} style={styles.cell} wrap={false}>
+                <View
+                  style={[
+                    styles.layerLegend,
+                    {
+                      backgroundColor: getAMPColorWithAlpha(amp.type, amp.name)
+                    }
+                  ]}
+                />
+                <Text style={{ fontWeight: 'bold' }}>
+                  {getTitle(amp.name)} <Text style={{ fontWeight: 'normal' }}> / {amp.type ?? 'AUCUN NOM'}</Text>
+                </Text>
+              </View>
+            ))}
+          </View>
+          <View style={{ flex: 1 }}>
+            {vigilanceAreas.map(vigilanceArea => (
+              <View key={vigilanceArea.id} style={styles.cell} wrap={false}>
+                <View
+                  style={[
+                    styles.layerLegend,
+                    {
+                      backgroundColor: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments)
+                    }
+                  ]}
+                />
+                <Text>{vigilanceArea.name}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
     </>

@@ -21,6 +21,7 @@ type GeneratePdfButtonProps = {
 export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
   const [shouldTriggerExport, setShouldTriggerExport] = useState(false)
   const [isOpening, setIsOpening] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { subThemes, themes } = useGetControlPlans()
 
@@ -83,6 +84,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const handleDownload = async () => {
     setShouldTriggerExport(true)
+    setIsLoading(true)
   }
 
   useEffect(() => {
@@ -103,6 +105,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
         }
         setShouldTriggerExport(false)
         setIsOpening(false)
+        setIsLoading(false)
       }
     }
     renderPdf()
@@ -121,11 +124,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   return (
     <>
-      <StyledLinkButton
-        disabled={loading || isOpening}
-        Icon={loading || isOpening ? Icon.Reset : Icon.Document}
-        onClick={handleDownload}
-      >
+      <StyledLinkButton disabled={isLoading} Icon={isLoading ? Icon.Reset : Icon.Document} onClick={handleDownload}>
         {getLoadingText()}
       </StyledLinkButton>
     </>
