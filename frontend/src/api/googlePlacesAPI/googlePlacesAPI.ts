@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { throttle } from 'lodash-es'
 import { useEffect, useState, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { loadGoogleMapScript } from './utils'
@@ -52,7 +52,7 @@ export const useGooglePlacesAPI = search => {
   }, [])
 
   const throttledSearch = useMemo(() => {
-    const throttled = _.throttle(
+    const throttled = throttle(
       async query => {
         if (abortControlerRef.current) {
           abortControlerRef.current.abort()

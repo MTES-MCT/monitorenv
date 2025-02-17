@@ -4,7 +4,7 @@ import { missionFormsActions } from '@features/Mission/components/MissionForm/sl
 import { isMissionNew } from '@features/Mission/utils'
 import { reportingActions } from '@features/Reportings/slice'
 import { sideWindowActions } from '@features/SideWindow/slice'
-import omit from 'lodash/omit'
+import { omit } from 'lodash-es'
 import { generatePath } from 'react-router'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'

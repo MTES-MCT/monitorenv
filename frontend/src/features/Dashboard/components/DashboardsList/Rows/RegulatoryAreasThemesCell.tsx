@@ -1,5 +1,5 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
-import { uniq } from 'lodash'
+import { uniq } from 'lodash-es'
 
 export function RegulatoryAreasThemesCell({ themeIds }: { themeIds: number[] }) {
   const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
