@@ -1,6 +1,6 @@
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { reportingActions } from '@features/Reportings/slice'
-import omit from 'lodash/omit'
+import { omit } from 'lodash-es'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import {

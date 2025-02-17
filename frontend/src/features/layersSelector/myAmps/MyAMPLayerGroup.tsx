@@ -1,5 +1,5 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { intersection } from 'lodash'
+import { intersection } from 'lodash-es'
 
 import { MyAMPLayerZone } from './MyAMPLayerZone'
 import { getNumberOfAMPByGroupName } from '../../../api/ampsAPI'

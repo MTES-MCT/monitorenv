@@ -1,11 +1,11 @@
-import { omit } from 'lodash/fp'
+import { omit } from 'lodash-es'
 
 import type { StationFormValues } from './types'
 import type { Station } from '../../../../domain/entities/station'
 
 export function getStationDataFromStationFormValues(baseFormValues: StationFormValues): Station.StationData {
   return {
-    ...omit(['coordinates'], baseFormValues),
+    ...omit(baseFormValues, ['coordinates']),
     latitude: baseFormValues.coordinates![0],
     longitude: baseFormValues.coordinates![1]
   } as Station.StationData

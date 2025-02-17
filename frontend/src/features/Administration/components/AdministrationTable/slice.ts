@@ -1,5 +1,5 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { set } from 'lodash/fp'
+import { set } from 'lodash-es'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -32,7 +32,7 @@ const AdministrationTableSlice = createSlice({
         value: any
       }>
     ) {
-      state.filtersState = set(action.payload.key, action.payload.value, state.filtersState)
+      state.filtersState = set(state.filtersState, action.payload.key, action.payload.value)
     }
   }
 })

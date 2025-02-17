@@ -1,6 +1,6 @@
 import { type ControlUnit, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
-import { uniq } from 'lodash/fp'
+import { uniq } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 

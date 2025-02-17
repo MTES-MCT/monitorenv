@@ -17,7 +17,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { globalActions } from 'domain/shared_slices/Global'
 import { useField } from 'formik'
-import { uniq, uniqBy } from 'lodash'
+import { uniq, uniqBy } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

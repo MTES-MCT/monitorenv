@@ -7,7 +7,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useMemo, useState } from 'react'
 
 import { PanelComments } from './PanelComments'
