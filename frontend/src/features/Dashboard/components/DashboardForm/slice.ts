@@ -4,7 +4,7 @@ import { type ControlUnit, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingTypeEnum, StatusFilterEnum } from 'domain/entities/reporting'
-import { set } from 'lodash'
+import { set } from 'lodash-es'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

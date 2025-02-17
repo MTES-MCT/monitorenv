@@ -7,7 +7,7 @@ import { useListenReportingEventUpdates } from '@features/Reportings/components/
 import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router'
 import { ToastContainer } from 'react-toastify'
