@@ -5,7 +5,7 @@ import {
   type RegulatoryOrAMPOrViglanceAreaLayerType,
   RegulatoryOrAMPOrViglanceAreaLayerTypeAsList
 } from 'domain/entities/layers/constants'
-import { uniqBy } from 'lodash'
+import { uniqBy } from 'lodash-es'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'

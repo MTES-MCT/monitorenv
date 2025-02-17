@@ -3,7 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { difference } from 'lodash'
+import { difference } from 'lodash-es'
 import { useMemo, useState } from 'react'
 
 import { getExtentOfLayersGroup } from './getExtentOfLayersGroup'

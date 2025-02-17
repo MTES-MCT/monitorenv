@@ -1,4 +1,4 @@
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { createReporting } from '../../utils/createReporting'

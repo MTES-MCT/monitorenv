@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useEffect, useMemo } from 'react'
 
 import type { BookmarkType } from '../components/DashboardForm/Bookmark'

@@ -2,7 +2,7 @@ import { isMissionNew } from '@features/Mission/utils'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { chain } from 'lodash'
+import { chain } from 'lodash-es'
 import { generatePath } from 'react-router'
 
 import { attachReportingToMissionSliceActions } from '../components/MissionForm/AttachReporting/slice'

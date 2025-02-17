@@ -1,6 +1,6 @@
 import { reportingActions } from '@features/Reportings/slice'
 import { useFormikContext, type FormikErrors } from 'formik'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 

@@ -9,7 +9,7 @@ import { skipToken } from '@reduxjs/toolkit/query'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
 import { Formik } from 'formik'
-import { noop } from 'lodash'
+import { noop } from 'lodash-es'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 

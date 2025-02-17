@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 

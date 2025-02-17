@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { isArray } from 'lodash-es'
 import { useEffect, useState, useRef } from 'react'
 
 import { setCurrentMapExtentTracker } from '../../domain/shared_slices/Map'
@@ -62,7 +62,7 @@ export function MapHistory({ map }: BaseMapChildrenProps) {
           zoom
         }
 
-        const url = _.isArray(center) ? `#@${center[0]?.toFixed(2)},${center[1]?.toFixed(2)},${zoom}` : null
+        const url = isArray(center) ? `#@${center[0]?.toFixed(2)},${center[1]?.toFixed(2)},${zoom}` : null
         window.history.pushState(view, 'map', url)
         const extent = currentView.calculateExtent(map.getSize())
         dispatch(setCurrentMapExtentTracker(extent))

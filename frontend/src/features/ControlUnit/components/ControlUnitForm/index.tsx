@@ -12,7 +12,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
-import { sortBy } from 'lodash/fp'
+import { sortBy } from 'lodash-es'
 import { useCallback, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
@@ -63,11 +63,11 @@ export function ControlUnitForm() {
     () =>
       departmentAreas
         ? sortBy(
-            ['label'],
             departmentAreas.map(departmentArea => ({
               label: `${departmentArea.inseeCode} - ${departmentArea.name}`,
               value: departmentArea.inseeCode
-            }))
+            })),
+            ['label']
           )
         : undefined,
     [departmentAreas]

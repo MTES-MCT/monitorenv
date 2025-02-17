@@ -7,7 +7,7 @@ import { InteractionListener, OLGeometryType } from 'domain/entities/map/constan
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
-import _ from 'lodash'
+import { isEqual } from 'lodash-es'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
@@ -38,7 +38,7 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
   }, [value])
 
   useEffect(() => {
-    if (geometry?.type === OLGeometryType.MULTIPOLYGON && !_.isEqual(geometry, value)) {
+    if (geometry?.type === OLGeometryType.MULTIPOLYGON && !isEqual(geometry, value)) {
       helpers.setValue(geometry)
     }
   }, [geometry, helpers, value])

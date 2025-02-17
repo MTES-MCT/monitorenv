@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
 
 import { LayerType } from '../../../domain/entities/layers/constants'
@@ -14,7 +14,7 @@ export function AdministrativeLayers({ map }: BaseMapChildrenProps) {
     if (map && showedAdministrativeLayerIds) {
       const olLayers = map.getLayers()
       const olLayersList = olLayers?.getArray()
-      if (_.isEmpty(olLayersList)) {
+      if (isEmpty(olLayersList)) {
         return
       }
       // remove layers

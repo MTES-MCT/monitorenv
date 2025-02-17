@@ -6,7 +6,7 @@ import {
   pluralize,
   getControlUnitResourceCategoryFromType
 } from '@mtes-mct/monitor-ui'
-import { isEmpty, uniq } from 'lodash/fp'
+import { isEmpty, uniq } from 'lodash-es'
 
 import { isNotArchived } from '../../utils/isNotArchived'
 

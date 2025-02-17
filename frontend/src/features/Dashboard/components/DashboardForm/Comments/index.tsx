@@ -1,7 +1,7 @@
 import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Textarea } from '@mtes-mct/monitor-ui'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { forwardRef, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 

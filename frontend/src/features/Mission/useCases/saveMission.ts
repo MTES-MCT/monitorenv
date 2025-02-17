@@ -6,7 +6,7 @@ import { reportingActions } from '@features/Reportings/slice'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
-import omit from 'lodash/omit'
+import { omit } from 'lodash-es'
 import { generatePath } from 'react-router'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'

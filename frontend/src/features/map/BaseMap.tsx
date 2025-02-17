@@ -6,7 +6,7 @@ import {
   type MapClickEvent,
   type SerializedFeature
 } from 'domain/types/map'
-import { isEqual, throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 import { defaults as defaultControls, ScaleLine } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'
@@ -43,6 +43,7 @@ import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened
 
 import type { VectorLayerWithName, WebGLVectorLayerWithName } from '../../domain/types/layer'
 import type { MapBrowserEvent } from 'ol'
+import { isEqual } from 'lodash'
 
 export type BaseMapChildrenProps = {
   currentFeatureListOver?: SerializedFeature<Record<string, any>>[]

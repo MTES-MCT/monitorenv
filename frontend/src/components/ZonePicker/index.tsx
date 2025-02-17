@@ -4,7 +4,7 @@ import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 

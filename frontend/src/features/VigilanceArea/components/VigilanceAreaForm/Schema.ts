@@ -1,5 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 
 import type { ImageApi } from '@components/Form/types'

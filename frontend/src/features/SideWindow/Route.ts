@@ -1,4 +1,4 @@
-import { isArray } from 'lodash'
+import { isArray } from 'lodash-es'
 import { matchPath } from 'react-router'
 
 import { useAppSelector } from '../../hooks/useAppSelector'

@@ -1,4 +1,4 @@
-import { uniq } from 'lodash'
+import { uniq } from 'lodash-es'
 
 import type { Dashboard } from '@features/Dashboard/types'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'

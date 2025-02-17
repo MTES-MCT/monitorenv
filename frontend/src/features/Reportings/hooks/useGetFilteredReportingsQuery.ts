@@ -3,7 +3,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { StatusFilterEnum } from 'domain/entities/reporting'
-import { filter } from 'lodash'
+import { filter } from 'lodash-es'
 import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'

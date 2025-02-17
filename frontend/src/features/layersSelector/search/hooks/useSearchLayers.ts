@@ -7,7 +7,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import Fuse, { type Expression } from 'fuse.js'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { setAMPsSearchResult, setRegulatoryLayersSearchResult, setVigilanceAreasSearchResult } from '../slice'
@@ -48,7 +48,7 @@ export function useSearchLayers() {
       minMatchCharLength: 2,
       threshold: 0.2
     })
-    const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
+    const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) ?? [], {
       ignoreLocation: true,
       includeScore: false,
       keys: ['name', 'type'],

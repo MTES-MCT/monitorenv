@@ -4,7 +4,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { groupBy } from 'lodash'
+import { groupBy } from 'lodash-es'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 

@@ -1,5 +1,5 @@
 import { Layers } from 'domain/entities/layers/constants'
-import { reduce } from 'lodash'
+import { reduce } from 'lodash-es'
 
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 

@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { get } from 'lodash-es'
 
 const SortType = {
   ASC: 'asc',
@@ -6,8 +6,8 @@ const SortType = {
 }
 
 export function sortMissionsByProperty(a, b, sortColumn, sortType) {
-  const x = _.get(a, sortColumn)
-  const y = _.get(b, sortColumn)
+  const x = get(a, sortColumn)
+  const y = get(b, sortColumn)
 
   if (typeof x === 'string' && typeof y === 'string') {
     if (sortType === SortType.ASC) {

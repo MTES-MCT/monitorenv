@@ -3,7 +3,7 @@ import { undefine } from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { diff } from 'deep-object-diff'
 import { useFormikContext } from 'formik'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { useEffect } from 'react'
 
 import { attachReportingToMissionSliceActions } from './AttachReporting/slice'

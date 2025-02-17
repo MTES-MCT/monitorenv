@@ -3,7 +3,7 @@ import JSTSGeometryFactory from 'jsts/org/locationtech/jts/geom/GeometryFactory'
 import JSTSGeometryGraph from 'jsts/org/locationtech/jts/geomgraph/GeometryGraph'
 import JSTSIsSimpleOp from 'jsts/org/locationtech/jts/operation/IsSimpleOp'
 import JSTSConsistentAreaTester from 'jsts/org/locationtech/jts/operation/valid/ConsistentAreaTester'
-import { dropRight, map, flattenDeep, chunk, reduce, uniq } from 'lodash'
+import { dropRight, map, flattenDeep, chunk, reduce, uniq } from 'lodash-es'
 
 import { OLGeometryType } from '../domain/entities/map/constants'
 
@@ -58,7 +58,7 @@ function isPolygonValid(polygon: Coordinate[][]) {
   const firstPoint = coordinates[0]
   const lastPoint = coordinates[coordinates.length - 1]
   if (
-    (firstPoint && lastPoint && firstPoint[0] !== lastPoint[0]) ||
+    (firstPoint && lastPoint && firstPoint[0] !== lastPoint[0]) ??
     (firstPoint && lastPoint && firstPoint[1] !== lastPoint[1])
   ) {
     // Polygon is not closed
