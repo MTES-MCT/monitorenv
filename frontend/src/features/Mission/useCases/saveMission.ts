@@ -100,15 +100,18 @@ export const saveMission =
           missionUpdated,
           reportings
         })
-      } else if ('data' in response.error) {
-        if (response.error.data?.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
-          throw Error('Le signalement est déjà rattaché à une mission')
+      } else {
+        if ('data' in response.error) {
+          if (response.error.data?.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
+            throw Error('Le signalement est déjà rattaché à une mission')
+          }
+          if (response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {
+            throw Error('Une propriété est invalide')
+          }
         }
-        if (response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {
-          throw Error('Une propriété est invalide')
-        }
+
+        throw Error('Erreur à la création ou à la modification de la mission')
       }
-      throw Error('Erreur à la création ou à la modification de la mission')
     } catch (error) {
       dispatch(setToast({ containerId: 'sideWindow', message: error }))
     }

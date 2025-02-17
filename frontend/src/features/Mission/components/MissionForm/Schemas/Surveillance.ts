@@ -2,14 +2,11 @@ import * as Yup from 'yup'
 
 import { ClosedControlPlansSchema, NewControlPlansSchema } from './ControlPlans'
 import { type Awareness, type EnvActionSurveillance } from '../../../../../domain/entities/missions'
-import { isCypress } from '../../../../../utils/isCypress'
 import { HIDDEN_ERROR } from '../constants'
 import { actionEndDateValidation, actionStartDateValidation } from './ActionDates'
 
 import type { ControlPlansData } from 'domain/entities/controlPlan'
 import type { GeoJSON } from 'domain/types/GeoJSON'
-
-const shouldUseAlternateValidationInTestEnvironment = !import.meta.env.PROD || isCypress()
 
 export const getNewEnvActionSurveillanceSchema = (
   ctx: any
@@ -29,9 +26,7 @@ export const getNewEnvActionSurveillanceSchema = (
         .optional(),
       controlPlans: Yup.array<ControlPlansData>().of(NewControlPlansSchema).optional(),
       durationMatchesMission: Yup.boolean().optional(),
-      geom: shouldUseAlternateValidationInTestEnvironment
-        ? Yup.mixed<GeoJSON.MultiPolygon>().optional()
-        : Yup.mixed<GeoJSON.MultiPolygon>().required('Veuillez définir une zone de surveillance'),
+      geom: Yup.mixed<GeoJSON.MultiPolygon>().required('Veuillez définir une zone de surveillance'),
       id: Yup.string().required(),
       observations: Yup.string().optional(),
       openBy: Yup.string()
@@ -59,9 +54,7 @@ export const getCompletionEnvActionSurveillanceSchema = (
         .optional(),
       controlPlans: Yup.array().ensure().of(ClosedControlPlansSchema).ensure().required().min(1),
       durationMatchesMission: Yup.boolean().optional(),
-      geom: shouldUseAlternateValidationInTestEnvironment
-        ? Yup.mixed<GeoJSON.MultiPolygon>().optional()
-        : Yup.mixed<GeoJSON.MultiPolygon>().required('Veuillez définir une zone de surveillance'),
+      geom: Yup.mixed<GeoJSON.MultiPolygon>().required('Veuillez définir une zone de surveillance'),
       id: Yup.string().required(),
       observations: Yup.string().optional(),
       openBy: Yup.string()
