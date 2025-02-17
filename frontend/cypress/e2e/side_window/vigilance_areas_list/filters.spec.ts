@@ -36,23 +36,23 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     verifyVigilanceAreaRows('ABC')
   })
 
-  it('Should filter missions by seaFront filter', () => {
+  it('Should filter vigilance areas by seaFront filter', () => {
     cy.fill('Façade', ['NAMO'])
     verifyVigilanceAreaRows('NAMO')
   })
 
-  it('Should filter missions by draft status', () => {
+  it('Should filter vigilance areas by draft status', () => {
     cy.fill('Publiée', false)
     verifyVigilanceAreaRows('Non Publiée')
   })
 
-  it('Should filter missions by published status', () => {
+  it('Should filter vigilance areas by published status', () => {
     cy.fill('Non publiée', false)
     verifyVigilanceAreaRows('Publiée')
   })
 
-  it('Should filter missions by search query', () => {
-    cy.fill('Rechercher dans les zones de vigilance', 'Proin')
+  it('Should filter vigilance areas by search query', () => {
+    cy.fill('Rechercher dans les zones de vigilance', 'Proin', { delay: 400 })
     cy.getDataCy('vigilance-area-row').should('have.length', 1)
   })
 })
