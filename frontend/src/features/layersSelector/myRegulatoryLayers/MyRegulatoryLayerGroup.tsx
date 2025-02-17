@@ -1,6 +1,6 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { getTitle } from 'domain/entities/layers/utils'
-import { intersection } from 'lodash'
+import { intersection } from 'lodash-es'
 
 import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
 import { getNumberOfRegulatoryLayerZonesByGroupName } from '../../../api/regulatoryLayersAPI'

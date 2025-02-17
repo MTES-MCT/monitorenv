@@ -1,7 +1,7 @@
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { reportingActions } from '@features/Reportings/slice'
 import { Level } from '@mtes-mct/monitor-ui'
-import omit from 'lodash/omit'
+import { omit } from 'lodash-es'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { ReportingContext, setReportingFormVisibility, VisibilityState } from '../../../domain/shared_slices/Global'
