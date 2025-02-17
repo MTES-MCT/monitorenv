@@ -5,6 +5,13 @@ import { Layers } from 'domain/entities/layers/constants'
 import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { DrawEvent } from 'ol/interaction/Draw'
 import React from 'react'
+import { useDrawVectorLayer } from '@hooks/useDrawVectorLayer'
+import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
+import { InteractionType, OLGeometryType } from 'domain/entities/map/constants'
+import { isEmpty } from 'lodash-es'
+import { Modify } from 'ol/interaction'
+import Draw, { createBox, createRegularPolygon, type GeometryFunction } from 'ol/interaction/Draw'
+import React, { useCallback, useEffect } from 'react'
 
 import { dashboardActions } from '../../slice'
 
