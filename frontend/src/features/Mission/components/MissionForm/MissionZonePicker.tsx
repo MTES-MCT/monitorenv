@@ -1,7 +1,7 @@
 import { Accent, Button, Icon, IconButton, Label, THEME } from '@mtes-mct/monitor-ui'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField, useFormikContext } from 'formik'
-import _ from 'lodash'
+import { isEqual } from 'lodash-es'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
@@ -36,7 +36,7 @@ export function MissionZonePicker() {
   }, [value])
 
   useEffect(() => {
-    if (geometry?.type === OLGeometryType.MULTIPOLYGON && !_.isEqual(geometry, value)) {
+    if (geometry?.type === OLGeometryType.MULTIPOLYGON && !isEqual(geometry, value)) {
       helpers.setValue(geometry)
     }
   }, [geometry, helpers, value])

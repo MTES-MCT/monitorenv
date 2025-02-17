@@ -8,7 +8,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import _, { difference } from 'lodash'
+import { difference, includes, intersection } from 'lodash-es'
 import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
 
@@ -44,9 +44,9 @@ export function ResultListLayerGroup({
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
-  const zonesSelected = _.intersection(selectedLayerIds, layerIds)
+  const zonesSelected = intersection(selectedLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
-  const forceZonesAreOpen = _.includes(layerIds, layerIdToDisplay)
+  const forceZonesAreOpen = includes(layerIds, layerIdToDisplay)
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const AMPLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)

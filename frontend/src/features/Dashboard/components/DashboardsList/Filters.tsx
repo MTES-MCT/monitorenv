@@ -20,7 +20,7 @@ import { isNotArchived } from '@utils/isNotArchived'
 import { DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
-import { isArray, isEqual } from 'lodash'
+import { isArray, isEqual } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

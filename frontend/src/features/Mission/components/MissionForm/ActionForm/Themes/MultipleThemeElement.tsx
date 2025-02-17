@@ -1,5 +1,5 @@
 import { Accent, Button, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
-import { isEmpty, compact } from 'lodash'
+import { isEmpty, compact } from 'lodash-es'
 import styled from 'styled-components'
 
 import { ActionTheme } from './ActionTheme'
