@@ -6,7 +6,7 @@ import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolki
 import { dashboardsFiltersMigrations } from '@store/migrations/dashboardsFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingTypeEnum, StatusFilterEnum } from 'domain/entities/reporting'
-import { isEqual, set } from 'lodash'
+import { isEqual, set } from 'lodash-es'
 import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

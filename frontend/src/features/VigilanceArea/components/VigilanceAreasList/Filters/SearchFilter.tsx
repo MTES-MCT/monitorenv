@@ -1,7 +1,7 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { TextInput, usePrevious } from '@mtes-mct/monitor-ui'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 

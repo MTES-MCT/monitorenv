@@ -9,7 +9,7 @@ import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum, type O
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
-import { chain, reduce } from 'lodash'
+import { chain, reduce } from 'lodash-es'
 import { type MutableRefObject, useCallback, useMemo, useRef } from 'react'
 
 import { MapReportingsFilters } from './Map'

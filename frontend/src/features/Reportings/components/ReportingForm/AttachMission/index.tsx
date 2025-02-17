@@ -9,7 +9,7 @@ import {
   updateMapInteractionListeners
 } from 'domain/use_cases/map/updateMapInteractionListeners'
 import { useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 

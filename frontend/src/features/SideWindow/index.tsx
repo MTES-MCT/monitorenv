@@ -21,7 +21,7 @@ import {
   isReportingsPage
 } from '@utils/routes'
 import { shouldDisplayEnvBanner } from '@utils/shouldDisplayEnvBanner'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
 import { StyleSheetManager } from 'styled-components'

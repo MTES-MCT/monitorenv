@@ -3,7 +3,7 @@ import { getReportingInitialValues, isNewReporting } from '@features/Reportings/
 import { useAppSelector } from '@hooks/useAppSelector'
 import { ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 import { Form, Formik } from 'formik'
-import { noop } from 'lodash'
+import { noop } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

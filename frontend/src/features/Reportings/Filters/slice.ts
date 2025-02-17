@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { reportingsFiltersMigrations } from '@store/migrations/reportingsFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { StatusFilterEnum } from 'domain/entities/reporting'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

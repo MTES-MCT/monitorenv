@@ -1,6 +1,6 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { InfractionTypeEnum, type Mission, missionTypeEnum, type NewMission } from 'domain/entities/missions'
-import { sum, uniqBy } from 'lodash'
+import { sum, uniqBy } from 'lodash-es'
 
 import {
   ActionTypeEnum,

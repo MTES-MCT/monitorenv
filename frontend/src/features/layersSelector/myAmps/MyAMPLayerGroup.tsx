@@ -1,5 +1,5 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { intersection } from 'lodash'
+import { intersection } from 'lodash-es'
 import { useCallback } from 'react'
 
 import { MyAMPLayerZone } from './MyAMPLayerZone'

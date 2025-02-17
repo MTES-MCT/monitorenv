@@ -6,7 +6,7 @@ import {
 } from '@features/VigilanceArea/slice'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import { groupBy } from 'lodash'
+import { groupBy } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

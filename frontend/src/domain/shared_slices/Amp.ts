@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import _ from 'lodash'
+import { concat, difference, union, uniq, without } from 'lodash-es'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -31,8 +31,8 @@ const ampSlice = createSlice({
     addAmpZonesToMyLayers(state, action) {
       return {
         ...state,
-        selectedAmpLayerIds: _.union(state.selectedAmpLayerIds, action.payload),
-        showedAmpLayerIds: _.union(state.showedAmpLayerIds, action.payload)
+        selectedAmpLayerIds: union(state.selectedAmpLayerIds, action.payload),
+        showedAmpLayerIds: union(state.showedAmpLayerIds, action.payload)
       }
     },
 
@@ -43,10 +43,10 @@ const ampSlice = createSlice({
      * @param {number} action.payload - The amp zone id
      */
     hideAmpLayer(state, action) {
-      state.showedAmpLayerIds = _.without(state.showedAmpLayerIds, action.payload)
+      state.showedAmpLayerIds = without(state.showedAmpLayerIds, action.payload)
     },
     hideAmpLayers(state, action) {
-      state.showedAmpLayerIds = _.without(state.showedAmpLayerIds, ...action.payload)
+      state.showedAmpLayerIds = without(state.showedAmpLayerIds, ...action.payload)
     },
 
     /**
@@ -59,8 +59,8 @@ const ampSlice = createSlice({
     removeAmpZonesFromMyLayers(state, action) {
       return {
         ...state,
-        selectedAmpLayerIds: _.difference(state.selectedAmpLayerIds, action.payload),
-        showedAmpLayerIds: _.difference(state.showedAmpLayerIds, action.payload)
+        selectedAmpLayerIds: difference(state.selectedAmpLayerIds, action.payload),
+        showedAmpLayerIds: difference(state.showedAmpLayerIds, action.payload)
       }
     },
 
@@ -71,7 +71,7 @@ const ampSlice = createSlice({
      * @param {AmpZone[]} action.payload - The amp zone
      */
     showAmpLayer(state, action) {
-      state.showedAmpLayerIds = _.uniq(_.concat(state.showedAmpLayerIds, action.payload))
+      state.showedAmpLayerIds = uniq(concat(state.showedAmpLayerIds, action.payload))
     }
   }
 })
