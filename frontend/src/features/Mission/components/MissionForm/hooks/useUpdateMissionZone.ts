@@ -46,8 +46,54 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
   const [actionGeom, setActionGeom] = useState(
     values.geom && firstActionWithDate?.geom ? firstActionWithDate?.geom : undefined
   )
+  console.log('firstActionWithDate', firstActionWithDate)
+  console.log('actionGeom', actionGeom)
 
+  // for control action we need to compute a circle for mission zone
+  const updateGeometryForControlAction = firstActionWithDate => {
+    const { coordinates } = firstActionWithDate.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
+
+    if (coordinates.length === 0) {
+      return
+    }
+
+    const circleZone = computeCircleZone(coordinates[0])
+    if (!isEqual(values.geom, circleZone)) {
+      setFieldValue('geom', circleZone)
+    }
+  }
+
+  const updateGeometryForSurveillanceAction = firstActionWithDate => {
+    if (!isEqual(values.geom, firstActionWithDate.geom)) {
+      setFieldValue('geom', firstActionWithDate.geom)
+    }
+  }
+
+  // when we open the mission we want to calculate new geom if monitorfish has deleted last action
   useEffect(() => {
+    if (
+      values.geom &&
+      values.geom.coordinates.length === 0 &&
+      values.isGeometryComputedFromControls &&
+      firstActionWithDate?.geom &&
+      firstActionWithDate.geom.coordinates?.length > 0
+    ) {
+      setActionGeom(firstActionWithDate.geom)
+      // Handle geometry update based on action type
+      switch (firstActionWithDate.actionType) {
+        case ActionTypeEnum.CONTROL:
+          updateGeometryForControlAction(firstActionWithDate)
+          break
+        case ActionTypeEnum.SURVEILLANCE:
+          updateGeometryForSurveillanceAction(firstActionWithDate)
+          break
+        default:
+          break
+      }
+    }
+  }, [])
+  useEffect(() => {
+    console.log('ENTER IN USE EFFECT')
     // if user has added a zone manually and deleted it
     const clearManualZoneIfDeleted = () => {
       if (!values.isGeometryComputedFromControls && actionGeom && values.geom?.coordinates.length === 0) {
@@ -83,33 +129,13 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
         return
       }
 
-      // for control action we need to compute a circle for mission zone
-      const updateGeometryForControlAction = () => {
-        const { coordinates } = firstActionWithDate.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
-
-        if (coordinates.length === 0) {
-          return
-        }
-
-        const circleZone = computeCircleZone(coordinates[0])
-        if (!isEqual(values.geom, circleZone)) {
-          setFieldValue('geom', circleZone)
-        }
-      }
-
-      const updateGeometryForSurveillanceAction = () => {
-        if (!isEqual(values.geom, firstActionWithDate.geom)) {
-          setFieldValue('geom', firstActionWithDate.geom)
-        }
-      }
-
       // Handle geometry update based on action type
       switch (firstActionWithDate.actionType) {
         case ActionTypeEnum.CONTROL:
-          updateGeometryForControlAction()
+          updateGeometryForControlAction(firstActionWithDate)
           break
         case ActionTypeEnum.SURVEILLANCE:
-          updateGeometryForSurveillanceAction()
+          updateGeometryForSurveillanceAction(firstActionWithDate)
           break
         default:
           break
@@ -123,15 +149,19 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
 
     clearManualZoneIfDeleted()
     if (cleanMissionZoneIfNoActions()) {
+      console.log('cleanMissionZoneIfNoActions')
       return
     }
     if (skipIfFromMonitorFish()) {
+      console.log('skipIfFromMonitorFish')
       return
     }
     if (skipIfNoCoordinates()) {
+      console.log('skipIfNoCoordinates')
       return
     }
     if (skipIfNotListeningOrManual()) {
+      console.log('skipIfNotListeningOrManual')
       return
     }
     updateMissionZoneGeometry()
