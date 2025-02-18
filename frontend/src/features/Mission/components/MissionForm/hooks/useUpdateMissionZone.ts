@@ -29,6 +29,7 @@ function computeCircleZone(coordinates) {
 }
 
 export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine>) => {
+  const [isMount, setIsMount] = useState(false)
   const filteredEnvActions = useMemo(
     () =>
       sortedActions.filter(
@@ -51,13 +52,15 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
   console.log('actionGeom', actionGeom)
 
   const updateMissionZoneGeometry = useCallback(() => {
-    if (!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) {
+    if ((!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) && isMount) {
+      console.log('updateMissionZoneGeometry RETURN')
+
       return
     }
 
     // for control action we need to compute a circle for mission zone
     const updateGeometryForControlAction = () => {
-      const { coordinates } = firstActionWithDate.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
+      const { coordinates } = firstActionWithDate?.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
 
       if (coordinates.length === 0) {
         return
@@ -70,13 +73,13 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
     }
 
     const updateGeometryForSurveillanceAction = () => {
-      if (!isEqual(values.geom, firstActionWithDate.geom)) {
-        setFieldValue('geom', firstActionWithDate.geom)
+      if (!isEqual(values.geom, firstActionWithDate?.geom)) {
+        setFieldValue('geom', firstActionWithDate?.geom)
       }
     }
 
     // Handle geometry update based on action type
-    switch (firstActionWithDate.actionType) {
+    switch (firstActionWithDate?.actionType) {
       case ActionTypeEnum.CONTROL:
         updateGeometryForControlAction()
         break
@@ -90,22 +93,11 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
     if (!values.isGeometryComputedFromControls) {
       setFieldValue('isGeometryComputedFromControls', true)
     }
-    setActionGeom(firstActionWithDate.geom)
-  }, [actionGeom, firstActionWithDate, setFieldValue, values.geom, values.isGeometryComputedFromControls])
+    setActionGeom(firstActionWithDate?.geom)
+  }, [actionGeom, firstActionWithDate, setFieldValue, values.geom, values.isGeometryComputedFromControls, isMount])
 
-  // when we open the mission we want to calculate new geom if monitorfish has deleted last action
   useEffect(() => {
-    if (
-      values.geom &&
-      values.geom.coordinates.length === 0 &&
-      values.isGeometryComputedFromControls &&
-      firstActionWithDate?.geom &&
-      firstActionWithDate.geom.coordinates?.length > 0
-    ) {
-      updateMissionZoneGeometry()
-    }
-    // it's just necessary when the mission is open
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setIsMount(true)
   }, [])
 
   useEffect(() => {
