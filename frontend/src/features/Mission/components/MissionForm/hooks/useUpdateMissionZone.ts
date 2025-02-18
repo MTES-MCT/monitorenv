@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
@@ -15,7 +16,7 @@ import { isEqual } from 'lodash'
 import { Feature } from 'ol'
 import { MultiPolygon } from 'ol/geom'
 import Polygon, { circular } from 'ol/geom/Polygon'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -49,25 +50,48 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
   console.log('firstActionWithDate', firstActionWithDate)
   console.log('actionGeom', actionGeom)
 
-  // for control action we need to compute a circle for mission zone
-  const updateGeometryForControlAction = firstActionWithDate => {
-    const { coordinates } = firstActionWithDate.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
-
-    if (coordinates.length === 0) {
+  const updateMissionZoneGeometry = useCallback(() => {
+    if (!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) {
       return
     }
 
-    const circleZone = computeCircleZone(coordinates[0])
-    if (!isEqual(values.geom, circleZone)) {
-      setFieldValue('geom', circleZone)
-    }
-  }
+    // for control action we need to compute a circle for mission zone
+    const updateGeometryForControlAction = () => {
+      const { coordinates } = firstActionWithDate.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
 
-  const updateGeometryForSurveillanceAction = firstActionWithDate => {
-    if (!isEqual(values.geom, firstActionWithDate.geom)) {
-      setFieldValue('geom', firstActionWithDate.geom)
+      if (coordinates.length === 0) {
+        return
+      }
+
+      const circleZone = computeCircleZone(coordinates[0])
+      if (!isEqual(values.geom, circleZone)) {
+        setFieldValue('geom', circleZone)
+      }
     }
-  }
+
+    const updateGeometryForSurveillanceAction = () => {
+      if (!isEqual(values.geom, firstActionWithDate.geom)) {
+        setFieldValue('geom', firstActionWithDate.geom)
+      }
+    }
+
+    // Handle geometry update based on action type
+    switch (firstActionWithDate.actionType) {
+      case ActionTypeEnum.CONTROL:
+        updateGeometryForControlAction()
+        break
+      case ActionTypeEnum.SURVEILLANCE:
+        updateGeometryForSurveillanceAction()
+        break
+      default:
+        break
+    }
+
+    if (!values.isGeometryComputedFromControls) {
+      setFieldValue('isGeometryComputedFromControls', true)
+    }
+    setActionGeom(firstActionWithDate.geom)
+  }, [actionGeom, firstActionWithDate, setFieldValue, values.geom, values.isGeometryComputedFromControls])
 
   // when we open the mission we want to calculate new geom if monitorfish has deleted last action
   useEffect(() => {
@@ -78,20 +102,12 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
       firstActionWithDate?.geom &&
       firstActionWithDate.geom.coordinates?.length > 0
     ) {
-      setActionGeom(firstActionWithDate.geom)
-      // Handle geometry update based on action type
-      switch (firstActionWithDate.actionType) {
-        case ActionTypeEnum.CONTROL:
-          updateGeometryForControlAction(firstActionWithDate)
-          break
-        case ActionTypeEnum.SURVEILLANCE:
-          updateGeometryForSurveillanceAction(firstActionWithDate)
-          break
-        default:
-          break
-      }
+      updateMissionZoneGeometry()
     }
+    // it's just necessary when the mission is open
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   useEffect(() => {
     console.log('ENTER IN USE EFFECT')
     // if user has added a zone manually and deleted it
@@ -124,44 +140,25 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
       listener === InteractionListener.MISSION_ZONE ||
       (!values.isGeometryComputedFromControls && values.geom && values.geom.coordinates.length > 0)
 
-    const updateMissionZoneGeometry = () => {
-      if (!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) {
-        return
-      }
-
-      // Handle geometry update based on action type
-      switch (firstActionWithDate.actionType) {
-        case ActionTypeEnum.CONTROL:
-          updateGeometryForControlAction(firstActionWithDate)
-          break
-        case ActionTypeEnum.SURVEILLANCE:
-          updateGeometryForSurveillanceAction(firstActionWithDate)
-          break
-        default:
-          break
-      }
-
-      if (!values.isGeometryComputedFromControls) {
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
-      setActionGeom(firstActionWithDate.geom)
-    }
-
     clearManualZoneIfDeleted()
     if (cleanMissionZoneIfNoActions()) {
       console.log('cleanMissionZoneIfNoActions')
+
       return
     }
     if (skipIfFromMonitorFish()) {
       console.log('skipIfFromMonitorFish')
+
       return
     }
     if (skipIfNoCoordinates()) {
       console.log('skipIfNoCoordinates')
+
       return
     }
     if (skipIfNotListeningOrManual()) {
       console.log('skipIfNotListeningOrManual')
+
       return
     }
     updateMissionZoneGeometry()
@@ -176,6 +173,8 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
     values.fishActions.length,
     filteredEnvActions.length,
     firstActionWithDate?.geom,
-    firstActionWithDate?.actionType
+    firstActionWithDate?.actionType,
+    firstActionWithDate,
+    updateMissionZoneGeometry
   ])
 }
