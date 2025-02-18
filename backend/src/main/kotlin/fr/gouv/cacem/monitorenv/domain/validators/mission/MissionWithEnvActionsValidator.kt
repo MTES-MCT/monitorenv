@@ -25,7 +25,6 @@ class MissionWithEnvActionsValidator(private val missionValidator: MissionValida
     }
 
     private fun validateEnvActions(mission: MissionEntity) {
-
         mission.envActions?.forEach { envAction ->
             if (envAction is EnvActionControlEntity) {
                 validateControl(envAction, mission)
@@ -46,16 +45,14 @@ class MissionWithEnvActionsValidator(private val missionValidator: MissionValida
         validateInfractions(control)
     }
 
-    private fun validateInfractions(
-        control: EnvActionControlEntity,
-    ) {
+    private fun validateInfractions(control: EnvActionControlEntity) {
         val sumOfNbTarget = control.infractions?.sumOf { infraction -> infraction.nbTarget }
         if (sumOfNbTarget != 0 &&
             sumOfNbTarget != null &&
             (
-                    control.actionNumberOfControls != null &&
-                            sumOfNbTarget > control.actionNumberOfControls
-                    )
+                control.actionNumberOfControls != null &&
+                    sumOfNbTarget > control.actionNumberOfControls
+            )
         ) {
             throw BackendUsageException(
                 code = BackendUsageErrorCode.UNVALID_PROPERTY,
