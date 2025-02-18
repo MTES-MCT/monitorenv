@@ -58,7 +58,6 @@ class MissionValidatorWithEnvActionsUTest {
         missionWithEnvActionsValidator.validate(mission)
     }
 
-
     @ParameterizedTest
     @EnumSource(value = InfractionTypeEnum::class, names = ["WAITING"], mode = EnumSource.Mode.EXCLUDE)
     fun `validate should throw an exception if there is a control with infractionType other than WAITING that doesnt have a NATINF`(
@@ -231,7 +230,6 @@ class MissionValidatorWithEnvActionsUTest {
             assertThrows(BackendUsageException::class.java) { missionWithEnvActionsValidator.validate(mission) }
         assertThat(assertThrows.data).isEqualTo("La géométrie de la surveillance est obligatoire")
     }
-
 
     @Test
     fun `validate should pass for a valid MissionEntity`() {
