@@ -14,8 +14,6 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
-const cellHeight = 20
-
 const styles = StyleSheet.create({
   amp: {
     backgroundColor: '#D6DF64',
@@ -26,13 +24,11 @@ const styles = StyleSheet.create({
     border: `0.5 solid ${THEME.color.blueGray25}`,
     flexDirection: 'row',
     fontSize: 6.8,
-    height: cellHeight,
     padding: '4.3 12'
   },
   header: {
     flex: 1,
     flexDirection: 'row',
-    height: cellHeight,
     justifyContent: 'space-between',
     padding: '4.3 12'
   },
@@ -45,7 +41,6 @@ const styles = StyleSheet.create({
     border: `0.5 solid ${THEME.color.blueGray25}`,
     fontSize: 6.8,
     fontWeight: 'bold',
-    height: cellHeight,
     padding: '4.3 12'
   },
   layerLegend: {
