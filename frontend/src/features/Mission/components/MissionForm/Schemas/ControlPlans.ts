@@ -12,8 +12,8 @@ export const ClosedControlPlansSchema: Yup.Schema<ControlPlansData> = Yup.object
 
 export const NewControlPlansSchema: Yup.Schema<ControlPlansData> = Yup.object()
   .shape({
-    subThemeIds: Yup.array().of(Yup.number().required()).required(),
-    tagIds: Yup.array().of(Yup.number().required()).required(),
+    subThemeIds: Yup.array().of(Yup.number().required()).optional(),
+    tagIds: Yup.array().of(Yup.number().required()).optional(),
     themeId: Yup.number().optional()
   })
   .defined()
