@@ -45,9 +45,6 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
   const listener = useAppSelector(state => state.draw.listener)
   const { setFieldValue, values } = useFormikContext<Mission>()
   const [actionGeom, setActionGeom] = useState<GeoJSON.MultiPolygon | GeoJSON.MultiPoint | undefined>(undefined)
-  console.log('values', values)
-  console.log('firstActionWithDate', firstActionWithDate)
-  console.log('actionGeom', actionGeom)
 
   const updateMissionZoneGeometry = useCallback(() => {
     if (!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) {
@@ -93,7 +90,6 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
   }, [actionGeom, firstActionWithDate, setFieldValue, values.geom, values.isGeometryComputedFromControls])
 
   useEffect(() => {
-    console.log('ENTER IN USE EFFECT')
     // if user has added a zone manually and deleted it
     const clearManualZoneIfDeleted = () => {
       if (!values.isGeometryComputedFromControls && actionGeom && values.geom?.coordinates.length === 0) {
@@ -126,23 +122,15 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
 
     clearManualZoneIfDeleted()
     if (cleanMissionZoneIfNoActions()) {
-      console.log('cleanMissionZoneIfNoActions')
-
       return
     }
     if (skipIfFromMonitorFish()) {
-      console.log('skipIfFromMonitorFish')
-
       return
     }
     if (skipIfNoCoordinates()) {
-      console.log('skipIfNoCoordinates')
-
       return
     }
     if (skipIfNotListeningOrManual()) {
-      console.log('skipIfNotListeningOrManual')
-
       return
     }
     updateMissionZoneGeometry()
